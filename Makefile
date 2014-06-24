@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -novw -l
 kramdown2629 ?= kramdown-rfc2629
 
-names := http2-encryption
+names := http2-encryption alt-svc
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := encryption
+friendly_names := encryption alt-svc
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
@@ -38,6 +38,10 @@ clean:
 
 encryption.%: draft-ietf-httpbis-http2-encryption.%
 	cp -f $< $@
+
+alt-svc.%: draft-ietf-httpbis-http2-alt-svc.%
+	cp -f $< $@
+
 
 define makerule_submit_xml =
 $(1)
