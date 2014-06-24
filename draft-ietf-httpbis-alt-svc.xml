@@ -920,7 +920,7 @@ Alt-Svc-Used: 1
     <date month="June" year="2014" />
   </front>
   <seriesInfo name="RFC" value="7234"/>
-  <x:source href="http://httpwg.github.io/specs/rfc7234.xml"
+  <x:source href="refs/rfc7234.xml"
             basename="https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7234"/>
 </reference>
 
@@ -945,7 +945,7 @@ Alt-Svc-Used: 1
     <date month="June" year="2014"/>
   </front>
   <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-http2-13"/>
-  <x:source href="https://raw.githubusercontent.com/http2/http2-spec/master/draft-ietf-httpbis-http2.xml"/>
+  <x:source href="refs/draft-ietf-httpbis-http2-13.xml"/>
 </reference>
 
 </references>
