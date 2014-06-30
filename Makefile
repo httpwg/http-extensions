@@ -39,7 +39,7 @@ clean:
 encryption.%: draft-ietf-httpbis-http2-encryption.%
 	cp -f $< $@
 
-alt-svc.%: draft-ietf-httpbis-http2-alt-svc.%
+alt-svc.%: draft-ietf-httpbis-alt-svc.%
 	cp -f $< $@
 
 
