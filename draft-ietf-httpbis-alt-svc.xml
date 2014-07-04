@@ -64,6 +64,8 @@
     <area>Applications</area>
     <workgroup>HTTPbis</workgroup>
     <keyword>HTTP</keyword>
+    <keyword>ALPN</keyword>
+    <keyword>Alternate Services</keyword>
 
     <abstract>
       <t>
@@ -80,8 +82,10 @@
       </t>
       <t>
         Working Group information can be found at <eref
-        target="https://tools.ietf.org/wg/httpbis/"/>; that specific to HTTP/2 are at <eref
-        target="https://http2.github.io/"/>.
+        target="https://tools.ietf.org/wg/httpbis/"/>
+        and <eref target="http://httpwg.github.io/"/>; source code and issues
+        list for tis draft can be found at
+        <eref target="https://github.com/httpwg/http-extensions"/>.
       </t>
       <t>
         The changes in this draft are summarized in <xref
@@ -1011,6 +1015,9 @@ Alt-Svc-Used: 1
 </t>
 <t>
   Moved definition of status code 421 to HTTP/2.
+</t>
+<t>
+  Partly resolved <eref target="https://github.com/httpwg/http-extensions/issues/5"/>.
 </t>
 </section>
 
