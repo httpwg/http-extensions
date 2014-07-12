@@ -223,7 +223,7 @@
   Formally, an alternative service is identified by the combination of:
   <list style="symbols">
     <t>An Application Layer Protocol Negotiation (ALPN) protocol, as per
-    <xref target="ALPN"/></t>
+    <xref target="RFC7301"/></t>
     <t>A host, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.2"/></t>
     <t>A port, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.3"/></t>
   </list>
@@ -928,16 +928,16 @@ Alt-Svc-Used: 1
             basename="https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7234"/>
 </reference>
 
-<reference anchor="ALPN">
+<reference anchor="RFC7301">
   <front>
-    <title>Transport Layer Security (TLS) Application Layer Protocol Negotiation Extension</title>
+    <title>Transport Layer Security (TLS) Application-Layer Protocol Negotiation Extension</title>
     <author initials="S." surname="Friedl" fullname="Stephan Friedl"/>
     <author initials="A." surname="Popov" fullname="Andrey Popov"/>
     <author initials="A." surname="Langley" fullname="Adam Langley"/>
     <author initials="S." surname="Emile" fullname="Stephan Emile"/>
-    <date month="March" year="2014"/>
+    <date month="July" year="2014"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-tls-applayerprotoneg-05"/>
+  <seriesInfo name="RFC" value="7301"/>
 </reference>
 
 <reference anchor="HTTP2">
@@ -1021,6 +1021,11 @@ Alt-Svc-Used: 1
 </t>
 </section>
 
+<section title="Since draft-ietf-httpbis-alt-svc-02" anchor="changes.since.draft-ietf-httpbis-alt-svc-02">
+<t>
+  Updated ALPN reference.
+</t>
+</section>
 </section>
 
   </back>
