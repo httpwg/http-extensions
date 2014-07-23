@@ -280,12 +280,8 @@
    for establishing new requests, not limiting the use of existing ones.
 </t>
 <t>
-   To mitigate risks associated with caching compromised values (see
-   <xref target="host_security"/> for details), user agents &SHOULD; examine cached alternative
-   services when they detect a change in network configuration, and remove any
-   that could be compromised (for example, those whose association with the trust
-   root is questionable). User agents that do not have a means of detecting network
-   changes &SHOULD; place an upper bound on their lifetime.
+   Clients ought to consider that changes in network configurations can
+   result in suboptimal or compromised cached alternative services.
 </t>
 </section>
 
@@ -760,10 +756,6 @@ Alt-Svc-Used: 1
    lifetime, so that the user agent still directs traffic to the attacker even when
    not using the intermediary.
 </t>
-<t>
-   As a result, there is a requirement in <xref target="caching"/> to examine cached alternative
-   services when a network change is detected.
-</t>
 </section>
 
 <section title="Changing Protocols" anchor="changing-protocols">
@@ -1029,6 +1021,9 @@ Alt-Svc-Used: 1
 <section title="Since draft-ietf-httpbis-alt-svc-02" anchor="changes.since.draft-ietf-httpbis-alt-svc-02">
 <t>
   Updated ALPN reference.
+</t>
+<t>
+  Resolved <eref target="https://github.com/httpwg/http-extensions/issues/2"/>.
 </t>
 </section>
 </section>
