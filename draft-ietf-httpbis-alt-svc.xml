@@ -570,7 +570,7 @@ Alt-Svc: h2c=":8000"; ma=60
     </t>
     <t hangText="Origin:">
       An &OPTIONAL; sequence of characters (length determined by subtracting the length of all
-      preceding fields from the frame length) containing the ASCII serialisation of an
+      preceding fields from the frame length) containing the ASCII serialization of an
       origin (<xref target="RFC6454" x:fmt="," x:sec="6.2"/>) that the alternate service is
       applicable to.
     </t>
@@ -801,8 +801,8 @@ Alt-Svc-Used: 1
 
 <section title="Acknowledgements" anchor="acknowledgements">
 <t>
-  Thanks to Eliot Lear, Stephen Farrell, Guy Podjarny, Stephen Ludin, Erik
-  Nygren, Paul Hoffman, Adam Langley, Will Chan and Richard Barnes for their
+  Thanks to Adam Langley, Eliot Lear, Erik Nygren, Guy Podjarny, Paul Hoffman,
+  Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
   feedback and suggestions.
 </t>
 <t>
