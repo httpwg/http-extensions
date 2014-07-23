@@ -895,7 +895,7 @@ Alt-Svc-Used: 1
     <date month="June" year="2014" />
   </front>
   <seriesInfo name="RFC" value="7230" />
-  <x:source href="http://httpwg.github.io/specs/rfc7230.xml"
+  <x:source href="refs/rfc7230.xml"
             basename="https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230"/>
 </reference>
 
