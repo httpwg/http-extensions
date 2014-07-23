@@ -284,7 +284,7 @@
    <xref target="host_security"/> for details), user agents &SHOULD; examine cached alternative
    services when they detect a change in network configuration, and remove any
    that could be compromised (for example, those whose association with the trust
-   root is questionable). UAs that do not have a means of detecting network
+   root is questionable). User agents that do not have a means of detecting network
    changes &SHOULD; place an upper bound on their lifetime.
 </t>
 </section>
