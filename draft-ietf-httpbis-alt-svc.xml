@@ -597,7 +597,8 @@ Alt-Svc: h2c=":8000"; ma=60
 </t>
 <figure>
 <artwork type="abnf2616">
-Alt-Svc-Used     = ("1" / "0") *( OWS ";" OWS Alt-Svc-Used-Ext )
+Alt-Svc-Used     = Alt-Svc-Flag *( OWS ";" OWS Alt-Svc-Used-Ext )
+Alt-Svc-Flag     = "1" / "0"
 Alt-Svc-Used-Ext = token "=" ( token / quoted-string )
 </artwork>
 </figure>
@@ -610,6 +611,10 @@ Alt-Svc-Used-Ext = token "=" ( token / quoted-string )
 <t>
    When using an alternative service, clients &MUST; include a Alt-Svc-Used
    header field in all requests.
+</t>
+<t>
+   An Alt-Svc-Flag value of "1" indicates that an alternate service was used,
+   while "0" means it was not.
 </t>
 <figure>
   <preamble>For example:</preamble>
