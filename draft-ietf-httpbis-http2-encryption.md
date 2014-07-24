@@ -262,7 +262,7 @@ MUST clear cached alternative service information when clearing other origin-bas
 cookies).
 
 
-## Confusion on Status
+## Confusion Regarding Request Scheme
 
 Many existing HTTP/1.1 implementations use the presence or absence of TLS in the stack to determine
 whether requests are for `http` or `https` resources.  This is necessary in many cases because the
