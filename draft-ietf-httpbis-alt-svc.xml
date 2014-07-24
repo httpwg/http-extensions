@@ -34,7 +34,7 @@
      xmlns:x="http://purl.org/net/xml2rfc/ext">
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
   <front>
-    <title abbrev="Alternative Services">HTTP Alternative Services</title>
+    <title>HTTP Alternative Services</title>
 
     <author initials="M." surname="Nottingham" fullname="Mark Nottingham">
       <organization>Akamai</organization>
@@ -589,9 +589,9 @@ Alt-Svc: h2c=":8000"; ma=60
 </t>
 <figure>
 <artwork type="abnf2616">
-Alt-Svc-Used     = Alt-Svc-Flag *( OWS ";" OWS Alt-Svc-Used-Ext )
-Alt-Svc-Flag     = "1" / "0"
-Alt-Svc-Used-Ext = token "=" ( token / quoted-string )
+Alt-Svc-Used     = use-flag *( OWS ";" OWS ext-param )
+use-flag         = "1" / "0"
+ext-param        = token "=" ( token / quoted-string )
 </artwork>
 </figure>
 <t>
@@ -605,7 +605,7 @@ Alt-Svc-Used-Ext = token "=" ( token / quoted-string )
    header field in all requests.
 </t>
 <t>
-   An Alt-Svc-Flag value of "1" indicates that an alternate service was used,
+   A flag value of "1" indicates that an alternate service was used,
    while "0" means it was not.
 </t>
 <figure>
@@ -617,7 +617,7 @@ Alt-Svc-Used: 1
 </artwork>
 </figure>
 <t>
-  The extension parameters (Alt-Svc-Used-Ext) are reserved for future use;
+  The extension parameters (ext-param) are reserved for future use;
   specifications that want to define an extension will need to update this
   document (and ought to introduce an extension registry).
 </t>
