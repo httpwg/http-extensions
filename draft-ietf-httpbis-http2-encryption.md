@@ -43,29 +43,31 @@ informative:
 
 --- abstract
 
-This document describes how "http" URIs can be accessed using Transport Layer Security (TLS) to
+This document describes how `http` URIs can be accessed using Transport Layer Security (TLS) to
 mitigate pervasive monitoring attacks.
 
 --- middle
 
 # Introduction
 
-This document describes how to use HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to
-decouple the URI scheme from the use and configuration of underlying encryption, thereby allowing a
-"http" URI to be accessed using TLS {{RFC5246}} opportunistically.
 
-Currently, "https" URIs require acquiring and configuring a valid certificate, which is difficult
-for some deployments to do. Therefore, this document specifies a way for sites to serve "http" URIs
-over TLS without necessarily supporting strong server authentication.
+This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to decouple
+the URI scheme from the use and configuration of underlying encryption, allowing a `http`
+URI to be accessed using TLS {{RFC5246}} opportunistically.
+
+Currently, `https` URIs require acquiring and configuring a valid certificate, which means that
+some deployments find supporting TLS difficult. Therefore, this document describes a usage model
+whereby sites can serve `http` URIs over TLS without being required to support strong server
+authentication.
 
 Opportunistic Security {{I-D.dukhovni-opportunistic-security}} does not provide the same guarantees
-as using TLS with "https" URIs; it is vulnerable to active attacks, and does not change the security
+as using TLS with `https` URIs; it is vulnerable to active attacks, and does not change the security
 context of the connection. Normally, users will not be able to tell that it is in use (i.e., there
 will be no "lock icon").
 
 By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
 them is described in {{http-tls}}. It does not offer the same level of protection as afforded to
-"https" URIs, but increases the likelihood that an active attack be detected.
+`https` URIs, but increases the likelihood that an active attack be detected.
 
 
 ## Goals and Non-Goals
@@ -74,7 +76,7 @@ The immediate goal is to make the use of HTTP more robust in the face of pervasi
 monitoring {{RFC7258}}.
 
 A secondary goal is to limit the potential for active attacks. It is not intended to offer the same
-level of protection as afforded to "https" URIs, but instead to increase the likelihood that an
+level of protection as afforded to `https` URIs, but instead to increase the likelihood that an
 active attack can be detected.
 
 A final (but significant) goal is to provide for ease of implementation, deployment and operation.
@@ -91,9 +93,9 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # Using HTTP URIs over TLS
 
-An origin server that supports the resolution of "http" URIs can indicate support for this
-specification by advertising an alternative service {{I-D.ietf-httpbis-alt-svc}} with a
-protocol identifier that uses TLS, such as "h2" {{I-D.ietf-httpbis-http2}}.
+An origin server that supports the resolution of `http` URIs can indicate support for this
+specification by providing an alternative service advertisement {{I-D.ietf-httpbis-alt-svc}} for a
+protocol identifier that uses TLS, such as `h2` {{I-D.ietf-httpbis-http2}}.
 
 A client that receives such an advertisement MAY make future requests intended for the associated
 origin ({{RFC6454}}) to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
@@ -115,7 +117,7 @@ only implied by "https" URIs. Furthermore, doing so (as per {{RFC2818}}) creates
 operational challenges. For these reasons, server authentication is not mandatory for "http" URIs
 when using the mechanism described in this specification.
 
-When connecting to an alternative service for an "http" URI, clients are not required to perform the
+When connecting to an alternative service for an `http` URI, clients are not required to perform the
 server authentication procedure described in Section 3.1 of {{RFC2818}}. The server certificate, if
 one is proffered by the alternative service, is not necessarily checked for validity, expiration,
 issuance by a trusted certificate authority or matched against the name in the URI. Therefore, the
@@ -133,16 +135,16 @@ the origin's host); for example, using TLS with a certificate that validates as 
 
 # Interaction with "https" URIs
 
-When using alternative services, both "http" and "https" URIs might use the same connection,
-because HTTP/2 permits coalescing multiple origins.
+When using alternative services, both `http` and `https` URIs might use the same connection,
+because HTTP/2 permits requests for multiple origins on the same connection.
 
-Since "https" URIs rely on server authentication, a connection that is initially created for "http"
-URIs without authenticating the server cannot be used for "https" URIs until the server certificate
+Since `https` URIs rely on server authentication, a connection that is initially created for `http`
+URIs without authenticating the server cannot be used for `https` URIs until the server certificate
 is successfully authenticated. Section 3.1 of {{RFC2818}} describes the basic mechanism, though the
 authentication considerations in {{I-D.ietf-httpbis-alt-svc}} also apply.
 
 Connections that are established without any means of server authentication (for instance, the
-purely anonymous TLS cipher suites), cannot be used for "https" URIs.
+purely anonymous TLS cipher suites), cannot be used for `https` URIs.
 
 
 # Requiring Use of TLS {#http-tls}
@@ -201,7 +203,7 @@ When this header field appears in a response, clients MUST strongly authenticate
 service, as described in Section 3.1 of {{RFC2818}}, noting the additional requirements in
 {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if strong authentication fails.
 
-Persisted information expires after a period determined by the value of the "ma" parameter. See
+Persisted information expires after a period determined by the value of the `ma` parameter. See
 Section 4.2.3 of {{RFC7234}} for details of determining response age.
 
     ma-parameter     = delta-seconds
@@ -228,8 +230,8 @@ with "https" URIs, provided that the mechanism can be restricted to a single HTT
 
 ## Security Indicators
 
-User Agents MUST NOT provide any special security indicia when an "http" resource is acquired using
-TLS. In particular, indicators that might suggest the same level of security as "https" MUST NOT be
+User Agents MUST NOT provide any special security indicia when an `http` resource is acquired using
+TLS. In particular, indicators that might suggest the same level of security as `https` MUST NOT be
 used (e.g., using a "lock device").
 
 
