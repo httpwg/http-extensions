@@ -273,8 +273,8 @@ this means using the authority form for requests.  This introduces the potential
 since a server might erroneously provide a response for the `https` scheme in response to an
 `http`-schemed response over TLS.  This offers
 
-<cref>Open issue: do we want to require an explicit indication from HTTP/1.1 servers so that clients
-can be assured that this error did not occur?</cref>
+<t><cref>Open issue: do we want to require an explicit indication from HTTP/1.1 servers so that
+clients can be assured that this error did not occur?</cref></t>
 
 
 
