@@ -260,6 +260,21 @@ MUST clear cached alternative service information when clearing other origin-bas
 cookies).
 
 
+## Confusion on Status
+
+Many existing HTTP/1.1 implementations use the presence or absence of TLS in the stack to determine
+whether requests are for `http` or `https` resources.  This is necessary in many cases because the
+most common form of an HTTP/1.1 request does not carry an explicit indication of the URI scheme.
+
+Opportunistically secured HTTP requests MUST include an explicit scheme identifier.  For HTTP/1.1,
+this means using the authority form for requests.  This introduces the potential for confusion,
+since a server might erroneously provide a response for the `https` scheme in response to an
+`http`-schemed response over TLS.  This offers
+
+<cref>Open issue: do we want to require an explicit indication from HTTP/1.1 servers so that clients
+can be assured that this error did not occur?</cref>
+
+
 
 --- back
 
