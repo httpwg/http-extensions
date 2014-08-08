@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced.
+     An alternate method (rfc include) is described in the references. -->
+
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC2629 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2629.xml">
+<!ENTITY RFC7230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml">
+<!ENTITY RFC5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
+<!ENTITY RFC6544 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6544.xml">
+<!ENTITY RFC7231 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7231.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='lib/rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs),
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e., [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="std" docName="draft-ietf-httpbis-tunnel-protocol" ipr="trust200902">
+  <!-- category values: std, bcp, info, exp, and historic
+     ipr values: trust200902, noModificationTrust200902, noDerivativesTrust200902,
+        or pre5378Trust200902
+     you can add the attributes updates="NNNN" and obsoletes="NNNN"
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <title abbrev="HTTP Connect - Tunnel Protocol">HTTP Connect - Tunnel Protocol For WebRTC</title>
+
+
+       <author fullname="Andrew Hutton" initials="A."
+            surname="Hutton">
+      <organization>Unify</organization>
+      <address>
+        <postal>
+          <street>Technology Drive</street>
+          <city>Nottingham</city>
+          <region></region>
+          <code>NG9 1LA</code>
+          <country>UK</country>
+        </postal>
+        <email>andrew.hutton@unify.com</email>
+      </address>
+    </author>
+
+   <author fullname="Justin Uberti" initials="J."
+            surname="Uberti">
+      <organization>Google</organization>
+      <address>
+        <postal>
+          <street>747 6th Ave S</street>
+          <city>Kirkland</city>
+          <region>WA</region>
+          <code>98033</code>
+          <country>US</country>
+        </postal>
+        <email>justin@uberti.name</email>
+      </address>
+    </author>
+
+     <author fullname="Martin Thomson" initials="M."
+            surname="Thomson">
+      <organization>Mozilla</organization>
+      <address>
+        <postal>
+          <street>331 E Evelyn Street</street>
+          <city>Mountain View</city>
+          <region>CA</region>
+          <code>94041</code>
+          <country>US</country>
+        </postal>
+        <email>martin.thomson@gmail.com</email>
+      </address>
+    </author>
+
+    <date year="2014" />
+
+    <area>General</area>
+
+    <workgroup>Internet Engineering Task Force</workgroup>
+
+    <keyword>WebRTC, HTTP Connect, Firewall, HTTP proxy</keyword>
+
+    <abstract>
+      <t>
+      This document describes a mechanism to enable HTTP Clients to provide an indication within a HTTP Connect request as to which protocol will be used within the tunnel established to the Server identified by the target resource. The tunneled protocol is declared using the Tunnel-Protocol HTTP Request header field. Label usage relating to the use of HTTP Connect by WebRTC clients (e.g. turn, webrtc) are described in this document.
+       </t>
+    </abstract>
+   
+  </front>
+  
+ 
+
+  <middle>
+
+    <section title="Introduction">
+      <t>
+      The HTTP Connect method (Section 4.3.6 of <xref target="RFC7231"></xref>) requests that the recipient establish a tunnel to the destination origin server identified by the request-target and thereafter forward packets, in both directions, until the tunnel is closed. Such tunnels are commonly used to create end-to-end virtual connections, through one or more proxies, which may then be secured using TLS (Transport Layer Security, <xref target="RFC5246"></xref>).
+      </t>
+      <t>
+      The RTCWEB use cases and requirements document <xref target="I-D.ietf-rtcweb-use-cases-and-requirements"></xref> includes a requirement that a WebRTC Client must be able to send streams and data to a peer in the presence of Firewalls that only allow traffic via a HTTP Proxy, when Firewall policy allows WebRTC traffic. To facilitate this and to allow such a HTTP Proxy to be provided with an indication that WebRTC related real-time media is to be included in the tunnel this specification defines the Tunnel-Protocol Request header field and associated labels. This allows the proxy to identify the protocol being used in the tunnel as early as possible therefore enabling the proxy to make informed policy decisions. The type of policy decisions the proxy may make is not specified here but may include rejecting the request with a HTTP status code responses or prioritizing connections. As described in Section 4.3.6 of <xref target="RFC7231"></xref> and 2xx response indicates consent for the client to switch to tunnel mode.
+      </t>
+      <t>
+      The HTTP Tunnel-Protocol header field may be used in conjunction with and complements the application layer next protocol extension <xref target="I-D.ietf-tls-applayerprotoneg"></xref> specified for TLS <xref target="RFC5246"></xref>".  In the scenario where the HTTP Connect is used to establish a TLS tunnel then the HTTP Tunnel-Protocol may be used to carry the same next protocol label as carried within the TLS handshake. However, the HTTP-Protocol is an indication rather a negotiation since the HTTP Proxy does not implement the tunneled protocol. ALPN Labels are already defined for TURN in <xref target="I-D.patil-tram-alpn"></xref> and WebRTC <xref target="I-D.thomson-rtcweb-alpn"></xref> and are re-used here.
+      </t>
+            
+      <section title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in <xref
+        target="RFC2119">RFC 2119</xref>.</t>
+      </section>
+    </section>
+    
+    <section title="Use Cases">
+    <t>
+    The following two use cases are considered:
+       <list style="symbols">
+       <t>The WebRTC Client issues a HTTP CONNECT request to the HTTP proxy with the TURN server address in the Request URI.
+       </t>
+       <t>The WebRTC Client issues a HTTP CONNECT request to the HTTP proxy with the TCP address of a WebRTC peer in the Request URI.  This is used in the case of establishing ICE-TCP <xref target="RFC6544"></xref> with a WebRTC Peer.
+       </t>
+       </list>
+     </t>
+     </section>
+     
+  <section title="The Tunnel-Protocol HTTP Request Header Field">
+    <t>
+    The client MAY include the Tunnel-Protocol Request Header field in a HTTP Connect request to indicate the application layer protocol within the tunnel.
+    </t>
+  <section title="Header Field Values">
+    <t>
+		Valid values for the protocol field are taken from the registry established in <xref target="I-D.ietf-tls-applayerprotoneg"></xref>.  For the purposes of WebRTC, the values "webrtc" <xref target="I-D.thomson-rtcweb-alpn"></xref> and "turn" <xref target="I-D.patil-tram-alpn"></xref> are applicable.
+    </t>
+   </section>
+    
+    
+    <section title="Syntax">
+    <t>The ABNF (Augmented Backus-Naur Form) syntax for the Tunnel-Protocol header field is given below.  It is based on the Generic Grammar defined in Section 2 of <xref target="RFC7230"></xref>.
+    </t>
+	<t>
+     Tunnel-Protocol		= "Tunnel-Protocol":" protocol | protocol-extension
+    </t><t>                             
+     protocol				= "webrtc" | "turn"
+     </t><t> 
+     protocol-extension		= token
+	</t>       
+    </section>
+    
+    <section title="TURN as the Tunnel Protocol">
+	    <t> The RTCWEB transports specification <xref target="I-D.ietf-rtcweb-transports"></xref> requires that a WebRTC client support the modes of TURN that uses TCP and TLS between the client and the TURN server in order to deal with firewalls blocking UDP traffic. In the case where HTTP Connect is used to establish a tunnel to the TURN server the client SHOULD include the "Tunnel-Protocol" header field with the value "turn" <xref target="I-D.patil-tram-alpn"></xref> as shown in the example below.
+		 </t>
+		 <figure><artwork><![CDATA[
+		 CONNECT turn_server.example.com:5349 HTTP/1.1
+		 Host: turn_server.example.com:5349
+		 Tunnel-Protocol: turn
+		]]></artwork></figure>
+		
+    </section>
+    
+    
+    <section title="ICE-TCP / WebRTC as the Tunnel Protocol">   
+	    <t><xref target="I-D.ietf-rtcweb-transports"></xref> also requires that a WebRTC client support ICE-TCP <xref target="RFC6544"></xref> as a mechanism to allow webrtc applications to communicate to peers with public IP addresses across UDP-blocking firewalls without using a TURN server. In this case the client SHOULD include the "Tunnel-Protocol" header field with the value "webrtc" <xref target="I-D.thomson-rtcweb-alpn"></xref> as shown in the example below. 
+	    </t>
+		<figure><artwork><![CDATA[
+	     CONNECT 198.51.100.0:8999 HTTP/1.1
+	     Host: 198.51.100.0:8999
+	     Tunnel-Protocol: webrtc
+		]]></artwork></figure>   
+	
+		<t>Note: The protocol "c_webrtc" described in  <xref target="I-D.thomson-rtcweb-alpn"></xref>  is not relevent in this context and when used at the TLS layer the client SHOULD use "webrtc" in the Tunnel-Protocol header. OPEN ISSUE - Is this correct?       
+	    </t>
+	
+	</section>  
+
+  </section>
+  
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>To Be Added</t>
+     </section>
+
+    <section anchor="Security" title="Security Considerations">
+        <t>
+		In case of using HTTP CONNECT to a TURN server  the security consideration of <xref target="RFC7231"></xref>, Section-4.3.6] apply. It states that there "are significant risks in establishing a tunnel to arbitrary servers, particularly when the destination is a well-known or reserved TCP port that is not intended for Web traffic. Proxies that support CONNECT SHOULD restrict its use to a limited set of known ports or a configurable whitelist of safe request targets."
+		</t>
+	<t>
+	The Tunnel-Protocol request header field described in this document is an optional header and HTTP Proxies may of course not support the header and therefore ignore it. If the header is not present or ignored then the proxy has no explicit indication as to the purpose of the tunnel on which to provide consent, this is the generic case that exists without the Tunnel-Protocol header.
+		</t>
+    </section>
+  </middle>
+
+  <back>
+    <!-- References split into informative and normative -->
+
+
+
+    <references title="Normative References">
+      &RFC2119;
+      &RFC7230;
+      &RFC7231;
+      <?rfc include="reference.I-D.patil-tram-alpn.xml"?>
+      <?rfc include="reference.I-D.thomson-rtcweb-alpn.xml"?>
+     </references>
+    
+   
+
+    <references title="Informative References">
+
+      &RFC5246;
+      &RFC6544;
+      <?rfc include="reference.I-D.ietf-tls-applayerprotoneg.xml"?>
+      <?rfc include="reference.I-D.ietf-rtcweb-use-cases-and-requirements.xml"?>
+      <?rfc include="reference.I-D.ietf-rtcweb-transports.xml"?>
+      </references>
+      
+       
+
+<!--
+   <section anchor="app-additional" title="Additional Stuff">
+      <t>This becomes an Appendix.</t>
+    </section>
+
+   Change Log
+
+-->
+  </back>
+</rfc>
