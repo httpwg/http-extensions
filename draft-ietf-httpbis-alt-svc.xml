@@ -34,7 +34,7 @@
      xmlns:x="http://purl.org/net/xml2rfc/ext">
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
   <front>
-    <title abbrev="Alternative Services">HTTP Alternative Services</title>
+    <title>HTTP Alternative Services</title>
 
     <author initials="M." surname="Nottingham" fullname="Mark Nottingham">
       <organization>Akamai</organization>
@@ -64,6 +64,8 @@
     <area>Applications</area>
     <workgroup>HTTPbis</workgroup>
     <keyword>HTTP</keyword>
+    <keyword>ALPN</keyword>
+    <keyword>Alternate Services</keyword>
 
     <abstract>
       <t>
@@ -80,8 +82,10 @@
       </t>
       <t>
         Working Group information can be found at <eref
-        target="https://tools.ietf.org/wg/httpbis/"/>; that specific to HTTP/2 are at <eref
-        target="https://http2.github.io/"/>.
+        target="https://tools.ietf.org/wg/httpbis/"/>
+        and <eref target="http://httpwg.github.io/"/>; source code and issues
+        list for this draft can be found at
+        <eref target="https://github.com/httpwg/http-extensions"/>.
       </t>
       <t>
         The changes in this draft are summarized in <xref
@@ -219,7 +223,7 @@
   Formally, an alternative service is identified by the combination of:
   <list style="symbols">
     <t>An Application Layer Protocol Negotiation (ALPN) protocol, as per
-    <xref target="ALPN"/></t>
+    <xref target="RFC7301"/></t>
     <t>A host, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.2"/></t>
     <t>A port, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.3"/></t>
   </list>
@@ -276,12 +280,8 @@
    for establishing new requests, not limiting the use of existing ones.
 </t>
 <t>
-   To mitigate risks associated with caching compromised values (see
-   <xref target="host_security"/> for details), user agents &SHOULD; examine cached alternative
-   services when they detect a change in network configuration, and remove any
-   that could be compromised (for example, those whose association with the trust
-   root is questionable). UAs that do not have a means of detecting network
-   changes &SHOULD; place an upper bound on their lifetime.
+   Clients ought to consider that changes in network configurations can
+   result in suboptimal or compromised cached alternative services.
 </t>
 </section>
 
@@ -413,10 +413,6 @@ Alt-Svc: http2="new.example.org:80"
 </texttable>
 <t>
    Alt-Svc &MAY; occur in any HTTP response message, regardless of the status code.
-</t>
-<t>
-   Alt-Svc does not allow advertisement of alternative services on other hosts, to
-   protect against various header-based attacks.
 </t>
 <figure>
   <preamble>It can, however, have multiple values:</preamble>
@@ -566,7 +562,7 @@ Alt-Svc: h2c=":8000"; ma=60
     </t>
     <t hangText="Origin:">
       An &OPTIONAL; sequence of characters (length determined by subtracting the length of all
-      preceding fields from the frame length) containing the ASCII serialisation of an
+      preceding fields from the frame length) containing the ASCII serialization of an
       origin (<xref target="RFC6454" x:fmt="," x:sec="6.2"/>) that the alternate service is
       applicable to.
     </t>
@@ -593,8 +589,9 @@ Alt-Svc: h2c=":8000"; ma=60
 </t>
 <figure>
 <artwork type="abnf2616">
-Alt-Svc-Used     = ("1" / "0") *( OWS ";" OWS Alt-Svc-Used-Ext )
-Alt-Svc-Used-Ext = token "=" ( token / quoted-string )
+Alt-Svc-Used     = use-flag *( OWS ";" OWS ext-param )
+use-flag         = "1" / "0"
+ext-param        = token "=" ( token / quoted-string )
 </artwork>
 </figure>
 <t>
@@ -607,6 +604,10 @@ Alt-Svc-Used-Ext = token "=" ( token / quoted-string )
    When using an alternative service, clients &MUST; include a Alt-Svc-Used
    header field in all requests.
 </t>
+<t>
+   A flag value of "1" indicates that an alternate service was used,
+   while "0" means it was not.
+</t>
 <figure>
   <preamble>For example:</preamble>
   <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
@@ -616,7 +617,7 @@ Alt-Svc-Used: 1
 </artwork>
 </figure>
 <t>
-  The extension parameters (Alt-Svc-Used-Ext) are reserved for future use;
+  The extension parameters (ext-param) are reserved for future use;
   specifications that want to define an extension will need to update this
   document (and ought to introduce an extension registry).
 </t>
@@ -751,10 +752,6 @@ Alt-Svc-Used: 1
    lifetime, so that the user agent still directs traffic to the attacker even when
    not using the intermediary.
 </t>
-<t>
-   As a result, there is a requirement in <xref target="caching"/> to examine cached alternative
-   services when a network change is detected.
-</t>
 </section>
 
 <section title="Changing Protocols" anchor="changing-protocols">
@@ -797,8 +794,8 @@ Alt-Svc-Used: 1
 
 <section title="Acknowledgements" anchor="acknowledgements">
 <t>
-  Thanks to Eliot Lear, Stephen Farrell, Guy Podjarny, Stephen Ludin, Erik
-  Nygren, Paul Hoffman, Adam Langley, Will Chan and Richard Barnes for their
+  Thanks to Adam Langley, Eliot Lear, Erik Nygren, Guy Podjarny, Paul Hoffman,
+  Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
   feedback and suggestions.
 </t>
 <t>
@@ -898,7 +895,7 @@ Alt-Svc-Used: 1
     <date month="June" year="2014" />
   </front>
   <seriesInfo name="RFC" value="7230" />
-  <x:source href="http://httpwg.github.io/specs/rfc7230.xml"
+  <x:source href="refs/rfc7230.xml"
             basename="https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230"/>
 </reference>
 
@@ -920,20 +917,20 @@ Alt-Svc-Used: 1
     <date month="June" year="2014" />
   </front>
   <seriesInfo name="RFC" value="7234"/>
-  <x:source href="http://httpwg.github.io/specs/rfc7234.xml"
+  <x:source href="refs/rfc7234.xml"
             basename="https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7234"/>
 </reference>
 
-<reference anchor="ALPN">
+<reference anchor="RFC7301">
   <front>
-    <title>Transport Layer Security (TLS) Application Layer Protocol Negotiation Extension</title>
+    <title>Transport Layer Security (TLS) Application-Layer Protocol Negotiation Extension</title>
     <author initials="S." surname="Friedl" fullname="Stephan Friedl"/>
     <author initials="A." surname="Popov" fullname="Andrey Popov"/>
     <author initials="A." surname="Langley" fullname="Adam Langley"/>
     <author initials="S." surname="Emile" fullname="Stephan Emile"/>
-    <date month="March" year="2014"/>
+    <date month="July" year="2014"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-tls-applayerprotoneg-05"/>
+  <seriesInfo name="RFC" value="7301"/>
 </reference>
 
 <reference anchor="HTTP2">
@@ -945,7 +942,7 @@ Alt-Svc-Used: 1
     <date month="June" year="2014"/>
   </front>
   <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-http2-13"/>
-  <x:source href="https://raw.githubusercontent.com/http2/http2-spec/master/draft-ietf-httpbis-http2.xml"/>
+  <x:source href="refs/draft-ietf-httpbis-http2-13.xml"/>
 </reference>
 
 </references>
@@ -1012,8 +1009,19 @@ Alt-Svc-Used: 1
 <t>
   Moved definition of status code 421 to HTTP/2.
 </t>
+<t>
+  Partly resolved <eref target="https://github.com/httpwg/http-extensions/issues/5"/>.
+</t>
 </section>
 
+<section title="Since draft-ietf-httpbis-alt-svc-02" anchor="changes.since.draft-ietf-httpbis-alt-svc-02">
+<t>
+  Updated ALPN reference.
+</t>
+<t>
+  Resolved <eref target="https://github.com/httpwg/http-extensions/issues/2"/>.
+</t>
+</section>
 </section>
 
   </back>
