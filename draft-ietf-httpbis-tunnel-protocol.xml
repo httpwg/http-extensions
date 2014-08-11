@@ -132,7 +132,7 @@
      
   <section title="The Tunnel-Protocol HTTP Request Header Field">
     <t>
-    The client MAY include the Tunnel-Protocol Request Header field in a HTTP Connect request to indicate the application layer protocol within the tunnel.
+    Clients include the Tunnel-Protocol Request Header field in a HTTP Connect request to indicate the application layer protocol used within the tunnel.
     </t>
   <section title="Header Field Values">
     <t>
