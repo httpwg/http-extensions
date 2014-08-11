@@ -131,7 +131,7 @@
         <t>ALPN protocol names are octet sequences with no additional constraints on format. Octets not allowed in tokens (<xref target="RFC7230"/>, Section 3.2.6) must be percent-encoded as per Section 2.1 of <xref target="RFC3986"/>. Consequently, the octet representing the percent character "%" (hex 25) must be percent-encoded as well.</t>
         <t>In order to have precisely one way to represent any ALPN protocol name, the following additional constraints apply:
 
-       <list style="bullets"><t>Octets in the ALPN protocol must not be percent-encoded if they are valid token characters except "%", and</t><t>When using percent-encoding, uppercase hex digits must be used.</t></list>
+       <list style="symbols"><t>Octets in the ALPN protocol must not be percent-encoded if they are valid token characters except "%", and</t><t>When using percent-encoding, uppercase hex digits must be used.</t></list>
      </t>
         <t>With these constraints, recipients can apply simple string comparison to match protocol identifiers.</t>
         <t>For example:
