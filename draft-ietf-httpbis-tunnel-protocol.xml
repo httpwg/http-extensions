@@ -86,7 +86,9 @@
     <date year="2014"/>
     <area>General</area>
     <workgroup>Internet Engineering Task Force</workgroup>
-    <keyword>HTTP Connect, Firewall, HTTP proxy</keyword>
+    <keyword>HTTP CONNECT</keyword>
+    <keyword>Firewall</keyword>
+    <keyword>HTTP proxy</keyword>
     <abstract>
       <t>
       This specification allows HTTP CONNECT requests to indicate what protocol will be used within the tunnel once established, using the Tunnel-Protocol request header field.
