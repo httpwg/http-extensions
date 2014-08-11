@@ -9,6 +9,7 @@
 <!ENTITY RFC5246 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
 <!ENTITY RFC7230 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
 <!ENTITY RFC7231 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7231.xml">
+<!ENTITY RFC7301 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7301.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='lib/rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
@@ -100,7 +101,7 @@
       The HTTP CONNECT method (Section 4.3.6 of <xref target="RFC7231"/>) requests that the recipient establish a tunnel to the identified origin server and thereafter forward packets, in both directions, until the tunnel is closed. Such tunnels are commonly used to create end-to-end virtual connections, through one or more proxies, which may then be secured using TLS (Transport Layer Security, <xref target="RFC5246"/>).
       </t>
       <t>
-      The HTTP Tunnel-Protocol header field identifies the protocol that will be spoken within the tunnel, using the application layer next protocol identifier <xref target="I-D.ietf-tls-applayerprotoneg"/> specified for TLS <xref target="RFC5246"/>". 
+      The HTTP Tunnel-Protocol header field identifies the protocol that will be spoken within the tunnel, using the application layer next protocol identifier <xref target="RFC7301"/> specified for TLS <xref target="RFC5246"/>". 
     </t>
       <t>
     When CONNECT is used to establish a TLS tunnel, the Tunnel-Protocol header field may be used to carry the same next protocol label as was carried within the TLS handshake. However, the HTTP-Protocol is an indication rather a negotiation since HTTP proxies do not implement the tunneled protocol.
@@ -117,7 +118,7 @@
     </t>
       <section title="Header Field Values">
         <t>
-		Valid values for the protocol field are taken from the registry established in <xref target="I-D.ietf-tls-applayerprotoneg"/>.
+		Valid values for the protocol field are taken from the registry established in <xref target="RFC7301"/>.
     </t>
       </section>
       <section title="Syntax">
@@ -165,7 +166,7 @@
       &RFC3986;
       &RFC7230;
       &RFC7231;
-      <?rfc include="reference.I-D.ietf-tls-applayerprotoneg.xml"?>
+      &RFC7301;
      </references>
     <references title="Informative References">
       &RFC5246;
