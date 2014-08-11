@@ -35,7 +35,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-httpbis-tunnel-protocol" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-httpbis-tunnel-protocol-latest" ipr="trust200902">
   <!-- category values: std, bcp, info, exp, and historic
      ipr values: trust200902, noModificationTrust200902, noDerivativesTrust200902,
         or pre5378Trust200902
