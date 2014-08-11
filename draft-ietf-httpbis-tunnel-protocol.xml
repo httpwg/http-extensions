@@ -7,6 +7,7 @@
      An alternate method (rfc include) is described in the references. -->
 
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC3986 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml">
 <!ENTITY RFC5246 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
 <!ENTITY RFC7230 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
 <!ENTITY RFC7231 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7231.xml">
@@ -148,10 +149,22 @@
     <t>The ABNF (Augmented Backus-Naur Form) syntax for the Tunnel-Protocol header field is given below.  It is based on the Generic Grammar defined in Section 2 of <xref target="RFC7230"></xref>.
     </t>
 	<t>
-     Tunnel-Protocol		= "Tunnel-Protocol":" protocol-id
+     Tunnel-Protocol = "Tunnel-Protocol":" protocol-id
     </t><t>                             
-     protocol-id				= token
+     protocol-id     = token ; percent-encoded ALPN protocol identifier
      </t>    
+
+    <t>ALPN protocol names are octet sequences with no additional constraints on format. Octets not allowed in tokens (<xref target="RFC7230"/>, Section 3.2.6) must be percent-encoded as per Section 2.1 of <xref target="RFC3986"/>. Consequently, the octet representing the percent character "%" (hex 25) must be percent-encoded as well.</t>
+
+     <t>In order to have precisely one way to represent any ALPN protocol name, the following additional constraints apply:
+
+       <list style="bullets">
+         <t>Octets in the ALPN protocol must not be percent-encoded if they are valid token characters except "%", and</t>
+           <t>When using percent-encoding, uppercase hex digits must be used.</t>
+       </list>
+     </t>
+
+     <t>With these constraints, recipients can apply simple string comparison to match protocol identifiers.</t>
 
 	    <t>For example:
 		 </t>
@@ -189,6 +202,7 @@
 
     <references title="Normative References">
       &RFC2119;
+      &RFC3986;
       &RFC7230;
       &RFC7231;
      </references>
