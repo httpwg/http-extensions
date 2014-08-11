@@ -205,13 +205,14 @@
       &RFC3986;
       &RFC7230;
       &RFC7231;
+      <?rfc include="reference.I-D.ietf-tls-applayerprotoneg.xml"?>
      </references>
     
    
 
     <references title="Informative References">
       &RFC5246;
-      <?rfc include="reference.I-D.ietf-tls-applayerprotoneg.xml"?>
+
     </references>
       
        
