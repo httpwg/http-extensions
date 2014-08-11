@@ -48,7 +48,7 @@
   <!-- ***** FRONT MATTER ***** -->
 
   <front>
-    <title abbrev="HTTP Connect - Tunnel Protocol">HTTP Connect - Tunnel Protocol For WebRTC</title>
+    <title abbrev="Tunnel-Protocol">The Tunnel-Protocol HTTP Header Field</title>
 
 
        <author fullname="Andrew Hutton" initials="A."
