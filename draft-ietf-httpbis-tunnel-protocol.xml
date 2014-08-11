@@ -6,12 +6,12 @@
      There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. -->
 
-<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC2629 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2629.xml">
-<!ENTITY RFC7230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml">
-<!ENTITY RFC5246 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml">
-<!ENTITY RFC6544 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6544.xml">
-<!ENTITY RFC7231 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7231.xml">
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC2629 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2629.xml">
+<!ENTITY RFC7230 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
+<!ENTITY RFC5246 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
+<!ENTITY RFC6544 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6544.xml">
+<!ENTITY RFC7231 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7231.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='lib/rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
