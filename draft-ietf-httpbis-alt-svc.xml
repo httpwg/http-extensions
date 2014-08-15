@@ -381,23 +381,23 @@ alt-authority = token / quoted-string
 <figure>
   <preamble>For example:</preamble>
    <artwork type="example">
-Alt-Svc: http2=":8000"
+Alt-Svc: h2=":8000"
 </artwork>
 <postamble>
-   This indicates the "http2" protocol on the same host using the
-   indicated port 8000.
+   This indicates the "h2" protocol (<xref target="HTTP2"/>) on the same
+   host using the indicated port 8000.
 </postamble>
 </figure>
 <figure>
   <preamble>An example involving a change of host:</preamble>
    <artwork type="example">
-Alt-Svc: http2="new.example.org:80"
+Alt-Svc: h2="new.example.org:80"
 </artwork>
 <postamble>
-   This indicates the "http2" protocol on the host "new.example.org",
-   running on port 80. Note that the "quoted-string" syntax needs to be used
-   when a host is specified in addition to a port (":" is not an allowed
-   character in "token").
+   This indicates the "h2" protocol on the host "new.example.org", running
+   on port 80. Note that the "quoted-string" syntax needs to be used when a
+   host is specified in addition to a port (":" is not an allowed character
+   in "token").
 </postamble>
 </figure>
 <texttable style="all" align="left">
@@ -406,8 +406,8 @@ Alt-Svc: http2="new.example.org:80"
   <ttcol>protocol-id</ttcol>
   <ttcol>Note</ttcol>
 
-  <c>http2</c>
-  <c>http2</c>
+  <c>h2</c>
+  <c>h2</c>
   <c>No escaping needed</c>
 
   <c>w=x:y#z</c>
