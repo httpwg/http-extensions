@@ -239,6 +239,10 @@
    an HTTP header field (<xref target="alt-svc"/>) and an HTTP/2 frame type
    (<xref target="frame"/>).
 </t>
+<t>
+   The remainder of this section describes requirements that are common to alternative
+   services, regardless of how they are discovered.
+</t>
 
 <section title="Host Authentication" anchor="host_auth">
 <t>
