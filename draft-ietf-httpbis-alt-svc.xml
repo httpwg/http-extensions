@@ -103,15 +103,14 @@
    used to both name and find things to interact with.
 </t>
 <t>
-   In some cases, it is desirable to separate these aspects; to be able to keep
-   the same identifier for a resource, but interact with it using a different
-   location on the network.
+   In some cases, it is desirable to separate identification and location in HTTP; keeping the same
+   identifier for a resource, but interacting with it at a different location on the network.
 </t>
 <t>For example:
   <list style="symbols">
     <t>
-       An origin server might wish to redirect a client to an alternative when it
-       needs to go down for maintenance, or it has found an alternative in a
+       An origin server might wish to redirect a client to a different server when it
+       needs to go down for maintenance, or it has found a server in a
        location that is more local to the client.
     </t>
     <t>
