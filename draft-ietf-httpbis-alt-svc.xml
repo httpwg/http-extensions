@@ -259,10 +259,6 @@
    cannot use it, because there is no mechanism in that protocol to establish
    strong server authentication.
 </t>
-<t>
-   Furthermore, this means that the HTTP Host header field and the SNI information
-   provided in TLS by the client will be that of the origin, not the alternative.
-</t>
 </section>
 
 <section title="Alternative Service Caching" anchor="caching">
@@ -293,6 +289,10 @@
    A client &MUST; only use a TLS-based alternative service if the client also
    supports TLS Server Name Indication (SNI). This supports the conservation of
    IP addresses on the alternative service host.
+</t>
+<t>
+   Note that the SNI information provided in TLS by the client will be that of the origin, not the
+   alternative (as will the Host HTTP header field-value).
 </t>
 </section>
 
