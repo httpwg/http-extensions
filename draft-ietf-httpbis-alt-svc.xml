@@ -246,7 +246,7 @@
 
 <section title="Host Authentication" anchor="host_auth">
 <t>
-   Clients &MUST-NOT; use alternative services with a host other than the origin's
+   Clients &MUST-NOT; use alternative services with a host that is different than the origin's
    without strong server authentication; this mitigates the attack described in
    <xref target="host_security"/>. One way to achieve this is for the alternative to use TLS
    with a certificate that is valid for that origin.
