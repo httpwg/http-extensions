@@ -22,7 +22,7 @@
 <!-- control the table of contents (ToC) -->
 <?rfc toc="yes"?>
 <!-- generate a ToC -->
-<?rfc tocdepth="4"?>
+<?rfc tocdepth="3"?>
 <!-- the number of levels of subsections in ToC. default: 3 -->
 <!-- control references -->
 <?rfc symrefs="yes"?>
@@ -45,6 +45,7 @@
   <!-- ***** FRONT MATTER ***** -->
   <front>
     <title abbrev="Tunnel-Protocol">The Tunnel-Protocol HTTP Request Header Field</title>
+
     <author fullname="Andrew Hutton" initials="A." surname="Hutton">
       <organization>Unify</organization>
       <address>
@@ -57,7 +58,8 @@
         <email>andrew.hutton@unify.com</email>
       </address>
     </author>
-    <author fullname="Justin Uberti" initials="J." surname="Uberti">
+
+   <author fullname="Justin Uberti" initials="J." surname="Uberti">
       <organization>Google</organization>
       <address>
         <postal>
@@ -70,6 +72,7 @@
         <email>justin@uberti.name</email>
       </address>
     </author>
+
     <author fullname="Martin Thomson" initials="M." surname="Thomson">
       <organization>Mozilla</organization>
       <address>
@@ -83,82 +86,145 @@
         <email>martin.thomson@gmail.com</email>
       </address>
     </author>
-    <date year="2014"/>
+
+   <date year="2014"/>
     <area>General</area>
     <workgroup>Internet Engineering Task Force</workgroup>
     <keyword>HTTP CONNECT</keyword>
     <keyword>Firewall</keyword>
     <keyword>HTTP proxy</keyword>
+
     <abstract>
       <t>
-      This specification allows HTTP CONNECT requests to indicate what protocol will be used within the tunnel once established, using the Tunnel-Protocol request header field.
+        This specification allows HTTP CONNECT requests to indicate what
+        protocol will be used within the tunnel once established, using the
+        Tunnel-Protocol request header field.
        </t>
     </abstract>
   </front>
-  <middle>
+
+ <middle>
     <section title="Introduction">
       <t>
-      The HTTP CONNECT method (Section 4.3.6 of <xref target="RFC7231"/>) requests that the recipient establish a tunnel to the identified origin server and thereafter forward packets, in both directions, until the tunnel is closed. Such tunnels are commonly used to create end-to-end virtual connections, through one or more proxies, which may then be secured using TLS (Transport Layer Security, <xref target="RFC5246"/>).
+        The HTTP CONNECT method (Section 4.3.6 of <xref target="RFC7231"/>)
+        requests that the recipient establish a tunnel to the identified origin
+        server and thereafter forward packets, in both directions, until the
+        tunnel is closed. Such tunnels are commonly used to create end-to-end
+        virtual connections, through one or more proxies, which may then be
+        secured using TLS (Transport Layer Security, <xref target="RFC5246"/>).
       </t>
       <t>
-      The HTTP Tunnel-Protocol header field identifies the protocol that will be spoken within the tunnel, using the application layer next protocol identifier <xref target="RFC7301"/> specified for TLS <xref target="RFC5246"/>". 
-    </t>
-      <t>
-    When CONNECT is used to establish a TLS tunnel, the Tunnel-Protocol header field may be used to carry the same next protocol label as was carried within the TLS handshake. However, the HTTP-Protocol is an indication rather a negotiation since HTTP proxies do not implement the tunneled protocol.
+        The HTTP Tunnel-Protocol header field identifies the protocol that will
+        be spoken within the tunnel, using the application layer next protocol
+        identifier <xref target="RFC7301"/> specified for TLS <xref
+        target="RFC5246"/>".
       </t>
+      <t>
+        When CONNECT is used to establish a TLS tunnel, the Tunnel-Protocol
+        header field may be used to carry the same next protocol label as was
+        carried within the TLS handshake. However, the HTTP-Protocol is an
+        indication rather a negotiation since HTTP proxies do not implement the
+        tunneled protocol.
+      </t>
+
       <section title="Requirements Language">
-        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-        document are to be interpreted as described in <xref target="RFC2119">RFC 2119</xref>.</t>
+        <t>
+          The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+          "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+          document are to be interpreted as described in <xref
+          target="RFC2119">RFC 2119</xref>.
+        </t>
       </section>
     </section>
-    <section title="The Tunnel-Protocol HTTP Request Header Field">
+
+   <section title="The Tunnel-Protocol HTTP Request Header Field">
       <t>
-    Clients include the Tunnel-Protocol Request Header field in a HTTP Connect request to indicate the application layer protocol used within the tunnel.
-    </t>
+        Clients include the Tunnel-Protocol Request Header field in a HTTP
+        Connect request to indicate the application layer protocol used within
+        the tunnel.
+      </t>
+
       <section title="Header Field Values">
         <t>
-		Valid values for the protocol field are taken from the registry established in <xref target="RFC7301"/>.
-    </t>
+          Valid values for the protocol field are taken from the registry
+          established in <xref target="RFC7301"/>.
+        </t>
       </section>
-      <section title="Syntax">
-        <t>The ABNF (Augmented Backus-Naur Form) syntax for the Tunnel-Protocol header field is given below.  It is based on the Generic Grammar defined in Section 2 of <xref target="RFC7230"/>.
-    </t>
-        <t>
-     Tunnel-Protocol = "Tunnel-Protocol":" protocol-id
-    </t>
-        <t>                             
-     protocol-id     = token ; percent-encoded ALPN protocol identifier
-     </t>
-        <t>ALPN protocol names are octet sequences with no additional constraints on format. Octets not allowed in tokens (<xref target="RFC7230"/>, Section 3.2.6) must be percent-encoded as per Section 2.1 of <xref target="RFC3986"/>. Consequently, the octet representing the percent character "%" (hex 25) must be percent-encoded as well.</t>
-        <t>In order to have precisely one way to represent any ALPN protocol name, the following additional constraints apply:
 
-       <list style="symbols"><t>Octets in the ALPN protocol must not be percent-encoded if they are valid token characters except "%", and</t><t>When using percent-encoding, uppercase hex digits must be used.</t></list>
-     </t>
-        <t>With these constraints, recipients can apply simple string comparison to match protocol identifiers.</t>
-        <t>For example:
-		 </t>
+     <section title="Syntax">
+        <t>
+          The ABNF (Augmented Backus-Naur Form) syntax for the Tunnel-Protocol
+          header field is given below.  It is based on the Generic Grammar
+          defined in Section 2 of <xref target="RFC7230"/>.
+        </t>
         <figure>
+          <artwork type="abnf"><![CDATA[
+     Tunnel-Protocol = "Tunnel-Protocol":" protocol-id
+     protocol-id     = token ; percent-encoded ALPN protocol identifier
+]]></artwork>
+        </figure>
+        <t>
+          ALPN protocol names are octet sequences with no additional constraints
+          on format. Octets not allowed in tokens (<xref target="RFC7230"/>,
+          Section 3.2.6) must be percent-encoded as per Section 2.1 of <xref
+          target="RFC3986"/>. Consequently, the octet representing the percent
+          character "%" (hex 25) must be percent-encoded as well.
+        </t>
+        <t>
+          In order to have precisely one way to represent any ALPN protocol
+          name, the following additional constraints apply:
+          <list style="symbols">
+            <t>
+              Octets in the ALPN protocol must not be percent-encoded if they
+              are valid token characters except "%", and
+            </t>
+            <t>
+              When using percent-encoding, uppercase hex digits must be used.
+            </t>
+          </list>
+        </t>
+        <t>
+          With these constraints, recipients can apply simple string comparison
+          to match protocol identifiers.
+        </t>
+        <figure>
+          <preamble>
+            For example:
+          </preamble>
           <artwork><![CDATA[
-		 CONNECT turn_server.example.com:5349 HTTP/1.1
-		 Host: turn_server.example.com:5349
-		 Tunnel-Protocol: turn
-		]]></artwork>
+CONNECT turn_server.example.com:5349 HTTP/1.1
+Host: turn_server.example.com:5349
+Tunnel-Protocol: turn
+]]></artwork>
         </figure>
       </section>
     </section>
+
     <section anchor="IANA" title="IANA Considerations">
       <t>To Be Added</t>
     </section>
+
     <section anchor="Security" title="Security Considerations">
       <t>
-		In case of using HTTP CONNECT to a TURN server  the security consideration of <xref target="RFC7231"/>, Section-4.3.6] apply. It states that there "are significant risks in establishing a tunnel to arbitrary servers, particularly when the destination is a well-known or reserved TCP port that is not intended for Web traffic. Proxies that support CONNECT SHOULD restrict its use to a limited set of known ports or a configurable whitelist of safe request targets."
-		</t>
+        In case of using HTTP CONNECT to a TURN server the security
+        consideration of <xref target="RFC7231"/>, Section-4.3.6] apply. It
+        states that there "are significant risks in establishing a tunnel to
+        arbitrary servers, particularly when the destination is a well-known or
+        reserved TCP port that is not intended for Web traffic. Proxies that
+        support CONNECT SHOULD restrict its use to a limited set of known ports
+        or a configurable whitelist of safe request targets."
+      </t>
       <t>
-	The Tunnel-Protocol request header field described in this document is an optional header and HTTP Proxies may of course not support the header and therefore ignore it. If the header is not present or ignored then the proxy has no explicit indication as to the purpose of the tunnel on which to provide consent, this is the generic case that exists without the Tunnel-Protocol header.
-		</t>
+        The Tunnel-Protocol request header field described in this document is
+        an optional header and HTTP Proxies may of course not support the header
+        and therefore ignore it. If the header is not present or ignored then
+        the proxy has no explicit indication as to the purpose of the tunnel on
+        which to provide consent, this is the generic case that exists without
+        the Tunnel-Protocol header.
+      </t>
     </section>
   </middle>
+
   <back>
     <!-- References split into informative and normative -->
     <references title="Normative References">
@@ -167,18 +233,10 @@
       &RFC7230;
       &RFC7231;
       &RFC7301;
-     </references>
-    <references title="Informative References">
-      &RFC5246;
-
     </references>
-    <!--
-   <section anchor="app-additional" title="Additional Stuff">
-      <t>This becomes an Appendix.</t>
-    </section>
 
-   Change Log
-
--->
+   <references title="Informative References">
+      &RFC5246;
+    </references>
   </back>
 </rfc>
