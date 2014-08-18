@@ -201,7 +201,7 @@
    but potentially communication options for that protocol.
 </t>
 <t>
-   This means that clients using an alternative service will change the host, port
+   This means that clients using an alternative service can change the host, port
    and protocol that they are using to fetch resources, but these changes &MUST-NOT;
    be propagated to the application that is using HTTP; from that standpoint, the
    URI being accessed and all information derived from it (scheme, host, port) are
