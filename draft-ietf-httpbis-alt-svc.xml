@@ -507,14 +507,14 @@ Alt-Svc: h2c=":8000"; ma=60
   not support this frame can safely ignore it.
 </t>
 <t>
-  An ALTSVC frame on a client-initiated stream indicates that the conveyed
-  alternative service is associated with the origin of that stream.
+  An ALTSVC frame on from a server to a client on a client-initiated stream indicates that the
+  conveyed alternative service is associated with the origin of that stream.
 </t>
 <t>
-  An ALTSVC frame on stream 0 indicates that the conveyed alternative service is
-  associated with the origin contained in the Origin field of the frame. An
-  association with an origin that the client does not consider authoritative for
-  the current connection &MUST; be ignored.
+  An ALTSVC frame from a server to a client on stream 0 indicates that the conveyed alternative
+  service is associated with the origin contained in the Origin field of the frame. An association
+  with an origin that the client does not consider authoritative for the current connection &MUST;
+  be ignored.
 </t>
 <t>
   The ALTSVC frame type is 0xa (decimal 10).
