@@ -732,10 +732,9 @@ Alt-Svc-Used: 1
 </t>
 <t>
    For example, if an attacker can convince a user agent to send all traffic for
-   "innocent.example.org" to "evil.example.com" by successfully associating it as
-   an alternative service, they can masquerade as that origin. This can be done
-   locally (see mitigations above) or remotely (e.g., by an intermediary as a
-   man-in-the-middle attack).
+   "innocent.example.org" to "evil.example.com" by successfully associating it as an alternative
+   service, they can masquerade as that origin. This can be done locally (see mitigations in <xref
+   target="changing-ports"/>) or remotely (e.g., by an intermediary as a man-in-the-middle attack).
 </t>
 <t>
    This is the reason for the requirement in <xref target="host_auth"/> that any alternative
