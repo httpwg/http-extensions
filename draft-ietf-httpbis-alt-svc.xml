@@ -484,15 +484,15 @@ Alt-Svc: h2c=":8000"; ma=60
 </postamble>
 </figure>
 <t>
+   Note that the freshness lifetime for HTTP caching (here, 600 seconds) does not
+   affect caching of Alt-Svc values.
+</t>
+<t>
    When an Alt-Svc response header field is received from an origin, its value
    invalidates and replaces all cached alternative services for that origin.
 </t>
 <t>
    See <xref target="caching"/> for general requirements on caching alternative services.
-</t>
-<t>
-   Note that the freshness lifetime for HTTP caching (here, 600 seconds) does not
-   affect caching of Alt-Svc values.
 </t>
 </section>
 </section>
