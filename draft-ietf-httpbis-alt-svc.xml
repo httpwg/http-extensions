@@ -128,7 +128,7 @@
 </t>
 <t>
    This specification defines a new concept in HTTP, "Alternative Services",
-   that allows a resource to nominate additional means of interacting with it on
+   that allows an origin server to nominate additional means of interacting with it on
    the network. It defines a general framework for this in <xref
    target="alternative"/>, along with specific mechanisms for advertising their
    existence using HTTP header fields (<xref target="alt-svc"/>) or an HTTP/2
