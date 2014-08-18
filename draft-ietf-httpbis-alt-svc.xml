@@ -263,7 +263,7 @@
 
 <section title="Alternative Service Caching" anchor="caching">
 <t>
-   Mechanisms for discovering alternative services can associate a freshness
+   Mechanisms for discovering alternative services also associate a freshness
    lifetime with them; for example, the Alt-Svc header field uses the "ma"
    parameter.
 </t>
