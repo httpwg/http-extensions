@@ -315,7 +315,7 @@
    service.
 </t>
 <t>
-   The client does not need to block requests; the origin's connection can be
+   The client does not need to block requests on any existing connection; it can be
    used until the alternative connection is established. However, if the security
    properties of the existing connection are weak (e.g. cleartext HTTP/1.1) then
    it might make sense to block until the new connection is fully available in
