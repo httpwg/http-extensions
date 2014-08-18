@@ -209,7 +209,7 @@
 </t>
 <t>
    Importantly, this includes its security context; in particular, when TLS
-   <xref target="RFC5246"/> is in use, the alternative server will need to present a certificate
+   <xref target="RFC5246"/> is in use, the alternative service will need to present a certificate
    for the origin's host name, not that of the alternative. Likewise, the Host
    header field (<xref target="RFC7230" x:fmt="," x:rel="#header.host"/>) is
    still derived from the origin, not the alternative service (just as it would
