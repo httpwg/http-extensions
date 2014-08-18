@@ -429,11 +429,6 @@ Alt-Svc: h2c=":8000", h2=":443"
    with subsequent requests on the same connection.
 </t>
 <t>
-   To reduce the ability of servers to track individual clients over time (see <xref
-   target="tracking"/>), an alternative service indication sent by a client &SHOULD-NOT; include
-   any alternative service information other than the protocol, host and port.
-</t>
-<t>
    When using HTTP/2 (<xref target="HTTP2"/>), clients &SHOULD; instead send an ALTSVC frame.
    A single ALTSVC frame can be sent for a connection; a new frame is not needed for every
    request.
@@ -623,6 +618,11 @@ Alt-Svc-Used: 1
   The extension parameters (ext-param) are reserved for future use;
   specifications that want to define an extension will need to update this
   document (and ought to introduce an extension registry).
+</t>
+<t>
+   To reduce the ability of servers to track individual clients over time (see <xref
+   target="tracking"/>), an alternative service indication sent by a client &SHOULD-NOT; include
+   any alternative service information other than the protocol, host and port.
 </t>
 </section>
 
