@@ -42,26 +42,24 @@ informative:
 
 --- abstract
 
-This describes how "http" URIs can be accessed using Transport Layer Security (TLS) to mitigate
-pervasive monitoring attacks.
+This document describes how "http" URIs can be accessed using Transport Layer Security (TLS) to
+mitigate pervasive monitoring attacks.
 
 --- middle
 
 # Introduction
 
-This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to decouple
-the URI scheme from the use and configuration of underlying encryption, allowing a "http"
-URI to be accessed using TLS {{RFC5246}} opportunistically.
+This document describes how to use HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to
+decouple the URI scheme from the use and configuration of underlying encryption, thereby allowing a
+"http" URI to be accessed using TLS {{RFC5246}} opportunistically.
 
-Currently, "https" URIs requires acquiring and configuring a valid certificate, which means that
-some deployments find supporting TLS difficult. Therefore, this document describes a usage model
-whereby sites can serve "http" URIs over TLS without being required to support strong server
-authentication.
+Currently, "https" URIs require acquiring and configuring a valid certificate, which is difficult
+for some deployments to do. Therefore, this document specifies a way for sites to serve "http" URIs
+over TLS without necessarily supporting strong server authentication.
 
-A mechanism for limiting the potential for active attacks is described in {{http-tls}}. This
-provides clients with additional protection against them for a period after successfully connecting
-to a server using TLS. This does not offer the same level of protection as afforded to "https"
-URIs, but increases the likelihood that an active attack be detected.
+By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
+them is described in {{http-tls}}. It does not offer the same level of protection as afforded to
+"https" URIs, but increases the likelihood that an active attack be detected.
 
 
 ## Goals and Non-Goals
