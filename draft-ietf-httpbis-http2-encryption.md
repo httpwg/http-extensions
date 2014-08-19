@@ -116,14 +116,13 @@ issuance by a trusted certificate authority or matched against the name in the U
 alternative service MAY provide any certificate, or even select TLS cipher suites that do not
 include authentication.
 
-A client MAY perform additional checks on the certificate that it is offered (if the server does
-not select an unauthenticated TLS cipher suite). For instance, a client could examine the
-certificate to see if it has changed over time.
+A client MAY perform additional checks on the offered certificate (if the server does not select an
+unauthenticated TLS cipher suite). For instance, a client could examine the certificate to see if
+it has changed over time.
 
-In order to retain the authority properties of "http" URIs, and as stipulated by
-{{I-D.ietf-httpbis-alt-svc}}, clients MUST NOT use alternative services that identify a host other
-than that of the origin, unless the alternative service itself is strongly authenticated (as the
-origin's host). This is not currently possible for "http" URIs on cleartext transports.
+As stipulated by {{I-D.ietf-httpbis-alt-svc}}, clients MUST NOT use alternative services with a
+host other than the origin's, unless the alternative service itself is strongly authenticated (as
+the origin's host); for example, using TLS with a certificate that validates as per {{RFC2818}}.
 
 
 # Interaction with "https" URIs
