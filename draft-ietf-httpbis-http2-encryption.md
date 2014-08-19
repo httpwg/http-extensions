@@ -85,7 +85,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # Using HTTP URIs over TLS
 
-An origin server that supports the resolution of HTTP URIs can indicate support for this
+An origin server that supports the resolution of "http" URIs can indicate support for this
 specification by advertising an alternative service {{I-D.ietf-httpbis-alt-svc}} with a
 protocol identifier that uses TLS, such as "h2" {{I-D.ietf-httpbis-http2}}.
 
@@ -104,10 +104,10 @@ expire, in order minimize the delays that might be incurred.
 
 # Server Authentication {#auth}
 
-By their nature, HTTP URIs do not require cryptographically strong server authentication; that is
-only implied by HTTPS URIs. Establishing strong server authentication (see {{RFC2818}}) creates a
+By their nature, "http" URIs do not require cryptographically strong server authentication; that is
+only implied by "https" URIs. Establishing strong server authentication (see {{RFC2818}}) creates a
 number of operational challenges. For these reasons, server authentication is not mandatory for
-HTTP URIs when using the mechanism described in this specification.
+"http" URIs when using the mechanism described in this specification.
 
 When connecting to an alternative service for an "http" URI, clients are required to perform the
 server authentication procedure described in Section 3.1 of {{RFC2818}}. The server certificate, if
@@ -130,8 +130,8 @@ origin's host). This is not currently possible for "http" URIs on cleartext tran
 
 An alternative service that is discovered to support "http" URIs might concurrently support "https"
 URIs, because HTTP/2 permits the sending of requests for multiple origins (see {{RFC6454}}) on the
-one connection. Therefore, when using alternative services, both HTTP and HTTPS URIs might be sent
-on the same connection.
+one connection. Therefore, when using alternative services, both "http" and "https" URIs might be
+sent on the same connection.
 
 "https" URIs rely on server authentication. Therefore, if a connection is initially created without
 authenticating the server, requests for "https" resources cannot be sent over that connection until
@@ -218,7 +218,7 @@ over time.
 
 Once a server has indicated that it will support authenticated TLS, a client MAY use key pinning
 {{I-D.ietf-websec-key-pinning}} or any other mechanism that would otherwise be restricted to use
-with HTTPS URIs, provided that the mechanism can be restricted to a single HTTP origin.
+with "https" URIs, provided that the mechanism can be restricted to a single HTTP origin.
 
 
 
