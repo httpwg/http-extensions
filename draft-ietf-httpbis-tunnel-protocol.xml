@@ -117,14 +117,14 @@
         The HTTP Tunnel-Protocol header field identifies the protocol that will
         be spoken within the tunnel, using the application layer next protocol
         identifier <xref target="RFC7301"/> specified for TLS <xref
-        target="RFC5246"/>".
+        target="RFC5246"/>.
       </t>
       <t>
         When CONNECT is used to establish a TLS tunnel, the Tunnel-Protocol
         header field may be used to carry the same next protocol label as was
         carried within the TLS handshake. However, the HTTP-Protocol is an
-        indication rather a negotiation since HTTP proxies do not implement the
-        tunneled protocol.
+        indication rather than a negotiation since HTTP proxies do not implement
+        the tunneled protocol.
       </t>
 
       <section title="Requirements Language">
