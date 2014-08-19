@@ -105,9 +105,9 @@ expire, in order minimize the delays that might be incurred.
 # Server Authentication {#auth}
 
 By their nature, "http" URIs do not require cryptographically strong server authentication; that is
-only implied by "https" URIs. Establishing strong server authentication (see {{RFC2818}}) creates a
-number of operational challenges. For these reasons, server authentication is not mandatory for
-"http" URIs when using the mechanism described in this specification.
+only implied by "https" URIs. Furthermore, doing so (as per {{RFC2818}}) creates a number of
+operational challenges. For these reasons, server authentication is not mandatory for "http" URIs
+when using the mechanism described in this specification.
 
 When connecting to an alternative service for an "http" URI, clients are required to perform the
 server authentication procedure described in Section 3.1 of {{RFC2818}}. The server certificate, if
