@@ -90,7 +90,7 @@ specification by advertising an alternative service {{I-D.ietf-httpbis-alt-svc}}
 protocol identifier that uses TLS, such as "h2" {{I-D.ietf-httpbis-http2}}.
 
 A client that receives such an advertisement MAY make future requests intended for the associated
-origin to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
+origin ({{RFC6454}}) to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
 
 A client that places the importance of protection against passive attacks over performance might
 choose to withhold requests until an encrypted connection is available. However, if such a
@@ -127,10 +127,8 @@ the origin's host); for example, using TLS with a certificate that validates as 
 
 # Interaction with "https" URIs
 
-An alternative service that is discovered to support "http" URIs might concurrently support "https"
-URIs, because HTTP/2 permits the sending of requests for multiple origins (see {{RFC6454}}) on the
-one connection. Therefore, when using alternative services, both "http" and "https" URIs might be
-sent on the same connection.
+When using alternative services, both "http" and "https" URIs might use the same connection,
+because HTTP/2 permits coalescing multiple origins.
 
 "https" URIs rely on server authentication. Therefore, if a connection is initially created without
 authenticating the server, requests for "https" resources cannot be sent over that connection until
