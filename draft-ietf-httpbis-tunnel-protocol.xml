@@ -121,10 +121,16 @@
       </t>
       <t>
         When CONNECT is used to establish a TLS tunnel, the Tunnel-Protocol
-        header field may be used to carry the same next protocol label as was
-        carried within the TLS handshake. However, the HTTP-Protocol is an
-        indication rather than a negotiation since HTTP proxies do not implement
-        the tunneled protocol.
+        header field may be used to carry the same application protocol label as
+        will be carried within the TLS handshake.  If there are multiple
+        possible application protocols, all of those application protocols are
+        indicated.
+      </t>
+      <t>
+        The Tunnel-Protocol header field carries an indication only.  In TLS,
+        the final choice of application protocol is made by the server.  Proxies
+        do not implement the tunneled protocol, though they might choose to make
+        policy decisions based on the value of the header field.
       </t>
 
       <section title="Requirements Language">
@@ -140,8 +146,8 @@
    <section title="The Tunnel-Protocol HTTP Request Header Field">
       <t>
         Clients include the Tunnel-Protocol Request Header field in a HTTP
-        Connect request to indicate the application layer protocol used within
-        the tunnel.
+        Connect request to indicate the application layer protocol or protocols
+        that will be used within the tunnel.
       </t>
 
       <section title="Header Field Values">
@@ -158,10 +164,10 @@
           defined in <xref x:sec="2" x:fmt="of" target="RFC7230"/>.
         </t>
         <figure>
-          <artwork type="abnf2616">
-     Tunnel-Protocol = "Tunnel-Protocol:" protocol-id
-     protocol-id     = token ; percent-encoded ALPN protocol identifier
-</artwork>
+          <artwork type="abnf2616"><![CDATA[
+Tunnel-Protocol = "Tunnel-Protocol":" 1#protocol-id
+protocol-id     = token ; percent-encoded ALPN protocol identifier
+]]></artwork>
         </figure>
         <t>
           ALPN protocol names are octet sequences with no additional constraints
