@@ -250,10 +250,10 @@ validating and persisting it.
 
 ## Privacy Considerations {#privacy}
 
-Clients that persist state for origins can be tracked over time based on their use of this
-information. Persisted information can be cleared to reduce the ability of servers to track
-clients. Clients MUST clear persisted alternative service information when clearing
-other origin-based state (i.e., cookies).
+Cached alternative services can be used to track clients over time; e.g., using a user-unique
+hostname. Clearing the cache reduces the ability of servers to track clients; therefore clients
+MUST clear cached alternative service information when clearing other origin-based state (i.e.,
+cookies).
 
 
 
