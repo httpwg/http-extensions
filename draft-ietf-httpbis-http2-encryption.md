@@ -122,9 +122,9 @@ issuance by a trusted certificate authority or matched against the name in the U
 alternative service MAY provide any certificate, or even select TLS cipher suites that do not
 include authentication.
 
-A client MAY perform additional checks on the offered certificate (if the server does not select an
-unauthenticated TLS cipher suite). For instance, a client could examine the certificate to see if
-it has changed over time.
+A client MAY perform additional checks on the offered certificate if the server does not select an
+unauthenticated TLS cipher suite.  This document doesn't define any such checks, though clients
+could be configured with a policy that defines what is acceptable.
 
 As stipulated by {{I-D.ietf-httpbis-alt-svc}}, clients MUST NOT use alternative services with a
 host other than the origin's, unless the alternative service itself is strongly authenticated (as
