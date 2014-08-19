@@ -42,26 +42,24 @@ informative:
 
 --- abstract
 
-This describes how "http" URIs can be accessed using Transport Layer Security (TLS) to mitigate
-pervasive monitoring attacks.
+This document describes how "http" URIs can be accessed using Transport Layer Security (TLS) to
+mitigate pervasive monitoring attacks.
 
 --- middle
 
 # Introduction
 
-This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to decouple
-the URI scheme from the use and configuration of underlying encryption, allowing a "http"
-URI to be accessed using TLS {{RFC5246}} opportunistically.
+This document describes how to use HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to
+decouple the URI scheme from the use and configuration of underlying encryption, thereby allowing a
+"http" URI to be accessed using TLS {{RFC5246}} opportunistically.
 
-Currently, "https" URIs requires acquiring and configuring a valid certificate, which means that
-some deployments find supporting TLS difficult. Therefore, this document describes a usage model
-whereby sites can serve "http" URIs over TLS without being required to support strong server
-authentication.
+Currently, "https" URIs require acquiring and configuring a valid certificate, which is difficult
+for some deployments to do. Therefore, this document specifies a way for sites to serve "http" URIs
+over TLS without necessarily supporting strong server authentication.
 
-A mechanism for limiting the potential for active attacks is described in {{http-tls}}. This
-provides clients with additional protection against them for a period after successfully connecting
-to a server using TLS. This does not offer the same level of protection as afforded to "https"
-URIs, but increases the likelihood that an active attack be detected.
+By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
+them is described in {{http-tls}}. It does not offer the same level of protection as afforded to
+"https" URIs, but increases the likelihood that an active attack be detected.
 
 
 ## Goals and Non-Goals
@@ -87,29 +85,29 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # Using HTTP URIs over TLS
 
-An origin server that supports the resolution of HTTP URIs can indicate support for this
-specification by providing an alternative service advertisement {{I-D.ietf-httpbis-alt-svc}} for a
+An origin server that supports the resolution of "http" URIs can indicate support for this
+specification by advertising an alternative service {{I-D.ietf-httpbis-alt-svc}} with a
 protocol identifier that uses TLS, such as "h2" {{I-D.ietf-httpbis-http2}}.
 
-A client that receives such an advertisement MAY direct future requests for the associated origin
-to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
+A client that receives such an advertisement MAY make future requests intended for the associated
+origin ({{RFC6454}}) to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
 
-A client that places the importance of passive protections over performance might choose to withold
-requests until an encrypted connection is available. However, if such a connection cannot be
-successfully established, the client MAY resume its use of the cleartext connection.
+A client that places the importance of protection against passive attacks over performance might
+choose to withhold requests until an encrypted connection is available. However, if such a
+connection cannot be successfully established, the client MAY resume its use of the cleartext
+connection.
 
 A client can also explicitly probe for an alternative service advertisement by sending a request
-that bears little or no sensitive information, such as one with the OPTIONS method. Clients with
-expired alternative services information could make a similar request in parallel to an attempt to
-contact an alternative service, to minimize the delays that might be incurred by failing to contact
-the alternative service.
+that bears little or no sensitive information, such as one with the OPTIONS method. Likewise,
+clients with existing alternative services information could make such a request before they
+expire, in order minimize the delays that might be incurred.
 
 # Server Authentication {#auth}
 
-There are no existing expectations with respect to cryptographically strong server authentication
-when it comes to resolving HTTP URIs. Establishing it, as described in {{RFC2818}}, creates a
-number of operational challenges. For these reasons, server authentication is not mandatory for
-HTTP URIs when using the mechanism described in this specification.
+By their nature, "http" URIs do not require cryptographically strong server authentication; that is
+only implied by "https" URIs. Furthermore, doing so (as per {{RFC2818}}) creates a number of
+operational challenges. For these reasons, server authentication is not mandatory for "http" URIs
+when using the mechanism described in this specification.
 
 When connecting to an alternative service for an "http" URI, clients are required to perform the
 server authentication procedure described in Section 3.1 of {{RFC2818}}. The server certificate, if
@@ -118,28 +116,24 @@ issuance by a trusted certificate authority or matched against the name in the U
 alternative service MAY provide any certificate, or even select TLS cipher suites that do not
 include authentication.
 
-A client MAY perform additional checks on the certificate that it is offered (if the server does
-not select an unauthenticated TLS cipher suite). For instance, a client could examine the
-certificate to see if it has changed over time.
+A client MAY perform additional checks on the offered certificate (if the server does not select an
+unauthenticated TLS cipher suite). For instance, a client could examine the certificate to see if
+it has changed over time.
 
-In order to retain the authority properties of "http" URIs, and as stipulated by
-{{I-D.ietf-httpbis-alt-svc}}, clients MUST NOT use alternative services that identify a host other
-than that of the origin, unless the alternative service itself is strongly authenticated (as the
-origin's host). This is not currently possible for "http" URIs on cleartext transports.
+As stipulated by {{I-D.ietf-httpbis-alt-svc}}, clients MUST NOT use alternative services with a
+host other than the origin's, unless the alternative service itself is strongly authenticated (as
+the origin's host); for example, using TLS with a certificate that validates as per {{RFC2818}}.
 
 
 # Interaction with "https" URIs
 
-An alternative service that is discovered to support "http" URIs might concurrently support "https"
-URIs, because HTTP/2 permits the sending of requests for multiple origins (see {{RFC6454}}) on the
-one connection. Therefore, when using alternative services, both HTTP and HTTPS URIs might be sent
-on the same connection.
+When using alternative services, both "http" and "https" URIs might use the same connection,
+because HTTP/2 permits coalescing multiple origins.
 
-"https" URIs rely on server authentication. Therefore, if a connection is initially created without
-authenticating the server, requests for "https" resources cannot be sent over that connection until
-the server certificate is successfully authenticated. Section 3.1 of {{RFC2818}} describes the
-basic mechanism, though the authentication considerations in {{I-D.ietf-httpbis-alt-svc}} could
-also apply.
+Since "https" URIs rely on server authentication, a connection that is initially created for "http"
+URIs without authenticating the server cannot be used for "https" URIs until the server certificate
+is successfully authenticated. Section 3.1 of {{RFC2818}} describes the basic mechanism, though the
+authentication considerations in {{I-D.ietf-httpbis-alt-svc}} also apply.
 
 Connections that are established without any means of server authentication (for instance, the
 purely anonymous TLS cipher suites), cannot be used for "https" URIs.
@@ -220,7 +214,7 @@ over time.
 
 Once a server has indicated that it will support authenticated TLS, a client MAY use key pinning
 {{I-D.ietf-websec-key-pinning}} or any other mechanism that would otherwise be restricted to use
-with HTTPS URIs, provided that the mechanism can be restricted to a single HTTP origin.
+with "https" URIs, provided that the mechanism can be restricted to a single HTTP origin.
 
 
 
@@ -245,21 +239,19 @@ unauthenticated and unencrypted channel, it is subject to downgrade by network a
 simplest form, an attacker that wants the connection to remain in the clear need only strip the
 `Alt-Svc` header field from responses.
 
-As long as a client is willing to use cleartext TCP to contact a server, these attacks are
-possible. The `HTTP-TLS` header field provides an imperfect mechanism for establishing a
-commitment. The advantage is that this only works if a previous connection is established where an
-active attacker was not present. A continuously present active attacker can either prevent the
-client from ever using TLS, or offer a self-signed certificate. This would prevent the client from
-ever seeing the `HTTP-TLS` header field, or if the header field is seen, from successfully
-validating and persisting it.
+Downgrade attacks can be partially mitigated using the `HTTP-TLS` header field, because when it is
+used, a client can avoid using cleartext to contact a supporting server. However, this only works
+when a previous connection has been established without an active attacker present; a continuously
+present active attacker can either prevent the client from ever using TLS, or offer its own
+certificate.
 
 
 ## Privacy Considerations {#privacy}
 
-Clients that persist state for origins can be tracked over time based on their use of this
-information. Persisted information can be cleared to reduce the ability of servers to track
-clients. Clients MUST clear persisted alternative service information when clearing
-other origin-based state (i.e., cookies).
+Cached alternative services can be used to track clients over time; e.g., using a user-specific
+hostname. Clearing the cache reduces the ability of servers to track clients; therefore clients
+MUST clear cached alternative service information when clearing other origin-based state (i.e.,
+cookies).
 
 
 
