@@ -86,21 +86,21 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 # Using HTTP URIs over TLS
 
 An origin server that supports the resolution of HTTP URIs can indicate support for this
-specification by providing an alternative service advertisement {{I-D.ietf-httpbis-alt-svc}} for a
+specification by advertising an alternative service {{I-D.ietf-httpbis-alt-svc}} with a
 protocol identifier that uses TLS, such as "h2" {{I-D.ietf-httpbis-http2}}.
 
-A client that receives such an advertisement MAY direct future requests for the associated origin
-to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
+A client that receives such an advertisement MAY make future requests intended for the associated
+origin to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
 
-A client that places the importance of passive protections over performance might choose to withold
-requests until an encrypted connection is available. However, if such a connection cannot be
-successfully established, the client MAY resume its use of the cleartext connection.
+A client that places the importance of protection against passive attacks over performance might
+choose to withhold requests until an encrypted connection is available. However, if such a
+connection cannot be successfully established, the client MAY resume its use of the cleartext
+connection.
 
 A client can also explicitly probe for an alternative service advertisement by sending a request
-that bears little or no sensitive information, such as one with the OPTIONS method. Clients with
-expired alternative services information could make a similar request in parallel to an attempt to
-contact an alternative service, to minimize the delays that might be incurred by failing to contact
-the alternative service.
+that bears little or no sensitive information, such as one with the OPTIONS method. Likewise,
+clients with existing alternative services information could make such a request before they
+expire, in order minimize the delays that might be incurred.
 
 # Server Authentication {#auth}
 
