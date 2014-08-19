@@ -36,6 +36,7 @@ normative:
   I-D.ietf-websec-key-pinning:
 
 informative:
+  I-D.dukhovni-opportunistic-security:
   RFC6454:
   RFC7258:
 
@@ -56,6 +57,11 @@ decouple the URI scheme from the use and configuration of underlying encryption,
 Currently, "https" URIs require acquiring and configuring a valid certificate, which is difficult
 for some deployments to do. Therefore, this document specifies a way for sites to serve "http" URIs
 over TLS without necessarily supporting strong server authentication.
+
+Opportunistic Security {{I-D.dukhovni-opportunistic-security}} does not provide the same guarantees
+as using TLS with "https" URIs; it is vulnerable to active attacks, and does not change the security
+context of the connection. Normally, users will not be able to tell that it is in use (i.e., there
+will be no "lock icon").
 
 By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
 them is described in {{http-tls}}. It does not offer the same level of protection as afforded to
