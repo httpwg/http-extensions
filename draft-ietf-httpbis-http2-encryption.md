@@ -109,7 +109,7 @@ only implied by "https" URIs. Furthermore, doing so (as per {{RFC2818}}) creates
 operational challenges. For these reasons, server authentication is not mandatory for "http" URIs
 when using the mechanism described in this specification.
 
-When connecting to an alternative service for an "http" URI, clients are required to perform the
+When connecting to an alternative service for an "http" URI, clients are not required to perform the
 server authentication procedure described in Section 3.1 of {{RFC2818}}. The server certificate, if
 one is proffered by the alternative service, is not necessarily checked for validity, expiration,
 issuance by a trusted certificate authority or matched against the name in the URI. Therefore, the
