@@ -239,18 +239,16 @@ unauthenticated and unencrypted channel, it is subject to downgrade by network a
 simplest form, an attacker that wants the connection to remain in the clear need only strip the
 `Alt-Svc` header field from responses.
 
-As long as a client is willing to use cleartext TCP to contact a server, these attacks are
-possible. The `HTTP-TLS` header field provides an imperfect mechanism for establishing a
-commitment. The advantage is that this only works if a previous connection is established where an
-active attacker was not present. A continuously present active attacker can either prevent the
-client from ever using TLS, or offer a self-signed certificate. This would prevent the client from
-ever seeing the `HTTP-TLS` header field, or if the header field is seen, from successfully
-validating and persisting it.
+Downgrade attacks can be partially mitigated using the `HTTP-TLS` header field, because when it is
+used, a client can avoid using cleartext to contact a supporting server. However, this only works
+when a previous connection has been established without an active attacker present; a continuously
+present active attacker can either prevent the client from ever using TLS, or offer its own
+certificate.
 
 
 ## Privacy Considerations {#privacy}
 
-Cached alternative services can be used to track clients over time; e.g., using a user-unique
+Cached alternative services can be used to track clients over time; e.g., using a user-specific
 hostname. Clearing the cache reduces the ability of servers to track clients; therefore clients
 MUST clear cached alternative service information when clearing other origin-based state (i.e.,
 cookies).
