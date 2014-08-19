@@ -130,11 +130,10 @@ the origin's host); for example, using TLS with a certificate that validates as 
 When using alternative services, both "http" and "https" URIs might use the same connection,
 because HTTP/2 permits coalescing multiple origins.
 
-"https" URIs rely on server authentication. Therefore, if a connection is initially created without
-authenticating the server, requests for "https" resources cannot be sent over that connection until
-the server certificate is successfully authenticated. Section 3.1 of {{RFC2818}} describes the
-basic mechanism, though the authentication considerations in {{I-D.ietf-httpbis-alt-svc}} could
-also apply.
+Since "https" URIs rely on server authentication, a connection that is initially created for "http"
+URIs without authenticating the server cannot be used for "https" URIs until the server certificate
+is successfully authenticated. Section 3.1 of {{RFC2818}} describes the basic mechanism, though the
+authentication considerations in {{I-D.ietf-httpbis-alt-svc}} also apply.
 
 Connections that are established without any means of server authentication (for instance, the
 purely anonymous TLS cipher suites), cannot be used for "https" URIs.
