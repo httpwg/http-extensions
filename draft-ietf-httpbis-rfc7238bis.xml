@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc subcompact="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes" ?>
+
+<!DOCTYPE rfc [
+  <!ENTITY mdash "&#8212;">
+  <!ENTITY Note "<x:h xmlns:x='http://purl.org/net/xml2rfc/ext'>Note:</x:h>">
+  <!ENTITY MAY "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MAY</bcp14>">
+  <!ENTITY MUST "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MUST</bcp14>">
+  <!ENTITY MUST-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MUST NOT</bcp14>">
+  <!ENTITY OPTIONAL "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>OPTIONAL</bcp14>">
+  <!ENTITY RECOMMENDED "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>RECOMMENDED</bcp14>">
+  <!ENTITY REQUIRED "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>REQUIRED</bcp14>">
+  <!ENTITY SHALL "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHALL</bcp14>">
+  <!ENTITY SHALL-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHALL NOT</bcp14>">
+  <!ENTITY SHOULD "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD</bcp14>">
+  <!ENTITY SHOULD-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD NOT</bcp14>">
+]>
+<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" obsoletes="7238" xmlns:ed="http://greenbytes.de/2002/rfcedit" ipr="trust200902" docName="draft-ietf-httpbis-rfc7238bis-latest" category="std" xml:lang="en">
+
+  <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
+
+	<front>
+  <title abbrev="HTTP Status Code 308">The Hypertext Transfer Protocol Status Code 308 (Permanent Redirect)</title>
+  <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke">
+    <organization abbrev="greenbytes">greenbytes GmbH</organization>
+    <address>
+      <postal>
+        <street>Hafenweg 16</street>
+        <city>Muenster</city><region>NW</region><code>48155</code>
+        <country>Germany</country>
+      </postal>
+      <email>julian.reschke@greenbytes.de</email>	
+      <uri>http://greenbytes.de/tech/webdav/</uri>	
+    </address>
+  </author>
+
+  <date year="2014"/>
+  
+  <area>Applications</area>
+  <workgroup>HTTPbis</workgroup>
+  <keyword>HTTP</keyword>
+  <keyword>redirect</keyword>
+  <keyword>status code</keyword>
+
+  <abstract>
+    <t>
+      This document specifies the additional Hypertext Transfer Protocol (HTTP)
+      status code 308 (Permanent Redirect). 
+    </t>
+  </abstract>
+  </front>
+
+  <middle>
+<section title="Introduction" anchor="introduction">
+<t>
+  HTTP defines a set of status codes for the purpose of redirecting a request
+  to a different URI (<xref target="RFC3986"/>). The history of these status codes is summarized in
+  <xref target="RFC7231" x:rel="#status.3xx"/>, which
+  also classifies the existing status codes into four categories.
+</t>
+<t>
+  The first of these categories contains the status codes 301 (Moved Permanently),
+  302 (Found), and 307 (Temporary Redirect), which can be classified as below: 
+</t>
+<texttable align="left" suppress-title="true">
+<ttcol/>
+<ttcol>Permanent</ttcol>
+<ttcol>Temporary</ttcol>
+<c>Allows changing the request method from POST to GET</c>
+<c>301</c>
+<c>302</c>
+<c>Does not allow changing the request method from POST to GET</c>
+<c>-</c>
+<c>307</c>
+</texttable>
+<t>
+  <xref target="RFC7231" x:rel="#status.307"/>
+  states that HTTP does not define a permanent variant of status code 307;
+  this specification adds 
+  the status code 308, defining this missing variant (<xref target="status.308"/>).
+</t>
+<t>
+  This specification contains no technical changes from the experimental RFC 7238<!-- (<xref target="RFC7238"/>)-->,
+  which it obsoletes.
+</t>
+</section>  
+
+<section title="Notational Conventions" anchor="notational.conventions">
+<t>
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in <xref target="RFC2119"/>.
+</t>
+</section>
+
+<section title="308 Permanent Redirect" anchor="status.308">
+
+
+<t>
+   The <x:dfn>308 (Permanent Redirect)</x:dfn> status code indicates that the
+   target resource has been assigned a new permanent URI and
+   any future references to this resource ought to use one of the enclosed
+   URIs. Clients with link editing capabilities ought to automatically re-link
+   references to the effective request URI (<xref target="RFC7230" x:rel="#effective.request.uri"/>)
+   to one or more of the new references sent by the server, where possible.
+</t>
+<t>
+   The server &SHOULD; generate a Location header field (<xref target="RFC7231" x:rel="#header.location" x:fmt=","/>) in the
+   response containing a preferred URI reference for the new permanent URI.
+   The user agent &MAY; use the Location field value for automatic redirection.
+   The server's response payload usually contains a short hypertext note with
+   a hyperlink to the new URI(s).
+</t>
+<t>
+   A 308 response is cacheable by default; i.e., unless otherwise indicated by
+   the method definition or explicit cache controls (see <xref target="RFC7234" x:rel="#heuristic.freshness" x:fmt=","/>).
+</t>
+<x:note>
+  <t>
+    &Note; This status code is similar to 301 (Moved Permanently) (<xref target="RFC7231" x:rel="#status.301" x:fmt=","/>), except
+    that it does not allow changing the request method from POST to GET.
+  </t>
+</x:note>
+
+</section>
+
+<section title="Deployment Considerations" anchor="deployment.considerations">
+<t>
+  <xref target="RFC7231" x:rel="#status.codes"/>
+  requires recipients to treat unknown 3xx status codes the same way as
+  status code 300 Multiple Choices (<xref target="RFC7231" x:rel="#status.300" x:fmt=","/>).
+  Thus, servers will not be able to rely on automatic redirection happening
+  similar to status codes 301, 302, or 307.
+</t>
+<t>
+  Therefore, initial use of status code 308 will be restricted to cases where
+  the server has sufficient confidence in the client's understanding the new 
+  code or when a fallback to the semantics of status code 300 is not problematic.
+  Server implementers are advised not to vary the status code based on
+  characteristics of the request, such as the User-Agent header field
+  ("User-Agent Sniffing") &mdash; doing so usually results in code that is both
+  hard to maintain and hard to debug and would also require special attention to caching
+  (i.e., setting a "Vary" response header field, as defined in 
+  <xref target="RFC7231" x:fmt="of" x:rel="#header.vary"/>).
+</t>
+<t>
+  Note that many existing HTML-based user agents will emulate a refresh when encountering
+  an HTML &lt;meta&gt; refresh directive (<xref target="HTML"/>). This can be used as another
+  fallback. For example:
+</t>
+
+<figure>
+  <preamble>Client request:</preamble>
+  <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
+GET / HTTP/1.1
+Host: example.com
+
+</artwork></figure>
+<figure>
+  <preamble>Server response:</preamble>
+  <artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="  ">
+HTTP/1.1 308 Permanent Redirect
+Content-Type: text/html; charset=UTF-8
+Location: http://example.com/new
+Content-Length: <x:length-of target="body"/>
+
+<x:span anchor="body">&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+                      "http://www.w3.org/TR/html4/strict.dtd"&gt;
+&lt;html&gt;
+   &lt;head&gt;
+      &lt;title&gt;Permanent Redirect&lt;/title&gt;
+      &lt;meta http-equiv="refresh" 
+            content="0; url=http://example.com/new"&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;p&gt;
+         The document has been moved to
+         &lt;a href="http://example.com/new"
+         &gt;http://example.com/new&lt;/a&gt;.
+      &lt;/p&gt;
+   &lt;/body&gt;
+&lt;/html&gt;
+</x:span></artwork></figure>
+</section>
+
+<section title="Security Considerations" anchor="security.considerations">
+<t>
+  All security considerations that apply to HTTP redirects apply to the
+  308 status code as well (see <xref target="RFC7231" x:rel="#security.considerations"/>).
+</t>
+</section>  
+
+<section title="IANA Considerations" anchor="iana.considerations">
+<t>
+   The registration below has been added to the "Hypertext Transfer Protocol (HTTP) Status Code Registry"
+   (defined in <xref target="RFC7231" x:rel="#status.code.registry"/>
+   and located at <eref target="http://www.iana.org/assignments/http-status-codes"/>):
+</t>
+<texttable align="left" suppress-title="true" anchor="iana.status.code.registration.table">
+   <ttcol>Value</ttcol>
+   <ttcol>Description</ttcol>
+   <ttcol>Reference</ttcol>
+   <c>308</c>
+   <c>Permanent Redirect</c>
+   <c>
+      <xref target="status.308"/> of this specification
+   </c>
+</texttable>
+</section>
+
+<section title="Acknowledgements" anchor="acknowledgements">
+<t>
+  The definition for the new status code 308 reuses text from
+  the HTTP/1.1 definitions of status codes 301 and 307.
+</t>
+<t>
+  Furthermore, thanks to Ben Campbell, Cyrus Daboo, Eran Hammer-Lahav, Bjoern Hoehrmann,
+  Subramanian Moonesamy, Peter Saint-Andre,
+  and Robert Sparks for feedback on this document.
+</t>
+</section>
+  </middle>
+  <back>
+  
+<references title="Normative References">
+
+<reference anchor="RFC2119">
+  <front>
+    <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+    <author initials="S." surname="Bradner" fullname="Scott Bradner">
+      <organization>Harvard University</organization>
+      <address><email>sob@harvard.edu</email></address>
+    </author>
+    <date month="March" year="1997"/>
+  </front>
+  <seriesInfo name="BCP" value="14"/>
+  <seriesInfo name="RFC" value="2119"/>
+</reference>
+
+<reference anchor="RFC3986">
+ <front>
+  <title abbrev="URI Generic Syntax">Uniform Resource Identifier (URI): Generic Syntax</title>
+  <author initials="T." surname="Berners-Lee" fullname="Tim Berners-Lee">
+    <organization abbrev="W3C/MIT">World Wide Web Consortium</organization>
+    <address>
+       <email>timbl@w3.org</email>
+       <uri>http://www.w3.org/People/Berners-Lee/</uri>
+    </address>
+  </author>
+  <author initials="R." surname="Fielding" fullname="Roy T. Fielding">
+    <organization abbrev="Day Software">Day Software</organization>
+    <address>
+      <email>fielding@gbiv.com</email>
+      <uri>http://roy.gbiv.com/</uri>
+    </address>
+  </author>
+  <author initials="L." surname="Masinter" fullname="Larry Masinter">
+    <organization abbrev="Adobe Systems">Adobe Systems Incorporated</organization>
+    <address>
+      <email>LMM@acm.org</email>
+      <uri>http://larry.masinter.net/</uri>
+    </address>
+  </author>
+  <date month="January" year="2005"/>
+ </front>
+ <seriesInfo name="STD" value="66"/>
+ <seriesInfo name="RFC" value="3986"/>
+</reference>
+
+
+<reference anchor="RFC7230">
+  <front>
+    <title>Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</title>
+    <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor">
+      <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
+      <address><email>fielding@gbiv.com</email></address>
+    </author>
+    <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor">
+      <organization abbrev="greenbytes">greenbytes GmbH</organization>
+      <address><email>julian.reschke@greenbytes.de</email></address>
+    </author>
+    <date month="June" year="2014"/>
+  </front>
+  <seriesInfo name="RFC" value="7230"/>
+  <x:source href="refs/rfc7230.xml" basename="https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7230"/>
+</reference>
+
+<reference anchor="RFC7231">
+  <front>
+    <title>Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</title>
+    <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor">
+      <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
+      <address><email>fielding@gbiv.com</email></address>
+    </author>
+    <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor">
+      <organization abbrev="greenbytes">greenbytes GmbH</organization>
+      <address><email>julian.reschke@greenbytes.de</email></address>
+    </author>
+    <date month="June" year="2014"/>
+  </front>
+  <seriesInfo name="RFC" value="7231"/>
+  <x:source href="refs/rfc7231.xml" basename="https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7231"/>
+</reference>
+
+<reference anchor="RFC7234">
+  <front>
+    <title>Hypertext Transfer Protocol (HTTP/1.1): Caching</title>
+    <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor">
+      <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
+      <address><email>fielding@gbiv.com</email></address>
+    </author>
+    <author initials="M." surname="Nottingham" fullname="Mark Nottingham" role="editor">
+      <organization>Rackspace</organization>
+      <address><email>mnot@mnot.net</email></address>
+    </author>
+    <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor">
+      <organization abbrev="greenbytes">greenbytes GmbH</organization>
+      <address><email>julian.reschke@greenbytes.de</email></address>
+    </author>
+    <date month="June" year="2014"/>
+  </front>
+  <seriesInfo name="RFC" value="7234"/>
+  <x:source href="refs/rfc7234.xml" basename="https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7234"/>
+</reference>
+
+</references>
+
+
+<references title="Informative References">
+<reference anchor="HTML" target="http://www.w3.org/TR/1999/REC-html401-19991224">
+  <front>
+    <title>HTML 4.01 Specification</title>
+    <author fullname="David Raggett" surname="Raggett" initials="D."/>
+    <author fullname="Arnaud Le Hors" surname="Le Hors" initials="A."/>
+    <author fullname="Ian Jacobs" surname="Jacobs" initials="I."/>
+    <date year="1999" month="December" day="24"/>
+  </front>
+  <seriesInfo name="W3C Recommendation" value="REC-html401-19991224"/>
+  <annotation>
+    Latest version available at
+    <eref target="http://www.w3.org/TR/html401"/>.
+  </annotation>
+</reference>
+<!--<reference anchor="RFC7238">
+  <front>
+    <title>The Hypertext Transfer Protocol Status Code 308 (Permanent Redirect)</title>
+    <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke">
+      <address><email>julian.reschke@greenbytes.de</email></address>
+    </author>
+    <date month="June" year="2014"/>
+  </front>
+  <seriesInfo name="RFC" value="7238"/>
+</reference>-->
+</references>
+  </back>
+
+</rfc>
