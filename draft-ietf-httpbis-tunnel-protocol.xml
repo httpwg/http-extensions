@@ -12,37 +12,18 @@
 <!ENTITY RFC7301 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7301.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='lib/rfc2629.xslt' ?>
-<!-- used by XSLT processors -->
-<!-- For a complete list and description of processing instructions (PIs),
-     please see http://xml.resource.org/authoring/README.html. -->
-<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
-     (Here they are set differently than their defaults in xml2rfc v1.32) -->
 <?rfc strict="yes" ?>
-<!-- give errors regarding ID-nits and DTD validation -->
-<!-- control the table of contents (ToC) -->
 <?rfc toc="yes"?>
-<!-- generate a ToC -->
 <?rfc tocdepth="3"?>
-<!-- the number of levels of subsections in ToC. default: 3 -->
-<!-- control references -->
 <?rfc symrefs="yes"?>
-<!-- use symbolic references tags, i.e., [RFC2119] instead of [1] -->
 <?rfc sortrefs="yes" ?>
-<!-- sort the reference entries alphabetically -->
-<!-- control vertical white space
-     (using these PIs as follows is recommended by the RFC Editor) -->
 <?rfc compact="yes" ?>
-<!-- do not start each main section on a new page -->
 <?rfc subcompact="no" ?>
-<!-- keep one blank line between list items -->
-<!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-httpbis-tunnel-protocol-latest" ipr="trust200902">
-  <!-- category values: std, bcp, info, exp, and historic
-     ipr values: trust200902, noModificationTrust200902, noDerivativesTrust200902,
-        or pre5378Trust200902
-     you can add the attributes updates="NNNN" and obsoletes="NNNN"
-     they will automatically be output with "(if approved)" -->
-  <!-- ***** FRONT MATTER ***** -->
+<?rfc comments="yes" ?>
+<?rfc inline="yes"?>
+<?rfc rfcedstyle="yes"?>
+<rfc category="std" docName="draft-ietf-httpbis-tunnel-protocol-latest" ipr="trust200902"      xmlns:x="http://purl.org/net/xml2rfc/ext">
+  <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
   <front>
     <title abbrev="Tunnel-Protocol">The Tunnel-Protocol HTTP Request Header Field</title>
 
@@ -88,8 +69,8 @@
     </author>
 
    <date year="2014"/>
-    <area>General</area>
-    <workgroup>Internet Engineering Task Force</workgroup>
+    <area>Applications</area>
+    <workgroup>HTTPbis</workgroup>
     <keyword>HTTP CONNECT</keyword>
     <keyword>Firewall</keyword>
     <keyword>HTTP proxy</keyword>
@@ -101,12 +82,31 @@
         Tunnel-Protocol request header field.
        </t>
     </abstract>
+
+    <note title="Editorial Note (To be removed by RFC Editor)">
+      <t>
+        Discussion of this draft takes place on the HTTPBIS working group mailing list
+        (ietf-http-wg@w3.org), which is archived at <eref
+        target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
+      </t>
+      <t>
+        Working Group information can be found at <eref
+        target="https://tools.ietf.org/wg/httpbis/"/>
+        and <eref target="http://httpwg.github.io/"/>; source code and issues
+        list for this draft can be found at
+        <eref target="https://github.com/httpwg/http-extensions"/>.
+      </t>
+      <!--<t>
+        The changes in this draft are summarized in <xref
+        target="change.log"/>.
+      </t>-->
+    </note>
   </front>
 
  <middle>
     <section title="Introduction">
       <t>
-        The HTTP CONNECT method (Section 4.3.6 of <xref target="RFC7231"/>)
+        The HTTP CONNECT method (<xref target="RFC7231" x:fmt="of" x:sec="4.3.6"/>)
         requests that the recipient establish a tunnel to the identified origin
         server and thereafter forward packets, in both directions, until the
         tunnel is closed. Such tunnels are commonly used to create end-to-end
@@ -155,19 +155,19 @@
         <t>
           The ABNF (Augmented Backus-Naur Form) syntax for the Tunnel-Protocol
           header field is given below.  It is based on the Generic Grammar
-          defined in Section 2 of <xref target="RFC7230"/>.
+          defined in <xref x:sec="2" x:fmt="of" target="RFC7230"/>.
         </t>
         <figure>
-          <artwork type="abnf"><![CDATA[
+          <artwork type="abnf2616">
      Tunnel-Protocol = "Tunnel-Protocol:" protocol-id
      protocol-id     = token ; percent-encoded ALPN protocol identifier
-]]></artwork>
+</artwork>
         </figure>
         <t>
           ALPN protocol names are octet sequences with no additional constraints
-          on format. Octets not allowed in tokens (<xref target="RFC7230"/>,
-          Section 3.2.6) must be percent-encoded as per Section 2.1 of <xref
-          target="RFC3986"/>. Consequently, the octet representing the percent
+          on format. Octets not allowed in tokens (<xref target="RFC7230" x:fmt="," x:sec="3.2.6"/>)
+          must be percent-encoded as per <xref x:fmt="of" x:sec="2.1" target="RFC3986"/>.
+          Consequently, the octet representing the percent
           character "%" (hex 25) must be percent-encoded as well.
         </t>
         <t>
@@ -191,23 +191,23 @@
           <preamble>
             For example:
           </preamble>
-          <artwork><![CDATA[
+          <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
 CONNECT turn_server.example.com:5349 HTTP/1.1
 Host: turn_server.example.com:5349
 Tunnel-Protocol: turn
-]]></artwork>
+</artwork>
         </figure>
       </section>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>To Be Added</t>
+      <t><cref>To Be Added</cref></t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
       <t>
         In case of using HTTP CONNECT to a TURN server the security
-        consideration of <xref target="RFC7231"/>, Section-4.3.6] apply. It
+        consideration of <xref target="RFC7231" x:fmt="of" x:sec="4.3.6"/> apply. It
         states that there "are significant risks in establishing a tunnel to
         arbitrary servers, particularly when the destination is a well-known or
         reserved TCP port that is not intended for Web traffic. Proxies that
@@ -226,7 +226,6 @@ Tunnel-Protocol: turn
   </middle>
 
   <back>
-    <!-- References split into informative and normative -->
     <references title="Normative References">
       &RFC2119;
       &RFC3986;
