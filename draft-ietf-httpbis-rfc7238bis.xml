@@ -201,9 +201,10 @@ Content-Length: <x:length-of target="body"/>
 
 <section title="IANA Considerations" anchor="iana.considerations">
 <t>
-   The registration below has been added to the "Hypertext Transfer Protocol (HTTP) Status Code Registry"
+   The "Hypertext Transfer Protocol (HTTP) Status Code Registry"
    (defined in <xref target="RFC7231" x:rel="#status.code.registry"/>
-   and located at <eref target="http://www.iana.org/assignments/http-status-codes"/>):
+   and located at <eref target="http://www.iana.org/assignments/http-status-codes"/>)
+   needs to be updated with the registration below:
 </t>
 <texttable align="left" suppress-title="true" anchor="iana.status.code.registration.table">
    <ttcol>Value</ttcol>
