@@ -344,8 +344,7 @@
 Alt-Svc       = 1#( alternative *( OWS ";" OWS parameter ) )
 alternative   = protocol-id "=" alt-authority
 protocol-id   = token ; percent-encoded ALPN protocol identifier
-alt-authority = token / quoted-string
-                ; containing [ uri-host ] ":" port
+alt-authority = quoted-string ; containing [ uri-host ] ":" port
 </artwork>
 </figure>
 <t>
@@ -395,9 +394,8 @@ Alt-Svc: h2="new.example.org:80"
 </artwork>
 <postamble>
    This indicates the "h2" protocol on the host "new.example.org", running
-   on port 80. Note that the "quoted-string" syntax needs to be used when a
-   host is specified in addition to a port (":" is not an allowed character
-   in "token").
+   on port 80. Note that the "quoted-string" syntax needs to be used because
+   ":" is not an allowed character in "token".
 </postamble>
 </figure>
 <texttable style="all" align="left">
