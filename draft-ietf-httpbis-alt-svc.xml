@@ -438,9 +438,9 @@ Alt-Svc: h2c=":8000", h2=":443"
    any alternative service information other than the protocol, host and port.
 </t>
 <t>
-   When using HTTP/2 (<xref target="HTTP2"/>), clients &SHOULD; instead send an ALTSVC frame.
-   A single ALTSVC frame can be sent for a connection; a new frame is not needed for every
-   request.
+   When using HTTP/2 (<xref target="HTTP2"/>), servers &SHOULD; instead send an ALTSVC frame
+   (<xref target="frame"/>). A single ALTSVC frame can be sent for a connection;
+   a new frame is not needed for every request.
 </t>
 <t>
    Note that all field elements that allow "quoted-string" syntax &MUST; be processed
