@@ -1027,12 +1027,6 @@ Alt-Svc-Used: 1
   Resolved <eref target="https://github.com/httpwg/http-extensions/issues/2"/>.
 </t>
 </section>
-
-<section title="Since draft-ietf-httpbis-alt-svc-03" anchor="changes.since.draft-ietf-httpbis-alt-svc-03">
-<t>
-  None yet.
-</t>
-</section>
 </section>
 
   </back>
