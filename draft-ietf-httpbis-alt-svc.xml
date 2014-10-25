@@ -103,15 +103,14 @@
    used to both name and find things to interact with.
 </t>
 <t>
-   In some cases, it is desirable to separate these aspects; to be able to keep
-   the same identifier for a resource, but interact with it using a different
-   location on the network.
+   In some cases, it is desirable to separate identification and location in HTTP; keeping the same
+   identifier for a resource, but interacting with it at a different location on the network.
 </t>
 <t>For example:
   <list style="symbols">
     <t>
-       An origin server might wish to redirect a client to an alternative when it
-       needs to go down for maintenance, or it has found an alternative in a
+       An origin server might wish to redirect a client to a different server when it
+       needs to go down for maintenance, or it has found a server in a
        location that is more local to the client.
     </t>
     <t>
@@ -129,7 +128,7 @@
 </t>
 <t>
    This specification defines a new concept in HTTP, "Alternative Services",
-   that allows a resource to nominate additional means of interacting with it on
+   that allows an origin server to nominate additional means of interacting with it on
    the network. It defines a general framework for this in <xref
    target="alternative"/>, along with specific mechanisms for advertising their
    existence using HTTP header fields (<xref target="alt-svc"/>) or an HTTP/2
@@ -162,7 +161,7 @@
    This specification defines a new concept in HTTP, the "<x:dfn>alternative service</x:dfn>".
    When an origin (see <xref target="RFC6454"/>) has resources that are accessible through a
    different protocol / host / port combination, it is said to have an alternative
-   service.
+   service available.
 </t>
 <t>
    An alternative service can be used to interact with the resources on an origin
@@ -202,7 +201,7 @@
    but potentially communication options for that protocol.
 </t>
 <t>
-   This means that clients using an alternative service will change the host, port
+   This means that clients using an alternative service can change the host, port
    and protocol that they are using to fetch resources, but these changes &MUST-NOT;
    be propagated to the application that is using HTTP; from that standpoint, the
    URI being accessed and all information derived from it (scheme, host, port) are
@@ -210,7 +209,7 @@
 </t>
 <t>
    Importantly, this includes its security context; in particular, when TLS
-   <xref target="RFC5246"/> is in use, the alternative server will need to present a certificate
+   <xref target="RFC5246"/> is in use, the alternative service will need to present a certificate
    for the origin's host name, not that of the alternative. Likewise, the Host
    header field (<xref target="RFC7230" x:fmt="," x:rel="#header.host"/>) is
    still derived from the origin, not the alternative service (just as it would
@@ -240,10 +239,14 @@
    an HTTP header field (<xref target="alt-svc"/>) and an HTTP/2 frame type
    (<xref target="frame"/>).
 </t>
+<t>
+   The remainder of this section describes requirements that are common to alternative
+   services, regardless of how they are discovered.
+</t>
 
 <section title="Host Authentication" anchor="host_auth">
 <t>
-   Clients &MUST-NOT; use alternative services with a host other than the origin's
+   Clients &MUST-NOT; use alternative services with a host that is different than the origin's
    without strong server authentication; this mitigates the attack described in
    <xref target="host_security"/>. One way to achieve this is for the alternative to use TLS
    with a certificate that is valid for that origin.
@@ -256,15 +259,11 @@
    cannot use it, because there is no mechanism in that protocol to establish
    strong server authentication.
 </t>
-<t>
-   Furthermore, this means that the HTTP Host header field and the SNI information
-   provided in TLS by the client will be that of the origin, not the alternative.
-</t>
 </section>
 
 <section title="Alternative Service Caching" anchor="caching">
 <t>
-   Mechanisms for discovering alternative services can associate a freshness
+   Mechanisms for discovering alternative services also associate a freshness
    lifetime with them; for example, the Alt-Svc header field uses the "ma"
    parameter.
 </t>
@@ -274,8 +273,8 @@
    recommendations.
 </t>
 <t>
-   Clients with existing connections to alternative services are not needed to
-   fall back to the origin when its freshness lifetime ends; i.e., the caching
+   Clients with existing connections to an alternative service are not required to
+   stop using it when its freshness lifetime ends; i.e., the caching
    mechanism is intended for limiting how long an alternative service can be used
    for establishing new requests, not limiting the use of existing ones.
 </t>
@@ -290,6 +289,10 @@
    A client &MUST; only use a TLS-based alternative service if the client also
    supports TLS Server Name Indication (SNI). This supports the conservation of
    IP addresses on the alternative service host.
+</t>
+<t>
+   Note that the SNI information provided in TLS by the client will be that of the origin, not the
+   alternative (as will the Host HTTP header field-value).
 </t>
 </section>
 
@@ -319,17 +322,17 @@
    service.
 </t>
 <t>
-   The client does not need to block requests; the origin's connection can be
+   The client does not need to block requests on any existing connection; it can be
    used until the alternative connection is established. However, if the security
    properties of the existing connection are weak (e.g. cleartext HTTP/1.1) then
    it might make sense to block until the new connection is fully available in
    order to avoid information leakage.
 </t>
 <t>
-   Furthermore, if the connection to the alternative service fails or is
-   unresponsive, the client &MAY; fall back to using the origin. Note, however, that
-   this could be the basis of a downgrade attack, thus losing any enhanced
-   security properties of the alternative service.
+   Furthermore, if the connection to the alternative service fails or is unresponsive, the client
+   &MAY; fall back to using the origin or another alternative service. Note, however, that this
+   could be the basis of a downgrade attack, thus losing any enhanced security properties of the
+   alternative service.
 </t>
 </section>
 </section>
@@ -420,7 +423,7 @@ Alt-Svc: h2="new.example.org:80"
    Alt-Svc &MAY; occur in any HTTP response message, regardless of the status code.
 </t>
 <figure>
-  <preamble>It can, however, have multiple values:</preamble>
+  <preamble>The Alt-Svc field value can have multiple values:</preamble>
   <artwork type="example">
 Alt-Svc: h2c=":8000", h2=":443"
 </artwork>
@@ -429,11 +432,6 @@ Alt-Svc: h2c=":8000", h2=":443"
    The value(s) advertised by Alt-Svc can be used by clients to open a new
    connection to one or more alternative services immediately, or simultaneously
    with subsequent requests on the same connection.
-</t>
-<t>
-   To reduce the ability of servers to track individual clients over time (see <xref
-   target="tracking"/>), an alternative service indication sent by a client &SHOULD-NOT; include
-   any alternative service information other than the protocol, host and port.
 </t>
 <t>
    When using HTTP/2 (<xref target="HTTP2"/>), servers &SHOULD; instead send an ALTSVC frame
@@ -486,15 +484,15 @@ Alt-Svc: h2c=":8000"; ma=60
 </postamble>
 </figure>
 <t>
+   Note that the freshness lifetime for HTTP caching (here, 600 seconds) does not
+   affect caching of Alt-Svc values.
+</t>
+<t>
    When an Alt-Svc response header field is received from an origin, its value
    invalidates and replaces all cached alternative services for that origin.
 </t>
 <t>
    See <xref target="caching"/> for general requirements on caching alternative services.
-</t>
-<t>
-   Note that the freshness lifetime for HTTP caching (here, 600 seconds) does not
-   affect caching of Alt-Svc values.
 </t>
 </section>
 </section>
@@ -509,14 +507,14 @@ Alt-Svc: h2c=":8000"; ma=60
   not support this frame can safely ignore it.
 </t>
 <t>
-  An ALTSVC frame on a client-initiated stream indicates that the conveyed
-  alternative service is associated with the origin of that stream.
+  An ALTSVC frame on from a server to a client on a client-initiated stream indicates that the
+  conveyed alternative service is associated with the origin of that stream.
 </t>
 <t>
-  An ALTSVC frame on stream 0 indicates that the conveyed alternative service is
-  associated with the origin contained in the Origin field of the frame. An
-  association with an origin that the client does not consider authoritative for
-  the current connection &MUST; be ignored.
+  An ALTSVC frame from a server to a client on stream 0 indicates that the conveyed alternative
+  service is associated with the origin contained in the Origin field of the frame. An association
+  with an origin that the client does not consider authoritative for the current connection &MUST;
+  be ignored.
 </t>
 <t>
   The ALTSVC frame type is 0xa (decimal 10).
@@ -626,6 +624,11 @@ Alt-Svc-Used: 1
   specifications that want to define an extension will need to update this
   document (and ought to introduce an extension registry).
 </t>
+<t>
+   To reduce the ability of servers to track individual clients over time (see <xref
+   target="tracking"/>), an alternative service indication sent by a client &SHOULD-NOT; include
+   any alternative service information other than the protocol, host and port.
+</t>
 </section>
 
 <section title="The 421 Not Authoritative HTTP Status Code" anchor="status">
@@ -734,10 +737,9 @@ Alt-Svc-Used: 1
 </t>
 <t>
    For example, if an attacker can convince a user agent to send all traffic for
-   "innocent.example.org" to "evil.example.com" by successfully associating it as
-   an alternative service, they can masquerade as that origin. This can be done
-   locally (see mitigations above) or remotely (e.g., by an intermediary as a
-   man-in-the-middle attack).
+   "innocent.example.org" to "evil.example.com" by successfully associating it as an alternative
+   service, they can masquerade as that origin. This can be done locally (see mitigations in <xref
+   target="changing-ports"/>) or remotely (e.g., by an intermediary as a man-in-the-middle attack).
 </t>
 <t>
    This is the reason for the requirement in <xref target="host_auth"/> that any alternative
