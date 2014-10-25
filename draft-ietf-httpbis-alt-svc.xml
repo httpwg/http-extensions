@@ -507,7 +507,7 @@ Alt-Svc: h2c=":8000"; ma=60
   not support this frame can safely ignore it.
 </t>
 <t>
-  An ALTSVC frame on from a server to a client on a client-initiated stream indicates that the
+  An ALTSVC frame from a server to a client on a client-initiated stream indicates that the
   conveyed alternative service is associated with the origin of that stream.
 </t>
 <t>
