@@ -317,7 +317,7 @@
    HTTP; or, an alternative service might itself advertise an alternative.
 </t>
 <t>
-   When a client uses an alternate service, it &MUST; emit the Alt-Svc-Used
+   When a client uses an alternate service, it &MUST; emit the Alt-Used
    header field (<xref target="indicator"/>) on every request using that alternate
    service.
 </t>
@@ -585,26 +585,26 @@ Alt-Svc: h2c=":8000"; ma=60
 </t>
 </section>
 
-<section title="The Alt-Svc-Used HTTP Header Field" anchor="indicator">
+<section title="The Alt-Used HTTP Header Field" anchor="indicator">
 <t>
-   The Alt-Svc-Used HTTP header field is used in requests to indicate that an
+   The Alt-Used header field is used in requests to indicate that an
    alternate service is in use.
 </t>
 <figure>
 <artwork type="abnf2616">
-Alt-Svc-Used     = use-flag *( OWS ";" OWS ext-param )
-use-flag         = "1" / "0"
-ext-param        = token "=" ( token / quoted-string )
+Alt-Used     = use-flag *( OWS ";" OWS ext-param )
+use-flag     = "1" / "0"
+ext-param    = token "=" ( token / quoted-string )
 </artwork>
 </figure>
 <t>
-   Alt-Svc-Used is intended to allow alternate services to avoid sending
+   Alt-Used is intended to allow alternate services to avoid sending
    alternative service indications where there is a risk of generating a loops.
    It also allows a service to identify requests for accounting and load
    balancing purposes.
 </t>
 <t>
-   When using an alternative service, clients &MUST; include a Alt-Svc-Used
+   When using an alternative service, clients &MUST; include a Alt-Used
    header field in all requests.
 </t>
 <t>
@@ -616,7 +616,7 @@ ext-param        = token "=" ( token / quoted-string )
   <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
 GET /thing HTTP/1.1
 Host: origin.example.com
-Alt-Svc-Used: 1
+Alt-Used: 1
 </artwork>
 </figure>
 <t>
@@ -676,7 +676,7 @@ Alt-Svc-Used: 1
    <c>
       <xref target="alt-svc"/>
    </c>
-   <c>Alt-Svc-Used</c>
+   <c>Alt-Used</c>
    <c>http</c>
    <c>standard</c>
    <c>
@@ -1032,7 +1032,7 @@ Alt-Svc-Used: 1
 
 <section title="Since draft-ietf-httpbis-alt-svc-03" anchor="changes.since.draft-ietf-httpbis-alt-svc-03">
 <t>
-  None yet.
+  Renamed "Alt-Svc-Used" to "Alt-Used" (<eref target="https://github.com/httpwg/http-extensions/issues/17"/>).
 </t>
 </section>
 </section>
