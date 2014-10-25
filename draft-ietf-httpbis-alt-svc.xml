@@ -579,6 +579,11 @@ Alt-Svc: h2c=":8000"; ma=60
   ALTSVC frame &MUST; treat it as a connection error of type PROTOCOL_ERROR.
 </t>
 <t>
+  An ALTSVC frame on a client-initiated stream containing non-empty "Origin" information 
+  is invalid and &MUST; be ignored. Likewise, an ALTSVC frame on stream 0 with
+  empty (length 0) "Origin" information is invalid and &MUST; be ignored.
+</t>
+<t>
   The ALTSVC frame is processed hop-by-hop.  An intermediary &MUST-NOT; forward ALTSVC frames,
   though it can use the information contained in ALTSVC frames in forming new ALTSVC frames
   to send to its own clients.
@@ -1033,6 +1038,9 @@ Alt-Used: 1
 <section title="Since draft-ietf-httpbis-alt-svc-03" anchor="changes.since.draft-ietf-httpbis-alt-svc-03">
 <t>
   Renamed "Alt-Svc-Used" to "Alt-Used" (<eref target="https://github.com/httpwg/http-extensions/issues/17"/>).
+</t>
+<t>
+  Clarify ALTSVC Origin information requirements (<eref target="https://github.com/httpwg/http-extensions/issues/19"/>).
 </t>
 </section>
 </section>
