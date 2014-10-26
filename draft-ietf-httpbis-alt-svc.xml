@@ -273,7 +273,7 @@
    recommendations.
 </t>
 <t>
-   Clients with existing connections to an alternative service are not required to
+   Clients with existing connections to an alternative service do not need to
    stop using it when its freshness lifetime ends; i.e., the caching
    mechanism is intended for limiting how long an alternative service can be used
    for establishing new requests, not limiting the use of existing ones.
