@@ -631,23 +631,23 @@ Alt-Used: 1
 </t>
 </section>
 
-<section title="The 421 Not Authoritative HTTP Status Code" anchor="status">
+<section title="The 421 Misdirected Request HTTP Status Code" anchor="status">
 <t>
-   The 421 (Not Authoritative) status code is defined in <xref target="HTTP2"
-   x:rel="#NotAuthoritative" x:fmt=","/> to indicate that the current server
+   The 421 (Misdirected Request) status code is defined in <xref target="HTTP2"
+   x:fmt="of" x:rel="#MisdirectedRequest"/> to indicate that the current server
    instance is not authoritative for the requested resource.  This can be used
    to indicate that an alternative service is not authoritative; see <xref
    target="alternative"/>).
 </t>
 <t>
-   Clients receiving 421 (Not Authoritative) from an alternative service &MUST;
+   Clients receiving 421 (Misdirected Request) from an alternative service &MUST;
    remove the corresponding entry from its alternative service cache (see <xref
    target="caching"/>) for that origin. Regardless of the idempotency of the
    request method, they &MAY; retry the request, either at another alternative
    server, or at the origin.
 </t>
 <t>
-   A 421 (Not Authoritative) response &MAY; carry an Alt-Svc header field.
+   A 421 (Misdirected Request) response &MAY; carry an Alt-Svc header field.
 </t>
 </section>
 
@@ -1044,6 +1044,9 @@ Alt-Used: 1
 <section title="Since draft-ietf-httpbis-alt-svc-04" anchor="changes.since.draft-ietf-httpbis-alt-svc-04">
 <t>
   Mention tracking by alt-svc host name in Security Considerations (<eref target="https://github.com/httpwg/http-extensions/issues/36"/>).
+</t>
+<t>
+  "421 (Not Authoritative)" -> "421 (Misdirected Request)".
 </t>
 </section>
 </section>
