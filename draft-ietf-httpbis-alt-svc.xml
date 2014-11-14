@@ -1040,6 +1040,12 @@ Alt-Used: 1
   Remove/tune language with respect to tracking risks (see <eref target="https://github.com/httpwg/http-extensions/issues/34"/>).
 </t>
 </section>
+
+<section title="Since draft-ietf-httpbis-alt-svc-04" anchor="changes.since.draft-ietf-httpbis-alt-svc-04">
+<t>
+  None yet.
+</t>
+</section>
 </section>
 
   </back>
