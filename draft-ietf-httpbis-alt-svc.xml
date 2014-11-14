@@ -782,9 +782,9 @@ Alt-Used: 1
 
 <section title="Tracking Clients Using Alternative Services" anchor="tracking">
 <t>
-   The Alt-Used header field (<xref target="indicator"/>) provides a server
-   with one additional bit of information that can be used to correlate
-   requests.
+   Choosing an alternative service implies connecting to a new, server-supplied
+   host name. By using many different (potentially unique) host names, servers
+   could conceivably track client requests.
 </t>
 <t>
    Clients concerned by the additional fingerprinting can choose to ignore alternative
@@ -1043,7 +1043,7 @@ Alt-Used: 1
 
 <section title="Since draft-ietf-httpbis-alt-svc-04" anchor="changes.since.draft-ietf-httpbis-alt-svc-04">
 <t>
-  None yet.
+  Mention tracking by alt-svc host name in Security Considerations (<eref target="https://github.com/httpwg/http-extensions/issues/36"/>).
 </t>
 </section>
 </section>
