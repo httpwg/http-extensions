@@ -519,57 +519,10 @@ Alt-Svc: h2c=":8000"; ma=60
 <t>
   The ALTSVC frame type is 0xa (decimal 10).
 </t>
-<figure title="ALTSVC Frame Payload">
-  <artwork type="drawing"><![CDATA[
-  0                   1                   2                   3
-  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- |                          Max-Age (32)                         |
- +-------------------------------+---------------+---------------+
- |            Port (16)          | Proto-Len (8) |
- +-------------------------------+---------------+---------------+
- |                        Protocol-ID (*)                        |
- +---------------+-----------------------------------------------+
- | Host-Len (8)  |                   Host (*)                  ...
- +---------------+-----------------------------------------------+
- |                          Origin? (*)                        ...
- +---------------------------------------------------------------+
-]]></artwork>
-</figure>
-
 <t>
-  The ALTSVC frame contains the following fields:
-  <list style="hanging">
-    <t hangText="Max-Age:">
-      An unsigned, 32-bit integer indicating the freshness lifetime of the alternative
-      service association, as per <xref target="caching"/>.
-    </t>
-    <t hangText="Port:">
-      An unsigned, 16-bit integer indicating the port that the alternative service is
-      available upon.
-    </t>
-    <t hangText="Proto-Len:">
-      An unsigned, 8-bit integer indicating the length, in octets, of the Protocol-ID field.
-    </t>
-    <t hangText="Protocol-ID:">
-      A sequence of bytes (length determined by <spanx style="verb">Proto-Len</spanx>)
-      containing the ALPN protocol identifier of the alternative service.
-    </t>
-    <t hangText="Host-Len:">
-      An unsigned, 8-bit integer indicating the length, in octets, of the Host header field.
-    </t>
-    <t hangText="Host:">
-      A sequence of characters (length determined by <spanx style="verb">Host-Len</spanx>)
-      containing an ASCII string indicating the host that the alternative service is
-      available upon.
-    </t>
-    <t hangText="Origin:">
-      An &OPTIONAL; sequence of characters (length determined by subtracting the length of all
-      preceding fields from the frame length) containing the ASCII serialization of an
-      origin (<xref target="RFC6454" x:fmt="," x:sec="6.2"/>) that the alternate service is
-      applicable to.
-    </t>
-  </list>
+  The payload of an ALTSVC frame is identical to the payload of the Alt-Svc
+  field value defined in <xref target="alt-svc"/> (ABNF production
+  "Alt-Svc").
 </t>
 <t>
   The ALTSVC frame does not define any flags.
@@ -1047,6 +1000,10 @@ Alt-Used: 1
 </t>
 <t>
   "421 (Not Authoritative)" -> "421 (Misdirected Request)".
+</t>
+<t>
+  Allow the frame to carry multiple indicator and use the same payload formats for both
+  (<eref target="https://github.com/httpwg/http-extensions/issues/37"/>).
 </t>
 </section>
 </section>
