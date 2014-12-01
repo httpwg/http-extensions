@@ -1006,6 +1006,12 @@ Alt-Used: 1
   (<eref target="https://github.com/httpwg/http-extensions/issues/37"/>).
 </t>
 </section>
+
+<section title="Since draft-ietf-httpbis-alt-svc-05" anchor="changes.since.draft-ietf-httpbis-alt-svc-05">
+<t>
+  None yet.
+</t>
+</section>
 </section>
 
   </back>
