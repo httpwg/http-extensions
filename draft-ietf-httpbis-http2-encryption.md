@@ -50,10 +50,9 @@ mitigate pervasive monitoring attacks.
 
 # Introduction
 
-
 This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to decouple
-the URI scheme from the use and configuration of underlying encryption, allowing a `http`
-URI to be accessed using TLS {{RFC5246}} opportunistically.
+the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI to be
+accessed using TLS {{RFC5246}} opportunistically.
 
 Currently, `https` URIs require acquiring and configuring a valid certificate, which means that
 some deployments find supporting TLS difficult. Therefore, this document describes a usage model
