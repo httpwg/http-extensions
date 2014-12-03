@@ -17,6 +17,11 @@ Currently, this includes:
 * [Editor's copy](https://httpwg.github.com/http-extensions/encryption.txt) (plain text)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
 
+### Tunnel Protocol for CONNECT
+
+* [Editor's copy](https://httpwg.github.com/http-extensions/tunnel-protocol.html) (HTML)
+* [Editor's copy](https://httpwg.github.com/http-extensions/tunnel-protocol.txt) (plain text)
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-tunnel-protocol) (less recent, more official)
 
 
 ## Contributing
