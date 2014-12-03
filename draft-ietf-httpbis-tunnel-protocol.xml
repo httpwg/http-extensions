@@ -145,9 +145,10 @@
 
    <section title="The Tunnel-Protocol HTTP Request Header Field">
       <t>
-        Clients include the Tunnel-Protocol Request Header field in a HTTP
-        Connect request to indicate the application layer protocol or protocols
-        that will be used within the tunnel.
+        Clients include the `Tunnel-Protocol` Request Header field in an HTTP
+        CONNECT request to indicate the application layer protocol will be used
+        within the tunnel, or the set of protocols that might be used within the
+        tunnel.
       </t>
 
       <section title="Header Field Values">
@@ -159,7 +160,7 @@
 
      <section title="Syntax">
         <t>
-          The ABNF (Augmented Backus-Naur Form) syntax for the Tunnel-Protocol
+          The ABNF (Augmented Backus-Naur Form) syntax for the `Tunnel-Protocol`
           header field is given below.  It is based on the Generic Grammar
           defined in <xref x:sec="2" x:fmt="of" target="RFC7230"/>.
         </t>
@@ -200,7 +201,7 @@ protocol-id     = token ; percent-encoded ALPN protocol identifier
           <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
 CONNECT turn_server.example.com:5349 HTTP/1.1
 Host: turn_server.example.com:5349
-Tunnel-Protocol: turn
+Tunnel-Protocol: stun.turn
 </artwork>
         </figure>
       </section>
@@ -213,20 +214,23 @@ Tunnel-Protocol: turn
     <section anchor="Security" title="Security Considerations">
       <t>
         In case of using HTTP CONNECT to a TURN server the security
-        consideration of <xref target="RFC7231" x:fmt="of" x:sec="4.3.6"/> apply. It
-        states that there "are significant risks in establishing a tunnel to
-        arbitrary servers, particularly when the destination is a well-known or
-        reserved TCP port that is not intended for Web traffic. Proxies that
-        support CONNECT SHOULD restrict its use to a limited set of known ports
-        or a configurable whitelist of safe request targets."
+        considerations of <xref target="RFC7231" x:fmt="of" x:sec="4.3.6"/>
+        apply. It states that there "are significant risks in establishing a
+        tunnel to arbitrary servers, particularly when the destination is a
+        well-known or reserved TCP port that is not intended for Web
+        traffic. Proxies that support CONNECT SHOULD restrict its use to a
+        limited set of known ports or a configurable whitelist of safe request
+        targets."
       </t>
       <t>
-        The Tunnel-Protocol request header field described in this document is
-        an optional header and HTTP Proxies may of course not support the header
-        and therefore ignore it. If the header is not present or ignored then
-        the proxy has no explicit indication as to the purpose of the tunnel on
-        which to provide consent, this is the generic case that exists without
-        the Tunnel-Protocol header.
+        The `Tunnel-Protocol` request header field described in this document is
+        an optional header. Clients and HTTP Proxies could choose to not support
+        the header and therefore fail to provide it, or ignore it when
+        present. If the header is not available or ignored, a proxy cannot
+        identify the purpose of the tunnel and use this as input to any
+        authorization decision regarding the tunnel. This is indistinguishable
+        from the case where either client or proxy does not support the
+        `Tunnel-Protocol` header.
       </t>
     </section>
   </middle>
