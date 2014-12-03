@@ -5,6 +5,7 @@
 <!-- One method to get references from the online citation libraries.
      There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. --><!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC3864 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3864.xml">
 <!ENTITY RFC3986 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml">
 <!ENTITY RFC5246 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
 <!ENTITY RFC7230 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
@@ -143,7 +144,7 @@
       </section>
     </section>
 
-   <section title="The Tunnel-Protocol HTTP Request Header Field">
+   <section title="The Tunnel-Protocol HTTP Request Header Field" anchor="tp">
       <t>
         Clients include the `Tunnel-Protocol` Request Header field in an HTTP
         CONNECT request to indicate the application layer protocol will be used
@@ -208,7 +209,30 @@ Tunnel-Protocol: stun.turn
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t><cref>To Be Added</cref></t>
+      <t>
+        HTTP header fields are registered within the "Message Headers" registry
+        maintained at <eref
+        target="https://www.iana.org/assignments/message-headers"/>.  This
+        document defines and registers the `Tunnel-Protocol` header field,
+        according to <xref target="RFC3864"/> as follows:
+        <list style="hanging">
+          <t hangText="Header Field Name:">
+            Tunnel-Protocol
+          </t>
+          <t hangText="Protocol:">
+            http
+          </t>
+          <t hangText="Status:">
+            Standard
+          </t>
+          <t hangText="Reference:">
+            <xref target="tp"/>
+          </t>
+          <t hangText="Change Controller:">
+            IETF (iesg@ietf.org) - Internet Engineering Task Force
+          </t>
+        </list>
+      </t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -238,6 +262,7 @@ Tunnel-Protocol: stun.turn
   <back>
     <references title="Normative References">
       &RFC2119;
+      &RFC3864;
       &RFC3986;
       &RFC7230;
       &RFC7231;
