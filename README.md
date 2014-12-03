@@ -24,6 +24,13 @@ Currently, this includes:
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-tunnel-protocol) (less recent, more official)
 
 
+### 308 Status Code (RFC 7238bis)
+
+* [Editor's copy](https://httpwg.github.com/http-extensions/rfc7238bis.html) (HTML)
+* [Editor's copy](https://httpwg.github.com/http-extensions/rfc7238bis.txt) (plain text)
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc7238bis) (less recent, more official)
+
+
 ## Contributing
 
 See [Contributing.md](our contribution guidelines) for information about how to
