@@ -167,7 +167,8 @@ form of protection against active attacks can be provided for clients on subsequ
 
 When an alternative service is able to commit to providing service for a particular origin over TLS
 for a bounded period of time, clients can choose to rely upon its avilability, failing when it
-cannot be contacted. Effectively, this makes the alternative service "sticky" in the client.
+cannot be contacted. Effectively, this makes the choice to use a secured protocol "sticky" in the
+client.
 
 One drawback with this approach is that clients need to strongly authenticate the alternative
 service to act upon such a commitment; otherwise, an attacker could create a persistent denial of
