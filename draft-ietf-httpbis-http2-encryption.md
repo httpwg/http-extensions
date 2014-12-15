@@ -170,10 +170,6 @@ for a bounded period of time, clients can choose to rely upon its avilability, f
 cannot be contacted. Effectively, this makes the choice to use a secured protocol "sticky" in the
 client.
 
-One drawback with this approach is that clients need to strongly authenticate the alternative
-service to act upon such a commitment; otherwise, an attacker could create a persistent denial of
-service.
-
 
 ## The HTTP-TLS Header Field
 
@@ -188,6 +184,10 @@ considered fresh.
 
 For example:
 
+    GET /index.html HTTP/1.1
+    Host: example.com
+
+
     HTTP/1.1 200 OK
     Content-Type: text/html
     Cache-Control: 600
@@ -195,21 +195,28 @@ For example:
     Date: Thu, 1 May 2014 16:20:09 GMT
     HTTP-TLS: ma=3600
 
-Note that the commitment is not bound to a particular alternative service; clients SHOULD use
-other alternative services that they become aware of, as long as the requirements regarding
-authentication and avoidance of cleartext protocols are met.
+This header field creates a commitment from the origin {{RFC6454}} of the associated resource (in
+the example, `http://example.com`).  For the duration of the commitment, clients SHOULD strongly
+authenticate the server for all subsequent requests made to that origin.
 
-When this header field appears in a response, clients MUST strongly authenticate the alternative
-service, as described in Section 3.1 of {{RFC2818}}, noting the additional requirements in
-{{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if strong authentication fails.
+Authentication for HTTP over TLS is described in Section 3.1 of {{RFC2818}}, noting the additional
+requirements in {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if strong
+authentication fails; otherwise, an attacker could create a persistent denial of service by
+falsifying a commitment.
 
-Persisted information expires after a period determined by the value of the `ma` parameter. See
-Section 4.2.3 of {{RFC7234}} for details of determining response age.
+The commitment to use authenticated TLS persists for a period determined by the value of the `ma`
+parameter. See Section 4.2.3 of {{RFC7234}} for details of determining response age.
 
     ma-parameter     = delta-seconds
 
-Requests for an origin that has a persisted, unexpired value for `HTTP-TLS` MUST fail if they
-cannot be made over an authenticated TLS connection.
+The commitment made by the `HTTP-TLS` header field applies only to the origin of the resource that
+generates the `HTTP-TLS` header field.  Requests for an origin that has a persisted, unexpired value
+for `HTTP-TLS` MUST fail if they cannot be made over an authenticated TLS connection.
+
+Note that the commitment is not bound to a particular alternative service.  Clients SHOULD use
+alternative services that they become aware of.  However, clients MUST NOT use an unauthenticated
+alternative service for an origin with this commitment.  Where there is an active commitment,
+clients MAY instead ignore advertisements for unsecured alternatives services.
 
 
 ## Operational Considerations
