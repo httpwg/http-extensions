@@ -30,6 +30,7 @@ normative:
   RFC2119:
   RFC2818:
   RFC5246:
+  RFC6454:
   RFC7234:
   I-D.ietf-httpbis-http2:
   I-D.ietf-httpbis-alt-svc:
@@ -37,7 +38,6 @@ normative:
 
 informative:
   I-D.dukhovni-opportunistic-security:
-  RFC6454:
   RFC7258:
 
 
