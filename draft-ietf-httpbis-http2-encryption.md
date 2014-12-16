@@ -197,7 +197,8 @@ For example:
 
 This header field creates a commitment from the origin {{RFC6454}} of the associated resource (in
 the example, `http://example.com`).  For the duration of the commitment, clients SHOULD strongly
-authenticate the server for all subsequent requests made to that origin.
+authenticate the server for all subsequent requests made to that origin, though this creates some
+risks for clients {{pinrisks}}.
 
 Authentication for HTTP over TLS is described in Section 3.1 of {{RFC2818}}, noting the additional
 requirements in {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if strong
@@ -219,7 +220,7 @@ alternative service for an origin with this commitment.  Where there is an activ
 clients MAY instead ignore advertisements for unsecured alternatives services.
 
 
-## Operational Considerations
+## Operational Considerations {#pinrisks}
 
 To avoid situations where a persisted value of `HTTP-TLS` causes a client to be unable to contact a
 site, clients SHOULD limit the time that a value is persisted for a given origin. A lower limit
