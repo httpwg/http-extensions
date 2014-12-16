@@ -276,7 +276,8 @@ Many existing HTTP/1.1 implementations use the presence or absence of TLS in the
 whether requests are for `http` or `https` resources.  This is necessary in many cases because the
 most common form of an HTTP/1.1 request does not carry an explicit indication of the URI scheme.
 
-HTTP/1.1 MUST NOT be sent over HTTP/1.1 or earlier versions of the protocol.  Opportunistically secured HTTP requests MUST include an explicit scheme identifier.
+HTTP/1.1 MUST NOT be sent over HTTP/1.1 or earlier versions of the protocol.  Opportunistically
+secured HTTP requests MUST include an explicit scheme identifier.
 
 
 
