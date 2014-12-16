@@ -211,8 +211,10 @@ parameter. See Section 4.2.3 of {{RFC7234}} for details of determining response 
     ma-parameter     = delta-seconds
 
 The commitment made by the `HTTP-TLS` header field applies only to the origin of the resource that
-generates the `HTTP-TLS` header field.  Requests for an origin that has a persisted, unexpired value
-for `HTTP-TLS` MUST fail if they cannot be made over an authenticated TLS connection.
+generates the `HTTP-TLS` header field.
+
+Requests for an origin that has a persisted, unexpired value for `HTTP-TLS` MUST fail if they cannot
+be made over an authenticated TLS connection.
 
 Note that the commitment is not bound to a particular alternative service.  Clients SHOULD use
 alternative services that they become aware of.  However, clients MUST NOT use an unauthenticated
