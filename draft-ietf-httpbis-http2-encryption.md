@@ -132,8 +132,9 @@ the origin's host); for example, using TLS with a certificate that validates as 
 
 # Interaction with "https" URIs
 
-When using alternative services, both `http` and `https` URIs might use the same connection,
-because HTTP/2 permits requests for multiple origins on the same connection.
+When using alternative services, requests for resources identified by both `http` and `https` URIs
+might use the same connection, because HTTP/2 permits requests for multiple origins on the same
+connection.
 
 Since `https` URIs rely on server authentication, a connection that is initially created for `http`
 URIs without authenticating the server cannot be used for `https` URIs until the server certificate
