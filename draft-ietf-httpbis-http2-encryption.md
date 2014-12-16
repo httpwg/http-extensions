@@ -190,7 +190,7 @@ For example:
 
     HTTP/1.1 200 OK
     Content-Type: text/html
-    Cache-Control: 600
+    Cache-Control: max-age=600
     Age: 30
     Date: Thu, 1 May 2014 16:20:09 GMT
     HTTP-TLS: ma=3600
