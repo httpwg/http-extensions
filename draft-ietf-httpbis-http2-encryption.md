@@ -172,7 +172,8 @@ client.
 
 ## The HTTP-TLS Header Field
 
-A alternative service can make this commitment by sending a `HTTP-TLS` header field:
+A alternative service can make this commitment by sending a `HTTP-TLS` header field, described here
+using the '#' ABNF extension defined in Section 7 of {{RFC7230}}:
 
     HTTP-TLS     = 1#parameter
 
