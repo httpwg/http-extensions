@@ -77,8 +77,8 @@ level of protection as afforded to `https` URIs, but instead to increase the lik
 active attack can be detected.
 
 A final (but significant) goal is to provide for ease of implementation, deployment and operation.
-This mechanism should have a minimal impact upon performance, and should not require extensive
-administrative effort to configure.
+This mechanism is expected to have a minimal impact upon performance, and a trivial administrative
+effort to configure.
 
 
 ## Notational Conventions
@@ -99,7 +99,7 @@ origin ({{RFC6454}}) to the identified service (as specified by {{I-D.ietf-httpb
 
 A client that places the importance of protection against passive attacks over performance might
 choose to withhold requests until an encrypted connection is available. However, if such a
-connection cannot be successfully established, the client MAY resume its use of the cleartext
+connection cannot be successfully established, the client can resume its use of the cleartext
 connection.
 
 A client can also explicitly probe for an alternative service advertisement by sending a request
@@ -118,7 +118,7 @@ When connecting to an alternative service for an `http` URI, clients are not req
 server authentication procedure described in Section 3.1 of {{RFC2818}}. The server certificate, if
 one is proffered by the alternative service, is not necessarily checked for validity, expiration,
 issuance by a trusted certificate authority or matched against the name in the URI. Therefore, the
-alternative service MAY provide any certificate, or even select TLS cipher suites that do not
+alternative service can provide any certificate, or even select TLS cipher suites that do not
 include authentication.
 
 A client MAY perform additional checks on the offered certificate if the server does not select an
