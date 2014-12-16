@@ -201,8 +201,8 @@ authenticate the server for all subsequent requests made to that origin, though 
 risks for clients (see {{pinrisks}}).
 
 Authentication for HTTP over TLS is described in Section 3.1 of {{RFC2818}}, noting the additional
-requirements in {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if strong
-authentication fails; otherwise, an attacker could create a persistent denial of service by
+requirements in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if
+strong authentication fails; otherwise, an attacker could create a persistent denial of service by
 falsifying a commitment.
 
 The commitment to use authenticated TLS persists for a period determined by the value of the `ma`
