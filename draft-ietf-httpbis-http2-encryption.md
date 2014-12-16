@@ -54,10 +54,9 @@ This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-al
 the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI to be
 accessed using TLS {{RFC5246}} opportunistically.
 
-Currently, `https` URIs require acquiring and configuring a valid certificate, which means that
-some deployments find supporting TLS difficult. Therefore, this document describes a usage model
-whereby sites can serve `http` URIs over TLS without being required to support strong server
-authentication.
+Serving `https` URIs require acquiring and configuring a valid certificate, which means that some
+deployments find supporting TLS difficult. This document describes a usage model whereby sites can
+serve `http` URIs over TLS without being required to support strong server authentication.
 
 Opportunistic Security {{RFC7435}} does not provide the same guarantees
 as using TLS with `https` URIs; it is vulnerable to active attacks, and does not change the security
