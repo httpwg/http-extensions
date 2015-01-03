@@ -142,7 +142,7 @@
   similar to status codes 301, 302, or 307.
 </t>
 <t>
-  Therefore, initial use of status code 308 will be restricted to cases where
+  Therefore, the use of status code 308 is restricted to cases where
   the server has sufficient confidence in the client's understanding the new 
   code or when a fallback to the semantics of status code 300 is not problematic.
   Server implementers are advised not to vary the status code based on
