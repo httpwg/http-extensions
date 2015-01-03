@@ -65,9 +65,8 @@ $(addsuffix .txt,$(next)): %.txt: %.xml
 	$(xml2rfc) $< $@
 
 stylesheet := lib/myxml2rfc.xslt
-extra_css := lib/style.css
 %.html: %.xml $(stylesheet) $(extra_css)
-	$(saxon) $< $(stylesheet) | sed -f lib/addstyle.sed > $@
+	$(saxon) $< $(stylesheet) > $@
 
 reduction := lib/clean-for-DTD.xslt
 %.redxml: %.xml $(reduction)
