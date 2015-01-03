@@ -84,7 +84,7 @@
 </texttable>
 <t>
   <xref target="RFC7231" x:rel="#status.307"/>
-  states that HTTP does not define a permanent variant of status code 307;
+  states that it does not define a permanent variant of status code 307;
   this specification adds 
   the status code 308, defining this missing variant (<xref target="status.308"/>).
 </t>
@@ -223,7 +223,8 @@ Content-Length: <x:length-of target="body"/>
   the HTTP/1.1 definitions of status codes 301 and 307.
 </t>
 <t>
-  Furthermore, thanks to Ben Campbell, Cyrus Daboo, Eran Hammer-Lahav, Bjoern Hoehrmann,
+  Furthermore, thanks to Ben Campbell, Cyrus Daboo, Adrian Farrell, Eran Hammer-Lahav,
+  Bjoern Hoehrmann, Barry Leiba,
   Subramanian Moonesamy, Peter Saint-Andre,
   and Robert Sparks for feedback on this document.
 </t>
