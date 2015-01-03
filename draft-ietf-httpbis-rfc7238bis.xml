@@ -154,7 +154,7 @@
 </t>
 <t>
   Note that many existing HTML-based user agents will emulate a refresh when encountering
-  an HTML &lt;meta&gt; refresh directive (<xref target="HTML"/>). This can be used as another
+  an HTML &lt;meta&gt; refresh directive (<xref target="HTML" x:fmt="," x:sec="4.2.5.3" x:rel="document-metadata.html#pragma-directives"/>). This can be used as another
   fallback. For example:
 </t>
 
@@ -173,8 +173,7 @@ Content-Type: text/html; charset=UTF-8
 Location: http://example.com/new
 Content-Length: <x:length-of target="body"/>
 
-<x:span anchor="body">&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-                      "http://www.w3.org/TR/html4/strict.dtd"&gt;
+<x:span anchor="body">&lt;!DOCTYPE HTML&gt;
 &lt;html&gt;
    &lt;head&gt;
       &lt;title&gt;Permanent Redirect&lt;/title&gt;
@@ -337,18 +336,23 @@ Content-Length: <x:length-of target="body"/>
 
 
 <references title="Informative References">
-<reference anchor="HTML" target="http://www.w3.org/TR/1999/REC-html401-19991224">
+<reference anchor='HTML'
+           target='http://www.w3.org/TR/2014/REC-html5-20141028/'>
   <front>
-    <title>HTML 4.01 Specification</title>
-    <author fullname="David Raggett" surname="Raggett" initials="D."/>
-    <author fullname="Arnaud Le Hors" surname="Le Hors" initials="A."/>
-    <author fullname="Ian Jacobs" surname="Jacobs" initials="I."/>
-    <date year="1999" month="December" day="24"/>
+    <title>HTML5</title>
+    <author fullname='Ian Hickson' surname='Hickson' initials='I.'/>
+    <author fullname='Robin Berjon' surname='Berjon' initials='R.'/>
+    <author fullname='Steve Faulkner' surname='Faulkner' initials='S.'/>
+    <author fullname='Travis Leithead' surname='Leithead' initials='T.'/>
+    <author fullname='Erika Doyle Navara' surname='Doyle Navara' initials='E.'/>
+    <author fullname='Edward O&apos;Connor' surname='O&apos;Connor' initials='E.'/>
+    <author fullname='Silvia Pfeiffer' surname='Pfeiffer' initials='S.'/>
+    <date year='2014' month='October' day='28'/>
   </front>
-  <seriesInfo name="W3C Recommendation" value="REC-html401-19991224"/>
+  <seriesInfo name='W3C Recommendation' value='REC-html5-20141028'/>
   <annotation>
     Latest version available at
-    <eref target="http://www.w3.org/TR/html401"/>.
+    <eref target='http://www.w3.org/TR/html5/'/>.
   </annotation>
 </reference>
 <!--<reference anchor="RFC7238">
