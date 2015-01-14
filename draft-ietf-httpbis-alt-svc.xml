@@ -519,10 +519,35 @@ Alt-Svc: h2c=":8000"; ma=60
 <t>
   The ALTSVC frame type is 0xa (decimal 10).
 </t>
+<figure title="ALTSVC Frame Payload">
+  <artwork type="drawing"><![CDATA[
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ | Origin-Len (8)|                Origin? (*)                  ...
+ +---------------+-----------------------------------------------+
+ |                          Value                              ...
+ +---------------------------------------------------------------+
+]]></artwork>
+</figure>
+
 <t>
-  The payload of an ALTSVC frame is identical to the payload of the Alt-Svc
-  field value defined in <xref target="alt-svc"/> (ABNF production
-  "Alt-Svc").
+  The ALTSVC frame contains the following fields:
+  <list style="hanging">
+    <t hangText="Origin-Len:">
+      An unsigned, 8-bit integer indicating the length, in octets, of the Origin header field.
+    </t>
+    <t hangText="Origin:">
+      An &OPTIONAL; sequence of characters (length determined by <spanx
+      style="verb">Origin-Len</spanx>) containing the ASCII serialization of an origin (<xref
+      target="RFC6454" x:fmt="," x:sec="6.2"/>) that the alternate service is applicable to.
+    </t>
+    <t hangTest="Value:">
+      A sequence of characters (length determined by subtracting the length of all preceding fields
+      from the frame length) containing a value identical to the Alt-Svc field value defined in
+      <xref target="alt-svc"/> (ABNF production "Alt-Svc").
+    </t>
+  </list>
 </t>
 <t>
   The ALTSVC frame does not define any flags.
