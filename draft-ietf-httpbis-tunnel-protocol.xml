@@ -26,7 +26,7 @@
 <rfc category="std" docName="draft-ietf-httpbis-tunnel-protocol-latest" ipr="trust200902"      xmlns:x="http://purl.org/net/xml2rfc/ext">
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
   <front>
-    <title abbrev="Tunnel-Protocol">The Tunnel-Protocol HTTP Request Header Field</title>
+    <title abbrev="Tunnel-Protocol">The Tunnel-Protocol HTTP Header Field</title>
 
     <author fullname="Andrew Hutton" initials="A." surname="Hutton">
       <organization>Unify</organization>
@@ -80,7 +80,7 @@
       <t>
         This specification allows HTTP CONNECT requests to indicate what
         protocol will be used within the tunnel once established, using the
-        Tunnel-Protocol request header field.
+        Tunnel-Protocol header field.
        </t>
     </abstract>
 
@@ -144,11 +144,11 @@
       </section>
     </section>
 
-   <section title="The Tunnel-Protocol HTTP Request Header Field" anchor="tp">
+   <section title="The Tunnel-Protocol HTTP Header Field" anchor="tp">
       <t>
-        Clients include the `Tunnel-Protocol` Request Header field in an HTTP
-        CONNECT request to indicate the application layer protocol will be used
-        within the tunnel, or the set of protocols that might be used within the
+        Clients include the Tunnel-Protocol header field in an HTTP CONNECT
+        request to indicate the application layer protocol will be used within
+        the tunnel, or the set of protocols that might be used within the
         tunnel.
       </t>
 
@@ -161,7 +161,7 @@
 
      <section title="Syntax">
         <t>
-          The ABNF (Augmented Backus-Naur Form) syntax for the `Tunnel-Protocol`
+          The ABNF (Augmented Backus-Naur Form) syntax for the Tunnel-Protocol
           header field is given below.  It is based on the Generic Grammar
           defined in <xref x:sec="2" x:fmt="of" target="RFC7230"/>.
         </t>
@@ -214,7 +214,7 @@ Tunnel-Protocol: h2, http%2F1.1
         HTTP header fields are registered within the "Message Headers" registry
         maintained at <eref
         target="https://www.iana.org/assignments/message-headers"/>.  This
-        document defines and registers the `Tunnel-Protocol` header field,
+        document defines and registers the Tunnel-Protocol header field,
         according to <xref target="RFC3864"/> as follows:
         <list style="hanging">
           <t hangText="Header Field Name:">
@@ -248,14 +248,14 @@ Tunnel-Protocol: h2, http%2F1.1
         targets."
       </t>
       <t>
-        The `Tunnel-Protocol` request header field described in this document is
-        an optional header. Clients and HTTP Proxies could choose to not support
+        The Tunnel-Protocol header field described in this document is an
+        optional header. Clients and HTTP Proxies could choose to not support
         the header and therefore fail to provide it, or ignore it when
         present. If the header is not available or ignored, a proxy cannot
         identify the purpose of the tunnel and use this as input to any
         authorization decision regarding the tunnel. This is indistinguishable
         from the case where either client or proxy does not support the
-        `Tunnel-Protocol` header.
+        Tunnel-Protocol header.
       </t>
     </section>
   </middle>
