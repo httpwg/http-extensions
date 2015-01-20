@@ -173,10 +173,11 @@ protocol-id     = token ; percent-encoded ALPN protocol identifier
         </figure>
         <t>
           ALPN protocol names are octet sequences with no additional constraints
-          on format. Octets not allowed in tokens (<xref target="RFC7230" x:fmt="," x:sec="3.2.6"/>)
-          must be percent-encoded as per <xref x:fmt="of" x:sec="2.1" target="RFC3986"/>.
-          Consequently, the octet representing the percent
-          character "%" (hex 25) must be percent-encoded as well.
+          on format. Octets not allowed in tokens (<xref target="RFC7230"
+          x:fmt="," x:sec="3.2.6"/>) must be percent-encoded as per <xref
+          x:fmt="of" x:sec="2.1" target="RFC3986"/>.  Consequently, the octet
+          representing the percent character "%" (hex 25) must be
+          percent-encoded as well.
         </t>
         <t>
           In order to have precisely one way to represent any ALPN protocol
