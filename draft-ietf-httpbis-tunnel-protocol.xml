@@ -201,9 +201,9 @@ protocol-id     = token ; percent-encoded ALPN protocol identifier
             For example:
           </preamble>
           <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
-CONNECT turn_server.example.com:5349 HTTP/1.1
-Host: turn_server.example.com:5349
-Tunnel-Protocol: stun.turn
+CONNECT www.example.com HTTP/1.1
+Host: www.example.com
+Tunnel-Protocol: h2, http%2F1.1
 </artwork>
         </figure>
       </section>
