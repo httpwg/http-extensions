@@ -8,6 +8,7 @@
 <!ENTITY RFC3864 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3864.xml">
 <!ENTITY RFC3986 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml">
 <!ENTITY RFC5246 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
+<!ENTITY RFC5766 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5766.xml">
 <!ENTITY RFC7230 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml">
 <!ENTITY RFC7231 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7231.xml">
 <!ENTITY RFC7301 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7301.xml">
@@ -111,18 +112,18 @@
         requests that the recipient establish a tunnel to the identified origin
         server and thereafter forward packets, in both directions, until the
         tunnel is closed. Such tunnels are commonly used to create end-to-end
-        virtual connections, through one or more proxies, which may then be
+        virtual connections, through one or more proxies, which can then be
         secured using TLS (Transport Layer Security, <xref target="RFC5246"/>).
       </t>
       <t>
         The HTTP Tunnel-Protocol header field identifies the protocol that will
-        be spoken within the tunnel, using the application layer next protocol
-        identifier <xref target="RFC7301"/> specified for TLS <xref
+        be spoken within the tunnel, using the Application Layer Protocol
+        Negotiation identifier (ALPN, <xref target="RFC7301"/>) specified for TLS <xref
         target="RFC5246"/>.
       </t>
       <t>
         When CONNECT is used to establish a TLS tunnel, the Tunnel-Protocol
-        header field may be used to carry the same application protocol label as
+        header field can be used to carry the same application protocol label as
         will be carried within the TLS handshake.  If there are multiple
         possible application protocols, all of those application protocols are
         indicated.
@@ -147,15 +148,17 @@
    <section title="The Tunnel-Protocol HTTP Header Field" anchor="tp">
       <t>
         Clients include the Tunnel-Protocol header field in an HTTP CONNECT
-        request to indicate the application layer protocol will be used within
+        request to indicate the application layer protocol that will be used within
         the tunnel, or the set of protocols that might be used within the
         tunnel.
       </t>
 
       <section title="Header Field Values">
         <t>
-          Valid values for the protocol field are taken from the registry
-          established in <xref target="RFC7301"/>.
+          Valid values for the protocol field are taken from the
+          "Application-Layer Protocol Negotiation (ALPN) Protocol ID" registry
+          (<eref target="http://www.iana.org/assignments/tls-extensiontype-values/#alpn-protocol-ids"/>)
+          established by <xref target="RFC7301"/>.
         </t>
       </section>
 
@@ -188,7 +191,7 @@ protocol-id     = token ; percent-encoded ALPN protocol identifier
               are valid token characters except "%", and
             </t>
             <t>
-              When using percent-encoding, uppercase hex digits must be used.
+              When using percent-encoding, uppercase hex digits MUST be used.
             </t>
           </list>
         </t>
@@ -238,7 +241,7 @@ Tunnel-Protocol: h2, http%2F1.1
 
     <section anchor="Security" title="Security Considerations">
       <t>
-        In case of using HTTP CONNECT to a TURN server the security
+        In case of using HTTP CONNECT to a TURN server ("Traversal Using Relays around NAT", <xref target="RFC5766"/>) the security
         considerations of <xref target="RFC7231" x:fmt="of" x:sec="4.3.6"/>
         apply. It states that there "are significant risks in establishing a
         tunnel to arbitrary servers, particularly when the destination is a
@@ -249,13 +252,13 @@ Tunnel-Protocol: h2, http%2F1.1
       </t>
       <t>
         The Tunnel-Protocol header field described in this document is an
-        optional header. Clients and HTTP Proxies could choose to not support
+        OPTIONAL header field. Clients and HTTP Proxies could choose to not support
         the header and therefore fail to provide it, or ignore it when
         present. If the header is not available or ignored, a proxy cannot
         identify the purpose of the tunnel and use this as input to any
         authorization decision regarding the tunnel. This is indistinguishable
         from the case where either client or proxy does not support the
-        Tunnel-Protocol header.
+        Tunnel-Protocol header field.
       </t>
     </section>
   </middle>
@@ -272,6 +275,7 @@ Tunnel-Protocol: h2, http%2F1.1
 
    <references title="Informative References">
       &RFC5246;
+      &RFC5766;
     </references>
   </back>
 </rfc>
