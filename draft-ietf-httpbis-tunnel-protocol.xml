@@ -112,27 +112,32 @@
         requests that the recipient establish a tunnel to the identified origin
         server and thereafter forward packets, in both directions, until the
         tunnel is closed. Such tunnels are commonly used to create end-to-end
-        virtual connections, through one or more proxies, which can then be
-        secured using TLS (Transport Layer Security, <xref target="RFC5246"/>).
+        virtual connections, through one or more proxies.
       </t>
       <t>
         The HTTP Tunnel-Protocol header field identifies the protocol that will
         be spoken within the tunnel, using the Application Layer Protocol
-        Negotiation identifier (ALPN, <xref target="RFC7301"/>) specified for TLS <xref
-        target="RFC5246"/>.
+        Negotiation identifier (ALPN, <xref target="RFC7301"/>).
       </t>
       <t>
-        When CONNECT is used to establish a TLS tunnel, the Tunnel-Protocol
-        header field can be used to carry the same application protocol label as
-        will be carried within the TLS handshake.  If there are multiple
-        possible application protocols, all of those application protocols are
-        indicated.
+        When the CONNECT method is used to establish a tunnel, the
+        Tunnel-Protocol header field can be used to identify the protocol that
+        the client intends to use with that tunnel.  For a tunnel that is then
+        secured using <xref target="RFC5246">TLS</xref>, the header field
+        carries the same application protocol label as will be carried within
+        the TLS handshake.  If there are multiple possible application
+        protocols, all of those application protocols are indicated.
       </t>
       <t>
-        The Tunnel-Protocol header field carries an indication only.  In TLS,
-        the final choice of application protocol is made by the server.  Proxies
-        do not implement the tunneled protocol, though they might choose to make
-        policy decisions based on the value of the header field.
+        The Tunnel-Protocol header field carries an indication of client intent
+        only.  In TLS, the final choice of application protocol is made by the
+        server from the set of choices presented by the client.  Other protocols
+        could negotiate protocols differently.
+      </t>
+      <t>
+        Proxies do not implement the tunneled protocol, though they
+        might choose to make policy decisions based on the value of the header
+        field.
       </t>
 
       <section title="Requirements Language">
