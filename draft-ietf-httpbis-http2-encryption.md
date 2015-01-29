@@ -37,8 +37,8 @@ normative:
   I-D.ietf-websec-key-pinning:
 
 informative:
-  I-D.dukhovni-opportunistic-security:
   RFC7258:
+  RFC7435:
 
 
 --- abstract
@@ -59,7 +59,7 @@ some deployments find supporting TLS difficult. Therefore, this document describ
 whereby sites can serve `http` URIs over TLS without being required to support strong server
 authentication.
 
-Opportunistic Security {{I-D.dukhovni-opportunistic-security}} does not provide the same guarantees
+Opportunistic Security {{RFC7435}} does not provide the same guarantees
 as using TLS with `https` URIs; it is vulnerable to active attacks, and does not change the security
 context of the connection. Normally, users will not be able to tell that it is in use (i.e., there
 will be no "lock icon").
