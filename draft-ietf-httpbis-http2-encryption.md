@@ -152,10 +152,10 @@ Editors' Note: this is a very rough take on an approach that would provide a lim
 protection against downgrade attack. It's unclear at this point whether the additional effort (and
 modest operational cost) is worthwhile.
 
-The mechanism described in this specification is trival to mount an active attack against, for two
+The mechanism described in this specification is trivial to mount an active attack against, for two
 reasons:
 
-- A client that doesn't perform authentication an easy victim of server impersonation, through
+- A client that doesn't perform authentication is an easy victim of server impersonation, through
 man-in-the-middle attacks.
 
 - A client that is willing to use cleartext to resolve the resource will do so if access to any
@@ -166,7 +166,7 @@ critical failings (especially considering the alternative - HTTP over cleartext)
 form of protection against active attacks can be provided for clients on subsequent connections.
 
 When an alternative service is able to commit to providing service for a particular origin over TLS
-for a bounded period of time, clients can choose to rely upon its avilability, failing when it
+for a bounded period of time, clients can choose to rely upon its availability, failing when it
 cannot be contacted. Effectively, this makes the choice to use a secured protocol "sticky" in the
 client.
 
@@ -198,7 +198,7 @@ For example:
 This header field creates a commitment from the origin {{RFC6454}} of the associated resource (in
 the example, `http://example.com`).  For the duration of the commitment, clients SHOULD strongly
 authenticate the server for all subsequent requests made to that origin, though this creates some
-risks for clients {{pinrisks}}.
+risks for clients (see {{pinrisks}}).
 
 Authentication for HTTP over TLS is described in Section 3.1 of {{RFC2818}}, noting the additional
 requirements in {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if strong
@@ -276,9 +276,7 @@ Many existing HTTP/1.1 implementations use the presence or absence of TLS in the
 whether requests are for `http` or `https` resources.  This is necessary in many cases because the
 most common form of an HTTP/1.1 request does not carry an explicit indication of the URI scheme.
 
-HTTP/1.1 MUST NOT be sent over HTTP/1.1 or earlier versions of the protocol.  Opportunistically
-secured HTTP requests MUST include an explicit scheme identifier.
-
+HTTP/1.1 MUST NOT be used for opportunistically secured requests.
 
 
 --- back
