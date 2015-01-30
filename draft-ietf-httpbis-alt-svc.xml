@@ -569,36 +569,31 @@ Alt-Svc: h2c=":8000"; ma=60
 
 <section title="The Alt-Used HTTP Header Field" anchor="indicator">
 <t>
-   The Alt-Used header field is used in requests to indicate that an
-   alternate service is in use.
+   The Alt-Used header field is used in requests to indicate the identity of
+   the  alternate service in use, just as the Host header field (<xref target="RFC7230" x:rel="#header.host"/>)
+   identifies the host and port of the origin.
 </t>
 <figure>
 <artwork type="abnf2616">
-Alt-Used     = use-flag *( OWS ";" OWS ext-param )
-use-flag     = "1" / "0"
-ext-param    = token "=" ( token / quoted-string )
+Alt-Used     = uri-host [ ":" port ]
 </artwork>
 </figure>
 <t>
-   Alt-Used is intended to allow alternate services to avoid sending
-   alternative service indications where there is a risk of generating a loops.
-   It also allows a service to identify requests for accounting and load
-   balancing purposes.
+   Alt-Used is intended to allow alternate services to detect loops, differentiate
+   traffic for purposes of load balancing, and generally to ensure that it is
+   possible to identify the intended destination of traffic, since introducing
+   this information after a protocol is in use has proven to be problematic.
 </t>
 <t>
-   When using an alternative service, clients &MUST; include a Alt-Used
+   When using an alternative service, clients &SHOULD; include a Alt-Used
    header field in all requests.
-</t>
-<t>
-   A flag value of "1" indicates that an alternate service was used,
-   while "0" means it was not.
 </t>
 <figure>
   <preamble>For example:</preamble>
   <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
 GET /thing HTTP/1.1
 Host: origin.example.com
-Alt-Used: 1
+Alt-Used: alternate.example.net
 </artwork>
 </figure>
 <t>
@@ -778,7 +773,7 @@ Alt-Used: 1
 <section title="Acknowledgements" anchor="acknowledgements">
 <t>
   Thanks to Adam Langley, Bence Beky, Eliot Lear, Erik Nygren, Guy Podjarny,
-  Martin Thomson,
+  Martin Thomson, Matthew Kerwin,
   Paul Hoffman,
   Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
   feedback and suggestions.
@@ -1034,6 +1029,10 @@ Alt-Used: 1
 </section>
 
 <section title="Since draft-ietf-httpbis-alt-svc-05" anchor="changes.since.draft-ietf-httpbis-alt-svc-05">
+<t>
+  Go back to specifying the origin in Alt-Used, but make it a "SHOULD"
+  (<eref target="https://github.com/httpwg/http-extensions/issues/34"/>).
+</t>
 <t>
   Restore Origin field in ALT-SVC frame
   (<eref target="https://github.com/httpwg/http-extensions/issues/38"/>).
