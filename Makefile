@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -novw -l
 kramdown2629 ?= kramdown-rfc2629
 
-names := http2-encryption alt-svc tunnel-protocol rfc7238bis
+names := http2-encryption alt-svc tunnel-protocol rfc7238bis auth-info
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -46,6 +46,9 @@ tunnel-protocol.%: draft-ietf-httpbis-tunnel-protocol.%
 	cp -f $< $@
 
 rfc7238bis.%: draft-ietf-httpbis-rfc7238bis.%
+	cp -f $< $@
+
+auth-info.%: draft-ietf-httpbis-auth-info.%
 	cp -f $< $@
 
 define makerule_submit_xml =

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc subcompact="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes" ?>
+
+<!DOCTYPE rfc [
+  <!ENTITY mdash "&#8212;">
+  <!ENTITY Note "<x:h xmlns:x='http://purl.org/net/xml2rfc/ext'>Note:</x:h>">
+  <!ENTITY MAY "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MAY</bcp14>">
+  <!ENTITY MUST "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MUST</bcp14>">
+  <!ENTITY MUST-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MUST NOT</bcp14>">
+  <!ENTITY OPTIONAL "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>OPTIONAL</bcp14>">
+  <!ENTITY RECOMMENDED "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>RECOMMENDED</bcp14>">
+  <!ENTITY REQUIRED "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>REQUIRED</bcp14>">
+  <!ENTITY SHALL "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHALL</bcp14>">
+  <!ENTITY SHALL-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHALL NOT</bcp14>">
+  <!ENTITY SHOULD "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD</bcp14>">
+  <!ENTITY SHOULD-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD NOT</bcp14>">
+]>
+<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" xmlns:ed="http://greenbytes.de/2002/rfcedit" ipr="trust200902" docName="draft-ietf-httpbis-auth-info-latest" category="std" xml:lang="en" x:maturity-level="proposed">
+
+  <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
+
+	<front>
+  <title abbrev="HTTP Authentication-Info">The Hypertext Transfer Protocol (HTTP) Authentication-Info and Proxy-Authentication-Info Response&#160;Header Fields</title>
+  <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke">
+    <organization abbrev="greenbytes">greenbytes GmbH</organization>
+    <address>
+      <postal>
+        <street>Hafenweg 16</street>
+        <city>Muenster</city><region>NW</region><code>48155</code>
+        <country>Germany</country>
+      </postal>
+      <email>julian.reschke@greenbytes.de</email>	
+      <uri>http://greenbytes.de/tech/webdav/</uri>	
+    </address>
+  </author>
+
+  <date year="2015"/>
+  
+  <area>Applications</area>
+  <workgroup>HTTPbis</workgroup>
+  <keyword>HTTP</keyword>
+  <keyword>authentication</keyword>
+
+  <abstract>
+    <t>
+      This specification defines the "Authentication-Info" and
+      "Proxy-Authentication-Info" response header fields for use in HTTP authentication
+      schemes which need to return additional information during or after
+      authentication.
+    </t>
+  </abstract>
+
+  <note title="Editorial Note (To be removed by RFC Editor)">
+    <t>
+      Discussion of this draft takes place on the HTTPBIS working group mailing list
+      (ietf-http-wg@w3.org), which is archived at <eref
+      target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
+    </t>
+    <t>
+      Working Group information can be found at <eref
+      target="https://tools.ietf.org/wg/httpbis/"/>
+      and <eref target="http://httpwg.github.io/"/>; source code and issues
+      list for this draft can be found at
+      <eref target="https://github.com/httpwg/http-extensions"/>.
+    </t>
+    <t>
+      The changes in this draft are summarized in <xref
+      target="change.log"/>.
+    </t>
+  </note>
+
+  </front>
+
+  <middle>
+
+<section title="Introduction" anchor="introduction">
+<t>
+  This specification defines the "Authentication-Info" and
+  "Proxy-Authentication-Info" response header fields for use in HTTP authentication
+  schemes (<xref target="RFC7235"/>) which need to return additional
+  information during or after authentication.
+</t>
+<t>
+  Both were previously defined in <xref target="RFC2617" x:sec="3"/>, defining
+  the HTTP "Digest" authentication scheme. This document generalizes
+  the description for use not only in "Digest" (<xref target="DIGEST"/>), but
+  also other future schemes that might have the same requirements for carrying
+  additional information during authentication. 
+</t>
+</section>  
+
+<section title="Notational Conventions" anchor="notational.conventions">
+  <x:anchor-alias value="auth-param"/>
+<!--<t>
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in <xref target="RFC2119"/>.
+</t>-->
+<t>
+   This specification uses the Augmented Backus-Naur Form (ABNF) notation of
+   <xref target="RFC5234"/> with a list extension, defined in
+   <xref target="RFC7230" x:rel="#abnf.extension"/>, that allows for compact definition of
+   comma-separated lists using a '#' operator (similar to how the '*' operator
+   indicates repetition).
+   The ABNF production for "auth-param" is defined in <xref target="RFC7235" x:rel="#challenge.and.response"/>.
+</t>
+</section>
+
+<section title="The Authentication-Info Response Header Field" anchor="authentication-info">
+  <x:anchor-alias value="Authentication-Info"/>
+<t>
+  HTTP authentication schemes can use the Authentication-Info response header
+  field to return additional information applicable to the authentication
+  currently in use. 
+</t>
+<t>
+  The field value is a list of parameters (name/value pairs), using the "auth-param"
+  syntax defined in <xref target="RFC7235" x:rel="#challenge.and.response"/>.
+  This specification only describes the generic format; authentication schemes
+  using "Authentication-Info" will define the individual parameters. The "Digest"
+  Authentication Scheme, for instance, defines multiple parameters in
+  <xref target="DIGEST" x:sec="3.5.1"/>.
+</t>
+<figure><artwork type="abnf2616"><!---<iref primary="true" item="Grammar" subitem="Authentication-Info"/>-->
+  <x:ref>Authentication-Info</x:ref> = #<x:ref>auth-param</x:ref>
+</artwork></figure>
+<t>
+  The Authentication-Info header field can be used in any HTTP response,
+  independently of request method and status code. Its semantics are defined
+  by the applicable authentication scheme. Intermediaries are not allowed
+  to modify the field value in any way. Authentication-Info can be used
+  inside trailers (<xref target="RFC7230" x:fmt="," x:rel="#chunked.trailer.part"/>).
+</t>
+
+<section title="Parameter Value Format">
+<t>
+  Parameter values can be expressed either as "token" or as "quoted-string"
+  (<xref target="RFC7230" x:rel="#field.components"/>).
+</t>
+<t>
+  Authentication scheme definitions need to allow both notations, both for
+  senders and recipients. This allows recipients to use generic parsing 
+  components, independent of the authentication scheme in use.
+</t>
+<t>
+  For backwards compatibility, authentication scheme definitions can restrict
+  the format for senders to one of the two variants. This can be important
+  when it is known that deployed implementations will fail when encountering
+  one of the two formats.
+</t>
+</section>
+</section>
+
+<section title="The Proxy-Authentication-Info Response Header Field" anchor="proxy-authentication-info">
+  <x:anchor-alias value="Proxy-Authentication-Info"/>
+<t>
+  The Proxy-Authentication-Info response header field is equivalent to Authentication-Info,
+  except that it applies to proxy authentication (<xref target="RFC7235"/>):
+</t>
+<t>
+<figure><artwork type="abnf2616"><!--<iref primary="true" item="Grammar" subitem="Proxy-Authentication-Info"/>-->
+  <x:ref>Proxy-Authentication-Info</x:ref> = #<x:ref>auth-param</x:ref>
+</artwork></figure>
+</t>
+</section>
+
+<section title="Security Considerations" anchor="security.considerations">
+<t>
+  Adding information to HTTP responses that are sent over an unencrypted
+  channel can affect security and privacy. The presence of the header fields
+  alone indicates that HTTP authentication is in use. Additional information
+  could be exposed by the contents of the authentication-scheme specific
+  parameters; this will have to be considered in the definitions of these
+  schemes.
+</t>
+</section>
+
+<section title="IANA Considerations" anchor="iana.considerations">
+<t>
+   HTTP header fields are registered within the "Message Headers" registry
+   located at <eref target="http://www.iana.org/assignments/message-headers"/>,
+   as defined by <xref target="BCP90"/>.
+</t>
+<t>
+   This document updates the definitions of the "Authentication-Info" and
+   "Proxy-Authentication-Info" header fields,
+   so the "Permanent Message Header Field Names" registry shall be updated
+   accordingly:
+</t>
+<texttable align="left" suppress-title="true" anchor="iana.header.registration.table">
+   <ttcol>Header Field Name</ttcol>
+   <ttcol>Protocol</ttcol>
+   <ttcol>Status</ttcol>
+   <ttcol>Reference</ttcol>
+
+   <c>Authentication-Info</c>
+   <c>http</c>
+   <c>standard</c>
+   <c>
+    <xref target="authentication-info"/> of this document
+   </c>
+   <c>Proxy-Authentication-Info</c>
+   <c>http</c>
+   <c>standard</c>
+   <c>
+    <xref target="proxy-authentication-info"/> of this document
+   </c>
+</texttable>
+</section>
+
+<section title="Acknowledgements">
+<t>
+  This document is based on the header field definitions in RFCs 2069 and 2617,
+  whose authors are: John Franks, Phillip M. Hallam-Baker, Jeffery L. Hostetler,
+  Scott D. Lawrence, Paul J. Leach, Ari Luotonen, Eric W. Sink, and
+  Lawrence C. Stewart.
+</t>
+<t>
+  Additional thanks go to the members of the HTTPAuth and HTTPbis
+  Working Groups, namely Amos Jeffries, Benjamin Kaduk, Alexey Melnikov,
+  Yutaka Oiwa, Rifaat Shekh-Yusef, and Martin Thomson.
+</t>
+</section>
+
+  </middle>
+  <back>
+  
+<references title="Normative References">
+
+<!--<reference anchor="RFC2119">
+  <front>
+    <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+    <author initials="S." surname="Bradner" fullname="Scott Bradner"/>
+    <date month="March" year="1997"/>
+  </front>
+  <seriesInfo name="BCP" value="14"/>
+  <seriesInfo name="RFC" value="2119"/>
+</reference>-->
+
+<reference anchor="RFC5234">
+  <front>
+    <title abbrev="ABNF for Syntax Specifications">Augmented BNF for Syntax Specifications: ABNF</title>
+    <author initials="D." surname="Crocker" fullname="Dave Crocker" role="editor"/>
+    <author initials="P." surname="Overell" fullname="Paul Overell"/>
+    <date month="January" year="2008"/>
+  </front>
+  <seriesInfo name="STD" value="68"/>
+  <seriesInfo name="RFC" value="5234"/>
+</reference>
+
+<reference anchor="RFC7230">
+  <front>
+    <title>Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</title>
+    <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor"/>
+    <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor"/>
+    <date month="June" year="2014"/>
+  </front>
+  <seriesInfo name="RFC" value="7230"/>
+  <x:source href="refs/rfc7230.xml" basename="rfc7230"/>
+</reference>
+
+<reference anchor="RFC7235">
+  <front>
+    <title>Hypertext Transfer Protocol (HTTP/1.1): Authentication</title>
+    <author fullname="Roy T. Fielding" initials="R." role="editor" surname="Fielding"/>
+    <author fullname="Julian F. Reschke" initials="J. F." role="editor" surname="Reschke"/>
+    <date month="June" year="2014"/>
+  </front>
+  <seriesInfo name="RFC" value="7235"/>
+  <x:source href="refs/rfc7235.xml" basename="rfc7235"/>
+</reference>
+
+
+<!--<reference anchor="RFC7231">
+  <front>
+    <title>Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</title>
+    <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor">
+      <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
+      <address><email>fielding@gbiv.com</email></address>
+    </author>
+    <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor">
+      <organization abbrev="greenbytes">greenbytes GmbH</organization>
+      <address><email>julian.reschke@greenbytes.de</email></address>
+    </author>
+    <date month="June" year="2014"/>
+  </front>
+  <seriesInfo name="RFC" value="7231"/>
+  <x:source href="rfc7231.xml" basename="rfc7231"/>
+</reference>-->
+
+</references>
+
+<references title="Informative References">
+
+<reference anchor='BCP90'>
+  <front>
+    <title>Registration Procedures for Message Header Fields</title>
+    <author initials='G.' surname='Klyne' fullname='G. Klyne'/>
+    <author initials='M.' surname='Nottingham' fullname='M. Nottingham'/>
+    <author initials='J.' surname='Mogul' fullname='J. Mogul'/>
+    <date year='2004' month='September' />
+  </front>
+  <seriesInfo name='BCP' value='90' />
+  <seriesInfo name='RFC' value='3864' />
+</reference>
+
+<reference anchor="RFC2617">
+  <front>
+    <title abbrev="HTTP Authentication">HTTP Authentication: Basic and Digest Access Authentication</title>
+    <author initials="J." surname="Franks" fullname="John Franks"/>
+    <author initials="P.M." surname="Hallam-Baker" fullname="Phillip M. Hallam-Baker"/>
+    <author initials="J.L." surname="Hostetler" fullname="Jeffery L. Hostetler"/>
+    <author initials="S.D." surname="Lawrence" fullname="Scott D. Lawrence"/>
+    <author initials="P.J." surname="Leach" fullname="Paul J. Leach"/>
+    <author initials="A." surname="Luotonen" fullname="Ari Luotonen"/>
+    <author initials="L." surname="Stewart" fullname="Lawrence C. Stewart"/>
+    <date month="June" year="1999"/>
+  </front>
+  <seriesInfo name="RFC" value="2617"/>
+</reference>
+
+<reference anchor="DIGEST">
+  <front>
+    <title>HTTP Digest Access Authentication</title>
+    <author initials="R." surname="Shekh-Yusef" fullname="Rifaat Shekh-Yusef" role="editor"/>
+    <author initials="D." surname="Ahrens" fullname="David Ahrens"/>
+    <author initials="S." surname="Bremer" fullname="Sophie Bremer"/>
+    <date month="January" year="2015"/>
+  </front>
+  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-12"/>
+</reference>
+  
+</references>
+
+<section title="Change Log (to be removed by RFC Editor before publication)" anchor="change.log">
+
+<section title="draft-reschke-httpauth-auth-info-00">
+<t>
+  Changed boilerplate to make this an HTTPbis WG draft. Added Acknowledgements.
+</t>
+<t>
+  In the Security Considerations, remind people that those apply to unencryped
+  channels.
+</t>
+<t>
+  Make it clearer that these are really just response header fields.
+</t>
+</section>
+</section>
+  </back>
+
+</rfc>
