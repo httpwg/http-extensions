@@ -65,7 +65,7 @@
     <workgroup>HTTPbis</workgroup>
     <keyword>HTTP</keyword>
     <keyword>ALPN</keyword>
-    <keyword>Alternate Services</keyword>
+    <keyword>Alternative Services</keyword>
 
     <abstract>
       <t>
@@ -317,9 +317,9 @@
    HTTP; or, an alternative service might itself advertise an alternative.
 </t>
 <t>
-   When a client uses an alternate service, it &MUST; emit the Alt-Used
-   header field (<xref target="indicator"/>) on every request using that alternate
-   service.
+   When a client uses an alternative service, it &MUST; emit the Alt-Used
+   header field (<xref target="indicator"/>) on every request using that
+   alternative service.
 </t>
 <t>
    The client does not need to block requests on any existing connection; it can be
@@ -538,8 +538,8 @@ Alt-Svc: h2c=":8000"; ma=60
     </t>
     <t hangText="Origin:">
       An &OPTIONAL; sequence of characters containing the ASCII serialization of an
-      origin (<xref target="RFC6454" x:fmt="," x:sec="6.2"/>) that the alternate service is
-      applicable to.
+      origin (<xref target="RFC6454" x:fmt="," x:sec="6.2"/>) that the alternative
+      service is applicable to.
     </t>
     <t hangText="Alt-Svc-Field-Value:">
       A sequence of octets (length determined by subtracting the length of all preceding fields
@@ -570,7 +570,7 @@ Alt-Svc: h2c=":8000"; ma=60
 <section title="The Alt-Used HTTP Header Field" anchor="indicator">
 <t>
    The Alt-Used header field is used in requests to indicate the identity of
-   the  alternate service in use, just as the Host header field (<xref target="RFC7230" x:rel="#header.host"/>)
+   the  alternative service in use, just as the Host header field (<xref target="RFC7230" x:rel="#header.host"/>)
    identifies the host and port of the origin.
 </t>
 <figure>
@@ -579,7 +579,7 @@ Alt-Used     = uri-host [ ":" port ]
 </artwork>
 </figure>
 <t>
-   Alt-Used is intended to allow alternate services to detect loops, differentiate
+   Alt-Used is intended to allow alternative services to detect loops, differentiate
    traffic for purposes of load balancing, and generally to ensure that it is
    possible to identify the intended destination of traffic, since introducing
    this information after a protocol is in use has proven to be problematic.
