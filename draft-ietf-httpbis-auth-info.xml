@@ -74,7 +74,7 @@
     </t>
     <t>
       The changes in this draft are summarized in <xref
-      target="change.log"/>.
+      target="since.00"/>.
     </t>
   </note>
 
@@ -119,8 +119,7 @@
   <x:anchor-alias value="Authentication-Info"/>
 <t>
   HTTP authentication schemes can use the Authentication-Info response header
-  field to return additional information applicable to the authentication
-  currently in use. 
+  field to communicate additional information regarding the successful authentication.
 </t>
 <t>
   The field value is a list of parameters (name/value pairs), using the "auth-param"
@@ -353,6 +352,13 @@
 </t>
 <t>
   Make it clearer that these are really just response header fields.
+</t>
+</section>
+
+<section title="draft-ietf-httpbis-auth-info-00" anchor="since.00">
+<t>
+  Rephrase introduction of header field to be closer to what RFC 2617
+  said ("successful authentication").
 </t>
 </section>
 </section>
