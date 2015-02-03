@@ -317,7 +317,7 @@
    HTTP; or, an alternative service might itself advertise an alternative.
 </t>
 <t>
-   When a client uses an alternative service, it &MUST; emit the Alt-Used
+   When a client uses an alternative service, it &SHOULD; emit the Alt-Used
    header field (<xref target="indicator"/>) on every request using that
    alternative service.
 </t>
