@@ -317,9 +317,9 @@
    HTTP; or, an alternative service might itself advertise an alternative.
 </t>
 <t>
-   When a client uses an alternative service, it &SHOULD; emit the Alt-Used
-   header field (<xref target="indicator"/>) on every request using that
-   alternative service.
+   When a client uses an alternative service for a request, it can indicate
+   this to the server using the  Alt-Used header field (<xref
+      target="indicator"/>).
 </t>
 <t>
    The client does not need to block requests on any existing connection; it can be
@@ -587,6 +587,11 @@ Alt-Used     = uri-host [ ":" port ]
 <t>
    When using an alternative service, clients &SHOULD; include a Alt-Used
    header field in all requests.
+</t>
+<t>
+   As the Alt-Used header field might be used by the server for tracking the
+   client, a client &MAY; choose not to include it in its requests for
+   protecting its privacy (see <xref target="tracking"/>).
 </t>
 <figure>
   <preamble>For example:</preamble>
