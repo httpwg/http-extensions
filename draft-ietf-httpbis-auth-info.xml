@@ -127,7 +127,7 @@
   This specification only describes the generic format; authentication schemes
   using "Authentication-Info" will define the individual parameters. The "Digest"
   Authentication Scheme, for instance, defines multiple parameters in
-  <xref target="DIGEST" x:sec="3.5.1"/>.
+  <xref target="DIGEST" x:sec="3.5"/>.
 </t>
 <figure><artwork type="abnf2616"><!---<iref primary="true" item="Grammar" subitem="Authentication-Info"/>-->
   <x:ref>Authentication-Info</x:ref> = #<x:ref>auth-param</x:ref>
@@ -333,9 +333,9 @@
     <author initials="R." surname="Shekh-Yusef" fullname="Rifaat Shekh-Yusef" role="editor"/>
     <author initials="D." surname="Ahrens" fullname="David Ahrens"/>
     <author initials="S." surname="Bremer" fullname="Sophie Bremer"/>
-    <date month="January" year="2015"/>
+    <date month="February" year="2015"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-12"/>
+  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-13"/>
 </reference>
   
 </references>
@@ -359,6 +359,9 @@
 <t>
   Rephrase introduction of header field to be closer to what RFC 2617
   said ("successful authentication").
+</t>
+<t>
+  Update DIGEST reference.
 </t>
 </section>
 </section>
