@@ -588,6 +588,11 @@ Alt-Used     = uri-host [ ":" port ]
    When using an alternative service, clients &SHOULD; include a Alt-Used
    header field in all requests.
 </t>
+<t>
+   As the Alt-Used header field might be used by the server for tracking the
+   client, a client &MAY; choose not to include it in its requests for
+   protecting its privacy (see <xref target="tracking"/>).
+</t>
 <figure>
   <preamble>For example:</preamble>
   <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
