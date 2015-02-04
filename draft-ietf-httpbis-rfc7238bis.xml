@@ -196,6 +196,14 @@ Content-Length: <x:length-of target="body"/>
   All security considerations that apply to HTTP redirects apply to the
   308 status code as well (see <xref target="RFC7231" x:rel="#security.considerations"/>).
 </t>
+<t>
+  Furthermore, unsecured HTTP is always subject to redirect attacks, in that a
+  "man in the middle" can replace any HTTP response message with a redirect
+  (such as to a malicious site or one benefiting the attacker).  Such an
+  attack can use "permanent" redirect codes (301 or 308) to convince
+  clients or proxies to cache the malicious information.  Secured HTTP
+  is not subject to these sorts of attacks.
+</t>
 </section>  
 
 <section title="IANA Considerations" anchor="iana.considerations">
@@ -225,7 +233,7 @@ Content-Length: <x:length-of target="body"/>
 <t>
   Furthermore, thanks to Ben Campbell, Cyrus Daboo, Adrian Farrell, Eran Hammer-Lahav,
   Bjoern Hoehrmann, Barry Leiba,
-  Subramanian Moonesamy, Peter Saint-Andre,
+  Subramanian Moonesamy, Kathleen Moriarty, Peter Saint-Andre,
   and Robert Sparks for feedback on this document.
 </t>
 </section>
