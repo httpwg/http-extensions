@@ -74,7 +74,7 @@
     </t>
     <t>
       The changes in this draft are summarized in <xref
-      target="since.00"/>.
+      target="since.01"/>.
     </t>
   </note>
 
@@ -362,6 +362,11 @@
 </t>
 <t>
   Update DIGEST reference.
+</t>
+</section>
+<section title="draft-ietf-httpbis-auth-info-01" anchor="since.01">
+<t>
+  None yet.
 </t>
 </section>
 </section>
