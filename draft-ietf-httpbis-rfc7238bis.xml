@@ -197,12 +197,11 @@ Content-Length: <x:length-of target="body"/>
   308 status code as well (see <xref target="RFC7231" x:rel="#security.considerations"/>).
 </t>
 <t>
-  Furthermore, unsecured HTTP is always subject to redirect attacks, in that a
-  "man in the middle" can replace any HTTP response message with a redirect
-  (such as to a malicious site or one benefiting the attacker).  Such an
-  attack can use "permanent" redirect codes (301 or 308) to convince
-  clients or proxies to cache the malicious information.  Secured HTTP
-  is not subject to these sorts of attacks.
+  Unsecured communication over the Internet is subject to man in the
+  middle modification of messages, including changing status codes or
+  redirect targets.  Use of TLS is one way to mitigate those attacks.
+  See <xref target="RFC7230" x:rel="#security.considerations"/> for related
+  attacks on authority and message integrity.
 </t>
 </section>  
 
@@ -234,7 +233,7 @@ Content-Length: <x:length-of target="body"/>
   Furthermore, thanks to Ben Campbell, Cyrus Daboo, Adrian Farrell, Eran Hammer-Lahav,
   Bjoern Hoehrmann, Barry Leiba,
   Subramanian Moonesamy, Kathleen Moriarty, Peter Saint-Andre,
-  and Robert Sparks for feedback on this document.
+  Robert Sparks, and Roy Fielding for feedback on this document.
 </t>
 </section>
   </middle>
