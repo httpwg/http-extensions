@@ -74,7 +74,7 @@
     </t>
     <t>
       The changes in this draft are summarized in <xref
-      target="since.01"/>.
+      target="since.02"/>.
     </t>
   </note>
 
@@ -372,6 +372,11 @@
 </t>
 <t>
   Add "updates: 2617" to boilerplate.
+</t>
+</section>
+<section title="draft-ietf-httpbis-auth-info-02" anchor="since.02">
+<t>
+  None yet.
 </t>
 </section>
 </section>
