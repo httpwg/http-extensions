@@ -137,7 +137,8 @@
   independently of request method and status code. Its semantics are defined
   by the applicable authentication scheme. Intermediaries are not allowed
   to modify the field value in any way. Authentication-Info can be used
-  inside trailers (<xref target="RFC7230" x:fmt="," x:rel="#chunked.trailer.part"/>).
+  inside trailers (<xref target="RFC7230" x:fmt="," x:rel="#chunked.trailer.part"/>)
+  when the authentication scheme explicitly allows this.
 </t>
 
 <section title="Parameter Value Format">
@@ -226,7 +227,7 @@
 <t>
   Additional thanks go to the members of the HTTPAuth and HTTPbis
   Working Groups, namely Amos Jeffries, Benjamin Kaduk, Alexey Melnikov,
-  Yutaka Oiwa, Rifaat Shekh-Yusef, and Martin Thomson.
+  Mark Nottingham, Yutaka Oiwa, Rifaat Shekh-Yusef, and Martin Thomson.
 </t>
 </section>
 
@@ -366,7 +367,8 @@
 </section>
 <section title="draft-ietf-httpbis-auth-info-01" anchor="since.01">
 <t>
-  None yet.
+  State that scheme definitions need to define whether the header field can
+  be used in trailers.
 </t>
 </section>
 </section>
