@@ -54,8 +54,8 @@
     <t>
       This specification defines the "Authentication-Info" and
       "Proxy-Authentication-Info" response header fields for use in HTTP authentication
-      schemes which need to return additional information during or after
-      authentication.
+      schemes which need to return information once the client's
+      authentication credentials have been accepted.
     </t>
   </abstract>
 
@@ -86,8 +86,8 @@
 <t>
   This specification defines the "Authentication-Info" and
   "Proxy-Authentication-Info" response header fields for use in HTTP authentication
-  schemes (<xref target="RFC7235"/>) which need to return additional
-  information during or after authentication.
+  schemes (<xref target="RFC7235"/>) which need to return
+  information once the client's authentication credentials have been accepted.
 </t>
 <t>
   Both were previously defined in <xref target="RFC2617" x:sec="3"/>, defining
@@ -119,7 +119,9 @@
   <x:anchor-alias value="Authentication-Info"/>
 <t>
   HTTP authentication schemes can use the Authentication-Info response header
-  field to communicate additional information regarding the successful authentication.
+  field to communicate information after the client's authentication credentials have been accepted.
+  This information can include a finalization message from the server (e.g., it can contain the
+  server authentication).
 </t>
 <t>
   The field value is a list of parameters (name/value pairs), using the "auth-param"
