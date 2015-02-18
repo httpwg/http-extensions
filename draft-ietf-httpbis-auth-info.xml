@@ -38,13 +38,13 @@
         <city>Muenster</city><region>NW</region><code>48155</code>
         <country>Germany</country>
       </postal>
-      <email>julian.reschke@greenbytes.de</email>	
-      <uri>http://greenbytes.de/tech/webdav/</uri>	
+      <email>julian.reschke@greenbytes.de</email>
+      <uri>http://greenbytes.de/tech/webdav/</uri>
     </address>
   </author>
 
   <date year="2015"/>
-  
+
   <area>Applications</area>
   <workgroup>HTTPbis</workgroup>
   <keyword>HTTP</keyword>
@@ -93,10 +93,10 @@
   Both were previously defined in <xref target="RFC2617" x:sec="3"/>, defining
   the HTTP "Digest" authentication scheme. This document generalizes
   the description for use not only in "Digest" (<xref target="DIGEST"/>), but
-  also other future schemes that might have the same requirements for carrying
-  additional information during authentication. 
+  also in other future schemes that might have the same requirements for carrying
+  additional information during authentication.
 </t>
-</section>  
+</section>
 
 <section title="Notational Conventions" anchor="notational.conventions">
   <x:anchor-alias value="auth-param"/>
@@ -148,7 +148,7 @@
 </t>
 <t>
   Authentication scheme definitions need to allow both notations, both for
-  senders and recipients. This allows recipients to use generic parsing 
+  senders and recipients. This allows recipients to use generic parsing
   components, independent of the authentication scheme in use.
 </t>
 <t>
@@ -233,7 +233,7 @@
 
   </middle>
   <back>
-  
+
 <references title="Normative References">
 
 <!--<reference anchor="RFC2119">
@@ -338,7 +338,7 @@
   </front>
   <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-13"/>
 </reference>
-  
+
 </references>
 
 <section title="Change Log (to be removed by RFC Editor before publication)" anchor="change.log">
