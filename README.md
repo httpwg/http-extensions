@@ -32,8 +32,8 @@ Currently, this includes:
 
 ### HTTP Authentication-Info Header Field
 
-* [Editor's copy](https://httpwg.github.com/http-extensions/auth-info.html) (HTML)
-* [Editor's copy](https://httpwg.github.com/http-extensions/auth-info.txt) (plain text)
+* [Editor's copy](https://httpwg.github.com/http-extensions/draft-ietf-httpbis-auth-info.html) (HTML)
+* [Editor's copy](https://httpwg.github.com/http-extensions/draft-ietf-httpbis-auth-info.txt) (plain text)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
 
 ## Contributing
