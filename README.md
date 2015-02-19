@@ -38,7 +38,7 @@ Currently, this includes:
 
 ## Contributing
 
-See [Contributing.md](our contribution guidelines) for information about how to
+See [our contribution guidelines](CONTRIBUTING.md) for information about how to
 participate.
 
 **Be aware that all contributions to the specification fall under the "NOTE WELL" terms outlined below.**
