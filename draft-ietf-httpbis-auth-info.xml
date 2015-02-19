@@ -338,7 +338,7 @@
     <author initials="S." surname="Bremer" fullname="Sophie Bremer"/>
     <date month="February" year="2015"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-13"/>
+  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-14"/>
 </reference>
 
 </references>
@@ -378,7 +378,7 @@
 </section>
 <section title="draft-ietf-httpbis-auth-info-02" anchor="since.02">
 <t>
-  None yet.
+  Updated DIGEST reference. Minor tweaks to language describing the purpose of the header field.
 </t>
 </section>
 </section>
