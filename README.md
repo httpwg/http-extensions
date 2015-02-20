@@ -1,8 +1,6 @@
 ## Draft HTTP  Extension Specifications
 
-This is the working area for the [IETF HTTP Working Group](https://httpwg.github.io/) draft extensions.
-
-Currently, this includes:
+This is the working area for the [IETF HTTP Working Group](https://httpwg.github.io/) draft extensions. Currently, this includes:
 
 ### Alternative Services
 
