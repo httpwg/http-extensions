@@ -6,7 +6,7 @@ Currently, this includes:
 
 ### Alternative Services
 
-* Editors' draft - [HTML](https://httpwg.github.io/http-extensions/alt-svc.html) (HTML) / [plain text](https://httpwg.github.io/http-extensions/alt-svc.txt)
+* Editors' draft - [HTML](https://httpwg.github.io/http-extensions/alt-svc.html) / [plain text](https://httpwg.github.io/http-extensions/alt-svc.txt)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
 
 ### HTTP Opportunistic Security
@@ -22,7 +22,7 @@ Currently, this includes:
 
 ### 308 Status Code (RFC 7238bis)
 
-* Editors' draft - [HTML](https://httpwg.github.com/http-extensions/rfc7238bis.html)/ [plain text](https://httpwg.github.com/http-extensions/rfc7238bis.txt)
+* Editors' draft - [HTML](https://httpwg.github.com/http-extensions/rfc7238bis.html) / [plain text](https://httpwg.github.com/http-extensions/rfc7238bis.txt)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc7238bis) (less recent, more official)
 
 ### HTTP Authentication-Info Header Field
