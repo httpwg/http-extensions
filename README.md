@@ -3,33 +3,28 @@
 This is the working area for the [IETF HTTP Working Group](https://httpwg.github.io/) draft extensions. Currently, this includes:
 
 ### Alternative Services
-
-* Editors' draft - [HTML](https://httpwg.github.io/http-extensions/alt-svc.html) / [plain text](https://httpwg.github.io/http-extensions/alt-svc.txt)
+* [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/alt-svc.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aalt-svc)
 
 ### HTTP Opportunistic Security
-
-* Editors' draft - [HTML](https://httpwg.github.com/http-extensions/encryption.html) / [plain text](https://httpwg.github.com/http-extensions/encryption.txt)
+* [Editors' Draft](https://httpwg.github.io/http-extensions/encryption.html) ([plain text](https://httpwg.github.io/http-extensions/encryption.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec)
 
 ### Tunnel Protocol for CONNECT
-
-* Editors' draft - [HTML](https://httpwg.github.com/http-extensions/tunnel-protocol.html) / [plain text](https://httpwg.github.com/http-extensions/tunnel-protocol.txt)
+* [Editors' Draft](https://httpwg.github.io/http-extensions/tunnel-protocol.html) ([plain text](https://httpwg.github.io/http-extensions/tunnel-protocol.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-tunnel-protocol) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Atunnel-proto)
 
 
 ### 308 Status Code (RFC 7238bis)
-
-* Editors' draft - [HTML](https://httpwg.github.com/http-extensions/rfc7238bis.html) / [plain text](https://httpwg.github.com/http-extensions/rfc7238bis.txt)
+* [Editors' Draft](https://httpwg.github.io/http-extensions/rfc7238bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc7238bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc7238bis) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A308bis)
 
 ### HTTP Authentication-Info Header Field
-
-* Editors' draft - [HTML](https://httpwg.github.com/http-extensions/draft-ietf-httpbis-auth-info.html) / [plain text](https://httpwg.github.com/http-extensions/draft-ietf-httpbis-auth-info.txt)
+* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aauth-info)
 
