@@ -378,7 +378,10 @@
 </section>
 <section title="draft-ietf-httpbis-auth-info-02" anchor="since.02">
 <t>
-  Updated DIGEST reference. Minor tweaks to language describing the purpose of the header field.
+  Updated DIGEST reference.
+</t>
+<t>
+  Clarify purpose of header consistently (<eref target="https://github.com/httpwg/http-extensions/issues/49"/>).
 </t>
 </section>
 </section>
