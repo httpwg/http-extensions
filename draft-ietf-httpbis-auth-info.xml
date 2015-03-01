@@ -137,10 +137,16 @@
 <t>
   The Authentication-Info header field can be used in any HTTP response,
   independently of request method and status code. Its semantics are defined
-  by the applicable authentication scheme. Intermediaries are not allowed
-  to modify the field value in any way. Authentication-Info can be used
-  inside trailers (<xref target="RFC7230" x:fmt="," x:rel="#chunked.trailer.part"/>)
-  when the authentication scheme explicitly allows this.
+  by the applicable authentication scheme.
+</t>
+<t>
+  A proxy forwarding a response is not allowed to modify the field value in any
+  way. 
+</t>
+<t>  
+  Authentication-Info can be used inside trailers
+  (<xref target="RFC7230" x:fmt="," x:rel="#chunked.trailer.part"/>) when the
+  authentication scheme explicitly allows this.
 </t>
 
 <section title="Parameter Value Format">
@@ -382,6 +388,9 @@
 </t>
 <t>
   Clarify purpose of header consistently (<eref target="https://github.com/httpwg/http-extensions/issues/49"/>).
+</t>
+<t>
+  The do-not-modify rule does not include proxies that consume Authentication-Info (<eref target="https://github.com/httpwg/http-extensions/issues/50"/>).
 </t>
 </section>
 </section>
