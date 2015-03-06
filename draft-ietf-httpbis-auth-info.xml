@@ -74,7 +74,7 @@
     </t>
     <t>
       The changes in this draft are summarized in <xref
-      target="since.02"/>.
+      target="since.03"/>.
     </t>
   </note>
 
@@ -354,9 +354,9 @@
     <author initials="R." surname="Shekh-Yusef" fullname="Rifaat Shekh-Yusef" role="editor"/>
     <author initials="D." surname="Ahrens" fullname="David Ahrens"/>
     <author initials="S." surname="Bremer" fullname="Sophie Bremer"/>
-    <date month="February" year="2015"/>
+    <date month="March" year="2015"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-14"/>
+  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-15"/>
 </reference>
 
 </references>
@@ -406,6 +406,11 @@
 </t>
 <t>
   Borrow more proxy auth related considerations from RFC 7235 for the description of Proxy-Authentication-Info (<eref target="https://github.com/httpwg/http-extensions/issues/51"/>).
+</t>
+</section>
+<section title="draft-ietf-httpbis-auth-info-03" anchor="since.03">
+<t>
+  Updated DIGEST reference.
 </t>
 </section>
 </section>
