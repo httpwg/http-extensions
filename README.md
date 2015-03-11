@@ -1,4 +1,4 @@
-## Draft HTTP Extension Specifications
+## Current Draft HTTP Extension Specifications
 
 This is the working area for the [IETF HTTP Working Group](https://httpwg.github.io/) draft extensions. Currently, this includes:
 
@@ -17,16 +17,18 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-tunnel-protocol) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Atunnel-proto)
 
+### HTTP Authentication-Info Header Field
+* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aauth-info)
+
+## Approved Draft HTTP Extension Specifications
 
 ### 308 Status Code (RFC 7238bis)
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rfc7238bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc7238bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc7238bis) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A308bis)
-
-### HTTP Authentication-Info Header Field
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aauth-info)
+* [RFC Editor Queue](https://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-rfc7238bis)
 
 ## Contributing
 
@@ -36,7 +38,7 @@ participate.
 **Be aware that all contributions to the specification fall under the "NOTE WELL" terms below.**
 
 
-## Working With the Drafts
+## Working with the Drafts
 
 If you're an editor, or forking a copy of the draft, a few things to know:
 
