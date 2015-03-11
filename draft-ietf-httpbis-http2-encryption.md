@@ -7,7 +7,7 @@ category: exp
 
 ipr: trust200902
 area: General
-workgroup: HTTPbis
+workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes

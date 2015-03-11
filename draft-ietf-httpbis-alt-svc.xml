@@ -62,7 +62,7 @@
 
     <date year="2015"/>
     <area>Applications</area>
-    <workgroup>HTTPbis</workgroup>
+    <workgroup>HTTP</workgroup>
     <keyword>HTTP</keyword>
     <keyword>ALPN</keyword>
     <keyword>Alternative Services</keyword>

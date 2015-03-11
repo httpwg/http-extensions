@@ -72,7 +72,7 @@
 
     <date year="2015"/>
     <area>Applications</area>
-    <workgroup>HTTPbis</workgroup>
+    <workgroup>HTTP</workgroup>
     <keyword>HTTP CONNECT</keyword>
     <keyword>Firewall</keyword>
     <keyword>HTTP proxy</keyword>
