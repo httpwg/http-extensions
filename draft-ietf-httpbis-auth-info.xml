@@ -74,7 +74,7 @@
     </t>
     <t>
       The changes in this draft are summarized in <xref
-      target="since.03"/>.
+      target="since.04"/>.
     </t>
   </note>
 
@@ -377,7 +377,7 @@
 </t>
 </section>
 
-<section title="draft-ietf-httpbis-auth-info-00" anchor="since.00">
+<section title="Since draft-ietf-httpbis-auth-info-00" anchor="since.00">
 <t>
   Rephrase introduction of header field to be closer to what RFC 2617
   said ("successful authentication").
@@ -386,7 +386,7 @@
   Update DIGEST reference.
 </t>
 </section>
-<section title="draft-ietf-httpbis-auth-info-01" anchor="since.01">
+<section title="Since draft-ietf-httpbis-auth-info-01" anchor="since.01">
 <t>
   State that scheme definitions need to define whether the header field can
   be used in trailers.
@@ -395,7 +395,7 @@
   Add "updates: 2617" to boilerplate.
 </t>
 </section>
-<section title="draft-ietf-httpbis-auth-info-02" anchor="since.02">
+<section title="Since draft-ietf-httpbis-auth-info-02" anchor="since.02">
 <t>
   Updated DIGEST reference.
 </t>
@@ -409,7 +409,7 @@
   Borrow more proxy auth related considerations from RFC 7235 for the description of Proxy-Authentication-Info (<eref target="https://github.com/httpwg/http-extensions/issues/51"/>).
 </t>
 </section>
-<section title="draft-ietf-httpbis-auth-info-03" anchor="since.03">
+<section title="Since draft-ietf-httpbis-auth-info-03" anchor="since.03">
 <t>
   Updated DIGEST reference.
 </t>
@@ -419,6 +419,11 @@
 </t>
 <t>
   Adjust the IPR boilerplate because we are using some text from RFC 2617.
+</t>
+</section>
+<section title="Since draft-ietf-httpbis-auth-info-04" anchor="since.04">
+<t>
+  None yet.
 </t>
 </section>
 </section>
