@@ -137,8 +137,9 @@
 <t>
   The Authentication-Info header field can be used in any HTTP response,
   independently of request method and status code. Its semantics are defined
-  by the authentication scheme indicated by the Authorization header field of
-  the corresponding request.
+  by the authentication scheme indicated by the Authorization header field
+  (<xref target="RFC7235" x:fmt="," x:rel="#header.authorization"/>)
+  of the corresponding request.
 </t>
 <t>
   A proxy forwarding a response is not allowed to modify the field value in any
@@ -172,8 +173,11 @@
 <section title="The Proxy-Authentication-Info Response Header Field" anchor="proxy-authentication-info">
   <x:anchor-alias value="Proxy-Authentication-Info"/>
 <t>
-  The Proxy-Authentication-Info response header field is equivalent to Authentication-Info,
-  except that it applies to proxy authentication (<xref target="RFC7235"/>):
+  The Proxy-Authentication-Info response header field is equivalent to
+  Authentication-Info, except that its semantics are defined by the
+  authentication scheme indicated by the Proxy-Authorization header field
+  (<xref target="RFC7235" x:fmt="," x:rel="#header.proxy-authorization"/>)
+  of the corresponding request, and applies to proxy authentication (<xref target="RFC7235" x:fmt="," x:sec="2"/>):
 </t>
 <t>
 <figure><artwork type="abnf2616"><!--<iref primary="true" item="Grammar" subitem="Proxy-Authentication-Info"/>-->
@@ -423,7 +427,8 @@
 </section>
 <section title="Since draft-ietf-httpbis-auth-info-04" anchor="since.04">
 <t>
-  None yet.
+  Add another clarification about how the applicable scheme for Proxy-Authentication-Info 
+  is determined.
 </t>
 </section>
 </section>
