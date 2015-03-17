@@ -247,14 +247,14 @@ Tunnel-Protocol: h2, http%2F1.1
 
     <section anchor="Security" title="Security Considerations">
       <t>
-        In case of using HTTP CONNECT to a TURN server ("Traversal Using Relays around NAT", <xref target="RFC5766"/>) the security
-        considerations of <xref target="RFC7231" x:fmt="of" x:sec="4.3.6"/>
-        apply. It states that there "are significant risks in establishing a
-        tunnel to arbitrary servers, particularly when the destination is a
-        well-known or reserved TCP port that is not intended for Web
-        traffic. Proxies that support CONNECT SHOULD restrict its use to a
-        limited set of known ports or a configurable whitelist of safe request
-        targets."
+        In case of using HTTP CONNECT to a TURN server ("Traversal Using Relays
+        around NAT", <xref target="RFC5766"/>) the security considerations of
+        <xref target="RFC7231" x:fmt="of" x:sec="4.3.6"/> apply. It states that
+        there "are significant risks in establishing a tunnel to arbitrary
+        servers, particularly when the destination is a well-known or reserved
+        TCP port that is not intended for Web traffic. Proxies that support
+        CONNECT SHOULD restrict its use to a limited set of known ports or a
+        configurable whitelist of safe request targets."
       </t>
       <t>
         The Tunnel-Protocol header field described in this document is an
