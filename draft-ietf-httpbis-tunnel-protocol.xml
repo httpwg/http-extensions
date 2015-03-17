@@ -135,9 +135,10 @@
         could negotiate protocols differently.
       </t>
       <t>
-        Proxies do not implement the tunneled protocol, though they
-        might choose to make policy decisions based on the value of the header
-        field.
+        Proxies do not implement the tunneled protocol, though they might choose
+        to make policy decisions based on the value of the header field.  For
+        example, a proxy could use the application protocol to select
+        appropriate traffic prioritization.
       </t>
 
       <section title="Requirements Language">
@@ -257,7 +258,7 @@ Tunnel-Protocol: h2, http%2F1.1
       </t>
       <t>
         The Tunnel-Protocol header field described in this document is an
-        OPTIONAL header field. Clients and HTTP Proxies could choose to not support
+        OPTIONAL header field. Clients and HTTP proxies could choose to not support
         the header and therefore fail to provide it, or ignore it when
         present. If the header is not available or ignored, a proxy cannot
         identify the purpose of the tunnel and use this as input to any
