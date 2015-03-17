@@ -266,6 +266,14 @@ Tunnel-Protocol: h2, http%2F1.1
         from the case where either client or proxy does not support the
         Tunnel-Protocol header field.
       </t>
+      <t>
+        The value of the Tunnel-Protocol header field could be falsified by a
+        client.  The use of protocols like <xref target="RFC5246">TLS</xref>
+        make it very difficult or impossible to verify that the header field is
+        correct even after a connection is established.  A proxy therefore
+        cannot rely on the value of the Tunnel-Protocol header field as a policy
+        input in all cases.
+      </t>
     </section>
   </middle>
 
