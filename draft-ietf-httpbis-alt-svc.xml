@@ -240,6 +240,11 @@
    (<xref target="frame"/>).
 </t>
 <t>
+   Note that for the purpose of identifying an alternative service, the
+   "http/1.1" token defined by <xref target="RFC7301"/> identifies HTTP/1.1 over
+   TLS.
+</t>
+<t>
    The remainder of this section describes requirements that are common to alternative
    services, regardless of how they are discovered.
 </t>
