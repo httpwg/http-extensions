@@ -507,8 +507,9 @@ Alt-Svc: h2c=":8000"; ma=60
   not support this frame can safely ignore it.
 </t>
 <t>
-  An ALTSVC frame from a server to a client on a client-initiated stream indicates that the
-  conveyed alternative service is associated with the origin of that stream.
+  An ALTSVC frame from a server to a client on a stream other than stream 0
+  indicates that the conveyed alternative service is associated with the origin
+  of that stream.
 </t>
 <t>
   An ALTSVC frame from a server to a client on stream 0 indicates that the conveyed alternative
@@ -554,9 +555,9 @@ Alt-Svc: h2c=":8000"; ma=60
   ALTSVC frame &MUST; treat it as a connection error of type PROTOCOL_ERROR.
 </t>
 <t>
-  An ALTSVC frame on a client-initiated stream containing non-empty "Origin" information 
-  is invalid and &MUST; be ignored. Likewise, an ALTSVC frame on stream 0 with
-  empty (length 0) "Origin" information is invalid and &MUST; be ignored.
+  An ALTSVC frame on stream 0 with empty (length 0) "Origin" information is
+  invalid and &MUST; be ignored. An ALTSVC frame on a stream other than stream
+  0 containing non-empty "Origin" information is invalid and &MUST; be ignored.
 </t>
 <t>
   The ALTSVC frame is processed hop-by-hop.  An intermediary &MUST-NOT; forward ALTSVC frames,
@@ -1044,7 +1045,8 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-06" anchor="changes.since.draft-ietf-httpbis-alt-svc-06">
 <t>
-  None yet.
+  alt svc frame on pushed (even and non-0) frame
+  (<eref target="https://github.com/httpwg/http-extensions/issues/44"/>).
 </t>
 </section>
 </section>
