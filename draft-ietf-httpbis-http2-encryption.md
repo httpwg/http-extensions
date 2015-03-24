@@ -31,6 +31,7 @@ normative:
   RFC2818:
   RFC5246:
   RFC6454:
+  RFC7230:
   RFC7234:
   I-D.ietf-httpbis-http2:
   I-D.ietf-httpbis-alt-svc:
