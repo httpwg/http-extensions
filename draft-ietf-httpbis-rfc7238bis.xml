@@ -210,7 +210,7 @@ Content-Length: <x:length-of target="body"/>
    The "Hypertext Transfer Protocol (HTTP) Status Code Registry"
    (defined in <xref target="RFC7231" x:rel="#status.code.registry"/>
    and located at <eref target="http://www.iana.org/assignments/http-status-codes"/>)
-   needs to be updated with the registration below:
+   has been updated to reference this specification.
 </t>
 <texttable align="left" suppress-title="true" anchor="iana.status.code.registration.table">
    <ttcol>Value</ttcol>
