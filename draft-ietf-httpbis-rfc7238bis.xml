@@ -89,7 +89,7 @@
   the status code 308, defining this missing variant (<xref target="status.308"/>).
 </t>
 <t>
-  This specification contains no technical changes from the experimental RFC 7238<!-- (<xref target="RFC7238"/>)-->,
+  This specification contains no technical changes from the Experimental RFC 7238,
   which it obsoletes.
 </t>
 </section>  
@@ -137,7 +137,7 @@
 <t>
   <xref target="RFC7231" x:rel="#status.codes"/>
   requires recipients to treat unknown 3xx status codes the same way as
-  status code 300 Multiple Choices (<xref target="RFC7231" x:rel="#status.300" x:fmt=","/>).
+  status code 300 (Multiple Choices) (<xref target="RFC7231" x:rel="#status.300" x:fmt=","/>).
   Thus, servers will not be able to rely on automatic redirection happening
   similar to status codes 301, 302, or 307.
 </t>
@@ -197,9 +197,9 @@ Content-Length: <x:length-of target="body"/>
   308 status code as well (see <xref target="RFC7231" x:rel="#security.considerations"/>).
 </t>
 <t>
-  Unsecured communication over the Internet is subject to man in the
-  middle modification of messages, including changing status codes or
-  redirect targets.  Use of TLS is one way to mitigate those attacks.
+  Unsecured communication over the Internet is subject to man-in-the-middle
+  modification of messages, including changing status codes or
+  redirect targets.  Use of Transport Layer Security (TLS) is one way to mitigate those attacks.
   See <xref target="RFC7230" x:rel="#security.considerations"/> for related
   attacks on authority and message integrity.
 </t>
@@ -222,19 +222,6 @@ Content-Length: <x:length-of target="body"/>
       <xref target="status.308"/> of this specification
    </c>
 </texttable>
-</section>
-
-<section title="Acknowledgements" anchor="acknowledgements">
-<t>
-  The definition for the new status code 308 reuses text from
-  the HTTP/1.1 definitions of status codes 301 and 307.
-</t>
-<t>
-  Furthermore, thanks to Ben Campbell, Cyrus Daboo, Adrian Farrell, Eran Hammer-Lahav,
-  Bjoern Hoehrmann, Barry Leiba,
-  Subramanian Moonesamy, Kathleen Moriarty, Peter Saint-Andre,
-  Robert Sparks, and Roy Fielding for feedback on this document.
-</t>
 </section>
   </middle>
   <back>
@@ -374,6 +361,20 @@ Content-Length: <x:length-of target="body"/>
   <seriesInfo name="RFC" value="7238"/>
 </reference>-->
 </references>
+
+
+<section title="Acknowledgements" anchor="acknowledgements" numbered="false">
+<t>
+  The definition for the new status code 308 reuses text from
+  the HTTP/1.1 definitions of status codes 301 and 307.
+</t>
+<t>
+  Furthermore, thanks to Ben Campbell, Cyrus Daboo, Adrian Farrell, Eran Hammer-Lahav,
+  Bjoern Hoehrmann, Barry Leiba,
+  Subramanian Moonesamy, Kathleen Moriarty, Peter Saint-Andre,
+  Robert Sparks, and Roy Fielding for feedback on this document.
+</t>
+</section>
   </back>
 
 </rfc>
