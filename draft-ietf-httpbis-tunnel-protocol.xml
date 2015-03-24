@@ -266,6 +266,16 @@ Tunnel-Protocol: h2, http%2F1.1
         from the case where either client or proxy does not support the
         Tunnel-Protocol header field.
       </t>
+      <t>
+        The value of the Tunnel-Protocol header field could be falsified by a
+        client.  If the data being sent through the tunnel is encrypted (for
+        example, with <xref target="RFC5246">TLS</xref>), then the proxy might
+        not be able to directly inspect the data to verify that the claimed
+        protocol is the one which is actually being used, though a proxy might
+        be able to perform traffic analysis <xref target="TRAFFIC"/>.  A proxy
+        therefore cannot rely on the value of the Tunnel-Protocol header field
+        as a policy input in all cases.
+      </t>
     </section>
   </middle>
 
@@ -282,6 +292,21 @@ Tunnel-Protocol: h2, http%2F1.1
    <references title="Informative References">
       &RFC5246;
       &RFC5766;
+
+      <reference anchor="TRAFFIC"
+                 target="https://alfredo.pironti.eu/research/publications/full/identifying-website-users-tls-traffic-analysis-new-attacks-and-effective-counterme">
+        <front>
+          <title>
+            Website Users by TLS Traffic Analysis: New Attacks and Effective
+            Countermeasures, Revision 1
+          </title>
+          <author initials="A." surname="Pironti"/>
+          <author initials="P-Y." surname="Strub"/>
+          <author initials="K." surname="Bhargavan"/>
+          <date year="2012"/>
+        </front>
+      </reference>
+
     </references>
   </back>
 </rfc>
