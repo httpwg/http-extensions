@@ -242,7 +242,8 @@
 <t>
    Note that for the purpose of identifying an alternative service, the
    "http/1.1" token defined by <xref target="RFC7301"/> identifies HTTP/1.1 over
-   TLS.
+   TLS. In addition, neither <xref target="RFC7301"/>, nor this document
+   defines a token that identifies HTTP/1.1 over unsecured TCP.
 </t>
 <t>
    The remainder of this section describes requirements that are common to alternative
