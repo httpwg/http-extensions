@@ -767,7 +767,7 @@ Alt-Used: alternate.example.net
    service advertisements.
 </t>
 <t>
-   In a browser, or any other application, any alternative service information &MUST; be removed when origin-specific data
+   In a browser, or in any other application, any alternative service information &MUST; be removed when origin-specific data
    is cleared (for instance, when cookies are cleared).
 </t>
 </section>
