@@ -430,8 +430,8 @@ Alt-Svc: h2c=":8000", h2=":443"
 </figure>
 <t>
    The value(s) advertised by Alt-Svc can be used by clients to open a new
-   connection to one or more alternative services immediately, or simultaneously
-   with subsequent requests on the same connection.
+   connection to an alternative services. Subsequent requests can start using this new connection
+   immediately, or can continue using the existing connection while the new connection is created.
 </t>
 <t>
    When using HTTP/2 (<xref target="HTTP2"/>), servers &SHOULD; instead send an ALTSVC frame
