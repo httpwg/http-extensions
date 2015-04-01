@@ -28,13 +28,14 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aauth-info)
 
-## Approved Draft HTTP Extension Specifications
 
 ### 308 Status Code (RFC 7238bis)
+
+**Approved; In the [RFC Editor Queue](https://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-rfc7238bis).**
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rfc7238bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc7238bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc7238bis) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A308bis)
-* [RFC Editor Queue](https://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-rfc7238bis)
 
 ## Contributing
 
