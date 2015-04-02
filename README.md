@@ -22,7 +22,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 ### HTTP Authentication-Info Header Field
 
-**[IETF Last Call](http://www.w3.org/mid/20150312151321.30375.57568.idtracker@ietfa.amsl.com) ends 02 Apr 2015.**
+**On [agenda of 2015-04-09 IESG telechat](https://datatracker.ietf.org/iesg/agenda/)**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
