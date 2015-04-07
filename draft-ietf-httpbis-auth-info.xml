@@ -74,7 +74,7 @@
     </t>
     <t>
       The changes in this draft are summarized in <xref
-      target="since.04"/>.
+      target="since.05"/>.
     </t>
   </note>
 
@@ -415,6 +415,11 @@
 <t>
   Add another clarification about how the applicable scheme for Proxy-Authentication-Info 
   is determined.
+</t>
+</section>
+<section title="Since draft-ietf-httpbis-auth-info-05" anchor="since.05">
+<t>
+  None yet.
 </t>
 </section>
 </section>
