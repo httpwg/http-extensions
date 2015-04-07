@@ -345,9 +345,9 @@
     <author initials="R." surname="Shekh-Yusef" fullname="Rifaat Shekh-Yusef" role="editor"/>
     <author initials="D." surname="Ahrens" fullname="David Ahrens"/>
     <author initials="S." surname="Bremer" fullname="Sophie Bremer"/>
-    <date month="March" year="2015"/>
+    <date month="April" year="2015"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-15"/>
+  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-16"/>
 </reference>
 
 </references>
@@ -419,7 +419,7 @@
 </section>
 <section title="Since draft-ietf-httpbis-auth-info-05" anchor="since.05">
 <t>
-  None yet.
+  Updated DIGEST reference.
 </t>
 </section>
 </section>
