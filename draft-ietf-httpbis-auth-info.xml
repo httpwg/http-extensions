@@ -242,20 +242,6 @@
 </texttable>
 </section>
 
-<section title="Acknowledgements">
-<t>
-  This document is based on the header field definitions in RFCs 2069 and 2617,
-  whose authors are: John Franks, Phillip M. Hallam-Baker, Jeffery L. Hostetler,
-  Scott D. Lawrence, Paul J. Leach, Ari Luotonen, Eric W. Sink, and
-  Lawrence C. Stewart.
-</t>
-<t>
-  Additional thanks go to the members of the HTTPAuth and HTTPbis
-  Working Groups, namely Amos Jeffries, Benjamin Kaduk, Alexey Melnikov,
-  Mark Nottingham, Yutaka Oiwa, Rifaat Shekh-Yusef, and Martin Thomson.
-</t>
-</section>
-
   </middle>
   <back>
 
@@ -432,6 +418,21 @@
 </t>
 </section>
 </section>
+
+<section title="Acknowledgements" numbered="false">
+<t>
+  This document is based on the header field definitions in RFCs 2069 and 2617,
+  whose authors are: John Franks, Phillip M. Hallam-Baker, Jeffery L. Hostetler,
+  Scott D. Lawrence, Paul J. Leach, Ari Luotonen, Eric W. Sink, and
+  Lawrence C. Stewart.
+</t>
+<t>
+  Additional thanks go to the members of the HTTPAuth and HTTPbis
+  Working Groups, namely Amos Jeffries, Benjamin Kaduk, Alexey Melnikov,
+  Mark Nottingham, Yutaka Oiwa, Rifaat Shekh-Yusef, and Martin Thomson.
+</t>
+</section>
+
   </back>
 
 </rfc>
