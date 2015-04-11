@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc subcompact="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes" ?>
+
+<!DOCTYPE rfc [
+  <!ENTITY mdash "&#8212;">
+  <!ENTITY Note "<x:h xmlns:x='http://purl.org/net/xml2rfc/ext'>Note:</x:h>">
+  <!ENTITY MAY "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MAY</bcp14>">
+  <!ENTITY MUST "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MUST</bcp14>">
+  <!ENTITY MUST-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MUST NOT</bcp14>">
+  <!ENTITY OPTIONAL "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>OPTIONAL</bcp14>">
+  <!ENTITY RECOMMENDED "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>RECOMMENDED</bcp14>">
+  <!ENTITY REQUIRED "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>REQUIRED</bcp14>">
+  <!ENTITY SHALL "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHALL</bcp14>">
+  <!ENTITY SHALL-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHALL NOT</bcp14>">
+  <!ENTITY SHOULD "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD</bcp14>">
+  <!ENTITY SHOULD-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD NOT</bcp14>">
+]>
+<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" xmlns:ed="http://greenbytes.de/2002/rfcedit" ipr="trust200902" docName="draft-ietf-httpbis-cice-latest" category="std" xml:lang="en" x:maturity-level="proposed">
+
+  <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
+
+	<front>
+  <title abbrev="HTTP CICE">Hypertext Transfer Protocol (HTTP) Client-Initiated Content-Encoding</title>
+  <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke">
+    <organization abbrev="greenbytes">greenbytes GmbH</organization>
+    <address>
+      <postal>
+        <street>Hafenweg 16</street>
+        <city>Muenster</city><region>NW</region><code>48155</code>
+        <country>Germany</country>
+      </postal>
+      <email>julian.reschke@greenbytes.de</email>	
+      <uri>http://greenbytes.de/tech/webdav/</uri>	
+    </address>
+  </author>
+
+  <date year="2015"/>
+  
+  <area>Applications</area>
+  <workgroup>HTTP</workgroup>
+  <keyword>HTTP</keyword>
+  <keyword>content-encoding</keyword>
+
+  <abstract>
+    <t>
+      In HTTP, "Content Codings" allow for payload encodings such as for
+      compression or integrity checks. In particular, the "gzip" content
+      coding is widely used for payload data sent in response messages.
+    </t>
+    <t>
+      Content Codings can be used in request messages as well, however
+      discoverability is not on par with response messages. This document
+      extends the HTTP "Accept-Encoding" header field for use in responses.
+    </t>
+  </abstract>
+  
+
+  <note title="Editorial Note (To be removed by RFC Editor before publication)">
+    <t>
+      Discussion of this draft takes place on the HTTPBIS working group mailing list
+      (ietf-http-wg@w3.org), which is archived at <eref
+      target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
+    </t>
+    <t>
+      Working Group information can be found at <eref
+      target="https://tools.ietf.org/wg/httpbis/"/>
+      and <eref target="http://httpwg.github.io/"/>; source code and issues
+      list for this draft can be found at
+      <eref target="https://github.com/httpwg/http-extensions"/>.
+    </t>
+    <t>
+      The changes in this draft are summarized in <xref target="changes.since.r.02"/>.
+    </t>
+  </note>
+
+
+  </front>
+
+  <middle>
+
+<section title="Introduction" anchor="introduction">
+    <t>
+      In HTTP, "Content Codings" allow for payload encodings such as for
+      compression or integrity checks (<xref target="RFC7231" x:fmt="," x:rel="#data.encoding"/>). In particular, the "gzip" content
+      coding is widely used for payload data sent in response messages.
+    </t>
+    <t>
+      Content Codings can be used in request messages as well, however
+      discoverability is not on par with response messages. This document
+      extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses.
+    </t>
+</section>  
+
+<section title="Notational Conventions" anchor="notational.conventions">
+<t>
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in <xref target="RFC2119"/>.
+</t>
+<t>
+   This document reuses terminology used in the base HTTP specifications,
+   namely <xref target="RFC7230" x:fmt="of" x:rel="#architecture"/> and
+   <xref target="RFC7231" x:fmt="of" x:rel="#data.encoding"/>.
+</t>
+</section>
+
+<section title="Extensions to 'Accept-Encoding' Header Field" anchor="accept-encoding">
+<t>
+  <xref target="RFC7231" x:fmt="of" x:rel="#header.accept-encoding"/> defines
+  "Accept-Encoding" as a request header field only.
+</t>
+<t>
+  This specification extends that definition to allow "Accept-Encoding"
+  as a response header field as well.  When present, it indicates what
+  content codings a resource was willing to accept at the time of the
+  response.
+  A field value that only contains "identity" implies that no 
+  content codings are supported.
+</t>
+<t>
+  Note that this information is specific to the specific request. The
+  set of supported encodings might be different for other resources on the 
+  same server, could also change depending on other aspects of the 
+  request (such as the request method), or might change in the future.
+</t>
+<t>
+  <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/> defines status code
+  415 (Unsupported Media Type) to apply to both media type and content coding
+  related problems.
+</t>
+<t>
+  Servers that fail a request due to an unsupported content coding &SHOULD;
+  respond with a 415 status and &SHOULD; include an "Accept-Encoding" header field in
+  that response, allowing clients to distinguish between content coding
+  related issues and media type related issues. In order
+  to avoid confusion with media type related problems, servers that fail a request
+  with a 415 status for reasons unrelated to content codings &SHOULD-NOT;
+  include the "Accept-Encoding" header field.
+</t>
+<t>
+  While sending "Accept-Encoding" in a 415 (Unsupported Media Type) response will be the most common use case,
+  it is not restricted to this particular status code. For instance, a server
+  might include it in a 2xx response when a request payload was
+  big enough to justify use of a compression coding, but the client failed to do so.
+</t>
+</section>
+
+<section title="Example" anchor="example">
+<t>
+  Client submits a POST request using Content-Encoding "compress"
+  (<xref target="RFC7231" x:fmt="," x:rel="#content.codings"/>):
+</t>
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
+POST /edit/ HTTP/1.1
+Host: example.org
+Content-Type: application/atom+xml;type=entry
+Content-Encoding: compress
+
+...compressed payload...
+</artwork></figure>
+<t>
+  Server rejects request because it only allows the "gzip" content coding:
+</t>
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="  ">
+HTTP/1.1 415 Unsupported Media Type
+Date: Fri, 09 May 2014 11:43:53 GMT
+Accept-Encoding: gzip
+Content-Length: <x:length-of target="exbody"/>
+Content-Type: text/plain
+
+<x:span anchor="exbody">This resource only supports the "gzip" content coding in requests.
+</x:span></artwork></figure>
+<t>
+  ...at which point the client can retry the request with the supported
+  "gzip" content coding.
+</t>
+<t>
+  Alternatively, a server that does not support any content codings in
+  requests could answer with:
+</t>
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="  ">
+HTTP/1.1 415 Unsupported Media Type
+Date: Fri, 09 May 2014 11:43:53 GMT
+Accept-Encoding: identity
+Content-Length: <x:length-of target="exbody2"/>
+Content-Type: text/plain
+
+<x:span anchor="exbody2">This resource does not support content codings in requests.
+</x:span></artwork></figure>
+</section>
+
+<section title="Deployment Considerations" anchor="deployment.considerations">
+<t>
+  Servers that do not support content codings in requests already are required
+  to fail a request that does use a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
+  recommends to use the status code 415 (Unsupported Media Type), so the only
+  change needed is to include the "Accept-Encoding" header field with value
+  "identity" in that response.
+</t>
+<t>
+  Servers that do support some content codings are required to fail requests
+  with unsupported content codings as well. To be compliant with this specification,
+  servers will need to use the status code 415 (Unsupported Media Type) to
+  signal the problem, and will have to include an "Accept-Encoding" header field
+  that enumerates the content codings that are supported. As the set of
+  supported content codings usually is
+  static and small, adding the header field ought to be trivial.
+</t>
+</section>
+
+<section title="Security Considerations" anchor="security.considerations">
+<t>
+  This specification does not introduce any new security considerations
+  beyond those discussed in <xref target="RFC7231" x:fmt="of"
+  x:rel="#security.considerations"/>.
+</t>
+</section>
+
+<section title="IANA Considerations" anchor="iana.considerations">
+<t>
+   HTTP header fields are registered within the "Message Headers" registry
+   located at <eref target="http://www.iana.org/assignments/message-headers"/>,
+   as defined by <xref target="BCP90"/>.
+</t>
+<t>
+   This document updates the definition of the "Accept-Encoding" header field,
+   so the "Permanent Message Header Field Names" registry shall be updated
+   accordingly:
+</t>
+<texttable align="left" suppress-title="true" anchor="iana.header.registration.table">
+   <ttcol>Header Field Name</ttcol>
+   <ttcol>Protocol</ttcol>
+   <ttcol>Status</ttcol>
+   <ttcol>Reference</ttcol>
+
+   <c>Accept-Encoding</c>
+   <c>http</c>
+   <c>standard</c>
+   <c>
+      <xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>,
+      extended by  <xref target="accept-encoding"/> of this document
+   </c>
+</texttable>
+</section>
+
+  </middle>
+  <back>
+  
+<references title="Normative References">
+
+<reference anchor="RFC2119">
+  <front>
+    <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+    <author initials="S." surname="Bradner" fullname="Scott Bradner">
+      <organization>Harvard University</organization>
+      <address><email>sob@harvard.edu</email></address>
+    </author>
+    <date month="March" year="1997"/>
+  </front>
+  <seriesInfo name="BCP" value="14"/>
+  <seriesInfo name="RFC" value="2119"/>
+</reference>
+
+<reference anchor="RFC7230">
+  <front>
+    <title>Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</title>
+    <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor">
+      <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
+      <address><email>fielding@gbiv.com</email></address>
+    </author>
+    <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor">
+      <organization abbrev="greenbytes">greenbytes GmbH</organization>
+      <address><email>julian.reschke@greenbytes.de</email></address>
+    </author>
+    <date month="June" year="2014"/>
+  </front>
+  <seriesInfo name="RFC" value="7230"/>
+  <x:source href="refs/rfc7230.xml" basename="rfc7230"/>
+</reference>
+
+<reference anchor="RFC7231">
+  <front>
+    <title>Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</title>
+    <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor">
+      <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
+      <address><email>fielding@gbiv.com</email></address>
+    </author>
+    <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor">
+      <organization abbrev="greenbytes">greenbytes GmbH</organization>
+      <address><email>julian.reschke@greenbytes.de</email></address>
+    </author>
+    <date month="June" year="2014"/>
+  </front>
+  <seriesInfo name="RFC" value="7231"/>
+  <x:source href="refs/rfc7231.xml" basename="rfc7231"/>
+</reference>
+
+</references>
+
+<references title="Informative References">
+<reference anchor='BCP90'>
+  <front>
+    <title>Registration Procedures for Message Header Fields</title>
+    <author initials='G.' surname='Klyne' fullname='G. Klyne'>
+      <organization>Nine by Nine</organization>
+      <address><email>GK-IETF@ninebynine.org</email></address>
+    </author>
+    <author initials='M.' surname='Nottingham' fullname='M. Nottingham'>
+      <organization>BEA Systems</organization>
+      <address><email>mnot@pobox.com</email></address>
+    </author>
+    <author initials='J.' surname='Mogul' fullname='J. Mogul'>
+      <organization>HP Labs</organization>
+      <address><email>JeffMogul@acm.org</email></address>
+    </author>
+    <date year='2004' month='September' />
+  </front>
+  <seriesInfo name='BCP' value='90' />
+  <seriesInfo name='RFC' value='3864' />
+</reference>
+</references>
+
+<section title="Change Log (to be removed by RFC Editor before publication)" anchor="change.log">
+
+<section title="Since draft-reschke-http-cice-00" anchor="changes.since.r.00">
+<t>
+  Clarified that the information returned in Accept-Encoding is per resource, not per server.
+</t>
+<t>
+  Added some deployment considerations.
+</t>
+<t>
+  Updated HTTP/1.1 references.
+</t>
+</section>
+
+<section title="Since draft-reschke-http-cice-01" anchor="changes.since.r.01">
+<t>
+  Restrict the scope of A-E from "future requests" to "at the time of this request".
+</t>
+<t>
+  Mention use of A-E in responses other than 415.
+</t>
+<t>
+  Recommend not to include A-E in a 415 response unless there was actually a problem related to content coding.
+</t>
+</section>
+
+<section title="Since draft-reschke-http-cice-02" anchor="changes.since.r.02">
+<t>
+  First Working Group draft; updated boilerplate accordingly.
+</t>
+</section>
+</section>
+<section title="Acknowledgements" numbered="false">
+<t>
+  Thanks go to the members of the and HTTPbis Working Group, namely
+  Amos Jeffries, Mark Nottingham, and Ted Hardie. 
+</t>
+</section>
+
+  </back>
+
+</rfc>
