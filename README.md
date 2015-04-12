@@ -28,6 +28,11 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aauth-info)
 
+### HTTP Client-Initiated Content-Encoding
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cice.html)
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cice) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acice)
 
 ## Contributing
 
