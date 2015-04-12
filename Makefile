@@ -48,6 +48,10 @@ tunnel-protocol.%: draft-ietf-httpbis-tunnel-protocol.%
 auth-info.%: draft-ietf-httpbis-auth-info.%
 	cp -f $< $@
 
+cice.%: draft-ietf-httpbis-cice.%
+	cp -f $< $@
+
+
 define makerule_submit_xml =
 $(1)
 	sed -e"s/$$(basename $$<)-latest/$$(basename $$@)/" $$< > $$@
