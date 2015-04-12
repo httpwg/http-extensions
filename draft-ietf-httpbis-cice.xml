@@ -78,7 +78,7 @@
       <eref target="https://github.com/httpwg/http-extensions"/>.
     </t>
     <t>
-      The changes in this draft are summarized in <xref target="changes.since.r.02"/>.
+      The changes in this draft are summarized in <xref target="changes.since.00"/>.
     </t>
   </note>
 
@@ -358,6 +358,12 @@ Content-Type: text/plain
 <section title="Since draft-reschke-http-cice-02" anchor="changes.since.r.02">
 <t>
   First Working Group draft; updated boilerplate accordingly.
+</t>
+</section>
+
+<section title="Since draft-ietf-httpbis-cice-00" anchor="changes.since.00">
+<t>
+  None yet.
 </t>
 </section>
 </section>
