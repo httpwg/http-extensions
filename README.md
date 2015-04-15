@@ -22,7 +22,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 ### HTTP Authentication-Info Header Field
 
-**On [agenda of 2015-04-09 IESG telechat](https://datatracker.ietf.org/iesg/agenda/)**
+**in [RFC Editor queue](http://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-auth-info)**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
