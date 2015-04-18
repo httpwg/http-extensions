@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!DOCTYPE rfc SYSTEM "xml2rfc/rfc2629.dtd" [
+<!DOCTYPE rfc [
 <!ENTITY rfc2119 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'>
 <!ENTITY rfc2616 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml'>
 <!ENTITY rfc4084 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4084.xml'>
