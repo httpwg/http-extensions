@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE rfc SYSTEM "xml2rfc/rfc2629.dtd" [
+<!ENTITY rfc2119 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'>
+<!ENTITY rfc2616 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml'>
+<!ENTITY rfc4084 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4084.xml'>
+<!ENTITY rfc4924 SYSTEM 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4924.xml'>
+]>
+
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc toc="yes" ?>
+<?rfc tocdepth="1" ?>
+<?rfc tocindent="yes" ?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="yes"?>
+<?rfc iprnotified="no" ?>
+<?rfc strict="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc comments="yes" ?>
+<?rfc inline="yes" ?>
+
+<rfc ipr="trust200902" 
+     docName="draft-ietf-httpbis-legally-restricted-status-latest" 
+     category="std"
+     updates="2616">
+
+  <front>
+    <title abbrev="HTTP-status-451">An HTTP Status Code to Report Legal Obstacles</title>
+    <author initials="T." surname="Bray" fullname="Tim Bray">
+      <organization>Textuality</organization>
+      <address>
+	<email>tbray@textuality.com</email>
+	<uri>http://www.tbray.org/ongoing/</uri>
+      </address>
+    </author>
+
+
+    <date year="2015" month="April"/>
+    <abstract>
+
+      <t>This document specifies a Hypertext Transfer Protocol (HTTP) 
+      status code for use when resource access is denied as a
+      consequence of legal demands.</t>
+
+    </abstract>
+  </front>
+
+  <middle>
+
+    <section title="Introduction">
+      <t>This document specifies a Hypertext Transfer Protocol (HTTP) 
+      status code for use when a server operator has a received a legal demand
+      to deny access to a resource.</t>
+
+      <t>This status code may be used to provide transparency
+      in circumstances where issues of law or public policy affect server
+      operations. This transparency may be beneficial both to these operators
+      and to end users.</t>
+      <t><xref target="RFC4924"/> discusses the forces working
+      against transparent operation of the Internet; these clearly include
+      legal interventions to restrict access to content.  As that document
+      notes, and as Section 4 of <xref target="RFC4084"/> states, such
+      restrictions should be made explicit.</t>
+      
+      <t>Feedback should occur on the ietf-http-wg@w3.org mailing list,
+      although this draft is NOT a work item of the IETF HTTPbis Working
+      Group. </t>
+    </section>
+
+    <section title="Requirements">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in
+      this document are to be interpreted as described in <xref
+      target="RFC2119"/>.</t>
+    </section>
+
+
+    <section title="451 Unavailable For Legal Reasons">
+      <t>This status code indicates that the server is denying access
+      to the resource as a consequence of a legal demand.</t> 
+      
+      <t>The server in question may not be an origin server.  This type of
+      legal demand typically most directly affects the operations of ISPs and
+      search engines.</t>
+
+      <t>Responses using this status code SHOULD include an explanation,
+      in the response body, of the details of the legal demand: the party
+      making it, the applicable legislation or regulation, and what classes of
+      person and resource it applies
+      to.  For example:</t>
+
+      <figure><artwork xml:space="preserve">
+HTTP/1.1 451 Unavailable For Legal Reasons
+Content-Type: text/html
+
+&lt;html>
+ &lt;head>&lt;title>Unavailable For Legal Reasons&lt;/title>&lt;/head>
+ &lt;body>
+  &lt;h1>Unavailable For Legal Reasons&lt;/h1>
+  &lt;p>This request may not be serviced in the Roman Province 
+  of Judea due to the Lex Julia Majestatis, which disallows 
+  access to resources hosted on servers deemed to be 
+  operated by the People's Front of Judea.&lt;/p>
+ &lt;/body>
+&lt;/html></artwork></figure>
+
+<t>The use of the 451 status code implies neither the existence nor
+non-existence of the resource named in the request. That is to say,
+it is possible that if the legal demands were removed,
+a request for the resource still might not succeed.</t>
+
+<t>Note that in many cases clients can still access the denied resource by
+using technical countermeasures such as a VPN or the Tor network.</t>
+    </section>
+
+    <section title="Security Considerations">
+
+      <section title="451 Unavailable for Legal Reasons">
+	<t>The 451 status code is optional; clients cannot rely upon its
+	use. It is possible that certain legal authorities may wish
+	to avoid transparency, and not only demand the restriction of access 
+        to certain resources, but also avoid disclosing that the demand 
+        was made.  </t>
+      </section>
+
+
+    </section>
+
+    <section title="IANA Considerations">
+      <t>The HTTP Status Codes Registry should be updated with the
+      following entries:</t>
+
+      <t><list style="symbols">
+	<t>Code: 451</t>
+	<t>Description: Unavailable for Legal Reasons</t>
+	<t>Specification: [ this document ]</t>
+      </list></t>
+    </section>
+
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      &rfc2119;
+      &rfc4084;
+      &rfc4924;
+    </references>
+
+
+    <section title="Acknowledgements">
+      <t>Thanks to Terence Eden, who observed that the existing
+      status code 403 was not really suitable for this situation, and
+      suggested the creation of a new status code.</t>
+      <t>Thanks also to Ray Bradbury.</t>
+      <t>The author takes all responsibility for errors and
+      omissions.</t>
+    </section>
+
+
+  </back>
+</rfc>
