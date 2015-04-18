@@ -34,6 +34,12 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cice) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acice)
 
+### HTTP Legally Restricted Status Code
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-legally-restricted-status.html)
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A451)
+
 ## Contributing
 
 See [our contribution guidelines](CONTRIBUTING.md) for information about how to
