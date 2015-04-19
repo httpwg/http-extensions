@@ -22,20 +22,26 @@
 <rfc ipr="trust200902" 
      docName="draft-ietf-httpbis-legally-restricted-status-latest" 
      category="std"
-     updates="2616">
+     updates="2616"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+
+  <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
 
   <front>
     <title abbrev="HTTP-status-451">An HTTP Status Code to Report Legal Obstacles</title>
     <author initials="T." surname="Bray" fullname="Tim Bray">
       <organization>Textuality</organization>
       <address>
-	<email>tbray@textuality.com</email>
-	<uri>http://www.tbray.org/ongoing/</uri>
+      	<email>tbray@textuality.com</email>
+      	<uri>http://www.tbray.org/ongoing/</uri>
       </address>
     </author>
 
 
     <date year="2015" month="April"/>
+    <area>Applications</area>
+    <workgroup>HTTP</workgroup>
+
     <abstract>
 
       <t>This document specifies a Hypertext Transfer Protocol (HTTP) 
@@ -43,6 +49,24 @@
       consequence of legal demands.</t>
 
     </abstract>
+
+  <note title="Editorial Note (To be removed by RFC Editor before publication)">
+    <t>
+      Discussion of this draft takes place on the HTTPBIS working group mailing list
+      (ietf-http-wg@w3.org), which is archived at <eref
+      target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
+    </t>
+    <t>
+      Working Group information can be found at <eref
+      target="https://tools.ietf.org/wg/httpbis/"/>
+      and <eref target="http://httpwg.github.io/"/>; source code and issues
+      list for this draft can be found at
+      <eref target="https://github.com/httpwg/http-extensions"/>.
+    </t>
+    <!--<t>
+      The changes in this draft are summarized in <xref target="changes.since.00"/>.
+    </t>-->
+  </note>
   </front>
 
   <middle>
@@ -89,7 +113,7 @@
       person and resource it applies
       to.  For example:</t>
 
-      <figure><artwork xml:space="preserve">
+      <figure><artwork type="example">
 HTTP/1.1 451 Unavailable For Legal Reasons
 Content-Type: text/html
 
@@ -147,7 +171,7 @@ using technical countermeasures such as a VPN or the Tor network.</t>
     </references>
 
 
-    <section title="Acknowledgements">
+    <section title="Acknowledgements" numbered="false">
       <t>Thanks to Terence Eden, who observed that the existing
       status code 403 was not really suitable for this situation, and
       suggested the creation of a new status code.</t>
