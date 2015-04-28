@@ -221,11 +221,11 @@ ALPN: h2, http%2F1.1
 
     <section anchor="IANA" title="IANA Considerations">
       <t>
-        HTTP header fields are registered within the "Message Headers" registry
-        maintained at <eref
+        HTTP header fields are registered within the "Permanent Message Header
+        Field Names" registry maintained at <eref
         target="https://www.iana.org/assignments/message-headers"/>.  This
-        document defines and registers the ALPN header field,
-        according to <xref target="RFC3864"/> as follows:
+        document defines and registers the ALPN header field, according to <xref
+        target="RFC3864"/> as follows:
         <list style="hanging">
           <t hangText="Header Field Name:">
             ALPN
