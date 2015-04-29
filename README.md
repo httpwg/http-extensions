@@ -1,161 +1,139 @@
-# Internet Draft Template Repository
-
-The contents of this repository can be used to get started with a new internet
-draft.
-
-## Getting Started
-
-This all assumes that you have an [account](https://github.com/join) with
-GitHub.
-
-### Working Group Setup
-
-Make a [new organization](https://github.com/organizations/new) for your working
-group.  This guide will use the name `unicorn-wg` for your working group.
-
-### New Draft Setup
-
-[Make a new repository](https://github.com/new).  This guide will use the
-name name `unicorn-protocol` here.
-
-Clone that repository:
-```sh
-$ git clone https://github.com/unicorn-wg/unicorn-protocol.git
-```
-Copy the contents of this respository in:
-```sh
-$ cd unicorn-protocol
-$ git pull https://github.com/martinthomson/i-d-template.git master
-```
-Choose whether you want to use markdown, outline, or xml as your input form.
-If you already have a draft, then that decision is already made for you.
-
-Move the template file into place.
-```sh
-$ git mv template.md draft-ietf-unicorn-protocol.md
-```
-Or add an existing file.
-```sh
-$ git add draft-ietf-unicorn-protocol.xml
-````
-Edit the draft so that it has the right name.  This template uses the
-`-latest` suffix in place of the usual number ('-00', or '-08').
-```xml
-   <rfc docName="draft-ietf-unicorn-protocol-latest" category="std">
-```
-Or in markdown:
-```yaml
-docname: draft-ietf-unicorn-protocol-latest
-```
-And add it:
-```sh
-$ git add draft-ietf-unicorn-protocol.md
-```
-Remove the unnecessary template files.
-```sh
-$ git rm template.md template.xml
-```
-Move the README.md template into place.
-```sh
-$ git rm README.md
-$ git mv README-template.md README.md
-```
-Edit the `README.md` and `CONTRIBUTING.md` files.  Note that `CONTRIBUTING.md`
-file is just the latter part of `README.md`.
-```sh
-$ vi README.md CONTRIBUTING.md
-# ...
-$ git add README.md CONTRIBUTING.md
-```
-Commit and push
-```sh
-$ git commit
-$ git push
-```
-
-Optional: If you are using markdown, you might like to add the following line to your
-`.gitignore` to avoid committing the intermediate XML file that this might create.
-```
-draft-*.xml
-```
+# HTTP Content Encryption
 
 
-### Setting Up The Editor's Copy
+* [Editor's copy](https://martinthomson.github.io/http-encryption/)
+* [Formal Draft] (https://tools.ietf.org/html/draft-thomson-http-encryption) (older)
 
-GitHub uses the `gh-pages` branch as source for a project web page.  This branch
-needs to be initialized first.  The `setup-ghpages` make target does that:
+
+## Contributing
+
+Before submitting feedback, please familiarize yourself with our current issues
+list and review the [working group home page](https://httpwg.github.io/). If you're
+new to this, you may also want to read the [Tao of the
+IETF](https://www.ietf.org/tao.html).
+
+Be aware that all contributions to the specification fall under the "NOTE WELL"
+terms outlined below.
+
+1. The best way to provide feedback (editorial or design) and ask questions is
+sending an e-mail to [our mailing
+list](https://lists.w3.org/Archives/Public/ietf-http-wg/). This will ensure that
+the entire Working Group sees your input in a timely fashion.
+
+2. If you have **editorial** suggestions (i.e., those that do not change the
+meaning of the specification), you can either:
+
+  a) Fork this repository and submit a pull request; this is the lowest
+  friction way to get editorial changes in.
+
+  b) Submit a new issue to Github, and mention that you believe it is editorial
+  in the issue body. It is not necessary to notify the mailing list for
+  editorial issues.
+
+  c) Make comments on individual commits in Github. Note that this feedback is
+  processed only with best effort by the editors, so it should only be used for
+  quick editorial suggestions or questions.
+
+3. For non-editorial (i.e., **design**) issues, you can also create an issue on
+Github. However, you **must notify the mailing list** when creating such issues,
+providing a link to the issue in the message body.
+
+  Note that **github issues are not for substantial discussions**; the only
+  appropriate place to discuss design issues is on the mailing list itself.
+
+
+## Building the Draft
+
+Formatted text and HTML versions of the draft can be built using `make`.
 
 ```sh
-$ make setup-ghpages
+$ make
 ```
 
-You can maintain `gh-pages` manually by running the following command
-occasionally.
+This requires that you have the necessary software installed.  There are several
+other tools that are enabled by make, check the Makefile for details, including
+links to the software those tools might require.
+
+
+## Installation and Setup
+
+Mac users will need to install
+[XCode](https://itunes.apple.com/us/app/xcode/id497799835) to get `make`, see
+[this answer](http://stackoverflow.com/a/11494872/1375574) for instructions.
+Some of the makefile targets need GNU make 4.0, which Apple doesn't ship yet;
+sorry, but if you want those, you can
+[download](https://www.gnu.org/software/make/) and build a copy for yourself.
+
+Windows users will need to use [Cygwin](http://cygwin.org/) to get `make`.
+
+All systems require [xml2rfc](http://xml2rfc.ietf.org/).  This requires [Python
+2.7](https://www.python.org/).  The easiest way to get `xml2rfc` is with `pip`.
+
+Using a `virtualenv`:
 
 ```sh
-$ make ghpages
+$ virtualenv --no-site-packages venv
+# remember also to activate the virtualenv before any 'make' run
+$ source venv/bin/activate
+$ pip install xml2rfc
 ```
 
-Or, you can run an automatic commit after each checkin with Travis.
-
-
-### Automatic Update for Editor's Copy
-
-This requires that you sign in with [Travis](https://travis-ci.org/).
-
-First enable builds for the new repository on the Travis site.  (Hit the button
-with a '+' on it once you are logged in.)  Note that Travis only synchronizes
-repositories with GitHub once a day, so you might have to force a refresh.
-
-You will need the Travis command line tool for the next step; this is available
-as a [Ruby](https://www.ruby-lang.org/) [gem](https://rubygems.org/):
+To your local user account:
 
 ```sh
-$ sudo gem install travis
+$ pip install --user xml2rfc
 ```
 
-*WARNING*: You might want to use a dummy account for this next part to minimize
-any problems from accidental leaks of your key.  Once you enable pushes from
-Travis, be very careful accepting pull requests that alter `.travis.yml` or
-`Makefile`.  Those files can cause the value of the token to be published for
-all to see.  You don't want that to happen, even though tokens can be revoked
-easily.  Only pushes to the main repository will be able to see the token, so
-don't worry about pull requests.
-
-Then, you need to get yourself a [new GitHub application
-token](https://github.com/settings/tokens/new).  The application token only
-needs the `public_repo` privilege.  This will let it push updates to your
-`gh-pages` branch.
-
-Then, you update the Travis configuration file with an encrypted copy of that
-token, as follows:
+Or globally:
 
 ```sh
-$ travis encrypt GH_TOKEN=<YOUR TOKEN HERE> -a -p
-$ git add .travis.yml
-$ git commit
-$ git push
+$ sudo pip install xml2rfc
 ```
 
-As a side benefit, Travis will now also check pull requests for errors, letting
-you know if things didn't work out so that you don't merge anything suspect.
+xml2rfc depends on development versions of [libxml2](http://xmlsoft.org/) and
+[libxslt1](http://xmlsoft.org/XSLT).  These packages are named `libxml2-dev` and
+`libxslt1-dev` (Debian, Ubuntu) or `libxml2-devel` and `libxslt1-devel` (RedHat,
+Fedora).
 
-
-## Updating the Makefile
-
-Occasionally improvements and changes are made to the Makefile or the support
-files in this repository.  The `update` make target looks after the update of
-the core files.
+If you use markdown, you will also need to install `kramdown-xml2rfc`, which
+requires Ruby and can be installed using the roby package manager, `gem`:
 
 ```sh
-$ make update
-$ git commit
+$ gem install kramdown-xml2rfc
 ```
 
-This script is cunning enough to handle merging any simple changes that you
-might have made to the Makefile yourself, such as adding targets.
 
+## NOTE WELL
 
-## Submitting Drafts
+Any submission to the [IETF](https://www.ietf.org/) intended by the Contributor
+for publication as all or part of an IETF Internet-Draft or RFC and any
+statement made within the context of an IETF activity is considered an "IETF
+Contribution". Such statements include oral statements in IETF sessions, as
+well as written and electronic communications made at any time or place, which
+are addressed to:
 
-See `SUBMITTING.md`.
+ * The IETF plenary session
+ * The IESG, or any member thereof on behalf of the IESG
+ * Any IETF mailing list, including the IETF list itself, any working group
+   or design team list, or any other list functioning under IETF auspices
+ * Any IETF working group or portion thereof
+ * Any Birds of a Feather (BOF) session
+ * The IAB or any member thereof on behalf of the IAB
+ * The RFC Editor or the Internet-Drafts function
+ * All IETF Contributions are subject to the rules of
+   [RFC 5378](https://tools.ietf.org/html/rfc5378) and
+   [RFC 3979](https://tools.ietf.org/html/rfc3979)
+   (updated by [RFC 4879](https://tools.ietf.org/html/rfc4879)).
+
+Statements made outside of an IETF session, mailing list or other function,
+that are clearly not intended to be input to an IETF activity, group or
+function, are not IETF Contributions in the context of this notice.
+
+Please consult [RFC 5378](https://tools.ietf.org/html/rfc5378) and [RFC
+3979](https://tools.ietf.org/html/rfc3979) for details.
+
+A participant in any IETF activity is deemed to accept all IETF rules of
+process, as documented in Best Current Practices RFCs and IESG Statements.
+
+A participant in any IETF activity acknowledges that written, audio and video
+records of meetings may be made and may be available to the public.
