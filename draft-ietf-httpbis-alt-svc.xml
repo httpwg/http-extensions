@@ -923,9 +923,9 @@ Alt-Used: alternate.example.net
     <author initials="M." surname="Belshe" fullname="Mike Belshe"/>
     <author initials="R." surname="Peon" fullname="Roberto Peon"/>
     <author initials="M." surname="Thomson" fullname="Martin Thomson" role="editor"/>
-    <date month="November" year="2014"/>
+    <date month="February" year="2015"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-http2-16"/>
+  <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-http2-17"/>
   <x:source href="refs/draft-ietf-httpbis-http2-16.xml"/>
 </reference>
 
