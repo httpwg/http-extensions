@@ -32,9 +32,9 @@ normative:
   RFC5246:
   RFC6454:
   RFC7234:
+  RFC7469:
   I-D.ietf-httpbis-http2:
   I-D.ietf-httpbis-alt-svc:
-  I-D.ietf-websec-key-pinning:
 
 informative:
   RFC7258:
@@ -229,7 +229,7 @@ correct value - and the corresponding limit on persistence - can increase as the
 over time.
 
 Once a server has indicated that it will support authenticated TLS, a client MAY use key pinning
-{{I-D.ietf-websec-key-pinning}} or any other mechanism that would otherwise be restricted to use
+{{RFC7469}} or any other mechanism that would otherwise be restricted to use
 with "https" URIs, provided that the mechanism can be restricted to a single HTTP origin.
 
 
