@@ -155,7 +155,7 @@
   <x:anchor-alias value="uri-host"/>
   This document uses the Augmented BNF defined in <xref target="RFC5234"/>
   along with the "#rule" extension defined in <xref target="RFC7230" x:rel="#abnf.extension" x:fmt="of"/>.
-  The "rules below are defined in <xref target="RFC7230"/> and <xref target="RFC7234"/>:
+  The rules below are defined in <xref target="RFC7230"/> and <xref target="RFC7234"/>:
 </t>
 <figure><artwork type="abnf2616">
 OWS           = &lt;OWS, see <xref target="RFC7230" x:rel="#whitespace"/>&gt;
