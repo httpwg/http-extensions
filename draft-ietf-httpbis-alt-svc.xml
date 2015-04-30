@@ -146,12 +146,25 @@
   "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
   interpreted as described in <xref target="RFC2119"/>.
 </t>
-<t>
+<t anchor="imported.abnf">
+  <x:anchor-alias value="OWS"/>
+  <x:anchor-alias value="delta-seconds"/>
+  <x:anchor-alias value="port"/>
+  <x:anchor-alias value="quoted-string"/>
+  <x:anchor-alias value="token"/>
+  <x:anchor-alias value="uri-host"/>
   This document uses the Augmented BNF defined in <xref target="RFC5234"/>
-  along with the "OWS", "delta-seconds", "parameter", "port", "quoted-string", "token",
-  and "uri-host" rules from <xref target="RFC7230"/>, and uses the "#rule"
-  extension defined in <xref target="RFC7230" x:rel="#abnf.extension" x:fmt="sec"/> of that document.
+  along with the "#rule" extension defined in <xref target="RFC7230" x:rel="#abnf.extension" x:fmt="of"/>.
+  The "rules below are defined in <xref target="RFC7230"/> and <xref target="RFC7234"/>:
 </t>
+<figure><artwork type="abnf2616">
+OWS           = &lt;OWS, see <xref target="RFC7230" x:rel="#whitespace"/>&gt;
+delta-seconds = &lt;delta-seconds; see <xref target="RFC7234" x:rel="#delta-seconds"/>&gt;
+port          = &lt;port, see <xref target="RFC7230" x:rel="#uri"/>&gt;
+quoted-string = &lt;quoted-string, see <xref target="RFC7230" x:rel="#field.components"/>&gt;
+token         = &lt;token, see <xref target="RFC7230" x:rel="#field.components"/>&gt;
+uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
+</artwork></figure>
 </section>
 
     </section>
@@ -346,8 +359,9 @@
   <artwork type="abnf2616">
 Alt-Svc       = 1#( alternative *( OWS ";" OWS parameter ) )
 alternative   = protocol-id "=" alt-authority
-protocol-id   = token ; percent-encoded ALPN protocol identifier
-alt-authority = quoted-string ; containing [ uri-host ] ":" port
+protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol identifier
+alt-authority = <x:ref>quoted-string</x:ref> ; containing [ <x:ref>uri-host</x:ref> ] ":" <x:ref>port</x:ref>
+parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-string</x:ref> )
 </artwork>
 </figure>
 <t>
@@ -460,7 +474,7 @@ Alt-Svc: h2=":443"; ma=3600
 </t>
 <figure>
   <artwork type="abnf2616">
-ma = delta-seconds
+ma = <x:ref>delta-seconds</x:ref>
 </artwork></figure>
 <t>
    See <xref target="RFC7234" x:rel="#age.calculations" x:fmt="of"/> for details of determining
@@ -1047,6 +1061,10 @@ Alt-Used: alternate.example.net
 <t>
   alt svc frame on pushed (even and non-0) frame
   (<eref target="https://github.com/httpwg/http-extensions/issues/44"/>).
+</t>
+<t>
+  ABNF for "parameter"
+  (<eref target="https://github.com/httpwg/http-extensions/issues/65"/>).
 </t>
 </section>
 </section>
