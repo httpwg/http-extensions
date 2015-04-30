@@ -5,12 +5,12 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 ### Alternative Services
 * [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/alt-svc.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aalt-svc)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aalt-svc) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-alt-svc/)
 
 ### HTTP Opportunistic Security
 * [Editors' Draft](https://httpwg.github.io/http-extensions/encryption.html) ([plain text](https://httpwg.github.io/http-extensions/encryption.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-encryption/)
 
 ### Tunnel Protocol for CONNECT
 
@@ -18,7 +18,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/tunnel-protocol.html) ([plain text](https://httpwg.github.io/http-extensions/tunnel-protocol.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-tunnel-protocol) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Atunnel-proto)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Atunnel-proto) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-tunnel-protocol/)
 
 ### HTTP Authentication-Info Header Field
 
@@ -26,19 +26,19 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aauth-info)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aauth-info) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-auth-info/)
 
 ### HTTP Client-Initiated Content-Encoding
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cice.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cice) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acice)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acice) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-cice/)
 
 ### HTTP Legally Restricted Status Code
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-legally-restricted-status.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A451)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A451) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-legall-restricted-status/)
 
 ## Contributing
 
