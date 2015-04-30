@@ -461,7 +461,7 @@ Alt-Svc: h2c=":8000", h2=":443"
 <t>
    When an alternative service is advertised using Alt-Svc, it is considered fresh
    for 24 hours from generation of the message. This can be modified with the 'ma'
-   (max-age) parameter;
+   (max-age) parameter:
 </t>
 <figure>
   <artwork type="example">
