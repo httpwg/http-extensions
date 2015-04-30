@@ -14,7 +14,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 ### Tunnel Protocol for CONNECT
 
-**[Working Group Last Call](http://www.w3.org/mid/6BB89A55-A81D-432F-B3A0-B4EAB4BD568A@mnot.net) ends 10 Apr 2015.**
+**[Working Group Last Call](http://www.w3.org/mid/6BB89A55-A81D-432F-B3A0-B4EAB4BD568A@mnot.net) ended 10 Apr 2015.**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/tunnel-protocol.html) ([plain text](https://httpwg.github.io/http-extensions/tunnel-protocol.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-tunnel-protocol) (less recent, more official)
