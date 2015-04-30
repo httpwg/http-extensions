@@ -788,19 +788,6 @@ Alt-Used: alternate.example.net
 
 </section>
 
-<section title="Acknowledgements" anchor="acknowledgements">
-<t>
-  Thanks to Adam Langley, Bence Beky, Eliot Lear, Erik Nygren, Guy Podjarny,
-  Herve Ruellan, Martin Thomson, Matthew Kerwin,
-  Paul Hoffman,
-  Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
-  feedback and suggestions.
-</t>
-<t>
-  The Alt-Svc header field was influenced by the design of the
-  Alternate-Protocol header field in SPDY.
-</t>
-</section>
 
   </middle>
 
@@ -1069,6 +1056,20 @@ Alt-Used: alternate.example.net
 </section>
 </section>
 
+
+<section title="Acknowledgements" anchor="acknowledgements" numbered="false">
+<t>
+  Thanks to Adam Langley, Bence Beky, Eliot Lear, Erik Nygren, Guy Podjarny,
+  Herve Ruellan, Martin Thomson, Matthew Kerwin,
+  Paul Hoffman,
+  Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
+  feedback and suggestions.
+</t>
+<t>
+  The Alt-Svc header field was influenced by the design of the
+  Alternate-Protocol header field in SPDY.
+</t>
+</section>
   </back>
 
 </rfc>
