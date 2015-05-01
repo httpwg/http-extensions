@@ -131,8 +131,9 @@
    that allows an origin server to nominate additional means of interacting with it on
    the network. It defines a general framework for this in <xref
    target="alternative"/>, along with specific mechanisms for advertising their
-   existence using HTTP header fields (<xref target="alt-svc"/>) or an HTTP/2
-   frame type (<xref target="frame"/>).
+   existence using HTTP header fields (<xref target="alt-svc"/>) or HTTP/2
+   frames (<xref target="frame"/>), plus a way to indicate that an alternative
+   service was used (<xref target="indicator"/>).
 </t>
 <t>
    It also introduces a new status code in <xref target="status"/>, so that origin servers (or
