@@ -759,7 +759,7 @@ Alt-Used: alternate.example.net
    itself implies this.
 </t>
 <t>
-   For example, if a "https://" URI had a protocol advertised that does not use
+   For example, if a "https://" URI has a protocol advertised that does not use
    some form of end-to-end encryption (most likely, TLS), it violates the
    expectations for security that the URI scheme implies.
 </t>
