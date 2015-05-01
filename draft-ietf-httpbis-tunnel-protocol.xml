@@ -152,7 +152,7 @@
         </t>
       </section>
 
-     <section title="Syntax">
+      <section title="Syntax">
         <t>
           The ABNF (Augmented Backus-Naur Form) syntax for the ALPN
           header field is given below.  It is based on the Generic Grammar
@@ -199,6 +199,26 @@ Host: www.example.com
 ALPN: h2, http%2F1.1
 </artwork>
         </figure>
+      </section>
+
+      <section title="Usage">
+        <t>
+          For a CONNECT tunnel that consequently uses a protocol that operates
+          over TLS, the value of the ALPN header field contains the same list of
+          ALPN identifiers that will be sent in the TLS ClientHello message
+          <xref target="RFC7301"/>.
+        </t>
+        <t>
+          Where no protocol negotiation is expected to occur, such as in
+          protocols that do not use TLS, the ALPN header field contains the
+          single protocol that is intended to be used.  If an alternative form
+          of protocol negotiation is possible, the ALPN header field contains
+          the set of protocols that might be negotiated.
+        </t>
+        <t>
+          The ALPN identifier and registry are used to identify a protocol, not
+          a single protocol layer or component.
+        </t>
       </section>
     </section>
 
