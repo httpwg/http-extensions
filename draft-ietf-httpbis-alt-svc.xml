@@ -787,6 +787,14 @@ Alt-Used: alternate.example.net
 </t>
 </section>
 
+<section title="Confusion Regarding Request Scheme" anchor="confusion-regarding-request-scheme">
+<t>
+   Alternative Services &MUST-NOT; be advertised for a protocol that is not
+   designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot carry
+   safely requests for http resources.
+</t>
+</section>
+
 </section>
 
 
@@ -1036,10 +1044,6 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-05" anchor="changes.since.draft-ietf-httpbis-alt-svc-05">
 <t>
-  Align opp-sec and alt-svc
-  (<eref target="https://github.com/httpwg/http-extensions/issues/33"/>).
-</t>
-<t>
   Go back to specifying the origin in Alt-Used, but make it a "SHOULD"
   (<eref target="https://github.com/httpwg/http-extensions/issues/34"/>).
 </t>
@@ -1050,6 +1054,15 @@ Alt-Used: alternate.example.net
 </section>
 
 <section title="Since draft-ietf-httpbis-alt-svc-06" anchor="changes.since.draft-ietf-httpbis-alt-svc-06">
+<t>
+  Disallow use of alternative services when the protocol might not carry
+  the scheme
+  (<eref target="https://github.com/httpwg/http-extensions/issues/12"/>).
+</t>
+<t>
+  Align opp-sec and alt-svc
+  (<eref target="https://github.com/httpwg/http-extensions/issues/33"/>).
+</t>
 <t>
   alt svc frame on pushed (even and non-0) frame
   (<eref target="https://github.com/httpwg/http-extensions/issues/44"/>).
