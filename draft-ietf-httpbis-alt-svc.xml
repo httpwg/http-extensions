@@ -782,7 +782,7 @@ Alt-Used: alternate.example.net
    service advertisements.
 </t>
 <t>
-   In a browser, any alternative service information &MUST; be removed when origin-specific data
+   In a user agent, any alternative service information &MUST; be removed when origin-specific data
    is cleared (for instance, when cookies are cleared).
 </t>
 </section>
@@ -1066,6 +1066,10 @@ Alt-Used: alternate.example.net
 <t>
   alt svc frame on pushed (even and non-0) frame
   (<eref target="https://github.com/httpwg/http-extensions/issues/44"/>).
+</t>
+<t>
+  "browser" -> "user agent"
+  (<eref target="https://github.com/httpwg/http-extensions/pull/61"/>).
 </t>
 <t>
   ABNF for "parameter"
