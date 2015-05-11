@@ -83,31 +83,38 @@ This memo introduces a content-coding for HTTP that allows message payloads to b
 
 # Introduction
 
-It is sometimes desirable to encrypt the contents of a HTTP message (request or response) in a
-persistent manner, so that when the payload is stored (e.g., with a HTTP PUT), only someone with
-the appropriate key can read it.
+It is sometimes desirable to encrypt the contents of a HTTP message (request or
+response) so that when the payload is stored (e.g., with a HTTP PUT), only
+someone with the appropriate key can read it.
 
-For example, it might be necessary to store a file on a server without exposing its contents to
-that server. Furthermore, that same file could be replicated to other servers (to make it more
-resistant to server or network failure), downloaded by clients (to make it available offline), etc.
-without exposing its contents.
+For example, it might be necessary to store a file on a server without exposing
+its contents to that server. Furthermore, that same file could be replicated to
+other servers (to make it more resistant to server or network failure),
+downloaded by clients (to make it available offline), etc.  without exposing its
+contents.
 
-These uses are not met by the use of TLS [RFC5246], since it only encrypts the channel between the
-client and server.
+These uses are not met by the use of TLS [RFC5246], since it only encrypts the
+channel between the client and server.
 
-Message-based encryption formats - such as those that are described by [RFC4880], [RFC5652],
-[I-D.ietf-jose-json-web-encryption], and [XMLENC] - are not suited to stream processing, which is
-necessary for HTTP messages.  While virtually any of these alternatives could be profiled and
-adapted to suit, the overhead and complexity that would introduce is sub-optimal.  However, this
-format can be interpreted as sequence of JSON Web Encryption [I-D.ietf-jose-json-web-encryption]
-values with a fixed header, see {{jwe}}.
+This document specifies a content-coding (Section 3.1.2 of [RFC7231]) for HTTP
+to serve these and other use cases.
 
-This document specifies a content-coding (Section 3.1.2 of [RFC7231]) for HTTP to serve these and
-other use cases.
+This content-coding is not a direct adaptation of message-based encryption
+formats - such as those that are described by [RFC4880], [RFC5652],
+[I-D.ietf-jose-json-web-encryption], and [XMLENC] - which are not suited to
+stream processing, which is necessary for HTTP.  The format described here
+cleaves more closely to the lower level constructs described in [RFC5116].
 
-This mechanism is likely only a small part of a larger design that uses content encryption.  In
-particular, this document does not describe key management practices.  How clients and servers
-acquire and identify keys will depend on the use case.
+To the extent that message-based encryption formats use the same primitives, the
+format can be considered as sequence of encrypted messages with a particular
+profile.  For instance, {{jwe}} explains how the format is congruent with a
+sequence of JSON Web Encryption [I-D.ietf-jose-json-web-encryption] values with
+a fixed header.
+
+This mechanism is likely only a small part of a larger design that uses content
+encryption.  In particular, this document does not describe key management
+practices.  How clients and servers acquire and identify keys will depend on the
+use case.
 
 
 ## Notational Conventions
