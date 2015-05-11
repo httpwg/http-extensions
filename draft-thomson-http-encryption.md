@@ -244,23 +244,26 @@ This value MUST be greater than 1.  If the "rs" parameter is absent, the record 
 
 ## Content Encryption Key Derivation {#derivation}
 
-In order to allow the reuse of keying material for multiple different messages, a content encryption
-key is derived for each message.  This key is derived from the decoded value of the "s" parameter
-using the HMAC-based key derivation function (HKDF) described in [RFC5869] using the SHA-256 hash
-algorithm [FIPS180-2].
+In order to allow the reuse of keying material for multiple different messages,
+a content encryption key is derived for each message.  This key is derived from
+the decoded value of the "salt" parameter using the HMAC-based key derivation
+function (HKDF) described in [RFC5869] using the SHA-256 hash algorithm
+[FIPS180-2].
 
-The decoded value of the "salt" parameter is the salt input to HKDF function.  The keying material
-identified by the "keyid" parameter is the input keying material (IKM) to HKDF.  Input keying
-material can either be prearranged, or can be described using the Encryption-Key header field
-({{encryption-key}}).  The first step of HKDF is therefore:
+The decoded value of the "salt" parameter is the salt input to HKDF function.
+The keying material identified by the "keyid" parameter is the input keying
+material (IKM) to HKDF.  Input keying material can either be prearranged, or can
+be described using the Encryption-Key header field ({{encryption-key}}).  The
+first step of HKDF is therefore:
 
 ~~~
    PRK = HMAC-SHA-256(salt, IKM)
 ~~~
 
-AEAD_AES_128_GCM requires 16 octets (128 bits) of key, so the length (L) parameter of HKDF is 16.
-The info parameter is set to the ASCII-encoded string "Content-Encoding: aesgcm128".  The second
-step of HKDF can therefore be simplified to the first 16 octets of a single HMAC:
+AEAD_AES_128_GCM requires 16 octets (128 bits) of key, so the length (L)
+parameter of HKDF is 16.  The info parameter is set to the ASCII-encoded string
+"Content-Encoding: aesgcm128".  The second step of HKDF can therefore be
+simplified to the first 16 octets of a single HMAC:
 
 ~~~
    OKM = HMAC-SHA-256(PRK, "Content-Encoding: aesgcm128" || 0x01)
