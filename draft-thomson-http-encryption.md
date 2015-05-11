@@ -595,8 +595,8 @@ counter could achieve the desired result.
 ## Content Integrity
 
 This mechanism only provides content origin authentication.  The authentication
-tag only ensures that those with access to the content encryption key produce a
-message that will be accepted as valid.
+tag only ensures that an entity with access to the content encryption key
+produced the encrypted data.
 
 Any entity with the content encryption key can therefore produce content that
 will be accepted as valid.  This includes all recipients of the same message.
