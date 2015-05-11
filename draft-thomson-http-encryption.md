@@ -76,7 +76,8 @@ informative:
 
 --- abstract
 
-This memo introduces a content-coding for HTTP that allows message payloads to be encrypted.
+This memo introduces a content-coding for HTTP that allows message payloads to
+be encrypted.
 
 
 --- middle
@@ -119,9 +120,9 @@ use case.
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
-"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
-[RFC2119].
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
+interpreted as described in [RFC2119].
 
 
 # The "aesgcm-128" HTTP content-coding {#aesgcm128}
@@ -197,49 +198,55 @@ Issue:
 
 # The "Encryption" HTTP header field  {#encryption}
 
-The "Encryption" HTTP header field describes the encrypted content encoding(s) that have been
-applied to a message payload, and therefore how those content encoding(s) can be removed.
+The "Encryption" HTTP header field describes the encrypted content encoding(s)
+that have been applied to a message payload, and therefore how those content
+encoding(s) can be removed.
 
 ~~~
   Encryption-val = #encryption_params
   encryption_params = [ param *( ";" param ) ]
 ~~~
 
-If the payload is encrypted more than once (as reflected by having multiple content-codings that
-imply encryption), each application of the content encoding is reflected in the Encryption header
-field, in the order in which they were applied.
+If the payload is encrypted more than once (as reflected by having multiple
+content-codings that imply encryption), each application of the content encoding
+is reflected in the Encryption header field, in the order in which they were
+applied.
 
-The Encryption header MAY be omitted if the sender does not intend for the immediate recipient to
-be able to decrypt the message.  Alternatively, the Encryption header field MAY be omitted if the
-sender intends for the recipient to acquire the header field by other means.
+The Encryption header MAY be omitted if the sender does not intend for the
+immediate recipient to be able to decrypt the message.  Alternatively, the
+Encryption header field MAY be omitted if the sender intends for the recipient
+to acquire the header field by other means.
 
-Servers processing PUT requests MUST persist the value of the Encryption header field, unless they
-remove the content-coding by decrypting the payload.
+Servers processing PUT requests MUST persist the value of the Encryption header
+field, unless they remove the content-coding by decrypting the payload.
 
 
 ## Encryption Header Field Parameters
 
-The following parameters are used in determining the key that is used for encryption:
+The following parameters are used in determining the key that is used for
+encryption:
 
 keyid:
 
-: The "keyid" parameter contains a string that identifies the keying material that is used.  The
-"keyid" parameter SHOULD be included, unless key identification is guaranteed by other means.  The
-"keyid" parameter MUST be used if keying material is included in an Encryption-Key header field.
+: The "keyid" parameter contains a string that identifies the keying material
+that is used.  The "keyid" parameter SHOULD be included, unless key
+identification is guaranteed by other means.  The "keyid" parameter MUST be used
+if keying material is included in an Encryption-Key header field.
 
 salt:
 
-: The "salt" parameter contains a base64 URL-encoded octets that is used as salt in deriving a
-unique content encryption key (see {{derivation}}).  The "salt" parameter MUST be present, and MUST
-be exactly 16 octets long.  The "salt" parameter MUST NOT be reused for two different messages that
-have the same content encryption key; generating a random nonce for each message ensures that reuse
-is highly unlikely.
+: The "salt" parameter contains a base64 URL-encoded octets that is used as salt
+in deriving a unique content encryption key (see {{derivation}}).  The "salt"
+parameter MUST be present, and MUST be exactly 16 octets long.  The "salt"
+parameter MUST NOT be reused for two different messages that have the same
+content encryption key; generating a random nonce for each message ensures that
+reuse is highly unlikely.
 
 rs:
 
-: The "rs" parameter contains a positive decimal integer that describes the record size in octets.
-This value MUST be greater than 1.  If the "rs" parameter is absent, the record size defaults to
-4096 octets.
+: The "rs" parameter contains a positive decimal integer that describes the
+record size in octets.  This value MUST be greater than 1.  If the "rs"
+parameter is absent, the record size defaults to 4096 octets.
 
 
 ## Content Encryption Key Derivation {#derivation}
@@ -272,8 +279,8 @@ simplified to the first 16 octets of a single HMAC:
 
 # Encryption-Key Header Field {#encryption-key}
 
-An Encryption-Key header field can be used to describe the input keying material used in the
-Encryption header field.
+An Encryption-Key header field can be used to describe the input keying material
+used in the Encryption header field.
 
 ~~~
   Encryption-Key-val = #encryption_key_params
@@ -282,63 +289,72 @@ Encryption header field.
 
 keyid:
 
-: The "keyid" parameter corresponds to the "keyid" parameter in the Encryption header field.
+: The "keyid" parameter corresponds to the "keyid" parameter in the Encryption
+header field.
 
 key:
 
-: The "key" parameter contains the URL-safe base64 [RFC4648] octets of the input keying material.
+: The "key" parameter contains the URL-safe base64 [RFC4648] octets of the input
+keying material.
 
 dh:
 
-: The "dh" parameter contains an ephemeral Diffie-Hellman share. This form of the header field can
-be used to encrypt content for a specific recipient.
+: The "dh" parameter contains an ephemeral Diffie-Hellman share. This form of
+the header field can be used to encrypt content for a specific recipient.
 
 
-The input keying material used by the content-encoding key derivation (see {{derivation}}) can be
-determined based on the information in the Encryption-Key header field.  The method for key
-derivation depends on the parameters that are present in the header field.
+The input keying material used by the content-encoding key derivation (see
+{{derivation}}) can be determined based on the information in the Encryption-Key
+header field.  The method for key derivation depends on the parameters that are
+present in the header field.
 
-Note that different methods for determining input keying materal will produce different
-amounts of data.  The HKDF process ensures that the final content encryption key is the necessary
-size.
+Note that different methods for determining input keying materal will produce
+different amounts of data.  The HKDF process ensures that the final content
+encryption key is the necessary size.
 
-Alternative methods for determining input keying material MAY be defined by specifications that use
-this content-encoding.
+Alternative methods for determining input keying material MAY be defined by
+specifications that use this content-encoding.
 
 
 ## Explicit Key
 
-The "key" parameter is decoded and used directly if present.  The "key" parameter MUST decode to
-exactly 16 octets in order to be used as input keying material for "aesgcm128" content encoding.
+The "key" parameter is decoded and used directly if present.  The "key"
+parameter MUST decode to exactly 16 octets in order to be used as input keying
+material for "aesgcm128" content encoding.
 
-Other key determination parameters can be ignored if the "key" parameter is present.
+Other key determination parameters can be ignored if the "key" parameter is
+present.
 
 
 ## Diffie-Hellman
 
-The "dh" parameter is included to describe a Diffie-Hellman share, either modp (or finite field)
-Diffie-Hellman [DH] or elliptic curve Diffie-Hellman (ECDH) [RFC4492].
+The "dh" parameter is included to describe a Diffie-Hellman share, either modp
+(or finite field) Diffie-Hellman [DH] or elliptic curve Diffie-Hellman (ECDH)
+[RFC4492].
 
-This share is combined with other information at the recipient to determine the HKDF input keying
-material.  In order for the exchange to be successful, the following information MUST be established
-out of band:
+This share is combined with other information at the recipient to determine the
+HKDF input keying material.  In order for the exchange to be successful, the
+following information MUST be established out of band:
 
 * Which Diffie-Hellman form is used.
 
 * The modp group or elliptic curve that will be used.
 
-* The format of the ephemeral public share that is included in the "dh" parameter.  For instance,
-  using ECDH both parties need to agree whether this is an uncompressed or compressed point.
+* The format of the ephemeral public share that is included in the "dh"
+  parameter.  For instance, using ECDH both parties need to agree whether this
+  is an uncompressed or compressed point.
 
-In addition to identifying which content-encoding this input keying material is used for, the
-"keyid" parameter is used to identify this additional information at the receiver.
+In addition to identifying which content-encoding this input keying material is
+used for, the "keyid" parameter is used to identify this additional information
+at the receiver.
 
-The intended recipient recovers their private key and are then able to generate a shared secret
-using the appropriate Diffie-Hellman process.
+The intended recipient recovers their private key and are then able to generate
+a shared secret using the appropriate Diffie-Hellman process.
 
-Specifications that rely on an Diffie-Hellman exchange for determining input keying material MUST
-either specify the parameters for Diffie-Hellman (group parameters, or curves and point format) that
-are used, or describe how those parameters are negotiated between sender and receiver.
+Specifications that rely on an Diffie-Hellman exchange for determining input
+keying material MUST either specify the parameters for Diffie-Hellman (group
+parameters, or curves and point format) that are used, or describe how those
+parameters are negotiated between sender and receiver.
 
 
 # Examples
@@ -356,10 +372,11 @@ Encryption: keyid="http://example.org/bob/keys/123";
 [encrypted payload]
 ~~~
 
-Here, a successful HTTP GET response has been encrypted using a key that is identified by a URI.
+Here, a successful HTTP GET response has been encrypted using a key that is
+identified by a URI.
 
-Note that the media type has been changed to "application/octet-stream" to avoid exposing
-information about the content.
+Note that the media type has been changed to "application/octet-stream" to avoid
+exposing information about the content.
 
 ## Encryption and Compression
 
@@ -390,8 +407,8 @@ Encryption: keyid="mailto:me@example.com";
 [encrypted payload]
 ~~~
 
-Here, a PUT request has been encrypted with two keys; both will be necessary to read the content.
-The outer layer of encryption uses a 1200 octet record size.
+Here, a PUT request has been encrypted with two keys; both will be necessary to
+read the content.  The outer layer of encryption uses a 1200 octet record size.
 
 
 ## Encryption with Explicit Key {#explicit}
@@ -406,9 +423,9 @@ Encryption-Key: keyid="a1"; key="9Z57YCb3dK95dSsdFJbkag"
 zK3kpG__Z8whjIkG6RYgPz11oUkTKcxPy9WP-VPMfuc
 ~~~
 
-This example shows the string "I am the walrus" encrypted using an explicit key.  The content body
-contains a single record only and is shown here encoded in URL-safe base64 for presentation reasons
-only.
+This example shows the string "I am the walrus" encrypted using an explicit key.
+The content body contains a single record only and is shown here encoded in
+URL-safe base64 for presentation reasons only.
 
 
 ## Diffie-Hellman Encryption
@@ -425,13 +442,15 @@ Encryption-Key: keyid="dhkey";
 BmuHqRzdD4W1mibxglrPiRHZRSY49Dzdm6jHrWXzZrE
 ~~~
 
-This example shows the same string, "I am the walrus", encrypted using ECDH over the P-256 curve
-[FIPS186]. The content body is shown here encoded in URL-safe base64 for presentation reasons only.
+This example shows the same string, "I am the walrus", encrypted using ECDH over
+the P-256 curve [FIPS186]. The content body is shown here encoded in URL-safe
+base64 for presentation reasons only.
 
-The receiver (in this case, the HTTP client) uses the key identified by the string "dhkey" and the
-sender (the server) uses a key pair for which the public share is included in the "dh" parameter
-above. The keys shown below use uncompressed points [X.692] encoded using URL-safe base64. Line
-wrapping is added for presentation purposes only.
+The receiver (in this case, the HTTP client) uses the key identified by the
+string "dhkey" and the sender (the server) uses a key pair for which the public
+share is included in the "dh" parameter above. The keys shown below use
+uncompressed points [X.692] encoded using URL-safe base64. Line wrapping is
+added for presentation purposes only.
 
 ~~~
    Receiver:
@@ -448,8 +467,8 @@ wrapping is added for presentation purposes only.
 
 ## The "aesgcm-128" HTTP content-coding
 
-This memo registers the "encrypted" HTTP content-coding in the HTTP Content Codings Registry, as
-detailed in {{aesgcm128}}.
+This memo registers the "encrypted" HTTP content-coding in the HTTP Content
+Codings Registry, as detailed in {{aesgcm128}}.
 
 * Name: aesgcm-128
 * Description: AES-GCM encryption with a 128-bit key
@@ -458,8 +477,8 @@ detailed in {{aesgcm128}}.
 
 ## Encryption Header Fields
 
-This memo registers the "Encryption" HTTP header field in the Permanent Message Header Registry, as
-detailed in {{encryption}}.
+This memo registers the "Encryption" HTTP header field in the Permanent Message
+Header Registry, as detailed in {{encryption}}.
 
 * Field name: Encryption
 * Protocol: HTTP
@@ -467,8 +486,8 @@ detailed in {{encryption}}.
 * Reference: [this specification]
 * Notes:
 
-This memo registers the "Encryption-Key" HTTP header field in the Permanent Message Header Registry,
-as detailed in {{encryption-key}}.
+This memo registers the "Encryption-Key" HTTP header field in the Permanent
+Message Header Registry, as detailed in {{encryption-key}}.
 
 * Field name: Encryption-Key
 * Protocol: HTTP
@@ -513,9 +532,9 @@ The initial contents of this registry are:
 
 ## The HTTP Encryption-Key Parameter Registry {#encryption-key-registry}
 
-This memo establishes a registry for parameters used by the "Encryption-Key" header
-field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.  The
-"Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
+This memo establishes a registry for parameters used by the "Encryption-Key"
+header field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.
+The "Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
 "Specification Required" policy [RFC5226].
 
 Entries in this registry are expected to include the following information:
@@ -547,117 +566,135 @@ The initial contents of this registry are:
 
 # Security Considerations
 
-This mechanism assumes the presence of a key management framework that is used to manage the
-distribution of keys between valid senders and receivers.  Defining key management is part of
-composing this mechanism into a larger application, protocol, or framework.
+This mechanism assumes the presence of a key management framework that is used
+to manage the distribution of keys between valid senders and receivers.
+Defining key management is part of composing this mechanism into a larger
+application, protocol, or framework.
 
-Implementation of cryptography - and key management in particular - can be difficult.  For instance,
-implementations need to account for the potential for exposing keying material on side channels,
-such as might be exposed by the time it takes to perform a given operation.  The requirements for a
-good implementation of cryptographic algorithms can change over time.
+Implementation of cryptography - and key management in particular - can be
+difficult.  For instance, implementations need to account for the potential for
+exposing keying material on side channels, such as might be exposed by the time
+it takes to perform a given operation.  The requirements for a good
+implementation of cryptographic algorithms can change over time.
 
 
 ## Key and Nonce Reuse
 
-Encrypting different plaintext with the same content encryption key and nonce in AES-GCM is not safe
-[RFC5116].  The scheme defined here relies on the uniqueness of the "nonce" parameter to ensure that
-the content encryption key is different for every message.
+Encrypting different plaintext with the same content encryption key and nonce in
+AES-GCM is not safe [RFC5116].  The scheme defined here relies on the uniqueness
+of the "nonce" parameter to ensure that the content encryption key is different
+for every message.
 
-If a key and nonce are reused, this could expose the content encryption key and it makes message
-modification trivial.  If the same key is used for multiple messages, then the nonce parameter MUST
-be unique for each.  An implementation SHOULD generate a random nonce parameter for every message,
-though using a counter could achieve the desired result.
+If a key and nonce are reused, this could expose the content encryption key and
+it makes message modification trivial.  If the same key is used for multiple
+messages, then the nonce parameter MUST be unique for each.  An implementation
+SHOULD generate a random nonce parameter for every message, though using a
+counter could achieve the desired result.
 
 
 ## Content Integrity
 
-This mechanism only provides content origin authentication.  The authentication tag only ensures
-that those with access to the content encryption key produce a message that will be accepted as
-valid.
+This mechanism only provides content origin authentication.  The authentication
+tag only ensures that those with access to the content encryption key produce a
+message that will be accepted as valid.
 
-Any entity with the content encryption key can therefore produce content that will be accepted as
-valid.  This includes all recipients of the same message.
+Any entity with the content encryption key can therefore produce content that
+will be accepted as valid.  This includes all recipients of the same message.
 
-Furthermore, any entity that is able to modify both the Encryption header field and the message
-payload can replace messages.  Without the content encryption key however, modifications to or
-replacement of parts of a message are not possible.
+Furthermore, any entity that is able to modify both the Encryption header field
+and the message payload can replace messages.  Without the content encryption
+key however, modifications to or replacement of parts of a message are not
+possible.
 
 
 ## Leaking Information in Headers
 
-Because "encrypted" only operates upon the message payload, any information exposed in header fields is
-visible to anyone who can read the message.
+Because "encrypted" only operates upon the message payload, any information
+exposed in header fields is visible to anyone who can read the message.
 
-For example, the Content-Type header field can leak information about the message payload.
+For example, the Content-Type header field can leak information about the
+message payload.
 
-There are a number of strategies available to mitigate this threat, depending upon the
-application's threat model and the users' tolerance for leaked information:
+There are a number of strategies available to mitigate this threat, depending
+upon the application's threat model and the users' tolerance for leaked
+information:
 
-1. Determine that it is not an issue. For example, if it is expected that all content stored will be
-"application/json", or another very common media type, exposing the Content-Type header field could be an
-acceptable risk.
+1. Determine that it is not an issue. For example, if it is expected that all
+   content stored will be "application/json", or another very common media type,
+   exposing the Content-Type header field could be an acceptable risk.
 
-2. If it is considered sensitive information and it is possible to determine it through other means
-(e.g., out of band, using hints in other representations, etc.), omit the relevant headers, and/or
-normalize them. In the case of Content-Type, this could be accomplished by always sending
-Content-Type: application/octet-stream (the most generic media type), or no Content-Type at all.
+2. If it is considered sensitive information and it is possible to determine it
+   through other means (e.g., out of band, using hints in other representations,
+   etc.), omit the relevant headers, and/or normalize them. In the case of
+   Content-Type, this could be accomplished by always sending Content-Type:
+   application/octet-stream (the most generic media type), or no Content-Type at
+   all.
 
-3. If it is considered sensitive information and it is not possible to convey it elsewhere,
-encapsulate the HTTP message using the application/http media type (Section 8.3.2 of [RFC7230]), encrypting that as the
-payload of the "outer" message.
+3. If it is considered sensitive information and it is not possible to convey it
+   elsewhere, encapsulate the HTTP message using the application/http media type
+   (Section 8.3.2 of [RFC7230]), encrypting that as the payload of the "outer"
+   message.
 
 
 ## Poisoning Storage
 
-This mechanism only offers encryption of content; it does not perform authentication or
-authorization, which still needs to be performed (e.g., by HTTP authentication [RFC7235]).
+This mechanism only offers encryption of content; it does not perform
+authentication or authorization, which still needs to be performed (e.g., by
+HTTP authentication [RFC7235]).
 
-This is especially relevant when a HTTP PUT request is accepted by a server; if the request is
-unauthenticated, it becomes possible for a third party to deny service and/or poison the store.
+This is especially relevant when a HTTP PUT request is accepted by a server; if
+the request is unauthenticated, it becomes possible for a third party to deny
+service and/or poison the store.
 
 
 ## Sizing and Timing Attacks
 
-Applications using this mechanism need to be aware that the size of encrypted messages, as well as
-their timing, HTTP methods, URIs and so on, may leak sensitive information.
+Applications using this mechanism need to be aware that the size of encrypted
+messages, as well as their timing, HTTP methods, URIs and so on, may leak
+sensitive information.
 
-This risk can be mitigated through the use of the padding that this mechanism provides.
-Alternatively, splitting up content into segments and storing the separately might reduce
-exposure. HTTP/2 [I-D.ietf-httpbis-http2] combined with TLS [RFC5246] might be used to hide the size
-of individual messages.
+This risk can be mitigated through the use of the padding that this mechanism
+provides.  Alternatively, splitting up content into segments and storing the
+separately might reduce exposure. HTTP/2 [I-D.ietf-httpbis-http2] combined with
+TLS [RFC5246] might be used to hide the size of individual messages.
 
 
 --- back
 
 # JWE Mapping {#jwe}
 
-The "aesgcm-128" content encoding can be considered as a sequence of JSON Web Encryption (JWE)
-objects, each corresponding to a single fixed size record.  The following transformations are
-applied to a JWE object that might be expressed using the JWE Compact Serialization:
+The "aesgcm-128" content encoding can be considered as a sequence of JSON Web
+Encryption (JWE) objects, each corresponding to a single fixed size record.  The
+following transformations are applied to a JWE object that might be expressed
+using the JWE Compact Serialization:
 
-* The JWE Protected Header is fixed to a value { "alg": "dir", "enc": "A128GCM" }, describing direct
-  encryption using AES-GCM with a 128-bit key.  This header is not transmitted, it is instead
-  implied by the value of the Content-Encoding header field.
+* The JWE Protected Header is fixed to a value { "alg": "dir", "enc": "A128GCM"
+  }, describing direct encryption using AES-GCM with a 128-bit key.  This header
+  is not transmitted, it is instead implied by the value of the Content-Encoding
+  header field.
 
 * The JWE Encrypted Key is empty, as stipulated by the direct encryption algorithm.
 
-* The JWE Initialization Vector ("iv") for each record is set to the 96-bit integer value of the
-  record sequence number, starting at zero.  This value is also not transmitted.
+* The JWE Initialization Vector ("iv") for each record is set to the 96-bit
+  integer value of the record sequence number, starting at zero.  This value is
+  also not transmitted.
 
-* The final value is the concatenated JWE Ciphertext and the JWE Authentication Tag, both expressed
-  without URL-safe Base 64 encoding.  The "." separator is omitted, since the length of these fields
-  is known.
+* The final value is the concatenated JWE Ciphertext and the JWE Authentication
+  Tag, both expressed without URL-safe Base 64 encoding.  The "." separator is
+  omitted, since the length of these fields is known.
 
-Thus, the example in {{explicit}} can be rendered using the JWE Compact Serialization as:
+Thus, the example in {{explicit}} can be rendered using the JWE Compact
+Serialization as:
 
 ~~~
 eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..AAAAAAAAAAAAAAAA.
 LwTC-fwdKh8de0smD2jfzA.eh1vURhu65M2lxhctbbntA
 ~~~
 
-Where the first line represents the fixed JWE Protected Header, JWE Encrypted Key, and JWE
-Initialization Vector, all of which are determined algorithmically.  The second line contains the
-encoded body, split into JWE Ciphertext and JWE Authentication Tag.
+Where the first line represents the fixed JWE Protected Header, JWE Encrypted
+Key, and JWE Initialization Vector, all of which are determined algorithmically.
+The second line contains the encoded body, split into JWE Ciphertext and JWE
+Authentication Tag.
 
 # Acknowledgements
 
