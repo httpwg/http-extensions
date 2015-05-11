@@ -126,21 +126,24 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # The "aesgcm-128" HTTP content-coding {#aesgcm128}
 
-The "aesgcm-128" HTTP content-coding indicates that a payload has been encrypted using Advanced
-Encryption Standard (AES) in Galois/Counter Mode (GCM) as identified as AEAD_AES_128_GCM in
-[RFC5116], Section 5.1.  The AEAD_AES_128_GCM algorithm uses a 128 bit content encryption key.
+The "aesgcm-128" HTTP content-coding indicates that a payload has been encrypted
+using Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) as
+identified as AEAD_AES_128_GCM in [RFC5116], Section 5.1.  The AEAD_AES_128_GCM
+algorithm uses a 128 bit content encryption key.
 
-When this content-coding is in use, the Encryption header field ({{encryption}}) describes how
-encryption has been applied.  The Encryption-Key header field ({{encryption-key}}) can be included to
-describe how the the content encryption key is derived or retrieved.
+When this content-coding is in use, the Encryption header field ({{encryption}})
+describes how encryption has been applied.  The Encryption-Key header field
+({{encryption-key}}) can be included to describe how the the content encryption
+key is derived or retrieved.
 
-The "aesgcm-128" content-coding uses a single fixed set of encryption primitives.  Cipher suite
-agility is achieved by defining a new content-coding scheme.  This ensures that only the HTTP
-Accept-Encoding header field is necessary to negotiate the use of encryption.
+The "aesgcm-128" content-coding uses a single fixed set of encryption
+primitives.  Cipher suite agility is achieved by defining a new content-coding
+scheme.  This ensures that only the HTTP Accept-Encoding header field is
+necessary to negotiate the use of encryption.
 
-The "aesgcm-128" content-coding uses a fixed record size.  The resulting encoding is a series of
-fixed-size records, with a final record that is one or more octets shorter than a fixed sized
-record.
+The "aesgcm-128" content-coding uses a fixed record size.  The resulting
+encoding is a series of fixed-size records, with a final record that is one or
+more octets shorter than a fixed sized record.
 
 ~~~
        +------+
@@ -158,30 +161,35 @@ record.
 +--------------------+     expands by 16 octets
 ~~~
 
-The record size determines the length of each portion of plaintext that is enciphered.  The record
-size defaults to 4096 octets, but can be changed using the "rs" parameter on the Encryption header
-field.
+The record size determines the length of each portion of plaintext that is
+enciphered.  The record size defaults to 4096 octets, but can be changed using
+the "rs" parameter on the Encryption header field.
 
-AEAD_AES_128_GCM expands ciphertext to be 16 octets longer than its input plaintext.  Therefore, the
-length of each enciphered record is equal to the value of the "rs" parameter plus 16 octets.  It is
-a fatal decryption error to have a remainder of 16 octets or less in size (though AEAD_AES_128_GCM
-permits input plaintext to be zero length, records always contain at least one padding octet).
+AEAD_AES_128_GCM expands ciphertext to be 16 octets longer than its input
+plaintext.  Therefore, the length of each enciphered record is equal to the
+value of the "rs" parameter plus 16 octets.  A receiver MUST fail to decrypt if
+the remainder is 16 octets or less in size (though AEAD_AES_128_GCM permits
+input plaintext to be zero length, records always contain at least one padding
+octet).
 
-Each record contains between 0 and 255 octets of padding, inserted into a record before the
-enciphered content.  The length of the padding is stored in the first octet of the payload.  All
-padding octets MUST be set to zero.  It is a fatal decryption error to have a record with more
-padding than the record size.
+Each record contains between 0 and 255 octets of padding, inserted into a record
+before the enciphered content.  The length of the padding is stored in the first
+octet of the payload.  All padding octets MUST be set to zero.  A receiver MUST
+fail to decrypt if a record has more padding than the record size can
+accommodate.
 
-The nonce used for each record is a 96-bit value containing the index of the current record in
-network byte order.  Records are indexed starting at zero.
+The nonce used for each record is a 96-bit value containing the index of the
+current record in network byte order.  Records are indexed starting at zero.
 
-The additional data passed to the AEAD algorithm is a zero-length octet sequence.
+The additional data passed to each invocation of AEAD_AES_128_GCM is a
+zero-length octet sequence.
 
-A sequence of full-sized records can be truncated to produce a shorter sequence of records with
-valid authentication tags.  To prevent an attacker from truncating a stream, an endoder MUST append
-a record that contains only padding if the final record is not shorter than the record size.  A
-receiver MUST treat the stream as failed due to truncation if the final record is not less than the
-full record size.
+A sequence of full-sized records can be truncated to produce a shorter sequence
+of records with valid authentication tags.  To prevent an attacker from
+truncating a stream, an encoder MUST append a record that contains only padding
+and is smaller than the full record size if the final record ends on a record
+boundary.  A receiver MUST treat the stream as failed due to truncation if the
+final record is the full record size.
 
 Issue:
 : Double check that this construction (with no AAD) is safe.
