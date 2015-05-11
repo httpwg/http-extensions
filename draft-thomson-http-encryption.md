@@ -472,7 +472,7 @@ Codings Registry, as detailed in {{aesgcm128}}.
 
 * Name: aesgcm-128
 * Description: AES-GCM encryption with a 128-bit key
-* Reference [this specification]
+* Reference: this specification
 
 
 ## Encryption Header Fields
@@ -483,7 +483,7 @@ Header Registry, as detailed in {{encryption}}.
 * Field name: Encryption
 * Protocol: HTTP
 * Status: Standard
-* Reference: [this specification]
+* Reference: this specification
 * Notes:
 
 This memo registers the "Encryption-Key" HTTP header field in the Permanent
@@ -492,7 +492,7 @@ Message Header Registry, as detailed in {{encryption-key}}.
 * Field name: Encryption-Key
 * Protocol: HTTP
 * Status: Standard
-* Reference: [this specification]
+* Reference: this specification
 * Notes:
 
 
@@ -515,19 +515,19 @@ The initial contents of this registry are:
 
 * Parameter Name: keyid
 * Purpose: Identify the key that is in use.
-* Reference: [this document]
+* Reference: this document
 
 ### salt
 
 * Parameter Name: salt
 * Purpose: Provide a source of entropy for derivation of the content encryption key. This value is mandatory.
-* Reference: [this document]
+* Reference: this document
 
 ### rs
 
 * Parameter Name: rs
 * Purpose: The size of the encrypted records.
-* Reference: [this document]
+* Reference: this document
 
 
 ## The HTTP Encryption-Key Parameter Registry {#encryption-key-registry}
@@ -549,19 +549,19 @@ The initial contents of this registry are:
 
 * Parameter Name: keyid
 * Purpose: Identify the key that is in use.
-* Reference: [this document]
+* Reference: this document
 
 ### key
 
 * Parameter Name: key
 * Purpose: Provide an explicit key.
-* Reference: [this document]
+* Reference: this document
 
 ### dh
 
 * Parameter Name: dh
 * Purpose: Carry a modp or elliptic curve Diffie-Hellman share used to derive a key.
-* Reference: [this document]
+* Reference: this document
 
 
 # Security Considerations
