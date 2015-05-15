@@ -115,7 +115,7 @@
     </t>
     <t>
        An origin server might wish to offer access to its resources using a new
-       protocol (such as HTTP/2, see <xref target="HTTP2"/>) or one using improved
+       protocol (such as HTTP/2, see <xref target="RFC7540"/>) or one using improved
        security (such as Transport Layer Security (TLS), see <xref target="RFC5246"/>).
     </t>
     <t>
@@ -401,7 +401,7 @@ parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-
 Alt-Svc: h2=":8000"
 </artwork>
 <postamble>
-   This indicates the "h2" protocol (<xref target="HTTP2"/>) on the same
+   This indicates the "h2" protocol (<xref target="RFC7540"/>) on the same
    host using the indicated port 8000.
 </postamble>
 </figure>
@@ -449,7 +449,7 @@ Alt-Svc: h2c=":8000", h2=":443"
    with subsequent requests on the same connection.
 </t>
 <t>
-   When using HTTP/2 (<xref target="HTTP2"/>), servers &SHOULD; instead send an ALTSVC frame
+   When using HTTP/2 (<xref target="RFC7540"/>), servers &SHOULD; instead send an ALTSVC frame
    (<xref target="frame"/>). A single ALTSVC frame can be sent for a connection;
    a new frame is not needed for every request.
 </t>
@@ -514,7 +514,7 @@ Alt-Svc: h2c=":8000"; ma=60
 
 <section anchor="frame" title="The ALTSVC HTTP/2 Frame">
 <t>
-  The ALTSVC HTTP/2 frame (<xref target="HTTP2" x:fmt="," x:rel="#FramingLayer"/>)
+  The ALTSVC HTTP/2 frame (<xref target="RFC7540" x:fmt="," x:rel="#FramingLayer"/>)
   advertises the availability of an alternative service to an HTTP/2 client.
 </t>
 <t>
@@ -624,7 +624,7 @@ Alt-Used: alternate.example.net
 
 <section title="The 421 Misdirected Request HTTP Status Code" anchor="status">
 <t>
-   The 421 (Misdirected Request) status code is defined in <xref target="HTTP2"
+   The 421 (Misdirected Request) status code is defined in <xref target="RFC7540"
    x:fmt="of" x:rel="#MisdirectedRequest"/> to indicate that the current server
    instance is not authoritative for the requested resource.  This can be used
    to indicate that an alternative service is not authoritative; see <xref
@@ -682,7 +682,7 @@ Alt-Used: alternate.example.net
 <section anchor="alt-svc-frame-registration" title="The ALTSVC HTTP/2 Frame Type">
 <t>
   This document registers the ALTSVC frame type in the HTTP/2 Frame Types
-  registry (<xref target="HTTP2" x:fmt="," x:rel="#iana-frames"/>).
+  registry (<xref target="RFC7540" x:fmt="," x:rel="#iana-frames"/>).
   <list style="empty">
     <t>Frame Type: ALTSVC</t>
     <t>Code: 0xa</t>
@@ -927,16 +927,17 @@ Alt-Used: alternate.example.net
   <seriesInfo name="RFC" value="7301"/>
 </reference>
 
-<reference anchor="HTTP2">
+<reference anchor="RFC7540">
   <front>
     <title>Hypertext Transfer Protocol version 2</title>
     <author initials="M." surname="Belshe" fullname="Mike Belshe"/>
     <author initials="R." surname="Peon" fullname="Roberto Peon"/>
     <author initials="M." surname="Thomson" fullname="Martin Thomson" role="editor"/>
-    <date month="February" year="2015"/>
+    <date month="May" year="2015"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-http2-17"/>
-  <x:source href="refs/draft-ietf-httpbis-http2-16.xml"/>
+  <seriesInfo name="RFC" value="7540"/>
+  <!-- update once we have a proper source file! -->
+  <x:source href="refs/draft-ietf-httpbis-http2-latest.xml"/>
 </reference>
 
 </references>
@@ -1074,6 +1075,9 @@ Alt-Used: alternate.example.net
 <t>
   ABNF for "parameter"
   (<eref target="https://github.com/httpwg/http-extensions/issues/65"/>).
+</t>
+<t>
+  Updated HTTP/2 reference.
 </t>
 </section>
 </section>
