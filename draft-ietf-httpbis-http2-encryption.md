@@ -31,6 +31,7 @@ normative:
   RFC2818:
   RFC5246:
   RFC6454:
+  RFC7230:
   RFC7234:
   RFC7469:
   I-D.ietf-httpbis-http2:
@@ -132,8 +133,9 @@ the origin's host); for example, using TLS with a certificate that validates as 
 
 # Interaction with "https" URIs
 
-When using alternative services, both `http` and `https` URIs might use the same connection,
-because HTTP/2 permits requests for multiple origins on the same connection.
+When using alternative services, requests for resources identified by both `http` and `https` URIs
+might use the same connection, because HTTP/2 permits requests for multiple origins on the same
+connection.
 
 Since `https` URIs rely on server authentication, a connection that is initially created for `http`
 URIs without authenticating the server cannot be used for `https` URIs until the server certificate
@@ -156,8 +158,8 @@ reasons:
 - A client that doesn't perform authentication is an easy victim of server impersonation, through
 man-in-the-middle attacks.
 
-- A client that is willing to use cleartext to resolve the resource will do so if access to any
-TLS-enabled alternative services is blocked at the network layer.
+- A client that is willing to use HTTP over cleartext to resolve the resource will do so if access
+to any TLS-enabled alternative services is blocked at the network layer.
 
 Given that the primary goal of this specification is to prevent passive attacks, these are not
 critical failings (especially considering the alternative - HTTP over cleartext). However, a modest
@@ -171,7 +173,8 @@ client.
 
 ## The HTTP-TLS Header Field
 
-A alternative service can make this commitment by sending a `HTTP-TLS` header field:
+A alternative service can make this commitment by sending a `HTTP-TLS` header field, described here
+using the '#' ABNF extension defined in Section 7 of {{RFC7230}}:
 
     HTTP-TLS     = 1#parameter
 
@@ -188,7 +191,7 @@ For example:
 
     HTTP/1.1 200 OK
     Content-Type: text/html
-    Cache-Control: 600
+    Cache-Control: max-age=600
     Age: 30
     Date: Thu, 1 May 2014 16:20:09 GMT
     HTTP-TLS: ma=3600
@@ -199,8 +202,8 @@ authenticate the server for all subsequent requests made to that origin, though 
 risks for clients (see {{pinrisks}}).
 
 Authentication for HTTP over TLS is described in Section 3.1 of {{RFC2818}}, noting the additional
-requirements in {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if strong
-authentication fails; otherwise, an attacker could create a persistent denial of service by
+requirements in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if
+strong authentication fails; otherwise, an attacker could create a persistent denial of service by
 falsifying a commitment.
 
 The commitment to use authenticated TLS persists for a period determined by the value of the `ma`
@@ -209,8 +212,10 @@ parameter. See Section 4.2.3 of {{RFC7234}} for details of determining response 
     ma-parameter     = delta-seconds
 
 The commitment made by the `HTTP-TLS` header field applies only to the origin of the resource that
-generates the `HTTP-TLS` header field.  Requests for an origin that has a persisted, unexpired value
-for `HTTP-TLS` MUST fail if they cannot be made over an authenticated TLS connection.
+generates the `HTTP-TLS` header field.
+
+Requests for an origin that has a persisted, unexpired value for `HTTP-TLS` MUST fail if they cannot
+be made over an authenticated TLS connection.
 
 Note that the commitment is not bound to a particular alternative service.  Clients SHOULD use
 alternative services that they become aware of.  However, clients MUST NOT use an unauthenticated

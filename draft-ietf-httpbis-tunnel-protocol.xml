@@ -85,25 +85,6 @@
         ALPN header field.
        </t>
     </abstract>
-
-    <note title="Editorial Note (To be removed by RFC Editor)">
-      <t>
-        Discussion of this draft takes place on the HTTPBIS working group mailing list
-        (ietf-http-wg@w3.org), which is archived at <eref
-        target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
-      </t>
-      <t>
-        Working Group information can be found at <eref
-        target="https://tools.ietf.org/wg/httpbis/"/>
-        and <eref target="http://httpwg.github.io/"/>; source code and issues
-        list for this draft can be found at
-        <eref target="https://github.com/httpwg/http-extensions"/>.
-      </t>
-      <!--<t>
-        The changes in this draft are summarized in <xref
-        target="change.log"/>.
-      </t>-->
-    </note>
   </front>
 
  <middle>
@@ -116,9 +97,9 @@
         virtual connections, through one or more proxies.
       </t>
       <t>
-        The HTTP ALPN header field identifies the protocol that will
-        be spoken within the tunnel, using the Application Layer Protocol
-        Negotiation identifier (ALPN, <xref target="RFC7301"/>).
+        The HTTP ALPN header field identifies the protocol that will be used
+        within the tunnel, using the Application Layer Protocol Negotiation
+        identifier (ALPN, <xref target="RFC7301"/>).
       </t>
       <t>
         When the CONNECT method is used to establish a tunnel, the
@@ -130,10 +111,13 @@
         protocols, all of those application protocols are indicated.
       </t>
       <t>
-        The ALPN header field carries an indication of client intent
-        only.  In TLS, the final choice of application protocol is made by the
-        server from the set of choices presented by the client.  Other protocols
-        could negotiate protocols differently.
+        The ALPN header field carries an indication of client intent only.  An
+        ALPN identifier is used here only to identify the application protocol
+        or suite of protocols that the client intends to use in the tunnel.  No
+        negotiation takes place using this header field.  In TLS, the final
+        choice of application protocol is made by the server from the set of
+        choices presented by the client.  Other substrates could negotiate the
+        application protocol differently.
       </t>
       <t>
         Proxies do not implement the tunneled protocol, though they might choose
@@ -169,7 +153,7 @@
         </t>
       </section>
 
-     <section title="Syntax">
+      <section title="Syntax">
         <t>
           The ABNF (Augmented Backus-Naur Form) syntax for the ALPN
           header field is given below.  It is based on the Generic Grammar
@@ -216,6 +200,28 @@ Host: www.example.com
 ALPN: h2, http%2F1.1
 </artwork>
         </figure>
+      </section>
+
+      <section title="Usage">
+        <t>
+          For a CONNECT tunnel that conveys a TLS session that in turn
+          encapsulates another protocol, the value of the ALPN header field
+          contains the same list of ALPN identifiers that will be sent in the
+          TLS ClientHello message <xref target="RFC7301"/>.
+        </t>
+        <t>
+          Where no protocol negotiation is expected to occur, such as in
+          protocols that do not use TLS, the ALPN header field contains a single
+          ALPN Protocol Identifier corresponding to the application protocol
+          that is intended to be used.  If an alternative form of protocol
+          negotiation is possible, the ALPN header field contains the set of
+          protocols that might be negotiated.
+        </t>
+        <t>
+          When used in the ALPN header field, the ALPN identifier and registry
+          are used to identify an entire application protocol stack, not a
+          single protocol layer or component.
+        </t>
       </section>
     </section>
 
