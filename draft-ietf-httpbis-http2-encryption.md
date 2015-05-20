@@ -65,8 +65,7 @@ context of the connection. Normally, users will not be able to tell that it is i
 will be no "lock icon").
 
 By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
-them is described in {{http-tls}}. It does not offer the same level of protection as afforded to
-`https` URIs, but increases the likelihood that an active attack be detected.
+them is described in {{http-tls}}.
 
 
 ## Goals and Non-Goals
