@@ -1,7 +1,7 @@
 xml2rfc ?= "xml2rfc"
 saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -novw -l
-kramdown2629 ?= kramdown-rfc2629
+kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=http://unicorn-wg.github.io/idrefs kramdown-rfc2629
 
 names := http2-encryption alt-svc tunnel-protocol auth-info cice legally-restricted-status
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
