@@ -31,6 +31,7 @@ normative:
   RFC2818:
   RFC5246:
   RFC6454:
+  RFC7230:
   RFC7234:
   RFC7469:
   I-D.ietf-httpbis-http2:
@@ -54,10 +55,9 @@ This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-al
 the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI to be
 accessed using TLS {{RFC5246}} opportunistically.
 
-Currently, `https` URIs require acquiring and configuring a valid certificate, which means that
-some deployments find supporting TLS difficult. Therefore, this document describes a usage model
-whereby sites can serve `http` URIs over TLS without being required to support strong server
-authentication.
+Serving `https` URIs require acquiring and configuring a valid certificate, which means that some
+deployments find supporting TLS difficult. This document describes a usage model whereby sites can
+serve `http` URIs over TLS without being required to support strong server authentication.
 
 Opportunistic Security {{RFC7435}} does not provide the same guarantees
 as using TLS with `https` URIs; it is vulnerable to active attacks, and does not change the security
@@ -65,8 +65,7 @@ context of the connection. Normally, users will not be able to tell that it is i
 will be no "lock icon").
 
 By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
-them is described in {{http-tls}}. It does not offer the same level of protection as afforded to
-`https` URIs, but increases the likelihood that an active attack be detected.
+them is described in {{http-tls}}.
 
 
 ## Goals and Non-Goals
@@ -79,8 +78,8 @@ level of protection as afforded to `https` URIs, but instead to increase the lik
 active attack can be detected.
 
 A final (but significant) goal is to provide for ease of implementation, deployment and operation.
-This mechanism should have a minimal impact upon performance, and should not require extensive
-administrative effort to configure.
+This mechanism is expected to have a minimal impact upon performance, and a trivial administrative
+effort to configure.
 
 
 ## Notational Conventions
@@ -101,7 +100,7 @@ origin ({{RFC6454}}) to the identified service (as specified by {{I-D.ietf-httpb
 
 A client that places the importance of protection against passive attacks over performance might
 choose to withhold requests until an encrypted connection is available. However, if such a
-connection cannot be successfully established, the client MAY resume its use of the cleartext
+connection cannot be successfully established, the client can resume its use of the cleartext
 connection.
 
 A client can also explicitly probe for an alternative service advertisement by sending a request
@@ -120,7 +119,7 @@ When connecting to an alternative service for an `http` URI, clients are not req
 server authentication procedure described in Section 3.1 of {{RFC2818}}. The server certificate, if
 one is proffered by the alternative service, is not necessarily checked for validity, expiration,
 issuance by a trusted certificate authority or matched against the name in the URI. Therefore, the
-alternative service MAY provide any certificate, or even select TLS cipher suites that do not
+alternative service can provide any certificate, or even select TLS cipher suites that do not
 include authentication.
 
 A client MAY perform additional checks on the offered certificate if the server does not select an
@@ -134,8 +133,9 @@ the origin's host); for example, using TLS with a certificate that validates as 
 
 # Interaction with "https" URIs
 
-When using alternative services, both `http` and `https` URIs might use the same connection,
-because HTTP/2 permits requests for multiple origins on the same connection.
+When using alternative services, requests for resources identified by both `http` and `https` URIs
+might use the same connection, because HTTP/2 permits requests for multiple origins on the same
+connection.
 
 Since `https` URIs rely on server authentication, a connection that is initially created for `http`
 URIs without authenticating the server cannot be used for `https` URIs until the server certificate
@@ -158,8 +158,8 @@ reasons:
 - A client that doesn't perform authentication is an easy victim of server impersonation, through
 man-in-the-middle attacks.
 
-- A client that is willing to use cleartext to resolve the resource will do so if access to any
-TLS-enabled alternative services is blocked at the network layer.
+- A client that is willing to use HTTP over cleartext to resolve the resource will do so if access
+to any TLS-enabled alternative services is blocked at the network layer.
 
 Given that the primary goal of this specification is to prevent passive attacks, these are not
 critical failings (especially considering the alternative - HTTP over cleartext). However, a modest
@@ -173,7 +173,8 @@ client.
 
 ## The HTTP-TLS Header Field
 
-A alternative service can make this commitment by sending a `HTTP-TLS` header field:
+A alternative service can make this commitment by sending a `HTTP-TLS` header field, described here
+using the '#' ABNF extension defined in Section 7 of {{RFC7230}}:
 
     HTTP-TLS     = 1#parameter
 
@@ -190,7 +191,7 @@ For example:
 
     HTTP/1.1 200 OK
     Content-Type: text/html
-    Cache-Control: 600
+    Cache-Control: max-age=600
     Age: 30
     Date: Thu, 1 May 2014 16:20:09 GMT
     HTTP-TLS: ma=3600
@@ -201,8 +202,8 @@ authenticate the server for all subsequent requests made to that origin, though 
 risks for clients (see {{pinrisks}}).
 
 Authentication for HTTP over TLS is described in Section 3.1 of {{RFC2818}}, noting the additional
-requirements in {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if strong
-authentication fails; otherwise, an attacker could create a persistent denial of service by
+requirements in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if
+strong authentication fails; otherwise, an attacker could create a persistent denial of service by
 falsifying a commitment.
 
 The commitment to use authenticated TLS persists for a period determined by the value of the `ma`
@@ -211,8 +212,10 @@ parameter. See Section 4.2.3 of {{RFC7234}} for details of determining response 
     ma-parameter     = delta-seconds
 
 The commitment made by the `HTTP-TLS` header field applies only to the origin of the resource that
-generates the `HTTP-TLS` header field.  Requests for an origin that has a persisted, unexpired value
-for `HTTP-TLS` MUST fail if they cannot be made over an authenticated TLS connection.
+generates the `HTTP-TLS` header field.
+
+Requests for an origin that has a persisted, unexpired value for `HTTP-TLS` MUST fail if they cannot
+be made over an authenticated TLS connection.
 
 Note that the commitment is not bound to a particular alternative service.  Clients SHOULD use
 alternative services that they become aware of.  However, clients MUST NOT use an unauthenticated
