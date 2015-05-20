@@ -112,11 +112,12 @@
       </t>
       <t>
         The ALPN header field carries an indication of client intent only.  An
-        ALPN identifier is used only for protocol identification.  No
+        ALPN identifier is used here only to identify the application protocol
+        or suite of protocols that the client intends to use in the tunnel.  No
         negotiation takes place using this header field.  In TLS, the final
         choice of application protocol is made by the server from the set of
-        choices presented by the client.  Other protocols could negotiate
-        protocols differently.
+        choices presented by the client.  Other substrates could negotiate the
+        application protocol differently.
       </t>
       <t>
         Proxies do not implement the tunneled protocol, though they might choose
@@ -203,21 +204,23 @@ ALPN: h2, http%2F1.1
 
       <section title="Usage">
         <t>
-          For a CONNECT tunnel that consequently uses a protocol that operates
-          over TLS, the value of the ALPN header field contains the same list of
-          ALPN identifiers that will be sent in the TLS ClientHello message
-          <xref target="RFC7301"/>.
+          For a CONNECT tunnel that conveys a TLS session that in turn
+          encapsulates another protocol, the value of the ALPN header field
+          contains the same list of ALPN identifiers that will be sent in the
+          TLS ClientHello message <xref target="RFC7301"/>.
         </t>
         <t>
           Where no protocol negotiation is expected to occur, such as in
-          protocols that do not use TLS, the ALPN header field contains the
-          single protocol that is intended to be used.  If an alternative form
-          of protocol negotiation is possible, the ALPN header field contains
-          the set of protocols that might be negotiated.
+          protocols that do not use TLS, the ALPN header field contains a single
+          ALPN Protocol Identifier corresponding to the application protocol
+          that is intended to be used.  If an alternative form of protocol
+          negotiation is possible, the ALPN header field contains the set of
+          protocols that might be negotiated.
         </t>
         <t>
-          The ALPN identifier and registry are used to identify a protocol, not
-          a single protocol layer or component.
+          When used in the ALPN header field, the ALPN identifier and registry
+          are used to identify an entire application protocol stack, not a
+          single protocol layer or component.
         </t>
       </section>
     </section>
