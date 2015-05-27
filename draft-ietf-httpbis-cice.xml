@@ -59,7 +59,8 @@
     <t>
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
-      extends the HTTP "Accept-Encoding" header field for use in responses.
+      allows the HTTP "Accept-Encoding" header field to be used in responses,
+      to indicate that content codings are allowed in requests.
     </t>
   </abstract>
   
@@ -97,7 +98,8 @@
     <t>
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
-      extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses.
+      allows the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) to be used in responses, to indicate that content 
+      codings are allowed in requests.
     </t>
 </section>  
 
@@ -120,7 +122,7 @@
   "Accept-Encoding" as a request header field only.
 </t>
 <t>
-  This specification extends that definition to allow "Accept-Encoding"
+  This specification expands that definition to allow "Accept-Encoding"
   as a response header field as well.  When present in a response, it indicates what
   content codings the resource was willing to accept in the associated request.
   A field value that only contains "identity" implies that no 
@@ -249,7 +251,7 @@ Content-Type: text/plain
    <c>standard</c>
    <c>
       <xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>,
-      extended by  <xref target="accept-encoding"/> of this document
+      and <xref target="accept-encoding"/> of this document
    </c>
 </texttable>
 </section>
@@ -365,7 +367,7 @@ Content-Type: text/plain
 
 <section title="Since draft-ietf-httpbis-cice-00" anchor="changes.since.00">
 <t>
-  None yet.
+  Apply editorial improvements suggested by Mark Nottingham.
 </t>
 </section>
 </section>
