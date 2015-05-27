@@ -108,7 +108,7 @@
    document are to be interpreted as described in <xref target="RFC2119"/>.
 </t>
 <t>
-   This document reuses terminology used in the base HTTP specifications,
+   This document reuses terminology defined in the base HTTP specifications,
    namely <xref target="RFC7230" x:fmt="of" x:rel="#architecture"/> and
    <xref target="RFC7231" x:fmt="of" x:rel="#data.encoding"/>.
 </t>
