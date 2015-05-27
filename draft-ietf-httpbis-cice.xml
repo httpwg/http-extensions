@@ -114,7 +114,7 @@
 </t>
 </section>
 
-<section title="Extensions to 'Accept-Encoding' Header Field" anchor="accept-encoding">
+<section title="Using the 'Accept-Encoding' Header Field in Responses" anchor="accept-encoding">
 <t>
   <xref target="RFC7231" x:fmt="of" x:rel="#header.accept-encoding"/> defines
   "Accept-Encoding" as a request header field only.
