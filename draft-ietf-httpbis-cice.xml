@@ -123,17 +123,16 @@
 </t>
 <t>
   This specification extends that definition to allow "Accept-Encoding"
-  as a response header field as well.  When present, it indicates what
-  content codings a resource was willing to accept at the time of the
-  response.
+  as a response header field as well.  When present in a response, it indicates what
+  content codings the resource was willing to accept in the associated request.
   A field value that only contains "identity" implies that no 
-  content codings are supported.
+  content codings were supported.
 </t>
 <t>
-  Note that this information is specific to the specific request. The
+  Note that this information is specific to the associated request; the
   set of supported encodings might be different for other resources on the 
-  same server, could also change depending on other aspects of the 
-  request (such as the request method), or might change in the future.
+  same server, and could change over time or depend on other aspects of the 
+  request (such as the request method).
 </t>
 <t>
   <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/> defines status code
@@ -150,10 +149,12 @@
   include the "Accept-Encoding" header field.
 </t>
 <t>
-  While sending "Accept-Encoding" in a 415 (Unsupported Media Type) response will be the most common use case,
-  it is not restricted to this particular status code. For instance, a server
-  might include it in a 2xx response when a request payload was
-  big enough to justify use of a compression coding, but the client failed to do so.
+  It is expected that the most common use of "Accept-Encoding" in responses will have the 415
+  (Unsupported Media Type) status code, in response to optimistic use of a content coding by
+  clients. However, the header field can also be used to indicate to clients that content codings
+  are supported, to optimize future interactions. For example, a resource might include it in a 2xx
+  response when the request payload was big enough to justify use of a compression coding, but the
+  client failed do so.
 </t>
 </section>
 
