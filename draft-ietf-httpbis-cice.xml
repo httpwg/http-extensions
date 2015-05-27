@@ -204,7 +204,7 @@ Content-Type: text/plain
 <t>
   Servers that do not support content codings in requests already are required
   to fail a request that does use a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
-  recommends to use the status code 415 (Unsupported Media Type), so the only
+  recommends using the status code 415 (Unsupported Media Type), so the only
   change needed is to include the "Accept-Encoding" header field with value
   "identity" in that response.
 </t>
@@ -214,7 +214,7 @@ Content-Type: text/plain
   servers will need to use the status code 415 (Unsupported Media Type) to
   signal the problem, and will have to include an "Accept-Encoding" header field
   that enumerates the content codings that are supported. As the set of
-  supported content codings usually is
+  supported content codings is usually
   static and small, adding the header field ought to be trivial.
 </t>
 </section>
