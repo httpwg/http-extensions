@@ -52,12 +52,12 @@
 
   <abstract>
     <t>
-      In HTTP, "Content Codings" allow for payload encodings such as for
+      In HTTP, content codings allow for payload encodings such as for
       compression or integrity checks. In particular, the "gzip" content
       coding is widely used for payload data sent in response messages.
     </t>
     <t>
-      Content Codings can be used in request messages as well, however
+      Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
       extends the HTTP "Accept-Encoding" header field for use in responses.
     </t>
@@ -89,12 +89,13 @@
 
 <section title="Introduction" anchor="introduction">
     <t>
-      In HTTP, "Content Codings" allow for payload encodings such as for
-      compression or integrity checks (<xref target="RFC7231" x:fmt="," x:rel="#data.encoding"/>). In particular, the "gzip" content
-      coding is widely used for payload data sent in response messages.
+      In HTTP, content codings allow for payload encodings such as for
+      compression or integrity checks (<xref target="RFC7231" x:fmt="," x:rel="#data.encoding"/>).
+      In particular, the "gzip" content coding is widely used for payload data sent in response
+      messages.
     </t>
     <t>
-      Content Codings can be used in request messages as well, however
+      Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
       extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses.
     </t>
