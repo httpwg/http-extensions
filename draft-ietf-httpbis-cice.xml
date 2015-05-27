@@ -59,8 +59,8 @@
     <t>
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
-      allows the HTTP "Accept-Encoding" header field to be used in responses,
-      to indicate that content codings are allowed in requests.
+      extends the HTTP "Accept-Encoding" header field for use in responses,
+      to indicate that content codings are supported in requests.
     </t>
   </abstract>
   
@@ -98,8 +98,8 @@
     <t>
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
-      allows the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) to be used in responses, to indicate that content 
-      codings are allowed in requests.
+      extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses, to indicate that content 
+      codings are supported in requests.
     </t>
 </section>  
 
