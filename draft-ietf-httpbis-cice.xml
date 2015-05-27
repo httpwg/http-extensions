@@ -160,7 +160,7 @@
 
 <section title="Example" anchor="example">
 <t>
-  Client submits a POST request using Content-Encoding "compress"
+  A client submits a POST request using the "compress" content coding
   (<xref target="RFC7231" x:fmt="," x:rel="#content.codings"/>):
 </t>
 <figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
@@ -172,7 +172,7 @@ Content-Encoding: compress
 ...compressed payload...
 </artwork></figure>
 <t>
-  Server rejects request because it only allows the "gzip" content coding:
+  The server rejects request because it only allows the "gzip" content coding:
 </t>
 <figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="  ">
 HTTP/1.1 415 Unsupported Media Type
