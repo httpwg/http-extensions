@@ -936,8 +936,7 @@ Alt-Used: alternate.example.net
     <date month="May" year="2015"/>
   </front>
   <seriesInfo name="RFC" value="7540"/>
-  <!-- update once we have a proper source file! -->
-  <x:source href="refs/draft-ietf-httpbis-http2-latest.xml"/>
+  <x:source href="refs/rfc7540.xml"/>
 </reference>
 
 </references>
