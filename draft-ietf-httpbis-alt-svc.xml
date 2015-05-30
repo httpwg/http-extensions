@@ -445,7 +445,7 @@ Alt-Svc: h2c=":8000", h2=":443"
 </figure>
 <t>
    The value(s) advertised by Alt-Svc can be used by clients to open a new
-   connection to an alternative services. Subsequent requests can start using this new connection
+   connection to an alternative service. Subsequent requests can start using this new connection
    immediately, or can continue using the existing connection while the new connection is created.
 </t>
 <t>
@@ -1082,7 +1082,8 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-07" anchor="changes.since.draft-ietf-httpbis-alt-svc-07">
 <t>
-  None yet.
+  Number of alternate services used
+  (<eref target="https://github.com/httpwg/http-extensions/issues/58"/>).
 </t>
 </section>
 </section>
