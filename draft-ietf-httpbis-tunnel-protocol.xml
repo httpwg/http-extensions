@@ -264,14 +264,13 @@ ALPN: h2, http%2F1.1
         configurable whitelist of safe request targets."
       </t>
       <t>
-        The ALPN header field described in this document is an
-        OPTIONAL header field. Clients and HTTP proxies could choose to not support
-        the header and therefore fail to provide it, or ignore it when
-        present. If the header is not available or ignored, a proxy cannot
-        identify the purpose of the tunnel and use this as input to any
-        authorization decision regarding the tunnel. This is indistinguishable
-        from the case where either client or proxy does not support the
-        ALPN header field.
+        The ALPN header field described in this document is OPTIONAL. Clients
+        and HTTP proxies could choose to not support the header and therefore
+        fail to provide it, or ignore it when present. If the header is not
+        available or ignored, a proxy cannot identify the purpose of the tunnel
+        and use this as input to any authorization decision regarding the
+        tunnel. This is indistinguishable from the case where either client or
+        proxy does not support the ALPN header field.
       </t>
       <t>
         The value of the ALPN header field could be falsified by a
