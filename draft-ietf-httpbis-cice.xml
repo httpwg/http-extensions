@@ -79,7 +79,7 @@
       <eref target="https://github.com/httpwg/http-extensions"/>.
     </t>
     <t>
-      The changes in this draft are summarized in <xref target="changes.since.00"/>.
+      The changes in this draft are summarized in <xref target="changes.since.01"/>.
     </t>
   </note>
 
@@ -370,7 +370,13 @@ Content-Type: text/plain
   Apply editorial improvements suggested by Mark Nottingham.
 </t>
 </section>
+<section title="Since draft-ietf-httpbis-cice-01" anchor="changes.since.01">
+<t>
+  None yet.
+</t>
 </section>
+</section>
+
 <section title="Acknowledgements" numbered="false">
 <t>
   Thanks go to the members of the and HTTPbis Working Group, namely
