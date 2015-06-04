@@ -203,10 +203,10 @@ ALPN: h2, http%2F1.1
 
       <section title="Usage">
         <t>
-          For a CONNECT tunnel that conveys a TLS session that in turn
-          encapsulates another protocol, the value of the ALPN header field
-          contains the same list of ALPN identifiers that will be sent in the
-          TLS ClientHello message <xref target="RFC7301"/>.
+          For a CONNECT tunnel that conveys a protocol secured with TLS, the
+          value of the ALPN header field contains the same list of ALPN
+          identifiers that will be sent in the TLS ClientHello message <xref
+          target="RFC7301"/>.
         </t>
         <t>
           Where no protocol negotiation is expected to occur, such as in
