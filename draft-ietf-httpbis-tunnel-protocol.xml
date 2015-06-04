@@ -97,18 +97,17 @@
         virtual connections, through one or more proxies.
       </t>
       <t>
-        The HTTP ALPN header field identifies the protocol that will be used
-        within the tunnel, using the Application Layer Protocol Negotiation
-        identifier (ALPN, <xref target="RFC7301"/>).
+        The HTTP ALPN header field identifies the protocol or protocols that the
+        client intends to use within a tunnel that is established using CONNECT.
+        This uses the Application Layer Protocol Negotiation identifier (ALPN,
+        <xref target="RFC7301"/>).
       </t>
       <t>
-        When the CONNECT method is used to establish a tunnel, the
-        ALPN header field can be used to identify the protocol that
-        the client intends to use with that tunnel.  For a tunnel that is then
-        secured using <xref target="RFC5246">TLS</xref>, the header field
-        carries the same application protocol label as will be carried within
-        the TLS handshake.  If there are multiple possible application
-        protocols, all of those application protocols are indicated.
+        For a tunnel that is then secured using <xref
+        target="RFC5246">TLS</xref>, the header field carries the same
+        application protocol label as will be carried within the TLS handshake.
+        If there are multiple possible application protocols, all of those
+        application protocols are indicated.
       </t>
       <t>
         The ALPN header field carries an indication of client intent only.  An
