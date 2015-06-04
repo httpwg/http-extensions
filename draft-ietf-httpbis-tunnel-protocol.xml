@@ -81,8 +81,8 @@
     <abstract>
       <t>
         This specification allows HTTP CONNECT requests to indicate what
-        protocol will be used within the tunnel once established, using the
-        ALPN header field.
+        protocol is intended to be used within the tunnel once established,
+        using the ALPN header field.
        </t>
     </abstract>
   </front>
@@ -137,9 +137,9 @@
 
    <section title="The ALPN HTTP Header Field" anchor="tp">
       <t>
-        Clients include the ALPN header field in an HTTP CONNECT
-        request to indicate the application layer protocol that will be used within
-        the tunnel, or the set of protocols that might be used within the
+        Clients include the ALPN header field in an HTTP CONNECT request to
+        indicate the application layer protocol that a client intends to use
+        within the tunnel, or a set of protocols that might be used within the
         tunnel.
       </t>
 
