@@ -22,13 +22,15 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 ### HTTP Authentication-Info Header Field
 
-**in [RFC Editor queue](http://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-auth-info)**
+**In [RFC Editor queue](http://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-auth-info)**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aauth-info) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-auth-info/)
 
 ### HTTP Client-Initiated Content-Encoding
+
+**In [Working Group Last Call](http://www.w3.org/mid/D56ECDCB-70C6-4786-9C89-2862C1FFDED4@mnot.net)**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cice.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cice) (less recent, more official)
