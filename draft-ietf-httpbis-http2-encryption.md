@@ -34,7 +34,7 @@ normative:
   RFC7230:
   RFC7234:
   RFC7469:
-  I-D.ietf-httpbis-http2:
+  RFC7540:
   I-D.ietf-httpbis-alt-svc:
 
 informative:
@@ -93,7 +93,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 An origin server that supports the resolution of `http` URIs can indicate support for this
 specification by providing an alternative service advertisement {{I-D.ietf-httpbis-alt-svc}} for a
-protocol identifier that uses TLS, such as `h2` {{I-D.ietf-httpbis-http2}}.
+protocol identifier that uses TLS, such as `h2` {{RFC7540}}.
 
 A client that receives such an advertisement MAY make future requests intended for the associated
 origin ({{RFC6454}}) to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
