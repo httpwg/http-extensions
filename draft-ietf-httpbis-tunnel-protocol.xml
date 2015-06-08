@@ -155,8 +155,8 @@
       <section title="Syntax">
         <t>
           The ABNF (Augmented Backus-Naur Form) syntax for the ALPN
-          header field is given below.  It is based on the Generic Grammar
-          defined in <xref x:sec="2" x:fmt="of" target="RFC7230"/>.
+          header field value is given below. It uses the syntax defined
+          in <xref x:sec="1.2" x:fmt="of" target="RFC7230"/>.
         </t>
         <figure>
           <artwork type="abnf2616"><![CDATA[
