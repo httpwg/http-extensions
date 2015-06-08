@@ -265,10 +265,10 @@ ALPN: h2, http%2F1.1
       </t>
       <t>
         The ALPN header field described in this document is OPTIONAL. Clients
-        and HTTP proxies could choose to not support the header and therefore
-        fail to provide it, or ignore it when present. If the header is not
-        available or ignored, a proxy cannot identify the purpose of the tunnel
-        and use this as input to any authorization decision regarding the
+        and HTTP proxies could choose to not support it and therefore either
+        fail to provide it, or ignore it when present. If the header field is
+        not available or ignored, a proxy cannot identify the purpose of the
+        tunnel and use this as input to any authorization decision regarding the
         tunnel. This is indistinguishable from the case where either client or
         proxy does not support the ALPN header field.
       </t>
