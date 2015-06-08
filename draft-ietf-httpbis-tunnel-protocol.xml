@@ -217,9 +217,9 @@ ALPN: h2, http%2F1.1
           protocols that might be negotiated.
         </t>
         <t>
-          When used in the ALPN header field, the ALPN identifier and registry
-          are used to identify an entire application protocol stack, not a
-          single protocol layer or component.
+          When used in the ALPN header field, an ALPN identifier is used to
+          identify an entire application protocol stack, not a single protocol
+          layer or component.
         </t>
       </section>
     </section>
