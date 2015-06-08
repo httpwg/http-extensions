@@ -148,6 +148,7 @@
   interpreted as described in <xref target="RFC2119"/>.
 </t>
 <t anchor="imported.abnf">
+  <x:anchor-alias value="DIGIT"/>
   <x:anchor-alias value="OWS"/>
   <x:anchor-alias value="delta-seconds"/>
   <x:anchor-alias value="port"/>
@@ -302,8 +303,10 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    for establishing new connections, not limiting the use of existing ones.
 </t>
 <t>
-   Clients ought to consider that changes in network configurations can
-   result in suboptimal or compromised cached alternative services.
+   When alternative services are used to send a client to the most optimal server, a change in
+   network configuration can result in cached values becoming suboptimal. Therefore, clients SHOULD
+   remove from cache all alternative services that lack the "persist" flag with the value "1" when
+   they detect such a change (when information about network state is available).
 </t>
 </section>
 
@@ -549,6 +552,24 @@ Alt-Svc: h2c=":8000"; ma=60
    When an Alt-Svc response header field is received from an origin, its value
    invalidates and replaces all cached alternative services for that origin.
 </t>
+<t>
+   By default, cached alternative services will be cleared when the client detects a network
+   change. Alternative services that are intended to be longer-lived (e.g., those that are not
+   specific to the client access network) can carry the "persist" parameter with a value "1" as a
+   hint that the service is potentially useful beyond a network configuration change.
+</t>
+<figure>
+  <artwork type="abnf2616">
+persist = 1*<x:ref>DIGIT</x:ref>
+</artwork></figure>
+<t>
+  For example:
+</t>
+<figure>
+  <artwork type="example">
+Alt-Svc: h2=":443"; ma=2592000; persist=1
+</artwork>
+</figure>  
 <t>
    See <xref target="caching"/> for general requirements on caching alternative services.
 </t>
@@ -854,11 +875,12 @@ Alt-Used: alternate.example.net
 <t>
    Choosing an alternative service implies connecting to a new, server-supplied
    host name. By using many different (potentially unique) host names, servers
-   could conceivably track client requests.
+   could conceivably track client requests. Such tracking could follow users
+   across multiple networks, when the "persist" flag is used.
 </t>
 <t>
-   Clients concerned by the additional fingerprinting can choose to ignore alternative
-   service advertisements.
+   Clients concerned by the additional fingerprinting surface can choose not to use
+   alternative services.
 </t>
 <t>
    In a user agent, any alternative service information &MUST; be removed when origin-specific data
