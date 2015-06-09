@@ -272,6 +272,12 @@ ALPN: h2, http%2F1.1
         proxy does not support the ALPN header field.
       </t>
       <t>
+        There is no confidentiality protection for the ALPN header field.  ALPN
+        identifiers that might expose confidential or sensitive information
+        SHOULD NOT be sent, as described in Section 5 of <xref
+        target="RFC7301"/>.
+      </t>
+      <t>
         The value of the ALPN header field could be falsified by a
         client.  If the data being sent through the tunnel is encrypted (for
         example, with <xref target="RFC5246">TLS</xref>), then the proxy might
