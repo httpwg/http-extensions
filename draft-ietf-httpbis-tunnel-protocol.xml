@@ -203,6 +203,11 @@ ALPN: h2, http%2F1.1
 
       <section title="Usage">
         <t>
+          When used in the ALPN header field, an ALPN identifier is used to
+          identify an entire application protocol stack, not a single protocol
+          layer or component.
+        </t>
+        <t>
           For a CONNECT tunnel that conveys a protocol secured with TLS, the
           value of the ALPN header field contains the same list of ALPN
           identifiers that will be sent in the TLS ClientHello message <xref
@@ -217,9 +222,25 @@ ALPN: h2, http%2F1.1
           protocols that might be negotiated.
         </t>
         <t>
-          When used in the ALPN header field, an ALPN identifier is used to
-          identify an entire application protocol stack, not a single protocol
-          layer or component.
+          A proxy can use the value of the ALPN header field as input to
+          authorization decisions.  The header field exposes protocol
+          information at the HTTP layer, allowing authorization decisions to be
+          made earlier, with better error reporting (such as a 403 status code).
+          However, due to the potential for falsification, it is not suitable as
+          the sole basis for authorization, since different values can be
+          reported in the header field to what is used.
+        </t>
+        <t>
+          A proxy could attempt to inspect packets to determine the protocol in
+          use.  This requires that the proxy understand each ALPN identifier.
+          Protocols like TLS could hide negotiated protocols, or protocol
+          negotiation details could change over time.  Proxies SHOULD NOT break
+          a CONNECT tunnel solely on the basis of a failure to recognize the
+          protocol.
+        </t>
+        <t>
+          A proxy can use the ALPN header field value to change how it
+          manages or prioritizes connections.
         </t>
       </section>
     </section>
