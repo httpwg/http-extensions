@@ -295,7 +295,7 @@ ALPN: h2, http%2F1.1
       <t>
         There is no confidentiality protection for the ALPN header field.  ALPN
         identifiers that might expose confidential or sensitive information
-        SHOULD NOT be sent, as described in Section 5 of <xref
+        SHOULD NOT be sent, as described in <xref x:sec="5" x:fmt="of"
         target="RFC7301"/>.
       </t>
       <t>
