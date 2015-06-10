@@ -222,13 +222,12 @@ ALPN: h2, http%2F1.1
           protocols that might be negotiated.
         </t>
         <t>
-          A proxy can use the value of the ALPN header field as input to
-          authorization decisions.  The header field exposes protocol
-          information at the HTTP layer, allowing authorization decisions to be
-          made earlier, with better error reporting (such as a 403 status code).
-          The ALPN header field might be used to deny a request quickly and
-          cleanly, but the potential for falsification makes it insufficient for
-          authorizing requests.
+          A proxy can use the value of the ALPN header field to more cleanly and
+          efficiently reject requests for a CONNECT tunnel.  Exposing protocol
+          information at the HTTP layer allows a proxy to deny requests earlier,
+          with better error reporting (such as a 403 status code).  The ALPN
+          header field can be falsified and is therefore not sufficient basis
+          for authorizing a request.
         </t>
         <t>
           A proxy could attempt to inspect packets to determine the protocol in
