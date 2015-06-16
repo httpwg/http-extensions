@@ -196,15 +196,18 @@ Issue:
 : Double check that this construction (with no AAD) is safe.
 
 
-# The "Encryption" HTTP header field  {#encryption}
+# The Encryption HTTP header field  {#encryption}
 
-The "Encryption" HTTP header field describes the encrypted content encoding(s)
+The `Encryption` HTTP header field describes the encrypted content encoding(s)
 that have been applied to a message payload, and therefore how those content
 encoding(s) can be removed.
 
+The `Encryption` header field uses the extended ABNF syntax defined in
+Section 1.2 of [RFC7230] and the `parameter` rule from [RFC7231]
+
 ~~~
   Encryption-val = #encryption_params
-  encryption_params = [ param *( ";" param ) ]
+  encryption_params = [ parameter *( ";" parameter ) ]
 ~~~
 
 If the payload is encrypted more than once (as reflected by having multiple
@@ -282,9 +285,12 @@ simplified to the first 16 octets of a single HMAC:
 An Encryption-Key header field can be used to describe the input keying material
 used in the Encryption header field.
 
+The Encryption-Key header field uses the extended ABNF syntax defined in Section
+1.2 of [RFC7230] and the `parameter` rule from [RFC7231].
+
 ~~~
   Encryption-Key-val = #encryption_key_params
-  encryption_key_params = [ param *( ";" param ) ]
+  encryption_key_params = [ parameter *( ";" parameter ) ]
 ~~~
 
 keyid:
