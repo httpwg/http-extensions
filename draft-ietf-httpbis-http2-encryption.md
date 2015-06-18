@@ -281,6 +281,11 @@ most common form of an HTTP/1.1 request does not carry an explicit indication of
 
 HTTP/1.1 MUST NOT be used for opportunistically secured requests.
 
+Some HTTP/1.1 implementations use ambient signals to determine if a request is for an `https`
+resource.  For example, implementations might look for TLS on the stack or a port number of 443.  An
+implementation that supports opportunistically secured requests SHOULD suppress these signals if
+there is any potential for confusion.
+
 
 --- back
 
