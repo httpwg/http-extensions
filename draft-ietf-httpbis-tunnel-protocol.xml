@@ -155,8 +155,8 @@
       <section title="Syntax">
         <t>
           The ABNF (Augmented Backus-Naur Form) syntax for the ALPN
-          header field is given below.  It is based on the Generic Grammar
-          defined in <xref x:sec="2" x:fmt="of" target="RFC7230"/>.
+          header field value is given below. It uses the syntax defined
+          in <xref x:sec="1.2" x:fmt="of" target="RFC7230"/>.
         </t>
         <figure>
           <artwork type="abnf2616"><![CDATA[
@@ -203,6 +203,11 @@ ALPN: h2, http%2F1.1
 
       <section title="Usage">
         <t>
+          When used in the ALPN header field, an ALPN identifier is used to
+          identify an entire application protocol stack, not a single protocol
+          layer or component.
+        </t>
+        <t>
           For a CONNECT tunnel that conveys a protocol secured with TLS, the
           value of the ALPN header field contains the same list of ALPN
           identifiers that will be sent in the TLS ClientHello message <xref
@@ -217,9 +222,24 @@ ALPN: h2, http%2F1.1
           protocols that might be negotiated.
         </t>
         <t>
-          When used in the ALPN header field, an ALPN identifier is used to
-          identify an entire application protocol stack, not a single protocol
-          layer or component.
+          A proxy can use the value of the ALPN header field to more cleanly and
+          efficiently reject requests for a CONNECT tunnel.  Exposing protocol
+          information at the HTTP layer allows a proxy to deny requests earlier,
+          with better error reporting (such as a 403 status code).  The ALPN
+          header field can be falsified and is therefore not sufficient basis
+          for authorizing a request.
+        </t>
+        <t>
+          A proxy could attempt to inspect packets to determine the protocol in
+          use.  This requires that the proxy understand each ALPN identifier.
+          Protocols like TLS could hide negotiated protocols, or protocol
+          negotiation details could change over time.  Proxies SHOULD NOT break
+          a CONNECT tunnel solely on the basis of a failure to recognize the
+          protocol.
+        </t>
+        <t>
+          A proxy can use the ALPN header field value to change how it
+          manages or prioritizes connections.
         </t>
       </section>
     </section>
@@ -270,6 +290,12 @@ ALPN: h2, http%2F1.1
         tunnel and use this as input to any authorization decision regarding the
         tunnel. This is indistinguishable from the case where either client or
         proxy does not support the ALPN header field.
+      </t>
+      <t>
+        There is no confidentiality protection for the ALPN header field.  ALPN
+        identifiers that might expose confidential or sensitive information
+        SHOULD NOT be sent, as described in <xref x:sec="5" x:fmt="of"
+        target="RFC7301"/>.
       </t>
       <t>
         The value of the ALPN header field could be falsified by a
