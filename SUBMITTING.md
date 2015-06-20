@@ -1,3 +1,17 @@
+# Working with the Drafts
+
+If you're an editor, or forking a copy of the draft, a few things to know:
+
+* Pushing to the master branch will automatically generate the HTML on the
+  gh-pages branch.
+* You'll need xml2rfc, Java and Saxon-HE available. You can override the
+  default locations in the environment.  On a Mac with
+  [Homebrew](http://brew.sh/), "saxon-b" is the right package.
+* For some drafts, you will need [kramdown-rfc2629](https://github.com/cabo/kramdown-rfc2629)
+* Some of the make targets require GNU Make 4.0
+* Making the txt and html for the latest drafts is done with "make".
+
+
 # Submitting
 
 When you're ready to submit a new version of a draft:
@@ -21,3 +35,6 @@ When you're ready to submit a new version of a draft:
 7. Add "Since draft-ietf-httpbis-<name>-...-NN" subsection to "Changes".
 
 8. Add/remove any "implementation draft" notices from the abstract.
+
+
+
