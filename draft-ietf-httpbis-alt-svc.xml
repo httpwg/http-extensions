@@ -567,7 +567,7 @@ Alt-Svc: h2c=":8000"; ma=60
 </t>
 <t>
   The ALTSVC frame is intended for receipt by clients; a server that receives an
-  ALTSVC frame &MUST; treat it as a connection error of type PROTOCOL_ERROR.
+  ALTSVC frame can safely ignore it.
 </t>
 <t>
   An ALTSVC frame on stream 0 with empty (length 0) "Origin" information is
@@ -1082,6 +1082,10 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-07" anchor="changes.since.draft-ietf-httpbis-alt-svc-07">
 <t>
+  Unexpected Alt-Svc frames
+  (<eref target="https://github.com/httpwg/http-extensions/issues/18"/>).
+</t>
+<t>
   Number of alternate services used
   (<eref target="https://github.com/httpwg/http-extensions/issues/58"/>).
 </t>
@@ -1092,7 +1096,7 @@ Alt-Used: alternate.example.net
 <section title="Acknowledgements" anchor="acknowledgements" numbered="false">
 <t>
   Thanks to Adam Langley, Bence Beky, Eliot Lear, Erik Nygren, Guy Podjarny,
-  Herve Ruellan, Martin Thomson, Matthew Kerwin,
+  Herve Ruellan, Martin Thomson, Matthew Kerwin, Mike Bishop,
   Paul Hoffman,
   Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
   feedback and suggestions.
