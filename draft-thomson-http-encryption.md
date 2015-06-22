@@ -245,8 +245,8 @@ salt:
 in deriving a unique content encryption key (see {{derivation}}).  The "salt"
 parameter MUST be present, and MUST be exactly 16 octets long.  The "salt"
 parameter MUST NOT be reused for two different payload bodies that have the same
-content encryption key; generating a random salt for every application of the
-content encoding ensures that reuse is highly unlikely.
+input keying material; generating a random salt for every application of the
+content encoding ensures that content encryption key reuse is highly unlikely.
 
 rs:
 
@@ -317,7 +317,7 @@ The input keying material used by the content-encoding key derivation (see
 header field.  The method for key derivation depends on the parameters that are
 present in the header field.
 
-Note that different methods for determining input keying materal will produce
+Note that different methods for determining input keying material will produce
 different amounts of data.  The HKDF process ensures that the final content
 encryption key is the necessary size.
 
