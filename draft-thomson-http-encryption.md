@@ -199,7 +199,7 @@ Issue:
 # The Encryption HTTP header field  {#encryption}
 
 The `Encryption` HTTP header field describes the encrypted content encoding(s)
-that have been applied to a message payload, and therefore how those content
+that have been applied to a payload body, and therefore how those content
 encoding(s) can be removed.
 
 The `Encryption` header field uses the extended ABNF syntax defined in
@@ -216,9 +216,9 @@ is reflected in the Encryption header field, in the order in which they were
 applied.
 
 The Encryption header MAY be omitted if the sender does not intend for the
-immediate recipient to be able to decrypt the message.  Alternatively, the
-Encryption header field MAY be omitted if the sender intends for the recipient
-to acquire the header field by other means.
+immediate recipient to be able to decrypt the payload body.  Alternatively,
+the Encryption header field MAY be omitted if the sender intends for the
+recipient to acquire the header field by other means.
 
 Servers processing PUT requests MUST persist the value of the Encryption header
 field, unless they remove the content-coding by decrypting the payload.
@@ -242,9 +242,9 @@ salt:
 : The "salt" parameter contains a base64 URL-encoded octets that is used as salt
 in deriving a unique content encryption key (see {{derivation}}).  The "salt"
 parameter MUST be present, and MUST be exactly 16 octets long.  The "salt"
-parameter MUST NOT be reused for two different messages that have the same
-content encryption key; generating a random nonce for each message ensures that
-reuse is highly unlikely.
+parameter MUST NOT be reused for two different payload bodies that have the same
+content encryption key; generating a random nonce for every application of the
+content encoding ensures that reuse is highly unlikely.
 
 rs:
 
@@ -255,10 +255,10 @@ parameter is absent, the record size defaults to 4096 octets.
 
 ## Content Encryption Key Derivation {#derivation}
 
-In order to allow the reuse of keying material for multiple different messages,
-a content encryption key is derived for each message.  The content encryption
-key is derived from the decoded value of the "salt" parameter using the
-HMAC-based key derivation function (HKDF) described in [RFC5869] using the
+In order to allow the reuse of keying material for multiple different HTTP
+messages, a content encryption key is derived for each message.  The content
+encryption key is derived from the decoded value of the "salt" parameter using
+the HMAC-based key derivation function (HKDF) described in [RFC5869] using the
 SHA-256 hash algorithm [FIPS180-2].
 
 The decoded value of the "salt" parameter is the salt input to HKDF function.
@@ -592,14 +592,14 @@ implementation of cryptographic algorithms can change over time.
 Encrypting different plaintext with the same content encryption key and nonce in
 AES-GCM is not safe [RFC5116].  The scheme defined here relies on the uniqueness
 of the "nonce" parameter to ensure that the content encryption key is different
-for every message.
+for every application of the content encoding.
 
 If a content encryption key and nonce are reused, this could expose the content
-encryption key and it makes message modification trivial.  Thus, if the same
-input keying material key is used for multiple messages, then the salt parameter
-MUST be unique for each.  This ensures that the content encryption key differs.
-An implementation SHOULD generate a random salt parameter for every message;
-alternatively, a counter could achieve the desired result.
+encryption key and it makes modification attacks trivial.  Thus, if the same
+input keying material is reused, then the salt parameter MUST be unique each
+time.  This ensures that the content encryption key is not reused.  An
+implementation SHOULD generate a random salt parameter for every message;
+a counter could achieve the same result.
 
 
 ## Content Integrity
@@ -609,21 +609,23 @@ tag only ensures that an entity with access to the content encryption key
 produced the encrypted data.
 
 Any entity with the content encryption key can therefore produce content that
-will be accepted as valid.  This includes all recipients of the same message.
+will be accepted as valid.  This includes all recipients of the same HTTP
+message.
 
 Furthermore, any entity that is able to modify both the Encryption header field
-and the message payload can replace messages.  Without the content encryption
-key however, modifications to or replacement of parts of a message are not
-possible.
+and the HTTP message body can replace the contents.  Without the content
+encryption key or the input keying material, modifications to or replacement of
+parts of a payload body are not possible.
 
 
 ## Leaking Information in Headers
 
-Because "encrypted" only operates upon the message payload, any information
-exposed in header fields is visible to anyone who can read the message.
+Because only the payload body is encrypted, information exposed in header fields
+is visible to anyone who can read the HTTP message.  This could expose
+side-channel information.
 
 For example, the Content-Type header field can leak information about the
-message payload.
+payload body.
 
 There are a number of strategies available to mitigate this threat, depending
 upon the application's threat model and the users' tolerance for leaked
