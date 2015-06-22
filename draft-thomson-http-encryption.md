@@ -135,8 +135,8 @@ algorithm uses a 128 bit content encryption key.
 
 When this content-coding is in use, the Encryption header field ({{encryption}})
 describes how encryption has been applied.  The Encryption-Key header field
-({{encryption-key}}) can be included to describe how the the content encryption
-key is derived or retrieved.
+({{encryption-key}}) can be included to describe how the content encryption key
+is derived or retrieved.
 
 The "aesgcm-128" content-coding uses a single fixed set of encryption
 primitives.  Cipher suite agility is achieved by defining a new content-coding
@@ -148,9 +148,9 @@ encoding is a series of fixed-size records, with a final record that is one or
 more octets shorter than a fixed sized record.
 
 ~~~
-       +------+
-       | data |         input of between rs-256
-       +------+            and rs-1 octets
+       +------+         input of between rs-256
+       | data |            and rs-1 octets
+       +------+      (one fewer for the last record)
            |
            v
 +-----+-----------+
