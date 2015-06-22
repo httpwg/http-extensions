@@ -169,17 +169,17 @@ smaller.  The record size defaults to 4096 octets, but can be changed using the
 "rs" parameter on the Encryption header field.
 
 AEAD_AES_128_GCM expands ciphertext to be 16 octets longer than its input
-plaintext.  Therefore, the length of each enciphered record is equal to the
-value of the "rs" parameter plus 16 octets.  A receiver MUST fail to decrypt if
-the remainder is 16 octets or less in size (though AEAD_AES_128_GCM permits
-input plaintext to be zero length, records always contain at least one padding
-octet).
+plaintext.  Therefore, the length of each enciphered record other than the last
+is equal to the value of the "rs" parameter plus 16 octets.  A receiver MUST
+fail to decrypt if the remainder is 16 octets or less in size (though
+AEAD_AES_128_GCM permits input plaintext to be zero length, records always
+contain at least one padding octet).
 
-Each record contains between 0 and 255 octets of padding, inserted into a record
-before the enciphered content.  The length of the padding is stored in the first
-octet of the payload.  All padding octets MUST be set to zero.  A receiver MUST
-fail to decrypt if a record has more padding than the record size can
-accommodate.
+Each record contains between 1 and 256 octets of padding, inserted into a record
+before the enciphered content.  Padding consists of a length byte, followed that
+number of zero-valued bytes.  A receiver MUST fail to decrypt if any padding
+byte other than the first is non-zero, or a record has more padding than the
+record size can accommodate.
 
 The nonce used for each record is a 96-bit value containing the index of the
 current record in network byte order.  Records are indexed starting at zero.
