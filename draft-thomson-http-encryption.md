@@ -113,9 +113,10 @@ sequence of JSON Web Encryption [I-D.ietf-jose-json-web-encryption] values with
 a fixed header.
 
 This mechanism is likely only a small part of a larger design that uses content
-encryption.  In particular, this document does not describe key management
-practices.  How clients and servers acquire and identify keys will depend on the
-use case.
+encryption.  How clients and servers acquire and identify keys will depend on
+the use case.  Though a complete key management system is not described, this
+document defines an Encryption-Key header field that can be used to convey
+keying material.
 
 
 ## Notational Conventions
