@@ -171,9 +171,9 @@ smaller.  The record size defaults to 4096 octets, but can be changed using the
 AEAD_AES_128_GCM expands ciphertext to be 16 octets longer than its input
 plaintext.  Therefore, the length of each enciphered record other than the last
 is equal to the value of the "rs" parameter plus 16 octets.  A receiver MUST
-fail to decrypt if the remainder is 16 octets or less in size (though
-AEAD_AES_128_GCM permits input plaintext to be zero length, records always
-contain at least one padding octet).
+fail to decrypt if the final record ciphertext is 16 octets or less in size.
+Valid records always contain at least one byte of padding and a 16 octet
+authentication tag.
 
 Each record contains between 1 and 256 octets of padding, inserted into a record
 before the enciphered content.  Padding consists of a length byte, followed that
@@ -245,7 +245,7 @@ salt:
 in deriving a unique content encryption key (see {{derivation}}).  The "salt"
 parameter MUST be present, and MUST be exactly 16 octets long.  The "salt"
 parameter MUST NOT be reused for two different payload bodies that have the same
-content encryption key; generating a random nonce for every application of the
+content encryption key; generating a random salt for every application of the
 content encoding ensures that reuse is highly unlikely.
 
 rs:
@@ -592,16 +592,19 @@ implementation of cryptographic algorithms can change over time.
 ## Key and Nonce Reuse
 
 Encrypting different plaintext with the same content encryption key and nonce in
-AES-GCM is not safe [RFC5116].  The scheme defined here relies on the uniqueness
-of the "nonce" parameter to ensure that the content encryption key is different
-for every application of the content encoding.
+AES-GCM is not safe [RFC5116].  The scheme defined here uses a fixed progression
+of nonce values.  Thus, a new content encryption key is needed for every
+application of the content encoding.  Since input keying material can be reused,
+a unique "salt" parameter is needed to ensure a content encryption key is not
+reused.
 
-If a content encryption key and nonce are reused, this could expose the content
-encryption key and it makes modification attacks trivial.  Thus, if the same
-input keying material is reused, then the salt parameter MUST be unique each
-time.  This ensures that the content encryption key is not reused.  An
-implementation SHOULD generate a random salt parameter for every message;
-a counter could achieve the same result.
+If a content encryption key is reused - that is, if input keying material and
+salt are reused - this could expose the content encryption key or make
+modification attacks trivial.  Thus, if the same input keying material is
+reused, then the salt parameter MUST be unique each time.  This ensures that the
+content encryption key is not reused.  An implementation SHOULD generate a
+random salt parameter for every message; a counter could achieve the same
+result.
 
 
 ## Content Integrity
