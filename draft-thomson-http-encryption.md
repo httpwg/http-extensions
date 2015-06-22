@@ -164,8 +164,9 @@ more octets shorter than a fixed sized record.
 ~~~
 
 The record size determines the length of each portion of plaintext that is
-enciphered.  The record size defaults to 4096 octets, but can be changed using
-the "rs" parameter on the Encryption header field.
+enciphered, with the exception of the final record, which is necessarily
+smaller.  The record size defaults to 4096 octets, but can be changed using the
+"rs" parameter on the Encryption header field.
 
 AEAD_AES_128_GCM expands ciphertext to be 16 octets longer than its input
 plaintext.  Therefore, the length of each enciphered record is equal to the
