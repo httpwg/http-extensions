@@ -226,15 +226,16 @@ field, unless they remove the content-coding by decrypting the payload.
 
 ## Encryption Header Field Parameters
 
-The following parameters are used in determining the key that is used for
-encryption:
+The following parameters are used in determining the content encryption key that
+is used for encryption:
 
 keyid:
 
 : The "keyid" parameter contains a string that identifies the keying material
 that is used.  The "keyid" parameter SHOULD be included, unless key
 identification is guaranteed by other means.  The "keyid" parameter MUST be used
-if keying material is included in an Encryption-Key header field.
+if keying material included in an Encryption-Key header field is needed to
+derive the content encryption key.
 
 salt:
 
@@ -255,10 +256,10 @@ parameter is absent, the record size defaults to 4096 octets.
 ## Content Encryption Key Derivation {#derivation}
 
 In order to allow the reuse of keying material for multiple different messages,
-a content encryption key is derived for each message.  This key is derived from
-the decoded value of the "salt" parameter using the HMAC-based key derivation
-function (HKDF) described in [RFC5869] using the SHA-256 hash algorithm
-[FIPS180-2].
+a content encryption key is derived for each message.  The content encryption
+key is derived from the decoded value of the "salt" parameter using the
+HMAC-based key derivation function (HKDF) described in [RFC5869] using the
+SHA-256 hash algorithm [FIPS180-2].
 
 The decoded value of the "salt" parameter is the salt input to HKDF function.
 The keying material identified by the "keyid" parameter is the input keying
@@ -270,13 +271,13 @@ first step of HKDF is therefore:
    PRK = HMAC-SHA-256(salt, IKM)
 ~~~
 
-AEAD_AES_128_GCM requires 16 octets (128 bits) of key, so the length (L)
-parameter of HKDF is 16.  The info parameter is set to the ASCII-encoded string
-"Content-Encoding: aesgcm128".  The second step of HKDF can therefore be
-simplified to the first 16 octets of a single HMAC:
+AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key, so the
+length (L) parameter to HKDF is 16.  The info parameter is set to the
+ASCII-encoded string "Content-Encoding: aesgcm128".  The second step of HKDF can
+therefore be simplified to the first 16 octets of a single HMAC:
 
 ~~~
-   OKM = HMAC-SHA-256(PRK, "Content-Encoding: aesgcm128" || 0x01)
+   CEK = HMAC-SHA-256(PRK, "Content-Encoding: aesgcm128" || 0x01)
 ~~~
 
 
@@ -324,9 +325,9 @@ specifications that use this content-encoding.
 
 ## Explicit Key
 
-The "key" parameter is decoded and used directly if present.  The "key"
-parameter MUST decode to exactly 16 octets in order to be used as input keying
-material for "aesgcm128" content encoding.
+The "key" parameter is decoded and used as the input keying material if present.
+The "key" parameter MUST decode to exactly 16 octets in order to be used as
+input keying material for "aesgcm128" content encoding.
 
 Other key determination parameters can be ignored if the "key" parameter is
 present.
@@ -378,8 +379,8 @@ Encryption: keyid="http://example.org/bob/keys/123";
 [encrypted payload]
 ~~~
 
-Here, a successful HTTP GET response has been encrypted using a key that is
-identified by a URI.
+Here, a successful HTTP GET response has been encrypted using input keying
+material that is identified by a URI.
 
 Note that the media type has been changed to "application/octet-stream" to avoid
 exposing information about the content.
@@ -413,8 +414,9 @@ Encryption: keyid="mailto:me@example.com";
 [encrypted payload]
 ~~~
 
-Here, a PUT request has been encrypted with two keys; both will be necessary to
-read the content.  The outer layer of encryption uses a 1200 octet record size.
+Here, a PUT request has been encrypted twice with different input keying
+material; decrypting twice is necessary to read the content.  The outer layer of
+encryption uses a 1200 octet record size.
 
 
 ## Encryption with Explicit Key {#explicit}
@@ -429,9 +431,10 @@ Encryption-Key: keyid="a1"; key="9Z57YCb3dK95dSsdFJbkag"
 zK3kpG__Z8whjIkG6RYgPz11oUkTKcxPy9WP-VPMfuc
 ~~~
 
-This example shows the string "I am the walrus" encrypted using an explicit key.
-The content body contains a single record only and is shown here encoded in
-URL-safe base64 for presentation reasons only.
+This example shows the string "I am the walrus" encrypted using an directly
+provided value for the input keying material.  The content body contains a
+single record only and is shown here encoded in URL-safe base64 for presentation
+reasons only.
 
 
 ## Diffie-Hellman Encryption
@@ -452,9 +455,9 @@ This example shows the same string, "I am the walrus", encrypted using ECDH over
 the P-256 curve [FIPS186]. The content body is shown here encoded in URL-safe
 base64 for presentation reasons only.
 
-The receiver (in this case, the HTTP client) uses the key identified by the
-string "dhkey" and the sender (the server) uses a key pair for which the public
-share is included in the "dh" parameter above. The keys shown below use
+The receiver (in this case, the HTTP client) uses a key pair that is identified
+by the string "dhkey" and the sender (the server) uses a key pair for which the
+public share is included in the "dh" parameter above. The keys shown below use
 uncompressed points [X.692] encoded using URL-safe base64. Line wrapping is
 added for presentation purposes only.
 
@@ -477,7 +480,7 @@ This memo registers the "encrypted" HTTP content-coding in the HTTP Content
 Codings Registry, as detailed in {{aesgcm128}}.
 
 * Name: aesgcm-128
-* Description: AES-GCM encryption with a 128-bit key
+* Description: AES-GCM encryption with a 128-bit content encryption key
 * Reference: this specification
 
 
@@ -526,7 +529,7 @@ The initial contents of this registry are:
 ### salt
 
 * Parameter Name: salt
-* Purpose: Provide a source of entropy for derivation of the content encryption key. This value is mandatory.
+* Purpose: Provide a source of entropy for derivation of a content encryption key. This value is mandatory.
 * Reference: this document
 
 ### rs
@@ -560,13 +563,13 @@ The initial contents of this registry are:
 ### key
 
 * Parameter Name: key
-* Purpose: Provide an explicit key.
+* Purpose: Provide an explicit input keying material value.
 * Reference: this document
 
 ### dh
 
 * Parameter Name: dh
-* Purpose: Carry a modp or elliptic curve Diffie-Hellman share used to derive a key.
+* Purpose: Carry a modp or elliptic curve Diffie-Hellman share used to derive input keying material.
 * Reference: this document
 
 
@@ -591,11 +594,12 @@ AES-GCM is not safe [RFC5116].  The scheme defined here relies on the uniqueness
 of the "nonce" parameter to ensure that the content encryption key is different
 for every message.
 
-If a key and nonce are reused, this could expose the content encryption key and
-it makes message modification trivial.  If the same key is used for multiple
-messages, then the nonce parameter MUST be unique for each.  An implementation
-SHOULD generate a random nonce parameter for every message, though using a
-counter could achieve the desired result.
+If a content encryption key and nonce are reused, this could expose the content
+encryption key and it makes message modification trivial.  Thus, if the same
+input keying material key is used for multiple messages, then the salt parameter
+MUST be unique for each.  This ensures that the content encryption key differs.
+An implementation SHOULD generate a random salt parameter for every message;
+alternatively, a counter could achieve the desired result.
 
 
 ## Content Integrity
@@ -675,9 +679,9 @@ following transformations are applied to a JWE object that might be expressed
 using the JWE Compact Serialization:
 
 * The JWE Protected Header is fixed to a value { "alg": "dir", "enc": "A128GCM"
-  }, describing direct encryption using AES-GCM with a 128-bit key.  This header
-  is not transmitted, it is instead implied by the value of the Content-Encoding
-  header field.
+  }, describing direct encryption using AES-GCM with a 128-bit content
+  encryption key.  This header is not transmitted, it is instead implied by the
+  value of the Content-Encoding header field.
 
 * The JWE Encrypted Key is empty, as stipulated by the direct encryption algorithm.
 
