@@ -47,6 +47,7 @@ informative:
   RFC5226:
   RFC5246:
   RFC5652:
+  RFC7233:
   RFC7235:
   I-D.ietf-httpbis-http2:
   FIPS186:
@@ -177,8 +178,8 @@ authentication tag.
 
 Each record contains between 1 and 256 octets of padding, inserted into a record
 before the enciphered content.  Padding consists of a length byte, followed that
-number of zero-valued bytes.  A receiver MUST fail to decrypt if any padding
-byte other than the first is non-zero, or a record has more padding than the
+number of zero-valued octets.  A receiver MUST fail to decrypt if any padding
+octet other than the first is non-zero, or a record has more padding than the
 record size can accommodate.
 
 The nonce for each record is a 96-bit value constructed from the record sequence
@@ -194,8 +195,11 @@ and is smaller than the full record size if the final record ends on a record
 boundary.  A receiver MUST treat the stream as failed due to truncation if the
 final record is the full record size.
 
-Issue:
-: Double check that this construction (with no AAD) is safe.
+A consequence of this record structure is that range requests [RFC7233] and
+random access to encrypted payload bodies are possible at the granularity of the
+record size.  However, without data from adjacent ranges, partial records cannot
+be used.  Thus, it is best if records start and end on multiples of the record
+size, plus the 16 octet authentication tag size.
 
 
 # The Encryption HTTP header field  {#encryption}
