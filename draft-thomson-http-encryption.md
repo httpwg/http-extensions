@@ -317,6 +317,10 @@ The input keying material used by the content-encoding key derivation (see
 header field.  The method for key derivation depends on the parameters that are
 present in the header field.
 
+The value or values provided in the Encryption-Key header field is valid only
+for the current HTTP message unless additional information indicates a greater
+scope.
+
 Note that different methods for determining input keying material will produce
 different amounts of data.  The HKDF process ensures that the final content
 encryption key is the necessary size.
