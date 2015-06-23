@@ -247,10 +247,11 @@ salt:
 
 : The "salt" parameter contains a base64 URL-encoded octets that is used as salt
 in deriving a unique content encryption key (see {{derivation}}).  The "salt"
-parameter MUST be present, and MUST be exactly 16 octets long.  The "salt"
-parameter MUST NOT be reused for two different payload bodies that have the same
-input keying material; generating a random salt for every application of the
-content encoding ensures that content encryption key reuse is highly unlikely.
+parameter MUST be present, and MUST be exactly 16 octets long when decoded.  The
+"salt" parameter MUST NOT be reused for two different payload bodies that have
+the same input keying material; generating a random salt for every application
+of the content encoding ensures that content encryption key reuse is highly
+unlikely.
 
 rs:
 
