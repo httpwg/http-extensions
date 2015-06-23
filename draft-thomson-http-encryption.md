@@ -328,7 +328,7 @@ specifications that use this content-encoding.
 ## Explicit Key
 
 The "key" parameter is decoded and used as the input keying material if present.
-The "key" parameter MUST decode to exactly 16 octets in order to be used as
+The "key" parameter MUST decode to at least 16 octets in order to be used as
 input keying material for "aesgcm128" content encoding.
 
 Other key determination parameters can be ignored if the "key" parameter is
