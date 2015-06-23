@@ -429,7 +429,7 @@ encryption uses a 1200 octet record size.
 
 ~~~
 HTTP/1.1 200 OK
-Content-Length: 31
+Content-Length: 32
 Content-Encoding: aesgcm-128
 Encryption: keyid="a1"; salt="ibZx1RNz537h1XNkRcPpjA"
 Encryption-Key: keyid="a1"; key="9Z57YCb3dK95dSsdFJbkag"
@@ -447,7 +447,7 @@ reasons only.
 
 ~~~
 HTTP/1.1 200 OK
-Content-Length: 31
+Content-Length: 32
 Content-Encoding: aesgcm-128
 Encryption: keyid="dhkey"; salt="5hpuYfxDzG6nSs9-EQuaBg"
 Encryption-Key: keyid="dhkey";
