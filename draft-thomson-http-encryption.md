@@ -126,9 +126,9 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 interpreted as described in [RFC2119].
 
 
-# The "aesgcm-128" HTTP content-coding {#aesgcm128}
+# The "aesgcm128" HTTP content-coding {#aesgcm128}
 
-The "aesgcm-128" HTTP content-coding indicates that a payload has been encrypted
+The "aesgcm128" HTTP content-coding indicates that a payload has been encrypted
 using Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) as
 identified as AEAD_AES_128_GCM in [RFC5116], Section 5.1.  The AEAD_AES_128_GCM
 algorithm uses a 128 bit content encryption key.
@@ -138,12 +138,12 @@ describes how encryption has been applied.  The Encryption-Key header field
 ({{encryption-key}}) can be included to describe how the content encryption key
 is derived or retrieved.
 
-The "aesgcm-128" content-coding uses a single fixed set of encryption
+The "aesgcm128" content-coding uses a single fixed set of encryption
 primitives.  Cipher suite agility is achieved by defining a new content-coding
 scheme.  This ensures that only the HTTP Accept-Encoding header field is
 necessary to negotiate the use of encryption.
 
-The "aesgcm-128" content-coding uses a fixed record size.  The resulting
+The "aesgcm128" content-coding uses a fixed record size.  The resulting
 encoding is a series of fixed-size records, with a final record that is one or
 more octets shorter than a fixed sized record.
 
@@ -398,7 +398,7 @@ parameters are negotiated between sender and receiver.
 ~~~
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
-Content-Encoding: aesgcm-128
+Content-Encoding: aesgcm128
 Connection: close
 Encryption: keyid="http://example.org/bob/keys/123";
             salt="XZwpw6o37R-6qoZjw6KwAw"
@@ -417,7 +417,7 @@ exposing information about the content.
 ~~~
 HTTP/1.1 200 OK
 Content-Type: text/html
-Content-Encoding: aesgcm-128, gzip
+Content-Encoding: aesgcm128, gzip
 Transfer-Encoding: chunked
 Encryption: keyid="mailto:me@example.com";
             salt="m2hJ_NttRtFyUiMRPwfpHA"
@@ -431,7 +431,7 @@ Encryption: keyid="mailto:me@example.com";
 PUT /thing HTTP/1.1
 Host: storage.example.com
 Content-Type: application/http
-Content-Encoding: aesgcm-128, aesgcm-128
+Content-Encoding: aesgcm128, aesgcm128
 Content-Length: 1234
 Encryption: keyid="mailto:me@example.com";
             salt="NfzOeuV5USPRA-n_9s1Lag",
@@ -451,7 +451,7 @@ encryption uses a 1200 octet record size.
 ~~~
 HTTP/1.1 200 OK
 Content-Length: 32
-Content-Encoding: aesgcm-128
+Content-Encoding: aesgcm128
 Encryption: keyid="a1"; salt="ibZx1RNz537h1XNkRcPpjA"
 Encryption-Key: keyid="a1"; key="9Z57YCb3dK95dSsdFJbkag"
 
@@ -469,7 +469,7 @@ reasons only.
 ~~~
 HTTP/1.1 200 OK
 Content-Length: 32
-Content-Encoding: aesgcm-128
+Content-Encoding: aesgcm128
 Encryption: keyid="dhkey"; salt="5hpuYfxDzG6nSs9-EQuaBg"
 Encryption-Key: keyid="dhkey";
                 dh="BLsyIPbDn6bquEOwHaju2gj8kUVoflzTtPs_6fGoock_
@@ -501,12 +501,12 @@ added for presentation purposes only.
 
 # IANA Considerations
 
-## The "aesgcm-128" HTTP content-coding
+## The "aesgcm128" HTTP content-coding
 
 This memo registers the "encrypted" HTTP content-coding in the HTTP Content
 Codings Registry, as detailed in {{aesgcm128}}.
 
-* Name: aesgcm-128
+* Name: aesgcm128
 * Description: AES-GCM encryption with a 128-bit content encryption key
 * Reference: this specification
 
@@ -705,7 +705,7 @@ TLS [RFC5246] might be used to hide the size of individual messages.
 
 # JWE Mapping {#jwe}
 
-The "aesgcm-128" content encoding can be considered as a sequence of JSON Web
+The "aesgcm128" content encoding can be considered as a sequence of JSON Web
 Encryption (JWE) objects, each corresponding to a single fixed size record.  The
 following transformations are applied to a JWE object that might be expressed
 using the JWE Compact Serialization:
