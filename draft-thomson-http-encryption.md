@@ -181,8 +181,8 @@ number of zero-valued bytes.  A receiver MUST fail to decrypt if any padding
 byte other than the first is non-zero, or a record has more padding than the
 record size can accommodate.
 
-The nonce used for each record is a 96-bit value containing the index of the
-current record in network byte order.  Records are indexed starting at zero.
+The nonce for each record is a 96-bit value constructed from the record sequence
+number and the input keying material.  Nonce derivation is covered in {{nonce}}.
 
 The additional data passed to each invocation of AEAD_AES_128_GCM is a
 zero-length octet sequence.
@@ -280,6 +280,27 @@ therefore be simplified to the first 16 octets of a single HMAC:
 
 ~~~
    CEK = HMAC-SHA-256(PRK, "Content-Encoding: aesgcm128" || 0x01)
+~~~
+
+
+## Nonce Derivation {#nonce}
+
+The nonce input to AEAD_AES_128_GCM is constructed for each record.  The nonce
+for each record is a 12 octet (96 bit) value is produced from the record
+sequence number and a value derived from the input keying material.
+
+The input keying material and salt values are input to HKDF with different info
+and length parameters.  The info parameter for the nonce is the ASCII-encoded
+string "Content-Encoding: nonce" and the length (L) parameter is 12 octets.
+
+The result is combined with the record sequence number - using exclusive or - to
+produce the nonce.  The record sequence number (SEQ) is a 96-bit unsigned
+integer in network byte order that starts at zero.
+
+Thus, the final nonce for each record is a 12 octet value:
+
+~~~
+   NONCE = HMAC-SHA-256(PRK, "Content-Encoding: nonce" || 0x01) ^ SEQ
 ~~~
 
 
