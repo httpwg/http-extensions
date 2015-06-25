@@ -47,6 +47,7 @@ informative:
   RFC5226:
   RFC5246:
   RFC5652:
+  RFC7233:
   RFC7235:
   I-D.ietf-httpbis-http2:
   FIPS186:
@@ -113,9 +114,10 @@ sequence of JSON Web Encryption [I-D.ietf-jose-json-web-encryption] values with
 a fixed header.
 
 This mechanism is likely only a small part of a larger design that uses content
-encryption.  In particular, this document does not describe key management
-practices.  How clients and servers acquire and identify keys will depend on the
-use case.
+encryption.  How clients and servers acquire and identify keys will depend on
+the use case.  Though a complete key management system is not described, this
+document defines an Encryption-Key header field that can be used to convey
+keying material.
 
 
 ## Notational Conventions
@@ -125,31 +127,31 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 interpreted as described in [RFC2119].
 
 
-# The "aesgcm-128" HTTP content-coding {#aesgcm128}
+# The "aesgcm128" HTTP content-coding {#aesgcm128}
 
-The "aesgcm-128" HTTP content-coding indicates that a payload has been encrypted
+The "aesgcm128" HTTP content-coding indicates that a payload has been encrypted
 using Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) as
 identified as AEAD_AES_128_GCM in [RFC5116], Section 5.1.  The AEAD_AES_128_GCM
 algorithm uses a 128 bit content encryption key.
 
 When this content-coding is in use, the Encryption header field ({{encryption}})
 describes how encryption has been applied.  The Encryption-Key header field
-({{encryption-key}}) can be included to describe how the the content encryption
-key is derived or retrieved.
+({{encryption-key}}) can be included to describe how the content encryption key
+is derived or retrieved.
 
-The "aesgcm-128" content-coding uses a single fixed set of encryption
+The "aesgcm128" content-coding uses a single fixed set of encryption
 primitives.  Cipher suite agility is achieved by defining a new content-coding
 scheme.  This ensures that only the HTTP Accept-Encoding header field is
 necessary to negotiate the use of encryption.
 
-The "aesgcm-128" content-coding uses a fixed record size.  The resulting
+The "aesgcm128" content-coding uses a fixed record size.  The resulting
 encoding is a series of fixed-size records, with a final record that is one or
 more octets shorter than a fixed sized record.
 
 ~~~
-       +------+
-       | data |         input of between rs-256
-       +------+            and rs-1 octets
+       +------+         input of between rs-256
+       | data |            and rs-1 octets
+       +------+      (one fewer for the last record)
            |
            v
 +-----+-----------+
@@ -163,24 +165,25 @@ more octets shorter than a fixed sized record.
 ~~~
 
 The record size determines the length of each portion of plaintext that is
-enciphered.  The record size defaults to 4096 octets, but can be changed using
-the "rs" parameter on the Encryption header field.
+enciphered, with the exception of the final record, which is necessarily
+smaller.  The record size defaults to 4096 octets, but can be changed using the
+"rs" parameter on the Encryption header field.
 
 AEAD_AES_128_GCM expands ciphertext to be 16 octets longer than its input
-plaintext.  Therefore, the length of each enciphered record is equal to the
-value of the "rs" parameter plus 16 octets.  A receiver MUST fail to decrypt if
-the remainder is 16 octets or less in size (though AEAD_AES_128_GCM permits
-input plaintext to be zero length, records always contain at least one padding
-octet).
+plaintext.  Therefore, the length of each enciphered record other than the last
+is equal to the value of the "rs" parameter plus 16 octets.  A receiver MUST
+fail to decrypt if the final record ciphertext is 16 octets or less in size.
+Valid records always contain at least one byte of padding and a 16 octet
+authentication tag.
 
-Each record contains between 0 and 255 octets of padding, inserted into a record
-before the enciphered content.  The length of the padding is stored in the first
-octet of the payload.  All padding octets MUST be set to zero.  A receiver MUST
-fail to decrypt if a record has more padding than the record size can
-accommodate.
+Each record contains between 1 and 256 octets of padding, inserted into a record
+before the enciphered content.  Padding consists of a length byte, followed that
+number of zero-valued octets.  A receiver MUST fail to decrypt if any padding
+octet other than the first is non-zero, or a record has more padding than the
+record size can accommodate.
 
-The nonce used for each record is a 96-bit value containing the index of the
-current record in network byte order.  Records are indexed starting at zero.
+The nonce for each record is a 96-bit value constructed from the record sequence
+number and the input keying material.  Nonce derivation is covered in {{nonce}}.
 
 The additional data passed to each invocation of AEAD_AES_128_GCM is a
 zero-length octet sequence.
@@ -192,19 +195,25 @@ and is smaller than the full record size if the final record ends on a record
 boundary.  A receiver MUST treat the stream as failed due to truncation if the
 final record is the full record size.
 
-Issue:
-: Double check that this construction (with no AAD) is safe.
+A consequence of this record structure is that range requests [RFC7233] and
+random access to encrypted payload bodies are possible at the granularity of the
+record size.  However, without data from adjacent ranges, partial records cannot
+be used.  Thus, it is best if records start and end on multiples of the record
+size, plus the 16 octet authentication tag size.
 
 
-# The "Encryption" HTTP header field  {#encryption}
+# The Encryption HTTP header field  {#encryption}
 
-The "Encryption" HTTP header field describes the encrypted content encoding(s)
-that have been applied to a message payload, and therefore how those content
+The `Encryption` HTTP header field describes the encrypted content encoding(s)
+that have been applied to a payload body, and therefore how those content
 encoding(s) can be removed.
+
+The `Encryption` header field uses the extended ABNF syntax defined in
+Section 1.2 of [RFC7230] and the `parameter` rule from [RFC7231]
 
 ~~~
   Encryption-val = #encryption_params
-  encryption_params = [ param *( ";" param ) ]
+  encryption_params = [ parameter *( ";" parameter ) ]
 ~~~
 
 If the payload is encrypted more than once (as reflected by having multiple
@@ -213,9 +222,9 @@ is reflected in the Encryption header field, in the order in which they were
 applied.
 
 The Encryption header MAY be omitted if the sender does not intend for the
-immediate recipient to be able to decrypt the message.  Alternatively, the
-Encryption header field MAY be omitted if the sender intends for the recipient
-to acquire the header field by other means.
+immediate recipient to be able to decrypt the payload body.  Alternatively,
+the Encryption header field MAY be omitted if the sender intends for the
+recipient to acquire the header field by other means.
 
 Servers processing PUT requests MUST persist the value of the Encryption header
 field, unless they remove the content-coding by decrypting the payload.
@@ -223,24 +232,26 @@ field, unless they remove the content-coding by decrypting the payload.
 
 ## Encryption Header Field Parameters
 
-The following parameters are used in determining the key that is used for
-encryption:
+The following parameters are used in determining the content encryption key that
+is used for encryption:
 
 keyid:
 
 : The "keyid" parameter contains a string that identifies the keying material
 that is used.  The "keyid" parameter SHOULD be included, unless key
 identification is guaranteed by other means.  The "keyid" parameter MUST be used
-if keying material is included in an Encryption-Key header field.
+if keying material included in an Encryption-Key header field is needed to
+derive the content encryption key.
 
 salt:
 
 : The "salt" parameter contains a base64 URL-encoded octets that is used as salt
 in deriving a unique content encryption key (see {{derivation}}).  The "salt"
-parameter MUST be present, and MUST be exactly 16 octets long.  The "salt"
-parameter MUST NOT be reused for two different messages that have the same
-content encryption key; generating a random nonce for each message ensures that
-reuse is highly unlikely.
+parameter MUST be present, and MUST be exactly 16 octets long when decoded.  The
+"salt" parameter MUST NOT be reused for two different payload bodies that have
+the same input keying material; generating a random salt for every application
+of the content encoding ensures that content encryption key reuse is highly
+unlikely.
 
 rs:
 
@@ -251,11 +262,11 @@ parameter is absent, the record size defaults to 4096 octets.
 
 ## Content Encryption Key Derivation {#derivation}
 
-In order to allow the reuse of keying material for multiple different messages,
-a content encryption key is derived for each message.  This key is derived from
-the decoded value of the "salt" parameter using the HMAC-based key derivation
-function (HKDF) described in [RFC5869] using the SHA-256 hash algorithm
-[FIPS180-2].
+In order to allow the reuse of keying material for multiple different HTTP
+messages, a content encryption key is derived for each message.  The content
+encryption key is derived from the decoded value of the "salt" parameter using
+the HMAC-based key derivation function (HKDF) described in [RFC5869] using the
+SHA-256 hash algorithm [FIPS180-2].
 
 The decoded value of the "salt" parameter is the salt input to HKDF function.
 The keying material identified by the "keyid" parameter is the input keying
@@ -267,13 +278,34 @@ first step of HKDF is therefore:
    PRK = HMAC-SHA-256(salt, IKM)
 ~~~
 
-AEAD_AES_128_GCM requires 16 octets (128 bits) of key, so the length (L)
-parameter of HKDF is 16.  The info parameter is set to the ASCII-encoded string
-"Content-Encoding: aesgcm128".  The second step of HKDF can therefore be
-simplified to the first 16 octets of a single HMAC:
+AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key, so the
+length (L) parameter to HKDF is 16.  The info parameter is set to the
+ASCII-encoded string "Content-Encoding: aesgcm128".  The second step of HKDF can
+therefore be simplified to the first 16 octets of a single HMAC:
 
 ~~~
-   OKM = HMAC-SHA-256(PRK, "Content-Encoding: aesgcm128" || 0x01)
+   CEK = HMAC-SHA-256(PRK, "Content-Encoding: aesgcm128" || 0x01)
+~~~
+
+
+## Nonce Derivation {#nonce}
+
+The nonce input to AEAD_AES_128_GCM is constructed for each record.  The nonce
+for each record is a 12 octet (96 bit) value is produced from the record
+sequence number and a value derived from the input keying material.
+
+The input keying material and salt values are input to HKDF with different info
+and length parameters.  The info parameter for the nonce is the ASCII-encoded
+string "Content-Encoding: nonce" and the length (L) parameter is 12 octets.
+
+The result is combined with the record sequence number - using exclusive or - to
+produce the nonce.  The record sequence number (SEQ) is a 96-bit unsigned
+integer in network byte order that starts at zero.
+
+Thus, the final nonce for each record is a 12 octet value:
+
+~~~
+   NONCE = HMAC-SHA-256(PRK, "Content-Encoding: nonce" || 0x01) ^ SEQ
 ~~~
 
 
@@ -282,9 +314,12 @@ simplified to the first 16 octets of a single HMAC:
 An Encryption-Key header field can be used to describe the input keying material
 used in the Encryption header field.
 
+The Encryption-Key header field uses the extended ABNF syntax defined in Section
+1.2 of [RFC7230] and the `parameter` rule from [RFC7231].
+
 ~~~
   Encryption-Key-val = #encryption_key_params
-  encryption_key_params = [ param *( ";" param ) ]
+  encryption_key_params = [ parameter *( ";" parameter ) ]
 ~~~
 
 keyid:
@@ -308,7 +343,11 @@ The input keying material used by the content-encoding key derivation (see
 header field.  The method for key derivation depends on the parameters that are
 present in the header field.
 
-Note that different methods for determining input keying materal will produce
+The value or values provided in the Encryption-Key header field is valid only
+for the current HTTP message unless additional information indicates a greater
+scope.
+
+Note that different methods for determining input keying material will produce
 different amounts of data.  The HKDF process ensures that the final content
 encryption key is the necessary size.
 
@@ -318,9 +357,9 @@ specifications that use this content-encoding.
 
 ## Explicit Key
 
-The "key" parameter is decoded and used directly if present.  The "key"
-parameter MUST decode to exactly 16 octets in order to be used as input keying
-material for "aesgcm128" content encoding.
+The "key" parameter is decoded and used as the input keying material if present.
+The "key" parameter MUST decode to at least 16 octets in order to be used as
+input keying material for "aesgcm128" content encoding.
 
 Other key determination parameters can be ignored if the "key" parameter is
 present.
@@ -364,7 +403,7 @@ parameters are negotiated between sender and receiver.
 ~~~
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
-Content-Encoding: aesgcm-128
+Content-Encoding: aesgcm128
 Connection: close
 Encryption: keyid="http://example.org/bob/keys/123";
             salt="XZwpw6o37R-6qoZjw6KwAw"
@@ -372,8 +411,8 @@ Encryption: keyid="http://example.org/bob/keys/123";
 [encrypted payload]
 ~~~
 
-Here, a successful HTTP GET response has been encrypted using a key that is
-identified by a URI.
+Here, a successful HTTP GET response has been encrypted using input keying
+material that is identified by a URI.
 
 Note that the media type has been changed to "application/octet-stream" to avoid
 exposing information about the content.
@@ -383,7 +422,7 @@ exposing information about the content.
 ~~~
 HTTP/1.1 200 OK
 Content-Type: text/html
-Content-Encoding: aesgcm-128, gzip
+Content-Encoding: aesgcm128, gzip
 Transfer-Encoding: chunked
 Encryption: keyid="mailto:me@example.com";
             salt="m2hJ_NttRtFyUiMRPwfpHA"
@@ -397,7 +436,7 @@ Encryption: keyid="mailto:me@example.com";
 PUT /thing HTTP/1.1
 Host: storage.example.com
 Content-Type: application/http
-Content-Encoding: aesgcm-128, aesgcm-128
+Content-Encoding: aesgcm128, aesgcm128
 Content-Length: 1234
 Encryption: keyid="mailto:me@example.com";
             salt="NfzOeuV5USPRA-n_9s1Lag",
@@ -407,33 +446,35 @@ Encryption: keyid="mailto:me@example.com";
 [encrypted payload]
 ~~~
 
-Here, a PUT request has been encrypted with two keys; both will be necessary to
-read the content.  The outer layer of encryption uses a 1200 octet record size.
+Here, a PUT request has been encrypted twice with different input keying
+material; decrypting twice is necessary to read the content.  The outer layer of
+encryption uses a 1200 octet record size.
 
 
 ## Encryption with Explicit Key {#explicit}
 
 ~~~
 HTTP/1.1 200 OK
-Content-Length: 31
-Content-Encoding: aesgcm-128
+Content-Length: 32
+Content-Encoding: aesgcm128
 Encryption: keyid="a1"; salt="ibZx1RNz537h1XNkRcPpjA"
 Encryption-Key: keyid="a1"; key="9Z57YCb3dK95dSsdFJbkag"
 
 zK3kpG__Z8whjIkG6RYgPz11oUkTKcxPy9WP-VPMfuc
 ~~~
 
-This example shows the string "I am the walrus" encrypted using an explicit key.
-The content body contains a single record only and is shown here encoded in
-URL-safe base64 for presentation reasons only.
+This example shows the string "I am the walrus" encrypted using an directly
+provided value for the input keying material.  The content body contains a
+single record only and is shown here encoded in URL-safe base64 for presentation
+reasons only.
 
 
 ## Diffie-Hellman Encryption
 
 ~~~
 HTTP/1.1 200 OK
-Content-Length: 31
-Content-Encoding: aesgcm-128
+Content-Length: 32
+Content-Encoding: aesgcm128
 Encryption: keyid="dhkey"; salt="5hpuYfxDzG6nSs9-EQuaBg"
 Encryption-Key: keyid="dhkey";
                 dh="BLsyIPbDn6bquEOwHaju2gj8kUVoflzTtPs_6fGoock_
@@ -446,9 +487,9 @@ This example shows the same string, "I am the walrus", encrypted using ECDH over
 the P-256 curve [FIPS186]. The content body is shown here encoded in URL-safe
 base64 for presentation reasons only.
 
-The receiver (in this case, the HTTP client) uses the key identified by the
-string "dhkey" and the sender (the server) uses a key pair for which the public
-share is included in the "dh" parameter above. The keys shown below use
+The receiver (in this case, the HTTP client) uses a key pair that is identified
+by the string "dhkey" and the sender (the server) uses a key pair for which the
+public share is included in the "dh" parameter above. The keys shown below use
 uncompressed points [X.692] encoded using URL-safe base64. Line wrapping is
 added for presentation purposes only.
 
@@ -465,13 +506,13 @@ added for presentation purposes only.
 
 # IANA Considerations
 
-## The "aesgcm-128" HTTP content-coding
+## The "aesgcm128" HTTP content-coding
 
 This memo registers the "encrypted" HTTP content-coding in the HTTP Content
 Codings Registry, as detailed in {{aesgcm128}}.
 
-* Name: aesgcm-128
-* Description: AES-GCM encryption with a 128-bit key
+* Name: aesgcm128
+* Description: AES-GCM encryption with a 128-bit content encryption key
 * Reference: this specification
 
 
@@ -520,7 +561,7 @@ The initial contents of this registry are:
 ### salt
 
 * Parameter Name: salt
-* Purpose: Provide a source of entropy for derivation of the content encryption key. This value is mandatory.
+* Purpose: Provide a source of entropy for derivation of a content encryption key. This value is mandatory.
 * Reference: this document
 
 ### rs
@@ -554,13 +595,13 @@ The initial contents of this registry are:
 ### key
 
 * Parameter Name: key
-* Purpose: Provide an explicit key.
+* Purpose: Provide an explicit input keying material value.
 * Reference: this document
 
 ### dh
 
 * Parameter Name: dh
-* Purpose: Carry a modp or elliptic curve Diffie-Hellman share used to derive a key.
+* Purpose: Carry a modp or elliptic curve Diffie-Hellman share used to derive input keying material.
 * Reference: this document
 
 
@@ -581,15 +622,19 @@ implementation of cryptographic algorithms can change over time.
 ## Key and Nonce Reuse
 
 Encrypting different plaintext with the same content encryption key and nonce in
-AES-GCM is not safe [RFC5116].  The scheme defined here relies on the uniqueness
-of the "nonce" parameter to ensure that the content encryption key is different
-for every message.
+AES-GCM is not safe [RFC5116].  The scheme defined here uses a fixed progression
+of nonce values.  Thus, a new content encryption key is needed for every
+application of the content encoding.  Since input keying material can be reused,
+a unique "salt" parameter is needed to ensure a content encryption key is not
+reused.
 
-If a key and nonce are reused, this could expose the content encryption key and
-it makes message modification trivial.  If the same key is used for multiple
-messages, then the nonce parameter MUST be unique for each.  An implementation
-SHOULD generate a random nonce parameter for every message, though using a
-counter could achieve the desired result.
+If a content encryption key is reused - that is, if input keying material and
+salt are reused - this could expose the plaintext and the authentication key,
+nullifying the protection offered by encryption.  Thus, if the same input keying
+material is reused, then the salt parameter MUST be unique each time.  This
+ensures that the content encryption key is not reused.  An implementation SHOULD
+generate a random salt parameter for every message; a counter could achieve the
+same result.
 
 
 ## Content Integrity
@@ -599,21 +644,23 @@ tag only ensures that an entity with access to the content encryption key
 produced the encrypted data.
 
 Any entity with the content encryption key can therefore produce content that
-will be accepted as valid.  This includes all recipients of the same message.
+will be accepted as valid.  This includes all recipients of the same HTTP
+message.
 
 Furthermore, any entity that is able to modify both the Encryption header field
-and the message payload can replace messages.  Without the content encryption
-key however, modifications to or replacement of parts of a message are not
-possible.
+and the HTTP message body can replace the contents.  Without the content
+encryption key or the input keying material, modifications to or replacement of
+parts of a payload body are not possible.
 
 
 ## Leaking Information in Headers
 
-Because "encrypted" only operates upon the message payload, any information
-exposed in header fields is visible to anyone who can read the message.
+Because only the payload body is encrypted, information exposed in header fields
+is visible to anyone who can read the HTTP message.  This could expose
+side-channel information.
 
 For example, the Content-Type header field can leak information about the
-message payload.
+payload body.
 
 There are a number of strategies available to mitigate this threat, depending
 upon the application's threat model and the users' tolerance for leaked
@@ -663,15 +710,15 @@ TLS [RFC5246] might be used to hide the size of individual messages.
 
 # JWE Mapping {#jwe}
 
-The "aesgcm-128" content encoding can be considered as a sequence of JSON Web
+The "aesgcm128" content encoding can be considered as a sequence of JSON Web
 Encryption (JWE) objects, each corresponding to a single fixed size record.  The
 following transformations are applied to a JWE object that might be expressed
 using the JWE Compact Serialization:
 
 * The JWE Protected Header is fixed to a value { "alg": "dir", "enc": "A128GCM"
-  }, describing direct encryption using AES-GCM with a 128-bit key.  This header
-  is not transmitted, it is instead implied by the value of the Content-Encoding
-  header field.
+  }, describing direct encryption using AES-GCM with a 128-bit content
+  encryption key.  This header is not transmitted, it is instead implied by the
+  value of the Content-Encoding header field.
 
 * The JWE Encrypted Key is empty, as stipulated by the direct encryption algorithm.
 
