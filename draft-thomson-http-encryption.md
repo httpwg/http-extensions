@@ -49,7 +49,8 @@ informative:
   RFC5652:
   RFC7233:
   RFC7235:
-  I-D.ietf-httpbis-http2:
+  RFC7516:
+  RFC7540:
   FIPS186:
     title: "Digital Signature Standard (DSS)"
     author:
@@ -62,7 +63,6 @@ informative:
        - org: ANSI
      date: 1998
      seriesinfo: ANSI X9.62
-  I-D.ietf-jose-json-web-encryption:
   XMLENC:
      title: "XML Encryption Syntax and Processing"
      author:
@@ -102,16 +102,15 @@ This document specifies a content-coding (Section 3.1.2 of [RFC7231]) for HTTP
 to serve these and other use cases.
 
 This content-coding is not a direct adaptation of message-based encryption
-formats - such as those that are described by [RFC4880], [RFC5652],
-[I-D.ietf-jose-json-web-encryption], and [XMLENC] - which are not suited to
-stream processing, which is necessary for HTTP.  The format described here
-cleaves more closely to the lower level constructs described in [RFC5116].
+formats - such as those that are described by [RFC4880], [RFC5652], [RFC7516],
+and [XMLENC] - which are not suited to stream processing, which is necessary for
+HTTP.  The format described here cleaves more closely to the lower level
+constructs described in [RFC5116].
 
 To the extent that message-based encryption formats use the same primitives, the
 format can be considered as sequence of encrypted messages with a particular
 profile.  For instance, {{jwe}} explains how the format is congruent with a
-sequence of JSON Web Encryption [I-D.ietf-jose-json-web-encryption] values with
-a fixed header.
+sequence of JSON Web Encryption [RFC7516] values with a fixed header.
 
 This mechanism is likely only a small part of a larger design that uses content
 encryption.  How clients and servers acquire and identify keys will depend on
@@ -601,8 +600,8 @@ sensitive information.
 
 This risk can be mitigated through the use of the padding that this mechanism
 provides.  Alternatively, splitting up content into segments and storing the
-separately might reduce exposure. HTTP/2 [I-D.ietf-httpbis-http2] combined with
-TLS [RFC5246] might be used to hide the size of individual messages.
+separately might reduce exposure. HTTP/2 [RFC7540] combined with TLS [RFC5246]
+might be used to hide the size of individual messages.
 
 
 # IANA Considerations
@@ -711,9 +710,9 @@ The initial contents of this registry are:
 # JWE Mapping {#jwe}
 
 The "aesgcm128" content encoding can be considered as a sequence of JSON Web
-Encryption (JWE) objects, each corresponding to a single fixed size record.  The
-following transformations are applied to a JWE object that might be expressed
-using the JWE Compact Serialization:
+Encryption (JWE) objects [RFC7516], each corresponding to a single fixed size
+record.  The following transformations are applied to a JWE object that might be
+expressed using the JWE Compact Serialization:
 
 * The JWE Protected Header is fixed to a value { "alg": "dir", "enc": "A128GCM"
   }, describing direct encryption using AES-GCM with a 128-bit content
