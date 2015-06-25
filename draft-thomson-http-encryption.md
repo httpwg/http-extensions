@@ -722,9 +722,10 @@ using the JWE Compact Serialization:
 
 * The JWE Encrypted Key is empty, as stipulated by the direct encryption algorithm.
 
-* The JWE Initialization Vector ("iv") for each record is set to the 96-bit
-  integer value of the record sequence number, starting at zero.  This value is
-  also not transmitted.
+* The JWE Initialization Vector ("iv") for each record is set to the exclusive
+  or of the 96-bit record sequence number, starting at zero, and a value derived
+  from the input keying material (see {{nonce}}).  This value is also not
+  transmitted.
 
 * The final value is the concatenated JWE Ciphertext and the JWE Authentication
   Tag, both expressed without URL-safe Base 64 encoding.  The "." separator is
