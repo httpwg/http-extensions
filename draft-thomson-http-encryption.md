@@ -127,7 +127,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 interpreted as described in [RFC2119].
 
 
-# The "aesgcm128" HTTP content-coding {#aesgcm128}
+# The "aesgcm128" HTTP Content Encoding {#aesgcm128}
 
 The "aesgcm128" HTTP content-coding indicates that a payload has been encrypted
 using Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) as
@@ -202,7 +202,7 @@ be used.  Thus, it is best if records start and end on multiples of the record
 size, plus the 16 octet authentication tag size.
 
 
-# The Encryption HTTP header field  {#encryption}
+# The Encryption HTTP Header Field  {#encryption}
 
 The `Encryption` HTTP header field describes the encrypted content encoding(s)
 that have been applied to a payload body, and therefore how those content
@@ -504,107 +504,6 @@ added for presentation purposes only.
 ~~~
 
 
-# IANA Considerations
-
-## The "aesgcm128" HTTP content-coding
-
-This memo registers the "encrypted" HTTP content-coding in the HTTP Content
-Codings Registry, as detailed in {{aesgcm128}}.
-
-* Name: aesgcm128
-* Description: AES-GCM encryption with a 128-bit content encryption key
-* Reference: this specification
-
-
-## Encryption Header Fields
-
-This memo registers the "Encryption" HTTP header field in the Permanent Message
-Header Registry, as detailed in {{encryption}}.
-
-* Field name: Encryption
-* Protocol: HTTP
-* Status: Standard
-* Reference: this specification
-* Notes:
-
-This memo registers the "Encryption-Key" HTTP header field in the Permanent
-Message Header Registry, as detailed in {{encryption-key}}.
-
-* Field name: Encryption-Key
-* Protocol: HTTP
-* Status: Standard
-* Reference: this specification
-* Notes:
-
-
-## The HTTP Encryption Parameter Registry {#encryption-registry}
-
-This memo establishes a registry for parameters used by the "Encryption" header
-field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.  The
-"Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
-"Specification Required" policy [RFC5226].
-
-Entries in this registry are expected to include the following information:
-
-* Parameter Name: The name of the parameter.
-* Purpose: A brief description of the purpose of the parameter.
-* Reference: A reference to a specification that defines the semantics of the parameter.
-
-The initial contents of this registry are:
-
-### keyid
-
-* Parameter Name: keyid
-* Purpose: Identify the key that is in use.
-* Reference: this document
-
-### salt
-
-* Parameter Name: salt
-* Purpose: Provide a source of entropy for derivation of a content encryption key. This value is mandatory.
-* Reference: this document
-
-### rs
-
-* Parameter Name: rs
-* Purpose: The size of the encrypted records.
-* Reference: this document
-
-
-## The HTTP Encryption-Key Parameter Registry {#encryption-key-registry}
-
-This memo establishes a registry for parameters used by the "Encryption-Key"
-header field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.
-The "Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
-"Specification Required" policy [RFC5226].
-
-Entries in this registry are expected to include the following information:
-
-* Parameter Name: The name of the parameter.
-* Purpose: A brief description of the purpose of the parameter.
-* Reference: A reference to a specification that defines the semantics of the parameter.
-
-The initial contents of this registry are:
-
-### keyid
-
-* Parameter Name: keyid
-* Purpose: Identify the key that is in use.
-* Reference: this document
-
-### key
-
-* Parameter Name: key
-* Purpose: Provide an explicit input keying material value.
-* Reference: this document
-
-### dh
-
-* Parameter Name: dh
-* Purpose: Carry a modp or elliptic curve Diffie-Hellman share used to derive input keying material.
-* Reference: this document
-
-
 # Security Considerations
 
 This mechanism assumes the presence of a key management framework that is used
@@ -704,6 +603,107 @@ This risk can be mitigated through the use of the padding that this mechanism
 provides.  Alternatively, splitting up content into segments and storing the
 separately might reduce exposure. HTTP/2 [I-D.ietf-httpbis-http2] combined with
 TLS [RFC5246] might be used to hide the size of individual messages.
+
+
+# IANA Considerations
+
+## The "aesgcm128" HTTP Content Encoding
+
+This memo registers the "encrypted" HTTP content-coding in the HTTP Content
+Codings Registry, as detailed in {{aesgcm128}}.
+
+* Name: aesgcm128
+* Description: AES-GCM encryption with a 128-bit content encryption key
+* Reference: this specification
+
+
+## Encryption Header Fields
+
+This memo registers the "Encryption" HTTP header field in the Permanent Message
+Header Registry, as detailed in {{encryption}}.
+
+* Field name: Encryption
+* Protocol: HTTP
+* Status: Standard
+* Reference: this specification
+* Notes:
+
+This memo registers the "Encryption-Key" HTTP header field in the Permanent
+Message Header Registry, as detailed in {{encryption-key}}.
+
+* Field name: Encryption-Key
+* Protocol: HTTP
+* Status: Standard
+* Reference: this specification
+* Notes:
+
+
+## The HTTP Encryption Parameter Registry {#encryption-registry}
+
+This memo establishes a registry for parameters used by the "Encryption" header
+field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.  The
+"Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
+"Specification Required" policy [RFC5226].
+
+Entries in this registry are expected to include the following information:
+
+* Parameter Name: The name of the parameter.
+* Purpose: A brief description of the purpose of the parameter.
+* Reference: A reference to a specification that defines the semantics of the parameter.
+
+The initial contents of this registry are:
+
+### keyid
+
+* Parameter Name: keyid
+* Purpose: Identify the key that is in use.
+* Reference: this document
+
+### salt
+
+* Parameter Name: salt
+* Purpose: Provide a source of entropy for derivation of a content encryption key. This value is mandatory.
+* Reference: this document
+
+### rs
+
+* Parameter Name: rs
+* Purpose: The size of the encrypted records.
+* Reference: this document
+
+
+## The HTTP Encryption-Key Parameter Registry {#encryption-key-registry}
+
+This memo establishes a registry for parameters used by the "Encryption-Key"
+header field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.
+The "Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
+"Specification Required" policy [RFC5226].
+
+Entries in this registry are expected to include the following information:
+
+* Parameter Name: The name of the parameter.
+* Purpose: A brief description of the purpose of the parameter.
+* Reference: A reference to a specification that defines the semantics of the parameter.
+
+The initial contents of this registry are:
+
+### keyid
+
+* Parameter Name: keyid
+* Purpose: Identify the key that is in use.
+* Reference: this document
+
+### key
+
+* Parameter Name: key
+* Purpose: Provide an explicit input keying material value.
+* Reference: this document
+
+### dh
+
+* Parameter Name: dh
+* Purpose: Carry a modp or elliptic curve Diffie-Hellman share used to derive input keying material.
+* Reference: this document
 
 
 --- back
