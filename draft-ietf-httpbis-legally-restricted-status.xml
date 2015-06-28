@@ -5,6 +5,7 @@
 <!ENTITY rfc2616 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2616.xml'>
 <!ENTITY rfc4084 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4084.xml'>
 <!ENTITY rfc4924 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4924.xml'>
+<!ENTITY rfc7234 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7234.xml'>
 ]>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -20,7 +21,7 @@
 <?rfc inline="yes" ?>
 
 <rfc ipr="trust200902" 
-     docName="draft-ietf-httpbis-legally-restricted-status-latest" 
+     docName="draft-ietf-httpbis-legally-restricted-status-01" 
      category="std"
      updates="2616"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
@@ -41,6 +42,7 @@
     <date year="2015" month="April"/>
     <area>Applications</area>
     <workgroup>HTTP</workgroup>
+    <keyword>HTTP</keyword>
 
     <abstract>
 
@@ -86,9 +88,7 @@
       notes, and as Section 4 of <xref target="RFC4084"/> states, such
       restrictions should be made explicit.</t>
       
-      <t>Feedback should occur on the ietf-http-wg@w3.org mailing list,
-      although this draft is NOT a work item of the IETF HTTPbis Working
-      Group. </t>
+      <t>Feedback should occur on the ietf-http-wg@w3.org mailing list.</t>
     </section>
 
     <section title="Requirements">
@@ -135,6 +135,8 @@ a request for the resource still might not succeed.</t>
 
 <t>Note that in many cases clients can still access the denied resource by
 using technical countermeasures such as a VPN or the Tor network.</t>
+
+<t>A 451 response is cacheable by default; i.e., unless otherwise indicated by the method definition or explicit cache controls; see <xref target="RFC7234"/>.</t>
     </section>
 
     <section title="Security Considerations">
@@ -168,6 +170,7 @@ using technical countermeasures such as a VPN or the Tor network.</t>
       &rfc2119;
       &rfc4084;
       &rfc4924;
+      &rfc7234;
     </references>
 
 
@@ -176,8 +179,6 @@ using technical countermeasures such as a VPN or the Tor network.</t>
       status code 403 was not really suitable for this situation, and
       suggested the creation of a new status code.</t>
       <t>Thanks also to Ray Bradbury.</t>
-      <t>The author takes all responsibility for errors and
-      omissions.</t>
     </section>
 
 
