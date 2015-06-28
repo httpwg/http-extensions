@@ -33,6 +33,12 @@ providing a link to the issue in the message body.
   Note that **github issues are not for substantial discussions**; the only
   appropriate place to discuss design issues is on the mailing list itself.
 
+
+# Code of Conduct
+
+The [IETF Guidelines for Conduct](http://tools.ietf.org/html/rfc7154) applies to all Working Group communications and meetings.
+
+
 # NOTE WELL
 
 Any submission to the [IETF](http://www.ietf.org/) intended by the Contributor

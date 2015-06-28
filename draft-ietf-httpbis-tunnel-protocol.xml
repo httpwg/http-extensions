@@ -4,7 +4,8 @@
 <!DOCTYPE rfc [
 <!-- One method to get references from the online citation libraries.
      There has to be one entity for each item to be referenced.
-     An alternate method (rfc include) is described in the references. --><!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC3864 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3864.xml">
 <!ENTITY RFC3986 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml">
 <!ENTITY RFC5246 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
@@ -27,7 +28,7 @@
 <rfc category="std" docName="draft-ietf-httpbis-tunnel-protocol-latest" ipr="trust200902"      xmlns:x="http://purl.org/net/xml2rfc/ext">
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
   <front>
-    <title abbrev="Tunnel-Protocol">The Tunnel-Protocol HTTP Header Field</title>
+    <title abbrev="The ALPN Header">The ALPN HTTP Header Field</title>
 
     <author fullname="Andrew Hutton" initials="A." surname="Hutton">
       <organization>Unify</organization>
@@ -80,29 +81,10 @@
     <abstract>
       <t>
         This specification allows HTTP CONNECT requests to indicate what
-        protocol will be used within the tunnel once established, using the
-        Tunnel-Protocol header field.
+        protocol is intended to be used within the tunnel once established,
+        using the ALPN header field.
        </t>
     </abstract>
-
-    <note title="Editorial Note (To be removed by RFC Editor)">
-      <t>
-        Discussion of this draft takes place on the HTTPBIS working group mailing list
-        (ietf-http-wg@w3.org), which is archived at <eref
-        target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
-      </t>
-      <t>
-        Working Group information can be found at <eref
-        target="https://tools.ietf.org/wg/httpbis/"/>
-        and <eref target="http://httpwg.github.io/"/>; source code and issues
-        list for this draft can be found at
-        <eref target="https://github.com/httpwg/http-extensions"/>.
-      </t>
-      <!--<t>
-        The changes in this draft are summarized in <xref
-        target="change.log"/>.
-      </t>-->
-    </note>
   </front>
 
  <middle>
@@ -115,24 +97,26 @@
         virtual connections, through one or more proxies.
       </t>
       <t>
-        The HTTP Tunnel-Protocol header field identifies the protocol that will
-        be spoken within the tunnel, using the Application Layer Protocol
-        Negotiation identifier (ALPN, <xref target="RFC7301"/>).
+        The HTTP ALPN header field identifies the protocol or protocols that the
+        client intends to use within a tunnel that is established using CONNECT.
+        This uses the Application Layer Protocol Negotiation identifier (ALPN,
+        <xref target="RFC7301"/>).
       </t>
       <t>
-        When the CONNECT method is used to establish a tunnel, the
-        Tunnel-Protocol header field can be used to identify the protocol that
-        the client intends to use with that tunnel.  For a tunnel that is then
-        secured using <xref target="RFC5246">TLS</xref>, the header field
-        carries the same application protocol label as will be carried within
-        the TLS handshake.  If there are multiple possible application
+        For a tunnel that is then secured using <xref
+        target="RFC5246">TLS</xref>, the header field carries the same
+        application protocol label as will be carried within the TLS handshake
+        <xref target="RFC7301"/>.  If there are multiple possible application
         protocols, all of those application protocols are indicated.
       </t>
       <t>
-        The Tunnel-Protocol header field carries an indication of client intent
-        only.  In TLS, the final choice of application protocol is made by the
-        server from the set of choices presented by the client.  Other protocols
-        could negotiate protocols differently.
+        The ALPN header field carries an indication of client intent only.  An
+        ALPN identifier is used here only to identify the application protocol
+        or suite of protocols that the client intends to use in the tunnel.  No
+        negotiation takes place using this header field.  In TLS, the final
+        choice of application protocol is made by the server from the set of
+        choices presented by the client.  Other substrates could negotiate the
+        application protocol differently.
       </t>
       <t>
         Proxies do not implement the tunneled protocol, though they might choose
@@ -151,11 +135,11 @@
       </section>
     </section>
 
-   <section title="The Tunnel-Protocol HTTP Header Field" anchor="tp">
+   <section title="The ALPN HTTP Header Field" anchor="tp">
       <t>
-        Clients include the Tunnel-Protocol header field in an HTTP CONNECT
-        request to indicate the application layer protocol that will be used within
-        the tunnel, or the set of protocols that might be used within the
+        Clients include the ALPN header field in an HTTP CONNECT request to
+        indicate the application layer protocol that a client intends to use
+        within the tunnel, or a set of protocols that might be used within the
         tunnel.
       </t>
 
@@ -168,15 +152,15 @@
         </t>
       </section>
 
-     <section title="Syntax">
+      <section title="Syntax">
         <t>
-          The ABNF (Augmented Backus-Naur Form) syntax for the Tunnel-Protocol
-          header field is given below.  It is based on the Generic Grammar
-          defined in <xref x:sec="2" x:fmt="of" target="RFC7230"/>.
+          The ABNF (Augmented Backus-Naur Form) syntax for the ALPN
+          header field value is given below. It uses the syntax defined
+          in <xref x:sec="1.2" x:fmt="of" target="RFC7230"/>.
         </t>
         <figure>
           <artwork type="abnf2616"><![CDATA[
-Tunnel-Protocol = "Tunnel-Protocol":" 1#protocol-id
+ALPN = 1#protocol-id
 protocol-id     = token ; percent-encoded ALPN protocol identifier
 ]]></artwork>
         </figure>
@@ -212,22 +196,64 @@ protocol-id     = token ; percent-encoded ALPN protocol identifier
           <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
 CONNECT www.example.com HTTP/1.1
 Host: www.example.com
-Tunnel-Protocol: h2, http%2F1.1
+ALPN: h2, http%2F1.1
 </artwork>
         </figure>
+      </section>
+
+      <section title="Usage">
+        <t>
+          When used in the ALPN header field, an ALPN identifier is used to
+          identify an entire application protocol stack, not a single protocol
+          layer or component.
+        </t>
+        <t>
+          For a CONNECT tunnel that conveys a protocol secured with TLS, the
+          value of the ALPN header field contains the same list of ALPN
+          identifiers that will be sent in the TLS ClientHello message <xref
+          target="RFC7301"/>.
+        </t>
+        <t>
+          Where no protocol negotiation is expected to occur, such as in
+          protocols that do not use TLS, the ALPN header field contains a single
+          ALPN Protocol Identifier corresponding to the application protocol
+          that is intended to be used.  If an alternative form of protocol
+          negotiation is possible, the ALPN header field contains the set of
+          protocols that might be negotiated.
+        </t>
+        <t>
+          A proxy can use the value of the ALPN header field to more cleanly and
+          efficiently reject requests for a CONNECT tunnel.  Exposing protocol
+          information at the HTTP layer allows a proxy to deny requests earlier,
+          with better error reporting (such as a 403 status code).  The ALPN
+          header field can be falsified and is therefore not sufficient basis
+          for authorizing a request.
+        </t>
+        <t>
+          A proxy could attempt to inspect packets to determine the protocol in
+          use.  This requires that the proxy understand each ALPN identifier.
+          Protocols like TLS could hide negotiated protocols, or protocol
+          negotiation details could change over time.  Proxies SHOULD NOT break
+          a CONNECT tunnel solely on the basis of a failure to recognize the
+          protocol.
+        </t>
+        <t>
+          A proxy can use the ALPN header field value to change how it
+          manages or prioritizes connections.
+        </t>
       </section>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
       <t>
-        HTTP header fields are registered within the "Message Headers" registry
-        maintained at <eref
+        HTTP header fields are registered within the "Permanent Message Header
+        Field Names" registry maintained at <eref
         target="https://www.iana.org/assignments/message-headers"/>.  This
-        document defines and registers the Tunnel-Protocol header field,
-        according to <xref target="RFC3864"/> as follows:
+        document defines and registers the ALPN header field, according to <xref
+        target="RFC3864"/> as follows:
         <list style="hanging">
           <t hangText="Header Field Name:">
-            Tunnel-Protocol
+            ALPN
           </t>
           <t hangText="Protocol:">
             http
@@ -257,23 +283,28 @@ Tunnel-Protocol: h2, http%2F1.1
         configurable whitelist of safe request targets."
       </t>
       <t>
-        The Tunnel-Protocol header field described in this document is an
-        OPTIONAL header field. Clients and HTTP proxies could choose to not support
-        the header and therefore fail to provide it, or ignore it when
-        present. If the header is not available or ignored, a proxy cannot
-        identify the purpose of the tunnel and use this as input to any
-        authorization decision regarding the tunnel. This is indistinguishable
-        from the case where either client or proxy does not support the
-        Tunnel-Protocol header field.
+        The ALPN header field described in this document is OPTIONAL. Clients
+        and HTTP proxies could choose to not support it and therefore either
+        fail to provide it, or ignore it when present. If the header field is
+        not available or ignored, a proxy cannot identify the purpose of the
+        tunnel and use this as input to any authorization decision regarding the
+        tunnel. This is indistinguishable from the case where either client or
+        proxy does not support the ALPN header field.
       </t>
       <t>
-        The value of the Tunnel-Protocol header field could be falsified by a
+        There is no confidentiality protection for the ALPN header field.  ALPN
+        identifiers that might expose confidential or sensitive information
+        SHOULD NOT be sent, as described in <xref x:sec="5" x:fmt="of"
+        target="RFC7301"/>.
+      </t>
+      <t>
+        The value of the ALPN header field could be falsified by a
         client.  If the data being sent through the tunnel is encrypted (for
         example, with <xref target="RFC5246">TLS</xref>), then the proxy might
         not be able to directly inspect the data to verify that the claimed
         protocol is the one which is actually being used, though a proxy might
         be able to perform traffic analysis <xref target="TRAFFIC"/>.  A proxy
-        therefore cannot rely on the value of the Tunnel-Protocol header field
+        therefore cannot rely on the value of the ALPN header field
         as a policy input in all cases.
       </t>
     </section>

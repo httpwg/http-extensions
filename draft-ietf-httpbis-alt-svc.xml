@@ -115,7 +115,7 @@
     </t>
     <t>
        An origin server might wish to offer access to its resources using a new
-       protocol (such as HTTP/2, see <xref target="HTTP2"/>) or one using improved
+       protocol (such as HTTP/2, see <xref target="RFC7540"/>) or one using improved
        security (such as Transport Layer Security (TLS), see <xref target="RFC5246"/>).
     </t>
     <t>
@@ -131,8 +131,9 @@
    that allows an origin server to nominate additional means of interacting with it on
    the network. It defines a general framework for this in <xref
    target="alternative"/>, along with specific mechanisms for advertising their
-   existence using HTTP header fields (<xref target="alt-svc"/>) or an HTTP/2
-   frame type (<xref target="frame"/>).
+   existence using HTTP header fields (<xref target="alt-svc"/>) or HTTP/2
+   frames (<xref target="frame"/>), plus a way to indicate that an alternative
+   service was used (<xref target="indicator"/>).
 </t>
 <t>
    It also introduces a new status code in <xref target="status"/>, so that origin servers (or
@@ -146,12 +147,25 @@
   "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
   interpreted as described in <xref target="RFC2119"/>.
 </t>
-<t>
+<t anchor="imported.abnf">
+  <x:anchor-alias value="OWS"/>
+  <x:anchor-alias value="delta-seconds"/>
+  <x:anchor-alias value="port"/>
+  <x:anchor-alias value="quoted-string"/>
+  <x:anchor-alias value="token"/>
+  <x:anchor-alias value="uri-host"/>
   This document uses the Augmented BNF defined in <xref target="RFC5234"/>
-  along with the "OWS", "delta-seconds", "parameter", "port", "quoted-string", "token",
-  and "uri-host" rules from <xref target="RFC7230"/>, and uses the "#rule"
-  extension defined in <xref target="RFC7230" x:rel="#abnf.extension" x:fmt="sec"/> of that document.
+  along with the "#rule" extension defined in <xref target="RFC7230" x:rel="#abnf.extension" x:fmt="of"/>.
+  The rules below are defined in <xref target="RFC7230"/> and <xref target="RFC7234"/>:
 </t>
+<figure><artwork type="abnf2616">
+OWS           = &lt;OWS, see <xref target="RFC7230" x:rel="#whitespace"/>&gt;
+delta-seconds = &lt;delta-seconds; see <xref target="RFC7234" x:rel="#delta-seconds"/>&gt;
+port          = &lt;port, see <xref target="RFC7230" x:rel="#uri"/>&gt;
+quoted-string = &lt;quoted-string, see <xref target="RFC7230" x:rel="#field.components"/>&gt;
+token         = &lt;token, see <xref target="RFC7230" x:rel="#field.components"/>&gt;
+uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
+</artwork></figure>
 </section>
 
     </section>
@@ -209,7 +223,7 @@
 </t>
 <t>
    Importantly, this includes its security context; in particular, when TLS
-   <xref target="RFC5246"/> is in use, the alternative service will need to present a certificate
+   <xref target="RFC5246"/> is used to authenticate, the alternative service will need to present a certificate
    for the origin's host name, not that of the alternative. Likewise, the Host
    header field (<xref target="RFC7230" x:fmt="," x:rel="#header.host"/>) is
    still derived from the origin, not the alternative service (just as it would
@@ -346,8 +360,9 @@
   <artwork type="abnf2616">
 Alt-Svc       = 1#( alternative *( OWS ";" OWS parameter ) )
 alternative   = protocol-id "=" alt-authority
-protocol-id   = token ; percent-encoded ALPN protocol identifier
-alt-authority = quoted-string ; containing [ uri-host ] ":" port
+protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol identifier
+alt-authority = <x:ref>quoted-string</x:ref> ; containing [ <x:ref>uri-host</x:ref> ] ":" <x:ref>port</x:ref>
+parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-string</x:ref> )
 </artwork>
 </figure>
 <t>
@@ -386,7 +401,7 @@ alt-authority = quoted-string ; containing [ uri-host ] ":" port
 Alt-Svc: h2=":8000"
 </artwork>
 <postamble>
-   This indicates the "h2" protocol (<xref target="HTTP2"/>) on the same
+   This indicates the "h2" protocol (<xref target="RFC7540"/>) on the same
    host using the indicated port 8000.
 </postamble>
 </figure>
@@ -430,11 +445,11 @@ Alt-Svc: h2c=":8000", h2=":443"
 </figure>
 <t>
    The value(s) advertised by Alt-Svc can be used by clients to open a new
-   connection to one or more alternative services immediately, or simultaneously
-   with subsequent requests on the same connection.
+   connection to an alternative service. Subsequent requests can start using this new connection
+   immediately, or can continue using the existing connection while the new connection is created.
 </t>
 <t>
-   When using HTTP/2 (<xref target="HTTP2"/>), servers &SHOULD; instead send an ALTSVC frame
+   When using HTTP/2 (<xref target="RFC7540"/>), servers &SHOULD; instead send an ALTSVC frame
    (<xref target="frame"/>). A single ALTSVC frame can be sent for a connection;
    a new frame is not needed for every request.
 </t>
@@ -447,7 +462,7 @@ Alt-Svc: h2c=":8000", h2=":443"
 <t>
    When an alternative service is advertised using Alt-Svc, it is considered fresh
    for 24 hours from generation of the message. This can be modified with the 'ma'
-   (max-age) parameter;
+   (max-age) parameter:
 </t>
 <figure>
   <artwork type="example">
@@ -460,7 +475,7 @@ Alt-Svc: h2=":443"; ma=3600
 </t>
 <figure>
   <artwork type="abnf2616">
-ma = delta-seconds
+ma = <x:ref>delta-seconds</x:ref>
 </artwork></figure>
 <t>
    See <xref target="RFC7234" x:rel="#age.calculations" x:fmt="of"/> for details of determining
@@ -499,7 +514,7 @@ Alt-Svc: h2c=":8000"; ma=60
 
 <section anchor="frame" title="The ALTSVC HTTP/2 Frame">
 <t>
-  The ALTSVC HTTP/2 frame (<xref target="HTTP2" x:fmt="," x:rel="#FramingLayer"/>)
+  The ALTSVC HTTP/2 frame (<xref target="RFC7540" x:fmt="," x:rel="#FramingLayer"/>)
   advertises the availability of an alternative service to an HTTP/2 client.
 </t>
 <t>
@@ -552,7 +567,7 @@ Alt-Svc: h2c=":8000"; ma=60
 </t>
 <t>
   The ALTSVC frame is intended for receipt by clients; a server that receives an
-  ALTSVC frame &MUST; treat it as a connection error of type PROTOCOL_ERROR.
+  ALTSVC frame can safely ignore it.
 </t>
 <t>
   An ALTSVC frame on stream 0 with empty (length 0) "Origin" information is
@@ -609,7 +624,7 @@ Alt-Used: alternate.example.net
 
 <section title="The 421 Misdirected Request HTTP Status Code" anchor="status">
 <t>
-   The 421 (Misdirected Request) status code is defined in <xref target="HTTP2"
+   The 421 (Misdirected Request) status code is defined in <xref target="RFC7540"
    x:fmt="of" x:rel="#MisdirectedRequest"/> to indicate that the current server
    instance is not authoritative for the requested resource.  This can be used
    to indicate that an alternative service is not authoritative; see <xref
@@ -667,7 +682,7 @@ Alt-Used: alternate.example.net
 <section anchor="alt-svc-frame-registration" title="The ALTSVC HTTP/2 Frame Type">
 <t>
   This document registers the ALTSVC frame type in the HTTP/2 Frame Types
-  registry (<xref target="HTTP2" x:fmt="," x:rel="#iana-frames"/>).
+  registry (<xref target="RFC7540" x:fmt="," x:rel="#iana-frames"/>).
   <list style="empty">
     <t>Frame Type: ALTSVC</t>
     <t>Code: 0xa</t>
@@ -745,7 +760,7 @@ Alt-Used: alternate.example.net
    itself implies this.
 </t>
 <t>
-   For example, if a "https://" URI had a protocol advertised that does not use
+   For example, if a "https://" URI has a protocol advertised that does not use
    some form of end-to-end encryption (most likely, TLS), it violates the
    expectations for security that the URI scheme implies.
 </t>
@@ -767,26 +782,21 @@ Alt-Used: alternate.example.net
    service advertisements.
 </t>
 <t>
-   In a browser, any alternative service information &MUST; be removed when origin-specific data
+   In a user agent, any alternative service information &MUST; be removed when origin-specific data
    is cleared (for instance, when cookies are cleared).
 </t>
 </section>
 
+<section title="Confusion Regarding Request Scheme" anchor="confusion-regarding-request-scheme">
+<t>
+   Alternative Services &MUST-NOT; be advertised for a protocol that is not
+   designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot carry
+   safely requests for http resources.
+</t>
 </section>
 
-<section title="Acknowledgements" anchor="acknowledgements">
-<t>
-  Thanks to Adam Langley, Bence Beky, Eliot Lear, Erik Nygren, Guy Podjarny,
-  Herve Ruellan, Martin Thomson, Matthew Kerwin,
-  Paul Hoffman,
-  Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
-  feedback and suggestions.
-</t>
-<t>
-  The Alt-Svc header field was influenced by the design of the
-  Alternate-Protocol header field in SPDY.
-</t>
 </section>
+
 
   </middle>
 
@@ -917,16 +927,16 @@ Alt-Used: alternate.example.net
   <seriesInfo name="RFC" value="7301"/>
 </reference>
 
-<reference anchor="HTTP2">
+<reference anchor="RFC7540">
   <front>
     <title>Hypertext Transfer Protocol version 2</title>
     <author initials="M." surname="Belshe" fullname="Mike Belshe"/>
     <author initials="R." surname="Peon" fullname="Roberto Peon"/>
     <author initials="M." surname="Thomson" fullname="Martin Thomson" role="editor"/>
-    <date month="November" year="2014"/>
+    <date month="May" year="2015"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-http2-16"/>
-  <x:source href="refs/draft-ietf-httpbis-http2-16.xml"/>
+  <seriesInfo name="RFC" value="7540"/>
+  <x:source href="refs/rfc7540.xml"/>
 </reference>
 
 </references>
@@ -1045,12 +1055,57 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-06" anchor="changes.since.draft-ietf-httpbis-alt-svc-06">
 <t>
+  Disallow use of alternative services when the protocol might not carry
+  the scheme
+  (<eref target="https://github.com/httpwg/http-extensions/issues/12"/>).
+</t>
+<t>
+  Align opp-sec and alt-svc
+  (<eref target="https://github.com/httpwg/http-extensions/issues/33"/>).
+</t>
+<t>
   alt svc frame on pushed (even and non-0) frame
   (<eref target="https://github.com/httpwg/http-extensions/issues/44"/>).
+</t>
+<t>
+  "browser" -> "user agent"
+  (<eref target="https://github.com/httpwg/http-extensions/pull/61"/>).
+</t>
+<t>
+  ABNF for "parameter"
+  (<eref target="https://github.com/httpwg/http-extensions/issues/65"/>).
+</t>
+<t>
+  Updated HTTP/2 reference.
+</t>
+</section>
+
+<section title="Since draft-ietf-httpbis-alt-svc-07" anchor="changes.since.draft-ietf-httpbis-alt-svc-07">
+<t>
+  Unexpected Alt-Svc frames
+  (<eref target="https://github.com/httpwg/http-extensions/issues/18"/>).
+</t>
+<t>
+  Number of alternate services used
+  (<eref target="https://github.com/httpwg/http-extensions/issues/58"/>).
 </t>
 </section>
 </section>
 
+
+<section title="Acknowledgements" anchor="acknowledgements" numbered="false">
+<t>
+  Thanks to Adam Langley, Bence Beky, Eliot Lear, Erik Nygren, Guy Podjarny,
+  Herve Ruellan, Martin Thomson, Matthew Kerwin, Mike Bishop,
+  Paul Hoffman,
+  Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
+  feedback and suggestions.
+</t>
+<t>
+  The Alt-Svc header field was influenced by the design of the
+  Alternate-Protocol header field in SPDY.
+</t>
+</section>
   </back>
 
 </rfc>
