@@ -30,7 +30,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 ### HTTP Client-Initiated Content-Encoding
 
-**In [Working Group Last Call](http://www.w3.org/mid/D56ECDCB-70C6-4786-9C89-2862C1FFDED4@mnot.net) until 2015-06-22**
+**[Working Group Last Call](http://www.w3.org/mid/D56ECDCB-70C6-4786-9C89-2862C1FFDED4@mnot.net) ended 2015-06-22**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cice.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cice) (less recent, more official)
