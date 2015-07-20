@@ -331,6 +331,11 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    HTTP; or, an alternative service might itself advertise an alternative.
 </t>
 <t>
+   A client configured to use a proxy for a given request &SHOULD-NOT;
+   directly connect to an alternative service for it, but instead route it
+   through that proxy.
+</t>
+<t>
    When a client uses an alternative service for a request, it can indicate
    this to the server using the  Alt-Used header field (<xref
       target="indicator"/>).
@@ -1088,6 +1093,10 @@ Alt-Used: alternate.example.net
 <t>
   Number of alternate services used
   (<eref target="https://github.com/httpwg/http-extensions/issues/58"/>).
+</t>
+<t>
+   Proxy and .pac interaction
+  (<eref target="https://github.com/httpwg/http-extensions/issues/62"/>).
 </t>
 </section>
 </section>
