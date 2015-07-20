@@ -180,7 +180,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    An alternative service can be used to interact with the resources on an origin
    server at a separate location on the network, possibly using a different
-   protocol configuration. Alternative services are considered authoritative for
+   protocol, or suite of protocols, configuration. Alternative services are considered authoritative for
    an origin's resources, in the sense of <xref target="RFC7230" x:rel="#establishing.authority" x:fmt=","/>.
 </t>
 <figure>
@@ -235,7 +235,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
   Formally, an alternative service is identified by the combination of:
   <list style="symbols">
-    <t>An Application Layer Protocol Negotiation (ALPN) protocol, as per
+    <t>An Application Layer Protocol Negotiation (ALPN) protocol identifier, as per
     <xref target="RFC7301"/></t>
     <t>A host, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.2"/></t>
     <t>A port, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.3"/></t>
@@ -246,6 +246,15 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
   <list style="symbols">
     <t>A freshness lifetime, expressed in seconds; see <xref target="caching"/></t>
   </list>
+</t>
+<t>
+  The ALPN protocol identifier is used to identify the application protocol or
+  suite of protocols used by the alternative service.  Note that for the
+  purpose of this specification, an ALPN protocol identifier implicitly
+  includes TLS in the suite of protocols it identifies, unless specified
+  otherwise in its definition. In particular, the ALPN protocol identifiers
+  defined in <xref target="RFC7301"/> include TLS in the suite of protocols
+  they identify.
 </t>
 <t>
    There are many ways that a client could discover the alternative service(s)
