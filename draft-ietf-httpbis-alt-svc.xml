@@ -235,7 +235,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
   Formally, an alternative service is identified by the combination of:
   <list style="symbols">
-    <t>An Application Layer Protocol Negotiation (ALPN) protocol, as per
+    <t>An Application Layer Protocol Negotiation (ALPN) protocol name, as per
     <xref target="RFC7301"/></t>
     <t>A host, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.2"/></t>
     <t>A port, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.3"/></t>
@@ -365,7 +365,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
   <artwork type="abnf2616">
 Alt-Svc       = 1#( alternative *( OWS ";" OWS parameter ) )
 alternative   = protocol-id "=" alt-authority
-protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol identifier
+protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol name
 alt-authority = <x:ref>quoted-string</x:ref> ; containing [ <x:ref>uri-host</x:ref> ] ":" <x:ref>port</x:ref>
 parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-string</x:ref> )
 </artwork>
@@ -383,7 +383,7 @@ parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-
    additional constraints apply:
    <list style="numbers">
     <t>
-      Octets in the ALPN protocol &MUST-NOT; be percent-encoded if they are valid
+      Octets in the ALPN protocol name &MUST-NOT; be percent-encoded if they are valid
       token characters except "%", and
     </t>
     <t>
