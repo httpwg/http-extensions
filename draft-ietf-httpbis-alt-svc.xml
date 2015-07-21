@@ -252,9 +252,9 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
   suite of protocols used by the alternative service.  Note that for the
   purpose of this specification, an ALPN protocol identifier implicitly
   includes TLS in the suite of protocols it identifies, unless specified
-  otherwise in its definition. In particular, the ALPN protocol identifiers
-  defined in <xref target="RFC7301"/> include TLS in the suite of protocols
-  they identify.
+  otherwise in its definition. In particular, the "http/1.1" identifier
+  defined in <xref target="RFC7301"/> identifies the stack of protocols
+  HTTP/1.1 over TLS.
 </t>
 <t>
    There are many ways that a client could discover the alternative service(s)
