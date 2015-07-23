@@ -205,7 +205,7 @@ Content-Type: text/plain
 <section title="Deployment Considerations" anchor="deployment.considerations">
 <t>
   Servers that do not support content codings in requests already are required
-  to fail a request that does use a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
+  to fail a request that uses a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
   recommends using the status code 415 (Unsupported Media Type), so the only
   change needed is to include the "Accept-Encoding" header field with value
   "identity" in that response.
