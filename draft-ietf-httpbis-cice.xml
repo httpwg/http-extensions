@@ -60,7 +60,7 @@
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
       extends the HTTP "Accept-Encoding" header field for use in responses,
-      to indicate that content codings are supported in requests.
+      to indicate the content codings that are supported in requests.
     </t>
   </abstract>
   
@@ -98,8 +98,8 @@
     <t>
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
-      extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses, to indicate that content 
-      codings are supported in requests.
+      extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses,
+      to indicate the content codings that are supported in requests.
     </t>
 </section>  
 
@@ -206,7 +206,7 @@ Content-Type: text/plain
 <t>
   Servers that do not support content codings in requests already are required
   to fail a request that uses a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
-  recommends using the status code 415 (Unsupported Media Type), so the only
+  defines the status code 415 (Unsupported Media Type) for this purpose, so the only
   change needed is to include the "Accept-Encoding" header field with value
   "identity" in that response.
 </t>
@@ -380,7 +380,7 @@ Content-Type: text/plain
 <section title="Acknowledgements" numbered="false">
 <t>
   Thanks go to the members of the and HTTPbis Working Group, namely
-  Amos Jeffries, Mark Nottingham, and Ted Hardie. 
+  Amos Jeffries, Mark Nottingham, Pete Resnick, and Ted Hardie. 
 </t>
 </section>
 
