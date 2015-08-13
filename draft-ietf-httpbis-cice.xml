@@ -79,7 +79,7 @@
       <eref target="https://github.com/httpwg/http-extensions"/>.
     </t>
     <t>
-      The changes in this draft are summarized in <xref target="changes.since.01"/>.
+      The changes in this draft are summarized in <xref target="changes.since.02"/>.
     </t>
   </note>
 
@@ -403,6 +403,11 @@ Content-Type: text/plain
 <t>
   Clarify that we're also extending the definition of status code 415
   (so update that IANA registry entry as well).
+</t>
+</section>
+<section title="Since draft-ietf-httpbis-cice-02" anchor="changes.since.02">
+<t>
+  None yet.
 </t>
 </section>
 </section>
