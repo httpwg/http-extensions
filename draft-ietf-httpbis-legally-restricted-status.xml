@@ -23,7 +23,6 @@
 <rfc ipr="trust200902" 
      docName="draft-ietf-httpbis-legally-restricted-status-01" 
      category="std"
-     updates="2616"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
 
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
