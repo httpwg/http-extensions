@@ -230,16 +230,25 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    if a CNAME were being used).
 </t>
 <t>
-  The changes &MAY;, however, be made visible in debugging tools, consoles, etc.
+   The changes &MAY;, however, be made visible in debugging tools, consoles, etc.
 </t>
 <t>
-  Formally, an alternative service is identified by the combination of:
+   Formally, an alternative service is identified by the combination of:
   <list style="symbols">
     <t>An Application Layer Protocol Negotiation (ALPN) protocol name, as per
     <xref target="RFC7301"/></t>
     <t>A host, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.2"/></t>
     <t>A port, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.3"/></t>
   </list>
+</t>
+<t>
+   The ALPN protocol name is used to identify the application protocol or
+   suite of protocols used by the alternative service.  Note that for the
+   purpose of this specification, an ALPN protocol name implicitly
+   includes TLS in the suite of protocols it identifies, unless specified
+   otherwise in its definition. In particular, the ALPN name "http/1.1",
+   registered by <xref x:sec="6" x:fmt="of" target="RFC7301"/>, identifies
+   HTTP/1.1 over TLS.
 </t>
 <t>
    Additionally, each alternative service &MUST; have:
@@ -1089,6 +1098,10 @@ Alt-Used: alternate.example.net
 <t>
   Unexpected Alt-Svc frames
   (<eref target="https://github.com/httpwg/http-extensions/issues/18"/>).
+</t>
+<t>
+  ALPN identifiers in Alt-Svc
+  (<eref target="https://github.com/httpwg/http-extensions/issues/43"/>).
 </t>
 <t>
   Number of alternate services used
