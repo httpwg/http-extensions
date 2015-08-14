@@ -109,9 +109,9 @@
 <t>For example:
   <list style="symbols">
     <t>
-       An origin server might wish to redirect a client to a different server when it
-       needs to go down for maintenance, or it has found a server in a
-       location that is more local to the client.
+       An origin server might wish to redirect a client to a different server
+       when it is under load, or it has found a server in a location that is
+       more local to the client.
     </t>
     <t>
        An origin server might wish to offer access to its resources using a new
@@ -1097,6 +1097,11 @@ Alt-Used: alternate.example.net
 <t>
    Proxy and .pac interaction
   (<eref target="https://github.com/httpwg/http-extensions/issues/62"/>).
+</t>
+<t>
+  Incorporate several editorial improvements suggested by Mike Bishop
+  (<eref target="https://github.com/httpwg/http-extensions/pull/77"/>,
+  <eref target="https://github.com/httpwg/http-extensions/pull/78"/>).
 </t>
 </section>
 </section>
