@@ -136,9 +136,9 @@
    service was used (<xref target="indicator"/>).
 </t>
 <t>
-   It also introduces a new status code in <xref target="status"/>, so that origin servers (or
-   their nominated alternatives) can indicate that they are not authoritative for
-   a given origin, in cases where the wrong location is used.
+   It also endorses the status code 421 (Misdirected Request) (<xref target="status"/>)
+   that origin servers (or their nominated alternatives) can use to indicate that they
+   are not authoritative for a given origin, in cases where the wrong location is used.
 </t>
 
 <section title="Notational Conventions" anchor="notational-conventions">
@@ -205,7 +205,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    The alternative service is essentially alternative routing information that can
    also be used to reach the origin in the same way that DNS CNAME or SRV records
    define routing information at the name resolution level. Each origin maps to a
-   set of these routes &mdash; the default route is derived from origin itself and the
+   set of these routes &mdash; the default route is derived from thr origin itself and the
    other routes are introduced based on alternative-protocol information.
 </t>
 <t>
@@ -290,7 +290,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    Clients with existing connections to an alternative service do not need to
    stop using it when its freshness lifetime ends; i.e., the caching
    mechanism is intended for limiting how long an alternative service can be used
-   for establishing new requests, not limiting the use of existing ones.
+   for establishing new connections, not limiting the use of existing ones.
 </t>
 <t>
    Clients ought to consider that changes in network configurations can
@@ -795,8 +795,8 @@ Alt-Used: alternate.example.net
 <section title="Confusion Regarding Request Scheme" anchor="confusion-regarding-request-scheme">
 <t>
    Alternative Services &MUST-NOT; be advertised for a protocol that is not
-   designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot carry
-   safely requests for http resources.
+   designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot safely carry
+   requests for http resources.
 </t>
 </section>
 
