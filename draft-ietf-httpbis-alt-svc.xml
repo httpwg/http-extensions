@@ -372,7 +372,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 </t>
 <figure>
   <artwork type="abnf2616">
-Alt-Svc       = 1#( alternative *( OWS ";" OWS parameter ) )
+Alt-Svc       = #( alternative *( OWS ";" OWS parameter ) )
 alternative   = protocol-id "=" alt-authority
 protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol name
 alt-authority = <x:ref>quoted-string</x:ref> ; containing [ <x:ref>uri-host</x:ref> ] ":" <x:ref>port</x:ref>
@@ -518,7 +518,10 @@ Alt-Svc: h2c=":8000"; ma=60
 </t>
 <t>
    When an Alt-Svc response header field is received from an origin, its value
-   invalidates and replaces all cached alternative services for that origin.
+   invalidates and replaces all cached alternative services for that origin.  In
+   particular, when an Alt-Svc response header field with zero alternative
+   services is received, all cached alternative services are cleared for that
+   origin.
 </t>
 <t>
    See <xref target="caching"/> for general requirements on caching alternative services.
@@ -554,7 +557,7 @@ Alt-Svc: h2c=":8000"; ma=60
  +-------------------------------+-------------------------------+
  |         Origin-Len (16)       | Origin? (*)                 ...
  +-------------------------------+-------------------------------+
- |                   Alt-Svc-Field-Value (*)                   ...
+ |                   Alt-Svc-Field-Value? (*)                  ...
  +---------------------------------------------------------------+
 ]]></artwork>
 </figure>
@@ -570,9 +573,11 @@ Alt-Svc: h2c=":8000"; ma=60
       service is applicable to.
     </t>
     <t hangText="Alt-Svc-Field-Value:">
-      A sequence of octets (length determined by subtracting the length of all preceding fields
-      from the frame length) containing a value identical to the Alt-Svc field value defined in
-      <xref target="alt-svc"/> (ABNF production "Alt-Svc").
+      An &OPTIONAL; sequence of octets (length determined by subtracting the
+      length of all preceding fields from the frame length) containing a value
+      identical to the Alt-Svc field value defined in <xref target="alt-svc"/>
+      (ABNF production "Alt-Svc").  An empty sequence denotes an empty list of
+      alternative services.
     </t>
   </list>
 </t>
