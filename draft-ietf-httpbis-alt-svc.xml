@@ -372,13 +372,24 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 </t>
 <figure>
   <artwork type="abnf2616">
-Alt-Svc       = 1#( alternative *( OWS ";" OWS parameter ) )
+Alt-Svc       = 1#alt-value
+alt-value     = clear / ( alternative *( OWS ";" OWS parameter ) )
+clear         = <x:abnf-char-sequence>"clear"</x:abnf-char-sequence>; "clear", case-sensitive
 alternative   = protocol-id "=" alt-authority
 protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol name
 alt-authority = <x:ref>quoted-string</x:ref> ; containing [ <x:ref>uri-host</x:ref> ] ":" <x:ref>port</x:ref>
 parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-string</x:ref> )
 </artwork>
 </figure>
+<t>
+   The field value consists of a list of values, each of which indicating one
+   alternative service or being the keyword "clear".
+</t>
+<t>
+   Any field value containing the special value "clear" indicates that the
+   origin requests all alternatives for that origin to be invalidated (including
+   those received in the same response).
+</t>
 <t>
    ALPN protocol names are octet sequences with no
    additional constraints on format.<!-- besides length?-->
@@ -457,6 +468,10 @@ Alt-Svc: h2="new.example.org:80"
 Alt-Svc: h2c=":8000", h2=":443"
 </artwork>
 </figure>
+<t>
+   When multiple values are present, the order of the values reflects the server's
+   preference (with the first value being the most preferred alternative).
+</t>
 <t>
    The value(s) advertised by Alt-Svc can be used by clients to open a new
    connection to an alternative service. Subsequent requests can start using this new connection
@@ -1095,6 +1110,10 @@ Alt-Used: alternate.example.net
 </section>
 
 <section title="Since draft-ietf-httpbis-alt-svc-07" anchor="changes.since.draft-ietf-httpbis-alt-svc-07">
+<t>
+  Alt-Svc alternative cache invalidation
+  (<eref target="https://github.com/httpwg/http-extensions/issues/16"/>).
+</t>
 <t>
   Unexpected Alt-Svc frames
   (<eref target="https://github.com/httpwg/http-extensions/issues/18"/>).
