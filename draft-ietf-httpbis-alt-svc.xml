@@ -109,9 +109,9 @@
 <t>For example:
   <list style="symbols">
     <t>
-       An origin server might wish to redirect a client to a different server when it
-       needs to go down for maintenance, or it has found a server in a
-       location that is more local to the client.
+       An origin server might wish to redirect a client to a different server
+       when it is under load, or it has found a server in a location that is
+       more local to the client.
     </t>
     <t>
        An origin server might wish to offer access to its resources using a new
@@ -136,9 +136,9 @@
    service was used (<xref target="indicator"/>).
 </t>
 <t>
-   It also introduces a new status code in <xref target="status"/>, so that origin servers (or
-   their nominated alternatives) can indicate that they are not authoritative for
-   a given origin, in cases where the wrong location is used.
+   It also endorses the status code 421 (Misdirected Request) (<xref target="status"/>)
+   that origin servers (or their nominated alternatives) can use to indicate that they
+   are not authoritative for a given origin, in cases where the wrong location is used.
 </t>
 
 <section title="Notational Conventions" anchor="notational-conventions">
@@ -205,7 +205,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    The alternative service is essentially alternative routing information that can
    also be used to reach the origin in the same way that DNS CNAME or SRV records
    define routing information at the name resolution level. Each origin maps to a
-   set of these routes &mdash; the default route is derived from origin itself and the
+   set of these routes &mdash; the default route is derived from thr origin itself and the
    other routes are introduced based on alternative-protocol information.
 </t>
 <t>
@@ -230,16 +230,25 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    if a CNAME were being used).
 </t>
 <t>
-  The changes &MAY;, however, be made visible in debugging tools, consoles, etc.
+   The changes &MAY;, however, be made visible in debugging tools, consoles, etc.
 </t>
 <t>
-  Formally, an alternative service is identified by the combination of:
+   Formally, an alternative service is identified by the combination of:
   <list style="symbols">
-    <t>An Application Layer Protocol Negotiation (ALPN) protocol, as per
+    <t>An Application Layer Protocol Negotiation (ALPN) protocol name, as per
     <xref target="RFC7301"/></t>
     <t>A host, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.2"/></t>
     <t>A port, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.3"/></t>
   </list>
+</t>
+<t>
+   The ALPN protocol name is used to identify the application protocol or
+   suite of protocols used by the alternative service.  Note that for the
+   purpose of this specification, an ALPN protocol name implicitly
+   includes TLS in the suite of protocols it identifies, unless specified
+   otherwise in its definition. In particular, the ALPN name "http/1.1",
+   registered by <xref x:sec="6" x:fmt="of" target="RFC7301"/>, identifies
+   HTTP/1.1 over TLS.
 </t>
 <t>
    Additionally, each alternative service &MUST; have:
@@ -290,7 +299,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    Clients with existing connections to an alternative service do not need to
    stop using it when its freshness lifetime ends; i.e., the caching
    mechanism is intended for limiting how long an alternative service can be used
-   for establishing new requests, not limiting the use of existing ones.
+   for establishing new connections, not limiting the use of existing ones.
 </t>
 <t>
    Clients ought to consider that changes in network configurations can
@@ -331,6 +340,11 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    HTTP; or, an alternative service might itself advertise an alternative.
 </t>
 <t>
+   A client configured to use a proxy for a given request &SHOULD-NOT;
+   directly connect to an alternative service for it, but instead route it
+   through that proxy.
+</t>
+<t>
    When a client uses an alternative service for a request, it can indicate
    this to the server using the  Alt-Used header field (<xref
       target="indicator"/>).
@@ -358,13 +372,24 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 </t>
 <figure>
   <artwork type="abnf2616">
-Alt-Svc       = 1#( alternative *( OWS ";" OWS parameter ) )
+Alt-Svc       = 1#alt-value
+alt-value     = clear / ( alternative *( OWS ";" OWS parameter ) )
+clear         = <x:abnf-char-sequence>"clear"</x:abnf-char-sequence>; "clear", case-sensitive
 alternative   = protocol-id "=" alt-authority
-protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol identifier
+protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol name
 alt-authority = <x:ref>quoted-string</x:ref> ; containing [ <x:ref>uri-host</x:ref> ] ":" <x:ref>port</x:ref>
 parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-string</x:ref> )
 </artwork>
 </figure>
+<t>
+   The field value consists of a list of values, each of which indicating one
+   alternative service or being the keyword "clear".
+</t>
+<t>
+   Any field value containing the special value "clear" indicates that the
+   origin requests all alternatives for that origin to be invalidated (including
+   those received in the same response).
+</t>
 <t>
    ALPN protocol names are octet sequences with no
    additional constraints on format.<!-- besides length?-->
@@ -378,7 +403,7 @@ parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-
    additional constraints apply:
    <list style="numbers">
     <t>
-      Octets in the ALPN protocol &MUST-NOT; be percent-encoded if they are valid
+      Octets in the ALPN protocol name &MUST-NOT; be percent-encoded if they are valid
       token characters except "%", and
     </t>
     <t>
@@ -443,6 +468,10 @@ Alt-Svc: h2="new.example.org:80"
 Alt-Svc: h2c=":8000", h2=":443"
 </artwork>
 </figure>
+<t>
+   When multiple values are present, the order of the values reflects the server's
+   preference (with the first value being the most preferred alternative).
+</t>
 <t>
    The value(s) advertised by Alt-Svc can be used by clients to open a new
    connection to an alternative service. Subsequent requests can start using this new connection
@@ -790,8 +819,8 @@ Alt-Used: alternate.example.net
 <section title="Confusion Regarding Request Scheme" anchor="confusion-regarding-request-scheme">
 <t>
    Alternative Services &MUST-NOT; be advertised for a protocol that is not
-   designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot carry
-   safely requests for http resources.
+   designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot safely carry
+   requests for http resources.
 </t>
 </section>
 
@@ -1082,12 +1111,29 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-07" anchor="changes.since.draft-ietf-httpbis-alt-svc-07">
 <t>
+  Alt-Svc alternative cache invalidation
+  (<eref target="https://github.com/httpwg/http-extensions/issues/16"/>).
+</t>
+<t>
   Unexpected Alt-Svc frames
   (<eref target="https://github.com/httpwg/http-extensions/issues/18"/>).
 </t>
 <t>
+  ALPN identifiers in Alt-Svc
+  (<eref target="https://github.com/httpwg/http-extensions/issues/43"/>).
+</t>
+<t>
   Number of alternate services used
   (<eref target="https://github.com/httpwg/http-extensions/issues/58"/>).
+</t>
+<t>
+   Proxy and .pac interaction
+  (<eref target="https://github.com/httpwg/http-extensions/issues/62"/>).
+</t>
+<t>
+  Incorporate several editorial improvements suggested by Mike Bishop
+  (<eref target="https://github.com/httpwg/http-extensions/pull/77"/>,
+  <eref target="https://github.com/httpwg/http-extensions/pull/78"/>).
 </t>
 </section>
 </section>

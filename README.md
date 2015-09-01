@@ -14,7 +14,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 ### Tunnel Protocol for CONNECT
 
-**Scheduled for the 2015-06-11 IESG telechat**
+**In [RFC Editor Queue](http://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-tunnel-protocol)**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/tunnel-protocol.html) ([plain text](https://httpwg.github.io/http-extensions/tunnel-protocol.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-tunnel-protocol) (less recent, more official)
@@ -30,7 +30,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 ### HTTP Client-Initiated Content-Encoding
 
-**In [Working Group Last Call](http://www.w3.org/mid/D56ECDCB-70C6-4786-9C89-2862C1FFDED4@mnot.net) until 2015-06-22**
+**Submitted to IESG**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cice.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cice) (less recent, more official)

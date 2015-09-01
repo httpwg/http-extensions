@@ -24,6 +24,7 @@
 <rfc ipr="trust200902" 
      docName="draft-ietf-httpbis-legally-restricted-status-02" 
      category="std">
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
 
   <front>
     <title abbrev="HTTP-status-451">An HTTP Status Code to Report Legal Obstacles</title>

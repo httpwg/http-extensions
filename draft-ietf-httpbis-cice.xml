@@ -60,7 +60,7 @@
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
       extends the HTTP "Accept-Encoding" header field for use in responses,
-      to indicate that content codings are supported in requests.
+      to indicate the content codings that are supported in requests.
     </t>
   </abstract>
   
@@ -79,7 +79,7 @@
       <eref target="https://github.com/httpwg/http-extensions"/>.
     </t>
     <t>
-      The changes in this draft are summarized in <xref target="changes.since.01"/>.
+      The changes in this draft are summarized in <xref target="changes.since.02"/>.
     </t>
   </note>
 
@@ -98,8 +98,12 @@
     <t>
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
-      extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses, to indicate that content 
-      codings are supported in requests.
+      extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses,
+      to indicate the content codings that are supported in requests. It
+      furthermore updates the definition of status code 415
+      (Unsupported Media Type) (<xref target="RFC7231" x:fmt="," x:rel="#status.415"/>),
+      recommending to include the "Accept-Encoding" header field when
+      appropriate.
     </t>
 </section>  
 
@@ -205,8 +209,8 @@ Content-Type: text/plain
 <section title="Deployment Considerations" anchor="deployment.considerations">
 <t>
   Servers that do not support content codings in requests already are required
-  to fail a request that does use a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
-  recommends using the status code 415 (Unsupported Media Type), so the only
+  to fail a request that uses a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
+  defines the status code 415 (Unsupported Media Type) for this purpose, so the only
   change needed is to include the "Accept-Encoding" header field with value
   "identity" in that response.
 </t>
@@ -230,6 +234,7 @@ Content-Type: text/plain
 </section>
 
 <section title="IANA Considerations" anchor="iana.considerations">
+<section title="Header Field Registry">
 <t>
    HTTP header fields are registered within the "Message Headers" registry
    located at <eref target="http://www.iana.org/assignments/message-headers"/>,
@@ -237,7 +242,7 @@ Content-Type: text/plain
 </t>
 <t>
    This document updates the definition of the "Accept-Encoding" header field,
-   so the "Permanent Message Header Field Names" registry shall be updated
+   so the "Permanent Message Header Field Names" registry ought to be updated
    accordingly:
 </t>
 <texttable align="left" suppress-title="true" anchor="iana.header.registration.table">
@@ -254,6 +259,30 @@ Content-Type: text/plain
       and <xref target="accept-encoding"/> of this document
    </c>
 </texttable>
+</section>
+<section title="Status Code Registry">
+<t>
+   HTTP status codes are registered within the "Status Code" registry
+   located at <eref target="http://www.iana.org/assignments/http-status-codes"/>.
+</t>
+<t>
+   This document updates the definition of the status code 415 (Unsupported Media Type),
+   so the "Status Code" registry ought to be updated
+   accordingly:
+</t>
+<texttable align="left" suppress-title="true" anchor="iana.status.code.registration.table">
+   <ttcol>Value</ttcol>
+   <ttcol>Description</ttcol>
+   <ttcol>Reference</ttcol>
+
+   <c>415</c>
+   <c>Unsupported Media Type</c>
+   <c>
+      <xref target="RFC7231" x:fmt="," x:rel="#status.415"/>,
+      and <xref target="accept-encoding"/> of this document
+   </c>
+</texttable>
+</section>
 </section>
 
   </middle>
@@ -372,6 +401,12 @@ Content-Type: text/plain
 </section>
 <section title="Since draft-ietf-httpbis-cice-01" anchor="changes.since.01">
 <t>
+  Clarify that we're also extending the definition of status code 415
+  (so update that IANA registry entry as well).
+</t>
+</section>
+<section title="Since draft-ietf-httpbis-cice-02" anchor="changes.since.02">
+<t>
   None yet.
 </t>
 </section>
@@ -380,7 +415,7 @@ Content-Type: text/plain
 <section title="Acknowledgements" numbered="false">
 <t>
   Thanks go to the members of the and HTTPbis Working Group, namely
-  Amos Jeffries, Mark Nottingham, and Ted Hardie. 
+  Amos Jeffries, Mark Nottingham, Pete Resnick, and Ted Hardie. 
 </t>
 </section>
 
