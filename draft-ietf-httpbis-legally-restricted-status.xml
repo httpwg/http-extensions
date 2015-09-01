@@ -140,14 +140,11 @@ using technical countermeasures such as a VPN or the Tor network.</t>
 
     <section title="Security Considerations">
 
-      <section title="451 Unavailable for Legal Reasons">
 	<t>The 451 status code is optional; clients cannot rely upon its
 	use. It is possible that certain legal authorities may wish
 	to avoid transparency, and not only demand the restriction of access 
         to certain resources, but also avoid disclosing that the demand 
         was made.  </t>
-      </section>
-
 
     </section>
 
