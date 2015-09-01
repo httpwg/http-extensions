@@ -23,7 +23,7 @@
 
 <rfc ipr="trust200902" 
      docName="draft-ietf-httpbis-legally-restricted-status-02" 
-     category="std">
+     category="std"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
 
   <front>
