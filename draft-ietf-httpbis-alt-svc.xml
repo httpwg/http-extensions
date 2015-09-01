@@ -462,7 +462,7 @@ Alt-Svc: h2="new.example.org:80"
 <t>
    Alt-Svc &MAY; occur in any HTTP response message, regardless of the status code.
    Note that recipients of Alt-Svc are free to ignore the header field (and indeed
-   need to in some situations; see <xref target="host_auth"/>).
+   need to in some situations; see Sections <xref format="counter" target="host_auth"/> and <xref format="counter" target="status"/>).
 </t>
 <figure>
   <preamble>The Alt-Svc field value can have multiple values:</preamble>
@@ -669,7 +669,7 @@ Alt-Used: alternate.example.net
    server, or at the origin.
 </t>
 <t>
-   A 421 (Misdirected Request) response &MAY; carry an Alt-Svc header field.
+   An Alt-Svc header field in a 421 (Misdirected Request) response &MUST; be ignored.
 </t>
 </section>
 
@@ -1133,8 +1133,12 @@ Alt-Used: alternate.example.net
   (<eref target="https://github.com/httpwg/http-extensions/issues/58"/>).
 </t>
 <t>
-   Proxy and .pac interaction
+  Proxy and .pac interaction
   (<eref target="https://github.com/httpwg/http-extensions/issues/62"/>).
+</t>
+<t>
+  Alt-Svc header with 421 status
+  (<eref target="https://github.com/httpwg/http-extensions/issues/75"/>).
 </t>
 <t>
   Incorporate several editorial improvements suggested by Mike Bishop
