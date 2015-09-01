@@ -461,6 +461,8 @@ Alt-Svc: h2="new.example.org:80"
 </texttable>
 <t>
    Alt-Svc &MAY; occur in any HTTP response message, regardless of the status code.
+   Note that recipients of Alt-Svc are free to ignore the header field (and indeed
+   need to in some situations; see <xref target="host_auth"/>).
 </t>
 <figure>
   <preamble>The Alt-Svc field value can have multiple values:</preamble>
@@ -1117,6 +1119,10 @@ Alt-Used: alternate.example.net
 <t>
   Unexpected Alt-Svc frames
   (<eref target="https://github.com/httpwg/http-extensions/issues/18"/>).
+</t>
+<t>
+  Associating Alt-Svc header with an origin
+  (<eref target="https://github.com/httpwg/http-extensions/issues/21"/>).
 </t>
 <t>
   ALPN identifiers in Alt-Svc
