@@ -482,7 +482,8 @@ Alt-Svc: h2c=":8000", h2=":443"
 <t>
    When using HTTP/2 (<xref target="RFC7540"/>), servers &SHOULD; instead send an ALTSVC frame
    (<xref target="frame"/>). A single ALTSVC frame can be sent for a connection;
-   a new frame is not needed for every request.
+   a new frame is not needed for every request. Note that, despite this
+   recommendation, Alt-Svc header fields remain valid in responses delivered over HTTP/2.
 </t>
 <t>
    Note that all field elements that allow "quoted-string" syntax &MUST; be processed
@@ -1144,6 +1145,10 @@ Alt-Used: alternate.example.net
   Incorporate several editorial improvements suggested by Mike Bishop
   (<eref target="https://github.com/httpwg/http-extensions/pull/77"/>,
   <eref target="https://github.com/httpwg/http-extensions/pull/78"/>).
+</t>
+<t>
+  Alt-Svc response header field in HTTP/2 frame
+  (<eref target="https://github.com/httpwg/http-extensions/issues/87"/>).
 </t>
 </section>
 </section>
