@@ -144,12 +144,12 @@
   related problems.
 </t>
 <t>
-  Servers that fail a request due to an unsupported content coding &SHOULD;
-  respond with a 415 status and &SHOULD; include an "Accept-Encoding" header field in
+  Servers that fail a request due to an unsupported content coding ought to
+  respond with a 415 status and ought to include an "Accept-Encoding" header field in
   that response, allowing clients to distinguish between content coding
   related issues and media type related issues. In order
   to avoid confusion with media type related problems, servers that fail a request
-  with a 415 status for reasons unrelated to content codings &SHOULD-NOT;
+  with a 415 status for reasons unrelated to content codings &MUST-NOT;
   include the "Accept-Encoding" header field.
 </t>
 <t>
@@ -415,7 +415,7 @@ Content-Type: text/plain
 <section title="Acknowledgements" numbered="false">
 <t>
   Thanks go to the members of the and HTTPbis Working Group, namely
-  Amos Jeffries, Mark Nottingham, Pete Resnick, and Ted Hardie. 
+  Amos Jeffries, Ben Campbell, Mark Nottingham, Pete Resnick, and Ted Hardie. 
 </t>
 </section>
 
