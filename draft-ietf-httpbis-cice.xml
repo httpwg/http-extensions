@@ -92,8 +92,8 @@
     <t>
       In HTTP, content codings allow for payload encodings such as for
       compression or integrity checks (<xref target="RFC7231" x:fmt="," x:rel="#data.encoding"/>).
-      In particular, the "gzip" content coding is widely used for payload data sent in response
-      messages.
+      In particular, the "gzip" content coding (<xref target="RFC7230" x:fmt="," x:rel="#compression.codings"/>)
+      is widely used for payload data sent in response messages.
     </t>
     <t>
       Content codings can be used in request messages as well, however
