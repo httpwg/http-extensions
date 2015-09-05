@@ -226,10 +226,27 @@ Content-Type: text/plain
 </section>
 
 <section title="Security Considerations" anchor="security.considerations">
-<t>
+<!--<t>
   This specification does not introduce any new security considerations
   beyond those discussed in <xref target="RFC7231" x:fmt="of"
   x:rel="#security.considerations"/>.
+</t>-->
+<t>
+  This specification only adds discovery of supported content codings and
+  diagnostics for requests failing due to unsupported content codings. As such,
+  it doesn't introduce any new security considerations over those already
+  present in HTTP/1.1 (<xref target="RFC7231" x:fmt="of"
+  x:rel="#security.considerations"/>) and HTTP/2 (<xref target="RFC7540" x:fmt="of"
+  x:rel="#security"/>).
+</t>
+<t>
+  However, the point of better discoverability and diagnostics is to make it
+  easier to use content codings in requests. This might lead to increased
+  usage of compression codings such as gzip (<xref target="RFC7230" x:fmt="of"
+  x:rel="#compression.codings"/>), which, when used over a secure channel, can
+  enable side-channel attacks such as BREACH (see <xref target="RFC7540" x:fmt="of"
+  x:sec="10.6"/> and <xref target="BREACH"/>). At the time of publication,
+  it was unclear how BREACH-like attacks can be applied to compression in HTTP requests.
 </t>
 </section>
 
@@ -360,6 +377,29 @@ Content-Type: text/plain
   <seriesInfo name='BCP' value='90' />
   <seriesInfo name='RFC' value='3864' />
 </reference>
+<reference anchor="RFC7540">
+  <front>
+    <title>Hypertext Transfer Protocol Version 2 (HTTP/2)</title>
+    <author initials="M." surname="Belshe" fullname="Mike Belshe"/>
+    <author initials="R." surname="Peon" fullname="Roberto Peon"/>
+    <author initials="M." surname="Thomson" fullname="Martin Thomson" role="editor"/>
+    <date month="May" year="2015"/>
+  </front>
+  <seriesInfo name="RFC" value="7540"/>
+  <x:source href="refs/rfc7540.xml"/>
+</reference>
+<reference anchor="BREACH"
+           target="http://breachattack.com/resources/BREACH%20-%20SSL,%20gone%20in%2030%20seconds.pdf">
+  <front>
+    <title>
+      BREACH: Reviving the CRIME Attack
+    </title>
+    <author initials="Y." surname="Gluck"/>
+    <author initials="N." surname="Harris"/>
+    <author initials="A." surname="Prado"/>
+    <date year="2013" month="July" day="12"/>
+  </front>
+</reference>
 </references>
 
 <section title="Change Log (to be removed by RFC Editor before publication)" anchor="change.log">
@@ -407,7 +447,8 @@ Content-Type: text/plain
 </section>
 <section title="Since draft-ietf-httpbis-cice-02" anchor="changes.since.02">
 <t>
-  None yet.
+  Add BREACH like attacks to security considerations
+  (<eref target="https://github.com/httpwg/http-extensions/issues/94"/>).
 </t>
 </section>
 </section>
