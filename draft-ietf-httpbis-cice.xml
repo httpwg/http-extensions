@@ -447,6 +447,10 @@ Content-Type: text/plain
 </section>
 <section title="Since draft-ietf-httpbis-cice-02" anchor="changes.since.02">
 <t>
+  Removed normative language that required used of Accept-Encoding in responses
+  (which would have made existing servers non-compliant).
+</t>
+<t>
   Add BREACH like attacks to security considerations
   (<eref target="https://github.com/httpwg/http-extensions/issues/94"/>).
 </t>
