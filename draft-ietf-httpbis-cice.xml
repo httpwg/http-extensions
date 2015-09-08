@@ -79,7 +79,7 @@
       <eref target="https://github.com/httpwg/http-extensions"/>.
     </t>
     <t>
-      The changes in this draft are summarized in <xref target="changes.since.02"/>.
+      The changes in this draft are summarized in <xref target="changes.since.03"/>.
     </t>
   </note>
 
@@ -453,6 +453,11 @@ Content-Type: text/plain
 <t>
   Add BREACH like attacks to security considerations
   (<eref target="https://github.com/httpwg/http-extensions/issues/94"/>).
+</t>
+</section>
+<section title="Since draft-ietf-httpbis-cice-03" anchor="changes.since.03">
+<t>
+  None yet.
 </t>
 </section>
 </section>
