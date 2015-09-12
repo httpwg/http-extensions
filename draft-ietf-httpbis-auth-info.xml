@@ -29,7 +29,7 @@
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
 
 	<front>
-  <title abbrev="HTTP Authentication-Info">The Hypertext Transfer Protocol (HTTP) Authentication-Info and Proxy-Authentication-Info Response&#160;Header Fields</title>
+  <title abbrev="HTTP Authentication-Info">HTTP Authentication-Info and Proxy-Authentication-Info Response&#160;Header Fields</title>
   <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke">
     <organization abbrev="greenbytes">greenbytes GmbH</organization>
     <address>
@@ -53,8 +53,9 @@
   <abstract>
     <t>
       This specification defines the "Authentication-Info" and
-      "Proxy-Authentication-Info" response header fields for use in HTTP authentication
-      schemes which need to return information once the client's
+      "Proxy-Authentication-Info" response header fields for use in
+      Hypertext Transfer Protocol (HTTP) authentication
+      schemes that need to return information once the client's
       authentication credentials have been accepted.
     </t>
   </abstract>
@@ -72,10 +73,10 @@
       list for this draft can be found at
       <eref target="https://github.com/httpwg/http-extensions"/>.
     </t>
-    <t>
+<!--    <t>
       The changes in this draft are summarized in <xref
       target="since.05"/>.
-    </t>
+    </t>-->
   </note>
 
   </front>
@@ -86,13 +87,13 @@
 <t>
   This specification defines the "Authentication-Info" and
   "Proxy-Authentication-Info" response header fields for use in HTTP authentication
-  schemes (<xref target="RFC7235"/>) which need to return
+  schemes (<xref target="RFC7235"/>) that need to return
   information once the client's authentication credentials have been accepted.
 </t>
 <t>
   Both were previously defined in <xref target="RFC2617" x:sec="3"/>, defining
   the HTTP "Digest" authentication scheme. This document generalizes
-  the description for use not only in "Digest" (<xref target="DIGEST"/>), but
+  the description for use not only in "Digest" (<xref target="RFC7616"/>), but
   also in other future schemes that might have the same requirements for carrying
   additional information during authentication.
 </t>
@@ -129,7 +130,7 @@
   This specification only describes the generic format; authentication schemes
   using "Authentication-Info" will define the individual parameters. The "Digest"
   Authentication Scheme, for instance, defines multiple parameters in
-  <xref target="DIGEST" x:sec="3.5"/>.
+  <xref target="RFC7616" x:sec="3.5"/>.
 </t>
 <figure><artwork type="abnf2616"><!---<iref primary="true" item="Grammar" subitem="Authentication-Info"/>-->
   <x:ref>Authentication-Info</x:ref> = #<x:ref>auth-param</x:ref>
@@ -218,7 +219,7 @@
 <t>
    This document updates the definitions of the "Authentication-Info" and
    "Proxy-Authentication-Info" header fields,
-   so the "Permanent Message Header Field Names" registry shall be updated
+   so the "Permanent Message Header Field Names" registry has been updated
    accordingly:
 </t>
 <texttable align="left" suppress-title="true" anchor="iana.header.registration.table">
@@ -339,90 +340,18 @@
   <seriesInfo name="RFC" value="2617"/>
 </reference>
 
-<reference anchor="DIGEST">
+<reference anchor="RFC7616">
   <front>
     <title>HTTP Digest Access Authentication</title>
     <author initials="R." surname="Shekh-Yusef" fullname="Rifaat Shekh-Yusef" role="editor"/>
     <author initials="D." surname="Ahrens" fullname="David Ahrens"/>
     <author initials="S." surname="Bremer" fullname="Sophie Bremer"/>
-    <date month="April" year="2015"/>
+    <date month="September" year="2015"/>
   </front>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-httpauth-digest-19"/>
+  <seriesInfo name="RFC" value="7616"/>
 </reference>
 
 </references>
-
-<section title="Change Log (to be removed by RFC Editor before publication)" anchor="change.log">
-
-<section title="draft-reschke-httpauth-auth-info-00">
-<t>
-  Changed boilerplate to make this an HTTPbis WG draft. Added Acknowledgements.
-</t>
-<t>
-  In the Security Considerations, remind people that those apply to unencryped
-  channels.
-</t>
-<t>
-  Make it clearer that these are really just response header fields.
-</t>
-</section>
-
-<section title="Since draft-ietf-httpbis-auth-info-00" anchor="since.00">
-<t>
-  Rephrase introduction of header field to be closer to what RFC 2617
-  said ("successful authentication").
-</t>
-<t>
-  Update DIGEST reference.
-</t>
-</section>
-<section title="Since draft-ietf-httpbis-auth-info-01" anchor="since.01">
-<t>
-  State that scheme definitions need to define whether the header field can
-  be used in trailers.
-</t>
-<t>
-  Add "updates: 2617" to boilerplate.
-</t>
-</section>
-<section title="Since draft-ietf-httpbis-auth-info-02" anchor="since.02">
-<t>
-  Updated DIGEST reference.
-</t>
-<t>
-  Clarify purpose of header consistently (<eref target="https://github.com/httpwg/http-extensions/issues/49"/>).
-</t>
-<t>
-  The do-not-modify rule does not include proxies that consume Authentication-Info (<eref target="https://github.com/httpwg/http-extensions/issues/50"/>).
-</t>
-<t>
-  Borrow more proxy auth related considerations from RFC 7235 for the description of Proxy-Authentication-Info (<eref target="https://github.com/httpwg/http-extensions/issues/51"/>).
-</t>
-</section>
-<section title="Since draft-ietf-httpbis-auth-info-03" anchor="since.03">
-<t>
-  Updated DIGEST reference.
-</t>
-<t>
-  Clarify how the applicable auth scheme is determined (it is present
-  in the request's (Proxy-)Authorization header field).
-</t>
-<t>
-  Adjust the IPR boilerplate because we are using some text from RFC 2617.
-</t>
-</section>
-<section title="Since draft-ietf-httpbis-auth-info-04" anchor="since.04">
-<t>
-  Add another clarification about how the applicable scheme for Proxy-Authentication-Info 
-  is determined.
-</t>
-</section>
-<section title="Since draft-ietf-httpbis-auth-info-05" anchor="since.05">
-<t>
-  Updated DIGEST reference.
-</t>
-</section>
-</section>
 
 <section title="Acknowledgements" numbered="false">
 <t>
@@ -432,8 +361,8 @@
   Lawrence C. Stewart.
 </t>
 <t>
-  Additional thanks go to the members of the HTTPAuth and HTTPbis
-  Working Groups, namely Amos Jeffries, Benjamin Kaduk, Alexey Melnikov,
+  Additional thanks go to the members of the HTTPAUTH and HTTPBIS
+  Working Groups, namely, Amos Jeffries, Benjamin Kaduk, Alexey Melnikov,
   Mark Nottingham, Yutaka Oiwa, Rifaat Shekh-Yusef, and Martin Thomson.
 </t>
 </section>
