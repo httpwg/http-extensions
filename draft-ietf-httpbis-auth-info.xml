@@ -128,7 +128,7 @@
   The field value is a list of parameters (name/value pairs), using the "auth-param"
   syntax defined in <xref target="RFC7235" x:rel="#challenge.and.response"/>.
   This specification only describes the generic format; authentication schemes
-  using "Authentication-Info" will define the individual parameters. The "Digest"
+  using Authentication-Info will define the individual parameters. The "Digest"
   Authentication Scheme, for instance, defines multiple parameters in
   <xref target="RFC7616" x:sec="3.5"/>.
 </t>
