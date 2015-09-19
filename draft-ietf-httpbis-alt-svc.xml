@@ -372,9 +372,9 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 </t>
 <figure>
   <artwork type="abnf2616">
-Alt-Svc       = 1#alt-value
-alt-value     = clear / ( alternative *( OWS ";" OWS parameter ) )
+Alt-Svc       = clear / 1#alt-value
 clear         = <x:abnf-char-sequence>"clear"</x:abnf-char-sequence>; "clear", case-sensitive
+alt-value     = alternative *( OWS ";" OWS parameter )
 alternative   = protocol-id "=" alt-authority
 protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol name
 alt-authority = <x:ref>quoted-string</x:ref> ; containing [ <x:ref>uri-host</x:ref> ] ":" <x:ref>port</x:ref>
@@ -382,13 +382,14 @@ parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-
 </artwork>
 </figure>
 <t>
-   The field value consists of a list of values, each of which indicating one
-   alternative service or being the keyword "clear".
+   The field value consists either of a list of values, each of which indicating one
+   alternative service, or the keyword "clear".
 </t>
 <t>
-   Any field value containing the special value "clear" indicates that the
+   A field value containing the special value "clear" indicates that the
    origin requests all alternatives for that origin to be invalidated (including
-   those received in the same response).
+   those specified in the same response, in case of an invalid reply containing
+   both "clear" and alternative services).
 </t>
 <t>
    ALPN protocol names are octet sequences with no
