@@ -1189,12 +1189,12 @@ Alt-Used: alternate.example.net
   (<eref target="https://github.com/httpwg/http-extensions/issues/58"/>).
 </t>
 <t>
-  Need to define extensibility for alt-svc parameters
-  (<eref target="https://github.com/httpwg/http-extensions/issues/59"/>).
-</t>
-<t>
   Proxy and .pac interaction
   (<eref target="https://github.com/httpwg/http-extensions/issues/62"/>).
+</t>
+<t>
+  Need to define extensibility for alt-svc parameters
+  (<eref target="https://github.com/httpwg/http-extensions/issues/69"/>).
 </t>
 <t>
   Alt-Svc header with 421 status
