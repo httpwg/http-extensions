@@ -157,9 +157,10 @@
   <x:anchor-alias value="uri-host"/>
   This document uses the Augmented BNF defined in <xref target="RFC5234"/>
   along with the "#rule" extension defined in <xref target="RFC7230" x:rel="#abnf.extension" x:fmt="of"/>.
-  The rules below are defined in <xref target="RFC7230"/> and <xref target="RFC7234"/>:
+  The rules below are defined in <xref target="RFC5234"/>, <xref target="RFC7230"/>, and <xref target="RFC7234"/>:
 </t>
 <figure><artwork type="abnf2616">
+DIGIT         = &lt;DIGIT, see <xref target="RFC5234" x:sec="B.1"/>&gt;
 OWS           = &lt;OWS, see <xref target="RFC7230" x:rel="#whitespace"/>&gt;
 delta-seconds = &lt;delta-seconds; see <xref target="RFC7234" x:rel="#delta-seconds"/>&gt;
 port          = &lt;port, see <xref target="RFC7230" x:rel="#uri"/>&gt;
@@ -304,7 +305,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 </t>
 <t>
    When alternative services are used to send a client to the most optimal server, a change in
-   network configuration can result in cached values becoming suboptimal. Therefore, clients SHOULD
+   network configuration can result in cached values becoming suboptimal. Therefore, clients &SHOULD;
    remove from cache all alternative services that lack the "persist" flag with the value "1" when
    they detect such a change (when information about network state is available).
 </t>
@@ -490,7 +491,7 @@ Alt-Svc: h2c=":8000", h2=":443"
    recommendation, Alt-Svc header fields remain valid in responses delivered over HTTP/2.
 </t>
 <t>
-   This specification defines one parameter: "ma", defined in
+   This specification defines two parameters: "ma" and "persist", defined in
    <xref target="caching-alt-svc-header-field-values"/>. Unknown parameters
    &MUST; be ignored, that is the values (alt-value) they appear in &MUST;
    be processed as if the unknown parameter was not present.
@@ -557,10 +558,9 @@ Alt-Svc: h2c=":8000"; ma=60
    change. Alternative services that are intended to be longer-lived (e.g., those that are not
    specific to the client access network) can carry the "persist" parameter with a value "1" as a
    hint that the service is potentially useful beyond a network configuration change.
-</t>
-<figure>
+</t><figure>
   <artwork type="abnf2616">
-persist = 1*<x:ref>DIGIT</x:ref>
+persist = 1<x:ref>DIGIT</x:ref>
 </artwork></figure>
 <t>
   For example:
@@ -570,6 +570,11 @@ persist = 1*<x:ref>DIGIT</x:ref>
 Alt-Svc: h2=":443"; ma=2592000; persist=1
 </artwork>
 </figure>  
+<t>
+   This specification only a defines a single value for "persist"; others
+   can be defined in future specifications. Clients &MUST; ignore "persist"
+   parameters with unknown values.
+</t>
 <t>
    See <xref target="caching"/> for general requirements on caching alternative services.
 </t>
@@ -778,13 +783,17 @@ Alt-Used: alternate.example.net
 
 <section title="Registrations" anchor="parameter.registrations">
 <t>
-  The HTTP Alt-Svc Parameter Registry is to be populated with the registration<!--s--> below:
+  The HTTP Alt-Svc Parameter Registry is to be populated with the registrations below:
 </t>
 <texttable align="left" suppress-title="true">
    <ttcol>Alt-Svc Parameter</ttcol>
    <ttcol>Reference</ttcol>
 
    <c>ma</c>
+   <c>
+      <xref target="caching-alt-svc-header-field-values"/>
+   </c>
+   <c>persist</c>
    <c>
       <xref target="caching-alt-svc-header-field-values"/>
    </c>
@@ -879,8 +888,8 @@ Alt-Used: alternate.example.net
    across multiple networks, when the "persist" flag is used.
 </t>
 <t>
-   Clients concerned by the additional fingerprinting surface can choose not to use
-   alternative services.
+   Clients concerned by the additional fingerprinting can choose to
+   ignore alternative service advertisements.
 </t>
 <t>
    In a user agent, any alternative service information &MUST; be removed when origin-specific data
@@ -1217,6 +1226,10 @@ Alt-Used: alternate.example.net
 <t>
   Need to define extensibility for alt-svc parameters
   (<eref target="https://github.com/httpwg/http-extensions/issues/69"/>).
+</t>
+<t>
+  Persistence of alternates across network changes
+  (<eref target="https://github.com/httpwg/http-extensions/issues/71"/>).
 </t>
 <t>
   Alt-Svc header with 421 status
