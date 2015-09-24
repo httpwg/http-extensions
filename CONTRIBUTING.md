@@ -5,41 +5,78 @@ list and review the [working group home page](https://httpwg.github.io/). If
 you're new to this, you may also want to read the [Tao of the
 IETF](http://www.ietf.org/tao.html).
 
-**Be aware that all contributions to the specification fall under the "NOTE WELL" terms outlined below.**
-
-1. The best way to provide feedback (editorial or design) and ask questions is
-sending an e-mail to [our mailing
-list](http://lists.w3.org/Archives/Public/ietf-http-wg/). This will assure that
-the entire Working Group sees your input in a timely fashion.
-
-2. If you have **editorial** suggestions (i.e., those that do not change the
-meaning of the specification), you can either:
-
-  a) Fork this repository and submit a pull request; this is the lowest
-  friction way to get editorial changes in.
-  
-  b) Submit a new issue to Github, and mention that you believe it is editorial
-  in the issue body. It is not necessary to notify the mailing list for
-  editorial issues.
-  
-  c) Make comments on individual commits in Github. Note that this feedback is
-  processed only with best effort by the editors, so it should only be used for
-  quick editorial suggestions or questions.
-
-3. For non-editorial (i.e., **design**) issues, you can also create an issue on
-Github. However, you **must notify the mailing list** when creating such issues,
-providing a link to the issue in the message body.
-
-  Note that **github issues are not for substantial discussions**; the only
-  appropriate place to discuss design issues is on the mailing list itself.
+**Be aware that all contributions fall under the "NOTE WELL" terms outlined below.**
 
 
-# Code of Conduct
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Raising Issues](#raising-issues)
+- [Resolving Issues](#resolving-issues)
+- [Pull Requests](#pull-requests)
+- [Code of Conduct](#code-of-conduct)
+- [NOTE WELL](#note-well)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
+## Raising Issues
+
+We use our [issues list](https://github.com/httpwg/http-extensions/issues) to track items for discussion and their resolution.
+
+Before filing a new issue, please consider a few things:
+
+* Issues should be just that; issues with our deliverables, not questions or
+  support requests.
+
+* Please review the issues list to make sure that you aren't filing a
+  duplicate.
+
+* If you're not sure how to phrase your issue, please ask on the [mailing list]((http://lists.w3.org/Archives/Public/ietf-http-wg/)).
+
+Off-topic and duplicate issues will be closed without discussion.
+
+Issues can also be raised on the [Working Group mailing
+list](http://lists.w3.org/Archives/Public/ietf-http-wg/).
+
+Note that comments on individual commits will only be responded to with best
+effort, and may not be seen.
+
+
+## Resolving Issues
+
+Issues will be labeled by the Chair as either `editorial` or `design`.
+
+* **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list]((http://lists.w3.org/Archives/Public/ietf-http-wg/)). 
+
+* **Editorial** issues can be closed by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
+
+Once the resolution for a design issue is determined, it will be recorded in the
+issue and then the issue will be marked `editor-ready`. After the editor has
+incorporated a resolution into the specification, the issue can be closed.
+
+When a new draft is published, the design issues that have been closed since
+the last draft will be highlighted on the mailing list, to aid reviewers.
+
+If substantive new information is brought to our attention, issues can be
+reopened by the Chair.
+
+
+## Pull Requests
+
+We welcome pull requests, both for editorial suggestions and to resolve open
+issues. In the latter case, please identify the relevant issue.
+
+Please do not use a pull request to open a new design issue.
+
+
+## Code of Conduct
 
 The [IETF Guidelines for Conduct](http://tools.ietf.org/html/rfc7154) applies to all Working Group communications and meetings.
 
 
-# NOTE WELL
+## NOTE WELL
 
 Any submission to the [IETF](http://www.ietf.org/) intended by the Contributor
 for publication as all or part of an IETF Internet-Draft or RFC and any
