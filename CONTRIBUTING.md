@@ -32,13 +32,11 @@ Before filing a new issue, please consider a few things:
   duplicate.
 * If you're not sure how to phrase your issue, please ask on the [mailing list]((http://lists.w3.org/Archives/Public/ietf-http-wg/)).
 
-Off-topic and duplicate issues will be closed without discussion.
-
 Issues can also be raised on the [Working Group mailing
 list](http://lists.w3.org/Archives/Public/ietf-http-wg/).
 
-Note that comments on individual commits will only be responded to with best
-effort, and may not be seen.
+Off-topic and duplicate issues will be closed without discussion. Note that comments on individual
+commits will only be responded to with best effort, and may not be seen.
 
 
 ## Resolving Issues
