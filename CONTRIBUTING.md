@@ -28,10 +28,8 @@ Before filing a new issue, please consider a few things:
 
 * Issues should be just that; issues with our deliverables, not questions or
   support requests.
-
 * Please review the issues list to make sure that you aren't filing a
   duplicate.
-
 * If you're not sure how to phrase your issue, please ask on the [mailing list]((http://lists.w3.org/Archives/Public/ietf-http-wg/)).
 
 Off-topic and duplicate issues will be closed without discussion.
@@ -48,7 +46,6 @@ effort, and may not be seen.
 Issues will be labeled by the Chair as either `editorial` or `design`.
 
 * **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list]((http://lists.w3.org/Archives/Public/ietf-http-wg/)). 
-
 * **Editorial** issues can be closed by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
 
 Once the resolution for a design issue is determined, it will be recorded in the
