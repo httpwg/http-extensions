@@ -52,7 +52,7 @@ Issues will be labeled by the Chair as either `editorial` or `design`.
 * **Editorial** issues can be closed by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
 
 Once the resolution for a design issue is determined, it will be recorded in the
-issue and then the issue will be marked `editor-ready`. After the editor has
+issue and then the issue will be labelled `editor-ready`. After the editor has
 incorporated a resolution into the specification, the issue can be closed.
 
 When a new draft is published, the design issues that have been closed since
