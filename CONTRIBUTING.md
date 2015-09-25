@@ -22,7 +22,8 @@ IETF](http://www.ietf.org/tao.html).
 
 ## Raising Issues
 
-We use our [issues list](https://github.com/httpwg/http-extensions/issues) to track items for discussion and their resolution.
+We use our [issues list](https://github.com/httpwg/http-extensions/issues) to 
+track items for discussion and their resolution.
 
 Before filing a new issue, please consider a few things:
 
@@ -33,7 +34,8 @@ Before filing a new issue, please consider a few things:
 * If you're not sure how to phrase your issue, please ask on the [mailing list]((http://lists.w3.org/Archives/Public/ietf-http-wg/)).
 
 Issues can also be raised on the [Working Group mailing
-list](http://lists.w3.org/Archives/Public/ietf-http-wg/).
+list](http://lists.w3.org/Archives/Public/ietf-http-wg/) by clearly marking them as such (e.g., 
+in the Subject: line). 
 
 Off-topic and duplicate issues will be closed without discussion. Note that comments on individual
 commits will only be responded to with best effort, and may not be seen.
@@ -67,7 +69,8 @@ Please do not use a pull request to open a new design issue.
 
 ## Code of Conduct
 
-The [IETF Guidelines for Conduct](http://tools.ietf.org/html/rfc7154) applies to all Working Group communications and meetings.
+The [IETF Guidelines for Conduct](http://tools.ietf.org/html/rfc7154) applies 
+to all Working Group communications and meetings.
 
 
 ## NOTE WELL
