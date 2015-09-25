@@ -35,7 +35,7 @@ Before filing a new issue, please consider a few things:
 
 Issues can also be raised on the [Working Group mailing
 list](http://lists.w3.org/Archives/Public/ietf-http-wg/) by clearly marking them as such (e.g., 
-in the Subject: line). 
+in the `Subject:` line). 
 
 Off-topic and duplicate issues will be closed without discussion. Note that comments on individual
 commits will only be responded to with best effort, and may not be seen.
