@@ -728,6 +728,10 @@
 <!-- does the document contain edits? -->
 <xsl:variable name="has-edits" select="//ed:ins | //ed:del | //ed:replace" />
 
+<!-- does the document have a published-as-rfc link? -->
+<xsl:variable name="published-as-rfc" select="/*/x:link[@rel='Alternate' and starts-with(@title,'RFC')]"/>
+
+
 <xsl:template match="text()[not(ancestor::artwork)]">
   <xsl:variable name="ws" select="'&#9;&#10;&#13;&#32;'"/>
   <xsl:variable name="starts-with-ws" select="'' = translate(substring(.,1,1),$ws,'')"/>
@@ -1294,7 +1298,7 @@
           </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
-          <p class="filename"><xsl:value-of select="$docname"/></p>
+          <div class="filename"><xsl:value-of select="$docname"/></div>
         </xsl:otherwise>
       </xsl:choose>
       
@@ -1357,10 +1361,9 @@
   </div>
 
   <!-- insert notice about update -->
-  <xsl:variable name="published-as" select="/*/x:link[@rel='Alternate' and starts-with(@title,'RFC')]"/>
-  <xsl:if test="$published-as">
-    <p style="color: green; text-align: center; font-size: 14pt; background-color: yellow;">
-      <b>Note:</b> a later version of this document has been published as <a href="{$published-as/@href}"><xsl:value-of select="$published-as/@title"/></a>.
+  <xsl:if test="$published-as-rfc">
+    <p class="publishedasrfc">
+      <b>Note:</b> a later version of this document has been published as <a href="{$published-as-rfc/@href}"><xsl:value-of select="$published-as-rfc/@title"/></a>.
     </p>
   </xsl:if>
 
@@ -2146,6 +2149,9 @@
             <xsl:variable name="displayname">
               <!-- surname/initials is reversed for last author except when it's the only one -->
               <xsl:choose>
+                <xsl:when test="$truncated-initials='' and @surname">
+                  <xsl:value-of select="@surname"/>
+                </xsl:when>
                 <xsl:when test="position()=last() and position()!=1">
                   <xsl:value-of select="concat($truncated-initials,' ',@surname)" />
                 </xsl:when>
@@ -2807,7 +2813,7 @@
   </xsl:variable>
 
   <xsl:if test="$xml2rfc-ext-insert-metadata='yes' and $rfcno!='' and @anchor='rfc.status'">
-    <div id="{$anchor-prefix}.meta" style="float: right; border: 1px solid black; margin: 2em; padding: 1em; display: none;"></div>
+    <div id="{$anchor-prefix}.meta" class="docstatus"></div>
   </xsl:if>
   <div>
     <xsl:if test="@anchor">
@@ -5118,6 +5124,19 @@ thead th {
 }</xsl:if><xsl:if test="$xml2rfc-ext-justification='always'">
 dd, li, p {
   text-align: justify;
+}</xsl:if><xsl:if test="$xml2rfc-ext-insert-metadata='yes' and $rfcno!=''">
+.docstatus {
+  border: 1px solid black;
+  display: none;
+  float: right;
+  margin: 2em;
+  padding: 1em;
+}</xsl:if><xsl:if test="$published-as-rfc">
+.publishedasrfc {
+  background-color: yellow;
+  color: green;
+  font-size: 14pt;
+  text-align: center;
 }</xsl:if>
 
 @media screen {
@@ -8055,11 +8074,11 @@ dd, li, p {
   <xsl:variable name="gen">
     <xsl:text>http://greenbytes.de/tech/webdav/rfc2629.xslt, </xsl:text>
     <!-- when RCS keyword substitution in place, add version info -->
-    <xsl:if test="contains('$Revision: 1.738 $',':')">
-      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.738 $', 'Revision: '),'$','')),', ')" />
+    <xsl:if test="contains('$Revision: 1.743 $',':')">
+      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.743 $', 'Revision: '),'$','')),', ')" />
     </xsl:if>
-    <xsl:if test="contains('$Date: 2015/09/03 09:04:03 $',':')">
-      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2015/09/03 09:04:03 $', 'Date: '),'$','')),', ')" />
+    <xsl:if test="contains('$Date: 2015/09/25 12:36:08 $',':')">
+      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2015/09/25 12:36:08 $', 'Date: '),'$','')),', ')" />
     </xsl:if>
     <xsl:value-of select="concat('XSLT vendor: ',system-property('xsl:vendor'),' ',system-property('xsl:vendor-url'))" />
   </xsl:variable>
@@ -8196,19 +8215,28 @@ dd, li, p {
 
 <!-- reformat contents of author/@initials -->
 <xsl:template name="format-initials">
-  <xsl:variable name="r">
-    <xsl:call-template name="t-format-initials">
-      <xsl:with-param name="remainder" select="normalize-space(@initials)"/>
-    </xsl:call-template>
-  </xsl:variable>
+  <xsl:variable name="normalized" select="normalize-space(@initials)"/>
 
-  <xsl:if test="$r!=@initials">
-    <xsl:call-template name="warning">
-      <xsl:with-param name="msg">@initials '<xsl:value-of select="@initials"/>': did you mean '<xsl:value-of select="$r"/>'?</xsl:with-param>
-    </xsl:call-template>
-  </xsl:if>
-
-  <xsl:value-of select="$r"/>
+  <xsl:choose>
+    <xsl:when test="$normalized=''">
+      <!-- nothing to do -->
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:variable name="r">
+        <xsl:call-template name="t-format-initials">
+          <xsl:with-param name="remainder" select="$normalized"/>
+        </xsl:call-template>
+      </xsl:variable>
+    
+      <xsl:if test="$r!=@initials">
+        <xsl:call-template name="warning">
+          <xsl:with-param name="msg">@initials '<xsl:value-of select="@initials"/>': did you mean '<xsl:value-of select="$r"/>'?</xsl:with-param>
+        </xsl:call-template>
+      </xsl:if>
+    
+      <xsl:value-of select="$r"/>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xsl:template name="t-format-initials">
@@ -8266,6 +8294,7 @@ prev: <xsl:value-of select="$prev"/>
 <xsl:template name="truncate-initials">
   <xsl:param name="initials"/>
   <xsl:choose>
+    <xsl:when test="normalize-space($initials)=''"/>
     <xsl:when test="$xml2rfc-multiple-initials='yes'">
       <xsl:value-of select="$initials"/>
     </xsl:when>
@@ -8822,6 +8851,7 @@ prev: <xsl:value-of select="$prev"/>
 <xsl:template match="@*" mode="validate"/>
 
 <xsl:template name="warninvalid">
+  <xsl:param name="additionalDiagnostics"/>
   <xsl:variable name="pname">
     <xsl:if test="namespace-uri(..)!=''">
       <xsl:value-of select="concat('{',namespace-uri(..),'}')"/>
@@ -8835,7 +8865,7 @@ prev: <xsl:value-of select="$prev"/>
     <xsl:value-of select="local-name(.)"/>
   </xsl:variable>
   <xsl:call-template name="warning">
-    <xsl:with-param name="msg" select="concat($cname,' not allowed inside ',$pname)"/>
+    <xsl:with-param name="msg" select="concat($cname,' not allowed inside ',$pname,$additionalDiagnostics)"/>
   </xsl:call-template>
 </xsl:template>
 
@@ -8880,6 +8910,14 @@ prev: <xsl:value-of select="$prev"/>
 </xsl:template>
 <xsl:template match="t" mode="validate">
   <xsl:call-template name="warninvalid"/>
+  <xsl:apply-templates select="@*|*" mode="validate"/>
+</xsl:template>
+
+<!-- xref element -->
+<xsl:template match="abstract//xref" mode="validate">
+  <xsl:call-template name="warninvalid">
+    <xsl:with-param name="additionalDiagnostics"> (inside &lt;artwork>)</xsl:with-param>
+  </xsl:call-template>
   <xsl:apply-templates select="@*|*" mode="validate"/>
 </xsl:template>
 
