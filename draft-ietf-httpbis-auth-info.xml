@@ -24,7 +24,7 @@
   <!ENTITY SHOULD "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD</bcp14>">
   <!ENTITY SHOULD-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD NOT</bcp14>">
 ]>
-<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" updates="2617" xmlns:ed="http://greenbytes.de/2002/rfcedit" ipr="pre5378Trust200902" docName="draft-ietf-httpbis-auth-info-latest" category="std" xml:lang="en" x:maturity-level="proposed">
+<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" obsoletes="2617" xmlns:ed="http://greenbytes.de/2002/rfcedit" ipr="pre5378Trust200902" docName="draft-ietf-httpbis-auth-info-latest" category="std" xml:lang="en" x:maturity-level="proposed">
 
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
 
