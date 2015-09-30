@@ -1,6 +1,9 @@
 ## Draft HTTP Extension Specifications
 
-This is the working area for the [IETF HTTP Working Group](https://httpwg.github.io/) draft extensions. Currently, this includes:
+This is the working area for the [IETF HTTP Working Group](https://httpwg.github.io/) draft extensions. See [our contribution 
+guidelines](CONTRIBUTING.md) for information about how to participate.
+
+**Be aware that all contributions to the specification fall under the "NOTE WELL" terms therein.**
 
 ### Alternative Services
 * [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/alt-svc.txt))
@@ -45,12 +48,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acice) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-cice/)
 
 
-## Contributing
 
-See [our contribution guidelines](CONTRIBUTING.md) for information about how to
-participate.
-
-**Be aware that all contributions to the specification fall under the "NOTE WELL" terms therein.**
 
 
 
