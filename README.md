@@ -14,7 +14,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 ### HTTP Legally Restricted Status Code
 
-** In [Working Group Last Call](http://www.w3.org/mid/0E5383DD-927C-493F-90C4-4A9C7CB93308@mnot.net); ends 2015-10-15**
+**In [Working Group Last Call](http://www.w3.org/mid/0E5383DD-927C-493F-90C4-4A9C7CB93308@mnot.net) - ends 2015-10-15**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-legally-restricted-status.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
