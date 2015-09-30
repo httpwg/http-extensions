@@ -14,9 +14,11 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 
 ### HTTP Legally Restricted Status Code
 
+** In [Working Group Last Call](http://www.w3.org/mid/0E5383DD-927C-493F-90C4-4A9C7CB93308@mnot.net); ends 2015-10-15**
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-legally-restricted-status.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A451) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-legall-restricted-status/)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A451) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-legally-restricted-status/)
 
 ### Tunnel Protocol for CONNECT
 
