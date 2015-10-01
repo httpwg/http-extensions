@@ -326,10 +326,10 @@ keyid:
 : The "keyid" parameter corresponds to the "keyid" parameter in the Encryption
 header field.
 
-key:
+aesgcm128:
 
-: The "key" parameter contains the URL-safe base64 [RFC4648] octets of the input
-keying material.
+: The "aesgcm128" parameter contains the URL-safe base64 [RFC4648] octets of the
+input keying material.
 
 dh:
 
@@ -356,12 +356,13 @@ specifications that use this content-encoding.
 
 ## Explicit Key
 
-The "key" parameter is decoded and used as the input keying material if present.
-The "key" parameter MUST decode to at least 16 octets in order to be used as
-input keying material for "aesgcm128" content encoding.
+The "aesgcm128" parameter is decoded and used as the input keying material for
+the "aesgcm128" content encoding.  The "aesgcm128" parameter MUST decode to at
+least 16 octets in order to be used as input keying material for "aesgcm128"
+content encoding.
 
-Other key determination parameters can be ignored if the "key" parameter is
-present.
+Other key determination parameters can be ignored if the "aesgcm128" parameter
+is present.
 
 
 ## Diffie-Hellman
@@ -457,7 +458,7 @@ HTTP/1.1 200 OK
 Content-Length: 32
 Content-Encoding: aesgcm128
 Encryption: keyid="a1"; salt="ibZx1RNz537h1XNkRcPpjA"
-Encryption-Key: keyid="a1"; key="9Z57YCb3dK95dSsdFJbkag"
+Encryption-Key: keyid="a1"; aesgcm128="9Z57YCb3dK95dSsdFJbkag"
 
 zK3kpG__Z8whjIkG6RYgPz11oUkTKcxPy9WP-VPMfuc
 ~~~
@@ -692,10 +693,10 @@ The initial contents of this registry are:
 * Purpose: Identify the key that is in use.
 * Reference: this document
 
-### key
+### aesgcm128
 
-* Parameter Name: key
-* Purpose: Provide an explicit input keying material value.
+* Parameter Name: aesgcm128
+* Purpose: Provide an explicit input keying material value for the aesgcm128 content encoding.
 * Reference: this document
 
 ### dh
