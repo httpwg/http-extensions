@@ -693,7 +693,7 @@ The initial contents of this registry are:
 * Purpose: Identify the key that is in use.
 * Reference: this document
 
-### aesgcm128
+### aesgcm128 {#iana-ekey-aesgcm128}
 
 * Parameter Name: aesgcm128
 * Purpose: Provide an explicit input keying material value for the aesgcm128 content encoding.
