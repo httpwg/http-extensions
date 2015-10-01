@@ -27,6 +27,7 @@
 <rfc xmlns:x="http://purl.org/net/xml2rfc/ext" obsoletes="2617" xmlns:ed="http://greenbytes.de/2002/rfcedit" ipr="pre5378Trust200902" docName="draft-ietf-httpbis-auth-info-latest" category="std" xml:lang="en" x:maturity-level="proposed">
 
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
+  <x:link rel="Alternate" title="RFC7615" href="http://greenbytes.de/tech/webdav/rfc7615.html"/>
 
 	<front>
   <title abbrev="HTTP Authentication-Info">HTTP Authentication-Info and Proxy-Authentication-Info Response&#160;Header Fields</title>
