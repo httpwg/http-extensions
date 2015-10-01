@@ -31,14 +31,6 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-tunnel-protocol) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Atunnel-proto) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-tunnel-protocol/)
 
-### HTTP Authentication-Info Header Field
-
-**In [RFC Editor queue](http://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-auth-info)**
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-auth-info.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-auth-info) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aauth-info) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-auth-info/)
-
 ### HTTP Client-Initiated Content-Encoding
 
 **In [RFC Editor queue](https://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-cice)**
