@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := encryption alt-svc tunnel-protocol cice legally-restricted-status
+friendly_names := encryption alt-svc tunnel-protocol cice legally-restricted-status rfc5987bis
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
