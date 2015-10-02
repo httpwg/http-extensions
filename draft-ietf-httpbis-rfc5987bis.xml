@@ -187,8 +187,8 @@
 <figure><artwork type="abnf">  attribute     = token
   value         = token / quoted-string
 
-  quoted-string = &lt;quoted-string, defined in <xref target="RFC7230" x:fmt="," x:rel="#field.components"/>&gt;
-  token         = &lt;token, defined in <xref target="RFC7230" x:fmt="," x:rel="#field.components"/>&gt;
+  quoted-string = &lt;quoted-string, see <xref target="RFC7230" x:fmt="," x:rel="#field.components"/>&gt;
+  token         = &lt;token, see <xref target="RFC7230" x:fmt="," x:rel="#field.components"/>&gt;
 </artwork></figure>
 <t anchor="bnf">
   <x:anchor-alias value="ext-value"/>
@@ -219,7 +219,7 @@
                 ; except that the single quote is not included
                 ; &SHOULD; be registered in the IANA charset registry
 
-  language      = &lt;Language-Tag, defined in <xref target="RFC5646" x:fmt="," x:sec="2.1"/>&gt;
+  language      = &lt;Language-Tag, see <xref target="RFC5646" x:fmt="," x:sec="2.1"/>&gt;
 
   value-chars   = *( pct-encoded / attr-char )
 
