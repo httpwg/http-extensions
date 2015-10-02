@@ -5,6 +5,12 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 **Be aware that all contributions to the specification fall under the "NOTE WELL" terms therein.**
 
+### Character Encoding and Language for Parameters
+* [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/rfc5987bis.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc5987bis) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Arfc5987bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc5987bis/)
+
+
 ### Alternative Services
 * [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/alt-svc.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
