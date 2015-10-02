@@ -51,7 +51,7 @@ cice.%: draft-ietf-httpbis-cice.%
 legally-restricted-status.%: draft-ietf-httpbis-legally-restricted-status.%
 	cp -f $< $@
 
-rfc5987bis.%: draft-ietf-httpbis-rfc5987bis%
+rfc5987bis.%: draft-ietf-httpbis-rfc5987bis.%
 	cp -f $< $@
 
 define makerule_submit_xml =
