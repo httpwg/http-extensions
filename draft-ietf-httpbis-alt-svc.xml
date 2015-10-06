@@ -828,11 +828,11 @@ Alt-Used: alternate.example.net
    they can thus masquerade as the HTTP server.
 </t>
 <t>
-   On servers, this risk can be reducted by restricting the ability to advertise
+   On servers, this risk can be reduced by restricting the ability to advertise
    alternative services, and restricting who can open a port for listening on that host.
    Clients can reduce this risk by imposing stronger requirements (e.g. strong
    authentication) when moving from System Ports to User or Dynamic Ports, or from
-   User Ports to Dynamic Ports, as defined in <xref target="RFC6335" x:rel="#section-6"/>.
+   User Ports to Dynamic Ports, as defined in <xref target="RFC6335" x:sec="6"/>.
 </t>
 <t>
    It is always valid for a client to ignore an alternative service advertisement which
@@ -1269,6 +1269,13 @@ Alt-Used: alternate.example.net
 <t>
   Alt-Svc response header field in HTTP/2 frame
   (<eref target="https://github.com/httpwg/http-extensions/issues/87"/>).
+</t>
+</section>
+
+<section title="Since draft-ietf-httpbis-alt-svc-08" anchor="changes.since.draft-ietf-httpbis-alt-svc-08">
+<t>
+  Alt-Svc: Elevation of privilege
+  (<eref target="https://github.com/httpwg/http-extensions/issues/73"/>).
 </t>
 </section>
 </section>
