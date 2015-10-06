@@ -816,17 +816,29 @@ Alt-Used: alternate.example.net
 <t>
    Using an alternative service implies accessing an origin's resources on an
    alternative port, at a minimum. An attacker that can inject alternative services
-   and listen at the advertised port is therefore able to hijack an origin.
+   and listen at the advertised port is therefore able to hijack an origin.  On
+   certain servers, it is normal for users to be able to control some personal
+   pages available on a shared port, and also to accept to requests on less-privileged
+   ports.
 </t>
 <t>
-   For example, an attacker that can add HTTP response header fields can redirect
-   traffic to a different port on the same host using the Alt-Svc header field; if
-   that port is under the attacker's control, they can thus masquerade as the HTTP
-   server.
+   For example, an attacker that can add HTTP response header fields to some pages
+   can redirect traffic for an entire origin to a different port on the same host
+   using the Alt-Svc header field; if that port is under the attacker's control,
+   they can thus masquerade as the HTTP server.
 </t>
 <t>
-   This risk can be mitigated by restricting the ability to advertise alternative
-   services, and restricting who can open a port for listening on that host.
+   On servers, this risk can be reducted by restricting the ability to advertise
+   alternative services, and restricting who can open a port for listening on that host.
+   Clients can reduce this risk by imposing stronger requirements (e.g. strong
+   authentication) when moving from System Ports to User or Dynamic Ports, or from
+   User Ports to Dynamic Ports, as defined in <xref target="RFC6335" x:rel="#section-6"/>.
+</t>
+<t>
+   It is always valid for a client to ignore an alternative service advertisement which
+   does not meet its implementation-specific security requirements.  Servers can increase
+   the likelihood of clients using the alternative service by providing strong
+   authentication even when not required.
 </t>
 </section>
 
@@ -1081,6 +1093,20 @@ Alt-Used: alternate.example.net
     <date year="2008" month="August"/>
   </front>
   <seriesInfo name="RFC" value="5246"/>
+</reference>
+	
+<reference anchor="RFC6335">
+  <front>
+    <title>Internet Assigned Numbers Authority (IANA) Procedures for the Management
+    of the Service Name and Transport Protocol Port Number Registry</title>
+    <author initials="M." surname="Cotton" fullname="M. Cotton"/>
+    <author initials="L." surname="Eggert" fullname="L. Eggert"/>
+    <author initials="J." surname="Touch" fullname="J. Touch"/>
+    <author initials="M." surname="Westerlund" fullname="M. Westerlund"/>
+    <author initials="S." surname="Cheshire" fullname="S. Cheshire"/>
+    <date year="2011" month="August"/>
+  </front>
+  <seriesInfo name="RFC" value="6335"/>
 </reference>
 
 </references>
