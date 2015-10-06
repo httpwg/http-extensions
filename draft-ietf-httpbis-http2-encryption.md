@@ -34,7 +34,7 @@ normative:
   RFC7230:
   RFC7234:
   RFC7469:
-  I-D.ietf-httpbis-http2:
+  RFC7540:
   I-D.ietf-httpbis-alt-svc:
 
 informative:
@@ -78,8 +78,8 @@ level of protection as afforded to `https` URIs, but instead to increase the lik
 active attack can be detected.
 
 A final (but significant) goal is to provide for ease of implementation, deployment and operation.
-This mechanism is expected to have a minimal impact upon performance, and a trivial administrative
-effort to configure.
+This mechanism is expected to have a minimal impact upon performance, and require a trivial
+administrative effort to configure.
 
 
 ## Notational Conventions
@@ -93,7 +93,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 An origin server that supports the resolution of `http` URIs can indicate support for this
 specification by providing an alternative service advertisement {{I-D.ietf-httpbis-alt-svc}} for a
-protocol identifier that uses TLS, such as `h2` {{I-D.ietf-httpbis-http2}}.
+protocol identifier that uses TLS, such as `h2` {{RFC7540}}.
 
 A client that receives such an advertisement MAY make future requests intended for the associated
 origin ({{RFC6454}}) to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
@@ -110,9 +110,9 @@ expire, in order minimize the delays that might be incurred.
 
 # Server Authentication {#auth}
 
-By their nature, "http" URIs do not require cryptographically strong server authentication; that is
-only implied by "https" URIs. Furthermore, doing so (as per {{RFC2818}}) creates a number of
-operational challenges. For these reasons, server authentication is not mandatory for "http" URIs
+By their nature, `http` URIs do not require cryptographically strong server authentication; that is
+only implied by `https` URIs. Furthermore, doing so (as per {{RFC2818}}) creates a number of
+operational challenges. For these reasons, server authentication is not mandatory for `http` URIs
 when using the mechanism described in this specification.
 
 When connecting to an alternative service for an `http` URI, clients are not required to perform the
@@ -233,7 +233,7 @@ over time.
 
 Once a server has indicated that it will support authenticated TLS, a client MAY use key pinning
 {{RFC7469}} or any other mechanism that would otherwise be restricted to use
-with "https" URIs, provided that the mechanism can be restricted to a single HTTP origin.
+with `https` URIs, provided that the mechanism can be restricted to a single HTTP origin.
 
 
 
@@ -280,6 +280,11 @@ whether requests are for `http` or `https` resources.  This is necessary in many
 most common form of an HTTP/1.1 request does not carry an explicit indication of the URI scheme.
 
 HTTP/1.1 MUST NOT be used for opportunistically secured requests.
+
+Some HTTP/1.1 implementations use ambient signals to determine if a request is for an `https`
+resource.  For example, implementations might look for TLS on the stack or a port number of 443.  An
+implementation that supports opportunistically secured requests SHOULD suppress these signals if
+there is any potential for confusion.
 
 
 --- back

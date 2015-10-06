@@ -61,7 +61,7 @@
     </author>
 
     <date year="2015"/>
-    <area>Applications</area>
+    <area>Applications and Real-Time</area>
     <workgroup>HTTP</workgroup>
     <keyword>HTTP</keyword>
     <keyword>ALPN</keyword>
@@ -109,9 +109,9 @@
 <t>For example:
   <list style="symbols">
     <t>
-       An origin server might wish to redirect a client to a different server when it
-       needs to go down for maintenance, or it has found a server in a
-       location that is more local to the client.
+       An origin server might wish to redirect a client to a different server
+       when it is under load, or it has found a server in a location that is
+       more local to the client.
     </t>
     <t>
        An origin server might wish to offer access to its resources using a new
@@ -136,9 +136,9 @@
    service was used (<xref target="indicator"/>).
 </t>
 <t>
-   It also introduces a new status code in <xref target="status"/>, so that origin servers (or
-   their nominated alternatives) can indicate that they are not authoritative for
-   a given origin, in cases where the wrong location is used.
+   It also endorses the status code 421 (Misdirected Request) (<xref target="status"/>)
+   that origin servers (or their nominated alternatives) can use to indicate that they
+   are not authoritative for a given origin, in cases where the wrong location is used.
 </t>
 
 <section title="Notational Conventions" anchor="notational-conventions">
@@ -148,6 +148,7 @@
   interpreted as described in <xref target="RFC2119"/>.
 </t>
 <t anchor="imported.abnf">
+  <x:anchor-alias value="DIGIT"/>
   <x:anchor-alias value="OWS"/>
   <x:anchor-alias value="delta-seconds"/>
   <x:anchor-alias value="port"/>
@@ -156,9 +157,10 @@
   <x:anchor-alias value="uri-host"/>
   This document uses the Augmented BNF defined in <xref target="RFC5234"/>
   along with the "#rule" extension defined in <xref target="RFC7230" x:rel="#abnf.extension" x:fmt="of"/>.
-  The rules below are defined in <xref target="RFC7230"/> and <xref target="RFC7234"/>:
+  The rules below are defined in <xref target="RFC5234"/>, <xref target="RFC7230"/>, and <xref target="RFC7234"/>:
 </t>
 <figure><artwork type="abnf2616">
+DIGIT         = &lt;DIGIT, see <xref target="RFC5234" x:sec="B.1"/>&gt;
 OWS           = &lt;OWS, see <xref target="RFC7230" x:rel="#whitespace"/>&gt;
 delta-seconds = &lt;delta-seconds; see <xref target="RFC7234" x:rel="#delta-seconds"/>&gt;
 port          = &lt;port, see <xref target="RFC7230" x:rel="#uri"/>&gt;
@@ -205,7 +207,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    The alternative service is essentially alternative routing information that can
    also be used to reach the origin in the same way that DNS CNAME or SRV records
    define routing information at the name resolution level. Each origin maps to a
-   set of these routes &mdash; the default route is derived from origin itself and the
+   set of these routes &mdash; the default route is derived from thr origin itself and the
    other routes are introduced based on alternative-protocol information.
 </t>
 <t>
@@ -230,16 +232,25 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    if a CNAME were being used).
 </t>
 <t>
-  The changes &MAY;, however, be made visible in debugging tools, consoles, etc.
+   The changes &MAY;, however, be made visible in debugging tools, consoles, etc.
 </t>
 <t>
-  Formally, an alternative service is identified by the combination of:
+   Formally, an alternative service is identified by the combination of:
   <list style="symbols">
-    <t>An Application Layer Protocol Negotiation (ALPN) protocol, as per
+    <t>An Application Layer Protocol Negotiation (ALPN) protocol name, as per
     <xref target="RFC7301"/></t>
     <t>A host, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.2"/></t>
     <t>A port, as per <xref target="RFC3986" x:fmt="," x:sec="3.2.3"/></t>
   </list>
+</t>
+<t>
+   The ALPN protocol name is used to identify the application protocol or
+   suite of protocols used by the alternative service.  Note that for the
+   purpose of this specification, an ALPN protocol name implicitly
+   includes TLS in the suite of protocols it identifies, unless specified
+   otherwise in its definition. In particular, the ALPN name "http/1.1",
+   registered by <xref x:sec="6" x:fmt="of" target="RFC7301"/>, identifies
+   HTTP/1.1 over TLS.
 </t>
 <t>
    Additionally, each alternative service &MUST; have:
@@ -290,11 +301,13 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    Clients with existing connections to an alternative service do not need to
    stop using it when its freshness lifetime ends; i.e., the caching
    mechanism is intended for limiting how long an alternative service can be used
-   for establishing new requests, not limiting the use of existing ones.
+   for establishing new connections, not limiting the use of existing ones.
 </t>
 <t>
-   Clients ought to consider that changes in network configurations can
-   result in suboptimal or compromised cached alternative services.
+   When alternative services are used to send a client to the most optimal server, a change in
+   network configuration can result in cached values becoming suboptimal. Therefore, clients &SHOULD;
+   remove from cache all alternative services that lack the "persist" flag with the value "1" when
+   they detect such a change (when information about network state is available).
 </t>
 </section>
 
@@ -331,6 +344,11 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    HTTP; or, an alternative service might itself advertise an alternative.
 </t>
 <t>
+   A client configured to use a proxy for a given request &SHOULD-NOT;
+   directly connect to an alternative service for it, but instead route it
+   through that proxy.
+</t>
+<t>
    When a client uses an alternative service for a request, it can indicate
    this to the server using the  Alt-Used header field (<xref
       target="indicator"/>).
@@ -358,13 +376,25 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 </t>
 <figure>
   <artwork type="abnf2616">
-Alt-Svc       = 1#( alternative *( OWS ";" OWS parameter ) )
+Alt-Svc       = clear / 1#alt-value
+clear         = <x:abnf-char-sequence>"clear"</x:abnf-char-sequence>; "clear", case-sensitive
+alt-value     = alternative *( OWS ";" OWS parameter )
 alternative   = protocol-id "=" alt-authority
-protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol identifier
+protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol name
 alt-authority = <x:ref>quoted-string</x:ref> ; containing [ <x:ref>uri-host</x:ref> ] ":" <x:ref>port</x:ref>
 parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-string</x:ref> )
 </artwork>
 </figure>
+<t>
+   The field value consists either of a list of values, each of which indicating one
+   alternative service, or the keyword "clear".
+</t>
+<t>
+   A field value containing the special value "clear" indicates that the
+   origin requests all alternatives for that origin to be invalidated (including
+   those specified in the same response, in case of an invalid reply containing
+   both "clear" and alternative services).
+</t>
 <t>
    ALPN protocol names are octet sequences with no
    additional constraints on format.<!-- besides length?-->
@@ -378,7 +408,7 @@ parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-
    additional constraints apply:
    <list style="numbers">
     <t>
-      Octets in the ALPN protocol &MUST-NOT; be percent-encoded if they are valid
+      Octets in the ALPN protocol name &MUST-NOT; be percent-encoded if they are valid
       token characters except "%", and
     </t>
     <t>
@@ -436,6 +466,8 @@ Alt-Svc: h2="new.example.org:80"
 </texttable>
 <t>
    Alt-Svc &MAY; occur in any HTTP response message, regardless of the status code.
+   Note that recipients of Alt-Svc are free to ignore the header field (and indeed
+   need to in some situations; see Sections <xref format="counter" target="host_auth"/> and <xref format="counter" target="status"/>).
 </t>
 <figure>
   <preamble>The Alt-Svc field value can have multiple values:</preamble>
@@ -444,14 +476,29 @@ Alt-Svc: h2c=":8000", h2=":443"
 </artwork>
 </figure>
 <t>
+   When multiple values are present, the order of the values reflects the server's
+   preference (with the first value being the most preferred alternative).
+</t>
+<t>
    The value(s) advertised by Alt-Svc can be used by clients to open a new
-   connection to one or more alternative services immediately, or simultaneously
-   with subsequent requests on the same connection.
+   connection to an alternative service. Subsequent requests can start using this new connection
+   immediately, or can continue using the existing connection while the new connection is created.
 </t>
 <t>
    When using HTTP/2 (<xref target="RFC7540"/>), servers &SHOULD; instead send an ALTSVC frame
    (<xref target="frame"/>). A single ALTSVC frame can be sent for a connection;
-   a new frame is not needed for every request.
+   a new frame is not needed for every request. Note that, despite this
+   recommendation, Alt-Svc header fields remain valid in responses delivered over HTTP/2.
+</t>
+<t>
+   This specification defines two parameters: "ma" and "persist", defined in
+   <xref target="caching-alt-svc-header-field-values"/>. Unknown parameters
+   &MUST; be ignored, that is the values (alt-value) they appear in &MUST;
+   be processed as if the unknown parameter was not present.
+</t>
+<t>
+   New parameters can be defined in extension specifications (see
+   <xref target="iana.parameters"/> for registration details).
 </t>
 <t>
    Note that all field elements that allow "quoted-string" syntax &MUST; be processed
@@ -505,6 +552,28 @@ Alt-Svc: h2c=":8000"; ma=60
 <t>
    When an Alt-Svc response header field is received from an origin, its value
    invalidates and replaces all cached alternative services for that origin.
+</t>
+<t>
+   By default, cached alternative services will be cleared when the client detects a network
+   change. Alternative services that are intended to be longer-lived (e.g., those that are not
+   specific to the client access network) can carry the "persist" parameter with a value "1" as a
+   hint that the service is potentially useful beyond a network configuration change.
+</t><figure>
+  <artwork type="abnf2616">
+persist = 1<x:ref>DIGIT</x:ref>
+</artwork></figure>
+<t>
+  For example:
+</t>
+<figure>
+  <artwork type="example">
+Alt-Svc: h2=":443"; ma=2592000; persist=1
+</artwork>
+</figure>  
+<t>
+   This specification only a defines a single value for "persist"; others
+   can be defined in future specifications. Clients &MUST; ignore "persist"
+   parameters with unknown values.
 </t>
 <t>
    See <xref target="caching"/> for general requirements on caching alternative services.
@@ -567,7 +636,7 @@ Alt-Svc: h2c=":8000"; ma=60
 </t>
 <t>
   The ALTSVC frame is intended for receipt by clients; a server that receives an
-  ALTSVC frame &MUST; treat it as a connection error of type PROTOCOL_ERROR.
+  ALTSVC frame can safely ignore it.
 </t>
 <t>
   An ALTSVC frame on stream 0 with empty (length 0) "Origin" information is
@@ -638,7 +707,7 @@ Alt-Used: alternate.example.net
    server, or at the origin.
 </t>
 <t>
-   A 421 (Misdirected Request) response &MAY; carry an Alt-Svc header field.
+   An Alt-Svc header field in a 421 (Misdirected Request) response &MUST; be ignored.
 </t>
 </section>
 
@@ -691,9 +760,49 @@ Alt-Used: alternate.example.net
 </t>
 </section>
 
+<section anchor="iana.parameters" title="Alt-Svc Parameter Registry">
+<t>
+   The HTTP Alt-Svc Parameter Registry defines the name space for the
+   cache directives. It will be created and maintained at (the suggested URI)
+   <eref target="http://www.iana.org/assignments/http-alt-svc-parameters"/>.
+</t>
+
+<section title="Procedure" anchor="parameter.registry.procedure">
+<t>
+   A registration &MUST; include the following fields:
+   <list style="symbols">
+      <t>Parameter Name</t>
+      <t>Pointer to specification text</t>
+   </list>
+</t>
+<t>
+   Values to be added to this name space require IETF Review (see <xref
+   target="RFC5226" x:fmt="," x:sec="4.1"/>).
+</t>
 </section>
 
-<section title="Internationalization Considerations" anchor="tnternationalization-considerations">
+<section title="Registrations" anchor="parameter.registrations">
+<t>
+  The HTTP Alt-Svc Parameter Registry is to be populated with the registrations below:
+</t>
+<texttable align="left" suppress-title="true">
+   <ttcol>Alt-Svc Parameter</ttcol>
+   <ttcol>Reference</ttcol>
+
+   <c>ma</c>
+   <c>
+      <xref target="caching-alt-svc-header-field-values"/>
+   </c>
+   <c>persist</c>
+   <c>
+      <xref target="caching-alt-svc-header-field-values"/>
+   </c>
+</texttable>
+</section>
+</section>
+</section>
+
+<section title="Internationalization Considerations" anchor="internationalization-considerations">
 <t>
    An internationalized domain name that appears in either the header field
    (<xref target="alt-svc"/>) or the HTTP/2 frame (<xref target="frame"/>)
@@ -775,11 +884,12 @@ Alt-Used: alternate.example.net
 <t>
    Choosing an alternative service implies connecting to a new, server-supplied
    host name. By using many different (potentially unique) host names, servers
-   could conceivably track client requests.
+   could conceivably track client requests. Such tracking could follow users
+   across multiple networks, when the "persist" flag is used.
 </t>
 <t>
-   Clients concerned by the additional fingerprinting can choose to ignore alternative
-   service advertisements.
+   Clients concerned by the additional fingerprinting can choose to
+   ignore alternative service advertisements.
 </t>
 <t>
    In a user agent, any alternative service information &MUST; be removed when origin-specific data
@@ -790,14 +900,11 @@ Alt-Used: alternate.example.net
 <section title="Confusion Regarding Request Scheme" anchor="confusion-regarding-request-scheme">
 <t>
    Alternative Services &MUST-NOT; be advertised for a protocol that is not
-   designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot carry
-   safely requests for http resources.
+   designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot safely carry
+   requests for http resources.
 </t>
 </section>
-
 </section>
-
-
   </middle>
 
   <back>
@@ -832,6 +939,17 @@ Alt-Used: alternate.example.net
   </front>
   <seriesInfo name="STD" value="66"/>
   <seriesInfo name="RFC" value="3986"/>
+</reference>
+
+<reference anchor='RFC5226'>
+  <front>
+    <title>Guidelines for Writing an IANA Considerations Section in RFCs</title>
+    <author initials='T.' surname='Narten' fullname='T. Narten'/>
+    <author initials='H.' surname='Alvestrand' fullname='H. Alvestrand'/>
+    <date year='2008' month='May' />
+  </front>
+  <seriesInfo name='BCP' value='26' />
+  <seriesInfo name='RFC' value='5226' />
 </reference>
 
 <reference anchor="RFC5234">
@@ -936,8 +1054,7 @@ Alt-Used: alternate.example.net
     <date month="May" year="2015"/>
   </front>
   <seriesInfo name="RFC" value="7540"/>
-  <!-- update once we have a proper source file! -->
-  <x:source href="refs/draft-ietf-httpbis-http2-latest.xml"/>
+  <x:source href="refs/rfc7540.xml"/>
 </reference>
 
 </references>
@@ -1083,7 +1200,49 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-07" anchor="changes.since.draft-ietf-httpbis-alt-svc-07">
 <t>
-  None yet.
+  Alt-Svc alternative cache invalidation
+  (<eref target="https://github.com/httpwg/http-extensions/issues/16"/>).
+</t>
+<t>
+  Unexpected Alt-Svc frames
+  (<eref target="https://github.com/httpwg/http-extensions/issues/18"/>).
+</t>
+<t>
+  Associating Alt-Svc header with an origin
+  (<eref target="https://github.com/httpwg/http-extensions/issues/21"/>).
+</t>
+<t>
+  ALPN identifiers in Alt-Svc
+  (<eref target="https://github.com/httpwg/http-extensions/issues/43"/>).
+</t>
+<t>
+  Number of alternate services used
+  (<eref target="https://github.com/httpwg/http-extensions/issues/58"/>).
+</t>
+<t>
+  Proxy and .pac interaction
+  (<eref target="https://github.com/httpwg/http-extensions/issues/62"/>).
+</t>
+<t>
+  Need to define extensibility for alt-svc parameters
+  (<eref target="https://github.com/httpwg/http-extensions/issues/69"/>).
+</t>
+<t>
+  Persistence of alternates across network changes
+  (<eref target="https://github.com/httpwg/http-extensions/issues/71"/>).
+</t>
+<t>
+  Alt-Svc header with 421 status
+  (<eref target="https://github.com/httpwg/http-extensions/issues/75"/>).
+</t>
+<t>
+  Incorporate several editorial improvements suggested by Mike Bishop
+  (<eref target="https://github.com/httpwg/http-extensions/pull/77"/>,
+  <eref target="https://github.com/httpwg/http-extensions/pull/78"/>).
+</t>
+<t>
+  Alt-Svc response header field in HTTP/2 frame
+  (<eref target="https://github.com/httpwg/http-extensions/issues/87"/>).
 </t>
 </section>
 </section>
@@ -1092,7 +1251,7 @@ Alt-Used: alternate.example.net
 <section title="Acknowledgements" anchor="acknowledgements" numbered="false">
 <t>
   Thanks to Adam Langley, Bence Beky, Eliot Lear, Erik Nygren, Guy Podjarny,
-  Herve Ruellan, Martin Thomson, Matthew Kerwin,
+  Herve Ruellan, Martin Thomson, Matthew Kerwin, Mike Bishop,
   Paul Hoffman,
   Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
   feedback and suggestions.

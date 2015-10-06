@@ -2,9 +2,11 @@
 
 <!DOCTYPE rfc [
 <!ENTITY rfc2119 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml'>
-<!ENTITY rfc2616 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2616.xml'>
 <!ENTITY rfc4084 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4084.xml'>
 <!ENTITY rfc4924 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4924.xml'>
+<!ENTITY rfc7234 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7234.xml'>
+<!ENTITY rfc3986 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml'>
+<!ENTITY rfc5988 SYSTEM 'http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5988.xml'>
 ]>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -20,12 +22,9 @@
 <?rfc inline="yes" ?>
 
 <rfc ipr="trust200902" 
-     docName="draft-ietf-httpbis-legally-restricted-status-latest" 
+     docName="draft-ietf-httpbis-legally-restricted-status-02" 
      category="std"
-     updates="2616"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
-
-  <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
 
   <front>
     <title abbrev="HTTP-status-451">An HTTP Status Code to Report Legal Obstacles</title>
@@ -38,9 +37,10 @@
     </author>
 
 
-    <date year="2015" month="April"/>
-    <area>Applications</area>
+    <date year="2015" month="August"/>
+    <area>Applications and Real-Time</area>
     <workgroup>HTTP</workgroup>
+    <keyword>HTTP</keyword>
 
     <abstract>
 
@@ -76,7 +76,7 @@
       status code for use when a server operator has a received a legal demand
       to deny access to a resource.</t>
 
-      <t>This status code may be used to provide transparency
+      <t>This status code can be used to provide transparency
       in circumstances where issues of law or public policy affect server
       operations. This transparency may be beneficial both to these operators
       and to end users.</t>
@@ -86,9 +86,7 @@
       notes, and as Section 4 of <xref target="RFC4084"/> states, such
       restrictions should be made explicit.</t>
       
-      <t>Feedback should occur on the ietf-http-wg@w3.org mailing list,
-      although this draft is NOT a work item of the IETF HTTPbis Working
-      Group. </t>
+      <t>Feedback should occur on the ietf-http-wg@w3.org mailing list.</t>
     </section>
 
     <section title="Requirements">
@@ -103,7 +101,7 @@
       <t>This status code indicates that the server is denying access
       to the resource as a consequence of a legal demand.</t> 
       
-      <t>The server in question may not be an origin server.  This type of
+      <t>The server in question might not be an origin server.  This type of
       legal demand typically most directly affects the operations of ISPs and
       search engines.</t>
 
@@ -135,13 +133,34 @@ a request for the resource still might not succeed.</t>
 
 <t>Note that in many cases clients can still access the denied resource by
 using technical countermeasures such as a VPN or the Tor network.</t>
+
+<t>A 451 response is cacheable by default; i.e., unless otherwise indicated by the method definition or explicit cache controls; see <xref target="RFC7234"/>.</t>
+    </section>
+
+    <section title="Identifying Blocking Entities">
+      <t>As noted above, when an attempt to access a resource fails
+      with status 451, the entity blocking access might or might not be the
+      origin server.  There are a variety of entities in the resource-access
+      path which could choose to deny access, for example ISPs,
+      cache providers, and DNS servers.</t>
+      <t>It is useful, when legal blockages occur, to be able to identify the
+      entities actually implementing the blocking.</t>
+      <t>When an entity blocks access to a resource and returns status 451, it
+      SHOULD include a "Link" HTTP header field <xref target="RFC5988"/>
+      whose value is a URI reference <xref target="RFC3986"/>
+      identifying itself.  When used for this purpose, the "Link" header field
+      MUST have a "rel" parameter whose value is "blocked-by".</t>
+      <t>The intent is that the header be used to identify the entity actually
+      implementing blockage, not any other entity mandating it.  A
+      human readable response body, as discussed above, is the appropriate
+      location for discussion of administrative and policy issues.</t>
     </section>
 
     <section title="Security Considerations">
 
       <section title="451 Unavailable for Legal Reasons">
 	<t>The 451 status code is optional; clients cannot rely upon its
-	use. It is possible that certain legal authorities may wish
+	use. It is possible that certain legal authorities might wish
 	to avoid transparency, and not only demand the restriction of access 
         to certain resources, but also avoid disclosing that the demand 
         was made.  </t>
@@ -152,7 +171,7 @@ using technical countermeasures such as a VPN or the Tor network.</t>
 
     <section title="IANA Considerations">
       <t>The HTTP Status Codes Registry should be updated with the
-      following entries:</t>
+      following entry:</t>
 
       <t><list style="symbols">
 	<t>Code: 451</t>
@@ -168,16 +187,16 @@ using technical countermeasures such as a VPN or the Tor network.</t>
       &rfc2119;
       &rfc4084;
       &rfc4924;
+      &rfc7234;
+      &rfc3986;
+      &rfc5988;
     </references>
 
-
-    <section title="Acknowledgements" numbered="false">
+    <section title="Acknowledgements">
       <t>Thanks to Terence Eden, who observed that the existing
       status code 403 was not really suitable for this situation, and
       suggested the creation of a new status code.</t>
       <t>Thanks also to Ray Bradbury.</t>
-      <t>The author takes all responsibility for errors and
-      omissions.</t>
     </section>
 
 

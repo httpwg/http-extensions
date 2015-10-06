@@ -45,7 +45,7 @@
 
   <date year="2015"/>
   
-  <area>Applications</area>
+  <area>Applications and Real-Time</area>
   <workgroup>HTTP</workgroup>
   <keyword>HTTP</keyword>
   <keyword>content-encoding</keyword>
@@ -60,7 +60,7 @@
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
       extends the HTTP "Accept-Encoding" header field for use in responses,
-      to indicate that content codings are supported in requests.
+      to indicate the content codings that are supported in requests.
     </t>
   </abstract>
   
@@ -79,7 +79,7 @@
       <eref target="https://github.com/httpwg/http-extensions"/>.
     </t>
     <t>
-      The changes in this draft are summarized in <xref target="changes.since.00"/>.
+      The changes in this draft are summarized in <xref target="changes.since.03"/>.
     </t>
   </note>
 
@@ -92,14 +92,18 @@
     <t>
       In HTTP, content codings allow for payload encodings such as for
       compression or integrity checks (<xref target="RFC7231" x:fmt="," x:rel="#data.encoding"/>).
-      In particular, the "gzip" content coding is widely used for payload data sent in response
-      messages.
+      In particular, the "gzip" content coding (<xref target="RFC7230" x:fmt="," x:rel="#compression.codings"/>)
+      is widely used for payload data sent in response messages.
     </t>
     <t>
       Content codings can be used in request messages as well, however
       discoverability is not on par with response messages. This document
-      extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses, to indicate that content 
-      codings are supported in requests.
+      extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses,
+      to indicate the content codings that are supported in requests. It
+      furthermore updates the definition of status code 415
+      (Unsupported Media Type) (<xref target="RFC7231" x:fmt="," x:rel="#status.415"/>),
+      recommending to include the "Accept-Encoding" header field when
+      appropriate.
     </t>
 </section>  
 
@@ -140,12 +144,12 @@
   related problems.
 </t>
 <t>
-  Servers that fail a request due to an unsupported content coding &SHOULD;
-  respond with a 415 status and &SHOULD; include an "Accept-Encoding" header field in
+  Servers that fail a request due to an unsupported content coding ought to
+  respond with a 415 status and ought to include an "Accept-Encoding" header field in
   that response, allowing clients to distinguish between content coding
   related issues and media type related issues. In order
   to avoid confusion with media type related problems, servers that fail a request
-  with a 415 status for reasons unrelated to content codings &SHOULD-NOT;
+  with a 415 status for reasons unrelated to content codings &MUST-NOT;
   include the "Accept-Encoding" header field.
 </t>
 <t>
@@ -205,8 +209,8 @@ Content-Type: text/plain
 <section title="Deployment Considerations" anchor="deployment.considerations">
 <t>
   Servers that do not support content codings in requests already are required
-  to fail a request that does use a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
-  recommends using the status code 415 (Unsupported Media Type), so the only
+  to fail a request that uses a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
+  defines the status code 415 (Unsupported Media Type) for this purpose, so the only
   change needed is to include the "Accept-Encoding" header field with value
   "identity" in that response.
 </t>
@@ -222,14 +226,32 @@ Content-Type: text/plain
 </section>
 
 <section title="Security Considerations" anchor="security.considerations">
-<t>
+<!--<t>
   This specification does not introduce any new security considerations
   beyond those discussed in <xref target="RFC7231" x:fmt="of"
   x:rel="#security.considerations"/>.
+</t>-->
+<t>
+  This specification only adds discovery of supported content codings and
+  diagnostics for requests failing due to unsupported content codings. As such,
+  it doesn't introduce any new security considerations over those already
+  present in HTTP/1.1 (<xref target="RFC7231" x:fmt="of"
+  x:rel="#security.considerations"/>) and HTTP/2 (<xref target="RFC7540" x:fmt="of"
+  x:rel="#security"/>).
+</t>
+<t>
+  However, the point of better discoverability and diagnostics is to make it
+  easier to use content codings in requests. This might lead to increased
+  usage of compression codings such as gzip (<xref target="RFC7230" x:fmt="of"
+  x:rel="#compression.codings"/>), which, when used over a secure channel, can
+  enable side-channel attacks such as BREACH (see <xref target="RFC7540" x:fmt="of"
+  x:sec="10.6"/> and <xref target="BREACH"/>). At the time of publication,
+  it was unclear how BREACH-like attacks can be applied to compression in HTTP requests.
 </t>
 </section>
 
 <section title="IANA Considerations" anchor="iana.considerations">
+<section title="Header Field Registry">
 <t>
    HTTP header fields are registered within the "Message Headers" registry
    located at <eref target="http://www.iana.org/assignments/message-headers"/>,
@@ -237,7 +259,7 @@ Content-Type: text/plain
 </t>
 <t>
    This document updates the definition of the "Accept-Encoding" header field,
-   so the "Permanent Message Header Field Names" registry shall be updated
+   so the "Permanent Message Header Field Names" registry ought to be updated
    accordingly:
 </t>
 <texttable align="left" suppress-title="true" anchor="iana.header.registration.table">
@@ -254,6 +276,30 @@ Content-Type: text/plain
       and <xref target="accept-encoding"/> of this document
    </c>
 </texttable>
+</section>
+<section title="Status Code Registry">
+<t>
+   HTTP status codes are registered within the "Status Code" registry
+   located at <eref target="http://www.iana.org/assignments/http-status-codes"/>.
+</t>
+<t>
+   This document updates the definition of the status code 415 (Unsupported Media Type),
+   so the "Status Code" registry ought to be updated
+   accordingly:
+</t>
+<texttable align="left" suppress-title="true" anchor="iana.status.code.registration.table">
+   <ttcol>Value</ttcol>
+   <ttcol>Description</ttcol>
+   <ttcol>Reference</ttcol>
+
+   <c>415</c>
+   <c>Unsupported Media Type</c>
+   <c>
+      <xref target="RFC7231" x:fmt="," x:rel="#status.415"/>,
+      and <xref target="accept-encoding"/> of this document
+   </c>
+</texttable>
+</section>
 </section>
 
   </middle>
@@ -331,6 +377,29 @@ Content-Type: text/plain
   <seriesInfo name='BCP' value='90' />
   <seriesInfo name='RFC' value='3864' />
 </reference>
+<reference anchor="RFC7540">
+  <front>
+    <title>Hypertext Transfer Protocol Version 2 (HTTP/2)</title>
+    <author initials="M." surname="Belshe" fullname="Mike Belshe"/>
+    <author initials="R." surname="Peon" fullname="Roberto Peon"/>
+    <author initials="M." surname="Thomson" fullname="Martin Thomson" role="editor"/>
+    <date month="May" year="2015"/>
+  </front>
+  <seriesInfo name="RFC" value="7540"/>
+  <x:source href="refs/rfc7540.xml"/>
+</reference>
+<reference anchor="BREACH"
+           target="http://breachattack.com/resources/BREACH%20-%20SSL,%20gone%20in%2030%20seconds.pdf">
+  <front>
+    <title>
+      BREACH: Reviving the CRIME Attack
+    </title>
+    <author initials="Y." surname="Gluck"/>
+    <author initials="N." surname="Harris"/>
+    <author initials="A." surname="Prado"/>
+    <date year="2013" month="July" day="12"/>
+  </front>
+</reference>
 </references>
 
 <section title="Change Log (to be removed by RFC Editor before publication)" anchor="change.log">
@@ -370,11 +439,34 @@ Content-Type: text/plain
   Apply editorial improvements suggested by Mark Nottingham.
 </t>
 </section>
+<section title="Since draft-ietf-httpbis-cice-01" anchor="changes.since.01">
+<t>
+  Clarify that we're also extending the definition of status code 415
+  (so update that IANA registry entry as well).
+</t>
 </section>
+<section title="Since draft-ietf-httpbis-cice-02" anchor="changes.since.02">
+<t>
+  Removed normative language that required used of Accept-Encoding in responses
+  (which would have made existing servers non-compliant).
+</t>
+<t>
+  Add BREACH like attacks to security considerations
+  (<eref target="https://github.com/httpwg/http-extensions/issues/94"/>).
+</t>
+</section>
+<section title="Since draft-ietf-httpbis-cice-03" anchor="changes.since.03">
+<t>
+  None yet.
+</t>
+</section>
+</section>
+
 <section title="Acknowledgements" numbered="false">
 <t>
   Thanks go to the members of the and HTTPbis Working Group, namely
-  Amos Jeffries, Mark Nottingham, and Ted Hardie. 
+  Amos Jeffries, Ben Campbell, Mark Nottingham, Pete Resnick,
+  Stephen Farrell, and Ted Hardie. 
 </t>
 </section>
 

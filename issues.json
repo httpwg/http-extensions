@@ -1,13 +1,154 @@
 [
   {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/69",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/69/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/69/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/69/events",
-    "html_url": "https://github.com/httpwg/http-extensions/issues/69",
-    "id": 74702401,
-    "number": 69,
-    "title": "need to define extensibility for alt-svc parameters",
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/96",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/96/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/96/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/96/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/96",
+    "id": 107380621,
+    "number": 96,
+    "title": "IANA procedure for alt-svc parameters",
+    "user": {
+      "login": "reschke",
+      "id": 332994,
+      "avatar_url": "https://avatars.githubusercontent.com/u/332994?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/reschke",
+      "html_url": "https://github.com/reschke",
+      "followers_url": "https://api.github.com/users/reschke/followers",
+      "following_url": "https://api.github.com/users/reschke/following{/other_user}",
+      "gists_url": "https://api.github.com/users/reschke/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/reschke/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/reschke/subscriptions",
+      "organizations_url": "https://api.github.com/users/reschke/orgs",
+      "repos_url": "https://api.github.com/users/reschke/repos",
+      "events_url": "https://api.github.com/users/reschke/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/reschke/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
+        "name": "alt-svc",
+        "color": "fbca04"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2015-09-20T08:58:28Z",
+    "updated_at": "2015-09-20T08:58:28Z",
+    "closed_at": null,
+    "body": "Currently defined as \"IETF Review\". Is this bar too high?"
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/93",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/93/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/93/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/93/events",
+    "html_url": "https://github.com/httpwg/http-extensions/pull/93",
+    "id": 104190496,
+    "number": 93,
+    "title": "Flatten Section 5",
+    "user": {
+      "login": "martinthomson",
+      "id": 67641,
+      "avatar_url": "https://avatars.githubusercontent.com/u/67641?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/martinthomson",
+      "html_url": "https://github.com/martinthomson",
+      "followers_url": "https://api.github.com/users/martinthomson/followers",
+      "following_url": "https://api.github.com/users/martinthomson/following{/other_user}",
+      "gists_url": "https://api.github.com/users/martinthomson/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/martinthomson/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/martinthomson/subscriptions",
+      "organizations_url": "https://api.github.com/users/martinthomson/orgs",
+      "repos_url": "https://api.github.com/users/martinthomson/repos",
+      "events_url": "https://api.github.com/users/martinthomson/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/martinthomson/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/451",
+        "name": "451",
+        "color": "fbca04"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2015-09-01T05:35:29Z",
+    "updated_at": "2015-09-01T15:24:57Z",
+    "closed_at": null,
+    "pull_request": {
+      "url": "https://api.github.com/repos/httpwg/http-extensions/pulls/93",
+      "html_url": "https://github.com/httpwg/http-extensions/pull/93",
+      "diff_url": "https://github.com/httpwg/http-extensions/pull/93.diff",
+      "patch_url": "https://github.com/httpwg/http-extensions/pull/93.patch"
+    },
+    "body": ""
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/92",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/92/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/92/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/92/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/92",
+    "id": 100819066,
+    "number": 92,
+    "title": "alt-svc vs the ability to convey the scheme inside the protocol",
+    "user": {
+      "login": "reschke",
+      "id": 332994,
+      "avatar_url": "https://avatars.githubusercontent.com/u/332994?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/reschke",
+      "html_url": "https://github.com/reschke",
+      "followers_url": "https://api.github.com/users/reschke/followers",
+      "following_url": "https://api.github.com/users/reschke/following{/other_user}",
+      "gists_url": "https://api.github.com/users/reschke/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/reschke/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/reschke/subscriptions",
+      "organizations_url": "https://api.github.com/users/reschke/orgs",
+      "repos_url": "https://api.github.com/users/reschke/repos",
+      "events_url": "https://api.github.com/users/reschke/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/reschke/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
+        "name": "alt-svc",
+        "color": "fbca04"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 2,
+    "created_at": "2015-08-13T16:59:06Z",
+    "updated_at": "2015-09-23T17:24:13Z",
+    "closed_at": null,
+    "body": "See <https://lists.w3.org/Archives/Public/ietf-http-wg/2015JulSep/0193.html>:\r\n\r\n\"Alternative Services MUST NOT be advertised for a protocol that is not \r\ndesigned to carry the scheme. In particular, HTTP/1.1 over TLS cannot \r\ncarry safely requests for http resources.\"\r\n\r\n...which refers to the :scheme pseudo header field in HTTP/2 \r\n(<http://greenbytes.de/tech/webdav/rfc7540.html#HttpRequest>).\r\n\r\nAs far as I recall the intention of the statement above is to avoid that \r\nwhen alt-svc is used to move http traffic to a TLSsy port such as 443, \r\nthe alternative server gets confused about whether it's serving HTTP or \r\nHTTPS.\r\n\r\nIn reality, even when the protocol *does* carry the scheme (such as \r\nin HTTP/2), the *application* (think PHP running on top of Apache httpd) \r\nis so distant from the actual server stack that it wouldn't have that \r\ninformation. This is especially true as long many servers shield \r\napplications from any knowledge about whether they are accessed over \r\nHTTP/1.1 or HTTP/2. (Speaking of which, HTTP/1.1 can carry this \r\ninformation as well, see \r\n<http://greenbytes.de/tech/webdav/rfc7230.html#absolute-form>)."
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/91",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/91/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/91/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/91/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/91",
+    "id": 100818772,
+    "number": 91,
+    "title": "alt-svc from https (1.1) to https (1.1)",
     "user": {
       "login": "reschke",
       "id": 332994,
@@ -34,6 +175,56 @@
         "color": "fbca04"
       },
       {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial",
+        "name": "editorial",
+        "color": "009800"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 5,
+    "created_at": "2015-08-13T16:57:28Z",
+    "updated_at": "2015-09-23T17:25:34Z",
+    "closed_at": null,
+    "body": "See <https://lists.w3.org/Archives/Public/ietf-http-wg/2015JulSep/0193.html>:\r\n\r\n\"Alternative Services MUST NOT be advertised for a protocol that is not designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot carry safely requests for http resources.\"\r\n\r\n...which refers to the :scheme pseudo header field in HTTP/2 (<http://greenbytes.de/tech/webdav/rfc7540.html#HttpRequest>).\r\n\r\nAs far as I recall the intention of the statement above is to avoid that when alt-svc is used to move http traffic to a TLSsy port such as 443, the alternative server gets confused about whether it's serving HTTP or HTTPS.\r\n\r\nThe clause seems to be less relevant when alt-svc is used to load-balance HTTP/1.1 http*s* traffic."
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/89",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/89/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/89/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/89/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/89",
+    "id": 96296619,
+    "number": 89,
+    "title": "Using alt-svc on localhost",
+    "user": {
+      "login": "martinthomson",
+      "id": 67641,
+      "avatar_url": "https://avatars.githubusercontent.com/u/67641?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/martinthomson",
+      "html_url": "https://github.com/martinthomson",
+      "followers_url": "https://api.github.com/users/martinthomson/followers",
+      "following_url": "https://api.github.com/users/martinthomson/following{/other_user}",
+      "gists_url": "https://api.github.com/users/martinthomson/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/martinthomson/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/martinthomson/subscriptions",
+      "organizations_url": "https://api.github.com/users/martinthomson/orgs",
+      "repos_url": "https://api.github.com/users/martinthomson/repos",
+      "events_url": "https://api.github.com/users/martinthomson/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/martinthomson/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
+        "name": "alt-svc",
+        "color": "fbca04"
+      },
+      {
         "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
         "name": "design",
         "color": "02d7e1"
@@ -43,11 +234,331 @@
     "locked": false,
     "assignee": null,
     "milestone": null,
-    "comments": 0,
-    "created_at": "2015-05-09T15:57:42Z",
-    "updated_at": "2015-05-27T06:38:17Z",
+    "comments": 6,
+    "created_at": "2015-07-21T11:46:43Z",
+    "updated_at": "2015-07-21T13:46:17Z",
     "closed_at": null,
-    "body": "must ignore? how to register new ones? IANA registry?"
+    "body": "You can identify an alternative on a different port on localhost trivially and it might be considered authoritative.  You probably don't want to accept localhost as a valid alternative for an `http://example.com` origin."
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/83",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/83/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/83/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/83/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/83",
+    "id": 85973736,
+    "number": 83,
+    "title": "Alt-Svc Header - hop by hop",
+    "user": {
+      "login": "mnot",
+      "id": 74384,
+      "avatar_url": "https://avatars.githubusercontent.com/u/74384?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mnot",
+      "html_url": "https://github.com/mnot",
+      "followers_url": "https://api.github.com/users/mnot/followers",
+      "following_url": "https://api.github.com/users/mnot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mnot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mnot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mnot/subscriptions",
+      "organizations_url": "https://api.github.com/users/mnot/orgs",
+      "repos_url": "https://api.github.com/users/mnot/repos",
+      "events_url": "https://api.github.com/users/mnot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mnot/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
+        "name": "alt-svc",
+        "color": "fbca04"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
+        "name": "design",
+        "color": "02d7e1"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 2,
+    "created_at": "2015-06-08T00:59:04Z",
+    "updated_at": "2015-09-20T11:56:10Z",
+    "closed_at": null,
+    "body": "Amos pointed out that we should consider making the header field explicitly hop-by-hop, to match the semantics of the frame."
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/80",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/80/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/80/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/80/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/80",
+    "id": 83234311,
+    "number": 80,
+    "title": "Distinguishing intermediaries from origins",
+    "user": {
+      "login": "mnot",
+      "id": 74384,
+      "avatar_url": "https://avatars.githubusercontent.com/u/74384?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/mnot",
+      "html_url": "https://github.com/mnot",
+      "followers_url": "https://api.github.com/users/mnot/followers",
+      "following_url": "https://api.github.com/users/mnot/following{/other_user}",
+      "gists_url": "https://api.github.com/users/mnot/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/mnot/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/mnot/subscriptions",
+      "organizations_url": "https://api.github.com/users/mnot/orgs",
+      "repos_url": "https://api.github.com/users/mnot/repos",
+      "events_url": "https://api.github.com/users/mnot/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/mnot/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/451",
+        "name": "451",
+        "color": "fbca04"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
+        "name": "design",
+        "color": "02d7e1"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 3,
+    "created_at": "2015-06-01T00:17:19Z",
+    "updated_at": "2015-09-02T06:29:11Z",
+    "closed_at": null,
+    "body": "In the current draft, 451 is used both to indicate when the origin server has the legal demands placed upon it, and when an intervening intermediary is enforcing such a demand.\r\n\r\nIn discussion, some have wondered whether it would be useful to be able to distinguish them in a machine-readable way; e.g., using a different status code (452?) or a response header."
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/76",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/76/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/76/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/76/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/76",
+    "id": 82174775,
+    "number": 76,
+    "title": "Alt-Svc and Cert Pinning",
+    "user": {
+      "login": "MikeBishop",
+      "id": 4273797,
+      "avatar_url": "https://avatars.githubusercontent.com/u/4273797?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/MikeBishop",
+      "html_url": "https://github.com/MikeBishop",
+      "followers_url": "https://api.github.com/users/MikeBishop/followers",
+      "following_url": "https://api.github.com/users/MikeBishop/following{/other_user}",
+      "gists_url": "https://api.github.com/users/MikeBishop/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/MikeBishop/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/MikeBishop/subscriptions",
+      "organizations_url": "https://api.github.com/users/MikeBishop/orgs",
+      "repos_url": "https://api.github.com/users/MikeBishop/repos",
+      "events_url": "https://api.github.com/users/MikeBishop/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/MikeBishop/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
+        "name": "alt-svc",
+        "color": "fbca04"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
+        "name": "design",
+        "color": "02d7e1"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editor-ready",
+        "name": "editor-ready",
+        "color": "0b02e1"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 4,
+    "created_at": "2015-05-28T23:45:37Z",
+    "updated_at": "2015-08-24T06:26:48Z",
+    "closed_at": null,
+    "body": "If http://www.example.com sends Alt-Svc pointing to evil.haxor.bg showing a cert from a hacked CA for the right origin, we don’t want to trust it.  Cert pinning would mitigate this for https:// origins, and we could go a step further for https:// origins without pinning and validate that the cert on the alternate resembles the cert we last saw on the origin (identical cert, same issuer, same issuer country, etc.).\r\n\r\nHowever, for http:// origins, we're pretty vulnerable.  That scenario looks a lot like 9.2 again for http:// origins – if you’re MITM’d once, you can be MITM’d for as long as you trust the fishy cert."
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/74",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/74/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/74/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/74/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/74",
+    "id": 82173176,
+    "number": 74,
+    "title": "Alt-Svc:  Alternates of alternates",
+    "user": {
+      "login": "MikeBishop",
+      "id": 4273797,
+      "avatar_url": "https://avatars.githubusercontent.com/u/4273797?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/MikeBishop",
+      "html_url": "https://github.com/MikeBishop",
+      "followers_url": "https://api.github.com/users/MikeBishop/followers",
+      "following_url": "https://api.github.com/users/MikeBishop/following{/other_user}",
+      "gists_url": "https://api.github.com/users/MikeBishop/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/MikeBishop/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/MikeBishop/subscriptions",
+      "organizations_url": "https://api.github.com/users/MikeBishop/orgs",
+      "repos_url": "https://api.github.com/users/MikeBishop/repos",
+      "events_url": "https://api.github.com/users/MikeBishop/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/MikeBishop/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
+        "name": "alt-svc",
+        "color": "fbca04"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
+        "name": "design",
+        "color": "02d7e1"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editor-ready",
+        "name": "editor-ready",
+        "color": "0b02e1"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 3,
+    "created_at": "2015-05-28T23:39:57Z",
+    "updated_at": "2015-08-24T06:26:15Z",
+    "closed_at": null,
+    "body": "When the origin delegates to an alternate for 30 seconds, and the alternate delegates somewhere else (or to itself) for 7 days, how long does the client keep it?  30 seconds because that’s what the origin said, or 7 days because the alternate is supposed to be equivalent in authority to the origin?\r\n\r\nI'm inclined toward the second, since the alternate is supposed to be fully authoritative and since it enables use of an alternate to be persistent so long as you regularly visit the origin.  It feels odd to let a delegate grant itself more power than the delegation originally gave it, though...."
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/73",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/73/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/73/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/73/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/73",
+    "id": 82172416,
+    "number": 73,
+    "title": "Alt-Svc:  Elevation of privilege",
+    "user": {
+      "login": "MikeBishop",
+      "id": 4273797,
+      "avatar_url": "https://avatars.githubusercontent.com/u/4273797?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/MikeBishop",
+      "html_url": "https://github.com/MikeBishop",
+      "followers_url": "https://api.github.com/users/MikeBishop/followers",
+      "following_url": "https://api.github.com/users/MikeBishop/following{/other_user}",
+      "gists_url": "https://api.github.com/users/MikeBishop/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/MikeBishop/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/MikeBishop/subscriptions",
+      "organizations_url": "https://api.github.com/users/MikeBishop/orgs",
+      "repos_url": "https://api.github.com/users/MikeBishop/repos",
+      "events_url": "https://api.github.com/users/MikeBishop/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/MikeBishop/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
+        "name": "alt-svc",
+        "color": "fbca04"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
+        "name": "design",
+        "color": "02d7e1"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editor-ready",
+        "name": "editor-ready",
+        "color": "0b02e1"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 4,
+    "created_at": "2015-05-28T23:37:28Z",
+    "updated_at": "2015-08-24T06:26:07Z",
+    "closed_at": null,
+    "body": "Someone who controls any resource on an origin can issue directives that affect all resources on that origin.  (Thinking of the server the CS/CE students could work with in college, where we all had pages at server.example.edu/~username.)  Sure, I can’t change the host because I don’t have the server cert, but I can change ports without that requirement.\r\n\r\nThe guidance in 9.1 just says “don’t let people do that,” which is easier said than done on systems that already exist.  People can run apps listening on ephemeral ports, and people can control their home pages.  With this combination, everyone else's home pages can be hijacked unless the server admin reads this draft before any students do and promptly prohibits pages from emitting headers named Alt-Svc.\r\n\r\nThe way to partially fix this is to require strong auth for changes of port as well.  Resources can still slow down access by causing attempts to access an alternate, but the alternate won't be able to supply fake resources."
+  },
+  {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/72",
+    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/72/labels{/name}",
+    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/72/comments",
+    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/72/events",
+    "html_url": "https://github.com/httpwg/http-extensions/issues/72",
+    "id": 82171264,
+    "number": 72,
+    "title": "Conflicts between Alt-Svc and ALPN",
+    "user": {
+      "login": "MikeBishop",
+      "id": 4273797,
+      "avatar_url": "https://avatars.githubusercontent.com/u/4273797?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/MikeBishop",
+      "html_url": "https://github.com/MikeBishop",
+      "followers_url": "https://api.github.com/users/MikeBishop/followers",
+      "following_url": "https://api.github.com/users/MikeBishop/following{/other_user}",
+      "gists_url": "https://api.github.com/users/MikeBishop/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/MikeBishop/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/MikeBishop/subscriptions",
+      "organizations_url": "https://api.github.com/users/MikeBishop/orgs",
+      "repos_url": "https://api.github.com/users/MikeBishop/repos",
+      "events_url": "https://api.github.com/users/MikeBishop/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/MikeBishop/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
+        "name": "alt-svc",
+        "color": "fbca04"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
+        "name": "design",
+        "color": "02d7e1"
+      },
+      {
+        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editor-ready",
+        "name": "editor-ready",
+        "color": "0b02e1"
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "milestone": null,
+    "comments": 6,
+    "created_at": "2015-05-28T23:34:18Z",
+    "updated_at": "2015-07-20T12:31:37Z",
+    "closed_at": null,
+    "body": "Alt-Svc tells me to use h2, so I open a TLS connection, and the server either doesn’t support ALPN or doesn’t select h2.  What now?  Weird corner cases ensue where I’m connected to something that may or may not be the alternate I was intending to reach.  (Similar issues ensue attempting to connect using h2c -- does it mean a direct TCP connection to the specified port, or that the client should offer Upgrade?  What if the server doesn't accept the Upgrade?)\r\n\r\nIt's simpler to just say TLS is the protocol and require ALPN support in 2.3 as well.  Point me to a TLS-enabled endpoint, and the specific protocols we'll use will be negotiated in real-time.\r\n\r\nHowever, this does pose a challenge if you wanted *only* HTTP/3 traffic going to your alternate."
   },
   {
     "url": "https://api.github.com/repos/httpwg/http-extensions/issues/67",
@@ -138,9 +649,9 @@
     "locked": false,
     "assignee": null,
     "milestone": null,
-    "comments": 1,
+    "comments": 2,
     "created_at": "2015-04-26T01:53:11Z",
-    "updated_at": "2015-05-01T12:59:52Z",
+    "updated_at": "2015-08-14T15:52:16Z",
     "closed_at": null,
     "pull_request": {
       "url": "https://api.github.com/repos/httpwg/http-extensions/pulls/66",
@@ -149,309 +660,6 @@
       "patch_url": "https://github.com/httpwg/http-extensions/pull/66.patch"
     },
     "body": "RFC 2119 defines \"MAY\" as a keyword, which may cause confusion with \"may not\", even though the latter is not uppercased.\r\n\r\nThis hopefully better clarifies that the server in question may or may not be an origin server, as opposed to implying that origin servers are prevented from returning a 451 response status."
-  },
-  {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/64",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/64/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/64/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/64/events",
-    "html_url": "https://github.com/httpwg/http-extensions/issues/64",
-    "id": 69444098,
-    "number": 64,
-    "title": "no need to update RFC 2616",
-    "user": {
-      "login": "reschke",
-      "id": 332994,
-      "avatar_url": "https://avatars.githubusercontent.com/u/332994?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/reschke",
-      "html_url": "https://github.com/reschke",
-      "followers_url": "https://api.github.com/users/reschke/followers",
-      "following_url": "https://api.github.com/users/reschke/following{/other_user}",
-      "gists_url": "https://api.github.com/users/reschke/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/reschke/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/reschke/subscriptions",
-      "organizations_url": "https://api.github.com/users/reschke/orgs",
-      "repos_url": "https://api.github.com/users/reschke/repos",
-      "events_url": "https://api.github.com/users/reschke/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/reschke/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/451",
-        "name": "451",
-        "color": "fbca04"
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "milestone": null,
-    "comments": 0,
-    "created_at": "2015-04-19T17:07:14Z",
-    "updated_at": "2015-05-09T15:56:30Z",
-    "closed_at": null,
-    "body": "a) it's obsoleted anyway, b) that's what we have the IANA status code registry for."
-  },
-  {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/62",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/62/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/62/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/62/events",
-    "html_url": "https://github.com/httpwg/http-extensions/issues/62",
-    "id": 66184419,
-    "number": 62,
-    "title": "Proxy and .pac interaction",
-    "user": {
-      "login": "martinthomson",
-      "id": 67641,
-      "avatar_url": "https://avatars.githubusercontent.com/u/67641?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/martinthomson",
-      "html_url": "https://github.com/martinthomson",
-      "followers_url": "https://api.github.com/users/martinthomson/followers",
-      "following_url": "https://api.github.com/users/martinthomson/following{/other_user}",
-      "gists_url": "https://api.github.com/users/martinthomson/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/martinthomson/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/martinthomson/subscriptions",
-      "organizations_url": "https://api.github.com/users/martinthomson/orgs",
-      "repos_url": "https://api.github.com/users/martinthomson/repos",
-      "events_url": "https://api.github.com/users/martinthomson/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/martinthomson/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
-        "name": "alt-svc",
-        "color": "fbca04"
-      },
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
-        "name": "design",
-        "color": "02d7e1"
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "milestone": null,
-    "comments": 4,
-    "created_at": "2015-04-03T16:51:39Z",
-    "updated_at": "2015-05-01T02:02:38Z",
-    "closed_at": null,
-    "body": "Ryan asks what you should pass to proxy.pac when you know about a potential alt-svc.\r\n\r\nI suggested that you use the original request origin and only use alternatives if the proxy.pac doesn't provide a proxy address.  That is proxy.pac overrides alternative services."
-  },
-  {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/59",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/59/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/59/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/59/events",
-    "html_url": "https://github.com/httpwg/http-extensions/pull/59",
-    "id": 65487069,
-    "number": 59,
-    "title": "Use only one alternative service.",
-    "user": {
-      "login": "hruellan",
-      "id": 3206601,
-      "avatar_url": "https://avatars.githubusercontent.com/u/3206601?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/hruellan",
-      "html_url": "https://github.com/hruellan",
-      "followers_url": "https://api.github.com/users/hruellan/followers",
-      "following_url": "https://api.github.com/users/hruellan/following{/other_user}",
-      "gists_url": "https://api.github.com/users/hruellan/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/hruellan/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/hruellan/subscriptions",
-      "organizations_url": "https://api.github.com/users/hruellan/orgs",
-      "repos_url": "https://api.github.com/users/hruellan/repos",
-      "events_url": "https://api.github.com/users/hruellan/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/hruellan/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
-        "name": "alt-svc",
-        "color": "fbca04"
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "milestone": null,
-    "comments": 0,
-    "created_at": "2015-03-31T16:09:37Z",
-    "updated_at": "2015-05-01T13:33:31Z",
-    "closed_at": null,
-    "pull_request": {
-      "url": "https://api.github.com/repos/httpwg/http-extensions/pulls/59",
-      "html_url": "https://github.com/httpwg/http-extensions/pull/59",
-      "diff_url": "https://github.com/httpwg/http-extensions/pull/59.diff",
-      "patch_url": "https://github.com/httpwg/http-extensions/pull/59.patch"
-    },
-    "body": "Solves #58 "
-  },
-  {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/58",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/58/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/58/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/58/events",
-    "html_url": "https://github.com/httpwg/http-extensions/issues/58",
-    "id": 65485620,
-    "number": 58,
-    "title": "Number of alternate services used",
-    "user": {
-      "login": "hruellan",
-      "id": 3206601,
-      "avatar_url": "https://avatars.githubusercontent.com/u/3206601?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/hruellan",
-      "html_url": "https://github.com/hruellan",
-      "followers_url": "https://api.github.com/users/hruellan/followers",
-      "following_url": "https://api.github.com/users/hruellan/following{/other_user}",
-      "gists_url": "https://api.github.com/users/hruellan/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/hruellan/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/hruellan/subscriptions",
-      "organizations_url": "https://api.github.com/users/hruellan/orgs",
-      "repos_url": "https://api.github.com/users/hruellan/repos",
-      "events_url": "https://api.github.com/users/hruellan/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/hruellan/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
-        "name": "alt-svc",
-        "color": "fbca04"
-      },
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
-        "name": "design",
-        "color": "02d7e1"
-      },
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editor-ready",
-        "name": "editor-ready",
-        "color": "0b02e1"
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "milestone": null,
-    "comments": 3,
-    "created_at": "2015-03-31T16:03:09Z",
-    "updated_at": "2015-05-27T06:36:02Z",
-    "closed_at": null,
-    "body": "At the end of section 3, the paragraph:\r\n\r\n> The value(s) advertised by Alt-Svc can be used by clients to open a new connection to one or more alternative services immediately, or simultaneously with subsequent requests on the same connection.\r\n\r\nsays that several alternative services can be used simultaneously by a client. \r\n\r\nHowever, section 2.4 Using Alternative Services, recommend choosing one alternative service and using only one alternative service (except during the transition time).\r\n\r\nI think we should align the two by rephrasing the sentence in 3."
-  },
-  {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/56",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/56/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/56/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/56/events",
-    "html_url": "https://github.com/httpwg/http-extensions/pull/56",
-    "id": 64111447,
-    "number": 56,
-    "title": "Precise signification of http/1.1 ALPN token.",
-    "user": {
-      "login": "hruellan",
-      "id": 3206601,
-      "avatar_url": "https://avatars.githubusercontent.com/u/3206601?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/hruellan",
-      "html_url": "https://github.com/hruellan",
-      "followers_url": "https://api.github.com/users/hruellan/followers",
-      "following_url": "https://api.github.com/users/hruellan/following{/other_user}",
-      "gists_url": "https://api.github.com/users/hruellan/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/hruellan/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/hruellan/subscriptions",
-      "organizations_url": "https://api.github.com/users/hruellan/orgs",
-      "repos_url": "https://api.github.com/users/hruellan/repos",
-      "events_url": "https://api.github.com/users/hruellan/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/hruellan/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "milestone": null,
-    "comments": 0,
-    "created_at": "2015-03-24T22:06:35Z",
-    "updated_at": "2015-03-24T22:06:35Z",
-    "closed_at": null,
-    "pull_request": {
-      "url": "https://api.github.com/repos/httpwg/http-extensions/pulls/56",
-      "html_url": "https://github.com/httpwg/http-extensions/pull/56",
-      "diff_url": "https://github.com/httpwg/http-extensions/pull/56.diff",
-      "patch_url": "https://github.com/httpwg/http-extensions/pull/56.patch"
-    },
-    "body": "The `http/1.1` ALPN token identifies HTTP/1.1 over TLS."
-  },
-  {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/43",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/43/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/43/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/43/events",
-    "html_url": "https://github.com/httpwg/http-extensions/issues/43",
-    "id": 56407295,
-    "number": 43,
-    "title": "ALPN identifiers in Alt-Svc",
-    "user": {
-      "login": "hruellan",
-      "id": 3206601,
-      "avatar_url": "https://avatars.githubusercontent.com/u/3206601?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/hruellan",
-      "html_url": "https://github.com/hruellan",
-      "followers_url": "https://api.github.com/users/hruellan/followers",
-      "following_url": "https://api.github.com/users/hruellan/following{/other_user}",
-      "gists_url": "https://api.github.com/users/hruellan/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/hruellan/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/hruellan/subscriptions",
-      "organizations_url": "https://api.github.com/users/hruellan/orgs",
-      "repos_url": "https://api.github.com/users/hruellan/repos",
-      "events_url": "https://api.github.com/users/hruellan/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/hruellan/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
-        "name": "alt-svc",
-        "color": "fbca04"
-      },
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
-        "name": "design",
-        "color": "02d7e1"
-      },
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editor-ready",
-        "name": "editor-ready",
-        "color": "0b02e1"
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "milestone": null,
-    "comments": 4,
-    "created_at": "2015-02-03T17:12:38Z",
-    "updated_at": "2015-05-27T06:37:39Z",
-    "closed_at": null,
-    "body": "ALPN identifiers from the ALPN spec have been defined in the context of negotiating the application protocol in TLS. In this context, they imply a layering above TLS.\r\nWhen used outside this context, there is an ambiguity, mainly for the http/1.1 token: does it refer to HTTP/1.1 over TLS, or can it refer also to HTTP/1.1 over TCP?\r\nThe draft should resolve this ambiguity by stating that the http/1.1 identifier is used to identify HTTP/1.1 over TLS.\r\n\r\nIn addition, a new identifier, h1c for example, could be defined to identify HTTP/1.1 over cleartext TCP, in order to allow using Alt-Svc to be used to target an HTTP/1.1 server over cleartext TCP."
   },
   {
     "url": "https://api.github.com/repos/httpwg/http-extensions/issues/33",
@@ -502,160 +710,5 @@
     "updated_at": "2015-05-01T13:51:26Z",
     "closed_at": null,
     "body": "After a re-read of alt-svc and opp-sec, it may make sense to have use some better alignment between the two docs around the cases where authentication is not employed.  In particular, alt-svc indicates:\r\n\r\n>   Importantly, this includes its security context; in particular, when TLS\r\n>  <xref target=\"RFC5246\"/> is in use, the alternative server will need to present a certificate\r\n>  for the origin's host name, not that of the alternative. \r\n\r\nReplacing \"is in use\" with \"is used to authenticate\" would align that text better with opp-sec. \r\n\r\nOn the opp-sec side:\r\n\r\n>   A client MAY perform additional checks on the offered certificate if the server does not select an\r\n>  unauthenticated TLS cipher suite.  This document doesn't define any such checks, though clients\r\n>  could be configured with a policy that defines what is acceptable.\r\n\r\nis very unclear for a server implementer (as well as clients).  If authentication doesn't succeed, should the client fail-back to clear-text (the origin) or hard fail?\r\n\r\nOne possibility (which may start getting outside of the editorial realm) is for an Alt-Svc parameter indicating that authentication will not be present (either via an unauthenticated cipher suite or a mismatching cert).  This would allow clients to chose to ignore the Alt-Svc rather than following it and erroring or needing to fall-back).  For example:\r\n\r\n     Alt-Svc: h2=\":443\" ; unauth\r\n\r\n\r\n"
-  },
-  {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/21",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/21/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/21/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/21/events",
-    "html_url": "https://github.com/httpwg/http-extensions/issues/21",
-    "id": 40460906,
-    "number": 21,
-    "title": "Associating Alt-Svc header with an origin",
-    "user": {
-      "login": "mnot",
-      "id": 74384,
-      "avatar_url": "https://avatars.githubusercontent.com/u/74384?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/mnot",
-      "html_url": "https://github.com/mnot",
-      "followers_url": "https://api.github.com/users/mnot/followers",
-      "following_url": "https://api.github.com/users/mnot/following{/other_user}",
-      "gists_url": "https://api.github.com/users/mnot/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/mnot/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/mnot/subscriptions",
-      "organizations_url": "https://api.github.com/users/mnot/orgs",
-      "repos_url": "https://api.github.com/users/mnot/repos",
-      "events_url": "https://api.github.com/users/mnot/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/mnot/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
-        "name": "alt-svc",
-        "color": "fbca04"
-      },
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial",
-        "name": "editorial",
-        "color": "009800"
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "milestone": null,
-    "comments": 6,
-    "created_at": "2014-08-18T07:05:48Z",
-    "updated_at": "2015-02-20T04:07:35Z",
-    "closed_at": null,
-    "body": "I think we need to be REALLY careful about making assertions about an origin in a response, given things like pretty-bad-proxy.\r\n\r\nSection 3 says:\r\n\r\n> Alt-Svc MAY occur in any HTTP response message, regardless of the status code.\r\n\r\nThat's way too broad. For example, what if it's in response to a CONNECT -- will clients associate it with the origin?\r\n\r\nI think the resolution of this will need to reference this:\r\n  http://httpwg.github.io/specs/rfc7231.html#identification\r\n\r\n"
-  },
-  {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/18",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/18/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/18/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/18/events",
-    "html_url": "https://github.com/httpwg/http-extensions/issues/18",
-    "id": 40460464,
-    "number": 18,
-    "title": "Unexpected Alt-Svc frames",
-    "user": {
-      "login": "mnot",
-      "id": 74384,
-      "avatar_url": "https://avatars.githubusercontent.com/u/74384?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/mnot",
-      "html_url": "https://github.com/mnot",
-      "followers_url": "https://api.github.com/users/mnot/followers",
-      "following_url": "https://api.github.com/users/mnot/following{/other_user}",
-      "gists_url": "https://api.github.com/users/mnot/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/mnot/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/mnot/subscriptions",
-      "organizations_url": "https://api.github.com/users/mnot/orgs",
-      "repos_url": "https://api.github.com/users/mnot/repos",
-      "events_url": "https://api.github.com/users/mnot/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/mnot/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
-        "name": "alt-svc",
-        "color": "fbca04"
-      },
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial",
-        "name": "editorial",
-        "color": "009800"
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "milestone": null,
-    "comments": 7,
-    "created_at": "2014-08-18T06:56:55Z",
-    "updated_at": "2015-05-01T02:10:44Z",
-    "closed_at": null,
-    "body": "Section 4 requires PROTOCOL_ERROR on an ALTSVC frame. However, earlier we say that it's a non-critical extension, and can be ignored. Which is it?\r\n\r\nYes, we could make a distinction on \"supporting the frame\", but that doesn't seem to helpful.\r\n\r\nCan we just drop the requirement and say it doesn't mean anything?"
-  },
-  {
-    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/16",
-    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/16/labels{/name}",
-    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/16/comments",
-    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/16/events",
-    "html_url": "https://github.com/httpwg/http-extensions/issues/16",
-    "id": 40460330,
-    "number": 16,
-    "title": "Alt-Svc alternative cache invalidation",
-    "user": {
-      "login": "mnot",
-      "id": 74384,
-      "avatar_url": "https://avatars.githubusercontent.com/u/74384?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/mnot",
-      "html_url": "https://github.com/mnot",
-      "followers_url": "https://api.github.com/users/mnot/followers",
-      "following_url": "https://api.github.com/users/mnot/following{/other_user}",
-      "gists_url": "https://api.github.com/users/mnot/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/mnot/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/mnot/subscriptions",
-      "organizations_url": "https://api.github.com/users/mnot/orgs",
-      "repos_url": "https://api.github.com/users/mnot/repos",
-      "events_url": "https://api.github.com/users/mnot/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/mnot/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc",
-        "name": "alt-svc",
-        "color": "fbca04"
-      },
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design",
-        "name": "design",
-        "color": "02d7e1"
-      },
-      {
-        "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editor-ready",
-        "name": "editor-ready",
-        "color": "0b02e1"
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "milestone": null,
-    "comments": 1,
-    "created_at": "2014-08-18T06:54:06Z",
-    "updated_at": "2015-03-17T05:42:04Z",
-    "closed_at": null,
-    "body": "In 3 The Alt-Svc HTTP Header Field, there's:\r\n\r\n> When an Alt-Svc response header field is received from an origin, its value invalidates and replaces all cached alternative services for that origin.\r\n\r\nHowever, in several other places, we now say that multiple alternatives can co-exist (with the client figuring out which to use). \r\n\r\nIs this still our intent -- i.e., that the header field has a special cache invalidation semantic -- or is it just left over from our previous approach?"
   }
 ]
