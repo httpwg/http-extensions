@@ -304,6 +304,11 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    for establishing new connections, not limiting the use of existing ones.
 </t>
 <t>
+   Alternative services are fully authoritative for the origin in question, including
+   the ability to clear or update cached alternative service entries, extend freshness
+   lifetimes, and any other authority the origin server would have.
+</t>
+<t>
    When alternative services are used to send a client to the most optimal server, a change in
    network configuration can result in cached values becoming suboptimal. Therefore, clients &SHOULD;
    remove from cache all alternative services that lack the "persist" flag with the value "1" when
