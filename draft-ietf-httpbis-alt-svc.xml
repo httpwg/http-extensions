@@ -364,7 +364,9 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    Furthermore, if the connection to the alternative service fails or is unresponsive, the client
    &MAY; fall back to using the origin or another alternative service. Note, however, that this
    could be the basis of a downgrade attack, thus losing any enhanced security properties of the
-   alternative service.
+   alternative service.  If the connection to the alternative service does not negotiate the
+   expected protocol (for example, ALPN fails to negotiate h2, or an Upgrade request to h2c is
+   not accepted), the connection to the alternative service &MUST; be considered to have failed.
 </t>
 </section>
 </section>
