@@ -1279,8 +1279,12 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-08" anchor="changes.since.draft-ietf-httpbis-alt-svc-08">
 <t>
-  Alt-Svc: Elevation of privilege
+  Elevation of privilege
   (<eref target="https://github.com/httpwg/http-extensions/issues/73"/>).
+</t>
+<t>
+  Alternates of alternates
+  (<eref target="https://github.com/httpwg/http-extensions/issues/74"/>).
 </t>
 </section>
 </section>
