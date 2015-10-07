@@ -1281,6 +1281,10 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-08" anchor="changes.since.draft-ietf-httpbis-alt-svc-08">
 <t>
+  Conflicts between Alt-Svc and ALPN
+  (<eref target="https://github.com/httpwg/http-extensions/issues/72"/>).
+</t>
+<t>
   Elevation of privilege
   (<eref target="https://github.com/httpwg/http-extensions/issues/73"/>).
 </t>
