@@ -691,11 +691,6 @@ Host: origin.example.com
 Alt-Used: alternate.example.net
 </artwork>
 </figure>
-<t>
-  The extension parameters (ext-param) are reserved for future use;
-  specifications that want to define an extension will need to update this
-  document (and ought to introduce an extension registry).
-</t>
 </section>
 
 <section title="The 421 Misdirected Request HTTP Status Code" anchor="status">
@@ -1280,6 +1275,11 @@ Alt-Used: alternate.example.net
 </section>
 
 <section title="Since draft-ietf-httpbis-alt-svc-08" anchor="changes.since.draft-ietf-httpbis-alt-svc-08">
+<t>
+  Remove left over text about ext-params, applying to an earlier version 
+  of Alt-Used
+  (see <eref target="https://github.com/httpwg/http-extensions/issues/34"/>).
+</t>
 <t>
   Conflicts between Alt-Svc and ALPN
   (<eref target="https://github.com/httpwg/http-extensions/issues/72"/>).
