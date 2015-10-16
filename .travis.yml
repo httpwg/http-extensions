@@ -9,6 +9,3 @@ install:
 - gem install kramdown-rfc2629
 - pip install xml2rfc
 script: make ghpages
-env:
-  global:
-  - secure: QOUU6ub/aUUABLF8dvrx8xfG/gdwN7RYUOyDk2AQi0Q06hW40x1FulQ11aA0GIzRwHZc3+NDdCHZ/BM2mj/pRlz8jAMr3eaPOCfFdZb1pvGh+UH0hGB0ICEXQoARFv22foYfGcUn9ALRB0OCaU3q+SnUtrT4tuzm3NdKLTrJrhA=
