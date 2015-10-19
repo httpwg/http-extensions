@@ -748,5 +748,6 @@ Authentication Tag.
 
 Mark Nottingham was an original author of this document.
 
-The following people provided valuable feedback and suggestions: Richard Barnes,
-Mike Jones, Stephen Farrell, John Mattsson, Eric Rescorla, and Jim Schaad.
+The following people provided valuable input: Richard Barnes, David Benjamin,
+Peter Beverloo, Mike Jones, Stephen Farrell, Adam Langley, John Mattsson, Eric
+Rescorla, and Jim Schaad.
