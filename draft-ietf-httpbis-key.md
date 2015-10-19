@@ -6,7 +6,7 @@ date: 2015
 category: std
 
 ipr: trust200902
-area: General
+area: Applications and Real-Time
 workgroup: httpbis
 keyword: Internet-Draft
 keyword: caching
@@ -46,7 +46,7 @@ informative:
 --- abstract
 
 The 'Key' header field for HTTP responses allows an origin server to describe the secondary cache
-key ({{RFC7234}}, section 4.1) for a resource, by conveying what is effectively a short algorithm
+key (RFC 7234, Section 4.1) for a resource, by conveying what is effectively a short algorithm
 that can be used upon later requests to determine if a stored response is reusable for a given
 request.
 
