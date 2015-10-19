@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -novw -l
 kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=http://unicorn-wg.github.io/idrefs kramdown-rfc2629
 
-names := http2-encryption alt-svc tunnel-protocol cice legally-restricted-status rfc5987bis
+names := http2-encryption alt-svc tunnel-protocol cice legally-restricted-status rfc5987bis key
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := encryption alt-svc tunnel-protocol cice legally-restricted-status rfc5987bis
+friendly_names := encryption alt-svc tunnel-protocol cice legally-restricted-status rfc5987bis key
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
@@ -52,6 +52,9 @@ legally-restricted-status.%: draft-ietf-httpbis-legally-restricted-status.%
 	cp -f $< $@
 
 rfc5987bis.%: draft-ietf-httpbis-rfc5987bis.%
+	cp -f $< $@
+
+key.%: draft-ietf-httpbis-key.%
 	cp -f $< $@
 
 define makerule_submit_xml =
