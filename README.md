@@ -5,6 +5,13 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 **Be aware that all contributions to the specification fall under the "NOTE WELL" terms therein.**
 
+
+### Key
+* [Editors' Draft](https://httpwg.github.io/http-extensions/key.html) ([plain text](https://httpwg.github.io/http-extensions/key.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-key) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Akey) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-key/)
+
+
 ### Character Encoding and Language for Parameters
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rfc5987bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc5987bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc5987bis) (less recent, more official)
