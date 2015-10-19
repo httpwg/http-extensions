@@ -36,13 +36,6 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A451) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-legally-restricted-status/)
 
-### Tunnel Protocol for CONNECT
-
-**In [RFC Editor Queue](http://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-tunnel-protocol)**
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/tunnel-protocol.html) ([plain text](https://httpwg.github.io/http-extensions/tunnel-protocol.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-tunnel-protocol) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Atunnel-proto) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-tunnel-protocol/)
 
 ### HTTP Client-Initiated Content-Encoding
 
