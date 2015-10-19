@@ -124,5 +124,6 @@ endif
 endif
 
 # backup issues
-issues:
-	curl https://api.github.com/repos/httpwg/http-extensions/issues?state=open > issues.json
+.PHONY: issues.json
+issues.json:
+	python lib/fetch-issues.py > issues.json
