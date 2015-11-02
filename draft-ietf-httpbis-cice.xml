@@ -57,7 +57,7 @@
       coding is widely used for payload data sent in response messages.
     </t>
     <t>
-      Content codings can be used in request messages as well, however
+      Content codings can be used in request messages as well; however,
       discoverability is not on par with response messages. This document
       extends the HTTP "Accept-Encoding" header field for use in responses,
       to indicate the content codings that are supported in requests.
@@ -96,7 +96,7 @@
       is widely used for payload data sent in response messages.
     </t>
     <t>
-      Content codings can be used in request messages as well, however
+      Content codings can be used in request messages as well; however,
       discoverability is not on par with response messages. This document
       extends the HTTP "Accept-Encoding" header field (<xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>) for use in responses,
       to indicate the content codings that are supported in requests. It
@@ -135,7 +135,7 @@
 <t>
   Note that this information is specific to the associated request; the
   set of supported encodings might be different for other resources on the 
-  same server, and could change over time or depend on other aspects of the 
+  same server and could change over time or depend on other aspects of the 
   request (such as the request method).
 </t>
 <t>
@@ -157,7 +157,7 @@
   (Unsupported Media Type) status code, in response to optimistic use of a content coding by
   clients. However, the header field can also be used to indicate to clients that content codings
   are supported, to optimize future interactions. For example, a resource might include it in a 2xx
-  response when the request payload was big enough to justify use of a compression coding, but the
+  response when the request payload was big enough to justify use of a compression coding but the
   client failed do so.
 </t>
 </section>
@@ -218,7 +218,7 @@ Content-Type: text/plain
   Servers that do support some content codings are required to fail requests
   with unsupported content codings as well. To be compliant with this specification,
   servers will need to use the status code 415 (Unsupported Media Type) to
-  signal the problem, and will have to include an "Accept-Encoding" header field
+  signal the problem and will have to include an "Accept-Encoding" header field
   that enumerates the content codings that are supported. As the set of
   supported content codings is usually
   static and small, adding the header field ought to be trivial.
