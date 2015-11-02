@@ -102,7 +102,7 @@
       to indicate the content codings that are supported in requests. It
       furthermore updates the definition of status code 415
       (Unsupported Media Type) (<xref target="RFC7231" x:fmt="," x:rel="#status.415"/>),
-      recommending to include the "Accept-Encoding" header field when
+      recommending that the "Accept-Encoding" header field be included when
       appropriate.
     </t>
 </section>  
@@ -140,15 +140,15 @@
 </t>
 <t>
   <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/> defines status code
-  415 (Unsupported Media Type) to apply to both media type and content coding
-  related problems.
+  415 (Unsupported Media Type) to apply to problems related to both media types
+  and content codings.
 </t>
 <t>
   Servers that fail a request due to an unsupported content coding ought to
   respond with a 415 status and ought to include an "Accept-Encoding" header field in
-  that response, allowing clients to distinguish between content coding
-  related issues and media type related issues. In order
-  to avoid confusion with media type related problems, servers that fail a request
+  that response, allowing clients to distinguish between issues related
+  to content codings and media types. In order
+  to avoid confusion with issues related to media types, servers that fail a request
   with a 415 status for reasons unrelated to content codings &MUST-NOT;
   include the "Accept-Encoding" header field.
 </t>
@@ -176,7 +176,7 @@ Content-Encoding: compress
 ...compressed payload...
 </artwork></figure>
 <t>
-  The server rejects request because it only allows the "gzip" content coding:
+  The server rejects the request because it only allows the "gzip" content coding:
 </t>
 <figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="  ">
 HTTP/1.1 415 Unsupported Media Type
@@ -188,7 +188,7 @@ Content-Type: text/plain
 <x:span anchor="exbody">This resource only supports the "gzip" content coding in requests.
 </x:span></artwork></figure>
 <t>
-  ...at which point the client can retry the request with the supported
+  At this point, the client can retry the request with the supported
   "gzip" content coding.
 </t>
 <t>
@@ -211,7 +211,7 @@ Content-Type: text/plain
   Servers that do not support content codings in requests already are required
   to fail a request that uses a content coding. <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
   defines the status code 415 (Unsupported Media Type) for this purpose, so the only
-  change needed is to include the "Accept-Encoding" header field with value
+  change needed is to include the "Accept-Encoding" header field with the value
   "identity" in that response.
 </t>
 <t>
@@ -464,7 +464,7 @@ Content-Type: text/plain
 
 <section title="Acknowledgements" numbered="false">
 <t>
-  Thanks go to the members of the and HTTPbis Working Group, namely
+  Thanks go to the members of the HTTPbis Working Group, namely
   Amos Jeffries, Ben Campbell, Mark Nottingham, Pete Resnick,
   Stephen Farrell, and Ted Hardie. 
 </t>
