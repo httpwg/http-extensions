@@ -863,9 +863,8 @@ Alt-Used: alternate.example.net
    Implementations &MUST; perform any certificate-pinning validation (e.g.
    <xref target="RFC7469"/>) on alternative services just as they would on direct
    connections to the origin.  Implementations might also choose to add
-   implementation-specific requirements around which certificates are acceptable
-   for alternative services.  For example, an implementation might require alternative
-   services to possess a certificate from the same certificate authority as the origin.
+   other requirements around which certificates are acceptable for alternative
+   services.
 </t>
 </section>
 
