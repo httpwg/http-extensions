@@ -30,7 +30,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### HTTP Legally Restricted Status Code
 
-**In [Working Group Last Call](http://www.w3.org/mid/0E5383DD-927C-493F-90C4-4A9C7CB93308@mnot.net) - ends 2015-10-15**
+**[Working Group Last Call](http://www.w3.org/mid/0E5383DD-927C-493F-90C4-4A9C7CB93308@mnot.net) ended 2015-10-15**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-legally-restricted-status.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
