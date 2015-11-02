@@ -258,9 +258,9 @@ Content-Type: text/plain
    as defined by <xref target="BCP90"/>.
 </t>
 <t>
-   This document updates the definition of the "Accept-Encoding" header field,
-   so the "Permanent Message Header Field Names" registry ought to be updated
-   accordingly:
+   This document updates the definition of the "Accept-Encoding" header field.
+   The "Permanent Message Header Field Names" registry has been updated
+   as follows:
 </t>
 <texttable align="left" suppress-title="true" anchor="iana.header.registration.table">
    <ttcol>Header Field Name</ttcol>
@@ -272,20 +272,19 @@ Content-Type: text/plain
    <c>http</c>
    <c>standard</c>
    <c>
-      <xref target="RFC7231" x:fmt="," x:rel="#header.accept-encoding"/>,
+      <xref target="RFC7231" x:fmt="of" x:rel="#header.accept-encoding"/>
       and <xref target="accept-encoding"/> of this document
    </c>
 </texttable>
 </section>
 <section title="Status Code Registry">
 <t>
-   HTTP status codes are registered within the "Status Code" registry
+   HTTP status codes are registered within the "HTTP Status Codes" registry
    located at <eref target="http://www.iana.org/assignments/http-status-codes"/>.
 </t>
 <t>
-   This document updates the definition of the status code 415 (Unsupported Media Type),
-   so the "Status Code" registry ought to be updated
-   accordingly:
+   This document updates the definition of the status code 415 (Unsupported Media Type).
+   The "HTTP Status Codes" registry has been updated as follows:
 </t>
 <texttable align="left" suppress-title="true" anchor="iana.status.code.registration.table">
    <ttcol>Value</ttcol>
@@ -295,7 +294,7 @@ Content-Type: text/plain
    <c>415</c>
    <c>Unsupported Media Type</c>
    <c>
-      <xref target="RFC7231" x:fmt="," x:rel="#status.415"/>,
+      <xref target="RFC7231" x:fmt="of" x:rel="#status.415"/>
       and <xref target="accept-encoding"/> of this document
    </c>
 </texttable>
