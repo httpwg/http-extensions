@@ -293,7 +293,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    parameter.
 </t>
 <t>
-   Clients &MAY; choose to use an alternative service instead of the origin at any
+   Clients &SHOULD; choose to use an alternative service instead of the origin at any
    time when it is considered fresh; see <xref target="switching"/> for specific
    recommendations.
 </t>
@@ -354,7 +354,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    through that proxy.
 </t>
 <t>
-   When a client uses an alternative service for a request, it can indicate
+   When a client uses an alternative service for a request, it &SHOULD; indicate
    this to the server using the  Alt-Used header field (<xref
       target="indicator"/>).
 </t>
