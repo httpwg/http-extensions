@@ -1316,6 +1316,10 @@ Alt-Used: alternate.example.net
   (<eref target="https://github.com/httpwg/http-extensions/issues/96"/>).
 </t>
 <t>
+  Security for spoofed certs
+  (<eref target="https://github.com/httpwg/http-extensions/issues/98"/>).
+</t>
+<t>
   Reconciling MAY/can vs. SHOULD
   (<eref target="https://github.com/httpwg/http-extensions/issues/101"/>).
 </t>
