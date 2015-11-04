@@ -874,6 +874,13 @@ Alt-Used: alternate.example.net
    lifetime, so that the user agent still directs traffic to the attacker even when
    not using the intermediary.
 </t>
+<t>
+   Implementations &MUST; perform any certificate-pinning validation (e.g.
+   <xref target="RFC7469"/>) on alternative services just as they would on direct
+   connections to the origin.  Implementations might also choose to add
+   other requirements around which certificates are acceptable for alternative
+   services.
+</t>
 </section>
 
 <section title="Changing Protocols" anchor="changing-protocols">
@@ -1110,6 +1117,17 @@ Alt-Used: alternate.example.net
     <date year="2011" month="August"/>
   </front>
   <seriesInfo name="RFC" value="6335"/>
+</reference>
+
+<reference anchor="RFC7469">
+  <front>
+    <title>Public Key Pinning Extension for HTTP</title>
+    <author initials="C." surname="Evans" fullname="Chris Evans"/>
+    <author initials="C." surname="Palmer" fullname="Chris Palmer"/>
+    <author initials="R." surname="Sleevi" fullname="Ryan Sleevi"/>
+    <date month="April" year="2015"/>
+  </front>
+  <seriesInfo name="RFC" value="7469"/>
 </reference>
 
 </references>
