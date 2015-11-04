@@ -293,7 +293,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    parameter.
 </t>
 <t>
-   Clients &MAY; choose to use an alternative service instead of the origin at any
+   Clients can choose to use an alternative service instead of the origin at any
    time when it is considered fresh; see <xref target="switching"/> for specific
    recommendations.
 </t>
@@ -337,7 +337,8 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    Therefore, if a client becomes aware of an alternative service, the client
    &SHOULD; use that alternative service for all requests to the associated origin
-   as soon as it is available, provided that the security properties of the
+   as soon as it is available, provided the alternative service information
+   is fresh (<xref target="caching"/>) and the security properties of the
    alternative service protocol are desirable, as compared to the existing
    connection.
 </t>
@@ -1295,6 +1296,10 @@ Alt-Used: alternate.example.net
 <t>
   IANA procedure for alt-svc parameters
   (<eref target="https://github.com/httpwg/http-extensions/issues/96"/>).
+</t>
+<t>
+  Reconciling MAY/can vs. SHOULD
+  (<eref target="https://github.com/httpwg/http-extensions/issues/101"/>).
 </t>
 </section>
 </section>
