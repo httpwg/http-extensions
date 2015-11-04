@@ -1312,12 +1312,12 @@ Alt-Used: alternate.example.net
   (<eref target="https://github.com/httpwg/http-extensions/issues/74"/>).
 </t>
 <t>
-  IANA procedure for alt-svc parameters
-  (<eref target="https://github.com/httpwg/http-extensions/issues/96"/>).
+  Alt-Svc and Cert Pinning
+  (<eref target="https://github.com/httpwg/http-extensions/issues/76"/>).
 </t>
 <t>
-  Security for spoofed certs
-  (<eref target="https://github.com/httpwg/http-extensions/issues/98"/>).
+  IANA procedure for alt-svc parameters
+  (<eref target="https://github.com/httpwg/http-extensions/issues/96"/>).
 </t>
 <t>
   Reconciling MAY/can vs. SHOULD
