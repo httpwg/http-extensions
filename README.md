@@ -37,14 +37,6 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A451) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-legally-restricted-status/)
 
 
-### HTTP Client-Initiated Content-Encoding
-
-**In [RFC Editor queue](https://www.rfc-editor.org/queue2.html#draft-ietf-httpbis-cice)**
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cice.html)
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cice) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acice) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-cice/)
-
 
 
 
