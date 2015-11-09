@@ -15,7 +15,7 @@ friendly_names := encryption alt-svc legally-restricted-status rfc5987bis key
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
-.PHONY: latest submit idnits clean issues $(names)
+.PHONY: latest submit idnits clean issues.json $(names)
 .INTERMEDIATE: $(addsuffix .redxml,$(drafts))
 .PRECIOUS: $(TARGETS)
 
@@ -121,6 +121,5 @@ endif
 endif
 
 # backup issues
-.PHONY: issues.json
 issues.json:
 	python lib/fetch-issues.py > issues.json

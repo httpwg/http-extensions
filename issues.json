@@ -1,6 +1,201 @@
 [
  [
   {
+   "body": "In \"Guidelines for Usage in HTTP Header Field Definitions\":\r\n\r\n- use HTTPbis whitespace definitions\r\n- use HTTPbis header field ABNF conventions", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/5987bis", 
+     "color": "fbca04", 
+     "name": "5987bis"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "name": "editorial"
+    }
+   ], 
+   "locked": false, 
+   "title": "update usage guidelines to current best practices", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/116", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/116/labels{/name}", 
+   "created_at": "2015-11-07T13:49:30Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/116/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/116/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/116", 
+   "comments": 0, 
+   "number": 116, 
+   "updated_at": "2015-11-07T13:49:42Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/reschke/following{/other_user}", 
+    "events_url": "https://api.github.com/users/reschke/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/reschke/orgs", 
+    "url": "https://api.github.com/users/reschke", 
+    "gists_url": "https://api.github.com/users/reschke/gists{/gist_id}", 
+    "html_url": "https://github.com/reschke", 
+    "subscriptions_url": "https://api.github.com/users/reschke/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/332994?v=3", 
+    "repos_url": "https://api.github.com/users/reschke/repos", 
+    "received_events_url": "https://api.github.com/users/reschke/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/reschke/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "reschke", 
+    "type": "User", 
+    "id": 332994, 
+    "followers_url": "https://api.github.com/users/reschke/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": null, 
+   "id": 115667935
+  }, 
+  {
+   "body": "The specification still refers to RFC 2616 when extending that spec's \"parameter\" production. This needs to be updated, in particular as the there isn't really a generic \"parameter\" ABNF specs can rely on in HTTP.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/5987bis", 
+     "color": "fbca04", 
+     "name": "5987bis"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design", 
+     "color": "02d7e1", 
+     "name": "design"
+    }
+   ], 
+   "locked": false, 
+   "title": "remove RFC 2616 dependencies", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/115", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/115/labels{/name}", 
+   "created_at": "2015-11-07T13:47:16Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/115/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/115/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/115", 
+   "comments": 0, 
+   "number": 115, 
+   "updated_at": "2015-11-07T13:48:36Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/reschke/following{/other_user}", 
+    "events_url": "https://api.github.com/users/reschke/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/reschke/orgs", 
+    "url": "https://api.github.com/users/reschke", 
+    "gists_url": "https://api.github.com/users/reschke/gists{/gist_id}", 
+    "html_url": "https://github.com/reschke", 
+    "subscriptions_url": "https://api.github.com/users/reschke/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/332994?v=3", 
+    "repos_url": "https://api.github.com/users/reschke/repos", 
+    "received_events_url": "https://api.github.com/users/reschke/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/reschke/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "reschke", 
+    "type": "User", 
+    "id": 332994, 
+    "followers_url": "https://api.github.com/users/reschke/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": null, 
+   "id": 115667834
+  }, 
+  {
+   "body": "", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/cice", 
+     "color": "fbca04", 
+     "name": "cice"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "name": "editorial"
+    }
+   ], 
+   "locked": false, 
+   "title": "Editorial AUTH48 changes for draft-ietf-httpbis-cice", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/114", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/114/labels{/name}", 
+   "created_at": "2015-11-02T09:20:11Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/114/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/114/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/114", 
+   "comments": 1, 
+   "number": 114, 
+   "updated_at": "2015-11-04T07:30:48Z", 
+   "assignee": null, 
+   "state": "closed", 
+   "user": {
+    "following_url": "https://api.github.com/users/reschke/following{/other_user}", 
+    "events_url": "https://api.github.com/users/reschke/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/reschke/orgs", 
+    "url": "https://api.github.com/users/reschke", 
+    "gists_url": "https://api.github.com/users/reschke/gists{/gist_id}", 
+    "html_url": "https://github.com/reschke", 
+    "subscriptions_url": "https://api.github.com/users/reschke/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/332994?v=3", 
+    "repos_url": "https://api.github.com/users/reschke/repos", 
+    "received_events_url": "https://api.github.com/users/reschke/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/reschke/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "reschke", 
+    "type": "User", 
+    "id": 332994, 
+    "followers_url": "https://api.github.com/users/reschke/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": "2015-11-04T07:30:48Z", 
+   "id": 114555379
+  }, 
+  {
+   "body": "http://tools.ietf.org/html/draft-ietf-httpbis-key-00#section-2.3.1\r\n2.3.1. div first example\r\n...(because, divided by 5, they all result in 1)...\r\nI think they all result in 0.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/key", 
+     "color": "fbca04", 
+     "name": "key"
+    }
+   ], 
+   "locked": false, 
+   "title": "[Key] typo in first div example", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/113", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/113/labels{/name}", 
+   "created_at": "2015-10-21T08:38:02Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/113/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/113/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/113", 
+   "comments": 0, 
+   "number": 113, 
+   "updated_at": "2015-10-28T14:06:21Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/waldbaerkoch/following{/other_user}", 
+    "events_url": "https://api.github.com/users/waldbaerkoch/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/waldbaerkoch/orgs", 
+    "url": "https://api.github.com/users/waldbaerkoch", 
+    "gists_url": "https://api.github.com/users/waldbaerkoch/gists{/gist_id}", 
+    "html_url": "https://github.com/waldbaerkoch", 
+    "subscriptions_url": "https://api.github.com/users/waldbaerkoch/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/3583116?v=3", 
+    "repos_url": "https://api.github.com/users/waldbaerkoch/repos", 
+    "received_events_url": "https://api.github.com/users/waldbaerkoch/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/waldbaerkoch/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "waldbaerkoch", 
+    "type": "User", 
+    "id": 3583116, 
+    "followers_url": "https://api.github.com/users/waldbaerkoch/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": null, 
+   "id": 112537341
+  }, 
+  {
    "body": "See:\r\n  https://github.com/mnot/I-D/issues/138", 
    "labels": [
     {
@@ -72,9 +267,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/111/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/111/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/111", 
-   "comments": 0, 
+   "comments": 1, 
    "number": 111, 
-   "updated_at": "2015-10-19T05:21:38Z", 
+   "updated_at": "2015-10-21T08:52:37Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -422,9 +617,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/104/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/104/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/104", 
-   "comments": 0, 
+   "comments": 1, 
    "number": 104, 
-   "updated_at": "2015-10-19T05:22:22Z", 
+   "updated_at": "2015-11-02T05:08:53Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -477,9 +672,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/103/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/103/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/103", 
-   "comments": 2, 
+   "comments": 3, 
    "number": 103, 
-   "updated_at": "2015-10-14T00:27:25Z", 
+   "updated_at": "2015-10-25T21:15:05Z", 
    "assignee": {
     "following_url": "https://api.github.com/users/timbray/following{/other_user}", 
     "events_url": "https://api.github.com/users/timbray/events{/privacy}", 
@@ -545,9 +740,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/102/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/102/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/102", 
-   "comments": 0, 
+   "comments": 1, 
    "number": 102, 
-   "updated_at": "2015-10-13T00:29:52Z", 
+   "updated_at": "2015-10-25T21:25:20Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -580,6 +775,11 @@
      "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc", 
      "color": "fbca04", 
      "name": "alt-svc"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design", 
+     "color": "02d7e1", 
+     "name": "design"
     }
    ], 
    "locked": false, 
@@ -590,9 +790,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/101/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/101/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/pull/101", 
-   "comments": 1, 
+   "comments": 3, 
    "number": 101, 
-   "updated_at": "2015-10-07T06:30:58Z", 
+   "updated_at": "2015-11-04T12:51:26Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -737,11 +937,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/98/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/98/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/pull/98", 
-   "comments": 2, 
+   "comments": 4, 
    "number": 98, 
-   "updated_at": "2015-10-07T16:00:55Z", 
+   "updated_at": "2015-11-04T15:03:13Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/MikeBishop/following{/other_user}", 
     "events_url": "https://api.github.com/users/MikeBishop/events{/privacy}", 
@@ -762,7 +962,7 @@
     "followers_url": "https://api.github.com/users/MikeBishop/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-04T15:03:12Z", 
    "pull_request": {
     "url": "https://api.github.com/repos/httpwg/http-extensions/pulls/98", 
     "diff_url": "https://github.com/httpwg/http-extensions/pull/98.diff", 
@@ -838,11 +1038,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/96/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/96/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/96", 
-   "comments": 2, 
+   "comments": 3, 
    "number": 96, 
-   "updated_at": "2015-10-05T00:12:40Z", 
+   "updated_at": "2015-11-04T09:08:17Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/reschke/following{/other_user}", 
     "events_url": "https://api.github.com/users/reschke/events{/privacy}", 
@@ -863,7 +1063,7 @@
     "followers_url": "https://api.github.com/users/reschke/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-04T09:08:17Z", 
    "id": 107380621
   }, 
   {
@@ -1034,9 +1234,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/92/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/92/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/92", 
-   "comments": 2, 
+   "comments": 4, 
    "number": 92, 
-   "updated_at": "2015-09-25T06:23:12Z", 
+   "updated_at": "2015-11-02T04:24:46Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -1185,9 +1385,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/89/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/89/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/89", 
-   "comments": 6, 
+   "comments": 7, 
    "number": 89, 
-   "updated_at": "2015-07-21T13:46:17Z", 
+   "updated_at": "2015-11-02T04:15:06Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -1318,7 +1518,9 @@
    "milestone": null, 
    "closed_at": "2015-09-02T07:21:24Z", 
    "id": 96049610
-  }, 
+  }
+ ], 
+ [
   {
    "body": "", 
    "labels": [], 
@@ -1542,9 +1744,7 @@
    }, 
    "closed_at": "2015-09-25T06:21:18Z", 
    "id": 85973736
-  }
- ], 
- [
+  }, 
   {
    "body": "Is 451 cacheable by default? I suspect so.\r\n\r\nSee:\r\n  http://httpwg.github.io/specs/rfc7231.html#overview.of.status.codes", 
    "labels": [
@@ -1672,9 +1872,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/80/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/80/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/80", 
-   "comments": 5, 
+   "comments": 6, 
    "number": 80, 
-   "updated_at": "2015-10-14T00:27:15Z", 
+   "updated_at": "2015-10-25T21:25:58Z", 
    "assignee": {
     "following_url": "https://api.github.com/users/timbray/following{/other_user}", 
     "events_url": "https://api.github.com/users/timbray/events{/privacy}", 
@@ -1893,9 +2093,9 @@
    "html_url": "https://github.com/httpwg/http-extensions/issues/76", 
    "comments": 5, 
    "number": 76, 
-   "updated_at": "2015-10-05T00:26:50Z", 
+   "updated_at": "2015-11-04T16:12:50Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/MikeBishop/following{/other_user}", 
     "events_url": "https://api.github.com/users/MikeBishop/events{/privacy}", 
@@ -1916,7 +2116,7 @@
     "followers_url": "https://api.github.com/users/MikeBishop/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-04T16:12:50Z", 
    "id": 82174775
   }, 
   {
@@ -2971,7 +3171,9 @@
    "milestone": null, 
    "closed_at": "2015-04-27T16:12:16Z", 
    "id": 64817562
-  }, 
+  }
+ ], 
+ [
   {
    "body": "The `http/1.1` ALPN token identifies HTTP/1.1 over TLS.", 
    "labels": [], 
@@ -3193,9 +3395,7 @@
    "milestone": null, 
    "closed_at": "2015-03-11T14:38:37Z", 
    "id": 60443746
-  }
- ], 
- [
+  }, 
   {
    "body": "The spec currently doesn't use BCP14 which MAY or MAY NOT confuse people.", 
    "labels": [
@@ -4481,7 +4681,9 @@
    "milestone": null, 
    "closed_at": "2014-08-19T18:31:54Z", 
    "id": 40551357
-  }, 
+  }
+ ], 
+ [
   {
    "body": "Section 3 implies that there are no cipher suite requirements on Opp Sec, but it'd be good to discuss and formalise this. May require tweaks to HTTP/2 (which places requirements on use of TLS, *not* TLS with \"https\").", 
    "labels": [
@@ -4677,9 +4879,7 @@
     "patch_url": "https://github.com/httpwg/http-extensions/pull/23.patch"
    }, 
    "id": 40548566
-  }
- ], 
- [
+  }, 
   {
    "body": "HTTP-TLS creates a commitment to use an authenticated connection.  We need to make it clear that changes to Alt-Svc, even on that connection cannot change the fact that the origin needs to be authenticated for the duration of the commitment.\r\n\r\nOne potential attack here is for a MitM to advertise a different Alt-Svc, perhaps overriding the advertisement for the secured endpoint.  A naive implementation might update the set of available Alt-Svc advertisements and then continue.  What should happen here is that the service becomes unreachable. ", 
    "labels": [
