@@ -1316,6 +1316,10 @@ Alt-Used: alternate.example.net
   (<eref target="https://github.com/httpwg/http-extensions/issues/76"/>).
 </t>
 <t>
+  Using alt-svc on localhost 
+  (no change to spec, see <eref target="https://github.com/httpwg/http-extensions/issues/89"/>).
+</t>
+<t>
   IANA procedure for alt-svc parameters
   (<eref target="https://github.com/httpwg/http-extensions/issues/96"/>).
 </t>
