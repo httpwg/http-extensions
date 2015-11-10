@@ -22,9 +22,8 @@
 <?rfc inline="yes" ?>
 
 <rfc ipr="trust200902" 
-     docName="draft-ietf-httpbis-legally-restricted-status-02" 
-     category="std"
-     xmlns:x="http://purl.org/net/xml2rfc/ext">
+     docName="draft-ietf-httpbis-legally-restricted-status-03" 
+     category="std">
 
   <front>
     <title abbrev="HTTP-status-451">An HTTP Status Code to Report Legal Obstacles</title>
@@ -37,7 +36,7 @@
     </author>
 
 
-    <date year="2015" month="August"/>
+    <date year="2015" month="November"/>
     <area>Applications and Real-Time</area>
     <workgroup>HTTP</workgroup>
     <keyword>HTTP</keyword>
@@ -73,8 +72,9 @@
 
     <section title="Introduction">
       <t>This document specifies a Hypertext Transfer Protocol (HTTP) 
-      status code for use when a server operator has a received a legal demand
-      to deny access to a resource.</t>
+      status code for use when a server operator has received a legal
+      demand to deny access to a resource or to a set of resources which
+      includes the requested resource.</t>
 
       <t>This status code can be used to provide transparency
       in circumstances where issues of law or public policy affect server
@@ -113,6 +113,7 @@
 
       <figure><artwork type="example">
 HTTP/1.1 451 Unavailable For Legal Reasons
+Link: &lt;https://spqr.example.org/legislatione>; rel="blocked-by"
 Content-Type: text/html
 
 &lt;html>
@@ -158,14 +159,11 @@ using technical countermeasures such as a VPN or the Tor network.</t>
 
     <section title="Security Considerations">
 
-      <section title="451 Unavailable for Legal Reasons">
-	<t>The 451 status code is optional; clients cannot rely upon its
-	use. It is possible that certain legal authorities might wish
-	to avoid transparency, and not only demand the restriction of access 
-        to certain resources, but also avoid disclosing that the demand 
-        was made.  </t>
-      </section>
-
+      <t>Clients cannot rely upon the use of the 451 status code.
+      It is possible that certain legal authorities might wish
+      to avoid transparency, and not only demand the restriction of access 
+      to certain resources, but also avoid disclosing that the demand 
+      was made.  </t>
 
     </section>
 
@@ -177,6 +175,15 @@ using technical countermeasures such as a VPN or the Tor network.</t>
 	<t>Code: 451</t>
 	<t>Description: Unavailable for Legal Reasons</t>
 	<t>Specification: [ this document ]</t>
+      </list></t>
+
+      <t>The Link Relation Type Registry should updated with the
+      following entry:</t>
+      <t><list style="symbols">
+	<t>Relation Name: blocked-by</t>
+	<t>Description: Identifies the entity blocking access to a resource
+	folllowing on receipt of a legal demand.</t>
+	<t>Reference: This document</t>
       </list></t>
     </section>
 
