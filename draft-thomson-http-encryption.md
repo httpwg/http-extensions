@@ -115,8 +115,8 @@ sequence of JSON Web Encryption [RFC7516] values with a fixed header.
 This mechanism is likely only a small part of a larger design that uses content
 encryption.  How clients and servers acquire and identify keys will depend on
 the use case.  Though a complete key management system is not described, this
-document defines an Encryption-Key header field that can be used to convey
-keying material.
+document defines an Crypto-Key header field that can be used to convey keying
+material.
 
 
 ## Notational Conventions
@@ -134,9 +134,9 @@ identified as AEAD_AES_128_GCM in [RFC5116], Section 5.1.  The AEAD_AES_128_GCM
 algorithm uses a 128 bit content encryption key.
 
 When this content-coding is in use, the Encryption header field ({{encryption}})
-describes how encryption has been applied.  The Encryption-Key header field
-({{encryption-key}}) can be included to describe how the content encryption key
-is derived or retrieved.
+describes how encryption has been applied.  The Crypto-Key header field
+({{crypto-key}}) can be included to describe how the content encryption key is
+derived or retrieved.
 
 The "aesgcm128" content-coding uses a single fixed set of encryption
 primitives.  Cipher suite agility is achieved by defining a new content-coding
@@ -239,8 +239,8 @@ keyid:
 : The "keyid" parameter contains a string that identifies the keying material
 that is used.  The "keyid" parameter SHOULD be included, unless key
 identification is guaranteed by other means.  The "keyid" parameter MUST be used
-if keying material included in an Encryption-Key header field is needed to
-derive the content encryption key.
+if keying material included in an Crypto-Key header field is needed to derive
+the content encryption key.
 
 salt:
 
@@ -270,20 +270,26 @@ SHA-256 hash algorithm [FIPS180-2].
 The decoded value of the "salt" parameter is the salt input to HKDF function.
 The keying material identified by the "keyid" parameter is the input keying
 material (IKM) to HKDF.  Input keying material can either be prearranged, or can
-be described using the Encryption-Key header field ({{encryption-key}}).  The
+be described using the Crypto-Key header field ({{crypto-key}}).  The
 first step of HKDF is therefore:
 
 ~~~
    PRK = HMAC-SHA-256(salt, IKM)
 ~~~
 
+The info parameter to HKDF is set to the ASCII-encoded string "Content-Encoding:
+aesgcm128", a single zero octet and an optional context string:
+
+~~~
+   cek_info = "Content-Encoding: aesgcm128" || 0x00 || context
+~~~
+
 AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key, so the
-length (L) parameter to HKDF is 16.  The info parameter is set to the
-ASCII-encoded string "Content-Encoding: aesgcm128".  The second step of HKDF can
+length (L) parameter to HKDF is 16.  The second step of HKDF can
 therefore be simplified to the first 16 octets of a single HMAC:
 
 ~~~
-   CEK = HMAC-SHA-256(PRK, "Content-Encoding: aesgcm128" || 0x01)
+   CEK = HMAC-SHA-256(PRK, cek_info || 0x01)
 ~~~
 
 
@@ -294,8 +300,17 @@ for each record is a 12 octet (96 bit) value is produced from the record
 sequence number and a value derived from the input keying material.
 
 The input keying material and salt values are input to HKDF with different info
-and length parameters.  The info parameter for the nonce is the ASCII-encoded
-string "Content-Encoding: nonce" and the length (L) parameter is 12 octets.
+and length parameters.
+
+The length (L) parameter is 12 octets.  The info parameter for the nonce is the
+ASCII-encoded string "Content-Encoding: nonce", a single zero octet and an
+context:
+
+~~~
+   nonce_info = "Content-Encoding: nonce" || 0x00 || context
+~~~
+
+Unless otherwise specified, the context is a zero length octet sequence.
 
 The result is combined with the record sequence number - using exclusive or - to
 produce the nonce.  The record sequence number (SEQ) is a 96-bit unsigned
@@ -304,21 +319,21 @@ integer in network byte order that starts at zero.
 Thus, the final nonce for each record is a 12 octet value:
 
 ~~~
-   NONCE = HMAC-SHA-256(PRK, "Content-Encoding: nonce" || 0x01) ^ SEQ
+   NONCE = HMAC-SHA-256(PRK, nonce_info || 0x01) XOR SEQ
 ~~~
 
 
-# Encryption-Key Header Field {#encryption-key}
+# Crypto-Key Header Field {#crypto-key}
 
-An Encryption-Key header field can be used to describe the input keying material
+An Crypto-Key header field can be used to describe the input keying material
 used in the Encryption header field.
 
-The Encryption-Key header field uses the extended ABNF syntax defined in Section
-1.2 of [RFC7230] and the `parameter` rule from [RFC7231].
+The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
+of [RFC7230] and the `parameter` rule from [RFC7231].
 
 ~~~
-  Encryption-Key-val = #encryption_key_params
-  encryption_key_params = [ parameter *( ";" parameter ) ]
+  Crypto-Key-val = #crypto_key_params
+  crypto_key_params = [ parameter *( ";" parameter ) ]
 ~~~
 
 keyid:
@@ -337,12 +352,12 @@ dh:
 the header field can be used to encrypt content for a specific recipient.
 
 
-The input keying material used by the content-encoding key derivation (see
-{{derivation}}) can be determined based on the information in the Encryption-Key
-header field.  The method for key derivation depends on the parameters that are
-present in the header field.
+The input keying material used by the key derivation (see {{derivation}}) can be
+determined based on the information in the Crypto-Key header field.  The method
+for key derivation depends on the parameters that are present in the header
+field.
 
-The value or values provided in the Encryption-Key header field is valid only
+The value or values provided in the Crypto-Key header field is valid only
 for the current HTTP message unless additional information indicates a greater
 scope.
 
@@ -379,16 +394,35 @@ following information MUST be established out of band:
 
 * The modp group or elliptic curve that will be used.
 
+* A label that uniquely identifies the group.  This label will be expressed as a
+  sequence of octets and MUST NOT include a zero-valued octet.
+
 * The format of the ephemeral public share that is included in the "dh"
-  parameter.  For instance, using ECDH both parties need to agree whether this
-  is an uncompressed or compressed point.
+  parameter.  This encoding MUST result in a single sequence of octets.  For
+  instance, using ECDH both parties need to agree whether this is an
+  uncompressed or compressed point.
 
 In addition to identifying which content-encoding this input keying material is
 used for, the "keyid" parameter is used to identify this additional information
 at the receiver.
 
 The intended recipient recovers their private key and are then able to generate
-a shared secret using the appropriate Diffie-Hellman process.
+a shared secret using the designated Diffie-Hellman process.
+
+To provide contributory behavior, the context for content encryption key and
+nonce derivation (see {{derivation}}) is set to include the derivation mode.
+The context is formed from the group label, a single zero octet, the length of
+the public key of the recipient, the encoded public key of the recipient, the
+length of the public key of the sender, and the public key of the sender:
+
+~~~
+   context = label || 0x00 ||
+               length(recipient_public) || recipient_public ||
+               length(sender_public) || sender_public
+~~~
+
+The two length fields are encoded as a two octet unsigned integer in network
+byte order.
 
 Specifications that rely on an Diffie-Hellman exchange for determining input
 keying material MUST either specify the parameters for Diffie-Hellman (group
@@ -457,10 +491,10 @@ encryption uses a 1200 octet record size.
 HTTP/1.1 200 OK
 Content-Length: 32
 Content-Encoding: aesgcm128
-Encryption: keyid="a1"; salt="ibZx1RNz537h1XNkRcPpjA"
-Encryption-Key: keyid="a1"; aesgcm128="9Z57YCb3dK95dSsdFJbkag"
+Encryption: keyid="a1"; salt="vr0o6Uq3w_KDWeatc27mUg"
+Crypto-Key: keyid="a1"; aesgcm128="csPJEXBYA5U-Tal9EdJi-w"
 
-zK3kpG__Z8whjIkG6RYgPz11oUkTKcxPy9WP-VPMfuc
+fuag8ThIRIazSHKUqJ5OduR75UgEUuM76J8UFwadEvg
 ~~~
 
 This example shows the string "I am the walrus" encrypted using an directly
@@ -475,12 +509,12 @@ reasons only.
 HTTP/1.1 200 OK
 Content-Length: 32
 Content-Encoding: aesgcm128
-Encryption: keyid="dhkey"; salt="5hpuYfxDzG6nSs9-EQuaBg"
-Encryption-Key: keyid="dhkey";
-                dh="BLsyIPbDn6bquEOwHaju2gj8kUVoflzTtPs_6fGoock_
-                    dwxi1BcgFtObPVnic4alcEucx8I6G8HmEZCJnAl36Zg"
+Encryption: keyid="dhkey"; salt="BXlfKQLkr1Uye5npraPXsw"
+Crypto-Key: keyid="dhkey";
+                dh="BAAchS17kTRTkYanibzO_L4jrHf91xu5ntQg5mHllLdS
+		    NYoiuOBoQwMSx0eUWjrt3p0fSnoEMlwAe-Kbom_b0q0"
 
-BmuHqRzdD4W1mibxglrPiRHZRSY49Dzdm6jHrWXzZrE
+UNkrli1bKtIa_k8gq_z4ASltJFQOarvE76gQ__iImLc
 ~~~
 
 This example shows the same string, "I am the walrus", encrypted using ECDH over
@@ -495,11 +529,11 @@ added for presentation purposes only.
 
 ~~~
    Receiver:
-      private key: iCjNf8v4ox_g1rJuSs_gbNmYuUYx76ZRruQs_CHRzDg
-      public key: BPM1w41cSD4BMeBTY0Fz9ryLM-LeM22Dvt0gaLRukf05
-                  rMhzFAvxVW_mipg5O0hkWad9ZWW0uMRO2Nrd32v8odQ
+      private key: c2FFWBracEQR_EiVp8l9zBG-bbZI2qzTbz4dlEvzpCE
+      public key: BDzMceVKKGnijK94B-j0BnmhvKEwiAyhvmpgo7D-yvMB
+                  RBfuPnLfaaDau47K_isqoQRJJGR33GcENUUjohECyNs
    Sender:
-      private key: W0cxgeHDZkR3uMQYAbVgF5swKQUAR7DgoTaaQVlA-Fg
+      private key: f0vn_1qHZmluyKDzQncncko0Y3UMkqiiRYbV3PuB2P4
       public key: <the value of the "dh" parameter>
 ~~~
 
@@ -628,10 +662,10 @@ Header Registry, as detailed in {{encryption}}.
 * Reference: this specification
 * Notes:
 
-This memo registers the "Encryption-Key" HTTP header field in the Permanent
-Message Header Registry, as detailed in {{encryption-key}}.
+This memo registers the "Crypto-Key" HTTP header field in the Permanent
+Message Header Registry, as detailed in {{crypto-key}}.
 
-* Field name: Encryption-Key
+* Field name: Crypto-Key
 * Protocol: HTTP
 * Status: Standard
 * Reference: this specification
@@ -672,11 +706,11 @@ The initial contents of this registry are:
 * Reference: this document
 
 
-## The HTTP Encryption-Key Parameter Registry {#encryption-key-registry}
+## The HTTP Crypto-Key Parameter Registry {#crypto-key-registry}
 
-This memo establishes a registry for parameters used by the "Encryption-Key"
-header field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.
-The "Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
+This memo establishes a registry for parameters used by the "Crypto-Key" header
+field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.  The
+"Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
 "Specification Required" policy [RFC5226].
 
 Entries in this registry are expected to include the following information:
