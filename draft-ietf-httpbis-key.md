@@ -152,7 +152,7 @@ between each field-name and its parameter set.
 ~~~
 
 Note that, as per {{RFC7231}}, parameter names are case-insensitive, and parameter values can be
-double-quoted strings (potentially with "\"-escaped characters inside).
+double-quoted strings (potentially with "\\"-escaped characters inside).
 
 The following header fields have the same effect:
 
