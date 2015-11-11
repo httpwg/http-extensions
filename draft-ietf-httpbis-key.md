@@ -341,7 +341,7 @@ Key: Bar;div=5
 ~~~
 
 indicates that the "Bar" header's field value should be partitioned into groups of 5. Thus, the
-following field values would be considered the same (because, divided by 5, they all result in 1):
+following field values would be considered the same (because, divided by 5, they all result in 0):
 
 ~~~
 Bar: 1
