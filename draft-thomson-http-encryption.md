@@ -509,17 +509,18 @@ reasons only.
 HTTP/1.1 200 OK
 Content-Length: 32
 Content-Encoding: aesgcm128
-Encryption: keyid="dhkey"; salt="BXlfKQLkr1Uye5npraPXsw"
+Encryption: keyid="dhkey"; salt="Qg61ZJRva_XBE9IEUelU3A"
 Crypto-Key: keyid="dhkey";
-                dh="BAAchS17kTRTkYanibzO_L4jrHf91xu5ntQg5mHllLdS
-		    NYoiuOBoQwMSx0eUWjrt3p0fSnoEMlwAe-Kbom_b0q0"
+                dh="BDgpRKok2GZZDmS4r63vbJSUtcQx4Fq1V58-6-3NbZzS
+                    TlZsQiCEDTQy3CZ0ZMsqeqsEb7qW2blQHA4S48fynTk"
 
-UNkrli1bKtIa_k8gq_z4ASltJFQOarvE76gQ__iImLc
+G6j_sfKg0qebO62yXpTCayN2KV24QitNiTvLgcFiEj0
 ~~~
 
 This example shows the same string, "I am the walrus", encrypted using ECDH over
-the P-256 curve [FIPS186]. The content body is shown here encoded in URL-safe
-base64 for presentation reasons only.
+the P-256 curve [FIPS186], which is identified with the label "P-256" encoded in
+ASCII. The content body is shown here encoded in URL-safe base64 for
+presentation reasons only.
 
 The receiver (in this case, the HTTP client) uses a key pair that is identified
 by the string "dhkey" and the sender (the server) uses a key pair for which the
@@ -529,11 +530,11 @@ added for presentation purposes only.
 
 ~~~
    Receiver:
-      private key: c2FFWBracEQR_EiVp8l9zBG-bbZI2qzTbz4dlEvzpCE
-      public key: BDzMceVKKGnijK94B-j0BnmhvKEwiAyhvmpgo7D-yvMB
-                  RBfuPnLfaaDau47K_isqoQRJJGR33GcENUUjohECyNs
+      private key: 9FWl15_QUQAWDaD3k3l50ZBZQJ4au27F1V4F0uLSD_M
+      public key: BCEkBjzL8Z3C-oi2Q7oE5t2Np-p7osjGLg93qUP0wvqR
+                  T21EEWyf0cQDQcakQMqz4hQKYOQ3il2nNZct4HgAUQU
    Sender:
-      private key: f0vn_1qHZmluyKDzQncncko0Y3UMkqiiRYbV3PuB2P4
+      private key: vG7TmzUX9NfVR4XUGBkLAFu8iDyQe-q_165JkkN0Vlw
       public key: <the value of the "dh" parameter>
 ~~~
 
