@@ -22,7 +22,7 @@
 <?rfc inline="yes" ?>
 
 <rfc ipr="trust200902" 
-     docName="draft-ietf-httpbis-legally-restricted-status-03" 
+     docName="draft-ietf-httpbis-legally-restricted-status-04" 
      category="std">
 
   <front>
@@ -192,11 +192,14 @@ using technical countermeasures such as a VPN or the Tor network.</t>
   <back>
     <references title="Normative References">
       &rfc2119;
-      &rfc4084;
-      &rfc4924;
       &rfc7234;
       &rfc3986;
       &rfc5988;
+    </references>
+
+    <references title="Informative References">
+      &rfc4084;
+      &rfc4924;
     </references>
 
     <section title="Acknowledgements">
