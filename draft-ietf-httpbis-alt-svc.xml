@@ -541,7 +541,7 @@ ma = <x:ref>delta-seconds</x:ref>
   <artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="  ">
 HTTP/1.1 200 OK
 Content-Type: text/html
-Cache-Control: 600
+Cache-Control: max-age=600
 Age: 30
 Alt-Svc: h2c=":8000"; ma=60
 </artwork>
@@ -1316,12 +1316,20 @@ Alt-Used: alternate.example.net
   (<eref target="https://github.com/httpwg/http-extensions/issues/76"/>).
 </t>
 <t>
+  Using alt-svc on localhost 
+  (no change to spec, see <eref target="https://github.com/httpwg/http-extensions/issues/89"/>).
+</t>
+<t>
   IANA procedure for alt-svc parameters
   (<eref target="https://github.com/httpwg/http-extensions/issues/96"/>).
 </t>
 <t>
   Reconciling MAY/can vs. SHOULD
   (<eref target="https://github.com/httpwg/http-extensions/issues/101"/>).
+</t>
+<t>
+  Typo in alt-svc caching example
+  (<eref target="https://github.com/httpwg/http-extensions/issues/117"/>).
 </t>
 </section>
 </section>
@@ -1332,7 +1340,8 @@ Alt-Used: alternate.example.net
   Thanks to Adam Langley, Bence Beky, Eliot Lear, Erik Nygren, Guy Podjarny,
   Herve Ruellan, Martin Thomson, Matthew Kerwin, Mike Bishop,
   Paul Hoffman,
-  Richard Barnes, Stephen Farrell, Stephen Ludin, and Will Chan for their
+  Richard Barnes, Richard Bradbury, Stephen Farrell, Stephen Ludin,
+  and Will Chan for their
   feedback and suggestions.
 </t>
 <t>
