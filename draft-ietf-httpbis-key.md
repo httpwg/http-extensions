@@ -236,7 +236,7 @@ response) using Key, the following steps are taken:
 1. If the Key header field is not present on the most recent cacheable (as per {{RFC7234}}, Section 3)) response seen for the resource, abort this algorithm (i.e., fall back to using Vary to determine the secondary cache key).
 2. Let `key_value` be the result of Creating a Header Field Value ({{value}}) with `key` as the `target_field_name` and the most recently seen response header list for the resource as `header_list`.
 3. Let `secondary_key` be an empty string.
-4. Create `key_list` by splitting `key_value` on "," characters.
+4. Create `key_list` by splitting `key_value` on "," characters, excepting "," characters within quoted strings, as per {{RFC7230}} Section 3.2.6..
 5. For `key_item` in `key_list`: 
 
    {: style="format %d)" counter="b"}
