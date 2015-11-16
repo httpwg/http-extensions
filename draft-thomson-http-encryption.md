@@ -284,6 +284,10 @@ aesgcm128", a single zero octet and an optional context string:
    cek_info = "Content-Encoding: aesgcm128" || 0x00 || context
 ~~~
 
+Unless otherwise specified, the context is a zero length octet sequence.
+Specifications that use this content encoding MAY specify the use of an expanded
+context to cover additional inputs in the key derivation.
+
 AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key, so the
 length (L) parameter to HKDF is 16.  The second step of HKDF can
 therefore be simplified to the first 16 octets of a single HMAC:
@@ -310,7 +314,8 @@ context:
    nonce_info = "Content-Encoding: nonce" || 0x00 || context
 ~~~
 
-Unless otherwise specified, the context is a zero length octet sequence.
+The context for nonce derivation SHOULD be the same as is used for content
+encryption key derivation.
 
 The result is combined with the record sequence number - using exclusive or - to
 produce the nonce.  The record sequence number (SEQ) is a 96-bit unsigned
