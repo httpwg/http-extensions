@@ -942,12 +942,14 @@ Alt-Used: alternate.example.net
   This risk can be mitigated in servers by using the URL scheme explicitly
   carried by the protocol (e.g., ":scheme" in HTTP/2 or the "absolute form" of
   the request target in HTTP/1.1) as an indication of security context, instead of
-  other connection properties (<xref target="RFC720" x:fmt="," x:rel="#HttpRequest"/>
-  and <xref target="RFC7231" x:fmt="," x:rel="#absolute-form"/>). When the protocol
-  does not explicitly carry the scheme (e.g., as is usually the case for HTTP/1.1 over
-  TLS, servers can, mitigate this risk by either assuming that
-  all requests have an insecure context, or by refraining from advertising
-  alternative services for insecure schemes (such as HTTP).
+  other connection properties (<xref target="RFC7540" x:fmt="," x:rel="#HttpRequest"/>
+  and <xref target="RFC7230" x:fmt="," x:rel="#absolute-form"/>).
+</t>
+<t>
+  When the protocol does not explicitly carry the scheme (e.g., as is usually
+  the case for HTTP/1.1 over TLS, servers can, mitigate this risk by either
+  assuming that all requests have an insecure context, or by refraining from
+  advertising alternative services for insecure schemes (such as HTTP).
 </t>
 </section>
 </section>
@@ -1100,7 +1102,8 @@ Alt-Used: alternate.example.net
     <date month="May" year="2015"/>
   </front>
   <seriesInfo name="RFC" value="7540"/>
-  <x:source href="refs/rfc7540.xml"/>
+  <x:source href="refs/rfc7540.xml"
+            basename="https://svn.tools.ietf.org/svn/wg/httpbis/specs/rfc7540"/>
 </reference>
 
 </references>
