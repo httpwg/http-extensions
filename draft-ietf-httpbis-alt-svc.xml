@@ -921,9 +921,33 @@ Alt-Used: alternate.example.net
 
 <section title="Confusion Regarding Request Scheme" anchor="confusion-regarding-request-scheme">
 <t>
-   Alternative Services &MUST-NOT; be advertised for a protocol that is not
-   designed to carry the scheme. In particular, HTTP/1.1 over TLS cannot safely carry
-   requests for http resources.
+  Some server-side HTTP applications make assumptions about security based upon
+  connection context; for example, equating being served upon port 443 with the
+  use of a HTTPS URL (and the various security properties that implies).
+</t>
+<t>
+  This affects not only the security properties of the connection itself, but
+  also the state of the client at the other end of it; for example, a Web
+  browser treats HTTPS URLs differently than HTTP URLs in many ways, not just
+  for purposes of protocol handling.
+</t>
+<t>
+  Since one of the uses of Alternative Services is to allow a connection to be
+  migrated to a different protocol and port, these applications can become
+  confused about the security properties of a given connection, sending
+  information (e.g., cookies, content) that is intended for a secure context 
+  (e.g., a HTTPS URL) to a client that is not treating it as one.
+</t>
+<t>
+  This risk can be mitigated in servers by using the URL scheme explicitly
+  carried by the protocol (e.g., ":scheme" in HTTP/2 or the "absolute form" of
+  the request target in HTTP/1.1) as an indication of security context, instead of
+  other connection properties (<xref target="RFC720" x:fmt="," x:rel="#HttpRequest"/>
+  and <xref target="RFC7231" x:fmt="," x:rel="#absolute-form"/>). When the protocol
+  does not explicitly carry the scheme (e.g., as is usually the case for HTTP/1.1 over
+  TLS, servers can, mitigate this risk by either assuming that
+  all requests have an insecure context, or by refraining from advertising
+  alternative services for insecure schemes (such as HTTP).
 </t>
 </section>
 </section>
@@ -1322,6 +1346,14 @@ Alt-Used: alternate.example.net
 <t>
   IANA procedure for alt-svc parameters
   (<eref target="https://github.com/httpwg/http-extensions/issues/96"/>).
+</t>
+<t>
+  Alt-svc from https (1.1) to https (1.1)
+  (<eref target="https://github.com/httpwg/http-extensions/issues/91"/>).
+</t>
+<t>
+  Alt-svc vs the ability to convey the scheme inside the protocol
+  (<eref target="https://github.com/httpwg/http-extensions/issues/92"/>).
 </t>
 <t>
   Reconciling MAY/can vs. SHOULD
