@@ -270,8 +270,8 @@ SHA-256 hash algorithm [FIPS180-2].
 The decoded value of the "salt" parameter is the salt input to HKDF function.
 The keying material identified by the "keyid" parameter is the input keying
 material (IKM) to HKDF.  Input keying material can either be prearranged, or can
-be described using the Crypto-Key header field ({{crypto-key}}).  The
-first step of HKDF is therefore:
+be described using the Crypto-Key header field ({{crypto-key}}).  The first step
+of HKDF is therefore:
 
 ~~~
    PRK = HMAC-SHA-256(salt, IKM)
@@ -414,9 +414,9 @@ at the receiver.
 The intended recipient recovers their private key and are then able to generate
 a shared secret using the designated Diffie-Hellman process.
 
-To provide contributory behavior, the context for content encryption key and
-nonce derivation (see {{derivation}}) is set to include the derivation mode.
-The context is formed from the group label, a single zero octet, the length of
+The context for content encryption key and nonce derivation (see {{derivation}})
+is set to include the means by which the keys were derived.  The context is
+formed from the concatenation of group label, a single zero octet, the length of
 the public key of the recipient, the encoded public key of the recipient, the
 length of the public key of the sender, and the public key of the sender:
 
@@ -433,6 +433,43 @@ Specifications that rely on an Diffie-Hellman exchange for determining input
 keying material MUST either specify the parameters for Diffie-Hellman (group
 parameters, or curves and point format) that are used, or describe how those
 parameters are negotiated between sender and receiver.
+
+
+## Pre-shared Authentication Secrets {#auth}
+
+Key derivation MAY be extended to include an additional authentication secret.
+Such a secret is shared between the sender and receiver of a message using other
+means.
+
+A pre-shared authentication secret is not explicitly signaled in either the
+Encryption or Crypto-Key header fields.  Use of this additional step depends on
+prior agreement.
+
+When a shared authentication secret is used, the keying material produced by the
+key agreement method (e.g., Diffie-Hellman, explicit key, or otherwise) is
+combined with the authentication secret using HKDF.  The output of HKDF is the
+input keying material used to derive the content encryption key and nonce
+{{derivation}}.
+
+The authentication secret is used as the "salt" parameter to HKDF, the raw
+keying material (e.g., Diffie-Hellman output) is used as the "IKM" parameter,
+the ASCII-encoded string "Content-Encoding: auth" with a terimal zero octet is
+used as the "info" parameter, and the length of the output is 16 octets:
+
+~~~
+   auth_context = "Content-Encoding: auth" || 0x00
+   IKM = HKDF(authentication, raw_key, auth_context, 16)
+~~~
+
+This invocation of HKDF does not take the same additional context that is
+provided to the final key derivation stages.
+
+Note that in the absence of an authentication secret, the input keying material
+is simply the raw keying material:
+
+~~~
+   IKM = raw_key
+~~~
 
 
 # Examples
