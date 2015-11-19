@@ -453,17 +453,18 @@ input keying material used to derive the content encryption key and nonce
 
 The authentication secret is used as the "salt" parameter to HKDF, the raw
 keying material (e.g., Diffie-Hellman output) is used as the "IKM" parameter,
-the ASCII-encoded string "Content-Encoding: auth" with a terimal zero octet is
+the ASCII-encoded string "Content-Encoding: auth" with a terminal zero octet is
 used as the "info" parameter, and the length of the output is 32 octets (i.e.,
 the entire output of the underlying SHA-256 HMAC function):
 
 ~~~
-   auth_context = "Content-Encoding: auth" || 0x00
-   IKM = HKDF(authentication, raw_key, auth_context, 32)
+   auth_info = "Content-Encoding: auth" || 0x00
+   IKM = HKDF(authentication, raw_key, auth_info, 32)
 ~~~
 
-This invocation of HKDF does not take the same additional context that is
-provided to the final key derivation stages.
+This invocation of HKDF does not take the same context that is provided to the
+final key derivation stages.  Alternatively, this phase can be viewed as always
+having a zero-length context.
 
 Note that in the absence of an authentication secret, the input keying material
 is simply the raw keying material:
