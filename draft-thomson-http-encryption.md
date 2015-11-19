@@ -211,7 +211,7 @@ The `Encryption` header field uses the extended ABNF syntax defined in
 Section 1.2 of [RFC7230] and the `parameter` rule from [RFC7231]
 
 ~~~
-  Encryption-val = #encryption_params
+  Encryption = #encryption_params
   encryption_params = [ parameter *( ";" parameter ) ]
 ~~~
 
@@ -337,7 +337,7 @@ The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
 of [RFC7230] and the `parameter` rule from [RFC7231].
 
 ~~~
-  Crypto-Key-val = #crypto_key_params
+  Crypto-Key = #crypto_key_params
   crypto_key_params = [ parameter *( ";" parameter ) ]
 ~~~
 
