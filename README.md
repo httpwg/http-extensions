@@ -19,6 +19,9 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 
 ### Alternative Services
+
+**[In Working Group Last Call](http://www.w3.org/mid/BF93352E-D9F2-4E03-BC77-F0F9B6991D6B@mnot.net)** - ends 4 December 2015
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/alt-svc.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aalt-svc) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-alt-svc/)
