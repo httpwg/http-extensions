@@ -69,7 +69,7 @@
 
     <abstract>
       <t>
-        This document specifies "alternative services" for HTTP, which allow an
+        This document specifies "Alternative Services" for HTTP, which allow an
         origin's resources to be authoritatively available at a separate network
         location, possibly accessed with a different protocol configuration.</t>
     </abstract>
@@ -174,7 +174,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 
 <section title="Alternative Services Concepts" anchor="alternative">
 <t>
-   This specification defines a new concept in HTTP, the "<x:dfn>alternative service</x:dfn>".
+   This specification defines a new concept in HTTP, the "<x:dfn>Alternative Service</x:dfn>".
    When an origin (see <xref target="RFC6454"/>) has resources that are accessible through a
    different protocol / host / port combination, it is said to have an alternative
    service available.
@@ -1371,7 +1371,8 @@ Alt-Used: alternate.example.net
 <section title="Since draft-ietf-httpbis-alt-svc-09" anchor="changes.since.draft-ietf-httpbis-alt-svc-09">
 <t>
   Editorial improvements
-  (<eref target="https://github.com/httpwg/http-extensions/issues/120"/>,
+  (<eref target="https://github.com/httpwg/http-extensions/issues/118"/>,
+  <eref target="https://github.com/httpwg/http-extensions/issues/120"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/122"/>).
 </t>
 </section>
