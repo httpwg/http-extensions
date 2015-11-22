@@ -208,7 +208,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    also be used to reach the origin in the same way that DNS CNAME or SRV records
    define routing information at the name resolution level. Each origin maps to a
    set of these routes &mdash; the default route is derived from the origin itself and the
-   other routes are introduced based on alternative-protocol information.
+   other routes are introduced based on alternative-service information.
 </t>
 <t>
    Furthermore, it is important to note that the first member of an alternative
@@ -1372,6 +1372,7 @@ Alt-Used: alternate.example.net
 <t>
   Editorial improvements
   (<eref target="https://github.com/httpwg/http-extensions/issues/118"/>,
+  <eref target="https://github.com/httpwg/http-extensions/issues/119"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/120"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/122"/>).
 </t>
