@@ -261,7 +261,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    There are many ways that a client could discover the alternative service(s)
    associated with an origin.  This document describes two such mechanisms:
-   an HTTP header field (<xref target="alt-svc"/>) and an HTTP/2 frame type
+   the "Alt-Svc" HTTP header field (<xref target="alt-svc"/>) and the "ALTSVC" HTTP/2 frame type
    (<xref target="frame"/>).
 </t>
 <t>
@@ -1371,7 +1371,8 @@ Alt-Used: alternate.example.net
 <section title="Since draft-ietf-httpbis-alt-svc-09" anchor="changes.since.draft-ietf-httpbis-alt-svc-09">
 <t>
   Editorial improvements
-  (<eref target="https://github.com/httpwg/http-extensions/issues/120"/>).
+  (<eref target="https://github.com/httpwg/http-extensions/issues/120"/>,
+  <eref target="https://github.com/httpwg/http-extensions/issues/122"/>).
 </t>
 </section>
 </section>
