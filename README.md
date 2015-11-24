@@ -11,6 +11,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
 
+
 ### Key
 * [Editors' Draft](https://httpwg.github.io/http-extensions/key.html) ([plain text](https://httpwg.github.io/http-extensions/key.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-key) (less recent, more official)
@@ -31,10 +32,12 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aalt-svc) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-alt-svc/)
 
+
 ### HTTP Opportunistic Security
 * [Editors' Draft](https://httpwg.github.io/http-extensions/encryption.html) ([plain text](https://httpwg.github.io/http-extensions/encryption.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-encryption/)
+
 
 ### HTTP Legally Restricted Status Code
 
