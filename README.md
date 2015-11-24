@@ -33,7 +33,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### HTTP Legally Restricted Status Code
 
-**Submitted to IESG**
+**In [IETF Last Call](https://mailarchive.ietf.org/arch/msg/ietf-announce/C9yNSl3AIrkM9e9XHuViDSZhPKk)** - ends 2015-12-04
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-legally-restricted-status.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
