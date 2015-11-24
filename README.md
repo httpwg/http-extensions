@@ -6,6 +6,11 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 **Be aware that all contributions to the specification fall under the "NOTE WELL" terms therein.**
 
 
+### Client Hints
+* [Editors' Draft](https://httpwg.github.io/http-extensions/client-hints.html) ([plain text](https://httpwg.github.io/http-extensions/client-hints.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
+
 ### Key
 * [Editors' Draft](https://httpwg.github.io/http-extensions/key.html) ([plain text](https://httpwg.github.io/http-extensions/key.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-key) (less recent, more official)
