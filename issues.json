@@ -1,6 +1,295 @@
 [
  [
   {
+   "body": "[Section 2.2](https://httpwg.github.io/http-extensions/alt-svc.html#caching) \r\n\r\n> Mechanisms for discovering alternative services also associate a freshness lifetime with them; for example, the Alt-Svc header field uses the \"ma\" parameter. \r\n\r\nThe term `Alt-Svc header field` has not been introduced at this stage. It is indicated in Section 2 `This document describes two such mechanisms: an HTTP header field...`, however it may help to name it explicitly there, or somewhere before Section 2.2.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc", 
+     "color": "fbca04", 
+     "name": "alt-svc"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "name": "editorial"
+    }
+   ], 
+   "locked": false, 
+   "title": "alt-svc: use of \"Alt-Svc header field\" term before it has been introduced", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/122", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/122/labels{/name}", 
+   "created_at": "2015-11-20T09:59:09Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/122/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/122/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/122", 
+   "comments": 0, 
+   "number": 122, 
+   "updated_at": "2015-11-22T13:44:16Z", 
+   "assignee": null, 
+   "state": "closed", 
+   "user": {
+    "following_url": "https://api.github.com/users/LPardue/following{/other_user}", 
+    "events_url": "https://api.github.com/users/LPardue/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/LPardue/orgs", 
+    "url": "https://api.github.com/users/LPardue", 
+    "gists_url": "https://api.github.com/users/LPardue/gists{/gist_id}", 
+    "html_url": "https://github.com/LPardue", 
+    "subscriptions_url": "https://api.github.com/users/LPardue/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/6571445?v=3", 
+    "repos_url": "https://api.github.com/users/LPardue/repos", 
+    "received_events_url": "https://api.github.com/users/LPardue/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/LPardue/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "LPardue", 
+    "type": "User", 
+    "id": 6571445, 
+    "followers_url": "https://api.github.com/users/LPardue/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": "2015-11-22T13:44:16Z", 
+   "id": 118006180
+  }, 
+  {
+   "body": "[Section 5](https://httpwg.github.io/http-extensions/alt-svc.html#indicator) foreshadows a discussion about privacy \r\n\r\n> As the Alt-Used header field might be used by the server for tracking the client, a client MAY choose not to include it in its requests for protecting its privacy (see Section 9.4). \r\n\r\nHowever, Section 9.4 doesn't contain any mention of Alt-Used. Maybe all the information contained in the document is enough but this just struck me as a little odd.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc", 
+     "color": "fbca04", 
+     "name": "alt-svc"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "name": "editorial"
+    }
+   ], 
+   "locked": false, 
+   "title": "alt-svc: Alt-Used security discussion", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/121", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/121/labels{/name}", 
+   "created_at": "2015-11-20T09:47:06Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/121/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/121/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/121", 
+   "comments": 0, 
+   "number": 121, 
+   "updated_at": "2015-11-20T23:21:14Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/LPardue/following{/other_user}", 
+    "events_url": "https://api.github.com/users/LPardue/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/LPardue/orgs", 
+    "url": "https://api.github.com/users/LPardue", 
+    "gists_url": "https://api.github.com/users/LPardue/gists{/gist_id}", 
+    "html_url": "https://github.com/LPardue", 
+    "subscriptions_url": "https://api.github.com/users/LPardue/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/6571445?v=3", 
+    "repos_url": "https://api.github.com/users/LPardue/repos", 
+    "received_events_url": "https://api.github.com/users/LPardue/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/LPardue/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "LPardue", 
+    "type": "User", 
+    "id": 6571445, 
+    "followers_url": "https://api.github.com/users/LPardue/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": null, 
+   "id": 118003417
+  }, 
+  {
+   "body": "[Section 5](https://httpwg.github.io/http-extensions/alt-svc.html#indicator) \r\n\r\n> When using an alternative service, clients SHOULD include a Alt-Used header field in all requests. \r\n\r\nShould be `an Alt-Used`?\r\n\r\n", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc", 
+     "color": "fbca04", 
+     "name": "alt-svc"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "name": "editorial"
+    }
+   ], 
+   "locked": false, 
+   "title": "alt-svc: section 5 \"a Alt-Used\"", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/120", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/120/labels{/name}", 
+   "created_at": "2015-11-20T09:36:12Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/120/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/120/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/120", 
+   "comments": 0, 
+   "number": 120, 
+   "updated_at": "2015-11-21T08:43:32Z", 
+   "assignee": null, 
+   "state": "closed", 
+   "user": {
+    "following_url": "https://api.github.com/users/LPardue/following{/other_user}", 
+    "events_url": "https://api.github.com/users/LPardue/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/LPardue/orgs", 
+    "url": "https://api.github.com/users/LPardue", 
+    "gists_url": "https://api.github.com/users/LPardue/gists{/gist_id}", 
+    "html_url": "https://github.com/LPardue", 
+    "subscriptions_url": "https://api.github.com/users/LPardue/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/6571445?v=3", 
+    "repos_url": "https://api.github.com/users/LPardue/repos", 
+    "received_events_url": "https://api.github.com/users/LPardue/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/LPardue/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "LPardue", 
+    "type": "User", 
+    "id": 6571445, 
+    "followers_url": "https://api.github.com/users/LPardue/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": "2015-11-21T08:43:32Z", 
+   "id": 118001571
+  }, 
+  {
+   "body": "https://httpwg.github.io/http-extensions/alt-svc.html#alternative\r\n\r\n>  Each origin maps to a set of these routes \u2014 the default route is derived from the origin itself and the other routes are introduced based on alternative-protocol information. \r\n\r\nThis looks like it may be a remnant from Alternate-Protocol. [Section 2.4](https://httpwg.github.io/http-extensions/alt-svc.html#switching) uses the phrase `alternative service protocol`, which seems a little clearer.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc", 
+     "color": "fbca04", 
+     "name": "alt-svc"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "name": "editorial"
+    }
+   ], 
+   "locked": false, 
+   "title": "alt-svc: use of \"alternative-protocol\" term", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/119", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/119/labels{/name}", 
+   "created_at": "2015-11-20T09:32:37Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/119/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/119/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/119", 
+   "comments": 1, 
+   "number": 119, 
+   "updated_at": "2015-11-22T20:35:27Z", 
+   "assignee": null, 
+   "state": "closed", 
+   "user": {
+    "following_url": "https://api.github.com/users/LPardue/following{/other_user}", 
+    "events_url": "https://api.github.com/users/LPardue/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/LPardue/orgs", 
+    "url": "https://api.github.com/users/LPardue", 
+    "gists_url": "https://api.github.com/users/LPardue/gists{/gist_id}", 
+    "html_url": "https://github.com/LPardue", 
+    "subscriptions_url": "https://api.github.com/users/LPardue/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/6571445?v=3", 
+    "repos_url": "https://api.github.com/users/LPardue/repos", 
+    "received_events_url": "https://api.github.com/users/LPardue/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/LPardue/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "LPardue", 
+    "type": "User", 
+    "id": 6571445, 
+    "followers_url": "https://api.github.com/users/LPardue/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": "2015-11-22T20:35:27Z", 
+   "id": 118000955
+  }, 
+  {
+   "body": "The document uses terminology such as \"Alternative Services\", \"alternative services\" and \"alternative service\". There seems to be a distinction between terms (albeit minor) based on the capitilisation and pluralisation but this is not completely clear to me.\r\n\r\nFor example:\r\n\r\nhttps://httpwg.github.io/http-extensions/alt-svc.html#rfc.abstract\r\n> This document specifies \"alternative services\" for HTTP,\r\n\r\nand  https://httpwg.github.io/http-extensions/alt-svc.html#introduction\r\n> This specification defines a new concept in HTTP, \"Alternative Services\"\r\n\r\nand https://httpwg.github.io/http-extensions/alt-svc.html#alternative\r\n> This specification defines a new concept in HTTP, the \"alternative service\".\r\n\r\nThe capilisation elsewhere looks ok based on context (titles, start of sentence) but perhaps that is leading to my uncertainty in the first place.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/alt-svc", 
+     "color": "fbca04", 
+     "name": "alt-svc"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "name": "editorial"
+    }
+   ], 
+   "locked": false, 
+   "title": "alt-svc: consistency of alternative service(s) terminology and capitalisation", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/118", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/118/labels{/name}", 
+   "created_at": "2015-11-20T09:23:36Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/118/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/118/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/118", 
+   "comments": 1, 
+   "number": 118, 
+   "updated_at": "2015-11-22T15:24:57Z", 
+   "assignee": null, 
+   "state": "closed", 
+   "user": {
+    "following_url": "https://api.github.com/users/LPardue/following{/other_user}", 
+    "events_url": "https://api.github.com/users/LPardue/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/LPardue/orgs", 
+    "url": "https://api.github.com/users/LPardue", 
+    "gists_url": "https://api.github.com/users/LPardue/gists{/gist_id}", 
+    "html_url": "https://github.com/LPardue", 
+    "subscriptions_url": "https://api.github.com/users/LPardue/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/6571445?v=3", 
+    "repos_url": "https://api.github.com/users/LPardue/repos", 
+    "received_events_url": "https://api.github.com/users/LPardue/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/LPardue/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "LPardue", 
+    "type": "User", 
+    "id": 6571445, 
+    "followers_url": "https://api.github.com/users/LPardue/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": "2015-11-22T15:24:57Z", 
+   "id": 117999408
+  }, 
+  {
+   "body": "https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc-08#section-3.1\r\n\r\n    For example, a response:\r\n\r\n     HTTP/1.1 200 OK\r\n     Content-Type: text/html\r\n     Cache-Control: 600\r\n     Age: 30\r\n     Alt-Svc: h2c=\":8000\"; ma=60\r\n\r\nMissing `max-age=` in `Cache-Control` header?", 
+   "labels": [], 
+   "locked": false, 
+   "title": "Typo in alt-svc caching example", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/117", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/117/labels{/name}", 
+   "created_at": "2015-11-09T16:39:01Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/117/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/117/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/117", 
+   "comments": 1, 
+   "number": 117, 
+   "updated_at": "2015-11-09T17:15:39Z", 
+   "assignee": null, 
+   "state": "closed", 
+   "user": {
+    "following_url": "https://api.github.com/users/rjb1000/following{/other_user}", 
+    "events_url": "https://api.github.com/users/rjb1000/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/rjb1000/orgs", 
+    "url": "https://api.github.com/users/rjb1000", 
+    "gists_url": "https://api.github.com/users/rjb1000/gists{/gist_id}", 
+    "html_url": "https://github.com/rjb1000", 
+    "subscriptions_url": "https://api.github.com/users/rjb1000/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/9865771?v=3", 
+    "repos_url": "https://api.github.com/users/rjb1000/repos", 
+    "received_events_url": "https://api.github.com/users/rjb1000/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/rjb1000/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "rjb1000", 
+    "type": "User", 
+    "id": 9865771, 
+    "followers_url": "https://api.github.com/users/rjb1000/followers"
+   }, 
+   "milestone": null, 
+   "closed_at": "2015-11-09T17:15:39Z", 
+   "id": 115915129
+  }, 
+  {
    "body": "In \"Guidelines for Usage in HTTP Header Field Definitions\":\r\n\r\n- use HTTPbis whitespace definitions\r\n- use HTTPbis header field ABNF conventions", 
    "labels": [
     {
@@ -169,9 +458,9 @@
    "html_url": "https://github.com/httpwg/http-extensions/issues/113", 
    "comments": 0, 
    "number": 113, 
-   "updated_at": "2015-10-28T14:06:21Z", 
+   "updated_at": "2015-11-11T04:48:40Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/waldbaerkoch/following{/other_user}", 
     "events_url": "https://api.github.com/users/waldbaerkoch/events{/privacy}", 
@@ -192,7 +481,7 @@
     "followers_url": "https://api.github.com/users/waldbaerkoch/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-11T04:48:40Z", 
    "id": 112537341
   }, 
   {
@@ -219,9 +508,9 @@
    "html_url": "https://github.com/httpwg/http-extensions/issues/112", 
    "comments": 0, 
    "number": 112, 
-   "updated_at": "2015-10-19T05:20:03Z", 
+   "updated_at": "2015-11-11T04:48:40Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
     "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
@@ -242,7 +531,7 @@
     "followers_url": "https://api.github.com/users/mnot/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-11T04:48:40Z", 
    "id": 112073839
   }, 
   {
@@ -267,11 +556,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/111/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/111/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/111", 
-   "comments": 1, 
+   "comments": 2, 
    "number": 111, 
-   "updated_at": "2015-10-21T08:52:37Z", 
+   "updated_at": "2015-11-11T06:34:10Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
     "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
@@ -292,7 +581,7 @@
     "followers_url": "https://api.github.com/users/mnot/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-11T06:34:10Z", 
    "id": 112073754
   }, 
   {
@@ -317,11 +606,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/110/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/110/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/110", 
-   "comments": 0, 
+   "comments": 1, 
    "number": 110, 
-   "updated_at": "2015-10-19T05:18:48Z", 
+   "updated_at": "2015-11-11T04:19:35Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
     "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
@@ -342,7 +631,7 @@
     "followers_url": "https://api.github.com/users/mnot/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-11T04:19:35Z", 
    "id": 112073660
   }, 
   {
@@ -367,9 +656,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/109/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/109/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/109", 
-   "comments": 0, 
+   "comments": 1, 
    "number": 109, 
-   "updated_at": "2015-10-19T05:21:56Z", 
+   "updated_at": "2015-11-13T04:00:50Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -417,11 +706,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/108/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/108/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/108", 
-   "comments": 0, 
+   "comments": 17, 
    "number": 108, 
-   "updated_at": "2015-10-19T05:22:03Z", 
+   "updated_at": "2015-11-24T00:34:50Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
     "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
@@ -442,7 +731,7 @@
     "followers_url": "https://api.github.com/users/mnot/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-24T00:34:50Z", 
    "id": 112073446
   }, 
   {
@@ -517,9 +806,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/106/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/106/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/106", 
-   "comments": 0, 
+   "comments": 3, 
    "number": 106, 
-   "updated_at": "2015-10-19T05:22:13Z", 
+   "updated_at": "2015-11-12T00:00:17Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -567,9 +856,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/105/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/105/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/105", 
-   "comments": 0, 
+   "comments": 1, 
    "number": 105, 
-   "updated_at": "2015-10-19T05:22:17Z", 
+   "updated_at": "2015-11-11T05:09:08Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -617,9 +906,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/104/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/104/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/104", 
-   "comments": 1, 
+   "comments": 11, 
    "number": 104, 
-   "updated_at": "2015-11-02T05:08:53Z", 
+   "updated_at": "2015-11-23T23:46:56Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -674,7 +963,7 @@
    "html_url": "https://github.com/httpwg/http-extensions/issues/103", 
    "comments": 3, 
    "number": 103, 
-   "updated_at": "2015-10-25T21:15:05Z", 
+   "updated_at": "2015-11-16T00:13:44Z", 
    "assignee": {
     "following_url": "https://api.github.com/users/timbray/following{/other_user}", 
     "events_url": "https://api.github.com/users/timbray/events{/privacy}", 
@@ -694,7 +983,7 @@
     "id": 17555, 
     "followers_url": "https://api.github.com/users/timbray/followers"
    }, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
     "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
@@ -715,7 +1004,7 @@
     "followers_url": "https://api.github.com/users/mnot/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-16T00:13:44Z", 
    "id": 111080021
   }, 
   {
@@ -742,9 +1031,9 @@
    "html_url": "https://github.com/httpwg/http-extensions/issues/102", 
    "comments": 1, 
    "number": 102, 
-   "updated_at": "2015-10-25T21:25:20Z", 
+   "updated_at": "2015-11-16T00:14:09Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
     "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
@@ -765,7 +1054,7 @@
     "followers_url": "https://api.github.com/users/mnot/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-16T00:14:09Z", 
    "id": 111079665
   }, 
   {
@@ -1211,7 +1500,9 @@
     "patch_url": "https://github.com/httpwg/http-extensions/pull/93.patch"
    }, 
    "id": 104190496
-  }, 
+  }
+ ], 
+ [
   {
    "body": "See <https://lists.w3.org/Archives/Public/ietf-http-wg/2015JulSep/0193.html>:\r\n\r\n\"Alternative Services MUST NOT be advertised for a protocol that is not \r\ndesigned to carry the scheme. In particular, HTTP/1.1 over TLS cannot \r\ncarry safely requests for http resources.\"\r\n\r\n...which refers to the :scheme pseudo header field in HTTP/2 \r\n(<http://greenbytes.de/tech/webdav/rfc7540.html#HttpRequest>).\r\n\r\nAs far as I recall the intention of the statement above is to avoid that \r\nwhen alt-svc is used to move http traffic to a TLSsy port such as 443, \r\nthe alternative server gets confused about whether it's serving HTTP or \r\nHTTPS.\r\n\r\nIn reality, even when the protocol *does* carry the scheme (such as \r\nin HTTP/2), the *application* (think PHP running on top of Apache httpd) \r\nis so distant from the actual server stack that it wouldn't have that \r\ninformation. This is especially true as long many servers shield \r\napplications from any knowledge about whether they are accessed over \r\nHTTP/1.1 or HTTP/2. (Speaking of which, HTTP/1.1 can carry this \r\ninformation as well, see \r\n<http://greenbytes.de/tech/webdav/rfc7230.html#absolute-form>).", 
    "labels": [
@@ -1224,6 +1515,11 @@
      "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design", 
      "color": "02d7e1", 
      "name": "design"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editor-ready", 
+     "color": "0b02e1", 
+     "name": "editor-ready"
     }
    ], 
    "locked": false, 
@@ -1234,11 +1530,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/92/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/92/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/92", 
-   "comments": 4, 
+   "comments": 12, 
    "number": 92, 
-   "updated_at": "2015-11-02T04:24:46Z", 
+   "updated_at": "2015-11-19T15:00:30Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/reschke/following{/other_user}", 
     "events_url": "https://api.github.com/users/reschke/events{/privacy}", 
@@ -1259,7 +1555,7 @@
     "followers_url": "https://api.github.com/users/reschke/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-19T02:16:22Z", 
    "id": 100819066
   }, 
   {
@@ -1284,11 +1580,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/91/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/91/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/91", 
-   "comments": 6, 
+   "comments": 7, 
    "number": 91, 
-   "updated_at": "2015-10-06T18:40:47Z", 
+   "updated_at": "2015-11-19T02:16:41Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/reschke/following{/other_user}", 
     "events_url": "https://api.github.com/users/reschke/events{/privacy}", 
@@ -1309,7 +1605,7 @@
     "followers_url": "https://api.github.com/users/reschke/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-19T02:16:41Z", 
    "id": 100818772
   }, 
   {
@@ -1385,11 +1681,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/89/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/89/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/89", 
-   "comments": 7, 
+   "comments": 8, 
    "number": 89, 
-   "updated_at": "2015-11-02T04:15:06Z", 
+   "updated_at": "2015-11-09T07:29:05Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
     "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
@@ -1410,7 +1706,7 @@
     "followers_url": "https://api.github.com/users/martinthomson/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-09T07:29:05Z", 
    "id": 96296619
   }, 
   {
@@ -1518,9 +1814,7 @@
    "milestone": null, 
    "closed_at": "2015-09-02T07:21:24Z", 
    "id": 96049610
-  }
- ], 
- [
+  }, 
   {
    "body": "", 
    "labels": [], 
@@ -1874,7 +2168,7 @@
    "html_url": "https://github.com/httpwg/http-extensions/issues/80", 
    "comments": 6, 
    "number": 80, 
-   "updated_at": "2015-10-25T21:25:58Z", 
+   "updated_at": "2015-11-16T00:13:59Z", 
    "assignee": {
     "following_url": "https://api.github.com/users/timbray/following{/other_user}", 
     "events_url": "https://api.github.com/users/timbray/events{/privacy}", 
@@ -1894,7 +2188,7 @@
     "id": 17555, 
     "followers_url": "https://api.github.com/users/timbray/followers"
    }, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
     "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
@@ -1915,7 +2209,7 @@
     "followers_url": "https://api.github.com/users/mnot/followers"
    }, 
    "milestone": null, 
-   "closed_at": null, 
+   "closed_at": "2015-11-16T00:13:59Z", 
    "id": 83234311
   }, 
   {
@@ -2858,7 +3152,9 @@
     "patch_url": "https://github.com/httpwg/http-extensions/pull/63.patch"
    }, 
    "id": 68811577
-  }, 
+  }
+ ], 
+ [
   {
    "body": "Ryan asks what you should pass to proxy.pac when you know about a potential alt-svc.\r\n\r\nI suggested that you use the original request origin and only use alternatives if the proxy.pac doesn't provide a proxy address.  That is proxy.pac overrides alternative services.", 
    "labels": [
@@ -3171,9 +3467,7 @@
    "milestone": null, 
    "closed_at": "2015-04-27T16:12:16Z", 
    "id": 64817562
-  }
- ], 
- [
+  }, 
   {
    "body": "The `http/1.1` ALPN token identifies HTTP/1.1 over TLS.", 
    "labels": [], 
@@ -4379,7 +4673,9 @@
    "milestone": null, 
    "closed_at": null, 
    "id": 40955142
-  }, 
+  }
+ ], 
+ [
   {
    "body": "If draft-dukhovni-blah ever gets published, or at least the constant spiraling in SAAG quiets down, then we want to include a reference to that.", 
    "labels": [
@@ -4681,9 +4977,7 @@
    "milestone": null, 
    "closed_at": "2014-08-19T18:31:54Z", 
    "id": 40551357
-  }
- ], 
- [
+  }, 
   {
    "body": "Section 3 implies that there are no cipher suite requirements on Opp Sec, but it'd be good to discuss and formalise this. May require tweaks to HTTP/2 (which places requirements on use of TLS, *not* TLS with \"https\").", 
    "labels": [
@@ -5933,7 +6227,9 @@
    "milestone": null, 
    "closed_at": "2014-06-24T01:29:12Z", 
    "id": 36346197
-  }, 
+  }
+ ], 
+ [
   {
    "body": "<a href=\"https://github.com/mnot\"><img src=\"https://avatars.githubusercontent.com/u/74384?\" align=\"left\" width=\"96\" height=\"96\" hspace=\"10\"></img></a> **Issue by [mnot](https://github.com/mnot)**\n_Monday Mar 31, 2014 at 03:20 GMT_\n_Originally opened as https://github.com/http2/http2-spec/issues/444_\n\n----\n\nFor the load balancing use case, it's necessary for clients to always flush altsvc cache upon a network change, but right now they're only required to examine the cache for suspicious entries. We should discuss whether this should be upgraded to always flush.\n", 
    "labels": [
