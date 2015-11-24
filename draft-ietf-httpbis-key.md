@@ -640,5 +640,6 @@ Thanks to Ilya Grigorik, Amos Jeffries and Yoav Weiss for their feedback.
 
 ## Since -00
 
+* Issue 108 (field-name cardinality) closed with no action.
 
 
