@@ -7,7 +7,7 @@ category: std
 
 ipr: trust200902
 area: Applications and Real-Time
-workgroup: HTTP Working Group
+workgroup: HTTP
 keyword: Internet-Draft
 keyword: client hints
 keyword: conneg
