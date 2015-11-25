@@ -70,7 +70,7 @@ $(addsuffix .txt,$(next)): %.txt: %.xml
 %.txt: %.redxml
 	$(xml2rfc) $< $@
 
-stylesheet := lib/myxml2rfc.xslt
+stylesheet := lib/rfcbootstrap.xslt
 %.html: %.xml $(stylesheet) $(extra_css)
 	$(saxon) $< $(stylesheet) > $@
 
