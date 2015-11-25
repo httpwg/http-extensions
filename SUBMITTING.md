@@ -13,14 +13,14 @@ If you're an editor, or forking a copy of the draft, a few things to know:
 
 For those on OSX using [Homebrew](http://brew.sh/):
 
-  brew tap homebrew/dupes
-  brew install saxon make ruby python
-  gem install kramdown-rfc2629
-  pip install xml2rfc
+    brew tap homebrew/dupes
+    brew install saxon make ruby python
+    gem install kramdown-rfc2629
+    pip install xml2rfc
 
 and then
 
-> saxon=/usr/local/bin/saxon gmake [target]
+    saxon=/usr/local/bin/saxon gmake [target]
 
 
 # Submitting
