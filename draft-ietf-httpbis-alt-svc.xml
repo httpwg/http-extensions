@@ -499,6 +499,10 @@ Alt-Svc: h2c=":8000", h2=":443"
    recommendation, Alt-Svc header fields remain valid in responses delivered over HTTP/2.
 </t>
 <t>
+   Each "alt-value" is followed by an &OPTIONAL; semicolon-separated list of
+   additional parameters, each such "parameter" comprising a name and a value.
+</t>
+<t>   
    This specification defines two parameters: "ma" and "persist", defined in
    <xref target="caching-alt-svc-header-field-values"/>. Unknown parameters
    &MUST; be ignored, that is the values (alt-value) they appear in &MUST;
@@ -765,8 +769,8 @@ Alt-Used: alternate.example.net
 
 <section anchor="iana.parameters" title="Alt-Svc Parameter Registry">
 <t>
-   The HTTP Alt-Svc Parameter Registry defines the name space for the
-   cache directives. It will be created and maintained at (the suggested URI)
+   The HTTP Alt-Svc Parameter Registry defines the name space for
+   parameters. It will be created and maintained at (the suggested URI)
    <eref target="http://www.iana.org/assignments/http-alt-svc-parameters"/>.
 </t>
 
@@ -1374,7 +1378,8 @@ Alt-Used: alternate.example.net
   (<eref target="https://github.com/httpwg/http-extensions/issues/118"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/119"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/120"/>,
-  <eref target="https://github.com/httpwg/http-extensions/issues/122"/>).
+  <eref target="https://github.com/httpwg/http-extensions/issues/122"/>,
+  <eref target="https://github.com/httpwg/http-extensions/issues/123"/>).
 </t>
 </section>
 </section>
