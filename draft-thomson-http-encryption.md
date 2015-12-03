@@ -403,9 +403,9 @@ following information MUST be established out of band:
   sequence of octets and MUST NOT include a zero-valued octet.
 
 * The format of the ephemeral public share that is included in the "dh"
-  parameter.  This encoding MUST result in a single sequence of octets.  For
-  instance, using ECDH both parties need to agree whether this is an
-  uncompressed or compressed point.
+  parameter.  This encoding MUST result in a single, canonical sequence of
+  octets.  For instance, using ECDH both parties need to agree whether this is
+  an uncompressed or compressed point.
 
 In addition to identifying which content-encoding this input keying material is
 used for, the "keyid" parameter is used to identify this additional information
@@ -417,8 +417,10 @@ a shared secret using the designated Diffie-Hellman process.
 The context for content encryption key and nonce derivation (see {{derivation}})
 is set to include the means by which the keys were derived.  The context is
 formed from the concatenation of group label, a single zero octet, the length of
-the public key of the recipient, the encoded public key of the recipient, the
-length of the public key of the sender, and the public key of the sender:
+the public key of the recipient, the public key of the recipient, the length of
+the public key of the sender, and the public key of the sender.  The public keys
+are encoded into octets as defined for the group when determining the context
+string.
 
 ~~~
    context = label || 0x00 ||
