@@ -271,8 +271,8 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 
 <section title="Host Authentication" anchor="host_auth">
 <t>
-   Clients &MUST-NOT; use alternative services with a host that is different than the origin's
-   without strong server authentication; this mitigates the attack described in
+   Clients &MUST-NOT; use an alternative service with a host that is different than the origin's
+   without strong server authentication linking the alternative service with the origin's identity. This mitigates the attack described in
    <xref target="host_security"/>. One way to achieve this is for the alternative to use TLS
    with a certificate that is valid for that origin.
 </t>
@@ -324,7 +324,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 </t>
 <t>
    Note that the SNI information provided in TLS by the client will be that of the origin, not the
-   alternative (as will the Host HTTP header field-value).
+   alternative (as will the Host HTTP header field value).
 </t>
 </section>
 
@@ -351,7 +351,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 </t>
 <t>
    A client configured to use a proxy for a given request &SHOULD-NOT;
-   directly connect to an alternative service for it, but instead route it
+   directly connect to an alternative service for this request, but instead route it
    through that proxy.
 </t>
 <t>
@@ -360,7 +360,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
       target="indicator"/>).
 </t>
 <t>
-   The client does not need to block requests on any existing connection; it can be
+   The client does not need to block requests on an existing connection; it can be
    used until the alternative connection is established. However, if the security
    properties of the existing connection are weak (e.g. cleartext HTTP/1.1) then
    it might make sense to block until the new connection is fully available in
@@ -394,7 +394,7 @@ parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-
 </artwork>
 </figure>
 <t>
-   The field value consists either of a list of values, each of which indicating one
+   The field value consists either of a list of values, each of which indicates one
    alternative service, or the keyword "clear".
 </t>
 <t>
@@ -524,18 +524,19 @@ Alt-Svc: h2c=":8000", h2=":443"
    (max-age) parameter:
 </t>
 <figure>
-  <artwork type="example">
-Alt-Svc: h2=":443"; ma=3600
-</artwork>
-</figure>
+  <artwork type="abnf2616">
+ma = <x:ref>delta-seconds</x:ref>
+</artwork></figure>
 <t>
    which indicates the number of seconds since the response was generated the
    alternative service is considered fresh for.
 </t>
 <figure>
-  <artwork type="abnf2616">
-ma = <x:ref>delta-seconds</x:ref>
-</artwork></figure>
+  <preamble>For example:</preamble>
+  <artwork type="example">
+Alt-Svc: h2=":443"; ma=3600
+</artwork>
+</figure>
 <t>
    See <xref target="RFC7234" x:rel="#age.calculations" x:fmt="of"/> for details of determining
    response age.
@@ -862,7 +863,7 @@ Alt-Used: alternate.example.net
 </t>
 <t>
    This is the reason for the requirement in <xref target="host_auth"/> that any alternative
-   service with a host different to the origin's be strongly authenticated with
+   service with a host different from the origin's be strongly authenticated with
    the origin's identity; i.e., presenting a certificate for the origin proves
    that the alternative service is authorized to serve traffic for the origin.
 </t>
@@ -895,7 +896,7 @@ Alt-Used: alternate.example.net
    itself implies this.
 </t>
 <t>
-   For example, if a "https://" URI has a protocol advertised that does not use
+   For example, if an "https://" URI has a protocol advertised that does not use
    some form of end-to-end encryption (most likely, TLS), it violates the
    expectations for security that the URI scheme implies.
 </t>
@@ -927,7 +928,7 @@ Alt-Used: alternate.example.net
 <t>
   Some server-side HTTP applications make assumptions about security based upon
   connection context; for example, equating being served upon port 443 with the
-  use of a HTTPS URL (and the various security properties that implies).
+  use of an HTTPS URL (and the various security properties that implies).
 </t>
 <t>
   This affects not only the security properties of the connection itself, but
@@ -940,7 +941,7 @@ Alt-Used: alternate.example.net
   migrated to a different protocol and port, these applications can become
   confused about the security properties of a given connection, sending
   information (e.g., cookies, content) that is intended for a secure context 
-  (e.g., a HTTPS URL) to a client that is not treating it as one.
+  (e.g., an HTTPS URL) to a client that is not treating it as one.
 </t>
 <t>
   This risk can be mitigated in servers by using the URL scheme explicitly
