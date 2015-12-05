@@ -521,21 +521,22 @@ Alt-Svc: h2c=":8000", h2=":443"
 <t>
    When an alternative service is advertised using Alt-Svc, it is considered fresh
    for 24 hours from generation of the message. This can be modified with the 'ma'
-   (max-age) parameter:
+   (max-age) parameter.
+</t>
+<figure>
+  <preamble>Syntax:</preamble>
+  <artwork type="abnf2616">
+ma = <x:ref>delta-seconds</x:ref>; see <xref target="RFC7234" x:fmt="," x:rel="#delta-seconds"/>
+</artwork></figure>
+<t>
+   The delta-seconds value indicates the number of seconds since the response was generated the
+   alternative service is considered fresh for.
 </t>
 <figure>
   <artwork type="example">
 Alt-Svc: h2=":443"; ma=3600
 </artwork>
 </figure>
-<t>
-   which indicates the number of seconds since the response was generated the
-   alternative service is considered fresh for.
-</t>
-<figure>
-  <artwork type="abnf2616">
-ma = <x:ref>delta-seconds</x:ref>
-</artwork></figure>
 <t>
    See <xref target="RFC7234" x:rel="#age.calculations" x:fmt="of"/> for details of determining
    response age.
@@ -571,6 +572,7 @@ Alt-Svc: h2c=":8000"; ma=60
    specific to the client access network) can carry the "persist" parameter with a value "1" as a
    hint that the service is potentially useful beyond a network configuration change.
 </t><figure>
+  <preamble>Syntax:</preamble>
   <artwork type="abnf2616">
 persist = 1<x:ref>DIGIT</x:ref>
 </artwork></figure>
