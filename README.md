@@ -26,7 +26,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Alternative Services
 
-**[In Working Group Last Call](http://www.w3.org/mid/BF93352E-D9F2-4E03-BC77-F0F9B6991D6B@mnot.net)** - ends 4 December 2015
+Working Group Last Call ended 4 December 2015
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/alt-svc.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
@@ -41,7 +41,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### HTTP Legally Restricted Status Code
 
-**In [IETF Last Call](https://mailarchive.ietf.org/arch/msg/ietf-announce/C9yNSl3AIrkM9e9XHuViDSZhPKk)** - ends 2015-12-04
+**On agenda of 2015-12-17 IESG telechat**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-legally-restricted-status.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
