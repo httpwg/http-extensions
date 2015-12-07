@@ -685,11 +685,6 @@ Alt-Used     = uri-host [ ":" port ]
    When using an alternative service, clients &SHOULD; include an Alt-Used
    header field in all requests.
 </t>
-<t>
-   As the Alt-Used header field might be used by the server for tracking the
-   client, a client &MAY; choose not to include it in its requests for
-   protecting its privacy (see <xref target="tracking"/>).
-</t>
 <figure>
   <preamble>For example:</preamble>
   <artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="  ">
@@ -1380,6 +1375,7 @@ Alt-Used: alternate.example.net
   (<eref target="https://github.com/httpwg/http-extensions/issues/118"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/119"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/120"/>,
+  <eref target="https://github.com/httpwg/http-extensions/issues/121"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/122"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/123"/>).
 </t>
