@@ -340,14 +340,15 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    as soon as it is available, provided the alternative service information
    is fresh (<xref target="caching"/>) and the security properties of the
    alternative service protocol are desirable, as compared to the existing
-   connection.
+   connection. A viable alternative service is then treated in every way as the
+   origin; this includes the ability to advertise alternative services.
 </t>
 <t>
    If a client becomes aware of multiple alternative services, it &MAY; choose
    the most suitable according to its own criteria (again, keeping security
    properties in mind). For example, an origin might advertise multiple
    alternative services to notify clients of support for multiple versions of
-   HTTP; or, an alternative service might itself advertise an alternative.
+   HTTP.
 </t>
 <t>
    A client configured to use a proxy for a given request &SHOULD-NOT;
@@ -1377,7 +1378,8 @@ Alt-Used: alternate.example.net
   <eref target="https://github.com/httpwg/http-extensions/issues/120"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/121"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/122"/>,
-  <eref target="https://github.com/httpwg/http-extensions/issues/123"/>).
+  <eref target="https://github.com/httpwg/http-extensions/issues/123"/>,
+  <eref target="https://github.com/httpwg/http-extensions/issues/125"/>).
 </t>
 </section>
 </section>
