@@ -663,6 +663,13 @@ Alt-Svc: h2=":443"; ma=2592000; persist=1
   though it can use the information contained in ALTSVC frames in forming new ALTSVC frames
   to send to its own clients.
 </t>
+<t>
+  Receiving an ALTSVC frame is semantically equivalent to receiving an Alt-Svc
+  header field. As a result, the ALTSVC frame causes alternative services for
+  the corresponding origin to be replaced. Note that it would be unwise to mix
+  the use of Alt-Svc header fields with the use of ALTSVC frames, as the sequence
+  of receipt might be hard to predict.
+</t>
 </section>
 
 <section title="The Alt-Used HTTP Header Field" anchor="indicator">
@@ -1379,7 +1386,8 @@ Alt-Used: alternate.example.net
   <eref target="https://github.com/httpwg/http-extensions/issues/121"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/122"/>,
   <eref target="https://github.com/httpwg/http-extensions/issues/123"/>,
-  <eref target="https://github.com/httpwg/http-extensions/issues/125"/>).
+  <eref target="https://github.com/httpwg/http-extensions/issues/125"/>,
+  <eref target="https://github.com/httpwg/http-extensions/issues/126"/>).
 </t>
 </section>
 </section>
