@@ -1390,6 +1390,12 @@ Alt-Used: alternate.example.net
   <eref target="https://github.com/httpwg/http-extensions/issues/126"/>).
 </t>
 </section>
+
+<section title="Since draft-ietf-httpbis-alt-svc-10" anchor="changes.since.draft-ietf-httpbis-alt-svc-10">
+<t>
+  None yet.
+</t>
+</section>
 </section>
 
 
