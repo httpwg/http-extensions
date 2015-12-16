@@ -264,6 +264,7 @@
 <xsl:variable name="css-noprint"><xsl:call-template name="generate-css-class"><xsl:with-param name="name" select="'noprint'"/></xsl:call-template></xsl:variable>
 <xsl:variable name="css-note"><xsl:call-template name="generate-css-class"><xsl:with-param name="name" select="'note'"/></xsl:call-template></xsl:variable>
 <xsl:variable name="css-publishedasrfc"><xsl:call-template name="generate-css-class"><xsl:with-param name="name" select="'publishedasrfc'"/></xsl:call-template></xsl:variable>
+<xsl:variable name="css-reference"><xsl:call-template name="generate-css-class"><xsl:with-param name="name" select="'reference'"/></xsl:call-template></xsl:variable>
 <xsl:variable name="css-right"><xsl:call-template name="generate-css-class"><xsl:with-param name="name" select="'right'"/></xsl:call-template></xsl:variable>
 <xsl:variable name="css-tcenter"><xsl:call-template name="generate-css-class"><xsl:with-param name="name" select="'tcenter'"/></xsl:call-template></xsl:variable>
 <xsl:variable name="css-tleft"><xsl:call-template name="generate-css-class"><xsl:with-param name="name" select="'tleft'"/></xsl:call-template></xsl:variable>
@@ -2443,7 +2444,7 @@
     <xsl:copy-of select="$title"/>
   </xsl:element>
 
-  <dl class="reference">
+  <dl class="{$css-reference}">
     <xsl:choose>
       <xsl:when test="$xml2rfc-sortrefs='yes' and $xml2rfc-symrefs!='no'">
         <xsl:apply-templates>
@@ -4752,10 +4753,10 @@ ul.empty li {
 dl p {
   margin-left: 0em;
 }
-dl.reference > dt {
+dl.<xsl:value-of select="$css-reference"/> > dt {
   font-weight: bold;
 }
-dl.reference > dd {
+dl.<xsl:value-of select="$css-reference"/> > dd {
   margin-left: 6em;
 }
 h1 {
@@ -8111,11 +8112,11 @@ dd, li, p {
   <xsl:variable name="gen">
     <xsl:text>http://greenbytes.de/tech/webdav/rfc2629.xslt, </xsl:text>
     <!-- when RCS keyword substitution in place, add version info -->
-    <xsl:if test="contains('$Revision: 1.753 $',':')">
-      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.753 $', 'Revision: '),'$','')),', ')" />
+    <xsl:if test="contains('$Revision: 1.755 $',':')">
+      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.755 $', 'Revision: '),'$','')),', ')" />
     </xsl:if>
-    <xsl:if test="contains('$Date: 2015/10/05 19:01:29 $',':')">
-      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2015/10/05 19:01:29 $', 'Date: '),'$','')),', ')" />
+    <xsl:if test="contains('$Date: 2015/11/29 11:14:21 $',':')">
+      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2015/11/29 11:14:21 $', 'Date: '),'$','')),', ')" />
     </xsl:if>
     <xsl:value-of select="concat('XSLT vendor: ',system-property('xsl:vendor'),' ',system-property('xsl:vendor-url'))" />
   </xsl:variable>
@@ -8330,9 +8331,25 @@ prev: <xsl:value-of select="$prev"/>
 
 <xsl:template name="truncate-initials">
   <xsl:param name="initials"/>
+  <xsl:variable name="local-multiple-initials">
+    <xsl:call-template name="parse-pis">
+      <xsl:with-param name="nodes" select="./processing-instruction('rfc')"/>
+      <xsl:with-param name="attr" select="'multiple-initials'"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="use-multiple-initials">
+    <xsl:choose>
+      <xsl:when test="$local-multiple-initials!=''">
+        <xsl:value-of select="$local-multiple-initials"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$xml2rfc-multiple-initials"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
   <xsl:choose>
     <xsl:when test="normalize-space($initials)=''"/>
-    <xsl:when test="$xml2rfc-multiple-initials='yes'">
+    <xsl:when test="$use-multiple-initials='yes'">
       <xsl:value-of select="$initials"/>
     </xsl:when>
     <xsl:otherwise>
