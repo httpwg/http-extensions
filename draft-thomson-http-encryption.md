@@ -220,6 +220,9 @@ content-codings that imply encryption), each application of the content encoding
 is reflected in the Encryption header field, in the order in which they were
 applied.
 
+Encryption header field values with multiple instances of the same parameter
+name are invalid.
+
 The Encryption header MAY be omitted if the sender does not intend for the
 immediate recipient to be able to decrypt the payload body.  Alternatively,
 the Encryption header field MAY be omitted if the sender intends for the
@@ -356,6 +359,8 @@ dh:
 : The "dh" parameter contains an ephemeral Diffie-Hellman share. This form of
 the header field can be used to encrypt content for a specific recipient.
 
+Crypto-Key header field values with multiple instances of the same parameter
+name are invalid.
 
 The input keying material used by the key derivation (see {{derivation}}) can be
 determined based on the information in the Crypto-Key header field.  The method
