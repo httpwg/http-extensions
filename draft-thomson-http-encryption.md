@@ -58,7 +58,7 @@ informative:
       - org: National Institute of Standards and Technology (NIST)
     date: July 2013
     seriesinfo: NIST PUB 186-4
-  X.692:
+  X9.62:
      title: "Public Key Cryptography For The Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)"
      author:
        - org: ANSI
@@ -577,7 +577,7 @@ presentation reasons only.
 The receiver (in this case, the HTTP client) uses a key pair that is identified
 by the string "dhkey" and the sender (the server) uses a key pair for which the
 public share is included in the "dh" parameter above. The keys shown below use
-uncompressed points [X.692] encoded using URL-safe base64. Line wrapping is
+uncompressed points [X9.62] encoded using URL-safe base64. Line wrapping is
 added for presentation purposes only.
 
 ~~~
