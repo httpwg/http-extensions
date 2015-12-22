@@ -269,7 +269,7 @@ In order to allow the reuse of keying material for multiple different HTTP
 messages, a content encryption key is derived for each message.  The content
 encryption key is derived from the decoded value of the "salt" parameter using
 the HMAC-based key derivation function (HKDF) described in [RFC5869] using the
-SHA-256 hash algorithm [FIPS180-2].
+SHA-256 hash algorithm [FIPS180-4].
 
 The decoded value of the "salt" parameter is the salt input to HKDF function.
 The keying material identified by the "keyid" parameter is the input keying
