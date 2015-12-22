@@ -28,12 +28,13 @@ normative:
   RFC7231:
   RFC5116:
   RFC5869:
-  FIPS180-2:
-    title: NIST FIPS 180-2, Secure Hash Standard
+  FIPS180-4:
+    title: NIST FIPS 180-4, Secure Hash Standard
     author:
       name: NIST
       ins: National Institute of Standards and Technology, U.S. Department of Commerce
-    date: 2002-08
+    date: 2012-03
+    target: http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf
   DH:
     title: "New Directions in Cryptography"
     author:
