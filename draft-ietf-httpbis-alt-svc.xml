@@ -956,7 +956,7 @@ Alt-Used: alternate.example.net
 </t>
 <t>
   When the protocol does not explicitly carry the scheme (e.g., as is usually
-  the case for HTTP/1.1 over TLS, servers can, mitigate this risk by either
+  the case for HTTP/1.1 over TLS, servers can mitigate this risk by either
   assuming that all requests have an insecure context, or by refraining from
   advertising alternative services for insecure schemes (such as HTTP).
 </t>
