@@ -54,7 +54,7 @@ key.%: draft-ietf-httpbis-key.%
 client-hints.%: draft-ietf-httpbis-client-hints.%
 	cp -f $< $@
 
-crypto.%: draft-ietf-httpbis-encryption-encoding.%
+encryption-encoding.%: draft-ietf-httpbis-encryption-encoding.%
 	cp -f $< $@
 
 define makerule_submit_xml =
