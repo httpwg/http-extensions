@@ -729,8 +729,8 @@ Message Header Registry, as detailed in {{crypto-key}}.
 
 This memo establishes a registry for parameters used by the "Encryption" header
 field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.  The
-"Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
-"Specification Required" policy [RFC5226].
+"Hypertext Transfer Protocol (HTTP) Encryption Parameters" registry operates
+under an "Specification Required" policy [RFC5226].
 
 Entries in this registry are expected to include the following information:
 

@@ -9,3 +9,4 @@
 venv/
 issues.json
 draft-thomson-http-encryption.xml
+lib
