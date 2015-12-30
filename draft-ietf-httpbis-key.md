@@ -7,7 +7,7 @@ category: std
 
 ipr: trust200902
 area: Applications and Real-Time
-workgroup: httpbis
+workgroup: HTTP
 keyword: Internet-Draft
 keyword: caching
 keyword: secondary cache key

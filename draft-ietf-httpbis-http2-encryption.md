@@ -6,7 +6,7 @@ date: 2015
 category: exp
 
 ipr: trust200902
-area: General
+area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
 
