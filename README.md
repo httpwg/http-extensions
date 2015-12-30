@@ -41,7 +41,7 @@ Working Group Last Call ended 4 December 2015
 
 ### HTTP Legally Restricted Status Code
 
-**On agenda of 2015-12-17 IESG telechat**
+**Approved**; in [RFC Editor Queue](https://www.rfc-editor.org/current_queue.php)
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-legally-restricted-status.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
