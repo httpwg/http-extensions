@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -novw -l
 kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=http://unicorn-wg.github.io/idrefs kramdown-rfc2629
 
-names := http2-encryption alt-svc legally-restricted-status rfc5987bis key client-hints
+names := http2-encryption alt-svc legally-restricted-status rfc5987bis key client-hints encryption-encoding
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := encryption alt-svc legally-restricted-status rfc5987bis key client-hints
+friendly_names := opsec alt-svc legally-restricted-status rfc5987bis key client-hints encryption-encoding
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
@@ -36,7 +36,7 @@ clean:
 	-rm -f $(addsuffix *-[0-9][0-9].xml,$(drafts))
 	-rm -f $(addsuffix *.html,$(drafts))
 
-encryption.%: draft-ietf-httpbis-http2-encryption.%
+opsec.%: draft-ietf-httpbis-http2-encryption.%
 	cp -f $< $@
 
 alt-svc.%: draft-ietf-httpbis-alt-svc.%
@@ -52,6 +52,9 @@ key.%: draft-ietf-httpbis-key.%
 	cp -f $< $@
 
 client-hints.%: draft-ietf-httpbis-client-hints.%
+	cp -f $< $@
+
+encryption-encoding.%: draft-ietf-httpbis-encryption-encoding.%
 	cp -f $< $@
 
 define makerule_submit_xml =
@@ -117,7 +120,7 @@ endif
 	if test `git status -s | wc -l` -gt 0; then git commit -m "Script updating gh-pages."; fi
 ifneq (,$(GH_TOKEN))
 	@echo git push -q https://github.com/$(TRAVIS_REPO_SLUG).git gh-pages
-	@git push -q https://$(GH_TOKEN)@github.com/$(TRAVIS_REPO_SLUG).git gh-pages
+	@git push -q https://$(GH_TOKEN)@github.com/$(TRAVIS_REPO_SLUG).git gh-pages >/dev/null 2>&1
 endif
 	-git checkout -qf "$(GIT_ORIG)"
 	-rm -rf $(GHPAGES_TMP)
