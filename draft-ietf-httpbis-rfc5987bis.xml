@@ -64,9 +64,7 @@
       target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
     </t>
     <t>
-      Working Group information can be found at <eref
-      target="https://tools.ietf.org/wg/httpbis/"/>
-      and <eref target="http://httpwg.github.io/"/>; source code and issues
+      Working Group information can be found at <eref target="http://httpwg.github.io/"/>; source code and issues
       list for this draft can be found at
       <eref target="https://github.com/httpwg/http-extensions"/>.
     </t>
