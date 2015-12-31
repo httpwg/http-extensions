@@ -269,7 +269,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 
 <section title="Host Authentication" anchor="host_auth">
 <t>
-   Clients &MUST-NOT; use alternative services with a host that is different than the origin's
+   Clients &MUST-NOT; use alternative services with a host that is different from the origin's
    without strong server authentication; this mitigates the attack described in
    <xref target="host_security"/>. One way to achieve this is for the alternative to use TLS
    with a certificate that is valid for that origin.
@@ -1391,7 +1391,8 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-10" anchor="changes.since.draft-ietf-httpbis-alt-svc-10">
 <t>
-  None yet.
+  Editorial improvements
+  (<eref target="https://github.com/httpwg/http-extensions/issues/130"/>).
 </t>
 </section>
 </section>
