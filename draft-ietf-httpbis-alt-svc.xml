@@ -330,7 +330,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    By their nature, alternative services are &OPTIONAL;: clients do not need to
    use them. However, it is advantageous for clients to behave in a predictable
-   way when they are used by servers (e.g., for load balancing).
+   way when alternative services are used by servers (e.g., for load balancing).
 </t>
 <t>
    Therefore, if a client becomes aware of an alternative service, the client
