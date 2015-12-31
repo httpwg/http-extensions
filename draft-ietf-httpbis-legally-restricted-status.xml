@@ -22,7 +22,7 @@
 <?rfc inline="yes" ?>
 
 <rfc ipr="trust200902" 
-     docName="draft-ietf-httpbis-legally-restricted-status-04" 
+     docName="draft-ietf-httpbis-legally-restricted-status-latest" 
      category="std">
 
   <front>
@@ -36,7 +36,7 @@
     </author>
 
 
-    <date year="2015" month="November"/>
+    <date year="2015"/>
     <area>Applications and Real-Time</area>
     <workgroup>HTTP</workgroup>
     <keyword>HTTP</keyword>
