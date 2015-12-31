@@ -393,7 +393,7 @@ parameter     = <x:ref>token</x:ref> "=" ( <x:ref>token</x:ref> / <x:ref>quoted-
 </artwork>
 </figure>
 <t>
-   The field value consists either of a list of values, each of which indicating one
+   The field value consists either of a list of values, each of which indicates one
    alternative service, or the keyword "clear".
 </t>
 <t>
