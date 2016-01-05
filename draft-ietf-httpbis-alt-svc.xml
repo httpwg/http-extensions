@@ -153,7 +153,8 @@
   <x:anchor-alias value="quoted-string"/>
   <x:anchor-alias value="token"/>
   <x:anchor-alias value="uri-host"/>
-  This document uses the Augmented BNF defined in <xref target="RFC5234"/>
+  This document uses the Augmented BNF defined in <xref target="RFC5234"/> and
+  updated by <xref target="RFC7405"/>
   along with the "#rule" extension defined in <xref target="RFC7230" x:rel="#abnf.extension" x:fmt="of"/>.
   The rules below are defined in <xref target="RFC5234"/>, <xref target="RFC7230"/>, and <xref target="RFC7234"/>:
 </t>
@@ -384,7 +385,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <figure>
   <artwork type="abnf2616">
 Alt-Svc       = clear / 1#alt-value
-clear         = <x:abnf-char-sequence>"clear"</x:abnf-char-sequence>; "clear", case-sensitive
+clear         = %s"clear"; "clear", case-sensitive
 alt-value     = alternative *( OWS ";" OWS parameter )
 alternative   = protocol-id "=" alt-authority
 protocol-id   = <x:ref>token</x:ref> ; percent-encoded ALPN protocol name
@@ -1100,6 +1101,15 @@ Alt-Used: alternate.example.net
   <seriesInfo name="RFC" value="7301"/>
 </reference>
 
+<reference anchor="RFC7405">
+  <front>
+    <title>Case-Sensitive String Support in ABNF</title>
+    <author initials="P." surname="Kyzivat" fullname="Paul Kyzivat"/>
+    <date year="2014" month="December"/>
+  </front>
+  <seriesInfo name="RFC" value="7405"/>
+</reference>
+
 <reference anchor="RFC7540">
   <front>
     <title>Hypertext Transfer Protocol version 2</title>
@@ -1393,6 +1403,10 @@ Alt-Used: alternate.example.net
 <t>
   Editorial improvements
   (<eref target="https://github.com/httpwg/http-extensions/issues/130"/>).
+</t>
+<t>
+  Use RFC 7405 ABNF extension
+  (<eref target="https://github.com/httpwg/http-extensions/issues/131"/>).
 </t>
 </section>
 </section>
