@@ -343,7 +343,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    origin; this includes the ability to advertise alternative services.
 </t>
 <t>
-   If a client becomes aware of multiple alternative services, it &MAY; choose
+   If a client becomes aware of multiple alternative services, it chooses
    the most suitable according to its own criteria (again, keeping security
    properties in mind). For example, an origin might advertise multiple
    alternative services to notify clients of support for multiple versions of
