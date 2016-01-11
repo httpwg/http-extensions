@@ -146,7 +146,6 @@
   interpreted as described in <xref target="RFC2119"/>.
 </t>
 <t anchor="imported.abnf">
-  <x:anchor-alias value="DIGIT"/>
   <x:anchor-alias value="OWS"/>
   <x:anchor-alias value="delta-seconds"/>
   <x:anchor-alias value="port"/>
@@ -159,7 +158,6 @@
   The rules below are defined in <xref target="RFC5234"/>, <xref target="RFC7230"/>, and <xref target="RFC7234"/>:
 </t>
 <figure><artwork type="abnf2616">
-DIGIT         = &lt;DIGIT, see <xref target="RFC5234" x:sec="B.1"/>&gt;
 OWS           = &lt;OWS, see <xref target="RFC7230" x:rel="#whitespace"/>&gt;
 delta-seconds = &lt;delta-seconds; see <xref target="RFC7234" x:rel="#delta-seconds"/>&gt;
 port          = &lt;port, see <xref target="RFC7230" x:rel="#uri"/>&gt;
@@ -574,7 +572,7 @@ Alt-Svc: h2c=":8000"; ma=60
 </t><figure>
   <preamble>Syntax:</preamble>
   <artwork type="abnf2616">
-persist = 1<x:ref>DIGIT</x:ref>
+persist = "1"
 </artwork></figure>
 <t>
   For example:
@@ -585,9 +583,8 @@ Alt-Svc: h2=":443"; ma=2592000; persist=1
 </artwork>
 </figure>  
 <t>
-   This specification only a defines a single value for "persist"; others
-   can be defined in future specifications. Clients &MUST; ignore "persist"
-   parameters with unknown values.
+   This specification only a defines a single value for "persist". Clients
+   &MUST; ignore "persist" parameters with values other than "1".
 </t>
 <t>
    See <xref target="caching"/> for general requirements on caching alternative services.
