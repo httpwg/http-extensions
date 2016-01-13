@@ -1008,7 +1008,7 @@ Alt-Used: alternate.example.net
 <reference anchor="RFC5234">
   <front>
     <title>Augmented BNF for Syntax Specifications: ABNF</title>
-    <author initials="D." surname="Crocker" fullname="D. Crocker"/>
+    <author initials="D." surname="Crocker" fullname="D. Crocker" role="editor"/>
     <author initials="P." surname="Overell" fullname="P. Overell"/>
     <date year="2008" month="January"/>
   </front>
