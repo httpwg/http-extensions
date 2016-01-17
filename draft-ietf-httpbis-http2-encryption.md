@@ -118,25 +118,17 @@ expire, in order minimize the delays that might be incurred.
 
 # Server Authentication {#auth}
 
-By their nature, `http` URIs do not require cryptographically strong server authentication; that is
-only implied by `https` URIs. Furthermore, doing so (as per {{RFC2818}}) creates a number of
-operational challenges. For these reasons, server authentication is not mandatory for `http` URIs
-when using the mechanism described in this specification.
+{{I-D.ietf-httpbis-alt-svc}} requires that an alternative service only be used when it is strongly
+authenticated as the origin.
 
-When connecting to an alternative service for an `http` URI, clients are not required to perform the
-server authentication procedure described in Section 3.1 of {{RFC2818}}. The server certificate, if
-one is proffered by the alternative service, is not necessarily checked for validity, expiration,
-issuance by a trusted certificate authority or matched against the name in the URI. Therefore, the
-alternative service can provide any certificate, or even select TLS cipher suites that do not
-include authentication.
+For the purposes of this specification, there are two ways to achieve this:
 
-A client MAY perform additional checks on the offered certificate if the server does not select an
-unauthenticated TLS cipher suite.  This document doesn't define any such checks, though clients
-could be configured with a policy that defines what is acceptable.
+1. Using TLS with a certificate that validates as per {{RFC2818}}, or
+2. Using an alternative service with a hostname that is character-for-character identical to that of the origin.
 
-As stipulated by {{I-D.ietf-httpbis-alt-svc}}, clients MUST NOT use alternative services with a
-host other than the origin's, unless the alternative service itself is strongly authenticated (as
-the origin's host); for example, using TLS with a certificate that validates as per {{RFC2818}}.
+The latter approach allows deployment without the use of valid certificates, to encourage
+deployment of opportunistic security. Therefore, in these cases the alternative service can provide
+any certificate, or even select TLS cipher suites that do not include authentication.
 
 
 # Interaction with "https" URIs

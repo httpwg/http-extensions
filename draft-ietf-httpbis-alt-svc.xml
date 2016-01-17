@@ -268,10 +268,9 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 
 <section title="Host Authentication" anchor="host_auth">
 <t>
-   Clients &MUST-NOT; use alternative services with a host that is different from the origin's
-   without strong server authentication; this mitigates the attack described in
-   <xref target="host_security"/>. One way to achieve this is for the alternative to use TLS
-   with a certificate that is valid for that origin.
+   Clients MUST strongly authenticate the alternative service as the origin. This mitigates the
+   attack described in <xref target="host_security"/>. One way to achieve this is for the
+   alternative to use TLS with a certificate that is valid for the origin.
 </t>
 <t>
    For example, if the origin's host is "www.example.com" and an alternative is
@@ -836,17 +835,12 @@ Alt-Used: alternate.example.net
    they can thus masquerade as the HTTP server.
 </t>
 <t>
-   On servers, this risk can be reduced by restricting the ability to advertise
-   alternative services, and restricting who can open a port for listening on that host.
-   Clients can reduce this risk by imposing stronger requirements (e.g. strong
-   authentication) when moving from System Ports to User or Dynamic Ports, or from
-   User Ports to Dynamic Ports, as defined in <xref target="RFC6335" x:sec="6"/>.
-</t>
+   This risk is mitigated for the requirement that any alternative service be strongly
+   authenticated with the origin's identity in <xref target="host_auth"/>.
+</t> 
 <t>
-   It is always valid for a client to ignore an alternative service advertisement which
-   does not meet its implementation-specific security requirements.  Servers can increase
-   the likelihood of clients using the alternative service by providing strong
-   authentication even when not required.
+   On servers, this risk can also be reduced by restricting the ability to advertise
+   alternative services, and restricting who can open a port for listening on that host.
 </t>
 </section>
 
@@ -863,9 +857,8 @@ Alt-Used: alternate.example.net
 </t>
 <t>
    This is the reason for the requirement in <xref target="host_auth"/> that any alternative
-   service with a host different from the origin's be strongly authenticated with
-   the origin's identity; i.e., presenting a certificate for the origin proves
-   that the alternative service is authorized to serve traffic for the origin.
+   service be strongly authenticated with the origin's identity; i.e., presenting a certificate for
+   the origin proves that the alternative service is authorized to serve traffic for the origin.
 </t>
 <t>
    However, this authorization is only as strong as the method used to
@@ -1146,20 +1139,6 @@ Alt-Used: alternate.example.net
   <seriesInfo name="RFC" value="5246"/>
 </reference>
 	
-<reference anchor="RFC6335">
-  <front>
-    <title>Internet Assigned Numbers Authority (IANA) Procedures for the Management
-    of the Service Name and Transport Protocol Port Number Registry</title>
-    <author initials="M." surname="Cotton" fullname="M. Cotton"/>
-    <author initials="L." surname="Eggert" fullname="L. Eggert"/>
-    <author initials="J." surname="Touch" fullname="J. Touch"/>
-    <author initials="M." surname="Westerlund" fullname="M. Westerlund"/>
-    <author initials="S." surname="Cheshire" fullname="S. Cheshire"/>
-    <date year="2011" month="August"/>
-  </front>
-  <seriesInfo name="RFC" value="6335"/>
-</reference>
-
 <reference anchor="RFC7469">
   <front>
     <title>Public Key Pinning Extension for HTTP</title>
