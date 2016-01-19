@@ -268,9 +268,10 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 
 <section title="Host Authentication" anchor="host_auth">
 <t>
-   Clients MUST strongly authenticate the alternative service as the origin. This mitigates the
-   attack described in <xref target="host_security"/>. One way to achieve this is for the
-   alternative to use TLS with a certificate that is valid for the origin.
+   Clients MUST have reasonable assurances that the alternative service is under control of and
+   valid for the whole origin. This mitigates the attack described in <xref
+   target="host_security"/>. One way to achieve this is for the alternative to use TLS with a
+   certificate that is valid for the origin.
 </t>
 <t>
    For example, if the origin's host is "www.example.com" and an alternative is
@@ -278,7 +279,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    offered is valid for "www.example.com", the client can use the alternative.
    However, if "other.example.com" is offered with the "h2c" protocol, the client
    cannot use it, because there is no mechanism in that protocol to establish
-   strong server authentication.
+   the relationship between the origin and the alternative.
 </t>
 </section>
 
@@ -835,8 +836,7 @@ Alt-Used: alternate.example.net
    they can thus masquerade as the HTTP server.
 </t>
 <t>
-   This risk is mitigated for the requirement that any alternative service be strongly
-   authenticated with the origin's identity in <xref target="host_auth"/>.
+   This risk is mitigated by the requirements in <xref target="host_auth"/>.
 </t> 
 <t>
    On servers, this risk can also be reduced by restricting the ability to advertise
@@ -856,14 +856,15 @@ Alt-Used: alternate.example.net
    target="changing-ports"/>) or remotely (e.g., by an intermediary as a man-in-the-middle attack).
 </t>
 <t>
-   This is the reason for the requirement in <xref target="host_auth"/> that any alternative
-   service be strongly authenticated with the origin's identity; i.e., presenting a certificate for
-   the origin proves that the alternative service is authorized to serve traffic for the origin.
+   This is the reason for the requirement in <xref target="host_auth"/> that clients have
+   reasonable assurances that the alternative service is under control of and valid for the whole
+   origin; i.e., presenting a certificate for the origin proves that the alternative service is
+   authorized to serve traffic for the origin.
 </t>
 <t>
-   However, this authorization is only as strong as the method used to
-   authenticate the alternative service. In particular, there are well-known
-   exploits to make an attacker's certificate appear as legitimate.
+   Note that this assurance is only as strong as the method used to authenticate the alternative
+   service. In particular, when TLS authentication is used to do so, there are well-known exploits
+   to make an attacker's certificate appear as legitimate.
 </t>
 <t>
    Alternative services could be used to persist such an attack; for example, an
