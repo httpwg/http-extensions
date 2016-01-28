@@ -134,9 +134,9 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 interpreted as described in [RFC2119].
 
 
-# The "aesgcm128" HTTP Content Encoding {#aesgcm128}
+# The "aesgcm" HTTP Content Encoding {#aesgcm}
 
-The "aesgcm128" HTTP content-coding indicates that a payload has been encrypted
+The "aesgcm" HTTP content-coding indicates that a payload has been encrypted
 using Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) as
 identified as AEAD_AES_128_GCM in [RFC5116], Section 5.1.  The AEAD_AES_128_GCM
 algorithm uses a 128 bit content encryption key.
@@ -146,14 +146,14 @@ describes how encryption has been applied.  The Crypto-Key header field
 ({{crypto-key}}) can be included to describe how the content encryption key is
 derived or retrieved.
 
-The "aesgcm128" content-coding uses a single fixed set of encryption
+The "aesgcm" content-coding uses a single fixed set of encryption
 primitives.  Cipher suite agility is achieved by defining a new content-coding
 scheme.  This ensures that only the HTTP Accept-Encoding header field is
 necessary to negotiate the use of encryption.
 
-The "aesgcm128" content-coding uses a fixed record size.  The resulting
-encoding is a series of fixed-size records, with a final record that is one or
-more octets shorter than a fixed sized record.
+The "aesgcm" content-coding uses a fixed record size.  The resulting encoding is
+a series of fixed-size records, with a final record that is one or more octets
+shorter than a fixed sized record.
 
 ~~~ drawing
        +------+         input of between rs-256
@@ -289,10 +289,10 @@ of HKDF is therefore:
 ~~~
 
 The info parameter to HKDF is set to the ASCII-encoded string "Content-Encoding:
-aesgcm128", a single zero octet and an optional context string:
+aesgcm", a single zero octet and an optional context string:
 
 ~~~ inline
-   cek_info = "Content-Encoding: aesgcm128" || 0x00 || context
+   cek_info = "Content-Encoding: aesgcm" || 0x00 || context
 ~~~
 
 Unless otherwise specified, the context is a zero length octet sequence.
@@ -357,9 +357,9 @@ keyid:
 : The "keyid" parameter corresponds to the "keyid" parameter in the Encryption
 header field.
 
-aesgcm128:
+aesgcm:
 
-: The "aesgcm128" parameter contains the URL-safe base64 [RFC4648] octets of the
+: The "aesgcm" parameter contains the URL-safe base64 [RFC4648] octets of the
 input keying material.
 
 dh:
@@ -389,13 +389,13 @@ specifications that use this content-encoding.
 
 ## Explicit Key
 
-The "aesgcm128" parameter is decoded and used as the input keying material for
-the "aesgcm128" content encoding.  The "aesgcm128" parameter MUST decode to at
-least 16 octets in order to be used as input keying material for "aesgcm128"
-content encoding.
+The "aesgcm" parameter is decoded and used as the input keying material for the
+"aesgcm" content encoding.  The "aesgcm" parameter MUST decode to at least 16
+octets in order to be used as input keying material for "aesgcm" content
+encoding.
 
-Other key determination parameters can be ignored if the "aesgcm128" parameter
-is present.
+Other key determination parameters can be ignored if the "aesgcm" parameter is
+present.
 
 
 ## Diffie-Hellman
@@ -496,7 +496,7 @@ is simply the raw keying material:
 ~~~ example
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
-Content-Encoding: aesgcm128
+Content-Encoding: aesgcm
 Connection: close
 Encryption: keyid="http://example.org/bob/keys/123";
             salt="XZwpw6o37R-6qoZjw6KwAw"
@@ -515,7 +515,7 @@ exposing information about the content.
 ~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
-Content-Encoding: aesgcm128, gzip
+Content-Encoding: aesgcm, gzip
 Transfer-Encoding: chunked
 Encryption: keyid="mailto:me@example.com";
             salt="m2hJ_NttRtFyUiMRPwfpHA"
@@ -529,7 +529,7 @@ Encryption: keyid="mailto:me@example.com";
 PUT /thing HTTP/1.1
 Host: storage.example.com
 Content-Type: application/http
-Content-Encoding: aesgcm128, aesgcm128
+Content-Encoding: aesgcm, aesgcm
 Content-Length: 1234
 Encryption: keyid="mailto:me@example.com";
             salt="NfzOeuV5USPRA-n_9s1Lag",
@@ -549,11 +549,11 @@ encryption uses a 1200 octet record size.
 ~~~ example
 HTTP/1.1 200 OK
 Content-Length: 32
-Content-Encoding: aesgcm128
+Content-Encoding: aesgcm
 Encryption: keyid="a1"; salt="vr0o6Uq3w_KDWeatc27mUg"
-Crypto-Key: keyid="a1"; aesgcm128="csPJEXBYA5U-Tal9EdJi-w"
+Crypto-Key: keyid="a1"; aesgcm="csPJEXBYA5U-Tal9EdJi-w"
 
-fuag8ThIRIazSHKUqJ5OduR75UgEUuM76J8UFwadEvg
+OwW_-ChdUuV44mRDjlg1lF4pviF1AsfHv_9wbnSHLoxj
 ~~~
 
 This example shows the string "I am the walrus" encrypted using an directly
@@ -567,13 +567,13 @@ reasons only.
 ~~~ example
 HTTP/1.1 200 OK
 Content-Length: 32
-Content-Encoding: aesgcm128
+Content-Encoding: aesgcm
 Encryption: keyid="dhkey"; salt="Qg61ZJRva_XBE9IEUelU3A"
 Crypto-Key: keyid="dhkey";
                 dh="BDgpRKok2GZZDmS4r63vbJSUtcQx4Fq1V58-6-3NbZzS
                     TlZsQiCEDTQy3CZ0ZMsqeqsEb7qW2blQHA4S48fynTk"
 
-G6j_sfKg0qebO62yXpTCayN2KV24QitNiTvLgcFiEj0
+yqD2bapcx14XxUbtwjiGx69eHE3Yd6AqXcwBpT2Kd1uy
 ~~~
 
 This example shows the same string, "I am the walrus", encrypted using ECDH over
@@ -701,12 +701,12 @@ might be used to hide the size of individual messages.
 
 # IANA Considerations
 
-## The "aesgcm128" HTTP Content Encoding
+## The "aesgcm" HTTP Content Encoding
 
 This memo registers the "encrypted" HTTP content-coding in the HTTP Content
-Codings Registry, as detailed in {{aesgcm128}}.
+Codings Registry, as detailed in {{aesgcm}}.
 
-* Name: aesgcm128
+* Name: aesgcm
 * Description: AES-GCM encryption with a 128-bit content encryption key
 * Reference: this specification
 
@@ -787,10 +787,10 @@ The initial contents of this registry are:
 * Purpose: Identify the key that is in use.
 * Reference: this document
 
-### aesgcm128 {#iana-ekey-aesgcm128}
+### aesgcm {#iana-ekey-aesgcm}
 
-* Parameter Name: aesgcm128
-* Purpose: Provide an explicit input keying material value for the aesgcm128 content encoding.
+* Parameter Name: aesgcm
+* Purpose: Provide an explicit input keying material value for the aesgcm content encoding.
 * Reference: this document
 
 ### dh
@@ -804,7 +804,7 @@ The initial contents of this registry are:
 
 # JWE Mapping {#jwe}
 
-The "aesgcm128" content encoding can be considered as a sequence of JSON Web
+The "aesgcm" content encoding can be considered as a sequence of JSON Web
 Encryption (JWE) objects [RFC7516], each corresponding to a single fixed size
 record.  The following transformations are applied to a JWE object that might be
 expressed using the JWE Compact Serialization:
