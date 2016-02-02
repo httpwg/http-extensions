@@ -915,8 +915,10 @@ Alt-Used: alternate.example.net
    across multiple networks, when the "persist" flag is used.
 </t>
 <t>
-   Clients concerned by the additional fingerprinting can choose to
-   ignore alternative service advertisements.
+   Clients that wish to prevent requests from being correlated (such as those
+   that offer modes aimed at providing improved privacy) can decide not to use
+   alternative services for multiple requests that would not otherwise be
+   allowed to be correlated.
 </t>
 <t>
    In a user agent, any alternative service information &MUST; be removed when origin-specific data
