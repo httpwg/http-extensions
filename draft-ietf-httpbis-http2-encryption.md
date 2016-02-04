@@ -176,7 +176,9 @@ client.
 A alternative service can make this commitment by sending a `HTTP-TLS` header field, described here
 using the '#' ABNF extension defined in Section 7 of {{RFC7230}}:
 
+~~~ abnf2616
     HTTP-TLS     = 1#parameter
+~~~
 
 When it appears in a HTTP response from a strongly authenticated alternative service, this header
 field indicates that the availability of the origin through TLS-protected alternative services is
@@ -185,16 +187,19 @@ considered fresh.
 
 For example:
 
+~~~ example
     GET /index.html HTTP/1.1
     Host: example.com
+~~~
 
-
+~~~ example
     HTTP/1.1 200 OK
     Content-Type: text/html
     Cache-Control: max-age=600
     Age: 30
     Date: Thu, 1 May 2014 16:20:09 GMT
     HTTP-TLS: ma=3600
+~~~
 
 This header field creates a commitment from the origin {{RFC6454}} of the associated resource (in
 the example, `http://example.com`).  For the duration of the commitment, clients SHOULD strongly
@@ -209,7 +214,9 @@ falsifying a commitment.
 The commitment to use authenticated TLS persists for a period determined by the value of the `ma`
 parameter. See Section 4.2.3 of {{RFC7234}} for details of determining response age.
 
+~~~ abnf2616
     ma-parameter     = delta-seconds
+~~~
 
 The commitment made by the `HTTP-TLS` header field applies only to the origin of the resource that
 generates the `HTTP-TLS` header field.
