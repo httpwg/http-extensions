@@ -268,7 +268,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 
 <section title="Host Authentication" anchor="host_auth">
 <t>
-   Clients MUST have reasonable assurances that the alternative service is under control of and
+   Clients &MUST; have reasonable assurances that the alternative service is under control of and
    valid for the whole origin. This mitigates the attack described in <xref
    target="host_security"/>. One way to achieve this is for the alternative to use TLS with a
    certificate that is valid for the origin.
@@ -1142,20 +1142,6 @@ Alt-Used: alternate.example.net
   <seriesInfo name="RFC" value="5246"/>
 </reference>
 
-<reference anchor="RFC6335">
-  <front>
-    <title>Internet Assigned Numbers Authority (IANA) Procedures for the Management
-    of the Service Name and Transport Protocol Port Number Registry</title>
-    <author initials="M." surname="Cotton" fullname="M. Cotton"/>
-    <author initials="L." surname="Eggert" fullname="L. Eggert"/>
-    <author initials="J." surname="Touch" fullname="J. Touch"/>
-    <author initials="M." surname="Westerlund" fullname="M. Westerlund"/>
-    <author initials="S." surname="Cheshire" fullname="S. Cheshire"/>
-    <date year="2011" month="August"/>
-  </front>
-  <seriesInfo name="RFC" value="6335"/>
-</reference>
-
 <reference anchor="RFC7469">
   <front>
     <title>Public Key Pinning Extension for HTTP</title>
@@ -1405,7 +1391,8 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-11" anchor="changes.since.draft-ietf-httpbis-alt-svc-11">
 <t>
-  None yet.
+  Security considerations wrt system ports
+  (<eref target="https://github.com/httpwg/http-extensions/issues/139"/>).
 </t>
 </section>
 </section>
