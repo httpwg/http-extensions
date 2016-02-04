@@ -581,7 +581,7 @@ persist = "1"
   <artwork type="example">
 Alt-Svc: h2=":443"; ma=2592000; persist=1
 </artwork>
-</figure>  
+</figure>
 <t>
    This specification only a defines a single value for "persist". Clients
    &MUST; ignore "persist" parameters with values other than "1".
@@ -909,8 +909,10 @@ Alt-Used: alternate.example.net
    across multiple networks, when the "persist" flag is used.
 </t>
 <t>
-   Clients concerned by the additional fingerprinting can choose to
-   ignore alternative service advertisements.
+   Clients that wish to prevent requests from being correlated (such as those
+   that offer modes aimed at providing improved privacy) can decide not to use
+   alternative services for multiple requests that would not otherwise be
+   allowed to be correlated.
 </t>
 <t>
    In a user agent, any alternative service information &MUST; be removed when origin-specific data
@@ -1139,7 +1141,21 @@ Alt-Used: alternate.example.net
   </front>
   <seriesInfo name="RFC" value="5246"/>
 </reference>
-	
+
+<reference anchor="RFC6335">
+  <front>
+    <title>Internet Assigned Numbers Authority (IANA) Procedures for the Management
+    of the Service Name and Transport Protocol Port Number Registry</title>
+    <author initials="M." surname="Cotton" fullname="M. Cotton"/>
+    <author initials="L." surname="Eggert" fullname="L. Eggert"/>
+    <author initials="J." surname="Touch" fullname="J. Touch"/>
+    <author initials="M." surname="Westerlund" fullname="M. Westerlund"/>
+    <author initials="S." surname="Cheshire" fullname="S. Cheshire"/>
+    <date year="2011" month="August"/>
+  </front>
+  <seriesInfo name="RFC" value="6335"/>
+</reference>
+
 <reference anchor="RFC7469">
   <front>
     <title>Public Key Pinning Extension for HTTP</title>
@@ -1384,6 +1400,12 @@ Alt-Used: alternate.example.net
 <t>
   Use RFC 7405 ABNF extension
   (<eref target="https://github.com/httpwg/http-extensions/issues/131"/>).
+</t>
+</section>
+
+<section title="Since draft-ietf-httpbis-alt-svc-11" anchor="changes.since.draft-ietf-httpbis-alt-svc-11">
+<t>
+  None yet.
 </t>
 </section>
 </section>
