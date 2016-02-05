@@ -583,7 +583,7 @@ Alt-Svc: h2=":443"; ma=2592000; persist=1
 </artwork>
 </figure>
 <t>
-   This specification only a defines a single value for "persist". Clients
+   This specification only defines a single value for "persist". Clients
    &MUST; ignore "persist" parameters with values other than "1".
 </t>
 <t>
