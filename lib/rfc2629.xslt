@@ -1,7 +1,7 @@
 <!--
     XSLT transformation from RFC2629 XML format to HTML
 
-    Copyright (c) 2006-2015, Julian Reschke (julian.reschke@greenbytes.de)
+    Copyright (c) 2006-2016, Julian Reschke (julian.reschke@greenbytes.de)
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -786,7 +786,7 @@
 
 <xsl:template name="add-artwork-class">
   <xsl:choose>
-    <xsl:when test="@type='abnf' or @type='abnf2045' or @type='abnf2616' or @type='application/xml-dtd' or @type='inline' or @type='application/relax-ng-compact-syntax'">
+    <xsl:when test="@type='abnf' or @type='abnf2045' or @type='abnf2616' or @type='abnf7230' or @type='application/xml-dtd' or @type='inline' or @type='application/relax-ng-compact-syntax'">
       <xsl:attribute name="class">inline</xsl:attribute>
     </xsl:when>
     <xsl:when test="starts-with(@type,'message/http') and contains(@type,'msgtype=&quot;request&quot;')">
@@ -3037,6 +3037,9 @@
   <xsl:param name="default"/>
   <xsl:choose>
     <xsl:when test="@sectionFormat">
+      <xsl:call-template name="warning">
+        <xsl:with-param name="msg">@sectionFormat is deprecated, use @x:fmt instead</xsl:with-param>
+      </xsl:call-template>
       <xsl:if test="@x:fmt">
         <xsl:call-template name="warning">
           <xsl:with-param name="msg">both @x:fmt and @sectionFormat specified</xsl:with-param>
@@ -3077,6 +3080,9 @@
 <xsl:template name="get-section-xref-section">
   <xsl:choose>
     <xsl:when test="@section">
+      <xsl:call-template name="warning">
+        <xsl:with-param name="msg">@section is deprecated, use @x:sec instead</xsl:with-param>
+      </xsl:call-template>
       <xsl:if test="@x:sec">
         <xsl:call-template name="warning">
           <xsl:with-param name="msg">both @x:sec and @section specified</xsl:with-param>
@@ -4675,6 +4681,46 @@ function appendRfcLinks(parent, text) {
 }
 </script>
 </xsl:if>
+<script type="application/javascript">
+function anchorRewrite() {
+<xsl:text>  map = { </xsl:text>
+  <xsl:for-each select="//x:anchor-alias">
+    <xsl:text>"</xsl:text>
+    <xsl:call-template name="replace-substring">
+      <xsl:with-param name="string" select="@value"/>
+      <xsl:with-param name="replace">"</xsl:with-param>
+      <xsl:with-param name="by">\"</xsl:with-param>
+    </xsl:call-template>
+    <xsl:text>": "</xsl:text>
+    <xsl:call-template name="replace-substring">
+      <xsl:with-param name="string" select="ancestor::*[@anchor][1]/@anchor"/>
+      <xsl:with-param name="replace">"</xsl:with-param>
+      <xsl:with-param name="by">\"</xsl:with-param>
+    </xsl:call-template>
+    <xsl:text>"</xsl:text>
+    <xsl:if test="position()!=last()">, </xsl:if>
+  </xsl:for-each>
+<xsl:text>};</xsl:text>
+  if (window.location.hash.length >= 1) {
+    var fragid = window.location.hash.substr(1);
+    if (fragid) {
+      if (! document.getElementById(fragid)) {
+        var prefix = "<xsl:value-of select="$anchor-prefix"/>";
+        var mapped = map[fragid];
+        if (mapped) {
+          window.location.hash = mapped;
+        } else if (fragid.indexOf("section-") == 0) {
+          window.location.hash = prefix + ".section." + fragid.substring(8);
+        } else if (fragid.indexOf("appendix-") == 0) {
+          window.location.hash = prefix + ".section." + fragid.substring(9);
+        }
+      }
+    }  
+  }
+}
+window.addEventListener('hashchange', anchorRewrite);
+window.addEventListener('DOMContentLoaded', anchorRewrite);
+</script>
 </xsl:template>
 
 <!-- insert CSS style info -->
@@ -7043,74 +7089,20 @@ dd, li, p {
 <xsl:template name="to-abnf-char-sequence">
   <xsl:param name="chars"/>
 
+  <xsl:variable name="asciistring">&#160; !"#$%&amp;'()*+,-./<xsl:value-of select="$digits"/>:;&lt;=>?@<xsl:value-of select="$ucase"/>[\]^_`<xsl:value-of select="$lcase"/>{|}~&#127;</xsl:variable> 
+  <xsl:variable name="hex">0123456789ABCDEF</xsl:variable>
+  
   <xsl:variable name="c" select="substring($chars,1,1)"/>
   <xsl:variable name="r" select="substring($chars,2)"/>
-
+  <xsl:variable name="pos" select="string-length(substring-before($asciistring,$c))"/>
+  
   <xsl:choose>
-    <xsl:when test="$c='-'">2D</xsl:when>
-    <xsl:when test="$c='/'">2F</xsl:when>
-    <xsl:when test="$c='0'">30</xsl:when>
-    <xsl:when test="$c='1'">31</xsl:when>
-    <xsl:when test="$c='2'">32</xsl:when>
-    <xsl:when test="$c='3'">33</xsl:when>
-    <xsl:when test="$c='4'">34</xsl:when>
-    <xsl:when test="$c='5'">35</xsl:when>
-    <xsl:when test="$c='6'">36</xsl:when>
-    <xsl:when test="$c='7'">37</xsl:when>
-    <xsl:when test="$c='8'">38</xsl:when>
-    <xsl:when test="$c='9'">39</xsl:when>
-    <xsl:when test="$c='A'">41</xsl:when>
-    <xsl:when test="$c='B'">42</xsl:when>
-    <xsl:when test="$c='C'">43</xsl:when>
-    <xsl:when test="$c='D'">44</xsl:when>
-    <xsl:when test="$c='E'">45</xsl:when>
-    <xsl:when test="$c='F'">46</xsl:when>
-    <xsl:when test="$c='G'">47</xsl:when>
-    <xsl:when test="$c='H'">48</xsl:when>
-    <xsl:when test="$c='I'">49</xsl:when>
-    <xsl:when test="$c='J'">4A</xsl:when>
-    <xsl:when test="$c='K'">4B</xsl:when>
-    <xsl:when test="$c='L'">4C</xsl:when>
-    <xsl:when test="$c='M'">4D</xsl:when>
-    <xsl:when test="$c='N'">4E</xsl:when>
-    <xsl:when test="$c='O'">4F</xsl:when>
-    <xsl:when test="$c='P'">50</xsl:when>
-    <xsl:when test="$c='Q'">51</xsl:when>
-    <xsl:when test="$c='R'">52</xsl:when>
-    <xsl:when test="$c='S'">53</xsl:when>
-    <xsl:when test="$c='T'">54</xsl:when>
-    <xsl:when test="$c='U'">55</xsl:when>
-    <xsl:when test="$c='V'">56</xsl:when>
-    <xsl:when test="$c='W'">57</xsl:when>
-    <xsl:when test="$c='X'">58</xsl:when>
-    <xsl:when test="$c='Y'">59</xsl:when>
-    <xsl:when test="$c='Z'">5A</xsl:when>
-    <xsl:when test="$c='a'">61</xsl:when>
-    <xsl:when test="$c='b'">62</xsl:when>
-    <xsl:when test="$c='c'">63</xsl:when>
-    <xsl:when test="$c='d'">64</xsl:when>
-    <xsl:when test="$c='e'">65</xsl:when>
-    <xsl:when test="$c='f'">66</xsl:when>
-    <xsl:when test="$c='g'">67</xsl:when>
-    <xsl:when test="$c='h'">68</xsl:when>
-    <xsl:when test="$c='i'">69</xsl:when>
-    <xsl:when test="$c='j'">6A</xsl:when>
-    <xsl:when test="$c='k'">6B</xsl:when>
-    <xsl:when test="$c='l'">6C</xsl:when>
-    <xsl:when test="$c='m'">6D</xsl:when>
-    <xsl:when test="$c='n'">6E</xsl:when>
-    <xsl:when test="$c='o'">6F</xsl:when>
-    <xsl:when test="$c='p'">70</xsl:when>
-    <xsl:when test="$c='q'">71</xsl:when>
-    <xsl:when test="$c='r'">72</xsl:when>
-    <xsl:when test="$c='s'">73</xsl:when>
-    <xsl:when test="$c='t'">74</xsl:when>
-    <xsl:when test="$c='u'">75</xsl:when>
-    <xsl:when test="$c='v'">76</xsl:when>
-    <xsl:when test="$c='w'">77</xsl:when>
-    <xsl:when test="$c='x'">78</xsl:when>
-    <xsl:when test="$c='y'">79</xsl:when>
-    <xsl:when test="$c='z'">7A</xsl:when>
+    <xsl:when test="$pos >= 1">
+      <xsl:variable name="ascii" select="$pos + 31"/>
+      <xsl:variable name="h" select="floor($ascii div 16)"/>
+      <xsl:variable name="l" select="floor($ascii mod 16)"/>
+      <xsl:value-of select="concat(substring($hex,1 + $h,1),substring($hex,1 + $l,1))"/>
+    </xsl:when>
     <xsl:otherwise>
       <xsl:text>??</xsl:text>
       <xsl:call-template name="error">
@@ -7433,7 +7425,7 @@ dd, li, p {
   </xsl:if>
 
   <!-- check ABNF syntax references -->
-  <xsl:if test="//artwork[@type='abnf2616']">
+  <xsl:if test="//artwork[@type='abnf2616' or @type='abnf7230']">
     <xsl:if test="not(//reference/seriesInfo[@name='RFC' and (@value='2068' or @value='2616' or @value='7230')]) and not(//reference/seriesInfo[@name='Internet-Draft' and (starts-with(@value, 'draft-ietf-httpbis-p1-messaging-'))])">
       <!-- check for draft-ietf-httpbis-p1-messaging- is for backwards compat -->
       <xsl:call-template name="warning">
@@ -8112,11 +8104,11 @@ dd, li, p {
   <xsl:variable name="gen">
     <xsl:text>http://greenbytes.de/tech/webdav/rfc2629.xslt, </xsl:text>
     <!-- when RCS keyword substitution in place, add version info -->
-    <xsl:if test="contains('$Revision: 1.755 $',':')">
-      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.755 $', 'Revision: '),'$','')),', ')" />
+    <xsl:if test="contains('$Revision: 1.761 $',':')">
+      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.761 $', 'Revision: '),'$','')),', ')" />
     </xsl:if>
-    <xsl:if test="contains('$Date: 2015/11/29 11:14:21 $',':')">
-      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2015/11/29 11:14:21 $', 'Date: '),'$','')),', ')" />
+    <xsl:if test="contains('$Date: 2016/02/05 15:26:59 $',':')">
+      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2016/02/05 15:26:59 $', 'Date: '),'$','')),', ')" />
     </xsl:if>
     <xsl:value-of select="concat('XSLT vendor: ',system-property('xsl:vendor'),' ',system-property('xsl:vendor-url'))" />
   </xsl:variable>
@@ -8582,6 +8574,13 @@ prev: <xsl:value-of select="$prev"/>
                     <xsl:choose>
                       <xsl:when test="$attrname='comments'"/>
                       <xsl:when test="$attrname='compact'"/>
+                      <xsl:when test="$attrname='docmapping'">
+                        <xsl:if test="$value!='yes'">
+                          <xsl:call-template name="warning">
+                            <xsl:with-param name="msg">the rfc docmapping pseudo-attribute with values other than 'yes' in not supported by this processor.</xsl:with-param>
+                          </xsl:call-template>
+                        </xsl:if>
+                      </xsl:when>
                       <xsl:when test="$attrname='editing'"/>
                       <xsl:when test="$attrname='footer'"/>
                       <xsl:when test="$attrname='header'"/>
