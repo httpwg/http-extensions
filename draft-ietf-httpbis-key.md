@@ -94,7 +94,7 @@ efficiency when responses depend upon such headers.
 
 For example, this response header field:
 
-~~~
+~~~ example
   Key: cookie;param=_sess;param=ID
 ~~~
 
@@ -102,7 +102,7 @@ indicates that the selected response depends upon the "_sess" and "ID" cookie va
  
 This Key:
 
-~~~
+~~~ example
   Key: user-agent;substr=MSIE
 ~~~
 
@@ -111,7 +111,7 @@ whose User-Agent header field contains "MSIE", and another for those that don't.
 
 A more complex example:
 
-~~~
+~~~ example
   Key: user-agent;substr=MSIE;Substr="mobile", Cookie;param="ID"
 ~~~
 
@@ -150,7 +150,7 @@ The Key field-value is a comma-delimited list of selecting header fields (simila
 zero to many parameters each, delimited by semicolons. Whitespace is not allowed in the field-value
 between each field-name and its parameter set.
 
-~~~
+~~~ abnf7230
   Key = 1#field-name *( ";" parameter )
 ~~~
 
@@ -159,14 +159,14 @@ double-quoted strings (potentially with "\\"-escaped characters inside).
 
 The following header fields have the same effect:
 
-~~~
+~~~ example
   Vary: Accept-Encoding, Cookie
   Key: Accept-Encoding, Cookie
 ~~~
   
 However, Key's use of parameters allows:
 
-~~~
+~~~ example
   Key: Accept-Encoding, Cookie;param=foo
 ~~~
   
@@ -192,21 +192,21 @@ Origin servers SHOULD still send Vary when using Key, to ensure backwards compat
 
 For example,
 
-~~~
+~~~ example
   Vary: User-Agent
   Key: User-Agent;substr="mozilla"
 ~~~
 
 Note that, in some cases, it may be better to explicitly use "Vary: *" if clients and caches don't have any practical way to use the Vary header field's value. For example,
 
-~~~
+~~~ example
   Vary: *
   Key: Cookie;param="ID"
 ~~~
 
 Except when Vary: * is used, the set of headers used in Key SHOULD reflect the same request header fields as Vary does, even if they don't have parameters. For example,
 
-~~~
+~~~ example
   Vary: Accept-Encoding, User-Agent
   Key: Accept-Encoding, User-Agent;substr="mozilla"
 ~~~
@@ -323,7 +323,7 @@ configured value.
 
 Its value's syntax is:
 
-~~~
+~~~ abnf7230
 div    = 1*DIGIT
 ~~~
 
@@ -339,14 +339,14 @@ To process a set of header fields against a div parameter, follow these steps (o
 
 For example, the Key:
 
-~~~
+~~~ example
 Key: Bar;div=5
 ~~~
 
 indicates that the "Bar" header's field value should be partitioned into groups of 5. Thus, the
 following field values would be considered the same (because, divided by 5, they all result in 0):
 
-~~~
+~~~ example
 Bar: 1
 Bar: 3 , 42
 Bar: 4, 1
@@ -354,7 +354,7 @@ Bar: 4, 1
 
 whereas these would be considered to be in a different group (because, divided by 5, they all result in 2);
 
-~~~
+~~~ example
 Bar: 12
 Bar: 10
 Bar: 14, 1
@@ -367,7 +367,7 @@ The "partition" parameter normalizes positive numeric header values into pre-def
 
 Its value's syntax is:
 
-~~~
+~~~ abnf7230
 partition = [ segment ] *( ":" [ segment ] )
 segment   = [ 0*DIGIT "." ] 1*DIGIT
 ~~~
@@ -392,7 +392,7 @@ equivalent):
 
 For example, the Key:
 
-~~~
+~~~ example
 Key: Foo;partition=20:30:40
 ~~~
 
@@ -405,7 +405,7 @@ indicates that the "Foo" header's field value should be divided into four segmen
 
 Thus, the following headers would all be normalized to the first segment:
 
-~~~
+~~~ example
 Foo: 1
 Foo: 0
 Foo: 4, 54
@@ -414,7 +414,7 @@ Foo: 19.9
 
 whereas the following would fall into the second segment:
 
-~~~
+~~~ example
 Foo: 20
 Foo: 29.999
 Foo:  24   , 10
@@ -428,7 +428,7 @@ is case-sensitive.
 
 Its value's syntax is:
 
-~~~
+~~~ abnf7230
 match  = ( token / quoted-string )
 ~~~
 
@@ -447,13 +447,13 @@ equivalent):
 
 For example, the Key:
 
-~~~
+~~~ example
 Key: Baz;match="charlie"
 ~~~
 
 Would return "1" for the following header field values:
 
-~~~
+~~~ example
 Baz: charlie
 Baz: foo, charlie
 Baz: bar, charlie     , abc
@@ -461,7 +461,7 @@ Baz: bar, charlie     , abc
 
 and "0" for these:
 
-~~~
+~~~ example
 Baz: theodore
 Baz: joe, sam
 Baz: "charlie"
@@ -478,7 +478,7 @@ of header values. It is case-sensitive.
 
 Its value's syntax is:
 
-~~~
+~~~ abnf7230
 substr  = ( token / quoted-string )
 ~~~
 
@@ -497,13 +497,13 @@ equivalent):
 
 For example, the Key:
 
-~~~
+~~~ example
 Key: Abc;substr=bennet
 ~~~
 
 Would return "1" for the following header field values:
 
-~~~
+~~~ example
 Abc: bennet
 Abc: foo, bennet
 Abc: abennet00
@@ -513,7 +513,7 @@ Abc: "bennet"
 
 and "0" for these:
 
-~~~
+~~~ example
 Abc: theodore
 Abc: joe, sam
 Abc: Bennet
@@ -528,7 +528,7 @@ uses the nominated key's value as the secondary cache key.
 
 Its value's syntax is:
 
-~~~
+~~~ abnf7230
 param  = ( token / quoted-string )
 ~~~
 
@@ -560,13 +560,13 @@ Note that steps 2 and 3 accommodate semicolon-separated values, so that it can b
 
 For example, the Key:
 
-~~~
+~~~ example
 Key: Def;param=liam
 ~~~
 
 The following headers would return the string (surrounded in single quotes) indicated:
 
-~~~
+~~~ example
 Def: liam=123           // '123'
 Def: mno=456            // ''
 Def:                    // ''
