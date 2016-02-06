@@ -155,7 +155,7 @@ The "aesgcm128" content-coding uses a fixed record size.  The resulting
 encoding is a series of fixed-size records, with a final record that is one or
 more octets shorter than a fixed sized record.
 
-~~~
+~~~ drawing
        +------+         input of between rs-256
        | data |            and rs-1 octets
        +------+      (one fewer for the last record)
@@ -218,7 +218,7 @@ encoding(s) can be removed.
 The `Encryption` header field uses the extended ABNF syntax defined in
 Section 1.2 of [RFC7230] and the `parameter` rule from [RFC7231]
 
-~~~
+~~~ abnf7230
   Encryption = #encryption_params
   encryption_params = [ parameter *( ";" parameter ) ]
 ~~~
@@ -284,14 +284,14 @@ material (IKM) to HKDF.  Input keying material can either be prearranged, or can
 be described using the Crypto-Key header field ({{crypto-key}}).  The first step
 of HKDF is therefore:
 
-~~~
+~~~ inline
    PRK = HMAC-SHA-256(salt, IKM)
 ~~~
 
 The info parameter to HKDF is set to the ASCII-encoded string "Content-Encoding:
 aesgcm128", a single zero octet and an optional context string:
 
-~~~
+~~~ inline
    cek_info = "Content-Encoding: aesgcm128" || 0x00 || context
 ~~~
 
@@ -303,7 +303,7 @@ AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key, so the
 length (L) parameter to HKDF is 16.  The second step of HKDF can
 therefore be simplified to the first 16 octets of a single HMAC:
 
-~~~
+~~~ inline
    CEK = HMAC-SHA-256(PRK, cek_info || 0x01)
 ~~~
 
@@ -321,7 +321,7 @@ The length (L) parameter is 12 octets.  The info parameter for the nonce is the
 ASCII-encoded string "Content-Encoding: nonce", a single zero octet and an
 context:
 
-~~~
+~~~ inline
    nonce_info = "Content-Encoding: nonce" || 0x00 || context
 ~~~
 
@@ -334,7 +334,7 @@ integer in network byte order that starts at zero.
 
 Thus, the final nonce for each record is a 12 octet value:
 
-~~~
+~~~ inline
    NONCE = HMAC-SHA-256(PRK, nonce_info || 0x01) XOR SEQ
 ~~~
 
@@ -347,7 +347,7 @@ used in the Encryption header field.
 The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
 of [RFC7230] and the `parameter` rule from [RFC7231].
 
-~~~
+~~~ abnf7230
   Crypto-Key = #crypto_key_params
   crypto_key_params = [ parameter *( ";" parameter ) ]
 ~~~
@@ -435,7 +435,7 @@ the public key of the sender, and the public key of the sender.  The public keys
 are encoded into octets as defined for the group when determining the context
 string.
 
-~~~
+~~~ inline
    context = label || 0x00 ||
                length(recipient_public) || recipient_public ||
                length(sender_public) || sender_public
@@ -472,7 +472,7 @@ the ASCII-encoded string "Content-Encoding: auth" with a terminal zero octet is
 used as the "info" parameter, and the length of the output is 32 octets (i.e.,
 the entire output of the underlying SHA-256 HMAC function):
 
-~~~
+~~~ inline
    auth_info = "Content-Encoding: auth" || 0x00
    IKM = HKDF(authentication, raw_key, auth_info, 32)
 ~~~
@@ -484,7 +484,7 @@ having a zero-length context.
 Note that in the absence of an authentication secret, the input keying material
 is simply the raw keying material:
 
-~~~
+~~~ inline
    IKM = raw_key
 ~~~
 
@@ -493,7 +493,7 @@ is simply the raw keying material:
 
 ## Successful GET Response
 
-~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
 Content-Encoding: aesgcm128
@@ -512,7 +512,7 @@ exposing information about the content.
 
 ## Encryption and Compression
 
-~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Encoding: aesgcm128, gzip
@@ -525,7 +525,7 @@ Encryption: keyid="mailto:me@example.com";
 
 ## Encryption with More Than One Key
 
-~~~
+~~~ example
 PUT /thing HTTP/1.1
 Host: storage.example.com
 Content-Type: application/http
@@ -546,7 +546,7 @@ encryption uses a 1200 octet record size.
 
 ## Encryption with Explicit Key {#explicit}
 
-~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Length: 32
 Content-Encoding: aesgcm128
@@ -564,7 +564,7 @@ reasons only.
 
 ## Diffie-Hellman Encryption
 
-~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Length: 32
 Content-Encoding: aesgcm128
@@ -587,7 +587,7 @@ public share is included in the "dh" parameter above. The keys shown below use
 uncompressed points [X9.62] encoded using URL-safe base64. Line wrapping is
 added for presentation purposes only.
 
-~~~
+~~~ example
    Receiver:
       private key: 9FWl15_QUQAWDaD3k3l50ZBZQJ4au27F1V4F0uLSD_M
       public key: BCEkBjzL8Z3C-oi2Q7oE5t2Np-p7osjGLg93qUP0wvqR
@@ -828,7 +828,7 @@ expressed using the JWE Compact Serialization:
 Thus, the example in {{explicit}} can be rendered using the JWE Compact
 Serialization as:
 
-~~~
+~~~ example
 eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..AAAAAAAAAAAAAAAA.
 LwTC-fwdKh8de0smD2jfzA.eh1vURhu65M2lxhctbbntA
 ~~~
