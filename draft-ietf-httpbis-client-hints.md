@@ -102,13 +102,13 @@ Further, depending on the used hint, the server MAY also need to emit additional
 
 Servers can advertise support for Client Hints using the Accept-CH header or an equivalent HTML meta element with http-equiv attribute.
 
-~~~
+~~~ abnf7230
   Accept-CH = #token
 ~~~
 
 For example:
 
-~~~
+~~~ example
   Accept-CH: DPR, Width, Viewport-Width, Downlink
 ~~~
 
@@ -119,13 +119,13 @@ When a client receives Accept-CH, it SHOULD append the Client Hint headers that 
 
 When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server MUST also emit a Vary response header field ({{RFC7234}}) to indicate which hints were used and whether the selected response is appropriate for a later request. 
 
-~~~
+~~~ example
   Vary: DPR
 ~~~
 
 Above example indicates that the cache key should be based on the DPR header.
 
-~~~
+~~~ example
   Vary: DPR, Width, Downlink
 ~~~
 
@@ -133,19 +133,19 @@ Above example indicates that the cache key should be based on the DPR, Width, an
 
 Client Hints MAY be combined with Key ({{I-D.ietf-httpbis-key}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server MAY return the following set of instructions:
 
-~~~
+~~~ example
   Key: DPR;partition=1.5:2.5:4.0
 ~~~
 
 Above example indicates that the cache key should be based on the value of the DPR header with three segments: less than 1.5, 1.5 to less than 2.5, and 4.0 or greater.
 
-~~~
+~~~ example
   Key: Width;div=320
 ~~~
 
 Above example indicates that the cache key should be based on the value of the Width header and be partitioned into groups of 320: 0-320, 320-640, and so on.
 
-~~~
+~~~ example
   Key: Downlink;partition=0.5:1.0:3.0:5.0:10
 ~~~
 
@@ -156,7 +156,7 @@ Above example indicates that the cache key should be based on the (Mbps) value o
 
 The "DPR" header field is a number that, in requests, indicates the client's current Device Pixel Ratio (DPR), which is the ratio of physical pixels over CSS px of the layout viewport on the device.
 
-~~~
+~~~ abnf7230
   DPR = 1*DIGIT [ "." 1*DIGIT ]
 ~~~
 
@@ -167,7 +167,7 @@ If DPR occurs in a message more than once, the last value overrides all previous
 
 The "Content-DPR" header field is a number that indicates the ratio between physical pixels over CSS px of the selected image response.
 
-~~~
+~~~ abnf7230
   Content-DPR = 1*DIGIT [ "." 1*DIGIT ]
 ~~~
 
@@ -182,7 +182,7 @@ If Content-DPR occurs in a message more than once, the last value overrides all 
 
 The "Width" header field is a number that, in requests, indicates the resource width in physical px (i.e. intrinsic size of an image). The provided physical px value is a number rounded to the largest smallest following integer (i.e. ceiling value).
 
-~~~
+~~~ abnf7230
   Width = 1*DIGIT
 ~~~
 
@@ -193,7 +193,7 @@ If the resource width is not known at the time of the request or the resource do
 
 The "Viewport-Width" header field is a number that, in requests, indicates the layout viewport width in CSS px. The provided CSS px value is a number rounded to the largest smallest following integer (i.e. ceiling value).
 
-~~~
+~~~ abnf7230
   Viewport-Width = 1*DIGIT
 ~~~
 
@@ -204,7 +204,7 @@ If Viewport-Width occurs in a message more than once, the last value overrides a
 
 The "Downlink" header field is a number that, in requests, indicates the client's maximum downlink speed in megabits per second (Mbps), as defined by the "downlinkMax" attribute in the W3C Network Information API.
 
-~~~
+~~~ abnf7230
   Downlink = 1*DIGIT [ "." 1*DIGIT ]
 ~~~
 
@@ -215,7 +215,7 @@ If Downlink occurs in a message more than once, the minimum value should be used
 
 The "Save-Data" header field is a token that, in requests, indicates client's preference for reduced data usage, due to high transfer costs, slow connection speeds, or other reasons.
 
-~~~
+~~~ abnf7230
   Save-Data = "on"
 ~~~
 
@@ -226,7 +226,7 @@ The token is a signal indicating explicit user opt-in into a reduced data usage 
 
 For example, given the following request headers:
 
-~~~
+~~~ example
   DPR: 2.0
   Width: 320
   Viewport-Width: 320
@@ -236,7 +236,7 @@ The server knows that the device pixel ratio is 2.0, that the intended display w
 
 If the server uses above hints to perform resource selection for an image asset, it must confirm its selection via the Content-DPR response header to allow the client to calculate the appropriate intrinsic size of the image response. The server does not need to confirm resource width, only the ratio between physical pixels and CSS px of the selected image resource:
 
-~~~
+~~~ example
   Content-DPR: 1.0
 ~~~
 
@@ -244,7 +244,7 @@ The Content-DPR response header indicates to the client that the server has sele
 
 Alternatively, the server could select an alternate resource based on the maximum downlink speed advertised in the request headers:
 
-~~~
+~~~ example
   Downlink: 0.384
 ~~~
 
