@@ -156,8 +156,8 @@ encoding is a series of fixed-size records, with a final record that is one or
 more octets shorter than a fixed sized record.
 
 ~~~ drawing
-       +------+         input of between rs-256
-       | data |            and rs-1 octets
+       +------+         input of between rs-65537
+       | data |            and rs-2 octets
        +------+      (one fewer for the last record)
            |
            v
@@ -183,11 +183,11 @@ fail to decrypt if the final record ciphertext is 16 octets or less in size.
 Valid records always contain at least one byte of padding and a 16 octet
 authentication tag.
 
-Each record contains between 1 and 256 octets of padding, inserted into a record
-before the enciphered content.  Padding consists of a length byte, followed that
-number of zero-valued octets.  A receiver MUST fail to decrypt if any padding
-octet other than the first is non-zero, or a record has more padding than the
-record size can accommodate.
+Each record contains between 2 and 65537 octets of padding, inserted into a
+record before the enciphered content. Padding consists of a two octet unsigned
+integer in network byte order, followed that number of zero-valued octets. A
+receiver MUST fail to decrypt if any padding octet other than the first two are
+non-zero, or a record has more padding than the record size can accommodate.
 
 The nonce for each record is a 96-bit value constructed from the record sequence
 number and the input keying material.  Nonce derivation is covered in {{nonce}}.
