@@ -26,6 +26,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 
 ### Character Encoding and Language for Parameters
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rfc5987bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc5987bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc5987bis) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Arfc5987bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc5987bis/)
@@ -33,7 +34,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Alternative Services
 
-Working Group Last Call ended 4 December 2015
+In **[IETF Last Call](https://mailarchive.ietf.org/arch/msg/ietf-announce/jF2I0J9VfnX4oyfcAy3oLF7Qc0g); ends 2016-02-24
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/alt-svc.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
@@ -41,6 +42,7 @@ Working Group Last Call ended 4 December 2015
 
 
 ### HTTP Opportunistic Security
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/opsec.html) ([plain text](https://httpwg.github.io/http-extensions/opsec.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-encryption/)
