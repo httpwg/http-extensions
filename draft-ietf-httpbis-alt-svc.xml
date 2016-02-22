@@ -1409,7 +1409,7 @@ This document defines the HTTP Cookie and Set-Cookie header fields. These header
 </t>
 </section>
 
-<section title="Since draft-ietf-httpbis-alt-svc-11" anchor="changes.since.draft-ietf-httpbis-alt-svc-12">
+<section title="Since draft-ietf-httpbis-alt-svc-12" anchor="changes.since.draft-ietf-httpbis-alt-svc-12">
 <t>
   None yet.
 </t>
