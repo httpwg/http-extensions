@@ -1419,10 +1419,10 @@ This document defines the HTTP Cookie and Set-Cookie header fields. These header
 
 <section title="Acknowledgements" anchor="acknowledgements" numbered="false">
 <t>
-  Thanks to Adam Langley, Bence Beky, Eliot Lear, Erik Nygren, Guy Podjarny,
+  Thanks to Adam Langley, Bence Beky, Chris Lonvick, Eliot Lear, Erik Nygren, Guy Podjarny,
   Herve Ruellan, Lucas Pardue, Martin Thomson, Matthew Kerwin, Mike Bishop,
   Paul Hoffman,
-  Richard Barnes, Richard Bradbury, Stephen Farrell, Stephen Ludin, Chris Lonvick,
+  Richard Barnes, Richard Bradbury, Stephen Farrell, Stephen Ludin,
   and Will Chan for their
   feedback and suggestions.
 </t>
