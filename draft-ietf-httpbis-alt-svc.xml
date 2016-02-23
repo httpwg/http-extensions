@@ -1139,21 +1139,13 @@ Alt-Used: alternate.example.net
 </reference>
 
 
-<reference anchor="RFC6265" target="http://www.rfc-editor.org/info/rfc6265">
-<front>
-<title>HTTP State Management Mechanism</title>
-<author initials="A." surname="Barth" fullname="A. Barth">
-<organization/>
-</author>
-<date year="2011" month="April"/>
-<abstract>
-<t>
-This document defines the HTTP Cookie and Set-Cookie header fields. These header fields can be used by HTTP servers to store state (called cookies) at HTTP user agents, letting the servers maintain a stateful session over the mostly stateless HTTP protocol. Although cookies have many historical infelicities that degrade their security and privacy, the Cookie and Set-Cookie header fields are widely used on the Internet. This document obsoletes RFC 2965. [STANDARDS-TRACK]
-</t>
-</abstract>
-</front>
-<seriesInfo name="RFC" value="6265"/>
-<seriesInfo name="DOI" value="10.17487/RFC6265"/>
+<reference anchor="RFC6265">
+  <front>
+    <title>HTTP State Management Mechanism</title>
+    <author initials="A." surname="Barth" fullname="A. Barth"/>
+    <date year="2011" month="April"/>
+  </front>
+  <seriesInfo name="RFC" value="6265"/>
 </reference>
 
 <reference anchor="RFC7469">
