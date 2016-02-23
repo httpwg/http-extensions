@@ -1,6 +1,6 @@
 xml2rfc ?= "xml2rfc"
 saxpath ?= "lib/saxon9.jar"
-saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -novw -l
+saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -l
 kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=http://unicorn-wg.github.io/idrefs kramdown-rfc2629
 
 names := http2-encryption alt-svc legally-restricted-status rfc5987bis key client-hints encryption-encoding
@@ -65,7 +65,7 @@ submit_deps := $(join $(addsuffix .xml: ,$(next)),$(addsuffix .redxml,$(drafts))
 $(foreach rule,$(submit_deps),$(eval $(call makerule_submit_xml,$(rule))))
 
 %.xml: %.md
-	$(kramdown2629) $< | sed -e '/DOCTYPE/,/>/d' > $@
+	$(kramdown2629) $< | sed -e 's/\"rfc2629.dtd\"/\"lib\/rfc2629.dtd\"/' > $@
 
 $(addsuffix .txt,$(next)): %.txt: %.xml
 	$(xml2rfc) $< $@
