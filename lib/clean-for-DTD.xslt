@@ -1,7 +1,7 @@
 <!--
     Strip rfc2629.xslt extensions, generating XML input for MTR's xml2rfc
 
-    Copyright (c) 2006-2015, Julian Reschke (julian.reschke@greenbytes.de)
+    Copyright (c) 2006-2016, Julian Reschke (julian.reschke@greenbytes.de)
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -34,9 +34,10 @@
                 xmlns:ed="http://greenbytes.de/2002/rfcedit"
                 xmlns:grddl="http://www.w3.org/2003/g/data-view#"
                 xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:svg="http://www.w3.org/2000/svg"
                 xmlns:x="http://purl.org/net/xml2rfc/ext"
                 xmlns:xhtml="http://www.w3.org/1999/xhtml"
-                exclude-result-prefixes="ed grddl rdf x xhtml"
+                exclude-result-prefixes="ed grddl rdf svg x xhtml"
 >
 
 <!-- re-use some of the default RFC2629.xslt rules -->
@@ -199,7 +200,6 @@
           <xsl:when test="self::preamble">
             <!-- it's not an element we can link to -->
             <xsl:call-template name="warning">
-              <xsl:with-param name="inline" select="'no'"/>
               <xsl:with-param name="msg">couldn't create the link as <xsl:value-of select="name()"/> does not support the anchor attribute.</xsl:with-param>
             </xsl:call-template>
             <xsl:value-of select="$current"/>
@@ -212,7 +212,6 @@
     </xsl:when>
     <xsl:otherwise>
       <xsl:call-template name="warning">
-        <xsl:with-param name="inline" select="'no'"/>
         <xsl:with-param name="msg">internal link target for '<xsl:value-of select="$val"/>' does not exist.</xsl:with-param>
       </xsl:call-template>
       <xsl:value-of select="."/>
@@ -662,6 +661,13 @@
 <xsl:template name="insert-end-code"/>
 <xsl:template match="@x:is-code-component" mode="cleanup"/>
 
+<xsl:template match="artwork[svg:svg]" mode="cleanup">
+<xsl:call-template name="warning">
+  <xsl:with-param name="msg">SVG image removed.</xsl:with-param>
+</xsl:call-template>
+<artwork>(see SVG image in HTML version)</artwork>
+</xsl:template>
+
 <xsl:template match="artwork" mode="cleanup">
   <xsl:variable name="content2"><xsl:apply-templates select="."/></xsl:variable>
   <xsl:variable name="content" select="translate($content2,'&#160;&#x2500;&#x2502;&#x2508;&#x250c;&#x2510;&#x2514;&#x2518;&#x251c;&#x2524;',' -|+++++++')"/>
@@ -694,6 +700,7 @@
 </xsl:template>
 
 <xsl:template match="@x:indent-with" mode="cleanup"/>
+<xsl:template match="@x:lang" mode="cleanup"/>
 
 <xsl:template name="indent">
   <xsl:param name="content"/>
@@ -751,7 +758,6 @@
     <xsl:value-of select="."/>
   </xsl:comment>
   <xsl:call-template name="warning">
-    <xsl:with-param name="inline" select="'no'"/>
     <xsl:with-param name="msg">Dropping annotation on <xsl:value-of select="local-name(..)"/> element.</xsl:with-param>
   </xsl:call-template>
 </xsl:template>
@@ -812,7 +818,6 @@
   <xsl:choose>
     <xsl:when test="*">
       <xsl:call-template name="warning">
-        <xsl:with-param name="inline" select="'no'"/>
         <xsl:with-param name="msg">strong not translated when including child elements</xsl:with-param>
       </xsl:call-template>
       <xsl:apply-templates mode="cleanup"/>
@@ -829,7 +834,6 @@
   <xsl:choose>
     <xsl:when test="*">
       <xsl:call-template name="warning">
-        <xsl:with-param name="inline" select="'no'"/>
         <xsl:with-param name="msg">em not translated when including child elements</xsl:with-param>
       </xsl:call-template>
       <xsl:apply-templates mode="cleanup"/>
@@ -846,7 +850,6 @@
   <xsl:choose>
     <xsl:when test="*">
       <xsl:call-template name="warning">
-        <xsl:with-param name="inline" select="'no'"/>
         <xsl:with-param name="msg">tt not translated when they include child elements</xsl:with-param>
       </xsl:call-template>
       <xsl:apply-templates mode="cleanup"/>
@@ -948,7 +951,6 @@
   </section>
   <xsl:if test="@numbered='no'">
     <xsl:call-template name="warning">
-      <xsl:with-param name="inline" select="'no'"/>
       <xsl:with-param name="msg">unnumbered sections not supported</xsl:with-param>
     </xsl:call-template>
   </xsl:if>
@@ -1062,7 +1064,6 @@
   <t>
     <xsl:if test="@start and @start!='1'">
       <xsl:call-template name="warning">
-        <xsl:with-param name="inline" select="'no'"/>
         <xsl:with-param name="msg">list start != 1 not supported</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
@@ -1090,6 +1091,42 @@
   </t>
 </xsl:template>
 
+<!-- Source Code -->
+<xsl:template match="sourcecode" mode="cleanup">
+  <xsl:choose>
+    <xsl:when test="parent::figure">
+      <artwork>
+        <xsl:copy-of select="@anchor|@type"/>
+        <xsl:apply-templates mode="cleanup"/>
+      </artwork>
+    </xsl:when>
+    <xsl:otherwise>
+      <figure>
+        <artwork>
+          <xsl:copy-of select="@anchor|@type"/>
+          <xsl:apply-templates mode="cleanup"/>
+        </artwork>
+      </figure>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<!-- date formats -->
+<xsl:template match="/rfc/front/date/@month" mode="cleanup">
+  <xsl:attribute name="month">
+    <xsl:choose>
+      <xsl:when test="string(number(.))!='NaN' and number(.)&gt;0 and number(.)&lt;13">
+        <xsl:call-template name="get-month-as-name">
+          <xsl:with-param name="month" select="."/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="."/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:attribute>
+</xsl:template>
+
 <!-- Display names for references -->
 <xsl:template match="displayreference" mode="cleanup"/>
 <xsl:template match="reference/@anchor[.=/rfc/back/displayreference/@target]" mode="cleanup">
@@ -1111,7 +1148,6 @@
     <xsl:when test="translate(substring($tnewname,1,1),$digits,'')=''">
       <xsl:value-of select="concat('_',$tnewname)"/>
       <xsl:call-template name="warning">
-        <xsl:with-param name="inline" select="'no'"/>
         <xsl:with-param name="msg">rewriting reference name '<xsl:value-of select="$tnewname"/>' to '<xsl:value-of select="concat('_',$tnewname)"/>' due to illegal start character</xsl:with-param>
       </xsl:call-template>
     </xsl:when>
