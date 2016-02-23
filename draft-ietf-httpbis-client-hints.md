@@ -266,49 +266,49 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Applicable protocol: HTTP
 - Status: standard
 - Author/Change controller: IETF
-- Specification document(s): [this document]
+- Specification document(s): \[this document\]
 - Related information: for Client Hints
 
 - Header field name: Width
 - Applicable protocol: HTTP
 - Status: standard
 - Author/Change controller: IETF
-- Specification document(s): [this document]
+- Specification document(s): \[this document\]
 - Related information: for Client Hints
 
 - Header field name: Viewport-Width
 - Applicable protocol: HTTP
 - Status: standard
 - Author/Change controller: IETF
-- Specification document(s): [this document]
+- Specification document(s): \[this document\]
 - Related information: for Client Hints
 
 - Header field name: Downlink
 - Applicable protocol: HTTP
 - Status: standard
 - Author/Change controller: IETF
-- Specification document(s): [this document]
+- Specification document(s): \[this document\]
 - Related information: for Client Hints
 
 - Header field name: Content-DPR
 - Applicable protocol: HTTP
 - Status: standard
 - Author/Change controller: IETF
-- Specification document(s): [this document]
+- Specification document(s): \[this document\]
 - Related information: for Client Hints
 
 - Header field name: Accept-CH
 - Applicable protocol: HTTP
 - Status: standard
 - Author/Change controller: IETF
-- Specification document(s): [this document]
+- Specification document(s): \[this document\]
 - Related information: for Client Hints
 
 - Header field name: Save-Data
 - Applicable protocol: HTTP
 - Status: standard
 - Author/Change controller: IETF
-- Specification document(s): [this document]
+- Specification document(s): \[this document\]
 - Related information: for Client Hints
 
 
