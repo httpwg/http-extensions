@@ -6,5 +6,5 @@ addons:
     - python-lxml
 install:
 - gem install kramdown-rfc2629
-- pip install --user xml2rfc
+- pip install xml2rfc
 script: make ghpages
