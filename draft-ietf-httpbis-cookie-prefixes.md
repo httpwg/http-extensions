@@ -10,7 +10,8 @@ area: General
 workgroup: HTTP
 keyword: Internet-Draft
 
-pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+stand_alone: yes
+pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
 
 author:
 -
@@ -30,6 +31,7 @@ informative:
   POWERFUL-FEATURES:
     target: https://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features
     title: "Prefer Secure Origins for Powerful New Features"
+    date: 2015
     author:
       ins: C. Palmer
       name: Chris Palmer
@@ -37,6 +39,7 @@ informative:
   SECURE-CONTEXTS:
     target: https://w3c.github.io/webappsec-secure-contexts/
     title: "Secure Contexts"
+    date: 2016
     author:
       ins: M. West
       name: Mike West
@@ -44,6 +47,7 @@ informative:
   DEPRECATING-HTTP:
     target: https://blog.mozilla.org/security/2015/04/30/deprecating-non-secure-http/
     title: "Deprecating Non-Secure HTTP"
+    date: 2015-04-30
     author:
       ins: R. Barnes
       name: Richard Barnes
@@ -51,6 +55,7 @@ informative:
   Lawrence2015:
     target: http://textslashplain.com/2015/10/09/duct-tape-and-baling-wirecookie-prefixes/
     title: "Duct Tape and Baling Wire -- Cookie Prefixes"
+    date: 2015-10-09
     author:
       ins: E. Lawrence
       name: Eric Lawrence

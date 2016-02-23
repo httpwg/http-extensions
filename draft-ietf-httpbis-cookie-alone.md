@@ -11,7 +11,8 @@ area: General
 workgroup: HTTP
 keyword: Internet-Draft
 
-pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+stand_alone: yes
+pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
 
 author:
 -
@@ -28,8 +29,9 @@ normative:
 
 informative:
   COOKIE-INTEGRITY:
-    target: https://www.usenix.org/system/files/conference/usenixsecurity15/sec15-paper-zheng.pdf
+    target: https://www.usenix.org/conference/usenixsecurity15/technical-sessions/presentation/zheng
     title: "Cookies Lack Integrity: Real-World Implications"
+    date: 2015-08
     author:
     -
       ins: X. Zheng
@@ -60,8 +62,9 @@ informative:
       name: Nicholas Weaver
       organization: International Computer Science Institute and University of California, Berkeley
   COOKIE-PREFIXES:
-    target: https://tools.ietf.org/html/draft-west-cookie-prefixes
+    target: https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes
     title: "Cookie Prefixes"
+    date: 2016
     author:
     -
       ins: M. West
