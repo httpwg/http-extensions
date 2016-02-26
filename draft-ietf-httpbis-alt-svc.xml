@@ -507,7 +507,7 @@ Alt-Svc: h2="alt.example.com:8000", h2=":443"
 <t>   
    This specification defines two parameters: "ma" and "persist", defined in
    <xref target="caching-alt-svc-header-field-values"/>. Unknown parameters
-   &MUST; be ignored, that is the values (alt-value) they appear in &MUST;
+   &MUST; be ignored. That is, the values (alt-value) they appear in &MUST;
    be processed as if the unknown parameter was not present.
 </t>
 <t>
