@@ -269,16 +269,21 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    Clients &MUST; have reasonable assurances that the alternative service is under control of and
    valid for the whole origin. This mitigates the attack described in <xref
-   target="host_security"/>. One way to achieve this is for the alternative to use TLS with a
-   certificate that is valid for the origin.
+   target="host_security"/>.
 </t>
 <t>
-   For example, if the origin's host is "www.example.com" and an alternative is
-   offered on "other.example.com" with the "h2" protocol, and the certificate
-   offered is valid for "www.example.com", the client can use the alternative.
-   However, if "other.example.com" is offered with the "h2c" protocol, the client
-   cannot use it, because there is no mechanism in that protocol to establish
-   the relationship between the origin and the alternative.
+   For the purposes of this document, "reasonable assurances" can be established through use of a
+   TLS-based protocol with the certificate checks defined in <xref target="RFC2818"/>. Other means
+   of establishing them &MUST; be documented in an RFC that updates this specification. Clients
+   &MAY; impose additional criteria for establishing reasonable assurances.
+</t>
+<t>
+   For example, if the origin's host is "www.example.com" and an alternative is offered on
+   "other.example.com" with the "h2" protocol, and the certificate offered is valid for
+   "www.example.com", the client can use the alternative. However, if either is offered with the
+   "h2c" protocol, the client cannot use it, because there is no mechanism (at the time of the
+   publication of this specification) in that protocol to establish the relationship between the
+   origin and the alternative.
 </t>
 </section>
 
@@ -477,7 +482,7 @@ Alt-Svc: h2="new.example.org:80"
 <figure>
   <preamble>The Alt-Svc field value can have multiple values:</preamble>
   <artwork type="example">
-Alt-Svc: h2c=":8000", h2=":443"
+Alt-Svc: h2="alt.example.com:8000", h2=":443"
 </artwork>
 </figure>
 <t>
@@ -545,7 +550,7 @@ HTTP/1.1 200 OK
 Content-Type: text/html
 Cache-Control: max-age=600
 Age: 30
-Alt-Svc: h2c=":8000"; ma=60
+Alt-Svc: h2=":8000"; ma=60
 </artwork>
 <postamble>
    indicates that an alternative service is available and usable for the next 60
@@ -967,6 +972,18 @@ Alt-Used: alternate.example.net
   </front>
   <seriesInfo name="BCP" value="14"/>
   <seriesInfo name="RFC" value="2119"/>
+</reference>
+
+<reference anchor="RFC2818" target="http://www.rfc-editor.org/info/rfc2818">
+  <front>
+    <title>HTTP Over TLS</title>
+    <author initials="E." surname="Rescorla" fullname="E. Rescorla">
+      <organization/>
+    </author>
+    <date year="2000" month="May"/>
+  </front>
+  <seriesInfo name="RFC" value="2818"/>
+  <seriesInfo name="DOI" value="10.17487/RFC2818"/>
 </reference>
 
 <reference anchor="RFC3986">
