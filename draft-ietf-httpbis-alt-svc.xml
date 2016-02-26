@@ -604,7 +604,7 @@ Alt-Svc: h2=":443"; ma=2592000; persist=1
 <t>
   The ALTSVC frame is a non-critical extension to HTTP/2.  Endpoints that do
   not support this frame will ignore it (as per the extensibility rules defined in 
-  Section 4.1 of <xref target="RFC7540"/>).
+  <xref target="RFC7540" x:sec="4.1" x:fmt="of"/>).
 </t>
 <t>
   An ALTSVC frame from a server to a client on a stream other than stream 0
