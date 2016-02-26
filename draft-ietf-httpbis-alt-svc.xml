@@ -471,7 +471,7 @@ Alt-Svc: h2="new.example.org:80"
 </texttable>
 <t>
    Alt-Svc &MAY; occur in any HTTP response message, regardless of the status code.
-   Note that recipients of Alt-Svc &MAY; ignore the header field (and are required to 
+   Note that recipients of Alt-Svc can ignore the header field (and are required to 
    in some situations; see Sections <xref format="counter" target="host_auth"/> and <xref format="counter" target="status"/>).
 </t>
 <figure>
@@ -598,7 +598,8 @@ Alt-Svc: h2=":443"; ma=2592000; persist=1
 </t>
 <t>
   The ALTSVC frame is a non-critical extension to HTTP/2.  Endpoints that do
-  not support this frame &MAY; ignore it.
+  not support this frame will ignore it (as per the extensibility rules defined in 
+  Section 4.1 of <xref target="RFC7540"/>).
 </t>
 <t>
   An ALTSVC frame from a server to a client on a stream other than stream 0
