@@ -974,16 +974,13 @@ Alt-Used: alternate.example.net
   <seriesInfo name="RFC" value="2119"/>
 </reference>
 
-<reference anchor="RFC2818" target="http://www.rfc-editor.org/info/rfc2818">
+<reference anchor="RFC2818">
   <front>
     <title>HTTP Over TLS</title>
-    <author initials="E." surname="Rescorla" fullname="E. Rescorla">
-      <organization/>
-    </author>
+    <author initials="E." surname="Rescorla" fullname="E. Rescorla"/>
     <date year="2000" month="May"/>
   </front>
   <seriesInfo name="RFC" value="2818"/>
-  <seriesInfo name="DOI" value="10.17487/RFC2818"/>
 </reference>
 
 <reference anchor="RFC3986">
@@ -1423,6 +1420,10 @@ Alt-Used: alternate.example.net
 <section title="Since draft-ietf-httpbis-alt-svc-12" anchor="changes.since.draft-ietf-httpbis-alt-svc-12">
 <t>
   Editorial changes triggered by <eref target="https://lists.w3.org/Archives/Public/ietf-http-wg/2016JanMar/0243.html"/>.
+</t>
+<t>
+  Reasonable Assurances and H2C
+  (<eref target="https://github.com/httpwg/http-extensions/issues/148"/>).
 </t>
 </section>
 </section>
