@@ -22,6 +22,9 @@
   <!ENTITY SHALL-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHALL NOT</bcp14>">
   <!ENTITY SHOULD "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD</bcp14>">
   <!ENTITY SHOULD-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD NOT</bcp14>">
+  <!ENTITY pound "&#163;">
+  <!ENTITY uuml "&#252;">
+  <!ENTITY euro "&#8364;">
 ]>
 <rfc xmlns:x="http://purl.org/net/xml2rfc/ext" obsoletes="5987" ipr="trust200902" docName="draft-ietf-httpbis-rfc5987bis-latest" category="std" x:maturity-level="internet" xml:lang="en">
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
@@ -32,7 +35,7 @@
     <address>
       <postal>
         <street>Hafenweg 16</street>
-        <city>Muenster</city><region>NW</region><code>48155</code>
+        <city>M&uuml;nster</city><region>NW</region><code>48155</code>
         <country>Germany</country>
       </postal>
       <email>julian.reschke@greenbytes.de</email>	
@@ -321,7 +324,7 @@
 </artwork></figure>
 <figure>
 <preamble>
-  Extended notation, using the Unicode character U+00A3 (POUND SIGN):
+  Extended notation, using the Unicode character U+00A3 ("&pound;", POUND SIGN):
 </preamble>
 <artwork type="example">
   foo: bar; title*=utf-8'en'<x:highlight>%C2%A3</x:highlight>%20rates
@@ -334,8 +337,8 @@
 </figure>
 <figure>
 <preamble>
-  Extended notation, using the Unicode characters U+00A3 (POUND SIGN)
-  and U+20AC (EURO SIGN):
+  Extended notation, using the Unicode characters U+00A3 ("&pound;", POUND SIGN)
+  and U+20AC ("&euro;", EURO SIGN):
 </preamble>
 <artwork type="example">
   foo: bar; title*=UTF-8''<x:highlight>%c2%a3</x:highlight>%20and%20<x:highlight>%e2%82%ac</x:highlight>%20rates
@@ -946,14 +949,15 @@
 
 <section title="Since draft-ietf-httpbis-rfc5987bis-00">
 <t>
-  None yet.
+  Editorial changes; introducing non-ASCII characters into author's
+  address, acknowledgements, and examples.
 </t>
 </section>
 </section>
 
 <section title="Acknowledgements" numbered="false">
 <t>
-  Thanks to Martin Duerst and Frank Ellermann for help figuring out ABNF details,
+  Thanks to Martin D&uuml;rst and Frank Ellermann for help figuring out ABNF details,
   to Graham Klyne and Alexey Melnikov for general review, to
   Chris Newman for pointing out an RFC 2231 incompatibility, and to
   Benjamin Carlyle, Roar Lauritzsen, Eric Lawrence, and James Manger for implementer's feedback.
