@@ -7,9 +7,10 @@ category: std
 updates: 6265
 
 ipr: trust200902
-area: General
+area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
+keyword: Cookie
 
 stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
@@ -81,6 +82,14 @@ This document updates RFC6265 by removing the ability for a non-secure origin
 to set cookies with a 'secure' flag, and to overwrite cookies whose 'secure'
 flag is set. This deprecation improves the isolation between HTTP and HTTPS
 origins, and reduces the risk of malicious interference.
+
+--- note_Note_to_Readers
+
+Discussion of this draft takes place on the HTTP working group mailing list 
+(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
+
+Working Group information can be found at <http://httpwg.github.io/>; source 
+code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/cookie-alone>.
 
 --- middle
 
