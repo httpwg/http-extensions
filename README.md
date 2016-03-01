@@ -48,14 +48,6 @@ In **[IETF Last Call](https://mailarchive.ietf.org/arch/msg/ietf-announce/jF2I0J
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-encryption/)
 
 
-### HTTP Legally Restricted Status Code
-
-**Approved**; in [RFC Editor Queue](https://www.rfc-editor.org/current_queue.php)
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-legally-restricted-status.html)
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-legally-restricted-status) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A451) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-legally-restricted-status/)
-
 ### RFC6265bis
 
 _We are currently working on drafts that, together, will serve as a roadmap for revising [the Cookie specification](http://httpwg.org/specs/rfc6265.html). So far, we have adopted:_
