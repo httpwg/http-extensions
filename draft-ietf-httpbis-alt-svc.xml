@@ -273,8 +273,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 </t>
 <t>
    For the purposes of this document, "reasonable assurances" can be established through use of a
-   TLS-based protocol with the certificate checks defined in <xref target="RFC2818"/>. Other means
-   of establishing them &MUST; be documented in an RFC that updates this specification. Clients
+   TLS-based protocol with the certificate checks defined in <xref target="RFC2818"/>. Clients
    &MAY; impose additional criteria for establishing reasonable assurances.
 </t>
 <t>
