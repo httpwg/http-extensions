@@ -6,9 +6,10 @@ category: std
 updates: 6265
 
 ipr: trust200902
-area: General
+area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
+keyword: Cookie
 
 stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
@@ -67,6 +68,14 @@ which may be used for cookies with specific properties. These restrictions
 enable user agents to smuggle cookie state to the server within the confines
 of the existing `Cookie` request header syntax, and limits the ways in which
 cookies may be abused in a conforming user agent.
+
+--- note_Note_to_Readers
+
+Discussion of this draft takes place on the HTTP working group mailing list 
+(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
+
+Working Group information can be found at <http://httpwg.github.io/>; source 
+code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/cookie-prefixes>.
 
 --- middle
 
