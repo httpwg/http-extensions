@@ -128,8 +128,8 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This document uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} (including the
 DQUOTE rule), and the list rule extension defined in {{RFC7230}}, Section 7. It includes by
-reference the field-name, quoted-string and quoted-pair rules from that document, and the parameter
-rule from {{RFC7231}}.
+reference the field-name, quoted-string and quoted-pair rules from that document, the OWS rule from 
+{{RFC7230}} and the parameter rule from {{RFC7231}}.
 
 
 # The "Key" Response Header Field
@@ -148,11 +148,11 @@ Additionally, user agents can use Key to discover if additional request header f
 influence the resource's selection of responses.
 
 The Key field-value is a comma-delimited list of selecting header fields (similar to Vary), with
-zero to many parameters each, delimited by semicolons. Whitespace is not allowed in the field-value
-between each field-name and its parameter set.
+zero to many parameters each, delimited by semicolons.
 
 ~~~ abnf7230
-  Key = 1#field-name *( ";" parameter )
+  Key       = 1#key-value
+  key-value = field-name *( OWS ";" OWS parameter )
 ~~~
 
 Note that, as per {{RFC7231}}, parameter names are case-insensitive, and parameter values can be
@@ -168,7 +168,7 @@ The following header fields have the same effect:
 However, Key's use of parameters allows:
 
 ~~~ example
-  Key: Accept-Encoding, Cookie;param=foo
+  Key: Accept-Encoding, Cookie; param=foo
 ~~~
   
 to indicate that the secondary cache key depends upon the Accept-Encoding header field and the
@@ -246,25 +246,26 @@ response) using Key, the following steps are taken:
    {: style="format %d)" counter="b"}
    1. Remove any leading and trailing WSP from `key_item`.
    2. If `key_item` does not contain a ";" character, fail parameter processing ({{fail-param}}) and skip to the next `key_item`.
-   3. Let `field_name` be the string before the first ";" character in `key_item`.
+   3. Let `field_name` be the string before the first ";" character in `key_item`, removing any WSP between them.
    4. Let `field_value` be the result of Creating a Header Field Value ({{value}}) with `field_name` as the `target_field_name` and the request header list as `header_list`.
-   5. Let `parameters` be the string after the first ";" character in `key_item`.
+   5. Let `parameters` be the string after the first ";" character in `key_item`, removing any WSP between them.
    6. Create `param_list` by splitting `parameters` on ";" characters, excepting ";" characters within quoted strings, as per {{RFC7230}} Section 3.2.6.
    7. For `parameter` in `param_list`:
 
       {: style="format %d)"  counter="c"}
       1. If `parameter` does not contain a "=", fail parameter processing ({{fail-param}}) and skip to the next `key_item`.
-      2. Let `param_name` be the string before the first "=" character in `parameter`, case-normalized to lowercase.
-      3. If `param_name` does not identify a Key parameter processing algorithm that is implemented, fail parameter processing ({{fail-param}}) and skip to the next `key_item`.
-      4. Let `param_value` be the string after the first "=" character in `parameter`.
-      5. If the first and last characters of `param_value` are both DQUOTE:
+      2. Remove any WSP at the beginning and/or end of `parameter`.
+      3. Let `param_name` be the string before the first "=" character in `parameter`, case-normalized to lowercase.
+      4. If `param_name` does not identify a Key parameter processing algorithm that is implemented, fail parameter processing ({{fail-param}}) and skip to the next `key_item`.
+      5. Let `param_value` be the string after the first "=" character in `parameter`.
+      6. If the first and last characters of `param_value` are both DQUOTE:
       
          {: style="format %d)" counter="d"}
          1. Remove the first and last characters of `param_value`.
          2. Replace quoted-pairs within `param_value` with the octet following the backslash, as per {{RFC7230}} Section 3.2.6.
-      6. If `param_value` does not conform to the syntax defined for it by the parameter definition, fail parameter processing {{fail-param}} and skip to the next `key_item`.
-      7. Run the identified processing algorithm on `field_value` with the `param_value`, and append the result to `secondary_key`. If parameter processing fails {{fail-param}}, skip to the next `key_item`.
-      8. Append a separator character (e.g., NULL) to `secondary_key`.
+      7. If `param_value` does not conform to the syntax defined for it by the parameter definition, fail parameter processing {{fail-param}} and skip to the next `key_item`.
+      8. Run the identified processing algorithm on `field_value` with the `param_value`, and append the result to `secondary_key`. If parameter processing fails {{fail-param}}, skip to the next `key_item`.
+      9. Append a separator character (e.g., NULL) to `secondary_key`.
 6. Return `secondary_key`.
 
 Note that this specification does not require that exact algorithm to be implemented. However,
@@ -645,5 +646,6 @@ Thanks to Ilya Grigorik, Amos Jeffries and Yoav Weiss for their feedback.
 ## Since -00
 
 * Issue 108 (field-name cardinality) closed with no action.
-
+* Issue 104 (Support "Or" operator) closed with no action.
+* Issue 107 (Whitespace requirement) addressed by allowing whitespace around parameters.
 
