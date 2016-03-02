@@ -591,7 +591,7 @@ Key Parameter registrations MUST include the following fields:
 * Parameter Name: \[name\]
 * Reference: \[Pointer to specification text\]
 
-Values to be added to this namespace require IETF Review (see Section 4.1 of [RFC5226]) and MUST
+Values to be added to this namespace require IETF Review (see Section 4.1 of {{RFC5226}}) and MUST
 conform to the purpose of content coding defined in this section.
 
 ## Registrations
