@@ -862,8 +862,8 @@ Alt-Used: alternate.example.net
 <t>
    This is the reason for the requirement in <xref target="host_auth"/> that clients have
    reasonable assurances that the alternative service is under control of and valid for the whole
-   origin; presenting a certificate for the origin proves that the alternative service is
-   authorized to serve traffic for the origin.
+   origin; for example, presenting a certificate for the origin proves that the alternative service
+   is authorized to serve traffic for the origin.
 </t>
 <t>
    Note that this assurance is only as strong as the method used to authenticate the alternative
