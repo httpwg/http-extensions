@@ -312,13 +312,13 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    When alternative services are used to send a client to the most optimal server, a change in
    network configuration can result in cached values becoming suboptimal. Therefore, clients &SHOULD;
    remove from cache all alternative services that lack the "persist" flag with the value "1" when
-   they detect such a change, when information about network state is available.
+   they detect such a change, when information about network state is available. 
 </t>
 </section>
 
 <section title="Requiring Server Name Indication" anchor="requiring-server-name-indication">
 <t>
-   A client &MUST; only use a TLS-based alternative service if the client also
+   A client &MUST-NOT; use a TLS-based alternative service unless the client
    supports TLS Server Name Indication (SNI). This supports the conservation of
    IP addresses on the alternative service host.
 </t>
@@ -335,13 +335,12 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    way when alternative services are used by servers, to aid purposes like load balancing.
 </t>
 <t>
-   Therefore, if a client becomes aware of an alternative service, the client
-   &SHOULD; use that alternative service for all requests to the associated origin
-   as soon as it is available, provided the alternative service information
-   is fresh (<xref target="caching"/>) and the security properties of the
-   alternative service protocol are desirable, as compared to the existing
-   connection. A viable alternative service is then treated in every way as the
-   origin; this includes the ability to advertise alternative services.
+   Therefore, if a client supporting this specification becomes aware of an alternative service,
+   the client &SHOULD; use that alternative service for all requests to the associated origin as
+   soon as it is available, provided the alternative service information is fresh (<xref
+   target="caching"/>) and the security properties of the alternative service protocol are
+   desirable, as compared to the existing connection. A viable alternative service is then treated
+   in every way as the origin; this includes the ability to advertise alternative services.
 </t>
 <t>
    If a client becomes aware of multiple alternative services, it chooses
