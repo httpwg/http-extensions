@@ -34,7 +34,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Alternative Services
 
-In **[IETF Last Call](https://mailarchive.ietf.org/arch/msg/ietf-announce/jF2I0J9VfnX4oyfcAy3oLF7Qc0g)**; ends 2016-02-24
+In **RFC Editor Queue**
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/alt-svc.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
