@@ -206,12 +206,12 @@ cannot be contacted. Effectively, this makes the choice to use a secured protoco
 ## Opportunistic Commitment
 
 A alternative service can commit to providing a secured alternative by including a `commit` member
-in the http-opportunistic well-known resource.  This field includes an RFC3339 [RFC3339] timestamp.
+in the http-opportunistic well-known resource.  This field includes an interval in seconds.
 
 ~~~ example
 {
   "origins": ["http://example.com:80", "http://www.example.com/:81"],
-  "commit": "2016-03-12T12:27:00Z"
+  "commit": 86400
 }
 ~~~
 
@@ -222,9 +222,10 @@ of {{I-D.ietf-httpbis-alt-svc}} and Section 3.1 of {{RFC2818}}.  As noted in
 instance, a client might choose to apply key pinning {{RFC7469}}.
 
 Once the `commit` member is provided and strongly authenticated, a client can assume that the
-opportunistically secured alternative will remain available until at least this time.  A client
-SHOULD NOT fall back to cleartext protocols prior to the time included in the `commit` member.  Note
-however that relying on this commitment creates some potential operational hazards (see
+opportunistically secured alternative will remain available for that number of seconds past the
+current time, less the current age of the resource (current_age as defined in Section 4.2.3 of
+{{RFC7234}}).  A client SHOULD NOT fall back to cleartext protocols prior to that interval elapsing.
+Note however that relying on a commitment creates some potential operational hazards (see
 {{pinrisks}}).
 
 A commitment MUST be ignored if the alternative cannot be authenticated; otherwise, an attacker
@@ -244,10 +245,10 @@ services.
 ## Operational Considerations {#pinrisks}
 
 To avoid situations where a commitment to use authenticated TLS causes a client to be unable to
-contact a site, clients MAY limit the time over which a commitment is respected for a given
-origin. A lower limit might be appropriate for initial commitments; the certainty that a site has
-set a correct value - and the corresponding limit on persistence - might increase as a commitment is
-renewed over a period of time.
+contact a site, clients MAY limit the time over which a commitment is respected for a given origin.
+A lower limit might be appropriate for initial commitments; the certainty that a site has set a
+correct value - and the corresponding limit on persistence - might increase as a commitment is
+renewed multiple times.
 
 
 # IANA Considerations
