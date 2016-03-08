@@ -29,7 +29,6 @@ author:
 normative:
   RFC2119:
   RFC2818:
-  RFC3339:
   RFC5246:
   RFC5785:
   RFC6454:
@@ -76,7 +75,7 @@ context of the connection. Normally, users will not be able to tell that it is i
 will be no "lock icon").
 
 By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
-them is described in {{http-tls}}.
+them is described in {{commit}}.
 
 
 ## Goals and Non-Goals
@@ -183,7 +182,7 @@ Connections that are established without any means of server authentication (for
 purely anonymous TLS cipher suites), cannot be used for `https` URIs.
 
 
-# Requiring Use of TLS {#http-tls}
+# Requiring Use of TLS {#commit}
 
 The mechanism described in this specification is trivial to mount an active attack against, for two
 reasons:
@@ -272,7 +271,7 @@ used (e.g.,  a "lock device").
 
 ## Downgrade Attacks {#downgrade}
 
-A downgrade attack against the negotiation for TLS is possible. With commitment {{#http-tls}}, this
+A downgrade attack against the negotiation for TLS is possible. With commitment {{commit}}, this
 is limited to occasions where clients have no prior information (see {{privacy}}), or when persisted
 commitments have expired.
 
