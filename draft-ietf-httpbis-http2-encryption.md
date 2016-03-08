@@ -30,10 +30,11 @@ normative:
   RFC2119:
   RFC2818:
   RFC5246:
+  RFC5785:
   RFC6454:
+  RFC7159:
   RFC7230:
   RFC7234:
-  RFC7469:
   RFC7540:
   I-D.ietf-httpbis-alt-svc:
 
@@ -60,8 +61,8 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 # Introduction
 
 This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to decouple
-the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI to be
-accessed using TLS {{RFC5246}} opportunistically.
+the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI
+{{RFC7230}} to be accessed using TLS {{RFC5246}} opportunistically.
 
 Serving `https` URIs require acquiring and configuring a valid certificate, which means that some
 deployments find supporting TLS difficult. This document describes a usage model whereby sites can
@@ -118,17 +119,51 @@ expire, in order minimize the delays that might be incurred.
 
 # Server Authentication {#auth}
 
-{{I-D.ietf-httpbis-alt-svc}} requires that an alternative service only be used when it is strongly
-authenticated as the origin.
+{{I-D.ietf-httpbis-alt-svc}} requires that an alternative service only be used when there are "reasonable assurances" that it is under control of and valid for the whole origin.
 
 For the purposes of this specification, there are two ways to achieve this:
 
 1. Using TLS with a certificate that validates as per {{RFC2818}}, or
-2. Using an alternative service with a hostname that is character-for-character identical to that of the origin.
+2. Confirming that both the origin and the alternative service support this specification by interacting with the "http-opportunistic" well-known URI (see {{well-known}}).
 
 The latter approach allows deployment without the use of valid certificates, to encourage
-deployment of opportunistic security. Therefore, in these cases the alternative service can provide
+deployment of opportunistic security. When it is in use, the alternative service can provide
 any certificate, or even select TLS cipher suites that do not include authentication.
+
+
+
+## The "http-opportunistic" well-known URI {#well-known}
+
+To establish reasonable assurances that an origin allows an alternative service on the same host as
+it when the alternative does not have a valid certificate (as per {{auth}}), an client can fetch
+the "http-opportunistic" well-known URI {{RFC5785}} from the origin.
+
+A client MAY consider there to be reasonable assurances when:
+
+* It has obtained a 200 (OK) response for the well-known URI from the origin, or refreshed one in cache {{RFC7234}}, and
+
+* That response has the media type "application/json", and
+
+* That response's payload, when parsed as JSON {{RFC7159}}, contains a root object with a member "origins" whose value is a list of strings, one of which is a case-insensitive character-for-character match for the origin in question, serialised into Unicode as per {{RFC6454}}, Section 6.1, and
+
+* The origin and alternative service's hostnames are the same when compared in a case-insensitive fashion, and
+
+* The chosen alternative service returns the same response as above.
+
+For example, this request/response pair would constitute reasonable assurances for the origin "http://www.example.com:80" for any alternative service also on "www.example.com":
+
+~~~
+GET /.well-known/http-opportunistic HTTP/1.1
+Host: www.example.com
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Connection: close
+
+{
+  "origins": ["http://example.com:80", "http://www.example.com/:81"]
+}
+~~~
 
 
 # Interaction with "https" URIs
@@ -243,6 +278,15 @@ Once a server has indicated that it will support authenticated TLS, a client MAY
 with `https` URIs, provided that the mechanism can be restricted to a single HTTP origin.
 
 
+
+# IANA Considerations
+
+This specification registers a Well-known URI {{RFC5785}}:
+
+* URI Suffix: http-opportunistic
+* Change Controller: IETF
+* Specification Document(s): [this specification]
+* Related Information:
 
 # Security Considerations
 
