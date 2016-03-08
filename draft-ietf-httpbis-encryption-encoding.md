@@ -83,10 +83,10 @@ be encrypted.
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source 
+Working Group information can be found at <http://httpwg.github.io/>; source
 code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/encryption>.
 
 --- middle
@@ -699,7 +699,7 @@ separately might reduce exposure. HTTP/2 [RFC7540] combined with TLS [RFC5246]
 might be used to hide the size of individual messages.
 
 
-# IANA Considerations
+# IANA Considerations {#iana}
 
 ## The "aesgcm" HTTP Content Encoding
 
@@ -770,7 +770,7 @@ The initial contents of this registry are:
 
 This memo establishes a registry for parameters used by the "Crypto-Key" header
 field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.  The
-"Hypertext Transfer Protocol (HTTP) Encryption Parameters" operates under an
+"Hypertext Transfer Protocol (HTTP) Crypto-Key Parameters" operates under an
 "Specification Required" policy [RFC5226].
 
 Entries in this registry are expected to include the following information:
