@@ -1424,6 +1424,18 @@ Alt-Used: alternate.example.net
   (<eref target="https://github.com/httpwg/http-extensions/issues/148"/>).
 </t>
 </section>
+
+<section title="Since draft-ietf-httpbis-alt-svc-13" anchor="changes.since.draft-ietf-httpbis-alt-svc-13">
+<t>
+  Editorial improvements. Also relaxed the requirements for "reasonable assurances" (see <eref target="https://github.com/httpwg/http-extensions/issues/148"/>).
+</t>
+</section>
+
+<section title="Since draft-ietf-httpbis-alt-svc-14" anchor="changes.since.draft-ietf-httpbis-alt-svc-14">
+<t>
+  None yet.
+</t>
+</section>
 </section>
 
 
