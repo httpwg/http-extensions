@@ -239,7 +239,7 @@ of {{RFC7234}}). A client SHOULD NOT fall back to cleartext protocols prior to t
 elapsing. Note however that relying on a commitment creates some potential operational hazards (see
 {{pinrisks}}).
 
-A commitment only applies to the origin of the well-known http-opportunistic resource that was
+A commitment only applies to the origin of the http-opportunistic well-known resource that was
 retrieved; all origins listed in the `origins` member need to independently discovered and
 validated.
 
