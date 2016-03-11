@@ -171,7 +171,7 @@ Content-Type: application/json
 Connection: close
 
 {
-  "origins": ["http://example.com:80", "http://www.example.com/:81"]
+  "origins": ["http://example.com", "http://www.example.com:81"]
 }
 ~~~
 
@@ -218,7 +218,7 @@ in the http-opportunistic well-known resource.  This field includes an interval 
 
 ~~~ example
 {
-  "origins": ["http://example.com:80", "http://www.example.com/:81"],
+  "origins": ["http://example.com", "http://www.example.com:81"],
   "commit": 86400
 }
 ~~~
