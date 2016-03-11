@@ -51,10 +51,10 @@ mitigate pervasive monitoring attacks.
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source 
+Working Group information can be found at <http://httpwg.github.io/>; source
 code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/opp-sec>.
 
 --- middle
@@ -75,7 +75,7 @@ context of the connection. Normally, users will not be able to tell that it is i
 will be no "lock icon").
 
 By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
-them is described in {{http-tls}}.
+them is described in {{commit}}.
 
 
 ## Goals and Non-Goals
@@ -182,20 +182,16 @@ Connections that are established without any means of server authentication (for
 purely anonymous TLS cipher suites), cannot be used for `https` URIs.
 
 
-# Requiring Use of TLS {#http-tls}
-
-Editors' Note: this is a very rough take on an approach that would provide a limited form of
-protection against downgrade attack. It's unclear at this point whether the additional effort (and
-modest operational cost) is worthwhile.
+# Requiring Use of TLS {#commit}
 
 The mechanism described in this specification is trivial to mount an active attack against, for two
 reasons:
 
-- A client that doesn't perform authentication is an easy victim of server impersonation, through
-man-in-the-middle attacks.
+* A client that doesn't perform authentication is an easy victim of server impersonation, through
+  man-in-the-middle attacks.
 
-- A client that is willing to use HTTP over cleartext to resolve the resource will do so if access
-to any TLS-enabled alternative services is blocked at the network layer.
+* A client that is willing to use HTTP over cleartext to resolve the resource will do so if access
+  to any TLS-enabled alternative services is blocked for any reason.
 
 Given that the primary goal of this specification is to prevent passive attacks, these are not
 critical failings (especially considering the alternative - HTTP over cleartext). However, a modest
@@ -203,81 +199,55 @@ form of protection against active attacks can be provided for clients on subsequ
 
 When an alternative service is able to commit to providing service for a particular origin over TLS
 for a bounded period of time, clients can choose to rely upon its availability, failing when it
-cannot be contacted. Effectively, this makes the choice to use a secured protocol "sticky" in the
-client.
+cannot be contacted. Effectively, this makes the choice to use a secured protocol "sticky".
 
 
-## The HTTP-TLS Header Field
+## Opportunistic Commitment
 
-A alternative service can make this commitment by sending a `HTTP-TLS` header field, described here
-using the '#' ABNF extension defined in Section 7 of {{RFC7230}}:
-
-~~~ abnf2616
-    HTTP-TLS     = 1#parameter
-~~~
-
-When it appears in a HTTP response from a strongly authenticated alternative service, this header
-field indicates that the availability of the origin through TLS-protected alternative services is
-"sticky", and that the client MUST NOT fall back to cleartext protocols while this information is
-considered fresh.
-
-For example:
+A alternative service can commit to providing a secured alternative by including a `commit` member
+in the http-opportunistic well-known resource.  This field includes an interval in seconds.
 
 ~~~ example
-    GET /index.html HTTP/1.1
-    Host: example.com
+{
+  "origins": ["http://example.com:80", "http://www.example.com/:81"],
+  "commit": 86400
+}
 ~~~
 
-~~~ example
-    HTTP/1.1 200 OK
-    Content-Type: text/html
-    Cache-Control: max-age=600
-    Age: 30
-    Date: Thu, 1 May 2014 16:20:09 GMT
-    HTTP-TLS: ma=3600
-~~~
+The value of the `commit` member MUST be ignored unless the alternative service can be strongly
+authenticated.  Minimum authentication requirements for HTTP over TLS are described in Section 2.1
+of {{I-D.ietf-httpbis-alt-svc}} and Section 3.1 of {{RFC2818}}.  As noted in
+{{I-D.ietf-httpbis-alt-svc}}, clients can impose other checks in addition to this minimum set.  For
+instance, a client might choose to apply key pinning {{RFC7469}}.
 
-This header field creates a commitment from the origin {{RFC6454}} of the associated resource (in
-the example, `http://example.com`).  For the duration of the commitment, clients SHOULD strongly
-authenticate the server for all subsequent requests made to that origin, though this creates some
-risks for clients (see {{pinrisks}}).
+Once the `commit` member is provided and strongly authenticated, a client can assume that the
+opportunistically secured alternative will remain available for that number of seconds past the
+current time, less the current age of the resource (current_age as defined in Section 4.2.3 of
+{{RFC7234}}).  A client SHOULD NOT fall back to cleartext protocols prior to that interval elapsing.
+Note however that relying on a commitment creates some potential operational hazards (see
+{{pinrisks}}).
 
-Authentication for HTTP over TLS is described in Section 3.1 of {{RFC2818}}, noting the additional
-requirements in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}}. The header field MUST be ignored if
-strong authentication fails; otherwise, an attacker could create a persistent denial of service by
-falsifying a commitment.
+A commitment MUST be ignored if the alternative cannot be authenticated; otherwise, an attacker
+could create a persistent denial of service by falsifying a commitment.
 
-The commitment to use authenticated TLS persists for a period determined by the value of the `ma`
-parameter. See Section 4.2.3 of {{RFC7234}} for details of determining response age.
+A commitment only applies to the origin of the well-known http-opportunistic resource that was
+retrieved; all origins listed in the `origins` member need to independently discovered and
+validated.
 
-~~~ abnf2616
-    ma-parameter     = delta-seconds
-~~~
-
-The commitment made by the `HTTP-TLS` header field applies only to the origin of the resource that
-generates the `HTTP-TLS` header field.
-
-Requests for an origin that has a persisted, unexpired value for `HTTP-TLS` MUST fail if they cannot
-be made over an authenticated TLS connection.
-
-Note that the commitment is not bound to a particular alternative service.  Clients SHOULD use
-alternative services that they become aware of.  However, clients MUST NOT use an unauthenticated
-alternative service for an origin with this commitment.  Where there is an active commitment,
-clients MAY instead ignore advertisements for unsecured alternatives services.
+Note that the commitment is not bound to a particular alternative service.  Clients can and SHOULD
+use alternative services that they become aware of.  However, once a valid and authenticated
+commitment has been received, clients SHOULD NOT use an unauthenticated alternative service.  Where
+there is an active commitment, clients SHOULD ignore advertisements for unsecured alternative
+services.
 
 
 ## Operational Considerations {#pinrisks}
 
-To avoid situations where a persisted value of `HTTP-TLS` causes a client to be unable to contact a
-site, clients SHOULD limit the time that a value is persisted for a given origin. A lower limit
-might be appropriate for initial observations of `HTTP-TLS`; the certainty that a site has set a
-correct value - and the corresponding limit on persistence - can increase as the value is seen more
-over time.
-
-Once a server has indicated that it will support authenticated TLS, a client MAY use key pinning
-{{RFC7469}} or any other mechanism that would otherwise be restricted to use
-with `https` URIs, provided that the mechanism can be restricted to a single HTTP origin.
-
+To avoid situations where a commitment to use authenticated TLS causes a client to be unable to
+contact a site, clients MAY limit the time over which a commitment is respected for a given origin.
+A lower limit might be appropriate for initial commitments; the certainty that a site has set a
+correct value - and the corresponding limit on persistence - might increase as a commitment is
+renewed multiple times.
 
 
 # IANA Considerations
@@ -289,32 +259,32 @@ This specification registers a Well-known URI {{RFC5785}}:
 * Specification Document(s): [this specification]
 * Related Information:
 
-# Security Considerations
+
+# Security Considerations {#security}
 
 ## Security Indicators
 
 User Agents MUST NOT provide any special security indicia when an `http` resource is acquired using
 TLS. In particular, indicators that might suggest the same level of security as `https` MUST NOT be
-used (e.g., using a "lock device").
-
+used (e.g.,  a "lock device").
 
 
 ## Downgrade Attacks {#downgrade}
 
-A downgrade attack against the negotiation for TLS is possible. With the `HTTP-TLS` header field,
-this is limited to occasions where clients have no prior information (see {{privacy}}), or when
-persisted commitments have expired.
+A downgrade attack against the negotiation for TLS is possible. With commitment {{commit}}, this
+is limited to occasions where clients have no prior information (see {{privacy}}), or when persisted
+commitments have expired.
 
 For example, because the `Alt-Svc` header field {{I-D.ietf-httpbis-alt-svc}} likely appears in an
 unauthenticated and unencrypted channel, it is subject to downgrade by network attackers. In its
 simplest form, an attacker that wants the connection to remain in the clear need only strip the
 `Alt-Svc` header field from responses.
 
-Downgrade attacks can be partially mitigated using the `HTTP-TLS` header field, because when it is
-used, a client can avoid using cleartext to contact a supporting server. However, this only works
-when a previous connection has been established without an active attacker present; a continuously
-present active attacker can either prevent the client from ever using TLS, or offer its own
-certificate.
+Downgrade attacks can be partially mitigated using the `commit` member of the http-opportunistic
+well-known resource, because when it is used, a client can avoid using cleartext to contact a
+supporting server. However, this only works when a previous connection has been established without
+an active attacker present; a continuously present active attacker can either prevent the client
+from ever using TLS, or offer its own certificate.
 
 
 ## Privacy Considerations {#privacy}
