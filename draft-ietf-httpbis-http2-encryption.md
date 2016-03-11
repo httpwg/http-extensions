@@ -239,9 +239,6 @@ of {{RFC7234}}). A client SHOULD NOT fall back to cleartext protocols prior to t
 elapsing. Note however that relying on a commitment creates some potential operational hazards (see
 {{pinrisks}}).
 
-A commitment MUST be ignored if the alternative cannot be authenticated; otherwise, an attacker
-could create a persistent denial of service by falsifying a commitment.
-
 A commitment only applies to the origin of the well-known http-opportunistic resource that was
 retrieved; all origins listed in the `origins` member need to independently discovered and
 validated.
