@@ -175,6 +175,10 @@ Connection: close
 }
 ~~~
 
+Note that this mechanism is only defined to establish reasonable assurances for the purposes of
+this specification; it does not apply to other uses of alternative services unless they explicitly
+invoke it.
+
 
 # Interaction with "https" URIs
 
