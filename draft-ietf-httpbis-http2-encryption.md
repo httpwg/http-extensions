@@ -123,17 +123,17 @@ expire, in order minimize the delays that might be incurred.
 {{I-D.ietf-httpbis-alt-svc}} requires that an alternative service only be used when there are
 "reasonable assurances" that it is under control of and valid for the whole origin.
 
-For the purposes of this specification, there are two ways to achieve this:
+As defined in that specification, one way of establishing this is using a TLS-based protocol with
+the certificate checks defined in {{RFC2818]}}. Clients MAY impose additional criteria for
+establishing reasonable assurances.
 
-1. Using TLS with a certificate that validates as per {{RFC2818}}, or
+For the purposes of this specification, an additional way of establishing reasonable assurances is
+available when the alternative is on the same host as the origin, using the "http-opportunistic"
+well-known URI defined in {{well-known}}.
 
-2. Confirming that both the origin and the alternative service support this specification by
-   interacting with the "http-opportunistic" well-known URI (see {{well-known}}).
-
-The latter approach allows deployment without the use of valid certificates, to encourage
-deployment of opportunistic security. When it is in use, the alternative service can provide
-any certificate, or even select TLS cipher suites that do not include authentication.
-
+This allows deployment without the use of valid certificates, to encourage deployment of
+opportunistic security. When it is in use, the alternative service can provide any certificate, or
+even select TLS cipher suites that do not include authentication.
 
 
 ## The "http-opportunistic" well-known URI {#well-known}
