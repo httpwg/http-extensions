@@ -199,7 +199,7 @@ reasons:
 * A client that doesn't perform authentication is an easy victim of server impersonation, through
   man-in-the-middle attacks.
 
-* A client that is willing to use HTTP over cleartext to resolve the resource will do so if access
+* A client that is willing to use HTTP over cleartext to fetch the resource will do so if access
   to any TLS-enabled alternative services is blocked for any reason.
 
 Given that the primary goal of this specification is to prevent passive attacks, these are not
