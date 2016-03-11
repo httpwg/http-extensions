@@ -135,24 +135,7 @@ This allows deployment without the use of valid certificates, to encourage deplo
 opportunistic security. When it is in use, the alternative service can provide any certificate, or
 even select TLS cipher suites that do not include authentication.
 
-
-## The "http-opportunistic" well-known URI {#well-known}
-
-To establish reasonable assurances that an origin allows an alternative service on the same host as
-it when the alternative does not have a valid certificate (as per {{auth}}), an client can fetch
-the "http-opportunistic" well-known URI {{RFC5785}} from the origin.
-
-A client MAY consider there to be reasonable assurances when:
-
-* It has obtained a 200 (OK) response for the well-known URI from the origin, or refreshed one in
-  cache {{RFC7234}}, and
-
-* That response has the media type "application/json", and
-
-* That response's payload, when parsed as JSON {{RFC7159}}, contains a root object with a member
-  "origins" whose value is a list of strings, one of which is a case-insensitive
-  character-for-character match for the origin in question, serialised into Unicode as per
-  {{RFC6454}}, Section 6.1, and
+When the client has a valid http-opportunistic response for an origin, it MAY consider there to be reasonable assurances when:
 
 * The origin and alternative service's hostnames are the same when compared in a case-insensitive
   fashion, and
@@ -217,7 +200,8 @@ contacted. Effectively, this makes the choice to use a secured protocol "sticky"
 ## Opportunistic Commitment
 
 A alternative service can commit to providing a secured alternative by including a `commit` member
-in the http-opportunistic well-known resource.  This field includes an interval in seconds.
+in the http-opportunistic well-known resource (see {{well-known}}). This field includes an interval
+in seconds.
 
 ~~~ example
 {
@@ -257,6 +241,26 @@ contact a site, clients MAY limit the time over which a commitment is respected 
 A lower limit might be appropriate for initial commitments; the certainty that a site has set a
 correct value - and the corresponding limit on persistence - might increase as a commitment is
 renewed multiple times.
+
+
+# The "http-opportunistic" well-known URI {#well-known}
+
+This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. An origin is said
+to have a valid http-opportunistic resource when:
+
+* The client has obtained a 200 (OK) response for the well-known URI from the origin, or refreshed
+  one in cache {{RFC7234}}, and
+
+* That response has the media type "application/json", and
+
+* That response's payload, when parsed as JSON {{RFC7159}}, contains an object as the root.
+
+* The "origins" member of the root object has a value of a list of strings, one of which is a
+  case-insensitive character-for-character match for the origin in question, serialised into
+  Unicode as per {{RFC6454}}, Section 6.1, and
+
+This specification defines one additional, optional member of the root object, "commit" in
+{{commit}}. Unrecognised members MUST be ignored.
 
 
 # IANA Considerations
