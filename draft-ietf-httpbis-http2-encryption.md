@@ -197,22 +197,21 @@ purely anonymous TLS cipher suites), cannot be used for `https` URIs.
 
 # Requiring Use of TLS {#commit}
 
-The mechanism described in {{well-known}} is trivial to mount an active attack against for two
-reasons:
+Even when the alternative service is strongly authenticated, opportunistically upgrading cleartext HTTP connections to use TLS is subject to active attacks. In particular:
 
-* A client that doesn't perform authentication is an easy victim of server impersonation, through
-  man-in-the-middle attacks.
+* Because the original HTTP connection is in cleartext, it is vulnerable to man-in-the-middle
+  attacks, and
 
-* A client that is willing to use HTTP over cleartext to fetch the resource will do so if access
-  to the alternative service(s) is blocked for any reason.
+* By default, if clients cannot reach the alternative service, they will fall back to using the
+  original cleartext origin.
 
 Given that the primary goal of this specification is to prevent passive attacks, these are not
 critical failings (especially considering the alternative - HTTP over cleartext). However, a modest
 form of protection against active attacks can be provided for clients on subsequent connections.
 
-When an alternative service is able to commit to providing service for a particular origin over TLS
-for a bounded period of time, clients can choose to rely upon its availability, failing when it
-cannot be contacted. Effectively, this makes the choice to use a secured protocol "sticky".
+When an origin is able to commit to providing service for a particular origin over TLS for a
+bounded period of time, clients can choose to rely upon its availability, failing when it cannot be
+contacted. Effectively, this makes the choice to use a secured protocol "sticky".
 
 
 ## Opportunistic Commitment
