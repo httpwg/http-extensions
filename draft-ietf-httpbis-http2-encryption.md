@@ -235,9 +235,9 @@ instance, a client might choose to apply key pinning {{RFC7469}}.
 
 Once the `commit` member is provided and strongly authenticated, a client can assume that the
 opportunistically secured alternative will remain available for that number of seconds past the
-current time, less the current age of the resource (current_age as defined in Section 4.2.3 of
-{{RFC7234}}). A client SHOULD NOT fall back to cleartext protocols prior to that interval elapsing.
-Note however that relying on a commitment creates some potential operational hazards (see
+current time, less the current age of the http-opportunistic response (as defined in Section 4.2.3
+of {{RFC7234}}). A client SHOULD NOT fall back to cleartext protocols prior to that interval
+elapsing. Note however that relying on a commitment creates some potential operational hazards (see
 {{pinrisks}}).
 
 A commitment MUST be ignored if the alternative cannot be authenticated; otherwise, an attacker
