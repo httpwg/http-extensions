@@ -199,9 +199,9 @@ contacted. Effectively, this makes the choice to use a secured protocol "sticky"
 
 ## Opportunistic Commitment
 
-A alternative service can commit to providing a secured alternative by including a `commit` member
-in the http-opportunistic well-known resource (see {{well-known}}). This field includes an interval
-in seconds.
+An insecure origin can commit to providing a secured alternative by including a `commit` member in
+the http-opportunistic well-known resource (see {{well-known}}), whose value is a number
+representing an interval in seconds.
 
 ~~~ example
 {
@@ -210,14 +210,16 @@ in seconds.
 }
 ~~~
 
+
 The value of the `commit` member MUST be ignored unless the alternative service can be strongly
 authenticated.  Minimum authentication requirements for HTTP over TLS are described in Section 2.1
 of {{I-D.ietf-httpbis-alt-svc}} and Section 3.1 of {{RFC2818}}.  As noted in
 {{I-D.ietf-httpbis-alt-svc}}, clients can impose other checks in addition to this minimum set.  For
 instance, a client might choose to apply key pinning {{RFC7469}}.
 
-Once the `commit` member is provided and strongly authenticated, a client can assume that the
-opportunistically secured alternative will remain available for that number of seconds past the
+If a client is able to obtain a valid http-opportunistic resource (as per {{well-known}})
+containing a `commit` member and a strongly authenticated alternative service is available, it can
+assume that such an alternative will remain available for the indicated number of seconds past the
 current time, less the current age of the http-opportunistic response (as defined in Section 4.2.3
 of {{RFC7234}}). A client SHOULD NOT fall back to cleartext protocols prior to that interval
 elapsing. Note however that relying on a commitment creates some potential operational hazards (see
