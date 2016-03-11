@@ -193,7 +193,7 @@ purely anonymous TLS cipher suites), cannot be used for `https` URIs.
 
 # Requiring Use of TLS {#commit}
 
-The mechanism described in this specification is trivial to mount an active attack against, for two
+The mechanism described in {{well-known}} is trivial to mount an active attack against for two
 reasons:
 
 * A client that doesn't perform authentication is an easy victim of server impersonation, through
