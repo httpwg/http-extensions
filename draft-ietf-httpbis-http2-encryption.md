@@ -200,7 +200,7 @@ reasons:
   man-in-the-middle attacks.
 
 * A client that is willing to use HTTP over cleartext to fetch the resource will do so if access
-  to any TLS-enabled alternative services is blocked for any reason.
+  to the alternative service(s) is blocked for any reason.
 
 Given that the primary goal of this specification is to prevent passive attacks, these are not
 critical failings (especially considering the alternative - HTTP over cleartext). However, a modest
