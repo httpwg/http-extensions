@@ -180,7 +180,8 @@ purely anonymous TLS cipher suites), cannot be used for `https` URIs.
 
 # Requiring Use of TLS {#commit}
 
-Even when the alternative service is strongly authenticated, opportunistically upgrading cleartext HTTP connections to use TLS is subject to active attacks. In particular:
+Even when the alternative service is strongly authenticated, opportunistically upgrading cleartext
+HTTP connections to use TLS is subject to active attacks. In particular:
 
 * Because the original HTTP connection is in cleartext, it is vulnerable to man-in-the-middle
   attacks, and
@@ -192,16 +193,20 @@ Given that the primary goal of this specification is to prevent passive attacks,
 critical failings (especially considering the alternative - HTTP over cleartext). However, a modest
 form of protection against active attacks can be provided for clients on subsequent connections.
 
-When an origin is able to commit to providing service for a particular origin over TLS for a
-bounded period of time, clients can choose to rely upon its availability, failing when it cannot be
+When an origin is able to commit to providing service for a particular origin over TLS for a bounded
+period of time, clients can choose to rely upon its availability, failing when it cannot be
 contacted. Effectively, this makes the choice to use a secured protocol "sticky".
 
 
 ## Opportunistic Commitment
 
-An insecure origin can commit to providing a secured alternative by including a `commit` member in
-the http-opportunistic well-known resource (see {{well-known}}), whose value is a number
-representing an interval in seconds.
+An origin can reduce the risk of attacks on opportunistically secured connections by committing to
+provide an secured, authenticated alternative service. This is done by including the optional
+`commit` member in the http-opportunistic well-known resource (see {{well-known}}). This feature is
+optional due to the requirement for server authentication and the potential risk entailed (see
+{{pinrisks}}).
+
+The value of the `commit` member is the duration of the commitment interval in seconds.
 
 ~~~ example
 {
@@ -210,39 +215,51 @@ representing an interval in seconds.
 }
 ~~~
 
-
-The value of the `commit` member MUST be ignored unless the alternative service can be strongly
-authenticated.  Minimum authentication requirements for HTTP over TLS are described in Section 2.1
-of {{I-D.ietf-httpbis-alt-svc}} and Section 3.1 of {{RFC2818}}.  As noted in
-{{I-D.ietf-httpbis-alt-svc}}, clients can impose other checks in addition to this minimum set.  For
-instance, a client might choose to apply key pinning {{RFC7469}}.
-
-If a client is able to obtain a valid http-opportunistic resource (as per {{well-known}})
-containing a `commit` member and a strongly authenticated alternative service is available, it can
-assume that such an alternative will remain available for the indicated number of seconds past the
-current time, less the current age of the http-opportunistic response (as defined in Section 4.2.3
-of {{RFC7234}}). A client SHOULD NOT fall back to cleartext protocols prior to that interval
-elapsing. Note however that relying on a commitment creates some potential operational hazards (see
+Including `commit` creates a commitment to provide a secured alternative service for the advertised
+period. Clients that receive this commitment can assume that a secured alternative service will be
+available for the indicated period. Clients might however choose to limit this time (see
 {{pinrisks}}).
 
-A commitment only applies to the origin of the http-opportunistic well-known resource that was
-retrieved; all origins listed in the `origins` member need to independently discovered and
-validated.
+## Client Handling of A Commitment
 
-Note that the commitment is not bound to a particular alternative service. Clients can and SHOULD
-use alternative services that they become aware of. However, once a valid and authenticated
-commitment has been received, clients SHOULD NOT use an unauthenticated alternative service. Where
-there is an active commitment, clients SHOULD ignore advertisements for unsecured alternative
-services.
+The value of the `commit` member MUST be ignored unless the alternative service can be strongly
+authenticated. The same requirements that apply to `https://` resources SHOULD be applied to
+authenticating the alternative. Minimum authentication requirements for HTTP over TLS are described
+in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}} and Section 3.1 of {{RFC2818}}. As noted in
+{{I-D.ietf-httpbis-alt-svc}}, clients can impose other checks in addition to this minimum set. For
+instance, a client might choose to apply key pinning {{RFC7469}}.
+
+A client that receives a commitment and that successfully authenticates the alternative service can
+assume that a secured alternative will remain available for the commitment interval. The commitment
+interval starts when the commitment is received and authenticated and runs for a number of seconds
+equal to value of the `commit` member, less the current age of the http-opportunistic response (as
+defined in Section 4.2.3 of {{RFC7234}}. A client SHOULD avoid sending requests via cleartext
+protocols or to unauthenticated alternative services for the duration of the commitment interval,
+except to discover new potential alternatives.
+
+A commitment only applies to the origin of the http-opportunistic well-known resource that was
+retrieved; other origins listed in the `origins` member MUST be independently discovered and
+authenticated.
+
+A commitment is not bound to a particular alternative service. Clients are able to use alternative
+services that they become aware of. However, once a valid and authenticated commitment has been
+received, clients SHOULD NOT use an unauthenticated alternative service. Where there is an active
+commitment, clients SHOULD ignore advertisements for unsecured alternative services. A client MAY
+send requests to an unauthenticated origin in an attempt to discover potential alternative services,
+but these requests SHOULD be entirely generic and avoid including credentials.
 
 
 ## Operational Considerations {#pinrisks}
 
-To avoid situations where a commitment to use authenticated TLS causes a client to be unable to
-contact a site, clients MAY limit the time over which a commitment is respected for a given origin.
-A lower limit might be appropriate for initial commitments; the certainty that a site has set a
-correct value - and the corresponding limit on persistence - might increase as a commitment is
-renewed multiple times.
+Errors in configuration of commitments has the potential to render even the unsecured origin
+inaccessible for the duration of a commitment. Initial deployments are encouraged to use short
+duration commitments so that errors can be detected without causing the origin to become
+inaccessible to clients for extended periods.
+
+To avoid situations where a commitment causes errors, clients MAY limit the time over which a
+commitment is respected for a given origin.  A lower limit might be appropriate for initial
+commitments; the certainty that a site has set a correct value - and the corresponding limit on
+persistence - might increase as a commitment is renewed multiple times.
 
 
 # The "http-opportunistic" well-known URI {#well-known}
