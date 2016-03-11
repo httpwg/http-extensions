@@ -51,11 +51,11 @@ mitigate pervasive monitoring attacks.
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list
-(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
+Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org),
+which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source
-code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/opp-sec>.
+Working Group information can be found at <http://httpwg.github.io/>; source code and issues list
+for this draft can be found at <https://github.com/httpwg/http-extensions/labels/opp-sec>.
 
 --- middle
 
@@ -69,10 +69,10 @@ Serving `https` URIs require acquiring and configuring a valid certificate, whic
 deployments find supporting TLS difficult. This document describes a usage model whereby sites can
 serve `http` URIs over TLS without being required to support strong server authentication.
 
-Opportunistic Security {{RFC7435}} does not provide the same guarantees
-as using TLS with `https` URIs; it is vulnerable to active attacks, and does not change the security
-context of the connection. Normally, users will not be able to tell that it is in use (i.e., there
-will be no "lock icon").
+Opportunistic Security {{RFC7435}} does not provide the same guarantees as using TLS with `https`
+URIs; it is vulnerable to active attacks, and does not change the security context of the
+connection. Normally, users will not be able to tell that it is in use (i.e., there will be no
+"lock icon").
 
 By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
 them is described in {{commit}}.
@@ -120,12 +120,15 @@ expire, in order minimize the delays that might be incurred.
 
 # Server Authentication {#auth}
 
-{{I-D.ietf-httpbis-alt-svc}} requires that an alternative service only be used when there are "reasonable assurances" that it is under control of and valid for the whole origin.
+{{I-D.ietf-httpbis-alt-svc}} requires that an alternative service only be used when there are
+"reasonable assurances" that it is under control of and valid for the whole origin.
 
 For the purposes of this specification, there are two ways to achieve this:
 
 1. Using TLS with a certificate that validates as per {{RFC2818}}, or
-2. Confirming that both the origin and the alternative service support this specification by interacting with the "http-opportunistic" well-known URI (see {{well-known}}).
+
+2. Confirming that both the origin and the alternative service support this specification by
+   interacting with the "http-opportunistic" well-known URI (see {{well-known}}).
 
 The latter approach allows deployment without the use of valid certificates, to encourage
 deployment of opportunistic security. When it is in use, the alternative service can provide
@@ -141,17 +144,23 @@ the "http-opportunistic" well-known URI {{RFC5785}} from the origin.
 
 A client MAY consider there to be reasonable assurances when:
 
-* It has obtained a 200 (OK) response for the well-known URI from the origin, or refreshed one in cache {{RFC7234}}, and
+* It has obtained a 200 (OK) response for the well-known URI from the origin, or refreshed one in
+  cache {{RFC7234}}, and
 
 * That response has the media type "application/json", and
 
-* That response's payload, when parsed as JSON {{RFC7159}}, contains a root object with a member "origins" whose value is a list of strings, one of which is a case-insensitive character-for-character match for the origin in question, serialised into Unicode as per {{RFC6454}}, Section 6.1, and
+* That response's payload, when parsed as JSON {{RFC7159}}, contains a root object with a member
+  "origins" whose value is a list of strings, one of which is a case-insensitive
+  character-for-character match for the origin in question, serialised into Unicode as per
+  {{RFC6454}}, Section 6.1, and
 
-* The origin and alternative service's hostnames are the same when compared in a case-insensitive fashion, and
+* The origin and alternative service's hostnames are the same when compared in a case-insensitive
+  fashion, and
 
 * The chosen alternative service returns the same response as above.
 
-For example, this request/response pair would constitute reasonable assurances for the origin "http://www.example.com:80" for any alternative service also on "www.example.com":
+For example, this request/response pair would constitute reasonable assurances for the origin
+"http://www.example.com:80" for any alternative service also on "www.example.com":
 
 ~~~
 GET /.well-known/http-opportunistic HTTP/1.1
@@ -223,7 +232,7 @@ instance, a client might choose to apply key pinning {{RFC7469}}.
 Once the `commit` member is provided and strongly authenticated, a client can assume that the
 opportunistically secured alternative will remain available for that number of seconds past the
 current time, less the current age of the resource (current_age as defined in Section 4.2.3 of
-{{RFC7234}}).  A client SHOULD NOT fall back to cleartext protocols prior to that interval elapsing.
+{{RFC7234}}). A client SHOULD NOT fall back to cleartext protocols prior to that interval elapsing.
 Note however that relying on a commitment creates some potential operational hazards (see
 {{pinrisks}}).
 
@@ -234,9 +243,9 @@ A commitment only applies to the origin of the well-known http-opportunistic res
 retrieved; all origins listed in the `origins` member need to independently discovered and
 validated.
 
-Note that the commitment is not bound to a particular alternative service.  Clients can and SHOULD
-use alternative services that they become aware of.  However, once a valid and authenticated
-commitment has been received, clients SHOULD NOT use an unauthenticated alternative service.  Where
+Note that the commitment is not bound to a particular alternative service. Clients can and SHOULD
+use alternative services that they become aware of. However, once a valid and authenticated
+commitment has been received, clients SHOULD NOT use an unauthenticated alternative service. Where
 there is an active commitment, clients SHOULD ignore advertisements for unsecured alternative
 services.
 
@@ -271,8 +280,8 @@ used (e.g.,  a "lock device").
 
 ## Downgrade Attacks {#downgrade}
 
-A downgrade attack against the negotiation for TLS is possible. With commitment {{commit}}, this
-is limited to occasions where clients have no prior information (see {{privacy}}), or when persisted
+A downgrade attack against the negotiation for TLS is possible. With commitment {{commit}}, this is
+limited to occasions where clients have no prior information (see {{privacy}}), or when persisted
 commitments have expired.
 
 For example, because the `Alt-Svc` header field {{I-D.ietf-httpbis-alt-svc}} likely appears in an
@@ -298,13 +307,13 @@ cookies).
 ## Confusion Regarding Request Scheme
 
 Many existing HTTP/1.1 implementations use the presence or absence of TLS in the stack to determine
-whether requests are for `http` or `https` resources.  This is necessary in many cases because the
+whether requests are for `http` or `https` resources. This is necessary in many cases because the
 most common form of an HTTP/1.1 request does not carry an explicit indication of the URI scheme.
 
 HTTP/1.1 MUST NOT be used for opportunistically secured requests.
 
 Some HTTP/1.1 implementations use ambient signals to determine if a request is for an `https`
-resource.  For example, implementations might look for TLS on the stack or a port number of 443.  An
+resource. For example, implementations might look for TLS on the stack or a port number of 443. An
 implementation that supports opportunistically secured requests SHOULD suppress these signals if
 there is any potential for confusion.
 
