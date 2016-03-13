@@ -275,7 +275,7 @@ to have a valid http-opportunistic resource when:
 
 * That response's payload, when parsed as JSON {{RFC7159}}, contains an object as the root.
 
-* The "origins" member of the root object has a value of a list of strings, one of which is a
+* The "origins" member of the root object has a value of an array of strings, one of which is a
   case-insensitive character-for-character match for the origin in question, serialised into
   Unicode as per {{RFC6454}}, Section 6.1, and
 
