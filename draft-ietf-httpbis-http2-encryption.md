@@ -233,7 +233,7 @@ A client that receives a commitment and that successfully authenticates the alte
 assume that a secured alternative will remain available for the commitment interval. The commitment
 interval starts when the commitment is received and authenticated and runs for a number of seconds
 equal to value of the `commit` member, less the current age of the http-opportunistic response (as
-defined in Section 4.2.3 of {{RFC7234}}. A client SHOULD avoid sending requests via cleartext
+defined in Section 4.2.3 of {{RFC7234}}). A client SHOULD avoid sending requests via cleartext
 protocols or to unauthenticated alternative services for the duration of the commitment interval,
 except to discover new potential alternatives.
 
