@@ -206,7 +206,8 @@ provide an secured, authenticated alternative service. This is done by including
 optional due to the requirement for server authentication and the potential risk entailed (see
 {{pinrisks}}).
 
-The value of the `commit` member is the duration of the commitment interval in seconds.
+The value of the `commit` member is a number ({{RFC7159}}, Section 6) indicating the duration of the
+commitment interval in seconds.
 
 ~~~ example
 {
