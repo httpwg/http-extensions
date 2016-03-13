@@ -224,11 +224,11 @@ available for the indicated period. Clients might however choose to limit this t
 ## Client Handling of A Commitment
 
 The value of the `commit` member MUST be ignored unless the alternative service can be strongly
-authenticated. The same requirements that apply to `https://` resources SHOULD be applied to
-authenticating the alternative. Minimum authentication requirements for HTTP over TLS are described
-in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}} and Section 3.1 of {{RFC2818}}. As noted in
-{{I-D.ietf-httpbis-alt-svc}}, clients can impose other checks in addition to this minimum set. For
-instance, a client might choose to apply key pinning {{RFC7469}}.
+authenticated. The same authentication requirements that apply to `https://` resources SHOULD be
+applied to authenticating the alternative. Minimum authentication requirements for HTTP over TLS
+are described in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}} and Section 3.1 of {{RFC2818}}. As
+noted in {{I-D.ietf-httpbis-alt-svc}}, clients can impose other checks in addition to this minimum
+set. For instance, a client might choose to apply key pinning {{RFC7469}}.
 
 A client that receives a commitment and that successfully authenticates the alternative service can
 assume that a secured alternative will remain available for the commitment interval. The commitment
