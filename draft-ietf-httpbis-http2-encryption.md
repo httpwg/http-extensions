@@ -143,7 +143,7 @@ When the client has a valid http-opportunistic response for an origin, it MAY co
 * The chosen alternative service returns the same response as above.
 
 For example, this request/response pair would constitute reasonable assurances for the origin
-"http://www.example.com:80" for any alternative service also on "www.example.com":
+"http://www.example.com" for any alternative service also on "www.example.com":
 
 ~~~
 GET /.well-known/http-opportunistic HTTP/1.1
