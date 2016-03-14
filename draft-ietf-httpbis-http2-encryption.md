@@ -289,7 +289,7 @@ This specification registers a Well-known URI {{RFC5785}}:
 
 * URI Suffix: http-opportunistic
 * Change Controller: IETF
-* Specification Document(s): [this specification]
+* Specification Document(s): \[this specification\]
 * Related Information:
 
 
