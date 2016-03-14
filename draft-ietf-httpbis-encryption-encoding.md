@@ -629,7 +629,7 @@ added for presentation purposes only.
 ~~~
 
 
-## Diffie-Hellman with Authentication Secret
+## Diffie-Hellman with Authentication Secret {#ex-authSecret}
 
 This example shows the same receiver key pair from {{ex-dh}}, but with a shared
 authentication secret of "R29vIGdvbyBnJyBqb29iIQ".
@@ -643,11 +643,12 @@ Crypto-Key: keyid="dhkey";
                 dh="BNoRDbb84JGm8g5Z5CFxurSqsXWJ11ItfXEWYVLE85Y7
                     CYkDjXsIEc4aqxYaQ1G8BqkXCJ6DPpDrWtdWj_mugHU"
 
-QPsWCEH-8WqiXl7Ez23A6u4rwH2hFBifCybQQz-SxsjF
+6nqAQUME8hNqw5J3kl8cpVVJylXKYqZOeseZG8UueKpA
 ~~~
 
 The sender's private key used in this example is
-"nCScek-QpEjmOOlT-rQ38nZzvdPlqa00Zy0i6m2OJvY".
+"nCScek-QpEjmOOlT-rQ38nZzvdPlqa00Zy0i6m2OJvY".  Intermediate values for this
+example are included in {{ex-intermediate}}.
 
 
 # Security Considerations
@@ -889,6 +890,80 @@ Where the first line represents the fixed JWE Protected Header, an empty JWE
 Encrypted Key, and the algorithmically-determined JWE Initialization Vector.
 The second line contains the encoded body, split into JWE Ciphertext and JWE
 Authentication Tag.
+
+
+# Intermediate Values for Encryption {#ex-intermediate}
+
+The intermediate values calculated for the example in {{ex-authSecret}} are
+shown here.  The following are inputs to the calculation:
+
+Plaintext:
+
+: SSBhbSB0aGUgd2FscnVz
+
+Sender public key:
+
+: BNoRDbb84JGm8g5Z5CFxurSqsXWJ11ItfXEWYVLE85Y7
+  CYkDjXsIEc4aqxYaQ1G8BqkXCJ6DPpDrWtdWj_mugHU
+
+Sender private key:
+
+: nCScek-QpEjmOOlT-rQ38nZzvdPlqa00Zy0i6m2OJvY
+
+Receiver public key:
+
+: BCEkBjzL8Z3C-oi2Q7oE5t2Np-p7osjGLg93qUP0wvqR
+  T21EEWyf0cQDQcakQMqz4hQKYOQ3il2nNZct4HgAUQU
+
+Receiver private key:
+
+: 9FWl15_QUQAWDaD3k3l50ZBZQJ4au27F1V4F0uLSD_M
+
+Salt:
+
+: lngarbyKfMoi9Z75xYXmkg
+
+Note that knowledge of just one of the private keys is necessary.  The sender
+randomly generates the salt value, whereas salt is input to the receiver.
+
+This produces the following intermediate values:
+
+Shared secret (raw_key):
+
+: RNjC-NVW4BGJbxWPW7G2mowsLeDa53LYKYm4--NOQ6Y
+
+Input keying material (IKM):
+
+: EhpZec37Ptm4IRD5-jtZ0q6r1iK5vYmY1tZwtN8fbZY
+
+Context for content encryption key derivation:
+
+: Q29udGVudC1FbmNvZGluZzogYWVzZ2NtAFAtMjU2AABB
+  BCEkBjzL8Z3C-oi2Q7oE5t2Np-p7osjGLg93qUP0wvqR
+  T21EEWyf0cQDQcakQMqz4hQKYOQ3il2nNZct4HgAUQUA
+  QQTaEQ22_OCRpvIOWeQhcbq0qrF1iddSLX1xFmFSxPOW
+  OwmJA417CBHOGqsWGkNRvAapFwiegz6Q61rXVo_5roB1
+
+Content encryption key (CEK):
+
+: AN2-xhvFWeYh5z0fcDu0Ww
+
+Context for nonce derivation:
+
+: Q29udGVudC1FbmNvZGluZzogbm9uY2UAUC0yNTYAAEEE
+  ISQGPMvxncL6iLZDugTm3Y2n6nuiyMYuD3epQ_TC-pFP
+  bUQRbJ_RxANBxqRAyrPiFApg5DeKXac1ly3geABRBQBB
+  BNoRDbb84JGm8g5Z5CFxurSqsXWJ11ItfXEWYVLE85Y7
+  CYkDjXsIEc4aqxYaQ1G8BqkXCJ6DPpDrWtdWj_mugHU
+
+Base nonce:
+
+: JY1Okw5rw1Drkg9J
+
+When the CEK and nonce are used with AES GCM and the padded plaintext of
+AABJIGFtIHRoZSB3YWxydXM, the final ciphertext is
+6nqAQUME8hNqw5J3kl8cpVVJylXKYqZOeseZG8UueKpA, as shown in the example.
+
 
 # Acknowledgements
 
