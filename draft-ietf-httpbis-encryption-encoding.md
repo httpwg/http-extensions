@@ -359,13 +359,13 @@ header field.
 
 aesgcm:
 
-: The "aesgcm" parameter contains the URL-safe base64 [RFC4648] octets of the
-input keying material.
+: The "aesgcm" parameter contains the URL and filename safe base64 [RFC4648]
+  octets of the input keying material with padding removed.
 
 dh:
 
 : The "dh" parameter contains an ephemeral Diffie-Hellman share. This form of
-the header field can be used to encrypt content for a specific recipient.
+  the header field can be used to encrypt content for a specific recipient.
 
 Crypto-Key header field values with multiple instances of the same parameter
 name are invalid.
@@ -445,9 +445,9 @@ The two length fields are encoded as a two octet unsigned integer in network
 byte order.
 
 Specifications that rely on an Diffie-Hellman exchange for determining input
-keying material MUST either specify the parameters for Diffie-Hellman (group
-parameters, or curves and point format) that are used, or describe how those
-parameters are negotiated between sender and receiver.
+keying material MUST either specify the parameters for Diffie-Hellman (label,
+group parameters, or curves and point format) that are used, or describe how
+those parameters are negotiated between sender and receiver.
 
 
 ## Pre-shared Authentication Secrets {#auth}
@@ -491,6 +491,12 @@ is simply the raw keying material:
 
 # Examples
 
+This section shows a few examples of the content encoding.
+
+Note: All binary values in the examples in this section use the URL and filename
+safe variant of base64 [RFC4648].  This includes the bodies of requests.
+Whitespace in these values is added to fit formatting constraints.
+
 ## Successful GET Response
 
 ~~~ example
@@ -510,12 +516,17 @@ material that is identified by a URI.
 Note that the media type has been changed to "application/octet-stream" to avoid
 exposing information about the content.
 
+
 ## Encryption and Compression
+
+In this example, a response is first compressed, then encrypted.  Note that this
+particular encoding might compromise confidentiality if the contents of the
+response could be influenced by an attacker.
 
 ~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
-Content-Encoding: aesgcm, gzip
+Content-Encoding: gzip, aesgcm
 Transfer-Encoding: chunked
 Encryption: keyid="mailto:me@example.com";
             salt="m2hJ_NttRtFyUiMRPwfpHA"
@@ -523,14 +534,19 @@ Encryption: keyid="mailto:me@example.com";
 [encrypted payload]
 ~~~
 
+
 ## Encryption with More Than One Key
+
+Here, a PUT request has been encrypted twice with different input keying
+material; decrypting twice is necessary to read the content.  The outer layer of
+encryption uses a 1200 octet record size.
 
 ~~~ example
 PUT /thing HTTP/1.1
 Host: storage.example.com
 Content-Type: application/http
 Content-Encoding: aesgcm, aesgcm
-Content-Length: 1234
+Content-Length: 1235
 Encryption: keyid="mailto:me@example.com";
             salt="NfzOeuV5USPRA-n_9s1Lag",
             keyid="http://example.org/bob/keys/123";
@@ -539,34 +555,49 @@ Encryption: keyid="mailto:me@example.com";
 [encrypted payload]
 ~~~
 
-Here, a PUT request has been encrypted twice with different input keying
-material; decrypting twice is necessary to read the content.  The outer layer of
-encryption uses a 1200 octet record size.
-
 
 ## Encryption with Explicit Key {#explicit}
 
+This example shows the UTF-8 encoded string "I am the walrus" encrypted using an
+directly provided value for the input keying material.  The content body
+contains a single record only and is shown here encoded in URL-safe base64 for
+presentation reasons only.
+
 ~~~ example
 HTTP/1.1 200 OK
-Content-Length: 32
+Content-Length: 33
 Content-Encoding: aesgcm
 Encryption: keyid="a1"; salt="vr0o6Uq3w_KDWeatc27mUg"
 Crypto-Key: keyid="a1"; aesgcm="csPJEXBYA5U-Tal9EdJi-w"
 
-OwW_-ChdUuV44mRDjlg1lF4pviF1AsfHv_9wbnSHLoxj
+VDeU0XxaJkOJDAxPl7h9JD5V8N43RorP7PfpPdZZQuwF
 ~~~
 
-This example shows the string "I am the walrus" encrypted using an directly
-provided value for the input keying material.  The content body contains a
-single record only and is shown here encoded in URL-safe base64 for presentation
-reasons only.
 
+## Encryption with Multiple Records
 
-## Diffie-Hellman Encryption
+This example shows the same encrypted message, but split into records of 10
+octets each.  The first record includes a single additional octet of padding,
+which causes the end of the content to align with a record boundary, forcing the
+creation of a third record that contains only padding.
 
 ~~~ example
 HTTP/1.1 200 OK
-Content-Length: 32
+Content-Length: 70
+Content-Encoding: aesgcm
+Encryption: keyid="a1"; salt="4pdat984KmT9BWsU3np0nw"; rs=10
+Crypto-Key: keyid="a1"; aesgcm="BO3ZVPxUlnLORbVGMpbT1Q"
+
+uzLfrZ4cbMTC6hlUqHz4NvWZshFlTN3o2RLr6FrIuOKEfl2VrM_jYgoiIyEo
+Zvc-ZGwV-RMJejG4M6ZfGysBAdhpPqrLzw
+~~~
+
+
+## Diffie-Hellman Encryption {#ex-dh}
+
+~~~ example
+HTTP/1.1 200 OK
+Content-Length: 33
 Content-Encoding: aesgcm
 Encryption: keyid="dhkey"; salt="Qg61ZJRva_XBE9IEUelU3A"
 Crypto-Key: keyid="dhkey";
@@ -596,6 +627,28 @@ added for presentation purposes only.
       private key: vG7TmzUX9NfVR4XUGBkLAFu8iDyQe-q_165JkkN0Vlw
       public key: <the value of the "dh" parameter>
 ~~~
+
+
+## Diffie-Hellman with Authentication Secret {#ex-authSecret}
+
+This example shows the same receiver key pair from {{ex-dh}}, but with a shared
+authentication secret of "R29vIGdvbyBnJyBqb29iIQ".
+
+~~~
+HTTP/1.1 200 OK
+Content-Length: 33
+Content-Encoding: aesgcm
+Encryption: keyid="dhkey"; salt="lngarbyKfMoi9Z75xYXmkg"
+Crypto-Key: keyid="dhkey";
+                dh="BNoRDbb84JGm8g5Z5CFxurSqsXWJ11ItfXEWYVLE85Y7
+                    CYkDjXsIEc4aqxYaQ1G8BqkXCJ6DPpDrWtdWj_mugHU"
+
+6nqAQUME8hNqw5J3kl8cpVVJylXKYqZOeseZG8UueKpA
+~~~
+
+The sender's private key used in this example is
+"nCScek-QpEjmOOlT-rQ38nZzvdPlqa00Zy0i6m2OJvY".  Intermediate values for this
+example are included in {{ex-intermediate}}.
 
 
 # Security Considerations
@@ -806,8 +859,8 @@ The initial contents of this registry are:
 
 The "aesgcm" content encoding can be considered as a sequence of JSON Web
 Encryption (JWE) objects [RFC7516], each corresponding to a single fixed size
-record.  The following transformations are applied to a JWE object that might be
-expressed using the JWE Compact Serialization:
+record that includes leading padding.  The following transformations are applied
+to a JWE object that might be expressed using the JWE Compact Serialization:
 
 * The JWE Protected Header is fixed to a value { "alg": "dir", "enc": "A128GCM"
   }, describing direct encryption using AES-GCM with a 128-bit content
@@ -829,14 +882,88 @@ Thus, the example in {{explicit}} can be rendered using the JWE Compact
 Serialization as:
 
 ~~~ example
-eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..AAAAAAAAAAAAAAAA.
-LwTC-fwdKh8de0smD2jfzA.eh1vURhu65M2lxhctbbntA
+eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..31iQYc1v4a36EgyJ.
+VDeU0XxaJkOJDAxPl7h9JD4.VfDeN0aKz-z36T3WWULsBQ
 ~~~
 
-Where the first line represents the fixed JWE Protected Header, JWE Encrypted
-Key, and JWE Initialization Vector, all of which are determined algorithmically.
+Where the first line represents the fixed JWE Protected Header, an empty JWE
+Encrypted Key, and the algorithmically-determined JWE Initialization Vector.
 The second line contains the encoded body, split into JWE Ciphertext and JWE
 Authentication Tag.
+
+
+# Intermediate Values for Encryption {#ex-intermediate}
+
+The intermediate values calculated for the example in {{ex-authSecret}} are
+shown here.  The following are inputs to the calculation:
+
+Plaintext:
+
+: SSBhbSB0aGUgd2FscnVz
+
+Sender public key:
+
+: BNoRDbb84JGm8g5Z5CFxurSqsXWJ11ItfXEWYVLE85Y7
+  CYkDjXsIEc4aqxYaQ1G8BqkXCJ6DPpDrWtdWj_mugHU
+
+Sender private key:
+
+: nCScek-QpEjmOOlT-rQ38nZzvdPlqa00Zy0i6m2OJvY
+
+Receiver public key:
+
+: BCEkBjzL8Z3C-oi2Q7oE5t2Np-p7osjGLg93qUP0wvqR
+  T21EEWyf0cQDQcakQMqz4hQKYOQ3il2nNZct4HgAUQU
+
+Receiver private key:
+
+: 9FWl15_QUQAWDaD3k3l50ZBZQJ4au27F1V4F0uLSD_M
+
+Salt:
+
+: lngarbyKfMoi9Z75xYXmkg
+
+Note that knowledge of just one of the private keys is necessary.  The sender
+randomly generates the salt value, whereas salt is input to the receiver.
+
+This produces the following intermediate values:
+
+Shared secret (raw_key):
+
+: RNjC-NVW4BGJbxWPW7G2mowsLeDa53LYKYm4--NOQ6Y
+
+Input keying material (IKM):
+
+: EhpZec37Ptm4IRD5-jtZ0q6r1iK5vYmY1tZwtN8fbZY
+
+Context for content encryption key derivation:
+
+: Q29udGVudC1FbmNvZGluZzogYWVzZ2NtAFAtMjU2AABB
+  BCEkBjzL8Z3C-oi2Q7oE5t2Np-p7osjGLg93qUP0wvqR
+  T21EEWyf0cQDQcakQMqz4hQKYOQ3il2nNZct4HgAUQUA
+  QQTaEQ22_OCRpvIOWeQhcbq0qrF1iddSLX1xFmFSxPOW
+  OwmJA417CBHOGqsWGkNRvAapFwiegz6Q61rXVo_5roB1
+
+Content encryption key (CEK):
+
+: AN2-xhvFWeYh5z0fcDu0Ww
+
+Context for nonce derivation:
+
+: Q29udGVudC1FbmNvZGluZzogbm9uY2UAUC0yNTYAAEEE
+  ISQGPMvxncL6iLZDugTm3Y2n6nuiyMYuD3epQ_TC-pFP
+  bUQRbJ_RxANBxqRAyrPiFApg5DeKXac1ly3geABRBQBB
+  BNoRDbb84JGm8g5Z5CFxurSqsXWJ11ItfXEWYVLE85Y7
+  CYkDjXsIEc4aqxYaQ1G8BqkXCJ6DPpDrWtdWj_mugHU
+
+Base nonce:
+
+: JY1Okw5rw1Drkg9J
+
+When the CEK and nonce are used with AES GCM and the padded plaintext of
+AABJIGFtIHRoZSB3YWxydXM, the final ciphertext is
+6nqAQUME8hNqw5J3kl8cpVVJylXKYqZOeseZG8UueKpA, as shown in the example.
+
 
 # Acknowledgements
 
