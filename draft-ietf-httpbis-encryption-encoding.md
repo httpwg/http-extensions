@@ -858,8 +858,8 @@ The initial contents of this registry are:
 
 The "aesgcm" content encoding can be considered as a sequence of JSON Web
 Encryption (JWE) objects [RFC7516], each corresponding to a single fixed size
-record.  The following transformations are applied to a JWE object that might be
-expressed using the JWE Compact Serialization:
+record that includes leading padding.  The following transformations are applied
+to a JWE object that might be expressed using the JWE Compact Serialization:
 
 * The JWE Protected Header is fixed to a value { "alg": "dir", "enc": "A128GCM"
   }, describing direct encryption using AES-GCM with a 128-bit content
@@ -881,12 +881,12 @@ Thus, the example in {{explicit}} can be rendered using the JWE Compact
 Serialization as:
 
 ~~~ example
-eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..AAAAAAAAAAAAAAAA.
-LwTC-fwdKh8de0smD2jfzA.eh1vURhu65M2lxhctbbntA
+eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..31iQYc1v4a36EgyJ.
+VDeU0XxaJkOJDAxPl7h9JD4.VfDeN0aKz-z36T3WWULsBQ
 ~~~
 
-Where the first line represents the fixed JWE Protected Header, JWE Encrypted
-Key, and JWE Initialization Vector, all of which are determined algorithmically.
+Where the first line represents the fixed JWE Protected Header, an empty JWE
+Encrypted Key, and the algorithmically-determined JWE Initialization Vector.
 The second line contains the encoded body, split into JWE Ciphertext and JWE
 Authentication Tag.
 
