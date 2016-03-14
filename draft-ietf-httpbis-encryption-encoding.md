@@ -631,6 +631,27 @@ presentation purposes only.
 ~~~
 
 
+## Diffie-Hellman with Authentication Secret
+
+This example shows the same receiver key pair from {{ex-dh}}, but with a shared
+authentication secret of "R29vIGdvbyBnJyBqb29iIQ".
+
+~~~
+HTTP/1.1 200 OK
+Content-Length: 33
+Content-Encoding: aesgcm
+Encryption: keyid="dhkey"; salt="lngarbyKfMoi9Z75xYXmkg"
+Crypto-Key: keyid="dhkey";
+                dh="BNoRDbb84JGm8g5Z5CFxurSqsXWJ11ItfXEWYVLE85Y7
+                    CYkDjXsIEc4aqxYaQ1G8BqkXCJ6DPpDrWtdWj_mugHU"
+
+QPsWCEH-8WqiXl7Ez23A6u4rwH2hFBifCybQQz-SxsjF
+~~~
+
+The sender's private key used in this example is
+"nCScek-QpEjmOOlT-rQ38nZzvdPlqa00Zy0i6m2OJvY".
+
+
 # Security Considerations
 
 This mechanism assumes the presence of a key management framework that is used
