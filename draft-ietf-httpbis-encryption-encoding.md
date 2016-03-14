@@ -359,13 +359,13 @@ header field.
 
 aesgcm:
 
-: The "aesgcm" parameter contains the URL-safe base64 [RFC4648] octets of the
-input keying material.
+: The "aesgcm" parameter contains the URL and filename safe base64 [RFC4648]
+  octets of the input keying material with padding removed.
 
 dh:
 
 : The "dh" parameter contains an ephemeral Diffie-Hellman share. This form of
-the header field can be used to encrypt content for a specific recipient.
+  the header field can be used to encrypt content for a specific recipient.
 
 Crypto-Key header field values with multiple instances of the same parameter
 name are invalid.
