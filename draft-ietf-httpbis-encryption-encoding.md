@@ -445,9 +445,9 @@ The two length fields are encoded as a two octet unsigned integer in network
 byte order.
 
 Specifications that rely on an Diffie-Hellman exchange for determining input
-keying material MUST either specify the parameters for Diffie-Hellman (group
-parameters, or curves and point format) that are used, or describe how those
-parameters are negotiated between sender and receiver.
+keying material MUST either specify the parameters for Diffie-Hellman (label,
+group parameters, or curves and point format) that are used, or describe how
+those parameters are negotiated between sender and receiver.
 
 
 ## Pre-shared Authentication Secrets {#auth}
