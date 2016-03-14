@@ -576,12 +576,30 @@ VDeU0XxaJkOJDAxPl7h9JD5V8N43RorP7PfpPdZZQuwF
 ~~~
 
 
+## Encryption with Multiple Records
 
-## Diffie-Hellman Encryption
+This example shows the same encrypted message, but split into records of 10
+octets each.  The first record includes a single additional octet of padding,
+which causes the end of the content to align with a record boundary, forcing the
+creation of a third record that contains only padding.
 
 ~~~ example
 HTTP/1.1 200 OK
-Content-Length: 32
+Content-Length: 70
+Content-Encoding: aesgcm
+Encryption: keyid="a1"; salt="4pdat984KmT9BWsU3np0nw"; rs=10
+Crypto-Key: keyid="a1"; aesgcm="BO3ZVPxUlnLORbVGMpbT1Q"
+
+uzLfrZ4cbMTC6hlUqHz4NvWZshFlTN3o2RLr6FrIuOKEfl2VrM_jYgoiIyEo
+Zvc-ZGwV-RMJejG4M6ZfGysBAdhpPqrLzw
+~~~
+
+
+## Diffie-Hellman Encryption {#ex-dh}
+
+~~~ example
+HTTP/1.1 200 OK
+Content-Length: 33
 Content-Encoding: aesgcm
 Encryption: keyid="dhkey"; salt="Qg61ZJRva_XBE9IEUelU3A"
 Crypto-Key: keyid="dhkey";
