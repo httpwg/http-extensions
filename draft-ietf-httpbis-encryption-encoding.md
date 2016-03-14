@@ -536,14 +536,19 @@ Encryption: keyid="mailto:me@example.com";
 [encrypted payload]
 ~~~
 
+
 ## Encryption with More Than One Key
+
+Here, a PUT request has been encrypted twice with different input keying
+material; decrypting twice is necessary to read the content.  The outer layer of
+encryption uses a 1200 octet record size.
 
 ~~~ example
 PUT /thing HTTP/1.1
 Host: storage.example.com
 Content-Type: application/http
 Content-Encoding: aesgcm, aesgcm
-Content-Length: 1234
+Content-Length: 1235
 Encryption: keyid="mailto:me@example.com";
             salt="NfzOeuV5USPRA-n_9s1Lag",
             keyid="http://example.org/bob/keys/123";
@@ -551,10 +556,6 @@ Encryption: keyid="mailto:me@example.com";
 
 [encrypted payload]
 ~~~
-
-Here, a PUT request has been encrypted twice with different input keying
-material; decrypting twice is necessary to read the content.  The outer layer of
-encryption uses a 1200 octet record size.
 
 
 ## Encryption with Explicit Key {#explicit}
