@@ -493,6 +493,12 @@ is simply the raw keying material:
 
 # Examples
 
+This section shows a few examples of the content encoding.
+
+Note: All binary values in the examples in this section use the URL and filename
+safe variant of base64 [RFC4648].  This includes the bodies of requests.
+Whitespace in these values is added to fit formatting constraints.
+
 ## Successful GET Response
 
 ~~~ example
