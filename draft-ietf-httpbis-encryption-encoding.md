@@ -560,20 +560,21 @@ Encryption: keyid="mailto:me@example.com";
 
 ## Encryption with Explicit Key {#explicit}
 
+This example shows the UTF-8 encoded string "I am the walrus" encrypted using an
+directly provided value for the input keying material.  The content body
+contains a single record only and is shown here using base64url encoding for
+presentation reasons.
+
 ~~~ example
 HTTP/1.1 200 OK
-Content-Length: 32
+Content-Length: 33
 Content-Encoding: aesgcm
 Encryption: keyid="a1"; salt="vr0o6Uq3w_KDWeatc27mUg"
 Crypto-Key: keyid="a1"; aesgcm="csPJEXBYA5U-Tal9EdJi-w"
 
-OwW_-ChdUuV44mRDjlg1lF4pviF1AsfHv_9wbnSHLoxj
+VDeU0XxaJkOJDAxPl7h9JD5V8N43RorP7PfpPdZZQuwF
 ~~~
 
-This example shows the string "I am the walrus" encrypted using an directly
-provided value for the input keying material.  The content body contains a
-single record only and use base64url encoding [RFC7515] for presentation
-reasons.
 
 
 ## Diffie-Hellman Encryption
