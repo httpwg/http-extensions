@@ -516,12 +516,17 @@ material that is identified by a URI.
 Note that the media type has been changed to "application/octet-stream" to avoid
 exposing information about the content.
 
+
 ## Encryption and Compression
+
+In this example, a response is first compressed, then encrypted.  Note that this
+particular encoding might compromise confidentiality if the contents of the
+response could be influenced by an attacker.
 
 ~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
-Content-Encoding: aesgcm, gzip
+Content-Encoding: gzip, aesgcm
 Transfer-Encoding: chunked
 Encryption: keyid="mailto:me@example.com";
             salt="m2hJ_NttRtFyUiMRPwfpHA"
