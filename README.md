@@ -43,6 +43,8 @@ In **RFC Editor Queue**
 
 ### HTTP Opportunistic Security
 
+In **Working Group Last Call** until 1 April 2016
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/opsec.html) ([plain text](https://httpwg.github.io/http-extensions/opsec.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-encryption/)
