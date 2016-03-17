@@ -23,9 +23,9 @@ author:
 normative:
   RFC2119:
   RFC4492:
-  RFC4648:
   RFC7230:
   RFC7231:
+  RFC7515:
   RFC5116:
   RFC5869:
   FIPS180-4:
@@ -132,6 +132,8 @@ material.
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in [RFC2119].
+
+Base64url encoding is defined in Section 2 of [RFC7515].
 
 
 # The "aesgcm" HTTP Content Encoding {#aesgcm}
@@ -248,26 +250,26 @@ is used for encryption:
 keyid:
 
 : The "keyid" parameter contains a string that identifies the keying material
-that is used.  The "keyid" parameter SHOULD be included, unless key
-identification is guaranteed by other means.  The "keyid" parameter MUST be used
-if keying material included in an Crypto-Key header field is needed to derive
-the content encryption key.
+  that is used.  The "keyid" parameter SHOULD be included, unless key
+  identification is guaranteed by other means.  The "keyid" parameter MUST be
+  used if keying material included in an Crypto-Key header field is needed to
+  derive the content encryption key.
 
 salt:
 
-: The "salt" parameter contains a base64 URL-encoded octets that is used as salt
-in deriving a unique content encryption key (see {{derivation}}).  The "salt"
-parameter MUST be present, and MUST be exactly 16 octets long when decoded.  The
-"salt" parameter MUST NOT be reused for two different payload bodies that have
-the same input keying material; generating a random salt for every application
-of the content encoding ensures that content encryption key reuse is highly
-unlikely.
+: The "salt" parameter contains a base64url-encoded octets [RFC7515] that is
+  used as salt in deriving a unique content encryption key (see {{derivation}}).
+  The "salt" parameter MUST be present, and MUST be exactly 16 octets long when
+  decoded.  The "salt" parameter MUST NOT be reused for two different payload
+  bodies that have the same input keying material; generating a random salt for
+  every application of the content encoding ensures that content encryption key
+  reuse is highly unlikely.
 
 rs:
 
 : The "rs" parameter contains a positive decimal integer that describes the
-record size in octets.  This value MUST be greater than 1.  If the "rs"
-parameter is absent, the record size defaults to 4096 octets.
+  record size in octets.  This value MUST be greater than 1.  If the "rs"
+  parameter is absent, the record size defaults to 4096 octets.
 
 
 ## Content Encryption Key Derivation {#derivation}
@@ -355,17 +357,17 @@ of [RFC7230] and the `parameter` rule from [RFC7231].
 keyid:
 
 : The "keyid" parameter corresponds to the "keyid" parameter in the Encryption
-header field.
+  header field.
 
 aesgcm:
 
-: The "aesgcm" parameter contains the URL-safe base64 [RFC4648] octets of the
-input keying material.
+: The "aesgcm" parameter contains the base64url-encoded octets [RFC7515] of the
+  input keying material.
 
 dh:
 
 : The "dh" parameter contains an ephemeral Diffie-Hellman share. This form of
-the header field can be used to encrypt content for a specific recipient.
+  the header field can be used to encrypt content for a specific recipient.
 
 Crypto-Key header field values with multiple instances of the same parameter
 name are invalid.
@@ -558,8 +560,8 @@ OwW_-ChdUuV44mRDjlg1lF4pviF1AsfHv_9wbnSHLoxj
 
 This example shows the string "I am the walrus" encrypted using an directly
 provided value for the input keying material.  The content body contains a
-single record only and is shown here encoded in URL-safe base64 for presentation
-reasons only.
+single record only and use base64url encoding [RFC7515] for presentation
+reasons.
 
 
 ## Diffie-Hellman Encryption
@@ -578,14 +580,14 @@ yqD2bapcx14XxUbtwjiGx69eHE3Yd6AqXcwBpT2Kd1uy
 
 This example shows the same string, "I am the walrus", encrypted using ECDH over
 the P-256 curve [FIPS186], which is identified with the label "P-256" encoded in
-ASCII. The content body is shown here encoded in URL-safe base64 for
+ASCII. The content body is shown here encoded in URL-safe base64url for
 presentation reasons only.
 
 The receiver (in this case, the HTTP client) uses a key pair that is identified
 by the string "dhkey" and the sender (the server) uses a key pair for which the
 public share is included in the "dh" parameter above. The keys shown below use
-uncompressed points [X9.62] encoded using URL-safe base64. Line wrapping is
-added for presentation purposes only.
+uncompressed points [X9.62] encoded using base64url. Line wrapping is added for
+presentation purposes only.
 
 ~~~ example
    Receiver:
