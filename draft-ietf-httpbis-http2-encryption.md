@@ -115,8 +115,9 @@ connection.
 
 A client can also explicitly probe for an alternative service advertisement by sending a request
 that bears little or no sensitive information, such as one with the OPTIONS method. Likewise,
-clients with existing alternative services information could make such a request before they
-expire, in order minimize the delays that might be incurred.
+clients with existing alternative services information could make such a request before they expire,
+in order minimize the delays that might be incurred.
+
 
 # Server Authentication {#auth}
 
@@ -135,7 +136,8 @@ This allows deployment without the use of valid certificates, to encourage deplo
 opportunistic security. When it is in use, the alternative service can provide any certificate, or
 even select TLS cipher suites that do not include authentication.
 
-When the client has a valid http-opportunistic response for an origin, it MAY consider there to be reasonable assurances when:
+When the client has a valid http-opportunistic response for an origin, it MAY consider there to be
+reasonable assurances when:
 
 * The origin and alternative service's hostnames are the same when compared in a case-insensitive
   fashion, and
@@ -158,9 +160,9 @@ Connection: close
 }
 ~~~
 
-Note that this mechanism is only defined to establish reasonable assurances for the purposes of
-this specification; it does not apply to other uses of alternative services unless they explicitly
-invoke it.
+Note that this mechanism is only defined to establish reasonable assurances for the purposes of this
+specification; it does not apply to other uses of alternative services unless they explicitly invoke
+it.
 
 
 # Interaction with "https" URIs
