@@ -349,4 +349,5 @@ there is any potential for confusion.
 # Acknowledgements
 
 Thanks to Patrick McManus, Eliot Lear, Stephen Farrell, Guy Podjarny, Stephen Ludin, Erik Nygren,
-Paul Hoffman, Adam Langley, Eric Rescorla and Richard Barnes for their feedback and suggestions.
+Paul Hoffman, Adam Langley, Eric Rescorla, Kari Hurtta, and Richard Barnes for their feedback and
+suggestions.
