@@ -156,7 +156,7 @@ Content-Type: application/json
 Connection: close
 
 {
-  "origins": ["http://example.com", "http://www.example.com:81"]
+  "origins": ["http://www.example.com", "http://example.com:81"]
 }
 ~~~
 
