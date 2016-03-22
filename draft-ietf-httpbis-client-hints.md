@@ -44,10 +44,10 @@ This specification defines a set of HTTP request header fields, colloquially kno
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source 
+Working Group information can be found at <http://httpwg.github.io/>; source
 code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/client-hints>.
 
 
@@ -117,7 +117,7 @@ When a client receives Accept-CH, it SHOULD append the Client Hint headers that 
 
 ### Interaction with Caches
 
-When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server MUST also emit a Vary response header field ({{RFC7234}}) to indicate which hints were used and whether the selected response is appropriate for a later request. 
+When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server MUST also emit a Vary response header field ({{RFC7234}}) to indicate which hints were used and whether the selected response is appropriate for a later request.
 
 ~~~ example
   Vary: DPR
@@ -160,7 +160,7 @@ The "DPR" header field is a number that, in requests, indicates the client's cur
   DPR = 1*DIGIT [ "." 1*DIGIT ]
 ~~~
 
-If DPR occurs in a message more than once, the last value overrides all previous occurrences. 
+If DPR occurs in a message more than once, the last value overrides all previous occurrences.
 
 
 ## Confirming Selected DPR
@@ -175,7 +175,7 @@ DPR ratio affects the calculation of intrinsic size of image resources on the cl
 
 Note that DPR confirmation is only required for image responses, and the server does not need to confirm the resource width as this value can be derived from the resource itself once it is decoded by the client.
 
-If Content-DPR occurs in a message more than once, the last value overrides all previous occurrences. 
+If Content-DPR occurs in a message more than once, the last value overrides all previous occurrences.
 
 
 # The Width Client Hint
@@ -186,7 +186,7 @@ The "Width" header field is a number that, in requests, indicates the resource w
   Width = 1*DIGIT
 ~~~
 
-If the resource width is not known at the time of the request or the resource does not have a display width, the Width header field may be omitted. If Width occurs in a message more than once, the last value overrides all previous occurrences. 
+If the resource width is not known at the time of the request or the resource does not have a display width, the Width header field may be omitted. If Width occurs in a message more than once, the last value overrides all previous occurrences.
 
 
 # The Viewport-Width Client Hint
@@ -197,7 +197,7 @@ The "Viewport-Width" header field is a number that, in requests, indicates the l
   Viewport-Width = 1*DIGIT
 ~~~
 
-If Viewport-Width occurs in a message more than once, the last value overrides all previous occurrences. 
+If Viewport-Width occurs in a message more than once, the last value overrides all previous occurrences.
 
 
 # The Downlink Client Hint
@@ -219,7 +219,7 @@ The "Save-Data" header field is a token that, in requests, indicates client's pr
   Save-Data = "on"
 ~~~
 
-The token is a signal indicating explicit user opt-in into a reduced data usage mode on the client, and when communicated to origins allows them to deliver alternate content honoring such preference - e.g. smaller image and video resources, alternate markup, and so on. 
+The token is a signal indicating explicit user opt-in into a reduced data usage mode on the client, and when communicated to origins allows them to deliver alternate content honoring such preference - e.g. smaller image and video resources, alternate markup, and so on.
 
 
 # Examples
