@@ -262,6 +262,7 @@ However, implementors should consider the privacy implications of various method
 
 This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP request fields, "Content-DPR" HTTP response field, and registers them in the Permanent Message Header Fields registry.
 
+## DPR
 - Header field name: DPR
 - Applicable protocol: HTTP
 - Status: standard
@@ -269,6 +270,7 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Specification document(s): \[this document\]
 - Related information: for Client Hints
 
+## Width
 - Header field name: Width
 - Applicable protocol: HTTP
 - Status: standard
@@ -276,6 +278,7 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Specification document(s): \[this document\]
 - Related information: for Client Hints
 
+## Viewport-Width
 - Header field name: Viewport-Width
 - Applicable protocol: HTTP
 - Status: standard
@@ -283,6 +286,7 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Specification document(s): \[this document\]
 - Related information: for Client Hints
 
+## Downlink
 - Header field name: Downlink
 - Applicable protocol: HTTP
 - Status: standard
@@ -290,6 +294,7 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Specification document(s): \[this document\]
 - Related information: for Client Hints
 
+## Content-DPR
 - Header field name: Content-DPR
 - Applicable protocol: HTTP
 - Status: standard
@@ -297,6 +302,7 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Specification document(s): \[this document\]
 - Related information: for Client Hints
 
+## Accept-CH
 - Header field name: Accept-CH
 - Applicable protocol: HTTP
 - Status: standard
@@ -304,6 +310,7 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Specification document(s): \[this document\]
 - Related information: for Client Hints
 
+## Save-Data
 - Header field name: Save-Data
 - Applicable protocol: HTTP
 - Status: standard
