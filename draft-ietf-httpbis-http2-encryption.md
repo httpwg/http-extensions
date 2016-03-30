@@ -124,8 +124,8 @@ in order minimize the delays that might be incurred.
 "reasonable assurances" that it is under control of and valid for the whole origin.
 
 As defined in that specification, one way of establishing this is using a TLS-based protocol with
-the certificate checks defined in {{RFC2818}}. Clients MAY impose additional criteria for
-establishing reasonable assurances.
+the certificate checks defined in {{RFC2818}}. Clients are permitted to impose additional criteria
+for establishing reasonable assurances.
 
 For the purposes of this specification, an additional way of establishing reasonable assurances is
 available when the alternative is on the same host as the origin, using the "http-opportunistic"
