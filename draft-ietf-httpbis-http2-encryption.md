@@ -63,7 +63,7 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 
 This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to decouple
 the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI
-{{RFC7230}} to be accessed using TLS {{RFC5246}} opportunistically.
+{{RFC7230}} to be accessed using Transport Layer Security (TLS) {{RFC5246}} opportunistically.
 
 Serving `https` URIs require acquiring and configuring a valid certificate, which means that some
 deployments find supporting TLS difficult. This document describes a usage model whereby sites can
