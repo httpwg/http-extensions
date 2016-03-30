@@ -74,8 +74,7 @@ URIs; it is vulnerable to active attacks, and does not change the security conte
 connection. Normally, users will not be able to tell that it is in use (i.e., there will be no
 "lock icon").
 
-By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
-them is described in {{commit}}.
+A mechanism for partially mitigating active attacks is described in {{commit}}.
 
 
 ## Goals and Non-Goals
