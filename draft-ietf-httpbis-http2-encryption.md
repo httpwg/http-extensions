@@ -177,7 +177,7 @@ is successfully authenticated. Section 3.1 of {{RFC2818}} describes the basic me
 authentication considerations in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}} also apply.
 
 Connections that are established without any means of server authentication (for instance, the
-purely anonymous TLS cipher suites), cannot be used for `https` URIs.
+purely anonymous TLS cipher suites) cannot be used for `https` URIs.
 
 
 # Requiring Use of TLS {#commit}
