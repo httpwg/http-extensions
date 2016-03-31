@@ -332,16 +332,15 @@ cookies).
 
 ## Confusion Regarding Request Scheme
 
-Many existing HTTP/1.1 implementations use the presence or absence of TLS in the stack to determine
-whether requests are for `http` or `https` resources. This is necessary in many cases because the
-most common form of an HTTP/1.1 request does not carry an explicit indication of the URI scheme.
-
-HTTP/1.1 MUST NOT be used for opportunistically secured requests.
-
 Some HTTP/1.1 implementations use ambient signals to determine if a request is for an `https`
-resource. For example, implementations might look for TLS on the stack or a port number of 443. An
-implementation that supports opportunistically secured requests SHOULD suppress these signals if
-there is any potential for confusion.
+resource. For example, implementations might look for TLS on the stack or a port number of 443. This
+is necessary in many cases because the most common form of an HTTP/1.1 request does not carry an
+explicit indication of the URI scheme.  An implementation that is serving an opportunistically
+secured request SHOULD suppress these signals for `http` resources.
+
+HTTP/1.1 MUST NOT be used to serve opportunistically secured requests. HTTP/1.1 can be used to
+discover an opportunistically secured alternative service.
+
 
 
 --- back
