@@ -63,7 +63,7 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 
 This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to decouple
 the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI
-{{RFC7230}} to be accessed using TLS {{RFC5246}} opportunistically.
+{{RFC7230}} to be accessed using Transport Layer Security (TLS) {{RFC5246}} opportunistically.
 
 Serving `https` URIs require acquiring and configuring a valid certificate, which means that some
 deployments find supporting TLS difficult. This document describes a usage model whereby sites can
@@ -74,8 +74,7 @@ URIs; it is vulnerable to active attacks, and does not change the security conte
 connection. Normally, users will not be able to tell that it is in use (i.e., there will be no
 "lock icon").
 
-By its nature, this technique is vulnerable to active attacks. A mechanism for partially mitigating
-them is described in {{commit}}.
+A mechanism for partially mitigating active attacks is described in {{commit}}.
 
 
 ## Goals and Non-Goals
@@ -125,8 +124,8 @@ in order minimize the delays that might be incurred.
 "reasonable assurances" that it is under control of and valid for the whole origin.
 
 As defined in that specification, one way of establishing this is using a TLS-based protocol with
-the certificate checks defined in {{RFC2818}}. Clients MAY impose additional criteria for
-establishing reasonable assurances.
+the certificate checks defined in {{RFC2818}}. Clients are permitted to impose additional criteria
+for establishing reasonable assurances.
 
 For the purposes of this specification, an additional way of establishing reasonable assurances is
 available when the alternative is on the same host as the origin, using the "http-opportunistic"
@@ -136,8 +135,9 @@ This allows deployment without the use of valid certificates, to encourage deplo
 opportunistic security. When it is in use, the alternative service can provide any certificate, or
 even select TLS cipher suites that do not include authentication.
 
-When the client has a valid http-opportunistic response for an origin, it MAY consider there to be
-reasonable assurances when:
+A client acquires an http-opportunistic response by making a GET request to the "http-opportunistic"
+well-known URI.  When the client has a valid http-opportunistic response for an origin, it MAY
+consider there to be reasonable assurances when:
 
 * The origin and alternative service's hostnames are the same when compared in a case-insensitive
   fashion, and
@@ -174,10 +174,10 @@ connection.
 Since `https` URIs rely on server authentication, a connection that is initially created for `http`
 URIs without authenticating the server cannot be used for `https` URIs until the server certificate
 is successfully authenticated. Section 3.1 of {{RFC2818}} describes the basic mechanism, though the
-authentication considerations in {{I-D.ietf-httpbis-alt-svc}} also apply.
+authentication considerations in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}} also apply.
 
 Connections that are established without any means of server authentication (for instance, the
-purely anonymous TLS cipher suites), cannot be used for `https` URIs.
+purely anonymous TLS cipher suites) cannot be used for `https` URIs.
 
 
 # Requiring Use of TLS {#commit}
@@ -203,7 +203,7 @@ contacted. Effectively, this makes the choice to use a secured protocol "sticky"
 ## Opportunistic Commitment
 
 An origin can reduce the risk of attacks on opportunistically secured connections by committing to
-provide an secured, authenticated alternative service. This is done by including the optional
+provide a secured, authenticated alternative service. This is done by including the optional
 `commit` member in the http-opportunistic well-known resource (see {{well-known}}). This feature is
 optional due to the requirement for server authentication and the potential risk entailed (see
 {{pinrisks}}).
@@ -279,7 +279,7 @@ to have a valid http-opportunistic resource when:
 
 * The "origins" member of the root object has a value of an array of strings, one of which is a
   case-insensitive character-for-character match for the origin in question, serialised into
-  Unicode as per {{RFC6454}}, Section 6.1, and
+  Unicode as per Section 6.1 of {{RFC6454}}.
 
 This specification defines one additional, optional member of the root object, "commit" in
 {{commit}}. Unrecognised members MUST be ignored.
@@ -287,11 +287,11 @@ This specification defines one additional, optional member of the root object, "
 
 # IANA Considerations
 
-This specification registers a Well-known URI {{RFC5785}}:
+This specification registers a Well-Known URI {{RFC5785}}:
 
 * URI Suffix: http-opportunistic
 * Change Controller: IETF
-* Specification Document(s): \[this specification\]
+* Specification Document(s): {{well-known}} of \[this specification\]
 * Related Information:
 
 
@@ -306,9 +306,9 @@ used (e.g.,  a "lock device").
 
 ## Downgrade Attacks {#downgrade}
 
-A downgrade attack against the negotiation for TLS is possible. With commitment {{commit}}, this is
-limited to occasions where clients have no prior information (see {{privacy}}), or when persisted
-commitments have expired.
+A downgrade attack against the negotiation for TLS is possible. With commitment (see {{commit}}),
+this is limited to occasions where clients have no prior information (see {{privacy}}), or when
+persisted commitments have expired.
 
 For example, because the `Alt-Svc` header field {{I-D.ietf-httpbis-alt-svc}} likely appears in an
 unauthenticated and unencrypted channel, it is subject to downgrade by network attackers. In its
@@ -332,16 +332,15 @@ cookies).
 
 ## Confusion Regarding Request Scheme
 
-Many existing HTTP/1.1 implementations use the presence or absence of TLS in the stack to determine
-whether requests are for `http` or `https` resources. This is necessary in many cases because the
-most common form of an HTTP/1.1 request does not carry an explicit indication of the URI scheme.
-
-HTTP/1.1 MUST NOT be used for opportunistically secured requests.
-
 Some HTTP/1.1 implementations use ambient signals to determine if a request is for an `https`
-resource. For example, implementations might look for TLS on the stack or a port number of 443. An
-implementation that supports opportunistically secured requests SHOULD suppress these signals if
-there is any potential for confusion.
+resource. For example, implementations might look for TLS on the stack or a port number of 443. This
+is necessary in many cases because the most common form of an HTTP/1.1 request does not carry an
+explicit indication of the URI scheme.  An implementation that is serving an opportunistically
+secured request SHOULD suppress these signals for `http` resources.
+
+HTTP/1.1 MUST NOT be used to serve opportunistically secured requests. HTTP/1.1 can be used to
+discover an opportunistically secured alternative service.
+
 
 
 --- back
@@ -349,5 +348,5 @@ there is any potential for confusion.
 # Acknowledgements
 
 Thanks to Patrick McManus, Eliot Lear, Stephen Farrell, Guy Podjarny, Stephen Ludin, Erik Nygren,
-Paul Hoffman, Adam Langley, Eric Rescorla, Kari Hurtta, and Richard Barnes for their feedback and
-suggestions.
+Paul Hoffman, Adam Langley, Eric Rescorla, Julian Reschke, Kari Hurtta, and Richard Barnes for their
+feedback and suggestions.
