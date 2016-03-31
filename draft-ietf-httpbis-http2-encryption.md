@@ -279,7 +279,7 @@ to have a valid http-opportunistic resource when:
 
 * The "origins" member of the root object has a value of an array of strings, one of which is a
   case-insensitive character-for-character match for the origin in question, serialised into
-  Unicode as per {{RFC6454}}, Section 6.1, and
+  Unicode as per Section 6.1 of {{RFC6454}}.
 
 This specification defines one additional, optional member of the root object, "commit" in
 {{commit}}. Unrecognised members MUST be ignored.
