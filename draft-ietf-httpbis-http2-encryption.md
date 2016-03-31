@@ -135,8 +135,9 @@ This allows deployment without the use of valid certificates, to encourage deplo
 opportunistic security. When it is in use, the alternative service can provide any certificate, or
 even select TLS cipher suites that do not include authentication.
 
-When the client has a valid http-opportunistic response for an origin, it MAY consider there to be
-reasonable assurances when:
+A client acquires an http-opportunistic response by making a GET request to the "http-opportunistic"
+well-known URI.  When the client has a valid http-opportunistic response for an origin, it MAY
+consider there to be reasonable assurances when:
 
 * The origin and alternative service's hostnames are the same when compared in a case-insensitive
   fashion, and
@@ -173,7 +174,7 @@ connection.
 Since `https` URIs rely on server authentication, a connection that is initially created for `http`
 URIs without authenticating the server cannot be used for `https` URIs until the server certificate
 is successfully authenticated. Section 3.1 of {{RFC2818}} describes the basic mechanism, though the
-authentication considerations in {{I-D.ietf-httpbis-alt-svc}} also apply.
+authentication considerations in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}} also apply.
 
 Connections that are established without any means of server authentication (for instance, the
 purely anonymous TLS cipher suites), cannot be used for `https` URIs.
