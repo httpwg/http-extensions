@@ -147,7 +147,7 @@ consider there to be reasonable assurances when:
 For example, this request/response pair would constitute reasonable assurances for the origin
 "http://www.example.com" for any alternative service also on "www.example.com":
 
-~~~
+~~~ example
 GET /.well-known/http-opportunistic HTTP/1.1
 Host: www.example.com
 
