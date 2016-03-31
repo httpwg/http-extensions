@@ -287,11 +287,11 @@ This specification defines one additional, optional member of the root object, "
 
 # IANA Considerations
 
-This specification registers a Well-known URI {{RFC5785}}:
+This specification registers a Well-Known URI {{RFC5785}}:
 
 * URI Suffix: http-opportunistic
 * Change Controller: IETF
-* Specification Document(s): \[this specification\]
+* Specification Document(s): {{well-known}} of \[this specification\]
 * Related Information:
 
 
