@@ -306,9 +306,9 @@ used (e.g.,  a "lock device").
 
 ## Downgrade Attacks {#downgrade}
 
-A downgrade attack against the negotiation for TLS is possible. With commitment {{commit}}, this is
-limited to occasions where clients have no prior information (see {{privacy}}), or when persisted
-commitments have expired.
+A downgrade attack against the negotiation for TLS is possible. With commitment (see {{commit}}),
+this is limited to occasions where clients have no prior information (see {{privacy}}), or when
+persisted commitments have expired.
 
 For example, because the `Alt-Svc` header field {{I-D.ietf-httpbis-alt-svc}} likely appears in an
 unauthenticated and unencrypted channel, it is subject to downgrade by network attackers. In its
