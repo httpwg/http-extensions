@@ -172,7 +172,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    This specification defines a new concept in HTTP, the "<x:dfn>Alternative Service</x:dfn>".
    When an origin <xref target="RFC6454"/> has resources that are accessible through a
-   different protocol / host / port combination, it is said to have an alternative
+   different protocol/host/port combination, it is said to have an alternative
    service available.
 </t>
 <t>
@@ -213,7 +213,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    but potentially communication options for that protocol.
 </t>
 <t>
-   This means that clients using an alternative service can change the host, port
+   This means that clients using an alternative service can change the host, port,
    and protocol that they are using to fetch resources, but these changes &MUST-NOT;
    be propagated to the application that is using HTTP; from that standpoint, the
    URI being accessed and all information derived from it (scheme, host, port) are
@@ -362,7 +362,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    The client does not need to block requests on any existing connection; it can be
    used until the alternative connection is established. However, if the security
-   properties of the existing connection are weak (for example, cleartext HTTP/1.1) then
+   properties of the existing connection are weak (for example, cleartext HTTP/1.1), then
    it might make sense to block until the new connection is fully available in
    order to avoid information leakage.
 </t>
@@ -490,7 +490,7 @@ Alt-Svc: h2="alt.example.com:8000", h2=":443"
 <t>
    The value(s) advertised by Alt-Svc can be used by clients to open a new
    connection to an alternative service. Subsequent requests can start using this new connection
-   immediately, or can continue using the existing connection while the new connection is created.
+   immediately or can continue using the existing connection while the new connection is created.
 </t>
 <t>
    When using HTTP/2 (<xref target="RFC7540"/>), servers &SHOULD; instead send an ALTSVC frame
@@ -553,7 +553,7 @@ Alt-Svc: h2=":8000"; ma=60
 <postamble>
    indicates that an alternative service is available and usable for the next 60
    seconds. However, the response has already been cached for 30 seconds (as per
-   the Age header field value), so therefore the alternative service is only fresh
+   the Age header field value); therefore the alternative service is only fresh
    for the 30 seconds from when this response was received, minus estimated
    transit time.
 </postamble>
@@ -568,7 +568,7 @@ Alt-Svc: h2=":8000"; ma=60
 </t>
 <t>
    By default, cached alternative services will be cleared when the client detects a network
-   change. Alternative services that are intended to be longer-lived (such as those that are not
+   change. Alternative services that are intended to be longer lived (such as those that are not
    specific to the client access network) can carry the "persist" parameter with a value "1" as a
    hint that the service is potentially useful beyond a network configuration change.
 </t><figure>
@@ -871,9 +871,9 @@ Alt-Used: alternate.example.net
 </t>
 <t>
    Alternative services could be used to persist such an attack. For example, an
-   intermediary could man-in-the-middle TLS-protected communication to a target,
+   intermediary could man-in-the-middle TLS-protected communication to a target
    and then direct all traffic to an alternative service with a large freshness
-   lifetime, so that the user agent still directs traffic to the attacker even when
+   lifetime so that the user agent still directs traffic to the attacker even when
    not using the intermediary.
 </t>
 <t>
@@ -898,7 +898,7 @@ Alt-Used: alternate.example.net
    expectations for security that the URI scheme implies.
    Therefore, clients cannot blindly use alternative services, but instead evaluate
    the option(s) presented to assure that security requirements and expectations
-   of specifications, implementations and end users are met.
+   of specifications, implementations, and end users are met.
 </t>
 </section>
 
