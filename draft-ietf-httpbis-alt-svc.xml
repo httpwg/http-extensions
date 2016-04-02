@@ -702,7 +702,7 @@ Alt-Used: alternate.example.net
 </figure>
 </section>
 
-<section title="The 421 Misdirected Request HTTP Status Code" anchor="status">
+<section title="The 421 (Misdirected Request) HTTP Status Code" anchor="status">
 <t>
    The 421 (Misdirected Request) status code is defined in <xref target="RFC7540"
    x:fmt="of" x:rel="#MisdirectedRequest"/> to indicate that the current server
@@ -920,7 +920,7 @@ Alt-Used: alternate.example.net
 </t>
 </section>
 
-<section title="Confusion Regarding Request Scheme" anchor="confusion-regarding-request-scheme">
+<section title="Confusion regarding Request Scheme" anchor="confusion-regarding-request-scheme">
 <t>
   Some server-side HTTP applications make assumptions about security based upon
   connection context; for example, equating being served upon port 443 with the
