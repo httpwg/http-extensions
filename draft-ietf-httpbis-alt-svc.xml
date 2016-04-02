@@ -732,7 +732,7 @@ Alt-Used: alternate.example.net
 </t>
 <t>
    This document defines the following HTTP header fields, so their associated
-   registry entries shall be added according to the permanent registrations below
+   registry entries have been added according to the permanent registrations below
    (see <xref target="BCP90"/>):
 </t>
 <texttable align="left" suppress-title="true" anchor="iana.header.registration.table">
@@ -755,13 +755,13 @@ Alt-Used: alternate.example.net
    </c>
 </texttable>
 <t>
-  The change controller is: "IETF (iesg@ietf.org) - Internet Engineering Task Force".
+  The change controller is: "IETF (iesg@ietf.org) -- Internet Engineering Task Force".
 </t>
 </section>
 
 <section anchor="alt-svc-frame-registration" title="The ALTSVC HTTP/2 Frame Type">
 <t>
-  This document registers the ALTSVC frame type in the HTTP/2 Frame Types
+  This document registers the ALTSVC frame type in the "HTTP/2 Frame Type"
   registry (<xref target="RFC7540" x:fmt="," x:rel="#iana-frames"/>).
   <list style="empty">
     <t>Frame Type: ALTSVC</t>
@@ -773,8 +773,8 @@ Alt-Used: alternate.example.net
 
 <section anchor="iana.parameters" title="Alt-Svc Parameter Registry">
 <t>
-   The HTTP Alt-Svc Parameter Registry defines the name space for
-   parameters. It will be created and maintained at (the suggested URI)
+   The "Hypertext Transfer Protocol (HTTP) Alt-Svc Parameter Registry" defines the name space for
+   parameters. It has been created and will be maintained at
    <eref target="http://www.iana.org/assignments/http-alt-svc-parameters"/>.
 </t>
 
@@ -794,7 +794,7 @@ Alt-Used: alternate.example.net
 
 <section title="Registrations" anchor="parameter.registrations">
 <t>
-  The HTTP Alt-Svc Parameter Registry is to be populated with the registrations below:
+  The "Hypertext Transfer Protocol (HTTP) Alt-Svc Parameter Registry" has been populated with the registrations below:
 </t>
 <texttable align="left" suppress-title="true">
    <ttcol>Alt-Svc Parameter</ttcol>
