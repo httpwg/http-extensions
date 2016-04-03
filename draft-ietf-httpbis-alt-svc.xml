@@ -1431,7 +1431,8 @@ Alt-Used: alternate.example.net
 
 <section title="Since draft-ietf-httpbis-alt-svc-14" anchor="changes.since.draft-ietf-httpbis-alt-svc-14">
 <t>
-  None yet.
+  Editorial changes made during RFC Editor's AUTH48 stage
+  (<eref target="https://github.com/httpwg/http-extensions/issues/165"/>).
 </t>
 </section>
 </section>
