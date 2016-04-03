@@ -216,7 +216,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    This means that clients using an alternative service can change the host, port,
    and protocol that they are using to fetch resources, but these changes &MUST-NOT;
    be propagated to the application that is using HTTP; from that standpoint, the
-   URI being accessed and all information derived from it (scheme, host, port) are
+   URI being accessed and all information derived from it (scheme, host, and port) are
    the same as before.
 </t>
 <t>
@@ -249,10 +249,8 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    HTTP/1.1 over TLS.
 </t>
 <t>
-   Additionally, each alternative service &MUST; have:
-  <list style="symbols">
-    <t>A freshness lifetime, expressed in seconds; see <xref target="caching"/></t>
-  </list>
+   Additionally, each alternative service &MUST; have a freshness lifetime,
+   expressed in seconds (see <xref target="caching"/>).
 </t>
 <t>
    There are many ways that a client could discover the alternative service(s)
@@ -311,7 +309,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    When alternative services are used to send a client to the most optimal server, a change in
    network configuration can result in cached values becoming suboptimal. Therefore, clients &SHOULD;
-   remove from cache all alternative services that lack the "persist" flag with the value "1" when
+   remove from the cache all alternative services that lack the "persist" flag with the value "1" when
    they detect such a change, when information about network state is available. 
 </t>
 </section>
@@ -332,7 +330,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    By their nature, alternative services are &OPTIONAL;: clients do not need to
    use them. However, it is advantageous for clients to behave in a predictable
-   way when alternative services are used by servers, to aid purposes like load balancing.
+   way when alternative services are used by servers, to aid in purposes like load balancing.
 </t>
 <t>
    Therefore, if a client supporting this specification becomes aware of an alternative service,
@@ -529,8 +527,8 @@ Alt-Svc: h2="alt.example.com:8000", h2=":443"
 ma = <x:ref>delta-seconds</x:ref>; see <xref target="RFC7234" x:fmt="," x:rel="#delta-seconds"/>
 </artwork></figure>
 <t>
-   The delta-seconds value indicates the number of seconds since the response was generated the
-   alternative service is considered fresh for.
+   The delta-seconds value indicates the number of seconds since the response was generated for which the
+   alternative service is considered fresh.
 </t>
 <figure>
   <artwork type="example">
@@ -538,8 +536,8 @@ Alt-Svc: h2=":443"; ma=3600
 </artwork>
 </figure>
 <t>
-   See <xref target="RFC7234" x:rel="#age.calculations" x:fmt="of"/> for details of determining
-   response age.
+   See <xref target="RFC7234" x:rel="#age.calculations" x:fmt="of"/> for details on determining
+   the response age.
 </t>
 <figure>
   <preamble>For example, a response:</preamble>
@@ -635,8 +633,8 @@ Alt-Svc: h2=":443"; ma=2592000; persist=1
     </t>
     <t hangText="Origin:">
       An &OPTIONAL; sequence of characters containing the ASCII serialization of an
-      origin (<xref target="RFC6454" x:fmt="," x:sec="6.2"/>) that the alternative
-      service is applicable to.
+      origin (<xref target="RFC6454" x:fmt="," x:sec="6.2"/>) to which the alternative
+      service is applicable.
     </t>
     <t hangText="Alt-Svc-Field-Value:">
       A sequence of octets (length determined by subtracting the length of all preceding fields
@@ -673,8 +671,8 @@ Alt-Svc: h2=":443"; ma=2592000; persist=1
 
 <section title="The Alt-Used HTTP Header Field" anchor="indicator">
 <t>
-   The Alt-Used header field is used in requests to indicate the identity of
-   the  alternative service in use, just as the Host header field (<xref target="RFC7230" x:rel="#header.host"/>)
+   The Alt-Used header field is used in requests to identify the alternative
+   service in use, just as the Host header field (<xref target="RFC7230" x:rel="#header.host"/>)
    identifies the host and port of the origin.
 </t>
 <figure>
