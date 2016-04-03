@@ -518,7 +518,7 @@ Alt-Svc: h2="alt.example.com:8000", h2=":443"
 <section title="Caching Alt-Svc Header Field Values" anchor="caching-alt-svc-header-field-values">
 <t>
    When an alternative service is advertised using Alt-Svc, it is considered fresh
-   for 24 hours from generation of the message. This can be modified with the 'ma'
+   for 24 hours from generation of the message. This can be modified with the "ma"
    (max-age) parameter.
 </t>
 <figure>
