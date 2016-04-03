@@ -824,10 +824,10 @@ Alt-Used: alternate.example.net
 <section title="Changing Ports" anchor="changing-ports">
 <t>
    Using an alternative service implies accessing an origin's resources on an
-   alternative port, at a minimum. An attacker that can inject alternative services
-   and listen at the advertised port is therefore able to hijack an origin.  On
+   alternative port, at a minimum. Therefore, an attacker that can inject alternative services
+   and listen at the advertised port is able to hijack an origin.  On
    certain servers, it is normal for users to be able to control some personal
-   pages available on a shared port, and also to accept to requests on less-privileged
+   pages available on a shared port and also to accept requests on less-privileged
    ports.
 </t>
 <t>
@@ -847,7 +847,7 @@ Alt-Used: alternate.example.net
 
 <section title="Changing Hosts" anchor="host_security">
 <t>
-   When the host is changed due to the use of an alternative service, it presents
+   When the host is changed due to the use of an alternative service, this presents
    an opportunity for attackers to hijack communication to an origin.
 </t>
 <t>
@@ -892,10 +892,10 @@ Alt-Used: alternate.example.net
 </t>
 <t>
    For example, if an "https://" URI has a protocol advertised that does not use
-   some form of end-to-end encryption (most likely, TLS), it violates the
+   some form of end-to-end encryption (most likely, TLS), this violates the
    expectations for security that the URI scheme implies.
-   Therefore, clients cannot blindly use alternative services, but instead evaluate
-   the option(s) presented to assure that security requirements and expectations
+   Therefore, clients cannot use alternative services blindly, but instead evaluate
+   the option(s) presented to ensure that security requirements and expectations
    of specifications, implementations, and end users are met.
 </t>
 </section>
