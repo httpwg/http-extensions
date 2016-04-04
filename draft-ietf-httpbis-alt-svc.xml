@@ -309,7 +309,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
 <t>
    When alternative services are used to send a client to the most optimal server, a change in
    network configuration can result in cached values becoming suboptimal. Therefore, clients &SHOULD;
-   remove from the cache all alternative services that lack the "persist" flag with the value "1" when
+   remove from cache all alternative services that lack the "persist" flag with the value "1" when
    they detect such a change, when information about network state is available. 
 </t>
 </section>
