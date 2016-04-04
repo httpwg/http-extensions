@@ -44,6 +44,7 @@ normative:
     seriesinfo: IEEE Transactions on Information Theory, V.IT-22 n.6
 
 informative:
+  RFC4648:
   RFC4880:
   RFC5226:
   RFC5246:
