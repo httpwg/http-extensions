@@ -224,7 +224,7 @@ request, each field-name in Key identifies a potential request header, just as w
 response header field.
 
 However, each of these can have zero to many key parameters that change how the response selection
-process (as defined in {{RFC7234}}, Section 4.3)) works.
+process (as defined in {{RFC7234}}, Section 4.3) works.
 
 In particular, when a cache fully implements this specification, it creates a secondary cache key
 for every request by following the instructions in the Key header field, ignoring the Vary header
@@ -240,7 +240,7 @@ response) using Key, the following steps are taken:
 1. If the Key header field is not present on the most recent cacheable (as per {{RFC7234}}, Section 3)) response seen for the resource, abort this algorithm (i.e., fall back to using Vary to determine the secondary cache key).
 2. Let `key_value` be the result of Creating a Header Field Value ({{value}}) with `key` as the `target_field_name` and the most recently seen response header list for the resource as `header_list`.
 3. Let `secondary_key` be an empty string.
-4. Create `key_list` by splitting `key_value` on "," characters, excepting "," characters within quoted strings, as per {{RFC7230}} Section 3.2.6..
+4. Create `key_list` by splitting `key_value` on "," characters, excepting "," characters within quoted strings, as per {{RFC7230}}, Section 3.2.6.
 5. For `key_item` in `key_list`: 
 
    {: style="format %d)" counter="b"}
@@ -249,7 +249,7 @@ response) using Key, the following steps are taken:
    3. Let `field_name` be the string before the first ";" character in `key_item`, removing any WSP between them.
    4. Let `field_value` be the result of Creating a Header Field Value ({{value}}) with `field_name` as the `target_field_name` and the request header list as `header_list`.
    5. Let `parameters` be the string after the first ";" character in `key_item`, removing any WSP between them.
-   6. Create `param_list` by splitting `parameters` on ";" characters, excepting ";" characters within quoted strings, as per {{RFC7230}} Section 3.2.6.
+   6. Create `param_list` by splitting `parameters` on ";" characters, excepting ";" characters within quoted strings, as per {{RFC7230}}, Section 3.2.6.
    7. For `parameter` in `param_list`:
 
       {: style="format %d)"  counter="c"}
@@ -262,9 +262,9 @@ response) using Key, the following steps are taken:
       
          {: style="format %d)" counter="d"}
          1. Remove the first and last characters of `param_value`.
-         2. Replace quoted-pairs within `param_value` with the octet following the backslash, as per {{RFC7230}} Section 3.2.6.
-      7. If `param_value` does not conform to the syntax defined for it by the parameter definition, fail parameter processing {{fail-param}} and skip to the next `key_item`.
-      8. Run the identified processing algorithm on `field_value` with the `param_value`, and append the result to `secondary_key`. If parameter processing fails {{fail-param}}, skip to the next `key_item`.
+         2. Replace quoted-pairs within `param_value` with the octet following the backslash, as per {{RFC7230}}, Section 3.2.6.
+      7. If `param_value` does not conform to the syntax defined for it by the parameter definition, fail parameter processing ({{fail-param}}) and skip to the next `key_item`.
+      8. Run the identified processing algorithm on `field_value` with the `param_value`, and append the result to `secondary_key`. If parameter processing fails ({{fail-param}}), skip to the next `key_item`.
       9. Append a separator character (e.g., NULL) to `secondary_key`.
 6. Return `secondary_key`.
 
@@ -332,7 +332,7 @@ div    = 1*DIGIT
 To process a set of header fields against a div parameter, follow these steps (or their equivalent):
 
 {: style="format %d)"}
-1. If `parameter_value` is "0", fail parameter processing {{fail-param}}.
+1. If `parameter_value` is "0", fail parameter processing ({{fail-param}}).
 2. If `header_value` is the empty string, return "none".
 3. If `header_value` contains a ",", remove it and all subsequent characters.
 4. Remove all WSP characters from `header_value`.
