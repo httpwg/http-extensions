@@ -210,7 +210,7 @@ uri-host      = &lt;uri-host, see <xref target="RFC7230" x:rel="#uri"/>&gt;
    Furthermore, it is important to note that the first member of an alternative
    service tuple is different from the "scheme" component of an origin; it is more
    specific, identifying not only the major version of the protocol being used,
-   but potentially communication options for that protocol.
+   but potentially the communication options for that protocol as well.
 </t>
 <t>
    This means that clients using an alternative service can change the host, port,
