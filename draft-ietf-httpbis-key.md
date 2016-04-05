@@ -86,6 +86,14 @@ For example, if the nature of the response depends upon the presence or absence 
 Cookie ({{RFC6265}}) in a request, Vary doesn't have a mechanism to offer enough fine-grained,
 resource-specific information to aid a cache's selection of the appropriate response.
 
+Additionally, when new selecting headers are defined, caches need to be updated to understand their
+semantics before Vary can operate over them efficiently; due to the sometimes slow rate of cache
+deployment, this can be problematic.
+
+Finally, Vary has proven to be difficult to implement correctly and efficiently by high-performance
+intermediary caches, because doing so involves examining all cached responses with the request's
+URL.
+
 This document defines a new response header field, "Key", that allows resources to describe the
 secondary cache key in a fine-grained, resource-specific manner, leading to improved cache
 efficiency when responses depend upon such headers.
