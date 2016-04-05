@@ -91,7 +91,7 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences.
 
-One way to infer some of these capabilities is through User-Agent (UA; section 5.5.3 of {{RFC7231}}) detection against an established database of client signatures. However, this technique requires acquiring such a database, integrating it into the serving path, and keeping it up to date. However, even once this infrastructure is deployed, UA sniffing has numerous limitations:
+One way to infer some of these capabilities is through User-Agent (UA; Section 5.5.3 of {{RFC7231}}) detection against an established database of client signatures. However, this technique requires acquiring such a database, integrating it into the serving path, and keeping it up to date. However, even once this infrastructure is deployed, UA sniffing has numerous limitations:
 
   - UA detection cannot reliably identify all static variables
   - UA detection cannot infer any dynamic client preferences
@@ -100,7 +100,7 @@ One way to infer some of these capabilities is through User-Agent (UA; section 5
 
 A popular alternative strategy is to use HTTP cookies ({{RFC6265}}) to communicate some information about the client. However, this approach is also not cache friendly, bound by same origin policy, and imposes additional client-side latency by requiring JavaScript execution to create and manage HTTP cookies.
 
-This document defines a set of new request header fields that allow the client to perform proactive content negotiation (section 3.4.1 of {{RFC7231}}) by indicating a list of device and agent specific preferences, through a mechanism similar to the Accept header field which is used to indicate preferred response formats.
+This document defines a set of new request header fields that allow the client to perform proactive content negotiation (Section 3.4.1 of {{RFC7231}}) by indicating a list of device and agent specific preferences, through a mechanism similar to the Accept header field which is used to indicate preferred response formats.
 
 Client Hints does not supersede or replace the User-Agent header field. Existing device detection mechanisms can continue to use both mechanisms if necessary. By advertising its capabilities within a request header field, Client Hints allows for cache friendly and proactive content negotiation.
 
@@ -124,7 +124,7 @@ The client and server, or an intermediate proxy, can use an opt-in mechanism to 
 
 ## Server Processing of Client Hints
 
-Servers respond with an optimized response based on one or more received hints from the client. When doing so, and if the resource is cacheable, the server MUST also emit a Vary response header field (section 7.1.4 of {{RFC7231}}), and optionally Key ({{I-D.ietf-httpbis-key}}), to indicate which hints were used and whether the selected response is appropriate for a later request.
+Servers respond with an optimized response based on one or more received hints from the client. When doing so, and if the resource is cacheable, the server MUST also emit a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{I-D.ietf-httpbis-key}}), to indicate which hints were used and whether the selected response is appropriate for a later request.
 
 Further, depending on the used hint, the server can emit additional response header fields to confirm the property of the response, such that the client can adjust its processing. For example, this specification defines "Content-DPR" response header field that needs to be returned by the server when the "DPR" hint is used to select the response.
 
@@ -185,7 +185,7 @@ Above example indicates that the cache key needs to include the (Mbps) value of 
 
 # The DPR Client Hint {#dpr}
 
-The "DPR" request header field is a number that indicates the client's current Device Pixel Ratio (DPR), which is the ratio of physical pixels over CSS px (section 5.2 of {{W3C.CR-css-values-3-20150611}}) of the layout viewport (Section 9.1.1 of [CSS2]) on the device.
+The "DPR" request header field is a number that indicates the client's current Device Pixel Ratio (DPR), which is the ratio of physical pixels over CSS px (Section 5.2 of {{W3C.CR-css-values-3-20150611}}) of the layout viewport (Section 9.1.1 of [CSS2]) on the device.
 
 ~~~ abnf7230
   DPR = 1*DIGIT [ "." 1*DIGIT ]
