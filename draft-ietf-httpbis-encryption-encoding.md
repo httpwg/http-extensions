@@ -344,7 +344,7 @@ Thus, the final nonce for each record is a 12 octet value:
 
 # Crypto-Key Header Field {#crypto-key}
 
-An Crypto-Key header field can be used to describe the input keying material
+A Crypto-Key header field can be used to describe the input keying material
 used in the Encryption header field.
 
 The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
