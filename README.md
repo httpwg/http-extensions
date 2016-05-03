@@ -32,15 +32,6 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Arfc5987bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc5987bis/)
 
 
-### Alternative Services
-
-In **RFC Editor Queue**
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/alt-svc.html) ([plain text](https://httpwg.github.io/http-extensions/alt-svc.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aalt-svc) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-alt-svc/)
-
-
 ### HTTP Opportunistic Security
 
 In **Working Group Last Call** until 1 April 2016
