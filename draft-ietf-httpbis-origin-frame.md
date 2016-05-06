@@ -7,7 +7,7 @@ category: std
 
 ipr: trust200902
 area: General
-workgroup: 
+workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes
