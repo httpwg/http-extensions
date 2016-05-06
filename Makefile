@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -l
 kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=http://unicorn-wg.github.io/idrefs kramdown-rfc2629
 
-names := http2-encryption alt-svc rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame
+names := http2-encryption rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := opsec alt-svc rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame
+friendly_names := opsec rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
@@ -37,9 +37,6 @@ clean:
 	-rm -f $(addsuffix *.html,$(drafts))
 
 opsec.%: draft-ietf-httpbis-http2-encryption.%
-	cp -f $< $@
-
-alt-svc.%: draft-ietf-httpbis-alt-svc.%
 	cp -f $< $@
 
 rfc5987bis.%: draft-ietf-httpbis-rfc5987bis.%
