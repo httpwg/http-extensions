@@ -36,7 +36,7 @@ normative:
   RFC7230:
   RFC7234:
   RFC7540:
-  I-D.ietf-httpbis-alt-svc:
+  RFC7838:
 
 informative:
   RFC7258:
@@ -61,7 +61,7 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 
 # Introduction
 
-This document describes a use of HTTP Alternative Services {{I-D.ietf-httpbis-alt-svc}} to decouple
+This document describes a use of HTTP Alternative Services {{RFC7838}} to decouple
 the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI
 {{RFC7230}} to be accessed using Transport Layer Security (TLS) {{RFC5246}} opportunistically.
 
@@ -101,11 +101,11 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 # Using HTTP URIs over TLS
 
 An origin server that supports the resolution of `http` URIs can indicate support for this
-specification by providing an alternative service advertisement {{I-D.ietf-httpbis-alt-svc}} for a
-protocol identifier that uses TLS, such as `h2` {{RFC7540}}.
+specification by providing an alternative service advertisement {{RFC7838}} for a protocol
+identifier that uses TLS, such as `h2` {{RFC7540}}.
 
 A client that receives such an advertisement MAY make future requests intended for the associated
-origin ({{RFC6454}}) to the identified service (as specified by {{I-D.ietf-httpbis-alt-svc}}).
+origin ({{RFC6454}}) to the identified service (as specified by {{RFC7838}}).
 
 A client that places the importance of protection against passive attacks over performance might
 choose to withhold requests until an encrypted connection is available. However, if such a
@@ -120,8 +120,8 @@ in order minimize the delays that might be incurred.
 
 # Server Authentication {#auth}
 
-{{I-D.ietf-httpbis-alt-svc}} requires that an alternative service only be used when there are
-"reasonable assurances" that it is under control of and valid for the whole origin.
+{{RFC7838}} requires that an alternative service only be used when there are "reasonable
+assurances" that it is under control of and valid for the whole origin.
 
 As defined in that specification, one way of establishing this is using a TLS-based protocol with
 the certificate checks defined in {{RFC2818}}. Clients are permitted to impose additional criteria
@@ -174,7 +174,7 @@ connection.
 Since `https` URIs rely on server authentication, a connection that is initially created for `http`
 URIs without authenticating the server cannot be used for `https` URIs until the server certificate
 is successfully authenticated. Section 3.1 of {{RFC2818}} describes the basic mechanism, though the
-authentication considerations in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}} also apply.
+authentication considerations in Section 2.1 of {{RFC7838}} also apply.
 
 Connections that are established without any means of server authentication (for instance, the
 purely anonymous TLS cipher suites) cannot be used for `https` URIs.
@@ -228,9 +228,9 @@ available for the indicated period. Clients might however choose to limit this t
 The value of the `commit` member MUST be ignored unless the alternative service can be strongly
 authenticated. The same authentication requirements that apply to `https://` resources SHOULD be
 applied to authenticating the alternative. Minimum authentication requirements for HTTP over TLS
-are described in Section 2.1 of {{I-D.ietf-httpbis-alt-svc}} and Section 3.1 of {{RFC2818}}. As
-noted in {{I-D.ietf-httpbis-alt-svc}}, clients can impose other checks in addition to this minimum
-set. For instance, a client might choose to apply key pinning {{RFC7469}}.
+are described in Section 2.1 of {{RFC7838}} and Section 3.1 of {{RFC2818}}. As noted in
+{{RFC7838}}, clients can impose other checks in addition to this minimum set. For instance, a
+client might choose to apply key pinning {{RFC7469}}.
 
 A client that receives a commitment and that successfully authenticates the alternative service can
 assume that a secured alternative will remain available for the commitment interval. The commitment
@@ -310,10 +310,10 @@ A downgrade attack against the negotiation for TLS is possible. With commitment 
 this is limited to occasions where clients have no prior information (see {{privacy}}), or when
 persisted commitments have expired.
 
-For example, because the `Alt-Svc` header field {{I-D.ietf-httpbis-alt-svc}} likely appears in an
-unauthenticated and unencrypted channel, it is subject to downgrade by network attackers. In its
-simplest form, an attacker that wants the connection to remain in the clear need only strip the
-`Alt-Svc` header field from responses.
+For example, because the `Alt-Svc` header field {{RFC7838}} likely appears in an unauthenticated
+and unencrypted channel, it is subject to downgrade by network attackers. In its simplest form, an
+attacker that wants the connection to remain in the clear need only strip the `Alt-Svc` header
+field from responses.
 
 Downgrade attacks can be partially mitigated using the `commit` member of the http-opportunistic
 well-known resource, because when it is used, a client can avoid using cleartext to contact a
