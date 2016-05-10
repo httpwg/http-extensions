@@ -332,15 +332,21 @@ cookies).
 
 ## Confusion Regarding Request Scheme
 
-Some HTTP/1.1 implementations use ambient signals to determine if a request is for an `https`
-resource. For example, implementations might look for TLS on the stack or a port number of 443. This
-is necessary in many cases because the most common form of an HTTP/1.1 request does not carry an
-explicit indication of the URI scheme.  An implementation that is serving an opportunistically
-secured request SHOULD suppress these signals for `http` resources.
+HTTP implementations and applications sometimes use ambient signals to determine if a request is
+for an `https` resource; for example, they might look for TLS on the stack, or a server port number
+of 443.
 
-HTTP/1.1 MUST NOT be used to serve opportunistically secured requests. HTTP/1.1 can be used to
-discover an opportunistically secured alternative service.
+This might be due to limitations in the protocol (the most common HTTP/1.1 request form does
+not carry an explicit indication of the URI scheme), or it may be because how the server and
+application are implemented (often, they are two separate entities, with a variety of possible
+interfaces between them).
 
+Any security decisions based upon this information could be misled by the deployment of this
+specification, because it violates the assumption that the use of TLS (or port 443) means that the
+client is accessing a HTTPS URI, and operating in the security context implied by HTTPS.
+
+Therefore, servers need to carefully examine the use of such signals before deploying this
+specification.
 
 
 --- back
