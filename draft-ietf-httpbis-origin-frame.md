@@ -57,7 +57,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
 {{RFC2119}}.
 
-## The ORIGIN HTTP/2 Frame
+# The ORIGIN HTTP/2 Frame
 
 The ORIGIN HTTP/2 frame ({{RFC7540}}, Section 4) indicates what origin(s) {{RFC6454}} the sender
 considers this connection authoritative for (in the sense of {{RFC7540}}, Section 10.1).
@@ -91,9 +91,10 @@ The ORIGIN frame contains the following fields, sets of which may be
 	repeated within the frame to indicate multiple origins:
 
 Origin-Len:
-  An unsigned, 16-bit integer indicating the length, in octets, of the Origin field.
+: An unsigned, 16-bit integer indicating the length, in octets, of the Origin field.
+
 Origin:
-  An optional sequence of characters containing the ASCII serialization of an origin ({{RFC6454}}, Section 6.2) that the sender believes this connection is authoritative for.
+: An optional sequence of characters containing the ASCII serialization of an origin ({{RFC6454}}, Section 6.2) that the sender believes this connection is authoritative for.
 
 The ORIGIN frame does not define any flags. It can contain one or more Origin-Len/Origin pairs.
 
