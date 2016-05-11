@@ -106,7 +106,7 @@ Origin:
 
 The ORIGIN frame does not define any flags. It can contain one or more Origin-Len/Origin pairs.
 
-The ORIGIN frame is processed hop-by-hop. An intermediary must not forward ORIGIN frames.
+The ORIGIN frame is processed hop-by-hop. An intermediary MUST NOT forward ORIGIN frames.
 
 Clients configured to use a proxy MUST ignore any ORIGIN frames received from it.
 
