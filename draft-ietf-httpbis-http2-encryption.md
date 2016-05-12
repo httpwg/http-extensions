@@ -203,7 +203,7 @@ contacted. Effectively, this makes the choice to use a secured protocol "sticky"
 
 An origin can reduce the risk of attacks on opportunistically secured connections by committing to
 provide a secured, authenticated alternative service. This is done by including the optional
-`commit` member in the http-opportunistic well-known resource (see {{well-known}}). This feature is
+`commit` member in the http-opportunistic well-known response (see {{well-known}}). This feature is
 optional due to the requirement for server authentication and the potential risk entailed (see
 {{pinrisks}}).
 
@@ -266,8 +266,8 @@ persistence - might increase as a commitment is renewed multiple times.
 
 # The "http-opportunistic" well-known URI {#well-known}
 
-This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. An origin is said
-to have a valid http-opportunistic resource when:
+This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said
+to have a valid http-opportunistic response for a given origin when:
 
 * The client has obtained a 200 (OK) response for the well-known URI from the origin, or refreshed
   one in cache {{RFC7234}}, and
