@@ -53,7 +53,7 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 HTTP/2 {{RFC7540}} allows clients to coalesce different origins {{RFC6454}} onto the same
 connection when certain conditions are met. In some cases, the server is not authoritative for a
-coalesced origin, so the 421 (Misdirected Request) status code was defined.
+coalesced origin, so the 421 (Misdirected Request) status code ({{RFC7540}}, Section 9.1.2) was defined.
 
 Using a status code in this manner allows clients to recover from misdirected requests, but at the
 penalty of adding latency. To address that, this specification defines a new HTTP/2 frame type,
@@ -106,7 +106,7 @@ Origin:
 
 The ORIGIN frame does not define any flags. It can contain one or more Origin-Len/Origin pairs.
 
-The ORIGIN frame is processed hop-by-hop. An intermediary must not forward ORIGIN frames.
+The ORIGIN frame is processed hop-by-hop. An intermediary MUST NOT forward ORIGIN frames.
 
 Clients configured to use a proxy MUST ignore any ORIGIN frames received from it.
 
