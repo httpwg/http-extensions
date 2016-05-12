@@ -134,9 +134,8 @@ This allows deployment without the use of valid certificates, to encourage deplo
 opportunistic security. When it is in use, the alternative service can provide any certificate, or
 even select TLS cipher suites that do not include authentication.
 
-A client acquires an http-opportunistic response by making a GET request to the "http-opportunistic"
-well-known URI.  When the client has a valid http-opportunistic response for an origin, it MAY
-consider there to be reasonable assurances when:
+When a client has a valid http-opportunistic response for an origin, it MAY consider there to be
+reasonable assurances as long as:
 
 * The origin and alternative service's hostnames are the same when compared in a case-insensitive
   fashion, and
