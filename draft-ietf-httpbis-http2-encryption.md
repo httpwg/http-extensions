@@ -140,7 +140,8 @@ reasonable assurances as long as:
 * The origin and alternative service's hostnames are the same when compared in a case-insensitive
   fashion, and
 
-* The chosen alternative service returns the same response as above.
+* The chosen alternative service returns the same representation as the origin did for the
+  http-opportunistic resource.
 
 For example, this request/response pair would constitute reasonable assurances for the origin
 "http://www.example.com" for any alternative service also on "www.example.com":
