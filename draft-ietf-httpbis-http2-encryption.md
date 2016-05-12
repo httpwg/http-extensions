@@ -140,11 +140,16 @@ consider there to be reasonable assurances as long as:
 * The origin and alternative service's hostnames are the same when compared in a case-insensitive
   fashion, and
 
+* The member of the "origins" object in the http-opportunistic response that matches the origin has
+  an array of numbers as a value, one of which matches the port of the alternative service in
+  question, and
+
 * The chosen alternative service returns the same representation as the origin did for the
   http-opportunistic resource.
 
 For example, this request/response pair would constitute reasonable assurances for the origin
-"http://www.example.com" for any alternative service also on "www.example.com":
+"http://www.example.com" for an alternative service on port 443 or 8000 of the host
+"www.example.com":
 
 ~~~ example
 GET /.well-known/http-opportunistic HTTP/1.1
@@ -155,7 +160,7 @@ Content-Type: application/json
 Connection: close
 
 {
-  "origins": ["http://www.example.com"]
+  "origins": {"http://www.example.com": [443, 8000]}
 }
 ~~~
 
@@ -212,7 +217,7 @@ commitment interval in seconds.
 
 ~~~ example
 {
-  "origins": ["http://example.com", "http://www.example.com:81"],
+  "origins": {"http://example.com": [], "http://www.example.com:81": [8000]},
   "commit": 86400
 }
 ~~~
@@ -276,9 +281,11 @@ to have a valid http-opportunistic response for a given origin when:
 
 * That response's payload, when parsed as JSON {{RFC7159}}, contains an object as the root.
 
-* The "origins" member of the root object has a value of an array of strings, one of which is a
-  case-insensitive character-for-character match for the origin in question, serialised into
-  Unicode as per Section 6.1 of {{RFC6454}}.
+* The root object contains an "origins" member, whose value is a object.
+
+* One of the "origins" object's members has a name that is a case-insensitive
+  character-for-character match for the origin in question, serialised into Unicode as per Section
+  6.1 of {{RFC6454}}.
 
 This specification defines one additional, optional member of the root object, "commit" in
 {{commit}}. Unrecognised members MUST be ignored.
