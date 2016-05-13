@@ -217,7 +217,10 @@ commitment interval in seconds.
 
 ~~~ example
 {
-  "origins": {"http://example.com": [], "http://www.example.com:81": [8000]},
+  "origins": {
+    "http://example.com": [],
+    "http://www.example.com:81": [8000]
+  },
   "commit": 86400
 }
 ~~~
