@@ -65,7 +65,7 @@ normative:
       ins: H. W. Lie
     seriesinfo:
       "W3C Recommendation": REC-CSS2-20110607
-    
+
 informative:
   RFC6265:
 
@@ -247,10 +247,11 @@ If Downlink occurs in a message more than once, the minimum value should be used
 The "Save-Data" request header field is a token that indicates client's preference for reduced data usage, due to high transfer costs, slow connection speeds, or other reasons.
 
 ~~~ abnf7230
-  Save-Data = "on"
+  Save-Data : sd-token *( ";" [sd-token] )
+  sd-token = token
 ~~~
 
-The token is a signal indicating explicit user opt-in into a reduced data usage mode on the client, and when communicated to origins allows them to deliver alternate content honoring such preference - e.g. smaller image and video resources, alternate markup, and so on.
+This document defines the "on" sd-token value, which is used as a signal indicating explicit user opt-in into a reduced data usage mode on the client, and when communicated to origins allows them to deliver alternate content honoring such preference - e.g. smaller image and video resources, alternate markup, and so on. New token and extension token values can only be defined by revisions of this specification.
 
 
 # Examples
