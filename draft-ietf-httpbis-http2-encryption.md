@@ -141,9 +141,8 @@ consider there to be reasonable assurances as long as:
 * The origin and alternative service's hostnames are the same when compared in a case-insensitive
   fashion, and
 
-* The member of the "origins" object in the http-opportunistic response that matches the origin has
-  an array of numbers as a value, one of which matches the port of the alternative service in
-  question, and
+* The origin object of the http-opportunistic response has a `tls-ports' member, whose value is an
+  array of numbers, one of which matches the port of the alternative service in question, and
 
 * The chosen alternative service returns the same representation as the origin did for the
   http-opportunistic resource.
@@ -161,7 +160,9 @@ Content-Type: application/json
 Connection: close
 
 {
-  "origins": {"http://www.example.com": [443, 8000]}
+  "http://www.example.com": {
+    "tls-ports": [443, 8000]
+  }
 }
 ~~~
 
@@ -209,31 +210,32 @@ contacted. Effectively, this makes the choice to use a secured protocol "sticky"
 
 An origin can reduce the risk of attacks on opportunistically secured connections by committing to
 provide a secured, authenticated alternative service. This is done by including the optional
-`commit` member in the http-opportunistic well-known response (see {{well-known}}). This feature is
-optional due to the requirement for server authentication and the potential risk entailed (see
-{{pinrisks}}).
+`tls-commit` member in the origin object of the http-opportunistic well-known response (see
+{{well-known}}).
 
-The value of the `commit` member is a number ({{RFC7159}}, Section 6) indicating the duration of the
-commitment interval in seconds.
+This feature is optional due to the requirement for server authentication and the potential risk
+entailed (see {{pinrisks}}).
+
+The value of the `tls-commit` member is a number ({{RFC7159}}, Section 6) indicating the duration
+of the commitment interval in seconds.
 
 ~~~ example
 {
-  "origins": {
-    "http://example.com": [],
-    "http://www.example.com:81": [8000]
-  },
-  "commit": 86400
+  "http://www.example.com": {
+    "tls-ports": [443,8080],
+    "tls-commit": 3600
+  }
 }
 ~~~
 
-Including `commit` creates a commitment to provide a secured alternative service for the advertised
-period. Clients that receive this commitment can assume that a secured alternative service will be
-available for the indicated period. Clients might however choose to limit this time (see
-{{pinrisks}}).
+Including `tls-commit` creates a commitment to provide a secured alternative service for the
+advertised period. Clients that receive this commitment can assume that a secured alternative
+service will be available for the indicated period. Clients might however choose to limit this time
+(see {{pinrisks}}).
 
 ## Client Handling of A Commitment
 
-The value of the `commit` member MUST be ignored unless the alternative service can be strongly
+The value of the `tls-commit` member MUST be ignored unless the alternative service can be strongly
 authenticated. The same authentication requirements that apply to `https://` resources SHOULD be
 applied to authenticating the alternative. Minimum authentication requirements for HTTP over TLS
 are described in Section 2.1 of {{RFC7838}} and Section 3.1 of {{RFC2818}}. As noted in
@@ -243,14 +245,10 @@ client might choose to apply key pinning {{RFC7469}}.
 A client that receives a commitment and that successfully authenticates the alternative service can
 assume that a secured alternative will remain available for the commitment interval. The commitment
 interval starts when the commitment is received and authenticated and runs for a number of seconds
-equal to value of the `commit` member, less the current age of the http-opportunistic response (as
-defined in Section 4.2.3 of {{RFC7234}}). A client SHOULD avoid sending requests via cleartext
+equal to value of the `tls-commit` member, less the current age of the http-opportunistic response
+(as defined in Section 4.2.3 of {{RFC7234}}). A client SHOULD avoid sending requests via cleartext
 protocols or to unauthenticated alternative services for the duration of the commitment interval,
 except to discover new potential alternatives.
-
-A commitment only applies to the origin of the http-opportunistic well-known resource that was
-retrieved; other origins listed in the `origins` member MUST be independently discovered and
-authenticated.
 
 A commitment is not bound to a particular alternative service. Clients are able to use alternative
 services that they become aware of. However, once a valid and authenticated commitment has been
@@ -284,14 +282,9 @@ to have a valid http-opportunistic response for a given origin when:
 
 * That response's payload, when parsed as JSON {{RFC7159}}, contains an object as the root.
 
-* The root object contains an "origins" member, whose value is a object.
-
-* One of the "origins" object's members has a name that is a case-insensitive
+* The root object contains a member whose name is a case-insensitive
   character-for-character match for the origin in question, serialised into Unicode as per Section
-  6.1 of {{RFC6454}}.
-
-This specification defines one additional, optional member of the root object, "commit" in
-{{commit}}. Unrecognised members MUST be ignored.
+  6.1 of {{RFC6454}}, and whose value is an object (hereafter, the "origin object").
 
 
 # IANA Considerations
@@ -324,11 +317,11 @@ and unencrypted channel, it is subject to downgrade by network attackers. In its
 attacker that wants the connection to remain in the clear need only strip the `Alt-Svc` header
 field from responses.
 
-Downgrade attacks can be partially mitigated using the `commit` member of the http-opportunistic
-well-known resource, because when it is used, a client can avoid using cleartext to contact a
-supporting server. However, this only works when a previous connection has been established without
-an active attacker present; a continuously present active attacker can either prevent the client
-from ever using TLS, or offer its own certificate.
+Downgrade attacks can be partially mitigated using the `tls-commit` member of the
+http-opportunistic well-known resource, because when it is used, a client can avoid using cleartext
+to contact a supporting server. However, this only works when a previous connection has been
+established without an active attacker present; a continuously present active attacker can either
+prevent the client from ever using TLS, or offer its own certificate.
 
 
 ## Privacy Considerations {#privacy}
