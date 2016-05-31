@@ -351,3 +351,16 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Related information: for Client Hints
 
 --- back
+
+# Changes
+
+## Since -00
+
+* Issue 168 (make Save-Data extensible) updated ABNF.
+* Issue 163 (CH review feedback) editorial feedback from httpwg list.
+* Issue 153 (NetInfo API citation) added normative reference.
+
+
+## Since -01
+
+None yet.
