@@ -39,7 +39,7 @@ table.header td {
   color: black;
 }
 
-samp, tt, code, pre {
+samp, tt, code, pre, span.tt {
   font: 11pt consolas, monospace;
   font-size-adjust: none;
 }
