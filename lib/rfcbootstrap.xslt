@@ -248,6 +248,10 @@
       h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
         color: rgb(51, 51, 51);
       }
+      span.tt {
+        font: 11pt consolas, monospace;
+        font-size-adjust: none;
+      }
     </style>
     <xsl:if test="$siteCssUrl!=''">
       <link rel="stylesheet" type="text/css" href="{$siteCssUrl}" />
@@ -257,14 +261,14 @@
   <xsl:template match="abstract">
     <xsl:call-template name="check-no-text-content"/>
     <hr/>
-    <h2 id="{$anchor-prefix}.abstract"><a href="#{$anchor-prefix}.abstract">Abstract</a></h2>
+    <h2 id="{$anchor-pref}.abstract"><a href="#{$anchor-pref}.abstract">Abstract</a></h2>
     <div class="lead">
       <xsl:apply-templates />
     </div>
   </xsl:template>
 
   <xsl:template match="/" mode="toc">
-    <div id="{$anchor-prefix}.toc">
+    <div id="{$anchor-pref}.toc">
       <ul class="nav">
         <xsl:apply-templates mode="toc" />
       </ul>
