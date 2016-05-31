@@ -358,6 +358,14 @@ Therefore, servers need to carefully examine the use of such signals before depl
 specification.
 
 
+## Server Controls
+
+Because this specification allows "reasonable assurances" to be established by the content of a
+well-known URI, servers SHOULD take suitable measures to assure that its content remains under
+their control. Likewise, because the Alt-Svc header field is used to describe policies across an
+entire origin, servers SHOULD NOT permit user content to set or modify the value of this header.
+
+
 --- back
 
 # Acknowledgements
