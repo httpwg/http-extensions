@@ -246,9 +246,11 @@ A client that receives a commitment and that successfully authenticates the alte
 assume that a secured alternative will remain available for the commitment interval. The commitment
 interval starts when the commitment is received and authenticated and runs for a number of seconds
 equal to value of the `tls-commit` member, less the current age of the http-opportunistic response
-(as defined in Section 4.2.3 of {{RFC7234}}). A client SHOULD avoid sending requests via cleartext
-protocols or to unauthenticated alternative services for the duration of the commitment interval,
-except to discover new potential alternatives.
+(as defined in Section 4.2.3 of {{RFC7234}}). Note that the commitment interval MAY exceed the
+freshness lifetime of the "http-opportunistic" resource.
+
+A client SHOULD avoid sending requests via cleartext protocols or to unauthenticated alternative
+services for the duration of the commitment interval, except to discover new potential alternatives.
 
 A commitment is not bound to a particular alternative service. Clients are able to use alternative
 services that they become aware of. However, once a valid and authenticated commitment has been
