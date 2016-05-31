@@ -34,6 +34,7 @@ normative:
   RFC6454:
   RFC7159:
   RFC7230:
+  RFC7232:
   RFC7234:
   RFC7540:
   RFC7838:
@@ -277,8 +278,7 @@ persistence - might increase as a commitment is renewed multiple times.
 This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said
 to have a valid http-opportunistic response for a given origin when:
 
-* The client has obtained a 200 (OK) response for the well-known URI from the origin, or refreshed
-  one in cache {{RFC7234}}, and
+* The client has obtained a 200 (OK) response for the well-known URI from the origin, and it is fresh {{RFC7234}} (potentially through revalidation {{RFC7232}}), and
 
 * That response has the media type "application/json", and
 
