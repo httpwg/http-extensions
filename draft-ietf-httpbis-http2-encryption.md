@@ -363,6 +363,8 @@ entire origin, servers SHOULD NOT permit user content to set or modify the value
 
 # Acknowledgements
 
-Thanks to Patrick McManus, Eliot Lear, Stephen Farrell, Guy Podjarny, Stephen Ludin, Erik Nygren,
-Paul Hoffman, Adam Langley, Eric Rescorla, Julian Reschke, Kari Hurtta, and Richard Barnes for their
-feedback and suggestions.
+Mike Bishop contributed significant text to this document.
+
+Thanks to Patrick McManus, Stefan Eissing, Eliot Lear, Stephen Farrell, Guy Podjarny, Stephen Ludin,
+Erik Nygren, Paul Hoffman, Adam Langley, Eric Rescorla, Julian Reschke, Kari Hurtta, and Richard
+Barnes for their feedback and suggestions.
