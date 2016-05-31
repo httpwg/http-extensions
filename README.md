@@ -27,6 +27,9 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 
 ### Key
+
+_Parked; waiting for implementation feedback._
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/key.html) ([plain text](https://httpwg.github.io/http-extensions/key.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-key) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Akey) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-key/)
