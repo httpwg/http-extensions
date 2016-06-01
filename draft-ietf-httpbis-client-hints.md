@@ -108,7 +108,7 @@ Client Hints does not supersede or replace the User-Agent header field. Existing
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
-This document uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Appendix B. It includes by reference the DIGIT rule from {{RFC5234}}; the OWS, field-name and quoted-string rules from {{RFC7230}}; and the parameter rule from {{RFC7231}}.
+This document uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Appendix B. It includes by reference the DIGIT rule from {{RFC5234}} and the OWS and field-name rules from {{RFC7230}}.
 
 
 # Client Hint Request Header Fields
@@ -124,7 +124,7 @@ The client and server, or an intermediate proxy, can use an opt-in mechanism to 
 
 ## Server Processing of Client Hints
 
-Servers respond with an optimized response based on one or more received hints from the client. When doing so, and if the resource is cacheable, the server MUST also emit a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{I-D.ietf-httpbis-key}}), to indicate which hints were used and whether the selected response is appropriate for a later request.
+Servers respond with an optimized response based on one or more received hints from the client. When doing so, and if the resource is cacheable, the server MUST also emit a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{I-D.ietf-httpbis-key}}), to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 Further, depending on the used hint, the server can emit additional response header fields to confirm the property of the response, such that the client can adjust its processing. For example, this specification defines "Content-DPR" response header field that needs to be returned by the server when the "DPR" hint is used to select the response.
 
@@ -134,7 +134,7 @@ Further, depending on the used hint, the server can emit additional response hea
 Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{W3C.REC-html5-20141028}}).
 
 ~~~ abnf7230
-  Accept-CH = #token
+  Accept-CH = #field-name
 ~~~
 
 For example:
@@ -143,12 +143,11 @@ For example:
   Accept-CH: DPR, Width, Viewport-Width, Downlink
 ~~~
 
-When a client receives Accept-CH, it SHOULD append the Client Hint header fields that match the advertised field-values. For example, based on Accept-CH example above, the client would append DPR, Width, Viewport-Width, and Downlink header fields to all subsequent requests.
-
+When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it SHOULD append the Client-Hint header fields that match the advertised field-values to the header list of all subsequent requests. For example, based on Accept-CH example above, a user agent could append DPR, Width, Viewport-Width, and Downlink header fields to all subresource requests initiated by the page constructed from the response. Alternatively, a client can treat advertised support as a persistent origin preference and append same header fields on all future requests initiated to and by the resources associated with that origin.
 
 ### Interaction with Caches
 
-When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server needs to emit a Vary response header field ({{RFC7234}}) to indicate which hints were used and whether the selected response is appropriate for a later request.
+When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server needs to emit a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 ~~~ example
   Vary: DPR
@@ -211,7 +210,7 @@ If Content-DPR occurs in a message more than once, the last value overrides all 
 
 # The Width Client Hint {#width}
 
-The "Width" request header field is a number that indicates the desired resource width in physical px (i.e. intrinsic size of an image). The provided physical px value is a number rounded to the largest smallest following integer (i.e. ceiling value).
+The "Width" request header field is a number that indicates the desired resource width in physical px (i.e. intrinsic size of an image). The provided physical px value is a number rounded to the smallest following integer (i.e. ceiling value).
 
 ~~~ abnf7230
   Width = 1*DIGIT
@@ -222,7 +221,7 @@ If the desired resource width is not known at the time of the request or the res
 
 # The Viewport-Width Client Hint {#viewport-width}
 
-The "Viewport-Width" request header field is a number that indicates the layout viewport width in CSS px. The provided CSS px value is a number rounded to the largest smallest following integer (i.e. ceiling value).
+The "Viewport-Width" request header field is a number that indicates the layout viewport width in CSS px. The provided CSS px value is a number rounded to the smallest following integer (i.e. ceiling value).
 
 ~~~ abnf7230
   Viewport-Width = 1*DIGIT
@@ -244,10 +243,10 @@ If Downlink occurs in a message more than once, the minimum value should be used
 
 # The Save-Data Client Hint {#save-data}
 
-The "Save-Data" request header field is a token that indicates client's preference for reduced data usage, due to high transfer costs, slow connection speeds, or other reasons.
+The "Save-Data" request header field consists of one or more tokens that indicate client's preference for reduced data usage, due to high transfer costs, slow connection speeds, or other reasons.
 
 ~~~ abnf7230
-  Save-Data : sd-token *( ";" [sd-token] )
+  Save-Data = sd-token *( OWS ";" OWS [sd-token] )
   sd-token = token
 ~~~
 
