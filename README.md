@@ -3,7 +3,7 @@
 This is the working area for the [IETF HTTP Working Group](https://httpwg.github.io/) draft extensions. See [our contribution 
 guidelines](CONTRIBUTING.md) for information about how to participate.
 
-**Be aware that all contributions to the specification fall under the "NOTE WELL" terms therein.**
+**Be aware that all contributions to our work fall under the "NOTE WELL" terms therein.**
 
 
 ### Origin Frame
