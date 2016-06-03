@@ -53,8 +53,8 @@
 
   <abstract>
     <t>
-      By default, message header field parameters in Hypertext Transfer Protocol (HTTP) messages
-      cannot carry characters outside the ISO-8859-1 character set. RFC 2231
+      By default, header field values in Hypertext Transfer Protocol (HTTP) messages
+      cannot directly carry characters outside the US-ASCII coded character set. RFC 2231
       defines an encoding mechanism for use in Multipurpose Internet Mail Extensions
       (MIME) headers. This document specifies an encoding suitable for use in HTTP header fields that is compatible with a profile of the encoding defined in RFC 2231.
     </t>
@@ -81,8 +81,8 @@
 
 <section title="Introduction" anchor="introduction">
 <t>
-  By default, message header field parameters in HTTP (<xref target="RFC2616"/>) messages
-  cannot carry characters outside the ISO-8859-1 coded character set (<xref target="ISO-8859-1"/>). RFC 2231
+  By default, header field values in HTTP messages (<xref target="RFC7230"/>)
+  cannot directly carry characters outside the US-ASCII coded character set (<xref target="USASCII"/>). RFC 2231
   (<xref target="RFC2231"/>) defines an encoding mechanism for use in MIME headers.
   This document specifies an encoding suitable for use in HTTP header fields that is compatible with a profile of the encoding defined in RFC 2231.
 </t>
@@ -300,7 +300,7 @@
   thus might accept that format, although invalid, as well.
 </t>
 <t>
-  <xref target="RFC5987"/> did require support for ISO-8859-1,
+  <xref target="RFC5987"/> did require support for ISO-8859-1 (<xref target="ISO-8859-1"/>),
   too; for compatibility with legacy code, recipients are encouraged to
   support this encoding as well.
 </t>
@@ -951,6 +951,12 @@
 <t>
   Editorial changes; introducing non-ASCII characters into author's
   address, acknowledgements, and examples.
+</t>
+</section>
+
+<section title="Since draft-ietf-httpbis-rfc5987bis-01">
+<t>
+  Removed mention of RFC 2616 from Abstract and Introduction.
 </t>
 </section>
 </section>
