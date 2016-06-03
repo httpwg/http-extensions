@@ -254,10 +254,12 @@ services for the duration of the commitment interval, except to discover new pot
 
 A commitment is not bound to a particular alternative service. Clients are able to use alternative
 services that they become aware of. However, once a valid and authenticated commitment has been
-received, clients SHOULD NOT use an unauthenticated alternative service. Where there is an active
-commitment, clients SHOULD ignore advertisements for unsecured alternative services. A client MAY
-send requests to an unauthenticated origin in an attempt to discover potential alternative services,
-but these requests SHOULD be entirely generic and avoid including credentials.
+received, clients SHOULD NOT use an alternative service without both reasonable assurances (see
+{{auth}}) and strong authentication. Where there is an active commitment, clients SHOULD ignore
+advertisements for unsecured alternative services.
+
+A client MAY send requests to an unauthenticated origin in an attempt to discover potential
+alternative services, but these requests SHOULD be entirely generic and avoid including credentials.
 
 
 ## Operational Considerations {#pinrisks}
