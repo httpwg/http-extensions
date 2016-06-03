@@ -82,7 +82,7 @@
 <section title="Introduction" anchor="introduction">
 <t>
   By default, header field values in HTTP messages (<xref target="RFC7230"/>)
-  cannot directly carry characters outside the US-ASCII coded character set (<xref target="USASCII"/>). RFC 2231
+  cannot directly carry characters outside the US-ASCII coded character set (<xref target="RFC0020"/>). RFC 2231
   (<xref target="RFC2231"/>) defines an encoding mechanism for use in MIME headers.
   This document specifies an encoding suitable for use in HTTP header fields that is compatible with a profile of the encoding defined in RFC 2231.
 </t>
@@ -421,7 +421,7 @@
 </t>
 <t>
   Furthermore, the extension ought to also be used whenever the parameter value
-  needs to carry characters not present in the US-ASCII (<xref target="USASCII"/>)
+  needs to carry characters not present in the US-ASCII (<xref target="RFC0020"/>)
   coded character set (note that it would be unacceptable to define a new parameter that
   would be restricted to a subset of the Unicode character set).
 </t>
@@ -489,6 +489,16 @@
   
 <references title="Normative References">
   
+  <reference anchor='RFC0020'>
+    <front>
+      <title>ASCII format for network interchange</title>
+      <author initials='V.' surname='Cerf' fullname='Vint Cerf'/>
+      <date year='1969' month='October' />
+    </front>
+    <seriesInfo name='STD' value='80' />
+    <seriesInfo name='RFC' value='20' />
+  </reference>
+
   <reference anchor="RFC2119">
     <front>
       <title abbrev="RFC Key Words">Key words for use in RFCs to Indicate Requirement Levels</title>
@@ -666,18 +676,7 @@
       <seriesInfo name="RFC" value="7231"/>
       <x:source href="refs/rfc7231.xml" basename="rfc7231"/>
     </reference>
-  
 
-  <reference anchor="USASCII">
-    <front>
-      <title>Coded Character Set -- 7-bit American Standard Code for Information Interchange</title>
-      <author>
-        <organization>American National Standards Institute</organization>
-      </author>
-      <date year="1986"/>
-    </front>
-    <seriesInfo name="ANSI" value="X3.4"/>
-  </reference>
 </references>
   
 <references title="Informative References">
@@ -957,6 +956,9 @@
 <section title="Since draft-ietf-httpbis-rfc5987bis-01">
 <t>
   Removed mention of RFC 2616 from Abstract and Introduction.
+</t>
+<t>
+  Reference RFC 20 for US-ASCII.
 </t>
 </section>
 </section>
