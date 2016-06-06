@@ -54,17 +54,11 @@ In **Working Group Last Call** until 1 April 2016
 
 ### RFC6265bis
 
-_We are currently working on drafts that, together, will serve as a roadmap for revising [the Cookie specification](http://httpwg.org/specs/rfc6265.html). So far, we have adopted:_
+We are currently working on drafts that, together, will serve as a roadmap for revising [the Cookie specification](http://httpwg.org/specs/rfc6265.html).
 
-#### Leave Secure Cookies Alone
+All [open issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A6265bis) for this effort are tracked together.
 
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-alone.html)
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-alone) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A6265bis) 
-
-#### Cookie Prefixes
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-prefixes.html)
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A6265bis) 
-
+So far, we have adopted:
+* [Leave Secure Cookies Alone](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-alone.html)
+* [Cookie Prefixes](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-prefixes.html)
+* [Same-Site Cookies](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-same-site.html)
