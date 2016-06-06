@@ -10,7 +10,7 @@ area: General
 workgroup: HTTP
 keyword: Internet-Draft
 
-pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+pi: [toc, tocindent, sortrefs, symrefs, compact, comments, inline]
 
 author:
 -
