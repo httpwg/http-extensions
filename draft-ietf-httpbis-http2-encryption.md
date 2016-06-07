@@ -19,7 +19,7 @@ author:
     name: Mark Nottingham
     organization:
     email: mnot@mnot.net
-    uri: http://www.mnot.net/
+    uri: https://www.mnot.net/
  -
     ins: M. Thomson
     name: Martin Thomson
