@@ -219,11 +219,11 @@ that have been applied to a payload body, and therefore how those content
 encoding(s) can be removed.
 
 The `Encryption` header field uses the extended ABNF syntax defined in
-Section 1.2 of [RFC7230] and the `parameter` rule from [RFC7231]
+Section 1.2 of [RFC7230] and the `parameter` and `OWS` rules from [RFC7231].
 
 ~~~ abnf7230
   Encryption = #encryption_params
-  encryption_params = [ parameter *( ";" parameter ) ]
+  encryption_params = [ parameter *( OWS ";" OWS parameter ) ]
 ~~~
 
 If the payload is encrypted more than once (as reflected by having multiple
@@ -348,11 +348,11 @@ A Crypto-Key header field can be used to describe the input keying material
 used in the Encryption header field.
 
 The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
-of [RFC7230] and the `parameter` rule from [RFC7231].
+of [RFC7230] and the `parameter` and `OWS` rules from [RFC7231].
 
 ~~~ abnf7230
   Crypto-Key = #crypto_key_params
-  crypto_key_params = [ parameter *( ";" parameter ) ]
+  crypto_key_params = [ parameter *( OWS ";" OWS parameter ) ]
 ~~~
 
 keyid:
