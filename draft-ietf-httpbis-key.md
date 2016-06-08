@@ -312,8 +312,10 @@ In some cases, a key parameter cannot determine a secondary cache key correspond
 nominated header field value. When this happens, Key processing needs to fail safely, so that the
 correct behavior is observed.
 
-When this happens, implementations MUST either behave as if the Key header was not present, or
-assure that the nominated header fields being compared match, as per {{RFC7234}}, Section 4.1.
+When this happens, implementations MUST either behave as if the whole Key header field was not
+present (i.e., abort processing of Key, ignoring it entirely and falling back to Vary), or assure
+that the nominated header fields being compared match, as per {{RFC7234}}, Section 4.1 (i.e., treat
+the failing portion of the Key header as falling back to Vary, but continuing to process the rest).
   
 
 ## Key Parameters
