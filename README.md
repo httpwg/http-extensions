@@ -14,12 +14,15 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 
 ### Client Hints
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/client-hints.html) ([plain text](https://httpwg.github.io/http-extensions/client-hints.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
 
 
 ### HTTP Encryption Content Encoding
+
+_In [Working Group Last Call](http://www.w3.org/mid/828F4861-FCC3-456B-9DB9-C35960B752BF@mnot.net); ends 2016-06-21._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-encryption-encoding.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-encryption-encoding) (less recent, more official)
@@ -44,7 +47,7 @@ _Parked; waiting for implementation feedback._
 
 ### HTTP Opportunistic Security
 
-In **Working Group Last Call** until 1 April 2016
+_Working Group Last Call concluded; incorporating feedback._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/opsec.html) ([plain text](https://httpwg.github.io/http-extensions/opsec.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
