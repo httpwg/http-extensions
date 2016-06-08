@@ -250,11 +250,12 @@ is used for encryption:
 
 keyid:
 
-: The "keyid" parameter contains a string that identifies the keying material
-  that is used.  The "keyid" parameter SHOULD be included, unless key
-  identification is guaranteed by other means.  The "keyid" parameter MUST be
-  used if keying material included in an Crypto-Key header field is needed to
-  derive the content encryption key.
+: The "keyid" parameter contains a sequence of octets that identifies the
+  keying material that is used.  When the Crypto-Key header field is used, the
+  "keyid" identifies a matching value in that field.  The "keyid" parameter MUST
+  be used if keying material included in an Crypto-Key header field is needed to
+  derive the content encryption key.  It can also be used to identify keys in an
+  application-specific fashion.
 
 salt:
 
