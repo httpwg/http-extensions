@@ -118,6 +118,10 @@ that bears little or no sensitive information, such as one with the OPTIONS meth
 clients with existing alternative services information could make such a request before they expire,
 in order minimize the delays that might be incurred.
 
+Client certificates are not meaningful for URLs with the "http" scheme, and therefore clients
+creating new TLS connections to alternative services for the purposes of this specification MUST
+NOT present them. Established connections with client certificates MAY be reused, however.
+
 
 # Server Authentication {#auth}
 
@@ -184,6 +188,7 @@ authentication considerations in Section 2.1 of {{RFC7838}} also apply.
 
 Connections that are established without any means of server authentication (for instance, the
 purely anonymous TLS cipher suites) cannot be used for `https` URIs.
+
 
 
 # Requiring Use of TLS {#commit}
