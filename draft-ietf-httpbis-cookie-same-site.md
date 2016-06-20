@@ -580,6 +580,10 @@ cannot be used to correlate user behavior across distinct origins.
 
 --- back
 
+# Changes since draft-ietf-httpbis-cookie-same-site-00
+
+None. Yet.
+
 # Acknowledgements
 
 The same-site cookie concept documented here is indebited to Mark Goodwin's
