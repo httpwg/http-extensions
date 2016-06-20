@@ -6,11 +6,13 @@ category: std
 updates: 6265
 
 ipr: trust200902
-area: General
+area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
+keyword: Cookie
 
-pi: [toc, tocindent, sortrefs, symrefs, compact, comments, inline]
+stand_alone: yes
+pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
 
 author:
 -
