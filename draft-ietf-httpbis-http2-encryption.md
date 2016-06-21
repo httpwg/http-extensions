@@ -165,7 +165,8 @@ Connection: close
 
 {
   "http://www.example.com": {
-    "tls-ports": [443, 8000]
+    "tls-ports": [443, 8000],
+    "lifetime": 2592000
   }
 }
 ~~~
@@ -221,22 +222,24 @@ provide a secured, authenticated alternative service. This is done by including 
 This feature is optional due to the requirement for server authentication and the potential risk
 entailed (see {{pinrisks}}).
 
-The value of the `tls-commit` member is a number ({{RFC7159}}, Section 6) indicating the duration
-of the commitment interval in seconds.
+When the value of the `tls-commit` member is "true" ({{RFC7159}}, Section 3), it indicates that the
+origin makes such a commitment for the duration of the origin object lifetime.
 
 ~~~ example
 {
   "http://www.example.com": {
     "tls-ports": [443,8080],
-    "tls-commit": 3600
+    "tls-commit": true,
+    "lifetime": 3600
   }
 }
 ~~~
 
 Including `tls-commit` creates a commitment to provide a secured alternative service for the
 advertised period. Clients that receive this commitment can assume that a secured alternative
-service will be available for the indicated period. Clients might however choose to limit this time
-(see {{pinrisks}}).
+service will be available for the origin object lifetime. Clients might however choose to limit
+this time (see {{pinrisks}}).
+
 
 ## Client Handling of A Commitment
 
@@ -248,14 +251,11 @@ are described in Section 2.1 of {{RFC7838}} and Section 3.1 of {{RFC2818}}. As n
 client might choose to apply key pinning {{RFC7469}}.
 
 A client that receives a commitment and that successfully authenticates the alternative service can
-assume that a secured alternative will remain available for the commitment interval. The commitment
-interval starts when the commitment is received and authenticated and runs for a number of seconds
-equal to value of the `tls-commit` member, less the current age of the http-opportunistic response
-(as defined in Section 4.2.3 of {{RFC7234}}). Note that the commitment interval MAY exceed the
-freshness lifetime of the "http-opportunistic" resource.
+assume that a secured alternative will remain available for the origin object lifetime.
 
 A client SHOULD avoid sending requests via cleartext protocols or to unauthenticated alternative
-services for the duration of the commitment interval, except to discover new potential alternatives.
+services for the duration of the origin object lifetime, except to discover new potential
+alternatives.
 
 A commitment is not bound to a particular alternative service. Clients are able to use alternative
 services that they become aware of. However, once a valid and authenticated commitment has been
@@ -289,12 +289,17 @@ to have a valid http-opportunistic response for a given origin when:
 
 * That response has the media type "application/json", and
 
-* That response's payload, when parsed as JSON {{RFC7159}}, contains an object as the root.
+* That response's payload, when parsed as JSON {{RFC7159}}, contains an object as the root, and
 
 * The root object contains a member whose name is a case-insensitive
   character-for-character match for the origin in question, serialised into Unicode as per Section
-  6.1 of {{RFC6454}}, and whose value is an object (hereafter, the "origin object").
+  6.1 of {{RFC6454}}, and whose value is an object (hereafter, the "origin object"),
 
+* The origin object has a "lifetime" member, whose value is a number indicating the number of seconds which the origin object is valid for (hereafter, the "origin object lifetime"), and
+
+* The origin object lifetime is greater than the `current_age` (as per {{RFC7234}}, Section 4.2.3).
+
+Note that origin object lifetime might differ from the freshness lifetime of the response.
 
 # IANA Considerations
 
