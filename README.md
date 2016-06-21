@@ -22,7 +22,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### HTTP Encryption Content Encoding
 
-_In [Working Group Last Call](http://www.w3.org/mid/828F4861-FCC3-456B-9DB9-C35960B752BF@mnot.net); ends 2016-06-21._
+_Working Group Last Call ended; incorporating feedback._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-encryption-encoding.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-encryption-encoding) (less recent, more official)
