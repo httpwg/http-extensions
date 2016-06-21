@@ -190,6 +190,9 @@ authentication considerations in Section 2.1 of {{RFC7838}} also apply.
 Connections that are established without any means of server authentication (for instance, the
 purely anonymous TLS cipher suites) cannot be used for `https` URIs.
 
+Because of the risk of server confusion about individual requests' schemes (see {{confuse}}), clients MUST NOT mix "https" and "http" requests on the same connection unless
+the http-opportunistic response's origin object {{well-known}} has a "mixed-scheme"
+member whose value is "true".
 
 
 # Requiring Use of TLS {#commit}
@@ -346,7 +349,7 @@ MUST clear cached alternative service information when clearing other origin-bas
 cookies).
 
 
-## Confusion Regarding Request Scheme
+## Confusion Regarding Request Scheme {#confuse}
 
 HTTP implementations and applications sometimes use ambient signals to determine if a request is
 for an `https` resource; for example, they might look for TLS on the stack, or a server port number
