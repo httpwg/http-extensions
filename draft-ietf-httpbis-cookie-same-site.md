@@ -386,21 +386,22 @@ of {{RFC6265}} with the following ABNF grammar:
     cookie-av      = expires-av / max-age-av / domain-av /
                      path-av / secure-av / httponly-av /
                      samesite-av / extension-av
-    samesite-av    = "SameSite" / "SameSite=" samesite-value
+    samesite-av    = "SameSite=" samesite-value
     samesite-value = "Strict" / "Lax"
 
 ## Semantics of the "SameSite" Attribute (Non-Normative)
 
 The "SameSite" attribute limits the scope of the cookie such that it will only
-be attached to requests if those requests are "same-site", as defined by the
+be attached to requests if those requests are same-site, as defined by the
 algorithm in {{same-site-requests}}. For example, requests for
 `https://example.com/sekrit-image` will attach same-site cookies if and only if
 initiated from a context whose "site for cookies" is "example.com".
 
-If the "SameSite" attribute's value is "Strict", or if the value is invalid, the
-cookie will only be sent along with "same-site" requests. If the value is "Lax",
-the cookie will be sent with "same-site" requests, and with "cross-site"
-top-level navigations, as described in {{strict-lax}}.
+If the "SameSite" attribute's value is "Strict", the cookie will only be sent
+along with "same-site" requests. If the value is "Lax", the cookie will be sent
+with same-site requests, and with "cross-site" top-level navigations, as
+described in {{strict-lax}}. If the "SameSite" attribute's value is neither of
+these, the cookie will be ignored.
 
 The changes to the `Cookie` header field suggested in {{cookie-header}} provide
 additional detail.
@@ -582,7 +583,8 @@ cannot be used to correlate user behavior across distinct origins.
 
 # Changes since draft-ietf-httpbis-cookie-same-site-00
 
-None. Yet.
+1.  Cookies whose "SameSite" attribute's value is neither "Strict" nor "Lax"
+    are ignored.
 
 # Acknowledgements
 
