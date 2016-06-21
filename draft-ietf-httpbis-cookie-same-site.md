@@ -12,7 +12,7 @@ keyword: Internet-Draft
 keyword: Cookie
 
 stand_alone: yes
-pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
+pi: [toc, tocindent, sortrefs, symrefs, compact, subcompact, comments, inline]
 
 author:
 -
