@@ -190,9 +190,10 @@ authentication considerations in Section 2.1 of {{RFC7838}} also apply.
 Connections that are established without any means of server authentication (for instance, the
 purely anonymous TLS cipher suites) cannot be used for `https` URIs.
 
-Because of the risk of server confusion about individual requests' schemes (see {{confuse}}), clients MUST NOT mix "https" and "http" requests on the same connection unless
-the http-opportunistic response's origin object {{well-known}} has a "mixed-scheme"
-member whose value is "true".
+Because of the risk of server confusion about individual requests' schemes (see {{confuse}}),
+clients MUST NOT mix "https" and "http" requests on the same connection unless the
+http-opportunistic response's origin object {{well-known}} has a "mixed-scheme" member whose value
+is "true".
 
 
 # Requiring Use of TLS {#commit}
