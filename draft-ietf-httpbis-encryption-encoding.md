@@ -211,6 +211,18 @@ record size.  However, without data from adjacent ranges, partial records cannot
 be used.  Thus, it is best if records start and end on multiples of the record
 size, plus the 16 octet authentication tag size.
 
+Selecting the record size most appropriate for a given situation requires a
+trade-off.  A smaller record size allows decrypted octets to be released more
+rapidly, which can be appropriate for applications that depend on
+responsiveness.  Smaller records also reduce the additional data required if
+random access into the ciphertext is needed.  Applications that depend on being
+able to pad by arbitrary amounts cannot increase the record size beyond 65537
+octets.
+
+Applications that don't depending on streaming, random access, or arbitrary
+padding can use larger records, or even a single record.  A larger record size
+reduces the processing and data overheads.
+
 
 # The Encryption HTTP Header Field  {#encryption}
 
