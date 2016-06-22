@@ -759,7 +759,7 @@ might be used to hide the size of individual messages.
 
 ## The "aesgcm" HTTP Content Encoding
 
-This memo registers the "encrypted" HTTP content-coding in the HTTP Content
+This memo registers the "aesgcm" HTTP content-coding in the HTTP Content
 Codings Registry, as detailed in {{aesgcm}}.
 
 * Name: aesgcm
