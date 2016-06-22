@@ -253,11 +253,6 @@ applied.
 Encryption header field values with multiple instances of the same parameter
 name are invalid.
 
-The Encryption header MAY be omitted if the sender does not intend for the
-immediate recipient to be able to decrypt the payload body.  Alternatively,
-the Encryption header field MAY be omitted if the sender intends for the
-recipient to acquire the header field by other means.
-
 Servers processing PUT requests MUST persist the value of the Encryption header
 field, unless they remove the content-coding by decrypting the payload.
 
