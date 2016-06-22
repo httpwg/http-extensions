@@ -303,8 +303,8 @@ SHA-256 hash algorithm [FIPS180-4].
 The decoded value of the "salt" parameter is the salt input to HKDF function.
 The keying material identified by the "keyid" parameter is the input keying
 material (IKM) to HKDF.  Input keying material can either be prearranged, or can
-be described using the Crypto-Key header field ({{crypto-key}}).  The first step
-of HKDF is therefore:
+be described using the Crypto-Key header field ({{crypto-key}}).  The extract
+phase of HKDF therefore produces a pseudorandom key (PRK) as follows:
 
 ~~~ inline
    PRK = HMAC-SHA-256(salt, IKM)
@@ -321,7 +321,7 @@ Unless otherwise specified, the context is a zero length octet sequence.
 Specifications that use this content encoding MAY specify the use of an expanded
 context to cover additional inputs in the key derivation.
 
-AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key, so the
+AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key (CEK), so the
 length (L) parameter to HKDF is 16.  The second step of HKDF can
 therefore be simplified to the first 16 octets of a single HMAC:
 
