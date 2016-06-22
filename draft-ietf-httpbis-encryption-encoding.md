@@ -250,11 +250,12 @@ is used for encryption:
 
 keyid:
 
-: The "keyid" parameter contains a string that identifies the keying material
-  that is used.  The "keyid" parameter SHOULD be included, unless key
-  identification is guaranteed by other means.  The "keyid" parameter MUST be
-  used if keying material included in an Crypto-Key header field is needed to
-  derive the content encryption key.
+: The "keyid" parameter identifies the keying material that is used.  When the
+  Crypto-Key header field is used, the "keyid" identifies a matching value in
+  that field.  The "keyid" parameter MUST be used if keying material included
+  in an Crypto-Key header field is needed to derive the content encryption key.
+  The "keyid" parameter can also be used to identify keys in an
+  application-specific fashion.
 
 salt:
 
@@ -507,7 +508,7 @@ HTTP/1.1 200 OK
 Content-Type: application/octet-stream
 Content-Encoding: aesgcm
 Connection: close
-Encryption: keyid="http://example.org/bob/keys/123";
+Encryption: keyid="bob/keys/123";
             salt="XZwpw6o37R-6qoZjw6KwAw"
 
 [encrypted payload]
@@ -531,7 +532,7 @@ HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Encoding: gzip, aesgcm
 Transfer-Encoding: chunked
-Encryption: keyid="mailto:me@example.com";
+Encryption: keyid="me@example.com";
             salt="m2hJ_NttRtFyUiMRPwfpHA"
 
 [encrypted payload]
@@ -552,7 +553,7 @@ Content-Encoding: aesgcm, aesgcm
 Content-Length: 1235
 Encryption: keyid="mailto:me@example.com";
             salt="NfzOeuV5USPRA-n_9s1Lag",
-            keyid="http://example.org/bob/keys/123";
+            keyid="bob/keys/123";
             salt="bDMSGoc2uobK_IhavSHsHA"; rs=1200
 
 [encrypted payload]
