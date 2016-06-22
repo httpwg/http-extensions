@@ -159,19 +159,19 @@ a series of fixed-size records, with a final record that is one or more octets
 shorter than a fixed sized record.
 
 ~~~ drawing
-       +------+         input of between rs-65537
-       | data |            and rs-2 octets
-       +------+      (one fewer for the last record)
+      +-----------+       content is rs octets minus padding
+      |   data    |       of between 2 and 65537 octets;
+      +-----------+       the last record is smaller
            |
            v
-+-----+-----------+
-| pad |   data    |     add padding to form plaintext
-+-----+-----------+
++-----+-----------+       add padding to rs octets;
+| pad |   data    |       the last record contains
++-----+-----------+       up to rs minus 1 octets
          |
          v
-+--------------------+
-|    ciphertext      |  encrypt with AEAD_AES_128_GCM
-+--------------------+     expands by 16 octets
++--------------------+    encrypt with AEAD_AES_128_GCM;
+|    ciphertext      |    final size is rs plus 16 octets
++--------------------+    the last record is smaller
 ~~~
 
 The record size determines the length of each portion of plaintext that is
