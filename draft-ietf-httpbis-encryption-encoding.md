@@ -179,11 +179,11 @@ enciphered, with the exception of the final record, which is necessarily
 smaller.  The record size defaults to 4096 octets, but can be changed using the
 "rs" parameter on the Encryption header field.
 
-AEAD_AES_128_GCM expands ciphertext to be 16 octets longer than its input
+AEAD_AES_128_GCM produces ciphertext 16 octets longer than its input
 plaintext.  Therefore, the length of each enciphered record other than the last
 is equal to the value of the "rs" parameter plus 16 octets.  A receiver MUST
-fail to decrypt if the final record ciphertext is 16 octets or less in size.
-Valid records always contain at least one byte of padding and a 16 octet
+fail to decrypt if the final record ciphertext is less than 18 octets in size.
+Valid records always contain at least two octets of padding and a 16 octet
 authentication tag.
 
 Each record contains between 2 and 65537 octets of padding, inserted into a
