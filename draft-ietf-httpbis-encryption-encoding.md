@@ -700,6 +700,20 @@ generate a random salt parameter for every message; a counter could achieve the
 same result.
 
 
+## Data Encryption Limits
+
+There are limits to the data that AEAD_AES_128_GCM can encipher.  The maximum
+record size is 2^36-31 [RFC5116].  In order to preserve a 2^-40 probability of
+indistinguishability under chosen plaintext attack (IND-CPA), the total amount
+of plaintext that can be enciphered MUST be less than 2^44.5 blocks [AEBounds].
+
+If rs is a multiple of 16 octets, this means 398 terabytes can be encrypted
+safely, including padding.  However, if the record size is a multiple of 16
+octets, the total amount of data that can be safely encrypted is reduced.  The
+worst case is a record size of 3 octets, for which at most 74 terabytes of
+plaintext can be encrypted, of which at least two-thirds is padding.
+
+
 ## Content Integrity
 
 This mechanism only provides content origin authentication.  The authentication
