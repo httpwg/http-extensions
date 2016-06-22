@@ -60,22 +60,29 @@ informative:
     date: July 2013
     seriesinfo: NIST PUB 186-4
   X9.62:
-     title: "Public Key Cryptography For The Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)"
-     author:
-       - org: ANSI
-     date: 1998
-     seriesinfo: ANSI X9.62
+    title: "Public Key Cryptography For The Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)"
+    author:
+      - org: ANSI
+    date: 1998
+    seriesinfo: ANSI X9.62
   XMLENC:
-     title: "XML Encryption Syntax and Processing"
-     author:
-       - ins: D. Eastlake
-       - ins: J. Reagle
-       - ins: T. Imamura
-       - ins: B. Dillaway
-       - ins: E. Simon
-     date: 2002-12
-     seriesinfo: W3C REC
-     target: "http://www.w3.org/TR/xmlenc-core/"
+    title: "XML Encryption Syntax and Processing"
+    author:
+      - ins: D. Eastlake
+      - ins: J. Reagle
+      - ins: T. Imamura
+      - ins: B. Dillaway
+      - ins: E. Simon
+    date: 2002-12
+    seriesinfo: W3C REC
+    target: "http://www.w3.org/TR/xmlenc-core/"
+  AEBounds:
+    title: "Limits on Authenticated Encryption Use in TLS"
+    author:
+      - ins: A. Luykx
+      - ins: K. Paterson
+    date: 2016-03-08
+    target: "http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf"
 
 --- abstract
 
