@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := opsec rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site
+friendly_names := opsec rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site jfv
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
@@ -61,6 +61,9 @@ origin-frame.%: draft-ietf-httpbis-origin-frame.%
 	cp -f $< $@
 
 cookie-same-site.%: draft-ietf-httpbis-cookie-same-site.%
+	cp -f $< $@
+
+jfv.%: draft-ietf-httpbis-jfv.%
 	cp -f $< $@
 
 define makerule_submit_xml =
