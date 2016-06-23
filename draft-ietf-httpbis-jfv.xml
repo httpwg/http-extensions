@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc subcompact="no"?>
+<?rfc rfcedstyle="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes" ?>
+<?rfc-ext html-pretty-print="prettyprint https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"?>
+
+<!DOCTYPE rfc [
+  <!ENTITY mdash "&#8212;">
+  <!ENTITY Note "<x:h xmlns:x='http://purl.org/net/xml2rfc/ext'>Note:</x:h>">
+  <!ENTITY MAY "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MAY</bcp14>">
+  <!ENTITY MUST "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MUST</bcp14>">
+  <!ENTITY MUST-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>MUST NOT</bcp14>">
+  <!ENTITY OPTIONAL "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>OPTIONAL</bcp14>">
+  <!ENTITY RECOMMENDED "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>RECOMMENDED</bcp14>">
+  <!ENTITY REQUIRED "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>REQUIRED</bcp14>">
+  <!ENTITY SHALL "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHALL</bcp14>">
+  <!ENTITY SHALL-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHALL NOT</bcp14>">
+  <!ENTITY SHOULD "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD</bcp14>">
+  <!ENTITY SHOULD-NOT "<bcp14 xmlns='http://purl.org/net/xml2rfc/ext'>SHOULD NOT</bcp14>">
+]>
+<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" xmlns:ed="http://greenbytes.de/2002/rfcedit" ipr="trust200902" docName="draft-ietf-httpbis-jfv-latest" category="std" xml:lang="en" x:maturity-level="proposed">
+
+  <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
+
+	<front>
+  <title abbrev="JSON Encoding for HTTP Field Values">A JSON Encoding for HTTP Header Field Values</title>
+  <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke">
+    <organization abbrev="greenbytes">greenbytes GmbH</organization>
+    <address>
+      <postal>
+        <street>Hafenweg 16</street>
+        <city>Muenster</city><region>NW</region><code>48155</code>
+        <country>Germany</country>
+      </postal>
+      <email>julian.reschke@greenbytes.de</email>	
+      <uri>http://greenbytes.de/tech/webdav/</uri>	
+    </address>
+  </author>
+
+  <date year="2016"/>
+  
+  <area>Applications and Real-Time</area>
+  <workgroup>HTTP</workgroup>
+  <keyword>HTTP</keyword>
+  <keyword>JSON</keyword>
+  <keyword>Header Field Value</keyword>
+
+  <abstract>
+    <t>
+      This document establishes a convention for use of JSON-encoded field
+      values in HTTP header fields.
+    </t>
+  </abstract>
+  
+  <note title="Editorial Note (To be removed by RFC Editor before publication)">
+    <t>
+      Discussion of this draft takes place on the HTTPBIS working group mailing list
+      (ietf-http-wg@w3.org), which is archived at <eref
+      target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
+    </t>
+    <t>
+      Working Group information can be found at <eref target="http://httpwg.github.io/"/>; source code and issues
+      list for this draft can be found at
+      <eref target="https://github.com/httpwg/http-extensions"/>.
+    </t>
+    <t>
+      The changes in this draft are summarized in <xref target="change.log"/>.
+    </t>
+  </note>
+
+  </front>
+
+  <middle>
+
+<section title="Introduction" anchor="introduction">
+<t>
+  Defining syntax for new HTTP header fields (<xref target="RFC7230" x:fmt="," 
+  x:rel="#header.fields"/>) is non-trivial. Among the commonly encountered
+  problems are:
+  <list style="symbols">
+    <t>There is no common syntax for complex field values. Several well-known 
+    header fields do use a similarly looking syntax, but it is hard to write
+    generic parsing code that will both correctly handle valid field values
+    but also reject invalid ones.
+    </t>
+    <t>The HTTP message format allows header fields to repeat, so field syntax
+    needs to be designed in a way that these cases are either meaningful,
+    or can be unambiguously detected and rejected.
+    </t>
+    <t>HTTP/1.1 does not define a character encoding scheme (<xref target="RFC6365"
+    x:fmt="," x:sec="2"/>), so header fields are either stuck with US-ASCII
+    (<xref target="RFC0020"/>), or need out-of-band information
+    to decide what encoding scheme is used. Furthermore, APIs
+    usually assume a default encoding scheme in order to map from
+    octet sequences to strings (for instance, <xref target="XMLHttpRequest"/>
+    uses the IDL type "ByteString", effectively resulting in the
+    ISO-8859-1 character encoding scheme <xref target="ISO-8859-1"/> being used).
+    </t>
+  </list>
+</t>
+<t>
+  (See <xref target="RFC7231" x:fmt="of" x:rel="#considerations.for.new.header.fields"/>
+  for a summary of considerations for new header fields.)
+</t>
+<t>
+  This specification addresses the issues listed above by defining both a generic
+  JSON-based (<xref target="RFC7159"/>) data model and a concrete
+  wire format that can be used in definitions of new header fields, where the
+  goals were:
+</t>
+<ul>
+  <li>to be compatible with header field recombination when fields occur multiple
+  times in a single message (<xref target="RFC7230" x:fmt="of" x:rel="#field.order"/>), and</li>
+  <li>not to use any problematic characters in the field value (non-ASCII characters and certain whitespace characters).</li>
+</ul>
+</section>  
+
+<!--<section title="Notational Conventions" anchor="notational.conventions">
+<t>
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in <xref target="RFC2119"/>.
+</t>
+<t>
+   This document reuses terminology used in the base HTTP specifications,
+   namely <xref target="RFC7230" x:fmt="of" x:rel="#header.fields"/>.
+</t>
+</section>-->
+
+<section title="Data Model and Format">
+<t>
+  In HTTP, header fields with the same field name can occur multiple times
+  within a single message (<xref target="RFC7230" x:fmt="of" x:rel="#field.order"/>).
+  When this happens, recipients are allowed to combine the field values using  
+  commas as delimiter. This rule matches nicely JSON's array format 
+  (<xref target="RFC7159" x:fmt="of" x:rel="#arrays"/>). Thus, the basic data model
+  used here is the JSON array.
+</t>
+<t>
+  Header field definitions that need only a single value can restrict
+  themselves to arrays of length 1, and are encouraged to define error
+  handling in case more values are received (such as "first wins", "last wins",
+  or "abort with fatal error message").
+</t>
+<t>
+  JSON arrays are mapped to field values by creating a sequence of
+  serialized member elements, separated by commas and optionally whitespace. This
+  is equivalent to using the full JSON array format, while leaving out
+  the "begin-array" ('[') and "end-array" (']') delimiters.
+</t>
+<figure>
+<preamble>
+  The ABNF character names and classes below are used (copied
+  from <xref target="RFC5234" x:fmt="," x:sec="B.1"/>):
+</preamble>
+<artwork type="abnf2616">
+  CR               = %x0D    ; carriage return
+  HTAB             = %x09    ; horizontal tab
+  LF               = %x0A    ; line feed
+  SP               = %x20    ; space
+  VCHAR            = %x21-7E ; visible (printing) characters
+</artwork></figure>
+<t>
+  Characters in JSON strings that are not allowed or discouraged in HTTP
+  header field values &mdash; that is, not in the "VCHAR" definition &mdash;
+  need to be represented using JSON's "backslash" escaping mechanism
+  (<xref target="RFC7159" x:fmt="," x:rel="#strings"/>).
+</t>
+<t>
+  The control characters CR, LF, and HTAB do not appear inside JSON
+  strings, but can be used outside (line breaks, indentation etc). These characters
+  need to be either stripped or replaced by space characters (ABNF "SP").
+</t>
+<t>
+  Formally, using the HTTP specification's ABNF extensions defined in
+  <xref target="RFC7230" x:fmt="of" x:rel="#abnf.extension"/>:
+</t>
+<figure><artwork type="abnf2616">
+  json-field-value = #json-field-item
+  json-field-item  = JSON-Text
+                   ; see <xref target="RFC7159" x:fmt="," x:rel="#grammar"/>,
+                   ; post-processed so that only VCHAR characters
+                   ; are used
+</artwork></figure>
+</section>
+
+<section title="Sender Requirements">
+<t>
+  To map a JSON array to an HTTP header field value, process each array
+  element separately by:
+  <list style="numbers">
+    <t>generating the JSON representation,</t>
+    <t>stripping all JSON control characters (CR, HTAB, LF), or replacing
+      them by space ("SP") characters,</t>
+    <t>replacing all remaining non-VSPACE characters by the equivalent
+    backslash-escape sequence (<xref target="RFC7159" x:fmt="," x:rel="#strings"/>).</t>
+  </list>
+</t>
+<t>
+  The resulting list of strings is transformed into an HTTP field value
+  by combining them using comma (%x2C) plus optional SP as delimiter,
+  and encoding the resulting string into an octet sequence using the 
+  US-ASCII character encoding scheme (<xref target="RFC0020"/>).
+</t>
+</section>
+
+<section title="Recipient Requirements">
+<t>
+  To map a set of HTTP header field instances to a JSON array:
+  <list style="numbers">
+    <t>combine all header field instances into a single field as per
+    <xref target="RFC7230" x:fmt="of" x:rel="#field.order"/>,</t>
+    <t>add a leading begin-array ("[") octet and a trailing end-array ("]") octet, then</t>
+    <t>run the resulting octet sequence through a JSON parser.
+    </t>
+  </list>
+</t>
+<t>
+  The result of the parsing operation is either an error (in which case
+  the header field values needs to be considered invalid), or a JSON array.
+</t>
+</section>
+
+<section title="Using this Format in Header Field Definitions">
+<t>
+  <cref>Explain what a definition of a new header field needs to do precisely
+  to use this format, mention must-ignore extensibiliy</cref>
+</t>
+</section>
+
+<section title="Examples" anchor="examples">
+<t>
+  This section shows how some of the existing HTTP header fields would look
+  like if they would use the format defined by this specification.
+</t>
+<section title="Content-Length" anchor="example.content-length">
+<t>
+  "Content-Length" is defined in <xref target="RFC7230" x:fmt="of"
+  x:rel="#header.content-length"/>, with the field value's ABNF being:
+</t>
+<figure><artwork type="abnf2616">
+  Content-Length = 1*DIGIT
+</artwork></figure>
+<t>
+  So the field value is similar to a JSON number (<xref target="RFC7159"
+  x:fmt="," x:rel="#numbers"/>).
+</t>
+<t>
+  Content-Length is restricted to a single field instance, as it doesn't use
+  the list production (as per <xref target="RFC7230" x:fmt="of" x:rel="#field.order"/>).
+  However, in practice multiple instances do occur, and the definition of
+  the header field does indeed discuss how to handle these cases.
+</t>
+<t>
+  If Content-Length was defined using the JSON format discussed here, the
+  ABNF would be something like:
+</t>
+<figure><artwork type="abnf2616">
+  Content-Length = #number
+                 ; number: <xref target="RFC7159" x:fmt="," x:rel="#numbers"/>
+</artwork></figure>
+<t>
+  ...and the prose definition would:
+  <list style="symbols">
+    <t>restrict all numbers to be non-negative integers without fractions, and</t>
+    <t>require that the array of values is of length 1
+    (but allow the case where the array is longer, but all members represent
+    the same value)</t>
+  </list>
+</t>
+</section>
+<section title="Content-Disposition" anchor="example.content-disposition">
+<t>
+  Content-Disposition field values, defined in <xref target="RFC6266"/>, consist of
+  a "disposition type" (a string), plus multiple parameters, of which at least
+  one ("filename") sometime needs to carry non-ASCII characters.
+</t>
+<t>
+  For instance, the first example in <xref target="RFC6266" x:fmt="of" x:sec="5"/>:
+</t>
+<figure><artwork type="example">
+  Attachment; filename=example.html
+</artwork></figure>
+<t>
+  has a disposition type of "Attachment", with filename parameter value
+  "example.html". A JSON representation of this information might be:
+</t>
+<figure><artwork type="application/json" x:lang="">
+  {
+    "Attachment": {
+      "filename" : "example.html"
+    }
+  }
+</artwork></figure>
+<t>
+  which would translate to a header field value of:
+</t>
+<figure><artwork type="application/json" x:lang="">
+  { "Attachment": { "filename" : "example.html" } }
+</artwork></figure>
+<t>
+  The third example in <xref target="RFC6266" x:fmt="of" x:sec="5"/>
+  uses a filename parameter containing non-US-ASCII characters:
+</t>
+<figure><artwork type="example">
+  attachment; filename*=UTF-8''%e2%82%ac%20rates
+</artwork></figure>
+<t>
+  Note that in this case, the "filename*" parameter uses the encoding defined in
+  <xref target="RFC5987"/>, representing a filename starting with the Unicode
+  character U+20AC (EURO SIGN), followed by " rates". If the definition
+  of Content-Disposition would have used the format proposed here, the
+  workaround involving the "parameter*" syntax would not have been needed at 
+  all.
+</t>
+<t>
+  The JSON representation of this value could then be:
+</t>
+<figure><artwork type="application/json" x:lang="">
+  { "attachment": { "filename" : "\u20AC rates" } }
+</artwork></figure>
+</section>
+<section title="WWW-Authenticate" anchor="example.www-authenticate">
+<t>
+  The WWW-Authenticate header field value is defined in <xref target="RFC7235" x:fmt="of"
+  x:rel="#header.www-authenticate"/> as a list of "challenges":
+</t>
+<figure><artwork type="abnf2616">
+   WWW-Authenticate = 1#challenge
+</artwork></figure>
+<t>
+  ...where a challenge consists of a scheme with optional parameters:
+</t>
+<figure><artwork type="abnf2616">
+  challenge   = auth-scheme [ 1*SP ( token68 / #auth-param ) ]
+</artwork></figure>
+<t>
+  An example for a complex header field value given in the definition of
+  the header field is:
+</t>
+<figure><artwork type="example">
+  Newauth realm="apps", type=1, title="Login to \"apps\"",
+  Basic realm="simple"
+</artwork>
+<postamble>(line break added for readability)</postamble>
+</figure>
+<t>
+  A possible JSON representation of this field value would be the array below:
+</t>
+<figure><artwork type="application/json" x:lang="">
+  [
+    {
+      "Newauth" : {
+        "realm": "apps",
+        "type" : 1,
+        "title" : "Login to \"apps\""
+      }
+    },
+    {
+      "Basic" : {
+        "realm": "simple"
+      }
+    } 
+  ]
+</artwork></figure>
+<t>
+  ...which would translate to a header field value of:
+</t>
+<figure><artwork type="example">
+  { "Newauth" : { "realm": "apps", "type" : 1,
+                  "title": "Login to \"apps\"" }},
+  { "Basic" : { "realm": "simple"}}
+</artwork></figure>
+</section>
+</section>
+
+<section title="Discussion">
+<t>
+  This approach uses a default of "JSON array", using implicit array markers.
+  An alternative would be a default of "JSON object". This would simplify
+  the syntax for non-list-typed header fields, but all the benefits of having the
+  same data model for both types of header fields would be gone.  
+  A hybrid approach might make sense, as long as it doesn't require any
+  heuristics on the recipient's side.
+</t>
+<aside>
+  <t>
+    <x:h>Note:</x:h>
+    a concrete proposal was made by Kazuho Oku in
+    <eref target="https://lists.w3.org/Archives/Public/ietf-http-wg/2016JanMar/0155.html"/>.
+  </t>
+</aside>
+<t>
+  <cref>Use of generic libs vs compactness of field values..</cref>
+</t>
+<t>
+  <cref>Mention potential "Key" header field extension (<xref target="KEY"/>).</cref>
+</t>
+</section>
+
+<section title="Deployment Considerations">
+<t>
+  This JSON-based syntax will only apply to newly introduced
+  header fields, thus backwards compatibility is not a problem. That being
+  said, it is conceivable that there is existing code that might trip over
+  double quotes not being used for HTTP's quoted-string syntax (<xref target="RFC7230" x:rel="#field.components"/>).
+</t>
+</section>
+
+<section title="Internationalization Considerations">
+<t>
+  In HTTP/1.1, header field values are represented by octet sequences, usually used to
+  transmit ASCII characters, with restrictions on the use of certain
+  control characters, and no associated default character encoding, nor
+  a way to describe it (<xref target="RFC7230" x:fmt="," x:rel="#header.fields"/>).
+  HTTP/2 does not change this.
+</t>
+<t>
+  This specification maps all characters which can cause problems to JSON
+  escape sequences, thereby solving the HTTP header field
+  internationalization problem.
+</t>
+<t>
+  Future specifications of HTTP might change to allow non-ASCII characters
+  natively. In that case, header fields using the syntax defined by this
+  specification would have a simple migration path (by just stopping
+  to require escaping of non-ASCII characters). 
+</t>
+</section>
+
+<section title="Security Considerations">
+<t>
+  Using JSON-shaped field values is believed to not introduce any new threads
+  beyond those described in <xref target="RFC7159" x:sec="12"/>, namely
+  the risk of recipients using the wrong tools to parse them.
+</t>
+<t>
+  Other than that, any syntax that makes extensions easy can be used to
+  smuggle information through field values; however, this concern is shared
+  with other widely used formats, such as those using parameters in the
+  form of name/value pairs.
+</t>
+</section>
+
+  </middle>
+  <back>
+  
+<references title="Normative References">
+
+  <reference anchor='RFC0020'>
+    <front>
+      <title>ASCII format for network interchange</title>
+      <author initials='V.' surname='Cerf' fullname='Vint Cerf'/>
+      <date year='1969' month='October' />
+    </front>
+    <seriesInfo name='STD' value='80' />
+    <seriesInfo name='RFC' value='20' />
+  </reference>
+
+<!--  <reference anchor="RFC2119">
+    <front>
+      <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+      <author initials="S." surname="Bradner" fullname="Scott Bradner">
+        <organization>Harvard University</organization>
+        <address><email>sob@harvard.edu</email></address>
+      </author>
+      <date month="March" year="1997"/>
+    </front>
+    <seriesInfo name="BCP" value="14"/>
+    <seriesInfo name="RFC" value="2119"/>
+  </reference>-->
+
+  <reference anchor="RFC5234">
+    <front>
+      <title abbrev="ABNF for Syntax Specifications">Augmented BNF for Syntax Specifications: ABNF</title>
+      <author initials="D." surname="Crocker" fullname="Dave Crocker" role="editor"/>
+      <author initials="P." surname="Overell" fullname="Paul Overell"/>
+      <date month="January" year="2008"/>
+    </front>
+    <seriesInfo name="STD" value="68"/>
+    <seriesInfo name="RFC" value="5234"/>
+  </reference>
+
+  <reference anchor='RFC7159'>
+    <front>
+      <title>The JavaScript Object Notation (JSON) Data Interchange Format</title>
+      <author initials='T.' surname='Bray' fullname='T. Bray'/>
+      <date year='2014' month='March' />
+    </front>
+    <seriesInfo name='RFC' value='7159' />
+    <x:source href="refs/rfc7159.xml" basename="rfc7159"/>
+  </reference>
+
+  <reference anchor="RFC7230">
+    <front>
+      <title>Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</title>
+      <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor">
+        <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
+        <address><email>fielding@gbiv.com</email></address>
+      </author>
+      <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor">
+        <organization abbrev="greenbytes">greenbytes GmbH</organization>
+        <address><email>julian.reschke@greenbytes.de</email></address>
+      </author>
+      <date month="June" year="2014"/>
+    </front>
+    <seriesInfo name="RFC" value="7230"/>
+    <x:source href="refs/rfc7230.xml" basename="rfc7230"/>
+  </reference>
+
+  <reference anchor="RFC7231">
+    <front>
+      <title>Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</title>
+      <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor">
+        <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
+        <address><email>fielding@gbiv.com</email></address>
+      </author>
+      <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor">
+        <organization abbrev="greenbytes">greenbytes GmbH</organization>
+        <address><email>julian.reschke@greenbytes.de</email></address>
+      </author>
+      <date month="June" year="2014"/>
+    </front>
+    <seriesInfo name="RFC" value="7231"/>
+    <x:source href="refs/rfc7231.xml" basename="rfc7231"/>
+  </reference>
+</references>
+
+<references title="Informative References">
+  <reference anchor="ISO-8859-1">
+    <front>
+      <title>Information technology -- 8-bit single-byte coded graphic character sets -- Part 1: Latin alphabet No. 1</title>
+      <author>
+        <organization>International Organization for Standardization</organization>
+      </author>
+      <date year="1998"/>
+    </front>
+    <seriesInfo name="ISO/IEC" value="8859-1:1998"/>
+  </reference>
+
+  <reference anchor="RFC5987">
+  	<front>
+      <title>Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters</title>
+      <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke"/>
+      <date month="August" year="2010"/>
+    </front>
+    <seriesInfo name="RFC" value="5987"/>
+  </reference>
+
+  <reference anchor="RFC6266">
+    <front>
+      <title abbrev="Content-Disposition in HTTP">Use of the Content-Disposition Header Field
+      in the Hypertext Transfer Protocol (HTTP)</title>
+      <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke"/>
+      <date month="June" year="2011"/>
+    </front>
+    <seriesInfo name='RFC' value='6266' />
+  </reference>
+
+  <reference anchor="RFC6365">
+    <front>
+      <title>Terminology Used in Internationalization in the IETF</title>
+      <author initials="P." surname="Hoffman" fullname="P. Hoffman"/>
+      <author initials="J." surname="Klensin" fullname="J. Klensin"/>
+      <date year="2011" month="September"/>
+    </front>
+    <seriesInfo name="BCP" value="166"/>
+    <seriesInfo name="RFC" value="6365"/>
+  </reference>
+
+  <reference anchor="RFC7235">
+    <front>
+      <title>Hypertext Transfer Protocol (HTTP/1.1): Authentication</title>
+      <author initials="R." surname="Fielding" fullname="Roy T. Fielding" role="editor"/>
+      <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke" role="editor"/>
+      <date month="June" year="2014"/>
+    </front>
+    <seriesInfo name="RFC" value="7235"/>
+    <x:source href="refs/rfc7235.xml" basename="rfc7235"/>
+  </reference>
+
+  <reference anchor='KEY'>
+    <front>
+      <title>The Key HTTP Response Header Field</title>
+      <author initials='R.' surname='Fielding' fullname='Roy Fielding'/>
+      <author initials='M.' surname='Nottingham' fullname='Mark Nottingham'/>
+      <date month='March' year='2016'/>
+    </front>
+    <seriesInfo name='Internet-Draft' value='draft-ietf-httpbis-key-01'/>
+  </reference>
+
+  <reference anchor='XMLHttpRequest'
+             target='http://www.w3.org/TR/2014/WD-XMLHttpRequest-20140130/'>
+    <front>
+      <title>XMLHttpRequest Level 1</title>
+      <author fullname='Anne van Kesteren' surname='van Kesteren' initials='A.'/>
+      <author fullname='Julian Aubourg' surname='Aubourg' initials='J.'/>
+      <author fullname='Jungkee Song' surname='Song' initials='J.'/>
+      <author fullname='Hallvord Steen' surname='Steen' initials='H.'/>
+      <date year='2014' month='January' day='30'/>
+    </front>
+    <seriesInfo name='W3C Working Draft' value='WD-XMLHttpRequest-20140130'/>
+    <annotation>
+      Latest version available at
+      <eref target='http://www.w3.org/TR/XMLHttpRequest/'/>.
+    </annotation>
+  </reference>
+</references>
+
+<section title="Change Log (to be removed by RFC Editor before publication)" anchor="change.log">
+
+<section title="Since draft-reschke-http-jfv-00" anchor="changes.since.00">
+<t>
+  Editorial fixes + working on the TODOs.
+</t>
+</section>
+<section title="Since draft-reschke-http-jfv-01" anchor="changes.since.01">
+<t>
+  Mention slightly increased risk of smuggling information in header field values.
+</t>
+</section>
+<section title="Since draft-reschke-http-jfv-02" anchor="changes.since.02">
+<t>
+  Mention Kazuho Oku's proposal for abbreviated forms.
+</t>
+<t>
+  Added a bit of text about the motivation for a concrete JSON subset (ack Cory Benfield).
+</t>
+<t>
+  Expand I18N section.
+</t>
+</section>
+<section title="Since draft-reschke-http-jfv-03" anchor="changes.since.03">
+<t>
+  Mention relation to KEY header field.
+</t>
+</section>
+</section>
+
+<section title="Acknowledgements" anchor="acks" numbered="false">
+<t>
+  Thanks go to the Hypertext Transfer Protocol Working Group participants.
+  <!-- Kazuho Oku-->
+  <!-- Cory Benfield-->
+</t>
+</section>
+
+  </back>
+
+</rfc>
