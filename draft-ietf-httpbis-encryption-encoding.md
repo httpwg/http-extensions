@@ -283,9 +283,9 @@ salt:
 rs:
 
 : The "rs" parameter contains a positive decimal integer that describes the
-  record size in octets.  This value MUST be greater than 1.  The "rs" parameter
-  is optional.  If the "rs" parameter is absent, the record size defaults to
-  4096 octets.
+  record size in octets.  This value MUST be greater than 1 and no more than
+  2^36-31 (see {{limits}}).  The "rs" parameter is optional.  If the "rs"
+  parameter is absent, the record size defaults to 4096 octets.
 
 
 ## Content Encryption Key Derivation {#derivation}
@@ -357,7 +357,8 @@ Thus, the final nonce for each record is a 12 octet value:
 ~~~
 
 This nonce construction prevents removal or reordering of records. However, it
-permits truncation of the tail of the sequence.
+permits truncation of the tail of the sequence (see {{aesgcm}} for how this is
+avoided).
 
 
 # Crypto-Key Header Field {#crypto-key}
@@ -704,7 +705,7 @@ generate a random salt parameter for every message; a counter could achieve the
 same result.
 
 
-## Data Encryption Limits
+## Data Encryption Limits {#limits}
 
 There are limits to the data that AEAD_AES_128_GCM can encipher.  The maximum
 record size is 2^36-31 [RFC5116].  In order to preserve a 2^-40 probability of
