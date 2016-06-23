@@ -162,8 +162,8 @@ scheme.  This ensures that only the HTTP Accept-Encoding header field is
 necessary to negotiate the use of encryption.
 
 The "aesgcm" content-coding uses a fixed record size.  The resulting encoding is
-a series of fixed-size records, with a final record that is one or more octets
-shorter than a fixed sized record.
+either a single record, or a series of fixed-size records. The final record, or
+a lone record, MUST be shorter than the fixed record size.
 
 ~~~ drawing
       +-----------+       content is rs octets minus padding
