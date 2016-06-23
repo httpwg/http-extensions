@@ -381,7 +381,7 @@ keyid:
 aesgcm:
 
 : The "aesgcm" parameter contains the base64url-encoded octets [RFC7515] of the
-  input keying material.
+  input keying material for the "aesgcm" content encoding.
 
 dh:
 
