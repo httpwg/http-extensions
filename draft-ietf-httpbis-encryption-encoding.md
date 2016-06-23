@@ -247,8 +247,8 @@ Section 1.2 of [RFC7230] and the `parameter` rule from [RFC7231]
 
 If the payload is encrypted more than once (as reflected by having multiple
 content-codings that imply encryption), each application of the content encoding
-is reflected in the Encryption header field, in the order in which they were
-applied.
+is reflected in a separate Encryption header field value in the order in which
+they were applied.
 
 Encryption header field values with multiple instances of the same parameter
 name are invalid.
