@@ -6,6 +6,13 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 **Be aware that all contributions to our work fall under the "NOTE WELL" terms therein.**
 
 
+### JSON Encoding for HTTP Field Values
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/jfv.html) ([plain text](https://httpwg.github.io/http-extensions/jfv.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-jfv) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Ajfv) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-jfv/)
+
+
 ### Origin Frame
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/origin-frame.html) ([plain text](https://httpwg.github.io/http-extensions/origin-frame.txt))
