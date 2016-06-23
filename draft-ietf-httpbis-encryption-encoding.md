@@ -356,7 +356,8 @@ Thus, the final nonce for each record is a 12 octet value:
    NONCE = HMAC-SHA-256(PRK, nonce_info || 0x01) XOR SEQ
 ~~~
 
-This nonce construction prevents removal or reordering of records.
+This nonce construction prevents removal or reordering of records. However, it
+permits truncation of the tail of the sequence.
 
 
 # Crypto-Key Header Field {#crypto-key}
