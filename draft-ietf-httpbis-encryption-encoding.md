@@ -171,7 +171,7 @@ shorter than a fixed sized record.
       +-----------+       the last record is smaller
            |
            v
-+-----+-----------+       add padding to rs octets;
++-----+-----------+       add padding to get rs octets;
 | pad |   data    |       the last record contains
 +-----+-----------+       up to rs minus 1 octets
          |
