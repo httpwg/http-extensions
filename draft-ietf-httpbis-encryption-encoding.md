@@ -283,9 +283,10 @@ salt:
 rs:
 
 : The "rs" parameter contains a positive decimal integer that describes the
-  record size in octets.  This value MUST be greater than 1 and no more than
-  2^36-31 (see {{limits}}).  The "rs" parameter is optional.  If the "rs"
-  parameter is absent, the record size defaults to 4096 octets.
+  record size in octets.  This value MUST be greater than 1.  For the "aesgcm"
+  content encoding, this value MUST NOT be greater than 2^36-31 (see
+  {{limits}}).  The "rs" parameter is optional.  If the "rs" parameter is
+  absent, the record size defaults to 4096 octets.
 
 
 ## Content Encryption Key Derivation {#derivation}
