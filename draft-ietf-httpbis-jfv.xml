@@ -642,6 +642,11 @@
   Mention relation to KEY header field.
 </t>
 </section>
+<section title="Since draft-reschke-http-jfv-04" anchor="changes.since.04">
+<t>
+  Change to HTTP Working Group draft.
+</t>
+</section>
 </section>
 
 <section title="Acknowledgements" anchor="acks" numbered="false">
