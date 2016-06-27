@@ -208,8 +208,8 @@ final record is the full record size.
 A consequence of this record structure is that range requests [RFC7233] and
 random access to encrypted payload bodies are possible at the granularity of the
 record size.  However, without data from adjacent ranges, partial records cannot
-be used.  Thus, it is best if records start and end on multiples of the record
-size, plus the 16 octet authentication tag size.
+be used.  Thus, it is best if range requests start and end on multiples of the
+record size, plus the 16 octet authentication tag size.
 
 
 # The Encryption HTTP Header Field  {#encryption}
