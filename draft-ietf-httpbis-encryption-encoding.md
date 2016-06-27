@@ -60,22 +60,29 @@ informative:
     date: July 2013
     seriesinfo: NIST PUB 186-4
   X9.62:
-     title: "Public Key Cryptography For The Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)"
-     author:
-       - org: ANSI
-     date: 1998
-     seriesinfo: ANSI X9.62
+    title: "Public Key Cryptography For The Financial Services Industry: The Elliptic Curve Digital Signature Algorithm (ECDSA)"
+    author:
+      - org: ANSI
+    date: 1998
+    seriesinfo: ANSI X9.62
   XMLENC:
-     title: "XML Encryption Syntax and Processing"
-     author:
-       - ins: D. Eastlake
-       - ins: J. Reagle
-       - ins: T. Imamura
-       - ins: B. Dillaway
-       - ins: E. Simon
-     date: 2002-12
-     seriesinfo: W3C REC
-     target: "http://www.w3.org/TR/xmlenc-core/"
+    title: "XML Encryption Syntax and Processing"
+    author:
+      - ins: D. Eastlake
+      - ins: J. Reagle
+      - ins: T. Imamura
+      - ins: B. Dillaway
+      - ins: E. Simon
+    date: 2002-12
+    seriesinfo: W3C REC
+    target: "http://www.w3.org/TR/xmlenc-core/"
+  AEBounds:
+    title: "Limits on Authenticated Encryption Use in TLS"
+    author:
+      - ins: A. Luykx
+      - ins: K. Paterson
+    date: 2016-03-08
+    target: "http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf"
 
 --- abstract
 
@@ -155,23 +162,23 @@ scheme.  This ensures that only the HTTP Accept-Encoding header field is
 necessary to negotiate the use of encryption.
 
 The "aesgcm" content-coding uses a fixed record size.  The resulting encoding is
-a series of fixed-size records, with a final record that is one or more octets
-shorter than a fixed sized record.
+either a single record, or a series of fixed-size records. The final record, or
+a lone record, MUST be shorter than the fixed record size.
 
 ~~~ drawing
-       +------+         input of between rs-65537
-       | data |            and rs-2 octets
-       +------+      (one fewer for the last record)
+      +-----------+       content is rs octets minus padding
+      |   data    |       of between 2 and 65537 octets;
+      +-----------+       the last record is smaller
            |
            v
-+-----+-----------+
-| pad |   data    |     add padding to form plaintext
-+-----+-----------+
++-----+-----------+       add padding to get rs octets;
+| pad |   data    |       the last record contains
++-----+-----------+       up to rs minus 1 octets
          |
          v
-+--------------------+
-|    ciphertext      |  encrypt with AEAD_AES_128_GCM
-+--------------------+     expands by 16 octets
++--------------------+    encrypt with AEAD_AES_128_GCM;
+|    ciphertext      |    final size is rs plus 16 octets
++--------------------+    the last record is smaller
 ~~~
 
 The record size determines the length of each portion of plaintext that is
@@ -179,11 +186,11 @@ enciphered, with the exception of the final record, which is necessarily
 smaller.  The record size defaults to 4096 octets, but can be changed using the
 "rs" parameter on the Encryption header field.
 
-AEAD_AES_128_GCM expands ciphertext to be 16 octets longer than its input
+AEAD_AES_128_GCM produces ciphertext 16 octets longer than its input
 plaintext.  Therefore, the length of each enciphered record other than the last
 is equal to the value of the "rs" parameter plus 16 octets.  A receiver MUST
-fail to decrypt if the final record ciphertext is 16 octets or less in size.
-Valid records always contain at least one byte of padding and a 16 octet
+fail to decrypt if the final record ciphertext is less than 18 octets in size.
+Valid records always contain at least two octets of padding and a 16 octet
 authentication tag.
 
 Each record contains between 2 and 65537 octets of padding, inserted into a
@@ -211,6 +218,18 @@ record size.  However, without data from adjacent ranges, partial records cannot
 be used.  Thus, it is best if range requests start and end on multiples of the
 record size, plus the 16 octet authentication tag size.
 
+Selecting the record size most appropriate for a given situation requires a
+trade-off.  A smaller record size allows decrypted octets to be released more
+rapidly, which can be appropriate for applications that depend on
+responsiveness.  Smaller records also reduce the additional data required if
+random access into the ciphertext is needed.  Applications that depend on being
+able to pad by arbitrary amounts cannot increase the record size beyond 65537
+octets.
+
+Applications that don't depending on streaming, random access, or arbitrary
+padding can use larger records, or even a single record.  A larger record size
+reduces the processing and data overheads.
+
 
 # The Encryption HTTP Header Field  {#encryption}
 
@@ -228,16 +247,11 @@ Section 1.2 of [RFC7230] and the `parameter` and `OWS` rules from [RFC7231].
 
 If the payload is encrypted more than once (as reflected by having multiple
 content-codings that imply encryption), each application of the content encoding
-is reflected in the Encryption header field, in the order in which they were
-applied.
+is reflected in a separate Encryption header field value in the order in which
+they were applied.
 
 Encryption header field values with multiple instances of the same parameter
 name are invalid.
-
-The Encryption header MAY be omitted if the sender does not intend for the
-immediate recipient to be able to decrypt the payload body.  Alternatively,
-the Encryption header field MAY be omitted if the sender intends for the
-recipient to acquire the header field by other means.
 
 Servers processing PUT requests MUST persist the value of the Encryption header
 field, unless they remove the content-coding by decrypting the payload.
@@ -270,8 +284,10 @@ salt:
 rs:
 
 : The "rs" parameter contains a positive decimal integer that describes the
-  record size in octets.  This value MUST be greater than 1.  If the "rs"
-  parameter is absent, the record size defaults to 4096 octets.
+  record size in octets.  This value MUST be greater than 1.  For the "aesgcm"
+  content encoding, this value MUST NOT be greater than 2^36-31 (see
+  {{limits}}).  The "rs" parameter is optional.  If the "rs" parameter is
+  absent, the record size defaults to 4096 octets.
 
 
 ## Content Encryption Key Derivation {#derivation}
@@ -285,8 +301,8 @@ SHA-256 hash algorithm [FIPS180-4].
 The decoded value of the "salt" parameter is the salt input to HKDF function.
 The keying material identified by the "keyid" parameter is the input keying
 material (IKM) to HKDF.  Input keying material can either be prearranged, or can
-be described using the Crypto-Key header field ({{crypto-key}}).  The first step
-of HKDF is therefore:
+be described using the Crypto-Key header field ({{crypto-key}}).  The extract
+phase of HKDF therefore produces a pseudorandom key (PRK) as follows:
 
 ~~~ inline
    PRK = HMAC-SHA-256(salt, IKM)
@@ -303,7 +319,7 @@ Unless otherwise specified, the context is a zero length octet sequence.
 Specifications that use this content encoding MAY specify the use of an expanded
 context to cover additional inputs in the key derivation.
 
-AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key, so the
+AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key (CEK), so the
 length (L) parameter to HKDF is 16.  The second step of HKDF can
 therefore be simplified to the first 16 octets of a single HMAC:
 
@@ -342,6 +358,10 @@ Thus, the final nonce for each record is a 12 octet value:
    NONCE = HMAC-SHA-256(PRK, nonce_info || 0x01) XOR SEQ
 ~~~
 
+This nonce construction prevents removal or reordering of records. However, it
+permits truncation of the tail of the sequence (see {{aesgcm}} for how this is
+avoided).
+
 
 # Crypto-Key Header Field {#crypto-key}
 
@@ -364,7 +384,7 @@ keyid:
 aesgcm:
 
 : The "aesgcm" parameter contains the base64url-encoded octets [RFC7515] of the
-  input keying material.
+  input keying material for the "aesgcm" content encoding.
 
 dh:
 
@@ -685,6 +705,20 @@ material is reused, then the salt parameter MUST be unique each time.  This
 ensures that the content encryption key is not reused.  An implementation SHOULD
 generate a random salt parameter for every message; a counter could achieve the
 same result.
+
+
+## Data Encryption Limits {#limits}
+
+There are limits to the data that AEAD_AES_128_GCM can encipher.  The maximum
+record size is 2^36-31 [RFC5116].  In order to preserve a 2^-40 probability of
+indistinguishability under chosen plaintext attack (IND-CPA), the total amount
+of plaintext that can be enciphered MUST be less than 2^44.5 blocks [AEBounds].
+
+If rs is a multiple of 16 octets, this means 398 terabytes can be encrypted
+safely, including padding.  However, if the record size is a multiple of 16
+octets, the total amount of data that can be safely encrypted is reduced.  The
+worst case is a record size of 3 octets, for which at most 74 terabytes of
+plaintext can be encrypted, of which at least two-thirds is padding.
 
 
 ## Content Integrity
