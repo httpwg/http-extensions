@@ -114,9 +114,10 @@ connection cannot be successfully established, the client can resume its use of 
 connection.
 
 A client can also explicitly probe for an alternative service advertisement by sending a request
-that bears little or no sensitive information, such as one with the OPTIONS method. Likewise,
-clients with existing alternative services information could make such a request before they expire,
-in order minimize the delays that might be incurred.
+that bears little or no sensitive information. A GET request to the "http-opportunistic"
+resource is optimal for this purpose. Likewise, clients with existing alternative services
+information could make such a request before they expire, in order minimize the delays that
+might be incurred.
 
 Client certificates are not meaningful for URLs with the "http" scheme, and therefore clients
 creating new TLS connections to alternative services for the purposes of this specification MUST
