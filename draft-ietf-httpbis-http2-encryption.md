@@ -171,6 +171,12 @@ Connection: close
 }
 ~~~
 
+The JSON format for the http-opportunistic resource makes it possible to include multiple values
+for the same origin.  Variations in case allow for duplicate keys that a JSON parser will treat
+as different.  Duplicated keys might not be detected by a client (see Section 4 of {{RFC7159}}).
+A client SHOULD NOT use origin objects if multiple keys match, though it MAY use any origin
+object with a matching key.
+
 Note that this mechanism is only defined to establish reasonable assurances for the purposes of this
 specification; it does not apply to other uses of alternative services unless they explicitly invoke
 it.
