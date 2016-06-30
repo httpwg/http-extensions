@@ -279,10 +279,10 @@ inaccessible for the duration of a commitment. Initial deployments are encourage
 duration commitments so that errors can be detected without causing the origin to become
 inaccessible to clients for extended periods.
 
-To avoid situations where a commitment causes errors, clients MAY limit the time over which a
-commitment is respected for a given origin.  A lower limit might be appropriate for initial
-commitments; the certainty that a site has set a correct value - and the corresponding limit on
-persistence - might increase as a commitment is renewed multiple times.
+To avoid situations where a commitment causes errors, clients MAY limit the origin object
+lifetime to limit the duration of commitment for that given origin.  A lower limit might be
+appropriate for initial commitments; the certainty that a site has set a correct value - and the
+corresponding limit on persistence - might increase as a commitment is renewed multiple times.
 
 
 # The "http-opportunistic" well-known URI {#well-known}
