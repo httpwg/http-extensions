@@ -232,7 +232,6 @@ origin makes such a commitment for the duration of the origin object lifetime.
 ~~~ example
 {
   "http://www.example.com": {
-    "tls-ports": [443,8080],
     "tls-commit": true,
     "lifetime": 3600
   }
@@ -243,6 +242,9 @@ Including `tls-commit` creates a commitment to provide a secured alternative ser
 advertised period. Clients that receive this commitment can assume that a secured alternative
 service will be available for the origin object lifetime. Clients might however choose to limit
 this time (see {{pinrisks}}).
+
+The `tls-ports` member is ignored when the `tls-commit` member is provided.  A server that is
+able to strongly authenticate can run on any port.
 
 
 ## Client Handling of A Commitment
