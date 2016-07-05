@@ -366,13 +366,16 @@ avoided).
 # Crypto-Key Header Field {#crypto-key}
 
 A Crypto-Key header field can be used to describe the input keying material
-used in the Encryption header field.
+used in the Encryption header field. Crypto-Key is a composite field,
+where multiple protocols may store information. Each parameter set
+shall be separated by a comma and should be identified by a "keyid"
+parameter.
 
 The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
 of [RFC7230] and the `parameter` and `OWS` rules from [RFC7231].
 
 ~~~ abnf7230
-  Crypto-Key = #crypto_key_params
+  Crypto-Key = crypto_key_params *(COMMA crypto_key_params)
   crypto_key_params = [ parameter *( OWS ";" OWS parameter ) ]
 ~~~
 
@@ -409,6 +412,18 @@ encryption key is the necessary size.
 
 Alternative methods for determining input keying material MAY be defined by
 specifications that use this content-encoding.
+
+An example of a composite Crypto-Key field is
+
+~~~ example
+   CryptoKey: keyid=p256dh;dh=BN8VZLdyi…,p256ecdsa=BFoWLF…
+~~~
+
+The proceeding example contained two parameter sets. The first
+contains "keyid" and "dh" used by this protocol (the values have been
+truncated with a "…" for readablity). The second contains "p256ecdsa"
+and belongs to a different protocol. Note that these parameter sets
+are divided by a COMMA ",".
 
 
 ## Explicit Key
