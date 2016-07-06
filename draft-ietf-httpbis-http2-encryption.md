@@ -66,7 +66,7 @@ This document describes a use of HTTP Alternative Services {{RFC7838}} to decoup
 the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI
 {{RFC7230}} to be accessed using Transport Layer Security (TLS) {{RFC5246}} opportunistically.
 
-Serving `https` URIs require acquiring and configuring a valid certificate, which means that some
+Serving `https` URIs requires acquiring and configuring a valid certificate, which means that some
 deployments find supporting TLS difficult. This document describes a usage model whereby sites can
 serve `http` URIs over TLS without being required to support strong server authentication.
 
