@@ -177,34 +177,18 @@
   The encoding defined by this specification does not allow that.
 </t>
 
-<section title="Definition">
-<t>
-  The syntax for parameters is defined in <xref target="RFC2616" x:fmt="of" x:sec="3.6"/>
-  (with RFC 2616 implied LWS translated to RFC 5234 LWSP):
-</t>
-<figure><artwork type="inline">
-  parameter     = attribute LWSP "=" LWSP value
-</artwork></figure>
-<figure><artwork type="abnf">  attribute     = token
-  value         = token / quoted-string
-
-  quoted-string = &lt;quoted-string, see <xref target="RFC7230" x:fmt="," x:rel="#field.components"/>&gt;
-  token         = &lt;token, see <xref target="RFC7230" x:fmt="," x:rel="#field.components"/>&gt;
-</artwork></figure>
-<t anchor="bnf">
+<section title="Definition" anchor="definition">
   <x:anchor-alias value="ext-value"/>
-  In order to include character encoding and language information, this
-  specification modifies the RFC 2616 grammar to be:
+<t>
+  The presence of extended parameter values usually is indicated by a parameter name
+  ending in an asterisk character. Note however that this is just a convention,
+  and that it needs to be explicitly specified in the definition of the header
+  field using this extension (see <xref target="usage.guidelines"/>).
+</t>
+<t>
+  The ABNF for extended parameter values is specified below:
 </t>
 <figure><artwork type="abnf">
-  parameter     = reg-parameter / ext-parameter
-
-  reg-parameter = parmname LWSP "=" LWSP value
-
-  ext-parameter = parmname "*" LWSP "=" LWSP ext-value
-
-  parmname      = 1*attr-char
-
   ext-value     = charset  "'" [ language ] "'" value-chars
                 ; like RFC 2231's &lt;extended-initial-value&gt;
                 ; (see <xref target="RFC2231" x:fmt="," x:sec="7"/>)
@@ -232,15 +216,6 @@
                 / "^" / "_" / "`" / "|" / "~"
                 ; token except ( "*" / "'" / "%" )
 </artwork></figure>
-<t>
-  Thus, a parameter is either a regular parameter (reg-parameter), as previously
-  defined in <xref target="RFC2616" x:fmt="of" x:sec="3.6"/>, or an extended
-  parameter (ext-parameter).
-</t>
-<t>
-  Extended parameters are those where the left-hand side of the assignment
-  ends with an asterisk character.
-</t>
 <t>
   The value part of an extended parameter (ext-value) is a token that consists
   of three parts: the &REQUIRED; character encoding name (charset), the &OPTIONAL;
@@ -380,11 +355,11 @@
   in <xref target="character.set.and.language.information"/> ought to clearly
   state that. A simple way to achieve this is to normatively reference
   this specification, and to include the <x:ref>ext-value</x:ref>
-  production into the ABNF for that header field.
+  production into the ABNF for specific header field parameters.
 </t>
 <figure><preamble>For instance:</preamble>
 <artwork type="example">
-  foo-header  = "foo" LWSP ":" LWSP token ";" LWSP title-param
+  foo         = token ";" LWSP title-param
   title-param = "title" LWSP "=" LWSP value
               / "title*" LWSP "=" LWSP ext-value
   ext-value   = &lt;see draft-ietf-httpbis-rfc5987bis, <xref target="character.set.and.language.information"/>&gt;
@@ -848,6 +823,11 @@
     <t>
       The requirement to support the "ISO-8859-1" encoding was removed.
     </t>
+    <t>
+      The document does not attempt to re-define a generic "parameter" ABNF anymore (it turned out that
+      there really isn't a generic definition of parameters in HTTP; for instance, 
+      there are subtle differences with respect to whitespace handling).
+    </t>
   </list>
 </t>
 </section>
@@ -961,6 +941,10 @@
 </t>
 <t>
   Reference RFC 20 for US-ASCII.
+</t>
+<t>
+  Do not attempt to define a generic parameter ABNF; just concentrate on the
+  parameter value syntax.
 </t>
 </section>
 </section>
