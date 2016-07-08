@@ -479,52 +479,13 @@
   <reference anchor="RFC2119">
     <front>
       <title abbrev="RFC Key Words">Key words for use in RFCs to Indicate Requirement Levels</title>
-      <author initials="S." surname="Bradner" fullname="Scott Bradner">
-        <organization>Harvard University</organization>
-        <address><email>sob@harvard.edu</email></address>
-      </author>
+      <author initials="S." surname="Bradner" fullname="Scott Bradner"/>
       <date month="March" year="1997"/>
     </front>
     <seriesInfo name="BCP" value="14"/>
     <seriesInfo name="RFC" value="2119"/>
   </reference>
 
-  <reference anchor="RFC2616">
-    <front>
-      <title>Hypertext Transfer Protocol -- HTTP/1.1</title>
-      <author initials="R." surname="Fielding" fullname="R. Fielding">
-        <organization>University of California, Irvine</organization>
-        <address><email>fielding@ics.uci.edu</email></address>
-      </author>
-      <author initials="J." surname="Gettys" fullname="J. Gettys">
-        <organization>W3C</organization>
-        <address><email>jg@w3.org</email></address>
-      </author>
-      <author initials="J." surname="Mogul" fullname="J. Mogul">
-        <organization>Compaq Computer Corporation</organization>
-        <address><email>mogul@wrl.dec.com</email></address>
-      </author>
-      <author initials="H." surname="Frystyk" fullname="H. Frystyk">
-        <organization>MIT Laboratory for Computer Science</organization>
-        <address><email>frystyk@w3.org</email></address>
-      </author>
-      <author initials="L." surname="Masinter" fullname="L. Masinter">
-        <organization>Xerox Corporation</organization>
-        <address><email>masinter@parc.xerox.com</email></address>
-      </author>
-      <author initials="P." surname="Leach" fullname="P. Leach">
-        <organization>Microsoft Corporation</organization>
-        <address><email>paulle@microsoft.com</email></address>
-      </author>
-      <author initials="T." surname="Berners-Lee" fullname="T. Berners-Lee">
-        <organization>W3C</organization>
-        <address><email>timbl@w3.org</email></address>
-      </author>
-      <date month="June" year="1999"/>
-    </front>
-    <seriesInfo name="RFC" value="2616"/>
-  </reference>
-  
   <reference anchor="RFC2978">
     <front>
       <title>IANA Charset Registration Procedures</title>
@@ -539,10 +500,7 @@
   <reference anchor="RFC3629">
     <front>
       <title>UTF-8, a transformation format of ISO 10646</title>
-      <author initials="F." surname="Yergeau" fullname="F. Yergeau">
-        <organization>Alis Technologies</organization>
-        <address><email>fyergeau@alis.com</email></address>
-      </author>
+      <author initials="F." surname="Yergeau" fullname="F. Yergeau"/>
       <date month="November" year="2003"/>
     </front>
     <seriesInfo name="STD" value="63"/>
@@ -552,27 +510,9 @@
   <reference anchor="RFC3986">
    <front>
     <title abbrev="URI Generic Syntax">Uniform Resource Identifier (URI): Generic Syntax</title>
-    <author initials="T." surname="Berners-Lee" fullname="Tim Berners-Lee">
-      <organization abbrev="W3C/MIT">World Wide Web Consortium</organization>
-      <address>
-         <email>timbl@w3.org</email>
-         <uri>http://www.w3.org/People/Berners-Lee/</uri>
-      </address>
-    </author>
-    <author initials="R." surname="Fielding" fullname="Roy T. Fielding">
-      <organization abbrev="Day Software">Day Software</organization>
-      <address>
-        <email>fielding@gbiv.com</email>
-        <uri>http://roy.gbiv.com/</uri>
-      </address>
-    </author>
-    <author initials="L." surname="Masinter" fullname="Larry Masinter">
-      <organization abbrev="Adobe Systems">Adobe Systems Incorporated</organization>
-      <address>
-        <email>LMM@acm.org</email>
-        <uri>http://larry.masinter.net/</uri>
-      </address>
-    </author>
+    <author initials="T." surname="Berners-Lee" fullname="Tim Berners-Lee"/>
+    <author initials="R." surname="Fielding" fullname="Roy T. Fielding"/>
+    <author initials="L." surname="Masinter" fullname="Larry Masinter"/>
     <date month="January" year="2005"/>
    </front>
    <seriesInfo name="STD" value="66"/>
@@ -582,14 +522,8 @@
   <reference anchor="RFC5646">
     <front>
       <title>Tags for Identifying Languages</title>
-      <author initials="A." surname="Phillips" fullname="Addison Phillips" role="editor">
-        <organization>Lab126</organization>
-        <address><email>addison@inter-locale.com</email></address>
-      </author>
-      <author initials="M." surname="Davis" fullname="Mark Davis" role="editor">
-        <organization>Google</organization>
-        <address><email>mark.davis@google.com</email></address>
-      </author>
+      <author initials="A." surname="Phillips" fullname="Addison Phillips" role="editor"/>
+      <author initials="M." surname="Davis" fullname="Mark Davis" role="editor"/>
       <date month="September" year="2009"/>
     </front>
     <seriesInfo name="BCP" value="47"/>
@@ -599,19 +533,8 @@
   <reference anchor="RFC5234">
     <front>
       <title abbrev="ABNF for Syntax Specifications">Augmented BNF for Syntax Specifications: ABNF</title>
-      <author initials="D." surname="Crocker" fullname="Dave Crocker" role="editor">
-        <organization>Brandenburg InternetWorking</organization>
-        <address>
-          <phone>+1.408.246.8253</phone>
-          <email>dcrocker@bbiw.net</email>
-        </address>  
-      </author>
-      <author initials="P." surname="Overell" fullname="Paul Overell">
-        <organization>THUS plc.</organization>
-        <address>
-          <email>paul.overell@thus.net</email>
-        </address>
-      </author>
+      <author initials="D." surname="Crocker" fullname="Dave Crocker" role="editor"/>
+      <author initials="P." surname="Overell" fullname="Paul Overell"/>
       <date month="January" year="2008"/>
     </front>
     <seriesInfo name="STD" value="68"/>
@@ -623,14 +546,8 @@
       <front>
         <title>
         Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</title>
-        <author fullname="Roy T. Fielding" initials="R." role="editor" surname="Fielding">
-          <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
-          <address><email>fielding@gbiv.com</email></address>
-        </author>
-        <author fullname="Julian F. Reschke" initials="J. F." role="editor" surname="Reschke">
-          <organization abbrev="greenbytes">greenbytes GmbH</organization>
-          <address><email>julian.reschke@greenbytes.de</email></address>
-        </author>
+        <author fullname="Roy T. Fielding" initials="R." role="editor" surname="Fielding"/>
+        <author fullname="Julian F. Reschke" initials="J. F." role="editor" surname="Reschke"/>
         <date month="June" year="2014"/>
       </front>
       <seriesInfo name="RFC" value="7230"/>
@@ -640,14 +557,8 @@
     <reference anchor="RFC7231">
       <front>
         <title>Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</title>
-        <author fullname="Roy T. Fielding" initials="R." role="editor" surname="Fielding">
-          <organization abbrev="Adobe">Adobe Systems Incorporated</organization>
-          <address><email>fielding@gbiv.com</email></address>
-        </author>
-        <author fullname="Julian F. Reschke" initials="J. F." role="editor" surname="Reschke">
-          <organization abbrev="greenbytes">greenbytes GmbH</organization>
-          <address><email>julian.reschke@greenbytes.de</email></address>
-        </author>
+        <author fullname="Roy T. Fielding" initials="R." role="editor" surname="Fielding"/>
+        <author fullname="Julian F. Reschke" initials="J. F." role="editor" surname="Reschke"/>
         <date month="June" year="2014"/>
       </front>
       <seriesInfo name="RFC" value="7231"/>
@@ -664,7 +575,7 @@
       <author>
         <organization>RFC Errata</organization>
       </author>
-      <date year=""/>
+      <date year="2009" month="October"/>
     </front>
   </reference>
 
@@ -682,14 +593,8 @@
   <reference anchor="RFC2045">
     <front>
       <title abbrev="Internet Message Bodies">Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies</title>
-      <author initials="N." surname="Freed" fullname="Ned Freed">
-        <organization>Innosoft International, Inc.</organization>
-        <address><email>ned@innosoft.com</email></address>
-      </author>
-      <author initials="N.S." surname="Borenstein" fullname="Nathaniel S. Borenstein">
-        <organization>First Virtual Holdings</organization>
-        <address><email>nsb@nsb.fv.com</email></address>
-      </author>
+      <author initials="N." surname="Freed" fullname="Ned Freed"/>
+      <author initials="N.S." surname="Borenstein" fullname="Nathaniel S. Borenstein"/>
       <date month="November" year="1996"/>
     </front>
     <seriesInfo name="RFC" value="2045"/>
@@ -698,10 +603,7 @@
   <reference anchor="RFC2047">
     <front>
       <title abbrev="Message Header Extensions">MIME (Multipurpose Internet Mail Extensions) Part Three: Message Header Extensions for Non-ASCII Text</title>
-      <author initials="K." surname="Moore" fullname="Keith Moore">
-        <organization>University of Tennessee</organization>
-        <address><email>moore@cs.utk.edu</email></address>
-      </author>
+      <author initials="K." surname="Moore" fullname="Keith Moore"/>
       <date month="November" year="1996"/>
     </front>
     <seriesInfo name="RFC" value="2047"/>
@@ -710,14 +612,8 @@
   <reference anchor="RFC2231">
     <front>
       <title abbrev="MIME Value and Encoded Word Extensions">MIME Parameter Value and Encoded Word Extensions: Character Sets, Languages, and Continuations</title>
-      <author initials="N." surname="Freed" fullname="Ned Freed">
-        <organization abbrev="Innosoft">Innosoft International, Inc.</organization>
-        <address><email>ned.freed@innosoft.com</email></address>
-      </author>
-      <author initials="K." surname="Moore" fullname="Keith Moore">
-        <organization>University of Tennessee</organization>
-        <address><email>moore@cs.utk.edu</email></address>
-      </author>
+      <author initials="N." surname="Freed" fullname="Ned Freed"/>
+      <author initials="K." surname="Moore" fullname="Keith Moore"/>
       <date year="1997" month="November"/>
     </front>
     <seriesInfo name="RFC" value="2231"/>
@@ -726,10 +622,7 @@
   <reference anchor="RFC2277">
     <front>
       <title abbrev="Charset Policy">IETF Policy on Character Sets and Languages</title>
-      <author initials="H.T." surname="Alvestrand" fullname="Harald Tveit Alvestrand">
-        <organization>UNINETT</organization>
-        <address><email>Harald.T.Alvestrand@uninett.no</email></address>
-      </author>
+      <author initials="H.T." surname="Alvestrand" fullname="Harald Tveit Alvestrand"/>
       <date year="1998" month="January"/>
     </front>
     <seriesInfo name="BCP" value="18"/>
@@ -739,32 +632,31 @@
   <reference anchor="RFC2388">
     <front>
       <title abbrev="multipart/form-data">Returning Values from Forms: multipart/form-data</title>
-      <author initials="L." surname="Masinter" fullname="Larry Masinter">
-        <organization>Xerox Palo Alto Research Center</organization>
-        <address>
-          <email>masinter@parc.xerox.com</email>
-        </address>
-      </author>
+      <author initials="L." surname="Masinter" fullname="Larry Masinter"/>
       <date year="1998" month="August"/>
     </front>
     <seriesInfo name="RFC" value="2388"/>
   </reference>
 
+  <reference anchor="RFC2616">
+    <front>
+      <title>Hypertext Transfer Protocol -- HTTP/1.1</title>
+      <author initials="R." surname="Fielding" fullname="R. Fielding"/>
+      <author initials="J." surname="Gettys" fullname="J. Gettys"/>
+      <author initials="J." surname="Mogul" fullname="J. Mogul"/>
+      <author initials="H." surname="Frystyk" fullname="H. Frystyk"/>
+      <author initials="L." surname="Masinter" fullname="L. Masinter"/>
+      <author initials="P." surname="Leach" fullname="P. Leach"/>
+      <author initials="T." surname="Berners-Lee" fullname="T. Berners-Lee"/>
+      <date month="June" year="1999"/>
+    </front>
+    <seriesInfo name="RFC" value="2616"/>
+  </reference>
+  
   <reference anchor="RFC5987">
   	<front>
       <title>Character Set and Language Encoding for Hypertext Transfer Protocol (HTTP) Header Field Parameters</title>
-      <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke">
-        <organization abbrev="greenbytes">greenbytes GmbH</organization>
-        <address>
-          <postal>
-            <street>Hafenweg 16</street>
-            <city>Muenster</city><region>NW</region><code>48155</code>
-            <country>Germany</country>
-          </postal>
-          <email>julian.reschke@greenbytes.de</email>	
-          <uri>http://greenbytes.de/tech/webdav/</uri>	
-        </address>
-      </author>
+      <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke"/>
       <date month="August" year="2010"/>
     </front>
     <seriesInfo name="RFC" value="5987"/>
@@ -773,11 +665,7 @@
   <reference anchor="RFC5988">
     <front>
       <title>Web Linking</title>
-      <author fullname="Mark Nottingham" initials="M." surname="Nottingham">
-        <address>
-          <email>mnot at mnot.net</email>
-        </address>
-      </author>
+      <author fullname="Mark Nottingham" initials="M." surname="Nottingham"/>
       <date month="October" year="2010"/>
     </front>
     <seriesInfo name="RFC" value="5988"/>
@@ -787,12 +675,7 @@
     <front>
       <title abbrev="Content-Disposition in HTTP">Use of the Content-Disposition Header Field
       in the Hypertext Transfer Protocol (HTTP)</title>
-      <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke">
-        <organization abbrev="greenbytes">greenbytes GmbH</organization>
-        <address>
-          <email>julian.reschke@greenbytes.de</email>
-        </address>
-      </author>
+      <author initials="J. F." surname="Reschke" fullname="Julian F. Reschke"/>
       <date month="June" year="2011"/>
     </front>
     <seriesInfo name="RFC" value="6266"/>
