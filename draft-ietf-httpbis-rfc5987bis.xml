@@ -218,10 +218,17 @@
 </artwork></figure>
 <t>
   The value part of an extended parameter (ext-value) is a token that consists
-  of three parts: the &REQUIRED; character encoding name (charset), the &OPTIONAL;
-  language information (language), and a character sequence representing the
+  of three parts:
+</t>
+<ol>
+  <li>the &REQUIRED; character encoding name (charset),</li>
+  <li>the &OPTIONAL; language information (language), and</li>
+  <li>a character sequence representing the
   actual value (value-chars), separated by single quote
-  characters. Note that both character encoding names and
+  characters.</li>
+</ol>
+<t>
+  Note that both character encoding names and
   language tags are restricted to the US-ASCII coded character set, and are matched
   case-insensitively (see <xref target="RFC2978" x:fmt="," x:sec="2.3"/> and
   <xref target="RFC5646" x:fmt="," x:sec="2.1.1"/>).
