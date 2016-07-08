@@ -734,6 +734,11 @@
   showing a potential way to optimize the format when default values apply.
 </t>
 </section>
+<section title="Since draft-ietf-httpbis-jfv-01" anchor="changes.since.wg.01">
+<t>
+  None yet.
+</t>
+</section>
 </section>
 
 <section title="Acknowledgements" anchor="acks" numbered="false">
