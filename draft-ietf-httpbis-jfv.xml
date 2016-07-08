@@ -379,6 +379,87 @@
   { "Basic" : { "realm": "simple"}}
 </artwork></figure>
 </section>
+<section title="Accept-Encoding" anchor="example.accept-encoding">
+<t>
+  The Accept-Encoding header field value is defined in <xref target="RFC7231" x:fmt="of"
+  x:rel="#header.accept-encoding"/> as a list of codings, each of which
+  allowing a weight parameter 'q':
+</t>
+<figure><artwork type="abnf2616">
+   Accept-Encoding = #( codings [ weight ] )
+   codings         = content-coding / "identity" / "*"
+   weight          = OWS ";" OWS "q=" qvalue
+   qvalue          = ( "0" [ "." 0*3DIGIT ] )
+                   / ( "1" [ "." 0*3("0") ] )
+</artwork></figure>
+<t>
+  An example for a complex header field value given in the definition of
+  the header field is:
+</t>
+<figure><artwork type="example">
+  gzip;q=1.0, identity; q=0.5, *;q=0
+</artwork></figure>
+<t>
+  Due to the defaulting rules for the quality value (<xref target="RFC7231" x:fmt="," x:rel="#quality.values"/>),
+  this could also be written as:
+</t>
+<figure><artwork type="example">
+  gzip, identity; q=0.5, *; q=0
+</artwork></figure>
+<t>
+  A JSON representation could be:
+</t>
+<figure><artwork type="application/json" x:lang="">
+  [
+    {
+      "gzip" : {
+      }
+    },
+    {
+      "identity" : {
+        "q": 0.5
+      }
+    },
+    {
+      "*" : {
+        "q": 0
+      }
+    }
+  ]
+</artwork></figure>
+<t>
+  ...which would translate to a header field value of:
+</t>
+<figure><artwork type="example">
+  {"gzip": {}}, {"identity": {"q": 0.5}}, {"*": {"q": 0}}
+</artwork></figure>
+<t>
+  In this example, the part about "gzip" appears unnecessarily verbose, as
+  the value is just an empty object. A simpler notation would collapse
+  members like these to string literals:
+</t>
+<figure><artwork type="example">
+  "gzip", {"identity": {"q": 0.5}}, {"*": {"q": 0}}
+</artwork></figure>
+<t>
+  If this is desirable, the header field definition could allow both
+  string literals and objects, and define that a mere string literal
+  would be mapped to a member whose name is given by the string literal,
+  and the value is an empty object.  
+</t>
+<figure>
+<preamble>
+  For what it's worth, one of the most common cases for 'Accept-Encoding' would
+  become:
+</preamble>
+<artwork type="example">
+  "gzip", "deflate"
+</artwork>
+<postamble>
+  which would be only a small overhead over the original format.
+</postamble>
+</figure>
+</section>
 </section>
 
 <section title="Discussion">
@@ -649,7 +730,8 @@
 </section>
 <section title="Since draft-ietf-httpbis-jfv-00" anchor="changes.since.wg.00">
 <t>
-  None yet.
+  Added example for "Accept-Encoding" (inspired by Kazuho's feedback),
+  showing a potential way to optimize the format when default values apply.
 </t>
 </section>
 </section>
