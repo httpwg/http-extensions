@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -l
 kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=http://unicorn-wg.github.io/idrefs kramdown-rfc2629
 
-names := http2-encryption rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site jfv
+names := http2-encryption rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site jfv cache-digest
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := opsec rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site jfv
+friendly_names := opsec rfc5987bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site jfv cache-digest
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
@@ -64,6 +64,9 @@ cookie-same-site.%: draft-ietf-httpbis-cookie-same-site.%
 	cp -f $< $@
 
 jfv.%: draft-ietf-httpbis-jfv.%
+	cp -f $< $@
+
+cache-digest.%: draft-ietf-httpbis-cache-digest.%
 	cp -f $< $@
 
 define makerule_submit_xml =

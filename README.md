@@ -6,6 +6,13 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 **Be aware that all contributions to our work fall under the "NOTE WELL" terms therein.**
 
 
+### Cache Digest
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/cache-digest.html) ([plain text](https://httpwg.github.io/http-extensions/cache-digest.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cache-digest) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acache-digest) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-cache-digest/)
+
+
 ### JSON Encoding for HTTP Field Values
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/jfv.html) ([plain text](https://httpwg.github.io/http-extensions/jfv.txt))
