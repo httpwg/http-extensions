@@ -175,7 +175,7 @@
 </t>
 <t>
   The control characters CR, LF, and HTAB do not appear inside JSON
-  strings, but can be used outside (line breaks, indentation etc). These characters
+  strings, but can be used outside (line breaks, indentation etc.). These characters
   need to be either stripped or replaced by space characters (ABNF "SP").
 </t>
 <t>
@@ -231,7 +231,7 @@
 <section title="Using this Format in Header Field Definitions">
 <t>
   <cref>Explain what a definition of a new header field needs to do precisely
-  to use this format, mention must-ignore extensibiliy</cref>
+  to use this format, mention must-ignore extensibility</cref>
 </t>
 </section>
 
@@ -645,6 +645,11 @@
 <section title="Since draft-reschke-http-jfv-04" anchor="changes.since.04">
 <t>
   Change to HTTP Working Group draft.
+</t>
+</section>
+<section title="Since draft-ietf-httpbis-jfv-00" anchor="changes.since.wg.00">
+<t>
+  None yet.
 </t>
 </section>
 </section>
