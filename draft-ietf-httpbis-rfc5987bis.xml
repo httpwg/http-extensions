@@ -387,8 +387,10 @@
   foo-header  = "foo" LWSP ":" LWSP token ";" LWSP title-param
   title-param = "title" LWSP "=" LWSP value
               / "title*" LWSP "=" LWSP ext-value
-  ext-value   = &lt;see RFC 5987, <xref target="character.set.and.language.information"/>&gt;
-</artwork></figure>
+  ext-value   = &lt;see draft-ietf-httpbis-rfc5987bis, <xref target="character.set.and.language.information"/>&gt;
+</artwork>
+<postamble><cref anchor="pub">Upon publication as RFC, the string "draft-ietf-httpbis-rfc5987bis" needs to be replaced with the RFC name, and this comment needs to be removed.</cref></postamble>
+</figure>
 <x:note>
   <t>
     <x:h>Note:</x:h> The Parameter Value Continuation feature defined in
