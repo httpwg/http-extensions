@@ -1,7 +1,7 @@
 ---
 title: Cache Digests for HTTP/2
 abbrev:
-docname: draft-ietf-cache-digest-latest
+docname: draft-ietf-httpbis-cache-digest-latest
 date: 2016
 category: std
 
