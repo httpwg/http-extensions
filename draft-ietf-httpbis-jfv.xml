@@ -528,6 +528,9 @@
   with other widely used formats, such as those using parameters in the
   form of name/value pairs.
 </t>
+<t>
+  <cref anchor="jsondupl">Talk about the risks introduced by JSON parsers not rejecting duplicate keys.</cref>
+</t>
 </section>
 
   </middle>
