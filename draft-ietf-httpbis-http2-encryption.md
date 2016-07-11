@@ -244,7 +244,10 @@ service will be available for the origin object lifetime. Clients might however 
 this time (see {{pinrisks}}).
 
 The `tls-ports` member is ignored when the `tls-commit` member is provided.  A server that is
-able to strongly authenticate can run on any port.
+able to strongly authenticate can run on any host or port.  Though a client will not discover
+such a server using the process in this document, it might learn that a strongly authenticated
+server exists by other means, such as when a connection is reused (see Section 9.1.1 of
+[RFC7540]).
 
 
 ## Client Handling of A Commitment
