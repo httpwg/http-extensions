@@ -4,7 +4,6 @@
 
 Mark Nottingham is the document shepherd; Alexey Melnikov is the responsible Area Director.
 
-
 This memo introduces a content-coding for HTTP that allows message payloads to
 be encrypted.
 
@@ -19,7 +18,7 @@ Explain how actively the document was reviewed and discussed, by the working gro
 ## 3. Intellectual Property
 
 Martin has confirmed that, to his direct, personal knowledge, all IPR related to this document has
-already been disclosed, in conformanc with BCPs 78 and 79.
+already been disclosed, in conformance with BCPs 78 and 79.
 
 One IPR disclosure has been made for this document; see <https://datatracker.ietf.org/ipr/2777/>.
 
@@ -36,16 +35,10 @@ Explain anything else that the IESG might need to know when reviewing this docum
 > This section is not meant to be submitted, but is here as a useful checklist of things the document shepherd is expected to have verified before publication is requested from the responsible Area Director. If the answers to any of these is "no", please explain the situation in the body of the writeup.
 
 * Does the shepherd stand behind the document and think the document is ready for publication?
-* Is the correct RFC type indicated in the title page header?
-* Is the abstract both brief and sufficient, and does it stand alone as a brief summary?
-* Is the intent of the document accurately and adequately explained in the introduction?
 * Have all required formal reviews (MIB Doctor, Media Type, URI, etc.) been requested and/or completed?
 * Has the shepherd performed automated checks -- idnits (see http://www.ietf.org/tools/idnits/ and the Internet-Drafts Checklist), checks of BNF rules, XML code and schemas, MIB definitions, and so on -- and determined that the document passes the tests? (In general, nits should be fixed before the document is sent to the IESG. If there are reasons that some remain (false positives, perhaps, or abnormal things that are necessary for this particular document), explain them.)
-* Has each author stated that their direct, personal knowledge of any IPR related to this document has already been disclosed, in conformance with BCPs 78 and 79?
 * Have all references within this document been identified as either normative or informative, and does the shepherd agree with how they have been classified?
 * Are all normative references made to documents that are ready for advancement and are otherwise in a clear state?
-* If publication of this document changes the status of any existing RFCs, are those RFCs listed on the title page header, and are the changes listed in the abstract and discussed (explained, not just mentioned) in the introduction?
-* If this is a "bis" document, have all of the errata been considered?
 
 IANA Considerations:
 * Are the IANA Considerations clear and complete? Remember that IANA have to understand unambiguously what's being requested, so they can perform the required actions.
