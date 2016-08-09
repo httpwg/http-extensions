@@ -107,7 +107,7 @@ The `scheme` component of a URI is defined in Section 3 of {{RFC3986}}.
 
 ## The "__Secure-" prefix
 
-If a cookie's name begins with "__Secure-", the cookie MUST be:
+If a cookie's name case-sensitively begins with "__Secure-", the cookie MUST be:
 
 1.  Set with a `Secure` attribute
 
@@ -125,7 +125,7 @@ While the following would be accepted if set from a secure origin (e.g.
 
 ## The "__Host-" prefix
 
-If a cookie's name begins with "__Host-", the cookie MUST be:
+If a cookie's name case-sensitively begins with "__Host-", the cookie MUST be:
 
 1.  Set with a `Secure` attribute
 
@@ -159,18 +159,18 @@ This document updates Section 5.3 of {{RFC6265}} as follows:
 After step 10 of the current algorithm, the cookies flags are set. Insert the
 following steps to perform the prefix checks this document specifies:
 
-11.  If the `cookie-name` begins with the string "__Secure-" or "__Host-",
-     abort these steps and ignore the cookie entirely unless both of the
-     following conditions are true:
+11.  If the `cookie-name` case-sensitively begins with the string "__Secure-" or
+     "__Host-", abort these steps and ignore the cookie entirely unless both of 
+     the following conditions are true:
 
      *   The cookie's `secure-only-flag` is `true`
 
      *   `request-uri`'s `scheme` component denotes a "secure" protocol (as
          determined by the user agent)
 
-12.  If the `cookie-name` begins with the string "__Host-", abort these
-     steps and ignore the cookie entirely unless the following conditions are
-     true:
+12.  If the `cookie-name` case-sensitively begins with the string "__Host-", 
+     abort these steps and ignore the cookie entirely unless the following 
+     conditions are true:
 
      *   The cookie's `host-only-flag` is `true`
 
