@@ -150,7 +150,7 @@ This document updates Section 5.3 of {{RFC6265}} as follows:
         non-secure variants. Perhaps we should restrict that as well?
 
 3.  In order to ensure that a non-secure site can never cause a `secure` cookie
-    to be evisted, adjust the "remove excess cookies" priority order at the
+    to be evicted, adjust the "remove excess cookies" priority order at the
     bottom of Section 5.3 to be the following:
 
     1.  Expired cookies.
