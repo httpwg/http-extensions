@@ -85,7 +85,7 @@ Origin-Len:
 : An unsigned, 16-bit integer indicating the length, in octets, of the Origin field.
 
 Origin:
-: An optional sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender believes this connection is authoritative for.
+: An optional sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender believes this connection is or could be authoritative for.
 
 The ORIGIN frame defines the following flags:
 
@@ -106,11 +106,11 @@ The ORIGIN frame allows the server to modify the Origin Set. In particular:
 2. A server can prune one or more origins from it by sending an ORIGIN frame with the REMOVE flag set;
 3. A server can remove all its members and then add zero or more members by sending an ORIGIN frame with the CLEAR flag set and a payload containing the new origins.
 
-Note that adding to the Origin Set (cases 1 and 3 above) does not imply that the connection is
-authoritative for the added origins (in the sense of {{!RFC7540}}, Section 10.1) on its own; this
-MUST be established by some other mechanism.
+Adding to the Origin Set (cases 1 and 3 above) does not imply that the connection is authoritative
+for the added origins (in the sense of {{!RFC7540}}, Section 10.1) on its own; this MUST be
+established by some other mechanism.
 
-Conversely, a client that implements this specification MUST NOT use a connection for a given origin when that origin does not appear in that connection's Origin Set, regardless of whether or not the connection is authoritative for that origin.
+A client that implements this specification MUST NOT use a connection for a given origin unless that origin appears in the Origin Set for the connection, regardless of whether or not it believes that the connection is authoritative for that origin.
 
 
 ## Processing ORIGIN Frames
@@ -121,18 +121,20 @@ can safely ignore it upon receipt.
 When received by a client, it can be used to inform HTTP/2 connection coalescing (see {{set}}), but
 does not relax the requirement there that the server is authoritative.
 
-It MUST occur on stream 0; an ORIGIN frame on any other stream is invalid and MUST be ignored. The
-ORIGIN frame is processed hop-by-hop. An intermediary MUST NOT forward ORIGIN frames. Clients configured to use a proxy MUST ignore any ORIGIN frames received from it.
+The origin frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST be ignored. 
+
+The ORIGIN frame is processed hop-by-hop. An intermediary MUST NOT forward ORIGIN frames. Clients
+configured to use a proxy MUST ignore any ORIGIN frames received from it.
 
 The following algorithm illustrates how a client can handle received origin frames:
 
-1. If the client is configured to be a proxy, ignore the frame and stop processing.
+1. If the client is configured to use a proxy, ignore the frame and stop processing.
 2. If the frame occurs upon any stream except stream 0, ignore the frame and stop processing.
 3. If the CLEAR flag is set, remove all members from the Origin Set.
 4. For each Origin field `origin_raw` in the frame payload:
-  a. Parse `origin_raw` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`.
-  b. If the REMOVE flag is set, remove any member of the Origin Set that is the same as `parsed_origin` (as per {{!RFC6454}}, Section 5), and continue to the next `parsed_origin`.
-  c. Otherwise, add `parsed_origin` to the Origin Set.
+   1. Parse `origin_raw` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`.
+   2. If the REMOVE flag is set, remove any member of the Origin Set that is the same as `parsed_origin` (as per {{!RFC6454}}, Section 5), and continue to the next `parsed_origin`.
+   3. Otherwise, add `parsed_origin` to the Origin Set.
 
 
 # Security Considerations
