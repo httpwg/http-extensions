@@ -3,7 +3,7 @@ title: HTTP Client Hints
 abbrev:
 docname: draft-ietf-httpbis-client-hints-latest
 date: 2016
-category: std
+category: exp
 
 ipr: trust200902
 area: Applications and Real-Time
@@ -30,7 +30,6 @@ normative:
   RFC7230:
   RFC7231:
   RFC7234:
-  I-D.ietf-httpbis-key:
   NETINFO:
     target: https://w3c.github.io/netinfo/
     title: "Network Information API"
@@ -68,6 +67,7 @@ normative:
 
 informative:
   RFC6265:
+  I-D.ietf-httpbis-key:
 
 --- abstract
 
@@ -284,9 +284,9 @@ The server knows that the client's maximum downlink speed is 0.384Mbps (GPRS EDG
 
 # Security Considerations
 
-Client Hints defined in this specification do not expose any new information about the user's environment beyond what is already available to, and can be communicated by, the application at runtime via JavaScript - e.g. viewport and image display width, device pixel ratio, and so on.
+Client Hints defined in this specification do not expose any new information about the user's environment beyond what is already available to, and can be communicated by, the application at runtime via JavaScript and CSS. For example, the application can obtain viewport width, image display width, and device pixel ratio via JavaScript, or through the use of CSS media queries and unique resource URLs even if JavaScript is disabled.
 
-However, implementors should consider the privacy implications of various methods to enable delivery of Client Hints - see "Sending Client Hints" section. For example, sending Client Hints on all requests can make information about the user's environment available to origins that otherwise did not have access to this data (e.g. origins hosting non-script resources), which might or not be the desired outcome. The implementors can provide mechanisms to control such behavior via explicit opt-in, or other mechanisms. Similarly, the implementors should consider how and whether delivery of Client Hints is affected when the user is in "incognito" or similar privacy mode.
+Implementors should consider the privacy implications of various methods to enable delivery of Client Hints—see "Sending Client Hints" section. For example, sending Client Hints on all requests can make information about the user's environment available to origins that otherwise did not have access to this data (e.g. origins hosting non-script resources), which might or not be the desired outcome. The implementors can provide mechanisms to control such behavior via explicit opt-in, or other mechanisms. Similarly, the implementors should consider how and whether delivery of Client Hints is affected when the user is in "incognito" or similar privacy mode.
 
 
 # IANA Considerations
