@@ -19,7 +19,7 @@ author:
     name: Mark Nottingham
     organization: Akamai
     email: mnot@mnot.net
-    uri: http://www.mnot.net/
+    uri: https://www.mnot.net/
  -
     ins: E. Nygren
     name: Erik Nygren
