@@ -89,8 +89,11 @@ Origin:
 
 The ORIGIN frame defines the following flags:
 
-* CLEAR (0x1): indicates that the Origin Set MUST be reset to an empty set before processing the contents of the frame it occurs upon.
-* REMOVE (0x2): indicates that the origin(s) carried in the payload must be removed from the Origin Set, if present; if not present, it/they have no effect.
+CLEAR (0x1):
+: Indicates that the Origin Set MUST be reset to an empty set before processing the contents of the frame it occurs upon.
+
+REMOVE (0x2): 
+: Indicates that the origin(s) carried in the payload must be removed from the Origin Set, if present; if not present, it/they have no effect.
 
 
 ## The Origin Set {#set}
@@ -126,7 +129,7 @@ The origin frame MUST be sent on stream 0; an ORIGIN frame on any other stream i
 The ORIGIN frame is processed hop-by-hop. An intermediary MUST NOT forward ORIGIN frames. Clients
 configured to use a proxy MUST ignore any ORIGIN frames received from it.
 
-The following algorithm illustrates how a client can handle received origin frames:
+The following algorithm illustrates how a client can handle received ORIGIN frames:
 
 1. If the client is configured to use a proxy, ignore the frame and stop processing.
 2. If the frame occurs upon any stream except stream 0, ignore the frame and stop processing.
