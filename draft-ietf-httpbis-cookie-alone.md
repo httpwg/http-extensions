@@ -1,7 +1,7 @@
 ---
 title: Deprecate modification of 'secure' cookies from non-secure origins
 abbrev: Leave Secure Cookies Alone
-docname: draft-ietf-httpbis-cookie-alone-00
+docname: draft-ietf-httpbis-cookie-alone-latest
 date: 2016
 category: std
 updates: 6265
@@ -142,9 +142,15 @@ This document updates Section 5.3 of {{RFC6265}} as follows:
         3.  Their `domain` domain-matches the `domain` of the newly created
             cookie, or vice-versa.
 
-        Note: This comparison intentionally ignores the `path` component. The
-        intent is to allow the `secure` flag to supercede the `path`
-        restrictions to protect sites against cookie fixing attacks.
+        4.  The `path` of the newly created cookie path-matches the `path`
+            of the existing cookie.
+
+        Note: The `path` comparison is not symmetric, ensuring only that a
+        newly-created non-secure cookie does not overlay an existing secure
+        cookie, providing some mitigation against cookie fixing attacks.
+        That is, given an existing secure cookie named `a` with a `path` of
+        `/login`, a non-secure cookie named `a` could be set for a `path`
+        of `/` or `/foo`, but not for a `path` of `/login` or `/login/en`.
 
         Note: This allows "secure" pages to override `secure` cookies with
         non-secure variants. Perhaps we should restrict that as well?
@@ -195,3 +201,12 @@ The proposal in {{COOKIE-PREFIXES}} could mitigate this risk, as could
 Richard Barnes encouraged a formalization of the deprecation proposal.
 {{COOKIE-INTEGRITY}} was a useful exploration of the issues {{RFC6265}}
 described.
+
+# Changes
+
+## Since -00
+
+* Issue 223 addressed by adding a path-match constraint to the storage algorithm
+  for non-secure cookies. This ensures that non-secure cookies cannot overlay
+  secure cookies for a given path, but allows secure and non-secure cookies with
+  the same name to exist on distinct paths.
