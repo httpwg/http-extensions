@@ -430,13 +430,6 @@
   recipients understanding this specification -- the latter obviously 
   ought to prefer the new syntax over the old one.</postamble>
 </figure>
-<x:note>
-  <t>
-    <x:h>Note:</x:h> at the time of this writing, many implementations failed
-    to ignore the form they do not understand, or prioritize the ASCII form
-    although the extended syntax was present.
-  </t>
-</x:note>
 </section>
 </section>
 
@@ -717,6 +710,9 @@
       The document does not attempt to re-define a generic "parameter" ABNF anymore (it turned out that
       there really isn't a generic definition of parameters in HTTP; for instance, 
       there are subtle differences with respect to whitespace handling).
+    </t>
+    <t>
+      A note about defects in error handling in current implementations was removed, as it wasn't accurate anymore.
     </t>
   </list>
 </t>
