@@ -5,6 +5,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 **Be aware that all contributions to our work fall under the "NOTE WELL" terms therein.**
 
+[![Build Status](https://travis-ci.org/httpwg/http-extensions.svg?branch=master)](https://travis-ci.org/httpwg/http-extensions)
 
 ### Cache Digest
 
