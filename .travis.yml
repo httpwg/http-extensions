@@ -5,8 +5,6 @@ addons:
   apt:
     packages:
     - python-lxml
-rvm:
-  - 2.3.1
 install:
 - gem install kramdown-rfc2629
 - pip install xml2rfc
