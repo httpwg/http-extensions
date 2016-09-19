@@ -114,9 +114,10 @@ connection cannot be successfully established, the client can resume its use of 
 connection.
 
 A client can also explicitly probe for an alternative service advertisement by sending a request
-that bears little or no sensitive information, such as one with the OPTIONS method. Likewise,
-clients with existing alternative services information could make such a request before they expire,
-in order minimize the delays that might be incurred.
+that bears little or no sensitive information. A GET request to the "http-opportunistic"
+resource is optimal for this purpose. Likewise, clients with existing alternative services
+information could make such a request before they expire, in order minimize the delays that
+might be incurred.
 
 Client certificates are not meaningful for URLs with the "http" scheme, and therefore clients
 creating new TLS connections to alternative services for the purposes of this specification MUST
@@ -278,10 +279,10 @@ inaccessible for the duration of a commitment. Initial deployments are encourage
 duration commitments so that errors can be detected without causing the origin to become
 inaccessible to clients for extended periods.
 
-To avoid situations where a commitment causes errors, clients MAY limit the time over which a
-commitment is respected for a given origin.  A lower limit might be appropriate for initial
-commitments; the certainty that a site has set a correct value - and the corresponding limit on
-persistence - might increase as a commitment is renewed multiple times.
+To avoid situations where a commitment causes errors, clients MAY limit the origin object
+lifetime to limit the duration of commitment for that given origin.  A lower limit might be
+appropriate for initial commitments; the certainty that a site has set a correct value - and the
+corresponding limit on persistence - might increase as a commitment is renewed multiple times.
 
 
 # The "http-opportunistic" well-known URI {#well-known}
