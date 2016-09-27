@@ -658,7 +658,7 @@ presentation purposes only.
 This example shows the same receiver key pair from {{ex-dh}}, but with a shared
 authentication secret of "R29vIGdvbyBnJyBqb29iIQ".
 
-~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Length: 33
 Content-Encoding: aesgcm
