@@ -75,21 +75,15 @@ URIs; it is vulnerable to active attacks, and does not change the security conte
 connection. Normally, users will not be able to tell that it is in use (i.e., there will be no
 "lock icon").
 
-A mechanism for partially mitigating active attacks is described in {{commit}}.
-
 
 ## Goals and Non-Goals
 
 The immediate goal is to make the use of HTTP more robust in the face of pervasive passive
 monitoring {{RFC7258}}.
 
-A secondary goal is to limit the potential for active attacks. It is not intended to offer the same
-level of protection as afforded to `https` URIs, but instead to increase the likelihood that an
-active attack can be detected.
-
-A final (but significant) goal is to provide for ease of implementation, deployment and operation.
-This mechanism is expected to have a minimal impact upon performance, and require a trivial
-administrative effort to configure.
+A secondary (but significant) goal is to provide for ease of implementation, deployment and
+operation. This mechanism is expected to have a minimal impact upon performance, and require a
+trivial administrative effort to configure.
 
 
 ## Notational Conventions
@@ -196,100 +190,13 @@ http-opportunistic response's origin object {{well-known}} has a "mixed-scheme" 
 is "true".
 
 
-# Requiring Use of TLS {#commit}
-
-Even when the alternative service is strongly authenticated, opportunistically upgrading cleartext
-HTTP connections to use TLS is subject to active attacks. In particular:
-
-* Because the original HTTP connection is in cleartext, it is vulnerable to man-in-the-middle
-  attacks, and
-
-* By default, if clients cannot reach the alternative service, they will fall back to using the
-  original cleartext origin.
-
-Given that the primary goal of this specification is to prevent passive attacks, these are not
-critical failings (especially considering the alternative - HTTP over cleartext). However, a modest
-form of protection against active attacks can be provided for clients on subsequent connections.
-
-When an origin is able to commit to providing service for a particular origin over TLS for a bounded
-period of time, clients can choose to rely upon its availability, failing when it cannot be
-contacted. Effectively, this makes the choice to use a secured protocol "sticky".
-
-
-## Opportunistic Commitment
-
-An origin can reduce the risk of attacks on opportunistically secured connections by committing to
-provide a secured, authenticated alternative service. This is done by including the optional
-`tls-commit` member in the origin object of the http-opportunistic well-known response (see
-{{well-known}}).
-
-This feature is optional due to the requirement for server authentication and the potential risk
-entailed (see {{pinrisks}}).
-
-When the value of the `tls-commit` member is "true" ({{RFC7159}}, Section 3), it indicates that the
-origin makes such a commitment for the duration of the origin object lifetime.
-
-~~~ example
-{
-  "http://www.example.com": {
-    "tls-ports": [443,8080],
-    "tls-commit": true,
-    "lifetime": 3600
-  }
-}
-~~~
-
-Including `tls-commit` creates a commitment to provide a secured alternative service for the
-advertised period. Clients that receive this commitment can assume that a secured alternative
-service will be available for the origin object lifetime. Clients might however choose to limit
-this time (see {{pinrisks}}).
-
-
-## Client Handling of A Commitment
-
-The value of the `tls-commit` member MUST be ignored unless the alternative service can be strongly
-authenticated. The same authentication requirements that apply to `https://` resources SHOULD be
-applied to authenticating the alternative. Minimum authentication requirements for HTTP over TLS
-are described in Section 2.1 of {{RFC7838}} and Section 3.1 of {{RFC2818}}. As noted in
-{{RFC7838}}, clients can impose other checks in addition to this minimum set. For instance, a
-client might choose to apply key pinning {{RFC7469}}.
-
-A client that receives a commitment and that successfully authenticates the alternative service can
-assume that a secured alternative will remain available for the origin object lifetime.
-
-A client SHOULD avoid sending requests via cleartext protocols or to unauthenticated alternative
-services for the duration of the origin object lifetime, except to discover new potential
-alternatives.
-
-A commitment is not bound to a particular alternative service. Clients are able to use alternative
-services that they become aware of. However, once a valid and authenticated commitment has been
-received, clients SHOULD NOT use an alternative service without both reasonable assurances (see
-{{auth}}) and strong authentication. Where there is an active commitment, clients SHOULD ignore
-advertisements for unsecured alternative services.
-
-A client MAY send requests to an unauthenticated origin in an attempt to discover potential
-alternative services, but these requests SHOULD be entirely generic and avoid including credentials.
-
-
-## Operational Considerations {#pinrisks}
-
-Errors in configuration of commitments has the potential to render even the unsecured origin
-inaccessible for the duration of a commitment. Initial deployments are encouraged to use short
-duration commitments so that errors can be detected without causing the origin to become
-inaccessible to clients for extended periods.
-
-To avoid situations where a commitment causes errors, clients MAY limit the time over which a
-commitment is respected for a given origin.  A lower limit might be appropriate for initial
-commitments; the certainty that a site has set a correct value - and the corresponding limit on
-persistence - might increase as a commitment is renewed multiple times.
-
-
 # The "http-opportunistic" well-known URI {#well-known}
 
 This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said
 to have a valid http-opportunistic response for a given origin when:
 
-* The client has obtained a 200 (OK) response for the well-known URI from the origin, and it is fresh {{RFC7234}} (potentially through revalidation {{RFC7232}}), and
+* The client has obtained a 200 (OK) response for the well-known URI from the origin, and it is
+  fresh {{RFC7234}} (potentially through revalidation {{RFC7232}}), and
 
 * That response has the media type "application/json", and
 
@@ -299,11 +206,13 @@ to have a valid http-opportunistic response for a given origin when:
   character-for-character match for the origin in question, serialised into Unicode as per Section
   6.1 of {{RFC6454}}, and whose value is an object (hereafter, the "origin object"),
 
-* The origin object has a "lifetime" member, whose value is a number indicating the number of seconds which the origin object is valid for (hereafter, the "origin object lifetime"), and
+* The origin object has a "lifetime" member, whose value is a number indicating the number of
+  seconds which the origin object is valid for (hereafter, the "origin object lifetime"), and
 
 * The origin object lifetime is greater than the `current_age` (as per {{RFC7234}}, Section 4.2.3).
 
 Note that origin object lifetime might differ from the freshness lifetime of the response.
+
 
 # IANA Considerations
 
@@ -334,12 +243,6 @@ For example, because the `Alt-Svc` header field {{RFC7838}} likely appears in an
 and unencrypted channel, it is subject to downgrade by network attackers. In its simplest form, an
 attacker that wants the connection to remain in the clear need only strip the `Alt-Svc` header
 field from responses.
-
-Downgrade attacks can be partially mitigated using the `tls-commit` member of the
-http-opportunistic well-known resource, because when it is used, a client can avoid using cleartext
-to contact a supporting server. However, this only works when a previous connection has been
-established without an active attacker present; a continuously present active attacker can either
-prevent the client from ever using TLS, or offer its own certificate.
 
 
 ## Privacy Considerations {#privacy}
