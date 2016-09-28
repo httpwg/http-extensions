@@ -87,14 +87,23 @@ The CACHE_DIGEST frame type is 0xf1. NOTE: This is an experimental value; if sta
 permanent value will be assigned.
 
 ~~~~
-+-----------------------------------------------+
-|              Digest-Value? (\*)              ...
-+-----------------------------------------------+
++-------------------------------+-------------------------------+
+|         Origin-Len (16)       | Origin? (\*)                ...
++-------------------------------+---------------+---------------+
+|                   Digest-Value? (\*)                        ...
++---------------------------------------------------------------+
 ~~~~
 
 The CACHE_DIGEST frame payload has the following fields:
 
-* **Digest-Value**: A sequence of octets containing the digest as computed in {{computing}}.
+Origin-Len:
+: An unsigned, 16-bit integer indicating the length, in octets, of the Origin field.
+
+Origin:
+: A sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the Digest-Value applies to.
+
+Digest-Value:
+: A sequence of octets containing the digest as computed in {{computing}}.
 
 The CACHE_DIGEST frame defines the following flags:
 
@@ -108,8 +117,8 @@ The CACHE_DIGEST frame defines the following flags:
 
 ## Client Behavior
 
-A CACHE_DIGEST frame can be sent from a client to a server on any stream in the "open" state, and
-conveys a digest of the contents of the client's cache for associated stream.
+A CACHE_DIGEST frame MUST be sent from a client to a server on stream 0, and conveys a digest of
+the contents of the client's cache for the indicated origin.
 
 In typical use, a client will send one or more CACHE_DIGESTs immediately after the first request on
 a connection for a given origin, on the same stream, because there is usually a short period of
@@ -121,7 +130,8 @@ If the cache's state is cleared, lost, or the client otherwise wishes the server
 previously sent CACHE_DIGESTs, it can send a CACHE_DIGEST with the RESET flag set.
 
 When generating CACHE_DIGEST, a client MUST NOT include cached responses whose URLs do not share
-origins {{RFC6454}} with the request of the stream that the frame is sent upon.
+origins {{RFC6454}} with the indicated origin. Clients MUST NOT send CACHE_DIGEST frames on
+connections that are not authoritative (as defined in {{RFC7540}}, 10.1) for the indicated origin.
 
 CACHE_DIGEST allows the client to indicate whether the set of URLs used to compute the digest
 represent fresh or stale stored responses, using the STALE flag. Clients MAY decide whether to only
@@ -211,6 +221,8 @@ RESET flag set as effectively clearing all stored digests for that origin.
 Clients are not likely to send updates to CACHE_DIGEST over the lifetime of a connection; it is
 expected that servers will separately track what cacheable responses have been sent previously on
 the same connection, using that knowledge in conjunction with that provided by CACHE_DIGEST.
+
+Servers MUST ignore CACHE_DIGEST frames sent on a stream other than 0.
 
 
 ### Querying the Digest for a Value {#querying}
