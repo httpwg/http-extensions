@@ -51,7 +51,7 @@ informative:
 
 --- abstract
 
-This memo introduces a content-coding for HTTP that allows message payloads to
+This memo introduces a content coding for HTTP that allows message payloads to
 be encrypted.
 
 --- note_Note_to_Readers
@@ -79,10 +79,10 @@ contents.
 These uses are not met by the use of TLS {{?RFC5246}}, since it only encrypts
 the channel between the client and server.
 
-This document specifies a content-coding (Section 3.1.2 of {{!RFC7231}}) for HTTP
+This document specifies a content coding (Section 3.1.2 of {{!RFC7231}}) for HTTP
 to serve these and other use cases.
 
-This content-coding is not a direct adaptation of message-based encryption
+This content coding is not a direct adaptation of message-based encryption
 formats - such as those that are described by {{?RFC4880}}, {{?RFC5652}},
 {{?RFC7516}}, and {{XMLENC}} - which are not suited to stream processing, which
 is necessary for HTTP.  The format described here cleaves more closely to the
@@ -111,22 +111,22 @@ Base64url encoding is defined in Section 2 of {{!RFC7515}}.
 
 # The "aesgcm" HTTP Content Coding {#aesgcm}
 
-The "aesgcm" HTTP content-coding indicates that a payload has been encrypted
+The "aesgcm" HTTP content coding indicates that a payload has been encrypted
 using Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) as
 identified as AEAD_AES_128_GCM in {{!RFC5116}}, Section 5.1.  The AEAD_AES_128_GCM
 algorithm uses a 128 bit content encryption key.
 
-When this content-coding is in use, the Encryption header field ({{encryption}})
+When this content coding is in use, the Encryption header field ({{encryption}})
 describes how encryption has been applied.  The Crypto-Key header field
 ({{crypto-key}}) can be included to describe how the content encryption key is
 derived or retrieved.
 
-The "aesgcm" content-coding uses a single fixed set of encryption
-primitives.  Cipher suite agility is achieved by defining a new content-coding
+The "aesgcm" content coding uses a single fixed set of encryption
+primitives.  Cipher suite agility is achieved by defining a new content coding
 scheme.  This ensures that only the HTTP Accept-Encoding header field is
 necessary to negotiate the use of encryption.
 
-The "aesgcm" content-coding uses a fixed record size.  The resulting encoding is
+The "aesgcm" content coding uses a fixed record size.  The resulting encoding is
 either a single record, or a series of fixed-size records. The final record, or
 a lone record, MUST be shorter than the fixed record size.
 
@@ -211,7 +211,7 @@ Section 1.2 of {{!RFC7230}} and the `parameter` and `OWS` rules from {{!RFC7231}
 ~~~
 
 If the payload is encrypted more than once (as reflected by having multiple
-content-codings that imply encryption), each application of the content coding
+content codings that imply encryption), each application of the content coding
 is reflected in a separate Encryption header field value in the order in which
 they were applied.
 
@@ -219,7 +219,7 @@ Encryption header field values with multiple instances of the same parameter
 name are invalid.
 
 Servers processing PUT requests MUST persist the value of the Encryption header
-field, unless they remove the content-coding by decrypting the payload.
+field, unless they remove the content coding by decrypting the payload.
 
 
 ## Encryption Header Field Parameters
@@ -581,7 +581,7 @@ separately might reduce exposure. HTTP/2 {{?RFC7540}} combined with TLS
 
 ## The "aesgcm" HTTP Content Coding
 
-This memo registers the "aesgcm" HTTP content-coding in the HTTP Content Codings
+This memo registers the "aesgcm" HTTP content coding in the HTTP Content Codings
 Registry, as detailed in {{aesgcm}}.
 
 * Name: aesgcm
