@@ -1,10 +1,6 @@
 language: python
 sudo: false
 cache: pip
-addons:
-  apt:
-    packages:
-    - python-lxml
 install:
 - gem install kramdown-rfc2629
 - pip install xml2rfc
