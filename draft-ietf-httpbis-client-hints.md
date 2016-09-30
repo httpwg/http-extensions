@@ -284,9 +284,11 @@ The server knows that the client's maximum downlink speed is 0.384Mbps (GPRS EDG
 
 # Security Considerations
 
-Client Hints defined in this specification do not expose any new information about the user's environment beyond what is already available to, and can be communicated by, the application at runtime via JavaScript and CSS. For example, the application can obtain viewport width, image display width, and device pixel ratio via JavaScript, or through the use of CSS media queries and unique resource URLs even if JavaScript is disabled.
+Client Hints defined in this specification do not expose new information about the user's environment beyond what is already available to, and can be communicated by, the application at runtime via JavaScript and CSS. For example, the application can obtain viewport width, image display width, and device pixel ratio via JavaScript, or through the use of CSS media queries and unique resource URLs even if JavaScript is disabled. However, implementors should consider the privacy implications of various methods to enable delivery of Client Hints - see "Sending Client Hints" section.
 
-Implementors should consider the privacy implications of various methods to enable delivery of Client Hints - see "Sending Client Hints" section. For example, sending Client Hints on all requests can make information about the user's environment available to origins that otherwise did not have access to this data (e.g. origins hosting non-script resources), which might or not be the desired outcome. The implementors can provide mechanisms to control such behavior via explicit opt-in, or other mechanisms. Similarly, the implementors should consider how and whether delivery of Client Hints is affected when the user is in "incognito" or similar privacy mode.
+For example, sending Client Hints on all requests can make information about the user's environment available to origins that otherwise did not have access to this data, which may or may not be the desired outcome - e.g. this may enable an image optimization service to deliver a tailored asset, and it may reveal same information about the user to other origins that may not have had access to it before. Similarly, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Restricting such field values to an enumerated range, where the user agent advertises a threshold value that is close but is not an exact representation of the current value, might reduce such fingerprinting risks.
+
+The implementers can provide mechanisms and policies to control how and when such hints are advertised: require origin opt-in and restrict delivery to same origin subrequests; limit delivery to requests that already carry indentifying information (e.g. cookies); modify delivery policy when in an "incognito" or a similar privacy mode; enable user configuration and opt in, and so on.
 
 
 # IANA Considerations
@@ -361,5 +363,11 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 
 
 ## Since -01
+
+* Issue 200: Moved Key reference to informative.
+* Issue 215: Extended passive fingerprinting and mitigation considerations.
+* Changed document status to experimental.
+
+## Since -02
 
 None yet.
