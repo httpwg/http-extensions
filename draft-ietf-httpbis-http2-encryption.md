@@ -132,8 +132,9 @@ TLS-based protocol with the certificate checks defined in {{RFC2818}}.
 
 However, it is possible that the server might become confused about whether requests' URLs have a
 `http` or `https` scheme, for various reasons; see {{confuse}}. To assure that the alternative
-service has opted into serving `http` URLs over TLS, clients MUST additionally check the
-"http-opportunistic" well-known URI defined in {{well-known}} before directing `http requests to it.
+service has opted into serving `http` URLs over TLS, clients are required to also check the
+"http-opportunistic" well-known URI defined in {{well-known}} before directing `http` requests to
+it.
 
 When a client has a valid http-opportunistic response for an origin (as per {{well-known}}), it MAY
 consider there to be reasonable assurances as long as:
