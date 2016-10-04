@@ -134,9 +134,6 @@ URI defined in {{well-known}} before directing HTTP requests to it.
 When a client has a valid http-opportunistic response for an origin (as per {{well-known}}), it MAY
 consider there to be reasonable assurances as long as:
 
-* The origin and alternative service's hostnames are the same when compared in a case-insensitive
-  fashion, and
-
 * The origin object of the http-opportunistic response has a `tls-ports' member, whose value is an
   array of numbers, one of which matches the port of the alternative service in question, and
 
