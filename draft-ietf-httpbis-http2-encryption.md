@@ -87,6 +87,9 @@ A secondary (but significant) goal is to provide for ease of implementation, dep
 operation. This mechanism is expected to have a minimal impact upon performance, and require a
 trivial administrative effort to configure.
 
+Preventing active attacks (such as a Man-in-the-Middle) is a non-goal for this specification.
+Furthermore, this specification is not intended to replace or offer an alternative to `https`,
+since it both prevents active attacks and invokes a more stringent security model in most clients.
 
 ## Notational Conventions
 
