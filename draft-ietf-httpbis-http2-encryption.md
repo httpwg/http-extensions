@@ -124,22 +124,16 @@ NOT present them. Established connections with client certificates MAY be reused
 
 ## Alternative Server Opt-In {#auth}
 
-{{RFC7838}} requires that an alternative service only be used when there are "reasonable
-assurances" that it is under control of and valid for the whole origin.
+It is possible that the server might become confused about whether requests' URLs have a `http` or
+`https` scheme, for various reasons; see {{confuse}}. To assure that the alternative service has
+opted into serving `http` URLs over TLS, clients are required to check the "http-opportunistic"
+well-known URI defined in {{well-known}} before directing `http` requests to it.
 
-As defined in that specification, a client can establish reasonable assurances when using a
-TLS-based protocol with the certificate checks defined in {{RFC2818}}.
+Clients MUST NOT send `http` requests over a connection with the `h2` protocol identifier, unless
+they have obtained a valid http-opportunistic response for an origin (as per {{well-known}}), and:
 
-However, it is possible that the server might become confused about whether requests' URLs have a
-`http` or `https` scheme, for various reasons; see {{confuse}}. To assure that the alternative
-service has opted into serving `http` URLs over TLS, clients are required to also check the
-"http-opportunistic" well-known URI defined in {{well-known}} before directing `http` requests to
-it.
-
-When a client has a valid http-opportunistic response for an origin (as per {{well-known}}), it MAY
-consider there to be reasonable assurances as long as:
-
-* The chosen alternative service presents a certificate that is valid for the origin, and
+* The chosen alternative service presents a certificate that is valid for the origin, as per
+  {{RFC2818}} (this also establishes "reasonable assurances" for the purposes of {RFC7838}}), and
 
 * The origin object of the http-opportunistic response has a `tls-ports' member, whose value is an
   array of numbers, one of which matches the port of the alternative service in question, and
@@ -147,8 +141,8 @@ consider there to be reasonable assurances as long as:
 * The chosen alternative service returns the same representation as the origin did for the
   http-opportunistic resource.
 
-For example, this request/response pair would constitute reasonable assurances for the origin
-"http://www.example.com" for an alternative service on port 443 or 8000 of the host
+For example, this request/response pair would allow reqeusts for the origin
+"http://www.example.com" to be sent to an alternative service on port 443 or 8000 of the host
 "www.example.com":
 
 ~~~ example
@@ -167,9 +161,6 @@ Connection: close
 }
 ~~~
 
-Note that this mechanism is only defined to establish reasonable assurances for the purposes of this
-specification; it does not apply to other uses of alternative services unless they explicitly invoke
-it.
 
 
 ## Interaction with "https" URIs
@@ -184,7 +175,7 @@ requests, unless the http-opportunistic origin object {{well-known}} fetched ove
 has a "mixed-scheme" member whose value is "true".
 
 
-# The "http-opportunistic" well-known URI {#well-known}
+## The "http-opportunistic" well-known URI {#well-known}
 
 This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said
 to have a valid http-opportunistic response for a given origin when:
@@ -266,10 +257,11 @@ specification.
 
 ## Server Controls
 
-Because this specification allows "reasonable assurances" to be established by the content of a
-well-known URI, servers SHOULD take suitable measures to assure that its content remains under
-their control. Likewise, because the Alt-Svc header field is used to describe policies across an
-entire origin, servers SHOULD NOT permit user content to set or modify the value of this header.
+This specification requires that a server send both an Alternative Service advertisement and host
+content in a well-known location to send HTTP requests over TLS. Servers SHOULD take suitable
+measures to assure that the content of the well-known resource remains under their control.
+Likewise, because the Alt-Svc header field is used to describe policies across an entire origin,
+servers SHOULD NOT permit user content to set or modify the value of this header.
 
 
 --- back
