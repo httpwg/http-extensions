@@ -259,7 +259,7 @@ specification.
 
 This specification requires that a server send both an Alternative Service advertisement and host
 content in a well-known location to send HTTP requests over TLS. Servers SHOULD take suitable
-measures to assure that the content of the well-known resource remains under their control.
+measures to ensure that the content of the well-known resource remains under their control.
 Likewise, because the Alt-Svc header field is used to describe policies across an entire origin,
 servers SHOULD NOT permit user content to set or modify the value of this header.
 
