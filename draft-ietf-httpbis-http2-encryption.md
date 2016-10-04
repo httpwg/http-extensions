@@ -117,7 +117,7 @@ that bears little or no sensitive information, such as one with the OPTIONS meth
 clients with existing alternative services information could make such a request before they expire,
 in order minimize the delays that might be incurred.
 
-Client certificates are not meaningful for URLs with the "http" scheme, and therefore clients
+Client certificates are not meaningful for URLs with the `http` scheme, and therefore clients
 creating new TLS connections to alternative services for the purposes of this specification MUST
 NOT present them. Established connections with client certificates MAY be reused, however.
 
@@ -131,9 +131,9 @@ As defined in that specification, a client can establish reasonable assurances w
 TLS-based protocol with the certificate checks defined in {{RFC2818}}.
 
 However, it is possible that the server might become confused about whether requests' URLs have a
-HTTP or HTTPS scheme, for various reasons; see {{confuse}}. To assure that the alternative service
-has opted into serving HTTP URLs over TLS, clients MUST check the "http-opportunistic" well-known
-URI defined in {{well-known}} before directing HTTP requests to it.
+`http` or `https` scheme, for various reasons; see {{confuse}}. To assure that the alternative
+service has opted into serving `http` URLs over TLS, clients MUST check the "http-opportunistic"
+well-known URI defined in {{well-known}} before directing `http requests to it.
 
 When a client has a valid http-opportunistic response for an origin (as per {{well-known}}), it MAY
 consider there to be reasonable assurances as long as:
