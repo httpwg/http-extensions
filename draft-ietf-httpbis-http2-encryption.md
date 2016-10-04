@@ -125,9 +125,9 @@ NOT present them. Established connections with client certificates MAY be reused
 ## Alternative Server Opt-In {#auth}
 
 It is possible that the server might become confused about whether requests' URLs have a `http` or
-`https` scheme, for various reasons; see {{confuse}}. To assure that the alternative service has
-opted into serving `http` URLs over TLS, clients are required to check the "http-opportunistic"
-well-known URI defined in {{well-known}} before directing `http` requests to it.
+`https` scheme, for various reasons; see {{confuse}}. To ensure that the alternative service has
+opted into serving `http` URLs over TLS, clients are required to perform additional checks before
+directing `http` requests to it.
 
 Clients MUST NOT send `http` requests over a connection with the `h2` protocol identifier, unless
 they have obtained a valid http-opportunistic response for an origin (as per {{well-known}}), and:
