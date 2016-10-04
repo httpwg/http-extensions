@@ -69,7 +69,8 @@ the URI scheme from the use and configuration of underlying encryption, allowing
 
 Serving `https` URIs requires avoiding Mixed Content {{W3C.CR-mixed-content-20160802}}, which is
 problematic in many deployments. This document describes a usage model whereby sites can serve
-`http` URIs over TLS, thereby avoiding these issues.
+`http` URIs over TLS, thereby avoiding these issues, while still providing protection against
+passive attacks.
 
 Opportunistic Security {{RFC7435}} does not provide the same guarantees as using TLS with `https`
 URIs; it is vulnerable to active attacks, and does not change the security context of the
