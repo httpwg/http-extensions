@@ -15,6 +15,11 @@ pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, i
 
 author:
 -
+  ins: A. Barth
+  name: Adam Barth
+  organization: Google, Inc
+  uri: https://www.adambarth.com/
+-
   ins: M. West
   name: Mike West
   organization: Google, Inc
@@ -1533,4 +1538,4 @@ Specification document:
 
 This document is a minor update of RFC 6265, adding small features, and
 aligning the specification with the reality of today's deployments. Here,
-we're standing upon the shoulders of giants (Adam Barth in particular).
+we're standing upon the shoulders of giants.
