@@ -102,7 +102,7 @@
   <t>
     <x:h>Note:</x:h> this encoding does not apply to message payloads
     transmitted over HTTP, such as when using the media type "multipart/form-data"
-    (<xref target="RFC2388"/>).
+    (<xref target="RFC7578"/>).
   </t>
 </x:note>
 </section>  
@@ -629,15 +629,6 @@
     <seriesInfo name="RFC" value="2277"/>
   </reference>
 
-  <reference anchor="RFC2388">
-    <front>
-      <title abbrev="multipart/form-data">Returning Values from Forms: multipart/form-data</title>
-      <author initials="L." surname="Masinter" fullname="Larry Masinter"/>
-      <date year="1998" month="August"/>
-    </front>
-    <seriesInfo name="RFC" value="2388"/>
-  </reference>
-
   <reference anchor="RFC2616">
     <front>
       <title>Hypertext Transfer Protocol -- HTTP/1.1</title>
@@ -691,6 +682,16 @@
     <seriesInfo name="BCP" value="166"/>
     <seriesInfo name="RFC" value="6365"/>
   </reference>
+
+  <reference anchor="RFC7578">
+    <front>
+      <title>Returning Values from Forms: multipart/form-data</title>
+      <author initials="L." surname="Masinter" fullname="Larry Masinter"/>
+      <date year="2015" month="July"/>
+    </front>
+    <seriesInfo name="RFC" value="7578"/>
+  </reference>
+
 </references>
 
 
@@ -836,7 +837,7 @@
 
 <section title="Since draft-ietf-httpbis-rfc5987bis-02">
 <t>
-  None yet.
+  RFC 2388 -> RFC 7578.
 </t>
 </section>
 </section>
