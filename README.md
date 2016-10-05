@@ -30,6 +30,8 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Client Hints
 
+_in Working Group Last Call; ends 2016-10-19_
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/client-hints.html) ([plain text](https://httpwg.github.io/http-extensions/client-hints.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
