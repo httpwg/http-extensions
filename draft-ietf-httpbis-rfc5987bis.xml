@@ -53,10 +53,13 @@
 
   <abstract>
     <t>
-      By default, header field values in Hypertext Transfer Protocol (HTTP) messages
-      cannot directly carry characters outside the US-ASCII coded character set. RFC 2231
-      defines an encoding mechanism for use in Multipurpose Internet Mail Extensions
-      (MIME) headers. This document specifies an encoding suitable for use in HTTP header fields that is compatible with a profile of the encoding defined in RFC 2231.
+      By default, header field values in Hypertext Transfer Protocol (HTTP)
+      messages cannot easily carry characters outside the US-ASCII coded
+      character set. RFC 2231 defines an encoding mechanism for use in
+      parameters inside Multipurpose Internet Mail Extensions (MIME) header
+      field values. This document specifies an encoding suitable for use in
+      HTTP header fields that is compatible with a simplified profile of the
+      encoding defined in RFC 2231.
     </t>
   </abstract>
 
@@ -81,10 +84,29 @@
 
 <section title="Introduction" anchor="introduction">
 <t>
-  By default, header field values in HTTP messages (<xref target="RFC7230"/>)
-  cannot directly carry characters outside the US-ASCII coded character set (<xref target="RFC0020"/>). RFC 2231
-  (<xref target="RFC2231"/>) defines an encoding mechanism for use in MIME headers.
-  This document specifies an encoding suitable for use in HTTP header fields that is compatible with a profile of the encoding defined in RFC 2231.
+  Use of characters outside the US-ASCII coded character set (<xref target="RFC0020"/>)
+  in HTTP header fields (<xref target="RFC7230"/>) is non-trivial:
+</t>
+<ul>
+  <li>The HTTP specification discourages use of non-US-ASCII characters in field
+  values, placing them into the "obs-text" ABNF production (<xref target="RFC7230" x:fmt="," x:rel="#header.fields"/>).</li>
+  <li>Furthermore, it stays silent about default character encoding schemes for
+  field values, so any use of non-US-ASCII characters would need to be specific
+  to the field definition, or would require some other kind of out-of-band information.</li>
+  <li>Finally, some APIs assume a default character encoding scheme in order to map from the octet sequences (obtained from the HTTP message) to character sequences:
+  for instance, the XMLHttpRequest API (<xref target="XMLHttpRequest"/>) uses the Interface Definition Language type "ByteString",
+  effectively resulting in the ISO-8859-1 character encoding scheme <xref target="ISO-8859-1"/>
+  being used.
+  </li>
+</ul>
+<t>  
+  On the other hand, RFC 2231 defines an encoding mechanism for parameters
+  inside MIME header fields (<xref target="RFC2231"/>), which, as opposed to
+  HTTP messages, do need to be sent over non-binary transports.
+  This document specifies an encoding suitable for use in HTTP header fields
+  that is compatible with a simplified profile of the encoding defined in RFC 2231.
+  It can be applied to any HTTP header field that uses the common "parameter"
+  ("name=value") syntax.
 </t>
 <t>
   This document obsoletes <xref target="RFC5987"/> and
@@ -692,6 +714,23 @@
     <seriesInfo name="RFC" value="7578"/>
   </reference>
 
+  <reference anchor='XMLHttpRequest'
+             target='http://www.w3.org/TR/2014/WD-XMLHttpRequest-20140130/'>
+    <front>
+      <title>XMLHttpRequest Level 1</title>
+      <author fullname='Anne van Kesteren' surname='van Kesteren' initials='A.'/>
+      <author fullname='Julian Aubourg' surname='Aubourg' initials='J.'/>
+      <author fullname='Jungkee Song' surname='Song' initials='J.'/>
+      <author fullname='Hallvord Steen' surname='Steen' initials='H.'/>
+      <date year='2014' month='January' day='30'/>
+    </front>
+    <seriesInfo name='W3C Working Draft' value='WD-XMLHttpRequest-20140130'/>
+    <annotation>
+      Latest version available at
+      <eref target='http://www.w3.org/TR/XMLHttpRequest/'/>.
+    </annotation>
+  </reference>
+
 </references>
 
 
@@ -838,6 +877,9 @@
 <section title="Since draft-ietf-httpbis-rfc5987bis-02">
 <t>
   RFC 2388 -> RFC 7578.
+</t>
+<t>
+  Expand on the motivation (see <eref target="https://github.com/httpwg/http-extensions/issues/213"/>).
 </t>
 </section>
 </section>
