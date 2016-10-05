@@ -82,3 +82,4 @@ So far, we have adopted:
 * [Leave Secure Cookies Alone](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-alone.html)
 * [Cookie Prefixes](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-prefixes.html)
 * [Same-Site Cookies](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-same-site.html)
+* [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
