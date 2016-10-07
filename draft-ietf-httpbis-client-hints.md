@@ -33,7 +33,6 @@ normative:
   NETINFO:
     target: https://w3c.github.io/netinfo/
     title: "Network Information API"
-    date: 2015-12
     author:
     -
       ins: M. Cáceres
