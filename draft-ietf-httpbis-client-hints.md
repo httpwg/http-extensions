@@ -115,7 +115,7 @@ This document uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}}
 
 A Client Hint request header field is a HTTP header field that is used by HTTP clients to indicate configuration data that can be used by the server to select an appropriate response. Each one conveys a list of client preferences that the server can use to adapt and optimize the response.
 
-## Sending Client Hints
+## Sending Client Hints {#sending-client-hints}
 
 Clients control which Client Hint headers and their respective header fields are communicated, based on their default settings, user configuration and/or preferences. The user can be given the choice to enable, disable, or override specific hints.
 
@@ -284,7 +284,7 @@ The server knows that the client's maximum downlink speed is 0.384Mbps (GPRS EDG
 
 # Security Considerations
 
-Client Hints defined in this specification do not expose new information about the user's environment beyond what is already available to, and can be communicated by, the application at runtime via JavaScript and CSS. For example, the application can obtain viewport width, image display width, and device pixel ratio via JavaScript, or through the use of CSS media queries and unique resource URLs even if JavaScript is disabled. However, implementors should consider the privacy implications of various methods to enable delivery of Client Hints - see "Sending Client Hints" section.
+Client Hints defined in this specification do not expose new information about the user's environment beyond what is already available to, and can be communicated by, the application at runtime via JavaScript and CSS. For example, the application can obtain viewport width, image display width, and device pixel ratio via JavaScript, or through the use of CSS media queries and unique resource URLs even if JavaScript is disabled. However, implementors should consider the privacy implications of various methods to enable delivery of Client Hints - see {{sending-client-hints}}.
 
 For example, sending Client Hints on all requests can make information about the user's environment available to origins that otherwise did not have access to this data, which may or may not be the desired outcome - e.g. this may enable an image optimization service to deliver a tailored asset, and it may reveal same information about the user to other origins that may not have had access to it before. Similarly, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Restricting such field values to an enumerated range, where the user agent advertises a threshold value that is close but is not an exact representation of the current value, might reduce such fingerprinting risks.
 
