@@ -48,7 +48,7 @@ normative:
       name: Ilya Grigorik
       organization: Google
   W3C.REC-html5-20141028:
-  W3C.CR-css-values-3-20150611:
+  W3C.CR-css-values-3-20160929:
   CSS2:
     target: http://www.w3.org/TR/2011/REC-CSS2-20110607
     title: "Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification"
