@@ -170,9 +170,9 @@ might use the same connection, because HTTP/2 permits requests for multiple orig
 connection.
 
 Because of the risk of server confusion about individual requests' schemes (see {{confuse}}),
-clients MUST NOT send `http` requests on a connection that has previously been used for `https`
-requests, unless the http-opportunistic origin object {{well-known}} fetched over that connection
-has a "mixed-scheme" member whose value is "true".
+clients MUST NOT `http` requests on a connection that would ordinarily be used for `https`
+requests, unless the http-opportunistic origin object {{well-known}} for that origin has a
+"mixed-scheme" member whose value is "true".
 
 
 ## The "http-opportunistic" well-known URI {#well-known}
