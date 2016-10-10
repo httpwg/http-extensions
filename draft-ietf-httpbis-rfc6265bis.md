@@ -1534,6 +1534,10 @@ Specification document:
 
 --- back
 
+# Changes since draft-ietf-httpbis-rfc6265bis-00
+
+*   None (yet).
+
 # Acknowledgements
 
 This document is a minor update of RFC 6265, adding small features, and
