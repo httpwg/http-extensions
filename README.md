@@ -39,7 +39,7 @@ _in Working Group Last Call; ends 2016-10-19_
 
 ### HTTP Encryption Content Encoding
 
-_Working Group Last Call ended; incorporating feedback._
+_Second Working Group Last Call ended; ends 2016-10-25_
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-encryption-encoding.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-encryption-encoding) (less recent, more official)
