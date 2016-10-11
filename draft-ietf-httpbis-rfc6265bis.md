@@ -706,12 +706,12 @@ conditions hold:
 
 *   All of the following conditions hold:
 
-  *   The domain string is a suffix of the string.
+    *   The domain string is a suffix of the string.
 
-  *   The last character of the string that is not included in the domain string
-      is a %x2E (".") character.
+    *   The last character of the string that is not included in the domain
+        string is a %x2E (".") character.
 
-  *   The string is a host name (i.e., not an IP address).
+    *   The string is a host name (i.e., not an IP address).
 
 ### Paths and Path-Match
 
@@ -1536,7 +1536,9 @@ Specification document:
 
 # Changes since draft-ietf-httpbis-rfc6265bis-00
 
-*   None (yet).
+*  Fixes to formatting caused by mistakes in the initial port to Markdown:
+
+   *   <https://github.com/httpwg/http-extensions/issues/243>
 
 # Acknowledgements
 
