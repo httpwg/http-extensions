@@ -1,16 +1,12 @@
 ---
 title: HTTP State Management Mechanism
-abbref:
 docname: draft-ietf-httpbis-rfc6265bis-latest
 date: 2016
 category: std
 
 ipr: trust200902
-area: General
+area: Applications and Real-Time
 workgroup: HTTP
-keyword: Internet-Draft
-
-stand_alone: yes  #_
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
 
 author:
