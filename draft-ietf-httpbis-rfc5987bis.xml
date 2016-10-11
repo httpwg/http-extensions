@@ -738,24 +738,25 @@
 <t>
   This section summarizes the changes compared to <xref target="RFC5987"/>:
 </t>
-<t>
-  <list style="symbols">
-    <t>
-      The document title was changed to "Indicating Character Encoding and Language for HTTP Header Field Parameters".
-    </t>
-    <t>
-      The requirement to support the "ISO-8859-1" encoding was removed.
-    </t>
-    <t>
-      The document does not attempt to re-define a generic "parameter" ABNF anymore (it turned out that
-      there really isn't a generic definition of parameters in HTTP; for instance, 
-      there are subtle differences with respect to whitespace handling).
-    </t>
-    <t>
-      A note about defects in error handling in current implementations was removed, as it wasn't accurate anymore.
-    </t>
-  </list>
-</t>
+<ul>
+  <li>
+    The document title was changed to "Indicating Character Encoding and Language for HTTP Header Field Parameters".
+  </li>
+  <li>
+    The introduction was rewritten to better explain the issues around non-ASCII characters in field values.
+  </li>
+  <li>
+    The requirement to support the "ISO-8859-1" encoding was removed.
+  </li>
+  <li>
+    The document does not attempt to re-define a generic "parameter" ABNF anymore (it turned out that
+    there really isn't a generic definition of parameters in HTTP; for instance, 
+    there are subtle differences with respect to whitespace handling).
+  </li>
+  <li>
+    A note about defects in error handling in current implementations was removed, as it wasn't accurate anymore.
+  </li>
+</ul>
 </section>
 
 
