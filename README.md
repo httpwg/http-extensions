@@ -74,9 +74,9 @@ _Working Group Last Call concluded; incorporating feedback._
 
 ### RFC6265bis
 
-* [Editors' Draft](https://httpwg.github.io/http-extensions/rfc6265bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc6265bisc.txt))
+* [Editors' Draft](https://httpwg.github.io/http-extensions/rfc6265bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc6265bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Arfc6265bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A6265bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/)
 
 This will incorporate the following drafts:
 * [Leave Secure Cookies Alone](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-alone.html)
