@@ -905,6 +905,12 @@
   Mention RFC 7616 in implementation report.
 </t>
 </section>
+
+<section title="Since draft-ietf-httpbis-rfc5987bis-03">
+<t>
+  None yet.
+</t>
+</section>
 </section>
 
 <section title="Acknowledgements" numbered="false">
