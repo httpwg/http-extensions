@@ -714,6 +714,17 @@
     <seriesInfo name="RFC" value="7578"/>
   </reference>
 
+  <reference anchor="RFC7616">
+    <front>
+      <title>HTTP Digest Access Authentication</title>
+      <author initials="R." surname="Shekh-Yusef" fullname="R. Shekh-Yusef" role="editor"/>
+      <author initials="D." surname="Ahrens" fullname="D. Ahrens"/>
+      <author initials="S." surname="Bremer" fullname="S. Bremer"/>
+      <date year="2015" month="September"/>
+    </front>
+    <seriesInfo name="RFC" value="7616"/>
+  </reference>
+
   <reference anchor='XMLHttpRequest'
              target='http://www.w3.org/TR/2014/WD-XMLHttpRequest-20140130/'>
     <front>
@@ -764,15 +775,18 @@
 <t>
   The encoding defined in this document currently is used for two different
   HTTP header fields:
-  <list style="symbols">
-    <t>
-      "Content-Disposition", defined in <xref target="RFC6266"/>, and
-    </t>
-    <t>
-      "Link", defined in <xref target="RFC5988"/>.
-    </t>
-  </list>
 </t>
+<ul>
+  <li>
+    "Authorization" (as used in HTTP Digest Authentication, defined in <xref target="RFC7616"/>),
+  </li>
+  <li>
+    "Content-Disposition", defined in <xref target="RFC6266"/>, and
+  </li>
+  <li>
+    "Link", defined in <xref target="RFC5988"/>.
+  </li>
+</ul>
 <t>
   As the encoding is a profile/clarification of the one defined in
   <xref target="RFC2231"/> in 1997, many user agents already supported it for
@@ -792,9 +806,14 @@
   to support ISO-8859-1.
 </t>
 <t>
-  The "Link" header field, on the other hand, was only recently specified
-  in <xref target="RFC5988"/>. At the time of this writing, no shipping User Agent
-  except Firefox supported the "title*" parameter  (starting with release 15).
+  The "Link" header field, on the other hand, was more recently specified
+  in <xref target="RFC5988"/>. At the time of this writing, no User Agent
+  except Firefox supported the "title*" parameter (starting with release 15).
+</t>
+<t>
+  <xref target="RFC7616" x:fmt="of" x:sec="3.4"/> defines the "username*" 
+  parameter for use in HTTP Digest Authentication. At the time of writing, no
+  User Agent implemented this extension.
 </t>
 </section>
 
@@ -881,6 +900,9 @@
 </t>
 <t>
   Expand on the motivation (see <eref target="https://github.com/httpwg/http-extensions/issues/213"/>).
+</t>
+<t>
+  Mention RFC 7616 in implementation report.
 </t>
 </section>
 </section>
