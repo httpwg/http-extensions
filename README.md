@@ -74,11 +74,11 @@ _Working Group Last Call concluded; incorporating feedback._
 
 ### RFC6265bis
 
-We are currently working on drafts that, together, will serve as a roadmap for revising [the Cookie specification](http://httpwg.org/specs/rfc6265.html).
+* [Editors' Draft](https://httpwg.github.io/http-extensions/rfc6265bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc6265bisc.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Arfc6265bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/)
 
-All [open issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A6265bis) for this effort are tracked together.
-
-So far, we have adopted:
+This will incorporate the following drafts:
 * [Leave Secure Cookies Alone](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-alone.html)
 * [Cookie Prefixes](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-prefixes.html)
 * [Same-Site Cookies](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-same-site.html)
