@@ -1048,30 +1048,56 @@ user agent MUST process the cookie as follows:
     attribute-name of "Secure", set the cookie's secure-only-flag to true.
     Otherwise, set the cookie's secure-only-flag to false.
 
-9.  If the cookie-attribute-list contains an attribute with an
+9.  If the scheme component of the request-uri does not denote a "secure"
+    protocol (as defined by the user agent), and the cookie's secure-only-flag
+    is true, then abort these steps and ignore the cookie entirely.
+
+10. If the cookie-attribute-list contains an attribute with an
     attribute-name of "HttpOnly", set the cookie's http-only-flag to true.
     Otherwise, set the cookie's http-only-flag to false.
 
-10. If the cookie was received from a "non-HTTP" API and the cookie's
+11. If the cookie was received from a "non-HTTP" API and the cookie's
     http-only-flag is set, abort these steps and ignore the cookie entirely.
 
-11. If the cookie store contains a cookie with the same name, domain, and
-    path as the newly created cookie:
+12. If the cookie's secure-only-flag is not set, and the scheme component of
+    request-uri does not denote a "secure" protocol, then abort these steps and
+    ignore the cookie entirely if the cookie store contains one or more cookies
+    that meet all of the following criteria:
+
+    1.  Their name matches the name of the newly-created cookie.
+
+    2.  Their secure-only-flag is set.
+
+    3.  Their domain domain-matches the domain of the newly-created cookie, or
+        vice-versa.
+
+    4.  The path of the newly-created cookie path-matches the path of the
+        existing cookie.
+
+    Note: The path comparison is not symmetric, ensuring only that a
+    newly-created, non-secure cookie does not overlay an existing secure
+    cookie, providing some mitigation against cookie-fixing attacks. That is,
+    given an existing secure cookie named 'a' with a path of '/login', a
+    non-secure cookie named 'a' could be set for a path of '/' or '/foo', but
+    not for a path of '/login' or '/login/en'.
+
+12. If the cookie store contains a cookie with the same name, domain, and
+    path as the newly-created cookie:
 
     1.  Let old-cookie be the existing cookie with the same name, domain,
-        and path as the newly created cookie. (Notice that this algorithm
+        and path as the newly-created cookie. (Notice that this algorithm
         maintains the invariant that there is at most one such cookie.)
 
-    2.  If the newly created cookie was received from a "non-HTTP" API and the
+    2.  If the newly-created cookie was received from a "non-HTTP" API and the
         old-cookie's http-only-flag is set, abort these steps and ignore the
         newly created cookie entirely.
 
-    3.  Update the creation-time of the newly created cookie to match the
+    3.  Update the creation-time of the newly-created cookie to match the
         creation-time of the old-cookie.
 
     4.  Remove the old-cookie from the cookie store.
 
-12. Insert the newly created cookie into the cookie store.
+13. Insert the newly-created cookie into the cookie store.
 
 A cookie is "expired" if the cookie has an expiry date in the past.
 
@@ -1091,10 +1117,13 @@ agent MUST evict cookies in the following priority order:
 
 1.  Expired cookies.
 
-2.  Cookies that share a domain field with more than a predetermined number of
+2.  Cookies whose secure-only-flag is not set, and which share a domain field
+    with more than a predetermined number of other cookies.
+
+3.  Cookies that share a domain field with more than a predetermined number of
     other cookies.
 
-3.  All cookies.
+4.  All cookies.
 
 If two cookies have the same removal priority, the user agent MUST evict the
 cookie with the earliest last-access date first.
