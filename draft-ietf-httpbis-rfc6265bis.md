@@ -1473,8 +1473,8 @@ security properties required by applications.
 
 # IANA Considerations
 
-The permanent message header field registry (see {{RFC3864}}) has been updated
-with the following registrations.
+The permanent message header field registry (see {{RFC3864}}) needs to be
+updated with the following registrations.
 
 ## Cookie
 
@@ -1509,40 +1509,6 @@ Author/Change controller:
 
 Specification document:
 : this specification (Section 5.2)
-
-## Cookie2
-
-Header field name:
-: Cookie2
-
-Applicable protocol:
-: http
-
-Status:
-: obsoleted
-
-Author/Change controller:
-: IETF
-
-Specification document:
-: {{RFC2965}}
-
-## Set-Cookie2
-
-Header field name:
-: Set-Cookie2
-
-Applicable protocol:
-: http
-
-Status:
-: obsoleted
-
-Author/Change controller:
-: IETF
-
-Specification document:
-: {{RFC2965}}
 
 --- back
 
