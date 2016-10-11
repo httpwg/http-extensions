@@ -9,6 +9,7 @@ ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
+stand_alone: yes #_
 
 author:
 -
@@ -43,6 +44,8 @@ informative:
   RFC2109:
   RFC2965:
   RFC2818:
+  RFC3986:
+  RFC6265:
   Netscape:
     target: http://web.archive.org/web/20020803110822/http://wp.netscape.com/newsref/std/cookie_spec.html
     title: "Persistent Client State -- HTTP Cookies"
@@ -396,10 +399,12 @@ domain-value      = <subdomain>
                       ; defined in [RFC1034], Section 3.5, as
                       ; enhanced by [RFC1123], Section 2.1
 path-av           = "Path=" path-value
-path-value        = <any CHAR except CTLs or ";">
+path-value        = *av-octet
 secure-av         = "Secure"
 httponly-av       = "HttpOnly"
-extension-av      = <any CHAR except CTLs or ";">
+extension-av      = *av-octet
+av-octet          = %x20-3A / %x3C-7E
+                      ; any CHAR except CTLs or ";"
 ~~~
 
 Note that some of the grammatical terms above reference documents that use
@@ -618,12 +623,12 @@ found-year) are initially "not set".
     non-delimiter   = %x00-08 / %x0A-1F / DIGIT / ":" / ALPHA / %x7F-FF
     non-digit       = %x00-2F / %x3A-FF
 
-    day-of-month    = 1*2DIGIT ( non-digit *OCTET )
+    day-of-month    = 1*2DIGIT [ non-digit *OCTET ]
     month           = ( "jan" / "feb" / "mar" / "apr" /
                         "may" / "jun" / "jul" / "aug" /
                         "sep" / "oct" / "nov" / "dec" ) *OCTET
-    year            = 2*4DIGIT ( non-digit *OCTET )
-    time            = hms-time ( non-digit *OCTET )
+    year            = 2*4DIGIT [ non-digit *OCTET ]
+    time            = hms-time [ non-digit *OCTET ]
     hms-time        = time-field ":" time-field ":" time-field
     time-field      = 1*2DIGIT
     ~~~
@@ -742,6 +747,9 @@ A request-path path-matches a given cookie-path if at least one of the
 following conditions holds:
 
 *   The cookie-path and the request-path are identical.
+
+    Note that this differs from the rules in {{RFC3986}} for equivalence of the
+    path component, and hence two equivalent paths can have different cookies.
 
 *   The cookie-path is a prefix of the request-path, and the last character
     of the cookie-path is %x2F ("/").
@@ -1543,6 +1551,11 @@ Specification document:
 *  Fixes to formatting caused by mistakes in the initial port to Markdown:
 
    *   <https://github.com/httpwg/http-extensions/issues/243>
+
+*  -01 addresses errata 3444 by updating the `path-value` and `extension-av`
+   grammar, errata 4148 by updating the `day-of-month`, `year`, and `time`
+   grammar, and errata 3663 by adding the requested note.
+   <https://www.rfc-editor.org/errata_search.php?rfc=6265>
 
 # Acknowledgements
 
