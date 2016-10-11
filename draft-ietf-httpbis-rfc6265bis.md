@@ -3,6 +3,7 @@ title: HTTP State Management Mechanism
 docname: draft-ietf-httpbis-rfc6265bis-latest
 date: 2016
 category: std
+obsoletes: 6265
 
 ipr: trust200902
 area: Applications and Real-Time
