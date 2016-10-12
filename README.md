@@ -57,6 +57,8 @@ _Parked; waiting for implementation feedback._
 
 ### Character Encoding and Language for Parameters
 
+_in Working Group Last Call; ends 2016-10-27_
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rfc5987bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc5987bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc5987bis) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A5987bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc5987bis/)
