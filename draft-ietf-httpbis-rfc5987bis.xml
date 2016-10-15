@@ -773,7 +773,7 @@
 
 <section title="Implementation Report" anchor="implementation.report">
 <t>
-  The encoding defined in this document currently is used for two different
+  The encoding defined in this document currently is used for three different
   HTTP header fields:
 </t>
 <ul>
