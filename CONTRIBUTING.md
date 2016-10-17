@@ -1,4 +1,4 @@
-# Contributing
+# Contributing to HTTP
 
 Before submitting feedback, please familiarize yourself with our current issues
 list and review the [working group home page](https://httpwg.github.io/). If
@@ -26,8 +26,10 @@ IETF](https://www.ietf.org/tao.html).
 
 The Working Group has a few venues for discussion:
 
-* We have a session at most [IETF meetings](https://www.ietf.org/meeting/), and sometimes in between. Agendas, minutes and other materials for these meetings can be found in our [meeting materials repository](https://github.com/httpwg/wg-materials), and in the [official proceedings](https://datatracker.ietf.org/wg/httpbis/meetings/).
+* We have a session at most [IETF meetings](https://www.ietf.org/meeting/), and sometimes in between. See our [meeting materials repository](https://github.com/httpwg/wg-materials), and the [official proceedings](https://datatracker.ietf.org/wg/httpbis/meetings/) for details.
+
 * Our [mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/) is used for most communication, including notifications of meetings, new drafts, consensus calls and other business, as well as issue discussion.
+
 * We also discuss specific issues on the [issues list](https://github.com/httpwg/http-extensions/issues) itself. If you don't want to use Github to follow these discussions, you can subscribe to the [issue announce list](https://www.ietf.org/mailman/listinfo/http-issues).
 
 To be active in the Working Group, you can participate in any of these places. Most activity takes place on the mailing list, but if you just want to comment on and raise issues, that's fine too.
@@ -44,7 +46,7 @@ Before filing a new issue, please consider a few things:
   support requests**.
 * Please review the issues list to make sure that you aren't filing a
   duplicate.
-* If you're not sure how to phrase your issue, please ask on the [mailing list]((https://lists.w3.org/Archives/Public/ietf-http-wg/)).
+* If you're not sure how to phrase your issue, please ask on the [mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/).
 
 Issues can also be raised on the [Working Group mailing
 list](https://lists.w3.org/Archives/Public/ietf-http-wg/) by clearly marking them as such (e.g., 
@@ -62,7 +64,7 @@ commits will only be responded to with best effort, and may not be seen.
 
 Issues will be labeled by the Chair as either `editorial` or `design`.
 
-* **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list]((https://lists.w3.org/Archives/Public/ietf-http-wg/)). 
+* **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/). 
 * **Editorial** issues can be closed by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
 
 Once the resolution for a design issue is determined, it will be recorded in the
