@@ -216,6 +216,12 @@ content codings that imply encryption), each application of the content coding
 is reflected in a separate Encryption header field value in the order in which
 they were applied.
 
+Content codings that use the Encryption header field MUST always include a
+value for the header field when the content coding has been applied.  If no
+parameters are needed, then a dummy value is necessary to avoid confusion about
+which set of parameters applies to which content coding.  This requirement
+applies to uses of the `aesgcm` content coding.
+
 Encryption header field values with multiple instances of the same parameter
 name are invalid.
 
