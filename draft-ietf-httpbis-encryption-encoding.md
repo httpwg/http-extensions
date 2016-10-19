@@ -306,7 +306,7 @@ therefore be simplified to the first 16 octets of a single HMAC:
 ## Nonce Derivation {#nonce}
 
 The nonce input to AEAD_AES_128_GCM is constructed for each record.  The nonce
-for each record is a 12 octet (96 bit) value is produced from the record
+for each record is a 12 octet (96 bit) value that is produced from the record
 sequence number and a value derived from the input keying material.
 
 The input keying material and salt values are input to HKDF with different info
