@@ -359,7 +359,7 @@ aesgcm:
   the input keying material for the "aesgcm" content coding.
 
 Crypto-Key header field values with multiple instances of the same parameter
-name are invalid.
+name in a single crypto-key-params production are invalid.
 
 The input keying material used by the key derivation (see {{derivation}}) can be
 determined based on the information in the Crypto-Key header field.
@@ -388,7 +388,7 @@ wrapping is added to fit formatting constraints.
 ## Encryption of a Response {#explicit}
 
 Here, a successful HTTP GET response has been encrypted using input keying
-material that is identified by a URI.
+material that is identified by the string "a1".
 
 The encrypted data in this example is the UTF-8 encoded string "I am the
 walrus".  The input keying material is included in the Crypto-Key header field.
