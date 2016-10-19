@@ -313,7 +313,7 @@ The input keying material and salt values are input to HKDF with different info
 and length parameters.
 
 The length (L) parameter is 12 octets.  The info parameter for the nonce is the
-ASCII-encoded string "Content-Encoding: nonce", a single zero octet and an
+ASCII-encoded string "Content-Encoding: nonce", a single zero octet and a
 context:
 
 ~~~ inline
