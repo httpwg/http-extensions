@@ -207,8 +207,8 @@ The `Encryption` header field uses the extended ABNF syntax defined in
 Section 1.2 of {{!RFC7230}} and the `parameter` and `OWS` rules from {{!RFC7231}}.
 
 ~~~ abnf7230
-  Encryption = #encryption_params
-  encryption_params = [ parameter *( OWS ";" OWS parameter ) ]
+  Encryption = #encryption-params
+  encryption-params = [ parameter *( OWS ";" OWS parameter ) ]
 ~~~
 
 If the payload is encrypted more than once (as reflected by having multiple
@@ -338,8 +338,8 @@ The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
 of {{!RFC7230}} and the `parameter` and `OWS` rules from {{!RFC7231}}.
 
 ~~~ abnf7230
-  Crypto-Key = #crypto_key_params
-  crypto_key_params = [ parameter *( OWS ";" OWS parameter ) ]
+  Crypto-Key = #crypto-key-params
+  crypto-key-params = [ parameter *( OWS ";" OWS parameter ) ]
 ~~~
 
 keyid:
