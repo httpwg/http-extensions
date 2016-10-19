@@ -407,7 +407,8 @@ VDeU0XxaJkOJDAxPl7h9JD5V8N43RorP7PfpPdZZQuwF
 ~~~
 
 Note that the media type has been changed to "application/octet-stream" to avoid
-exposing information about the content.
+exposing information about the content.  Alternatively (and equivalently), the
+Content-Type header field can be omitted.
 
 
 ## Encryption with Multiple Records
