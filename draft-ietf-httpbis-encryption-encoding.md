@@ -43,7 +43,7 @@ informative:
       - ins: K. Yiu
       - ins: M. Nyström
     date: 2013-01-24
-    seriesinfo: W3C REC
+    seriesinfo: W3C Recommendation REC-xmlenc-core1-20130411
     target: "https://www.w3.org/TR/2013/REC-xmlenc-core1-20130411"
   AEBounds:
     title: "Limits on Authenticated Encryption Use in TLS"
@@ -224,7 +224,8 @@ Content codings that use the Encryption header field MUST always include a
 value for the header field when the content coding has been applied.  If no
 parameters are needed, then a dummy value is necessary to avoid confusion about
 which set of parameters applies to which content coding.  This requirement
-applies to uses of the `aesgcm` content coding.
+applies to uses of the `aesgcm` content coding, which does not need a dummy
+value since the `salt` parameter is mandatory.
 
 Encryption header field values with multiple instances of the same parameter
 name in a single encryption-params production are invalid.
