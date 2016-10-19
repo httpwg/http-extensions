@@ -35,12 +35,16 @@ informative:
     author:
       - ins: D. Eastlake
       - ins: J. Reagle
+      - ins: F. Hirsch
+      - ins: T. Roessler
       - ins: T. Imamura
       - ins: B. Dillaway
       - ins: E. Simon
-    date: 2002-12
+      - ins: K. Yiu
+      - ins: M. Nyström
+    date: 2013-01-24
     seriesinfo: W3C REC
-    target: "http://www.w3.org/TR/xmlenc-core/"
+    target: "https://www.w3.org/TR/2013/REC-xmlenc-core1-20130411"
   AEBounds:
     title: "Limits on Authenticated Encryption Use in TLS"
     author:
