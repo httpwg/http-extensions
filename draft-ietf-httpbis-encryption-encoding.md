@@ -245,7 +245,7 @@ keyid:
 
 salt:
 
-: The "salt" parameter contains a base64url-encoded octets {{!RFC7515}} that is
+: The "salt" parameter contains a base64url-encoded octets that is
   used as salt in deriving a unique content encryption key (see {{derivation}}).
   The "salt" parameter MUST be present, and MUST be exactly 16 octets long when
   decoded.  The "salt" parameter MUST NOT be reused for two different payload
