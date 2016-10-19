@@ -223,7 +223,7 @@ which set of parameters applies to which content coding.  This requirement
 applies to uses of the `aesgcm` content coding.
 
 Encryption header field values with multiple instances of the same parameter
-name are invalid.
+name in a single encryption-params production are invalid.
 
 Servers processing PUT requests MUST persist the value of the Encryption header
 field, unless they remove the content coding by decrypting the payload.
