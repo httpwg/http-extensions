@@ -287,6 +287,9 @@ aesgcm", a single zero octet and an optional context string:
    cek_info = "Content-Encoding: aesgcm" || 0x00 || context
 ~~~
 
+Note:
+: Concatenation of octet sequences is represented by the `||` operator.
+
 Unless otherwise specified, the context is a zero length octet sequence.
 Specifications that use this content coding MAY specify the use of an expanded
 context to cover additional inputs in the key derivation.
