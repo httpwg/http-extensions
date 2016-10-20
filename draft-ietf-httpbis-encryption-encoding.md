@@ -35,12 +35,16 @@ informative:
     author:
       - ins: D. Eastlake
       - ins: J. Reagle
+      - ins: F. Hirsch
+      - ins: T. Roessler
       - ins: T. Imamura
       - ins: B. Dillaway
       - ins: E. Simon
-    date: 2002-12
-    seriesinfo: W3C REC
-    target: "http://www.w3.org/TR/xmlenc-core/"
+      - ins: K. Yiu
+      - ins: M. Nyström
+    date: 2013-01-24
+    seriesinfo: W3C Recommendation REC-xmlenc-core1-20130411
+    target: "https://www.w3.org/TR/2013/REC-xmlenc-core1-20130411"
   AEBounds:
     title: "Limits on Authenticated Encryption Use in TLS"
     author:
@@ -127,8 +131,9 @@ scheme.  This ensures that only the HTTP Accept-Encoding header field is
 necessary to negotiate the use of encryption.
 
 The "aesgcm" content coding uses a fixed record size.  The resulting encoding is
-either a single record, or a series of fixed-size records. The final record, or
-a lone record, MUST be shorter than the fixed record size.
+any number of fixed-size records - which could be zero records - followed by a
+single partial record.  The partial record MUST be shorter than the fixed record
+size.
 
 ~~~ drawing
       +-----------+       content is rs octets minus padding
@@ -206,8 +211,8 @@ The `Encryption` header field uses the extended ABNF syntax defined in
 Section 1.2 of {{!RFC7230}} and the `parameter` and `OWS` rules from {{!RFC7231}}.
 
 ~~~ abnf7230
-  Encryption = #encryption_params
-  encryption_params = [ parameter *( OWS ";" OWS parameter ) ]
+  Encryption = #encryption-params
+  encryption-params = [ parameter *( OWS ";" OWS parameter ) ]
 ~~~
 
 If the payload is encrypted more than once (as reflected by having multiple
@@ -215,8 +220,15 @@ content codings that imply encryption), each application of the content coding
 is reflected in a separate Encryption header field value in the order in which
 they were applied.
 
+Content codings that use the Encryption header field MUST always include a
+value for the header field when the content coding has been applied.  If no
+parameters are needed, then a dummy value is necessary to avoid confusion about
+which set of parameters applies to which content coding.  This requirement
+applies to uses of the `aesgcm` content coding, which does not need a dummy
+value since the `salt` parameter is mandatory.
+
 Encryption header field values with multiple instances of the same parameter
-name are invalid.
+name in a single encryption-params production are invalid.
 
 Servers processing PUT requests MUST persist the value of the Encryption header
 field, unless they remove the content coding by decrypting the payload.
@@ -238,7 +250,7 @@ keyid:
 
 salt:
 
-: The "salt" parameter contains a base64url-encoded octets {{!RFC7515}} that is
+: The "salt" parameter contains a base64url-encoded octets that is
   used as salt in deriving a unique content encryption key (see {{derivation}}).
   The "salt" parameter MUST be present, and MUST be exactly 16 octets long when
   decoded.  The "salt" parameter MUST NOT be reused for two different payload
@@ -280,6 +292,9 @@ aesgcm", a single zero octet and an optional context string:
    cek_info = "Content-Encoding: aesgcm" || 0x00 || context
 ~~~
 
+Note:
+: Concatenation of octet sequences is represented by the `||` operator.
+
 Unless otherwise specified, the context is a zero length octet sequence.
 Specifications that use this content coding MAY specify the use of an expanded
 context to cover additional inputs in the key derivation.
@@ -296,14 +311,14 @@ therefore be simplified to the first 16 octets of a single HMAC:
 ## Nonce Derivation {#nonce}
 
 The nonce input to AEAD_AES_128_GCM is constructed for each record.  The nonce
-for each record is a 12 octet (96 bit) value is produced from the record
+for each record is a 12 octet (96 bit) value that is produced from the record
 sequence number and a value derived from the input keying material.
 
 The input keying material and salt values are input to HKDF with different info
 and length parameters.
 
 The length (L) parameter is 12 octets.  The info parameter for the nonce is the
-ASCII-encoded string "Content-Encoding: nonce", a single zero octet and an
+ASCII-encoded string "Content-Encoding: nonce", a single zero octet and a
 context:
 
 ~~~ inline
@@ -337,8 +352,8 @@ The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
 of {{!RFC7230}} and the `parameter` and `OWS` rules from {{!RFC7231}}.
 
 ~~~ abnf7230
-  Crypto-Key = #crypto_key_params
-  crypto_key_params = [ parameter *( OWS ";" OWS parameter ) ]
+  Crypto-Key = #crypto-key-params
+  crypto-key-params = [ parameter *( OWS ";" OWS parameter ) ]
 ~~~
 
 keyid:
@@ -352,7 +367,7 @@ aesgcm:
   the input keying material for the "aesgcm" content coding.
 
 Crypto-Key header field values with multiple instances of the same parameter
-name are invalid.
+name in a single crypto-key-params production are invalid.
 
 The input keying material used by the key derivation (see {{derivation}}) can be
 determined based on the information in the Crypto-Key header field.
@@ -381,7 +396,7 @@ wrapping is added to fit formatting constraints.
 ## Encryption of a Response {#explicit}
 
 Here, a successful HTTP GET response has been encrypted using input keying
-material that is identified by a URI.
+material that is identified by the string "a1".
 
 The encrypted data in this example is the UTF-8 encoded string "I am the
 walrus".  The input keying material is included in the Crypto-Key header field.
@@ -400,7 +415,8 @@ VDeU0XxaJkOJDAxPl7h9JD5V8N43RorP7PfpPdZZQuwF
 ~~~
 
 Note that the media type has been changed to "application/octet-stream" to avoid
-exposing information about the content.
+exposing information about the content.  Alternatively (and equivalently), the
+Content-Type header field can be omitted.
 
 
 ## Encryption with Multiple Records
