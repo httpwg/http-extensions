@@ -142,7 +142,9 @@ For example:
   Accept-CH: DPR, Width, Viewport-Width, Downlink
 ~~~
 
-When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it SHOULD append the Client-Hint header fields that match the advertised field-values to the header list of all subsequent requests. For example, based on Accept-CH example above, a user agent could append DPR, Width, Viewport-Width, and Downlink header fields to all subresource requests initiated by the page constructed from the response. Alternatively, a client can treat advertised support as a persistent origin preference and append same header fields on all future requests initiated to and by the resources associated with that origin.
+When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the server is interested in receiving the Client-Hint header fields that match the advertised field-values; subsequent requests initiated to the same server and, optionally any subresource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in, can include the Client-Hint header fields that match the advertised field-values.
+
+For example, based on Accept-CH example above, a user agent could append DPR, Width, Viewport-Width, and Downlink header fields to all subresource requests initiated by the page constructed from the response. Alternatively, a client can treat advertised support as a persistent origin preference and append same header fields on all future requests initiated to and by the resources associated with that origin.
 
 ### Interaction with Caches
 
