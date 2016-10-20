@@ -495,6 +495,37 @@
 </t>
 </section>
 
+<section title="Interoperability Considerations" anchor="interop">
+<t>
+  The "I-JSON Message Format" specification (<xref target="RFC7493"/>) addresses
+  known JSON interoperability pain points. This specification borrows from 
+  the requirements made over there:
+</t>
+<section title="Encoding and Characters">
+<t>
+  This specification requires that field values use only US-ASCII characters,
+  and thus by definition use a subset of UTF-8 (<xref target="RFC7493" x:fmt="of" x:sec="2.1"/>).
+</t>
+</section>
+<section title="Numbers">
+<t>
+  Be aware of the issues around number precision, as discussed in <xref target="RFC7493" x:fmt="of" x:sec="2.2"/>.
+</t>
+</section>
+<section title="Object Constraints">
+<t>
+  As described in <xref target="RFC7159" x:fmt="of" x:sec="4"/>, JSON parser implementations
+  differ in the handling of duplicate object names. Therefore, senders &MUST-NOT;
+  use duplicate object names, and recipients &SHOULD; either treat
+  field values with duplicate names as invalid (consistent with <xref target="RFC7493" x:fmt="," x:sec="2.3"/>)
+  or use the lexically last value (consistent with <xref target="ECMA-262" x:fmt="," x:sec="24.3.1.1" x:rel="#sec-internalizejsonproperty"/>).
+</t>
+<t>
+  Furthermore, ordering of object members is not significant and can not be relied upon.
+</t>
+</section>
+</section>
+
 <section title="Internationalization Considerations">
 <t>
   In HTTP/1.1, header field values are represented by octet sequences, usually used to
@@ -527,9 +558,6 @@
   smuggle information through field values; however, this concern is shared
   with other widely used formats, such as those using parameters in the
   form of name/value pairs.
-</t>
-<t>
-  <cref anchor="jsondupl">Talk about the risks introduced by JSON parsers not rejecting duplicate keys.</cref>
 </t>
 </section>
 
@@ -615,6 +643,15 @@
     <seriesInfo name="RFC" value="7231"/>
     <x:source href="refs/rfc7231.xml" basename="rfc7231"/>
   </reference>
+
+  <reference anchor="RFC7493">
+    <front>
+      <title>The I-JSON Message Format</title>
+      <author initials="T." surname="Bray" fullname="T. Bray" role="editor"/>
+      <date year="2015" month="March"/>
+    </front>
+    <seriesInfo name="RFC" value="7493"/>
+  </reference>
 </references>
 
 <references title="Informative References">
@@ -668,6 +705,17 @@
     </front>
     <seriesInfo name="RFC" value="7235"/>
     <x:source href="refs/rfc7235.xml" basename="rfc7235"/>
+  </reference>
+
+
+  <reference anchor='ECMA-262'
+             target='http://www.ecma-international.org/ecma-262/6.0/'>
+    <front>
+      <title>ECMA-262 6th Edition, The ECMAScript 2015 Language Specification</title>
+      <author><organization>Ecma International</organization></author>
+      <date year='2015' month='June'/>
+    </front>
+    <seriesInfo name='Standard' value='ECMA-262'/>
   </reference>
 
   <reference anchor='KEY'>
@@ -739,7 +787,8 @@
 </section>
 <section title="Since draft-ietf-httpbis-jfv-01" anchor="changes.since.wg.01">
 <t>
-  None yet.
+  Add interop discussion, building on I-JSON and ECMA-262 (see
+  <eref target="https://github.com/httpwg/http-extensions/issues/225"/>).
 </t>
 </section>
 </section>
