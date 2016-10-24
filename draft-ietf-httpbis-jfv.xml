@@ -791,6 +791,11 @@
   <eref target="https://github.com/httpwg/http-extensions/issues/225"/>).
 </t>
 </section>
+<section title="Since draft-ietf-httpbis-jfv-02" anchor="changes.since.wg.02">
+<t>
+  None yet.
+</t>
+</section>
 </section>
 
 <section title="Acknowledgements" anchor="acks" numbered="false">
