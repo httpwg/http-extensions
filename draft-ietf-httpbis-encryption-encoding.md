@@ -113,17 +113,18 @@ interpreted as described in {{!RFC2119}}.
 Base64url encoding is defined in Section 2 of {{!RFC7515}}.
 
 
-# The "aes128gcm" HTTP Content Coding {#aesgcm}
+# The "aes128gcm" HTTP Content Coding {#aes128gcm}
 
 The "aes128gcm" HTTP content coding indicates that a payload has been encrypted
 using Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) as
 identified as AEAD_AES_128_GCM in {{!RFC5116}}, Section 5.1.  The AEAD_AES_128_GCM
 algorithm uses a 128 bit content encryption key.
 
-When this content coding is in use, the Encryption header field ({{encryption}})
-describes how encryption has been applied.  The Crypto-Key header field
-({{crypto-key}}) can be included to describe how the content encryption key is
-derived or retrieved.
+Using this content coding requires knowledge of a key.  The Crypto-Key header
+field ({{crypto-key}}) can be included to describe how the content encryption
+key is derived or retrieved.  Keys might be provided in messages that are
+separate from those with encrypted content using Crypto-Key, or provided through
+external mechanisms.
 
 The "aes128gcm" content coding uses a single fixed set of encryption
 primitives.  Cipher suite agility is achieved by defining a new content coding
@@ -131,9 +132,9 @@ scheme.  This ensures that only the HTTP Accept-Encoding header field is
 necessary to negotiate the use of encryption.
 
 The "aes128gcm" content coding uses a fixed record size.  The final encoding
-consists of a header (see {{header}}), zero or more fixed size encrypted records
-and a partial record.  The partial record MUST be shorter than the fixed record
-size.
+consists of a header (see {{header}}), zero or more fixed size encrypted
+records, and a partial record.  The partial record MUST be shorter than the
+fixed record size.
 
 ~~~ drawing
       +-----------+       content is rs octets minus padding
