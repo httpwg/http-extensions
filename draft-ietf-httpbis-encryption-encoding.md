@@ -204,9 +204,9 @@ decrypt the content (other than the key).  The header block is placed in the
 body of a message ahead of the sequence of records.
 
 ~~~ drawing
-+-----------+--------+-----------+------------+
-| salt (16) | rs (4) | idlen (1) | id (idlen) |
-+-----------+--------+-----------+------------+
++-----------+--------+-----------+---------------+
+| salt (16) | rs (4) | idlen (1) | keyid (idlen) |
++-----------+--------+-----------+---------------+
 ~~~
 
 salt:
