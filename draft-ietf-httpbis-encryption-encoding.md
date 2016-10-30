@@ -306,7 +306,7 @@ is avoided).
 # Crypto-Key Header Field {#crypto-key}
 
 A Crypto-Key header field can be used to describe the input keying material used
-in the Encryption header field.
+by the `aes128gcm` content coding.
 
 Ordinarily, this header field will not appear in the same message as the
 encrypted content.  Including the encryption key with the encrypted payload
@@ -437,13 +437,15 @@ same result.
 ## Data Encryption Limits {#limits}
 
 There are limits to the data that AEAD_AES_128_GCM can encipher.  The maximum
-record size is 2^36-31 {{!RFC5116}}.  In order to preserve a 2^-40 probability
-of indistinguishability under chosen plaintext attack (IND-CPA), the total
-amount of plaintext that can be enciphered MUST be less than 2^44.5 blocks
-{{AEBounds}}.
+value for the record size is limited by the size of the "rs" field in the header
+(see {{header}}), which ensures that the 2^36-31 limit for a single application
+of AEAD_AES_128_GCM is not reached {{!RFC5116}}.  In order to preserve a 2^-40
+probability of indistinguishability under chosen plaintext attack (IND-CPA), the
+total amount of plaintext that can be enciphered MUST be less than 2^44.5 blocks
+of 16 octets {{AEBounds}}.
 
 If rs is a multiple of 16 octets, this means 398 terabytes can be encrypted
-safely, including padding.  However, if the record size is a multiple of 16
+safely, including padding.  However, if the record size is not a multiple of 16
 octets, the total amount of data that can be safely encrypted is reduced.  The
 worst case is a record size of 3 octets, for which at most 74 terabytes of
 plaintext can be encrypted, of which at least two-thirds is padding.
