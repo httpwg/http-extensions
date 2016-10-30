@@ -225,7 +225,7 @@ value for the header field when the content coding has been applied.  If no
 parameters are needed, then a dummy value is necessary to avoid confusion about
 which set of parameters applies to which content coding.  This requirement
 applies to uses of the `aesgcm` content coding, which does not need a dummy
-value since the `salt` parameter is mandatory.
+value because the `salt` parameter is mandatory.
 
 Encryption header field values with multiple instances of the same parameter
 name in a single encryption-params production are invalid.
