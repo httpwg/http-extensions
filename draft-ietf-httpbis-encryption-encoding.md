@@ -221,7 +221,7 @@ rs:
 
 : The "rs" or record size parameter contains an unsigned 32-bit integer in
   network byte order that describes the record size in octets.  Note that it is
-  therefore impossible to exceed the 2^36-1 limit on plaintext input to
+  therefore impossible to exceed the 2^36-31 limit on plaintext input to
   AEAD_AES_128_GCM.  Values smaller than 3 are invalid.
 
 keyid:
@@ -446,9 +446,10 @@ of 16 octets {{AEBounds}}.
 
 If rs is a multiple of 16 octets, this means 398 terabytes can be encrypted
 safely, including padding.  However, if the record size is not a multiple of 16
-octets, the total amount of data that can be safely encrypted is reduced.  The
-worst case is a record size of 3 octets, for which at most 74 terabytes of
-plaintext can be encrypted, of which at least two-thirds is padding.
+octets, the total amount of data that can be safely encrypted is reduced
+proportionally.  The worst case is a record size of 3 octets, for which at most
+74 terabytes of plaintext can be encrypted, of which at least two-thirds is
+padding.
 
 
 ## Content Integrity
