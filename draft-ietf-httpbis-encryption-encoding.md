@@ -197,6 +197,12 @@ padding can use larger records, or even a single record.  A larger record size
 reduces the processing and data overheads.
 
 
+## Encryption Content Coding Header {#header}
+
+The content coding uses a header block that includes all parameters needed to
+decrypt the content (other than the key).  The header block is placed in the
+body of a message ahead of the sequence of records.
+
 ~~~ drawing
 +-----------+--------+-----------+------------+
 | salt (16) | rs (4) | idlen (1) | id (idlen) |
@@ -524,7 +530,7 @@ Registry, as detailed in {{aes128gcm}}.
 * Reference: this specification
 
 
-## Encryption Header Fields
+## Crypto-Key Header Field
 
 This memo registers the "Crypto-Key" HTTP header field in the Permanent
 Message Header Registry, as detailed in {{crypto-key}}.
@@ -558,7 +564,7 @@ The initial contents of this registry are:
 * Purpose: Identify the key that is in use.
 * Reference: this document
 
-### aes128gcm {#iana-ekey-aes128gcm}
+### aes128gcm {#iana-aes128gcm}
 
 * Parameter Name: aes128gcm
 * Purpose: Provide an explicit input keying material value for the aes128gcm
