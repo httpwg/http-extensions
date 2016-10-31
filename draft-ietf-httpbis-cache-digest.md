@@ -39,6 +39,17 @@ normative:
 
 informative:
   RFC6265:
+  Rice:
+    title: Adaptive variable-length coding for efficient compression of spacecraft television data
+    author:
+    -
+      ins: R. F. Rice
+      name: Robert F. Rice
+    -
+      ins: J. Plaunt
+      name: James Plaunt
+    date: 1971
+    seriesinfo: IEEE Transactions on Communication Technology 19.6
 
 
 --- abstract
@@ -70,8 +81,8 @@ allows a stream to be cancelled by a client using a RST_STREAM frame in this sit
 is still at least one round trip of potentially wasted capacity even then.
 
 This specification defines a HTTP/2 frame type to allow clients to inform the server of their
-cache's contents using a Golumb-Rice Coded Set. Servers can then use this to inform their choices
-of what to push to clients.
+cache's contents using a Golumb-Rice Coded Set {{Rice}}. Servers can then use this to inform their
+choices of what to push to clients.
 
 
 ## Notational Conventions
