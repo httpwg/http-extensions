@@ -119,8 +119,9 @@ clients with existing alternative services information could make such a request
 expire, in order minimize the delays that might be incurred.
 
 Client certificates are not meaningful for URLs with the `http` scheme, and therefore clients
-creating new TLS connections to alternative services for the purposes of this specification MUST
-NOT present them. Established connections with client certificates MAY be reused, however.
+creating new TLS connections to alternative services for the purposes of this specification MUST NOT
+present them. Connections that use client certificates for other reasons MAY be reused, though
+client certificates MUST NOT affect the responses to requests for `http` resources.
 
 
 ## Alternative Server Opt-In {#auth}
