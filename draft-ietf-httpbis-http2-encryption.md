@@ -105,7 +105,8 @@ specification by providing an alternative service advertisement {{RFC7838}} for 
 identifier that uses TLS, such as `h2` {{RFC7540}}.
 
 A client that receives such an advertisement MAY make future requests intended for the associated
-origin ({{RFC6454}}) to the identified service (as specified by {{RFC7838}}), provided that the alternative service opts in as described in {{auth}}.
+origin ({{RFC6454}}) to the identified service (as specified by {{RFC7838}}), provided that the
+alternative service opts in as described in {{auth}}.
 
 A client that places the importance of protection against passive attacks over performance might
 choose to withhold requests until an encrypted connection is available. However, if such a
@@ -114,8 +115,8 @@ connection.
 
 A client can also explicitly probe for an alternative service advertisement by sending a request
 that bears little or no sensitive information, such as one with the OPTIONS method. Likewise,
-clients with existing alternative services information could make such a request before they expire,
-in order minimize the delays that might be incurred.
+clients with existing alternative services information could make such a request before they
+expire, in order minimize the delays that might be incurred.
 
 Client certificates are not meaningful for URLs with the `http` scheme, and therefore clients
 creating new TLS connections to alternative services for the purposes of this specification MUST
@@ -177,8 +178,8 @@ has a "mixed-scheme" member whose value is "true".
 
 ## The "http-opportunistic" well-known URI {#well-known}
 
-This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said
-to have a valid http-opportunistic response for a given origin when:
+This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said to
+have a valid http-opportunistic response for a given origin when:
 
 * The client has obtained a 200 (OK) response for the well-known URI from the origin, and it is
   fresh {{RFC7234}} (potentially through revalidation {{RFC7232}}), and
@@ -187,9 +188,9 @@ to have a valid http-opportunistic response for a given origin when:
 
 * That response's payload, when parsed as JSON {{RFC7159}}, contains an object as the root, and
 
-* The root object contains a member whose name is a case-insensitive
-  character-for-character match for the origin in question, serialised into Unicode as per Section
-  6.1 of {{RFC6454}}, and whose value is an object (hereafter, the "origin object"),
+* The root object contains a member whose name is a case-insensitive character-for-character match
+  for the origin in question, serialised into Unicode as per Section 6.1 of {{RFC6454}}, and whose
+  value is an object (hereafter, the "origin object"),
 
 * The origin object has a "lifetime" member, whose value is a number indicating the number of
   seconds which the origin object is valid for (hereafter, the "origin object lifetime"), and
@@ -215,12 +216,12 @@ This specification registers a Well-Known URI {{RFC5785}}:
 
 User Agents MUST NOT provide any special security indicia when an `http` resource is acquired using
 TLS. In particular, indicators that might suggest the same level of security as `https` MUST NOT be
-used (e.g.,  a "lock device").
+used (e.g., a "lock device").
 
 
 ## Downgrade Attacks {#downgrade}
 
-A downgrade attack against the negotiation for TLS is possible. 
+A downgrade attack against the negotiation for TLS is possible.
 
 For example, because the `Alt-Svc` header field {{RFC7838}} likely appears in an unauthenticated
 and unencrypted channel, it is subject to downgrade by network attackers. In its simplest form, an
@@ -242,8 +243,8 @@ HTTP implementations and applications sometimes use ambient signals to determine
 for an `https` resource; for example, they might look for TLS on the stack, or a server port number
 of 443.
 
-This might be due to limitations in the protocol (the most common HTTP/1.1 request form does
-not carry an explicit indication of the URI scheme), or it may be because how the server and
+This might be due to limitations in the protocol (the most common HTTP/1.1 request form does not
+carry an explicit indication of the URI scheme), or it may be because how the server and
 application are implemented (often, they are two separate entities, with a variety of possible
 interfaces between them).
 
