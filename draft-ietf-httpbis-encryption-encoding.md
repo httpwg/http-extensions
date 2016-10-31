@@ -374,9 +374,10 @@ HTTP/1.1 200 OK
 Content-Type: application/octet-stream
 Content-Length: 33
 Content-Encoding: aes128gcm
-Crypto-Key: aes128gcm=6Aqf1aDH8lSxLyCpoCnAqg
+Crypto-Key: aes128gcm=B33e_VeFrOyIHwFTIfmesA
 
-lVIUs_H0A2a8-6dhmzY57H4K4uRFCF6tIIPRO9vrOL6B
+9Y1iaZMzICC05DO3y8dWiAAAopoAzpM9l8LHdpDaO9C-UvT4kttTI_edSsHv1o5b
+lWZ5mBYL
 ~~~
 
 Note that the media type has been changed to "application/octet-stream" to avoid
@@ -397,8 +398,8 @@ Content-Length: 70
 Content-Encoding: aes128gcm
 Crypto-Key: keyid="a1"; aes128gcm="BO3ZVPxUlnLORbVGMpbT1Q"
 
-iBmR5fjBCUvicKLSt1L1GQAAAAoCYTGZvfb0yACNxTo090xk6m_6GwMiLv4AxGSS
-_BFGyZS_2z_cOxSHLfuPsAQiId243MTE8B_5Vg-R5OPTNbiV3PlHJcjGONoI
+_lgOPHdbKmIaLnZC7_8huQAAAAoCYTGkQWUSYylMKzMduBHDCFDwL2oODx8nkh0n
+uOTNrh48DaWSm02DiQPzQAOGe6xRAeBj588hH6jQRTh_szFRS2Nwx9Aeuiic
 ~~~
 
 
@@ -596,16 +597,16 @@ to a JWE object that might be expressed using the JWE Compact Serialization:
   from the input keying material (see {{nonce}}).  This value is also not
   transmitted.
 
-* The final value is the concatenated JWE Ciphertext and the JWE Authentication
-  Tag, both expressed without base64url encoding.  The "." separator is omitted,
-  since the length of these fields is known.
+* The final value is the concatenated header, JWE Ciphertext, and JWE
+  Authentication Tag, all expressed without base64url encoding.  The "."
+  separator is omitted, since the length of these fields is known.
 
 Thus, the example in {{explicit}} can be rendered using the JWE Compact
 Serialization as:
 
 ~~~ example
 eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..31iQYc1v4a36EgyJ.
-VDeU0XxaJkOJDAxPl7h9JD4.VfDeN0aKz-z36T3WWULsBQ
+AM6TPZfCx3aQ2jvQvlL0-JLb.21Mj951Kwe_WjluVZnmYFgs
 ~~~
 
 Where the first line represents the fixed JWE Protected Header, an empty JWE
@@ -619,5 +620,5 @@ Authentication Tag.
 Mark Nottingham was an original author of this document.
 
 The following people provided valuable input: Richard Barnes, David Benjamin,
-Peter Beverloo, Mike Jones, Stephen Farrell, Adam Langley, John Mattsson, Julian
+Peter Beverloo, JR Conlin, Mike Jones, Stephen Farrell, Adam Langley, John Mattsson, Julian
 Reschke, Eric Rescorla, Jim Schaad, and Magnus Westerlund.
