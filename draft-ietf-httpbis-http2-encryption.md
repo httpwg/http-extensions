@@ -131,21 +131,14 @@ It is possible that the server might become confused about whether requests' URL
 opted into serving `http` URLs over TLS, clients are required to perform additional checks before
 directing `http` requests to it.
 
-Clients MUST NOT send `http` requests over a connection with the `h2` protocol identifier, unless
-they have obtained a valid http-opportunistic response for an origin (as per {{well-known}}), and:
+Clients MUST NOT send `http` requests over a secured connection, unless the chosen alternative
+service presents a certificate that is valid for the origin - as per {{RFC2818}} (this also
+establishes "reasonable assurances" for the purposes of {RFC7838}}) - and they have obtained a valid
+http-opportunistic response for an origin (as per {{well-known}}).
 
-* The chosen alternative service presents a certificate that is valid for the origin, as per
-  {{RFC2818}} (this also establishes "reasonable assurances" for the purposes of {RFC7838}}), and
-
-* The origin object of the http-opportunistic response has a `tls-ports' member, whose value is an
-  array of numbers, one of which matches the port of the alternative service in question, and
-
-* The chosen alternative service returns the same representation as the origin did for the
-  http-opportunistic resource.
-
-For example, this request/response pair would allow reqeusts for the origin
-"http://www.example.com" to be sent to an alternative service on port 443 or 8000 of the host
-"www.example.com":
+For example, assuming the following request is made over a TLS connection that is successfully
+authenticated for those origins, the following request/response pair would allow requests for the
+origins "http://www.example.com" or "http://example.com" to be sent using a secured connection:
 
 ~~~ example
 GET /.well-known/http-opportunistic HTTP/1.1
@@ -155,14 +148,8 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 Connection: close
 
-{
-  "http://www.example.com": {
-    "tls-ports": [443, 8000],
-    "lifetime": 2592000
-  }
-}
+[ "http://www.example.com", "http://example.com" ]
 ~~~
-
 
 
 ## Interaction with "https" URIs
@@ -171,10 +158,11 @@ When using alternative services, requests for resources identified by both `http
 might use the same connection, because HTTP/2 permits requests for multiple origins on the same
 connection.
 
-Because of the risk of server confusion about individual requests' schemes (see {{confuse}}),
-clients MUST NOT send `http` requests on a connection that has previously been used for `https`
-requests, unless the http-opportunistic origin object {{well-known}} fetched over that connection
-has a "mixed-scheme" member whose value is "true".
+Because of the potential for server confusion about the scheme of requests (see {{confuse}}),
+clients MUST NOT send `http` requests on a connection prior to successfully retrieving a valid
+http-opportunistic resource that contains the origin (see {{well-known}}). The primary purpose of
+this check is to provide a client with some assurance that a server understands this specification
+and has taken steps to avoid being confused about request scheme.
 
 
 ## The "http-opportunistic" well-known URI {#well-known}
@@ -187,18 +175,13 @@ have a valid http-opportunistic response for a given origin when:
 
 * That response has the media type "application/json", and
 
-* That response's payload, when parsed as JSON {{RFC7159}}, contains an object as the root, and
+* That response's payload, when parsed as JSON {{RFC7159}}, contains an array as the root, and
 
-* The root object contains a member whose name is a case-insensitive character-for-character match
-  for the origin in question, serialised into Unicode as per Section 6.1 of {{RFC6454}}, and whose
-  value is an object (hereafter, the "origin object"),
+* The array contains a string that is a case-insensitive character-for-character match
+  for the origin in question, serialised into Unicode as per Section 6.1 of {{RFC6454}}.
 
-* The origin object has a "lifetime" member, whose value is a number indicating the number of
-  seconds which the origin object is valid for (hereafter, the "origin object lifetime"), and
-
-* The origin object lifetime is greater than the `current_age` (as per {{RFC7234}}, Section 4.2.3).
-
-Note that origin object lifetime might differ from the freshness lifetime of the response.
+A client MAY treat an "http-opportunistic" resource as invalid if the contains values that are not
+strings.
 
 
 # IANA Considerations
