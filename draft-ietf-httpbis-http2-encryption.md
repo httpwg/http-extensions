@@ -142,8 +142,8 @@ authenticated for those origins, the following request/response pair would allow
 origins "http://www.example.com" or "http://example.com" to be sent using a secured connection:
 
 ~~~ example
-GET /.well-known/http-opportunistic HTTP/1.1
-Host: www.example.com
+GET http://example.com/.well-known/http-opportunistic HTTP/1.1
+Host: example.com
 
 HTTP/1.1 200 OK
 Content-Type: application/json
