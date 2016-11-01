@@ -110,7 +110,7 @@ Origin-Len:
 : An unsigned, 16-bit integer indicating the length, in octets, of the Origin field.
 
 Origin:
-: A sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the Digest-Value applies to.
+: A sequence of characters containing the ASCII serialization of an origin ({{RFC6454}}, Section 6.2) that the Digest-Value applies to.
 
 Digest-Value:
 : A sequence of octets containing the digest as computed in {{computing}}.
