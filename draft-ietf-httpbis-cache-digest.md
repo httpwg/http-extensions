@@ -1,13 +1,12 @@
 ---
 title: Cache Digests for HTTP/2
-abbrev:
 docname: draft-ietf-httpbis-cache-digest-latest
 date: 2016
 category: std
 
 ipr: trust200902
-area: General
-workgroup: 
+area: Applications and Real-Time
+workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes
