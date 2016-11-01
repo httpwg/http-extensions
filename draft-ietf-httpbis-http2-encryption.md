@@ -88,8 +88,8 @@ operation. This mechanism is expected to have a minimal impact upon performance,
 trivial administrative effort to configure.
 
 Preventing active attacks (such as a Man-in-the-Middle) is a non-goal for this specification.
-Furthermore, this specification is not intended to replace or offer an alternative to `https`,
-since it both prevents active attacks and invokes a more stringent security model in most clients.
+Furthermore, this specification is not intended to replace or offer an alternative to `https`, since
+it both prevents active attacks and invokes a more stringent security model in most clients.
 
 ## Notational Conventions
 
@@ -102,10 +102,12 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 An origin server that supports the resolution of `http` URIs can indicate support for this
 specification by providing an alternative service advertisement {{RFC7838}} for a protocol
-identifier that uses TLS, such as `h2` {{RFC7540}}.
+identifier that uses TLS, such as `h2` {{RFC7540}}, or `http/1.1` {{?RFC7301}}.  Note that HTTP/1.1
+requests MUST use the absolute form (see Section 5.3.2 of {{RFC7230}}).
 
 A client that receives such an advertisement MAY make future requests intended for the associated
-origin ({{RFC6454}}) to the identified service (as specified by {{RFC7838}}), provided that the alternative service opts in as described in {{auth}}.
+origin ({{RFC6454}}) to the identified service (as specified by {{RFC7838}}), provided that the
+alternative service opts in as described in {{auth}}.
 
 A client that places the importance of protection against passive attacks over performance might
 choose to withhold requests until an encrypted connection is available. However, if such a
@@ -114,12 +116,13 @@ connection.
 
 A client can also explicitly probe for an alternative service advertisement by sending a request
 that bears little or no sensitive information, such as one with the OPTIONS method. Likewise,
-clients with existing alternative services information could make such a request before they expire,
-in order minimize the delays that might be incurred.
+clients with existing alternative services information could make such a request before they
+expire, in order minimize the delays that might be incurred.
 
 Client certificates are not meaningful for URLs with the `http` scheme, and therefore clients
-creating new TLS connections to alternative services for the purposes of this specification MUST
-NOT present them. Established connections with client certificates MAY be reused, however.
+creating new TLS connections to alternative services for the purposes of this specification MUST NOT
+present them. Connections that use client certificates for other reasons MAY be reused, though
+client certificates MUST NOT affect the responses to requests for `http` resources.
 
 
 ## Alternative Server Opt-In {#auth}
@@ -129,38 +132,25 @@ It is possible that the server might become confused about whether requests' URL
 opted into serving `http` URLs over TLS, clients are required to perform additional checks before
 directing `http` requests to it.
 
-Clients MUST NOT send `http` requests over a connection with the `h2` protocol identifier, unless
-they have obtained a valid http-opportunistic response for an origin (as per {{well-known}}), and:
+Clients MUST NOT send `http` requests over a secured connection, unless the chosen alternative
+service presents a certificate that is valid for the origin - as per {{RFC2818}} (this also
+establishes "reasonable assurances" for the purposes of {RFC7838}}) - and they have obtained a valid
+http-opportunistic response for an origin (as per {{well-known}}).
 
-* The chosen alternative service presents a certificate that is valid for the origin, as per
-  {{RFC2818}} (this also establishes "reasonable assurances" for the purposes of {RFC7838}}), and
-
-* The origin object of the http-opportunistic response has a `tls-ports' member, whose value is an
-  array of numbers, one of which matches the port of the alternative service in question, and
-
-* The chosen alternative service returns the same representation as the origin did for the
-  http-opportunistic resource.
-
-For example, this request/response pair would allow reqeusts for the origin
-"http://www.example.com" to be sent to an alternative service on port 443 or 8000 of the host
-"www.example.com":
+For example, assuming the following request is made over a TLS connection that is successfully
+authenticated for those origins, the following request/response pair would allow requests for the
+origins "http://www.example.com" or "http://example.com" to be sent using a secured connection:
 
 ~~~ example
-GET /.well-known/http-opportunistic HTTP/1.1
-Host: www.example.com
+GET http://example.com/.well-known/http-opportunistic HTTP/1.1
+Host: example.com
 
 HTTP/1.1 200 OK
 Content-Type: application/json
 Connection: close
 
-{
-  "http://www.example.com": {
-    "tls-ports": [443, 8000],
-    "lifetime": 2592000
-  }
-}
+[ "http://www.example.com", "http://example.com" ]
 ~~~
-
 
 
 ## Interaction with "https" URIs
@@ -169,34 +159,30 @@ When using alternative services, requests for resources identified by both `http
 might use the same connection, because HTTP/2 permits requests for multiple origins on the same
 connection.
 
-Because of the risk of server confusion about individual requests' schemes (see {{confuse}}),
-clients MUST NOT send `http` requests on a connection that has previously been used for `https`
-requests, unless the http-opportunistic origin object {{well-known}} fetched over that connection
-has a "mixed-scheme" member whose value is "true".
+Because of the potential for server confusion about the scheme of requests (see {{confuse}}),
+clients MUST NOT send `http` requests on a connection prior to successfully retrieving a valid
+http-opportunistic resource that contains the origin (see {{well-known}}). The primary purpose of
+this check is to provide a client with some assurance that a server understands this specification
+and has taken steps to avoid being confused about request scheme.
 
 
 ## The "http-opportunistic" well-known URI {#well-known}
 
-This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said
-to have a valid http-opportunistic response for a given origin when:
+This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said to
+have a valid http-opportunistic response for a given origin when:
 
 * The client has obtained a 200 (OK) response for the well-known URI from the origin, and it is
   fresh {{RFC7234}} (potentially through revalidation {{RFC7232}}), and
 
 * That response has the media type "application/json", and
 
-* That response's payload, when parsed as JSON {{RFC7159}}, contains an object as the root, and
+* That response's payload, when parsed as JSON {{RFC7159}}, contains an array as the root, and
 
-* The root object contains a member whose name is a case-insensitive
-  character-for-character match for the origin in question, serialised into Unicode as per Section
-  6.1 of {{RFC6454}}, and whose value is an object (hereafter, the "origin object"),
+* The array contains a string that is a case-insensitive character-for-character match
+  for the origin in question, serialised into Unicode as per Section 6.1 of {{RFC6454}}.
 
-* The origin object has a "lifetime" member, whose value is a number indicating the number of
-  seconds which the origin object is valid for (hereafter, the "origin object lifetime"), and
-
-* The origin object lifetime is greater than the `current_age` (as per {{RFC7234}}, Section 4.2.3).
-
-Note that origin object lifetime might differ from the freshness lifetime of the response.
+A client MAY treat an "http-opportunistic" resource as invalid if the contains values that are not
+strings.
 
 
 # IANA Considerations
@@ -215,12 +201,12 @@ This specification registers a Well-Known URI {{RFC5785}}:
 
 User Agents MUST NOT provide any special security indicia when an `http` resource is acquired using
 TLS. In particular, indicators that might suggest the same level of security as `https` MUST NOT be
-used (e.g.,  a "lock device").
+used (e.g., a "lock device").
 
 
 ## Downgrade Attacks {#downgrade}
 
-A downgrade attack against the negotiation for TLS is possible. 
+A downgrade attack against the negotiation for TLS is possible.
 
 For example, because the `Alt-Svc` header field {{RFC7838}} likely appears in an unauthenticated
 and unencrypted channel, it is subject to downgrade by network attackers. In its simplest form, an
@@ -242,8 +228,8 @@ HTTP implementations and applications sometimes use ambient signals to determine
 for an `https` resource; for example, they might look for TLS on the stack, or a server port number
 of 443.
 
-This might be due to limitations in the protocol (the most common HTTP/1.1 request form does
-not carry an explicit indication of the URI scheme), or it may be because how the server and
+This might be due to limitations in the protocol (the most common HTTP/1.1 request form does not
+carry an explicit indication of the URI scheme), or it may be because how the server and
 application are implemented (often, they are two separate entities, with a variety of possible
 interfaces between them).
 
