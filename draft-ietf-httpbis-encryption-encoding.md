@@ -361,9 +361,10 @@ wrapping is added to fit formatting constraints.
 
 ## Encryption of a Response {#explicit}
 
-Here, a successful HTTP GET response has been encrypted using input keying
-material that is identified by an empty string (that is, the "keyid" field is
-zero octets in length).
+Here, a successful HTTP GET response has been encrypted.  This uses a record
+size of 4096 and the minimum of 2 octets of padding, so only a partial record is
+present.  The input keying material is identified by an empty string (that is,
+the "keyid" field in the header is zero octets in length).
 
 The encrypted data in this example is the UTF-8 encoded string "I am the
 walrus".  The input keying material is included in the Crypto-Key header field.
@@ -398,11 +399,12 @@ plaintext = AABJIGFtIHRoZSB3YWxydXM
 
 ## Encryption with Multiple Records
 
-This example shows the same encrypted message, but split into records of 10
-octets each (that is, the "rs" field in the header is 10).  The first record
-includes a single additional octet of padding, which causes the end of the
-content to align with a record boundary, forcing the creation of a third record
-that contains only padding.
+This example shows the same message, but the plaintext is split into records of
+10 octets each (that is, the "rs" field in the header is 10).  The first record
+includes a single additional octet of padding.  This means that there are 7
+octets of message in the first record, and 8 in the second.  This causes the end
+of the content to align with a record boundary, forcing the creation of a third
+record that contains only two octets of padding.
 
 ~~~ example
 HTTP/1.1 200 OK
