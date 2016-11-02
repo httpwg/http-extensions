@@ -62,7 +62,7 @@ commits will only be responded to with best effort, and may not be seen.
 
 ## Resolving Issues
 
-Issues will be labeled by the Chair as either `editorial` or `design`.
+Issues will be labeled by the Chairs as either `editorial` or `design`.
 
 * **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/), as outlined below. 
 
