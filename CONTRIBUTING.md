@@ -64,18 +64,21 @@ commits will only be responded to with best effort, and may not be seen.
 
 Issues will be labeled by the Chair as either `editorial` or `design`.
 
-* **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/). 
+* **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/), as outlined below. 
+
 * **Editorial** issues can be closed by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
 
-Once the resolution for a design issue is determined, it will be recorded in the
-issue and then the issue will be labelled `editor-ready`. After the editor has
-incorporated a resolution into the specification, the issue can be closed.
+Consensus for the resolution of a design issue can be established in a few different ways:
 
-When a new draft is published, the design issues that have been closed since
-the last draft will be highlighted on the mailing list, to aid reviewers.
+* Through discussion on the mailing list. Once a resolution is found, it will be recorded in the issue.
 
-If substantive new information is brought to our attention, issues can be
-reopened by the Chair.
+* Through discussion on the issues list. Once a resolution is found, it will be confirmed on the mailing list before consensus is declared. 
+
+The editors can also propose resolutions for the group's consideration by incorporating them into the draft(s); when doing so, the issue should not be closed until consensus is declared.
+
+Issues that have consensus will be labelled as `editor-ready`. After the editor has incorporated a resolution into the specification, the issue can be closed.
+
+When a new draft is published, the design issues that have been closed since the last draft will be highlighted on the mailing list, to aid reviewers. If substantive new information is brought to our attention, issues can be reopened by the Chairs.
 
 
 ## Pull Requests
