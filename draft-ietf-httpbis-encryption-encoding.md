@@ -376,7 +376,8 @@ Content-Length: 33
 Content-Encoding: aes128gcm
 Crypto-Key: aes128gcm=6Aqf1aDH8lSxLyCpoCnAqg
 
-lVIUs_H0A2a8-6dhmzY57H4K4uRFCF6tIIPRO9vrOL6B
+sJvlboCWzB5jr8hI_q9cOQAAEAAANSmxkSVa0-MiNNuF77YHSs-iwaNe_OK0qfmO
+c7NT5WSW
 ~~~
 
 Note that the media type has been changed to "application/octet-stream" to avoid
@@ -397,8 +398,8 @@ Content-Length: 70
 Content-Encoding: aes128gcm
 Crypto-Key: keyid="a1"; aes128gcm="BO3ZVPxUlnLORbVGMpbT1Q"
 
-iBmR5fjBCUvicKLSt1L1GQAAAAoCYTGZvfb0yACNxTo090xk6m_6GwMiLv4AxGSS
-_BFGyZS_2z_cOxSHLfuPsAQiId243MTE8B_5Vg-R5OPTNbiV3PlHJcjGONoI
+uNCkWiNYzKTnBN9ji3-qWAAAAAoCYTGHOqYFz-0in3dpb-VE2GfBngkaPy6bZus_
+qLF79s6zQyTSsA0iLOKyd3JqVIwprNzVatRCWZGUx_qsFbJBCQu62RqQuR2d
 ~~~
 
 
@@ -605,7 +606,7 @@ Serialization as:
 
 ~~~ example
 eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..31iQYc1v4a36EgyJ.
-VDeU0XxaJkOJDAxPl7h9JD4.VfDeN0aKz-z36T3WWULsBQ
+NSmxkSVa0-MiNNuF77YHSs8.osGjXvzitKn5jnOzU-Vklg
 ~~~
 
 Where the first line represents the fixed JWE Protected Header, an empty JWE
