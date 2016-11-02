@@ -102,8 +102,14 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 An origin server that supports the resolution of `http` URIs can indicate support for this
 specification by providing an alternative service advertisement {{RFC7838}} for a protocol
-identifier that uses TLS, such as `h2` {{RFC7540}}, or `http/1.1` {{?RFC7301}}.  Note that HTTP/1.1
-requests MUST use the absolute form (see Section 5.3.2 of {{RFC7230}}).
+identifier that uses TLS, such as `h2` {{RFC7540}}, or `http/1.1` {{?RFC7301}}.
+
+Requests for `http` resources using TLS MUST include the scheme in the request.  HTTP/2 requires
+this and provides the `:scheme` pseudo-header field for this purpose.  HTTP/1.1 provides no such
+field, and even prohibits the use of the absolute form for requests that are sent directly to an
+origin server (see Section 5.3.1 of {{RFC7230}}).  This document overrides that requirement for
+requests with the `http` scheme that are sent over TLS; these requests MUST be made using the
+absolute form as though the server were a proxy.
 
 A client that receives such an advertisement MAY make future requests intended for the associated
 origin ({{RFC6454}}) to the identified service (as specified by {{RFC7838}}), provided that the
