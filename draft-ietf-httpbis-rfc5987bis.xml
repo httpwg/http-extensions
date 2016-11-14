@@ -726,20 +726,12 @@
   </reference>
 
   <reference anchor='XMLHttpRequest'
-             target='http://www.w3.org/TR/2014/WD-XMLHttpRequest-20140130/'>
+             target='https://xhr.spec.whatwg.org/'>
     <front>
-      <title>XMLHttpRequest Level 1</title>
-      <author fullname='Anne van Kesteren' surname='van Kesteren' initials='A.'/>
-      <author fullname='Julian Aubourg' surname='Aubourg' initials='J.'/>
-      <author fullname='Jungkee Song' surname='Song' initials='J.'/>
-      <author fullname='Hallvord Steen' surname='Steen' initials='H.'/>
-      <date year='2014' month='January' day='30'/>
+      <title>XMLHttpRequest</title>
+      <author><organization>WhatWG</organization></author>
+      <date/>
     </front>
-    <seriesInfo name='W3C Working Draft' value='WD-XMLHttpRequest-20140130'/>
-    <annotation>
-      Latest version available at
-      <eref target='http://www.w3.org/TR/XMLHttpRequest/'/>.
-    </annotation>
   </reference>
 
 </references>
@@ -908,7 +900,7 @@
 
 <section title="Since draft-ietf-httpbis-rfc5987bis-03">
 <t>
-  None yet.
+  Fixed one editorial issue. Updated XHR reference.
 </t>
 </section>
 </section>
