@@ -408,7 +408,7 @@
 <x:note>
   <t>
     <x:h>Note:</x:h> This specification does not automatically assign a new
-    interpretration to parameter names ending in an asterisk. As pointed out
+    interpretation to parameter names ending in an asterisk. As pointed out
     above, it's up to the specification for the non-extended parameter to "opt
     in" to the syntax defined here. That being said, some existing
     implementations are known to automatically switch to the use of this
