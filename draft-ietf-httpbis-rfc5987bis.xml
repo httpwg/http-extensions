@@ -905,6 +905,9 @@
 <t>
   Fixed <eref target="https://github.com/httpwg/http-extensions/issues/266"/>: use of now undefined term "parmname".
 </t>
+<t>
+  Include WG into Acknowledgements for this revision.
+</t>
 </section>
 </section>
 
@@ -914,6 +917,10 @@
   to Graham Klyne and Alexey Melnikov for general review, to
   Chris Newman for pointing out an RFC 2231 incompatibility, and to
   Benjamin Carlyle, Roar Lauritzsen, Eric Lawrence, and James Manger for implementer's feedback.
+</t>
+<t>
+  Furthermore thanks to the members of the IETF HTTP Working Group for
+  the feedback specific to this update of RFC 5987.  
 </t>
 </section>  
 
