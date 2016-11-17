@@ -399,7 +399,7 @@
   <t>
     <x:h>Note:</x:h> The Parameter Value Continuation feature defined in
     <xref target="RFC2231" x:fmt="of" x:sec="3"/> makes it impossible to
-    have multiple instances of extended parameters with identical parmname components,
+    have multiple instances of extended parameters with identical names,
     as the processing of continuations would become ambiguous. Thus, specifications
     using this extension are advised to disallow this case for compatibility
     with RFC 2231.
@@ -436,7 +436,7 @@
 <section title="Error Handling">
 <t>
   Header field specifications need to define whether multiple
-  instances of parameters with identical parmname components are allowed, and
+  instances of parameters with identical names are allowed, and
   how they should be processed. This specification suggests that a parameter using the
   extended syntax takes precedence. This would allow producers to use both
   formats without breaking recipients that do not understand the extended syntax
@@ -901,6 +901,9 @@
 <section title="Since draft-ietf-httpbis-rfc5987bis-03">
 <t>
   Fixed one editorial issue. Updated XHR reference.
+</t>
+<t>
+  Fixed <eref target="https://github.com/httpwg/http-extensions/issues/266"/>: use of now undefined term "parmname".
 </t>
 </section>
 </section>
