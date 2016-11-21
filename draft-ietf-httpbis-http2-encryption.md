@@ -163,7 +163,8 @@ DATA
 
 ## Interaction with "https" URIs
 
-Clients MUST NOT send `http` requests and `https` requests on the same connection.
+Clients MUST NOT send `http` requests and `https` requests on the same connection.  Similarly,
+clients MUST NOT send `http` requests for multiple origins on the same connection.
 
 
 ## The "http-opportunistic" well-known URI {#well-known}
