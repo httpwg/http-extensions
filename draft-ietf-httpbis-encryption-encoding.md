@@ -535,6 +535,14 @@ provides.  Alternatively, splitting up content into segments and storing the
 separately might reduce exposure. HTTP/2 {{?RFC7540}} combined with TLS
 {{?RFC5246}} might be used to hide the size of individual messages.
 
+Developing a padding strategy is difficult.  A good padding strategy can depend
+on context.  Common strategies include padding to a small set of fixed lengths,
+padding to multiples of a values, or padding to powers of 2.  Even a good
+strategy can still cause size information to leak if processing activity of a
+recipient can be observed.  This is especially good if the trailing records of
+a message contain only padding.  To minimize this information, non-padding data
+can be evenly distributed between records.
+
 
 # IANA Considerations {#iana}
 
