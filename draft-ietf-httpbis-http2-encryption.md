@@ -192,6 +192,9 @@ have a valid http-opportunistic response for a given origin when:
 A client MAY treat an "http-opportunistic" resource as invalid if the contains values that are not
 strings.
 
+This document does not define semantics for "http-opportunistic" resources on an `https` origin,
+nor does it define semantics if the resource includes `https` origins.
+
 
 # IANA Considerations
 
