@@ -102,12 +102,14 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 An origin server that supports the resolution of `http` URIs can indicate support for this
 specification by providing an alternative service advertisement {{RFC7838}} for a protocol
-identifier that uses TLS, such as `h2` {{RFC7540}}, or `http/1.1` {{?RFC7301}}.  Note that HTTP/1.1
-requests MUST use the absolute form (see Section 5.3.2 of {{RFC7230}}).
+identifier that uses TLS, such as `h2` {{RFC7540}}.  Such a protocol MUST include an explicit
+indication of the scheme of the resource.  This excludes HTTP/1.1; HTTP/1.1 clients are forbidden
+from including the absolute form of a URI in requests to origin servers (see Section 5.3.1 of
+{{RFC7230}}).
 
 A client that receives such an advertisement MAY make future requests intended for the associated
-origin ({{RFC6454}}) to the identified service (as specified by {{RFC7838}}), provided that the
-alternative service opts in as described in {{auth}}.
+origin {{RFC6454}} to the identified service (as specified by {{RFC7838}}), provided that the
+alternative service opts in as described in {{opt-in}}.
 
 A client that places the importance of protection against passive attacks over performance might
 choose to withhold requests until an encrypted connection is available. However, if such a
@@ -125,7 +127,7 @@ present them. Connections that use client certificates for other reasons MAY be 
 client certificates MUST NOT affect the responses to requests for `http` resources.
 
 
-## Alternative Server Opt-In {#auth}
+## Alternative Server Opt-In {#opt-in}
 
 It is possible that the server might become confused about whether requests' URLs have a `http` or
 `https` scheme, for various reasons; see {{confuse}}. To ensure that the alternative service has
@@ -142,13 +144,19 @@ authenticated for those origins, the following request/response pair would allow
 origins "http://www.example.com" or "http://example.com" to be sent using a secured connection:
 
 ~~~ example
-GET http://example.com/.well-known/http-opportunistic HTTP/1.1
-Host: example.com
+HEADERS
+  + END_STREAM
+  + END_HEADERS
+    :method = GET
+    :scheme = http
+    :path = /.well-known/http-opportunistic
+    host: example.com
 
-HTTP/1.1 200 OK
-Content-Type: application/json
-Connection: close
-
+HEADERS
+    :status = 200
+    content-type = application/json
+DATA
+  + END_STREAM
 [ "http://www.example.com", "http://example.com" ]
 ~~~
 
@@ -228,10 +236,10 @@ HTTP implementations and applications sometimes use ambient signals to determine
 for an `https` resource; for example, they might look for TLS on the stack, or a server port number
 of 443.
 
-This might be due to limitations in the protocol (the most common HTTP/1.1 request form does not
-carry an explicit indication of the URI scheme), or it may be because how the server and
-application are implemented (often, they are two separate entities, with a variety of possible
-interfaces between them).
+This might be due to expected limitations in the protocol (the most common HTTP/1.1 request form
+does not carry an explicit indication of the URI scheme and the resource might have been developed
+assuming HTTP/1.1), or it may be because how the server and application are implemented (often,
+they are two separate entities, with a variety of possible interfaces between them).
 
 Any security decisions based upon this information could be misled by the deployment of this
 specification, because it violates the assumption that the use of TLS (or port 443) means that the
