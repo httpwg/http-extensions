@@ -99,9 +99,7 @@ sequence of JSON Web Encryption {{?RFC7516}} values with a fixed header.
 
 This mechanism is likely only a small part of a larger design that uses content
 encryption.  How clients and servers acquire and identify keys will depend on
-the use case.  Though a complete key management system is not described, this
-document defines an Crypto-Key header field that can be used to convey keying
-material.
+the use case.  In particular, a key management system is not described.
 
 
 ## Notational Conventions
@@ -120,11 +118,8 @@ using Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) as
 identified as AEAD_AES_128_GCM in {{!RFC5116}}, Section 5.1.  The AEAD_AES_128_GCM
 algorithm uses a 128 bit content encryption key.
 
-Using this content coding requires knowledge of a key.  The Crypto-Key header
-field ({{crypto-key}}) can be included to describe how the content encryption
-key is derived or retrieved.  Keys might be provided in messages that are
-separate from those with encrypted content using Crypto-Key, or provided through
-external mechanisms.
+Using this content coding requires knowledge of a key.  How this key is
+acquired is not defined in this document.
 
 The "aes128gcm" content coding uses a single fixed set of encryption
 primitives.  Cipher suite agility is achieved by defining a new content coding
@@ -227,11 +222,8 @@ rs:
 keyid:
 
 : The "keyid" parameter can be used to identify the keying material that is
-  used.  When the Crypto-Key header field is used, the "keyid" identifies a
-  matching value in that field.  The "keyid" parameter MUST be used if keying
-  material included in an Crypto-Key header field is needed to derive the
-  content encryption key.  The "keyid" parameter can also be used to identify
-  keys in an application-specific fashion.
+  used.  Recipients that receive a message are expected to know how to retrieve
+  keys; the "keyid" parameter might be input to that process.
 
 
 ## Content Encryption Key Derivation {#derivation}
@@ -244,9 +236,9 @@ the SHA-256 hash algorithm {{FIPS180-4}}.
 
 The value of the "salt" parameter is the salt input to HKDF function.  The
 keying material identified by the "keyid" parameter is the input keying material
-(IKM) to HKDF.  Input keying material can either be prearranged, or can be
-described using the Crypto-Key header field ({{crypto-key}}).  The extract phase
-of HKDF therefore produces a pseudorandom key (PRK) as follows:
+(IKM) to HKDF.  Input keying material is expected to be provided to recipients
+separately.  The extract phase of HKDF therefore produces a pseudorandom key
+(PRK) as follows:
 
 ~~~ inline
    PRK = HMAC-SHA-256(salt, IKM)
@@ -303,53 +295,6 @@ permits truncation of the tail of the sequence (see {{aes128gcm}} for how this
 is avoided).
 
 
-# Crypto-Key Header Field {#crypto-key}
-
-A Crypto-Key header field can be used to describe the input keying material used
-by the `aes128gcm` content coding.
-
-Ordinarily, this header field will not appear in the same message as the
-encrypted content.  Including the encryption key with the encrypted payload
-reduces the value of using encryption to a somewhat complicated checksum.
-However, the Crypto-Key header field could be used in one message to provision
-keys for other messages.
-
-The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
-of {{!RFC7230}} and the `parameter` and `OWS` rules from {{!RFC7231}}.
-
-~~~ abnf7230
-  Crypto-Key = #crypto-key-params
-  crypto-key-params = [ parameter *( OWS ";" OWS parameter ) ]
-~~~
-
-keyid:
-
-: The "keyid" parameter corresponds to the "keyid" parameter in the content
-  coding.
-
-aes128gcm:
-
-: The "aes128gcm" parameter contains the base64url-encoded octets {{!RFC7515}} of
-  the input keying material for the "aes128gcm" content coding.
-
-Crypto-Key header field values with multiple instances of the same parameter
-name in a single crypto-key-params production are invalid.
-
-The input keying material used by the key derivation (see {{derivation}}) can be
-determined based on the information in the Crypto-Key header field.
-
-The value or values provided in the Crypto-Key header field is valid only
-for the current HTTP message unless additional information indicates a greater
-scope.
-
-Alternative methods for determining input keying material MAY be defined by
-specifications that use this content coding.  This document only defines the use
-of the "aes128gcm" parameter which describes an explicit key.
-
-The "aes128gcm" parameter MUST decode to at least 16 octets in order to be used
-as input keying material for "aes128gcm" content coding.
-
-
 # Examples
 
 This section shows a few examples of the encrypted content coding.
@@ -367,16 +312,15 @@ present.  The input keying material is identified by an empty string (that is,
 the "keyid" field in the header is zero octets in length).
 
 The encrypted data in this example is the UTF-8 encoded string "I am the
-walrus".  The input keying material is included in the Crypto-Key header field.
-The content body contains a single record only and is shown here using base64url
-encoding for presentation reasons.
+walrus".  The input keying material is the value "B33e_VeFrOyIHwFTIfmesA" (in
+base64url).  The content body contains a single record and is shown here using
+base64url encoding for presentation reasons.
 
 ~~~ example
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
-Content-Length: 33
+Content-Length: 54
 Content-Encoding: aes128gcm
-Crypto-Key: aes128gcm=B33e_VeFrOyIHwFTIfmesA
 
 sJvlboCWzB5jr8hI_q9cOQAAEAAANSmxkSVa0-MiNNuF77YHSs-iwaNe_OK0qfmO
 c7NT5WSW
@@ -399,18 +343,18 @@ plaintext = AABJIGFtIHRoZSB3YWxydXM
 
 ## Encryption with Multiple Records
 
-This example shows the same message, but the plaintext is split into records of
-10 octets each (that is, the "rs" field in the header is 10).  The first record
-includes a single additional octet of padding.  This means that there are 7
-octets of message in the first record, and 8 in the second.  This causes the end
-of the content to align with a record boundary, forcing the creation of a third
-record that contains only two octets of padding.
+This example shows the same message with input keying material of
+"BO3ZVPxUlnLORbVGMpbT1Q".  In this example, the plaintext is split into records
+of 10 octets each (that is, the "rs" field in the header is 10).  The first
+record includes a single additional octet of padding.  This means that there
+are 7 octets of message in the first record, and 8 in the second.  This causes
+the end of the content to align with a record boundary, forcing the creation of
+a third record that contains only two octets of padding.
 
 ~~~ example
 HTTP/1.1 200 OK
-Content-Length: 70
+Content-Length: 93
 Content-Encoding: aes128gcm
-Crypto-Key: keyid="a1"; aes128gcm="BO3ZVPxUlnLORbVGMpbT1Q"
 
 uNCkWiNYzKTnBN9ji3-qWAAAAAoCYTGHOqYFz-0in3dpb-VE2GfBngkaPy6bZus_
 qLF79s6zQyTSsA0iLOKyd3JqVIwprNzVatRCWZGUx_qsFbJBCQu62RqQuR2d
@@ -540,54 +484,12 @@ separately might reduce exposure. HTTP/2 {{?RFC7540}} combined with TLS
 
 ## The "aes128gcm" HTTP Content Coding
 
-This memo registers the "aes128gcm" HTTP content coding in the HTTP Content Codings
-Registry, as detailed in {{aes128gcm}}.
+This memo registers the "aes128gcm" HTTP content coding in the HTTP Content
+Codings Registry, as detailed in {{aes128gcm}}.
 
 * Name: aes128gcm
 * Description: AES-GCM encryption with a 128-bit content encryption key
 * Reference: this specification
-
-
-## Crypto-Key Header Field
-
-This memo registers the "Crypto-Key" HTTP header field in the Permanent
-Message Header Registry, as detailed in {{crypto-key}}.
-
-* Field name: Crypto-Key
-* Protocol: HTTP
-* Status: Standard
-* Reference: this specification
-* Notes:
-
-
-## The HTTP Crypto-Key Parameter Registry {#crypto-key-registry}
-
-This memo establishes a registry for parameters used by the "Crypto-Key" header
-field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.  The
-"Hypertext Transfer Protocol (HTTP) Crypto-Key Parameters" operates under an
-"Specification Required" policy {{!RFC5226}}.
-
-Entries in this registry are expected to include the following information:
-
-* Parameter Name: The name of the parameter.
-* Purpose: A brief description of the purpose of the parameter.
-* Reference: A reference to a specification that defines the semantics of the
-  parameter.
-
-The initial contents of this registry are:
-
-### keyid
-
-* Parameter Name: keyid
-* Purpose: Identify the key that is in use.
-* Reference: this document
-
-### aes128gcm {#iana-aes128gcm}
-
-* Parameter Name: aes128gcm
-* Purpose: Provide an explicit input keying material value for the aes128gcm
-  content coding.
-* Reference: this document
 
 
 --- back
@@ -634,5 +536,5 @@ Authentication Tag.
 Mark Nottingham was an original author of this document.
 
 The following people provided valuable input: Richard Barnes, David Benjamin,
-Peter Beverloo, JR Conlin, Mike Jones, Stephen Farrell, Adam Langley, John Mattsson, Julian
-Reschke, Eric Rescorla, Jim Schaad, and Magnus Westerlund.
+Peter Beverloo, JR Conlin, Mike Jones, Stephen Farrell, Adam Langley, John
+Mattsson, Julian Reschke, Eric Rescorla, Jim Schaad, and Magnus Westerlund.
