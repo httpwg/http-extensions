@@ -23,6 +23,8 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Origin Frame
 
+_Parked; this document is held until use cases are clarified._
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/origin-frame.html) ([plain text](https://httpwg.github.io/http-extensions/origin-frame.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-origin-frame) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aorigin-frame) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-origin-frame/)
@@ -30,7 +32,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Client Hints
 
-_in Working Group Last Call; ends 2016-10-19_
+_Working Group Last Call concluded; waiting for writeup._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/client-hints.html) ([plain text](https://httpwg.github.io/http-extensions/client-hints.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
@@ -39,7 +41,7 @@ _in Working Group Last Call; ends 2016-10-19_
 
 ### HTTP Encryption Content Encoding
 
-_in Second Working Group Last Call; ends 2016-10-25_
+_Second Working Group Last Call concluded; waiting for changes._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-encryption-encoding.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-encryption-encoding) (less recent, more official)
@@ -57,7 +59,7 @@ _Parked; waiting for implementation feedback._
 
 ### Character Encoding and Language for Parameters
 
-_in Working Group Last Call; ends 2016-10-27_
+_Working Group Last Call ended; waiting for writeup._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rfc5987bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc5987bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc5987bis) (less recent, more official)
