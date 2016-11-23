@@ -301,7 +301,7 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Applicable protocol: HTTP
 - Status: standard
 - Author/Change controller: IETF
-- Specification document(s): {{accept-ch}}
+- Specification document(s): {{accept-ch}} of this document
 - Related information: for Client Hints
 
 ## Content-DPR {#iana-content-dpr}
