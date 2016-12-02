@@ -47,7 +47,7 @@ normative:
       name: Ilya Grigorik
       organization: Google
   W3C.REC-html5-20141028:
-  W3C.CR-css-values-3-20150611:
+  W3C.CR-css-values-3-20160929:
   CSS2:
     target: http://www.w3.org/TR/2011/REC-CSS2-20110607
     title: "Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification"
@@ -185,7 +185,7 @@ Above example indicates that the cache key needs to include the (Mbps) value of 
 
 # The DPR Client Hint {#dpr}
 
-The "DPR" request header field is a number that indicates the client's current Device Pixel Ratio (DPR), which is the ratio of physical pixels over CSS px (Section 5.2 of {{W3C.CR-css-values-3-20150611}}) of the layout viewport (Section 9.1.1 of [CSS2]) on the device.
+The "DPR" request header field is a number that indicates the client's current Device Pixel Ratio (DPR), which is the ratio of physical pixels over CSS px (Section 5.2 of {{W3C.CR-css-values-3-20160929}}) of the layout viewport (Section 9.1.1 of [CSS2]) on the device.
 
 ~~~ abnf7230
   DPR = 1*DIGIT [ "." 1*DIGIT ]
