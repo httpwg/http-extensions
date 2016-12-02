@@ -371,4 +371,11 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 
 ## Since -02
 
+* Issue 239: Updated reference to CR-css-values-3
+* Issue 240: Updated reference for Network Information API
+* Issue 241: Consistency in IANA considerations
+* Issue 250: Clarified Accept-CH
+
+## Since -03
+
 None yet.
