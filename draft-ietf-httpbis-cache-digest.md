@@ -80,7 +80,7 @@ allows a stream to be cancelled by a client using a RST_STREAM frame in this sit
 is still at least one round trip of potentially wasted capacity even then.
 
 This specification defines a HTTP/2 frame type to allow clients to inform the server of their
-cache's contents using a Golumb-Rice Coded Set {{Rice}}. Servers can then use this to inform their
+cache's contents using a Golomb-Rice Coded Set {{Rice}}. Servers can then use this to inform their
 choices of what to push to clients.
 
 
@@ -289,7 +289,7 @@ Additionally, User Agents SHOULD NOT send CACHE_DIGEST when in "privacy mode."
 
 # Acknowledgements
 
-Thanks to Adam Langley and Giovanni Bajo for their explorations of Golumb-coded sets. In
+Thanks to Adam Langley and Giovanni Bajo for their explorations of Golomb-coded sets. In
 particular, see
 <http://giovanni.bajo.it/post/47119962313/golomb-coded-sets-smaller-than-bloom-filters>, which
 refers to sample code.
