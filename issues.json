@@ -1,8 +1,550 @@
 [
  [
   {
-   "body": "(Originally misfiled at https://github.com/mnot/I-D/issues/204)\r\n\r\nI believe the algorithm may be improved to increase speed and reduce digest size.\r\n\r\n#### De-dupe URLs before hashing them\r\n\r\nWastes time sorting and skipping through the list in a later stage.\r\nInflates value of N, needlessly increasing size of the entire digest.\r\n\r\n#### Trim URL origin\r\n\r\nEvery URL has identical origin. Hashing this repetitive data is wasted effort.", 
+   "body": "It would be better to define the 'rs' (record size) parameter as the size of each ciphertext record (including the 16 byte tag for AEAD_AES_128_GCM).\r\n\r\nThat way a receiver can split the body into records without needing to add the algorithm-specific tag length. Then pass the bytes to a crypto library that does know details such as the tag length for a given alg.\r\n\r\nThis spec doesn't absolutely need alg agility as other algs would define their own content-encoding label. But it would be cleaner (& safer) if future algs could follow exactly the same pattern and same body format by simply defining a new content-encoding label. The format is very close, with the need to add 16 to 'rs' being the only wart.", 
    "labels": [], 
+   "locked": false, 
+   "title": "Record size (rs) should be of ciphertext, not padded-plaintext", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/274", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/274/labels{/name}", 
+   "created_at": "2016-12-07T07:37:43Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/274/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/274/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/274", 
+   "comments": 0, 
+   "number": 274, 
+   "updated_at": "2016-12-07T07:37:43Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/manger/following{/other_user}", 
+    "events_url": "https://api.github.com/users/manger/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/manger/orgs", 
+    "url": "https://api.github.com/users/manger", 
+    "gists_url": "https://api.github.com/users/manger/gists{/gist_id}", 
+    "html_url": "https://github.com/manger", 
+    "subscriptions_url": "https://api.github.com/users/manger/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/3963658?v=3", 
+    "repos_url": "https://api.github.com/users/manger/repos", 
+    "received_events_url": "https://api.github.com/users/manger/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/manger/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "manger", 
+    "type": "User", 
+    "id": 3963658, 
+    "followers_url": "https://api.github.com/users/manger/followers"
+   }, 
+   "milestone": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": null, 
+   "assignees": [], 
+   "id": 193978191
+  }, 
+  {
+   "labels": [], 
+   "number": 273, 
+   "assignee": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": null, 
+   "id": 190613822, 
+   "title": "Remove Crypto-Key header field", 
+   "pull_request": {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/pulls/273", 
+    "diff_url": "https://github.com/httpwg/http-extensions/pull/273.diff", 
+    "html_url": "https://github.com/httpwg/http-extensions/pull/273", 
+    "patch_url": "https://github.com/httpwg/http-extensions/pull/273.patch"
+   }, 
+   "comments": 1, 
+   "state": "open", 
+   "body": "Closes #265, #210.", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/273/labels{/name}", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/273/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/273/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/pull/273", 
+   "updated_at": "2016-11-25T19:39:34Z", 
+   "user": {
+    "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
+    "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/martinthomson/orgs", 
+    "url": "https://api.github.com/users/martinthomson", 
+    "gists_url": "https://api.github.com/users/martinthomson/gists{/gist_id}", 
+    "html_url": "https://github.com/martinthomson", 
+    "subscriptions_url": "https://api.github.com/users/martinthomson/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/67641?v=3", 
+    "repos_url": "https://api.github.com/users/martinthomson/repos", 
+    "received_events_url": "https://api.github.com/users/martinthomson/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/martinthomson/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "martinthomson", 
+    "type": "User", 
+    "id": 67641, 
+    "followers_url": "https://api.github.com/users/martinthomson/followers"
+   }, 
+   "milestone": null, 
+   "locked": false, 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/273", 
+   "created_at": "2016-11-21T04:05:54Z", 
+   "assignees": []
+  }, 
+  {
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "default": false, 
+     "id": 111000923, 
+     "name": "editorial"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/encryption", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 302951285, 
+     "name": "encryption"
+    }
+   ], 
+   "number": 272, 
+   "assignee": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": null, 
+   "id": 190612837, 
+   "title": "Advice on padding strategy", 
+   "pull_request": {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/pulls/272", 
+    "diff_url": "https://github.com/httpwg/http-extensions/pull/272.diff", 
+    "html_url": "https://github.com/httpwg/http-extensions/pull/272", 
+    "patch_url": "https://github.com/httpwg/http-extensions/pull/272.patch"
+   }, 
+   "comments": 0, 
+   "state": "open", 
+   "body": "Closes #260 ", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/272/labels{/name}", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/272/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/272/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/pull/272", 
+   "updated_at": "2016-11-21T03:55:22Z", 
+   "user": {
+    "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
+    "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/martinthomson/orgs", 
+    "url": "https://api.github.com/users/martinthomson", 
+    "gists_url": "https://api.github.com/users/martinthomson/gists{/gist_id}", 
+    "html_url": "https://github.com/martinthomson", 
+    "subscriptions_url": "https://api.github.com/users/martinthomson/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/67641?v=3", 
+    "repos_url": "https://api.github.com/users/martinthomson/repos", 
+    "received_events_url": "https://api.github.com/users/martinthomson/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/martinthomson/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "martinthomson", 
+    "type": "User", 
+    "id": 67641, 
+    "followers_url": "https://api.github.com/users/martinthomson/followers"
+   }, 
+   "milestone": null, 
+   "locked": false, 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/272", 
+   "created_at": "2016-11-21T03:55:22Z", 
+   "assignees": []
+  }, 
+  {
+   "body": "A few things I noticed / need to ask:\r\n\r\n* Is the Abstract still suitable? I note it doesn't mention 5987.\r\n\r\n* Is the intended status really Internet Standard? Given that 2026 requires \"a high degree of technical maturity and by a generally held belief that the specified protocol or service provides significant benefit to the Internet community\" and in light of the doubt around the use of this format, it seems like Proposed Standard might be more appropriate. Also, we'd need to document the implementations.\r\n\r\n* @reschke - If you have direct, personal knowledge of any IPR related to this document, has it already been disclosed?", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/5987bis", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 267140103, 
+     "name": "5987bis"
+    }
+   ], 
+   "locked": false, 
+   "title": "5987bis writeup", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/271", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/271/labels{/name}", 
+   "created_at": "2016-11-21T03:00:00Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/271/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/271/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/271", 
+   "comments": 1, 
+   "number": 271, 
+   "updated_at": "2016-11-21T06:54:37Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
+    "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/mnot/orgs", 
+    "url": "https://api.github.com/users/mnot", 
+    "gists_url": "https://api.github.com/users/mnot/gists{/gist_id}", 
+    "html_url": "https://github.com/mnot", 
+    "subscriptions_url": "https://api.github.com/users/mnot/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/74384?v=3", 
+    "repos_url": "https://api.github.com/users/mnot/repos", 
+    "received_events_url": "https://api.github.com/users/mnot/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/mnot/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "mnot", 
+    "type": "User", 
+    "id": 74384, 
+    "followers_url": "https://api.github.com/users/mnot/followers"
+   }, 
+   "milestone": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": null, 
+   "assignees": [], 
+   "id": 190607567
+  }, 
+  {
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design", 
+     "color": "02d7e1", 
+     "default": false, 
+     "id": 109132722, 
+     "name": "design"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/opp-sec", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 111000960, 
+     "name": "opp-sec"
+    }
+   ], 
+   "number": 270, 
+   "assignee": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": null, 
+   "id": 190604231, 
+   "title": "Don't allow clients to send http and https requests coalesced.", 
+   "pull_request": {
+    "url": "https://api.github.com/repos/httpwg/http-extensions/pulls/270", 
+    "diff_url": "https://github.com/httpwg/http-extensions/pull/270.diff", 
+    "html_url": "https://github.com/httpwg/http-extensions/pull/270", 
+    "patch_url": "https://github.com/httpwg/http-extensions/pull/270.patch"
+   }, 
+   "comments": 1, 
+   "state": "open", 
+   "body": "This is kinda silly, but it seems like adding support for coalescing is\r\nsomething we could fix later.\r\n\r\nCloses #269 with the nuclear option.", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/270/labels{/name}", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/270/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/270/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/pull/270", 
+   "updated_at": "2016-11-21T22:04:10Z", 
+   "user": {
+    "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
+    "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/martinthomson/orgs", 
+    "url": "https://api.github.com/users/martinthomson", 
+    "gists_url": "https://api.github.com/users/martinthomson/gists{/gist_id}", 
+    "html_url": "https://github.com/martinthomson", 
+    "subscriptions_url": "https://api.github.com/users/martinthomson/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/67641?v=3", 
+    "repos_url": "https://api.github.com/users/martinthomson/repos", 
+    "received_events_url": "https://api.github.com/users/martinthomson/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/martinthomson/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "martinthomson", 
+    "type": "User", 
+    "id": 67641, 
+    "followers_url": "https://api.github.com/users/martinthomson/followers"
+   }, 
+   "milestone": null, 
+   "locked": false, 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/270", 
+   "created_at": "2016-11-21T02:23:20Z", 
+   "assignees": []
+  }, 
+  {
+   "body": "Can we coalesce http and https?  The implication from everything we've said is \"yes\", but Erik remains reluctant.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design", 
+     "color": "02d7e1", 
+     "default": false, 
+     "id": 109132722, 
+     "name": "design"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/opp-sec", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 111000960, 
+     "name": "opp-sec"
+    }
+   ], 
+   "locked": false, 
+   "title": "mixed schemes", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/269", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/269/labels{/name}", 
+   "created_at": "2016-11-21T02:22:38Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/269/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/269/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/269", 
+   "comments": 0, 
+   "number": 269, 
+   "updated_at": "2016-11-21T02:22:38Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
+    "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/martinthomson/orgs", 
+    "url": "https://api.github.com/users/martinthomson", 
+    "gists_url": "https://api.github.com/users/martinthomson/gists{/gist_id}", 
+    "html_url": "https://github.com/martinthomson", 
+    "subscriptions_url": "https://api.github.com/users/martinthomson/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/67641?v=3", 
+    "repos_url": "https://api.github.com/users/martinthomson/repos", 
+    "received_events_url": "https://api.github.com/users/martinthomson/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/martinthomson/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "martinthomson", 
+    "type": "User", 
+    "id": 67641, 
+    "followers_url": "https://api.github.com/users/martinthomson/followers"
+   }, 
+   "milestone": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": null, 
+   "assignees": [], 
+   "id": 190604170
+  }, 
+  {
+   "body": "Current spec is using Golomb-coded sets as the algorithm to create digests.\r\n\r\nWhile they show great space-efficiency, Golomb-coded sets do not enable O(1) removal from the digest, which means from a browser implementation perspective, the browser would have to calculate the hash for each host upon connection creation.\r\n\r\nThat poses a couple of issues from an implementation perspective:\r\n\r\n* Calculating the hash on each connection establishment may be expensive. That part seems inherent to the algorithm and not likely to be optimized away.\r\n* Calculating the hash requires per-host indexing. That part is just a limitation of many current cache implementations.\r\n\r\nA cache digest algorithm that enables O(1) removal (as well as addition) to the digest would enable us to move away from those limitations:\r\n\r\n* Browsers can calculate a per-host digest once, then keep updating it as resources are added to the cache as well as when resources are removed from the cache. No need for per-host indexing.\r\n  -  In order to do that, browsers would need to persist digests along with the cache\r\n* Upon connection establishment, the browser can just send the ready-made digest to the server. Win!\r\n\r\nDuring the HTTPWS, counting bloom filters were mentioned as an O(1) removal algorithm, but they are extremely inefficient when it comes to space. (~4 times bigger than bloom filters)\r\n\r\nTurns out, [Cuckoo filters](https://www.cs.cmu.edu/~binfan/papers/login_cuckoofilter.pdf) enable O(1) removal while being more space efficient than bloom filters. While they are slightly bigger than Golomb-coded sets based digests, the cheaper runtime costs can make up for that deficiency.\r\n\r\n/cc @kazuho @mnot @cbentzel @mcmanus\r\n\r\n\r\n", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/cache-digest", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 418128526, 
+     "name": "cache-digest"
+    }
+   ], 
+   "locked": false, 
+   "title": "Enabling O(1) removal from digest", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/268", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/268/labels{/name}", 
+   "created_at": "2016-11-17T12:55:53Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/268/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/268/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/268", 
+   "comments": 9, 
+   "number": 268, 
+   "updated_at": "2016-11-21T03:50:54Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/yoavweiss/following{/other_user}", 
+    "events_url": "https://api.github.com/users/yoavweiss/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/yoavweiss/orgs", 
+    "url": "https://api.github.com/users/yoavweiss", 
+    "gists_url": "https://api.github.com/users/yoavweiss/gists{/gist_id}", 
+    "html_url": "https://github.com/yoavweiss", 
+    "subscriptions_url": "https://api.github.com/users/yoavweiss/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/786187?v=3", 
+    "repos_url": "https://api.github.com/users/yoavweiss/repos", 
+    "received_events_url": "https://api.github.com/users/yoavweiss/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/yoavweiss/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "yoavweiss", 
+    "type": "User", 
+    "id": 786187, 
+    "followers_url": "https://api.github.com/users/yoavweiss/followers"
+   }, 
+   "milestone": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": null, 
+   "assignees": [], 
+   "id": 190039700
+  }, 
+  {
+   "body": "In working on RFC5988bis, I'm referring to this spec, and finding it's difficult to talk about the concepts, because so much has been pared back.\r\n\r\nIn particular:\r\n\r\n* [ ] There isn't any prose reference to the \"*\" form of the attribute name; it only occurs in examples. One would assume that this is the normative way to invoke this encoding, but it isn't specified.\r\n* [ ] A distinct name for the encoding would help; right now, the best I can do is \"the encoding specified in RFC5987bis\".\r\n* [ ] The examples of how to use this in header specifications needs to be deeper.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/5987bis", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 267140103, 
+     "name": "5987bis"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "default": false, 
+     "id": 111000923, 
+     "name": "editorial"
+    }
+   ], 
+   "locked": false, 
+   "title": "Give us something to hang onto", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/267", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/267/labels{/name}", 
+   "created_at": "2016-11-16T06:40:41Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/267/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/267/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/267", 
+   "comments": 10, 
+   "number": 267, 
+   "updated_at": "2016-11-18T00:49:11Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
+    "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/mnot/orgs", 
+    "url": "https://api.github.com/users/mnot", 
+    "gists_url": "https://api.github.com/users/mnot/gists{/gist_id}", 
+    "html_url": "https://github.com/mnot", 
+    "subscriptions_url": "https://api.github.com/users/mnot/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/74384?v=3", 
+    "repos_url": "https://api.github.com/users/mnot/repos", 
+    "received_events_url": "https://api.github.com/users/mnot/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/mnot/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "mnot", 
+    "type": "User", 
+    "id": 74384, 
+    "followers_url": "https://api.github.com/users/mnot/followers"
+   }, 
+   "milestone": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": null, 
+   "assignees": [], 
+   "id": 189607204
+  }, 
+  {
+   "body": "... occurs twice in the current draft, without much context. Should it be removed?", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/5987bis", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 267140103, 
+     "name": "5987bis"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/editorial", 
+     "color": "009800", 
+     "default": false, 
+     "id": 111000923, 
+     "name": "editorial"
+    }
+   ], 
+   "locked": false, 
+   "title": "'parmname'", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/266", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/266/labels{/name}", 
+   "created_at": "2016-11-16T06:33:04Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/266/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/266/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/266", 
+   "comments": 1, 
+   "number": 266, 
+   "updated_at": "2016-11-17T00:43:40Z", 
+   "assignee": null, 
+   "state": "closed", 
+   "user": {
+    "following_url": "https://api.github.com/users/mnot/following{/other_user}", 
+    "events_url": "https://api.github.com/users/mnot/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/mnot/orgs", 
+    "url": "https://api.github.com/users/mnot", 
+    "gists_url": "https://api.github.com/users/mnot/gists{/gist_id}", 
+    "html_url": "https://github.com/mnot", 
+    "subscriptions_url": "https://api.github.com/users/mnot/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/74384?v=3", 
+    "repos_url": "https://api.github.com/users/mnot/repos", 
+    "received_events_url": "https://api.github.com/users/mnot/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/mnot/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "mnot", 
+    "type": "User", 
+    "id": 74384, 
+    "followers_url": "https://api.github.com/users/mnot/followers"
+   }, 
+   "milestone": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": "2016-11-17T00:43:40Z", 
+   "assignees": [], 
+   "id": 189605811
+  }, 
+  {
+   "body": "@ekr suggests that we remove this.  This is probably justified by recent developments.  Simplicity suggests that it is worth cutting as well.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/design", 
+     "color": "02d7e1", 
+     "default": false, 
+     "id": 109132722, 
+     "name": "design"
+    }, 
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/encryption", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 302951285, 
+     "name": "encryption"
+    }
+   ], 
+   "locked": false, 
+   "title": "Remove Crypto-Key", 
+   "url": "https://api.github.com/repos/httpwg/http-extensions/issues/265", 
+   "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/265/labels{/name}", 
+   "created_at": "2016-11-15T04:43:29Z", 
+   "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/265/events", 
+   "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/265/comments", 
+   "html_url": "https://github.com/httpwg/http-extensions/issues/265", 
+   "comments": 0, 
+   "number": 265, 
+   "updated_at": "2016-11-15T04:43:36Z", 
+   "assignee": null, 
+   "state": "open", 
+   "user": {
+    "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
+    "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/martinthomson/orgs", 
+    "url": "https://api.github.com/users/martinthomson", 
+    "gists_url": "https://api.github.com/users/martinthomson/gists{/gist_id}", 
+    "html_url": "https://github.com/martinthomson", 
+    "subscriptions_url": "https://api.github.com/users/martinthomson/subscriptions", 
+    "avatar_url": "https://avatars.githubusercontent.com/u/67641?v=3", 
+    "repos_url": "https://api.github.com/users/martinthomson/repos", 
+    "received_events_url": "https://api.github.com/users/martinthomson/received_events", 
+    "gravatar_id": "", 
+    "starred_url": "https://api.github.com/users/martinthomson/starred{/owner}{/repo}", 
+    "site_admin": false, 
+    "login": "martinthomson", 
+    "type": "User", 
+    "id": 67641, 
+    "followers_url": "https://api.github.com/users/martinthomson/followers"
+   }, 
+   "milestone": null, 
+   "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
+   "closed_at": null, 
+   "assignees": [], 
+   "id": 189298782
+  }, 
+  {
+   "body": "(Originally misfiled at https://github.com/mnot/I-D/issues/204)\r\n\r\nI believe the algorithm may be improved to increase speed and reduce digest size.\r\n\r\n#### De-dupe URLs before hashing them\r\n\r\nWastes time sorting and skipping through the list in a later stage.\r\nInflates value of N, needlessly increasing size of the entire digest.\r\n\r\n#### Trim URL origin\r\n\r\nEvery URL has identical origin. Hashing this repetitive data is wasted effort.", 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/cache-digest", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 418128526, 
+     "name": "cache-digest"
+    }
+   ], 
    "locked": false, 
    "title": "Overhead in cache digest algorithm", 
    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/264", 
@@ -11,29 +553,29 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/264/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/264/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/264", 
-   "comments": 0, 
+   "comments": 1, 
    "number": 264, 
-   "updated_at": "2016-11-13T15:40:28Z", 
+   "updated_at": "2016-11-21T03:51:00Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
-    "following_url": "https://api.github.com/users/cbas/following{/other_user}", 
-    "events_url": "https://api.github.com/users/cbas/events{/privacy}", 
-    "organizations_url": "https://api.github.com/users/cbas/orgs", 
-    "url": "https://api.github.com/users/cbas", 
-    "gists_url": "https://api.github.com/users/cbas/gists{/gist_id}", 
-    "html_url": "https://github.com/cbas", 
-    "subscriptions_url": "https://api.github.com/users/cbas/subscriptions", 
+    "following_url": "https://api.github.com/users/sebdeckers/following{/other_user}", 
+    "events_url": "https://api.github.com/users/sebdeckers/events{/privacy}", 
+    "organizations_url": "https://api.github.com/users/sebdeckers/orgs", 
+    "url": "https://api.github.com/users/sebdeckers", 
+    "gists_url": "https://api.github.com/users/sebdeckers/gists{/gist_id}", 
+    "html_url": "https://github.com/sebdeckers", 
+    "subscriptions_url": "https://api.github.com/users/sebdeckers/subscriptions", 
     "avatar_url": "https://avatars.githubusercontent.com/u/78718?v=3", 
-    "repos_url": "https://api.github.com/users/cbas/repos", 
-    "received_events_url": "https://api.github.com/users/cbas/received_events", 
+    "repos_url": "https://api.github.com/users/sebdeckers/repos", 
+    "received_events_url": "https://api.github.com/users/sebdeckers/received_events", 
     "gravatar_id": "", 
-    "starred_url": "https://api.github.com/users/cbas/starred{/owner}{/repo}", 
+    "starred_url": "https://api.github.com/users/sebdeckers/starred{/owner}{/repo}", 
     "site_admin": false, 
-    "login": "cbas", 
+    "login": "sebdeckers", 
     "type": "User", 
     "id": 78718, 
-    "followers_url": "https://api.github.com/users/cbas/followers"
+    "followers_url": "https://api.github.com/users/sebdeckers/followers"
    }, 
    "milestone": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
@@ -43,7 +585,15 @@
   }, 
   {
    "body": "Add Client hints support for the following:\r\n\r\n`Viewport-Color-Gamut`\r\nhttps://drafts.csswg.org/mediaqueries-4/#color-gamut\r\n\r\n`Viewport-Color-Profile`\r\nhttps://www.w3.org/TR/css-color-4/#at-ruledef-profile", 
-   "labels": [], 
+   "labels": [
+    {
+     "url": "https://api.github.com/repos/httpwg/http-extensions/labels/client-hints", 
+     "color": "fbca04", 
+     "default": false, 
+     "id": 290789441, 
+     "name": "client-hints"
+    }
+   ], 
    "locked": false, 
    "title": "Client hints: add support for hinting Display Gamut / Color Profile", 
    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/263", 
@@ -52,9 +602,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/263/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/263/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/263", 
-   "comments": 3, 
+   "comments": 8, 
    "number": 263, 
-   "updated_at": "2016-11-09T09:24:39Z", 
+   "updated_at": "2016-11-21T22:15:32Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -102,7 +652,7 @@
    "number": 262, 
    "assignee": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-11-21T02:10:32Z", 
    "id": 186976913, 
    "title": "Exclude HTTP/1.1", 
    "pull_request": {
@@ -112,13 +662,13 @@
     "patch_url": "https://github.com/httpwg/http-extensions/pull/262.patch"
    }, 
    "comments": 1, 
-   "state": "open", 
+   "state": "closed", 
    "body": "I tried to make this work, but @mcmanus is right: this is entirely a transport decision and given that our best option was to violate a MUST in RFC 7230, that's too hard.  This just says that HTTP/1.1 is no good because we can't include the scheme (because RFC 7230 says we can't).  I almost made this h2-specific, but then remembered that there might be another protocol that has favourable properties.", 
    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/262/labels{/name}", 
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/262/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/262/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/pull/262", 
-   "updated_at": "2016-11-03T05:15:42Z", 
+   "updated_at": "2016-11-21T02:10:32Z", 
    "user": {
     "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
     "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
@@ -164,7 +714,7 @@
    "number": 261, 
    "assignee": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-11-21T02:10:54Z", 
    "id": 186835922, 
    "title": "https origins are no longer relevant for http-opportunistic resources", 
    "pull_request": {
@@ -174,13 +724,13 @@
     "patch_url": "https://github.com/httpwg/http-extensions/pull/261.patch"
    }, 
    "comments": 0, 
-   "state": "open", 
+   "state": "closed", 
    "body": "", 
    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/261/labels{/name}", 
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/261/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/261/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/pull/261", 
-   "updated_at": "2016-11-02T15:36:08Z", 
+   "updated_at": "2016-11-21T02:10:54Z", 
    "user": {
     "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
     "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
@@ -282,7 +832,7 @@
    "number": 259, 
    "assignee": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-11-15T04:45:31Z", 
    "id": 186689036, 
    "title": "Fix examples", 
    "pull_request": {
@@ -291,14 +841,14 @@
     "html_url": "https://github.com/httpwg/http-extensions/pull/259", 
     "patch_url": "https://github.com/httpwg/http-extensions/pull/259.patch"
    }, 
-   "comments": 1, 
-   "state": "open", 
+   "comments": 2, 
+   "state": "closed", 
    "body": "Somehow I managed to mess up the examples royally.  They were kinda valid, but the rs and id fields didn't match the rest of the example.", 
    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/259/labels{/name}", 
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/259/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/259/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/pull/259", 
-   "updated_at": "2016-11-02T13:47:56Z", 
+   "updated_at": "2016-11-15T04:45:31Z", 
    "user": {
     "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
     "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
@@ -902,9 +1452,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/248/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/248/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/248", 
-   "comments": 2, 
+   "comments": 6, 
    "number": 248, 
-   "updated_at": "2016-10-12T11:49:52Z", 
+   "updated_at": "2016-11-24T19:36:06Z", 
    "assignee": {
     "following_url": "https://api.github.com/users/mikewest/following{/other_user}", 
     "events_url": "https://api.github.com/users/mikewest/events{/privacy}", 
@@ -1123,7 +1673,9 @@
    "closed_at": null, 
    "assignees": [], 
    "id": 182220402
-  }, 
+  }
+ ], 
+ [
   {
    "labels": [
     {
@@ -1248,7 +1800,7 @@
    "number": 242, 
    "assignee": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-11-21T02:11:31Z", 
    "id": 181942546, 
    "title": "The \"mixed-scheme\" field is probably needed when you make any request\u2026", 
    "pull_request": {
@@ -1257,14 +1809,14 @@
     "html_url": "https://github.com/httpwg/http-extensions/pull/242", 
     "patch_url": "https://github.com/httpwg/http-extensions/pull/242.patch"
    }, 
-   "comments": 0, 
-   "state": "open", 
+   "comments": 1, 
+   "state": "closed", 
    "body": "\u2026 over a connection that might be used for \"https\" resources.  After all, ordering of request in \"h2\" is\nsomewhat nebulous.\n\nAs discussed on-list.\n", 
    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/242/labels{/name}", 
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/242/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/242/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/pull/242", 
-   "updated_at": "2016-10-12T00:37:54Z", 
+   "updated_at": "2016-11-21T02:11:31Z", 
    "user": {
     "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
     "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
@@ -1303,7 +1855,7 @@
    "number": 241, 
    "assignee": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-11-23T18:29:50Z", 
    "id": 181650341, 
    "title": "consistency in IANA considerations", 
    "pull_request": {
@@ -1313,13 +1865,13 @@
     "patch_url": "https://github.com/httpwg/http-extensions/pull/241.patch"
    }, 
    "comments": 0, 
-   "state": "open", 
+   "state": "closed", 
    "body": "", 
    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/241/labels{/name}", 
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/241/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/241/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/pull/241", 
-   "updated_at": "2016-10-11T06:20:36Z", 
+   "updated_at": "2016-11-23T18:29:50Z", 
    "user": {
     "following_url": "https://api.github.com/users/reschke/following{/other_user}", 
     "events_url": "https://api.github.com/users/reschke/events{/privacy}", 
@@ -1405,7 +1957,7 @@
    "number": 239, 
    "assignee": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-12-02T18:05:15Z", 
    "id": 181646574, 
    "title": "update reference to CR-css-values-3", 
    "pull_request": {
@@ -1414,14 +1966,14 @@
     "html_url": "https://github.com/httpwg/http-extensions/pull/239", 
     "patch_url": "https://github.com/httpwg/http-extensions/pull/239.patch"
    }, 
-   "comments": 1, 
-   "state": "open", 
+   "comments": 2, 
+   "state": "closed", 
    "body": "", 
    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/239/labels{/name}", 
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/239/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/239/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/pull/239", 
-   "updated_at": "2016-10-11T06:21:00Z", 
+   "updated_at": "2016-12-02T18:05:15Z", 
    "user": {
     "following_url": "https://api.github.com/users/reschke/following{/other_user}", 
     "events_url": "https://api.github.com/users/reschke/events{/privacy}", 
@@ -1611,11 +2163,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/235/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/235/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/235", 
-   "comments": 0, 
+   "comments": 2, 
    "number": 235, 
-   "updated_at": "2016-09-07T20:44:20Z", 
+   "updated_at": "2016-11-21T21:44:32Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/mcmanus/following{/other_user}", 
     "events_url": "https://api.github.com/users/mcmanus/events{/privacy}", 
@@ -1637,12 +2189,10 @@
    }, 
    "milestone": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-11-21T02:13:00Z", 
    "assignees": [], 
    "id": 175601608
-  }
- ], 
- [
+  }, 
   {
    "body": "1] opportunistic security should require TLS authentication. Any other approach undermines the opt-in mechanism of .wk. As the PKI market has matured to allow truly free and automated certs certificate availability is no longer the chief barrier to https, and so opportunistic security should feel comfortable requiring real authentication. (THERE IS NO PROPOSED CHANGE IN THE SECURITY MODEL - HTTP:// IS STILL HTTP:// AND NOT GRANTED HTTPS:// STATUS AT ALL). The biggest barrier to https:// at this point seems to be mixed content.\n", 
    "labels": [
@@ -1662,11 +2212,11 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/234/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/234/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/234", 
-   "comments": 4, 
+   "comments": 5, 
    "number": 234, 
-   "updated_at": "2016-09-28T12:39:45Z", 
+   "updated_at": "2016-11-21T02:13:14Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/mcmanus/following{/other_user}", 
     "events_url": "https://api.github.com/users/mcmanus/events{/privacy}", 
@@ -1688,7 +2238,7 @@
    }, 
    "milestone": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-11-21T02:13:14Z", 
    "assignees": [], 
    "id": 175601371
   }, 
@@ -1998,9 +2548,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/228/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/228/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/228", 
-   "comments": 9, 
+   "comments": 10, 
    "number": 228, 
-   "updated_at": "2016-09-28T07:59:40Z", 
+   "updated_at": "2016-11-14T08:24:36Z", 
    "assignee": null, 
    "state": "open", 
    "user": {
@@ -2893,7 +3443,9 @@
     }
    ], 
    "id": 166084678
-  }, 
+  }
+ ], 
+ [
   {
    "body": "It seems like we should filter against the original origin when using alt-svc and we should specify this in the origin frame draft\n", 
    "labels": [
@@ -2978,9 +3530,9 @@
    "html_url": "https://github.com/httpwg/http-extensions/issues/213", 
    "comments": 4, 
    "number": 213, 
-   "updated_at": "2016-11-14T00:57:59Z", 
+   "updated_at": "2016-11-17T00:46:03Z", 
    "assignee": null, 
-   "state": "open", 
+   "state": "closed", 
    "user": {
     "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
     "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
@@ -3002,7 +3554,7 @@
    }, 
    "milestone": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-11-17T00:46:03Z", 
    "assignees": [], 
    "id": 166080503
   }, 
@@ -3230,9 +3782,9 @@
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/208/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/208/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/issues/208", 
-   "comments": 1, 
+   "comments": 2, 
    "number": 208, 
-   "updated_at": "2016-06-30T04:40:10Z", 
+   "updated_at": "2016-11-17T09:40:22Z", 
    "assignee": {
     "following_url": "https://api.github.com/users/reschke/following{/other_user}", 
     "events_url": "https://api.github.com/users/reschke/events{/privacy}", 
@@ -3442,7 +3994,7 @@
    "number": 205, 
    "assignee": null, 
    "repository_url": "https://api.github.com/repos/httpwg/http-extensions", 
-   "closed_at": null, 
+   "closed_at": "2016-11-21T02:13:28Z", 
    "id": 163061442, 
    "title": "Provide rules for handling duplicate keys", 
    "pull_request": {
@@ -3451,14 +4003,14 @@
     "html_url": "https://github.com/httpwg/http-extensions/pull/205", 
     "patch_url": "https://github.com/httpwg/http-extensions/pull/205.patch"
    }, 
-   "comments": 0, 
-   "state": "open", 
+   "comments": 1, 
+   "state": "closed", 
    "body": "Raised on list by Kari Hurtta.  Option 6.\n", 
    "labels_url": "https://api.github.com/repos/httpwg/http-extensions/issues/205/labels{/name}", 
    "events_url": "https://api.github.com/repos/httpwg/http-extensions/issues/205/events", 
    "comments_url": "https://api.github.com/repos/httpwg/http-extensions/issues/205/comments", 
    "html_url": "https://github.com/httpwg/http-extensions/pull/205", 
-   "updated_at": "2016-06-30T01:16:43Z", 
+   "updated_at": "2016-11-21T02:13:28Z", 
    "user": {
     "following_url": "https://api.github.com/users/martinthomson/following{/other_user}", 
     "events_url": "https://api.github.com/users/martinthomson/events{/privacy}", 
@@ -3483,9 +4035,7 @@
    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/205", 
    "created_at": "2016-06-30T01:16:43Z", 
    "assignees": []
-  }
- ], 
- [
+  }, 
   {
    "body": "a suggestion for 6265bis' title such that the term \"cookies\" is included...\n\n```\nCookies: HTTP State Management Mechanism\n```\n", 
    "labels": [
@@ -4505,7 +5055,9 @@
    "closed_at": "2016-06-07T06:36:27Z", 
    "assignees": [], 
    "id": 157734236
-  }, 
+  }
+ ], 
+ [
   {
    "body": "`draft-ietf-httpbis-client-hints.md`:\n\n> It includes by reference the DIGIT rule from {{RFC5234}}; the OWS, field-name and quoted-string rules from {{RFC7230}}; and the parameter rule from {{RFC7231}}.\n\nThe `quoted-string` and `parameter` rules are not used in the document.\n\nThe `OWS` rule is not used in the document, unless you accept [my comment on `Save-Data`](https://github.com/httpwg/http-extensions/issues/168#issuecomment-222740727).\n\nThe `field-name` rule is not used in the document, but I think it can be useful to clarify the definition of `Accept-CH`, i.e.:\n\n```\nAccept-CH = #field-name\n```\n", 
    "labels": [
@@ -5049,9 +5601,7 @@
    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/175", 
    "created_at": "2016-05-10T05:52:54Z", 
    "assignees": []
-  }
- ], 
- [
+  }, 
   {
    "body": "Unsure if this is the right place to ask. Is there an existing effort to make a header for HTTP/2's PUSH promises able to sync dependency trees?\n\nConsider:\n\n``` html\n<!-- index.html -->\n<script type=\"module\" src=\"a\"></script>\n```\n\n``` js\n// a\nimport \"b\";\n```\n\n``` js\n// b\nimport \"c\";\n```\n\nAnd so on...\n\nRight now we can PUSH `a`, `b`, etc. when `index.html` is requested. However, when we receive an etag for `index.html` we are unsure what revision of dependencies are in the cache for `a`, `b`, etc.\n\nI saw CACHE_DIGEST, but was wondering if there was an effort to make dependency tree caching available to reduce chatter for PUSH of large/deep resources as are common in JS applications.\n", 
    "labels": [], 
@@ -6053,7 +6603,9 @@
    "closed_at": "2016-05-04T15:26:10Z", 
    "assignees": [], 
    "id": 140096510
-  }, 
+  }
+ ], 
+ [
   {
    "body": "Which makes this section quite hard to follow.\n\nhttp://httpwg.org/http-extensions/client-hints.html#iana-considerations\n", 
    "labels": [
@@ -6559,9 +7111,7 @@
    "closed_at": "2016-03-17T01:06:50Z", 
    "assignees": [], 
    "id": 131808028
-  }
- ], 
- [
+  }, 
   {
    "body": "When an attacker has the ability to:\n\n1) inject a HTTP header in any response from an origin\n2) listen to a port on the same host\n\nthey can effectively hijack the origin, for browsers that implement OppSec.\n\nE.g., someone on a shared Web host that also offers shell access.\n\nPreviously, Alt-Svc used the port number as a way to mitigate this; however, in #139 we dropped that, because on many systems this is no longer a meaningful way to segment privileged applications. \n\nIn discussion, it was suggested that the origin should opt into OppSec explicitly, e.g., with a `.well-known` file. \n", 
    "labels": [
@@ -7582,7 +8132,9 @@
    "closed_at": "2015-12-13T17:18:39Z", 
    "assignees": [], 
    "id": 121930473
-  }, 
+  }
+ ], 
+ [
   {
    "labels": [
     {
@@ -8126,9 +8678,7 @@
    "closed_at": "2016-09-02T16:35:28Z", 
    "assignees": [], 
    "id": 115667834
-  }
- ], 
- [
+  }, 
   {
    "body": "", 
    "labels": [
@@ -9272,7 +9822,9 @@
    "closed_at": "2015-09-19T18:37:29Z", 
    "assignees": [], 
    "id": 106165031
-  }, 
+  }
+ ], 
+ [
   {
    "body": "(see thread starting at https://lists.w3.org/Archives/Public/ietf-http-wg/2015JulSep/0295.html)\n", 
    "labels": [
@@ -9818,9 +10370,7 @@
    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/85", 
    "created_at": "2015-06-16T03:31:30Z", 
    "assignees": []
-  }
- ], 
- [
+  }, 
   {
    "body": "\"The ABNF (Augmented Backus-Naur Form) syntax for the ALPN header field is given below. It is based on the Generic Grammar defined in Section 2 of [RFC7230].\"\n\nThis needs to say something like\n\n\"The ABNF (Augmented Backus-Naur Form) syntax for the ALPN header field value is given below. It uses the syntax defined in Section 1.2 of [RFC7230].\" \n", 
    "labels": [
@@ -9953,7 +10503,7 @@
      "followers_url": "https://api.github.com/users/mnot/followers"
     }, 
     "number": 1, 
-    "html_url": "https://github.com/httpwg/http-extensions/milestones/alt-svc-09", 
+    "html_url": "https://github.com/httpwg/http-extensions/milestone/1", 
     "updated_at": "2015-10-07T00:42:39Z", 
     "due_on": null, 
     "state": "open", 
@@ -10547,7 +11097,7 @@
      "followers_url": "https://api.github.com/users/mnot/followers"
     }, 
     "number": 1, 
-    "html_url": "https://github.com/httpwg/http-extensions/milestones/alt-svc-09", 
+    "html_url": "https://github.com/httpwg/http-extensions/milestone/1", 
     "updated_at": "2015-10-07T00:42:39Z", 
     "due_on": null, 
     "state": "open", 
@@ -10644,7 +11194,7 @@
      "followers_url": "https://api.github.com/users/mnot/followers"
     }, 
     "number": 1, 
-    "html_url": "https://github.com/httpwg/http-extensions/milestones/alt-svc-09", 
+    "html_url": "https://github.com/httpwg/http-extensions/milestone/1", 
     "updated_at": "2015-10-07T00:42:39Z", 
     "due_on": null, 
     "state": "open", 
@@ -11115,7 +11665,9 @@
    "closed_at": "2015-04-30T14:05:06Z", 
    "assignees": [], 
    "id": 70404286
-  }, 
+  }
+ ], 
+ [
   {
    "body": "a) it's obsoleted anyway, b) that's what we have the IANA status code registry for.\n", 
    "labels": [
@@ -11674,9 +12226,7 @@
    "url": "https://api.github.com/repos/httpwg/http-extensions/issues/55", 
    "created_at": "2015-03-24T18:28:51Z", 
    "assignees": []
-  }
- ], 
- [
+  }, 
   {
    "labels": [
     {
@@ -12813,7 +13363,9 @@
    "closed_at": "2014-10-03T17:09:36Z", 
    "assignees": [], 
    "id": 44800016
-  }, 
+  }
+ ], 
+ [
   {
    "body": "The current Alt-Svc-Used indicator is a boolean (\"0\"/\"1\"), due to the desire to preserve privacy.\nBased on some explorations of how this would be implemented on the server side, we realized that this doesn't provide enough information to distinguish between the different use-cases for Alt-Svc.  In particular, a server would have no way to know if just the protocol was changed, or if both the protocol and host were changed.  If we start using multiple Alt-Svc sources (such as DNS) this also becomes relevant.\n\nAn option short of including (proto,host,port) in Alt-Svc-Used would be to include a better indicator of how the Alt-Svc was used.  This could be either a bitmask or a string of tokens.  For example, with a bitmask:\n- 1 = Alt-Svc was used to change protocol  (ie, service proto != default origin scheme's proto)\n- 2 = Alt-Svc was used to change port     (ie, service port != origin port)\n- 4 = Alt-Svc was used to change host    (ie, service host != origin host)\n- 8 = Alt-Svc was obtained via Alt-Svc header\n- 16 = Alt-Svc was obtained via ALTSVC frame\n- 32 = Alt-Svc was obtained via DNS record  (reserved, not yet defined)\n\nWith a token approach, short character strings could replace the bitmask.\nIn either case this would result in a value like:\n\n  Alt-Svc-Used: 20\n  Alt-Svc-Used: h,f\n\nFor load-balancing, this would make it possible to infer the (proto,host,port) that may have been used in cases where it differs by use-case but is consistent within a use-case.\n\nThis would also significantly help with debuggability on the server side.\n### Editorial\n\nRegardless of how this is resolved, there is still text referring to previous Alt-Svc-Used indicator proposals that should be cleaned up to be consistent with whatever we decide on.  For example, with the current text the following is confusing and should be removed:\n\n>   To reduce the ability of servers to track individual clients over time (see <xref\n>   target=\"tracking\"/>), an alternative service indication sent by a client &SHOULD-NOT; include\n>   any alternative service information other than the protocol, host and port.\n\n(as the protocol, host, and port aren't part of what is being sent in the current indication).\n\nThe same applies of the \"Tracking Clients Using Alternative Services\" section which may be a remnant from previous versions.\n\nThe current text also mentions a \"token\" in the Alt-Svc-Used definition, but does not explain it or specify how it might be used or set.\n", 
    "labels": [
@@ -13371,9 +13923,7 @@
    "closed_at": "2014-08-19T18:18:32Z", 
    "assignees": [], 
    "id": 40551217
-  }
- ], 
- [
+  }, 
   {
    "labels": [
     {
@@ -14568,7 +15118,9 @@
    "closed_at": "2014-07-23T14:09:59Z", 
    "assignees": [], 
    "id": 36346205
-  }, 
+  }
+ ], 
+ [
   {
    "body": "<a href=\"https://github.com/mnot\"><img src=\"https://avatars.githubusercontent.com/u/74384?\" align=\"left\" width=\"96\" height=\"96\" hspace=\"10\"></img></a> **Issue by [mnot](https://github.com/mnot)**\n_Monday Apr 21, 2014 at 03:02 GMT_\n_Originally opened as https://github.com/http2/http2-spec/issues/462_\n\n---\n\nCurrently, Alt-Svc says:\n\n```\nIntermediaries MUST NOT change or append Alt-Svc field values.\n```\n\nThis seems too restrictive; e.g., a gateway (CDN) could do something useful here.\n\nSuggestion:\n\n```\nProxies MUST NOT change or append Alt-Svc field values.\n```\n\nAn argument could be made to degrade to SHOULD NOT, but if we do that, the specific conditions ought to be enumerated.\n", 
    "labels": [
