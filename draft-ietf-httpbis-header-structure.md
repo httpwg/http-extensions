@@ -1,6 +1,6 @@
 ---
 title: HTTP Header Common Structure 
-docname: draft-kamp-httpbis-header-structure-latest
+docname: draft-ietf-httpbis-header-structure-latest
 date: 2016
 category: std
 ipr: trust200902
