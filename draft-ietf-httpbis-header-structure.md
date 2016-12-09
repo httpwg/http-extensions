@@ -157,13 +157,13 @@ In ABNF:
 ~~~ abnf
   import OWS from RFC7230
   import HEXDIG, DQUOTE from RFC5234
-	import UTF8-2, UTF8-3, UTF8-4 from RFC3629
+  import UTF8-2, UTF8-3, UTF8-4 from RFC3629
 
   h1_common-structure-header =
           ( field-name ":" OWS ">" h1_common_structure "<" )
-	# Self-identifying HTTP headers
+  # Self-identifying HTTP headers
           ( field-name ":" OWS h1_common_structure ) /
-	# legacy HTTP headers on white-list, see {{iana}}
+  # legacy HTTP headers on white-list, see {{iana}}
 
   h1_common_structure = h1_element  * ("," h1_element)
 
@@ -199,14 +199,14 @@ In ABNF:
                       UTF8-4
                       ) DQUOTE
   # This is UTF8 with HTTP1 unfriendly codepoints
-	# (00-1f, 7f) neutered with \uXXXX escapes.
+  # (00-1f, 7f) neutered with \uXXXX escapes.
 
   h1_blob = "'" base64 "'"
   # XXX: where to import base64 from ?
 
-	h1_timestamp = number
-	# UNIX/POSIX time_t semantics.
-	# fractional seconds allowed.
+  h1_timestamp = number
+  # UNIX/POSIX time_t semantics.
+  # fractional seconds allowed.
 
   h1_common_structure = ">" h1_common_structure "<"
 ~~~
@@ -264,7 +264,7 @@ into Common Structure.
 For instance one could imagine:
 
 ~~~
-	Date: >1475061449.201<
+  Date: >1475061449.201<
 ~~~
 
 Which would be faster to parse and validate than
