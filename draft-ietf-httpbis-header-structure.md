@@ -1,5 +1,5 @@
 ---
-title: HTTP Header Common Structure 
+title: HTTP Header Field Common Structure 
 docname: draft-kamp-httpbis-header-structure-latest
 date: 2016
 category: std
