@@ -12,7 +12,7 @@ keyword: Internet-Draft
 
 author:
  -
-    ins: PH. Kamp
+    ins: P-H. Kamp
     name: Poul-Henning Kamp
     organization: The Varnish Cache Project
     email: phk@varnish-cache.org
