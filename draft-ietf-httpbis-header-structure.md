@@ -551,3 +551,7 @@ share:
       1#challenge
 ~~~
 
+
+# Changes
+
+## Since draft-ietf-httpbis-header-structure-00
