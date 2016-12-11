@@ -3,9 +3,6 @@ title: HTTP Header Common Structure
 docname: draft-ietf-httpbis-header-structure-latest
 date: 2016
 category: std
-ipr: trust200902
-
-ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
