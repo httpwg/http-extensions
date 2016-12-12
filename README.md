@@ -7,6 +7,14 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 [![Build Status](https://travis-ci.org/httpwg/http-extensions.svg?branch=master)](https://travis-ci.org/httpwg/http-extensions)
 
+
+### Header Common Structure
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/header-structure.html) ([plain text](https://httpwg.github.io/http-extensions/header-structure.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-header-structure) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aheader-structure) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-header-structure/)
+
+
 ### Cache Digest
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/cache-digest.html) ([plain text](https://httpwg.github.io/http-extensions/cache-digest.txt))
