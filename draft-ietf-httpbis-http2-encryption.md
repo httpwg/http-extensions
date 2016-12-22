@@ -163,15 +163,8 @@ DATA
 
 ## Interaction with "https" URIs
 
-When using alternative services, requests for resources identified by both `http` and `https` URIs
-might use the same connection, because HTTP/2 permits requests for multiple origins on the same
-connection.
-
-Because of the potential for server confusion about the scheme of requests (see {{confuse}}),
-clients MUST NOT send `http` requests on a connection prior to successfully retrieving a valid
-http-opportunistic resource that contains the origin (see {{well-known}}). The primary purpose of
-this check is to provide a client with some assurance that a server understands this specification
-and has taken steps to avoid being confused about request scheme.
+Clients MUST NOT send `http` requests and `https` requests on the same connection.  Similarly,
+clients MUST NOT send `http` requests for multiple origins on the same connection.
 
 
 ## The "http-opportunistic" well-known URI {#well-known}
