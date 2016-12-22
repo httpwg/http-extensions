@@ -110,7 +110,7 @@ Common Structure in ABNF:
 
   common-structure = 1* ( identifier dictionary )
 
-  dictionary = * ( identifier value )
+  dictionary = * ( identifier [ value ] )
 
   value = identifier /
           number /
