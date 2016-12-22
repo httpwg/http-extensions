@@ -99,9 +99,7 @@ sequence of JSON Web Encryption {{?RFC7516}} values with a fixed header.
 
 This mechanism is likely only a small part of a larger design that uses content
 encryption.  How clients and servers acquire and identify keys will depend on
-the use case.  Though a complete key management system is not described, this
-document defines an Crypto-Key header field that can be used to convey keying
-material.
+the use case.  In particular, a key management system is not described.
 
 
 ## Notational Conventions
@@ -120,11 +118,8 @@ using Advanced Encryption Standard (AES) in Galois/Counter Mode (GCM) as
 identified as AEAD_AES_128_GCM in {{!RFC5116}}, Section 5.1.  The AEAD_AES_128_GCM
 algorithm uses a 128 bit content encryption key.
 
-Using this content coding requires knowledge of a key.  The Crypto-Key header
-field ({{crypto-key}}) can be included to describe how the content encryption
-key is derived or retrieved.  Keys might be provided in messages that are
-separate from those with encrypted content using Crypto-Key, or provided through
-external mechanisms.
+Using this content coding requires knowledge of a key.  How this key is
+acquired is not defined in this document.
 
 The "aes128gcm" content coding uses a single fixed set of encryption
 primitives.  Cipher suite agility is achieved by defining a new content coding
@@ -135,6 +130,11 @@ The "aes128gcm" content coding uses a fixed record size.  The final encoding
 consists of a header (see {{header}}), zero or more fixed size encrypted
 records, and a partial record.  The partial record MUST be shorter than the
 fixed record size.
+
+The record size determines the length of each portion of plaintext that is
+enciphered, with the exception of the final record, which is necessarily
+smaller.  The record size ("rs") is included in the content coding header (see
+{{header}}).
 
 ~~~ drawing
       +-----------+       content is rs octets minus padding
@@ -152,26 +152,22 @@ fixed record size.
 +--------------------+    the last record is smaller
 ~~~
 
-The record size determines the length of each portion of plaintext that is
-enciphered, with the exception of the final record, which is necessarily
-smaller.  The record size ("rs") is included in the content coding header (see
-{{header}}).
-
 AEAD_AES_128_GCM produces ciphertext 16 octets longer than its input plaintext.
 Therefore, the length of each enciphered record other than the last is equal to
-the value of the "rs" parameter plus 16 octets.  To prevent an attacker from
-truncating a stream, an encoder MUST append a record that contains only padding
-and is smaller than the full record size if the final record ends on a record
-boundary.  A receiver MUST fail to decrypt if the final record ciphertext is
-less than 18 octets in size or equal to the record size plus 16 (that is, the
-size of a full encrypted record).  Valid records always contain at least two
-octets of padding and a 16 octet authentication tag.
+the value of the "rs" parameter plus 16 octets.  If the final record ends on a
+record boundary, the encoder MUST append a record that contains contains only
+padding and is smaller than the full record size.  A receiver MUST fail to
+decrypt if the final record ciphertext is less than 18 octets in size or equal
+to the record size plus 16 (that is, the size of a full encrypted record).
+Valid records always contain at least two octets of padding and a 16 octet
+authentication tag.
 
-Each record contains between 2 and 65537 octets of padding, inserted into a
-record before the enciphered content. Padding consists of a two octet unsigned
-integer in network byte order, followed that number of zero-valued octets. A
-receiver MUST fail to decrypt if any padding octet other than the first two are
-non-zero, or a record has more padding than the record size can accommodate.
+Each record contains a 2 octet padding length field and between 0 and 65535
+octets of padding, inserted into a record before the enciphered content. The
+padding length is a two octet unsigned integer in network byte order; padding is
+that number of zero-valued octets. A receiver MUST fail to decrypt if any
+padding octet is non-zero, or a record has more padding than the record size can
+accommodate.
 
 The nonce for each record is a 96-bit value constructed from the record sequence
 number and the input keying material.  Nonce derivation is covered in {{nonce}}.
@@ -182,7 +178,9 @@ zero-length octet sequence.
 A consequence of this record structure is that range requests {{?RFC7233}} and
 random access to encrypted payload bodies are possible at the granularity of the
 record size.  Partial records at the ends of a range cannot be decrypted.  Thus,
-it is best if range requests start and end on record boundaries.
+it is best if range requests start and end on record boundaries.  Note however
+that random access to specific parts of encrypted data could be confounded by
+the presence of padding.
 
 Selecting the record size most appropriate for a given situation requires a
 trade-off.  A smaller record size allows decrypted octets to be released more
@@ -227,26 +225,23 @@ rs:
 keyid:
 
 : The "keyid" parameter can be used to identify the keying material that is
-  used.  When the Crypto-Key header field is used, the "keyid" identifies a
-  matching value in that field.  The "keyid" parameter MUST be used if keying
-  material included in an Crypto-Key header field is needed to derive the
-  content encryption key.  The "keyid" parameter can also be used to identify
-  keys in an application-specific fashion.
+  used.  Recipients that receive a message are expected to know how to retrieve
+  keys; the "keyid" parameter might be input to that process.
 
 
 ## Content Encryption Key Derivation {#derivation}
 
 In order to allow the reuse of keying material for multiple different HTTP
 messages, a content encryption key is derived for each message.  The content
-encryption key is derived from the decoded value of the "salt" parameter using
-the HMAC-based key derivation function (HKDF) described in {{!RFC5869}} using
-the SHA-256 hash algorithm {{FIPS180-4}}.
+encryption key is derived from the "salt" parameter using the HMAC-based key
+derivation function (HKDF) described in {{!RFC5869}} using the SHA-256 hash
+algorithm {{FIPS180-4}}.
 
 The value of the "salt" parameter is the salt input to HKDF function.  The
 keying material identified by the "keyid" parameter is the input keying material
-(IKM) to HKDF.  Input keying material can either be prearranged, or can be
-described using the Crypto-Key header field ({{crypto-key}}).  The extract phase
-of HKDF therefore produces a pseudorandom key (PRK) as follows:
+(IKM) to HKDF.  Input keying material is expected to be provided to recipients
+separately.  The extract phase of HKDF therefore produces a pseudorandom key
+(PRK) as follows:
 
 ~~~ inline
    PRK = HMAC-SHA-256(salt, IKM)
@@ -303,53 +298,6 @@ permits truncation of the tail of the sequence (see {{aes128gcm}} for how this
 is avoided).
 
 
-# Crypto-Key Header Field {#crypto-key}
-
-A Crypto-Key header field can be used to describe the input keying material used
-by the `aes128gcm` content coding.
-
-Ordinarily, this header field will not appear in the same message as the
-encrypted content.  Including the encryption key with the encrypted payload
-reduces the value of using encryption to a somewhat complicated checksum.
-However, the Crypto-Key header field could be used in one message to provision
-keys for other messages.
-
-The Crypto-Key header field uses the extended ABNF syntax defined in Section 1.2
-of {{!RFC7230}} and the `parameter` and `OWS` rules from {{!RFC7231}}.
-
-~~~ abnf7230
-  Crypto-Key = #crypto-key-params
-  crypto-key-params = [ parameter *( OWS ";" OWS parameter ) ]
-~~~
-
-keyid:
-
-: The "keyid" parameter corresponds to the "keyid" parameter in the content
-  coding.
-
-aes128gcm:
-
-: The "aes128gcm" parameter contains the base64url-encoded octets {{!RFC7515}} of
-  the input keying material for the "aes128gcm" content coding.
-
-Crypto-Key header field values with multiple instances of the same parameter
-name in a single crypto-key-params production are invalid.
-
-The input keying material used by the key derivation (see {{derivation}}) can be
-determined based on the information in the Crypto-Key header field.
-
-The value or values provided in the Crypto-Key header field is valid only
-for the current HTTP message unless additional information indicates a greater
-scope.
-
-Alternative methods for determining input keying material MAY be defined by
-specifications that use this content coding.  This document only defines the use
-of the "aes128gcm" parameter which describes an explicit key.
-
-The "aes128gcm" parameter MUST decode to at least 16 octets in order to be used
-as input keying material for "aes128gcm" content coding.
-
-
 # Examples
 
 This section shows a few examples of the encrypted content coding.
@@ -362,21 +310,20 @@ wrapping is added to fit formatting constraints.
 ## Encryption of a Response {#explicit}
 
 Here, a successful HTTP GET response has been encrypted.  This uses a record
-size of 4096 and the minimum of 2 octets of padding, so only a partial record is
-present.  The input keying material is identified by an empty string (that is,
-the "keyid" field in the header is zero octets in length).
+size of 4096 and no padding (just the 2 octet padding length), so only a partial
+record is present.  The input keying material is identified by an empty string
+(that is, the "keyid" field in the header is zero octets in length).
 
 The encrypted data in this example is the UTF-8 encoded string "I am the
-walrus".  The input keying material is included in the Crypto-Key header field.
-The content body contains a single record only and is shown here using base64url
-encoding for presentation reasons.
+walrus".  The input keying material is the value "B33e_VeFrOyIHwFTIfmesA" (in
+base64url).  The content body contains a single record and is shown here using
+base64url encoding for presentation reasons.
 
 ~~~ example
 HTTP/1.1 200 OK
 Content-Type: application/octet-stream
-Content-Length: 33
+Content-Length: 54
 Content-Encoding: aes128gcm
-Crypto-Key: aes128gcm=B33e_VeFrOyIHwFTIfmesA
 
 sJvlboCWzB5jr8hI_q9cOQAAEAAANSmxkSVa0-MiNNuF77YHSs-iwaNe_OK0qfmO
 c7NT5WSW
@@ -399,18 +346,18 @@ plaintext = AABJIGFtIHRoZSB3YWxydXM
 
 ## Encryption with Multiple Records
 
-This example shows the same message, but the plaintext is split into records of
-10 octets each (that is, the "rs" field in the header is 10).  The first record
-includes a single additional octet of padding.  This means that there are 7
-octets of message in the first record, and 8 in the second.  This causes the end
-of the content to align with a record boundary, forcing the creation of a third
-record that contains only two octets of padding.
+This example shows the same message with input keying material of
+"BO3ZVPxUlnLORbVGMpbT1Q".  In this example, the plaintext is split into records
+of 10 octets each (that is, the "rs" field in the header is 10).  The first
+record includes a single octet of padding.  This means that there are 7 octets
+of message in the first record, and 8 in the second.  This causes the end of the
+content to align with a record boundary, forcing the creation of a third record
+that contains only two octets of the padding length.
 
 ~~~ example
 HTTP/1.1 200 OK
-Content-Length: 70
+Content-Length: 93
 Content-Encoding: aes128gcm
-Crypto-Key: keyid="a1"; aes128gcm="BO3ZVPxUlnLORbVGMpbT1Q"
 
 uNCkWiNYzKTnBN9ji3-qWAAAAAoCYTGHOqYFz-0in3dpb-VE2GfBngkaPy6bZus_
 qLF79s6zQyTSsA0iLOKyd3JqVIwprNzVatRCWZGUx_qsFbJBCQu62RqQuR2d
@@ -460,11 +407,11 @@ total amount of plaintext that can be enciphered MUST be less than 2^44.5 blocks
 of 16 octets {{AEBounds}}.
 
 If rs is a multiple of 16 octets, this means 398 terabytes can be encrypted
-safely, including padding.  However, if the record size is not a multiple of 16
-octets, the total amount of data that can be safely encrypted is reduced
-proportionally.  The worst case is a record size of 3 octets, for which at most
-74 terabytes of plaintext can be encrypted, of which at least two-thirds is
-padding.
+safely, including padding and overhead.  However, if the record size is not a
+multiple of 16 octets, the total amount of data that can be safely encrypted is
+reduced proportionally.  The worst case is a record size of 3 octets, for which
+at most 74 terabytes of plaintext can be encrypted, of which at least two-thirds
+is padding.
 
 
 ## Content Integrity
@@ -540,54 +487,12 @@ separately might reduce exposure. HTTP/2 {{?RFC7540}} combined with TLS
 
 ## The "aes128gcm" HTTP Content Coding
 
-This memo registers the "aes128gcm" HTTP content coding in the HTTP Content Codings
-Registry, as detailed in {{aes128gcm}}.
+This memo registers the "aes128gcm" HTTP content coding in the HTTP Content
+Codings Registry, as detailed in {{aes128gcm}}.
 
 * Name: aes128gcm
 * Description: AES-GCM encryption with a 128-bit content encryption key
 * Reference: this specification
-
-
-## Crypto-Key Header Field
-
-This memo registers the "Crypto-Key" HTTP header field in the Permanent
-Message Header Registry, as detailed in {{crypto-key}}.
-
-* Field name: Crypto-Key
-* Protocol: HTTP
-* Status: Standard
-* Reference: this specification
-* Notes:
-
-
-## The HTTP Crypto-Key Parameter Registry {#crypto-key-registry}
-
-This memo establishes a registry for parameters used by the "Crypto-Key" header
-field under the "Hypertext Transfer Protocol (HTTP) Parameters" grouping.  The
-"Hypertext Transfer Protocol (HTTP) Crypto-Key Parameters" operates under an
-"Specification Required" policy {{!RFC5226}}.
-
-Entries in this registry are expected to include the following information:
-
-* Parameter Name: The name of the parameter.
-* Purpose: A brief description of the purpose of the parameter.
-* Reference: A reference to a specification that defines the semantics of the
-  parameter.
-
-The initial contents of this registry are:
-
-### keyid
-
-* Parameter Name: keyid
-* Purpose: Identify the key that is in use.
-* Reference: this document
-
-### aes128gcm {#iana-aes128gcm}
-
-* Parameter Name: aes128gcm
-* Purpose: Provide an explicit input keying material value for the aes128gcm
-  content coding.
-* Reference: this document
 
 
 --- back
@@ -634,5 +539,5 @@ Authentication Tag.
 Mark Nottingham was an original author of this document.
 
 The following people provided valuable input: Richard Barnes, David Benjamin,
-Peter Beverloo, JR Conlin, Mike Jones, Stephen Farrell, Adam Langley, John Mattsson, Julian
-Reschke, Eric Rescorla, Jim Schaad, and Magnus Westerlund.
+Peter Beverloo, JR Conlin, Mike Jones, Stephen Farrell, Adam Langley, John
+Mattsson, Julian Reschke, Eric Rescorla, Jim Schaad, and Magnus Westerlund.
