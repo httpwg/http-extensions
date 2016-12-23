@@ -122,9 +122,10 @@ clients with existing alternative services information could make such a request
 expire, in order minimize the delays that might be incurred.
 
 Client certificates are not meaningful for URLs with the `http` scheme, and therefore clients
-creating new TLS connections to alternative services for the purposes of this specification MUST NOT
-present them. Connections that use client certificates for other reasons MAY be reused, though
-client certificates MUST NOT affect the responses to requests for `http` resources.
+creating new TLS connections to alternative services for the purposes of this specification MUST
+NOT present them. A server that also provides `https` resources on the same port can request a
+certificate during the TLS handshake, but it MUST NOT abort the handshake if the client does not
+provide one.
 
 
 ## Alternative Server Opt-In {#opt-in}
@@ -135,9 +136,10 @@ opted into serving `http` URLs over TLS, clients are required to perform additio
 directing `http` requests to it.
 
 Clients MUST NOT send `http` requests over a secured connection, unless the chosen alternative
-service presents a certificate that is valid for the origin - as per {{RFC2818}} (this also
-establishes "reasonable assurances" for the purposes of {RFC7838}}) - and they have obtained a valid
-http-opportunistic response for an origin (as per {{well-known}}).
+service presents a certificate that is valid for the origin as defined in {{RFC2818}} (this also
+establishes "reasonable assurances" for the purposes of {RFC7838}}) and they have obtained a
+valid http-opportunistic response for an origin (as per {{well-known}}).  An exception to the
+last restriction is made for requests for the "http-opportunistic" well-known URI.
 
 For example, assuming the following request is made over a TLS connection that is successfully
 authenticated for those origins, the following request/response pair would allow requests for the
@@ -172,8 +174,10 @@ clients MUST NOT send `http` requests for multiple origins on the same connectio
 This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said to
 have a valid http-opportunistic response for a given origin when:
 
-* The client has obtained a 200 (OK) response for the well-known URI from the origin, and it is
-  fresh {{RFC7234}} (potentially through revalidation {{RFC7232}}), and
+* The client has requested the well-known URI from the origin over an authenticated connection
+  and a 200 (OK) response was provided, and
+
+* That response is fresh {{RFC7234}} (potentially through revalidation {{RFC7232}}), and
 
 * That response has the media type "application/json", and
 
