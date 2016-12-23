@@ -137,37 +137,35 @@ smaller.  The record size ("rs") is included in the content coding header (see
 {{header}}).
 
 ~~~ drawing
-      +-----------+       content is rs octets minus padding
-      |   data    |       of between 2 and 65537 octets;
+      +-----------+       content of rs octets minus padding
+      |   data    |       less padding (2-65537) and tag (16);
       +-----------+       the last record is smaller
            |
            v
-+-----+-----------+       add padding to get rs octets;
++-----+-----------+       add padding to get rs-16 octets;
 | pad |   data    |       the last record contains
-+-----+-----------+       up to rs minus 1 octets
++-----+-----------+       up to rs minus 17 octets
          |
          v
 +--------------------+    encrypt with AEAD_AES_128_GCM;
-|    ciphertext      |    final size is rs plus 16 octets
+|    ciphertext      |    final size is rs;
 +--------------------+    the last record is smaller
 ~~~
 
 AEAD_AES_128_GCM produces ciphertext 16 octets longer than its input plaintext.
-Therefore, the length of each enciphered record other than the last is equal to
-the value of the "rs" parameter plus 16 octets.  If the final record ends on a
-record boundary, the encoder MUST append a record that contains contains only
-padding and is smaller than the full record size.  A receiver MUST fail to
-decrypt if the final record ciphertext is less than 18 octets in size or equal
-to the record size plus 16 (that is, the size of a full encrypted record).
-Valid records always contain at least two octets of padding and a 16 octet
+Therefore, the unencrypted content of each record is shorter than the record
+size by 16 octets.  If the final record ends on a record boundary, the encoder
+MUST append a record that contains contains only padding and is smaller than the
+full record size.  A receiver MUST fail to decrypt if the final record
+ciphertext is less than 18 octets in size or equal to the record size.  Valid
+records always contain at least a padding length of 2 octets and a 16 octet
 authentication tag.
 
-Each record contains a 2 octet padding length field and between 0 and 65535
-octets of padding, inserted into a record before the enciphered content. The
-padding length is a two octet unsigned integer in network byte order; padding is
-that number of zero-valued octets. A receiver MUST fail to decrypt if any
-padding octet is non-zero, or a record has more padding than the record size can
-accommodate.
+Each record contains a 2 octet padding length and between 0 and 65535 octets of
+padding, inserted into a record before the content. The padding length is a two
+octet unsigned integer in network byte order; padding is that number of
+zero-valued octets. A receiver MUST fail to decrypt if any padding octet is
+non-zero, or a record has more padding than the record size can accommodate.
 
 The nonce for each record is a 96-bit value constructed from the record sequence
 number and the input keying material.  Nonce derivation is covered in {{nonce}}.
@@ -220,7 +218,7 @@ rs:
 : The "rs" or record size parameter contains an unsigned 32-bit integer in
   network byte order that describes the record size in octets.  Note that it is
   therefore impossible to exceed the 2^36-31 limit on plaintext input to
-  AEAD_AES_128_GCM.  Values smaller than 3 are invalid.
+  AEAD_AES_128_GCM.  Values smaller than 19 are invalid.
 
 keyid:
 
@@ -348,7 +346,7 @@ plaintext = AABJIGFtIHRoZSB3YWxydXM
 
 This example shows the same message with input keying material of
 "BO3ZVPxUlnLORbVGMpbT1Q".  In this example, the plaintext is split into records
-of 10 octets each (that is, the "rs" field in the header is 10).  The first
+of 26 octets each (that is, the "rs" field in the header is 26).  The first
 record includes a single octet of padding.  This means that there are 7 octets
 of message in the first record, and 8 in the second.  This causes the end of the
 content to align with a record boundary, forcing the creation of a third record
@@ -359,7 +357,7 @@ HTTP/1.1 200 OK
 Content-Length: 93
 Content-Encoding: aes128gcm
 
-uNCkWiNYzKTnBN9ji3-qWAAAAAoCYTGHOqYFz-0in3dpb-VE2GfBngkaPy6bZus_
+uNCkWiNYzKTnBN9ji3-qWAAAABoCYTGHOqYFz-0in3dpb-VE2GfBngkaPy6bZus_
 qLF79s6zQyTSsA0iLOKyd3JqVIwprNzVatRCWZGUx_qsFbJBCQu62RqQuR2d
 ~~~
 
@@ -406,12 +404,12 @@ probability of indistinguishability under chosen plaintext attack (IND-CPA), the
 total amount of plaintext that can be enciphered MUST be less than 2^44.5 blocks
 of 16 octets {{AEBounds}}.
 
-If rs is a multiple of 16 octets, this means 398 terabytes can be encrypted
-safely, including padding and overhead.  However, if the record size is not a
-multiple of 16 octets, the total amount of data that can be safely encrypted is
-reduced proportionally.  The worst case is a record size of 3 octets, for which
-at most 74 terabytes of plaintext can be encrypted, of which at least two-thirds
-is padding.
+If the record size is a multiple of 16 octets, this means 398 terabytes can be
+encrypted safely, including padding and overhead.  However, if the record size
+is not a multiple of 16 octets, the total amount of data that can be safely
+encrypted is reduced because partial AES blocks are encrypted.  The worst case
+is a record size of 19 octets, for which at most 74 terabytes of plaintext can
+be encrypted, of which at least two-thirds is padding.
 
 
 ## Content Integrity
