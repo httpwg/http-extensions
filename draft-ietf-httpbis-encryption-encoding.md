@@ -224,7 +224,9 @@ keyid:
 
 : The "keyid" parameter can be used to identify the keying material that is
   used.  Recipients that receive a message are expected to know how to retrieve
-  keys; the "keyid" parameter might be input to that process.
+  keys; the "keyid" parameter might be input to that process.  A "keyid"
+  parameter SHOULD be a UTF-8 {{!RFC3629}} encoded string, particularly where
+  the identifier might need to appear in a textual form.
 
 
 ## Content Encryption Key Derivation {#derivation}
