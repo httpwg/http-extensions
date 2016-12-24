@@ -111,7 +111,13 @@ Common Structure in ABNF:
   common-structure = 1* ( identifier dictionary )
 
   dictionary = * ( identifier [ value ] )
+~~~
 
+Key identifiers in dictionaries SHALL be unique, but semantically
+overlapping key identifiers for instance 'text/plain' and 'text/*'
+are ok.
+
+~~~ abnf
   value = identifier /
           number /
           ascii_string /
@@ -147,6 +153,9 @@ Common Structure in ABNF:
   timestamp = POSIX time_t with optional millisecond resolution
           # XXX: Is there a place to import this from ?
 ~~~
+
+
+
 
 # HTTP/1 Serialization of HTTP Header Common Structure
 
@@ -294,7 +303,8 @@ until and if the owner of the entry requests otherwise.
 
 # Security Considerations
 
-TBD
+Unique dictionary keys are required to reduce the risk of
+smuggling attacks.
 
 
 --- back
@@ -553,3 +563,5 @@ share:
 # Changes
 
 ## Since draft-ietf-httpbis-header-structure-00
+
+Added uniqueness requirement on dictionary keys.
