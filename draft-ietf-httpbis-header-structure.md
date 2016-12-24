@@ -121,18 +121,25 @@ are ok.
   value = identifier /
           integer /
           number /
-          ascii_string /
-          unicode_string /
+          ascii-string /
+          unicode-string /
           blob /
           timestamp /
           common-structure
+~~~
+
+Recursion is included as a way to to support deep and more general
+data structures, but its use is highly discouraged and where it is
+used the depth of recursion SHALL always be explicitly limited.
+
+~~~ abnf
 
   identifier = token  [ "/" token ]
 
   integer = ["-"] 1*19 DIGIT
 ~~~
 
-Integers SHALL be in the range +/- 2^63-1 = [-9223372036854775807...9223372036854775807]
+Integers SHALL be in the range +/- 2^63-1 (= +/- 9223372036854775807)
 
 ~~~ abnf
   number = ["-"] DIGIT '.' 1*14DIGIT /
@@ -148,19 +155,14 @@ The limit of 15 siginificant digits is chosen so that numbers can
 be correctly represented by IEEE754 64 bit binary floating point.
 
 ~~~ abnf
-          # XXX: Not sure how to do this in ABNF:
-          # XXX: A single "." allowed between any two digits
-          # The range is limited is to ensure it can be
-          # correctly represented in IEEE754 64 bit
-          # binary floating point format.
 
-  ascii_string = * %x20-7e
+  ascii-string = * %x20-7e
           # This is a "safe" string in the sense that it
           # contains no control characters or multi-byte
           # sequences.  If that is not fancy enough, use
-          # unicode_string.
+          # unicode-string.
 
-  unicode_string = * unicode_codepoint
+  unicode-string = * unicode-codepoint
           # XXX: Is there a place to import this from ?
           # Unrestricted unicode, because there is no sane
           # way to restrict or otherwise make unicode "safe".
@@ -185,36 +187,40 @@ In ABNF:
   import HEXDIG, DQUOTE from RFC5234
   import UTF8-2, UTF8-3, UTF8-4 from RFC3629
 
-  h1_common-structure-header =
-          ( field-name ":" OWS ">" h1_common_structure "<" )
-  # Self-identifying HTTP headers
-          ( field-name ":" OWS h1_common_structure ) /
-  # legacy HTTP headers on white-list, see {{iana}}
+  h1-common-structure-header =
+          ( field-name ":" OWS ">" h1-common-structure "<" )
+          ( field-name ":" OWS h1-common-structure ) /
+~~~
 
-  h1_common_structure = h1_element  * ("," h1_element)
+Only white-listed legacy headers (see {{iana}}) are exempt
+from using the ">...<" format.
 
-  h1_element = identifier * (";" identifier ["=" h1_value])
+~~~ abnf
 
-  h1_value = identifier /
+  h1-common-structure = h1-element  * ("," h1-element)
+
+  h1-element = identifier * (";" identifier ["=" h1-value])
+
+  h1-value = identifier /
           integer /
           number /
-          h1_ascii_string /
-          h1_unicode_string /
-          h1_blob /
-          h1_timestamp /
-          h1_common-structure
+          h1-ascii-string /
+          h1-unicode-string /
+          h1-blob /
+          h1-timestamp /
+          ">" h1-common-structure "<"
 
-  h1_ascii_string = DQUOTE *(
+  h1-ascii-string = DQUOTE *(
                     ( "\" DQUOTE ) /
                     ( "\" "\" ) /
                     0x20-21 /
                     0x23-5B /
                     0x5D-7E
                     ) DQUOTE
-  # This is a proper subset of h1_unicode_string
+  # This is a proper subset of h1-unicode-string
   # NB only allowed backslash escapes are \" and \\
 
-  h1_unicode_string = DQUOTE *(
+  h1-unicode-string = DQUOTE *(
                       ( "\" DQUOTE )
                       ( "\" "\" ) /
                       ( "\" "u" 4*HEXDIG ) /
@@ -228,14 +234,14 @@ In ABNF:
   # This is UTF8 with HTTP1 unfriendly codepoints
   # (00-1f, 7f) neutered with \uXXXX escapes.
 
-  h1_blob = "'" base64 "'"
+  h1-blob = "'" base64 "'"
   # XXX: where to import base64 from ?
 
-  h1_timestamp = number
+  h1-timestamp = number
   # UNIX/POSIX time_t semantics.
   # fractional seconds allowed.
 
-  h1_common_structure = ">" h1_common_structure "<"
+  h1-common-structure = ">" h1-common-structure "<"
 ~~~
 
 XXX: Allow OWS in parsers, but not in generators ?
@@ -359,7 +365,7 @@ A subgroup of headers, mostly related to MIME, uses what one could
 call a 'qualified token'::
 
 ~~~ abnf
-  qualified_token = token_or_asterix [ "/" token_or_asterix ]
+  qualified-token = token-or-asterix [ "/" token-or-asterix ]
 ~~~
 
 The second motif is parameterized list elements.  The best known
@@ -372,15 +378,15 @@ In pidgin ABNF, ignoring white-space for the sake of clarity, the
 HTTP/1.1 serialization of Common Structure is is something like:
 
 ~~~ abnf
-  token_or_asterix = token from {{RFC7230}}, but also allowing "*"
+  token-or-asterix = token from {{RFC7230}}, but also allowing "*"
 
-  qualified_token = token_or_asterix [ "/" token_or_asterix ]
+  qualified-token = token-or-asterix [ "/" token-or-asterix ]
 
   field-name, see {{RFC7230}}
 
-  Common_Structure_Header = field-name ":" 1#named_dictionary
+  Common-Structure-Header = field-name ":" 1#named-dictionary
 
-  named_dictionary = qualified_token [ *(";" param) ]
+  named-dictionary = qualified-token [ *(";" param) ]
 
   param = token [ "=" value ]
 
