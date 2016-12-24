@@ -157,25 +157,39 @@ be correctly represented by IEEE754 64 bit binary floating point.
 ~~~ abnf
 
   ascii-string = * %x20-7e
-          # This is a "safe" string in the sense that it
-          # contains no control characters or multi-byte
-          # sequences.  If that is not fancy enough, use
-          # unicode-string.
-
-  unicode-string = * unicode-codepoint
-          # XXX: Is there a place to import this from ?
-          # Unrestricted unicode, because there is no sane
-          # way to restrict or otherwise make unicode "safe".
-
-  blob = * %0x00-ff
-          # Intended for cryptographic data and as a general
-          # escape mechanism for unmet requirements.
-
-  timestamp = POSIX time_t with optional millisecond resolution
-          # XXX: Is there a place to import this from ?
 ~~~
 
+This is intented to be an efficient, "safe" and uncomplicated string
+type, for uses where the string content will not be user visible.
 
+~~~ abnf
+
+  unicode-string = * UNICODE
+
+  UNICODE = <U+0000-U+D7FF / U+E000-U+10FFFF>
+  # UNICODE nicked from draft-seantek-unicode-in-abnf-02
+~~~
+
+Unicode-strings are unrestricted because there is no sane and/or
+culturally neutral way to subset or otherwise make unicode "safe",
+and Unicode is still evolving new and interesting code points.
+
+Users of unicode-string SHALL be prepared for the full gammut of
+glyph-gymnastics in order to avoid: U+1F4A9 U+08 U+1F574.
+
+~~~ abnf
+  blob = * %0x00-ff
+~~~
+
+Blobs are intented primarily for cryptographic data, but can be
+used for any otherwise unsatisfied needs.
+
+~~~ abnf
+  timestamp = number
+~~~
+
+A timestamp counts seconds since the UNIX time_t epoch, including
+the "invisible leap-seconds" misfeature.
 
 
 # HTTP/1 Serialization of HTTP Header Common Structure
@@ -185,7 +199,7 @@ In ABNF:
 ~~~ abnf
   import OWS from RFC7230
   import HEXDIG, DQUOTE from RFC5234
-  import UTF8-2, UTF8-3, UTF8-4 from RFC3629
+  import EmbeddedUnicodeChar from BCP137
 
   h1-common-structure-header =
           ( field-name ":" OWS ">" h1-common-structure "<" )
@@ -197,7 +211,7 @@ from using the ">...<" format.
 
 ~~~ abnf
 
-  h1-common-structure = h1-element  * ("," h1-element)
+  h1-common-structure = h1-element * ("," h1-element)
 
   h1-element = identifier * (";" identifier ["=" h1-value])
 
@@ -217,31 +231,28 @@ from using the ">...<" format.
                     0x23-5B /
                     0x5D-7E
                     ) DQUOTE
-  # This is a proper subset of h1-unicode-string
-  # NB only allowed backslash escapes are \" and \\
 
   h1-unicode-string = DQUOTE *(
                       ( "\" DQUOTE )
                       ( "\" "\" ) /
-                      ( "\" "u" 4*HEXDIG ) /
+                      EmbeddedUnicodeChar /
                       0x20-21 /
                       0x23-5B /
                       0x5D-7E /
-                      UTF8-2 /
-                      UTF8-3 /
-                      UTF8-4
                       ) DQUOTE
-  # This is UTF8 with HTTP1 unfriendly codepoints
-  # (00-1f, 7f) neutered with \uXXXX escapes.
+~~~
 
+The dim prospects of ever getting a majority of HTTP1 paths 8-bit
+clean makes UTF-8 unviable as H1 serialization.  Given that very
+little of the information in HTTP headers is presented to users in
+the first place, improving H1 and HPACK efficiency by inventing a
+more efficient BCP137 compliant escape-sequences seems unwarranted.
+
+~~~ abnf
   h1-blob = "'" base64 "'"
   # XXX: where to import base64 from ?
 
   h1-timestamp = number
-  # UNIX/POSIX time_t semantics.
-  # fractional seconds allowed.
-
-  h1-common-structure = ">" h1-common-structure "<"
 ~~~
 
 XXX: Allow OWS in parsers, but not in generators ?
