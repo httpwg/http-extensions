@@ -119,6 +119,7 @@ are ok.
 
 ~~~ abnf
   value = identifier /
+          integer /
           number /
           ascii_string /
           unicode_string /
@@ -128,7 +129,25 @@ are ok.
 
   identifier = token  [ "/" token ]
 
-  number = ["-"] 1*15 DIGIT
+  integer = ["-"] 1*19 DIGIT
+~~~
+
+Integers SHALL be in the range +/- 2^63-1 = [-9223372036854775807...9223372036854775807]
+
+~~~ abnf
+  number = ["-"] DIGIT '.' 1*14DIGIT /
+           ["-"] 2DIGIT '.' 1*13DIGIT /
+           ["-"] 3DIGIT '.' 1*12DIGIT /
+           ... /
+           ["-"] 12DIGIT '.' 1*3DIGIT /
+           ["-"] 13DIGIT '.' 1*2DIGIT /
+           ["-"] 14DIGIT '.' 1DIGIT
+~~~
+
+The limit of 15 siginificant digits is chosen so that numbers can
+be correctly represented by IEEE754 64 bit binary floating point.
+
+~~~ abnf
           # XXX: Not sure how to do this in ABNF:
           # XXX: A single "." allowed between any two digits
           # The range is limited is to ensure it can be
@@ -177,6 +196,7 @@ In ABNF:
   h1_element = identifier * (";" identifier ["=" h1_value])
 
   h1_value = identifier /
+          integer /
           number /
           h1_ascii_string /
           h1_unicode_string /
@@ -565,3 +585,5 @@ share:
 ## Since draft-ietf-httpbis-header-structure-00
 
 Added uniqueness requirement on dictionary keys.
+
+Added signed 64bit integer type
