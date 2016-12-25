@@ -604,3 +604,6 @@ share:
 Added uniqueness requirement on dictionary keys.
 
 Added signed 64bit integer type
+
+Drop UTF8, and settle on BCP137::EmbeddedUnicodeChar for h1-unicode-string
+
