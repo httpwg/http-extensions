@@ -201,9 +201,10 @@ Allowing clients to cache the http-opportunistic resource means that all alterna
 need to be able to respond to requests for `http` resources.  A client is permitted to use an
 alternative service without acquiring the http-opportunistic resource from that service.
 
-A client MUST NOT use any cached copies of an http-opportunistic resource that are acquired over
-unauthenticated connections.  To avoid potential errors, a client can request or revalidate the
-http-opportunistic resource before using any connection to an alternative service.
+A client MUST NOT use any cached copies of an http-opportunistic resource that was acquired (or
+revalidated) over an unauthenticated connection.  To avoid potential errors, a client can
+request or revalidate the http-opportunistic resource before using any connection to an
+alternative service.
 
 
 # IANA Considerations
