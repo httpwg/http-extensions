@@ -162,6 +162,11 @@ DATA
 [ "http://www.example.com", "http://example.com" ]
 ~~~
 
+Though this document describes multiple origins, this is only for operational convenience.  Only
+a request made to an origin (over an authenticated connection) can be used to acquire this
+resource for that origin.  Thus in the example, the request to `http://example.com` cannot be
+assumed to also provide an http-opportunistic response for `http://www.example.com`.
+
 
 ## Interaction with "https" URIs
 
