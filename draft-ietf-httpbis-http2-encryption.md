@@ -197,6 +197,10 @@ strings.
 This document does not define semantics for "http-opportunistic" resources on an `https` origin,
 nor does it define semantics if the resource includes `https` origins.
 
+Any strongly authenticated alternative service can provide this response.  That is, as long as
+the http-opportunistic response is valid, any authenticated alternative service can be used for
+that origin.
+
 
 # IANA Considerations
 
