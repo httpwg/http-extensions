@@ -206,6 +206,11 @@ revalidated) over an unauthenticated connection.  To avoid potential errors, a c
 request or revalidate the http-opportunistic resource before using any connection to an
 alternative service.
 
+Clients that use cached http-opportunistic responses MUST ensure that their cache is cleared of
+any responses that were acquired over an unauthenticated connection.  Revalidating an
+unauthenticated response using an authenticated connection does not ensure the integrity of the
+response.
+
 
 # IANA Considerations
 
