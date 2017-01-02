@@ -201,6 +201,11 @@ Any strongly authenticated alternative service can provide this response.  That 
 the http-opportunistic response is valid, any authenticated alternative service can be used for
 that origin.
 
+Clients that use cached http-opportunistic responses MUST ensure that their cache is cleared of
+any responses that were acquired over an unauthenticated connection.  Revalidating an
+unauthenticated response using an authenticated connection does not ensure the integrity of the
+response.
+
 
 # IANA Considerations
 
