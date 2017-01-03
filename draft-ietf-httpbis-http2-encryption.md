@@ -139,8 +139,9 @@ Clients MUST NOT send `http` requests over a secured connection, unless the chos
 service presents a certificate that is valid for the origin as defined in {{RFC2818}}.  Using an
 authenticated alternative service establishes "reasonable assurances" for the purposes of
 {RFC7838}}.  In addition to authenticating the server the client MUST have obtained a valid
-http-opportunistic response for an origin (as per {{well-known}}).  An exception to this
-restriction is made for requests for the "http-opportunistic" well-known URI.
+http-opportunistic response for an origin (as per {{well-known}}) using the authenticated
+connection.  An exception to this restriction is made for requests for the "http-opportunistic"
+well-known URI.
 
 For example, assuming the following request is made over a TLS connection that is successfully
 authenticated for those origins, the following request/response pair would allow requests for the
