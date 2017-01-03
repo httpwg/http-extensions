@@ -136,10 +136,11 @@ opted into serving `http` URLs over TLS, clients are required to perform additio
 directing `http` requests to it.
 
 Clients MUST NOT send `http` requests over a secured connection, unless the chosen alternative
-service presents a certificate that is valid for the origin as defined in {{RFC2818}} (this also
-establishes "reasonable assurances" for the purposes of {RFC7838}}) and they have obtained a
-valid http-opportunistic response for an origin (as per {{well-known}}).  An exception to the
-last restriction is made for requests for the "http-opportunistic" well-known URI.
+service presents a certificate that is valid for the origin as defined in {{RFC2818}}.  Using an
+authenticated alternative service establishes "reasonable assurances" for the purposes of
+{RFC7838}}.  In addition to authenticating the server the client MUST have obtained a valid
+http-opportunistic response for an origin (as per {{well-known}}).  An exception to this
+restriction is made for requests for the "http-opportunistic" well-known URI.
 
 For example, assuming the following request is made over a TLS connection that is successfully
 authenticated for those origins, the following request/response pair would allow requests for the
