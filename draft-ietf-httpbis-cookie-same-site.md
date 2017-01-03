@@ -1,7 +1,7 @@
 ---
 title: Same-Site Cookies
 docname: draft-ietf-httpbis-cookie-same-site-latest
-date: 2016
+date: 2017
 category: std
 updates: 6265
 

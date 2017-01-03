@@ -2,7 +2,7 @@
 title: Encrypted Content-Encoding for HTTP
 abbrev: HTTP encryption coding
 docname: draft-ietf-httpbis-encryption-encoding-latest
-date: 2016
+date: 2017
 category: std
 
 ipr: trust200902

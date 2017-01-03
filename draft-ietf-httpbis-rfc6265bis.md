@@ -1,7 +1,7 @@
 ---
 title: HTTP State Management Mechanism
 docname: draft-ietf-httpbis-rfc6265bis-latest
-date: 2016
+date: 2017
 category: std
 obsoletes: 6265
 

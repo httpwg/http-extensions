@@ -1,7 +1,7 @@
 ---
 title: HTTP Header Common Structure 
 docname: draft-ietf-httpbis-header-structure-latest
-date: 2016
+date: 2017
 category: std
 ipr: trust200902
 area: Applications and Real-Time

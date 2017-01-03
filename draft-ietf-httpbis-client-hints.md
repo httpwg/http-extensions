@@ -2,7 +2,7 @@
 title: HTTP Client Hints
 abbrev:
 docname: draft-ietf-httpbis-client-hints-latest
-date: 2016
+date: 2017
 category: exp
 
 ipr: trust200902

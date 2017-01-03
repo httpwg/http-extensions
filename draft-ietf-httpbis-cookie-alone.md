@@ -2,7 +2,7 @@
 title: Deprecate modification of 'secure' cookies from non-secure origins
 abbrev: Leave Secure Cookies Alone
 docname: draft-ietf-httpbis-cookie-alone-latest
-date: 2016
+date: 2017
 category: std
 updates: 6265
 
