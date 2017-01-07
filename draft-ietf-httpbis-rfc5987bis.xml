@@ -61,6 +61,9 @@
       HTTP header fields that is compatible with a simplified profile of the
       encoding defined in RFC 2231.
     </t>
+    <t>
+      This document obsoletes RFC 5987.
+    </t>
   </abstract>
 
   <note title="Editorial Note (To be removed by RFC Editor before publication)">
@@ -907,6 +910,9 @@
 </t>
 <t>
   Include WG into Acknowledgements for this revision.
+</t>
+<t>
+  Mention RFC 5987 in the abstract (<eref target="https://github.com/httpwg/http-extensions/issues/271"/>).
 </t>
 </section>
 </section>
