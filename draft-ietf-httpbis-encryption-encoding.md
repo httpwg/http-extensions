@@ -137,7 +137,7 @@ smaller.  The record size ("rs") is included in the content coding header (see
 {{header}}).
 
 ~~~ drawing
-      +-----------+       content of rs octets minus padding
+      +-----------+       content of rs octets
       |   data    |       less padding (2-65537) and tag (16);
       +-----------+       the last record is smaller
            |
@@ -155,11 +155,10 @@ smaller.  The record size ("rs") is included in the content coding header (see
 AEAD_AES_128_GCM produces ciphertext 16 octets longer than its input plaintext.
 Therefore, the unencrypted content of each record is shorter than the record
 size by 16 octets.  If the final record ends on a record boundary, the encoder
-MUST append a record that contains contains only padding and is smaller than the
-full record size.  A receiver MUST fail to decrypt if the final record
-ciphertext is less than 18 octets in size or equal to the record size.  Valid
-records always contain at least a padding length of 2 octets and a 16 octet
-authentication tag.
+MUST append a record that contains only padding and is smaller than the full
+record size.  A receiver MUST fail to decrypt if the final record ciphertext is
+less than 18 octets in size or equal to the record size.  Valid records always
+contain at least a padding length of 2 octets and a 16 octet authentication tag.
 
 Each record contains a 2 octet padding length and between 0 and 65535 octets of
 padding, inserted into a record before the content. The padding length is a two
