@@ -915,6 +915,12 @@
   Mention RFC 5987 in the abstract (<eref target="https://github.com/httpwg/http-extensions/issues/271"/>).
 </t>
 </section>
+
+<section title="Since draft-ietf-httpbis-rfc5987bis-04">
+<t>
+  None yet.
+</t>
+</section>
 </section>
 
 <section title="Acknowledgements" numbered="false">
