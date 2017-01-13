@@ -144,7 +144,7 @@ immutable extension in the "Hypertext Transfer Protocol (HTTP) Cache
 Directive Registry" with IETF Review.
 
 * Cache-Directive: immutable
-* Pointer to specification text: [this document]
+* Pointer to specification text: \[this document\]
 
 # Acknowledgments
 
