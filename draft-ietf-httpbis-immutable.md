@@ -112,7 +112,9 @@ requesting client.
 
 ## Example
 
+~~~ example
 Cache-Control: max-age=31536000, immutable
+~~~
 
 # Security Considerations
 
