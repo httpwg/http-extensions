@@ -1,10 +1,12 @@
 ---
 title: HTTP Immutable Responses
-abbrev: I-D
-docname: draft-ietf-httpbis-immutable-00
-date: 2017-01-12
+docname: draft-ietf-httpbis-immutable-latest
+date: 2017
 category: std
 ipr: trust200902
+area: Applications and Real-Time
+workgroup: HTTP
+
 author:
  - 
   ins: P. McManus
@@ -28,6 +30,14 @@ The immutable HTTP response Cache-Control extension allows servers to
 identify resources that will not be updated during their freshness
 lifetime. This assures that a client never needs to revalidate a
 cached fresh resource to be certain it has not been modified.
+
+--- note_Note_to_Readers
+
+Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org),
+which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
+
+Working Group information can be found at <http://httpwg.github.io/>; source code and issues list
+for this draft can be found at <https://github.com/httpwg/http-extensions/labels/immutable>.
 
 --- middle
 
