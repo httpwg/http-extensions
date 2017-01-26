@@ -728,6 +728,20 @@
     <seriesInfo name="RFC" value="7616"/>
   </reference>
 
+  <reference  anchor='RFC8053'>
+    <front>
+      <title>HTTP Authentication Extensions for Interactive Clients</title>
+      <author initials='Y.' surname='Oiwa' fullname='Y. Oiwa'/>
+      <author initials='H.' surname='Watanabe' fullname='H. Watanabe'/>
+      <author initials='H.' surname='Takagi' fullname='H. Takagi'/>
+      <author initials='K.' surname='Maeda' fullname='K. Maeda'/>
+      <author initials='T.' surname='Hayashi' fullname='T. Hayashi'/>
+      <author initials='Y.' surname='Ioku' fullname='Y. Ioku'/>
+      <date year='2017' month='January'/>
+    </front>
+    <seriesInfo name='RFC' value='8053'/>
+  </reference>
+
   <reference anchor='XMLHttpRequest'
              target='https://xhr.spec.whatwg.org/'>
     <front>
@@ -768,10 +782,13 @@
 
 <section title="Implementation Report" anchor="implementation.report">
 <t>
-  The encoding defined in this document currently is used for three different
+  The encoding defined in this document currently is used in four different
   HTTP header fields:
 </t>
 <ul>
+  <li>
+    "Authentication-Control", defined in <xref target="RFC8053"/>,
+  </li>
   <li>
     "Authorization" (as used in HTTP Digest Authentication, defined in <xref target="RFC7616"/>),
   </li>
@@ -918,7 +935,7 @@
 
 <section title="Since draft-ietf-httpbis-rfc5987bis-04">
 <t>
-  None yet.
+  Mention RFC8053 in Implementation Report.
 </t>
 </section>
 </section>
