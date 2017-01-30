@@ -128,13 +128,11 @@ necessary to negotiate the use of encryption.
 
 The "aes128gcm" content coding uses a fixed record size.  The final encoding
 consists of a header (see {{header}}), zero or more fixed size encrypted
-records, and a partial record.  The partial record MUST be shorter than the
-fixed record size.
+records.  The final record can be smaller than the record size.
 
 The record size determines the length of each portion of plaintext that is
-enciphered, with the exception of the final record, which is necessarily
-smaller.  The record size ("rs") is included in the content coding header (see
-{{header}}).
+enciphered.  The record size ("rs") is included in the content coding header
+(see {{header}}).
 
 ~~~ drawing
 +-----------+              content of rs octets
@@ -149,7 +147,7 @@ smaller.  The record size ("rs") is included in the content coding header (see
          v
 +--------------------+    encrypt with AEAD_AES_128_GCM;
 |    ciphertext      |    final size is rs;
-+--------------------+    the last record is smaller
++--------------------+    the last record can be smaller
 ~~~
 
 AEAD_AES_128_GCM produces ciphertext 16 octets longer than its input plaintext.
@@ -186,7 +184,7 @@ random access into the ciphertext is needed.
 
 Applications that don't depending on streaming, random access, or arbitrary
 padding can use larger records, or even a single record.  A larger record size
-reduces the processing and data overheads.
+reduces processing and data overheads.
 
 
 ## Encryption Content Coding Header {#header}
