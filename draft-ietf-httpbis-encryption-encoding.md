@@ -137,14 +137,14 @@ smaller.  The record size ("rs") is included in the content coding header (see
 {{header}}).
 
 ~~~ drawing
-      +-----------+       content of rs octets
-      |   data    |       less padding (2-65537) and tag (16);
-      +-----------+       the last record is smaller
-           |
-           v
-+-----+-----------+       add padding to get rs-16 octets;
-| pad |   data    |       the last record contains
-+-----+-----------+       up to rs minus 17 octets
++-----------+              content of rs octets
+|   data    |              less padding (1+) and tag (16);
++-----------+              the last record is smaller
+     |
+     v
++-----------+-----+        add padding to get rs-16 octets;
+|   data    | pad |        padding is zeros starting with 1,
++-----------+-----+        or 2 on the last record
          |
          v
 +--------------------+    encrypt with AEAD_AES_128_GCM;
@@ -154,17 +154,16 @@ smaller.  The record size ("rs") is included in the content coding header (see
 
 AEAD_AES_128_GCM produces ciphertext 16 octets longer than its input plaintext.
 Therefore, the unencrypted content of each record is shorter than the record
-size by 16 octets.  If the final record ends on a record boundary, the encoder
-MUST append a record that contains only padding and is smaller than the full
-record size.  A receiver MUST fail to decrypt if the final record ciphertext is
-less than 18 octets in size or equal to the record size.  Valid records always
-contain at least a padding length of 2 octets and a 16 octet authentication tag.
+size by 16 octets.  Valid records always contain at least a padding terminator
+octet and a 16 octet authentication tag.
 
-Each record contains a 2 octet padding length and between 0 and 65535 octets of
-padding, inserted into a record before the content. The padding length is a two
-octet unsigned integer in network byte order; padding is that number of
-zero-valued octets. A receiver MUST fail to decrypt if any padding octet is
-non-zero, or a record has more padding than the record size can accommodate.
+Each record contains a single padding delimiter octet followed by any number of
+zero octets.  The last record uses a padding delimiter octet set to the value 2,
+all other octets have a padding delimiter with the value 1.  A decrypter MUST
+fail if the unencrypted content of a record is all zero-valued.  A decrypter
+MUST fail if the last record contains a padding delimiter with a value other
+than 2; a decrypter MUST fail if any record other than the last contains a
+padding delimiter with a value other than 1.
 
 The nonce for each record is a 96-bit value constructed from the record sequence
 number and the input keying material.  Nonce derivation is covered in {{nonce}}.
@@ -183,9 +182,7 @@ Selecting the record size most appropriate for a given situation requires a
 trade-off.  A smaller record size allows decrypted octets to be released more
 rapidly, which can be appropriate for applications that depend on
 responsiveness.  Smaller records also reduce the additional data required if
-random access into the ciphertext is needed.  Applications that depend on being
-able to pad by arbitrary amounts cannot increase the record size beyond 65537
-octets.
+random access into the ciphertext is needed.
 
 Applications that don't depending on streaming, random access, or arbitrary
 padding can use larger records, or even a single record.  A larger record size
@@ -217,7 +214,7 @@ rs:
 : The "rs" or record size parameter contains an unsigned 32-bit integer in
   network byte order that describes the record size in octets.  Note that it is
   therefore impossible to exceed the 2^36-31 limit on plaintext input to
-  AEAD_AES_128_GCM.  Values smaller than 19 are invalid.
+  AEAD_AES_128_GCM.  Values smaller than 18 are invalid.
 
 keyid:
 
@@ -309,12 +306,12 @@ wrapping is added to fit formatting constraints.
 ## Encryption of a Response {#explicit}
 
 Here, a successful HTTP GET response has been encrypted.  This uses a record
-size of 4096 and no padding (just the 2 octet padding length), so only a partial
-record is present.  The input keying material is identified by an empty string
-(that is, the "keyid" field in the header is zero octets in length).
+size of 4096 and no padding (just the single octet padding delimiter), so only a
+partial record is present.  The input keying material is identified by an empty
+string (that is, the "keyid" field in the header is zero octets in length).
 
 The encrypted data in this example is the UTF-8 encoded string "I am the
-walrus".  The input keying material is the value "B33e_VeFrOyIHwFTIfmesA" (in
+walrus".  The input keying material is the value "yqdlZ-tYemfogSmv7Ws5PQ" (in
 base64url).  The content body contains a single record and is shown here using
 base64url encoding for presentation reasons.
 
@@ -324,8 +321,8 @@ Content-Type: application/octet-stream
 Content-Length: 54
 Content-Encoding: aes128gcm
 
-sJvlboCWzB5jr8hI_q9cOQAAEAAANSmxkSVa0-MiNNuF77YHSs-iwaNe_OK0qfmO
-c7NT5WSW
+I1BsxtFttlv3u_Oo94xnmwAAEAAA-NAVub2qFgBEuQKRapoZu-IxkIva3MEB1PD-
+ly8Thjg
 ~~~
 
 Note that the media type has been changed to "application/octet-stream" to avoid
@@ -335,11 +332,11 @@ Content-Type header field can be omitted.
 Intermediate values for this example (all shown in base64):
 
 ~~~ inline
-salt (from header) = sJvlboCWzB5jr8hI_q9cOQ
-PRK = MLAQxt_DHjM15cdlyU1oUnjq7TFlzToGTkdRmvvxVBw
-CEK = v31u7VGV3soO3wNaMaIdhg
-NONCE = XOaygzko98zjUFTJ
-plaintext = AABJIGFtIHRoZSB3YWxydXM
+salt (from header) = I1BsxtFttlv3u_Oo94xnmw
+PRK = zyeH5phsIsgUyd4oiSEIy35x-gIi4aM7y0hCF8mwn9g
+CEK = _wniytB-ofscZDh4tbSjHw
+NONCE = Bcs8gkIRKLI8GeI8
+plaintext = SSBhbSB0aGUgd2FscnVzAg
 ~~~
 
 
@@ -347,19 +344,18 @@ plaintext = AABJIGFtIHRoZSB3YWxydXM
 
 This example shows the same message with input keying material of
 "BO3ZVPxUlnLORbVGMpbT1Q".  In this example, the plaintext is split into records
-of 26 octets each (that is, the "rs" field in the header is 26).  The first
+of 25 octets each (that is, the "rs" field in the header is 25).  The first
 record includes a single octet of padding.  This means that there are 7 octets
-of message in the first record, and 8 in the second.  This causes the end of the
-content to align with a record boundary, forcing the creation of a third record
-that contains only two octets of the padding length.
+of message in the first record, and 8 in the second.  A key identifier of the
+UTF-8 encoded string "a1" is also included in the header.
 
 ~~~ example
 HTTP/1.1 200 OK
 Content-Length: 93
 Content-Encoding: aes128gcm
 
-uNCkWiNYzKTnBN9ji3-qWAAAABoCYTGHOqYFz-0in3dpb-VE2GfBngkaPy6bZus_
-qLF79s6zQyTSsA0iLOKyd3JqVIwprNzVatRCWZGUx_qsFbJBCQu62RqQuR2d
+uNCkWiNYzKTnBN9ji3-qWAAAABkCYTHOG8chz_gnvgOqdGYovxyjuqRyJFjEDyoF
+1Fvkj6hQPdPHI51OEUKEpgz3SsLWIqS_uA
 ~~~
 
 
@@ -375,6 +371,22 @@ difficult.  For instance, implementations need to account for the potential for
 exposing keying material on side channels, such as might be exposed by the time
 it takes to perform a given operation.  The requirements for a good
 implementation of cryptographic algorithms can change over time.
+
+
+## Message Truncation
+
+This content encoding is designed to permit the incremental processing of large
+messages.  It also permits random access to plaintext in a limited fashion.  The
+content encoding permits a receiver to detect when a message is truncated.
+
+A partially delivered message MUST NOT be processed as though the entire message
+was successfully delivered.  For instance, a partially delivered message cannot
+be cached as though it were complete.
+
+An attacker might exploit willingness to process partial messages to cause a
+receiver to remain in a specific intermediate state.  Implementations performing
+processing on partial messages need to ensure that any intermediate processing
+states don't advantage an attacker.
 
 
 ## Key and Nonce Reuse
@@ -409,8 +421,8 @@ If the record size is a multiple of 16 octets, this means 398 terabytes can be
 encrypted safely, including padding and overhead.  However, if the record size
 is not a multiple of 16 octets, the total amount of data that can be safely
 encrypted is reduced because partial AES blocks are encrypted.  The worst case
-is a record size of 19 octets, for which at most 74 terabytes of plaintext can
-be encrypted, of which at least two-thirds is padding.
+is a record size of 18 octets, for which at most 74 terabytes of plaintext can
+be encrypted, of which at least half is padding.
 
 
 ## Content Integrity
@@ -429,7 +441,7 @@ encryption key or the input keying material, modifications to or replacement of
 parts of a payload body are not possible.
 
 
-## Leaking Information in Headers
+## Leaking Information in Header Fields
 
 Because only the payload body is encrypted, information exposed in header fields
 is visible to anyone who can read the HTTP message.  This could expose
@@ -532,7 +544,7 @@ Serialization as:
 
 ~~~ example
 eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..31iQYc1v4a36EgyJ.
-NSmxkSVa0-MiNNuF77YHSs8.osGjXvzitKn5jnOzU-Vklg
+-NAVub2qFgBEuQKRapoZuw.4jGQi9rcwQHU8P6XLxOGOA
 ~~~
 
 Where the first line represents the fixed JWE Protected Header, an empty JWE
@@ -546,5 +558,6 @@ Authentication Tag.
 Mark Nottingham was an original author of this document.
 
 The following people provided valuable input: Richard Barnes, David Benjamin,
-Peter Beverloo, JR Conlin, Mike Jones, Stephen Farrell, Adam Langley, John
-Mattsson, Julian Reschke, Eric Rescorla, Jim Schaad, and Magnus Westerlund.
+Peter Beverloo, JR Conlin, Mike Jones, Stephen Farrell, Adam Langley, James
+Manger, John Mattsson, Julian Reschke, Eric Rescorla, Jim Schaad, and Magnus
+Westerlund.
