@@ -157,7 +157,7 @@ octet and a 16 octet authentication tag.
 
 Each record contains a single padding delimiter octet followed by any number of
 zero octets.  The last record uses a padding delimiter octet set to the value 2,
-all other records have a padding delimiter octet a value of 1.  A decrypter MUST
+all other records have a padding delimiter octet value of 1.  A decrypter MUST
 fail if the unencrypted content of a record is all zero-valued.  A decrypter
 MUST fail if the last record contains a padding delimiter with a value other
 than 2; a decrypter MUST fail if any record other than the last contains a
@@ -518,7 +518,7 @@ Codings Registry, as detailed in {{aes128gcm}}.
 
 The "aes128gcm" content coding can be considered as a sequence of JSON Web
 Encryption (JWE) objects {{?RFC7516}}, each corresponding to a single fixed size
-record that includes leading padding.  The following transformations are applied
+record that includes trailing padding.  The following transformations are applied
 to a JWE object that might be expressed using the JWE Compact Serialization:
 
 * The JWE Protected Header is fixed to the value { "alg": "dir", "enc": "A128GCM"
@@ -541,7 +541,7 @@ Thus, the example in {{explicit}} can be rendered using the JWE Compact
 Serialization as:
 
 ~~~ example
-eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..31iQYc1v4a36EgyJ.
+eyAiYWxnIjogImRpciIsICJlbmMiOiAiQTEyOEdDTSIgfQ..Bcs8gkIRKLI8GeI8.
 -NAVub2qFgBEuQKRapoZuw.4jGQi9rcwQHU8P6XLxOGOA
 ~~~
 
