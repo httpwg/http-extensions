@@ -26,7 +26,7 @@
   <!ENTITY uuml "&#252;">
   <!ENTITY euro "&#8364;">
 ]>
-<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" obsoletes="5987" ipr="trust200902" docName="draft-ietf-httpbis-rfc5987bis-latest" category="std" x:maturity-level="internet" xml:lang="en">
+<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" obsoletes="5987" ipr="trust200902" docName="draft-ietf-httpbis-rfc5987bis-latest" category="std" x:maturity-level="proposed" xml:lang="en">
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
 	<front>
   <title abbrev="Charset/Language Encoding in HTTP">Indicating Character Encoding and Language for HTTP Header Field Parameters</title>
