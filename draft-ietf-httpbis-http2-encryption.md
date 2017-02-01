@@ -186,7 +186,7 @@ have a valid http-opportunistic response for a given origin when:
 * The array contains a string that is a case-insensitive character-for-character match
   for the origin in question, serialised into Unicode as per Section 6.1 of {{RFC6454}}.
 
-A client MAY treat an "http-opportunistic" resource as invalid if the contains values that are not
+A client MAY treat an "http-opportunistic" resource as invalid if values it contains are not
 strings.
 
 This document does not define semantics for "http-opportunistic" resources on an `https` origin,
