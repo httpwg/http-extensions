@@ -26,7 +26,7 @@
   <!ENTITY uuml "&#252;">
   <!ENTITY euro "&#8364;">
 ]>
-<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" obsoletes="5987" ipr="trust200902" docName="draft-ietf-httpbis-rfc5987bis-latest" category="std" x:maturity-level="internet" xml:lang="en">
+<rfc xmlns:x="http://purl.org/net/xml2rfc/ext" obsoletes="5987" ipr="trust200902" docName="draft-ietf-httpbis-rfc5987bis-latest" category="std" x:maturity-level="proposed" xml:lang="en">
   <x:feedback template="mailto:ietf-http-wg@w3.org?subject={docname},%20%22{section}%22&amp;body=&lt;{ref}&gt;:"/>
 	<front>
   <title abbrev="Charset/Language Encoding in HTTP">Indicating Character Encoding and Language for HTTP Header Field Parameters</title>
@@ -43,7 +43,7 @@
     </address>
   </author>
 
-  <date year="2016"/>
+  <date year="2017"/>
   
   <area>Applications and Real-Time</area>
   <workgroup>HTTP</workgroup>
@@ -60,6 +60,9 @@
       field values. This document specifies an encoding suitable for use in
       HTTP header fields that is compatible with a simplified profile of the
       encoding defined in RFC 2231.
+    </t>
+    <t>
+      This document obsoletes RFC 5987.
     </t>
   </abstract>
 
@@ -725,6 +728,20 @@
     <seriesInfo name="RFC" value="7616"/>
   </reference>
 
+  <reference  anchor='RFC8053'>
+    <front>
+      <title>HTTP Authentication Extensions for Interactive Clients</title>
+      <author initials='Y.' surname='Oiwa' fullname='Y. Oiwa'/>
+      <author initials='H.' surname='Watanabe' fullname='H. Watanabe'/>
+      <author initials='H.' surname='Takagi' fullname='H. Takagi'/>
+      <author initials='K.' surname='Maeda' fullname='K. Maeda'/>
+      <author initials='T.' surname='Hayashi' fullname='T. Hayashi'/>
+      <author initials='Y.' surname='Ioku' fullname='Y. Ioku'/>
+      <date year='2017' month='January'/>
+    </front>
+    <seriesInfo name='RFC' value='8053'/>
+  </reference>
+
   <reference anchor='XMLHttpRequest'
              target='https://xhr.spec.whatwg.org/'>
     <front>
@@ -765,10 +782,13 @@
 
 <section title="Implementation Report" anchor="implementation.report">
 <t>
-  The encoding defined in this document currently is used for three different
+  The encoding defined in this document currently is used in four different
   HTTP header fields:
 </t>
 <ul>
+  <li>
+    "Authentication-Control", defined in <xref target="RFC8053"/>,
+  </li>
   <li>
     "Authorization" (as used in HTTP Digest Authentication, defined in <xref target="RFC7616"/>),
   </li>
@@ -907,6 +927,15 @@
 </t>
 <t>
   Include WG into Acknowledgements for this revision.
+</t>
+<t>
+  Mention RFC 5987 in the abstract (<eref target="https://github.com/httpwg/http-extensions/issues/271"/>).
+</t>
+</section>
+
+<section title="Since draft-ietf-httpbis-rfc5987bis-04">
+<t>
+  Mention RFC8053 in Implementation Report.
 </t>
 </section>
 </section>

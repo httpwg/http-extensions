@@ -1,10 +1,8 @@
 ---
 title: HTTP Header Field Common Structure 
-docname: draft-kamp-httpbis-header-structure-latest
-date: 2016
+docname: draft-ietf-httpbis-header-structure-latest
+date: 2017
 category: std
-ipr: trust200902
-
 ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
@@ -12,7 +10,7 @@ keyword: Internet-Draft
 
 author:
  -
-    ins: PH. Kamp
+    ins: P-H. Kamp
     name: Poul-Henning Kamp
     organization: The Varnish Cache Project
     email: phk@varnish-cache.org
@@ -112,43 +110,87 @@ Common Structure in ABNF:
 
   common-structure = 1* ( identifier dictionary )
 
-  dictionary = * ( identifier value )
+  dictionary = * ( identifier [ value ] )
+~~~
 
+Key identifiers in dictionaries SHALL be unique, but semantically
+overlapping key identifiers for instance 'text/plain' and 'text/*'
+are ok.
+
+~~~ abnf
   value = identifier /
+          integer /
           number /
-          ascii_string /
-          unicode_string /
+          ascii-string /
+          unicode-string /
           blob /
           timestamp /
           common-structure
+~~~
+
+Recursion is included as a way to to support deep and more general
+data structures, but its use is highly discouraged and where it is
+used the depth of recursion SHALL always be explicitly limited.
+
+~~~ abnf
 
   identifier = token  [ "/" token ]
 
-  number = ["-"] 1*15 DIGIT
-          # XXX: Not sure how to do this in ABNF:
-          # XXX: A single "." allowed between any two digits
-          # The range is limited is to ensure it can be
-          # correctly represented in IEEE754 64 bit
-          # binary floating point format.
-
-  ascii_string = * %x20-7e
-          # This is a "safe" string in the sense that it
-          # contains no control characters or multi-byte
-          # sequences.  If that is not fancy enough, use
-          # unicode_string.
-
-  unicode_string = * unicode_codepoint
-          # XXX: Is there a place to import this from ?
-          # Unrestricted unicode, because there is no sane
-          # way to restrict or otherwise make unicode "safe".
-
-  blob = * %0x00-ff
-          # Intended for cryptographic data and as a general
-          # escape mechanism for unmet requirements.
-
-  timestamp = POSIX time_t with optional millisecond resolution
-          # XXX: Is there a place to import this from ?
+  integer = ["-"] 1*19 DIGIT
 ~~~
+
+Integers SHALL be in the range +/- 2^63-1 (= +/- 9223372036854775807)
+
+~~~ abnf
+  number = ["-"] DIGIT '.' 1*14DIGIT /
+           ["-"] 2DIGIT '.' 1*13DIGIT /
+           ["-"] 3DIGIT '.' 1*12DIGIT /
+           ... /
+           ["-"] 12DIGIT '.' 1*3DIGIT /
+           ["-"] 13DIGIT '.' 1*2DIGIT /
+           ["-"] 14DIGIT '.' 1DIGIT
+~~~
+
+The limit of 15 siginificant digits is chosen so that numbers can
+be correctly represented by IEEE754 64 bit binary floating point.
+
+~~~ abnf
+
+  ascii-string = * %x20-7e
+~~~
+
+This is intented to be an efficient, "safe" and uncomplicated string
+type, for uses where the string content will not be user visible.
+
+~~~ abnf
+
+  unicode-string = * UNICODE
+
+  UNICODE = <U+0000-U+D7FF / U+E000-U+10FFFF>
+  # UNICODE nicked from draft-seantek-unicode-in-abnf-02
+~~~
+
+Unicode-strings are unrestricted because there is no sane and/or
+culturally neutral way to subset or otherwise make unicode "safe",
+and Unicode is still evolving new and interesting code points.
+
+Users of unicode-string SHALL be prepared for the full gammut of
+glyph-gymnastics in order to avoid: U+1F4A9 U+08 U+1F574.
+
+~~~ abnf
+  blob = * %0x00-ff
+~~~
+
+Blobs are intented primarily for cryptographic data, but can be
+used for any otherwise unsatisfied needs.
+
+~~~ abnf
+  timestamp = number
+~~~
+
+A timestamp counts seconds since the UNIX time_t epoch, including
+the "invisible leap-seconds" misfeature.
+
 
 # HTTP/1 Serialization of HTTP Header Common Structure
 
@@ -157,58 +199,60 @@ In ABNF:
 ~~~ abnf
   import OWS from RFC7230
   import HEXDIG, DQUOTE from RFC5234
-	import UTF8-2, UTF8-3, UTF8-4 from RFC3629
+  import EmbeddedUnicodeChar from BCP137
 
-  h1_common-structure-header =
-          ( field-name ":" OWS ">" h1_common_structure "<" )
-	# Self-identifying HTTP headers
-          ( field-name ":" OWS h1_common_structure ) /
-	# legacy HTTP headers on white-list, see {{iana}}
+  h1-common-structure-header =
+          ( field-name ":" OWS ">" h1-common-structure "<" )
+          ( field-name ":" OWS h1-common-structure ) /
+~~~
 
-  h1_common_structure = h1_element  * ("," h1_element)
+Only white-listed legacy headers (see {{iana}}) are exempt
+from using the ">...<" format.
 
-  h1_element = identifier * (";" identifier ["=" h1_value])
+~~~ abnf
 
-  h1_value = identifier /
+  h1-common-structure = h1-element * ("," h1-element)
+
+  h1-element = identifier * (";" identifier ["=" h1-value])
+
+  h1-value = identifier /
+          integer /
           number /
-          h1_ascii_string /
-          h1_unicode_string /
-          h1_blob /
-          h1_timestamp /
-          h1_common-structure
+          h1-ascii-string /
+          h1-unicode-string /
+          h1-blob /
+          h1-timestamp /
+          ">" h1-common-structure "<"
 
-  h1_ascii_string = DQUOTE *(
+  h1-ascii-string = DQUOTE *(
                     ( "\" DQUOTE ) /
                     ( "\" "\" ) /
                     0x20-21 /
                     0x23-5B /
                     0x5D-7E
                     ) DQUOTE
-  # This is a proper subset of h1_unicode_string
-  # NB only allowed backslash escapes are \" and \\
 
-  h1_unicode_string = DQUOTE *(
+  h1-unicode-string = DQUOTE *(
                       ( "\" DQUOTE )
                       ( "\" "\" ) /
-                      ( "\" "u" 4*HEXDIG ) /
+                      EmbeddedUnicodeChar /
                       0x20-21 /
                       0x23-5B /
                       0x5D-7E /
-                      UTF8-2 /
-                      UTF8-3 /
-                      UTF8-4
                       ) DQUOTE
-  # This is UTF8 with HTTP1 unfriendly codepoints
-	# (00-1f, 7f) neutered with \uXXXX escapes.
+~~~
 
-  h1_blob = "'" base64 "'"
+The dim prospects of ever getting a majority of HTTP1 paths 8-bit
+clean makes UTF-8 unviable as H1 serialization.  Given that very
+little of the information in HTTP headers is presented to users in
+the first place, improving H1 and HPACK efficiency by inventing a
+more efficient BCP137 compliant escape-sequences seems unwarranted.
+
+~~~ abnf
+  h1-blob = "'" base64 "'"
   # XXX: where to import base64 from ?
 
-	h1_timestamp = number
-	# UNIX/POSIX time_t semantics.
-	# fractional seconds allowed.
-
-  h1_common_structure = ">" h1_common_structure "<"
+  h1-timestamp = number
 ~~~
 
 XXX: Allow OWS in parsers, but not in generators ?
@@ -264,7 +308,7 @@ into Common Structure.
 For instance one could imagine:
 
 ~~~
-	Date: >1475061449.201<
+  Date: >1475061449.201<
 ~~~
 
 Which would be faster to parse and validate than
@@ -296,7 +340,8 @@ until and if the owner of the entry requests otherwise.
 
 # Security Considerations
 
-TBD
+Unique dictionary keys are required to reduce the risk of
+smuggling attacks.
 
 
 --- back
@@ -331,7 +376,7 @@ A subgroup of headers, mostly related to MIME, uses what one could
 call a 'qualified token'::
 
 ~~~ abnf
-  qualified_token = token_or_asterix [ "/" token_or_asterix ]
+  qualified-token = token-or-asterix [ "/" token-or-asterix ]
 ~~~
 
 The second motif is parameterized list elements.  The best known
@@ -344,15 +389,15 @@ In pidgin ABNF, ignoring white-space for the sake of clarity, the
 HTTP/1.1 serialization of Common Structure is is something like:
 
 ~~~ abnf
-  token_or_asterix = token from {{RFC7230}}, but also allowing "*"
+  token-or-asterix = token from {{RFC7230}}, but also allowing "*"
 
-  qualified_token = token_or_asterix [ "/" token_or_asterix ]
+  qualified-token = token-or-asterix [ "/" token-or-asterix ]
 
   field-name, see {{RFC7230}}
 
-  Common_Structure_Header = field-name ":" 1#named_dictionary
+  Common-Structure-Header = field-name ":" 1#named-dictionary
 
-  named_dictionary = qualified_token [ *(";" param) ]
+  named-dictionary = qualified-token [ *(";" param) ]
 
   param = token [ "=" value ]
 
@@ -551,3 +596,11 @@ share:
       1#challenge
 ~~~
 
+
+# Changes
+
+## Since draft-ietf-httpbis-header-structure-00
+
+Added uniqueness requirement on dictionary keys.
+
+Added signed 64bit integer type

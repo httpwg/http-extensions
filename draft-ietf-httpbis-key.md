@@ -2,7 +2,7 @@
 title: The Key HTTP Response Header Field
 abbrev: Key
 docname: draft-ietf-httpbis-key-latest
-date: 2016
+date: 2017
 category: std
 
 ipr: trust200902

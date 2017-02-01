@@ -2,7 +2,7 @@
 title: Opportunistic Security for HTTP
 abbrev: Opportunistic HTTP Security
 docname: draft-ietf-httpbis-http2-encryption-latest
-date: 2016
+date: 2017
 category: exp
 
 ipr: trust200902
@@ -122,9 +122,10 @@ clients with existing alternative services information could make such a request
 expire, in order minimize the delays that might be incurred.
 
 Client certificates are not meaningful for URLs with the `http` scheme, and therefore clients
-creating new TLS connections to alternative services for the purposes of this specification MUST NOT
-present them. Connections that use client certificates for other reasons MAY be reused, though
-client certificates MUST NOT affect the responses to requests for `http` resources.
+creating new TLS connections to alternative services for the purposes of this specification MUST
+NOT present them. A server that also provides `https` resources on the same port can request a
+certificate during the TLS handshake, but it MUST NOT abort the handshake if the client does not
+provide one.
 
 
 ## Alternative Server Opt-In {#opt-in}
@@ -135,9 +136,10 @@ opted into serving `http` URLs over TLS, clients are required to perform additio
 directing `http` requests to it.
 
 Clients MUST NOT send `http` requests over a secured connection, unless the chosen alternative
-service presents a certificate that is valid for the origin - as per {{RFC2818}} (this also
-establishes "reasonable assurances" for the purposes of {RFC7838}}) - and they have obtained a valid
-http-opportunistic response for an origin (as per {{well-known}}).
+service presents a certificate that is valid for the origin as defined in {{RFC2818}} (this also
+establishes "reasonable assurances" for the purposes of {RFC7838}}) and they have obtained a
+valid http-opportunistic response for an origin (as per {{well-known}}).  An exception to the
+last restriction is made for requests for the "http-opportunistic" well-known URI.
 
 For example, assuming the following request is made over a TLS connection that is successfully
 authenticated for those origins, the following request/response pair would allow requests for the
@@ -163,15 +165,8 @@ DATA
 
 ## Interaction with "https" URIs
 
-When using alternative services, requests for resources identified by both `http` and `https` URIs
-might use the same connection, because HTTP/2 permits requests for multiple origins on the same
-connection.
-
-Because of the potential for server confusion about the scheme of requests (see {{confuse}}),
-clients MUST NOT send `http` requests on a connection prior to successfully retrieving a valid
-http-opportunistic resource that contains the origin (see {{well-known}}). The primary purpose of
-this check is to provide a client with some assurance that a server understands this specification
-and has taken steps to avoid being confused about request scheme.
+Clients MUST NOT send `http` requests and `https` requests on the same connection.  Similarly,
+clients MUST NOT send `http` requests for multiple origins on the same connection.
 
 
 ## The "http-opportunistic" well-known URI {#well-known}
@@ -179,8 +174,10 @@ and has taken steps to avoid being confused about request scheme.
 This specification defines the "http-opportunistic" well-known URI {{RFC5785}}. A client is said to
 have a valid http-opportunistic response for a given origin when:
 
-* The client has obtained a 200 (OK) response for the well-known URI from the origin, and it is
-  fresh {{RFC7234}} (potentially through revalidation {{RFC7232}}), and
+* The client has requested the well-known URI from the origin over an authenticated connection
+  and a 200 (OK) response was provided, and
+
+* That response is fresh {{RFC7234}} (potentially through revalidation {{RFC7232}}), and
 
 * That response has the media type "application/json", and
 
@@ -189,11 +186,19 @@ have a valid http-opportunistic response for a given origin when:
 * The array contains a string that is a case-insensitive character-for-character match
   for the origin in question, serialised into Unicode as per Section 6.1 of {{RFC6454}}.
 
-A client MAY treat an "http-opportunistic" resource as invalid if the contains values that are not
+A client MAY treat an "http-opportunistic" resource as invalid if values it contains are not
 strings.
 
 This document does not define semantics for "http-opportunistic" resources on an `https` origin,
 nor does it define semantics if the resource includes `https` origins.
+
+Allowing clients to cache the http-opportunistic resource means that all alternative services
+need to be able to respond to requests for `http` resources.  A client is permitted to use an
+alternative service without acquiring the http-opportunistic resource from that service.
+
+A client MUST NOT use any cached copies of an http-opportunistic resource that are acquired over
+unauthenticated connections.  To avoid potential errors, a client can request or revalidate the
+http-opportunistic resource before using any connection to an alternative service.
 
 
 # IANA Considerations

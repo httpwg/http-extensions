@@ -1,7 +1,7 @@
 ---
 title: Cache Digests for HTTP/2
 docname: draft-ietf-httpbis-cache-digest-latest
-date: 2016
+date: 2017
 category: std
 
 ipr: trust200902
