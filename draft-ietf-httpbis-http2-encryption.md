@@ -162,6 +162,11 @@ DATA
 [ "http://www.example.com", "http://example.com" ]
 ~~~
 
+Though this document describes multiple origins, this is only for operational convenience.  Only
+a request made to an origin (over an authenticated connection) can be used to acquire this
+resource for that origin.  Thus in the example, the request to `http://example.com` cannot be
+assumed to also provide an http-opportunistic response for `http://www.example.com`.
+
 
 ## Interaction with "https" URIs
 
@@ -191,6 +196,15 @@ strings.
 
 This document does not define semantics for "http-opportunistic" resources on an `https` origin,
 nor does it define semantics if the resource includes `https` origins.
+
+Any strongly authenticated alternative service can provide this response.  That is, as long as
+the http-opportunistic response is valid, any authenticated alternative service can be used for
+that origin.
+
+Clients that use cached http-opportunistic responses MUST ensure that their cache is cleared of
+any responses that were acquired over an unauthenticated connection.  Revalidating an
+unauthenticated response using an authenticated connection does not ensure the integrity of the
+response.
 
 
 # IANA Considerations
