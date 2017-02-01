@@ -125,13 +125,13 @@ for the added origins (in the sense of {{!RFC7540}}, Section 10.1) on its own; s
 
 ## Establishing Authority and Coalescing with ORIGIN {#authority}
 
-{{RFC7540}}, Section 10.1 uses both DNS and the presented TLS certificate to establish the
-authority of an origin server, just as HTTP/1.1 does in {{RFC7230}}.
+{{!RFC7540}}, Section 10.1 uses both DNS and the presented TLS certificate to establish the
+authority of an origin server, just as HTTP/1.1 does in {{?RFC7230}}.
 
 Upon receiving an ORIGIN frame on a connection, clients that implement this specification are
 released from the requirement to establish authority for a given origin using DNS, for that
 connection. However, they MUST still establish authority using the certificate, as described in
-{{RFC7540}} Section 9.1.1.
+{{!RFC7540}} Section 9.1.1.
 
 Once such a frame is received, an implementing client MUST NOT use that connection for a given
 origin unless it appears in the connection's Origin Set. Implementing clients SHOULD use a
