@@ -192,6 +192,14 @@ strings.
 This document does not define semantics for "http-opportunistic" resources on an `https` origin,
 nor does it define semantics if the resource includes `https` origins.
 
+Allowing clients to cache the http-opportunistic resource means that all alternative services
+need to be able to respond to requests for `http` resources.  A client is permitted to use an
+alternative service without acquiring the http-opportunistic resource from that service.
+
+A client MUST NOT use any cached copies of an http-opportunistic resource that are acquired over
+unauthenticated connections.  To avoid potential errors, a client can request or revalidate the
+http-opportunistic resource before using any connection to an alternative service.
+
 
 # IANA Considerations
 
