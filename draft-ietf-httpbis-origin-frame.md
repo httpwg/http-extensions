@@ -95,7 +95,7 @@ Origin:
 The ORIGIN frame defines the following flags:
 
 CLEAR (0x1):
-: Indicates that the Origin Set MUST be reset to an empty before processing the contents of the frame it occurs upon.
+: Indicates that the Origin Set MUST be reset to an empty set before processing the contents of the frame it occurs upon.
 
 REMOVE (0x2): 
 : Indicates that the origin(s) carried in the payload must be removed from the Origin Set, if present; if not present, it/they have no effect.
