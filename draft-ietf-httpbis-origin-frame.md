@@ -218,7 +218,11 @@ The following algorithm illustrates how a client could handle received ORIGIN fr
 5. For each Origin field `origin_raw` in the frame payload:
    1. Parse `origin_raw` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`. If parsing fails, skip to the next `origin_raw`.
    2. If the `scheme` of `parsed_origin` is not "https", skip to the next `origin_raw`.
-   3. If the `host` of `parsed_origin` does not match a `subjectAltName` in the connection's presented certificate (using the wildcard rules defined in {{!RFC2818}}, Section 3.1), skip to the next `origin_raw`.
+   3. If the certificate presented by the server is not valid for the `host` of `parsed_origin` (see below), skip to the next `origin_raw`.
    4. If the `port` of `parsed_origin` does not match the connection's remote port, skip to the next `origin_raw`.
    5. Add `parsed_origin` to the Origin Set.
 
+The certificate presented by the server is valid for a host if it passes the checks that the client
+would perform when forming a new TLS connection to the origin. This includes verifying that the
+host matches a `dNSName` value from the certificate `subjectAltName` field (using the wildcard rules
+defined in {{!RFC2818}}).
