@@ -186,7 +186,7 @@ order to coalesce connections to the target onto their existing connection.
 --- back
 
 
-# Non-Normative Processing Algoritm {#algo}
+# Non-Normative Processing Algorithm {#algo}
 
 The following algorithm illustrates how a client could handle received ORIGIN frames:
 
