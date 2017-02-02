@@ -125,7 +125,7 @@ Once parsed, the value MUST have:
 
 * a scheme of "https", 
 * a host that is reflected in a `subjectAltName` of the connection's TLS certificate (using the wildcard rules defined in {{!RFC2818}}, Section 3.1), and 
-* a port that reflects the connection's local port on the server. 
+* a port that reflects the connection's remote port on the client. 
 
 If any of these requirements are violated, the client MUST ignore the field.
 
@@ -192,6 +192,6 @@ The following algorithm illustrates how a client could handle received ORIGIN fr
    1. Parse `origin_raw` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`. If parsing fails, skip to the next `origin_raw`.
    2. If the `scheme` of `parsed_origin` is not "https", skip to the next `origin_raw`.
    3. If the `host` of `parsed_origin` does not match a `subjectAltName` in the connection's presented certificate (using the wildcard rules defined in {{!RFC2818}}, Section 3.1), skip to the next `origin_raw`.
-   4. If the `port` of `parsed_origin` does not match the connection's local port, skip to the next `origin_raw`.
+   4. If the `port` of `parsed_origin` does not match the connection's remote port, skip to the next `origin_raw`.
    5. Add `parsed_origin` to the Origin Set.
 
