@@ -116,7 +116,7 @@ The ORIGIN frame is processed hop-by-hop. An intermediary MUST NOT forward ORIGI
 configured to use a proxy MUST ignore any ORIGIN frames received from it.
 
 Each ASCII-Origin field in the frame's payload MUST be parsed as an ASCII serialisation of an
-origin ({{!RFC6454, Section 6.2}}). If parsing fails, the field MUST be ignored.
+origin ({{!RFC6454}}, Section 6.2). If parsing fails, the field MUST be ignored.
 
 Senders should note that, as per {{!RFC6454}} Section 4, the values in an ORIGIN header need to be
 case-normalised before serialisation.
