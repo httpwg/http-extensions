@@ -167,6 +167,10 @@ these behaviors in the following ways:
 
 * Requests SHOULD use an existing connection if their origin is in that connection's Origin Set, unless there are operational reasons for creating a new connection.
 
+Note that this does not prevent clients from performing other certificate checks as required or
+allowed, either at connection time or when processing ORIGIN. See {{!RFC7540}} Section 9.1.1 for
+more information.
+
 
 # IANA Considerations
 
