@@ -187,7 +187,11 @@ more information.
 
 # IANA Considerations
 
-TBD.
+This specification adds an entry to the "HTTP/2 Frame Type" registry.
+
+* Frame Type: ORIGIN
+* Code: 0xb
+* Specification: [this document]
 
 
 # Security Considerations
