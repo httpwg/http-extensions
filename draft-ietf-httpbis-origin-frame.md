@@ -195,7 +195,7 @@ order to coalesce connections to the target onto their existing connection.
 The following algorithm illustrates how a client could handle received ORIGIN frames:
 
 1. If the client is configured to use a proxy for the connection, ignore the frame and stop processing.
-2. If the connection is not running under TLS or does not present Server Name Indication (SNI) {{!RFC6006}}, ignore the frame and stop processing.
+2. If the connection is not running under TLS, does not present Server Name Indication (SNI) {{!RFC6006}}, or the connection does not otherwise meet the requirements set by standards or the client implementation, ignore the frame and stop processing.
 3. If the frame occurs upon any stream except stream 0, ignore the frame and stop processing.
 4. For each Origin field `origin_raw` in the frame payload:
    1. Parse `origin_raw` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`. If parsing fails, skip to the next `origin_raw`.
