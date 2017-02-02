@@ -159,8 +159,9 @@ be correctly represented by IEEE754 64 bit binary floating point.
   ascii-string = * %x20-7e
 ~~~
 
-This is intented to be an efficient, "safe" and uncomplicated string
-type, for uses where the string content will not be user visible.
+This is intended to be an efficient, "safe" and uncomplicated string
+type, for uses where the string content is culturally neutral or
+where it will not be user visible.
 
 ~~~ abnf
 
@@ -175,13 +176,13 @@ culturally neutral way to subset or otherwise make unicode "safe",
 and Unicode is still evolving new and interesting code points.
 
 Users of unicode-string SHALL be prepared for the full gammut of
-glyph-gymnastics in order to avoid: U+1F4A9 U+08 U+1F574.
+glyph-gymnastics in order to avoid U+1F4A9 U+08 U+1F574.
 
 ~~~ abnf
   blob = * %0x00-ff
 ~~~
 
-Blobs are intented primarily for cryptographic data, but can be
+Blobs are intended primarily for cryptographic data, but can be
 used for any otherwise unsatisfied needs.
 
 ~~~ abnf
@@ -202,14 +203,20 @@ In ABNF:
   import EmbeddedUnicodeChar from BCP137
 
   h1-common-structure-header =
-          ( field-name ":" OWS ">" h1-common-structure "<" )
-          ( field-name ":" OWS h1-common-structure ) /
+	  h1-common-structure-legacy-header /
+	  h1-common-structure-self-identifying-header
+
+  h1-common-structure-legacy-header =
+          field-name ":" OWS h1-common-structure
 ~~~
 
-Only white-listed legacy headers (see {{iana}}) are exempt
-from using the ">...<" format.
+Only white-listed legacy headers (see {{iana}}) can use
+this format.
 
 ~~~ abnf
+
+  h1-common-structure-self-identifying-header:
+          field-name ":" OWS ">" h1-common-structure "<"
 
   h1-common-structure = h1-element * ("," h1-element)
 
@@ -249,7 +256,7 @@ the first place, improving H1 and HPACK efficiency by inventing a
 more efficient BCP137 compliant escape-sequences seems unwarranted.
 
 ~~~ abnf
-  h1-blob = "'" base64 "'"
+  h1-blob = ":" base64 ":"
   # XXX: where to import base64 from ?
 
   h1-timestamp = number
@@ -604,3 +611,7 @@ share:
 Added uniqueness requirement on dictionary keys.
 
 Added signed 64bit integer type
+
+Drop UTF8, and settle on BCP137::EmbeddedUnicodeChar for h1-unicode-string
+
+Change h1_blob delimiter to ":" as "'" is valid t_char
