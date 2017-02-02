@@ -168,6 +168,11 @@ these behaviors in the following ways:
 * Requests SHOULD use an existing connection if their origin is in that connection's Origin Set, unless there are operational reasons for creating a new connection.
 
 
+# IANA Considerations
+
+TBD.
+
+
 # Security Considerations
 
 Clients that blindly trust the ORIGIN frame's contents will be vulnerable to a large number of
