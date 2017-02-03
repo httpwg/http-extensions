@@ -43,48 +43,46 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 
 # Introduction
 
-The HTTP freshness lifetime [RFC7234] caching attribute
-specifies that a client may safely reuse a response to satisfy future
-requests over a specific period of time. It does not specify that the
-resource will be not be modified during that period.
+HTTP's freshness lifetime mechanism [RFC7234] allows a client to safely reuse a
+stored response to satisfy future requests for a specified period of time.
+However, it is still possible that the resource will be modified during that
+period.
 
-For instance, a front page newspaper photo with a freshness lifetime
-of one hour would mean that no user should see a photo more than one
-hour old. However, the photo could be updated at any time resulting in
-different users seeing different photos depending on the contents of
-their caches for up to one hour. This is compliant with the caching
-mechanism defined in [RFC7234].
+For instance, a front page newspaper photo with a freshness lifetime of one
+hour would mean that no user would see a cached photo more than one hour old.
+However, the photo could be updated at any time resulting in different users
+seeing different photos depending on the contents of their caches for up to one
+hour. This is compliant with the caching mechanism defined in [RFC7234].
 
-Users that need to confirm there have been no updates to their current
-cached resources typically invoke the reload (or refresh) mechanism in
-the user agent. This in turn generates a conditional request [RFC7232]
-and either a new representation or, if unmodified, a 304 response
-[RFC7231] is returned. A user agent that manages HTML and its
-dependent sub-resources may issue hundreds of conditional requests to
-refresh all portions of a common HTML page [REQPERPAGE].
+Users that need to confirm there have been no updates to their cached responses
+typically use the reload (or refresh) mechanism in their user agents. This in
+turn generates a conditional request [RFC7232] and either a new representation
+or, if unmodified, a 304 (Not Modified) response [RFC7232] is returned. A user
+agent that understands HTML and fetches its dependent sub-resources might issue
+hundreds of conditional requests to refresh all portions of a common page
+[REQPERPAGE].
 
-Through the use of the versioned URL design pattern some content
-providers never create more than one variant of a sub-resource. When
-these resources need an update they are simply published under a new URL,
-typically embedding a variant identifier in the path, and references
+However some content providers never create more than one variant of a
+sub-resource, because they use "versioned" URLs. When these resources need an
+update they are simply published under a new URL, typically embedding an
+identifier unique to that version of the resource in the path, and references
 to the sub-resource are updated with the new path information.
 
-For example, https://www.example.com/101016/main.css might be updated
-and republished as https://www.example.com/102026/main.css and the html that
-references it is changed at the same time. This design pattern allows
-a very large freshness lifetime to be applied to the sub-resource
-without guessing when it will be updated in the future.
+For example, `https://www.example.com/101016/main.css` might be updated and
+republished as `https://www.example.com/102026/main.css`, with any links that
+references it being changed at the same time. This design pattern allows a very
+large freshness lifetime to be used for the sub-resource without guessing
+when it will be updated in the future.
 
-Unfortunately, the user-agent is not aware of the versioned URL design
-pattern. User driven refresh events still translate into wasted
-conditional requests for each sub-resource as each will return 304
-responses.
+Unfortunately, the user agent does not know when this versioned URL design
+pattern is used. As a result, user-driven refreshes still translate into wasted
+conditional requests for each sub-resource as each will return 304 responses.
 
-The immutable HTTP response Cache-Control extension allows servers to
-identify resources that will not be updated during their freshness
-lifetime. This effectively instructs the client that any conditional
-request for a previously served variant of that resource may be safely
-skipped without worrying that it has been updated.
+The `immutable` HTTP response Cache-Control extension allows servers to
+identify responses that will not be updated during their freshness lifetimes.
+
+This effectively informs clients that any conditional request for that response
+can be safely skipped without worrying that it has been updated.
 
 # The immutable Cache-Control extension
 
