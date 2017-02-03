@@ -212,7 +212,7 @@ order to coalesce connections to the target onto their existing connection.
 The following algorithm illustrates how a client could handle received ORIGIN frames:
 
 1. If the client is configured to use a proxy for the connection, ignore the frame and stop processing.
-2. If the connection is not running under TLS, does not present Server Name Indication (SNI) {{!RFC6006}}, or the connection does not otherwise meet the requirements set by standards or the client implementation, ignore the frame and stop processing.
+2. If the connection is not identified with the "h2" protocol identifier or another protocol that has explicitly opted into this specification, ignore the frame and stop processing.
 3. If the frame occurs upon any stream except stream 0, ignore the frame and stop processing.
 4. If any of the flags 0x1, 0x2, 0x4 or 0x8 are set, ignore the frame and stop processing.
 5. For each Origin field `origin_raw` in the frame payload:
