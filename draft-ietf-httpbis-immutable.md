@@ -26,18 +26,19 @@ informative:
 
 --- abstract
 
-The immutable HTTP response Cache-Control extension allows servers to
-identify resources that will not be updated during their freshness
-lifetime. This assures that a client never needs to revalidate a
-cached fresh resource to be certain it has not been modified.
+The immutable HTTP response Cache-Control extension allows servers to identify
+resources that will not be updated during their freshness lifetime. This
+assures that a client never needs to revalidate a cached fresh resource to be
+certain it has not been modified.
 
 --- note_Note_to_Readers
 
 Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org),
 which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source code and issues list
-for this draft can be found at <https://github.com/httpwg/http-extensions/labels/immutable>.
+Working Group information can be found at <http://httpwg.github.io/>; source
+code and issues list for this draft can be found at
+<https://github.com/httpwg/http-extensions/labels/immutable>.
 
 --- middle
 
@@ -101,12 +102,11 @@ Cache-Control extension in a request has no effect.
 
 ## About Intermediaries
 
-An immutable response has the same semantic meaning for proxy clients
-as it does for User-Agent based clients and they therefore MAY also
-presume a conditional revalidation for a response marked immutable
-would return 304. A proxy client who uses immutable to anticipate a
-304 response may choose whether to reply with a 304 or 200 to its
-requesting client.
+An immutable response has the same semantic meaning for proxy clients as it
+does for User-Agent based clients and they therefore MAY also presume a
+conditional revalidation for a response marked immutable would return 304. A
+proxy client who uses immutable to anticipate a 304 response may choose whether
+to reply with a 304 or 200 to its requesting client.
 
 ## Example
 
@@ -116,35 +116,34 @@ Cache-Control: max-age=31536000, immutable
 
 # Security Considerations
 
-The immutable mechanism acts as form of soft pinning and, as with all
-pinning mechanisms, creates a vector for amplification of cache
-corruption incidents. These incidents include cache poisoning
-attacks. Three mechanisms are suggested for mitigation of this risk:
+The immutable mechanism acts as form of soft pinning and, as with all pinning
+mechanisms, creates a vector for amplification of cache corruption incidents.
+These incidents include cache poisoning attacks. Three mechanisms are suggested
+for mitigation of this risk:
 
-* Clients should ignore immutable for resources that are not
- part of an authenticated context such as HTTPS. Authenticated resources are less
- vulnerable to cache poisoning.
+* Clients SHOULD ignore immutable from resources that are not part of an
+  authenticated context such as HTTPS. Authenticated resources are less
+  vulnerable to cache poisoning.
  
-* User-Agents often provide two different refresh mechanismss: reload
-  and some form of force-reload. The latter is used to rectify
-  interrupted loads and other corruption. These reloads, typically
-  indicated through no-cache request attributes, should ignore
-  immutable as well.
+* User-Agents often provide two different refresh mechanisms: reload and some
+  form of force-reload. The latter is used to rectify interrupted loads and
+  other corruption. These reloads, typically indicated through no-cache request
+  attributes, SHOULD ignore immutable as well.
 
-* Clients should ignore immutable for resources that do not provide a
- strong indication that the stored response size is the correct
- response size such as responses delimited by connection close.
+* Clients SHOULD ignore immutable for resources that do not provide a strong
+  indication that the stored response size is the correct response size such as
+  responses delimited by connection close.
 
 # IANA Considerations
 
-[RFC7234] sections 7.1 and 7.1.2 require registration of the
-immutable extension in the "Hypertext Transfer Protocol (HTTP) Cache
-Directive Registry" with IETF Review.
+[RFC7234] sections 7.1 and 7.1.2 require registration of the immutable
+extension in the "Hypertext Transfer Protocol (HTTP) Cache Directive Registry"
+with IETF Review.
 
 * Cache-Directive: immutable
 * Pointer to specification text: \[this document\]
 
 # Acknowledgments
 
-Thank you to Ben Maurer for partnership in developing and testing this
-idea. Thank you to Amos Jeffries for help with proxy interactions.
+Thank you to Ben Maurer for partnership in developing and testing this idea.
+Thank you to Amos Jeffries for help with proxy interactions.
