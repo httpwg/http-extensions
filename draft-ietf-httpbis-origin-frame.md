@@ -103,8 +103,9 @@ define flags. See {{process}}.
 The ORIGIN frame is a non-critical extension to HTTP/2. Endpoints that do not support this frame
 can safely ignore it upon receipt.
 
-When received by an implementing client, it is used to manipulate the Origin Set (see {{set}}),
-thereby changing how the client establishes authority for origin servers (see {{authority}}).
+When received by an implementing client, it is used to initialise and manipulate the Origin Set
+(see {{set}}), thereby changing how the client establishes authority for origin servers (see
+{{authority}}).
 
 The origin frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST
 be ignored.
@@ -146,8 +147,9 @@ See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 The set of origins (as per {{!RFC6454}}) that a given connection might be used for is known in this
 specification as the Origin Set.
 
-When an ORIGIN frame is first received by a client, the connection's Origin Set is defined to
-contain a single origin, composed from:
+By default, a connections's Origin Set is uninitialised. When an ORIGIN frame is first received and
+successfully processed by a client, the connection's Origin Set is defined to contain a single
+origin, composed from:
 
   - Scheme: "https"
   - Host: the value sent in Server Name Indication ({{!RFC6066}} Section 3), converted to lower case
@@ -171,8 +173,8 @@ server(s) that a connection is authoritative for, just as HTTP/1.1 does in {{?RF
 Furthermore, {{!RFC7540}} Section 9.1.1 explicitly allows a connection to be used for more than one
 origin server, if it is authoritative. This affects what requests can be sent on the connection, both in HEADERS frame by the client and as PUSH_PROMISE frames from the server.
 
-Upon receiving an ORIGIN frame on a connection, clients that implement this specification change
-these behaviors in the following ways:
+Once an Origin Set has been initialised for a connection, clients that implement this
+specification change these behaviors in the following ways:
 
 * Clients MUST NOT consult DNS to establish authority for origins in the Origin Set. The TLS certificate MUST be used to do so, as described in {{!RFC7540}} Section 9.1.1.
 
@@ -215,7 +217,8 @@ The following algorithm illustrates how a client could handle received ORIGIN fr
 2. If the connection is not identified with the "h2" protocol identifier or another protocol that has explicitly opted into this specification, ignore the frame and stop processing.
 3. If the frame occurs upon any stream except stream 0, ignore the frame and stop processing.
 4. If any of the flags 0x1, 0x2, 0x4 or 0x8 are set, ignore the frame and stop processing.
-5. For each Origin field `origin_raw` in the frame payload:
+5. If no previous ORIGIN frame on the connection has reached this step, initialise the Origin Set as per {{set}}.
+6. For each Origin field `origin_raw` in the frame payload:
    1. Parse `origin_raw` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`. If parsing fails, skip to the next `origin_raw`.
    2. If the `scheme` of `parsed_origin` is not "https", skip to the next `origin_raw`.
    3. If the certificate presented by the server is not valid for the `host` of `parsed_origin` (see below), skip to the next `origin_raw`.
