@@ -186,6 +186,11 @@ Note that this does not prevent clients from performing other certificate checks
 allowed, either at connection time or when processing ORIGIN. See {{!RFC7540}} Section 9.1.1 for
 more information.
 
+Because ORIGIN can change the set of origins a connection is used for over time, it is possible
+that a client might have more than one viable connection to an origin open at any time. When this
+occurs, clients SHOULD not emit new requests on any connection whose Origin Set is a subset of
+another connection's Origin Set, and SHOULD close it once all outstanding requests are satisified.
+
 
 # IANA Considerations
 
