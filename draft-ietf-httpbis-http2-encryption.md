@@ -153,8 +153,8 @@ HEADERS
   + END_HEADERS
     :method = GET
     :scheme = http
+    :authority = example.com
     :path = /.well-known/http-opportunistic
-    host: example.com
 
 HEADERS
     :status = 200
