@@ -163,20 +163,20 @@ The Origin Set is also affected by the 421 (Misdirected Request) response status
 MUST create the ASCII serialisation of the corresponding request's origin (as per {{!RFC6454}},
 Section 6.2) and remove it from the connection's Origin Set, if present.
 
-Note that the Origin Set does not affect existing streams on a connection in any way.
-
 
 ## Authority, Push and Coalescing with ORIGIN {#authority}
 
 {{!RFC7540}}, Section 10.1 uses both DNS and the presented TLS certificate to establish the origin
 server(s) that a connection is authoritative for, just as HTTP/1.1 does in {{?RFC7230}}.
 Furthermore, {{!RFC7540}} Section 9.1.1 explicitly allows a connection to be used for more than one
-origin server, if it is authoritative. This affects what requests can be sent on the connection, both in HEADERS frame by the client and as PUSH_PROMISE frames from the server.
+origin server, if it is authoritative. This affects what requests can be sent on the connection,
+both in HEADERS frame by the client and as PUSH_PROMISE frames from the server.
 
-Once an Origin Set has been initialised for a connection, clients that implement this
-specification change these behaviors in the following ways:
+Once an Origin Set has been initialised for a connection, clients that implement this specification
+change these behaviors in the following ways:
 
-* Clients MUST NOT consult DNS to establish authority for origins in the Origin Set. The TLS certificate MUST be used to do so, as described in {{!RFC7540}} Section 9.1.1.
+* Clients MUST NOT consult DNS to establish the connection's authority for new requests. The TLS
+  certificate MUST be used to do so, as described in {{!RFC7540}} Section 9.1.1.
 
 * Clients sending a new request SHOULD use an existing connection if the request's origin is in that connection's Origin Set, unless there are operational reasons for creating a new connection.
 
