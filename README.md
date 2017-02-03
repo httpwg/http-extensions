@@ -75,7 +75,7 @@ _Submitted to IESG._
 
 ### HTTP Opportunistic Security
 
-_Working Group Last Call concluded; incorporating feedback._
+_In Second Working Group Last Call; ends 9 Feb 2017._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/opsec.html) ([plain text](https://httpwg.github.io/http-extensions/opsec.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
