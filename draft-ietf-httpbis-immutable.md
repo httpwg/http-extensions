@@ -86,16 +86,16 @@ can be safely skipped without worrying that it has been updated.
 
 # The immutable Cache-Control extension
 
-When present in an HTTP response, the immutable Cache-Control
-extension indicates that the origin server MUST NOT update the representation
-of that resource during the freshness lifetime of the response.
+When present in an HTTP response, the `immutable` Cache-Control extension
+indicates that the origin server MUST NOT update the representation of that
+resource during the freshness lifetime of the response.
 
-The immutable extension only applies during the freshness lifetime of
-the response. Stale responses SHOULD be revalidated as they normally
-would be in the absence of immutable.
+The immutable extension only applies during the freshness lifetime of the
+stored response. Stale responses SHOULD be revalidated as they normally would
+be in the absence of immutable.
 
-The immutable extension takes no arguments and if any arguments are
-present they have no meaning. Multiple instances of the immutable
+The immutable extension takes no arguments. If any arguments are present, they
+have no meaning, and MUST be ignored. Multiple instances of the immutable
 extension are equivalent to one instance. The presence of an immutable
 Cache-Control extension in a request has no effect.
 
