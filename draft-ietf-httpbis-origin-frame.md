@@ -229,3 +229,24 @@ The certificate presented by the server is valid for a host if it passes the che
 would perform when forming a new TLS connection to the origin. This includes verifying that the
 host matches a `dNSName` value from the certificate `subjectAltName` field (using the wildcard rules
 defined in {{!RFC2818}}).
+
+
+# Operational Considerations for Servers {#server-ops}
+
+The ORIGIN frame allows a server to indicate what for origins a given connection ought be used.
+
+For example, it can be used to inform the client that the connection is to only be used for the
+SNI-based origin, by sending an empty ORIGIN frame. Or, a larger number of origins can be indicated
+by including a payload.
+
+Generally, this information is most useful to send before sending any part of a response that might
+initiate a new connection; for example, `Link` headers {{?RFC5988}} in a response HEADERS, or links
+in the response body.
+
+Therefore, the ORIGIN frame ought be sent as soon as possible on a connection, ideally before any
+HEADERS or PUSH_PROMISE frames.
+
+However, if it's desirable to associate a large number of origins with a connection, doing so might
+introduce end-user perceived latency, due to their size. As a result, it might be necessary to
+select a "core" set of origins to send initially, expanding the set of origins the connection is
+used for with subsequent ORIGIN frames later (e.g., when the connection is idle).
