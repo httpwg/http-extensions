@@ -239,7 +239,7 @@ defined in {{!RFC2818}}).
 
 # Operational Considerations for Servers {#server-ops}
 
-The ORIGIN frame allows a server to indicate what for origins a given connection ought be used.
+The ORIGIN frame allows a server to indicate for which origins a given connection ought be used.
 
 For example, it can be used to inform the client that the connection is to only be used for the
 SNI-based origin, by sending an empty ORIGIN frame. Or, a larger number of origins can be indicated
