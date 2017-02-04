@@ -60,7 +60,8 @@ penalty of adding latency. To address that, this specification defines a new HTT
 
 Additionally, experience has shown that HTTP/2's requirement to establish server authority using
 both DNS and the server's certificate is onerous. This specification relaxes the requirement to
-check DNS when the ORIGIN frame is in use.
+check DNS when the ORIGIN frame is in use. Doing so has additional benefits, such as removing the
+latency associated with some DNS lookups, and improving DNS privacy.
 
 
 ## Notational Conventions
