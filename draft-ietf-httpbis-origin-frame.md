@@ -121,8 +121,9 @@ them MUST be ignored by clients conforming to this specification. The remaining 
 for backwards-compatible changes, and do not affect processing by clients conformant to this
 specification.
 
-The ORIGIN frame is processed hop-by-hop. An intermediary MUST NOT forward ORIGIN frames. Clients
-configured to use a proxy MUST ignore any ORIGIN frames received from it.
+The ORIGIN frame describes a property of the connection, and therefore is processed hop-by-hop. An
+intermediary MUST NOT forward ORIGIN frames. Clients configured to use a proxy MUST ignore any
+ORIGIN frames received from it.
 
 Each ASCII-Origin field in the frame's payload MUST be parsed as an ASCII serialisation of an
 origin ({{!RFC6454}}, Section 6.2). If parsing fails, the field MUST be ignored.
