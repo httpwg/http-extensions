@@ -234,7 +234,7 @@ The following algorithm illustrates how a client could handle received ORIGIN fr
 The certificate presented by the server is valid for a host if it passes the checks that the client
 would perform when forming a new TLS connection to the origin. This includes verifying that the
 host matches a `dNSName` value from the certificate `subjectAltName` field (using the wildcard rules
-defined in {{!RFC2818}}).
+defined in {{!RFC2818}}; see also {{!RFC5280}} Section 4.2.1.6).
 
 
 # Operational Considerations for Servers {#server-ops}
