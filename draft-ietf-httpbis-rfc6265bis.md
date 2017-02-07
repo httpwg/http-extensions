@@ -5,7 +5,7 @@ date: 2017
 category: std
 obsoletes: 6265
 
-ipr: trust200902
+ipr: pre5378Trust200902
 area: Applications and Real-Time
 workgroup: HTTP
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
