@@ -143,7 +143,7 @@ origin, composed from:
 
   - Scheme: "https"
   - Host: the value sent in Server Name Indication ({{!RFC6066}} Section 3), converted to lower case
-  - Port: the local port of the connection on the server
+  - Port: the remote port of the connection (i.e., the server's port)
 
 The contents of that ORIGIN frame (and subsequent ones) allows the server to incrementally add new
 origins to the Origin Set, as described in {{process}}.
