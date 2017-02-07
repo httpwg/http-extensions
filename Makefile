@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -l
 kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=https://xml2rfc.tools.ietf.org/public/rfc kramdown-rfc2629
 
-names := http2-encryption rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable
+names := http2-encryption rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable expect-ct
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := opsec rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable
+friendly_names := opsec rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable expect-ct
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
@@ -73,6 +73,9 @@ header-structure.%: draft-ietf-httpbis-header-structure.%
 	cp -f $< $@
 
 immutable.%: draft-ietf-httpbis-immutable.%
+	cp -f $< $@
+
+expect-ct.%: draft-ietf-httpbis-expect-ct.%
 	cp -f $< $@
 
 define makerule_submit_xml =
