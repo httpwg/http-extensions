@@ -203,8 +203,8 @@ In ABNF:
   import EmbeddedUnicodeChar from BCP137
 
   h1-common-structure-header =
-	  h1-common-structure-legacy-header /
-	  h1-common-structure-self-identifying-header
+          h1-common-structure-legacy-header /
+          h1-common-structure-self-identifying-header
 
   h1-common-structure-legacy-header =
           field-name ":" OWS h1-common-structure
