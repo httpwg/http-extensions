@@ -250,7 +250,7 @@ we can determine whether there is a match in the digest using the following algo
 2. Read the next 5 bits of `digest-value` as an integer; let `P` be two raised to the power of that value.
 3. Let `hash-value` be the result of computing a hash value ({{hash}}).
 4. Let `C` be -1.
-5. Read '0' bits from `digest-value` until a '1' bit is found; let `Q` bit the number of '0' bits. Discard the '1'.
+5. Read '0' bits from `digest-value` until a '1' bit is found; let `Q` be the number of '0' bits. Discard the '1'.
 6. Read log2(`P`) bits from `digest-value` after the '1' as an integer; let `R` be its value.
 7. Let `D` be `Q` * `P` + `R`.
 8. Increment `C` by `D` + 1.
