@@ -132,15 +132,6 @@ origin ({{!RFC6454}}, Section 6.2). If parsing fails, the field MUST be ignored.
 Senders should note that, as per {{!RFC6454}} Section 4, the values in an ORIGIN header need to be
 case-normalised before serialisation.
 
-Once parsed, the value MUST have:
-
-* a scheme of "https", 
-* a host that is reflected in a `subjectAltName` of the connection's TLS certificate (using the wildcard rules defined in {{!RFC2818}}, Section 3.1), and 
-* a port that reflects the connection's remote port on the client. 
-
-If any of these requirements are violated, the client MUST ignore the field (but still continue
-processing the frame).
-
 See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 
 
@@ -178,20 +169,22 @@ Once an Origin Set has been initialised for a connection, clients that implement
 change these behaviors in the following ways:
 
 * Clients MUST NOT consult DNS to establish the connection's authority for new requests. The TLS
-  certificate MUST be used to do so, as described in {{!RFC7540}} Section 9.1.1.
+  certificate MUST stil be used to do so, as described in {{!RFC7540}} Section 9.1.1.
 
 * Clients sending a new request SHOULD use an existing connection if the request's origin is in that connection's Origin Set, unless there are operational reasons for creating a new connection.
 
 * Clients MUST use the Origin Set to determine whether a received PUSH_PROMISE is authoritative, as described in {{!RFC7540}}, Section 8.2.2.
 
-Note that this does not prevent clients from performing other certificate checks as required or
-allowed, either at connection time or when processing ORIGIN. See {{!RFC7540}} Section 9.1.1 for
-more information.
+Note that clients are still required to perform checks on the certificate presented by the server
+for each origin that a connection is used for; see {{!RFC7540}} Section 9.1.1 for more information.
+This includes verifying that the host matches a `dNSName` value from the certificate
+`subjectAltName` field (using the wildcard rules defined in {{!RFC2818}}; see also {{!RFC5280}}
+Section 4.2.1.6).
 
 Because ORIGIN can change the set of origins a connection is used for over time, it is possible
 that a client might have more than one viable connection to an origin open at any time. When this
 occurs, clients SHOULD not emit new requests on any connection whose Origin Set is a subset of
-another connection's Origin Set, and SHOULD close it once all outstanding requests are satisified.
+another connection's Origin Set, and SHOULD close it once all outstanding requests are satisfied.
 
 
 # IANA Considerations
@@ -227,15 +220,7 @@ The following algorithm illustrates how a client could handle received ORIGIN fr
 5. If no previous ORIGIN frame on the connection has reached this step, initialise the Origin Set as per {{set}}.
 6. For each Origin field `origin_raw` in the frame payload:
    1. Parse `origin_raw` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`. If parsing fails, skip to the next `origin_raw`.
-   2. If the `scheme` of `parsed_origin` is not "https", skip to the next `origin_raw`.
-   3. If the certificate presented by the server is not valid for the `host` of `parsed_origin` (see below), skip to the next `origin_raw`.
-   4. If the `port` of `parsed_origin` does not match the connection's remote port, skip to the next `origin_raw`.
    5. Add `parsed_origin` to the Origin Set.
-
-The certificate presented by the server is valid for a host if it passes the checks that the client
-would perform when forming a new TLS connection to the origin. This includes verifying that the
-host matches a `dNSName` value from the certificate `subjectAltName` field (using the wildcard rules
-defined in {{!RFC2818}}; see also {{!RFC5280}} Section 4.2.1.6).
 
 
 # Operational Considerations for Servers {#server-ops}
