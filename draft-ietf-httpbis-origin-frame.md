@@ -129,9 +129,6 @@ ORIGIN frames received from it.
 Each ASCII-Origin field in the frame's payload MUST be parsed as an ASCII serialisation of an
 origin ({{!RFC6454}}, Section 6.2). If parsing fails, the field MUST be ignored.
 
-Senders should note that, as per {{!RFC6454}} Section 4, the values in an ORIGIN header need to be
-case-normalised before serialisation.
-
 See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 
 
@@ -242,3 +239,6 @@ However, if it's desirable to associate a large number of origins with a connect
 introduce end-user perceived latency, due to their size. As a result, it might be necessary to
 select a "core" set of origins to send initially, expanding the set of origins the connection is
 used for with subsequent ORIGIN frames later (e.g., when the connection is idle).
+
+Senders should note that, as per {{!RFC6454}} Section 4, the values in an ORIGIN header need to be
+case-normalised before serialisation.
