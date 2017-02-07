@@ -8,6 +8,7 @@ area: Applications and Real-Time
 workgroup: HTTP
 ipr: trust200902
 
+stand_alone: yes
 pi: [toc, sortrefs, symrefs]
 
 author:
