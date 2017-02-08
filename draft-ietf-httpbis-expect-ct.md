@@ -121,7 +121,7 @@ Known Expect-CT Host
 UA
   : is an acronym for "user agent". For the purposes of this specification, a UA
   is an HTTP client application typically actively manipulated by a user
-  {{!RFC2616}}.
+  {{!RFC7230}}.
 
 Unknown Expect-CT Host
   : is an Expect-CT Host that the UA has not noted.
