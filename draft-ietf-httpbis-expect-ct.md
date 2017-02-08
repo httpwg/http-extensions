@@ -19,6 +19,40 @@ author:
     email: estark@google.com
 
 
+normative:
+  FETCH:
+    target: https://fetch.spec.whatwg.org/
+    title: Fetch
+    author:
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
+  HTML:
+    target: https://html.spec.whatwg.org/
+    title: HTML
+    author:
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+      organization: Google, Inc.
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+      organization: Opera
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+      organization: Opera
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+      organization: Google, Inc.
+
 --- abstract
 
 This document defines a new HTTP header, named Expect-CT, that allows web host
@@ -506,7 +540,8 @@ of the following values: "tls-extension", "ocsp", or "embedded".
 When an Expect-CT header field contains the `report-uri` directive, and the
 connection does not comply with the UA's CT Policy, or when the UA connects to a
 Known Expect-CT Host with Expect-CT metadata that contains a `report-uri`, the
-UA SHOULD report the failure as follows:
+UA SHOULD report the failure as follows. "Queue a task" is defined in {{HTML}},
+and "fetch" in {{FETCH}}.
 
 1. Prepare a JSON object `report object` with the single key `expect-ct-report`,
    whose value is the result of generating a violation report object as
@@ -514,11 +549,10 @@ UA SHOULD report the failure as follows:
 2. Let `report body` by the JSON stringification of `report object`.
 3. Let `report-uri` be the value of the `report-uri` directive in the Expect-CT
    header field.
-3. [Queue a task](https://html.spec.whatwg.org/#queue-a-task) to
-   [fetch](https://fetch.spec.whatwg.org/#fetching) `report-uri`, with the
-   synchronous flag not set, using HTTP method `POST`, with a `Content-Type`
-   header field of `application/expect-ct-report`, and an entity body consisting
-   of `report body`.
+3. Queue a task to fetch `report-uri`, with the synchronous flag not set, using
+   HTTP method `POST`, with a `Content-Type` header field of
+   `application/expect-ct-report`, and an entity body consisting of `report
+   body`.
 
 # Security Considerations
 
