@@ -601,3 +601,9 @@ TBD
 When the UA detects a Known Expect-CT Host in violation of the UA's CT Policy,
 users will experience denials of service. It is advisable for UAs to explain the
 reason why.
+
+# Changes
+
+## Since -00
+
+None yet.
