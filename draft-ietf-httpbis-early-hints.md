@@ -103,15 +103,22 @@ processed; the client must behave as if it had not seen the informational respon
 An intermediary MAY drop the informational response. It MAY send HTTP/2 ([RFC7540]) push responses
 using the information found in the informational response.
 
-# Interoperatibility Issues
-
-Clients may have issues handling Early Hints, since informational response is rarely used for
-requests not including an Expect header ([RFC7231], section 5.1.1). Therefore, it is desirable to
-negotiate the capability to use the status code.
-
 # Security Considerations
 
-TBD
+Clients may have issues handling Early Hints, since informational response is rarely used for
+requests not including an Expect header ([RFC7231], section 5.1.1).
+
+An HTTP/1.1 client that mishandles the informational response as a final response is likely to
+consider all the responses to the succeeding requests sent over the same connection to be part of
+the final response. Such behavior may constitute a cross-origin information disclosure
+vulnerability in case the client multiplexes requests to different origins onto a single persistent
+connection.
+
+Therefore, a server might refrain from sending Early Hints over HTTP/1.1 unless when the client is
+known to handle informational responses correctly.
+
+HTTP/2 clients are less likely to suffer from incorrect framing since handling of the response
+headers does not affect how the end of the response body is determined.
 
 # IANA Considerations
 
