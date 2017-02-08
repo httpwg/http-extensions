@@ -133,3 +133,9 @@ entries:
 
 Thanks to Tatsuhiro Tsujikawa for coming up with the idea of sending the link headers using an
 informational response.
+
+# Changes
+
+## Since -00
+
+None yet.
