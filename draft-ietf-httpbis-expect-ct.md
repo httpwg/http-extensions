@@ -636,6 +636,23 @@ When the UA detects a Known Expect-CT Host in violation of the UA's CT Policy,
 users will experience denials of service. It is advisable for UAs to explain the
 reason why.
 
+# Authoring Considerations {#authoring-considerations}
+
+## HTTP Header
+
+Expect-CT could be specified as a TLS extension or X.509 certificate extension
+instead of an HTTP response header. Using an HTTP header as the mechanism for
+Expect-CT introduces a layering mismatch: for example, the software that
+terminates TLS and validates Certificate Transparency information might know
+nothing about HTTP. Nevertheless, an HTTP header was chosen primarily for ease
+of deployment. In practice, deploying new certificate extensions requires
+certificate authorities to support them, and new TLS extensions require server
+software updates, including possibly to servers outside of the site owner's
+direct control (such as in the case of a third-party CDN). Ease of deployment is
+a high priority for Expect-CT because it is intended as a temporary transition
+mechanism for user agents that are transitioning to universal Certificate
+Transparency requirements.
+
 # Changes
 
 ## Since -00
