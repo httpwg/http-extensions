@@ -349,7 +349,7 @@ encoded string "a1" is also included in the header.
 
 ~~~ example
 HTTP/1.1 200 OK
-Content-Length: 93
+Content-Length: 73
 Content-Encoding: aes128gcm
 
 uNCkWiNYzKTnBN9ji3-qWAAAABkCYTHOG8chz_gnvgOqdGYovxyjuqRyJFjEDyoF
