@@ -89,7 +89,7 @@ to serve these and other use cases.
 This content coding is not a direct adaptation of message-based encryption
 formats - such as those that are described by {{?RFC4880}}, {{?RFC5652}},
 {{?RFC7516}}, and {{XMLENC}} - which are not suited to stream processing, which
-is necessary for HTTP.  The format described here cleaves more closely to the
+is necessary for HTTP.  The format described here follows more closely to the
 lower level constructs described in {{!RFC5116}}.
 
 To the extent that message-based encryption formats use the same primitives, the
@@ -127,22 +127,22 @@ scheme.  This ensures that only the HTTP Accept-Encoding header field is
 necessary to negotiate the use of encryption.
 
 The "aes128gcm" content coding uses a fixed record size.  The final encoding
-consists of a header (see {{header}}), zero or more fixed size encrypted
-records.  The final record can be smaller than the record size.
+consists of a header (see {{header}}) and zero or more fixed size encrypted
+records; the final record can be smaller than the record size.
 
 The record size determines the length of each portion of plaintext that is
 enciphered.  The record size ("rs") is included in the content coding header
 (see {{header}}).
 
 ~~~ drawing
-+-----------+              content of rs octets
-|   data    |              less padding (1+) and tag (16);
-+-----------+              the last record is smaller
++-----------+              content
+|   data    |              any length up to rs-17 octets
++-----------+
      |
      v
-+-----------+-----+        add padding to get rs-16 octets;
-|   data    | pad |        padding is zeros starting with 1,
-+-----------+-----+        or 2 on the last record
++-----------+-----+        add a delimiter octet (0x01 or 0x02)
+|   data    | pad |        the 0x00-valued octets to rs-16
++-----------+-----+        (or less on the last record)
          |
          v
 +--------------------+    encrypt with AEAD_AES_128_GCM;
@@ -152,7 +152,7 @@ enciphered.  The record size ("rs") is included in the content coding header
 
 AEAD_AES_128_GCM produces ciphertext 16 octets longer than its input plaintext.
 Therefore, the unencrypted content of each record is shorter than the record
-size by 16 octets.  Valid records always contain at least a padding terminator
+size by 16 octets.  Valid records always contain at least a padding delimiter
 octet and a 16 octet authentication tag.
 
 Each record contains a single padding delimiter octet followed by any number of
@@ -263,8 +263,8 @@ be simplified to the first 16 octets of a single HMAC:
 ## Nonce Derivation {#nonce}
 
 The nonce input to AEAD_AES_128_GCM is constructed for each record.  The nonce
-for each record is a 12 octet (96 bit) value that is produced from the record
-sequence number and a value derived from the input keying material.
+for each record is a 12 octet (96 bit) value that is derived from the record
+sequence number, input keying material, and salt.
 
 The input keying material and salt values are input to HKDF with different info
 and length parameters.
@@ -310,8 +310,8 @@ string (that is, the "keyid" field in the header is zero octets in length).
 
 The encrypted data in this example is the UTF-8 encoded string "I am the
 walrus".  The input keying material is the value "yqdlZ-tYemfogSmv7Ws5PQ" (in
-base64url).  The content body contains a single record and is shown here using
-base64url encoding for presentation reasons.
+base64url).  The 54 octet content body contains a single record and is shown
+here using 71 base64url characters for presentation reasons.
 
 ~~~ example
 HTTP/1.1 200 OK
@@ -327,7 +327,7 @@ Note that the media type has been changed to "application/octet-stream" to avoid
 exposing information about the content.  Alternatively (and equivalently), the
 Content-Type header field can be omitted.
 
-Intermediate values for this example (all shown in base64):
+Intermediate values for this example (all shown using base64url):
 
 ~~~ inline
 salt (from header) = I1BsxtFttlv3u_Oo94xnmw
@@ -343,9 +343,9 @@ plaintext = SSBhbSB0aGUgd2FscnVzAg
 This example shows the same message with input keying material of
 "BO3ZVPxUlnLORbVGMpbT1Q".  In this example, the plaintext is split into records
 of 25 octets each (that is, the "rs" field in the header is 25).  The first
-record includes a single octet of padding.  This means that there are 7 octets
-of message in the first record, and 8 in the second.  A key identifier of the
-UTF-8 encoded string "a1" is also included in the header.
+record includes one 0x00 padding octet.  This means that there are 7 octets of
+message in the first record, and 8 in the second.  A key identifier of the UTF-8
+encoded string "a1" is also included in the header.
 
 ~~~ example
 HTTP/1.1 200 OK
@@ -369,6 +369,11 @@ difficult.  For instance, implementations need to account for the potential for
 exposing keying material on side channels, such as might be exposed by the time
 it takes to perform a given operation.  The requirements for a good
 implementation of cryptographic algorithms can change over time.
+
+As a content coding, presence of the "aes128gcm" coding might be transparent to
+a consumer of a message.  Recipients that depend on content origin
+authentication using this mechanism MUST reject messages that don't include the
+"aes128gcm" content coding.
 
 
 ## Message Truncation
@@ -412,8 +417,9 @@ value for the record size is limited by the size of the "rs" field in the header
 (see {{header}}), which ensures that the 2^36-31 limit for a single application
 of AEAD_AES_128_GCM is not reached {{!RFC5116}}.  In order to preserve a 2^-40
 probability of indistinguishability under chosen plaintext attack (IND-CPA), the
-total amount of plaintext that can be enciphered MUST be less than 2^44.5 blocks
-of 16 octets {{AEBounds}}.
+total amount of plaintext that can be enciphered with the key derived from the
+same input keying material and salt MUST be less than 2^44.5 blocks of 16 octets
+{{AEBounds}}.
 
 If the record size is a multiple of 16 octets, this means 398 terabytes can be
 encrypted safely, including padding and overhead.  However, if the record size
@@ -433,8 +439,8 @@ Any entity with the content encryption key can therefore produce content that
 will be accepted as valid.  This includes all recipients of the same HTTP
 message.
 
-Furthermore, any entity that is able to modify both the Encryption header field
-and the HTTP message body can replace the contents.  Without the content
+Furthermore, any entity that is able to modify both the Content-Encoding header
+field and the HTTP message body can replace the contents.  Without the content
 encryption key or the input keying material, modifications to or replacement of
 parts of a payload body are not possible.
 
@@ -487,17 +493,17 @@ messages, as well as their timing, HTTP methods, URIs and so on, may leak
 sensitive information.
 
 This risk can be mitigated through the use of the padding that this mechanism
-provides.  Alternatively, splitting up content into segments and storing the
+provides.  Alternatively, splitting up content into segments and storing them
 separately might reduce exposure. HTTP/2 {{?RFC7540}} combined with TLS
 {{?RFC5246}} might be used to hide the size of individual messages.
 
 Developing a padding strategy is difficult.  A good padding strategy can depend
 on context.  Common strategies include padding to a small set of fixed lengths,
-padding to multiples of a values, or padding to powers of 2.  Even a good
+padding to multiples of a value, or padding to powers of 2.  Even a good
 strategy can still cause size information to leak if processing activity of a
-recipient can be observed.  This is especially true if the trailing records of
-a message contain only padding.  Distributing non-padding data is recommended
-to avoid leaking size information.
+recipient can be observed.  This is especially true if the trailing records of a
+message contain only padding.  Distributing non-padding data is recommended to
+avoid leaking size information.
 
 
 # IANA Considerations {#iana}
