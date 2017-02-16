@@ -62,7 +62,7 @@ _Working Group Last Call concluded; waiting for writeup._
 
 ### HTTP Encryption Content Encoding
 
-_Second Working Group Last Call concluded; waiting for changes._
+_In Third Working Group Last Call; ends 02-03-17._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-encryption-encoding.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-encryption-encoding) (less recent, more official)
@@ -89,7 +89,7 @@ _Submitted to IESG._
 
 ### HTTP Opportunistic Security
 
-_In Second Working Group Last Call; ends 9 Feb 2017._
+_Submitted to IESG._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/opsec.html) ([plain text](https://httpwg.github.io/http-extensions/opsec.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
