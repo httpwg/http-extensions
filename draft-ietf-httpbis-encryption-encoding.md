@@ -141,7 +141,7 @@ enciphered.  The record size ("rs") is included in the content coding header
      |
      v
 +-----------+-----+        add a delimiter octet (0x01 or 0x02)
-|   data    | pad |        the 0x00-valued octets to rs-16
+|   data    | pad |        then 0x00-valued octets to rs-16
 +-----------+-----+        (or less on the last record)
          |
          v
