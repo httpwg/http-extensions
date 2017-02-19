@@ -135,14 +135,14 @@ enciphered.  The record size ("rs") is included in the content coding header
 (see {{header}}).
 
 ~~~ drawing
-+-----------+              content
-|   data    |              any length up to rs-17 octets
++-----------+             content
+|   data    |             any length up to rs-17 octets
 +-----------+
      |
      v
-+-----------+-----+        add a delimiter octet (0x01 or 0x02)
-|   data    | pad |        then 0x00-valued octets to rs-16
-+-----------+-----+        (or less on the last record)
++-----------+-----+       add a delimiter octet (0x01 or 0x02)
+|   data    | pad |       then 0x00-valued octets to rs-16
++-----------+-----+       (or less on the last record)
          |
          v
 +--------------------+    encrypt with AEAD_AES_128_GCM;
