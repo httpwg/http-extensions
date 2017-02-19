@@ -44,7 +44,8 @@ informative:
       - ins: K. Yiu
       - ins: M. Nyström
     date: 2013-01-24
-    seriesinfo: W3C Recommendation REC-xmlenc-core1-20130411
+    seriesinfo:
+      W3C Recommendation: REC-xmlenc-core1-20130411
     target: "https://www.w3.org/TR/2013/REC-xmlenc-core1-20130411"
   AEBounds:
     title: "Limits on Authenticated Encryption Use in TLS"
