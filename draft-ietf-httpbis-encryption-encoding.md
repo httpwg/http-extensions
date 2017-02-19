@@ -26,8 +26,9 @@ normative:
     author:
       name: NIST
       ins: National Institute of Standards and Technology, U.S. Department of Commerce
-    date: 2012-03
-    target: http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf
+    date: 2015-08
+    seriesInfo: DOI 10.6028/NIST.FIPS.180-4
+    target: http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
 
 informative:
   XMLENC:
