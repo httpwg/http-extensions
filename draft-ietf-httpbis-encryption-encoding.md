@@ -159,11 +159,13 @@ octet and a 16 octet authentication tag.
 
 Each record contains a single padding delimiter octet followed by any number of
 zero octets.  The last record uses a padding delimiter octet set to the value 2,
-all other records have a padding delimiter octet value of 1.  A decrypter MUST
-fail if the unencrypted content of a record is all zero-valued.  A decrypter
-MUST fail if the last record contains a padding delimiter with a value other
-than 2; a decrypter MUST fail if any record other than the last contains a
-padding delimiter with a value other than 1.
+all other records have a padding delimiter octet value of 1.
+
+On decryption, the padding delimiter is the last non-zero valued octet of the
+record.  A decrypter MUST fail if the record contains no non-zero octet.  A
+decrypter MUST fail if the last record contains a padding delimiter with a value
+other than 2 or if any record other than the last contains a padding delimiter
+with a value other than 1.
 
 The nonce for each record is a 96-bit value constructed from the record sequence
 number and the input keying material.  Nonce derivation is covered in {{nonce}}.
