@@ -48,7 +48,7 @@ informative:
 
 --- abstract
 
-This document describes how `http` URIs can be accessed using Transport Layer Security (TLS) to
+This document describes how `http` URIs can be accessed using Transport Layer Security (TLS) in HTTP/2 to
 mitigate pervasive monitoring attacks.
 
 --- note_Note_to_Readers
@@ -64,16 +64,18 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 # Introduction
 
 This document describes a use of HTTP Alternative Services {{RFC7838}} to decouple
-the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI
-{{RFC7230}} to be accessed using Transport Layer Security (TLS) {{RFC5246}} opportunistically.
+the URI scheme from the use and configuration of underlying encryption.
+It allows HTTP/2 {{RFC7540}} to access a `http` URI
+{{RFC7230}} using Transport Layer Security (TLS) {{RFC5246}}
+with Opportunistic Security {{RFC7435}}.
 
-Serving `https` URIs requires avoiding Mixed Content {{W3C.CR-mixed-content-20160802}}, which is
-problematic in many deployments. This document describes a usage model whereby sites can serve
-`http` URIs over TLS, thereby avoiding these issues, while still providing protection against
+This document describes a usage model whereby sites can serve
+`http` URIs over TLS, thereby avoiding the problem of serving 
+Mixed Content (describe in {{W3C.CR-mixed-content-20160802}}) while still providing protection against
 passive attacks.
 
-Opportunistic Security {{RFC7435}} does not provide the same guarantees as using TLS with `https`
-URIs; it is vulnerable to active attacks, and does not change the security context of the
+Opportunistic Security does not provide the same guarantees as using TLS with `https`
+URIs; Opportunistic Security is vulnerable to active attacks, and does not change the security context of the
 connection. Normally, users will not be able to tell that it is in use (i.e., there will be no
 "lock icon").
 
