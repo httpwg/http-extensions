@@ -30,22 +30,6 @@ normative:
   RFC7230:
   RFC7231:
   RFC7234:
-  NETINFO:
-    target: https://w3c.github.io/netinfo/
-    title: "Network Information API"
-    author:
-    -
-      ins: M. Cáceres
-      name: Marcos Cáceres
-      organization:  Mozilla Corporation
-    -
-      ins: F.J. Moreno
-      name: Fernando Jiménez Moreno
-      organization: Telefonica
-    -
-      ins: I. Grigorik
-      name: Ilya Grigorik
-      organization: Google
   W3C.REC-html5-20141028:
   W3C.CR-css-values-3-20160929:
   CSS2:
@@ -67,6 +51,22 @@ normative:
 informative:
   RFC6265:
   I-D.ietf-httpbis-key:
+  NETINFO:
+    target: https://w3c.github.io/netinfo/
+    title: "Network Information API"
+    author:
+    -
+      ins: M. Cáceres
+      name: Marcos Cáceres
+      organization:  Mozilla Corporation
+    -
+      ins: F.J. Moreno
+      name: Fernando Jiménez Moreno
+      organization: Telefonica
+    -
+      ins: I. Grigorik
+      name: Ilya Grigorik
+      organization: Google
 
 --- abstract
 
@@ -233,7 +233,7 @@ If Viewport-Width occurs in a message more than once, the last value overrides a
 
 # The Downlink Client Hint {#downlink}
 
-The "Downlink" request header field is a number that indicates the client's maximum downlink speed in megabits per second (Mbps), as defined by the "downlinkMax" attribute in the W3C Network Information API ({{NETINFO}}).
+The "Downlink" request header field is a number that indicates the client's maximum downlink speed in megabits per second (Mbps). For example, as defined by the "downlinkMax" attribute in the W3C Network Information API ({{NETINFO}}).
 
 ~~~ abnf7230
   Downlink = 1*DIGIT [ "." 1*DIGIT ]
