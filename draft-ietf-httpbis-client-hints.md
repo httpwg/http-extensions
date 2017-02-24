@@ -116,7 +116,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 ## Sending Client Hints
 
-Clients control which Client Hint headers and their respective header fields are communicated, based on their default settings, user configuration and/or preferences. The user can be given the choice to enable, disable, or override specific hints.
+Clients control which Client Hint headers and their respective header fields are communicated, based on their default settings, user configuration and/or preferences. Implementers might provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. Implementations specific to certain use cases or threat models might avoid transmitting these headers altogether, or limit them to secure contexts or authenticated sessions. Implementers should be aware that explaining the privacy implications of passive fingerprinting or network information disclosure may be challenging.
 
 The client and server, or an intermediate proxy, can use an opt-in mechanism to negotiate which fields should be reported to allow for efficient content adaption.
 
@@ -130,7 +130,7 @@ Further, depending on the used hint, the server can emit additional response hea
 
 ### Advertising Support for Client Hints {#accept-ch}
 
-Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{W3C.REC-html5-20141028}}).
+Servers should advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{W3C.REC-html5-20141028}}).
 
 ~~~ abnf7230
   Accept-CH = #field-name
