@@ -51,22 +51,6 @@ normative:
 informative:
   RFC6265:
   I-D.ietf-httpbis-key:
-  NETINFO:
-    target: https://w3c.github.io/netinfo/
-    title: "Network Information API"
-    author:
-    -
-      ins: M. Cáceres
-      name: Marcos Cáceres
-      organization:  Mozilla Corporation
-    -
-      ins: F.J. Moreno
-      name: Fernando Jiménez Moreno
-      organization: Telefonica
-    -
-      ins: I. Grigorik
-      name: Ilya Grigorik
-      organization: Google
 
 --- abstract
 
@@ -116,7 +100,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 ## Sending Client Hints
 
-Clients control which Client Hint headers and their respective header fields are communicated, based on their default settings, user configuration and/or preferences. Implementers might provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. Implementations specific to certain use cases or threat models might avoid transmitting these headers altogether, or limit them to secure contexts or authenticated sessions. Implementers should be aware that explaining the privacy implications of passive fingerprinting or network information disclosure may be challenging.
+Clients control which Client Hints are sent in requests, based on their default settings, user configuration and/or preferences. Implementers might provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. Implementations specific to certain use cases or threat models might avoid transmitting these headers altogether, or limit them to secure contexts or authenticated sessions. Implementers should be aware that explaining the privacy implications of passive fingerprinting or network information disclosure may be challenging.
 
 The client and server, or an intermediate proxy, can use an opt-in mechanism to negotiate which fields should be reported to allow for efficient content adaption.
 
@@ -130,7 +114,7 @@ Further, depending on the used hint, the server can emit additional response hea
 
 ### Advertising Support for Client Hints {#accept-ch}
 
-Servers should advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{W3C.REC-html5-20141028}}).
+Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{W3C.REC-html5-20141028}}).
 
 ~~~ abnf7230
   Accept-CH = #field-name
@@ -233,7 +217,7 @@ If Viewport-Width occurs in a message more than once, the last value overrides a
 
 # The Downlink Client Hint {#downlink}
 
-The "Downlink" request header field is a number that indicates the client's maximum downlink speed in megabits per second (Mbps). For example, as defined by the "downlinkMax" attribute in the W3C Network Information API ({{NETINFO}}).
+The "Downlink" request header field is a number that indicates the client's maximum downlink speed in megabits per second (Mbps).
 
 ~~~ abnf7230
   Downlink = 1*DIGIT [ "." 1*DIGIT ]
