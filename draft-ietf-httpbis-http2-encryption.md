@@ -49,7 +49,8 @@ informative:
 --- abstract
 
 This document describes how `http` URIs can be accessed using Transport Layer Security (TLS) and
-HTTP/2 to mitigate pervasive monitoring attacks.
+HTTP/2 to mitigate pervasive monitoring attacks. This mechanism not a replacement for `https` URIs;
+it is vulnerable to active attacks.
 
 --- note_Note_to_Readers
 
