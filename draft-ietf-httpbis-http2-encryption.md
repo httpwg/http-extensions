@@ -229,9 +229,9 @@ This specification registers a Well-Known URI {{RFC5785}}:
 
 ## Security Indicators
 
-User Agents MUST NOT provide any special security indicia when an `http` resource is acquired using
-TLS. In particular, indicators that might suggest the same level of security as `https` MUST NOT be
-used (e.g., a "lock device").
+User Agents MUST NOT provide any special security indicators when an `http` resource is acquired
+using TLS. In particular, indicators that might suggest the same level of security as `https` MUST
+NOT be used (e.g., a "lock device").
 
 
 ## Downgrade Attacks {#downgrade}
@@ -267,8 +267,8 @@ Any security decisions based upon this information could be misled by the deploy
 specification, because it violates the assumption that the use of TLS (or port 443) means that the
 client is accessing a HTTPS URI, and operating in the security context implied by HTTPS.
 
-Therefore, servers need to carefully examine the use of such signals before deploying this
-specification.
+Therefore, server implementers and administrators need to carefully examine the use of such signals
+before deploying this specification.
 
 
 ## Server Controls
