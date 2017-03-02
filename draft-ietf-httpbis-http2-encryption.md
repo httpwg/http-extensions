@@ -1,6 +1,6 @@
 ---
-title: Opportunistic Security for HTTP
-abbrev: Opportunistic HTTP Security
+title: Opportunistic Security for HTTP/2
+abbrev: Opportunistic HTTP/2 Security
 docname: draft-ietf-httpbis-http2-encryption-latest
 date: 2017
 category: exp
