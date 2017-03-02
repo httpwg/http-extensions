@@ -938,6 +938,12 @@
   Mention RFC8053 in Implementation Report.
 </t>
 </section>
+
+<section title="Since draft-ietf-httpbis-rfc5987bis-05">
+<t>
+  None yet.
+</t>
+</section>
 </section>
 
 <section title="Acknowledgements" numbered="false">
