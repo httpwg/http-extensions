@@ -19,7 +19,7 @@
 <rfc
     category="info"
     ipr="trust200902"
-    docName="draft-pratt-httpbis-rand-access-live-latest" >
+    docName="draft-ietf-httpbis-rand-access-live" >
 
     <!-- Processing Instructions- PIs (for a complete list and description,
           see file http://xml.resource.org/authoring/README.html and below... -->
@@ -113,7 +113,7 @@
         </address>
     </author>
     
-    <date year="2016" month="November"/>
+    <date year="2017" month="March"/>
          
     <!-- Meta-data Declarations -->
     
