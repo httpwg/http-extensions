@@ -27,6 +27,9 @@ Martin has confirmed that, to his direct, personal knowledge, all IPR related to
 already been disclosed, in conformance with BCPs 78 and 79.
 
 One IPR disclosure has been made for this document; see <https://datatracker.ietf.org/ipr/2777/>.
+The Working Group was informed of this (see
+<http://www.w3.org/mid/36BF957B-31D7-4F47-8C80-4F0506D09E64@mnot.net>), but no changes to the draft
+resulted.
 
 ## 4. Other Points
 
