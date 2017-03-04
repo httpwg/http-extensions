@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE rfc [
-<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC4234 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4234.xml">
-<!ENTITY RFC7230 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7230.xml">
-<!ENTITY RFC7233 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7233.xml">
+<!ENTITY RFC2119 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC4234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.4234.xml">
+<!ENTITY RFC7230 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7230.xml">
+<!ENTITY RFC7233 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7233.xml">
 
 <!-- Fudge for XMLmind which doesn't have this built in -->
 <!ENTITY nbsp    "&#160;">
