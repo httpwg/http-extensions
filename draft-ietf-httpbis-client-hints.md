@@ -96,7 +96,7 @@ This document uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}}
 
 # Client Hint Request Header Fields
 
-A Client Hint request header field is a HTTP header field that is used by HTTP clients to indicate configuration data that can be used by the server to select an appropriate response. Each one conveys a list of client preferences that the server can use to adapt and optimize the response.
+A Client Hint request header field is a HTTP header field that is used by HTTP clients to indicate configuration data that can be used by the server to select an appropriate response. Each one conveys client preferences that the server can use to adapt and optimize the response.
 
 ## Sending Client Hints
 
@@ -107,9 +107,9 @@ The client and server, or an intermediate proxy, can use an opt-in mechanism to 
 
 ## Server Processing of Client Hints
 
-Servers respond with an optimized response based on one or more received hints from the client. When doing so, and if the resource is cacheable, the server MUST also emit a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{I-D.ietf-httpbis-key}}), to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
+When presented with a request that contains one or more client hint headers, servers can optimise the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{I-D.ietf-httpbis-key}}), to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
-Further, depending on the used hint, the server can emit additional response header fields to confirm the property of the response, such that the client can adjust its processing. For example, this specification defines "Content-DPR" response header field that needs to be returned by the server when the "DPR" hint is used to select the response.
+Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing. For example, this specification defines "Content-DPR" response header field that needs to be returned by the server when the "DPR" hint is used to select the response.
 
 
 ### Advertising Support for Client Hints {#accept-ch}
@@ -126,13 +126,13 @@ For example:
   Accept-CH: DPR, Width, Viewport-Width, Downlink
 ~~~
 
-When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the server is interested in receiving the Client-Hint header fields that match the advertised field-values; subsequent requests initiated to the same server and, optionally any subresource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in, can include the Client-Hint header fields that match the advertised field-values.
+When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the server is interested in receiving specified request header fields that match the advertised field-values; subsequent requests initiated to the same server and, optionally any subresource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in, can include the request header fields that match the advertised field-values.
 
 For example, based on Accept-CH example above, a user agent could append DPR, Width, Viewport-Width, and Downlink header fields to all subresource requests initiated by the page constructed from the response. Alternatively, a client can treat advertised support as a persistent origin preference and append same header fields on all future requests initiated to and by the resources associated with that origin.
 
 ### Interaction with Caches
 
-When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server needs to emit a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
+When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server needs to generate a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 ~~~ example
   Vary: DPR
@@ -167,7 +167,9 @@ Above example indicates that the cache key needs to include the value of the Wid
 Above example indicates that the cache key needs to include the (Mbps) value of the Downlink header field with six segments: less than 0.5, 0.5 to less than 1.0, 1.0 to less than 3.0, 3.0 to less than 5.0, 5.0 to less than 10; 10 or higher.
 
 
-# The DPR Client Hint {#dpr}
+# Client Hints
+
+## The DPR header field {#dpr}
 
 The "DPR" request header field is a number that indicates the client's current Device Pixel Ratio (DPR), which is the ratio of physical pixels over CSS px (Section 5.2 of {{W3C.CR-css-values-3-20160929}}) of the layout viewport (Section 9.1.1 of [CSS2]) on the device.
 
@@ -178,7 +180,7 @@ The "DPR" request header field is a number that indicates the client's current D
 If DPR occurs in a message more than once, the last value overrides all previous occurrences.
 
 
-## Confirming Selected DPR {#content-dpr}
+### Confirming Selected DPR {#content-dpr}
 
 The "Content-DPR" response header field is a number that indicates the ratio between physical pixels over CSS px of the selected image response.
 
@@ -193,7 +195,7 @@ Note that DPR confirmation is only required for image responses, and the server 
 If Content-DPR occurs in a message more than once, the last value overrides all previous occurrences.
 
 
-# The Width Client Hint {#width}
+## The Width header field {#width}
 
 The "Width" request header field is a number that indicates the desired resource width in physical px (i.e. intrinsic size of an image). The provided physical px value is a number rounded to the smallest following integer (i.e. ceiling value).
 
@@ -204,7 +206,7 @@ The "Width" request header field is a number that indicates the desired resource
 If the desired resource width is not known at the time of the request or the resource does not have a display width, the Width header field can be omitted. If Width occurs in a message more than once, the last value overrides all previous occurrences.
 
 
-# The Viewport-Width Client Hint {#viewport-width}
+## The Viewport-Width header field {#viewport-width}
 
 The "Viewport-Width" request header field is a number that indicates the layout viewport width in CSS px. The provided CSS px value is a number rounded to the smallest following integer (i.e. ceiling value).
 
@@ -215,7 +217,7 @@ The "Viewport-Width" request header field is a number that indicates the layout 
 If Viewport-Width occurs in a message more than once, the last value overrides all previous occurrences.
 
 
-# The Downlink Client Hint {#downlink}
+## The Downlink header field {#downlink}
 
 The "Downlink" request header field is a number that indicates the client's maximum downlink speed in megabits per second (Mbps).
 
@@ -226,7 +228,7 @@ The "Downlink" request header field is a number that indicates the client's maxi
 If Downlink occurs in a message more than once, the minimum value should be used to override other occurrences.
 
 
-# The Save-Data Client Hint {#save-data}
+## The Save-Data header field {#save-data}
 
 The "Save-Data" request header field consists of one or more tokens that indicate client's preference for reduced data usage, due to high transfer costs, slow connection speeds, or other reasons.
 
@@ -235,7 +237,7 @@ The "Save-Data" request header field consists of one or more tokens that indicat
   sd-token = token
 ~~~
 
-This document defines the "on" sd-token value, which is used as a signal indicating explicit user opt-in into a reduced data usage mode on the client, and when communicated to origins allows them to deliver alternate content honoring such preference - e.g. smaller image and video resources, alternate markup, and so on. New token and extension token values can only be defined by revisions of this specification.
+This document defines the "on" sd-token value, which is used as a signal indicating explicit user opt-in into a reduced data usage mode on the client, and when communicated to origins allows them to deliver alternate content honoring such preference - e.g. smaller image and video resources, alternate markup, and so on. New token and extension token values can be defined by updates to this specification.
 
 
 # Examples
@@ -269,11 +271,11 @@ The server knows that the client's maximum downlink speed is 0.384Mbps (GPRS EDG
 
 # Security Considerations
 
-Client Hints defined in this specification do not expose new information about the user's environment beyond what is already available to, and can be communicated by, the application at runtime via JavaScript and CSS. For example, the application can obtain viewport width, image display width, and device pixel ratio via JavaScript, or through the use of CSS media queries and unique resource URLs even if JavaScript is disabled. However, implementors should consider the privacy implications of various methods to enable delivery of Client Hints - see "Sending Client Hints" section.
+The request header fields defined in this specification expose information that is already available to Web applications in the browser runtime itself (e.g., using JavaScript and CSS). For example, the application can obtain viewport width, image display width, and device pixel ratio via JavaScript, or through the use of CSS media queries and unique resource URLs even if JavaScript is disabled. However, servers that gather this information through such mechanisms are typically observable (e.g., you can see that they're using JavaScript to gather it), whereas servers' use of the header fields introduced by this specification is not observable. Section 2.1 discusses potential mitigations.
 
-For example, sending Client Hints on all requests can make information about the user's environment available to origins that otherwise did not have access to this data, which may or may not be the desired outcome - e.g. this may enable an image optimization service to deliver a tailored asset, and it may reveal same information about the user to other origins that may not have had access to it before. Similarly, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Restricting such field values to an enumerated range, where the user agent advertises a threshold value that is close but is not an exact representation of the current value, might reduce such fingerprinting risks.
+For example, sending Client Hints on all requests can make information about the user's environment available to origins that otherwise did not have access to this data, which may or may not be the desired outcome - e.g. this may enable an image optimization service to deliver a tailored asset, and it may reveal same information about the user to other origins that may not have had access to it before. Similarly, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Restricting such field values to an enumerated range, where the user agent advertises a threshold value that is close but is not an exact representation of the current value, can help mitigate the risk of such fingerprinting.
 
-The implementers can provide mechanisms and policies to control how and when such hints are advertised: require origin opt-in and restrict delivery to same origin subrequests; limit delivery to requests that already carry indentifying information (e.g. cookies); modify delivery policy when in an "incognito" or a similar privacy mode; enable user configuration and opt in, and so on.
+Implementers ought to provide mechanisms and policies to control how and when such hints are advertised. For example, they could require origin opt-in; restrict delivery to same origin subrequests; limit delivery to requests that already carry indentifying information (e.g. cookies); modify delivery policy when in an "incognito" or a similar privacy mode; enable user configuration and opt in, and so on.
 
 
 # IANA Considerations
