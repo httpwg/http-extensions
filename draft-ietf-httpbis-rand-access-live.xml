@@ -119,7 +119,7 @@
     
     <!-- Notice the use of &amp; as an escape for & which would otherwise
          start an entity declaration, whereas we want a literal &. -->
-    <area>Applications and Real Time</area>
+    <area>Applications and Real-Time</area>
 
     <!-- WG name at the upperleft corner of the doc,
          IETF fine for individual submissions.  You can also
