@@ -145,6 +145,21 @@
         </t>
     </abstract>
 
+    <note title="Editorial Note (To be removed by RFC Editor before publication)">
+      <t>
+        Discussion of this draft takes place on the HTTPBIS working group mailing list
+        (ietf-http-wg@w3.org), which is archived at <eref
+        target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
+      </t>
+      <t>
+        Working Group information can be found at <eref target="http://httpwg.github.io/"/>; source code and issues
+        list for this draft can be found at
+        <eref target="https://github.com/httpwg/http-extensions/labels/rand-access-live"/>.
+      </t><!--
+      <t>
+        The changes in this draft are summarized in <xref target="change.log"/>.
+      </t>-->
+    </note>
     <note title="Requirements Language">
         <t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;,
         &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
