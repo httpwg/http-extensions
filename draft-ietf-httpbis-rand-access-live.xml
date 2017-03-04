@@ -394,13 +394,6 @@
 			One potential issue with this recommendation is related to the use of very-large last-byte-pos values. Some Client and Server implementations may not be prepared to deal with byte position values of 2^^63 and beyond. So in applications where there's no expectation that the representation will ever exceed 2^^63, a value smaller than this value should be used as the Very Large last-byte-pos in a byte-seek request or content-range response.
 		</t>
     </section>
-    
-    <section anchor="Acknowledgements" title="Acknowledgements">
-        <t>
-			Mark Nottingham, Patrick McManus, Julian Reschke, Remy Lebeau, Rodger Combs, Thorsten Lohmar, Martin Thompson, Adrien de Croy, K. Morgan, Roy T. Fielding, Jeremy Poulter
-        </t>
-    </section>
-    
 </middle>
 
 <!--  *****BACK MATTER ***** -->
@@ -425,6 +418,12 @@
         </reference>
         &RFC4234;
     </references>
+        
+    <section anchor="Acknowledgements" title="Acknowledgements">
+        <t>
+			Mark Nottingham, Patrick McManus, Julian Reschke, Remy Lebeau, Rodger Combs, Thorsten Lohmar, Martin Thompson, Adrien de Croy, K. Morgan, Roy T. Fielding, Jeremy Poulter.
+        </t>
+    </section>
     
 </back>
 
