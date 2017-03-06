@@ -56,7 +56,7 @@ informative:
 
 An increasing diversity of Web-connected devices and software capabilities has created a need to deliver optimized content for each device.
 
-This specification defines a set of HTTP request header fields, colloquially known as Client Hints, to address this. They are intended to be used as input to proactive content negotiation; just as the Accept header field allows clients to indicate what formats they prefer, Client Hints allow clients to indicate a list of device and agent specific preferences.
+This specification defines a set of HTTP request header fields, colloquially known as Client Hints, to address this. They are intended to be used as input to proactive content negotiation; just as the Accept header field allows user agents to indicate what formats they prefer, Client Hints allow user agents to indicate device and agent specific preferences.
 
 
 --- note_Note_to_Readers
@@ -74,16 +74,16 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences.
 
-One way to infer some of these capabilities is through User-Agent (UA; Section 5.5.3 of {{RFC7231}}) detection against an established database of client signatures. However, this technique requires acquiring such a database, integrating it into the serving path, and keeping it up to date. However, even once this infrastructure is deployed, UA sniffing has numerous limitations:
+One way to infer some of these capabilities is through User-Agent (Section 5.5.3 of {{RFC7231}}) header field detection against an established database of client signatures. However, this technique requires acquiring such a database, integrating it into the serving path, and keeping it up to date. However, even once this infrastructure is deployed, user agent sniffing has numerous limitations:
 
-  - UA detection cannot reliably identify all static variables
-  - UA detection cannot infer any dynamic client preferences
-  - UA detection requires an external device database
-  - UA detection is not cache friendly
+  - User agent detection cannot reliably identify all static variables
+  - User agent detection cannot infer any dynamic client preferences
+  - User agent detection requires an external device database
+  - User agent detection is not cache friendly
 
-A popular alternative strategy is to use HTTP cookies ({{RFC6265}}) to communicate some information about the client. However, this approach is also not cache friendly, bound by same origin policy, and imposes additional client-side latency by requiring JavaScript execution to create and manage HTTP cookies.
+A popular alternative strategy is to use HTTP cookies ({{RFC6265}}) to communicate some information about the user agent. However, this approach is also not cache friendly, bound by same origin policy, and imposes additional client-side latency by requiring JavaScript execution to create and manage HTTP cookies.
 
-This document defines a set of new request header fields that allow the client to perform proactive content negotiation (Section 3.4.1 of {{RFC7231}}) by indicating a list of device and agent specific preferences, through a mechanism similar to the Accept header field which is used to indicate preferred response formats.
+This document defines a set of new request header fields that allow user agent to perform proactive content negotiation (Section 3.4.1 of {{RFC7231}}) by indicating device and agent specific preferences, through a mechanism similar to the Accept header field which is used to indicate preferred response formats.
 
 Client Hints does not supersede or replace the User-Agent header field. Existing device detection mechanisms can continue to use both mechanisms if necessary. By advertising its capabilities within a request header field, Client Hints allows for cache friendly and proactive content negotiation.
 
