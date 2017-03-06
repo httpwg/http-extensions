@@ -125,7 +125,7 @@
          IETF fine for individual submissions.  You can also
          omit this element in which case in defaults to "Network Working Group" -
          a hangover from the ancient history of the IETF! -->
-    <workgroup>Hypertext Transfer Protocol</workgroup>
+    <workgroup>HTTP</workgroup>
     
     <keyword>http range unit live</keyword>
     
