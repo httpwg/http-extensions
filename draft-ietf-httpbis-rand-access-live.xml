@@ -160,15 +160,6 @@
         The changes in this draft are summarized in <xref target="change.log"/>.
       </t>-->
     </note>
-    <note title="Requirements Language">
-        <t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;,
-        &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
-        &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;,
-        &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be
-        interpreted as described in <xref target="RFC2119">RFC 2119</xref>.
-        </t>
-    </note>
-
 </front>
 
 <middle>
@@ -185,6 +176,16 @@
         <t>
            To accommodate byte-range requests on large representations which have data appended over time efficiently and with low latency, this recommendation defines semantics whereby the HTTP Client performs byte-range requests using a combination of open-ended byte-range HEAD requests and GET requests using "Large Value" last-byte-pos values.
         </t>
+
+        <section title="Requirements Language">
+            <t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;,
+            &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
+            &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;,
+            &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be
+            interpreted as described in <xref target="RFC2119">RFC 2119</xref>.
+            </t>
+        </section>
+
     </section>
     
     <section anchor="definition" title="Performing Range requests on Random-Access Aggregating (&quot;live&quot;) Content">
