@@ -17,7 +17,7 @@
      after the rfc element start tag as shown below. -->
      
 <rfc
-    category="info"
+    category="exp"
     ipr="trust200902"
     docName="draft-ietf-httpbis-rand-access-live" >
 
