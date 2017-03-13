@@ -108,12 +108,16 @@ Cache-Control extension in a request has no effect.
 
 ## About Intermediaries
 
-An immutable response has the same semantic meaning for proxy clients
-as it does for User-Agent based clients and they therefore MAY also
-presume a conditional revalidation for a response marked immutable
-would return 304. A proxy client who uses immutable to anticipate a
-304 response may choose whether to reply with a 304 or 200 to its
-requesting client.
+An immutable response has the same semantic meaning whe received by
+proxy clients as it does when received by User-Agent based
+clients. Therefore proxies SHOULD skip conditionally revalidating fresh
+responses containing the immutable extension unless there is a signal
+from the client that a validation is necessary (e.g. a no-cache
+Cache-Control request directive).
+
+A proxy that uses immutable to bypass a conditional revalidation may choose
+whether to reply with a 304 or 200 to its requesting client based on
+the request headers the proxy received.
 
 ## Example
 
