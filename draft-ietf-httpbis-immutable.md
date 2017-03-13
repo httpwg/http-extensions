@@ -87,9 +87,14 @@ can be safely skipped without worrying that it has been updated.
 
 # The immutable Cache-Control extension
 
-When present in an HTTP response, the `immutable` Cache-Control extension
-indicates that the origin server MUST NOT update the representation of that
-resource during the freshness lifetime of the response.
+When present in an HTTP response, the `immutable` Cache-Control
+extension indicates that the origin server will not update the representation
+of that resource during the freshness lifetime of the
+response.
+
+Clients SHOULD NOT issue a conditional request during the
+response's freshness lifetime (e.g. upon a reload) unless explicitly
+overridden by the user (e.g. a force reload).
 
 The immutable extension only applies during the freshness lifetime of the
 stored response. Stale responses SHOULD be revalidated as they normally would
@@ -102,11 +107,16 @@ Cache-Control extension in a request has no effect.
 
 ## About Intermediaries
 
-An immutable response has the same semantic meaning for proxy clients as it
-does for User-Agent based clients and they therefore MAY also presume a
-conditional revalidation for a response marked immutable would return 304. A
-proxy client who uses immutable to anticipate a 304 response may choose whether
-to reply with a 304 or 200 to its requesting client.
+An immutable response has the same semantic meaning whe received by
+proxy clients as it does when received by User-Agent based
+clients. Therefore proxies SHOULD skip conditionally revalidating fresh
+responses containing the immutable extension unless there is a signal
+from the client that a validation is necessary (e.g. a no-cache
+Cache-Control request directive).
+
+A proxy that uses immutable to bypass a conditional revalidation may choose
+whether to reply with a 304 or 200 to its requesting client based on
+the request headers the proxy received.
 
 ## Example
 
@@ -145,5 +155,6 @@ with IETF Review.
 
 # Acknowledgments
 
-Thank you to Ben Maurer for partnership in developing and testing this idea.
-Thank you to Amos Jeffries for help with proxy interactions.
+Thank you to Ben Maurer for partnership in developing and testing this
+idea. Thank you to Amos Jeffries for help with proxy interactions and
+to Mark Nottingham for help with the documentation.

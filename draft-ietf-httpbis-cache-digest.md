@@ -80,7 +80,7 @@ allows a stream to be cancelled by a client using a RST_STREAM frame in this sit
 is still at least one round trip of potentially wasted capacity even then.
 
 This specification defines a HTTP/2 frame type to allow clients to inform the server of their
-cache's contents using a Golumb-Rice Coded Set {{Rice}}. Servers can then use this to inform their
+cache's contents using a Golomb-Rice Coded Set {{Rice}}. Servers can then use this to inform their
 choices of what to push to clients.
 
 
@@ -250,7 +250,7 @@ we can determine whether there is a match in the digest using the following algo
 2. Read the next 5 bits of `digest-value` as an integer; let `P` be two raised to the power of that value.
 3. Let `hash-value` be the result of computing a hash value ({{hash}}).
 4. Let `C` be -1.
-5. Read '0' bits from `digest-value` until a '1' bit is found; let `Q` bit the number of '0' bits. Discard the '1'.
+5. Read '0' bits from `digest-value` until a '1' bit is found; let `Q` be the number of '0' bits. Discard the '1'.
 6. Read log2(`P`) bits from `digest-value` after the '1' as an integer; let `R` be its value.
 7. Let `D` be `Q` * `P` + `R`.
 8. Increment `C` by `D` + 1.
@@ -289,7 +289,7 @@ Additionally, User Agents SHOULD NOT send CACHE_DIGEST when in "privacy mode."
 
 # Acknowledgements
 
-Thanks to Adam Langley and Giovanni Bajo for their explorations of Golumb-coded sets. In
+Thanks to Adam Langley and Giovanni Bajo for their explorations of Golomb-coded sets. In
 particular, see
 <http://giovanni.bajo.it/post/47119962313/golomb-coded-sets-smaller-than-bloom-filters>, which
 refers to sample code.

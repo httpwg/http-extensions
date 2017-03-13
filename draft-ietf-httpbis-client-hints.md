@@ -30,22 +30,6 @@ normative:
   RFC7230:
   RFC7231:
   RFC7234:
-  NETINFO:
-    target: https://w3c.github.io/netinfo/
-    title: "Network Information API"
-    author:
-    -
-      ins: M. Cáceres
-      name: Marcos Cáceres
-      organization:  Mozilla Corporation
-    -
-      ins: F.J. Moreno
-      name: Fernando Jiménez Moreno
-      organization: Telefonica
-    -
-      ins: I. Grigorik
-      name: Ilya Grigorik
-      organization: Google
   W3C.REC-html5-20141028:
   W3C.CR-css-values-3-20160929:
   CSS2:
@@ -116,7 +100,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 ## Sending Client Hints
 
-Clients control which Client Hint headers and their respective header fields are communicated, based on their default settings, user configuration and/or preferences. The user can be given the choice to enable, disable, or override specific hints.
+Clients control which Client Hints are sent in requests, based on their default settings, user configuration and/or preferences. Implementers might provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. Implementations specific to certain use cases or threat models might avoid transmitting these headers altogether, or limit them to secure contexts or authenticated sessions. Implementers should be aware that explaining the privacy implications of passive fingerprinting or network information disclosure may be challenging.
 
 The client and server, or an intermediate proxy, can use an opt-in mechanism to negotiate which fields should be reported to allow for efficient content adaption.
 
@@ -233,7 +217,7 @@ If Viewport-Width occurs in a message more than once, the last value overrides a
 
 # The Downlink Client Hint {#downlink}
 
-The "Downlink" request header field is a number that indicates the client's maximum downlink speed in megabits per second (Mbps), as defined by the "downlinkMax" attribute in the W3C Network Information API ({{NETINFO}}).
+The "Downlink" request header field is a number that indicates the client's maximum downlink speed in megabits per second (Mbps).
 
 ~~~ abnf7230
   Downlink = 1*DIGIT [ "." 1*DIGIT ]

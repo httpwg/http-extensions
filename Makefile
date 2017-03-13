@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -l
 kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=https://xml2rfc.tools.ietf.org/public/rfc kramdown-rfc2629
 
-names := http2-encryption rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable
+names := http2-encryption rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable expect-ct early-hints rand-access-live
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := opsec rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable
+friendly_names := opsec rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable expect-ct early-hints rand-access-live
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
@@ -75,6 +75,15 @@ header-structure.%: draft-ietf-httpbis-header-structure.%
 immutable.%: draft-ietf-httpbis-immutable.%
 	cp -f $< $@
 
+expect-ct.%: draft-ietf-httpbis-expect-ct.%
+	cp -f $< $@
+
+early-hints.%: draft-ietf-httpbis-early-hints.%
+	cp -f $< $@
+
+rand-access-live.%: draft-ietf-httpbis-rand-access-live.%
+	cp -f $< $@
+
 define makerule_submit_xml =
 $(1)
 	sed -e"s/$$(basename $$<)-latest/$$(basename $$@)/" $$< > $$@
@@ -88,8 +97,14 @@ $(foreach rule,$(submit_deps),$(eval $(call makerule_submit_xml,$(rule))))
 $(addsuffix .txt,$(next)): %.txt: %.xml
 	$(xml2rfc) $< $@
 
+draft-ietf-httpbis-rand-access-live.txt: draft-ietf-httpbis-rand-access-live.xml
+	$(xml2rfc) --text draft-ietf-httpbis-rand-access-live.xml
+
 %.txt: %.redxml
 	$(xml2rfc) $< $@
+
+draft-ietf-httpbis-rand-access-live.html: draft-ietf-httpbis-rand-access-live.xml
+	$(xml2rfc) --html draft-ietf-httpbis-rand-access-live.xml
 
 stylesheet := lib/rfcbootstrap.xslt
 %.html: %.xml $(stylesheet) $(extra_css)

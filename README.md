@@ -8,6 +8,25 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 [![Build Status](https://travis-ci.org/httpwg/http-extensions.svg?branch=master)](https://travis-ci.org/httpwg/http-extensions)
 
 
+### HTTP Random Access And Live Content
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/rand-access-live.html) ([plain text](https://httpwg.github.io/http-extensions/rand-access-live.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rand-access-live) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Arand-access-live) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rand-access-live/)
+
+### Early Hints
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/early-hints.html) ([plain text](https://httpwg.github.io/http-extensions/early-hints.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-early-hints) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aearly-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-early-hints/)
+
+### Expect-CT
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/expect-ct.html) ([plain text](https://httpwg.github.io/http-extensions/expect-ct.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-expect-ct) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aexpect-ct) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-expect-ct/)
+
+
 ### Header Common Structure
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/header-structure.html) ([plain text](https://httpwg.github.io/http-extensions/header-structure.txt))
@@ -48,7 +67,7 @@ _Working Group Last Call concluded; waiting for writeup._
 
 ### HTTP Encryption Content Encoding
 
-_Second Working Group Last Call concluded; waiting for changes._
+_Submitted to IESG._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-encryption-encoding.html)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-encryption-encoding) (less recent, more official)
@@ -75,7 +94,7 @@ _Submitted to IESG._
 
 ### HTTP Opportunistic Security
 
-_In Second Working Group Last Call; ends 9 Feb 2017._
+_Submitted to IESG._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/opsec.html) ([plain text](https://httpwg.github.io/http-extensions/opsec.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
