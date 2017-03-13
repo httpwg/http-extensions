@@ -107,7 +107,7 @@ Cache-Control extension in a request has no effect.
 
 ## About Intermediaries
 
-An immutable response has the same semantic meaning whe received by
+An immutable response has the same semantic meaning when received by
 proxy clients as it does when received by User-Agent based
 clients. Therefore proxies SHOULD skip conditionally revalidating fresh
 responses containing the immutable extension unless there is a signal
