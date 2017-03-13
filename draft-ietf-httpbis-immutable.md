@@ -158,4 +158,5 @@ Directive Registry" with IETF Review.
 # Acknowledgments
 
 Thank you to Ben Maurer for partnership in developing and testing this
-idea. Thank you to Amos Jeffries for help with proxy interactions.
+idea. Thank you to Amos Jeffries for help with proxy interactions and
+to Mark Nottingham for help with the documentation.
