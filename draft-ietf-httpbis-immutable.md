@@ -89,8 +89,13 @@ skipped without worrying that it has been updated.
 # The immutable Cache-Control extension
 
 When present in an HTTP response, the immutable Cache-Control
-extension indicates that the origin server MUST NOT update the representation
-of that resource during the freshness lifetime of the response.
+extension indicates that the origin server will not update the representation
+of that resource during the freshness lifetime of the
+response.
+
+Clients SHOULD NOT issue a conditional request during the
+response's freshness lifetime (e.g. upon a reload) unless explicitly
+overridden by the user (e.g. a force reload).
 
 The immutable extension only applies during the freshness lifetime of
 the response. Stale responses SHOULD be revalidated as they normally
