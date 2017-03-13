@@ -71,7 +71,7 @@ to the sub-resource are updated with the new path information.
 
 For example, `https://www.example.com/101016/main.css` might be updated and
 republished as `https://www.example.com/102026/main.css`, with any links that
-references it being changed at the same time. This design pattern allows a very
+reference it being changed at the same time. This design pattern allows a very
 large freshness lifetime to be used for the sub-resource without guessing
 when it will be updated in the future.
 
@@ -107,7 +107,7 @@ Cache-Control extension in a request has no effect.
 
 ## About Intermediaries
 
-An immutable response has the same semantic meaning whe received by
+An immutable response has the same semantic meaning when received by
 proxy clients as it does when received by User-Agent based
 clients. Therefore proxies SHOULD skip conditionally revalidating fresh
 responses containing the immutable extension unless there is a signal
