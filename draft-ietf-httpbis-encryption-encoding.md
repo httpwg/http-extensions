@@ -110,8 +110,6 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in {{!RFC2119}}.
 
-Base64url encoding is defined in Section 2 of {{?RFC7515}}.
-
 
 # The "aes128gcm" HTTP Content Coding {#aes128gcm}
 
@@ -300,9 +298,9 @@ is avoided).
 
 This section shows a few examples of the encrypted content coding.
 
-Note: All binary values in the examples in this section use base64url encoding
-{{?RFC7515}}.  This includes the bodies of requests.  Whitespace and line
-wrapping is added to fit formatting constraints.
+Note: All binary values in the examples in this section use Base 64 Encoding
+with URL and Filename Safe Alphabet {{?RFC4648}}.  This includes the bodies of
+requests.  Whitespace and line wrapping is added to fit formatting constraints.
 
 
 ## Encryption of a Response {#explicit}
