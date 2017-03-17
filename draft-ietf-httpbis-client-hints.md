@@ -107,12 +107,12 @@ The client and server, or an intermediate proxy, can use an opt-in mechanism to 
 
 ## Server Processing of Client Hints
 
-When presented with a request that contains one or more client hint headers, servers can optimise the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{I-D.ietf-httpbis-key}}), to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
+When presented with a request that contains one or more client hint headers, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{I-D.ietf-httpbis-key}}), to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing. For example, this specification defines "Content-DPR" response header field that needs to be returned by the server when the "DPR" hint is used to select the response.
 
 
-### Advertising Support for Client Hints {#accept-ch}
+### Advertising Support via Accept-CH header field {#accept-ch}
 
 Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{W3C.REC-html5-20141028}}).
 
@@ -123,12 +123,31 @@ Servers can advertise support for Client Hints using the Accept-CH header field 
 For example:
 
 ~~~ example
-  Accept-CH: DPR, Width, Viewport-Width, Downlink
+  Accept-CH: DPR, Width, Viewport-Width
 ~~~
 
-When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the server is interested in receiving specified request header fields that match the advertised field-values; subsequent requests initiated to the same server and, optionally any subresource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in, can include the request header fields that match the advertised field-values.
+When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the application is interested in receiving specified request header fields that match the advertised field-values; subresource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in can include the request header fields that match the advertised field-values.
 
-For example, based on Accept-CH example above, a user agent could append DPR, Width, Viewport-Width, and Downlink header fields to all subresource requests initiated by the page constructed from the response. Alternatively, a client can treat advertised support as a persistent origin preference and append same header fields on all future requests initiated to and by the resources associated with that origin.
+For example, based on Accept-CH example above, a user agent could append DPR, Width, and Viewport-Width header fields to all subresource requests initiated by the page constructed from the response.
+
+
+### The Accept-CH-Lifetime header field {#accept-ch-lifetime}
+
+Servers can ask the client to remember an origin-wide Accept-CH preference for a specified period of time to enable delivery of Client Hints on subsequent requests.
+
+~~~ abnf7230
+  Accept-CH-Lifetime = #delta-seconds
+~~~
+
+The field-value indicates that the Accept-CH preference should be considered stale after its age is greater than the specified number of seconds.
+
+~~~ example
+  Accept-CH: DPR, Viewport-Width
+  Accept-CH-Lifetime: 86400
+~~~
+
+For example, based on the Accept-CH and Accept-CH-Lifetime example above, a user agent could persist an origin-wide Accept-CH preference for up to 86400 seconds (1 day). Then, if a request is initiated to the same origin before the preference is stale, the client could append the requested header fields (DPR and Viewport-Width in this example) to the request, and any subresource request initiated as a result of processing a response from same origin.
+
 
 ### Interaction with Caches
 
@@ -275,7 +294,7 @@ The request header fields defined in this specification expose information that 
 
 For example, sending Client Hints on all requests can make information about the user's environment available to origins that otherwise did not have access to this data, which may or may not be the desired outcome - e.g. this may enable an image optimization service to deliver a tailored asset, and it may reveal same information about the user to other origins that may not have had access to it before. Similarly, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Restricting such field values to an enumerated range, where the user agent advertises a threshold value that is close but is not an exact representation of the current value, can help mitigate the risk of such fingerprinting.
 
-Implementers ought to provide mechanisms and policies to control how and when such hints are advertised. For example, they could require origin opt-in; restrict delivery to same origin subrequests; limit delivery to requests that already carry indentifying information (e.g. cookies); modify delivery policy when in an "incognito" or a similar privacy mode; enable user configuration and opt in, and so on.
+Implementers ought to provide mechanisms and policies to control how and when such hints are advertised. For example, they could require origin opt-in via Accept-CH; clear remembered opt-in, as set by Accept-CH-Lifetime, when site data, browsing history, browsing cache, or similar, are cleared; restrict delivery to same origin subrequests; limit delivery to requests that already carry identifying information (e.g. cookies); modify delivery policy when in an "incognito" or a similar privacy mode; enable user configuration and opt in, and so on.
 
 
 # IANA Considerations
@@ -288,6 +307,14 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Status: standard
 - Author/Change controller: IETF
 - Specification document(s): {{accept-ch}} of this document
+- Related information: for Client Hints
+
+## Accept-CH-Lifetime {#iana-accept-ch-lifetime}
+- Header field name: Accept-CH-Lifetime
+- Applicable protocol: HTTP
+- Status: standard
+- Author/Change controller: IETF
+- Specification document(s): {{accept-ch-lifetime}} of this document
 - Related information: for Client Hints
 
 ## Content-DPR {#iana-content-dpr}
@@ -364,4 +391,9 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 
 ## Since -03
 
-None yet.
+* Issue 284: Extended guidance for Accept-CH
+* Issue 308: Editorial cleanup
+* Issue 306: Define Accept-CH-Lifetime
+
+## Since -04
+* None yet.
