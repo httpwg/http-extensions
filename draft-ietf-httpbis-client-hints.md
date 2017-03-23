@@ -133,7 +133,7 @@ For example, based on Accept-CH example above, a user agent could append DPR, Wi
 
 ### The Accept-CH-Lifetime header field {#accept-ch-lifetime}
 
-Servers can ask the client to remember an origin-wide Accept-CH preference for a specified period of time to enable delivery of Client Hints on subsequent requests.
+Servers can ask the client to remember an origin-wide Accept-CH preference for a specified period of time to enable delivery of Client Hints on all subsequent requests to the origin, and on subresource requests initiated as a result of processing a response from the origin.
 
 ~~~ abnf7230
   Accept-CH-Lifetime = #delta-seconds
@@ -146,7 +146,7 @@ The field-value indicates that the Accept-CH preference should be considered sta
   Accept-CH-Lifetime: 86400
 ~~~
 
-For example, based on the Accept-CH and Accept-CH-Lifetime example above, a user agent could persist an origin-wide Accept-CH preference for up to 86400 seconds (1 day). Then, if a request is initiated to the same origin before the preference is stale, the client could append the requested header fields (DPR and Viewport-Width in this example) to the request, and any subresource request initiated as a result of processing a response from same origin.
+For example, based on the Accept-CH and Accept-CH-Lifetime example above, a user agent could persist an origin-wide Accept-CH preference for up to 86400 seconds (1 day). Then, if a request is initiated to the same origin before the preference is stale (e.g. as a result of a navigation to the origin, or fetching a subresource from the origin) the client could append the requested header fields (DPR and Viewport-Width in this example) to the request and any subresource requests initiated as a result of processing a response from same origin.
 
 
 ### Interaction with Caches
