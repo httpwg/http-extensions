@@ -1,7 +1,7 @@
 ---
 title: An HTTP Status Code for Indicating Hints
 abbrev: Early Hints
-docname: draft-ietf-httpbis-early-hints-latest
+docname: draft-ietf-httpbis-early-hints-01
 date: 2017
 category: exp
 
@@ -137,6 +137,6 @@ informational response.
 
 # Changes
 
-## Since -00
+## Since draft-ietf-httpbis-early-hints-00
 
-None yet.
+* Forbid processing the headers of a 103 response as part of the informational response.
