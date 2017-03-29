@@ -98,7 +98,8 @@ section 6.1) in the informational response using the status code.
 A client MAY speculatively evaluate the headers included in the informational response while
 waiting for the final response. For example, a client may recognize the link header of type preload
 and start fetching the resource. However, the evaluation MUST NOT affect how the final response is
-processed; the client must behave as if it had not seen the informational response.
+processed; the client must behave as if it had not seen the informational response. A client MUST
+NOT process the headers included in the response as if they belonged to the informational response.
 
 An intermediary MAY drop the informational response. It MAY send HTTP/2 ([RFC7540]) push responses
 using the information found in the informational response.
