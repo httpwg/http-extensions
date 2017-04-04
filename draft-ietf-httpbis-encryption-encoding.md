@@ -370,10 +370,13 @@ exposing keying material on side channels, such as might be exposed by the time
 it takes to perform a given operation.  The requirements for a good
 implementation of cryptographic algorithms can change over time.
 
-As a content coding, presence of the "aes128gcm" coding might be transparent to
-a consumer of a message.  Recipients that depend on content origin
-authentication using this mechanism MUST reject messages that don't include the
-"aes128gcm" content coding.
+
+## Automatic Decryption
+
+As a content coding, a "aes128gcm" content coding might be automatically removed
+by a receiver in way that is not obvious to the ultimate consumer of a message.
+Recipients that depend on content origin authentication using this mechanism
+MUST reject messages that don't include the "aes128gcm" content coding.
 
 
 ## Message Truncation
