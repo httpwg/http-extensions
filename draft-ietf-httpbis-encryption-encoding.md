@@ -409,8 +409,7 @@ salt are reused - this could expose the plaintext and the authentication key,
 nullifying the protection offered by encryption.  Thus, if the same input keying
 material is reused, then the salt parameter MUST be unique each time.  This
 ensures that the content encryption key is not reused.  An implementation SHOULD
-generate a random salt parameter for every message; a counter could achieve the
-same result.
+generate a random salt parameter for every message.
 
 
 ## Data Encryption Limits {#limits}
