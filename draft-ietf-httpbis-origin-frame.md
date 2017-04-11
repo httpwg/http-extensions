@@ -78,7 +78,7 @@ for the connection it occurs within.
 
 ## Syntax {#syntax}
 
-The ORIGIN frame type is 0xb (decimal 11).
+The ORIGIN frame type is 0xc (decimal 12).
 
 ~~~~
 +-------------------------------+-------------------------------+
@@ -189,7 +189,7 @@ another connection's Origin Set, and SHOULD close it once all outstanding reques
 This specification adds an entry to the "HTTP/2 Frame Type" registry.
 
 * Frame Type: ORIGIN
-* Code: 0xb
+* Code: 0xc
 * Specification: [this document]
 
 
