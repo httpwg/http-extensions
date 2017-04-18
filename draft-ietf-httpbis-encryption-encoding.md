@@ -216,13 +216,19 @@ rs:
   therefore impossible to exceed the 2^36-31 limit on plaintext input to
   AEAD_AES_128_GCM.  Values smaller than 18 are invalid.
 
+idlen:
+
+: The "idlen" parameter is an unsigned 8-bit integer that defines the length of
+  the "keyid" parameter.
+
 keyid:
 
 : The "keyid" parameter can be used to identify the keying material that is
-  used.  Recipients that receive a message are expected to know how to retrieve
-  keys; the "keyid" parameter might be input to that process.  A "keyid"
-  parameter SHOULD be a UTF-8 {{!RFC3629}} encoded string, particularly where
-  the identifier might need to rendered in a textual form.
+  used.  This field is the length determined by the "idlen" parameter.
+  Recipients that receive a message are expected to know how to retrieve keys;
+  the "keyid" parameter might be input to that process.  A "keyid" parameter
+  SHOULD be a UTF-8 {{!RFC3629}} encoded string, particularly where the
+  identifier might need to be rendered in a textual form.
 
 
 ## Content Encryption Key Derivation {#derivation}
