@@ -334,7 +334,7 @@ salt (from header) = I1BsxtFttlv3u_Oo94xnmw
 PRK = zyeH5phsIsgUyd4oiSEIy35x-gIi4aM7y0hCF8mwn9g
 CEK = _wniytB-ofscZDh4tbSjHw
 NONCE = Bcs8gkIRKLI8GeI8
-plaintext = SSBhbSB0aGUgd2FscnVzAg
+unencrypted data = SSBhbSB0aGUgd2FscnVzAg
 ~~~
 
 
