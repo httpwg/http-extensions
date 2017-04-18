@@ -256,8 +256,12 @@ aes128gcm" and a single zero octet:
    cek_info = "Content-Encoding: aes128gcm" || 0x00
 ~~~
 
-Note:
+Note(1):
 : Concatenation of octet sequences is represented by the `||` operator.
+
+Note(2):
+: The strings used here and in {{nonce}} do not include a terminating 0x00
+  octet, as is used in some programming languages.
 
 AEAD_AES_128_GCM requires a 16 octet (128 bit) content encryption key (CEK), so
 the length (L) parameter to HKDF is 16.  The second step of HKDF can therefore
