@@ -7,6 +7,9 @@ ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
 
+stand_alone: yes
+pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline, docmapping]
+
 author:
  - 
   ins: P. McManus
