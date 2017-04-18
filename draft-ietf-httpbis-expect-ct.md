@@ -280,8 +280,10 @@ The following examples demonstrate valid Expect-CT response header fields:
 
 ~~~ inline
 Expect-CT: max-age=86400,enforce
-Expect-CT: max-age=86400, enforce, report-uri="https://foo.test/report"
-Expect-CT: max-age=86400,report-uri="https://foo.test/report"
+
+Expect-CT: max-age=86400, enforce, report-uri="https://foo.example/report"
+
+Expect-CT: max-age=86400,report-uri="https://foo.example/report"
 ~~~
 {: #example-header-fields title="Examples of valid Expect-CT response header fields"}
 
