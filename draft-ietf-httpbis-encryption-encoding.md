@@ -499,13 +499,13 @@ information:
 
 ## Poisoning Storage
 
-This mechanism only offers encryption of content; it does not perform
-authentication or authorization, which still needs to be performed (e.g., by
-HTTP authentication {{?RFC7235}}).
+This mechanism only offers data origin authentication; it does not perform
+authentication or authorization of the message creator, which could still need
+to be performed (e.g., by HTTP authentication {{?RFC7235}}).
 
-This is especially relevant when a HTTP PUT request is accepted by a server; if
-the request is unauthenticated, it becomes possible for a third party to deny
-service and/or poison the store.
+This is especially relevant when a HTTP PUT request is accepted by a server
+without decrypting the payload; if the request is unauthenticated, it becomes
+possible for a third party to deny service and/or poison the store.
 
 
 ## Sizing and Timing Attacks
