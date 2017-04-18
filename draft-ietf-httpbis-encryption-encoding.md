@@ -54,6 +54,16 @@ informative:
       - ins: K. Paterson
     date: 2016-03-08
     target: "http://www.isg.rhul.ac.uk/~kp/TLS-AEbounds.pdf"
+  CLINIC:
+    title: "I Know Why You Went to the Clinic: Risks and Realization of HTTPS Traffic Analysis"
+    author:
+      - ins: B. Miller
+      - ins: L. Huang
+      - ins: A. D. Joseph
+      - ins: J. D. Tygar
+    date: 2014-03-03
+    target: "https://arxiv.org/abs/1403.0297"
+
 
 --- abstract
 
@@ -502,7 +512,8 @@ service and/or poison the store.
 
 Applications using this mechanism need to be aware that the size of encrypted
 messages, as well as their timing, HTTP methods, URIs and so on, may leak
-sensitive information.
+sensitive information.  See for example {{?NETFLIX=DOI.10.1145/3029806.3029821}}
+or {{CLINIC}}.
 
 This risk can be mitigated through the use of the padding that this mechanism
 provides.  Alternatively, splitting up content into segments and storing them
