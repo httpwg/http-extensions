@@ -525,8 +525,8 @@ on context.  Common strategies include padding to a small set of fixed lengths,
 padding to multiples of a value, or padding to powers of 2.  Even a good
 strategy can still cause size information to leak if processing activity of a
 recipient can be observed.  This is especially true if the trailing records of a
-message contain only padding.  Distributing non-padding data is recommended to
-avoid leaking size information.
+message contain only padding.  Distributing non-padding data across records is
+recommended to avoid leaking size information.
 
 
 # IANA Considerations {#iana}
