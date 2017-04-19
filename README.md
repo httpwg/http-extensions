@@ -49,8 +49,6 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Origin Frame
 
-_Parked; this document is held until use cases are clarified._
-
 * [Editors' Draft](https://httpwg.github.io/http-extensions/origin-frame.html) ([plain text](https://httpwg.github.io/http-extensions/origin-frame.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-origin-frame) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aorigin-frame) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-origin-frame/)
@@ -65,14 +63,6 @@ _Working Group Last Call concluded; waiting for writeup._
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
 
 
-### HTTP Encryption Content Encoding
-
-_Submitted to IESG._
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-encryption-encoding.html)
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-encryption-encoding) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aencryption) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-encryption-encoding/)
-
 
 ### Key
 
@@ -81,25 +71,6 @@ _Parked; waiting for implementation feedback._
 * [Editors' Draft](https://httpwg.github.io/http-extensions/key.html) ([plain text](https://httpwg.github.io/http-extensions/key.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-key) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Akey) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-key/)
-
-
-### Character Encoding and Language for Parameters
-
-_Submitted to IESG._
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/rfc5987bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc5987bis.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc5987bis) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A5987bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc5987bis/)
-
-
-### HTTP Opportunistic Security
-
-_Submitted to IESG._
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/opsec.html) ([plain text](https://httpwg.github.io/http-extensions/opsec.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-encryption/)
-
 
 
 ### RFC6265bis
@@ -113,3 +84,31 @@ This will incorporate the following drafts:
 * [Cookie Prefixes](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-prefixes.html)
 * [Same-Site Cookies](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-same-site.html)
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
+
+
+### HTTP Encryption Content Encoding
+
+_Approved; in RFC Editor Queue._
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-encryption-encoding.html)
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-encryption-encoding) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aencryption) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-encryption-encoding/)
+
+
+### Character Encoding and Language for Parameters
+
+_Approved; in RFC Editor Queue._
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/rfc5987bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc5987bis.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc5987bis) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A5987bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc5987bis/)
+
+
+### HTTP Opportunistic Security
+
+_Approved; in RFC Editor Queue._
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/opsec.html) ([plain text](https://httpwg.github.io/http-extensions/opsec.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-encryption/)
+
