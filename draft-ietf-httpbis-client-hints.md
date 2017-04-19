@@ -396,4 +396,4 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 * Issue 306: Define Accept-CH-Lifetime
 
 ## Since -04
-* None yet.
+* None
