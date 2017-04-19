@@ -240,7 +240,11 @@ introduce end-user perceived latency, due to their size. As a result, it might b
 select a "core" set of origins to send initially, expanding the set of origins the connection is
 used for with subsequent ORIGIN frames later (e.g., when the connection is idle).
 
-Senders should note that, as per {{!RFC6454}} Section 4, the values in an ORIGIN header need to be
+That said, senders are encouraged to include as many origins as practical within a single ORIGIN
+frame; clients need to make decisions about creating connections on the fly, and if the origin
+set is split across many frames, their behaviour might be suboptimal.
+
+Senders take note that, as per {{!RFC6454}} Section 4, the values in an ORIGIN header need to be
 case-normalised before serialisation.
 
 Finally, servers that allow alternative services {{?RFC7838}} will need to explicitly advertise
