@@ -118,9 +118,9 @@ connection with the "h2c" protocol identifier.
 This specification does not define any flags for the ORIGIN frame, but future updates might use
 them to change its semantics. The first four flags (0x1, 0x2, 0x4 and 0x8) are reserved for
 backwards-incompatible changes, and therefore when any of them are set, the ORIGIN frame containing
-them MUST be ignored by clients conforming to this specification. The remaining flags are reserved
-for backwards-compatible changes, and do not affect processing by clients conformant to this
-specification.
+them MUST be ignored by clients conforming to this specification, unless the flag's semantics are
+understood. The remaining flags are reserved for backwards-compatible changes, and do not affect
+processing by clients conformant to this specification.
 
 The ORIGIN frame describes a property of the connection, and therefore is processed hop-by-hop. An
 intermediary MUST NOT forward ORIGIN frames. Clients configured to use a proxy MUST ignore any
