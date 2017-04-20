@@ -174,10 +174,10 @@ using the grammar defined in RFC 5234 {{!RFC5234}} and the rules defined in
 Section 3.2 of RFC 7230 {{!RFC7230}}.
 
 ~~~ abnf
-Expect-CT-Directives = directive *( OWS ";" OWS directive )
-directive            = directive-name [ "=" directive-value ]
-directive-name       = token
-directive-value      = token / quoted-string
+Expect-CT           = #expect-ct-directive
+expect-ct-directive = directive-name [ "=" directive-value ]
+directive-name      = token
+directive-value     = token / quoted-string
 ~~~
 {: #expect-ct-syntax title="Syntax of the Expect-CT header field"}
 
@@ -274,6 +274,19 @@ delta-seconds = 1*DIGIT
 
 `delta-seconds` is used as defined in Section 1.2.1 of RFC 7234 {{!RFC7234}}.
 
+### Examples
+
+The following examples demonstrate valid Expect-CT response header fields:
+
+~~~ inline
+Expect-CT: max-age=86400,enforce
+
+Expect-CT: max-age=86400, enforce, report-uri="https://foo.example/report"
+
+Expect-CT: max-age=86400,report-uri="https://foo.example/report"
+~~~
+{: #example-header-fields title="Examples of valid Expect-CT response header fields"}
+
 ## Server Processing Model
 
 This section describes the processing model that Expect-CT Hosts implement.  The
@@ -339,10 +352,6 @@ not comply with the UA's CT Policy (i.e. the connection is not CT-qualified),
 and the UA has not already sent an Expect-CT report for this connection, then
 the UA SHOULD send a report to the specified `report-uri` as specified in
 {{reporting-expect-ct-failure}}.
-
-If a UA receives more than one Expect-CT header field in an HTTP response
-message over secure transport, then the UA MUST process only the first Expect-CT
-header field.
 
 The UA MUST ignore any Expect-CT header field not conforming to the grammar
 specified in {{response-header-field-syntax}}.
