@@ -247,6 +247,7 @@ set is split across many frames, their behaviour might be suboptimal.
 Senders take note that, as per {{!RFC6454}} Section 4, the values in an ORIGIN header need to be
 case-normalised before serialisation.
 
-Finally, servers that allow alternative services {{?RFC7838}} will need to explicitly advertise
-those origins when sending ORIGIN, because the default contents of the Origin Set (as per {{set}})
-do not contain any Alternative Services, even if they have been used previously on the connection.
+Finally, servers that host alternative services {{?RFC7838}} will need to explicitly advertise
+their origins when sending ORIGIN, because the default contents of the Origin Set (as per {{set}})
+do not contain any Alternative Services' origins, even if they have been used previously on the
+connection.
