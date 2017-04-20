@@ -17,7 +17,7 @@ author:
  -
     ins: M. Nottingham
     name: Mark Nottingham
-    organization: Akamai
+    organization:
     email: mnot@mnot.net
     uri: https://www.mnot.net/
  -
