@@ -50,7 +50,7 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 # Introduction
 
 HTTP/2 {{!RFC7540}} allows clients to coalesce different origins {{!RFC6454}} onto the same
-connection when certain conditions are met. However, in certain cases, a connection is is not
+connection when certain conditions are met. However, in certain cases, a connection is not
 usable for a coalesced origin, so the 421 (Misdirected Request) status code ({{?RFC7540}}, Section
 9.1.2) was defined.
 
