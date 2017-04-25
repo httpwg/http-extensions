@@ -111,6 +111,14 @@ informative:
     title: "Deprecate modification of 'secure' cookies from non-secure origins"
     target: "https://tools.ietf.org/html/draft-ietf-httpbis-cookie-alone-01"
     date: September 5, 2016
+  draft-ietf-httpbis-cookie-prefixes:
+    author:
+    -
+      ins: M. West
+      name: Mike West
+    title: "Cookie Prefixes"
+    target: "https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes-00"
+    date: February 23, 2016
 
 --- abstract
 
@@ -560,6 +568,70 @@ exposes cookies to scripts).
 
 Note that the HttpOnly attribute is independent of the Secure attribute: a
 cookie can have both the HttpOnly and the Secure attribute.
+
+### Cookie Name Prefixes
+
+Section 8.5 and 8.6 of this document spell out some of the drawbacks of cookies'
+historical implementation. In particular, it is impossible for a server to have
+confidence that a given cookie was set with a particular set of attributes. In
+order to provide such confidence in a backwards-compatible way, two common sets
+of requirements can be inferred from the first few characters of the cookie's
+name.
+
+The normative requirements for the prefixes described below are detailed in the
+storage model algorithm defined in Section 5.3.
+
+#### The "__Secure-" Prefix
+
+If a cookie's name begins with a case-sensitive match for the string
+`__Secure-`, then the cookie will have been set with a `Secure` attribute.
+
+For example, the following `Set-Cookie` header would be rejected by a conformant
+user agent, as it does not have a `Secure` attribute.
+
+~~~
+Set-Cookie: __Secure-SID=12345; Domain=example.com
+~~~
+
+Whereas the following `Set-Cookie` header would be accepted:
+
+~~~
+Set-Cookie: __Secure-SID=12345; Domain=example.com; Secure
+~~~
+
+#### The "__Host-" Prefix
+
+If a cookie's name begins with a case-sensitive match for the string
+`__Host-`, then the cookie will have been set with a `Secure` attribute, a
+`Path` attribute with a value of `/`, and no `Domain` attribute.
+
+This combination yields a cookie that hews as closely as a cookie can to
+treating the origin as a security boundary. The lack of a `Domain` attribute
+ensures that the cookie's `host-only-flag` is true, locking the cookie to a
+particular host, rather than allowing it to span subdomains. Setting the `Path`
+to `/` means that the cookie is effective for the entire host, and won't be
+overridden for specific paths. The `Secure` attribute ensures that the cookie
+is unaltered by non-secure origins, and won't span protocols.
+
+Ports are the only piece of the origin model that `__Host-` cookies continue
+to ignore.
+
+For example, the following cookies would always be rejected:
+
+~~~
+Set-Cookie: __Host-SID=12345
+Set-Cookie: __Host-SID=12345; Secure
+Set-Cookie: __Host-SID=12345; Domain=example.com
+Set-Cookie: __Host-SID=12345; Domain=example.com; Path=/
+Set-Cookie: __Host-SID=12345; Secure; Domain=example.com; Path=/
+~~~
+
+While the would be accepted if set from a secure origin (e.g.
+"https://example.com/"), and rejected otherwise:
+
+~~~
+Set-Cookie: __Host-SID=12345; Secure; Path=/
+~~~
 
 ## Cookie
 
@@ -1065,7 +1137,7 @@ user agent MUST process the cookie as follows:
     Otherwise, set the cookie's http-only-flag to false.
 
 11. If the cookie was received from a "non-HTTP" API and the cookie's
-    http-only-flag is set, abort these steps and ignore the cookie entirely.
+    http-only-flag is true, abort these steps and ignore the cookie entirely.
 
 12. If the cookie's secure-only-flag is not set, and the scheme component of
     request-uri does not denote a "secure" protocol, then abort these steps and
@@ -1074,7 +1146,7 @@ user agent MUST process the cookie as follows:
 
     1.  Their name matches the name of the newly-created cookie.
 
-    2.  Their secure-only-flag is set.
+    2.  Their secure-only-flag is true.
 
     3.  Their domain domain-matches the domain of the newly-created cookie, or
         vice-versa.
@@ -1089,7 +1161,21 @@ user agent MUST process the cookie as follows:
     non-secure cookie named 'a' could be set for a path of '/' or '/foo', but
     not for a path of '/login' or '/login/en'.
 
-12. If the cookie store contains a cookie with the same name, domain, and
+13. If the cookie-name begins with a case-sensitive match for the string
+    "__Secure-", abort these steps and ignore the cookie entirely unless the
+    cookie's secure-only-flag is true.
+
+14. If the cookie-name begins with a case-sensitive match for the string
+    "__Host-", abort these steps and ignore the cookie entirely unless the
+    cookie meets all the following criteria:
+
+    1.  The cookie's secure-only-flag is true.
+
+    2.  The cookie's host-only-flag is true.
+
+    3.  The cookie's path is `/`.
+
+15. If the cookie store contains a cookie with the same name, domain, and
     path as the newly-created cookie:
 
     1.  Let old-cookie be the existing cookie with the same name, domain,
@@ -1097,7 +1183,7 @@ user agent MUST process the cookie as follows:
         maintains the invariant that there is at most one such cookie.)
 
     2.  If the newly-created cookie was received from a "non-HTTP" API and the
-        old-cookie's http-only-flag is set, abort these steps and ignore the
+        old-cookie's http-only-flag is true, abort these steps and ignore the
         newly created cookie entirely.
 
     3.  Update the creation-time of the newly-created cookie to match the
@@ -1105,7 +1191,7 @@ user agent MUST process the cookie as follows:
 
     4.  Remove the old-cookie from the cookie store.
 
-13. Insert the newly-created cookie into the cookie store.
+16. Insert the newly-created cookie into the cookie store.
 
 A cookie is "expired" if the cookie has an expiry date in the past.
 
@@ -1568,7 +1654,10 @@ Specification document:
 
 *  Merged the recommendations from {{draft-ietf-httpbis-cookie-alone}}, removing
    the ability for a non-secure origin to set cookies with a 'secure' flag, and
-   to overwrite cookies whose 'secure' flag is set.
+   to overwrite cookies whose 'secure' flag is true.
+
+*  Merged the recommendations from {{draft-ietf-httpbis-cookie-prefixes}}, adding
+   `__Secure-` and `__Host-` cookie name prefix processing instructions.
 
 # Acknowledgements
 
