@@ -1,5 +1,5 @@
 ---
-title: HTTP Header Common Structure 
+title: HTTP Header Common Structure
 docname: draft-ietf-httpbis-header-structure-latest
 date: 2017
 category: std
@@ -17,11 +17,19 @@ author:
 
 normative:
   RFC2119:
+  RFC5137:
+  RFC5234:
   RFC7230:
 
 informative:
+  RFC7231:
+  RFC7232:
+  RFC7233:
+  RFC7234:
+  RFC7235:
+  RFC7239:
+  RFC7694:
 
-  
 --- abstract
 
 An abstract data model for HTTP headers, "Common Structure", and a
@@ -61,10 +69,10 @@ one long list of special cases.
 
 Parallel to this, various proposals for how to fulfill data-transportation
 needs, and to a lesser degree to impose some kind of order on
-HTTP headers, at least going forward were floated.
+HTTP headers, at least going forward, were floated.
 
 All of these proposals, JSON, CBOR etc. run into the same basic
-problem:  Their serialization is incompatible with {{RFC7230}}'s
+problem:  Their serialization is incompatible with RFC 7230's {{RFC7230}}
 ABNF definition of 'field-value'.
 
 For binary formats, such as CBOR, a wholesale base64/85
@@ -73,8 +81,10 @@ both debugability and bandwidth.
 
 For textual formats, such as JSON, the format must first be neutered
 to not violate field-value's ABNF, and then workarounds added
-to reintroduce the features just lost, for instance UNICODE strings,
-and suddenly it is no longer JSON anymore.
+to reintroduce the features just lost, for instance UNICODE strings.
+
+The post-surgery format is no longer JSON, and it experience indicates
+that almost-but-not-quite compatibility is worse than no compatibility.
 
 This proposal starts from the other end, and builds and generalizes
 a data structure definition from existing HTTP headers, which means
@@ -99,10 +109,10 @@ dictionaries.  Please see {{survey}} for how this model was derived.
 
 The definition of the data model is on purpose abstract, uncoupled
 from any protocol serialization or programming environment
-representation, meant as the foundation on which all such manifestations
-of the model can be built.
+representation, it is meant as the foundation on which all such
+manifestations of the model can be built.
 
-Common Structure in ABNF:
+Common Structure in ABNF (Slightly bastardized relative to RFC5234 {{RFC5234}}):
 
 ~~~ abnf
   import token from RFC7230
@@ -111,13 +121,7 @@ Common Structure in ABNF:
   common-structure = 1* ( identifier dictionary )
 
   dictionary = * ( identifier [ value ] )
-~~~
 
-Key identifiers in dictionaries SHALL be unique, but semantically
-overlapping key identifiers for instance 'text/plain' and 'text/*'
-are ok.
-
-~~~ abnf
   value = identifier /
           integer /
           number /
@@ -130,7 +134,8 @@ are ok.
 
 Recursion is included as a way to to support deep and more general
 data structures, but its use is highly discouraged and where it is
-used the depth of recursion SHALL always be explicitly limited.
+used the depth of recursion SHALL always be explicitly limited
+in the specifications of the HTTP headers which allow it.
 
 ~~~ abnf
 
@@ -151,7 +156,7 @@ Integers SHALL be in the range +/- 2^63-1 (= +/- 9223372036854775807)
            ["-"] 14DIGIT '.' 1DIGIT
 ~~~
 
-The limit of 15 siginificant digits is chosen so that numbers can
+The limit of 15 significant digits is chosen so that numbers can
 be correctly represented by IEEE754 64 bit binary floating point.
 
 ~~~ abnf
@@ -200,7 +205,7 @@ In ABNF:
 ~~~ abnf
   import OWS from RFC7230
   import HEXDIG, DQUOTE from RFC5234
-  import EmbeddedUnicodeChar from BCP137
+  import EmbeddedUnicodeChar from RFC5137
 
   h1-common-structure-header =
           h1-common-structure-legacy-header /
@@ -253,7 +258,7 @@ The dim prospects of ever getting a majority of HTTP1 paths 8-bit
 clean makes UTF-8 unviable as H1 serialization.  Given that very
 little of the information in HTTP headers is presented to users in
 the first place, improving H1 and HPACK efficiency by inventing a
-more efficient BCP137 compliant escape-sequences seems unwarranted.
+more efficient RFC5137 compliant escape-sequences seems unwarranted.
 
 ~~~ abnf
   h1-blob = ":" base64 ":"
@@ -300,7 +305,7 @@ Contra:
 Cannot act on any such header until all headers have been received.
 
 We must define where headers can be split (between identifier and
-dictionary ?, in the middle of dictionaries ?)  
+dictionary ?, in the middle of dictionaries ?)
 
 Most on-the-fly editing is hackish at best.
 
@@ -357,7 +362,7 @@ smuggling attacks.
 # Do HTTP headers have any common structure ? {#survey}
 
 Several proposals have been floated in recent years to use
-some preexisting structured data serialization or other 
+some preexisting structured data serialization or other
 for HTTP headers, to impose some sanity.
 
 None of these proposals have gained traction and no obvious
@@ -396,11 +401,11 @@ In pidgin ABNF, ignoring white-space for the sake of clarity, the
 HTTP/1.1 serialization of Common Structure is is something like:
 
 ~~~ abnf
-  token-or-asterix = token from {{RFC7230}}, but also allowing "*"
+  token-or-asterix = token from RFC7230, but also allowing "*"
 
   qualified-token = token-or-asterix [ "/" token-or-asterix ]
 
-  field-name, see {{RFC7230}}
+  field-name, see RFC7230
 
   Common-Structure-Header = field-name ":" 1#named-dictionary
 
@@ -470,7 +475,7 @@ by text compression (ie: HPACK) seems like a good idea too.
 
 However, when using a datamodel and a parser general enough to
 transport useful data, it will have to be followed by a validation
-step, which checks that the data also makes sense. 
+step, which checks that the data also makes sense.
 
 Today validation, such as it is, is often done by the bespoke parsers.
 
@@ -492,126 +497,98 @@ So file that idea under "future work".
 
 ## RFC723x headers with "common structure" {#common}
 
-~~~
-  Accept              [RFC7231, Section 5.3.2]
-  Accept-Charset      [RFC7231, Section 5.3.3]
-  Accept-Encoding     [RFC7231, Section 5.3.4][RFC7694, Section 3]
-  Accept-Language     [RFC7231, Section 5.3.5]
-  Age                 [RFC7234, Section 5.1]
-  Allow               [RFC7231, Section 7.4.1]
-  Connection          [RFC7230, Section 6.1]
-  Content-Encoding    [RFC7231, Section 3.1.2.2]
-  Content-Language    [RFC7231, Section 3.1.3.2]
-  Content-Length      [RFC7230, Section 3.3.2]
-  Content-Type        [RFC7231, Section 3.1.1.5]
-  Expect              [RFC7231, Section 5.1.1]
-  Max-Forwards        [RFC7231, Section 5.1.2]
-  MIME-Version        [RFC7231, Appendix A.1]
-  TE                  [RFC7230, Section 4.3]
-  Trailer             [RFC7230, Section 4.4]
-  Transfer-Encoding   [RFC7230, Section 3.3.1]
-  Upgrade             [RFC7230, Section 6.7]
-  Vary                [RFC7231, Section 7.1.4]
-~~~
+* Accept              {{RFC7231}}, Section 5.3.2
+* Accept-Charset      {{RFC7231}}, Section 5.3.3
+* Accept-Encoding     {{RFC7231}}, Section 5.3.4, {{RFC7694}}, Section 3
+* Accept-Language     {{RFC7231}}, Section 5.3.5
+* Age                 {{RFC7234}}, Section 5.1
+* Allow               {{RFC7231}}, Section 7.4.1
+* Connection          {{RFC7230}}, Section 6.1
+* Content-Encoding    {{RFC7231}}, Section 3.1.2.2
+* Content-Language    {{RFC7231}}, Section 3.1.3.2
+* Content-Length      {{RFC7230}}, Section 3.3.2
+* Content-Type        {{RFC7231}}, Section 3.1.1.5
+* Expect              {{RFC7231}}, Section 5.1.1
+* Max-Forwards        {{RFC7231}}, Section 5.1.2
+* MIME-Version        {{RFC7231}}, Appendix A.1
+* TE                  {{RFC7230}}, Section 4.3
+* Trailer             {{RFC7230}}, Section 4.4
+* Transfer-Encoding   {{RFC7230}}, Section 3.3.1
+* Upgrade             {{RFC7230}}, Section 6.7
+* Vary                {{RFC7231}}, Section 7.1.4
 
 ## RFC723x headers with "uncommon structure" {#uncommon}
 
 1 of the RFC723x headers is only reserved, and therefore
 have no structure at all:
 
-~~~
-  Close               [RFC7230, Section 8.1]
-~~~
+*  Close               {{RFC7230}}, Section 8.1
 
 5 of the RFC723x headers are HTTP dates:
 
-~~~
-  Date                [RFC7231, Section 7.1.1.2]
-  Expires             [RFC7234, Section 5.3]
-  If-Modified-Since   [RFC7232, Section 3.3]
-  If-Unmodified-Since [RFC7232, Section 3.4]
-  Last-Modified       [RFC7232, Section 2.2]
-~~~
+* Date                {{RFC7231}}, Section 7.1.1.2
+* Expires             {{RFC7234}}, Section 5.3
+* If-Modified-Since   {{RFC7232}}, Section 3.3
+* If-Unmodified-Since {{RFC7232}}, Section 3.4
+* Last-Modified       {{RFC7232}}, Section 2.2
 
 24 of the RFC723x headers use bespoke formats
 which only a single or in rare cases two headers
 share:
 
-~~~
-  Accept-Ranges       [RFC7233, Section 2.3]
-      bytes-unit / other-range-unit
-
-  Authorization       [RFC7235, Section 4.2]
-  Proxy-Authorization [RFC7235, Section 4.4]
-      credentials
-
-  Cache-Control       [RFC7234, Section 5.2]
-      1#cache-directive
-
-  Content-Location    [RFC7231, Section 3.1.4.2]
-      absolute-URI / partial-URI
-
-  Content-Range       [RFC7233, Section 4.2]
-      byte-content-range / other-content-range
-
-  ETag                [RFC7232, Section 2.3]
-      entity-tag
-
-  Forwarded           [RFC7239]
-      1#forwarded-element
-
-  From                [RFC7231, Section 5.5.1]
-      mailbox
-
-  If-Match            [RFC7232, Section 3.1]
-  If-None-Match       [RFC7232, Section 3.2]
-      "*" / 1#entity-tag
-
-  If-Range            [RFC7233, Section 3.2]
-      entity-tag / HTTP-date
-
-  Host                [RFC7230, Section 5.4]
-      uri-host [ ":" port ]
-
-  Location            [RFC7231, Section 7.1.2]
-      URI-reference
-
-  Pragma              [RFC7234, Section 5.4]
-      1#pragma-directive
-
-  Range               [RFC7233, Section 3.1]
-      byte-ranges-specifier / other-ranges-specifier
-
-  Referer             [RFC7231, Section 5.5.2]
-      absolute-URI / partial-URI
-
-  Retry-After         [RFC7231, Section 7.1.3]
-      HTTP-date / delay-seconds
-
-  Server              [RFC7231, Section 7.4.2]
-  User-Agent          [RFC7231, Section 5.5.3]
-      product *( RWS ( product / comment ) )
-
-  Via                 [RFC7230, Section 5.7.1]
-      1#( received-protocol RWS received-by [ RWS comment ] )
-
-  Warning             [RFC7234, Section 5.5]
-      1#warning-value
-
-  Proxy-Authenticate  [RFC7235, Section 4.3]
-  WWW-Authenticate    [RFC7235, Section 4.1]
-      1#challenge
-~~~
+* Accept-Ranges       {{RFC7233}}, Section 2.3
+  - bytes-unit / other-range-unit
+* Authorization       {{RFC7235}}, Section 4.2
+* Proxy-Authorization {{RFC7235}}, Section 4.4
+  - credentials
+* Cache-Control       {{RFC7234}}, Section 5.2
+  - 1#cache-directive
+* Content-Location    {{RFC7231}}, Section 3.1.4.2
+  - absolute-URI / partial-URI
+* Content-Range       {{RFC7233}}, Section 4.2
+  - byte-content-range / other-content-range
+* ETag                {{RFC7232}}, Section 2.3
+  - entity-tag
+* Forwarded           {{RFC7239}}
+  - 1#forwarded-element
+* From                {{RFC7231}}, Section 5.5.1
+  - mailbox
+* If-Match            {{RFC7232}}, Section 3.1
+* If-None-Match       {{RFC7232}}, Section 3.2
+  - "*" / 1#entity-tag
+* If-Range            {{RFC7233}}, Section 3.2
+  - entity-tag / HTTP-date
+* Host                {{RFC7230}}, Section 5.4
+  - uri-host \[ ":" port \]
+* Location            {{RFC7231}}, Section 7.1.2
+  - URI-reference
+* Pragma              {{RFC7234}}, Section 5.4
+  - 1#pragma-directive
+* Range               {{RFC7233}}, Section 3.1
+  - byte-ranges-specifier / other-ranges-specifier
+* Referer             {{RFC7231}}, Section 5.5.2
+  - absolute-URI / partial-URI
+* Retry-After         {{RFC7231}}, Section 7.1.3
+  - HTTP-date / delay-seconds
+* Server              {{RFC7231}}, Section 7.4.2
+* User-Agent          {{RFC7231}}, Section 5.5.3
+  - product *( RWS ( product / comment ) )
+* Via                 {{RFC7230}}, Section 5.7.1
+  - 1#( received-protocol RWS received-by \[ RWS comment \] )
+* Warning             {{RFC7234}}, Section 5.5
+  - 1#warning-value
+* Proxy-Authenticate  {{RFC7235}}, Section 4.3
+* WWW-Authenticate    {{RFC7235}}, Section 4.1
+  - 1#challenge
 
 
 # Changes
 
 ## Since draft-ietf-httpbis-header-structure-00
 
-Added uniqueness requirement on dictionary keys.
+Added signed 64bit integer type.
 
-Added signed 64bit integer type
+Drop UTF8, and settle on BCP137 {{RFC5137}}::EmbeddedUnicodeChar for
+h1-unicode-string.
 
-Drop UTF8, and settle on BCP137::EmbeddedUnicodeChar for h1-unicode-string
-
-Change h1_blob delimiter to ":" as "'" is valid t_char
+Change h1_blob delimiter to ":" since "'" is valid t_char
