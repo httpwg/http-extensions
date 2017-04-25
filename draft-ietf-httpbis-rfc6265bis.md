@@ -103,6 +103,14 @@ informative:
     title: "An Analysis of Private Browsing Modes in Modern Browsers"
     date: 2010
     target: http://www.usenix.org/events/sec10/tech/full_papers/Aggarwal.pdf
+  draft-ietf-httpbis-cookie-alone:
+    author:
+    -
+      ins: M. West
+      name: Mike West
+    title: "Deprecate modification of 'secure' cookies from non-secure origins"
+    target: "https://tools.ietf.org/html/draft-ietf-httpbis-cookie-alone-01"
+    date: September 5, 2016
 
 --- abstract
 
@@ -1543,14 +1551,24 @@ Specification document:
 
 # Changes since draft-ietf-httpbis-rfc6265bis-00
 
+## Changes in -01
+
 *  Fixes to formatting caused by mistakes in the initial port to Markdown:
 
    *   <https://github.com/httpwg/http-extensions/issues/243>
+   *   <https://github.com/httpwg/http-extensions/issues/246>
 
-*  -01 addresses errata 3444 by updating the `path-value` and `extension-av`
+*  Addresses errata 3444 by updating the `path-value` and `extension-av`
    grammar, errata 4148 by updating the `day-of-month`, `year`, and `time`
    grammar, and errata 3663 by adding the requested note.
    <https://www.rfc-editor.org/errata_search.php?rfc=6265>
+
+*  Dropped `Cookie2` and `Set-Cookie2` from the IANA Considerations section:
+   <https://github.com/httpwg/http-extensions/issues/247>
+
+*  Merged the recommendations from {{draft-ietf-httpbis-cookie-alone}}, removing
+   the ability for a non-secure origin to set cookies with a 'secure' flag, and
+   to overwrite cookies whose 'secure' flag is set.
 
 # Acknowledgements
 
