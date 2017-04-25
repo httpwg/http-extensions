@@ -584,6 +584,10 @@ share:
 
 # Changes
 
+## Since draft-ietf-httpbis-header-structure-01
+
+None yet.
+
 ## Since draft-ietf-httpbis-header-structure-00
 
 Added signed 64bit integer type.
