@@ -1663,6 +1663,10 @@ Specification document:
 *  Merged the recommendations from {{draft-ietf-httpbis-cookie-prefixes}}, adding
    `__Secure-` and `__Host-` cookie name prefix processing instructions.
 
+## draft-ietf-httpbis-rfc6265bis-02
+
+*  None (yet).
+
 # Acknowledgements
 
 This document is a minor update of RFC 6265, adding small features, and
