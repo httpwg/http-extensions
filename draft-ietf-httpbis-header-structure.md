@@ -1,5 +1,5 @@
 ---
-title: HTTP Header Common Structure 
+title: HTTP Header Field Common Structure 
 docname: draft-ietf-httpbis-header-structure-latest
 date: 2017
 category: std
