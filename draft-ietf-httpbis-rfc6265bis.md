@@ -1635,9 +1635,13 @@ Specification document:
 
 --- back
 
-# Changes since draft-ietf-httpbis-rfc6265bis-00
+# Changes
 
-## Changes in -01
+## draft-ietf-httpbis-rfc6265bis-00
+
+*  Port {{RFC6265}} to Markdown. No (intentional) normative changes.
+
+## draft-ietf-httpbis-rfc6265bis-01
 
 *  Fixes to formatting caused by mistakes in the initial port to Markdown:
 
