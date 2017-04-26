@@ -128,7 +128,7 @@ HTTP user agents, letting the servers maintain a stateful session over the
 mostly stateless HTTP protocol. Although cookies have many historical
 infelicities that degrade their security and privacy, the Cookie and Set-Cookie
 header fields are widely used on the Internet. This document obsoletes RFC
-2965.
+6265.
 
 --- note_Note_to_Readers
 
