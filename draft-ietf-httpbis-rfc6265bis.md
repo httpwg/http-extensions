@@ -41,30 +41,14 @@ normative:
       name: American National Standards Institute
 
 informative:
-  RFC2109:
-  RFC2965:
   RFC2818:
   RFC3986:
   RFC6265:
-  Netscape:
-    target: http://web.archive.org/web/20020803110822/http://wp.netscape.com/newsref/std/cookie_spec.html
-    title: "Persistent Client State -- HTTP Cookies"
-    date: 1999
-    author:
-      name: Netscape Communications Corp.
-  Kri2001:
-    target: http://arxiv.org/abs/cs.SE/0105018
-    title: "HTTP Cookies: Standards, Privacy, and Politics"
-    seriesinfo:
-      ACM: "ACM Transactions on Internet Technology Vol. 1, #2"
-    date: November 2001
-    author:
-      name: David M. Kristol
-      ins: D. Kristol
   RFC3629:
   RFC4648:
   RFC3864:
   RFC5895:
+  RFC6265:
   UTS46:
     target: http://unicode.org/reports/tr46/
     title: "Unicode IDNA Compatibility Processing"
@@ -182,23 +166,7 @@ in Section 5 does not recommend all of the syntactic and semantic variations in
 use today. Where some existing software differs from the recommended protocol
 in significant ways, the document contains a note explaining the difference.
 
-Prior to this document, there were at least three descriptions of cookies: the
-so-called "Netscape cookie specification" {{Netscape}}, RFC 2109 {{RFC2109}},
-and RFC 2965 {{RFC2965}}. However, none of these documents describe how the
-Cookie and Set-Cookie headers are actually used on the Internet (see
-{{Kri2001}} for historical context). In relation to previous IETF
-specifications of HTTP state management mechanisms, this document requests the
-following actions:
-
-1. Change the status of {{RFC2109}} to Historic (it has already been obsoleted
-    by {{RFC2965}}).
-
-2. Change the status of {{RFC2965}} to Historic.
-
-3. Indicate that {{RFC2965}} has been obsoleted by this document.
-
-In particular, in moving RFC 2965 to Historic and obsoleting it, this document
-deprecates the use of the Cookie2 and Set-Cookie2 header fields.
+This document obsoletes {{RFC6265}}.
 
 # Conventions
 
