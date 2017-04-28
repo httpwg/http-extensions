@@ -49,6 +49,7 @@ informative:
       name: James Plaunt
     date: 1971
     seriesinfo: IEEE Transactions on Communication Technology 19.6
+  I-D.ietf-tls-tls13:
 
 
 --- abstract
@@ -257,14 +258,29 @@ we can determine whether there is a match in the digest using the following algo
 9. If `C` is equal to `hash-value`, return 'true'.
 10. Otherwise, return to step 5 and continue processing; if no match is found before `digest-value` is exhausted, return 'false'.
 
+# The SETTINGS_CACHE_DIGEST SETTINGS Parameter
 
+A server can notify its support for CACHE_DIGEST frame by sending the SETTINGS_CACHE_DIGEST (0xff01) SETTINGS parameter (NOTE: This is an experimental value; if standardised, a permanent value will be assigned).
+If the server is tempted to making optimizations based on CACHE_DIGEST frames, it SHOULD send the SETTINGS parameter immediately after the connection is established.
 
+The value of the parameter is a bit-field of which the following bits are defined:
 
+FRESH (0x1): When set, it indicates that the server is willing to make use of a digest of freshly-cached responses.
+
+STALE (0x2): When set, it indicates that the server is willing to make use of a digest of stale-cached responses.
+
+Rest of the bits MUST be ignored and MUST be left unset when sending.
+
+The initial value of the parameter is zero (0x0) meaning that the server is not interested in seeing a CACHE_DIGEST frame.
+
+Some underlying transports allow the server's first flight of application data to reach the client at around the same time when the client sends it's first flight data. When such transport (e.g., TLS 1.3 {{I-D.ietf-tls-tls13}} in full-handshake mode) is used, a client can postpone sending the CACHE_DIGEST frame until it receives a SETTINGS_CACHE_DIGEST settings value.
+
+When the underlying transport does not have such property (e.g., TLS 1.3 in 0-RTT mode), a client can reuse the settings value found in previous connections to make assumptions.
 
 # IANA Considerations
 
-This draft currently has no requirements for IANA. If the CACHE_DIGEST frame is standardised, it
-will need to be assigned a frame type.
+This draft currently has no requirements for IANA.
+If the specification is standardised, the CACHE_DIGEST frame and the SETTINGS_CACHE_DIGEST SETTINGS parameter need to be registered.
 
 # Security Considerations
 
