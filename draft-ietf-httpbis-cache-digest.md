@@ -37,6 +37,8 @@ normative:
   RFC7540:
 
 informative:
+  RFC4648:
+  RFC5234:
   RFC6265:
   Rice:
     title: Adaptive variable-length coding for efficient compression of spacecraft television data
@@ -49,7 +51,6 @@ informative:
       name: James Plaunt
     date: 1971
     seriesinfo: IEEE Transactions on Communication Technology 19.6
-
 
 --- abstract
 
@@ -286,6 +287,37 @@ Additionally, User Agents SHOULD NOT send CACHE_DIGEST when in "privacy mode."
 
 --- back
 
+# Encoding the CACHE_DIGEST frame as an HTTP Header
+
+Some HTTP/2 protocol stacks do not provide an interface to inject arbitrary HTTP/2 frames while allowing the application to send additional HTTP request headers.
+When using such an implementation, it is sensible to send Cache Digests as HTTP headers, even though doing so consumes more bandwidth when compared to using HTTP/2 frames due to the fact that the digests need to be associated to every HTTP request as opposed to just sending once per connection.
+
+For the sake of interoperability with clients that are constrained to using headers, this appendix defines how a CACHE_DIGEST frame can be encoded as an HTTP header named `Cache-Digest`.
+
+The definition uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Appendix B.
+
+~~~ abnf7230
+  Cache-Digest  = 1#digest-entity
+  digest-entity = digest-value *(OWS ";" OWS digest-flag)
+  digest-value  = <Digest-Value encoded using base64url>
+  digest-flag   = token
+~~~
+
+A Cache-Digest request header is defined as a list construct of cache-digest-entities.
+Each cache-digest-entity corresponds to a CACHE_DIGEST frame.
+
+Digest-Value is encoded using base64url {{RFC4648}}, Section 5.
+Flags that are set are encoded as digest-flags by their names that are compared case-insensitively.
+
+Origin is omitted in the header form.
+The value is implied from the value of the `:authority` pseudo header.
+Client MUST only send Cache-Digest headers containing digests that belong to the origin specified by the HTTP request.
+
+The example below contains one digest of fresh resource and has only the `COMPLETE` flag set.
+
+~~~ example
+  Cache-Digest: AfdA; complete
+~~~
 
 # Acknowledgements
 
