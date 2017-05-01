@@ -51,6 +51,18 @@ informative:
       name: James Plaunt
     date: 1971
     seriesinfo: IEEE Transactions on Communication Technology 19.6
+  Service-Workers:
+    title: Service Workers 1
+    author:
+    - name: Alex Russell
+    - name: Jungkee Song
+    - name: Jake Archibald
+    - name: Marijn Kruisselbrink
+    date: 2016/10/11
+    target: https://www.w3.org/TR/2016/WD-service-workers-1/
+  Fetch:
+    title: Fetch Standard
+    target: https://fetch.spec.whatwg.org/
 
 --- abstract
 
@@ -264,8 +276,8 @@ we can determine whether there is a match in the digest using the following algo
 
 # IANA Considerations
 
-This draft currently has no requirements for IANA. If the CACHE_DIGEST frame is standardised, it
-will need to be assigned a frame type.
+This draft currently has no requirements for IANA.
+If the specification is standardised, the CACHE_DIGEST frame will need to be assigned a frame type and the Cache-Digest header will need to be registered.
 
 # Security Considerations
 
@@ -289,10 +301,9 @@ Additionally, User Agents SHOULD NOT send CACHE_DIGEST when in "privacy mode."
 
 # Encoding the CACHE_DIGEST frame as an HTTP Header
 
-Some HTTP/2 protocol stacks do not provide an interface to inject arbitrary HTTP/2 frames while allowing the application to send additional HTTP request headers.
-When using such an implementation, it is sensible to send Cache Digests as HTTP headers, even though doing so consumes more bandwidth when compared to using HTTP/2 frames due to the fact that the digests need to be associated to every HTTP request as opposed to just sending once per connection.
+On some web browsers that support Service Workers {{Service-Workers}} but not Cache Digests (yet), it is possible to achieve the benefit of using Cache Digests by emulating the frame using HTTP Headers.
 
-For the sake of interoperability with clients that are constrained to using headers, this appendix defines how a CACHE_DIGEST frame can be encoded as an HTTP header named `Cache-Digest`.
+For the sake of interoperability with such clients, this appendix defines how a CACHE_DIGEST frame can be encoded as an HTTP header named `Cache-Digest`.
 
 The definition uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Appendix B.
 
@@ -318,6 +329,11 @@ The example below contains one digest of fresh resource and has only the `COMPLE
 ~~~ example
   Cache-Digest: AfdA; complete
 ~~~
+
+Clients MUST associate Cache-Digest headers to every HTTP request, since Fetch {{Fetch}} - the HTTP API supported by Service Workers - does not define the order in which the issued requests will be sent to the server nor guarantees that all the requests will be transmitted using a single HTTP/2 connection.
+
+Also, due to the fact that any header that is supplied to Fetch is required to be end-to-end, there is an ambiguity in what a Cache-Digest header respresents when a request is transmitted through a proxy.
+The header may represent the cache state of a client or that of a proxy, depending on how the proxy handles the header.
 
 # Acknowledgements
 
