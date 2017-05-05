@@ -34,8 +34,9 @@ normative:
   RFC5234:
   RFC5890:
   USASCII:
-    target: ANSI X3.4
     title: "Coded Character Set -- 7-bit American Standard Code for Information Interchange"
+    seriesInfo:
+      ANSI: X3.4
     date: 1986
     author:
       name: American National Standards Institute
