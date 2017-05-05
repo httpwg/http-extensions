@@ -88,22 +88,8 @@ informative:
     title: "An Analysis of Private Browsing Modes in Modern Browsers"
     date: 2010
     target: http://www.usenix.org/events/sec10/tech/full_papers/Aggarwal.pdf
-  draft-ietf-httpbis-cookie-alone:
-    author:
-    -
-      ins: M. West
-      name: Mike West
-    title: "Deprecate modification of 'secure' cookies from non-secure origins"
-    target: "https://tools.ietf.org/html/draft-ietf-httpbis-cookie-alone-01"
-    date: September 5, 2016
-  draft-ietf-httpbis-cookie-prefixes:
-    author:
-    -
-      ins: M. West
-      name: Mike West
-    title: "Cookie Prefixes"
-    target: "https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes-00"
-    date: February 23, 2016
+  I-D.ietf-httpbis-cookie-alone:
+  I-D.ietf-httpbis-cookie-prefixes:
 
 --- abstract
 
@@ -1625,11 +1611,11 @@ Specification document:
 *  Dropped `Cookie2` and `Set-Cookie2` from the IANA Considerations section:
    <https://github.com/httpwg/http-extensions/issues/247>
 
-*  Merged the recommendations from {{draft-ietf-httpbis-cookie-alone}}, removing
+*  Merged the recommendations from {{I-D.ietf-httpbis-cookie-alone}}, removing
    the ability for a non-secure origin to set cookies with a 'secure' flag, and
    to overwrite cookies whose 'secure' flag is true.
 
-*  Merged the recommendations from {{draft-ietf-httpbis-cookie-prefixes}}, adding
+*  Merged the recommendations from {{I-D.ietf-httpbis-cookie-prefixes}}, adding
    `__Secure-` and `__Host-` cookie name prefix processing instructions.
 
 ## draft-ietf-httpbis-rfc6265bis-02
