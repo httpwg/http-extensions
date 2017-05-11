@@ -54,6 +54,21 @@
 <!-- Workaround for http://trac.tools.ietf.org/tools/xml2rfc/trac/ticket/297 -->
 <xsl:param name="xml2rfc-ext-strip-vbare">false</xsl:param>
 
+<!-- xml2rfc target -->
+<xsl:param name="xml2rfc-ext-xml2rfc-backend">
+  <xsl:variable name="default">
+    <xsl:choose>
+      <xsl:when test="$pub-yearmonth &gt; 201612">201610</xsl:when>
+      <xsl:otherwise>201510</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+  <xsl:call-template name="parse-pis">
+    <xsl:with-param name="nodes" select="/processing-instruction('rfc-ext')"/>
+    <xsl:with-param name="attr" select="'xml2rfc-backend'"/>
+    <xsl:with-param name="default" select="$default"/>
+  </xsl:call-template>
+</xsl:param>
+
 <!-- kick into cleanup mode -->
 <xsl:template match="/">
   <xsl:text>&#10;</xsl:text>
@@ -61,6 +76,8 @@
     This XML document is the output of clean-for-DTD.xslt; a tool that strips
     extensions to RFC2629(bis) from documents for processing with xml2rfc.
 </xsl:comment>
+<xsl:text>&#10;</xsl:text>
+<xsl:comment>TARGET-GENERATOR: <xsl:value-of select="$xml2rfc-ext-xml2rfc-backend"/></xsl:comment>
   <xsl:apply-templates select="/" mode="cleanup"/>
 </xsl:template>
 
@@ -138,7 +155,13 @@
 </xsl:template>
 
 
+<!-- V3 features -->
 
+<xsl:template match="boilerplate" mode="cleanup"/>
+<xsl:template match="link" mode="cleanup"/>
+<xsl:template match="rfc/@scripts" mode="cleanup"/>
+<xsl:template match="rfc/@version" mode="cleanup"/>
+<xsl:template match="@pn" mode="cleanup"/>
 
 <!-- extensions -->
 
@@ -146,6 +169,7 @@
   <xsl:choose>
     <xsl:when test="substring(.,1,1) != '&quot;' or substring(.,string-length(.),1) != '&quot;'">
       <xsl:call-template name="error">
+        <xsl:with-param name="inline">no</xsl:with-param>
         <xsl:with-param name="msg" select="'contents of x:abnf-char-sequence needs to be quoted.'" />
       </xsl:call-template>
     </xsl:when>
@@ -246,8 +270,27 @@
 
 <xsl:template match="x:blockquote|blockquote" mode="cleanup">
   <t><list>
-    <xsl:apply-templates mode="cleanup" />
-  </list></t>
+    <xsl:choose>
+      <xsl:when test="t|ul|ol|dl|artwork|figure|sourcecode">
+        <xsl:apply-templates mode="cleanup" />
+      </xsl:when>
+      <xsl:otherwise>
+        <t>
+          <xsl:apply-templates mode="cleanup" />
+        </t>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="@quotedFrom">
+      <t>
+        <xsl:text>&#8212; </xsl:text>
+        <xsl:choose>
+          <xsl:when test="@cite"><eref target="{@cite}"><xsl:value-of select="@quotedFrom"/></eref></xsl:when>
+          <xsl:otherwise><xsl:value-of select="@quotedFrom"/></xsl:otherwise>
+        </xsl:choose>
+      </t>
+    </xsl:if>
+  </list>
+  </t>
 </xsl:template>
 
 <xsl:template match="x:h" mode="cleanup">
@@ -390,7 +433,7 @@
 </xsl:template>
 
 <xsl:template match="@ascii" mode="cleanup"/>
-<xsl:template match="postal/*" mode="cleanup">
+<xsl:template match="postal/*[@ascii]" mode="cleanup">
   <xsl:element name="{local-name()}">
     <xsl:apply-templates select="@*" mode="cleanup"/>
     <xsl:choose>
@@ -402,6 +445,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:element>
+</xsl:template>
+
+<xsl:template match="postal" mode="cleanup">
+  <postal>
+    <xsl:apply-templates select="@*" mode="cleanup"/>
+    <xsl:if test="not(street) and not(postalLine)">
+      <!-- street is mandatory in V2 -->
+      <street/>
+    </xsl:if>
+    <xsl:apply-templates select="node()" mode="cleanup"/>
+  </postal>
 </xsl:template>
 
 <xsl:template match="xref[(@x:fmt or @x:sec or @x:rel or @section or @sectionFormat or @relative) and not(node())]" mode="cleanup">
@@ -1055,7 +1109,13 @@
 </xsl:template>
 <xsl:template match="front" mode="cleanup">
   <front>
-    <xsl:apply-templates select="text()|node()[not(self::seriesInfo)]" mode="cleanup"/>
+    <xsl:apply-templates select="title|author" mode="cleanup"/>
+    <xsl:apply-templates select="date" mode="cleanup"/>
+    <xsl:if test="not(date)">
+      <!-- mandatory in v2 -->
+      <date/>
+    </xsl:if>
+    <xsl:apply-templates select="text()|node()[not(self::seriesInfo or self::title or self::author or self::date)]" mode="cleanup"/>
   </front>
 </xsl:template>
 
@@ -1114,6 +1174,10 @@
 <xsl:template match="section" mode="cleanup">
   <section>
     <xsl:copy-of select="@anchor|@toc"/>
+    <xsl:if test="$xml2rfc-ext-xml2rfc-backend >= 201610 and @numbered='false'">
+      <!-- rewrite false to no, see https://trac.tools.ietf.org/tools/xml2rfc/trac/ticket/313 -->
+      <xsl:attribute name="numbered">no</xsl:attribute>
+    </xsl:if>
     <xsl:attribute name="title">
       <xsl:choose>
         <xsl:when test="name">
@@ -1132,7 +1196,7 @@
     </xsl:if>
     <xsl:apply-templates mode="cleanup"/>
   </section>
-  <xsl:if test="@numbered='no'">
+  <xsl:if test="(@numbered='no' or @numbered='false') and $xml2rfc-ext-xml2rfc-backend &lt; 201610">
     <xsl:call-template name="warning">
       <xsl:with-param name="msg">unnumbered sections not supported</xsl:with-param>
     </xsl:call-template>
@@ -1245,13 +1309,16 @@
 <!-- Ordered Lists -->
 <xsl:template match="ol[not(@type) or string-length(@type)=1]" mode="cleanup">
   <t>
+    <xsl:copy-of select="@anchor"/>
     <xsl:if test="@start and @start!='1'">
       <xsl:call-template name="error">
+        <xsl:with-param name="inline">no</xsl:with-param>
         <xsl:with-param name="msg">list start != 1 not supported</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
     <xsl:if test="@group">
       <xsl:call-template name="error">
+        <xsl:with-param name="inline">no</xsl:with-param>
         <xsl:with-param name="msg">ol/@group not supported</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
@@ -1265,6 +1332,7 @@
   <t>
     <xsl:if test="@start and @start!='1'">
       <xsl:call-template name="error">
+        <xsl:with-param name="inline">no</xsl:with-param>
         <xsl:with-param name="msg">list start != 1 not supported</xsl:with-param>
       </xsl:call-template>
     </xsl:if>
