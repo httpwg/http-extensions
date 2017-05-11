@@ -35,6 +35,8 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Immutable Responses
 
+*In Working Group Last Call; ends 2017-05-17*
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/immutable.html) ([plain text](https://httpwg.github.io/http-extensions/immutable.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-immutable) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aimmutable) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-immutable/)

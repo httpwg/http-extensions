@@ -50,7 +50,7 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 # Introduction
 
 HTTP/2 {{!RFC7540}} allows clients to coalesce different origins {{!RFC6454}} onto the same
-connection when certain conditions are met. However, in certain cases, a connection is is not
+connection when certain conditions are met. However, in certain cases, a connection is not
 usable for a coalesced origin, so the 421 (Misdirected Request) status code ({{?RFC7540}}, Section
 9.1.2) was defined.
 
@@ -166,7 +166,7 @@ Once an Origin Set has been initialised for a connection, clients that implement
 change these behaviors in the following ways:
 
 * Clients MUST NOT consult DNS to establish the connection's authority for new requests. The TLS
-  certificate MUST stil be used to do so, as described in {{!RFC7540}} Section 9.1.1.
+  certificate MUST still be used to do so, as described in {{!RFC7540}} Section 9.1.1.
 
 * Clients sending a new request SHOULD use an existing connection if the request's origin is in that connection's Origin Set, unless there are operational reasons for creating a new connection.
 
@@ -180,8 +180,8 @@ Section 4.2.1.6).
 
 Because ORIGIN can change the set of origins a connection is used for over time, it is possible
 that a client might have more than one viable connection to an origin open at any time. When this
-occurs, clients SHOULD not emit new requests on any connection whose Origin Set is a subset of
-another connection's Origin Set, and SHOULD close it once all outstanding requests are satisfied.
+occurs, clients SHOULD not emit new requests on any connection whose Origin Set is a proper subset
+of another connection's Origin Set, and SHOULD close it once all outstanding requests are satisfied.
 
 
 # IANA Considerations
