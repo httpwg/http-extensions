@@ -35,7 +35,7 @@ normative:
   RFC5890:
   USASCII:
     title: "Coded Character Set -- 7-bit American Standard Code for Information Interchange"
-    seriesInfo:
+    seriesinfo:
       ANSI: X3.4
     date: 1986
     author:
