@@ -30,6 +30,17 @@ normative:
   RFC2119:
   RFC2616:
   RFC3490:
+    override: yes
+    title: "Internationalizing Domain Names in Applications (IDNA)"
+    seriesinfo:
+      RFC: 3490
+    date: 2003-03
+    author:
+      -
+        ins: P. Faltstrom
+        ins: P. Hoffman
+        ins: A. Costello
+    ann: See {{idna-migration}} for an explanation why the normative reference to an obsoleted specification is needed.
   RFC4790:
   RFC5234:
   RFC5890:
