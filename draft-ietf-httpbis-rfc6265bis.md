@@ -66,7 +66,7 @@ informative:
   CSRF:
     target: http://portal.acm.org/citation.cfm?id=1455770.1455782
     title: Robust Defenses for Cross-Site Request Forgery
-    date: 2008
+    date: 2008-10
     author:
     -
       ins: A. Barth
@@ -75,6 +75,10 @@ informative:
       ins: C. Jackson
     -
       ins: J. Mitchell
+    seriesinfo:
+      DOI: 10.1145/1455770.1455782
+      ISBN: 978-1-59593-810-7 
+      ACM: "CCS '08: Proceedings of the 15th ACM conference on Computer and communications security (pages 75-88)"
   Aggarwal2010:
     author:
     -
