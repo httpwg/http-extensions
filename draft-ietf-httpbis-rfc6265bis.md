@@ -39,7 +39,7 @@ normative:
       ANSI: X3.4
     date: 1986
     author:
-      name: American National Standards Institute
+      organization: American National Standards Institute
 
 informative:
   RFC2818:
