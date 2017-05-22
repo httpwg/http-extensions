@@ -134,6 +134,10 @@ CT-qualified
 
 CT Policy
   : See Certificate Transparency Policy.
+  
+Effective Expect-CT Date
+  : is the time at which a UA observed a valid Expect-CT header for a given
+  host.
 
 Expect-CT Host
   : See HTTP Expect-CT Host.
@@ -356,13 +360,30 @@ the UA SHOULD send a report to the specified `report-uri` as specified in
 The UA MUST ignore any Expect-CT header field not conforming to the grammar
 specified in {{response-header-field-syntax}}.
 
-### Noting an Expect-CT Host - Storage Model
+### HTTP-Equiv \<meta\> Element Attribute
 
-The "effective Expect-CT date" of a Known Expect-CT Host is the time that the UA
-observed a valid Expect-CT header for the host. The "effective expiration date"
-of a Known Expect-CT Host is the effective Expect-CT date plus the max-age. An
-Expect-CT Host is "expired" if the effective expiration date refers to a date in
-the past. The UA MUST ignore any expired Expect-CT Hosts in its cache.
+UAs MUST NOT heed `http-equiv="Expect-CT"` attribute settings on `<meta>`
+elements {{!W3C.REC-html401-19991224}} in received content.
+
+### Noting Expect-CT {#noting-expect-ct}
+
+Upon receipt of the Expect-CT response header field over an error-free TLS
+connection (including the validation adding in {{expect-ct-compliance}}), the UA
+MUST note the host as a Known Expect-CT Host, storing the host's domain name and
+its associated Expect-CT directives in non-volatile storage. The domain name and
+associated Expect-CT directives are collectively known as "Expect-CT metadata".
+
+To note a host as a Known Expect-CT Host, the UA MUST set its Expect-CT metadata
+given in the most recently received valid Expect-CT header, as specified in
+{{storage-model}}.
+
+For forward compatibility, the UA MUST ignore any unrecognized Expect-CT header
+directives, while still processing those directives it does
+recognize. {{response-header-field-syntax}} specifies the directives `enforce`,
+`max-age`, and `report-uri`, but future specifications and implementations might
+use additional directives.
+
+### Storage Model {#storage-model}
 
 Known Expect-CT Hosts are identified only by domain names, and never IP
 addresses. If the substring matching the host production from the Request-URI
@@ -377,8 +398,9 @@ cache. The UA caches:
 
 - the Expect-CT Host's domain name,
 - whether the `enforce` directive is present
-- the effective expiration date, or enough information to calculate it (the
-  effective Expect-CT date and the value of the `max-age` directive),
+- the Effective Expiration Date, which is the Effective Expect-CT Date plus the
+  value of the `max-age` directive. Alternatively, the UA MAY cache enough
+  information to calculate the Effective Expiration Date.
 - the value of the `report-uri` directive, if present.
 
 If any other metadata from optional or future Expect-CT header directives are
@@ -395,31 +417,6 @@ Expect-CT header, the UA MAY behave as if the max-age were effectively 60
 days. (One way to achieve this behavior is for the UA to simply store a value of
 60 days instead of the 90-day value provided by the Expect-CT host.)
 
-### HTTP-Equiv \<meta\> Element Attribute
-
-UAs MUST NOT heed `http-equiv="Expect-CT"` attribute settings on `<meta>`
-elements {{!W3C.REC-html401-19991224}} in received content.
-
-## Noting Expect-CT {#noting-expect-ct}
-
-Upon receipt of the Expect-CT response header field, the UA notes the host as a
-Known Expect-CT Host, storing the host's domain name and its associated
-Expect-CT directives in non-volatile storage. The domain name and associated
-Expect-CT directives are collectively known as "Expect-CT metadata".
-
-The UA MUST note a host as a Known Expect-CT Host if and only if it received the
-Expect-CT response header field over an error-free TLS connection, including the
-validation added in {{expect-ct-compliance}}.
-
-To note a host as a Known Expect-CT Host, the UA MUST set its Expect-CT metadata
-given in the most recently received valid Expect-CT header.
-
-For forward compatibility, the UA MUST ignore any unrecognized Expect-CT header
-directives, while still processing those directives it does
-recognize. {{response-header-field-syntax}} specifies the directives `enforce`,
-`max-age`, and `report-uri`, but future specifications and implementations might
-use additional directives.
-
 ## Evaluating Expect-CT Connections for CT Compliance {#expect-ct-compliance}
 
 When a UA connects to a Known Expect-CT Host using a TLS connection, if the TLS
@@ -434,6 +431,10 @@ possible. It is acceptable to skip this CT compliance check for some hosts
 according to local policy. For example, a UA may disable CT compliance checks
 for hosts whose validated certificate chain terminates at a user-defined trust
 anchor, rather than a trust anchor built-in to the UA (or underlying platform).
+
+An Expect-CT Host is "expired" if the effective expiration date refers to a date
+in the past. The UA MUST ignore any expired Expect-CT Hosts in its cache and not
+treat such hosts as Known Expect-CT hosts.
 
 If a connection to a Known CT Host violates the UA's CT policy (i.e. the
 connection is not CT-qualified), and if the Known Expect-CT Host's Expect-CT
@@ -500,10 +501,10 @@ failed the CT compliance check. It is provided as a string.
 The `port` is the port to which the UA made the original request that failed the
 CT compliance check. It is provided as an integer.
 
-The `effective-expiration-date` is the Effective Expiration Date for the
-Expect-CT Host that failed the CT compliance check.  It is provided as a string
-formatted according to Section 5.6, "Internet Date/Time Format", of 
-{{!RFC3339}}.
+The `effective-expiration-date` is the Effective Expiration Date (see
+{{storage-model}}) for the Expect-CT Host that failed the CT compliance check.
+It is provided as a string formatted according to Section 5.6, "Internet
+Date/Time Format", of {{!RFC3339}}.
 
 The `served-certificate-chain` is the certificate chain, as served by the
 Expect-CT Host during TLS session setup.  It is provided as an array of strings,
