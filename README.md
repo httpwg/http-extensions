@@ -16,7 +16,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Early Hints
 
-* In Working Group Last Call; ends 2017-06-01*
+*In Working Group Last Call; ends 2017-06-01*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/early-hints.html) ([plain text](https://httpwg.github.io/http-extensions/early-hints.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-early-hints) (less recent, more official)
