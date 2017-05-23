@@ -162,11 +162,13 @@ Section 6.2) and remove it from the connection's Origin Set, if present.
 
 Note:
 
-: A server that acts as an alternative service {{?RFC7838}} might remove the origin that a
-  client creates the connection for by sending an ORIGIN frame.  The single value that is in the
-  newly-initialized Origin Set will contain the port of the alternative service rather than that
-  of the origin.  For instance, a client making requests for "https://example.com" that is
-  directed to an alternative at ("h2", "x.example.net", "8443") will seed the origin set with
+: A server that acts as an alternative service {{?RFC7838}} might invalidate the connection for
+  use with the origin that initiated use of the alternative by sending an ORIGIN frame.  If the
+  port on the alternative service is different from the origin that caused the alternative to be
+  used, that origin won't be automatically included in the Origin Set.  The entry with which the
+  Origin Set is initialized includes the port of the alternative service rather than that of the
+  origin.  For instance, a client making requests for "https://example.com" that is directed to
+  an alternative service at ("h2", "x.example.net", "8443") will seed the origin set with
   "https://example.com:8443".  This problem can be avoided by explicitly including an origin
   with the correct port in the ORIGIN frame.
 
