@@ -160,6 +160,16 @@ The Origin Set is also affected by the 421 (Misdirected Request) response status
 MUST create the ASCII serialisation of the corresponding request's origin (as per {{!RFC6454}},
 Section 6.2) and remove it from the connection's Origin Set, if present.
 
+Note:
+
+: A server that acts as an alternative service {{?RFC7838}} might remove the origin that a
+  client creates the connection for by sending an ORIGIN frame.  The single value that is in the
+  newly-initialized Origin Set will contain the port of the alternative service rather than that
+  of the origin.  For instance, a client making requests for "https://example.com" that is
+  directed to an alternative at ("h2", "x.example.net", "8443") will seed the origin set with
+  "https://example.com:8443".  This problem can be avoided by explicitly including an origin
+  with the correct port in the ORIGIN frame.
+
 
 ## Authority, Push and Coalescing with ORIGIN {#authority}
 
@@ -189,6 +199,9 @@ Because ORIGIN can change the set of origins a connection is used for over time,
 that a client might have more than one viable connection to an origin open at any time. When this
 occurs, clients SHOULD not emit new requests on any connection whose Origin Set is a proper subset
 of another connection's Origin Set, and SHOULD close it once all outstanding requests are satisfied.
+
+The Origin Set is unaffected by any alternative services {{?RFC7838}} advertisements made by the
+server.  Advertising an alternative service does not affect whether a server is authoritative.
 
 
 # IANA Considerations
