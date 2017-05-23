@@ -81,8 +81,9 @@ code and issues list for this draft can be found at
 # Introduction
 
 This document defines a new HTTP header that enables UAs to identify web hosts
-that expect the presence of Signed Certificate Timestamps (SCTs) {{!RFC6962}} in
-future Transport Layer Security (TLS) {{!RFC5246}} connections.
+that expect the presence of Signed Certificate Timestamps (SCTs)
+{{!I-D.ietf-trans-rfc6962-bis}} in future Transport Layer Security (TLS)
+{{!RFC5246}} connections.
 
 Web hosts that serve the Expect-CT HTTP header are noted by the UA as Known
 Expect-CT Hosts. The UA evaluates each connection to a Known Expect-CT Host for
@@ -501,16 +502,18 @@ representation of each X.509 certificate as described in {{!RFC7468}}.
 Expect-CT host and their validation statuses. The value is provided as an array
 of JSON objects. The SCTs may appear in any order. Each JSON object in the array
 has the following keys:
-  * The "sct" key, with a value as defined in Section 4.1 of RFC 6962 {{!RFC6962}}.
+  * The "sct" key, with a value as defined in Section 4.6 of
+    {{!I-D.ietf-trans-rfc6962-bis}}.
   * The "status" key, with a string value that the UA MUST set to one of the
     following values: "unknown" (indicating that the UA does not have or does
     not trust the public key of the log from which the SCT was issued), "valid"
     (indicating that the UA successfully validated the SCT as described in
-    Section 5.2 of {{!RFC6962}}), or "invalid" (indicating that the SCT
-    validation failed because of, e.g., a bad signature).
+    Section 8.2.3 of {{!I-D.ietf-trans-rfc6962-bis}}), or "invalid" (indicating
+    that the SCT validation failed because of, e.g., a bad signature).
   * The "source" key, with a string value that indicates from where the UA
-    obtained the SCT, as defined in Section 3.3 of {{!RFC6962}}. The UA MUST set
-    the value to one of "tls-extension", "ocsp", or "embedded".
+    obtained the SCT, as defined in Section 6 of
+    {{!I-D.ietf-trans-rfc6962-bis}}. The UA MUST set the value to one of
+    "tls-extension", "ocsp", or "embedded".
 
 ## Sending a violation report
 
@@ -552,11 +555,12 @@ connections.
 
 Site operators could themselves only cure this situation by one of:
 reconfiguring their web server to transmit SCTs using the TLS extension defined
-in Section 3.3 of {{!RFC6962}}, obtaining a certificate from an alternative
-certificate authority which provides SCTs by one of the other methods, or by
-waiting for the user agents' persisted notation of this as an Expect-CT host to
-reach its `max-age`. User agents may choose to implement mechanisms for users to
-cure this situation, as noted in {{usability-considerations}}.
+in Section 6.5 of {{!I-D.ietf-trans-rfc6962-bis}}, obtaining a certificate from
+an alternative certificate authority which provides SCTs by one of the other
+methods, or by waiting for the user agents' persisted notation of this as an
+Expect-CT host to reach its `max-age`. User agents may choose to implement
+mechanisms for users to cure this situation, as noted in
+{{usability-considerations}}.
 
 ## Maximum max-age
 
