@@ -642,4 +642,7 @@ Transparency requirements.
 
 ## Since -00
 
-None yet.
+* Editorial changes
+* Change Content-Type header of reports to 'application/expect-ct-report+json'
+* Update header field syntax to match convention (issue #327)
+* Reference RFC 6962-bis instead of RFC 6962
