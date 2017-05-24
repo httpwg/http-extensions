@@ -532,8 +532,8 @@ The steps to report an Expect-CT failure are as follows.
 3. Let `report-uri` be the value of the `report-uri` directive in the Expect-CT
    header field.
 4. Send an HTTP POST request to `report-uri` with a `Content-Type` header field
-   of `application/expect-ct-report`, and an entity body consisting of `report
-   body`.
+   of `application/expect-ct-report+json`, and an entity body consisting of
+   `report body`.
 
 The UA MAY perform other operations as part of sending the HTTP POST request,
 for example sending a CORS preflight as part of {{FETCH}}.
