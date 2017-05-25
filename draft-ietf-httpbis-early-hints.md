@@ -36,8 +36,8 @@ informative:
 
 --- abstract
 
-This memo introduces an informational status code for HTTP that can be used for indicating hints to
-help a client start making preparations for processing the final response.
+This memo introduces an informational HTTP status code that can be used to convey hints that
+help a client make preparations for processing the final response.
 
 
 --- note_Note_to_Readers
@@ -53,33 +53,32 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 
 # Introduction
 
-Most if not all of the web pages processed by a web browser contain links to external resources
-that need to be fetched prior to rendering the documents. Therefore, it is beneficial to send such
-links as early as possible in order to minimize the time spent until the browser becomes possible
-to render the document. Link header of type "preload" ([Preload]) can be used to indicate such
-links within the response headers of an HTTP response.
+It is common for HTTP responses to contain links to external resources that need to be fetched
+prior to their use; for example, rendering HTML by a Web browser. Having such links available to
+the client as early as possible helps to minimize perceived latency.
 
-However, it is not always possible for an origin server to send a response immediately after
-receiving a request. In fact, it is often the contrary. There are many deployments in which an
-origin server needs to query a database before generating a response. It is also not unusual for an
-origin server to delegate a request to an upstream HTTP server running at a distant location.
+The "preload" ([Preload]) link relation can be used to convey such links in the Link header field
+of an HTTP response. However, it is not always possible for an origin server to generate a response
+header block immediately after receiving a request. For example, the origin server might need to
+query a database before generating a response, or it might delegate a request to an upstream HTTP
+server running at a distant location.
 
 The dilemma here is that even though it is preferable for an origin server to send some headers as
-soon as it receives a request, it cannot do so until the status code and the headers of the final
-HTTP response is determined.
+soon as it receives a request, it cannot do so until the status code and the full headers of the
+final HTTP response are determined.
 
-HTTP/2 ([RFC7540]) push can be used as a solution to the issue, but has its own limitations. The
-resources that can be pushed using HTTP/2 are limited to those belonging to the same origin. Also,
-it is impossible to send only the links of the resources using HTTP/2 push. Sending HTTP responses
-for every resource is an inefficient way of using bandwidth, especially when a caching server
-exists as an intermediary.
+HTTP/2 ([RFC7540]) server push can be used as a solution to this issue, but has its own
+limitations. The responses that can be pushed using HTTP/2 are limited to those belonging to the
+same origin. Also, it is impossible to send only the links using server push. Finally, sending HTTP
+responses for every resource is an inefficient way of using bandwidth, especially when a caching
+server exists as an intermediary.
 
 This memo defines a status code for sending an informational response ([RFC7231], section 6.2) that
 contains headers that are likely to be included in the final response. A server can send the
 informational response containing some of the headers to help the client start making preparations
 for processing the final response, and then run time-consuming operations to generate the final
-response. The informational response can also be used by an origin server to trigger HTTP/2 push at
-an caching intermediary.
+response. The informational response can also be used by an origin server to trigger HTTP/2 server
+push at a caching intermediary.
 
 ## Notational Conventions
 
@@ -89,29 +88,32 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # 103 Early Hints
 
-This informational status code indicates the client that the server is likely to send a final
-response with the headers included in the informational response.
+The 103 (Early Hints) informational status code indicates the client that the server is likely to
+send a final response with the headers included in the informational response.
 
-A server MUST NOT include Content-Length, Transfer-Encoding, or any hop-by-hop headers ([RFC7230],
-section 6.1) in the informational response using the status code.
+A server MUST NOT include Content-Length, Transfer-Encoding, or any hop-by-hop header fields
+([RFC7230], section 6.1) in a 103 (Early Hints) response.
 
-A client MAY speculatively evaluate the headers included in the informational response while
-waiting for the final response. For example, a client may recognize the link header of type preload
-and start fetching the resource. However, the evaluation MUST NOT affect how the final response is
-processed; the client must behave as if it had not seen the informational response. A client MUST
-NOT process the headers included in the response as if they belonged to the informational response.
+A client MAY speculatively evaluate the headers included in a 103 (Early Hints) response while
+waiting for the final response. For example, a client might recognize a Link header field value
+containing the relation type "preload" and start fetching the target resource.
 
-An intermediary MAY drop the informational response. It MAY send HTTP/2 ([RFC7540]) push responses
-using the information found in the informational response.
+However, this MUST NOT affect how the final response is processed; when handling it, the client
+MUST behave as if it had not seen the informational response. In particular, a client MUST NOT
+process the headers included in the final response as if they belonged to the informational
+response, or vice versa.
+
+An intermediary MAY drop the informational response. It MAY send HTTP/2 ([RFC7540]) server pushes
+using the information found in the 103 (Early Hints) response.
 
 # Security Considerations
 
-Clients may have issues handling Early Hints, since informational response is rarely used for
-requests not including an Expect header ([RFC7231], section 5.1.1).
+Some clients may have issues handling 103 (Early Hints), since informational responses are rarely
+used in reply to requests not including an Expect header ([RFC7231], section 5.1.1).
 
-An HTTP/1.1 client that mishandles the informational response as a final response is likely to
-consider all the responses to the succeeding requests sent over the same connection to be part of
-the final response. Such behavior may constitute a cross-origin information disclosure
+In particular, an HTTP/1.1 client that mishandles an informational response as a final response
+is likely to consider all responses to the succeeding requests sent over the same connection to be
+part of the final response. Such behavior may constitute a cross-origin information disclosure
 vulnerability in case the client multiplexes requests to different origins onto a single persistent
 connection.
 
@@ -123,12 +125,11 @@ headers does not affect how the end of the response body is determined.
 
 # IANA Considerations
 
-If Early Hints is standardized, the HTTP Status Codes Registry should be updated with the following
-entries:
+The HTTP Status Codes Registry will be updated with the following entry:
 
 * Code: 103
 * Description: Early Hints
-* Specification: this document
+* Specification: [this document]
 
 # Acknowledgements
 
@@ -137,9 +138,13 @@ informational response.
 
 # Changes
 
-## Since draft-ietf-httpbis-early-hints-01
+## Since draft-ietf-httpbis-early-hints-02
 
 * None yet.
+
+## Since draft-ietf-httpbis-early-hints-01
+
+* Editorial changes.
 
 ## Since draft-ietf-httpbis-early-hints-00
 

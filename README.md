@@ -16,6 +16,8 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Early Hints
 
+*In Working Group Last Call; ends 2017-06-01*
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/early-hints.html) ([plain text](https://httpwg.github.io/http-extensions/early-hints.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-early-hints) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aearly-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-early-hints/)
@@ -34,6 +36,8 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aheader-structure) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-header-structure/)
 
 ### Immutable Responses
+
+*In Working Group Last Call; ends 2017-05-17*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/immutable.html) ([plain text](https://httpwg.github.io/http-extensions/immutable.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-immutable) (less recent, more official)
@@ -102,13 +106,4 @@ _Approved; in RFC Editor Queue._
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rfc5987bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc5987bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc5987bis) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A5987bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc5987bis/)
-
-
-### HTTP Opportunistic Security
-
-_Approved; in RFC Editor Queue._
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/opsec.html) ([plain text](https://httpwg.github.io/http-extensions/opsec.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-encryption) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aopp-sec) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-encryption/)
 

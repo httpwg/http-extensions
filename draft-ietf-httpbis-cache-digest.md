@@ -37,6 +37,8 @@ normative:
   RFC7540:
 
 informative:
+  RFC4648:
+  RFC5234:
   RFC6265:
   Rice:
     title: Adaptive variable-length coding for efficient compression of spacecraft television data
@@ -50,7 +52,18 @@ informative:
     date: 1971
     seriesinfo: IEEE Transactions on Communication Technology 19.6
   I-D.ietf-tls-tls13:
-
+  Service-Workers:
+    title: Service Workers 1
+    author:
+    - name: Alex Russell
+    - name: Jungkee Song
+    - name: Jake Archibald
+    - name: Marijn Kruisselbrink
+    date: 2016/10/11
+    target: https://www.w3.org/TR/2016/WD-service-workers-1/
+  Fetch:
+    title: Fetch Standard
+    target: https://fetch.spec.whatwg.org/
 
 --- abstract
 
@@ -280,6 +293,7 @@ When the underlying transport does not have such property (e.g., TLS 1.3 in 0-RT
 # IANA Considerations
 
 This draft currently has no requirements for IANA.
+
 If the specification is standardised, the CACHE_DIGEST frame and the SETTINGS_CACHE_DIGEST SETTINGS parameter need to be registered.
 
 # Security Considerations
@@ -302,6 +316,41 @@ Additionally, User Agents SHOULD NOT send CACHE_DIGEST when in "privacy mode."
 
 --- back
 
+# Encoding the CACHE_DIGEST frame as an HTTP Header
+
+On some web browsers that support Service Workers {{Service-Workers}} but not Cache Digests (yet), it is possible to achieve the benefit of using Cache Digests by emulating the frame using HTTP Headers.
+
+For the sake of interoperability with such clients, this appendix defines how a CACHE_DIGEST frame can be encoded as an HTTP header named `Cache-Digest`.
+
+The definition uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Appendix B.
+
+~~~ abnf7230
+  Cache-Digest  = 1#digest-entity
+  digest-entity = digest-value *(OWS ";" OWS digest-flag)
+  digest-value  = <Digest-Value encoded using base64url>
+  digest-flag   = token
+~~~
+
+A Cache-Digest request header is defined as a list construct of cache-digest-entities.
+Each cache-digest-entity corresponds to a CACHE_DIGEST frame.
+
+Digest-Value is encoded using base64url {{RFC4648}}, Section 5.
+Flags that are set are encoded as digest-flags by their names that are compared case-insensitively.
+
+Origin is omitted in the header form.
+The value is implied from the value of the `:authority` pseudo header.
+Client MUST only send Cache-Digest headers containing digests that belong to the origin specified by the HTTP request.
+
+The example below contains one digest of fresh resource and has only the `COMPLETE` flag set.
+
+~~~ example
+  Cache-Digest: AfdA; complete
+~~~
+
+Clients MUST associate Cache-Digest headers to every HTTP request, since Fetch {{Fetch}} - the HTTP API supported by Service Workers - does not define the order in which the issued requests will be sent to the server nor guarantees that all the requests will be transmitted using a single HTTP/2 connection.
+
+Also, due to the fact that any header that is supplied to Fetch is required to be end-to-end, there is an ambiguity in what a Cache-Digest header respresents when a request is transmitted through a proxy.
+The header may represent the cache state of a client or that of a proxy, depending on how the proxy handles the header.
 
 # Acknowledgements
 
