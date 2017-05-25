@@ -144,9 +144,9 @@ See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 The set of origins (as per {{!RFC6454}}) that a given connection might be used for is known in this
 specification as the Origin Set.
 
-By default, a connection's Origin Set is uninitialised. When an ORIGIN frame is first received and
-successfully processed by a client, the connection's Origin Set is defined to contain a single
-origin, composed from:
+By default, a connections's Origin Set is uninitialised. When an ORIGIN frame is first received
+and successfully processed by a client, the connection's Origin Set is defined to contain an
+initial origin.  The initial origin is composed from:
 
   - Scheme: "https"
   - Host: the value sent in Server Name Indication ({{!RFC6066}} Section 3), converted to lower case
@@ -162,15 +162,17 @@ Section 6.2) and remove it from the connection's Origin Set, if present.
 
 Note:
 
-: A server that acts as an alternative service {{?RFC7838}} might invalidate the connection for
-  use with the origin that initiated use of the alternative by sending an ORIGIN frame.  If the
-  port on the alternative service is different from the origin that caused the alternative to be
-  used, that origin won't be automatically included in the Origin Set.  The entry with which the
-  Origin Set is initialized includes the port of the alternative service rather than that of the
-  origin.  For instance, a client making requests for "https://example.com" that is directed to
-  an alternative service at ("h2", "x.example.net", "8443") will seed the origin set with
-  "https://example.com:8443".  This problem can be avoided by explicitly including an origin
-  with the correct port in the ORIGIN frame.
+: Using an alternative service {{?RFC7838}} can result in using a service that has a different
+  port to the original service (that is, the server that a client contacts when it has no active
+  alternative services).  In that case, the initial origin will have a different port number.  A
+  client could be unable to send requests for the origin that advertised the alternative
+  service.  Explicitly including origins in the ORIGIN frame avoids this problem.
+
+: For example, a client making requests for "https://example.com" is directed to an alternative
+  service at ("h2", "x.example.net", "8443").  If this alternative service sends an ORIGIN
+  frame, the initial origin will be "https://example.com:8443".  The client will not be able to
+  use the alternative service to make requests for "https://example.com" unless that origin is
+  explicitly included in the ORIGIN frame.
 
 
 ## Authority, Push and Coalescing with ORIGIN {#authority}
