@@ -106,8 +106,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # The CACHE_DIGEST Frame
 
-The CACHE_DIGEST frame type is 0xf1. NOTE: This is an experimental value; if standardised, a
-permanent value will be assigned.
+The CACHE_DIGEST frame type is 0xd (decimal 13).
 
 ~~~~
 +-------------------------------+-------------------------------+
@@ -276,8 +275,20 @@ we can determine whether there is a match in the digest using the following algo
 
 # IANA Considerations
 
-This draft currently has no requirements for IANA.
-If the specification is standardised, the CACHE_DIGEST frame will need to be assigned a frame type and the Cache-Digest header will need to be registered.
+This document registers the following entry in the Permanent Message Headers Registry, as per {{?RFC3864}}:
+
+* Header field name: Cache-Digest
+* Applicable protocol: http
+* Status: experimental
+* Author/Change controller: IESG
+* Specification document(s): [this document]
+
+This document registers the following entry in the HTTP/2 Frame Type Registry, as per {{?RFC7540}}:
+
+* Frame Type: CACHE_DIGEST
+* Code: 0xd
+* Specification: [this document]
+
 
 # Security Considerations
 
