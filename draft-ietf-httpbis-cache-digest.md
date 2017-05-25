@@ -283,7 +283,7 @@ This document registers the following entry in the Permanent Message Headers Reg
 * Author/Change controller: IESG
 * Specification document(s): [this document]
 
-This document registers the following entry in the HTTP/2 Frame Type Registry, as per {{?RFC7540}}:
+This document registers the following entry in the HTTP/2 Frame Type Registry, as per {{RFC7540}}:
 
 * Frame Type: CACHE_DIGEST
 * Code: 0xd
