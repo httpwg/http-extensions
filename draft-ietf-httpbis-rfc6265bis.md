@@ -66,7 +66,7 @@ informative:
     title: "Unicode IDNA Compatibility Processing"
     seriesinfo:
       UNICODE: "Unicode Technical Standards # 46"
-    date: 2010
+    date: 2016-06
     author:
     -
       ins: M. Davis
