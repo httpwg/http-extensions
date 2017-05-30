@@ -1,6 +1,6 @@
 ---
 title: Cache Digests for HTTP/2
-docname: draft-ietf-httpbis-cache-digest-02
+docname: draft-ietf-httpbis-cache-digest-latest
 date: 2017
 category: exp
 
@@ -378,6 +378,10 @@ refers to sample code.
 Thanks to Stefan Eissing for his suggestions.
 
 # Changes
+
+## Since draft-ietf-httpbis-cache-digest-02
+
+* None yet.
 
 ## Since draft-ietf-httpbis-cache-digest-01
 
