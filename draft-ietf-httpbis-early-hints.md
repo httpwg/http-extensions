@@ -105,6 +105,33 @@ response, or vice versa.
 An intermediary MAY drop the informational response. It MAY send HTTP/2 ([RFC7540]) server pushes
 using the information found in the 103 (Early Hints) response.
 
+The following example illustrates a typical message exchange that involves a 103 (Early Hints) response.
+
+Client request:
+
+~~~ example
+  GET / HTTP/1.1
+  Host: example.com
+~~~
+
+Server response:
+
+~~~ example
+  HTTP/1.1 103 Early Hints
+  Link: </style.css>; rel=preload; as=style
+  Link: </script.js>; rel=preload; as=script
+
+  HTTP/1.1 200 OK
+  Date: Fri, 26 May 2017 10:02:11 GMT
+  Content-Length: 1234
+  Content-Type: text/html; charset=utf-8
+  Link: </style.css>; rel=preload; as=style
+  Link: </script.js>; rel=preload; as=script
+
+  <!doctype html>
+  [... rest of the response body is ommitted from the example ...]
+~~~
+
 # Security Considerations
 
 Some clients might have issues handling 103 (Early Hints), since informational responses are rarely
