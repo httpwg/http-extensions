@@ -57,10 +57,10 @@ prior to their use; for example, rendering HTML by a Web browser. Having such li
 the client as early as possible helps to minimize perceived latency.
 
 The "preload" ([Preload]) link relation can be used to convey such links in the Link header field
-of an HTTP response. However, it is not always possible for an origin server to generate a response
-header block immediately after receiving a request. For example, the origin server might need to
-query a database before generating a response, or it might delegate a request to an upstream HTTP
-server running at a distant location.
+of an HTTP response. However, it is not always possible for an origin server to generate the
+header block of a final response immediately after receiving a request. For example, the origin
+server might delegate a request to an upstream HTTP server running at a distant location, or the
+status code might depend on the result of a database query.
 
 The dilemma here is that even though it is preferable for an origin server to send some header fields as
 soon as it receives a request, it cannot do so until the status code and the full header fields of the
