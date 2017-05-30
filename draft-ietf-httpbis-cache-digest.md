@@ -1,6 +1,6 @@
 ---
 title: Cache Digests for HTTP/2
-docname: draft-ietf-httpbis-cache-digest-latest
+docname: draft-ietf-httpbis-cache-digest-02
 date: 2017
 category: exp
 
@@ -376,3 +376,15 @@ particular, see
 refers to sample code.
 
 Thanks to Stefan Eissing for his suggestions.
+
+# Changes
+
+## Since draft-ietf-httpbis-cache-digest-01
+
+* Added definition of the Cache-Digest header.
+* Introduce ACCEPT_CACHE_DIGEST SETTINGS parameter.
+* Change intended status from Standard to Experimental.
+
+## Since draft-ietf-httpbis-cache-digest-00
+
+* Make the scope of a digest frame explicit and shift to stream 0.
