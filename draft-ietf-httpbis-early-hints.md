@@ -17,7 +17,7 @@ author:
  -
     ins: K. Oku
     name: Kazuho Oku
-    organization: DeNA Co., Ltd.
+    organization: Fastly
     email: kazuhooku@gmail.com
 
 normative:
@@ -165,9 +165,14 @@ informational response.
 
 # Changes
 
-## Since draft-ietf-httpbis-early-hints-02
+## Since draft-ietf-httpbis-early-hints-03
 
 * None yet.
+
+## Since draft-ietf-httpbis-early-hints-02
+
+* Editorial changes.
+* Added an example.
 
 ## Since draft-ietf-httpbis-early-hints-01
 
