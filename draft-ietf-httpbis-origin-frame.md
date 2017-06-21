@@ -223,6 +223,8 @@ The following algorithm illustrates how a client could handle received ORIGIN fr
 # Operational Considerations for Servers {#server-ops}
 
 The ORIGIN frame allows a server to indicate for which origins a given connection ought be used.
+The set of origins advertised using this mechanism is under control of the server; servers are not
+obligated to use it, or to advertise all origins which they might be able to answer a request for.
 
 For example, it can be used to inform the client that the connection is to only be used for the
 SNI-based origin, by sending an empty ORIGIN frame. Or, a larger number of origins can be indicated
