@@ -1,7 +1,7 @@
 ---
 title: An HTTP Status Code for Indicating Hints
 abbrev: Early Hints
-docname: draft-ietf-httpbis-early-hints-03
+docname: draft-ietf-httpbis-early-hints-latest
 date: 2017
 category: exp
 
@@ -164,6 +164,10 @@ Thanks to Tatsuhiro Tsujikawa for coming up with the idea of sending the Link he
 informational response.
 
 # Changes
+
+## Since draft-ietf-httpbis-early-hints-03
+
+* None yet.
 
 ## Since draft-ietf-httpbis-early-hints-02
 
