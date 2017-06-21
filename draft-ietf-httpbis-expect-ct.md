@@ -502,18 +502,28 @@ representation of each X.509 certificate as described in {{!RFC7468}}.
 Expect-CT host and their validation statuses. The value is provided as an array
 of JSON objects. The SCTs may appear in any order. Each JSON object in the array
 has the following keys:
-  * The "sct" key, with a value as defined in Section 4.6 of
+  * A "version" key, with an integer value. The UA MUST set this value to `1` if
+    the SCT is in the format defined in Section 3.2 of {{!RFC6962}} and `2` if
+    it is in the format defined in Section 4.6 of
     {{!I-D.ietf-trans-rfc6962-bis}}.
   * The "status" key, with a string value that the UA MUST set to one of the
     following values: "unknown" (indicating that the UA does not have or does
     not trust the public key of the log from which the SCT was issued), "valid"
     (indicating that the UA successfully validated the SCT as described in
-    Section 8.2.3 of {{!I-D.ietf-trans-rfc6962-bis}}), or "invalid" (indicating
-    that the SCT validation failed because of, e.g., a bad signature).
+    Section 5.2 of {{!RFC6962}} or Section 8.2.3 of
+    {{!I-D.ietf-trans-rfc6962-bis}}), or "invalid" (indicating that the SCT
+    validation failed because of, e.g., a bad signature).
   * The "source" key, with a string value that indicates from where the UA
-    obtained the SCT, as defined in Section 6 of
+    obtained the SCT, as defined in Section 3 or {{!RFC6962}} and Section 6 of
     {{!I-D.ietf-trans-rfc6962-bis}}. The UA MUST set the value to one of
     "tls-extension", "ocsp", or "embedded".
+  * The "serialized_sct" key, with a string value. If the value of the "version"
+    key is `1`, the UA MUST set this value to the base64 encoded {{!RFC4648}}
+    serialized `SignedCertificateTimestamp` structure from Section 3.2 of
+    {{!RFC6962}}. If the value of the "version" key is `2`, the UA MUST set this
+    value to the base64 encoded {{!RFC4648}} serialized `TransItem` structure
+    representing the SCT, as defined in Section 4.6 of
+    {{!I-D.ietf-trans-rfc6962-bis}}.
 
 ## Sending a violation report
 
