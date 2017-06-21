@@ -36,15 +36,6 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aimmutable) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-immutable/)
 
 
-### Early Hints
-
-*Sent to IESG*
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/early-hints.html) ([plain text](https://httpwg.github.io/http-extensions/early-hints.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-early-hints) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aearly-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-early-hints/)
-
-
 ### Cache Digest
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/cache-digest.html) ([plain text](https://httpwg.github.io/http-extensions/cache-digest.txt))
@@ -89,6 +80,15 @@ This will incorporate the following drafts:
 * [Cookie Prefixes](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-prefixes.html)
 * [Same-Site Cookies](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-same-site.html)
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
+
+
+### Early Hints
+
+*Sent to IESG*
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/early-hints.html) ([plain text](https://httpwg.github.io/http-extensions/early-hints.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-early-hints) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aearly-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-early-hints/)
 
 
 ### HTTP Encryption Content Encoding
