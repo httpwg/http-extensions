@@ -58,6 +58,7 @@
 <xsl:param name="xml2rfc-ext-xml2rfc-backend">
   <xsl:variable name="default">
     <xsl:choose>
+      <xsl:when test="$pub-yearmonth &gt;= 201705">201706</xsl:when>
       <xsl:when test="$pub-yearmonth &gt; 201612">201610</xsl:when>
       <xsl:otherwise>201510</xsl:otherwise>
     </xsl:choose>
@@ -1174,10 +1175,16 @@
 <xsl:template match="section" mode="cleanup">
   <section>
     <xsl:copy-of select="@anchor|@toc"/>
-    <xsl:if test="$xml2rfc-ext-xml2rfc-backend >= 201610 and @numbered='false'">
-      <!-- rewrite false to no, see https://trac.tools.ietf.org/tools/xml2rfc/trac/ticket/313 -->
-      <xsl:attribute name="numbered">no</xsl:attribute>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="$xml2rfc-ext-xml2rfc-backend >= 201706">
+        <xsl:copy-of select="@numbered"/>
+      </xsl:when>
+      <xsl:when test="$xml2rfc-ext-xml2rfc-backend >= 201610 and @numbered='false'">
+        <!-- rewrite false to no, see https://trac.tools.ietf.org/tools/xml2rfc/trac/ticket/313 -->
+        <xsl:attribute name="numbered">no</xsl:attribute>
+      </xsl:when>
+      <xsl:otherwise/>
+    </xsl:choose>
     <xsl:attribute name="title">
       <xsl:choose>
         <xsl:when test="name">
