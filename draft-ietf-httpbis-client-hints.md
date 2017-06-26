@@ -109,7 +109,7 @@ The client and server, or an intermediate proxy, can use an opt-in mechanism to 
 
 When presented with a request that contains one or more client hint header fields, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{KEY}}), to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
-Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing. For example, this specification defines "Content-DPR" response header field that needs to be returned by the server when the "DPR" hint is used to select the response.
+Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing. For example, this specification defines the "Content-DPR" response header field that needs to be returned by the server when the "DPR" hint is used to select the response.
 
 
 ### Advertising Support via Accept-CH header field {#accept-ch}
