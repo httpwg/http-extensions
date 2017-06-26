@@ -366,6 +366,10 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Specification document(s): {{width}} of this document
 - Related information: for Client Hints
 
+# Acknowledgements
+
+Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Yoav Weiss, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.
+
 
 --- back
 
