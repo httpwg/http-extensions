@@ -242,6 +242,8 @@ The "Save-Data" request header field consists of one or more tokens that indicat
 
 This document defines the "on" sd-token value, which is used as a signal indicating explicit user opt-in into a reduced data usage mode on the client, and when communicated to origins allows them to deliver alternate content honoring such preference - e.g. smaller image and video resources, alternate markup, and so on. New token and extension token values can be defined by updates to this specification.
 
+If Save-Data occurs in a message more than once, the last value overrides all previous occurrences.
+
 
 # Examples
 
