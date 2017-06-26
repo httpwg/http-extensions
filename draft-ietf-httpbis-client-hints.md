@@ -30,6 +30,7 @@ normative:
   RFC7230:
   RFC7231:
   RFC7234:
+  RFC6454:
   HTML5: W3C.REC-html5-20141028
   CSSVAL: W3C.CR-css-values-3-20160929
   CSS2:
@@ -133,7 +134,7 @@ For example, based on Accept-CH example above, a user agent could append DPR, Wi
 
 ### The Accept-CH-Lifetime header field {#accept-ch-lifetime}
 
-Servers can ask the client to remember an origin-wide Accept-CH preference for a specified period of time to enable delivery of Client Hints on all subsequent requests to the origin, and on subresource requests initiated as a result of processing a response from the origin.
+Servers can ask the client to remember an origin-wide Accept-CH preference for a specified period of time to enable delivery of Client Hints on all subsequent requests to the origin ({{RFC6454}}), and on any requests initiated as a result of processing a response from the origin.
 
 ~~~ abnf7230
   Accept-CH-Lifetime = #delta-seconds
@@ -364,6 +365,7 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Author/Change controller: IETF
 - Specification document(s): {{width}} of this document
 - Related information: for Client Hints
+
 
 --- back
 
