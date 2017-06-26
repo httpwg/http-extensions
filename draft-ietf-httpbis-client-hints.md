@@ -143,11 +143,14 @@ Servers can ask the client to remember an origin-wide Accept-CH preference for a
 The field-value indicates that the Accept-CH preference SHOULD be considered stale after its age is greater than the specified number of seconds.
 
 ~~~ example
-  Accept-CH: DPR, Viewport-Width
+  Accept-CH: DPR, Width
+  Accept-CH: Viewport-Width
   Accept-CH-Lifetime: 86400
 ~~~
 
-For example, based on the Accept-CH and Accept-CH-Lifetime example above, a user agent could persist an origin-wide Accept-CH preference for up to 86400 seconds (1 day). Then, if a request is initiated to the same origin before the preference is stale (e.g. as a result of a navigation to the origin, or fetching a subresource from the origin) the client could append the requested header fields (DPR and Viewport-Width in this example) to the request and any subresource requests initiated as a result of processing a response from same origin.
+For example, based on the Accept-CH and Accept-CH-Lifetime example above, a user agent could persist an origin-wide Accept-CH preference for up to 86400 seconds (1 day). Then, if a request is initiated to the same origin before the preference is stale (e.g. as a result of a navigation to the origin, or fetching a subresource from the origin) the client could append the requested header fields (DPR, Width, and Viewport-Width in this example) to the request and any subresource requests initiated as a result of processing a response from same origin.
+
+If Accept-CH-Lifetime occurs in a message more than once, the last value overrides all previous occurrences.
 
 
 ### Interaction with Caches
