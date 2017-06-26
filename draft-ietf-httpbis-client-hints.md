@@ -161,10 +161,10 @@ When selecting an optimized response based on one or more Client Hints, and if t
 Above example indicates that the cache key needs to include the DPR header field.
 
 ~~~ example
-  Vary: DPR, Width, Downlink
+  Vary: DPR, Width
 ~~~
 
-Above example indicates that the cache key needs to include the DPR, Width, and Downlink header fields.
+Above example indicates that the cache key needs to include the DPR and Width header fields.
 
 Client Hints MAY be combined with Key ({{KEY}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
 
@@ -179,12 +179,6 @@ Above example indicates that the cache key needs to include the value of the DPR
 ~~~
 
 Above example indicates that the cache key needs to include the value of the Width header field and be partitioned into groups of 320: 0-320, 320-640, and so on.
-
-~~~ example
-  Key: Downlink;partition=0.5:1.0:3.0:5.0:10
-~~~
-
-Above example indicates that the cache key needs to include the (Mbps) value of the Downlink header field with six segments: less than 0.5, 0.5 to less than 1.0, 1.0 to less than 3.0, 3.0 to less than 5.0, 5.0 to less than 10; 10 or higher.
 
 
 # Client Hints
@@ -237,17 +231,6 @@ The "Viewport-Width" request header field is a number that indicates the layout 
 If Viewport-Width occurs in a message more than once, the last value overrides all previous occurrences.
 
 
-## The Downlink header field {#downlink}
-
-The "Downlink" request header field is a number that indicates the client's maximum downlink speed in megabits per second (Mbps).
-
-~~~ abnf7230
-  Downlink = 1*DIGIT [ "." 1*DIGIT ]
-~~~
-
-If Downlink occurs in a message more than once, the minimum value SHOULD be used to override other occurrences.
-
-
 ## The Save-Data header field {#save-data}
 
 The "Save-Data" request header field consists of one or more tokens that indicate client's preference for reduced data usage, due to high transfer costs, slow connection speeds, or other reasons.
@@ -280,14 +263,6 @@ If the server uses above hints to perform resource selection for an image asset,
 
 The Content-DPR response header field indicates to the client that the server has selected resource with DPR ratio of 1.0. The client can use this information to perform additional processing on the resource - for example, calculate the appropriate intrinsic size of the image resource such that it is displayed at the correct resolution.
 
-Alternatively, the server could select an alternate resource based on the maximum downlink speed advertised in the request header fields:
-
-~~~ example
-  Downlink: 0.384
-~~~
-
-The server knows that the client's maximum downlink speed is 0.384Mbps (GPRS EDGE), and it can use this information to select an optimized resource - for example, an alternate image asset, stylesheet, HTML document, media stream, and so on.
-
 
 # Security Considerations
 
@@ -300,7 +275,7 @@ Implementers ought to provide mechanisms and policies to control how and when su
 
 # IANA Considerations
 
-This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP request fields, "Content-DPR" HTTP response field, and registers them in the Permanent Message Header Fields registry.
+This document defines the "Accept-CH", "DPR", "Save-Data", "Viewport-Width", and "Width" HTTP request fields, "Accept-CH", "Accept-CH-Lifetime", and "Content-DPR" HTTP response field, and registers them in the Permanent Message Header Fields registry.
 
 ## Accept-CH {#iana-accept-ch}
 - Header field name: Accept-CH
@@ -324,14 +299,6 @@ This document defines the "Accept-CH", "DPR", "Width", and "Downlink" HTTP reque
 - Status: standard
 - Author/Change controller: IETF
 - Specification document(s): {{content-dpr}} of this document
-- Related information: for Client Hints
-
-## Downlink {#iana-downlink}
-- Header field name: Downlink
-- Applicable protocol: HTTP
-- Status: standard
-- Author/Change controller: IETF
-- Specification document(s): {{downlink}} of this document
 - Related information: for Client Hints
 
 ## DPR {#iana-dpr}
