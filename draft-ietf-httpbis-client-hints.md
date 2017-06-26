@@ -89,7 +89,7 @@ Client Hints does not supersede or replace the User-Agent header field. Existing
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHOULD", "SHOULD NOT", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} when, and only when, they appear capitalized, as shown.
 
 This document uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Appendix B. It includes by reference the DIGIT rule from {{RFC5234}} and the OWS and field-name rules from {{RFC7230}}.
 
@@ -139,7 +139,7 @@ Servers can ask the client to remember an origin-wide Accept-CH preference for a
   Accept-CH-Lifetime = #delta-seconds
 ~~~
 
-The field-value indicates that the Accept-CH preference should be considered stale after its age is greater than the specified number of seconds.
+The field-value indicates that the Accept-CH preference SHOULD be considered stale after its age is greater than the specified number of seconds.
 
 ~~~ example
   Accept-CH: DPR, Viewport-Width
@@ -244,7 +244,7 @@ The "Downlink" request header field is a number that indicates the client's maxi
   Downlink = 1*DIGIT [ "." 1*DIGIT ]
 ~~~
 
-If Downlink occurs in a message more than once, the minimum value should be used to override other occurrences.
+If Downlink occurs in a message more than once, the minimum value SHOULD be used to override other occurrences.
 
 
 ## The Save-Data header field {#save-data}
