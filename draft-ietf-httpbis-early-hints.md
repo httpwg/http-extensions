@@ -137,7 +137,7 @@ Server response:
 # Security Considerations
 
 Some clients might have issues handling 103 (Early Hints), since informational responses are rarely
-used in reply to requests not including an Expect header ([RFC7231], Section 5.1.1).
+used in reply to requests not including an Expect header field ([RFC7231], Section 5.1.1).
 
 In particular, an HTTP/1.1 client that mishandles an informational response as a final response
 is likely to consider all responses to the succeeding requests sent over the same connection to be
