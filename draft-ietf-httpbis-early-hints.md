@@ -105,8 +105,6 @@ Aside from performance optimizations, such evaluation of the 103
 client MUST NOT interpret the 103 (Early Hints) response header fields as if they applied to
 the informational response itself (e.g., as metadata about the 103 (Early Hints) response).
 
-An intermediary MAY send HTTP/2 ([RFC7540]) server pushes using the information found in the 103 (Early Hints) response.
-
 The following example illustrates a typical message exchange that involves a 103 (Early Hints) response.
 
 Client request:
