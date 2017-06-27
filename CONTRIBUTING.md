@@ -96,8 +96,8 @@ Please do not use a pull request to open a new design issue.
 
 ## Code of Conduct
 
-The [IETF Guidelines for Conduct](https://tools.ietf.org/html/rfc7154) applies 
-to all Working Group communications and meetings.
+The [IETF Guidelines for Conduct](https://tools.ietf.org/html/rfc7154) applies to all Working Group
+communications and meetings.
 
 
 ## NOTE WELL
