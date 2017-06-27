@@ -67,21 +67,18 @@ Issues will be labeled by the Chairs as either `editorial` or `design`:
 
 * **Editorial** issues can be dealt with by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
 
-Consensus for the resolution of a design issue can be established in a few different ways:
+The `open` design issues in the issues list are those that we are currently or plan to discuss.
+When a design issue is `closed`, it implies that the issue's proposed resolution is reflected in
+the drafts.
 
-* Through discussion on the mailing list. Once a resolution is found, it will be recorded in the issue.
-
-* Through discussion on the issues list. Once a resolution is found, it will be confirmed on the mailing list before consensus is declared. 
-
-The editors can also propose resolutions for the group's consideration by incorporating them into
-the draft(s); when doing so, the issue should not be closed until consensus is declared.
-
-Issues that have consensus will be labelled as `editor-ready`. After the editor has incorporated a
-resolution into the specification, the issue can be closed.
+The editors can also propose resolutions to design issues for the group's consideration by
+incorporating them into the draft(s). When they do so, the issue will be closed and flagged with
+the `proposal` label.
 
 When a new draft is published, the design issues that have been closed since the last draft will be
-highlighted on the mailing list, to aid reviewers. If substantive new information is brought to our
-attention, issues can be reopened by the Chairs.
+highlighted on the mailing list, to aid reviewers. If new information (in the judgement of the
+Chairs) about a decision comes to light, or there is an objection to a proposed resolution flagged
+with `proposal`, the issue will be reopened by the Chairs.
 
 
 ## Pull Requests
