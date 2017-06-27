@@ -90,9 +90,6 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 The 103 (Early Hints) informational status code indicates to the client that the server is likely to
 send a final response with the header fields included in the informational response.
 
-A server MUST NOT include Content-Length, Transfer-Encoding, or any hop-by-hop header fields
-([RFC7230], Section 6.1) in a 103 (Early Hints) response.
-
 A client can speculatively evaluate the header fields included in a 103 (Early Hints) response while
 waiting for the final response. For example, a client might recognize a Link header field value
 containing the relation type "preload" and start fetching the target resource.
@@ -103,8 +100,7 @@ fields on the final response. Aside from performance optimizations, such evaluat
 client MUST NOT interpret the 103 (Early Hints) response header fields as if they applied to
 the informational response itself (e.g., as metadata about the 103 (Early Hints) response).
 
-An intermediary MAY drop the informational response. It MAY send HTTP/2 ([RFC7540]) server pushes
-using the information found in the 103 (Early Hints) response.
+An intermediary MAY send HTTP/2 ([RFC7540]) server pushes using the information found in the 103 (Early Hints) response.
 
 The following example illustrates a typical message exchange that involves a 103 (Early Hints) response.
 
