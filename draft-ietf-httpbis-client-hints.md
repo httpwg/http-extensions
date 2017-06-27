@@ -392,4 +392,8 @@ Above example indicates that the cache key needs to include the value of the Wid
 * Issue 306: Define Accept-CH-Lifetime
 
 ## Since -04
+* Issue 361: Removed Downlink
+* Issue 361: Moved Key to appendix, plus other editorial feedback.
+
+## Since -05
 * None
