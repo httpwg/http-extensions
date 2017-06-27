@@ -93,12 +93,17 @@ send a final response with the header fields included in the informational respo
 A client can speculatively evaluate the header fields included in a 103 (Early Hints) response while
 waiting for the final response. For example, a client might recognize a Link header field value
 containing the relation type "preload" and start fetching the target resource.
-
 However, these header fields only provide hints to the client; they do not replace the header
-fields on the final response. Aside from performance optimizations, such evaluation of the 103
+fields on the final response.
+
+Aside from performance optimizations, such evaluation of the 103
 (Early Hints) response's header fields MUST NOT affect how the final response is processed. A
 client MUST NOT interpret the 103 (Early Hints) response header fields as if they applied to
 the informational response itself (e.g., as metadata about the 103 (Early Hints) response).
+
+A server MUST NOT omit sending the header fields of a final response even if they have been sent as
+part of a 103 (Early Hints) response.
+The server SHOULD only send the header fields that are likely to help the client carry out speculative operations as part of the 103 (Early Hints) response, instead of including all the header fields that are likely to be seen in the final response.
 
 An intermediary MAY send HTTP/2 ([RFC7540]) server pushes using the information found in the 103 (Early Hints) response.
 
