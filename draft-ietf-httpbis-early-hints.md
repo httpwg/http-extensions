@@ -159,10 +159,7 @@ The HTTP Status Codes Registry will be updated with the following entry:
 * Description: Early Hints
 * Specification: [this document]
 
-# Acknowledgements
-
-Thanks to Tatsuhiro Tsujikawa for coming up with the idea of sending the Link header fields using an
-informational response.
+--- back
 
 # Changes
 
@@ -182,3 +179,8 @@ informational response.
 ## Since draft-ietf-httpbis-early-hints-00
 
 * Forbid processing the headers of a 103 response as part of the informational response.
+
+# Acknowledgements
+
+Thanks to Tatsuhiro Tsujikawa for coming up with the idea of sending the Link header fields using an
+informational response.
