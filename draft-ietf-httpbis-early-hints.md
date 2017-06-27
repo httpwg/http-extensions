@@ -113,6 +113,7 @@ Client request:
 ~~~ example
   GET / HTTP/1.1
   Host: example.com
+
 ~~~
 
 Server response:
@@ -136,11 +137,11 @@ Server response:
 # Security Considerations
 
 Some clients might have issues handling 103 (Early Hints), since informational responses are rarely
-used in reply to requests not including an Expect header ([RFC7231], Section 5.1.1).
+used in reply to requests not including an Expect header field ([RFC7231], Section 5.1.1).
 
 In particular, an HTTP/1.1 client that mishandles an informational response as a final response
 is likely to consider all responses to the succeeding requests sent over the same connection to be
-part of the final response. Such behavior may constitute a cross-origin information disclosure
+part of the final response. Such behavior might constitute a cross-origin information disclosure
 vulnerability in case the client multiplexes requests to different origins onto a single persistent
 connection.
 
@@ -158,10 +159,7 @@ The HTTP Status Codes Registry will be updated with the following entry:
 * Description: Early Hints
 * Specification: [this document]
 
-# Acknowledgements
-
-Thanks to Tatsuhiro Tsujikawa for coming up with the idea of sending the Link header fields using an
-informational response.
+--- back
 
 # Changes
 
@@ -181,3 +179,8 @@ informational response.
 ## Since draft-ietf-httpbis-early-hints-00
 
 * Forbid processing the headers of a 103 response as part of the informational response.
+
+# Acknowledgements
+
+Thanks to Tatsuhiro Tsujikawa for coming up with the idea of sending the Link header fields using an
+informational response.
