@@ -91,14 +91,6 @@ This will incorporate the following drafts:
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aearly-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-early-hints/)
 
 
-### HTTP Encryption Content Encoding
-
-_Approved; in RFC Editor Queue._
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-encryption-encoding.html)
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-encryption-encoding) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aencryption) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-encryption-encoding/)
-
 
 ### Character Encoding and Language for Parameters
 
