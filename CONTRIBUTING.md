@@ -81,9 +81,12 @@ incorporating them into the draft(s). When they do so, the issue will be closed 
 the `proposal` label.
 
 When a new draft is published, the design issues that have been closed since the last draft will be
-highlighted on the mailing list, to aid reviewers. If new information (in the judgement of the
-Chairs) about a decision comes to light, or there is an objection to a proposed resolution flagged
-with `proposal`, the issue will be reopened by the Chairs.
+highlighted on the mailing list, to aid reviewers. 
+
+If new information (in the judgement of the Chairs) about a decision comes to light, or there is an
+objection to a proposed resolution flagged with `proposal`, the issue will be reopened by the
+Chairs. Otherwise, the `proposal` flag will be removed from those issues, to denote that their
+resolution has been accepted.
 
 
 ## Pull Requests
