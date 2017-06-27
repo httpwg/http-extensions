@@ -65,7 +65,7 @@ Issues will be labeled by the Chairs as either `editorial` or `design`:
 
 * **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/), as outlined below. 
 
-* **Editorial** issues can be closed by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
+* **Editorial** issues can be dealt with by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
 
 Consensus for the resolution of a design issue can be established in a few different ways:
 
