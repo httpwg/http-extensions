@@ -1,7 +1,7 @@
 # Contributing to HTTP
 
 Before submitting feedback, please familiarize yourself with our current issues list,
-[charter](https://datatracker.ietf.org/wg/httpbis/about/) and [working group home
+[charter](https://datatracker.ietf.org/wg/httpbis/about/), and [working group home
 page](https://httpwg.github.io/). If you're new to this, you may also want to read the [Tao of the
 IETF](https://www.ietf.org/tao.html).
 
