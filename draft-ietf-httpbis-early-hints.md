@@ -141,7 +141,7 @@ used in reply to requests not including an Expect header field ([RFC7231], Secti
 
 In particular, an HTTP/1.1 client that mishandles an informational response as a final response
 is likely to consider all responses to the succeeding requests sent over the same connection to be
-part of the final response. Such behavior may constitute a cross-origin information disclosure
+part of the final response. Such behavior might constitute a cross-origin information disclosure
 vulnerability in case the client multiplexes requests to different origins onto a single persistent
 connection.
 
