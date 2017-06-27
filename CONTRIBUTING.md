@@ -61,6 +61,11 @@ commits will only be responded to with best effort, and may not be seen.
 
 ## Resolving Issues
 
+As in all IETF Working Groups, final consensus of the Working Group is determined during Working
+Group Last Call; consensus established in discussion of issues provides a limited precedent, to
+prevent revisiting topics unnecessarily. Our issues list provides a mechanism for tracking those
+discussions and their outcome.
+
 Issues will be labeled by the Chairs as either `editorial` or `design`:
 
 * **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/), as outlined below. 
