@@ -15,6 +15,7 @@ author:
   email: pmcmanus@mozilla.com
 
 normative:
+ RFC2119:
  RFC7232:
  RFC7234:
 
@@ -83,6 +84,12 @@ identify responses that will not be updated during their freshness lifetimes.
 
 This effectively informs clients that any conditional request for that response
 can be safely skipped without worrying that it has been updated.
+
+## Notational Conventions
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
+"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
+{{RFC2119}}.
 
 # The immutable Cache-Control extension
 
