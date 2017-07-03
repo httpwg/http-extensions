@@ -15,7 +15,6 @@ author:
   email: pmcmanus@mozilla.com
 
 normative:
- RFC7231:
  RFC7232:
  RFC7234:
 
