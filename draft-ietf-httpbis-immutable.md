@@ -118,9 +118,9 @@ proxy clients as it does when received by User-Agent based
 clients. Therefore proxies SHOULD skip conditionally revalidating fresh
 responses containing the immutable extension unless there is a signal
 from the client that a validation is necessary (e.g. a no-cache
-Cache-Control request directive).
+Cache-Control request directive defined by Section 5.2.1.4 of [RFC7234]).
 
-A proxy that uses immutable to bypass a conditional revalidation may choose
+A proxy that uses immutable to bypass a conditional revalidation can choose
 whether to reply with a 304 or 200 to its requesting client based on
 the request headers the proxy received.
 
@@ -152,7 +152,7 @@ for mitigation of this risk:
 
 # IANA Considerations
 
-[RFC7234] sections 7.1 and 7.1.2 require registration of the immutable
+Section 7.1 of [RFC7234] requires registration of the immutable
 extension in the "Hypertext Transfer Protocol (HTTP) Cache Directive Registry"
 with IETF Review.
 
