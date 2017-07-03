@@ -1,6 +1,6 @@
 ---
 title: HTTP Immutable Responses
-docname: draft-ietf-httpbis-immutable-02
+docname: draft-ietf-httpbis-immutable-03
 date: 2017
 category: std
 ipr: trust200902
