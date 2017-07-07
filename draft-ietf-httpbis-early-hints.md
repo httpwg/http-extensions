@@ -133,6 +133,12 @@ Server response:
   [... rest of the response body is ommitted from the example ...]
 ~~~
 
+As is the case with any informational response, a server might emit more than one 103 (Early Hints)
+response prior to sending a final response.
+This can happen for example when a caching intermediary generates a 103 (Early Hints) response based
+on the header fields of a stale-cached response, then forwards a 103 (Early Hints) response and a
+final response that were sent from the origin server in response to a revalidation request.
+
 # Security Considerations
 
 Some clients might have issues handling 103 (Early Hints), since informational responses are rarely
