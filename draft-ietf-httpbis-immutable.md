@@ -1,6 +1,6 @@
 ---
 title: HTTP Immutable Responses
-docname: draft-ietf-httpbis-immutable-02
+docname: draft-ietf-httpbis-immutable-03
 date: 2017
 category: std
 ipr: trust200902
@@ -15,7 +15,7 @@ author:
   email: pmcmanus@mozilla.com
 
 normative:
- RFC7231:
+ RFC2119:
  RFC7232:
  RFC7234:
 
@@ -85,6 +85,12 @@ identify responses that will not be updated during their freshness lifetimes.
 This effectively informs clients that any conditional request for that response
 can be safely skipped without worrying that it has been updated.
 
+## Notational Conventions
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
+"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in
+{{RFC2119}}.
+
 # The immutable Cache-Control extension
 
 When present in an HTTP response, the `immutable` Cache-Control
@@ -112,9 +118,9 @@ proxy clients as it does when received by User-Agent based
 clients. Therefore proxies SHOULD skip conditionally revalidating fresh
 responses containing the immutable extension unless there is a signal
 from the client that a validation is necessary (e.g. a no-cache
-Cache-Control request directive).
+Cache-Control request directive defined by Section 5.2.1.4 of [RFC7234]).
 
-A proxy that uses immutable to bypass a conditional revalidation may choose
+A proxy that uses immutable to bypass a conditional revalidation can choose
 whether to reply with a 304 or 200 to its requesting client based on
 the request headers the proxy received.
 
@@ -146,7 +152,7 @@ for mitigation of this risk:
 
 # IANA Considerations
 
-[RFC7234] sections 7.1 and 7.1.2 require registration of the immutable
+Section 7.1 of [RFC7234] requires registration of the immutable
 extension in the "Hypertext Transfer Protocol (HTTP) Cache Directive Registry"
 with IETF Review.
 

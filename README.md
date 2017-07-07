@@ -27,14 +27,6 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-header-structure) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aheader-structure) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-header-structure/)
 
-### Immutable Responses
-
-*In Working Group Last Call; ends 2017-05-17*
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/immutable.html) ([plain text](https://httpwg.github.io/http-extensions/immutable.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-immutable) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aimmutable) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-immutable/)
-
 
 ### Cache Digest
 
@@ -80,6 +72,15 @@ This will incorporate the following drafts:
 * [Cookie Prefixes](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-prefixes.html)
 * [Same-Site Cookies](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-same-site.html)
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
+
+
+### Immutable Responses
+
+*Sent to IESG*
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/immutable.html) ([plain text](https://httpwg.github.io/http-extensions/immutable.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-immutable) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aimmutable) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-immutable/)
 
 
 ### Early Hints

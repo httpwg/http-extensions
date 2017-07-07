@@ -144,7 +144,7 @@ part of the final response. Such behavior might constitute a cross-origin inform
 vulnerability in case the client multiplexes requests to different origins onto a single persistent
 connection.
 
-Therefore, a server might refrain from sending Early Hints over HTTP/1.1 unless when the client is
+Therefore, a server might refrain from sending Early Hints over HTTP/1.1 unless the client is
 known to handle informational responses correctly.
 
 HTTP/2 clients are less likely to suffer from incorrect framing since handling of the response
