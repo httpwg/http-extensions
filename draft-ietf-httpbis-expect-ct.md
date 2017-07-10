@@ -652,7 +652,7 @@ Transparency requirements.
 
 ## Since -01
 
-* None yet
+* Change SCT reporting format to support both RFC 6962 and 6962-bis SCTs.
 
 ## Since -00
 
