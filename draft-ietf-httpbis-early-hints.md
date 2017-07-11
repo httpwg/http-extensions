@@ -90,21 +90,20 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 The 103 (Early Hints) informational status code indicates to the client that the server is likely to
 send a final response with the header fields included in the informational response.
 
-A server MUST NOT include Content-Length, Transfer-Encoding, or any hop-by-hop header fields
-([RFC7230], Section 6.1) in a 103 (Early Hints) response.
+Typically, a server will include the header fields sent in a 103 (Early Hints) response in the final
+response as well. However, there might be cases when this is not desirable, such as when the server
+learns that they are not correct before the final response is sent.
 
 A client can speculatively evaluate the header fields included in a 103 (Early Hints) response while
 waiting for the final response. For example, a client might recognize a Link header field value
 containing the relation type "preload" and start fetching the target resource.
-
 However, these header fields only provide hints to the client; they do not replace the header
-fields on the final response. Aside from performance optimizations, such evaluation of the 103
+fields on the final response.
+
+Aside from performance optimizations, such evaluation of the 103
 (Early Hints) response's header fields MUST NOT affect how the final response is processed. A
 client MUST NOT interpret the 103 (Early Hints) response header fields as if they applied to
 the informational response itself (e.g., as metadata about the 103 (Early Hints) response).
-
-An intermediary MAY drop the informational response. It MAY send HTTP/2 ([RFC7540]) server pushes
-using the information found in the 103 (Early Hints) response.
 
 The following example illustrates a typical message exchange that involves a 103 (Early Hints) response.
 
@@ -133,6 +132,12 @@ Server response:
   <!doctype html>
   [... rest of the response body is ommitted from the example ...]
 ~~~
+
+As is the case with any informational response, a server might emit more than one 103 (Early Hints)
+response prior to sending a final response.
+This can happen for example when a caching intermediary generates a 103 (Early Hints) response based
+on the header fields of a stale-cached response, then forwards a 103 (Early Hints) response and a
+final response that were sent from the origin server in response to a revalidation request.
 
 # Security Considerations
 
