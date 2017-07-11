@@ -1,7 +1,7 @@
 ---
 title: An HTTP Status Code for Indicating Hints
 abbrev: Early Hints
-docname: draft-ietf-httpbis-early-hints-latest
+docname: draft-ietf-httpbis-early-hints-04
 date: 2017
 category: exp
 
@@ -170,7 +170,10 @@ The HTTP Status Codes Registry will be updated with the following entry:
 
 ## Since draft-ietf-httpbis-early-hints-03
 
-* None yet.
+* Removed statements that were either redundant or contradictory to RFC7230-7234.
+* Clarified what the server's expected behavior is.
+* Explain that a server might want to send more than one 103 response.
+* Editorial Changes.
 
 ## Since draft-ietf-httpbis-early-hints-02
 
