@@ -93,7 +93,7 @@ Origin-Len:
 : An unsigned, 16-bit integer indicating the length, in octets, of the ASCII-Origin field.
 
 Origin:
-: An optional sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender believes this connection is or could be authoritative for.
+: An OPTIONAL sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender believes this connection is or could be authoritative for.
 
 The ORIGIN frame does not define any flags. However, future updates to this specification MAY
 define flags. See {{process}}.
@@ -137,7 +137,7 @@ See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 The set of origins (as per {{!RFC6454}}) that a given connection might be used for is known in this
 specification as the Origin Set.
 
-By default, a connections's Origin Set is uninitialised. When an ORIGIN frame is first received and
+By default, a connection's Origin Set is uninitialised. When an ORIGIN frame is first received and
 successfully processed by a client, the connection's Origin Set is defined to contain a single
 origin, composed from:
 
