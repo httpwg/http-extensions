@@ -30,8 +30,8 @@ normative:
   RFC7230:
   RFC7231:
   RFC7234:
-  W3C.REC-html5-20141028:
-  W3C.CR-css-values-3-20160929:
+  HTML5: W3C.REC-html5-20141028
+  CSSVAL: W3C.CR-css-values-3-20160929
   CSS2:
     target: http://www.w3.org/TR/2011/REC-CSS2-20110607
     title: "Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification"
@@ -50,7 +50,7 @@ normative:
 
 informative:
   RFC6265:
-  I-D.ietf-httpbis-key:
+  KEY: I-D.ietf-httpbis-key
 
 --- abstract
 
@@ -107,14 +107,14 @@ The client and server, or an intermediate proxy, can use an opt-in mechanism to 
 
 ## Server Processing of Client Hints
 
-When presented with a request that contains one or more client hint headers, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{I-D.ietf-httpbis-key}}), to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
+When presented with a request that contains one or more client hint headers, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}), and optionally Key ({{KEY}}), to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing. For example, this specification defines "Content-DPR" response header field that needs to be returned by the server when the "DPR" hint is used to select the response.
 
 
 ### Advertising Support via Accept-CH header field {#accept-ch}
 
-Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{W3C.REC-html5-20141028}}).
+Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{HTML5}}).
 
 ~~~ abnf7230
   Accept-CH = #field-name
@@ -165,7 +165,7 @@ Above example indicates that the cache key needs to include the DPR header field
 
 Above example indicates that the cache key needs to include the DPR, Width, and Downlink header fields.
 
-Client Hints MAY be combined with Key ({{I-D.ietf-httpbis-key}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
+Client Hints MAY be combined with Key ({{KEY}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
 
 ~~~ example
   Key: DPR;partition=1.5:2.5:4.0
@@ -190,7 +190,7 @@ Above example indicates that the cache key needs to include the (Mbps) value of 
 
 ## The DPR header field {#dpr}
 
-The "DPR" request header field is a number that indicates the client's current Device Pixel Ratio (DPR), which is the ratio of physical pixels over CSS px (Section 5.2 of {{W3C.CR-css-values-3-20160929}}) of the layout viewport (Section 9.1.1 of [CSS2]) on the device.
+The "DPR" request header field is a number that indicates the client's current Device Pixel Ratio (DPR), which is the ratio of physical pixels over CSS px (Section 5.2 of {{CSSVAL}}) of the layout viewport (Section 9.1.1 of [CSS2]) on the device.
 
 ~~~ abnf7230
   DPR = 1*DIGIT [ "." 1*DIGIT ]
