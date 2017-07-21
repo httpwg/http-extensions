@@ -348,7 +348,7 @@ Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Yoav Weiss, Ben Greens
 
 # Interaction with Key Response Header Field
 
-Client Hints may be combined with Key response header field ({{I-D.ietf-httpbis-key}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
+Client Hints may be combined with Key response header field ({{KEY}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
 
 ~~~ example
   Key: DPR;partition=1.5:2.5:4.0
