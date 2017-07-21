@@ -127,14 +127,14 @@ For example:
   Accept-CH: DPR, Width, Viewport-Width
 ~~~
 
-When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the application is interested in receiving specified request header fields that match the advertised field-values; subresource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in can include the request header fields that match the advertised field-values.
+When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the origin ({{RFC6454}}) is interested in receiving specified request header fields that match the advertised field-values; same-origin resource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in can include the request header fields that match the advertised field-values.
 
-For example, based on Accept-CH example above, a user agent could append DPR, Width, and Viewport-Width header fields to all subresource requests initiated by the page constructed from the response.
+For example, based on Accept-CH example above, a user agent could append DPR, Width, and Viewport-Width header fields to all same-origin resource requests initiated by the page constructed from the response.
 
 
 ### The Accept-CH-Lifetime Header Field {#accept-ch-lifetime}
 
-Servers can ask the client to remember an origin-wide Accept-CH preference for a specified period of time to enable delivery of Client Hints on all subsequent requests to the origin ({{RFC6454}}), and on any requests initiated as a result of processing a response from the origin.
+Servers can ask the client to remember an origin-wide Accept-CH preference for a specified period of time to enable delivery of Client Hints on subsequent requests to the origin ({{RFC6454}}).
 
 ~~~ abnf7230
   Accept-CH-Lifetime = #delta-seconds
@@ -148,7 +148,7 @@ The field-value indicates that the Accept-CH preference SHOULD be considered sta
   Accept-CH-Lifetime: 86400
 ~~~
 
-For example, based on the Accept-CH and Accept-CH-Lifetime example above, a user agent could persist an origin-wide Accept-CH preference for up to 86400 seconds (1 day). Then, if a request is initiated to the same origin before the preference is stale (e.g. as a result of a navigation to the origin, or fetching a subresource from the origin) the client could append the requested header fields (DPR, Width, and Viewport-Width in this example) to the request and any subresource requests initiated as a result of processing a response from same origin.
+For example, based on the Accept-CH and Accept-CH-Lifetime example above, a user agent could persist an origin-wide Accept-CH preference for up to 86400 seconds (1 day). Then, if a request is initiated to the same origin before the preference is stale (e.g. as a result of a navigation to the origin, or fetching a resource from the origin) the client could append the requested header fields (DPR, Width, and Viewport-Width in this example) to all requests matching that origin.
 
 If Accept-CH-Lifetime occurs in a message more than once, the last value overrides all previous occurrences.
 
