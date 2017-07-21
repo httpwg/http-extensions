@@ -169,21 +169,6 @@ Above example indicates that the cache key needs to include the DPR header field
 
 Above example indicates that the cache key needs to include the DPR and Width header fields.
 
-<<<<<<< HEAD
-Client Hints MAY be combined with Key ({{KEY}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
-
-~~~ example
-  Key: DPR;partition=1.5:2.5:4.0
-~~~
-
-Above example indicates that the cache key needs to include the value of the DPR header field with three segments: less than 1.5, 1.5 to less than 2.5, and 4.0 or greater.
-
-~~~ example
-  Key: Width;div=320
-~~~
-
-Above example indicates that the cache key needs to include the value of the Width header field and be partitioned into groups of 320: 0-320, 320-640, and so on.
-
 
 # Client Hints
 
