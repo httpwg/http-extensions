@@ -32,6 +32,7 @@ normative:
   RFC7234:
   RFC6454:
   HTML5: W3C.REC-html5-20141028
+  SECURE-CONTEXTS: W3C.CR-secure-contexts-20160915
   CSSVAL: W3C.CR-css-values-3-20160929
   CSS2:
     target: http://www.w3.org/TR/2011/REC-CSS2-20110607
@@ -101,9 +102,9 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 ## Sending Client Hints
 
-Clients control which Client Hints are sent in requests, based on their default settings, user configuration and/or preferences. Implementers might provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. Implementations specific to certain use cases or threat models might avoid transmitting these header fields altogether, or limit them to secure contexts or authenticated sessions. Implementers should be aware that explaining the privacy implications of passive fingerprinting or network information disclosure may be challenging.
+Clients control which Client Hints are sent in requests, based on their default settings, user configuration and/or preferences. The client and server, or an intermediate proxy, can use an opt-in mechanism outlined below to negotiate which fields should be sent to allow for efficient content adaption.
 
-The client and server, or an intermediate proxy, can use an opt-in mechanism to negotiate which fields should be reported to allow for efficient content adaption.
+Implementers should be be aware of the passive fingerprinting and network information disclosure implications when implementing support for Client Hints, and follow the considerations outlined in "Security Considerations" section of this document.
 
 
 ## Server Processing of Client Hints
@@ -127,20 +128,20 @@ For example:
   Accept-CH: DPR, Width, Viewport-Width
 ~~~
 
-When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the origin ({{RFC6454}}) is interested in receiving specified request header fields that match the advertised field-values; same-origin resource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in can include the request header fields that match the advertised field-values.
+When a client receives Accept-CH from a potentially trustworthy origin ({{SECURE-CONTEXTS}}), or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the origin ({{RFC6454}}) is interested in receiving specified request header fields that match the advertised field-values; same-origin resource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in can include the request header fields that match the advertised field-values.
 
 For example, based on Accept-CH example above, a user agent could append DPR, Width, and Viewport-Width header fields to all same-origin resource requests initiated by the page constructed from the response.
 
 
 ### The Accept-CH-Lifetime Header Field {#accept-ch-lifetime}
 
-Servers can ask the client to remember an origin-wide Accept-CH preference for a specified period of time to enable delivery of Client Hints on subsequent requests to the origin ({{RFC6454}}).
+Servers can ask the client to remember sent Accept-CH preference for a specified period of time, to enable delivery of Client Hints on subsequent requests to the server's origin ({{RFC6454}}).
 
 ~~~ abnf7230
   Accept-CH-Lifetime = #delta-seconds
 ~~~
 
-The field-value indicates that the Accept-CH preference SHOULD be considered stale after its age is greater than the specified number of seconds.
+When a client receives Accept-CH-Lifetime from a potentially trustworthy origin ("opt-in origin"), the field-value indicates that the Accept-CH preference SHOULD be considered stale after its age is greater than the specified number of seconds, and if applicable, persisted as a double-keyed preference that combines the values of the opt-in origin and the potentially trustworthy origin of the resource that initiated the request that received the opt-in preference.
 
 ~~~ example
   Accept-CH: DPR, Width
@@ -148,7 +149,7 @@ The field-value indicates that the Accept-CH preference SHOULD be considered sta
   Accept-CH-Lifetime: 86400
 ~~~
 
-For example, based on the Accept-CH and Accept-CH-Lifetime example above, a user agent could persist an origin-wide Accept-CH preference for up to 86400 seconds (1 day). Then, if a request is initiated to the same origin before the preference is stale (e.g. as a result of a navigation to the origin, or fetching a resource from the origin) the client could append the requested header fields (DPR, Width, and Viewport-Width in this example) to all requests matching that origin.
+For example, based on the Accept-CH and Accept-CH-Lifetime example above, which is received from bar.com in response to a resource request initiated by foo.com, both of which are potentially trustworthy origins: a user agent could persist a double-keyed Accept-CH preference, for requests initiated to bar.com from foo.com, for up to 86400 seconds (1 day). Then, if a request is initiated to bar.com from foo.com before the preference is stale the client could append the requested header fields (DPR, Width, and Viewport-Width in this example) to all requests matching that origin. Alternatively, if the same Accept-CH-Lifetime preference was advertised by bar.com, then same Client Hints header fields can be advertised on a navigation to the origin, and any requests to same origin initiated as a result of processing a response from bar.com.
 
 If Accept-CH-Lifetime occurs in a message more than once, the last value overrides all previous occurrences.
 
@@ -257,13 +258,17 @@ The Content-DPR response header field indicates to the client that the server ha
 
 # Security Considerations
 
-The request header fields defined in this specification, and those that extend it, expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to provide policies and mechanisms to control how and when such hints are advertised.
+The request header fields defined in this specification, and those that extend it, expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
-The hint request headers ought not to provide new information that is otherwise not available to the application via HTML, CSS, or JavaScript. For example, this specification defines Viewport-Width, Width, and DPR header fields, all of which can be obtained via JavaScript, or through the use of CSS media queries and unique resource URLs even if JavaScript is disabled.
+Transmitted Client Hints header fields should not provide new information that is otherwise not available to the application via HTML, CSS, or JavaScript.  Further, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Restricting such field values to an enumerated range, where the advertised value is close but is not an exact representation of the current value, can help mitigate the risk of such fingerprinting as well as reduce possibility of unnecessary cache fragmentation.
 
-Similarly, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Restricting such field values to an enumerated range, where the user agent advertises a threshold value that is close but is not an exact representation of the current value, can help mitigate the risk of such fingerprinting.
+Implementers should consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
-Implementers ought to provide mechanisms and policies to control how and when client hints are advertised - refer to Section 2.1. For example, they ought to enforce origin opt-in via Accept-CH and Accept-CH-Lifetime, and clear remembered opt-in, as set by Accept-CH-Lifetime, when site data, browsing history, browsing cache, or similar, are cleared. Similarly, they may wish to limit delivery to requests that already carry identifying information (e.g. cookies or referer data), enable user configuration and opt-in, and so on.
+  - Implementers may provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting or network information disclosure to users may be challenging.
+  - Implementers should support double-keyed Client Hints opt-in requested by potentially trustworthy origins via Accept-CH and Accept-CH-Lifetime header fields, and clear remembered opt-in when site data, browsing history, browsing cache, or similar, are cleared.
+  - Implementations specific to certain use cases or threat models may avoid transmitting Client Hints header fields altogether or limit them to authenticated sessions only that already carry identifying information, such as cookies or referer data.
+
+Following the above recommendations should significantly reduce the risks of linkability and passive fingerprinting.
 
 
 # IANA Considerations
