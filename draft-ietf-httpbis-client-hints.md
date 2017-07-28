@@ -57,7 +57,7 @@ informative:
 
 An increasing diversity of Web-connected devices and software capabilities has created a need to deliver optimized content for each device.
 
-This specification defines a set of HTTP request header fields, colloquially known as Client Hints, to address this. They are intended to be used as input to proactive content negotiation; just as the Accept header field allows user agents to indicate what formats they prefer, Client Hints allow user agents to indicate device and agent specific preferences.
+This specification defines an extensible and configurable set of HTTP request header fields, colloquially known as Client Hints, to address this. They are intended to be used as input to proactive content negotiation; just as the Accept header field allows user agents to indicate what formats they prefer, Client Hints allow user agents to indicate device and agent specific preferences.
 
 
 --- note_Note_to_Readers
