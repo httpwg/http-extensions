@@ -78,16 +78,23 @@ for the connection it occurs within.
 
 ## Syntax {#syntax}
 
-The ORIGIN frame type is 0xc (decimal 12).
+The ORIGIN frame type is 0xc (decimal 12), and contains zero to many Origin-Entry.
 
 ~~~~
 +-------------------------------+-------------------------------+
-|         Origin-Len (16)       | ASCII-Origin? (*)           ...
+|         Origin-Entry (*)                                    ...
 +-------------------------------+-------------------------------+
 ~~~~
 
-The ORIGIN frame's payload contains the following fields, sets of which may be repeated within the
-frame to indicate multiple origins:
+An Origin-Entry is a length-delimited string:
+
+~~~~
++-------------------------------+-------------------------------+
+|         Origin-Len (16)       | ASCII-Origin?               ...
++-------------------------------+-------------------------------+
+~~~~
+
+Specifically:
 
 Origin-Len:
 : An unsigned, 16-bit integer indicating the length, in octets, of the ASCII-Origin field.
