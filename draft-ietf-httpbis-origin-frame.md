@@ -149,7 +149,7 @@ and successfully processed by a client, the connection's Origin Set is defined t
 initial origin.  The initial origin is composed from:
 
   - Scheme: "https"
-  - Host: the value sent in Server Name Indication ({{!RFC6066}} Section 3), converted to lower case
+  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}} Section 3), converted to lower case
   - Port: the remote port of the connection (i.e., the server's port)
 
 The contents of that ORIGIN frame (and subsequent ones) allows the server to incrementally add new
@@ -162,11 +162,13 @@ Section 6.2) and remove it from the connection's Origin Set, if present.
 
 Note:
 
-: Using an alternative service {{?RFC7838}} can result in using a service that has a different
-  port to the original service (that is, the server that a client contacts when it has no active
-  alternative services).  In that case, the initial origin will have a different port number.  A
-  client could be unable to send requests for the origin that advertised the alternative
-  service.  Explicitly including origins in the ORIGIN frame avoids this problem.
+: When sending an ORIGIN frame to a connection that is initialised as an Alternative Service
+  {{?RFC7838}}, the initial origin set {{ref}} will contain an origin with the appropriate
+  scheme and hostname (since Alternative Services specifies that the origin's hostname be sent
+  in SNI). However, it is possible that the port will be different than that of the intended
+  origin, since the initial origin set is calculated using the actual port in use, which can be
+  different for the alternative service. In this case, the intended origin needs to be sent in
+  the ORIGIN frame explicitly.
 
 : For example, a client making requests for "https://example.com" is directed to an alternative
   service at ("h2", "x.example.net", "8443").  If this alternative service sends an ORIGIN
