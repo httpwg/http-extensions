@@ -168,23 +168,22 @@ server(s) that a connection is authoritative for, just as HTTP/1.1 does in {{?RF
 
 Furthermore, {{!RFC7540}} Section 9.1.1 explicitly allows a connection to be used for more than one
 origin server, if it is authoritative. This affects what requests can be sent on the connection,
-both in HEADERS frame by the client and as PUSH_PROMISE frames from the server.
+both in HEADERS frame by the client and as PUSH_PROMISE frames from the server ({{!RFC7540}}, Section 8.2.2).
 
 Once an Origin Set has been initialised for a connection, clients that implement this specification
-change these behaviors in the following ways:
+use it to help determine what the connection is authoritative for. Specifically, such clients MUST
+NOT consider a connection to be authoritative for an origin not present in the Origin Set, and
+SHOULD use the connection for all requests to origins in the Origin Set for which the connection is
+authoritative, unless there are operational reasons for opening a new connection.
 
-* Clients MAY avoid consulting DNS to establish the connection's authority for new requests. The
-  TLS certificate MUST still be used to do so, as described in {{!RFC7540}} Section 9.1.1.
+Note that for a connection to be considered authoritative for a given origin, the client is still
+required to obtain a certificate that passes suitable checks; see {{!RFC7540}}
+Section 9.1.1 for more information. This includes verifying that the host matches a `dNSName` value
+from the certificate `subjectAltName` field (using the wildcard rules defined in {{!RFC2818}}; see
+also {{!RFC5280}} Section 4.2.1.6).
 
-* Clients sending a new request SHOULD use an existing connection if the request's origin is in that connection's Origin Set, unless there are operational reasons for creating a new connection.
-
-* Clients MUST use the Origin Set to determine whether a received PUSH_PROMISE is authoritative, as described in {{!RFC7540}}, Section 8.2.2.
-
-Note that clients are still required to perform checks on the certificate presented by the server
-for each origin that a connection is used for; see {{!RFC7540}} Section 9.1.1 for more information.
-This includes verifying that the host matches a `dNSName` value from the certificate
-`subjectAltName` field (using the wildcard rules defined in {{!RFC2818}}; see also {{!RFC5280}}
-Section 4.2.1.6).
+Additionally, clients MAY avoid consulting DNS to establish the connection's authority for new
+requests.
 
 Because ORIGIN can change the set of origins a connection is used for over time, it is possible
 that a client might have more than one viable connection to an origin open at any time. When this
