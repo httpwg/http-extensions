@@ -212,6 +212,9 @@ order to coalesce connections to the target onto their existing connection. Clie
 this attack in a variety of ways; examples include checking for a Signed Certificate Timestamp
 {{?RFC6929}}, or performing certificate revocation checks.
 
+The Origin Set's size is unbounded by this specification, and thus could be used by attackers to
+exhaust client resources. To mitigate this risk, clients can monitor their state commitment and
+close the connection if it is too high.
 --- back
 
 
