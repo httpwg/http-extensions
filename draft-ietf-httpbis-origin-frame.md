@@ -39,10 +39,10 @@ given connection.
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source 
+Working Group information can be found at <http://httpwg.github.io/>; source
 code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/origin-frame>.
 
 --- middle
@@ -144,12 +144,12 @@ See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 The set of origins (as per {{!RFC6454}}) that a given connection might be used for is known in this
 specification as the Origin Set.
 
-By default, a connection's Origin Set is uninitialised. When an ORIGIN frame is first received and
-successfully processed by a client, the connection's Origin Set is defined to contain a single
-origin, composed from:
+By default, the Origin Set for a connection is uninitialised. When an ORIGIN frame is first received
+and successfully processed by a client, the connection's Origin Set is defined to contain an initial
+origin.  The initial origin is composed from:
 
   - Scheme: "https"
-  - Host: the value sent in Server Name Indication ({{!RFC6066}} Section 3), converted to lower case
+  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}} Section 3), converted to lower case
   - Port: the remote port of the connection (i.e., the server's port)
 
 The contents of that ORIGIN frame (and subsequent ones) allows the server to incrementally add new
@@ -159,6 +159,22 @@ The Origin Set is also affected by the 421 (Misdirected Request) response status
 {{!RFC7540}} Section 9.1.2. Upon receipt of a response with this status code, implementing clients
 MUST create the ASCII serialisation of the corresponding request's origin (as per {{!RFC6454}},
 Section 6.2) and remove it from the connection's Origin Set, if present.
+
+Note:
+
+: When sending an ORIGIN frame to a connection that is initialised as an Alternative Service
+  {{?RFC7838}}, the initial origin set {{set}} will contain an origin with the appropriate
+  scheme and hostname (since Alternative Services specifies that the origin's hostname be sent
+  in SNI). However, it is possible that the port will be different than that of the intended
+  origin, since the initial origin set is calculated using the actual port in use, which can be
+  different for the alternative service. In this case, the intended origin needs to be sent in
+  the ORIGIN frame explicitly.
+
+: For example, a client making requests for "https://example.com" is directed to an alternative
+  service at ("h2", "x.example.net", "8443").  If this alternative service sends an ORIGIN
+  frame, the initial origin will be "https://example.com:8443".  The client will not be able to
+  use the alternative service to make requests for "https://example.com" unless that origin is
+  explicitly included in the ORIGIN frame.
 
 
 ## Authority, Push and Coalescing with ORIGIN {#authority}
@@ -189,6 +205,9 @@ Because ORIGIN can change the set of origins a connection is used for over time,
 that a client might have more than one viable connection to an origin open at any time. When this
 occurs, clients SHOULD not emit new requests on any connection whose Origin Set is a proper subset
 of another connection's Origin Set, and SHOULD close it once all outstanding requests are satisfied.
+
+The Origin Set is unaffected by any alternative services {{?RFC7838}} advertisements made by the
+server.  Advertising an alternative service does not affect whether a server is authoritative.
 
 
 # IANA Considerations
