@@ -61,7 +61,7 @@ penalty of adding latency. To address that, this specification defines a new HTT
 Additionally, experience has shown that HTTP/2's requirement to establish server authority using
 both DNS and the server's certificate is onerous. This specification relaxes the requirement to
 check DNS when the ORIGIN frame is in use. Doing so has additional benefits, such as removing the
-latency associated with some DNS lookups, and improving DNS privacy.
+latency associated with some DNS lookups.
 
 
 ## Notational Conventions
@@ -158,6 +158,7 @@ Section 6.2) and remove it from the connection's Origin Set, if present.
 
 {{!RFC7540}}, Section 10.1 uses both DNS and the presented TLS certificate to establish the origin
 server(s) that a connection is authoritative for, just as HTTP/1.1 does in {{?RFC7230}}.
+
 Furthermore, {{!RFC7540}} Section 9.1.1 explicitly allows a connection to be used for more than one
 origin server, if it is authoritative. This affects what requests can be sent on the connection,
 both in HEADERS frame by the client and as PUSH_PROMISE frames from the server.
@@ -165,8 +166,8 @@ both in HEADERS frame by the client and as PUSH_PROMISE frames from the server.
 Once an Origin Set has been initialised for a connection, clients that implement this specification
 change these behaviors in the following ways:
 
-* Clients MUST NOT consult DNS to establish the connection's authority for new requests. The TLS
-  certificate MUST still be used to do so, as described in {{!RFC7540}} Section 9.1.1.
+* Clients MAY avoid consulting DNS to establish the connection's authority for new requests. The
+  TLS certificate MUST still be used to do so, as described in {{!RFC7540}} Section 9.1.1.
 
 * Clients sending a new request SHOULD use an existing connection if the request's origin is in that connection's Origin Set, unless there are operational reasons for creating a new connection.
 
@@ -201,7 +202,9 @@ attacks. See {{authority}} for mitigations.
 Relaxing the requirement to consult DNS when determining authority for an origin means that an
 attacker who possesses a valid certificate no longer needs to be on-path to redirect traffic to
 them; instead of modifying DNS, they need only convince the user to visit another Web site, in
-order to coalesce connections to the target onto their existing connection.
+order to coalesce connections to the target onto their existing connection. Clients can mitigate
+this attack in a variety of ways; examples include checking for a Signed Certificate Timestamp
+{{?RFC6929}}, or performing certificate revocation checks.
 
 --- back
 
