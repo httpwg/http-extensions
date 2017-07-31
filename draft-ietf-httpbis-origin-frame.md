@@ -225,8 +225,8 @@ The following algorithm illustrates how a client could handle received ORIGIN fr
 3. If the frame occurs upon any stream except stream 0, ignore the frame and stop processing.
 4. If any of the flags 0x1, 0x2, 0x4 or 0x8 are set, ignore the frame and stop processing.
 5. If no previous ORIGIN frame on the connection has reached this step, initialise the Origin Set as per {{set}}.
-6. For each Origin field `origin_raw` in the frame payload:
-   1. Parse `origin_raw` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`. If parsing fails, skip to the next `origin_raw`.
+6. For each `Origin-Entry` in the frame payload:
+   1. Parse `ASCII-Origin` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`. If parsing fails, skip to the next `Origin-Entry`.
    5. Add `parsed_origin` to the Origin Set.
 
 
