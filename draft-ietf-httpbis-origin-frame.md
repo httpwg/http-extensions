@@ -144,9 +144,9 @@ See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 The set of origins (as per {{!RFC6454}}) that a given connection might be used for is known in this
 specification as the Origin Set.
 
-By default, a connections's Origin Set is uninitialised. When an ORIGIN frame is first received
-and successfully processed by a client, the connection's Origin Set is defined to contain an
-initial origin.  The initial origin is composed from:
+By default, the Origin Set for a connection is uninitialised. When an ORIGIN frame is first received
+and successfully processed by a client, the connection's Origin Set is defined to contain an initial
+origin.  The initial origin is composed from:
 
   - Scheme: "https"
   - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}} Section 3), converted to lower case
