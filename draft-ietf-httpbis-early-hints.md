@@ -68,7 +68,7 @@ final HTTP response are determined.
 
 HTTP/2 ([RFC7540]) server push can accelerate the delivery of resources, but only resources for which the server is authoritative.
 The other limitation of server push is that the response will be transmitted regardless of if the client has the response cached.
-At the cost of spending one extra round-trip compared to server push in the worst case, delivering Link header fields in a timely fashion is more flexible and consumes less bandwidth, especially if a client is associated with a large amount of cache storage.
+At the cost of spending one extra round-trip compared to server push in the worst case, delivering Link header fields in a timely fashion is more flexible and might consume less bandwidth.
 
 This memo defines a status code for sending an informational response ([RFC7231], Section 6.2) that
 contains header fields that are likely to be included in the final response. A server can send the
