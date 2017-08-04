@@ -199,7 +199,7 @@ from the certificate `subjectAltName` field (using the wildcard rules defined in
 also {{!RFC5280}} Section 4.2.1.6).
 
 Additionally, clients MAY avoid consulting DNS to establish the connection's authority for new
-requests.
+requests; however, those that do so face new risks, as explained in {{sc}}
 
 Because ORIGIN can change the set of origins a connection is used for over time, it is possible
 that a client might have more than one viable connection to an origin open at any time. When this
@@ -219,21 +219,24 @@ This specification adds an entry to the "HTTP/2 Frame Type" registry.
 * Specification: [this document]
 
 
-# Security Considerations
+# Security Considerations {#sc}
 
 Clients that blindly trust the ORIGIN frame's contents will be vulnerable to a large number of
 attacks. See {{authority}} for mitigations.
 
 Relaxing the requirement to consult DNS when determining authority for an origin means that an
 attacker who possesses a valid certificate no longer needs to be on-path to redirect traffic to
-them; instead of modifying DNS, they need only convince the user to visit another Web site, in
-order to coalesce connections to the target onto their existing connection. Clients can mitigate
-this attack in a variety of ways; examples include checking for a Signed Certificate Timestamp
-{{?RFC6929}}, or performing certificate revocation checks.
+them; instead of modifying DNS, they need only convince the user to visit another Web site in
+order to coalesce connections to the target onto their existing connection.
+
+As a result, clients opting not to consult DNS ought to employ some alternative means to increase
+confidence that the certificate is legitimate, such as such as checking for a Signed Certificate
+Timestamp {{?RFC6929}}, or performing certificate revocation checks.
 
 The Origin Set's size is unbounded by this specification, and thus could be used by attackers to
 exhaust client resources. To mitigate this risk, clients can monitor their state commitment and
 close the connection if it is too high.
+
 --- back
 
 
