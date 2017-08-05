@@ -60,7 +60,9 @@ informative:
     - name: Jake Archibald
     - name: Marijn Kruisselbrink
     date: 2016/10/11
-    target: https://www.w3.org/TR/2016/WD-service-workers-1/
+    seriesinfo:
+      'W3C Working Draft': WD-service-workers-1-20161011
+    target: https://www.w3.org/TR/2016/WD-service-workers-1-20161011/
   Fetch:
     title: Fetch Standard
     target: https://fetch.spec.whatwg.org/
