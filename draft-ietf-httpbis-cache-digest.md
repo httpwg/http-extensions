@@ -226,7 +226,7 @@ Given:
 
 1. Let `key` be `URL` converted to an ASCII string by percent-encoding as appropriate {{RFC3986}}.
 2. If `validators` is true and `ETag` is not null:
-   1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present) and double quotes, as per {{RFC7232}} Section 2.3.
+   1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present) and double quotes, as per {{RFC7232}}, Section 2.3.
 3. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, expressed as an integer.
 4. Truncate `hash-value` to log2( `N` \* `P` ) bits.
 
