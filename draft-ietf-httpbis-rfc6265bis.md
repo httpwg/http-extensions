@@ -514,6 +514,11 @@ To maximize compatibility with user agents, servers that wish to store arbitrary
 data in a cookie-value SHOULD encode that data, for example, using Base64
 {{RFC4648}}.
 
+Per the grammar above, the cookie-value MAY be wrapped in DQUOTE characters.
+Note that in this case, the initial and trailing DQUOTE characters are not
+stripped. They are part of the cookie-value, and will be included in Cookie
+headers sent to the server.
+
 The portions of the set-cookie-string produced by the cookie-av term are
 known as attributes. To maximize compatibility with user agents, servers SHOULD
 NOT produce two attributes with the same name in the same set-cookie-string.
