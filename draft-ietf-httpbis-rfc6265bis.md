@@ -1,6 +1,5 @@
 ---
 title: "Cookies: HTTP State Management Mechanism"
-abbrev: Cookies
 docname: draft-ietf-httpbis-rfc6265bis-latest
 date: 2017
 category: std
@@ -45,6 +44,8 @@ normative:
   RFC4790:
   RFC5234:
   RFC5890:
+  RFC6454:
+  RFC7231:
   USASCII:
     title: "Coded Character Set -- 7-bit American Standard Code for Information Interchange"
     seriesinfo:
@@ -52,6 +53,54 @@ normative:
     date: 1986
     author:
       organization: American National Standards Institute
+  FETCH:
+    target: https://fetch.spec.whatwg.org/
+    title: Fetch
+    author:
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
+  HTML:
+    target: https://html.spec.whatwg.org/
+    title: HTML
+    author:
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+      organization: Google, Inc.
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+      organization: Opera
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+      organization: Opera
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+      organization: Google, Inc.
+  SERVICE-WORKERS:
+    target: http://www.w3.org/TR/service-workers/
+    title: Service Workers
+    author:
+    -
+      ins: A. Russell
+      name: Alex Russell
+    -
+      ins: J. Song
+      name: Jungkee Song
+    -
+      ins: J. Archibald
+      name: Jake Archibald
+  PSL:
+    target: https://publicsuffix.org/list/
+    title: "Public Suffix List"
 
 informative:
   RFC2818:
@@ -62,6 +111,7 @@ informative:
   RFC3864:
   RFC5895:
   RFC6265:
+  RFC7034:
   UTS46:
     target: http://unicode.org/reports/tr46/
     title: "Unicode IDNA Compatibility Processing"
@@ -104,8 +154,36 @@ informative:
     title: "An Analysis of Private Browsing Modes in Modern Browsers"
     date: 2010
     target: http://www.usenix.org/events/sec10/tech/full_papers/Aggarwal.pdf
+  app-isolation:
+    target: http://www.collinjackson.com/research/papers/appisolation.pdf
+    title: App Isolation - Get the Security of Multiple Browsers with Just One
+    author:
+    -
+      ins: E. Chen
+      name: Eric Y. Chen
+    -
+      ins: J. Bau
+      name: Jason Bau
+    -
+      ins: C. Reis
+      name: Charles Reis
+    -
+      ins: A. Barth
+      name: Adam Barth
+    -
+      ins: C. Jackson
+      name: Collin Jackson
+    date: 2011
+  prerendering:
+    target: https://www.chromium.org/developers/design-documents/prerender
+    title: Chrome Prerendering
+    author:
+    -
+      ins: C. Bentzel
+      name: Chris Bentzel
   I-D.ietf-httpbis-cookie-alone:
   I-D.ietf-httpbis-cookie-prefixes:
+  I-D.ietf-httpbis-cookie-same-site:
 
 --- abstract
 
@@ -230,6 +308,36 @@ only if they are equivalent under the i;ascii-casemap collation defined in
 {{RFC4790}}.
 
 The term string means a sequence of non-NUL octets.
+
+The terms "active document", "ancestor browsing context", "browsing context",
+"dedicated worker", "Document", "WorkerGlobalScope", "sandboxed origin browsing
+context flag", "parent browsing context", "shared worker", "the worker's
+Documents", "nested browsing context", and "top-level browsing context" are
+defined in {{HTML}}.
+
+"Service Workers" are defined in the Service Workers specification
+{{SERVICE-WORKERS}}.
+
+The term "origin", the mechanism of deriving an origin from a URI, and the "the
+same" matching algorithm for origins are defined in {{RFC6454}}.
+
+"Safe" HTTP methods include `GET`, `HEAD`, `OPTIONS`, and `TRACE`, as defined
+in Section 4.2.1 of {{RFC7231}}.
+
+The term "public suffix" is defined in a note in Section 5.3 of {{RFC6265}} as
+"a domain that is controlled by a public registry", and are also know as
+"effective top-level domains" (eTLDs). For example, `example.com`'s public
+suffix is `com`. User agents SHOULD use an up-to-date public suffix list,
+such as the one maintained by Mozilla at {{PSL}}.
+
+An origin's "registered domain" is the origin's host's public suffix plus the
+label to its left. That is, for `https://www.example.com`, the public suffix is
+`com`, and the registered domain is `example.com`. This concept is defined more
+rigorously in {{PSL}}, and is also know as "effective top-level domain plus one"
+(eTLD+1).
+
+The term "request", as well as a request's "client", "current url", "method",
+and "target browsing context", are defined in {{FETCH}}.
 
 # Overview
 
@@ -371,7 +479,7 @@ token             = <token, defined in [RFC2616], Section 2.2>
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
-                    extension-av
+                    samesite-av / extension-av
 expires-av        = "Expires=" sane-cookie-date
 sane-cookie-date  =
     <rfc1123-date, defined in [RFC2616], Section 3.3.1>
@@ -389,6 +497,8 @@ path-av           = "Path=" path-value
 path-value        = *av-octet
 secure-av         = "Secure"
 httponly-av       = "HttpOnly"
+samesite-av       = "SameSite=" samesite-value
+samesite-value    = "Strict" / "Lax"
 extension-av      = *av-octet
 av-octet          = %x20-3A / %x3C-7E
                       ; any CHAR except CTLs or ";"
@@ -539,6 +649,20 @@ exposes cookies to scripts).
 
 Note that the HttpOnly attribute is independent of the Secure attribute: a
 cookie can have both the HttpOnly and the Secure attribute.
+
+#### The SameSite Attribute
+
+The "SameSite" attribute limits the scope of the cookie such that it will only
+be attached to requests if those requests are same-site, as defined by the
+algorithm in {{same-site-requests}}. For example, requests for
+`https://example.com/sekrit-image` will attach same-site cookies if and only if
+initiated from a context whose "site for cookies" is "example.com".
+
+If the "SameSite" attribute's value is "Strict", the cookie will only be sent
+along with "same-site" requests. If the value is "Lax", the cookie will be sent
+with same-site requests, and with "cross-site" top-level navigations, as
+described in {{strict-lax}}. If the "SameSite" attribute's value is neither of
+these, the cookie will be ignored.
 
 ### Cookie Name Prefixes
 
@@ -809,6 +933,131 @@ following conditions holds:
     of the request-path that is not included in the cookie-path is a %x2F
     ("/") character.
 
+## "Same-site" and "cross-site" Requests  {#same-site-requests}
+
+A request is "same-site" if its target's URI's origin's registered domain
+is an exact match for the request's client's "site for cookies", or if the
+request has no client. The request is otherwise "cross-site".
+
+For a given request ("request"), the following algorithm returns `same-site` or
+`cross-site`:
+
+1.  If `request`'s client is `null`, return `same-site`.
+
+2.  Let `site` be `request`'s client's "site for cookies" (as defined in the
+    following sections).
+
+3.  Let `target` be the registered domain of `request`'s current url.
+
+4.  If `site` is an exact match for `target`, return `same-site`.
+
+5.  Return `cross-site`.
+
+The request's client's "site for cookies" is calculated depending upon its
+client's type, as described in the following subsections:
+
+### Document-based requests {#document-requests}
+
+The URI displayed in a user agent's address bar is the only security context
+directly exposed to users, and therefore the only signal users can reasonably
+rely upon to determine whether or not they trust a particular website. The
+registered domain of that URI's origin represents the context in which a user
+most likely believes themselves to be interacting. We'll label this domain the
+"top-level site".
+
+For a document displayed in a top-level browsing context, we can stop here: the
+document's "site for cookies" is the top-level site.
+
+For documents which are displayed in nested browsing contexts, we need to audit
+the origins of each of a document's ancestor browsing contexts' active documents
+in order to account for the "multiple-nested scenarios" described in Section 4
+of {{RFC7034}}. These document's "site for cookies" is the top-level site if and
+only if the document and each of its ancestor documents' origins have the same
+registered domain as the top-level site. Otherwise its "site for cookies" is
+the empty string.
+
+Given a Document (`document`), the following algorithm returns its "site for
+cookies" (either a registered domain, or the empty string):
+
+1.  Let `top-document` be the active document in `document`'s browsing context's
+    top-level browsing context.
+
+2.  Let `top-origin` be the origin of `top-document`'s URI if `top-document`'s
+    sandboxed origin browsing context flag is set, and `top-document`'s origin
+    otherwise.
+
+3.  Let `documents` be a list containing `document` and each of `document`'s
+    ancestor browsing contexts' active documents.
+
+4.  For each `item` in `documents`:
+
+    1.  Let `origin` be the origin of `item`'s URI if `item`'s sandboxed origin
+        browsing context flag is set, and `item`'s origin otherwise.
+
+    2.  If `origin`'s host's registered domain is not an exact match for
+        `top-origin`'s host's registered domain, return the empty string.
+
+4.  Return `top-site`.
+
+### Worker-based requests {#worker-requests}
+
+Worker-driven requests aren't as clear-cut as document-driven requests, as
+there isn't a clear link between a top-level browsing context and a worker.
+This is especially true for Service Workers {{SERVICE-WORKERS}}, which may
+execute code in the background, without any document visible at all.
+
+Note: The descriptions below assume that workers must be same-origin with
+the documents that instantiate them. If this invariant changes, we'll need to
+take the worker's script's URI into account when determining their status.
+
+#### Dedicated and Shared Workers {#dedicated-and-shared-requests}
+
+Dedicated workers are simple, as each dedicated worker is bound to one and only
+one document. Requests generated from a dedicated worker (via `importScripts`,
+`XMLHttpRequest`, `fetch()`, etc) define their "site for cookies" as that
+document's "site for cookies".
+
+Shared workers may be bound to multiple documents at once. As it is quite
+possible for those documents to have distinct "site for cookie" values, the
+worker's "site for cookies" will be the empty string in cases where the values
+diverge, and the shared value in cases where the values agree.
+
+Given a WorkerGlobalScope (`worker`), the following algorithm returns its "site
+for cookies" (either a registered domain, or the empty string):
+
+1.  Let `site` be `worker`'s origin's host's registered domain.
+
+2.  For each `document` in `worker`'s Documents:
+
+    1.  Let `document-site` be `document`'s "site for cookies" (as defined
+        in {{document-requests}}).
+
+    2.  If `document-site` is not an exact match for `site`, return the empty
+        string.
+
+3.  Return `site`.
+
+#### Service Workers
+
+Service Workers are more complicated, as they act as a completely separate
+execution context with only tangential relationship to the Document which
+registered them.
+
+Requests which simply pass through a service worker will be handled as described
+above: the request's client will be the Document or Worker which initiated the
+request, and its "site for cookies" will be those defined in
+{{document-requests}} and {{dedicated-and-shared-requests}}
+
+Requests which are initiated by the Service Worker itself (via a direct call to
+`fetch()`, for instance), on the other hand, will have a client which is a
+ServiceWorkerGlobalScope. Its "site for cookies" will be the registered domain
+of the Service Worker's URI.
+
+Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
+"site for cookies" (either a registered domain, or the empty string):
+
+1.  Return `worker`'s origin's host's registered domain.
+
 ## The Set-Cookie Header {#set-cookie}
 
 When a user agent receives a Set-Cookie header field in an HTTP response, the
@@ -995,11 +1244,53 @@ If the attribute-name case-insensitively matches the string "HttpOnly", the
 user agent MUST append an attribute to the cookie-attribute-list with an
 attribute-name of HttpOnly and an empty attribute-value.
 
+### The SameSite Attribute
+
+If the attribute-name case-insensitively matches the string "SameSite", the
+user agent MUST process the cookie-av as follows:
+
+1.  If cookie-av's attribute-value is not a case-insensitive match for "Strict"
+    or "Lax", ignore the `cookie-av`.
+
+2.  Let `enforcement` be "Lax" if cookie-av's attribute-value is a
+    case-insensitive match for "Lax", and "Strict" otherwise.
+
+3.  Append an attribute to the cookie-attribute-list with an attribute-name
+    of "SameSite" and an attribute-value of `enforcement`.
+
+#### "Strict" and "Lax" enforcement {#strict-lax}
+
+Same-site cookies in "Strict" enforcement mode will not be sent along with
+top-level navigations which are triggered from a cross-site document context.
+As discussed in {{top-level-navigations}}, this might or might not be compatible
+with existing session management systems. In the interests of providing a
+drop-in mechanism that mitigates the risk of CSRF attacks, developers may set
+the `SameSite` attribute in a "Lax" enforcement mode that carves out an
+exception which sends same-site cookies along with cross-site requests if and
+only if they are top-level navigations which use a "safe" (in the {{RFC7231}}
+sense) HTTP method.
+
+Lax enforcement provides reasonable defense in depth against CSRF attacks that
+rely on unsafe HTTP methods (like `POST`), but does not offer a robust defense
+against CSRF as a general category of attack:
+
+1. Attackers can still pop up new windows or trigger top-level navigations in
+   order to create a "same-site" request (as described in section 2.1), which is
+   only a speedbump along the road to exploitation.
+
+2. Features like `<link rel='prerender'>` {{prerendering}} can be exploited
+   to create "same-site" requests without the risk of user detection.
+
+When possible, developers should use a session management mechanism such as
+that described in {{top-level-navigations}} to mitigate the risk of CSRF more
+completely.
+
 ## Storage Model {#storage-model}
 
 The user agent stores the following fields about each cookie: name, value,
 expiry-time, domain, path, creation-time, last-access-time,
-persistent-flag, host-only-flag, secure-only-flag, and http-only-flag.
+persistent-flag, host-only-flag, secure-only-flag, http-only-flag,
+and same-site-flag.
 
 When the user agent "receives a cookie" from a request-uri with name
 cookie-name, value cookie-value, and attributes cookie-attribute-list, the
@@ -1039,7 +1330,7 @@ user agent MUST process the cookie as follows:
     2.  Set the cookie's expiry-time to the latest representable date.
 
 4.  If the cookie-attribute-list contains an attribute with an
-    attribute-name iof "Domain":
+    attribute-name of "Domain":
 
     1.  Let the domain-attribute be the attribute-value of the last
         attribute in the cookie-attribute-list with an attribute-name of
@@ -1132,11 +1423,21 @@ user agent MUST process the cookie as follows:
     non-secure cookie named 'a' could be set for a path of '/' or '/foo', but
     not for a path of '/login' or '/login/en'.
 
-13. If the cookie-name begins with a case-sensitive match for the string
+13. If the cookie-attribute-list contains an attribute with an
+    attribute-name of "SameSite", set the cookie's same-site-flag to
+    attribute-value (i.e. either "Strict" or "Lax"). Otherwise, set the cookie's
+    same-site-flag to "None".
+
+14. If the cookie's `same-site-flag` is not "None", and the cookie is being set
+    from a context whose "site for cookies" is not an exact match for
+    request-uri's host's registered domain, then abort these steps and ignore
+    the newly created cookie entirely.
+
+15. If the cookie-name begins with a case-sensitive match for the string
     "__Secure-", abort these steps and ignore the cookie entirely unless the
     cookie's secure-only-flag is true.
 
-14. If the cookie-name begins with a case-sensitive match for the string
+16. If the cookie-name begins with a case-sensitive match for the string
     "__Host-", abort these steps and ignore the cookie entirely unless the
     cookie meets all the following criteria:
 
@@ -1146,7 +1447,7 @@ user agent MUST process the cookie as follows:
 
     3.  The cookie's path is `/`.
 
-15. If the cookie store contains a cookie with the same name, domain, and
+17. If the cookie store contains a cookie with the same name, domain, and
     path as the newly-created cookie:
 
     1.  Let old-cookie be the existing cookie with the same name, domain,
@@ -1162,7 +1463,7 @@ user agent MUST process the cookie as follows:
 
     4.  Remove the old-cookie from the cookie store.
 
-16. Insert the newly-created cookie into the cookie store.
+18. Insert the newly-created cookie into the cookie store.
 
 A cookie is "expired" if the cookie has an expiry date in the past.
 
@@ -1242,6 +1543,17 @@ compute the cookie-string from a cookie store and a request-uri:
     *  If the cookie's http-only-flag is true, then exclude the cookie if the
        cookie-string is being generated for a "non-HTTP" API (as defined by
        the user agent).
+
+    *  If the cookie's same-site-flag is not "None", and the HTTP request is
+       cross-site (as defined in {{same-site-requests}}) then exclude the
+       cookie unless all of the following statements hold:
+
+        1.  The same-site-flag is "Lax"
+
+        2.  The HTTP request's method is "safe".
+
+        3.  The HTTP request's target browsing context is a top-level browsing
+            context.
 
 2.  The user agent SHOULD sort the cookie-list in the following order:
 
@@ -1565,6 +1877,71 @@ Cookies rely upon the Domain Name System (DNS) for security. If the DNS is
 partially or fully compromised, the cookie protocol might fail to provide the
 security properties required by applications.
 
+## SameSite Cookies
+
+### Defense in depth
+
+"SameSite" cookies offer a robust defense against CSRF attack when deployed in
+strict mode, and when supported by the client. It is, however, prudent to ensure
+that this designation is not the extent of a site's defense against CSRF, as
+same-site navigations and submissions can certainly be executed in conjunction
+with other attack vectors such as cross-site scripting.
+
+Developers are strongly encouraged to deploy the usual server-side defenses
+(CSRF tokens, ensuring that "safe" HTTP methods are idempotent, etc) to mitigate
+the risk more fully.
+
+Additionally, client-side techniques such as those described in
+{{app-isolation}} may also prove effective against CSRF, and are certainly worth
+exploring in combination with "SameSite" cookies.
+
+### Top-level Navigations {#top-level-navigations}
+
+Setting the `SameSite` attribute in "strict" mode provides robust defense in
+depth against CSRF attacks, but has the potential to confuse users unless sites'
+developers carefully ensure that their cookie-based session management systems
+deal reasonably well with top-level navigations.
+
+Consider the scenario in which a user reads their email at MegaCorp Inc's
+webmail provider `https://example.com/`. They might expect that clicking on an
+emailed link to `https://projects.com/secret/project` would show them the secret
+project that they're authorized to see, but if `projects.com` has marked their
+session cookies as `SameSite`, then this cross-site navigation won't send them
+along with the request. `projects.com` will render a 404 error to avoid leaking
+secret information, and the user will be quite confused.
+
+Developers can avoid this confusion by adopting a session management system that
+relies on not one, but two cookies: one conceptually granting "read" access,
+another granting "write" access. The latter could be marked as `SameSite`, and
+its absence would prompt a reauthentication step before executing any
+non-idempotent action. The former could drop the `SameSite` attribute entirely,
+or choose the "Lax" version of enforcement, in order to allow users access to
+data via top-level navigation.
+
+### Mashups and Widgets
+
+The `SameSite` attribute is inappropriate for some important use-cases. In
+particular, note that content intended for embedding in a cross-site contexts
+(social networking widgets or commenting services, for instance) will not have
+access to same-site cookies. Cookies may be required for requests triggered in
+these cross-site contexts in order to provide seamless functionality that relies
+on a user's state.
+
+Likewise, some forms of Single-Sign-On might require cookie-based authentication
+in a cross-site context; these mechanisms will not function as intended with
+same-site cookies.
+
+### Server-controlled
+
+SameSite cookies in and of themselves don't do anything to address the
+general privacy concerns outlined in Section 7.1 of {{RFC6265}}. The "SameSite"
+attribute is set by the server, and serves to mitigate the risk of certain kinds
+of attacks that the server is worried about. The user is not involved in this
+decision. Moreover, a number of side-channels exist which could allow a server
+to link distinct requests even in the absence of cookies. Connection and/or
+socket pooling, Token Binding, and Channel ID all offer explicit methods of
+identification that servers could take advantage of.
+
 # IANA Considerations
 
 The permanent message header field registry (see {{RFC3864}}) needs to be
@@ -1636,7 +2013,10 @@ Specification document:
 
 ## draft-ietf-httpbis-rfc6265bis-02
 
-*  None (yet).
+*  Added the word "Cookies" to the document's name.
+
+*  Merged the recommendations from {{I-D.ietf-httpbis-cookie-same-site}}, adding
+   support for the `SameSite` attribute.
 
 # Acknowledgements
 
