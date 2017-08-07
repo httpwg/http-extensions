@@ -1,5 +1,6 @@
 ---
-title: HTTP State Management Mechanism
+title: "Cookies: HTTP State Management Mechanism"
+abbrev: Cookies
 docname: draft-ietf-httpbis-rfc6265bis-latest
 date: 2017
 category: std
