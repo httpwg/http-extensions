@@ -2026,12 +2026,29 @@ Specification document:
 
 ## draft-ietf-httpbis-rfc6265bis-02
 
-*  Added the word "Cookies" to the document's name.
-
 *  Merged the recommendations from {{I-D.ietf-httpbis-cookie-same-site}}, adding
    support for the `SameSite` attribute.
 
-*  Clarified that a `Path` attribute is required for `__Host-` cookie prefixes.
+*  Closed a number of editorial bugs:
+
+   *   Clarified address bar behavior for SameSite cookies:
+       <https://github.com/httpwg/http-extensions/issues/201>
+
+   *   Added the word "Cookies" to the document's name:
+       <https://github.com/httpwg/http-extensions/issues/204>
+
+   *   Clarified that the `__Host-` prefix requires an explicit `Path` attribute:
+       <https://github.com/httpwg/http-extensions/issues/222>
+
+   *   Expanded the options for dealing with third-party cookies to include a
+       brief mention of partitioning based on first-party:
+       <https://github.com/httpwg/http-extensions/issues/248>
+
+   *   Noted that double-quotes in cookie values are part of the value, and are
+       not stripped: <https://github.com/httpwg/http-extensions/issues/295>
+
+   *   Fixed the "site for cookies" algorithm to return something that makes
+       sense: <https://github.com/httpwg/http-extensions/issues/302>
 
 # Acknowledgements
 
