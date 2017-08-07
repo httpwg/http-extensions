@@ -1445,7 +1445,8 @@ user agent MUST process the cookie as follows:
 
     2.  The cookie's host-only-flag is true.
 
-    3.  The cookie's path is `/`.
+    3.  The cookie-attribute-list contains an attribute with an attribute-name
+        of "Path", and the cookie's path is `/`.
 
 17. If the cookie store contains a cookie with the same name, domain, and
     path as the newly-created cookie:
@@ -2017,6 +2018,8 @@ Specification document:
 
 *  Merged the recommendations from {{I-D.ietf-httpbis-cookie-same-site}}, adding
    support for the `SameSite` attribute.
+
+*  Clarified that a `Path` attribute is required for `__Host-` cookie prefixes.
 
 # Acknowledgements
 
