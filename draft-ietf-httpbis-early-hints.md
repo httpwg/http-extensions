@@ -133,11 +133,16 @@ Server response:
   [... rest of the response body is ommitted from the example ...]
 ~~~
 
+## Multiple Early Hints
+
 As is the case with any informational response, a server might emit more than one 103 (Early Hints)
 response prior to sending a final response.
 This can happen for example when a caching intermediary generates a 103 (Early Hints) response based
 on the header fields of a stale-cached response, then forwards a 103 (Early Hints) response and a
 final response that were sent from the origin server in response to a revalidation request.
+
+Since the nonexistence of a header field within a 103 (Early Hints) response does not indicate the absence of that header field in the final response, a server MAY omit a header field that was included in one 103 (Early Hints) response in the following 103 (Early Hints) responses, even when it is still expected that the header field will be part of the final response.
+A client SHOULD NOT consider the disappearance of a header field in the following 103 (Early Hints) responses as an indication that the server has retracted the expectation that the header field will be found in the final response.
 
 # Security Considerations
 
