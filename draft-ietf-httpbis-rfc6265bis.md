@@ -997,7 +997,7 @@ cookies" (either a registered domain, or the empty string):
     2.  If `origin`'s host's registered domain is not an exact match for
         `top-origin`'s host's registered domain, return the empty string.
 
-4.  Return `top-site`.
+5.  Return `top-origin`'s host's registered domain.
 
 ### Worker-based requests {#worker-requests}
 
