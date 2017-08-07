@@ -1663,12 +1663,16 @@ visits a site that contains content from a third party and then later visits
 another site that contains content from the same third party, the third party
 can track the user between the two sites.
 
-Some user agents restrict how third-party cookies behave. For example, some of
-these user agents refuse to send the Cookie header in third-party requests.
-Others refuse to process the Set-Cookie header in responses to third-party
-requests. User agents vary widely in their third-party cookie policies. This
-document grants user agents wide latitude to experiment with third-party cookie
-policies that balance the privacy and compatibility needs of their users.
+Given this risk to user privacy, some user agents restrict how third-party
+cookies behave, and those restrictions vary widly. For instance, user agents
+might block third-party cookies entirely by refusing to send Cookie headers or
+process Set-Cookie headers during third-party requests. They might take a less
+draconian approach by partitioning cookies based on the first-party context,
+sending one set of cookies to a given third party in one first-party context,
+and another to the same third party in another.
+
+This document grants user agents wide latitude to experiment with third-party
+cookie policies that balance the privacy and compatibility needs of their users.
 However, this document does not endorse any particular third-party cookie
 policy.
 
