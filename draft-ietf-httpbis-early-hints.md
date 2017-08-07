@@ -66,11 +66,9 @@ The dilemma here is that even though it is preferable for an origin server to se
 soon as it receives a request, it cannot do so until the status code and the full header fields of the
 final HTTP response are determined.
 
-HTTP/2 ([RFC7540]) server push can be used as a solution to this issue, but has its own
-limitations. The responses that can be pushed using HTTP/2 are limited to those belonging to the
-same origin. Also, it is impossible to send only the links using server push. Finally, sending HTTP
-responses for every resource is an inefficient way of using bandwidth, especially when a caching
-server exists as an intermediary.
+HTTP/2 ([RFC7540]) server push can accelerate the delivery of resources, but only resources for which the server is authoritative.
+The other limitation of server push is that the response will be transmitted regardless of whether the client has the response cached.
+At the cost of spending one extra round-trip compared to server push in the worst case, delivering Link header fields in a timely fashion is more flexible and might consume less bandwidth.
 
 This memo defines a status code for sending an informational response ([RFC7231], Section 6.2) that
 contains header fields that are likely to be included in the final response. A server can send the
