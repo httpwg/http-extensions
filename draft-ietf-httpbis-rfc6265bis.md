@@ -949,6 +949,9 @@ For a given request ("request"), the following algorithm returns `same-site` or
 
 1.  If `request`'s client is `null`, return `same-site`.
 
+    Note that this is the case for navigation triggered by the user directly
+    (e.g. by typing directly into a user agent's address bar).
+
 2.  Let `site` be `request`'s client's "site for cookies" (as defined in the
     following sections).
 
