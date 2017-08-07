@@ -105,6 +105,9 @@ Aside from performance optimizations, such evaluation of the 103
 client MUST NOT interpret the 103 (Early Hints) response header fields as if they applied to
 the informational response itself (e.g., as metadata about the 103 (Early Hints) response).
 
+A server MAY use a 103 (Early Hints) response to indicate only some of the header fields that are expected to be found in the final response.
+A client SHOULD NOT interpret the nonexistence of a header field in a 103 (Early Hints) response as a speculation that the header field is unlikely to be part of the final response.
+
 The following example illustrates a typical message exchange that involves a 103 (Early Hints) response.
 
 Client request:
