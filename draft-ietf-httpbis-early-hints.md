@@ -128,7 +128,7 @@ Server response:
   Link: </script.js>; rel=preload; as=script
 
   <!doctype html>
-  [... rest of the response body is ommitted from the example ...]
+  [... rest of the response body is omitted from the example ...]
 ~~~
 
 As is the case with any informational response, a server might emit more than one 103 (Early Hints)
