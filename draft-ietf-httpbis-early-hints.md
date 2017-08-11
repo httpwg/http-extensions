@@ -146,7 +146,7 @@ final response that were sent from the origin server in response to a revalidati
 
 A server MAY emit multiple 103 (Early Hints) responses with additional header fields as new information becomes available while the request is being processed.
 It does not need to repeat the fields that were already emitted, though it doesn't have to exclude them either.
-The client may consider any combination of header fields received in multiple 103 (Early Hints) responses when anticipating the list of header fields expected in the final response.
+The client can consider any combination of header fields received in multiple 103 (Early Hints) responses when anticipating the list of header fields expected in the final response.
 
 # Security Considerations
 
