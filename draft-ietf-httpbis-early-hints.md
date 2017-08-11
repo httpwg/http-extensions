@@ -146,6 +146,31 @@ A server MAY emit multiple 103 (Early Hints) responses with additional header fi
 It does not need to repeat the fields that were already emitted, though it doesn't have to exclude them either.
 The client can consider any combination of header fields received in multiple 103 (Early Hints) responses when anticipating the list of header fields expected in the final response.
 
+The following example illustrates a series of responses that a server might emit.
+In the example, the server uses two 103 (Early Hints) responses to notify the client that it is likely to send three Link header fields in the final response.
+Two of the three expected header fields are found in the final response.
+The other header field is replaced by another Link header field that contains a different value.
+
+~~~ example
+  HTTP/1.1 103 Early Hints
+  Link: </main.css>; rel=preload; as=style
+
+  HTTP/1.1 103 Early Hints
+  Link: </style.css>; rel=preload; as=style
+  Link: </script.js>; rel=preload; as=script
+
+  HTTP/1.1 200 OK
+  Date: Fri, 26 May 2017 10:02:11 GMT
+  Content-Length: 1234
+  Content-Type: text/html; charset=utf-8
+  Link: </main.css>; rel=preload; as=style
+  Link: </newstyle.css>; rel=preload; as=style
+  Link: </script.js>; rel=preload; as=script
+
+  <!doctype html>
+  [... rest of the response body is omitted from the example ...]
+~~~
+
 # Security Considerations
 
 Some clients might have issues handling 103 (Early Hints), since informational responses are rarely
