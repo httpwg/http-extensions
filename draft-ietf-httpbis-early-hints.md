@@ -145,7 +145,7 @@ on the header fields of a stale-cached response, then forwards a 103 (Early Hint
 final response that were sent from the origin server in response to a revalidation request.
 
 A server MAY emit multiple 103 (Early Hints) responses with additional header fields as new information becomes available while the request is being processed.
-It does not need to repeat the fields that were already emitted, though it is doesn't have to exclude them either.
+It does not need to repeat the fields that were already emitted, though it doesn't have to exclude them either.
 The client may consider any combination of header fields received in multiple 103 (Early Hints) responses when anticipating the list of header fields expected in the final response.
 
 # Security Considerations
