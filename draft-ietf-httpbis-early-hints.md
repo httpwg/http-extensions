@@ -144,8 +144,9 @@ This can happen for example when a caching intermediary generates a 103 (Early H
 on the header fields of a stale-cached response, then forwards a 103 (Early Hints) response and a
 final response that were sent from the origin server in response to a revalidation request.
 
-Since the nonexistence of a header field within a 103 (Early Hints) response does not indicate the absence of that header field in the final response, a server can omit a header field that was included in one 103 (Early Hints) response in the following 103 (Early Hints) responses, even when it is still anticipated that the header field will be part of the final response.
-What a client would expect in the final response is a union of the header fields that were found in the multiple 103 (Early Hints) responses.
+A server MAY emit multiple 103 (Early Hints) responses with additional header fields as new information becomes available while the request is being processed.
+It does not need to repeat the fields that were already emitted, though it is doesn't have to exclude them either.
+The client may consider any combination of header fields received in multiple 103 (Early Hints) responses when anticipating the list of header fields expected in the final response.
 
 # Security Considerations
 
