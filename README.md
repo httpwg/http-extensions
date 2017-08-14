@@ -29,7 +29,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 
 ### Cache Digest
-_Awaiting Editorial Update before IETF LC.__
+_Awaiting Editorial Update before IETF LC._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/cache-digest.html) ([plain text](https://httpwg.github.io/http-extensions/cache-digest.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cache-digest) (less recent, more official)
