@@ -175,8 +175,8 @@ connections to the host emitting the header for CT compliance
 ({{expect-ct-compliance}}).
 
 {{expect-ct-syntax}} describes the syntax (Augmented Backus-Naur Form) of the header field,
-using the grammar defined in RFC 5234 {{!RFC5234}} and the rules defined in
-Section 3.2 of RFC 7230 {{!RFC7230}}.
+using the grammar defined in {{!RFC5234}} and the rules defined in
+Section 3.2 of {{!RFC7230}}.
 
 ~~~ abnf
 Expect-CT           = #expect-ct-directive
@@ -186,9 +186,9 @@ directive-value     = token / quoted-string
 ~~~
 {: #expect-ct-syntax title="Syntax of the Expect-CT header field"}
 
-Optional white space (`OWS`) is used as defined in Section 3.2.3 of RFC 7230
+Optional white space (`OWS`) is used as defined in Section 3.2.3 of 
 {{!RFC7230}}. `token` and `quoted-string` are used as defined in Section 3.2.6
-of RFC 7230 {{!RFC7230}}.
+of {{!RFC7230}}.
 
 The directives defined in this specification are described below. The overall
 requirements for directives are:
@@ -226,7 +226,7 @@ report-uri-value = absolute-URI
 ~~~
 {: #reporturi-syntax title="Syntax of the report-uri directive value"}
 
-`absolute-URI` is defined in Section 4.3 of RFC 3986 {{!RFC3986}}.
+`absolute-URI` is defined in Section 4.3 of {{!RFC3986}}.
 
 Hosts may set `report-uri`s that use HTTP or HTTPS. If the scheme in the
 `report-uri` is one that uses TLS (e.g., HTTPS), UAs MUST check Expect-CT
@@ -277,7 +277,7 @@ delta-seconds = 1*DIGIT
 ~~~
 {: #maxage-syntax title="Syntax of the max-age directive value"}
 
-`delta-seconds` is used as defined in Section 1.2.1 of RFC 7234 {{!RFC7234}}.
+`delta-seconds` is used as defined in Section 1.2.1 of {{!RFC7234}}.
 
 ### Examples
 
@@ -482,8 +482,8 @@ failed the CT compliance check. The value is provided as an integer.
 
 * "effective-expiration-date": the value indicates the Effective Expiration Date
 (see {{storage-model}}) for the Expect-CT Host that failed the CT compliance
-check. The value is provided as a string formatted according to Section 5.6,
-"Internet Date/Time Format", of {{!RFC3339}}.
+check. The value is provided as a string formatted according to Section 5.6  of {{!RFC3339}}
+("Internet Date/Time Format").
 
 * "served-certificate-chain": the value is the certificate chain as served by
 the Expect-CT Host during TLS session setup. The value is provided as an array
