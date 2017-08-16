@@ -233,6 +233,12 @@ As a result, clients opting not to consult DNS ought to employ some alternative 
 confidence that the certificate is legitimate, such as such as checking for a Signed Certificate
 Timestamp {{?RFC6929}}, or performing certificate revocation checks.
 
+Clients opting not to consult DNS ought to do so only if they have a high degree of confidence that
+the certificate is legitimate. For instance, clients might skip consulting DNS only if they receive
+proof of inclusion in a Certificate Transparency log {{?RFC6929}} or they have a recent OCSP
+response {{?RFC6960}} (possibly using the "status_request" TLS extension {{?RFC6066}}) showing that
+the certificate was not revoked.
+
 The Origin Set's size is unbounded by this specification, and thus could be used by attackers to
 exhaust client resources. To mitigate this risk, clients can monitor their state commitment and
 close the connection if it is too high.
