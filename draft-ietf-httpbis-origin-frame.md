@@ -230,8 +230,9 @@ them; instead of modifying DNS, they need only convince the user to visit anothe
 order to coalesce connections to the target onto their existing connection.
 
 As a result, clients opting not to consult DNS ought to employ some alternative means to increase
-confidence that the certificate is legitimate, such as such as checking for a Signed Certificate
-Timestamp {{?RFC6929}}, or performing certificate revocation checks.
+confidence that the certificate is legitimate. Examples of mechanisms that can give additional
+confidence in a certificate include checking for a Signed Certificate Timestamp {{?RFC6929}} and
+performing certificate revocation checks.
 
 Clients opting not to consult DNS ought to do so only if they have a high degree of confidence that
 the certificate is legitimate. For instance, clients might skip consulting DNS only if they receive
