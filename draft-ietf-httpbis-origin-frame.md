@@ -196,7 +196,8 @@ Note that for a connection to be considered authoritative for a given origin, th
 required to obtain a certificate that passes suitable checks; see {{!RFC7540}}
 Section 9.1.1 for more information. This includes verifying that the host matches a `dNSName` value
 from the certificate `subjectAltName` field (using the wildcard rules defined in {{!RFC2818}}; see
-also {{!RFC5280}} Section 4.2.1.6).
+also {{!RFC5280}} Section 4.2.1.6). Clients MUST reject ORIGIN with an origin that does not pass those
+checks by treating it as a connection error ({{!RFC7540}}, Section 5.4.1) of type PROTOCOL_ERROR.
 
 Additionally, clients MAY avoid consulting DNS to establish the connection's authority for new
 requests; however, those that do so face new risks, as explained in {{sc}}
