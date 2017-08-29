@@ -195,8 +195,8 @@ authoritative, unless there are operational reasons for opening a new connection
 Note that for a connection to be considered authoritative for a given origin, the client is still
 required to obtain a certificate that passes suitable checks; see {{!RFC7540}}
 Section 9.1.1 for more information. This includes verifying that the host matches a `dNSName` value
-from the certificate `subjectAltName` field (using the wildcard rules defined in {{!RFC2818}}; see
-also {{!RFC5280}} Section 4.2.1.6).
+from the certificate `subjectAltName` field (using the rules defined in {{!RFC2818}}; see also
+{{!RFC5280}} Section 4.2.1.6).
 
 Additionally, clients MAY avoid consulting DNS to establish the connection's authority for new
 requests; however, those that do so face new risks, as explained in {{sc}}
