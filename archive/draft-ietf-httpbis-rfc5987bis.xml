@@ -75,7 +75,7 @@
 </t>
 <ul>
   <li>The HTTP specification discourages use of non-US-ASCII characters in field
-  values, placing them into the "obs-text" ABNF production (<xref target="RFC7230" x:fmt="," x:rel="#header.fields"/>).</li>
+  values, placing them into the "obs-text" Augmented Backus-Naur Form (ABNF) production (<xref target="RFC7230" x:fmt="," x:rel="#header.fields"/>).</li>
   <li>Furthermore, it stays silent about default character encoding schemes for
   field values, so any use of non-US-ASCII characters would need to be specific
   to the field definition, or would require some other kind of out-of-band information.</li>
@@ -122,7 +122,7 @@
   are to be interpreted as described in <xref target="RFC2119"/>.
 </t>
 <t>
-  This specification uses the ABNF (Augmented Backus-Naur Form) notation defined in
+  This specification uses the ABNF notation defined in
   <xref target="RFC5234"/>. The following core rules are included by
   reference, as defined in <xref target="RFC5234" x:fmt="," x:sec="B.1"/>:
   ALPHA (letters), DIGIT (decimal 0-9), HEXDIG (hexadecimal 0-9/A-F/a-f), and
