@@ -81,7 +81,7 @@
   to the field definition or would require some other kind of out-of-band information.</li>
   <li>Finally, some APIs assume a default character encoding scheme in order to map from the octet sequences (obtained from the HTTP message) to character sequences:
   for instance, the XMLHttpRequest API (<xref target="XMLHttpRequest"/>) uses the Interface Definition Language type "ByteString",
-  effectively resulting in the ISO-8859-1 character encoding scheme <xref target="ISO-8859-1"/>
+  effectively resulting in the ISO-8859-1 character encoding scheme (<xref target="ISO-8859-1"/>)
   being used.
   </li>
 </ul>
@@ -238,8 +238,8 @@
 <t>
   Note that both character encoding names and
   language tags are restricted to the US-ASCII coded character set and are matched
-  case-insensitively (see <xref target="RFC2978" x:fmt="," x:sec="2.3"/> and
-  <xref target="RFC5646" x:fmt="," x:sec="2.1.1"/>).
+  case-insensitively (see <xref target="RFC2978" x:fmt="of" x:sec="2.3"/> and
+  <xref target="RFC5646" x:fmt="of" x:sec="2.1.1"/>).
 </t>
 <t>
   Inside the value part, characters not contained in attr-char are
@@ -412,8 +412,8 @@
 </t>
 <t>
   Furthermore, the extension ought to also be used whenever the parameter value
-  needs to carry characters not present in the US-ASCII (<xref target="RFC0020"/>)
-  coded character set; note that it would be unacceptable to define a new parameter that
+  needs to carry characters not present in the US-ASCII
+  coded character set (<xref target="RFC0020"/>); note that it would be unacceptable to define a new parameter that
   would be restricted to a subset of the Unicode character set.
 </t>
 </section>
