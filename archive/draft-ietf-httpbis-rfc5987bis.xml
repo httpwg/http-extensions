@@ -131,7 +131,7 @@
 <t>
   This specification uses terminology defined in <xref target="RFC6365"/>,
   namely: "<x:dfn>character encoding scheme</x:dfn>" (abbreviated to
-  "<x:dfn>character encoding</x:dfn>" below), "<x:dfn>charset</x:dfn>"
+  "<x:dfn>character encoding</x:dfn>" below), "<x:dfn>charset</x:dfn>",
   and "<x:dfn>coded character set</x:dfn>".
 </t>
 <t>
@@ -455,7 +455,7 @@
 </t>
 <t>
   In addition, the extension specified in this document makes it possible
-  to transport multiple language variants for a single parameter, and such use might allow spoofing attacks, where
+  to transport multiple language variants for a single parameter, and such use might allow spoofing attacks where
   different language versions of the same parameter are not equivalent.
   Whether this attack is useful as an attack depends on the parameter
   specified.
@@ -796,7 +796,7 @@
 <t>
   Note that the implementation in Internet Explorer 9 does not support the
   ISO-8859-1 character encoding; this document revision acknowledges that UTF-8 is
-  sufficient for expressing all code points, and removes the requirement
+  sufficient for expressing all code points and removes the requirement
   to support ISO-8859-1.
 </t>
 <t>
@@ -816,7 +816,7 @@
   Thanks to Martin D&uuml;rst and Frank Ellermann for help figuring out ABNF details,
   to Graham Klyne and Alexey Melnikov for general review, to
   Chris Newman for pointing out an RFC 2231 incompatibility, and to
-  Benjamin Carlyle, Roar Lauritzsen, Eric Lawrence, and James Manger for implementer's feedback.
+  Benjamin Carlyle, Roar Lauritzsen, Eric Lawrence, and James Manger for implementers feedback.
 </t>
 <t>
   Furthermore, thanks to the members of the IETF HTTP Working Group for
