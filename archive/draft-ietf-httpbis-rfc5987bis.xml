@@ -102,8 +102,8 @@
 <x:note>
   <t>
     <x:h>Note:</x:h> In the remainder of this document, RFC 2231 is only referenced
-    for the purpose of explaining the choice of features that were adopted; they
-    are therefore purely informative.
+    for the purpose of explaining the choice of features that were adopted;
+    therefore, they are purely informative.
   </t>
 </x:note>
 <x:note>
@@ -130,8 +130,8 @@
 </t>
 <t>
   This specification uses terminology defined in <xref target="RFC6365"/>,
-  namely: "<x:dfn>character encoding scheme</x:dfn>" (below abbreviated to
-  "<x:dfn>character encoding</x:dfn>"), "<x:dfn>charset</x:dfn>"
+  namely: "<x:dfn>character encoding scheme</x:dfn>" (abbreviated to
+  "<x:dfn>character encoding</x:dfn>" below), "<x:dfn>charset</x:dfn>"
   and "<x:dfn>coded character set</x:dfn>".
 </t>
 <t>
@@ -188,9 +188,9 @@
 <section title="Definition" anchor="definition">
   <x:anchor-alias value="ext-value"/>
 <t>
-  The presence of extended parameter values usually is indicated by a parameter name
-  ending in an asterisk character. Note however that this is just a convention,
-  and that it needs to be explicitly specified in the definition of the header
+  The presence of extended parameter values is usually indicated by a parameter name
+  ending in an asterisk character. However, note that this is just a convention,
+  and that the extended parameter values need to be explicitly specified in the definition of the header
   field using this extension (see <xref target="usage.guidelines"/>).
 </t>
 <t>
@@ -273,7 +273,7 @@
   The 
   RFC 7230 token production (<xref target="RFC7230" x:fmt="," x:rel="#field.components"/>)
   differs from the production used in RFC 2231 (imported from <xref target="RFC2045" x:fmt="of" x:sec="5.1"/>)
-  in that curly braces ("{" and "}") are excluded. Thus, these two
+  in that curly braces (i.e., "{" and "}") are excluded. Thus, these two
   characters are excluded from the attr-char production as well.     
 </t>
 <t>
@@ -320,7 +320,7 @@
   foo: bar; title*=utf-8'en'<x:highlight>%C2%A3</x:highlight>%20rates
 </artwork>
 <postamble>
-  Note: The Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, then percent-encoded. Also, note
+  Note: The Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, and then percent-encoded. Also, note
   that the space character was encoded as %20, as it is not contained in
   attr-char.
 </postamble>
@@ -334,9 +334,9 @@
   foo: bar; title*=UTF-8''<x:highlight>%c2%a3</x:highlight>%20and%20<x:highlight>%e2%82%ac</x:highlight>%20rates
 </artwork>
 <postamble>
-  Note: The Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, then percent-encoded. Likewise,
+  Note: The Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, and then percent-encoded. Likewise,
   the Unicode euro sign character U+20AC was encoded into the octet
-  sequence E2 82 AC, then percent-encoded. Also note that HEXDIG allows
+  sequence E2 82 AC, and then percent-encoded. Also note that HEXDIG allows
   both lowercase and uppercase characters, so recipients must understand
   both, and that the language information is optional, while the character encoding is not.
 </postamble>
@@ -396,7 +396,7 @@
     interpretation to parameter names ending in an asterisk. As pointed out
     above, it's up to the specification for the non-extended parameter to "opt
     in" to the syntax defined here. That being said, some existing
-    implementations are known to automatically switch to the use of this
+    implementations are known to automatically switch to using this
     notation when a parameter name ends with an asterisk; thus, using parameter
     names ending in an asterisk for something else is likely to cause
     interoperability problems.
@@ -406,15 +406,15 @@
 <section title="When to Use the Extension" anchor="when.to.use.the.extension">
 <t>
   <xref target="RFC2277" x:fmt="of" x:sec="4.2"/> requires that protocol
-  elements containing human-readable text are able to carry language information. Thus, the <x:ref>ext-value</x:ref>
-  production ought to be always used when the parameter value is of textual
+  elements containing human-readable text be able to carry language information. Thus, the <x:ref>ext-value</x:ref>
+  production ought to always be used when the parameter value is of a textual
   nature and its language is known.
 </t>
 <t>
   Furthermore, the extension ought to also be used whenever the parameter value
   needs to carry characters not present in the US-ASCII (<xref target="RFC0020"/>)
-  coded character set (note that it would be unacceptable to define a new parameter that
-  would be restricted to a subset of the Unicode character set).
+  coded character set; note that it would be unacceptable to define a new parameter that
+  would be restricted to a subset of the Unicode character set.
 </t>
 </section>
 
@@ -447,7 +447,7 @@
   in which a displayed value appears to be something other than it is.
 </t>
 <t>
-  Furthermore, there are known attack scenarios relating to decoding UTF-8.
+  Furthermore, there are known attack scenarios related to decoding UTF-8.
 </t>
 <t>
   See <xref target="RFC3629" x:fmt="of" x:sec="10"/> for more information on
@@ -464,7 +464,7 @@
 
 <section title="IANA Considerations" anchor="iana.considerations">
 <t>
-  There are no IANA Considerations related to this specification.
+  This document does not require any IANA actions.
 </t>  
 </section>
 
@@ -751,12 +751,12 @@
     The requirement to support the "ISO-8859-1" encoding was removed.
   </li>
   <li>
-    The document does not attempt to re-define a generic "parameter" ABNF anymore (it turned out that
+    This document does not attempt to redefine a generic "parameter" ABNF anymore (it turned out that
     there really isn't a generic definition of parameters in HTTP; for instance, 
     there are subtle differences with respect to whitespace handling).
   </li>
   <li>
-    A note about defects in error handling in current implementations was removed, as it wasn't accurate anymore.
+    A note about defects in error handling in current implementations was removed, as it was no longer accurate.
   </li>
 </ul>
 </section>
@@ -764,7 +764,7 @@
 
 <section title="Implementation Report" anchor="implementation.report">
 <t>
-  The encoding defined in this document currently is used in four different
+  The encoding defined in this document is currently used in four different
   HTTP header fields:
 </t>
 <ul>
@@ -784,7 +784,7 @@
 <t>
   As the encoding is a profile/clarification of the one defined in
   <xref target="RFC2231"/> in 1997, many user agents already supported it for
-  use in "Content-Disposition" when <xref target="RFC5987"/> got published.
+  use in "Content-Disposition" when <xref target="RFC5987"/> was published.
 </t>
 <t>
   Since the publication of <xref target="RFC5987"/>, three more popular desktop
