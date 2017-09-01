@@ -101,14 +101,14 @@
 </t>
 <x:note>
   <t>
-    <x:h>Note:</x:h> in the remainder of this document, RFC 2231 is only referenced
+    <x:h>Note:</x:h> In the remainder of this document, RFC 2231 is only referenced
     for the purpose of explaining the choice of features that were adopted; they
     are therefore purely informative.
   </t>
 </x:note>
 <x:note>
   <t>
-    <x:h>Note:</x:h> this encoding does not apply to message payloads
+    <x:h>Note:</x:h> This encoding does not apply to message payloads
     transmitted over HTTP, such as when using the media type "multipart/form-data"
     (<xref target="RFC7578"/>).
   </t>
@@ -252,7 +252,7 @@
 </t>
 <x:note>
   <t>
-    <x:h>Note:</x:h> recipients should be prepared to handle encoding
+    <x:h>Note:</x:h> Recipients should be prepared to handle encoding
     errors, such as malformed or incomplete percent escape sequences, or
     non-decodable octet sequences, in a robust manner. This specification
     does not mandate any specific behavior, for instance, the following
@@ -320,7 +320,7 @@
   foo: bar; title*=utf-8'en'<x:highlight>%C2%A3</x:highlight>%20rates
 </artwork>
 <postamble>
-  Note: the Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, then percent-encoded. Also, note
+  Note: The Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, then percent-encoded. Also, note
   that the space character was encoded as %20, as it is not contained in
   attr-char.
 </postamble>
@@ -334,7 +334,7 @@
   foo: bar; title*=UTF-8''<x:highlight>%c2%a3</x:highlight>%20and%20<x:highlight>%e2%82%ac</x:highlight>%20rates
 </artwork>
 <postamble>
-  Note: the Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, then percent-encoded. Likewise,
+  Note: The Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, then percent-encoded. Likewise,
   the Unicode euro sign character U+20AC was encoded into the octet
   sequence E2 82 AC, then percent-encoded. Also note that HEXDIG allows
   both lowercase and uppercase characters, so recipients must understand
