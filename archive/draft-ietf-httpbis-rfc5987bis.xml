@@ -457,7 +457,7 @@
   In addition, the extension specified in this document makes it possible
   to transport multiple language variants for a single parameter, and such use might allow spoofing attacks where
   different language versions of the same parameter are not equivalent.
-  Whether this attack is useful as an attack depends on the parameter
+  Whether this attack is effective as an attack depends on the parameter
   specified.
 </t>
 </section>  
