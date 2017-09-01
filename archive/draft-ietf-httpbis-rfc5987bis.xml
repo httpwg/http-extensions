@@ -801,13 +801,13 @@
 </t>
 <t>
   The "Link" header field, on the other hand, was more recently specified
-  in <xref target="RFC5988"/>. At the time of this writing, no User Agent
+  in <xref target="RFC5988"/>. At the time of this writing, no user agent
   except Firefox supported the "title*" parameter (starting with release 15).
 </t>
 <t>
   <xref target="RFC7616" x:fmt="of" x:sec="3.4"/> defines the "username*" 
   parameter for use in HTTP Digest Authentication. At the time of writing, no
-  User Agent implemented this extension.
+  user agent implemented this extension.
 </t>
 </section>
 
