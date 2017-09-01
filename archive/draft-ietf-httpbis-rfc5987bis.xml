@@ -576,13 +576,13 @@
   
 <references title="Informative References">
 
-  <reference anchor="Err1912" target="http://www.rfc-editor.org">
+  <reference anchor="Err1912" target="https://www.rfc-editor.org/errata/eid1912">
     <front>
-      <title x:quotes="false">Errata ID 1912, RFC 2978</title>
+      <title x:quotes="false">Erratum ID 1912, RFC 2978</title>
       <author>
         <organization>RFC Errata</organization>
       </author>
-      <date year="2009" month="October"/>
+      <!--<date year="2009" month="October"/>-->
     </front>
   </reference>
 
