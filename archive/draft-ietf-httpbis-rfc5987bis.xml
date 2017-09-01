@@ -78,7 +78,7 @@
   values, placing them into the "obs-text" Augmented Backus-Naur Form (ABNF) production (<xref target="RFC7230" x:fmt="," x:rel="#header.fields"/>).</li>
   <li>Furthermore, it stays silent about default character encoding schemes for
   field values, so any use of non-US-ASCII characters would need to be specific
-  to the field definition, or would require some other kind of out-of-band information.</li>
+  to the field definition or would require some other kind of out-of-band information.</li>
   <li>Finally, some APIs assume a default character encoding scheme in order to map from the octet sequences (obtained from the HTTP message) to character sequences:
   for instance, the XMLHttpRequest API (<xref target="XMLHttpRequest"/>) uses the Interface Definition Language type "ByteString",
   effectively resulting in the ISO-8859-1 character encoding scheme <xref target="ISO-8859-1"/>
@@ -170,7 +170,7 @@
 <section title="Parameter Value Character Encoding and Language Information" anchor="character.set.and.language.information">
 <t>
   <xref target="RFC2231" x:fmt="of" x:sec="4"/> specifies how to embed
-  language information into parameter values, and also how to encode
+  language information into parameter values and also how to encode
   non-ASCII characters, dealing with restrictions both in MIME and HTTP
   header field parameters.
 </t>
@@ -237,7 +237,7 @@
 </ol>
 <t>
   Note that both character encoding names and
-  language tags are restricted to the US-ASCII coded character set, and are matched
+  language tags are restricted to the US-ASCII coded character set and are matched
   case-insensitively (see <xref target="RFC2978" x:fmt="," x:sec="2.3"/> and
   <xref target="RFC5646" x:fmt="," x:sec="2.1.1"/>).
 </t>
@@ -255,7 +255,7 @@
     <x:h>Note:</x:h> Recipients should be prepared to handle encoding
     errors, such as malformed or incomplete percent escape sequences, or
     non-decodable octet sequences, in a robust manner. This specification
-    does not mandate any specific behavior, for instance, the following
+    does not mandate any specific behavior; for instance, the following
     strategies are all acceptable:
     <list style="symbols">
       <t>ignoring the parameter,</t>
@@ -369,7 +369,7 @@
   Specifications of HTTP header fields that use the extensions defined
   in <xref target="character.set.and.language.information"/> ought to clearly
   state that. A simple way to achieve this is to normatively reference
-  this specification, and to include the <x:ref>ext-value</x:ref>
+  this specification and to include the <x:ref>ext-value</x:ref>
   production into the ABNF for specific header field parameters.
 </t>
 <figure><preamble>For instance:</preamble>
@@ -397,7 +397,7 @@
     above, it's up to the specification for the non-extended parameter to "opt
     in" to the syntax defined here. That being said, some existing
     implementations are known to automatically switch to the use of this
-    notation when a parameter name ends with an asterisk, thus using parameter
+    notation when a parameter name ends with an asterisk; thus, using parameter
     names ending in an asterisk for something else is likely to cause
     interoperability problems.
   </t>
@@ -421,7 +421,7 @@
 <section title="Error Handling">
 <t>
   Header field specifications need to define whether multiple
-  instances of parameters with identical names are allowed, and
+  instances of parameters with identical names are allowed and
   how they should be processed. This specification suggests that a parameter using the
   extended syntax takes precedence. This would allow producers to use both
   formats without breaking recipients that do not understand the extended syntax
@@ -443,7 +443,7 @@
 <section title="Security Considerations" anchor="security.considerations">
 <t>
   The format described in this document makes it possible to transport
-  non-ASCII characters, and thus enables character "spoofing" scenarios,
+  non-ASCII characters, and thus enables character "spoofing" scenarios
   in which a displayed value appears to be something other than it is.
 </t>
 <t>
@@ -819,7 +819,7 @@
   Benjamin Carlyle, Roar Lauritzsen, Eric Lawrence, and James Manger for implementer's feedback.
 </t>
 <t>
-  Furthermore thanks to the members of the IETF HTTP Working Group for
+  Furthermore, thanks to the members of the IETF HTTP Working Group for
   the feedback specific to this update of RFC 5987.  
 </t>
 </section>  
