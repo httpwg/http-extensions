@@ -237,16 +237,17 @@ the 4NN (Too Early) status code.
 It has just one valid value: "1". Its syntax is defined by the following ABNF
 {{!ABNF=RFC5234}}:
 
-~~~
+~~~ abnf
 Early-Data = "1"
 ~~~
 
 For example:
 
-~~~
+~~~ example
 GET /resource HTTP/1.0
 Host: example.com
 Early-Data: 1
+
 ~~~
 
 An intermediary that forwards a request received in TLS early data MUST send it
