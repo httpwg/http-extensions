@@ -8,6 +8,12 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 [![Build Status](https://travis-ci.org/httpwg/http-extensions.svg?branch=master)](https://travis-ci.org/httpwg/http-extensions)
 
 
+### Using Early Data in HTTP
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/replay.html) ([plain text](https://httpwg.github.io/http-extensions/replay.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-replay) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Areplay) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-replay/)
+
 ### HTTP Random Access And Live Content
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rand-access-live.html) ([plain text](https://httpwg.github.io/http-extensions/rand-access-live.txt))
