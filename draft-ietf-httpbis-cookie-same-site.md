@@ -249,7 +249,7 @@ same" matching algorithm for origins are defined in {{RFC6454}}.
 in Section 4.2.1 of {{RFC7231}}.
 
 The term "public suffix" is defined in a note in Section 5.3 of {{RFC6265}} as
-"a domain that is controlled by a public registry", and are also know as
+"a domain that is controlled by a public registry", and are also known as
 "effective top-level domains" (eTLDs). For example, `example.com`'s public
 suffix is `com`. User agents SHOULD use an up-to-date public suffix list,
 such as the one maintained by Mozilla at {{PSL}}.
@@ -297,7 +297,7 @@ document's "site for cookies" is the top-level site.
 For documents which are displayed in nested browsing contexts, we need to audit
 the origins of each of a document's ancestor browsing contexts' active documents
 in order to account for the "multiple-nested scenarios" described in Section 4
-of {{RFC7034}}. These document's "site for cookies" is the top-level site if and
+of {{RFC7034}}. A document's "site for cookies" is the top-level site if and
 only if the document and each of its ancestor documents' origins have the same
 registered domain as the top-level site. Otherwise its "site for cookies" is
 the empty string.
@@ -369,7 +369,7 @@ Service Workers are more complicated, as they act as a completely separate
 execution context with only tangential relationship to the Document which
 registered them.
 
-Requests which simply pass through a service worker will be handled as described
+Requests which simply pass through a Service Worker will be handled as described
 above: the request's client will be the Document or Worker which initiated the
 request, and its "site for cookies" will be those defined in
 {{document-requests}} and {{dedicated-and-shared-requests}}
