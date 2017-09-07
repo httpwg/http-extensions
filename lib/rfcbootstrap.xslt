@@ -261,14 +261,14 @@
   <xsl:template match="abstract">
     <xsl:call-template name="check-no-text-content"/>
     <hr/>
-    <h2 id="{$anchor-pref}.abstract"><a href="#{$anchor-pref}.abstract">Abstract</a></h2>
+    <h2 id="{$anchor-pref}abstract"><a href="#{$anchor-pref}abstract">Abstract</a></h2>
     <div class="lead">
       <xsl:apply-templates />
     </div>
   </xsl:template>
 
   <xsl:template match="/" mode="toc">
-    <div id="{$anchor-pref}.toc">
+    <div id="{$anchor-pref}toc">
       <ul class="nav">
         <xsl:apply-templates mode="toc" />
       </ul>
