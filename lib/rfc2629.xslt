@@ -806,6 +806,36 @@
   </xsl:call-template>
 </xsl:template>
 
+<xsl:param name="xml2rfc-ext-rfc-info-uri">
+  <xsl:call-template name="parse-pis">
+    <xsl:with-param name="nodes" select="/processing-instruction('rfc-ext')"/>
+    <xsl:with-param name="attr" select="'rfc-info-uri'"/>
+    <xsl:with-param name="default">
+      <xsl:choose>
+        <xsl:when test="$pub-yearmonth &lt; 201708">http://www.rfc-editor.org/info/{type}{no}</xsl:when>
+        <xsl:otherwise>https://www.rfc-editor.org/info/{type}{no}</xsl:otherwise>
+      </xsl:choose>    
+    </xsl:with-param>
+  </xsl:call-template>
+</xsl:param>
+
+<xsl:template name="compute-rfc-info-uri">
+  <xsl:param name="type"/>
+  <xsl:param name="no"/>
+  <xsl:variable name="t">
+    <xsl:call-template name="replace-substring">
+      <xsl:with-param name="string" select="$xml2rfc-ext-rfc-info-uri"/>
+      <xsl:with-param name="replace" select="'{type}'"/>
+      <xsl:with-param name="by" select="$type"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:call-template name="replace-substring">
+    <xsl:with-param name="string" select="$t"/>
+    <xsl:with-param name="replace" select="'{no}'"/>
+    <xsl:with-param name="by" select="$no"/>
+  </xsl:call-template>
+</xsl:template>
+
 <xsl:param name="xml2rfc-ext-rfc-erratum-uri">
   <xsl:call-template name="parse-pis">
     <xsl:with-param name="nodes" select="/processing-instruction('rfc-ext')"/>
@@ -980,6 +1010,29 @@
       >2010</xsl:when>
     <xsl:otherwise/>
   </xsl:choose>
+</xsl:variable>
+
+<!-- use https in boilerplate links? -->
+<xsl:variable name="rfc-boilerplate-use-https" select="$pub-yearmonth >= 201709"/>
+
+<xsl:variable name="rfc-info-link">
+  <xsl:variable name="scheme">
+    <xsl:choose>
+      <xsl:when test="$rfc-boilerplate-use-https">https</xsl:when>
+      <xsl:otherwise>http</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+  <xsl:value-of select="concat($scheme,'://www.rfc-editor.org/info/rfc',/rfc/@number)"/>
+</xsl:variable>
+
+<xsl:variable name="trust-license-info-link">
+  <xsl:variable name="scheme">
+    <xsl:choose>
+      <xsl:when test="$rfc-boilerplate-use-https">https</xsl:when>
+      <xsl:otherwise>http</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+  <xsl:value-of select="concat($scheme,'://trustee.ietf.org/license-info')"/>
 </xsl:variable>
 
 <!-- the reference to the latest and greatest headers-and-boilerplates document -->
@@ -1937,13 +1990,117 @@
 
 <!-- list templates depend on the list style -->
 
-<xsl:template match="list[@style='empty' or (not(@style) and not(ancestor::list[@style]) or (not(@style) and ancestor::list[@style='empty']))]">
-  <xsl:call-template name="check-no-text-content"/>
+<xsl:template name="list-empty">
   <ul class="empty">
+    <xsl:call-template name="copy-anchor"/>
     <xsl:call-template name="insertInsDelClass"/>
     <xsl:apply-templates />
   </ul>
 </xsl:template>
+
+<xsl:template name="list-format">
+  <dl>
+    <xsl:call-template name="copy-anchor"/>
+    <xsl:call-template name="insertInsDelClass"/>
+    <xsl:apply-templates />
+  </dl>
+</xsl:template>
+
+<xsl:template name="list-hanging">
+  <xsl:variable name="compact">
+    <xsl:call-template name="get-compact-setting"/>
+  </xsl:variable>
+  <!-- insert a hard space for nested lists so that indentation works ok -->
+  <xsl:if test="ancestor::list and normalize-space(preceding-sibling::text())=''">
+    <xsl:text>&#160;</xsl:text>
+  </xsl:if>
+  <dl>
+    <xsl:if test="$compact='yes'">
+      <xsl:attribute name="class">compact</xsl:attribute>
+    </xsl:if>
+    <xsl:call-template name="copy-anchor"/>
+    <xsl:call-template name="insertInsDelClass"/>
+    <xsl:apply-templates />
+  </dl>
+</xsl:template>
+
+<xsl:template name="list-numbers">
+  <ol>
+    <xsl:call-template name="copy-anchor"/>
+    <xsl:call-template name="insertInsDelClass"/>
+    <xsl:apply-templates />
+  </ol>
+</xsl:template>
+
+<xsl:template name="check-no-hangindent">
+  <xsl:if test="@hangIndent">
+    <xsl:call-template name="warning">
+      <xsl:with-param name="msg" select="'hangIndent attribute not supported for this list style'"/>
+    </xsl:call-template>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template name="list-letters">
+  <xsl:variable name="style">
+    <xsl:choose>
+      <!-- lowercase for even-numbered nesting levels -->
+      <xsl:when test="0=(count(ancestor::list[@style='letters']) mod 2)">la</xsl:when>
+      <!-- uppercase otherwise -->
+      <xsl:otherwise>ua</xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+  <ol class="{$style}">
+    <xsl:call-template name="copy-anchor"/>
+    <xsl:call-template name="insertInsDelClass"/>
+    <xsl:apply-templates />
+  </ol>
+</xsl:template>
+
+<xsl:template name="list-symbols">
+  <ul>
+    <xsl:call-template name="copy-anchor"/>
+    <xsl:call-template name="insertInsDelClass"/>
+    <xsl:apply-templates />
+  </ul>
+</xsl:template>
+
+<xsl:template match="list">
+  <xsl:variable name="style" select="ancestor-or-self::list[@style][1]/@style"/>
+  <xsl:call-template name="check-no-text-content"/>
+  <xsl:choose>
+    <xsl:when test="not($style) or $style='empty'">
+      <xsl:call-template name="check-no-hangindent"/>
+      <xsl:call-template name="list-empty"/>
+    </xsl:when>
+    <xsl:when test="starts-with($style, 'format ')">
+      <xsl:call-template name="list-format"/>
+    </xsl:when>
+    <xsl:when test="$style='hanging'">
+      <xsl:call-template name="list-hanging"/>
+    </xsl:when>
+    <xsl:when test="$style='letters'">
+      <xsl:call-template name="check-no-hangindent"/>
+      <xsl:call-template name="list-letters"/>
+    </xsl:when>
+    <xsl:when test="$style='numbers'">
+      <xsl:call-template name="check-no-hangindent"/>
+      <xsl:call-template name="list-numbers"/>
+    </xsl:when>
+    <xsl:when test="$style='symbols'">
+      <xsl:call-template name="check-no-hangindent"/>
+      <xsl:call-template name="list-symbols"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:call-template name="error">
+        <xsl:with-param name="msg" select="concat('Unsupported style attribute: ', $style)"/>
+      </xsl:call-template>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+
+
+<!-- v3 lists -->
 
 <xsl:template match="ol[string-length(@type)>1]">
   <xsl:variable name="p">
@@ -2069,14 +2226,6 @@
   </dd>
 </xsl:template>
 
-<xsl:template match="list[starts-with(@style,'format ')]">
-  <xsl:call-template name="check-no-text-content"/>
-  <dl>
-    <xsl:call-template name="insertInsDelClass"/>
-    <xsl:apply-templates />
-  </dl>
-</xsl:template>
-
 <!-- get value of "compact" mode, checking subcompact first, then compact -->
 <xsl:template name="get-compact-setting">
   <xsl:variable name="t1">
@@ -2100,34 +2249,6 @@
       <xsl:value-of select="$t1"/>
     </xsl:otherwise>
   </xsl:choose>
-</xsl:template>
-
-<xsl:template match="list[@style='hanging']">
-  <xsl:call-template name="check-no-text-content"/>
-  <xsl:variable name="compact">
-    <xsl:call-template name="get-compact-setting"/>
-  </xsl:variable>
-  <!-- insert a hard space for nested lists so that indentation works ok -->
-  <xsl:if test="ancestor::list and normalize-space(preceding-sibling::text())=''">
-    <xsl:text>&#160;</xsl:text>
-  </xsl:if>
-  <dl>
-    <xsl:if test="$compact='yes'">
-      <xsl:attribute name="class">compact</xsl:attribute>
-    </xsl:if>
-    <xsl:call-template name="copy-anchor"/>
-    <xsl:call-template name="insertInsDelClass"/>
-    <xsl:apply-templates />
-  </dl>
-</xsl:template>
-
-<xsl:template match="list[@style='numbers' or (not(@style) and ancestor::list[@style='numbers'])]">
-  <xsl:call-template name="check-no-text-content"/>
-  <ol>
-    <xsl:call-template name="copy-anchor"/>
-    <xsl:call-template name="insertInsDelClass"/>
-    <xsl:apply-templates />
-  </ol>
 </xsl:template>
 
 <xsl:template name="ol-start">
@@ -2221,61 +2342,9 @@
   </li>
 </xsl:template>
 
-<xsl:template match="list[@style='letters' or (not(@style) and ancestor::list[@style='letters'])]">
-  <xsl:call-template name="check-no-text-content"/>
-  <xsl:variable name="style">
-    <xsl:choose>
-      <!-- lowercase for even-numbered nesting levels -->
-      <xsl:when test="0=(count(ancestor::list[@style='letters']) mod 2)">la</xsl:when>
-      <!-- uppercase otherwise -->
-      <xsl:otherwise>ua</xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-  <ol class="{$style}">
-    <xsl:call-template name="copy-anchor"/>
-    <xsl:call-template name="insertInsDelClass"/>
-    <xsl:apply-templates />
-  </ol>
-</xsl:template>
-
-<xsl:template match="list[@style='symbols' or (not(@style) and ancestor::list[@style='symbols'])]">
-  <xsl:call-template name="check-no-text-content"/>
-  <ul>
-    <xsl:call-template name="copy-anchor"/>
-    <xsl:call-template name="insertInsDelClass"/>
-    <xsl:apply-templates />
-  </ul>
-</xsl:template>
-
-
 <!-- same for t(ext) elements -->
 
-<xsl:template match="list[@style='empty' or not(@style)]/t | list[@style='empty' or not(@style)]/ed:replace/ed:*/t">
-  <xsl:if test="@hangText">
-    <xsl:call-template name="warning">
-      <xsl:with-param name="msg" select="'t/@hangText used on unstyled list'"/>
-    </xsl:call-template>
-  </xsl:if>
-  <li>
-    <xsl:call-template name="copy-anchor"/>
-    <xsl:call-template name="insertInsDelClass"/>
-    <xsl:apply-templates />
-  </li>
-</xsl:template>
-
-<xsl:template match="list[@style='numbers' or @style='symbols' or @style='letters']/x:lt">
-  <li>
-    <xsl:call-template name="copy-anchor"/>
-    <xsl:apply-templates select="t" />
-  </li>
-</xsl:template>
-
-<xsl:template match="list[@style='numbers' or @style='symbols' or @style='letters']/t | list[@style='numbers' or @style='symbols' or @style='letters']/ed:replace/ed:*/t">
-  <xsl:if test="@hangText">
-    <xsl:call-template name="warning">
-      <xsl:with-param name="msg" select="'t/@hangText used on non-hanging list'"/>
-    </xsl:call-template>
-  </xsl:if>
+<xsl:template name="list-item-generic">
   <li>
     <xsl:call-template name="copy-anchor"/>
     <xsl:call-template name="insertInsDelClass"/>
@@ -2286,33 +2355,7 @@
   </li>
 </xsl:template>
 
-<xsl:template match="list[@style='hanging']/x:lt">
-  <xsl:if test="@hangText!=''">
-    <dt>
-      <xsl:call-template name="copy-anchor"/>
-      <xsl:call-template name="insertInsDelClass"/>
-      <xsl:variable name="del-node" select="ancestor::ed:del"/>
-      <xsl:variable name="rep-node" select="ancestor::ed:replace"/>
-      <xsl:variable name="deleted" select="$del-node and ($rep-node/ed:ins)"/>
-      <xsl:for-each select="../..">
-        <xsl:call-template name="insert-issue-pointer">
-          <xsl:with-param name="deleted-anchor" select="$deleted"/>
-        </xsl:call-template>
-      </xsl:for-each>
-      <xsl:value-of select="@hangText" />
-    </dt>
-  </xsl:if>
-  <dd>
-    <xsl:call-template name="insertInsDelClass"/>
-    <!-- if hangIndent present, use 0.7 of the specified value (1em is the width of the "m" character -->
-    <xsl:if test="../@hangIndent">
-      <xsl:attribute name="style">margin-left: <xsl:value-of select="format-number(../@hangIndent * 0.7,'#.#')"/>em</xsl:attribute>
-    </xsl:if>
-    <xsl:apply-templates select="t" />
-  </dd>
-</xsl:template>
-
-<xsl:template match="list[@style='hanging']/t | list[@style='hanging']/ed:replace/ed:*/t">
+<xsl:template name="list-item-hanging">
   <xsl:if test="@hangText!=''">
     <dt>
       <xsl:call-template name="copy-anchor"/>
@@ -2352,7 +2395,7 @@
   </xsl:choose>
 </xsl:template>
 
-<xsl:template match="list[starts-with(@style,'format ')]/t">
+<xsl:template name="list-item-format">
   <xsl:variable name="list" select=".." />
   <xsl:variable name="format" select="substring-after(../@style,'format ')" />
   <xsl:variable name="pos">
@@ -2373,8 +2416,111 @@
     </xsl:call-template>
   </dt>
   <dd>
-    <xsl:apply-templates />
+    <xsl:apply-templates/>
   </dd>
+</xsl:template>
+
+<xsl:template match="list/t | list/ed:replace/ed:*/t">
+  <xsl:variable name="style" select="ancestor::list[@style][1]/@style"/>
+  <xsl:choose>
+    <xsl:when test="not($style) or $style='empty' or $style='letters' or $style='numbers' or $style='symbols'">
+      <xsl:if test="@hangText">
+        <xsl:call-template name="warning">
+          <xsl:with-param name="msg" select="'t/@hangText used on unstyled list'"/>
+        </xsl:call-template>
+      </xsl:if>
+      <xsl:call-template name="list-item-generic"/>
+    </xsl:when>
+    <xsl:when test="starts-with($style, 'format ')">
+      <xsl:call-template name="list-item-format"/>
+    </xsl:when>
+    <xsl:when test="$style='hanging'">
+      <xsl:call-template name="list-item-hanging"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:call-template name="error">
+        <xsl:with-param name="msg" select="concat('Unsupported style attribute: ', $style)"/>
+      </xsl:call-template>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+<xsl:template name="list-lt-generic">
+  <li>
+    <xsl:call-template name="copy-anchor"/>
+    <xsl:apply-templates select="t" />
+  </li>
+</xsl:template>
+
+<xsl:template name="list-lt-format">
+  <xsl:variable name="list" select=".." />
+  <xsl:variable name="format" select="substring-after(../@style,'format ')" />
+  <xsl:variable name="pos">
+    <xsl:choose>
+      <xsl:when test="$list/@counter">
+        <xsl:number level="any" count="list[@counter=$list/@counter or (not(@counter) and @style=concat('format ',$list/@counter))]/t" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:number level="any" count="list[concat('format ',@counter)=$list/@style or (not(@counter) and @style=$list/@style)]/t" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+  <dt>
+    <xsl:call-template name="copy-anchor"/>
+    <xsl:call-template name="expand-format-percent">
+      <xsl:with-param name="format" select="$format"/>
+      <xsl:with-param name="pos" select="$pos"/>
+    </xsl:call-template>
+  </dt>
+  <dd>
+    <xsl:apply-templates select="t" />
+  </dd>
+</xsl:template>
+
+<xsl:template name="list-lt-hanging">
+  <xsl:if test="@hangText!=''">
+    <dt>
+      <xsl:call-template name="copy-anchor"/>
+      <xsl:call-template name="insertInsDelClass"/>
+      <xsl:variable name="del-node" select="ancestor::ed:del"/>
+      <xsl:variable name="rep-node" select="ancestor::ed:replace"/>
+      <xsl:variable name="deleted" select="$del-node and ($rep-node/ed:ins)"/>
+      <xsl:for-each select="../..">
+        <xsl:call-template name="insert-issue-pointer">
+          <xsl:with-param name="deleted-anchor" select="$deleted"/>
+        </xsl:call-template>
+      </xsl:for-each>
+      <xsl:value-of select="@hangText" />
+    </dt>
+  </xsl:if>
+  <dd>
+    <xsl:call-template name="insertInsDelClass"/>
+    <!-- if hangIndent present, use 0.7 of the specified value (1em is the width of the "m" character -->
+    <xsl:if test="../@hangIndent">
+      <xsl:attribute name="style">margin-left: <xsl:value-of select="format-number(../@hangIndent * 0.7,'#.#')"/>em</xsl:attribute>
+    </xsl:if>
+    <xsl:apply-templates select="t" />
+  </dd>
+</xsl:template>
+
+<xsl:template match="list/x:lt">
+  <xsl:variable name="style" select="ancestor::list[@style][1]/@style"/>
+  <xsl:choose>
+    <xsl:when test="$style='letters' or $style='numbers' or $style='symbols'">
+      <xsl:call-template name="list-lt-generic"/>
+    </xsl:when>    
+    <xsl:when test="starts-with($style, 'format ')">
+      <xsl:call-template name="list-lt-format"/>
+    </xsl:when>    
+    <xsl:when test="$style='hanging'">
+      <xsl:call-template name="list-lt-hanging"/>
+    </xsl:when>    
+    <xsl:otherwise>
+      <xsl:call-template name="error">
+        <xsl:with-param name="msg" select="concat('Unsupported style attribute: ', $style)"/>
+      </xsl:call-template>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xsl:template name="expand-format-percent">
@@ -2998,13 +3144,23 @@
       </xsl:when>
       <xsl:when test="$xml2rfc-ext-link-rfc-to-info-page='yes' and $si[@name='BCP'] and starts-with(@anchor, 'BCP')">
         <xsl:text>, &lt;</xsl:text>
-        <xsl:variable name="uri" select="concat('http://www.rfc-editor.org/info/bcp',$si[@name='BCP']/@value)"/>
+        <xsl:variable name="uri">
+          <xsl:call-template name="compute-rfc-info-uri">
+            <xsl:with-param name="type" select="'bcp'"/>
+            <xsl:with-param name="no" select="$si[@name='BCP']/@value"/>
+          </xsl:call-template>
+        </xsl:variable>
         <a href="{$uri}"><xsl:value-of select="$uri"/></a>
         <xsl:text>&gt;</xsl:text>
       </xsl:when>
       <xsl:when test="$xml2rfc-ext-link-rfc-to-info-page='yes' and $si[@name='RFC']">
         <xsl:text>, &lt;</xsl:text>
-        <xsl:variable name="uri" select="concat('http://www.rfc-editor.org/info/rfc',$si[@name='RFC']/@value)"/>
+        <xsl:variable name="uri">
+          <xsl:call-template name="compute-rfc-info-uri">
+            <xsl:with-param name="type" select="'rfc'"/>
+            <xsl:with-param name="no" select="$si[@name='RFC']/@value"/>
+          </xsl:call-template>
+        </xsl:variable>
         <a href="{$uri}"><xsl:value-of select="$uri"/></a>
         <xsl:text>&gt;</xsl:text>
       </xsl:when>
@@ -3227,7 +3383,7 @@
       </xsl:for-each>
       <xsl:if test="@number">
         <link rel="Alternate" title="Authoritative ASCII Version" href="http://www.ietf.org/rfc/rfc{@number}.txt" />
-        <link rel="Help" title="RFC-Editor's Status Page" href="http://www.rfc-editor.org/info/rfc{@number}" />
+        <link rel="Help" title="RFC-Editor's Status Page" href="{$rfc-info-link}" />
         <link rel="Help" title="Additional Information on tools.ietf.org" href="https://tools.ietf.org/html/rfc{@number}"/>
       </xsl:if>
 
@@ -5866,6 +6022,11 @@ caption {
   font-size: 10pt;
   margin-top: .5em;
 }
+<xsl:if test="//@x:caption-side">
+caption.caption-top {
+  caption-side: top;
+}
+</xsl:if>
 <xsl:if test="//table">
 table:not([class]) th {
   background-color: #e9e9e9;
@@ -6214,6 +6375,7 @@ dd, li, p {
   }
 </xsl:if>}
 @page<xsl:if test="$xml2rfc-ext-duplex='yes'">:right</xsl:if> {
+  font-family: <xsl:value-of select="$xml2rfc-ext-ff-body"/>;
   @top-left {
        content: "<xsl:call-template name="get-header-left"/>";
   }
@@ -6234,6 +6396,7 @@ dd, li, p {
   }
 }<xsl:if test="$xml2rfc-ext-duplex='yes'">
 @page:left {
+  font-family: <xsl:value-of select="$xml2rfc-ext-ff-body"/>;
   @top-left {
        content: "<xsl:call-template name="get-header-right"/>";
   }
@@ -7018,7 +7181,7 @@ dd, li, p {
     <t>
       Information about the current status of this document, any errata, and
       how to provide feedback on it may be obtained at
-      <eref target="http://www.rfc-editor.org/info/rfc{@number}">http://www.rfc-editor.org/info/rfc<xsl:value-of select="@number"/></eref>.
+      <eref target="{$rfc-info-link}"><xsl:value-of select="$rfc-info-link"/></eref>.
     </t>
   </xsl:if>
 
@@ -7039,7 +7202,7 @@ dd, li, p {
           <xsl:when test="$ipr-2010-01">
             <t>
               This document is subject to BCP 78 and the IETF Trust's Legal
-              Provisions Relating to IETF Documents (<eref target="http://trustee.ietf.org/license-info">http://trustee.ietf.org/license-info</eref>)
+              Provisions Relating to IETF Documents (<eref target="{$trust-license-info-link}"><xsl:value-of select="$trust-license-info-link"/></eref>)
               in effect on the date of publication of this document. Please
               review these documents carefully, as they describe your rights
               and restrictions with respect to this document.
@@ -7718,8 +7881,8 @@ dd, li, p {
 
 <xsl:template name="sluggy-anchor">
   <xsl:if test="self::section and (not(@anchor) or @anchor='')">
-    <xsl:variable name="fr">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.()-_ :%,/=@&lt;&gt;</xsl:variable>
-    <xsl:variable name="to">abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz0123456789.---_---------</xsl:variable>
+    <xsl:variable name="fr">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.()+-_ :%,/=@&lt;&gt;</xsl:variable>
+    <xsl:variable name="to">abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz0123456789.----_---------</xsl:variable>
     <xsl:variable name="canslug" select="translate(normalize-space(concat(@title,name)),$fr,'')=''"/>
     <xsl:if test="$canslug">
       <xsl:variable name="slug" select="translate(normalize-space(concat(@title,name)),$fr,$to)"/>
@@ -8939,6 +9102,9 @@ dd, li, p {
       <xsl:if test="(@title!='') or (@anchor!='' and not(@suppress-title='true'))">
         <xsl:variable name="n"><xsl:call-template name="get-table-number"/></xsl:variable>
         <caption>
+          <xsl:if test="@x:caption-side='top'">
+            <xsl:attribute name="class">caption-top</xsl:attribute>
+          </xsl:if>
           <xsl:if test="not(starts-with($n,'u'))">
             <xsl:text>Table </xsl:text>
             <xsl:value-of select="$n"/>
@@ -9245,11 +9411,11 @@ dd, li, p {
   <xsl:variable name="gen">
     <xsl:text>http://greenbytes.de/tech/webdav/rfc2629.xslt, </xsl:text>
     <!-- when RCS keyword substitution in place, add version info -->
-    <xsl:if test="contains('$Revision: 1.912 $',':')">
-      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.912 $', 'Revision: '),'$','')),', ')" />
+    <xsl:if test="contains('$Revision: 1.923 $',':')">
+      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.923 $', 'Revision: '),'$','')),', ')" />
     </xsl:if>
-    <xsl:if test="contains('$Date: 2017/05/31 14:04:25 $',':')">
-      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2017/05/31 14:04:25 $', 'Date: '),'$','')),', ')" />
+    <xsl:if test="contains('$Date: 2017/08/28 00:23:34 $',':')">
+      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2017/08/28 00:23:34 $', 'Date: '),'$','')),', ')" />
     </xsl:if>
     <xsl:value-of select="concat('XSLT vendor: ',system-property('xsl:vendor'),' ',system-property('xsl:vendor-url'))" />
   </xsl:variable>
@@ -9299,7 +9465,7 @@ dd, li, p {
             <xsl:with-param name="msg">Only top-level sections can be unnumbered</xsl:with-param>
           </xsl:call-template>
         </xsl:if>
-        <xsl:if test="following-sibling::section[not(@numbered) or @numberer!='false'] or following-sibling::references">
+        <xsl:if test="following-sibling::section[not(@numbered) or @numbered!='false'] or following-sibling::references">
           <xsl:call-template name="error">
             <xsl:with-param name="msg">Unnumbered section is followed by numbered sections</xsl:with-param>
           </xsl:call-template>
