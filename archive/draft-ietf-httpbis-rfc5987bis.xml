@@ -259,7 +259,7 @@
     strategies are all acceptable:
     <list style="symbols">
       <t>ignoring the parameter,</t>
-      <t>stripping a non-decodable octet sequence,</t>
+      <t>stripping a non-decodable octet sequence, and</t>
       <t>substituting a non-decodable octet sequence by a replacement
       character, such as the Unicode character U+FFFD (Replacement Character).</t>
     </list>
@@ -751,7 +751,7 @@
     The requirement to support the "ISO-8859-1" encoding was removed.
   </li>
   <li>
-    This document does not attempt to redefine a generic "parameter" ABNF anymore (it turned out that
+    This document no longer attempts to redefine a generic "parameter" ABNF (it turned out that
     there really isn't a generic definition of parameters in HTTP; for instance, 
     there are subtle differences with respect to whitespace handling).
   </li>
