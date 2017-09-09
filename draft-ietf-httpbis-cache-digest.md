@@ -163,7 +163,7 @@ connections that are not authoritative (as defined in {{RFC7540}}, 10.1) for the
 
 CACHE_DIGEST allows the client to indicate whether the set of URLs used to compute the digest
 represent fresh or stale stored responses, using the STALE flag. Clients MAY decide whether to only
-sent CACHE_DIGEST frames representing their fresh stored responses, their stale stored responses,
+send CACHE_DIGEST frames representing their fresh stored responses, their stale stored responses,
 or both.
 
 Clients can choose to only send a subset of the suitable stored responses of each type (fresh or
