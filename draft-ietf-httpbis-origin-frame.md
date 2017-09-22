@@ -163,7 +163,7 @@ Section 6.2) and remove it from the connection's Origin Set, if present.
 Note:
 
 : When sending an ORIGIN frame to a connection that is initialised as an Alternative Service
-  {{?RFC7838}}, the initial origin set {{set}} will contain an origin with the appropriate
+  {{?RFC7838}}, the initial origin set ({{set}}) will contain an origin with the appropriate
   scheme and hostname (since Alternative Services specifies that the origin's hostname be sent
   in SNI). However, it is possible that the port will be different than that of the intended
   origin, since the initial origin set is calculated using the actual port in use, which can be
