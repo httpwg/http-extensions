@@ -156,14 +156,14 @@ The contents of that ORIGIN frame (and subsequent ones) allows the server to inc
 origins to the Origin Set, as described in {{process}}.
 
 The Origin Set is also affected by the 421 (Misdirected Request) response status code, defined in
-{{!RFC7540}} Section 9.1.2. Upon receipt of a response with this status code, implementing clients
+{{!RFC7540}}, Section 9.1.2. Upon receipt of a response with this status code, implementing clients
 MUST create the ASCII serialisation of the corresponding request's origin (as per {{!RFC6454}},
 Section 6.2) and remove it from the connection's Origin Set, if present.
 
 Note:
 
 : When sending an ORIGIN frame to a connection that is initialised as an Alternative Service
-  {{?RFC7838}}, the initial origin set {{set}} will contain an origin with the appropriate
+  {{?RFC7838}}, the initial origin set ({{set}}) will contain an origin with the appropriate
   scheme and hostname (since Alternative Services specifies that the origin's hostname be sent
   in SNI). However, it is possible that the port will be different than that of the intended
   origin, since the initial origin set is calculated using the actual port in use, which can be
@@ -182,7 +182,7 @@ Note:
 {{!RFC7540}}, Section 10.1 uses both DNS and the presented TLS certificate to establish the origin
 server(s) that a connection is authoritative for, just as HTTP/1.1 does in {{?RFC7230}}.
 
-Furthermore, {{!RFC7540}} Section 9.1.1 explicitly allows a connection to be used for more than one
+Furthermore, {{!RFC7540}}, Section 9.1.1 explicitly allows a connection to be used for more than one
 origin server, if it is authoritative. This affects what requests can be sent on the connection,
 both in HEADERS frame by the client and as PUSH_PROMISE frames from the server ({{!RFC7540}}, Section 8.2.2).
 
@@ -196,14 +196,14 @@ Note that for a connection to be considered authoritative for a given origin, th
 required to obtain a certificate that passes suitable checks; see {{!RFC7540}}
 Section 9.1.1 for more information. This includes verifying that the host matches a `dNSName` value
 from the certificate `subjectAltName` field (using the rules defined in {{!RFC2818}}; see also
-{{!RFC5280}} Section 4.2.1.6).
+{{!RFC5280}}, Section 4.2.1.6).
 
 Additionally, clients MAY avoid consulting DNS to establish the connection's authority for new
-requests; however, those that do so face new risks, as explained in {{sc}}
+requests; however, those that do so face new risks, as explained in {{sc}}.
 
 Because ORIGIN can change the set of origins a connection is used for over time, it is possible
 that a client might have more than one viable connection to an origin open at any time. When this
-occurs, clients SHOULD not emit new requests on any connection whose Origin Set is a proper subset
+occurs, clients SHOULD NOT emit new requests on any connection whose Origin Set is a proper subset
 of another connection's Origin Set, and SHOULD close it once all outstanding requests are satisfied.
 
 The Origin Set is unaffected by any alternative services {{?RFC7838}} advertisements made by the
