@@ -82,7 +82,7 @@ for the connection it occurs within.
 
 The ORIGIN frame type is 0xc (decimal 12), and contains zero to many Origin-Entry.
 
-~~~~
+~~~~ artwork
 +-------------------------------+-------------------------------+
 |         Origin-Entry (*)                                    ...
 +-------------------------------+-------------------------------+
@@ -90,7 +90,7 @@ The ORIGIN frame type is 0xc (decimal 12), and contains zero to many Origin-Entr
 
 An Origin-Entry is a length-delimited string:
 
-~~~~
+~~~~ artwork
 +-------------------------------+-------------------------------+
 |         Origin-Len (16)       | ASCII-Origin?               ...
 +-------------------------------+-------------------------------+
