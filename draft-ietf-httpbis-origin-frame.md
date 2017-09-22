@@ -203,7 +203,7 @@ requests; however, those that do so face new risks, as explained in {{sc}}.
 
 Because ORIGIN can change the set of origins a connection is used for over time, it is possible
 that a client might have more than one viable connection to an origin open at any time. When this
-occurs, clients SHOULD not emit new requests on any connection whose Origin Set is a proper subset
+occurs, clients SHOULD NOT emit new requests on any connection whose Origin Set is a proper subset
 of another connection's Origin Set, and SHOULD close it once all outstanding requests are satisfied.
 
 The Origin Set is unaffected by any alternative services {{?RFC7838}} advertisements made by the
