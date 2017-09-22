@@ -1013,7 +1013,7 @@
 </xsl:variable>
 
 <!-- use https in boilerplate links? -->
-<xsl:variable name="rfc-boilerplate-use-https" select="$pub-yearmonth >= 201709"/>
+<xsl:variable name="rfc-boilerplate-use-https" select="($pub-yearmonth >= 201709 and $rfcno!=8230 and $rfcno!=8325 and $rfcno!=8236) or $rfcno=8214 or $rfcno=8223"/>
 
 <xsl:variable name="rfc-info-link">
   <xsl:variable name="scheme">
@@ -9411,11 +9411,11 @@ dd, li, p {
   <xsl:variable name="gen">
     <xsl:text>http://greenbytes.de/tech/webdav/rfc2629.xslt, </xsl:text>
     <!-- when RCS keyword substitution in place, add version info -->
-    <xsl:if test="contains('$Revision: 1.923 $',':')">
-      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.923 $', 'Revision: '),'$','')),', ')" />
+    <xsl:if test="contains('$Revision: 1.924 $',':')">
+      <xsl:value-of select="concat('Revision ',normalize-space(translate(substring-after('$Revision: 1.924 $', 'Revision: '),'$','')),', ')" />
     </xsl:if>
-    <xsl:if test="contains('$Date: 2017/08/28 00:23:34 $',':')">
-      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2017/08/28 00:23:34 $', 'Date: '),'$','')),', ')" />
+    <xsl:if test="contains('$Date: 2017/09/20 09:30:17 $',':')">
+      <xsl:value-of select="concat(normalize-space(translate(substring-after('$Date: 2017/09/20 09:30:17 $', 'Date: '),'$','')),', ')" />
     </xsl:if>
     <xsl:value-of select="concat('XSLT vendor: ',system-property('xsl:vendor'),' ',system-property('xsl:vendor-url'))" />
   </xsl:variable>

@@ -14,11 +14,13 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-replay) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Areplay) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-replay/)
 
+
 ### HTTP Random Access And Live Content
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rand-access-live.html) ([plain text](https://httpwg.github.io/http-extensions/rand-access-live.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rand-access-live) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Arand-access-live) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rand-access-live/)
+
 
 ### Expect-CT
 
@@ -35,7 +37,8 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 
 ### Cache Digest
-_Awaiting Editorial Update before IETF LC._
+
+_Awaiting implementer feedback._
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/cache-digest.html) ([plain text](https://httpwg.github.io/http-extensions/cache-digest.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cache-digest) (less recent, more official)
@@ -51,12 +54,9 @@ _Awaiting Editorial Update before IETF LC._
 
 ### Client Hints
 
-_2nd Working Group Last Call; ends 2017-05-03._
-
 * [Editors' Draft](https://httpwg.github.io/http-extensions/client-hints.html) ([plain text](https://httpwg.github.io/http-extensions/client-hints.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
-
 
 
 ### Key
@@ -81,15 +81,6 @@ This will incorporate the following drafts:
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
 
 
-### Immutable Responses
-
-*Sent to IESG*
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/immutable.html) ([plain text](https://httpwg.github.io/http-extensions/immutable.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-immutable) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aimmutable) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-immutable/)
-
-
 ### Early Hints
 
 *Sent to IESG*
@@ -97,14 +88,4 @@ This will incorporate the following drafts:
 * [Editors' Draft](https://httpwg.github.io/http-extensions/early-hints.html) ([plain text](https://httpwg.github.io/http-extensions/early-hints.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-early-hints) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aearly-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-early-hints/)
-
-
-
-### Character Encoding and Language for Parameters
-
-_Approved; in RFC Editor Queue._
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/rfc5987bis.html) ([plain text](https://httpwg.github.io/http-extensions/rfc5987bis.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc5987bis) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A5987bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc5987bis/)
 
