@@ -185,9 +185,12 @@ Note:
 {{!RFC7540}}, Section 10.1 uses both DNS and the presented TLS certificate to establish the origin
 server(s) that a connection is authoritative for, just as HTTP/1.1 does in {{?RFC7230}}.
 
-Furthermore, {{!RFC7540}}, Section 9.1.1 explicitly allows a connection to be used for more than one
-origin server, if it is authoritative. This affects what requests can be sent on the connection,
-both in HEADERS frame by the client and as PUSH_PROMISE frames from the server ({{!RFC7540}}, Section 8.2.2).
+Furthermore, {{!RFC7540}}, Section 9.1.1 explicitly allows a connection to be used for more than
+one origin server, if it is authoritative. This affects what responses can be considered
+authoritative, both in HEADERS and PUSH_PROMISE frames from the server ({{!RFC7540}}, Section
+8.2.2). Indirectly, it also affects what requests will be sent on a connection, since clients will
+generally only send requests on connections that they believe to be authoritative for the origin in
+question.
 
 Once an Origin Set has been initialised for a connection, clients that implement this specification
 use it to help determine what the connection is authoritative for. Specifically, such clients MUST
@@ -196,7 +199,7 @@ SHOULD use the connection for all requests to origins in the Origin Set for whic
 authoritative, unless there are operational reasons for opening a new connection.
 
 Note that for a connection to be considered authoritative for a given origin, the client is still
-required to obtain a certificate that passes suitable checks; see {{!RFC7540}}
+required to obtain a certificate that passes suitable checks; see {{!RFC7540}},
 Section 9.1.1 for more information. This includes verifying that the host matches a `dNSName` value
 from the certificate `subjectAltName` field (using the rules defined in {{!RFC2818}}; see also
 {{!RFC5280}}, Section 4.2.1.6).
