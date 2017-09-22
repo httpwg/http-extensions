@@ -152,14 +152,14 @@ and successfully processed by a client, the connection's Origin Set is defined t
 origin.  The initial origin is composed from:
 
   - Scheme: "https"
-  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}} Section 3), converted to lower case
+  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}}, Section 3), converted to lower case
   - Port: the remote port of the connection (i.e., the server's port)
 
 The contents of that ORIGIN frame (and subsequent ones) allows the server to incrementally add new
 origins to the Origin Set, as described in {{process}}.
 
 The Origin Set is also affected by the 421 (Misdirected Request) response status code, defined in
-{{!RFC7540}}, Section 9.1.2. Upon receipt of a response with this status code, implementing clients
+Section 9.1.2 of {{!RFC7540}}. Upon receipt of a response with this status code, implementing clients
 MUST create the ASCII serialisation of the corresponding request's origin (as per {{!RFC6454}},
 Section 6.2) and remove it from the connection's Origin Set, if present.
 
@@ -185,7 +185,7 @@ Note:
 {{!RFC7540}}, Section 10.1 uses both DNS and the presented TLS certificate to establish the origin
 server(s) that a connection is authoritative for, just as HTTP/1.1 does in {{?RFC7230}}.
 
-Furthermore, {{!RFC7540}}, Section 9.1.1 explicitly allows a connection to be used for more than
+Furthermore, Section 9.1.1 of {{!RFC7540}} explicitly allows a connection to be used for more than
 one origin server, if it is authoritative. This affects what responses can be considered
 authoritative, both in HEADERS and PUSH_PROMISE frames from the server ({{!RFC7540}}, Section
 8.2.2). Indirectly, it also affects what requests will be sent on a connection, since clients will
@@ -199,8 +199,8 @@ SHOULD use the connection for all requests to origins in the Origin Set for whic
 authoritative, unless there are operational reasons for opening a new connection.
 
 Note that for a connection to be considered authoritative for a given origin, the client is still
-required to obtain a certificate that passes suitable checks; see {{!RFC7540}},
-Section 9.1.1 for more information. This includes verifying that the host matches a `dNSName` value
+required to obtain a certificate that passes suitable checks; see Section 9.1.1 of {{!RFC7540}}
+for more information. This includes verifying that the host matches a `dNSName` value
 from the certificate `subjectAltName` field (using the rules defined in {{!RFC2818}}; see also
 {{!RFC5280}}, Section 4.2.1.6).
 
@@ -293,7 +293,7 @@ That said, senders are encouraged to include as many origins as practical within
 frame; clients need to make decisions about creating connections on the fly, and if the origin
 set is split across many frames, their behaviour might be suboptimal.
 
-Senders take note that, as per {{!RFC6454}} Section 4, the values in an ORIGIN header need to be
+Senders take note that, as per Section 4 of {{!RFC6454}}, the values in an ORIGIN header need to be
 case-normalised before serialisation.
 
 Finally, servers that host alternative services {{?RFC7838}} will need to explicitly advertise
