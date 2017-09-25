@@ -276,9 +276,7 @@ processing a request that might be replayed.
 
 Clients (user-agents and intermediaries) that sent the request in early data
 MUST automatically retry the request when receiving a 4NN (Too Early)
-response status code. Such retries MUST NOT be sent in early data, and SHOULD
-NOT be sent if the TLS handshake on the original connection does not
-successfully complete.
+response status code. Such retries MUST NOT be sent in early data.
 
 Intermediaries that receive a 4NN (Too Early) status code MAY automatically
 retry requests after allowing the handshake to complete unless the original
