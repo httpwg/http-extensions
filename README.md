@@ -75,9 +75,9 @@ _Parked; waiting for implementation feedback._
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A6265bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/)
 
 This will incorporate the following drafts:
-* [Leave Secure Cookies Alone](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-alone.html)
-* [Cookie Prefixes](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-prefixes.html)
-* [Same-Site Cookies](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cookie-same-site.html)
+* [Leave Secure Cookies Alone](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-alone)
+* [Cookie Prefixes](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes)
+* [Same-Site Cookies](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site)
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
 
 
