@@ -188,7 +188,7 @@ server(s) that a connection is authoritative for, just as HTTP/1.1 does in {{?RF
 
 Furthermore, Section 9.1.1 of {{!RFC7540}} explicitly allows a connection to be used for more than
 one origin server, if it is authoritative. This affects what responses can be considered
-authoritative, both in HEADERS and PUSH_PROMISE frames from the server ({{!RFC7540}}, Section
+authoritative, both for direct responses to requests and for server push (see {{!RFC7540}}, Section
 8.2.2). Indirectly, it also affects what requests will be sent on a connection, since clients will
 generally only send requests on connections that they believe to be authoritative for the origin in
 question.
