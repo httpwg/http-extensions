@@ -80,7 +80,8 @@ for the connection it occurs within.
 
 ## Syntax {#syntax}
 
-The ORIGIN frame type is 0xc (decimal 12), and contains zero to many Origin-Entry.
+The ORIGIN frame type is 0xc (decimal 12), and contains zero or more instances of the Origin-Entry
+field.
 
 ~~~~ drawing
 +-------------------------------+-------------------------------+
