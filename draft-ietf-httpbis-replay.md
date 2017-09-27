@@ -117,7 +117,7 @@ to mitigate the risks of replay:
    buffering the responses to preserve ordering in HTTP/1.1.
 
 4. The server can cause a client to retry a request and not use early data by
-   responding with the 4NN (Too Early) status code ({{status}}), in cases where
+   responding with the 425 (Too Early) status code ({{status}}), in cases where
    the risk of replay is judged too great.
 
 
@@ -154,7 +154,7 @@ accept early data MUST implement that mechanism.
 Note that a server cannot choose to selectively reject early data at the TLS
 layer. TLS only permits a server to accept all early data, or none of it. Once
 a server has decided to accept early data, it MUST process all requests in
-early data, even if the server rejects the request by sending a 4NN (Too Early)
+early data, even if the server rejects the request by sending a 425 (Too Early)
 response.
 
 A server can limit the amount of early data with the `max_early_data_size`
@@ -189,7 +189,7 @@ being processed twice.  Replays are also possible if there are multiple server
 instances that will accept early data, or if the same server accepts early data
 multiple times (though this would be in violation of requirements in TLS).
 
-Clients that use early data MUST retry requests upon receipt of a 4NN (Too
+Clients that use early data MUST retry requests upon receipt of a 425 (Too
 Early) status code; see {{status}}.
 
 An intermediary MUST NOT use early data when forwarding a request unless early
@@ -213,7 +213,7 @@ To meet these needs, two signalling mechanisms are defined:
 * The `Early-Data` header field is included in requests that are received in
   early data.
 
-* The 4NN (Too Early) status code is defined for a server to indicate that a
+* The 425 (Too Early) status code is defined for a server to indicate that a
   request could not be processed due to the consequences of a possible replay
   attack.
 
@@ -232,7 +232,7 @@ and its origin server.
 
 The `Early-Data` request header field indicates that the request has been
 conveyed in early data, and additionally indicates that a client understands
-the 4NN (Too Early) status code.
+the 425 (Too Early) status code.
 
 It has just one valid value: "1". Its syntax is defined by the following ABNF
 {{!ABNF=RFC5234}}:
@@ -259,36 +259,36 @@ An intermediary MUST NOT remove this header field if it is present in a request.
 The `Early-Data` header field is not intended for use by user agents (that is,
 the original initiator of a request).  Sending a request in early data implies
 that the client understands this specification and is willing to retry a request
-in response to a 4NN (Too Early) status code.  A user agent that sends a request
+in response to a 425 (Too Early) status code.  A user agent that sends a request
 in early data does not need to include the `Early-Data` header field.
 
 A server cannot make a request that contains the Early-Data header field safe
 for processing by waiting for the handshake to complete. A request that is
 marked with Early-Data was sent in early data on a previous hop. Requests that
 contain the Early-Data field and cannot be safely processed MUST be rejected
-using the 4NN (Too Early) status code.
+using the 425 (Too Early) status code.
 
 
-## The 4NN (Too Early) Status Code {#status}
+## The 425 (Too Early) Status Code {#status}
 
-A 4NN (Too Early) status code indicates that the server is unwilling to risk
+A 425 (Too Early) status code indicates that the server is unwilling to risk
 processing a request that might be replayed.
 
 Clients (user-agents and intermediaries) that sent the request in early data
-MUST automatically retry the request when receiving a 4NN (Too Early)
+MUST automatically retry the request when receiving a 425 (Too Early)
 response status code. Such retries MUST NOT be sent in early data.
 
-Intermediaries that receive a 4NN (Too Early) status code MAY automatically
+Intermediaries that receive a 425 (Too Early) status code MAY automatically
 retry requests after allowing the handshake to complete unless the original
 request contained the `Early-Data` header field when it was received.
-Otherwise, an intermediary MUST forward the 4NN (Too Early) status code.
+Otherwise, an intermediary MUST forward the 425 (Too Early) status code.
 
 The server cannot assume that a client is able to retry a request unless the
 request is received in early data or the `Early-Data` header field is set to
-"1".  A server SHOULD NOT emit the 4NN status code unless one of these
+"1".  A server SHOULD NOT emit the 425 status code unless one of these
 conditions is met.
 
-The 4NN (Too Early) status code is not cacheable by default. Its payload is not
+The 425 (Too Early) status code is not cacheable by default. Its payload is not
 the representation of any identified resource.
 
 
@@ -304,9 +304,9 @@ target.
 
 A gateway that forwards requests that were received in early data MUST only do
 so if it knows that the server that receives those requests understands the
-`Early-Data` header field and will correctly generate a 4NN (Too Early) status
+`Early-Data` header field and will correctly generate a 425 (Too Early) status
 code.  A gateway that isn't certain about server support SHOULD either delay
-forwarding the request until the TLS handshake completes, or send a 4NN (Too
+forwarding the request until the TLS handshake completes, or send a 425 (Too
 Early) status code in response.  A gateway that is uncertain about whether an
 origin server supports the `Early-Data` header field SHOULD disable early data.
 
@@ -324,7 +324,7 @@ Accepting early data exposes a server to potential denial of service through the
 replay of requests that are expensive to handle.  A server that is under load
 SHOULD prefer rejecting TLS early data as a whole rather than accepting early
 data and selectively processing requests.  Generating a 503 (Service
-Unavailable) or 4NN (Too Early) status code often leads to clients retrying
+Unavailable) or 425 (Too Early) status code often leads to clients retrying
 requests, which could result in increased load.
 
 
@@ -357,12 +357,12 @@ Related information:
 
 : (empty)
 
-This document registers the 4NN (Too Early) status code in the "Hypertext
+This document registers the 425 (Too Early) status code in the "Hypertext
 Transfer Protocol (HTTP) Status Code" registry established in {{!RFC7231}}.
 
 Value:
 
-: 4NN
+: 425
 
 Description:
 
