@@ -320,6 +320,10 @@ request is not safe to process before the TLS handshake completes, then all
 instances of the server need to agree and either reject the request or delay
 processing.
 
+A server MUST NOT act on early data before the handshake completes if it and any
+other server instance could make a different decision about how to handle the
+same data.
+
 ## Denial of Service
 
 Accepting early data exposes a server to potential denial of service through the
