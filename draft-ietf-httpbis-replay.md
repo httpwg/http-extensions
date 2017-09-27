@@ -251,9 +251,11 @@ Early-Data: 1
 
 ~~~
 
-An intermediary that forwards a request received in TLS early data MUST send it
-with the `Early-Data` header field set to "1" (i.e., it adds it if not present
-in the request).
+An intermediary that forwards a request prior to the completion of the TLS
+handshake MUST send it with the `Early-Data` header field set to "1" (i.e., it
+adds it if not present in the request).  This is also true if the intermediary
+might have forwarded the request prior to handshake completion (see
+{{be-consistent}} for details).
 
 An intermediary MUST NOT remove this header field if it is present in a request.
 
@@ -316,8 +318,8 @@ origin server supports the `Early-Data` header field SHOULD disable early data.
 Consistent treatment of a request that arrives in - or partially in - early data
 is critical to avoiding inappropriate processing of replayed requests.  If a
 request is not safe to process before the TLS handshake completes, then all
-instances of the server need to agree and either reject the request or delay
-processing.
+instances of the server (including gateways) need to agree and either reject the
+request or delay processing.
 
 ## Denial of Service
 
