@@ -198,7 +198,7 @@ data was used on a previous hop, or it knows that the request can be retried
 safely without consequences (typically, using out-of-band configuration).
 Absent better information, that means that an intermediary can only use early
 data if the request either arrived in early data or arrived with the
-`Early-Data` header field set to "1".
+`Early-Data` header field set to "1" (see {{header}}).
 
 
 # Extensions for Early Data in HTTP
