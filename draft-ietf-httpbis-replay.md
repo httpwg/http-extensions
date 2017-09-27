@@ -327,6 +327,14 @@ data and selectively processing requests.  Generating a 503 (Service
 Unavailable) or 425 (Too Early) status code often leads to clients retrying
 requests, which could result in increased load.
 
+## Out of Order Delivery
+
+In protocols that deliver data out of order (such as QUIC {{HQ}}) early data
+can arrive after the handshake completes.  This leads to potential ambiguity
+about the status of requests and could lead to inconsistent treatment (see
+{{be-consistent}}).  Implementations MUST either ensure that any early data that
+is delivered late is either discarded or consistently identified and processed.
+
 
 # IANA Considerations
 
