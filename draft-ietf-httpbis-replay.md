@@ -184,10 +184,11 @@ This automatic retry exposes the request to a potential replay attack.  An
 attacker sends early data to one server instance that accepts and processes the
 early data, but allows that connection to proceed no further.  The attacker then
 forwards the same messages from the client to another server instance that will
-reject early data.  The client the retries the request, resulting in the request
-being processed twice.  Replays are also possible if there are multiple server
-instances that will accept early data, or if the same server accepts early data
-multiple times (though this would be in violation of requirements in TLS).
+reject early data.  The client then retries the request, resulting in the
+request being processed twice.  Replays are also possible if there are multiple
+server instances that will accept early data, or if the same server accepts
+early data multiple times (though this would be in violation of requirements in
+TLS).
 
 Clients that use early data MUST retry requests upon receipt of a 425 (Too
 Early) status code; see {{status}}.
