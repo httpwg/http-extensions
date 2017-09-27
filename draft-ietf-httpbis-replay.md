@@ -237,16 +237,17 @@ the 425 (Too Early) status code.
 It has just one valid value: "1". Its syntax is defined by the following ABNF
 {{!ABNF=RFC5234}}:
 
-~~~
+~~~ abnf
 Early-Data = "1"
 ~~~
 
 For example:
 
-~~~
+~~~ example
 GET /resource HTTP/1.0
 Host: example.com
 Early-Data: 1
+
 ~~~
 
 An intermediary that forwards a request received in TLS early data MUST send it
@@ -275,9 +276,7 @@ processing a request that might be replayed.
 
 Clients (user-agents and intermediaries) that sent the request in early data
 MUST automatically retry the request when receiving a 425 (Too Early)
-response status code. Such retries MUST NOT be sent in early data, and SHOULD
-NOT be sent if the TLS handshake on the original connection does not
-successfully complete.
+response status code. Such retries MUST NOT be sent in early data.
 
 Intermediaries that receive a 425 (Too Early) status code MAY automatically
 retry requests after allowing the handshake to complete unless the original
@@ -377,7 +376,7 @@ Reference:
 --- back
 
 # Acknowledgments
-
+{:numbered="false"}
 This document was not easy to produce.  The following people made substantial
 contributions to the quality and completeness of the document: Subodh Iyengar,
 Benjamin Kaduk, Ilari Liusavaara, Kazuho Oku, and Victor Vasiliev.

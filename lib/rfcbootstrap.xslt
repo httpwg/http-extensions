@@ -126,26 +126,24 @@
 
         <div class="container" id="top">
           <div class="row">
-            <div class="col-md-4 col-md-push-8 hidden-sm hidden-xs" role="navigation">
+            <div class="col-md-4 col-md-push-8 hidden-sm hidden-xs" id="sidebar" role="navigation">
               <div class="navbar">
                 <div class="navbar-brand">
                   <a href="#top">
                     <xsl:choose>
-                      <xsl:when test="/rfc/@ipr and not(/rfc/@number)">Internet-Draft</xsl:when>
-                      <xsl:otherwise><strong>RFC </strong> <xsl:value-of select="/rfc/@number"/></xsl:otherwise>
+                      <xsl:when test="/rfc/@number"><strong>RFC </strong><xsl:value-of select="/rfc/@number"/></xsl:when>
+                      <xsl:otherwise><xsl:value-of select="/rfc/@docName"/></xsl:otherwise>
                     </xsl:choose>
                   </a>
                 </div>
                 <br clear="all"/>
                 <div class="">
-                  <!-- xsl:if test="$xml2rfc-toc='yes'" -->
                     <xsl:apply-templates select="/" mode="toc" />
                     <!-- xsl:call-template name="insertTocAppendix" / -->
-                    <!-- /xsl:if -->
                 </div>
               </div>
             </div>
-            <div class="col-md-8 col-md-pull-4 main" role="main">
+            <div class="col-md-8 main" role="main">
               <xsl:apply-templates select="front" />
               <xsl:apply-templates select="middle" />
               <xsl:call-template name="back" />
@@ -175,8 +173,14 @@
         width: 40%;
         float: right
       }
-      #rfc\.toc > ul li {
+      #rfc\.toc > ul ul {
         list-style: none;
+      }
+      #sidebar {
+        position: fixed;
+        height: 90%;
+        overflow-y: auto;
+        font-size: 90%;
       }
       .container .nav-sublist {
         padding-left: 20px;
@@ -261,14 +265,14 @@
   <xsl:template match="abstract">
     <xsl:call-template name="check-no-text-content"/>
     <hr/>
-    <h2 id="{$anchor-pref}.abstract"><a href="#{$anchor-pref}.abstract">Abstract</a></h2>
+    <h2 id="{$anchor-pref}abstract"><a href="#{$anchor-pref}abstract">Abstract</a></h2>
     <div class="lead">
       <xsl:apply-templates />
     </div>
   </xsl:template>
 
   <xsl:template match="/" mode="toc">
-    <div id="{$anchor-pref}.toc">
+    <div id="{$anchor-pref}toc">
       <ul class="nav">
         <xsl:apply-templates mode="toc" />
       </ul>
