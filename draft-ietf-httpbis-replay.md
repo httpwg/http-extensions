@@ -304,12 +304,13 @@ target.
 ## Gateways and Early Data
 
 A gateway that forwards requests that were received in early data MUST only do
-so if it knows that the server that receives those requests understands the
-`Early-Data` header field and will correctly generate a 425 (Too Early) status
-code.  A gateway that isn't certain about server support SHOULD either delay
-forwarding the request until the TLS handshake completes, or send a 425 (Too
-Early) status code in response.  A gateway that is uncertain about whether an
-origin server supports the `Early-Data` header field SHOULD disable early data.
+so if it knows that the origin server that receives those requests understands
+the `Early-Data` header field and will correctly generate a 425 (Too Early)
+status code.  A gateway that isn't certain about origin server support SHOULD
+either delay forwarding the request until the TLS handshake with its client
+completes, or send a 425 (Too Early) status code in response.  A gateway that is
+uncertain about whether an origin server supports the `Early-Data` header field
+SHOULD disable early data.
 
 ## Consistent Handling of Early Data {#be-consistent}
 
