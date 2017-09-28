@@ -21,7 +21,7 @@ author:
  -
     ins: M. Nottingham
     name: Mark Nottingham
-    organization: Yes
+    organization: Fastly
     email: mnot@mnot.net
  -
     ins: W. Tarreau
