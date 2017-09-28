@@ -108,9 +108,8 @@ to mitigate the risks of replay:
 2. The server can choose whether it will process early data before the TLS
    handshake completes. By deferring processing, it can ensure that only a
    successfully completed connection is used for the request(s) therein.
-   Assuming that a replayed ClientHello will not result in additional
-   connections being made by the client, this provides the server with some
-   assurance that the early data was not replayed.
+   This provides the server with some assurance that the early data was not
+   replayed.
 
 3. If the server receives multiple requests in early data, it can determine
    whether to defer HTTP processing on a per-request basis. This may require
