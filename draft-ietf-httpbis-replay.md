@@ -253,9 +253,9 @@ Early-Data: 1
 
 An intermediary that forwards a request prior to the completion of the TLS
 handshake MUST send it with the `Early-Data` header field set to "1" (i.e., it
-adds it if not present in the request).  This is also true if the intermediary
-might have forwarded the request prior to handshake completion (see
-{{be-consistent}} for details).
+adds it if not present in the request).  An intermediary MUST use the
+`Early-Data` header field if it might have forwarded the request prior to
+handshake completion (see {{be-consistent}} for details).
 
 An intermediary MUST NOT remove this header field if it is present in a request.
 
