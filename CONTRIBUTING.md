@@ -43,7 +43,7 @@ discussion and their resolution.
 
 Before filing a new issue, please consider a few things:
 
-* Issues should be just that; issues with our deliverables, **not questions or support requests**.
+* Issues should be just that; issues with our deliverables, **not proposals, questions or support requests**.
 
 * Please review the issues list to make sure that you aren't filing a duplicate.
 
@@ -76,19 +76,13 @@ Issues will be labeled by the Chairs as either `editorial` or `design`:
 
 The `open` design issues in the issues list are those that we are currently or plan to discuss.
 When a design issue is `closed`, it implies that the issue's proposed resolution is reflected in
-the drafts.
+the draft; if a closed design issue is labeled with `has-consensus`, it means that the incorporated resolution has Working Group consensus.
 
-The editors can also propose resolutions to design issues for the group's consideration by
-incorporating them into the draft(s). When they do so, the issue will be closed and flagged with
-the `proposal` label.
+Design issues can be discussed on the mailing list or the issues list. The editors can also propose resolutions to design issues for the group's consideration by incorporating them into the draft(s).
 
-When a new draft is published, the design issues that have been closed since the last draft will be
-highlighted on the mailing list, to aid reviewers. 
+When a new draft is published, the design issues that have been closed since the last draft will be highlighted on the mailing list, to aid reviewers. Once consensus is confirmed, those issues will be labeled with `has-consensus`.
 
-If new information (in the judgement of the Chairs) about a decision comes to light, or there is an
-objection to a proposed resolution flagged with `proposal`, the issue will be reopened by the
-Chairs. If there is no objection, the `proposal` flag will be removed from those issues, to denote
-that their resolution has been accepted.
+Note that whether or not a design issue is closed does **not** reflect consensus of the Working Group; an issue's `open`/`closed` state is only used to organise our discussions. If you have a question or problem with an issue in the `closed` state, please comment on it (either in the issues list or mailing list), and we'll adjust its state accordingly. Note that reopening issues with `has-consensus` requires new information.
 
 
 ## Pull Requests
