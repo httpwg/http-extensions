@@ -236,16 +236,11 @@ attacker who possesses a valid certificate no longer needs to be on-path to redi
 them; instead of modifying DNS, they need only convince the user to visit another Web site in
 order to coalesce connections to the target onto their existing connection.
 
-As a result, clients opting not to consult DNS ought to employ some alternative means to increase
-confidence that the certificate is legitimate. Examples of mechanisms that can give additional
-confidence in a certificate include checking for a Signed Certificate Timestamp {{?RFC6929}} and
-performing certificate revocation checks.
-
-Clients opting not to consult DNS ought to do so only if they have a high degree of confidence that
-the certificate is legitimate. For instance, clients might skip consulting DNS only if they receive
-proof of inclusion in a Certificate Transparency log {{?RFC6929}} or they have a recent OCSP
-response {{?RFC6960}} (possibly using the "status_request" TLS extension {{?RFC6066}}) showing that
-the certificate was not revoked.
+As a result, clients opting not to consult DNS ought to employ some alternative means to establish
+a high degree of confidence that the certificate is legitimate. For example, clients might skip
+consulting DNS only if they receive proof of inclusion in a Certificate Transparency log
+{{?RFC6929}} or they have a recent OCSP response {{?RFC6960}} (possibly using the "status_request"
+TLS extension {{?RFC6066}}) showing that the certificate was not revoked.
 
 The Origin Set's size is unbounded by this specification, and thus could be used by attackers to
 exhaust client resources. To mitigate this risk, clients can monitor their state commitment and
