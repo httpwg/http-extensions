@@ -1,6 +1,6 @@
 ---
-title: The ORIGIN HTTP/2 Frame
-abbrev: ORIGIN Frames
+title: HTTP/2 Origin Control
+abbrev: HTTP/2 Origin Control
 docname: draft-ietf-httpbis-origin-frame-latest
 date: 2017
 category: std
@@ -34,8 +34,8 @@ informative:
 
 --- abstract
 
-This document specifies the ORIGIN frame for HTTP/2, to indicate what origins are available on a
-given connection.
+This document specifies a mechanism to indicate what origins are available on a given connection
+when using HTTP/2.
 
 --- note_Note_to_Readers
 
@@ -60,8 +60,8 @@ penalty of adding latency. To address that, this specification defines a new HTT
 
 Additionally, experience has shown that HTTP/2's requirement to establish server authority using
 both DNS and the server's certificate is onerous. This specification relaxes the requirement to
-check DNS when the ORIGIN frame is in use. Doing so has additional benefits, such as removing the
-latency associated with some DNS lookups.
+check DNS when the ORIGIN frame is in use, as indicated by the "ORIGIN_SUPPORT" setting. Doing so
+has additional benefits, such as removing the latency associated with some DNS lookups.
 
 
 ## Notational Conventions
@@ -70,6 +70,18 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted
 as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all
 capitals, as shown here.
+
+
+# The ORIGIN_SUPPORT HTTP/2 Setting {#setting}
+
+The ORIGIN_SUPPORT HTTP/2 setting {{!RFC7540}}, Section 6.5) indicate that a server
+desires the connection to be considered "opted in" to the behaviour described in this specification.
+
+The value of the ORIGIN_SUPPORT setting does not have any meaning. Note that support for this
+specification cannot be disabled once it is sent.
+
+ORIGIN_SUPPORT has no effect on servers, and MUST be ignored by them. Likewise, it MUST be ignored
+by clients who have configured a proxy.
 
 
 # The ORIGIN HTTP/2 Frame
@@ -114,12 +126,12 @@ define flags. See {{process}}.
 The ORIGIN frame is a non-critical extension to HTTP/2. Endpoints that do not support this frame
 can safely ignore it upon receipt.
 
-When received by an implementing client, it is used to initialise and manipulate the Origin Set
-(see {{set}}), thereby changing how the client establishes authority for origin servers (see
-{{authority}}).
+When received by an implementing client, it is used to manipulate the Origin Set (see {{set}}),
+thereby changing how the client establishes authority for origin servers (see {{authority}}).
 
-The origin frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST
-be ignored.
+The ORIGIN frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST
+be ignored. The ORIGIN frame MUST be ignored if the ORIGIN_SUPPORT setting ({{setting}} has not be
+received.
 
 Likewise, the ORIGIN frame is only valid on connections with the "h2" protocol identifier, or when
 specifically nominated by the protocol's definition; it MUST be ignored when received on a
@@ -148,16 +160,16 @@ See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 The set of origins (as per {{!RFC6454}}) that a given connection might be used for is known in this
 specification as the Origin Set.
 
-By default, the Origin Set for a connection is uninitialised. When an ORIGIN frame is first received
-and successfully processed by a client, the connection's Origin Set is defined to contain an initial
-origin.  The initial origin is composed from:
+By default, the Origin Set for a connection is uninitialised. When the ORIGIN setting ({{setting}})
+is received by a client, the connection's Origin Set is defined to contain an initial origin. The
+initial origin is composed from:
 
   - Scheme: "https"
   - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}}, Section 3), converted to lower case
   - Port: the remote port of the connection (i.e., the server's port)
 
-The contents of that ORIGIN frame (and subsequent ones) allows the server to incrementally add new
-origins to the Origin Set, as described in {{process}}.
+The contents of subsequent ORIGIN frames allow the server to incrementally add new origins to the
+Origin Set, as described in {{process}}.
 
 The Origin Set is also affected by the 421 (Misdirected Request) response status code, defined in
 {{!RFC7540}}, Section 9.1.2. Upon receipt of a response with this status code, implementing clients
@@ -166,19 +178,19 @@ Section 6.2) and remove it from the connection's Origin Set, if present.
 
 Note:
 
-: When sending an ORIGIN frame to a connection that is initialised as an Alternative Service
+: When sending an ORIGIN setting on a connection that is initialised as an Alternative Service
   {{?RFC7838}}, the initial origin set ({{set}}) will contain an origin with the appropriate
   scheme and hostname (since Alternative Services specifies that the origin's hostname be sent
   in SNI). However, it is possible that the port will be different than that of the intended
   origin, since the initial origin set is calculated using the actual port in use, which can be
   different for the alternative service. In this case, the intended origin needs to be sent in
-  the ORIGIN frame explicitly.
+  a subsequent ORIGIN frame explicitly.
 
 : For example, a client making requests for "https://example.com" is directed to an alternative
   service at ("h2", "x.example.net", "8443").  If this alternative service sends an ORIGIN
-  frame, the initial origin will be "https://example.com:8443".  The client will not be able to
+  setting, the initial origin will be "https://example.com:8443".  The client will not be able to
   use the alternative service to make requests for "https://example.com" unless that origin is
-  explicitly included in the ORIGIN frame.
+  explicitly included in an ORIGIN frame.
 
 
 ## Authority, Push and Coalescing with ORIGIN {#authority}
@@ -193,11 +205,11 @@ authoritative, both for direct responses to requests and for server push (see {{
 generally only send requests on connections that they believe to be authoritative for the origin in
 question.
 
-Once an Origin Set has been initialised for a connection, clients that implement this specification
-use it to help determine what the connection is authoritative for. Specifically, such clients MUST
-NOT consider a connection to be authoritative for an origin not present in the Origin Set, and
-SHOULD use the connection for all requests to origins in the Origin Set for which the connection is
-authoritative, unless there are operational reasons for opening a new connection.
+Once ORIGIN_SUPPORT has been received on a connection, clients that implement this specification
+use the Origin Set to help determine what the connection is authoritative for. Specifically, such
+clients MUST NOT consider a connection to be authoritative for an origin not present in the Origin
+Set, and SHOULD use the connection for all requests to origins in the Origin Set for which the
+connection is authoritative, unless there are operational reasons for opening a new connection.
 
 Note that for a connection to be considered authoritative for a given origin, the client is still
 required to obtain a certificate that passes suitable checks; see Section 9.1.1 of {{!RFC7540}}
@@ -225,6 +237,13 @@ This specification adds an entry to the "HTTP/2 Frame Type" registry.
 * Code: 0xc
 * Specification: [this document]
 
+This specification adds an entry to the "HTTP/2 Settings" registry.
+
+* Name: ORIGIN_SUPPORT
+* Code: assign_me
+* Initial Value: (any value)
+* Specification: [this document]
+
 
 # Security Considerations {#sc}
 
@@ -249,15 +268,19 @@ close the connection if it is too high.
 --- back
 
 
-# Non-Normative Processing Algorithm {#algo}
+# Non-Normative Processing Algorithms {#algo}
+
+The following algorithm illustrates how a client could handle received ORIGIN_SUPPORT settings:
+
+1. Initialise the Origin Set as per {{set}}.
 
 The following algorithm illustrates how a client could handle received ORIGIN frames:
 
-1. If the client is configured to use a proxy for the connection, ignore the frame and stop processing.
-2. If the connection is not identified with the "h2" protocol identifier or another protocol that has explicitly opted into this specification, ignore the frame and stop processing.
-3. If the frame occurs upon any stream except stream 0, ignore the frame and stop processing.
-4. If any of the flags 0x1, 0x2, 0x4 or 0x8 are set, ignore the frame and stop processing.
-5. If no previous ORIGIN frame on the connection has reached this step, initialise the Origin Set as per {{set}}.
+1. If the client has not received an ORIGIN_SUPPORT setting on the connection, ignore the frame and stop processing.
+2. If the client is configured to use a proxy for the connection, ignore the frame and stop processing.
+3. If the connection is not identified with the "h2" protocol identifier or another protocol that has explicitly opted into this specification, ignore the frame and stop processing.
+4. If the frame occurs upon any stream except stream 0, ignore the frame and stop processing.
+5. If any of the flags 0x1, 0x2, 0x4 or 0x8 are set, ignore the frame and stop processing.
 6. For each `Origin-Entry` in the frame payload:
    1. Parse `ASCII-Origin` as an ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) and let the result be `parsed_origin`. If parsing fails, skip to the next `Origin-Entry`.
    5. Add `parsed_origin` to the Origin Set.
@@ -270,15 +293,15 @@ The set of origins advertised using this mechanism is under control of the serve
 obligated to use it, or to advertise all origins which they might be able to answer a request for.
 
 For example, it can be used to inform the client that the connection is to only be used for the
-SNI-based origin, by sending an empty ORIGIN frame. Or, a larger number of origins can be indicated
-by including a payload.
+SNI-based origin, by sending only an ORIGIN_SUPPORT setting. Or, a larger number of origins can be
+indicated by including one or more ORIGIN frames as well.
 
 Generally, this information is most useful to send before sending any part of a response that might
 initiate a new connection; for example, `Link` header fields {{?RFC5988}} in a response HEADERS, or links
 in the response body.
 
-Therefore, the ORIGIN frame ought be sent as soon as possible on a connection, ideally before any
-HEADERS or PUSH_PROMISE frames.
+Therefore, the ORIGIN_SUPPORT setting and any ORIGIN frames ought be sent as soon as possible on a
+connection, ideally before any HEADERS or PUSH_PROMISE frames.
 
 However, if it's desirable to associate a large number of origins with a connection, doing so might
 introduce end-user perceived latency, due to their size. As a result, it might be necessary to
