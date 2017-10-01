@@ -1,6 +1,8 @@
 # Contributing to HTTP
 
-Before submitting feedback, please familiarize yourself with our current issues list,
+Anyone can contribute to HTTP; you don't have to join the Working Group, because there is no "membership" -- anyone who participates in the work, as outlined below, is part of the HTTP Working Group.
+
+Before doing so, it's a good idea to familiarize yourself with our current issues list,
 [charter](https://datatracker.ietf.org/wg/httpbis/about/), and [working group home
 page](https://httpwg.github.io/). If you're new to this, you may also want to read the [Tao of the
 IETF](https://www.ietf.org/tao.html).
