@@ -439,7 +439,7 @@ treat such hosts as Known Expect-CT hosts.
 
 If a connection to a Known CT Host violates the UA's CT policy (i.e. the
 connection is not CT-qualified), and if the Known Expect-CT Host's Expect-CT
->data indicates an `enforce` configuration, the UA MUST treat the CT
+metadata indicates an `enforce` configuration, the UA MUST treat the CT
 compliance failure as a non-recoverable error.
 
 If a connection to a Known CT Host violates the UA's CT policy, and if the Known
