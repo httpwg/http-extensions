@@ -8,6 +8,7 @@ area: Applications and Real-Time
 workgroup: HTTP
 ipr: trust200902
 
+stand_alone: yes
 pi: [toc, sortrefs, symrefs]
 
 author:
@@ -17,6 +18,40 @@ author:
     org: Google
     email: estark@google.com
 
+
+normative:
+  FETCH:
+    target: https://fetch.spec.whatwg.org/
+    title: Fetch
+    author:
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
+  HTML:
+    target: https://html.spec.whatwg.org/
+    title: HTML
+    author:
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+      organization: Google, Inc.
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+      organization: Opera
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+      organization: Opera
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+      organization: Google, Inc.
 
 --- abstract
 
@@ -46,8 +81,9 @@ code and issues list for this draft can be found at
 # Introduction
 
 This document defines a new HTTP header that enables UAs to identify web hosts
-that expect the presence of Signed Certificate Timestamps (SCTs) {{!RFC6962}} in
-future Transport Layer Security (TLS) {{!RFC5246}} connections.
+that expect the presence of Signed Certificate Timestamps (SCTs)
+{{!I-D.ietf-trans-rfc6962-bis}} in future Transport Layer Security (TLS)
+{{!RFC5246}} connections.
 
 Web hosts that serve the Expect-CT HTTP header are noted by the UA as Known
 Expect-CT Hosts. The UA evaluates each connection to a Known Expect-CT Host for
@@ -99,6 +135,10 @@ CT-qualified
 
 CT Policy
   : See Certificate Transparency Policy.
+  
+Effective Expect-CT Date
+  : is the time at which a UA observed a valid Expect-CT header for a given
+  host.
 
 Expect-CT Host
   : See HTTP Expect-CT Host.
@@ -120,7 +160,7 @@ Known Expect-CT Host
 UA
   : is an acronym for "user agent". For the purposes of this specification, a UA
   is an HTTP client application typically actively manipulated by a user
-  {{!RFC2616}}.
+  {{!RFC7230}}.
 
 Unknown Expect-CT Host
   : is an Expect-CT Host that the UA has not noted.
@@ -135,20 +175,20 @@ connections to the host emitting the header for CT compliance
 ({{expect-ct-compliance}}).
 
 {{expect-ct-syntax}} describes the syntax (Augmented Backus-Naur Form) of the header field,
-using the grammar defined in RFC 5234 {{!RFC5234}} and the rules defined in
-Section 3.2 of RFC 7230 {{!RFC7230}}.
+using the grammar defined in {{!RFC5234}} and the rules defined in
+Section 3.2 of {{!RFC7230}}.
 
 ~~~ abnf
-Expect-CT-Directives = directive *( OWS ";" OWS directive )
-directive            = directive-name [ "=" directive-value ]
-directive-name       = token
-directive-value      = token / quoted-string
+Expect-CT           = #expect-ct-directive
+expect-ct-directive = directive-name [ "=" directive-value ]
+directive-name      = token
+directive-value     = token / quoted-string
 ~~~
 {: #expect-ct-syntax title="Syntax of the Expect-CT header field"}
 
-Optional white space (`OWS`) is used as defined in Section 3.2.3 of RFC 7230
+Optional white space (`OWS`) is used as defined in Section 3.2.3 of 
 {{!RFC7230}}. `token` and `quoted-string` are used as defined in Section 3.2.6
-of RFC 7230 {{!RFC7230}}.
+of {{!RFC7230}}.
 
 The directives defined in this specification are described below. The overall
 requirements for directives are:
@@ -186,7 +226,7 @@ report-uri-value = absolute-URI
 ~~~
 {: #reporturi-syntax title="Syntax of the report-uri directive value"}
 
-`absolute-URI` is defined in Section 4.3 of RFC 3986 {{!RFC3986}}.
+`absolute-URI` is defined in Section 4.3 of {{!RFC3986}}.
 
 Hosts may set `report-uri`s that use HTTP or HTTPS. If the scheme in the
 `report-uri` is one that uses TLS (e.g., HTTPS), UAs MUST check Expect-CT
@@ -237,7 +277,20 @@ delta-seconds = 1*DIGIT
 ~~~
 {: #maxage-syntax title="Syntax of the max-age directive value"}
 
-`delta-seconds` is used as defined in Section 1.2.1 of RFC 7234 {{!RFC7234}}.
+`delta-seconds` is used as defined in Section 1.2.1 of {{!RFC7234}}.
+
+### Examples
+
+The following examples demonstrate valid Expect-CT response header fields:
+
+~~~ inline
+Expect-CT: max-age=86400,enforce
+
+Expect-CT: max-age=86400, enforce, report-uri="https://foo.example/report"
+
+Expect-CT: max-age=86400,report-uri="https://foo.example/report"
+~~~
+{: #example-header-fields title="Examples of valid Expect-CT response header fields"}
 
 ## Server Processing Model
 
@@ -305,20 +358,33 @@ and the UA has not already sent an Expect-CT report for this connection, then
 the UA SHOULD send a report to the specified `report-uri` as specified in
 {{reporting-expect-ct-failure}}.
 
-If a UA receives more than one Expect-CT header field in an HTTP response
-message over secure transport, then the UA MUST process only the first Expect-CT
-header field.
-
 The UA MUST ignore any Expect-CT header field not conforming to the grammar
 specified in {{response-header-field-syntax}}.
 
-### Noting an Expect-CT Host - Storage Model
+### HTTP-Equiv \<meta\> Element Attribute
 
-The "effective Expect-CT date" of a Known Expect-CT Host is the time that the UA
-observed a valid Expect-CT header for the host. The "effective expiration date"
-of a Known Expect-CT Host is the effective Expect-CT date plus the max-age. An
-Expect-CT Host is "expired" if the effective expiration date refers to a date in
-the past. The UA MUST ignore any expired Expect-CT Hosts in its cache.
+UAs MUST NOT heed `http-equiv="Expect-CT"` attribute settings on `<meta>`
+elements {{!W3C.REC-html51-20161101}} in received content.
+
+### Noting Expect-CT {#noting-expect-ct}
+
+Upon receipt of the Expect-CT response header field over an error-free TLS
+connection (including the validation adding in {{expect-ct-compliance}}), the UA
+MUST note the host as a Known Expect-CT Host, storing the host's domain name and
+its associated Expect-CT directives in non-volatile storage. The domain name and
+associated Expect-CT directives are collectively known as "Expect-CT metadata".
+
+To note a host as a Known Expect-CT Host, the UA MUST set its Expect-CT metadata
+given in the most recently received valid Expect-CT header, as specified in
+{{storage-model}}.
+
+For forward compatibility, the UA MUST ignore any unrecognized Expect-CT header
+directives, while still processing those directives it does
+recognize. {{response-header-field-syntax}} specifies the directives `enforce`,
+`max-age`, and `report-uri`, but future specifications and implementations might
+use additional directives.
+
+### Storage Model {#storage-model}
 
 Known Expect-CT Hosts are identified only by domain names, and never IP
 addresses. If the substring matching the host production from the Request-URI
@@ -333,8 +399,9 @@ cache. The UA caches:
 
 - the Expect-CT Host's domain name,
 - whether the `enforce` directive is present
-- the effective expiration date, or enough information to calculate it (the
-  effective Expect-CT date and the value of the `max-age` directive),
+- the Effective Expiration Date, which is the Effective Expect-CT Date plus the
+  value of the `max-age` directive. Alternatively, the UA MAY cache enough
+  information to calculate the Effective Expiration Date.
 - the value of the `report-uri` directive, if present.
 
 If any other metadata from optional or future Expect-CT header directives are
@@ -346,35 +413,10 @@ erroneous Expect-CT hosts (whether by accident or due to attack) have some
 chance of recovering over time.  If the server sets a max-age greater than the
 UA's upper limit, the UA MAY behave as if the server set the max-age to the UA's
 upper limit.  For example, if the UA caps max-age at 5,184,000 seconds (60
-days), and a Pinned Host sets a max- age directive of 90 days in its Expect-CT
-header, the UA MAY behave as if the max-age were effectively 60 days. (One way
-to achieve this behavior is for the UA to simply store a value of 60 days
-instead of the 90-day value provided by the Expect-CT host.)
-
-### HTTP-Equiv \<meta\> Element Attribute
-
-UAs MUST NOT heed `http-equiv="Expect-CT"` attribute settings on `<meta>`
-elements {{!W3C.REC-html51-20161101}} in received content.
-
-## Noting Expect-CT {#noting-expect-ct}
-
-Upon receipt of the Expect-CT response header field, the UA notes the host as a
-Known Expect-CT Host, storing the host's domain name and its associated
-Expect-CT directives in non-volatile storage. The domain name and associated
-Expect-CT directives are collectively known as "Expect-CT metadata".
-
-The UA MUST note a host as a Known Expect-CT Host if and only if it received the
-Expect-CT response header field over an error-free TLS connection, including the
-validation added in {{expect-ct-compliance}}.
-
-To note a host as a Known Expect-CT Host, the UA MUST set its Expect-CT metadata
-given in the most recently received valid Expect-CT header.
-
-For forward compatibility, the UA MUST ignore any unrecognized Expect-CT header
-directives, while still processing those directives it does
-recognize. {{response-header-field-syntax}} specifies the directives `enforce`,
-`max-age`, and `report-uri`, but future specifications and implementations might
-use additional directives.
+days), and an Expect-CT Host sets a max- age directive of 90 days in its
+Expect-CT header, the UA MAY behave as if the max-age were effectively 60
+days. (One way to achieve this behavior is for the UA to simply store a value of
+60 days instead of the 90-day value provided by the Expect-CT host.)
 
 ## Evaluating Expect-CT Connections for CT Compliance {#expect-ct-compliance}
 
@@ -391,9 +433,13 @@ according to local policy. For example, a UA may disable CT compliance checks
 for hosts whose validated certificate chain terminates at a user-defined trust
 anchor, rather than a trust anchor built-in to the UA (or underlying platform).
 
+An Expect-CT Host is "expired" if the effective expiration date refers to a date
+in the past. The UA MUST ignore any expired Expect-CT Hosts in its cache and not
+treat such hosts as Known Expect-CT hosts.
+
 If a connection to a Known CT Host violates the UA's CT policy (i.e. the
 connection is not CT-qualified), and if the Known Expect-CT Host's Expect-CT
-metadata indicates an `enforce` configuration, the UA MUST treat the CT
+>data indicates an `enforce` configuration, the UA MUST treat the CT
 compliance failure as a non-recoverable error.
 
 If a connection to a Known CT Host violates the UA's CT policy, and if the Known
@@ -419,105 +465,88 @@ is not CT-qualified, if the UA has not already sent an Expect-CT report for this
 connection, then the UA SHOULD report Expect-CT failures to the configured
 `report-uri`, if any.
 
-## Generating a violation report
+## Generating a violation report {#generating-a-violation-report}
 
-To generate a violation report object, the UA constructs a JSON message of the
-following form:
+To generate a violation report object, the UA constructs a JSON object with the
+following keys and values:
 
-~~~ inline
-{
-  "date-time": date-time,
-  "hostname": hostname,
-  "port": port,
-  "effective-expiration-date": expiration-date,
-  "served-certificate-chain": [ (MUST be in the order served)
-    pem1, ... pemN
-  ],
-  "validated-certificate-chain": [
-    pem1, ... pemN
-  ],
-  "scts": [
-    sct1, ... sctN
-  ]
-}
-~~~
-{: #violation-report-object title="JSON format of a violation report object"}
+* "date-time": the value for this key indicates the time the UA observed the CT
+compliance failure. The value is a string formatted according to Section 5.6,
+"Internet Date/Time Format", of {{!RFC3339}}.
 
-Whitespace outside of quoted strings is not significant.  The key/value pairs
-may appear in any order, but each MUST appear only once.
+* "hostname": the value is the hostname to which the UA made the original
+request that failed the CT compliance check. The value is provided as a string.
 
-The `date-time` indicates the time the UA observed the CT compliance failure.
-It is provided as a string formatted according to Section 5.6, "Internet
-Date/Time Format", of {{!RFC3339}}.
+* "port": the value is the port to which the UA made the original request that
+failed the CT compliance check. The value is provided as an integer.
 
-The `hostname` is the hostname to which the UA made the original request that
-failed the CT compliance check. It is provided as a string.
+* "effective-expiration-date": the value indicates the Effective Expiration Date
+(see {{storage-model}}) for the Expect-CT Host that failed the CT compliance
+check. The value is provided as a string formatted according to Section 5.6  of {{!RFC3339}}
+("Internet Date/Time Format").
 
-The `port` is the port to which the UA made the original request that failed the
-CT compliance check. It is provided as an integer.
+* "served-certificate-chain": the value is the certificate chain as served by
+the Expect-CT Host during TLS session setup. The value is provided as an array
+of strings, which MUST appear in the order that the certificates were served;
+each string in the array is the Privacy-Enhanced Mail (PEM) representation of
+each X.509 certificate as described in {{!RFC7468}}.
 
-The `effective-expiration-date` is the Effective Expiration Date for the
-Expect-CT Host that failed the CT compliance check.  It is provided as a string
-formatted according to Section 5.6, "Internet Date/Time Format", of 
-{{!RFC3339}}.
+* "validated-certificate-chain": the value is the certificate chain as
+constructed by the UA during certificate chain verification. (This may differ
+from the value of the "served-certificate-chain" key.) The value is provided as
+an array of strings, which MUST appear in the order matching the chain that the
+UA validated; each string in the array is the Privacy-Enhanced Mail (PEM)
+representation of each X.509 certificate as described in {{!RFC7468}}.
 
-The `served-certificate-chain` is the certificate chain, as served by the
-Expect-CT Host during TLS session setup.  It is provided as an array of strings,
-which MUST appear in the order that the certificates were served; each string
-`pem1`, ... `pemN` is the Privacy-Enhanced Mail (PEM) representation of each
-X.509 certificate as described in {{!RFC7468}}.
-
-The `validated-certificate-chain` is the certificate chain, as constructed by
-the UA during certificate chain verification. (This may differ from the
-`served-certificate-chain`.) It is provided as an array of strings, which MUST
-appear in the order matching the chain that the UA validated; each string
-`pem1`, ... `pemN` is the Privacy-Enhanced Mail (PEM) representation of each
-X.509 certificate as described in {{!RFC7468}}.
-
-The `scts` are JSON messages representing the SCTs (if any) that the UA received
-for the Expect-CT host and their validation statuses. The format of `sct1`,
-... `sctN` is shown in {{sct-json-format}}. The SCTs may appear in any order.
-
-~~~ inline
-{
-  "sct": sct,
-  "status": status,
-  "source": source
-}
-~~~
-{: #sct-json-format title="JSON format of an SCT object"}
-
-The `sct` is as defined in Section 4.1 of RFC 6962 {{!RFC6962}}.
-
-The `status` is a string that the UA MUST set to one of the following values:
-"unknown" (indicating that the UA does not have or does not trust the public key
-of the log from which the SCT was issued), "valid" (indicating that the UA
-successfully validated the SCT as described in Section 5.2 of {{!RFC6962}}), or
-"invalid" (indicating that the SCT validation failed because of, e.g., a bad
-signature).
-
-The `source` is a string that indicates from where the UA obtained the SCT, as
-defined in Section 3.3 of {{!RFC6962}}. The UA MUST set `source` to one
-of the following values: "tls-extension", "ocsp", or "embedded".
+* "scts": the value represents the SCTs (if any) that the UA received for the
+Expect-CT host and their validation statuses. The value is provided as an array
+of JSON objects. The SCTs may appear in any order. Each JSON object in the array
+has the following keys:
+  * A "version" key, with an integer value. The UA MUST set this value to `1` if
+    the SCT is in the format defined in Section 3.2 of {{!RFC6962}} and `2` if
+    it is in the format defined in Section 4.6 of
+    {{!I-D.ietf-trans-rfc6962-bis}}.
+  * The "status" key, with a string value that the UA MUST set to one of the
+    following values: "unknown" (indicating that the UA does not have or does
+    not trust the public key of the log from which the SCT was issued), "valid"
+    (indicating that the UA successfully validated the SCT as described in
+    Section 5.2 of {{!RFC6962}} or Section 8.2.3 of
+    {{!I-D.ietf-trans-rfc6962-bis}}), or "invalid" (indicating that the SCT
+    validation failed because of, e.g., a bad signature).
+  * The "source" key, with a string value that indicates from where the UA
+    obtained the SCT, as defined in Section 3 or {{!RFC6962}} and Section 6 of
+    {{!I-D.ietf-trans-rfc6962-bis}}. The UA MUST set the value to one of
+    "tls-extension", "ocsp", or "embedded".
+  * The "serialized_sct" key, with a string value. If the value of the "version"
+    key is `1`, the UA MUST set this value to the base64 encoded {{!RFC4648}}
+    serialized `SignedCertificateTimestamp` structure from Section 3.2 of
+    {{!RFC6962}}. If the value of the "version" key is `2`, the UA MUST set this
+    value to the base64 encoded {{!RFC4648}} serialized `TransItem` structure
+    representing the SCT, as defined in Section 4.6 of
+    {{!I-D.ietf-trans-rfc6962-bis}}.
 
 ## Sending a violation report
 
-When an Expect-CT header field contains the `report-uri` directive, and the
-connection does not comply with the UA's CT Policy, or when the UA connects to a
-Known Expect-CT Host with Expect-CT metadata that contains a `report-uri`, the
-UA SHOULD report the failure as follows:
+The UA SHOULD report an Expect-CT failure when a connection to a Known Expect-CT
+Host does not comply with the UA's CT Policy and the host's Expect-CT metadata
+contains a `report-uri`. Additionally, the UA SHOULD report an Expect-CT failure
+when it receives an Expect-CT header field which contains the `report-uri`
+directive over a connection that does not comply with the UA's CT Policy.
+
+The steps to report an Expect-CT failure are as follows.
 
 1. Prepare a JSON object `report object` with the single key `expect-ct-report`,
    whose value is the result of generating a violation report object as
-   described in {{violation-report-object}}.
+   described in {{generating-a-violation-report}}.
 2. Let `report body` by the JSON stringification of `report object`.
 3. Let `report-uri` be the value of the `report-uri` directive in the Expect-CT
    header field.
-3. [Queue a task](https://html.spec.whatwg.org/#queue-a-task) to
-   [fetch](https://fetch.spec.whatwg.org/#fetching) `report-uri`, with the
-   synchronous flag not set, using HTTP method `POST`, with a `Content-Type`
-   header field of `application/expect-ct-report`, and an entity body consisting
-   of `report body`.
+4. Send an HTTP POST request to `report-uri` with a `Content-Type` header field
+   of `application/expect-ct-report+json`, and an entity body consisting of
+   `report body`.
+
+The UA MAY perform other operations as part of sending the HTTP POST request,
+for example sending a CORS preflight as part of {{FETCH}}.
 
 # Security Considerations
 
@@ -536,11 +565,12 @@ connections.
 
 Site operators could themselves only cure this situation by one of:
 reconfiguring their web server to transmit SCTs using the TLS extension defined
-in Section 3.3 of {{!RFC6962}}, obtaining a certificate from an alternative
-certificate authority which provides SCTs by one of the other methods, or by
-waiting for the user agents' persisted notation of this as an Expect-CT host to
-reach its `max-age`. User agents may choose to implement mechanisms for users to
-cure this situation, as noted in {{usability-considerations}}.
+in Section 6.5 of {{!I-D.ietf-trans-rfc6962-bis}}, obtaining a certificate from
+an alternative certificate authority which provides SCTs by one of the other
+methods, or by waiting for the user agents' persisted notation of this as an
+Expect-CT host to reach its `max-age`. User agents may choose to implement
+mechanisms for users to cure this situation, as noted in
+{{usability-considerations}}.
 
 ## Maximum max-age
 
@@ -600,3 +630,33 @@ TBD
 When the UA detects a Known Expect-CT Host in violation of the UA's CT Policy,
 users will experience denials of service. It is advisable for UAs to explain the
 reason why.
+
+# Authoring Considerations {#authoring-considerations}
+
+## HTTP Header
+
+Expect-CT could be specified as a TLS extension or X.509 certificate extension
+instead of an HTTP response header. Using an HTTP header as the mechanism for
+Expect-CT introduces a layering mismatch: for example, the software that
+terminates TLS and validates Certificate Transparency information might know
+nothing about HTTP. Nevertheless, an HTTP header was chosen primarily for ease
+of deployment. In practice, deploying new certificate extensions requires
+certificate authorities to support them, and new TLS extensions require server
+software updates, including possibly to servers outside of the site owner's
+direct control (such as in the case of a third-party CDN). Ease of deployment is
+a high priority for Expect-CT because it is intended as a temporary transition
+mechanism for user agents that are transitioning to universal Certificate
+Transparency requirements.
+
+# Changes
+
+## Since -01
+
+* Change SCT reporting format to support both RFC 6962 and 6962-bis SCTs.
+
+## Since -00
+
+* Editorial changes
+* Change Content-Type header of reports to 'application/expect-ct-report+json'
+* Update header field syntax to match convention (issue #327)
+* Reference RFC 6962-bis instead of RFC 6962

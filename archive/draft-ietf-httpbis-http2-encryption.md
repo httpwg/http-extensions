@@ -1,6 +1,6 @@
 ---
-title: Opportunistic Security for HTTP
-abbrev: Opportunistic HTTP Security
+title: Opportunistic Security for HTTP/2
+abbrev: Opportunistic HTTP/2 Security
 docname: draft-ietf-httpbis-http2-encryption-latest
 date: 2017
 category: exp
@@ -48,32 +48,26 @@ informative:
 
 --- abstract
 
-This document describes how `http` URIs can be accessed using Transport Layer Security (TLS) to
-mitigate pervasive monitoring attacks.
+This document describes how `http` URIs can be accessed using Transport Layer Security (TLS) and
+HTTP/2 to mitigate pervasive monitoring attacks. This mechanism not a replacement for `https` URIs;
+it is vulnerable to active attacks.
 
---- note_Note_to_Readers
-
-Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org),
-which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <http://httpwg.github.io/>; source code and issues list
-for this draft can be found at <https://github.com/httpwg/http-extensions/labels/opp-sec>.
 
 --- middle
 
 # Introduction
 
-This document describes a use of HTTP Alternative Services {{RFC7838}} to decouple
-the URI scheme from the use and configuration of underlying encryption, allowing a `http` URI
-{{RFC7230}} to be accessed using Transport Layer Security (TLS) {{RFC5246}} opportunistically.
+This document describes a use of HTTP Alternative Services {{RFC7838}} to decouple the URI scheme
+from the use and configuration of underlying encryption.  It allows an `http` URI to be accessed
+using HTTP/2 {{RFC7230}} and Transport Layer Security (TLS) {{RFC5246}} with Opportunistic
+Security {{RFC7435}}.
 
-Serving `https` URIs requires avoiding Mixed Content {{W3C.CR-mixed-content-20160802}}, which is
-problematic in many deployments. This document describes a usage model whereby sites can serve
-`http` URIs over TLS, thereby avoiding these issues, while still providing protection against
-passive attacks.
+This document describes a usage model whereby sites can serve `http` URIs over TLS, thereby
+avoiding the problem of serving Mixed Content (described in {{W3C.CR-mixed-content-20160802}})
+while still providing protection against passive attacks.
 
-Opportunistic Security {{RFC7435}} does not provide the same guarantees as using TLS with `https`
-URIs; it is vulnerable to active attacks, and does not change the security context of the
+Opportunistic Security does not provide the same guarantees as using TLS with `https` URIs,
+because it is vulnerable to active attacks, and does not change the security context of the
 connection. Normally, users will not be able to tell that it is in use (i.e., there will be no
 "lock icon").
 
@@ -89,7 +83,7 @@ trivial administrative effort to configure.
 
 Preventing active attacks (such as a Man-in-the-Middle) is a non-goal for this specification.
 Furthermore, this specification is not intended to replace or offer an alternative to `https`, since
-it both prevents active attacks and invokes a more stringent security model in most clients.
+`https` both prevents active attacks and invokes a more stringent security model in most clients.
 
 ## Notational Conventions
 
@@ -228,9 +222,9 @@ This specification registers a Well-Known URI {{RFC5785}}:
 
 ## Security Indicators
 
-User Agents MUST NOT provide any special security indicia when an `http` resource is acquired using
-TLS. In particular, indicators that might suggest the same level of security as `https` MUST NOT be
-used (e.g., a "lock device").
+User Agents MUST NOT provide any special security indicators when an `http` resource is acquired
+using TLS. In particular, indicators that might suggest the same level of security as `https` MUST
+NOT be used (e.g., a "lock device").
 
 
 ## Downgrade Attacks {#downgrade}
@@ -266,8 +260,8 @@ Any security decisions based upon this information could be misled by the deploy
 specification, because it violates the assumption that the use of TLS (or port 443) means that the
 client is accessing a HTTPS URI, and operating in the security context implied by HTTPS.
 
-Therefore, servers need to carefully examine the use of such signals before deploying this
-specification.
+Therefore, server implementers and administrators need to carefully examine the use of such signals
+before deploying this specification.
 
 
 ## Server Controls

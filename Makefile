@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -l
 kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=https://xml2rfc.tools.ietf.org/public/rfc kramdown-rfc2629
 
-names := http2-encryption rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable expect-ct early-hints
+names := rfc6265bis key client-hints origin-frame cache-digest header-structure expect-ct early-hints rand-access-live replay
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := opsec rfc5987bis rfc6265bis key client-hints encryption-encoding cookie-prefixes cookie-alone origin-frame cookie-same-site cache-digest header-structure immutable expect-ct early-hints
+friendly_names := rfc6265bis key client-hints origin-frame cache-digest header-structure expect-ct early-hints rand-access-live replay
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
@@ -36,12 +36,6 @@ clean:
 	-rm -f $(addsuffix *-[0-9][0-9].xml,$(drafts))
 	-rm -f $(addsuffix *.html,$(drafts))
 
-opsec.%: draft-ietf-httpbis-http2-encryption.%
-	cp -f $< $@
-
-rfc5987bis.%: draft-ietf-httpbis-rfc5987bis.%
-	cp -f $< $@
-
 rfc6265bis.%: draft-ietf-httpbis-rfc6265bis.%
 	cp -f $< $@
 
@@ -51,19 +45,7 @@ key.%: draft-ietf-httpbis-key.%
 client-hints.%: draft-ietf-httpbis-client-hints.%
 	cp -f $< $@
 
-encryption-encoding.%: draft-ietf-httpbis-encryption-encoding.%
-	cp -f $< $@
-
-cookie-prefixes.%: draft-ietf-httpbis-cookie-prefixes.%
-	cp -f $< $@
-
-cookie-alone.%: draft-ietf-httpbis-cookie-alone.%
-	cp -f $< $@
-
 origin-frame.%: draft-ietf-httpbis-origin-frame.%
-	cp -f $< $@
-
-cookie-same-site.%: draft-ietf-httpbis-cookie-same-site.%
 	cp -f $< $@
 
 cache-digest.%: draft-ietf-httpbis-cache-digest.%
@@ -72,13 +54,16 @@ cache-digest.%: draft-ietf-httpbis-cache-digest.%
 header-structure.%: draft-ietf-httpbis-header-structure.%
 	cp -f $< $@
 
-immutable.%: draft-ietf-httpbis-immutable.%
-	cp -f $< $@
-
 expect-ct.%: draft-ietf-httpbis-expect-ct.%
 	cp -f $< $@
 
 early-hints.%: draft-ietf-httpbis-early-hints.%
+	cp -f $< $@
+
+rand-access-live.%: draft-ietf-httpbis-rand-access-live.%
+	cp -f $< $@
+
+replay.%: draft-ietf-httpbis-replay.%
 	cp -f $< $@
 
 define makerule_submit_xml =
@@ -94,8 +79,14 @@ $(foreach rule,$(submit_deps),$(eval $(call makerule_submit_xml,$(rule))))
 $(addsuffix .txt,$(next)): %.txt: %.xml
 	$(xml2rfc) $< $@
 
+draft-ietf-httpbis-rand-access-live.txt: draft-ietf-httpbis-rand-access-live.xml
+	$(xml2rfc) --text draft-ietf-httpbis-rand-access-live.xml
+
 %.txt: %.redxml
 	$(xml2rfc) $< $@
+
+draft-ietf-httpbis-rand-access-live.html: draft-ietf-httpbis-rand-access-live.xml
+	$(xml2rfc) --html draft-ietf-httpbis-rand-access-live.xml
 
 stylesheet := lib/rfcbootstrap.xslt
 %.html: %.xml $(stylesheet) $(extra_css)

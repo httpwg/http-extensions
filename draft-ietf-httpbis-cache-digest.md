@@ -2,7 +2,7 @@
 title: Cache Digests for HTTP/2
 docname: draft-ietf-httpbis-cache-digest-latest
 date: 2017
-category: std
+category: exp
 
 ipr: trust200902
 area: Applications and Real-Time
@@ -37,6 +37,8 @@ normative:
   RFC7540:
 
 informative:
+  RFC4648:
+  RFC5234:
   RFC6265:
   Rice:
     title: Adaptive variable-length coding for efficient compression of spacecraft television data
@@ -47,9 +49,26 @@ informative:
     -
       ins: J. Plaunt
       name: James Plaunt
-    date: 1971
-    seriesinfo: IEEE Transactions on Communication Technology 19.6
-
+    date: December 1971
+    seriesinfo:
+      'IEEE Transactions on Communication Technology': 19.6
+      DOI: 10.1109/TCOM.1971.1090789
+      ISSN: 0018-9332 
+  I-D.ietf-tls-tls13:
+  Service-Workers:
+    title: Service Workers 1
+    author:
+    - name: Alex Russell
+    - name: Jungkee Song
+    - name: Jake Archibald
+    - name: Marijn Kruisselbrink
+    date: 2016/10/11
+    seriesinfo:
+      'W3C Working Draft': WD-service-workers-1-20161011
+    target: https://www.w3.org/TR/2016/WD-service-workers-1-20161011/
+  Fetch:
+    title: Fetch Standard
+    target: https://fetch.spec.whatwg.org/
 
 --- abstract
 
@@ -93,8 +112,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # The CACHE_DIGEST Frame
 
-The CACHE_DIGEST frame type is 0xf1. NOTE: This is an experimental value; if standardised, a
-permanent value will be assigned.
+The CACHE_DIGEST frame type is 0xd (decimal 13).
 
 ~~~~
 +-------------------------------+-------------------------------+
@@ -145,7 +163,7 @@ connections that are not authoritative (as defined in {{RFC7540}}, 10.1) for the
 
 CACHE_DIGEST allows the client to indicate whether the set of URLs used to compute the digest
 represent fresh or stale stored responses, using the STALE flag. Clients MAY decide whether to only
-sent CACHE_DIGEST frames representing their fresh stored responses, their stale stored responses,
+send CACHE_DIGEST frames representing their fresh stored responses, their stale stored responses,
 or both.
 
 Clients can choose to only send a subset of the suitable stored responses of each type (fresh or
@@ -208,7 +226,7 @@ Given:
 
 1. Let `key` be `URL` converted to an ASCII string by percent-encoding as appropriate {{RFC3986}}.
 2. If `validators` is true and `ETag` is not null:
-   1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present) and double quotes, as per {{RFC7232}} Section 2.3.
+   1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present) and double quotes, as per {{RFC7232}}, Section 2.3.
 3. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, expressed as an integer.
 4. Truncate `hash-value` to log2( `N` \* `P` ) bits.
 
@@ -257,14 +275,47 @@ we can determine whether there is a match in the digest using the following algo
 9. If `C` is equal to `hash-value`, return 'true'.
 10. Otherwise, return to step 5 and continue processing; if no match is found before `digest-value` is exhausted, return 'false'.
 
+# The ACCEPT_CACHE_DIGEST SETTINGS Parameter
 
+A server can notify its support for CACHE_DIGEST frame by sending the ACCEPT_CACHE_DIGEST (0x7) SETTINGS parameter.
+If the server is tempted to making optimizations based on CACHE_DIGEST frames, it SHOULD send the SETTINGS parameter immediately after the connection is established.
 
+The value of the parameter is a bit-field of which the following bits are defined:
 
+FRESH (0x1): When set, it indicates that the server is willing to make use of a digest of freshly-cached responses.
+
+STALE (0x2): When set, it indicates that the server is willing to make use of a digest of stale-cached responses.
+
+Rest of the bits MUST be ignored and MUST be left unset when sending.
+
+The initial value of the parameter is zero (0x0) meaning that the server is not interested in seeing a CACHE_DIGEST frame.
+
+Some underlying transports allow the server's first flight of application data to reach the client at around the same time when the client sends it's first flight data. When such transport (e.g., TLS 1.3 {{I-D.ietf-tls-tls13}} in full-handshake mode) is used, a client can postpone sending the CACHE_DIGEST frame until it receives a ACCEPT_CACHE_DIGEST settings value.
+
+When the underlying transport does not have such property (e.g., TLS 1.3 in 0-RTT mode), a client can reuse the settings value found in previous connections to that origin {{RFC6454}} to make assumptions.
 
 # IANA Considerations
 
-This draft currently has no requirements for IANA. If the CACHE_DIGEST frame is standardised, it
-will need to be assigned a frame type.
+This document registers the following entry in the Permanent Message Headers Registry, as per {{?RFC3864}}:
+
+* Header field name: Cache-Digest
+* Applicable protocol: http
+* Status: experimental
+* Author/Change controller: IESG
+* Specification document(s): [this document]
+
+This document registers the following entry in the HTTP/2 Frame Type Registry, as per {{RFC7540}}:
+
+* Frame Type: CACHE_DIGEST
+* Code: 0xd
+* Specification: [this document]
+
+This document registers the following entry in the HTTP/2 Settings Registry, as per {{RFC7540}}:
+
+* Code: 0x7
+* Name: ACCEPT_CACHE_DIGEST
+* Initial Value: 0x0
+* Reference: [this document]
 
 # Security Considerations
 
@@ -286,6 +337,41 @@ Additionally, User Agents SHOULD NOT send CACHE_DIGEST when in "privacy mode."
 
 --- back
 
+# Encoding the CACHE_DIGEST frame as an HTTP Header
+
+On some web browsers that support Service Workers {{Service-Workers}} but not Cache Digests (yet), it is possible to achieve the benefit of using Cache Digests by emulating the frame using HTTP Headers.
+
+For the sake of interoperability with such clients, this appendix defines how a CACHE_DIGEST frame can be encoded as an HTTP header named `Cache-Digest`.
+
+The definition uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Appendix B.
+
+~~~ abnf7230
+  Cache-Digest  = 1#digest-entity
+  digest-entity = digest-value *(OWS ";" OWS digest-flag)
+  digest-value  = <Digest-Value encoded using base64url>
+  digest-flag   = token
+~~~
+
+A Cache-Digest request header is defined as a list construct of cache-digest-entities.
+Each cache-digest-entity corresponds to a CACHE_DIGEST frame.
+
+Digest-Value is encoded using base64url {{RFC4648}}, Section 5.
+Flags that are set are encoded as digest-flags by their names that are compared case-insensitively.
+
+Origin is omitted in the header form.
+The value is implied from the value of the `:authority` pseudo header.
+Client MUST only send Cache-Digest headers containing digests that belong to the origin specified by the HTTP request.
+
+The example below contains one digest of fresh resource and has only the `COMPLETE` flag set.
+
+~~~ example
+  Cache-Digest: AfdA; complete
+~~~
+
+Clients MUST associate Cache-Digest headers to every HTTP request, since Fetch {{Fetch}} - the HTTP API supported by Service Workers - does not define the order in which the issued requests will be sent to the server nor guarantees that all the requests will be transmitted using a single HTTP/2 connection.
+
+Also, due to the fact that any header that is supplied to Fetch is required to be end-to-end, there is an ambiguity in what a Cache-Digest header respresents when a request is transmitted through a proxy.
+The header may represent the cache state of a client or that of a proxy, depending on how the proxy handles the header.
 
 # Acknowledgements
 
@@ -295,3 +381,19 @@ particular, see
 refers to sample code.
 
 Thanks to Stefan Eissing for his suggestions.
+
+# Changes
+
+## Since draft-ietf-httpbis-cache-digest-02
+
+* None yet.
+
+## Since draft-ietf-httpbis-cache-digest-01
+
+* Added definition of the Cache-Digest header.
+* Introduce ACCEPT_CACHE_DIGEST SETTINGS parameter.
+* Change intended status from Standard to Experimental.
+
+## Since draft-ietf-httpbis-cache-digest-00
+
+* Make the scope of a digest frame explicit and shift to stream 0.

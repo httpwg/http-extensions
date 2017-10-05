@@ -7,7 +7,6 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 <?rfc subcompact="no"?>
-<?rfc rfcedstyle="yes"?>
 <?rfc-ext include-references-in-index="yes" ?>
 <?rfc-ext allow-markup-in-artwork="yes" ?>
 
@@ -65,23 +64,6 @@
       This document obsoletes RFC 5987.
     </t>
   </abstract>
-
-  <note title="Editorial Note (To be removed by RFC Editor before publication)">
-    <t>
-      Discussion of this draft takes place on the HTTPBIS working group mailing list
-      (ietf-http-wg@w3.org), which is archived at <eref
-      target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
-    </t>
-    <t>
-      Working Group information can be found at <eref target="http://httpwg.github.io/"/>; source code and issues
-      list for this draft can be found at
-      <eref target="https://github.com/httpwg/http-extensions"/>.
-    </t>
-    <t>
-      The changes in this draft are summarized in <xref target="change.log"/>.
-    </t>
-  </note>
-
   </front>
   <middle>
 
@@ -92,13 +74,13 @@
 </t>
 <ul>
   <li>The HTTP specification discourages use of non-US-ASCII characters in field
-  values, placing them into the "obs-text" ABNF production (<xref target="RFC7230" x:fmt="," x:rel="#header.fields"/>).</li>
+  values, placing them into the "obs-text" Augmented Backus-Naur Form (ABNF) production (<xref target="RFC7230" x:fmt="," x:rel="#header.fields"/>).</li>
   <li>Furthermore, it stays silent about default character encoding schemes for
   field values, so any use of non-US-ASCII characters would need to be specific
-  to the field definition, or would require some other kind of out-of-band information.</li>
+  to the field definition or would require some other kind of out-of-band information.</li>
   <li>Finally, some APIs assume a default character encoding scheme in order to map from the octet sequences (obtained from the HTTP message) to character sequences:
   for instance, the XMLHttpRequest API (<xref target="XMLHttpRequest"/>) uses the Interface Definition Language type "ByteString",
-  effectively resulting in the ISO-8859-1 character encoding scheme <xref target="ISO-8859-1"/>
+  effectively resulting in the ISO-8859-1 character encoding scheme (<xref target="ISO-8859-1"/>)
   being used.
   </li>
 </ul>
@@ -113,19 +95,19 @@
 </t>
 <t>
   This document obsoletes <xref target="RFC5987"/> and
-  moves it to "historic" status; the changes are summarized
+  moves it to "Historic" status; the changes are summarized
   in <xref target="changes.from.rfc5987"/>.
 </t>
 <x:note>
   <t>
-    <x:h>Note:</x:h> in the remainder of this document, RFC 2231 is only referenced
-    for the purpose of explaining the choice of features that were adopted; they
-    are therefore purely informative.
+    <x:h>Note:</x:h> In the remainder of this document, RFC 2231 is only referenced
+    for the purpose of explaining the choice of features that were adopted;
+    therefore, they are purely informative.
   </t>
 </x:note>
 <x:note>
   <t>
-    <x:h>Note:</x:h> this encoding does not apply to message payloads
+    <x:h>Note:</x:h> This encoding does not apply to message payloads
     transmitted over HTTP, such as when using the media type "multipart/form-data"
     (<xref target="RFC7578"/>).
   </t>
@@ -135,11 +117,11 @@
 <section title="Notational Conventions">
 <t>
   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-  "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document
+  "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document
   are to be interpreted as described in <xref target="RFC2119"/>.
 </t>
 <t>
-  This specification uses the ABNF (Augmented Backus-Naur Form) notation defined in
+  This specification uses the ABNF notation defined in
   <xref target="RFC5234"/>. The following core rules are included by
   reference, as defined in <xref target="RFC5234" x:fmt="," x:sec="B.1"/>:
   ALPHA (letters), DIGIT (decimal 0-9), HEXDIG (hexadecimal 0-9/A-F/a-f), and
@@ -147,8 +129,8 @@
 </t>
 <t>
   This specification uses terminology defined in <xref target="RFC6365"/>,
-  namely: "<x:dfn>character encoding scheme</x:dfn>" (below abbreviated to
-  "<x:dfn>character encoding</x:dfn>"), "<x:dfn>charset</x:dfn>"
+  namely: "<x:dfn>character encoding scheme</x:dfn>" (abbreviated to
+  "<x:dfn>character encoding</x:dfn>" below), "<x:dfn>charset</x:dfn>",
   and "<x:dfn>coded character set</x:dfn>".
 </t>
 <t>
@@ -187,7 +169,7 @@
 <section title="Parameter Value Character Encoding and Language Information" anchor="character.set.and.language.information">
 <t>
   <xref target="RFC2231" x:fmt="of" x:sec="4"/> specifies how to embed
-  language information into parameter values, and also how to encode
+  language information into parameter values and also how to encode
   non-ASCII characters, dealing with restrictions both in MIME and HTTP
   header field parameters.
 </t>
@@ -205,9 +187,9 @@
 <section title="Definition" anchor="definition">
   <x:anchor-alias value="ext-value"/>
 <t>
-  The presence of extended parameter values usually is indicated by a parameter name
-  ending in an asterisk character. Note however that this is just a convention,
-  and that it needs to be explicitly specified in the definition of the header
+  The presence of extended parameter values is usually indicated by a parameter name
+  ending in an asterisk character. However, note that this is just a convention,
+  and that the extended parameter values need to be explicitly specified in the definition of the header
   field using this extension (see <xref target="usage.guidelines"/>).
 </t>
 <t>
@@ -254,9 +236,9 @@
 </ol>
 <t>
   Note that both character encoding names and
-  language tags are restricted to the US-ASCII coded character set, and are matched
-  case-insensitively (see <xref target="RFC2978" x:fmt="," x:sec="2.3"/> and
-  <xref target="RFC5646" x:fmt="," x:sec="2.1.1"/>).
+  language tags are restricted to the US-ASCII coded character set and are matched
+  case-insensitively (see <xref target="RFC2978" x:fmt="of" x:sec="2.3"/> and
+  <xref target="RFC5646" x:fmt="of" x:sec="2.1.1"/>).
 </t>
 <t>
   Inside the value part, characters not contained in attr-char are
@@ -269,14 +251,14 @@
 </t>
 <x:note>
   <t>
-    <x:h>Note:</x:h> recipients should be prepared to handle encoding
+    <x:h>Note:</x:h> Recipients should be prepared to handle encoding
     errors, such as malformed or incomplete percent escape sequences, or
     non-decodable octet sequences, in a robust manner. This specification
-    does not mandate any specific behavior, for instance, the following
+    does not mandate any specific behavior; for instance, the following
     strategies are all acceptable:
     <list style="symbols">
       <t>ignoring the parameter,</t>
-      <t>stripping a non-decodable octet sequence,</t>
+      <t>stripping a non-decodable octet sequence, and</t>
       <t>substituting a non-decodable octet sequence by a replacement
       character, such as the Unicode character U+FFFD (Replacement Character).</t>
     </list>
@@ -290,7 +272,7 @@
   The 
   RFC 7230 token production (<xref target="RFC7230" x:fmt="," x:rel="#field.components"/>)
   differs from the production used in RFC 2231 (imported from <xref target="RFC2045" x:fmt="of" x:sec="5.1"/>)
-  in that curly braces ("{" and "}") are excluded. Thus, these two
+  in that curly braces (i.e., "{" and "}") are excluded. Thus, these two
   characters are excluded from the attr-char production as well.     
 </t>
 <t>
@@ -337,7 +319,7 @@
   foo: bar; title*=utf-8'en'<x:highlight>%C2%A3</x:highlight>%20rates
 </artwork>
 <postamble>
-  Note: the Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, then percent-encoded. Also, note
+  Note: The Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, and then percent-encoded. Also, note
   that the space character was encoded as %20, as it is not contained in
   attr-char.
 </postamble>
@@ -351,9 +333,9 @@
   foo: bar; title*=UTF-8''<x:highlight>%c2%a3</x:highlight>%20and%20<x:highlight>%e2%82%ac</x:highlight>%20rates
 </artwork>
 <postamble>
-  Note: the Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, then percent-encoded. Likewise,
+  Note: The Unicode pound sign character U+00A3 was encoded into the octet sequence C2 A3 using the UTF-8 character encoding, and then percent-encoded. Likewise,
   the Unicode euro sign character U+20AC was encoded into the octet
-  sequence E2 82 AC, then percent-encoded. Also note that HEXDIG allows
+  sequence E2 82 AC, and then percent-encoded. Also note that HEXDIG allows
   both lowercase and uppercase characters, so recipients must understand
   both, and that the language information is optional, while the character encoding is not.
 </postamble>
@@ -386,7 +368,7 @@
   Specifications of HTTP header fields that use the extensions defined
   in <xref target="character.set.and.language.information"/> ought to clearly
   state that. A simple way to achieve this is to normatively reference
-  this specification, and to include the <x:ref>ext-value</x:ref>
+  this specification and to include the <x:ref>ext-value</x:ref>
   production into the ABNF for specific header field parameters.
 </t>
 <figure><preamble>For instance:</preamble>
@@ -394,9 +376,8 @@
   foo         = token ";" LWSP title-param
   title-param = "title" LWSP "=" LWSP value
               / "title*" LWSP "=" LWSP ext-value
-  ext-value   = &lt;see draft-ietf-httpbis-rfc5987bis, <xref target="character.set.and.language.information"/>&gt;
+  ext-value   = &lt;see RFC 8187, <xref target="character.set.and.language.information"/>&gt;
 </artwork>
-<postamble><cref anchor="pub">Upon publication as RFC, the string "draft-ietf-httpbis-rfc5987bis" needs to be replaced with the RFC name, and this comment needs to be removed.</cref></postamble>
 </figure>
 <x:note>
   <t>
@@ -414,8 +395,8 @@
     interpretation to parameter names ending in an asterisk. As pointed out
     above, it's up to the specification for the non-extended parameter to "opt
     in" to the syntax defined here. That being said, some existing
-    implementations are known to automatically switch to the use of this
-    notation when a parameter name ends with an asterisk, thus using parameter
+    implementations are known to automatically switch to using this
+    notation when a parameter name ends with an asterisk; thus, using parameter
     names ending in an asterisk for something else is likely to cause
     interoperability problems.
   </t>
@@ -424,22 +405,22 @@
 <section title="When to Use the Extension" anchor="when.to.use.the.extension">
 <t>
   <xref target="RFC2277" x:fmt="of" x:sec="4.2"/> requires that protocol
-  elements containing human-readable text are able to carry language information. Thus, the <x:ref>ext-value</x:ref>
-  production ought to be always used when the parameter value is of textual
+  elements containing human-readable text be able to carry language information. Thus, the <x:ref>ext-value</x:ref>
+  production ought to always be used when the parameter value is of a textual
   nature and its language is known.
 </t>
 <t>
   Furthermore, the extension ought to also be used whenever the parameter value
-  needs to carry characters not present in the US-ASCII (<xref target="RFC0020"/>)
-  coded character set (note that it would be unacceptable to define a new parameter that
-  would be restricted to a subset of the Unicode character set).
+  needs to carry characters not present in the US-ASCII
+  coded character set (<xref target="RFC0020"/>); note that it would be unacceptable to define a new parameter that
+  would be restricted to a subset of the Unicode character set.
 </t>
 </section>
 
 <section title="Error Handling">
 <t>
   Header field specifications need to define whether multiple
-  instances of parameters with identical names are allowed, and
+  instances of parameters with identical names are allowed and
   how they should be processed. This specification suggests that a parameter using the
   extended syntax takes precedence. This would allow producers to use both
   formats without breaking recipients that do not understand the extended syntax
@@ -461,11 +442,11 @@
 <section title="Security Considerations" anchor="security.considerations">
 <t>
   The format described in this document makes it possible to transport
-  non-ASCII characters, and thus enables character "spoofing" scenarios,
+  non-ASCII characters, and thus enables character "spoofing" scenarios
   in which a displayed value appears to be something other than it is.
 </t>
 <t>
-  Furthermore, there are known attack scenarios relating to decoding UTF-8.
+  Furthermore, there are known attack scenarios related to decoding UTF-8.
 </t>
 <t>
   See <xref target="RFC3629" x:fmt="of" x:sec="10"/> for more information on
@@ -473,16 +454,16 @@
 </t>
 <t>
   In addition, the extension specified in this document makes it possible
-  to transport multiple language variants for a single parameter, and such use might allow spoofing attacks, where
+  to transport multiple language variants for a single parameter, and such use might allow spoofing attacks where
   different language versions of the same parameter are not equivalent.
-  Whether this attack is useful as an attack depends on the parameter
+  Whether this attack is effective as an attack depends on the parameter
   specified.
 </t>
 </section>  
 
 <section title="IANA Considerations" anchor="iana.considerations">
 <t>
-  There are no IANA Considerations related to this specification.
+  This document does not require any IANA actions.
 </t>  
 </section>
 
@@ -594,13 +575,13 @@
   
 <references title="Informative References">
 
-  <reference anchor="Err1912" target="http://www.rfc-editor.org">
+  <reference anchor="Err1912" target="https://www.rfc-editor.org/errata/eid1912">
     <front>
-      <title x:quotes="false">Errata ID 1912, RFC 2978</title>
+      <title x:quotes="false">Erratum ID 1912, RFC 2978</title>
       <author>
         <organization>RFC Errata</organization>
       </author>
-      <date year="2009" month="October"/>
+      <!--<date year="2009" month="October"/>-->
     </front>
   </reference>
 
@@ -769,12 +750,12 @@
     The requirement to support the "ISO-8859-1" encoding was removed.
   </li>
   <li>
-    The document does not attempt to re-define a generic "parameter" ABNF anymore (it turned out that
+    This document no longer attempts to redefine a generic "parameter" ABNF (it turned out that
     there really isn't a generic definition of parameters in HTTP; for instance, 
     there are subtle differences with respect to whitespace handling).
   </li>
   <li>
-    A note about defects in error handling in current implementations was removed, as it wasn't accurate anymore.
+    A note about defects in error handling in current implementations was removed, as it was no longer accurate.
   </li>
 </ul>
 </section>
@@ -782,7 +763,7 @@
 
 <section title="Implementation Report" anchor="implementation.report">
 <t>
-  The encoding defined in this document currently is used in four different
+  The encoding defined in this document is currently used in four different
   HTTP header fields:
 </t>
 <ul>
@@ -802,7 +783,7 @@
 <t>
   As the encoding is a profile/clarification of the one defined in
   <xref target="RFC2231"/> in 1997, many user agents already supported it for
-  use in "Content-Disposition" when <xref target="RFC5987"/> got published.
+  use in "Content-Disposition" when <xref target="RFC5987"/> was published.
 </t>
 <t>
   Since the publication of <xref target="RFC5987"/>, three more popular desktop
@@ -814,130 +795,19 @@
 <t>
   Note that the implementation in Internet Explorer 9 does not support the
   ISO-8859-1 character encoding; this document revision acknowledges that UTF-8 is
-  sufficient for expressing all code points, and removes the requirement
+  sufficient for expressing all code points and removes the requirement
   to support ISO-8859-1.
 </t>
 <t>
   The "Link" header field, on the other hand, was more recently specified
-  in <xref target="RFC5988"/>. At the time of this writing, no User Agent
+  in <xref target="RFC5988"/>. At the time of this writing, no user agent
   except Firefox supported the "title*" parameter (starting with release 15).
 </t>
 <t>
   <xref target="RFC7616" x:fmt="of" x:sec="3.4"/> defines the "username*" 
   parameter for use in HTTP Digest Authentication. At the time of writing, no
-  User Agent implemented this extension.
+  user agent implemented this extension.
 </t>
-</section>
-
-<section title="Change Log (to be removed by RFC Editor before publication)" anchor="change.log">
-<section title="Since RFC5987">
-<t>
-  Only editorial changes for the purpose of starting the revision process
-  (obs5987).
-</t>
-</section>
-
-<section title="Since draft-reschke-rfc5987bis-00">
-<t>
-  Resolved issues "iso-8859-1" and "title" (title simplified).
-  Added and resolved issue "historic5987".
-</t>
-</section>
-
-<section title="Since draft-reschke-rfc5987bis-01">
-<t>
-  Added issues "httpbis", "parmsyntax",
-  "terminology" and "valuesyntax".
-  Closed issue "impls".
-</t>
-</section>
-
-<section title="Since draft-reschke-rfc5987bis-02">
-<t>
-  Resolved issue "terminology".
-</t>
-</section>
-
-<section title="Since draft-reschke-rfc5987bis-03">
-<t>
-  In <xref target="character.set.and.language.information"/>, pull historical notes into a separate subsection.
-  Resolved issues "valuesyntax" and "parmsyntax".
-</t>
-</section>
-
-<section title="Since draft-reschke-rfc5987bis-04">
-<t>
-  Update status of Firefox support in HTTP Link Header field.
-</t>
-</section>
-
-<section title="Since draft-reschke-rfc5987bis-05">
-<t>
-  Update status of Firefox support in HTTP Link Header field.
-</t>
-</section>
-
-<section title="Since draft-reschke-rfc5987bis-06">
-<t>
-  Update status with respect to Safari 6.
-</t>
-<t>
-  Started work on update with respect to RFC 723x. 
-</t>
-</section>
-
-<section title="Since draft-ietf-httpbis-rfc5987bis-00">
-<t>
-  Editorial changes; introducing non-ASCII characters into author's
-  address, acknowledgements, and examples.
-</t>
-</section>
-
-<section title="Since draft-ietf-httpbis-rfc5987bis-01">
-<t>
-  Removed mention of RFC 2616 from Abstract and Introduction.
-</t>
-<t>
-  Reference RFC 20 for US-ASCII.
-</t>
-<t>
-  Do not attempt to define a generic parameter ABNF; just concentrate on the
-  parameter value syntax.
-</t>
-</section>
-
-<section title="Since draft-ietf-httpbis-rfc5987bis-02">
-<t>
-  RFC 2388 -> RFC 7578.
-</t>
-<t>
-  Expand on the motivation (see <eref target="https://github.com/httpwg/http-extensions/issues/213"/>).
-</t>
-<t>
-  Mention RFC 7616 in implementation report.
-</t>
-</section>
-
-<section title="Since draft-ietf-httpbis-rfc5987bis-03">
-<t>
-  Fixed one editorial issue. Updated XHR reference.
-</t>
-<t>
-  Fixed <eref target="https://github.com/httpwg/http-extensions/issues/266"/>: use of now undefined term "parmname".
-</t>
-<t>
-  Include WG into Acknowledgements for this revision.
-</t>
-<t>
-  Mention RFC 5987 in the abstract (<eref target="https://github.com/httpwg/http-extensions/issues/271"/>).
-</t>
-</section>
-
-<section title="Since draft-ietf-httpbis-rfc5987bis-04">
-<t>
-  Mention RFC8053 in Implementation Report.
-</t>
-</section>
 </section>
 
 <section title="Acknowledgements" numbered="false">
@@ -945,10 +815,10 @@
   Thanks to Martin D&uuml;rst and Frank Ellermann for help figuring out ABNF details,
   to Graham Klyne and Alexey Melnikov for general review, to
   Chris Newman for pointing out an RFC 2231 incompatibility, and to
-  Benjamin Carlyle, Roar Lauritzsen, Eric Lawrence, and James Manger for implementer's feedback.
+  Benjamin Carlyle, Roar Lauritzsen, Eric Lawrence, and James Manger for implementers feedback.
 </t>
 <t>
-  Furthermore thanks to the members of the IETF HTTP Working Group for
+  Furthermore, thanks to the members of the IETF HTTP Working Group for
   the feedback specific to this update of RFC 5987.  
 </t>
 </section>  
