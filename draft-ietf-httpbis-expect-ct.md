@@ -364,7 +364,7 @@ specified in {{response-header-field-syntax}}.
 ### HTTP-Equiv \<meta\> Element Attribute
 
 UAs MUST NOT heed `http-equiv="Expect-CT"` attribute settings on `<meta>`
-elements {{!W3C.REC-html401-19991224}} in received content.
+elements {{!W3C.REC-html51-20161101}} in received content.
 
 ### Noting Expect-CT {#noting-expect-ct}
 
