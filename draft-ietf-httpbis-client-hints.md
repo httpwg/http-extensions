@@ -32,7 +32,6 @@ normative:
   RFC7234:
   RFC6454:
   HTML5: W3C.REC-html5-20141028
-  SECURE-CONTEXTS: W3C.CR-secure-contexts-20160915
   CSSVAL: W3C.CR-css-values-3-20160929
   CSS2:
     target: http://www.w3.org/TR/2011/REC-CSS2-20110607
@@ -128,7 +127,7 @@ For example:
   Accept-CH: DPR, Width, Viewport-Width
 ~~~
 
-When a client receives Accept-CH from a potentially trustworthy origin ({{SECURE-CONTEXTS}}), or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the origin ({{RFC6454}}) is interested in receiving specified request header fields that match the advertised field-values; same-origin resource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in can include the request header fields that match the advertised field-values.
+When a client receives an HTTP response, over a secure transport, that contains Accept-CH header field, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the origin ({{RFC6454}}) is interested in receiving specified request header fields that match the advertised field-values; same-origin resource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in can include the request header fields that match the advertised field-values.
 
 For example, based on Accept-CH example above, a user agent could append DPR, Width, and Viewport-Width header fields to all same-origin resource requests initiated by the page constructed from the response.
 
@@ -141,7 +140,7 @@ Servers can ask the client to remember sent Accept-CH preference for a specified
   Accept-CH-Lifetime = #delta-seconds
 ~~~
 
-When a client receives Accept-CH-Lifetime from a potentially trustworthy origin ("opt-in origin"), the field-value indicates that the Accept-CH preference SHOULD be considered stale after its age is greater than the specified number of seconds, and if applicable, persisted as a double-keyed preference that combines the values of the opt-in origin and the potentially trustworthy origin of the resource that initiated the request that received the opt-in preference.
+When a client receives an HTTP response, over a secure transport, that contains Accept-CH-Lifetime header field, the field-value indicates that the Accept-CH preference SHOULD be persisted and bound to the origin, and be considered stale after response's age ({{RFC7234}}, section 4.2) is greater than the specified number of seconds.
 
 ~~~ example
   Accept-CH: DPR, Width
@@ -149,7 +148,7 @@ When a client receives Accept-CH-Lifetime from a potentially trustworthy origin 
   Accept-CH-Lifetime: 86400
 ~~~
 
-For example, based on the Accept-CH and Accept-CH-Lifetime example above, which is received from bar.com in response to a resource request initiated by foo.com, both of which are potentially trustworthy origins: a user agent could persist a double-keyed Accept-CH preference, for requests initiated to bar.com from foo.com, for up to 86400 seconds (1 day). Then, if a request is initiated to bar.com from foo.com before the preference is stale the client could append the requested header fields (DPR, Width, and Viewport-Width in this example) to all requests matching that origin. Alternatively, if the same Accept-CH-Lifetime preference was advertised by bar.com, then same Client Hints header fields can be advertised on a navigation to the origin, and any requests to same origin initiated as a result of processing a response from bar.com.
+For example, based on the Accept-CH and Accept-CH-Lifetime example above, which is received from bar.com in response to a resource request initiated by foo.com, both delivered over a secure transport: a user agent SHOULD persist an Accept-CH preference bound to foo.com, for requests initiated to bar.com from foo.com, for up to 86400 seconds (1 day); this preference SHOULD NOT extend to requests initiated to bar.com from other origins.
 
 If Accept-CH-Lifetime occurs in a message more than once, the last value overrides all previous occurrences.
 
@@ -265,7 +264,7 @@ Transmitted Client Hints header fields should not provide new information that i
 Implementers should consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
   - Implementers may provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting or network information disclosure to users may be challenging.
-  - Implementers should support double-keyed Client Hints opt-in requested by potentially trustworthy origins via Accept-CH and Accept-CH-Lifetime header fields, and clear remembered opt-in when site data, browsing history, browsing cache, or similar, are cleared.
+  - Implementers should support Client Hints opt-in, delivered over secure transport, as advertised by Accept-CH and Accept-CH-Lifetime header fields, and clear remembered opt-in when site data, browsing history, browsing cache, or similar, are cleared.
   - Implementations specific to certain use cases or threat models may avoid transmitting Client Hints header fields altogether or limit them to authenticated sessions only that already carry identifying information, such as cookies or referer data.
 
 Following the above recommendations should significantly reduce the risks of linkability and passive fingerprinting.
