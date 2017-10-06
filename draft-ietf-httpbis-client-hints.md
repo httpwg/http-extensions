@@ -264,10 +264,8 @@ Transmitted Client Hints header fields should not provide new information that i
 Implementers should consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
   - Implementers may provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting or network information disclosure to users may be challenging.
-  - Implementers should support Client Hints opt-in, delivered over secure transport, as advertised by Accept-CH and Accept-CH-Lifetime header fields, and clear remembered opt-in when site data, browsing history, browsing cache, or similar, are cleared.
-  - Implementations specific to certain use cases or threat models may avoid transmitting Client Hints header fields altogether or limit them to authenticated sessions only that already carry identifying information, such as cookies or referer data.
-
-Following the above recommendations should significantly reduce the risks of linkability and passive fingerprinting.
+  - Implementers should support Client Hints opt-in, delivered over secure transport, as advertised by Accept-CH and Accept-CH-Lifetime header fields, and must clear remembered opt-in when site data, browsing history, browsing cache, or similar, are cleared.
+  - Implementations specific to certain use cases or threat models may avoid transmitting some or all of Client Hints header fields. For example, by limiting them to authenticated sessions only that already carry identifying information, such as cookies or referer data, and/or avoid transmission of header fields that carry higher risks of linkability.
 
 
 # IANA Considerations
