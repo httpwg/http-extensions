@@ -343,7 +343,7 @@ On some web browsers that support Service Workers {{Service-Workers}} but not Ca
 
 For the sake of interoperability with such clients, this appendix defines how a CACHE_DIGEST frame can be encoded as an HTTP header named `Cache-Digest`.
 
-The definition uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Appendix B.
+The definition uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Section 7.
 
 ~~~ abnf7230
   Cache-Digest  = 1#digest-entity
