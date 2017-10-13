@@ -260,13 +260,14 @@ The Content-DPR response header field indicates to the client that the server ha
 
 The request header fields defined in this specification, and those that extend it, expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
-Transmitted Client Hints header fields should not provide new information that is otherwise not available to the application via HTML, CSS, or JavaScript.  Further, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Restricting such field values to an enumerated range, where the advertised value is close but is not an exact representation of the current value, can help reduce the risk of such linkability as well as reduce possibility of unnecessary cache fragmentation.
+Transmitted Client Hints header fields SHOULD NOT provide new information that is otherwise not available to the application via other means, such as using HTML, CSS, or JavaScript. Further, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Reducing the set of field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users. However, such precautions can still be insufficient for some types of data, especially data that can change over time.
 
-Implementers should consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
+Implementers ought to consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
-  - Implementers may provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting or network information disclosure to users may be challenging.
-  - Implementers should support Client Hints opt-in, delivered over secure transport, as advertised by Accept-CH and Accept-CH-Lifetime header fields, and must clear remembered opt-in when site data, browsing history, browsing cache, or similar, are cleared.
-  - Implementations specific to certain use cases or threat models may avoid transmitting some or all of Client Hints header fields. For example, by limiting them to authenticated sessions only that already carry identifying information, such as cookies or referer data, and/or avoid transmission of header fields that carry higher risks of linkability.
+  - Implementers MAY provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting or network information disclosure to users may be challenging.
+  - Implementations specific to certain use cases or threat models MAY avoid transmitting some or all of Client Hints header fields. For example, avoid transmission of header fields that can carry higher risks of linkability.
+
+Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when site data, browsing history, browsing cache, or similar, are cleared.
 
 
 # IANA Considerations
