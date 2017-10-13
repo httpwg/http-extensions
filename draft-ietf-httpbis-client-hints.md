@@ -149,7 +149,7 @@ The preference MUST be delivered over a secure transport, and MUST NOT be persis
   Accept-CH-Lifetime: 86400
 ~~~
 
-For example, based on the Accept-CH and Accept-CH-Lifetime example above, which is received from bar.com in response to a resource request initiated by foo.com, both delivered over a secure transport: a user agent SHOULD persist an Accept-CH preference bound to foo.com, for requests initiated to bar.com from foo.com, for up to 86400 seconds (1 day); this preference SHOULD NOT extend to requests initiated to bar.com from other origins.
+For example, based on the Accept-CH and Accept-CH-Lifetime example above, which is received from "https://bar.example.com" in response to a resource request initiated by "https://foo.example.com", both delivered over a secure transport: a user agent SHOULD persist an Accept-CH preference bound to "https://foo.example.com", for requests initiated to "https://bar.example.com" from "https://foo.example.com", for up to 86400 seconds (1 day). This preference SHOULD NOT extend to requests initiated to "https://bar.example.com" from other origins.
 
 If Accept-CH-Lifetime occurs in a message more than once, the last value overrides all previous occurrences.
 
