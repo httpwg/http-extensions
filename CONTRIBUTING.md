@@ -1,6 +1,8 @@
 # Contributing to HTTP
 
-Before submitting feedback, please familiarize yourself with our current issues list,
+Anyone can contribute to HTTP; you don't have to join the Working Group, because there is no "membership" -- anyone who participates in the work, as outlined below, is part of the HTTP Working Group.
+
+Before doing so, it's a good idea to familiarize yourself with our current issues list,
 [charter](https://datatracker.ietf.org/wg/httpbis/about/), and [working group home
 page](https://httpwg.github.io/). If you're new to this, you may also want to read the [Tao of the
 IETF](https://www.ietf.org/tao.html).
@@ -43,7 +45,7 @@ discussion and their resolution.
 
 Before filing a new issue, please consider a few things:
 
-* Issues should be just that; issues with our deliverables, **not questions or support requests**.
+* Issues should be just that; issues with our deliverables, **not proposals, questions or support requests**.
 
 * Please review the issues list to make sure that you aren't filing a duplicate.
 
@@ -63,27 +65,26 @@ commits will only be responded to with best effort, and may not be seen.
 
 ## Resolving Issues
 
-Issues will be labeled by the Chairs as either `editorial` or `design`.
+As in all IETF Working Groups, final consensus of the Working Group is determined during Working
+Group Last Call; consensus established in discussion of issues provides a limited precedent, to
+prevent revisiting topics unnecessarily. Our issues list provides a mechanism for tracking those
+discussions and their outcome.
+
+Issues will be labeled by the Chairs as either `editorial` or `design`:
 
 * **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/), as outlined below. 
 
-* **Editorial** issues can be closed by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
+* **Editorial** issues can be dealt with by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
 
-Consensus for the resolution of a design issue can be established in a few different ways:
+The `open` design issues in the issues list are those that we are currently or plan to discuss.
+When a design issue is `closed`, it implies that the issue's proposed resolution is reflected in
+the draft; if a closed design issue is labeled with `has-consensus`, it means that the incorporated resolution has Working Group consensus.
 
-* Through discussion on the mailing list. Once a resolution is found, it will be recorded in the issue.
+Design issues can be discussed on the mailing list or the issues list. The editors can also propose resolutions to design issues for the group's consideration by incorporating them into the draft(s).
 
-* Through discussion on the issues list. Once a resolution is found, it will be confirmed on the mailing list before consensus is declared. 
+When a new draft is published, the design issues that have been closed since the last draft will be highlighted on the mailing list, to aid reviewers. Once consensus is confirmed, those issues will be labeled with `has-consensus`.
 
-The editors can also propose resolutions for the group's consideration by incorporating them into
-the draft(s); when doing so, the issue should not be closed until consensus is declared.
-
-Issues that have consensus will be labelled as `editor-ready`. After the editor has incorporated a
-resolution into the specification, the issue can be closed.
-
-When a new draft is published, the design issues that have been closed since the last draft will be
-highlighted on the mailing list, to aid reviewers. If substantive new information is brought to our
-attention, issues can be reopened by the Chairs.
+Note that whether or not a design issue is closed does **not** reflect consensus of the Working Group; an issue's `open`/`closed` state is only used to organise our discussions. If you have a question or problem with an issue in the `closed` state, please comment on it (either in the issues list or mailing list), and we'll adjust its state accordingly. Note that reopening issues with `has-consensus` requires new information.
 
 
 ## Pull Requests
@@ -119,7 +120,6 @@ addressed to:
  * All IETF Contributions are subject to the rules of [RFC
    5378](https://tools.ietf.org/html/rfc5378) and [RFC 3979](https://tools.ietf.org/html/rfc3979)
    (updated by [RFC 4879](https://tools.ietf.org/html/rfc4879)).
-
 
 Statements made outside of an IETF session, mailing list or other function, that are clearly not
 intended to be input to an IETF activity, group or function, are not IETF Contributions in the
