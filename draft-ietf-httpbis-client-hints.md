@@ -127,20 +127,21 @@ For example:
   Accept-CH: DPR, Width, Viewport-Width
 ~~~
 
-When a client receives an HTTP response, over a secure transport, that contains Accept-CH header field, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the origin ({{RFC6454}}) is interested in receiving specified request header fields that match the advertised field-values; same-origin resource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in can include the request header fields that match the advertised field-values.
+When a client receives an HTTP response advertising support for Client Hints, it should process it as origin ({{RFC6454}}) opt-in to receive Client Hint header fields advertised in the field-value. The opt-in MUST be delivered over a secure transport.
 
 For example, based on Accept-CH example above, a user agent could append DPR, Width, and Viewport-Width header fields to all same-origin resource requests initiated by the page constructed from the response.
 
 
 ### The Accept-CH-Lifetime Header Field {#accept-ch-lifetime}
 
-Servers can ask the client to remember sent Accept-CH preference for a specified period of time, to enable delivery of Client Hints on subsequent requests to the server's origin ({{RFC6454}}).
+Servers can ask the client to remember the set of Client Hints that the server supports for a specified period of time, to enable delivery of Client Hints on subsequent requests to the server's origin ({{RFC6454}}).
 
 ~~~ abnf7230
   Accept-CH-Lifetime = #delta-seconds
 ~~~
 
-When a client receives an HTTP response, over a secure transport, that contains Accept-CH-Lifetime header field, the field-value indicates that the Accept-CH preference SHOULD be persisted and bound to the origin, and be considered stale after response's age ({{RFC7234}}, section 4.2) is greater than the specified number of seconds.
+When a client receives an HTTP response that contains Accept-CH-Lifetime header field, the field-value indicates that the Accept-CH preference SHOULD be persisted and bound to the origin, and be considered stale after response's age ({{RFC7234}}, section 4.2) is greater than the specified number of seconds.
+The preference MUST be delivered over a secure transport, and MUST NOT be persisted for an origin that isn't HTTPS.
 
 ~~~ example
   Accept-CH: DPR, Width
