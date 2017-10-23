@@ -47,6 +47,8 @@ _Awaiting implementer feedback._
 
 ### Origin Frame
 
+_In Working Group Last Call; ends 2017-10-01_
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/origin-frame.html) ([plain text](https://httpwg.github.io/http-extensions/origin-frame.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-origin-frame) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aorigin-frame) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-origin-frame/)
