@@ -357,34 +357,34 @@ Above example indicates that the cache key needs to include the value of the Wid
 # Changes
 
 ## Since -00
-
 * Issue 168 (make Save-Data extensible) updated ABNF.
 * Issue 163 (CH review feedback) editorial feedback from httpwg list.
 * Issue 153 (NetInfo API citation) added normative reference.
 
-
 ## Since -01
-
 * Issue 200: Moved Key reference to informative.
 * Issue 215: Extended passive fingerprinting and mitigation considerations.
 * Changed document status to experimental.
 
 ## Since -02
-
 * Issue 239: Updated reference to CR-css-values-3
 * Issue 240: Updated reference for Network Information API
 * Issue 241: Consistency in IANA considerations
 * Issue 250: Clarified Accept-CH
 
 ## Since -03
-
 * Issue 284: Extended guidance for Accept-CH
 * Issue 308: Editorial cleanup
 * Issue 306: Define Accept-CH-Lifetime
 
 ## Since -04
 * Issue 361: Removed Downlink
-* Issue 361: Moved Key to appendix, plus other editorial feedback.
+* Issue 361: Moved Key to appendix, plus other editorial feedback
 
 ## Since -05
+* Issue 372: Scoped CH opt-in and delivery to secure transports
+* Issue 373: Bind CH opt-in to origin
+
+## Since -06
 * None
+
