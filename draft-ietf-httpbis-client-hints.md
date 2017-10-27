@@ -57,7 +57,7 @@ informative:
 
 An increasing diversity of Web-connected devices and software capabilities has created a need to deliver optimized content for each device.
 
-This specification defines a set of HTTP request header fields, colloquially known as Client Hints, to address this. They are intended to be used as input to proactive content negotiation; just as the Accept header field allows user agents to indicate what formats they prefer, Client Hints allow user agents to indicate device and agent specific preferences.
+This specification defines an extensible and configurable set of HTTP request header fields, colloquially known as Client Hints, to address this. They are intended to be used as input to proactive content negotiation; just as the Accept header field allows user agents to indicate what formats they prefer, Client Hints allow user agents to indicate device and agent specific preferences.
 
 
 --- note_Note_to_Readers
@@ -101,9 +101,9 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 ## Sending Client Hints
 
-Clients control which Client Hints are sent in requests, based on their default settings, user configuration and/or preferences. Implementers might provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. Implementations specific to certain use cases or threat models might avoid transmitting these header fields altogether, or limit them to secure contexts or authenticated sessions. Implementers should be aware that explaining the privacy implications of passive fingerprinting or network information disclosure may be challenging.
+Clients control which Client Hints are sent in requests, based on their default settings, user configuration and/or preferences. The client and server can use an opt-in mechanism outlined below to negotiate which fields should be sent to allow for efficient content adaption.
 
-The client and server, or an intermediate proxy, can use an opt-in mechanism to negotiate which fields should be reported to allow for efficient content adaption.
+Implementers should be aware of the passive fingerprinting and network information disclosure implications when implementing support for Client Hints, and follow the considerations outlined in "Security Considerations" section of this document.
 
 
 ## Server Processing of Client Hints
@@ -127,20 +127,21 @@ For example:
   Accept-CH: DPR, Width, Viewport-Width
 ~~~
 
-When a client receives Accept-CH, or if it is capable of processing the HTML response and finds an equivalent HTML meta element, it can treat it as a signal that the application is interested in receiving specified request header fields that match the advertised field-values; subresource requests initiated as a result of processing the response from the server that includes the Accept-CH opt-in can include the request header fields that match the advertised field-values.
+When a client receives an HTTP response advertising support for Client Hints, it should process it as origin ({{RFC6454}}) opt-in to receive Client Hint header fields advertised in the field-value. The opt-in MUST be delivered over a secure transport.
 
-For example, based on Accept-CH example above, a user agent could append DPR, Width, and Viewport-Width header fields to all subresource requests initiated by the page constructed from the response.
+For example, based on Accept-CH example above, a user agent could append DPR, Width, and Viewport-Width header fields to all same-origin resource requests initiated by the page constructed from the response.
 
 
 ### The Accept-CH-Lifetime Header Field {#accept-ch-lifetime}
 
-Servers can ask the client to remember an origin-wide Accept-CH preference for a specified period of time to enable delivery of Client Hints on all subsequent requests to the origin ({{RFC6454}}), and on any requests initiated as a result of processing a response from the origin.
+Servers can ask the client to remember the set of Client Hints that the server supports for a specified period of time, to enable delivery of Client Hints on subsequent requests to the server's origin ({{RFC6454}}).
 
 ~~~ abnf7230
   Accept-CH-Lifetime = #delta-seconds
 ~~~
 
-The field-value indicates that the Accept-CH preference SHOULD be considered stale after its age is greater than the specified number of seconds.
+When a client receives an HTTP response that contains Accept-CH-Lifetime header field, the field-value indicates that the Accept-CH preference SHOULD be persisted and bound to the origin, and be considered stale after response's age ({{RFC7234}}, section 4.2) is greater than the specified number of seconds.
+The preference MUST be delivered over a secure transport, and MUST NOT be persisted for an origin that isn't HTTPS.
 
 ~~~ example
   Accept-CH: DPR, Width
@@ -148,7 +149,7 @@ The field-value indicates that the Accept-CH preference SHOULD be considered sta
   Accept-CH-Lifetime: 86400
 ~~~
 
-For example, based on the Accept-CH and Accept-CH-Lifetime example above, a user agent could persist an origin-wide Accept-CH preference for up to 86400 seconds (1 day). Then, if a request is initiated to the same origin before the preference is stale (e.g. as a result of a navigation to the origin, or fetching a subresource from the origin) the client could append the requested header fields (DPR, Width, and Viewport-Width in this example) to the request and any subresource requests initiated as a result of processing a response from same origin.
+For example, based on the Accept-CH and Accept-CH-Lifetime example above, which is received from "https://bar.example.com" in response to a resource request initiated by "https://foo.example.com", both delivered over a secure transport: a user agent SHOULD persist an Accept-CH preference bound to "https://foo.example.com", for requests initiated to "https://bar.example.com" from "https://foo.example.com", for up to 86400 seconds (1 day). This preference SHOULD NOT extend to requests initiated to "https://bar.example.com" from other origins.
 
 If Accept-CH-Lifetime occurs in a message more than once, the last value overrides all previous occurrences.
 
@@ -257,11 +258,16 @@ The Content-DPR response header field indicates to the client that the server ha
 
 # Security Considerations
 
-The request header fields defined in this specification expose information that is already available to Web applications in the browser runtime itself (e.g., using JavaScript and CSS). For example, the application can obtain viewport width, image display width, and device pixel ratio via JavaScript, or through the use of CSS media queries and unique resource URLs even if JavaScript is disabled. However, servers that gather this information through such mechanisms are typically observable (e.g., you can see that they're using JavaScript to gather it), whereas servers' use of the header fields introduced by this specification is not observable. Section 2.1 discusses potential mitigations.
+The request header fields defined in this specification, and those that extend it, expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
-For example, sending Client Hints on all requests can make information about the user's environment available to origins that otherwise did not have access to this data, which may or may not be the desired outcome - e.g. this may enable an image optimization service to deliver a tailored asset, and it may reveal same information about the user to other origins that may not have had access to it before. Similarly, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Restricting such field values to an enumerated range, where the user agent advertises a threshold value that is close but is not an exact representation of the current value, can help mitigate the risk of such fingerprinting.
+Transmitted Client Hints header fields SHOULD NOT provide new information that is otherwise not available to the application via other means, such as using HTML, CSS, or JavaScript. Further, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Reducing the set of field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users. However, such precautions can still be insufficient for some types of data, especially data that can change over time.
 
-Implementers ought to provide mechanisms and policies to control how and when such hints are advertised. For example, they could require origin opt-in via Accept-CH; clear remembered opt-in, as set by Accept-CH-Lifetime, when site data, browsing history, browsing cache, or similar, are cleared; restrict delivery to same origin subrequests; limit delivery to requests that already carry identifying information (e.g. cookies); modify delivery policy when in an "incognito" or a similar privacy mode; enable user configuration and opt in, and so on.
+Implementers ought to consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
+
+  - Implementers MAY provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting or network information disclosure to users may be challenging.
+  - Implementations specific to certain use cases or threat models MAY avoid transmitting some or all of Client Hints header fields. For example, avoid transmission of header fields that can carry higher risks of linkability.
+
+Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when site data, browsing history, browsing cache, or similar, are cleared.
 
 
 # IANA Considerations
@@ -351,34 +357,34 @@ Above example indicates that the cache key needs to include the value of the Wid
 # Changes
 
 ## Since -00
-
 * Issue 168 (make Save-Data extensible) updated ABNF.
 * Issue 163 (CH review feedback) editorial feedback from httpwg list.
 * Issue 153 (NetInfo API citation) added normative reference.
 
-
 ## Since -01
-
 * Issue 200: Moved Key reference to informative.
 * Issue 215: Extended passive fingerprinting and mitigation considerations.
 * Changed document status to experimental.
 
 ## Since -02
-
 * Issue 239: Updated reference to CR-css-values-3
 * Issue 240: Updated reference for Network Information API
 * Issue 241: Consistency in IANA considerations
 * Issue 250: Clarified Accept-CH
 
 ## Since -03
-
 * Issue 284: Extended guidance for Accept-CH
 * Issue 308: Editorial cleanup
 * Issue 306: Define Accept-CH-Lifetime
 
 ## Since -04
 * Issue 361: Removed Downlink
-* Issue 361: Moved Key to appendix, plus other editorial feedback.
+* Issue 361: Moved Key to appendix, plus other editorial feedback
 
 ## Since -05
+* Issue 372: Scoped CH opt-in and delivery to secure transports
+* Issue 373: Bind CH opt-in to origin
+
+## Since -06
 * None
+
