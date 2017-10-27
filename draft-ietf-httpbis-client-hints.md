@@ -103,7 +103,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 Clients control which Client Hints are sent in requests, based on their default settings, user configuration and/or preferences. The client and server can use an opt-in mechanism outlined below to negotiate which fields should be sent to allow for efficient content adaption.
 
-Implementers should be be aware of the passive fingerprinting and network information disclosure implications when implementing support for Client Hints, and follow the considerations outlined in "Security Considerations" section of this document.
+Implementers should be aware of the passive fingerprinting and network information disclosure implications when implementing support for Client Hints, and follow the considerations outlined in "Security Considerations" section of this document.
 
 
 ## Server Processing of Client Hints
