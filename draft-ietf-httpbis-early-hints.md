@@ -1,7 +1,7 @@
 ---
 title: An HTTP Status Code for Indicating Hints
 abbrev: Early Hints
-docname: draft-ietf-httpbis-early-hints-latest
+docname: draft-ietf-httpbis-early-hints-05
 date: 2017
 category: exp
 
@@ -200,7 +200,8 @@ The HTTP Status Codes Registry will be updated with the following entry:
 
 ## Since draft-ietf-httpbis-early-hints-04
 
-* None yet.
+* Clarified that the server is allowed to add headers not found in a 103 response to the final response.
+* Clarify client's behavior when it receives more than one 103 response.
 
 ## Since draft-ietf-httpbis-early-hints-03
 
