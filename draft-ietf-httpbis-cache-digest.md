@@ -26,13 +26,6 @@ author:
     email: mnot@mnot.net
     uri: https://www.mnot.net/
 
- -
-    ins: Y. Weiss
-    name: Yoav Weiss
-    organization: Akamai Technologies Inc.
-    email: yoav@yoav.ws
-    uri: https://blog.yoav.ws/
-
 normative:
   RFC2119:
   RFC3986:
@@ -77,7 +70,7 @@ informative:
     title: Fetch Standard
     target: https://fetch.spec.whatwg.org/
   Cuckoo:
-    title: Cuckoo Filter: Practically Better Than Bloom
+    title: 'Cuckoo Filter: Practically Better Than Bloom'
     target: https://www.cs.cmu.edu/~dga/papers/cuckoo-conext2014.pdf
 
 --- abstract
