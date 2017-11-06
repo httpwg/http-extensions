@@ -133,7 +133,7 @@ Origin:
 : A sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the Digest-Value applies to.
 
 Digest-Value:
-: A sequence of octets containing the digest as computed in {{computing}}.
+: A sequence of octets containing the digest as computed in {{creating}} and {{adding}}.
 
 The CACHE_DIGEST frame defines the following flags:
 
