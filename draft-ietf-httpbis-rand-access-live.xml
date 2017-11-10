@@ -166,7 +166,7 @@
     
     <section anchor="introduction" title="Introduction">
         <t>
-             Some Hypertext Transfer Protocol (HTTP) clients use byte-range requests (Range requests using the "bytes" Range Unit) to transfer select portions of large representations. And in some cases large representations require content to be continuously or periodically appended - such as representations consisting of live audio or video sources, blockchain databases, and log files. clients cannot access the appended/live content using a Range request with the bytes range unit using the currently defined byte-range semantics without accepting performance or behavior sacrifices which are not acceptable for many applications.
+             Some Hypertext Transfer Protocol (HTTP) clients use byte-range requests (Range requests using the "bytes" Range Unit) to transfer select portions of large representations. And in some cases large representations require content to be continuously or periodically appended - such as representations consisting of live audio or video sources, blockchain databases, and log files. Clients cannot access the appended/live content using a Range request with the bytes range unit using the currently defined byte-range semantics without accepting performance or behavior sacrifices which are not acceptable for many applications.
         </t>
         <t>
 			For instance, HTTP clients have the ability to access appended content on an indeterminate-length resource by transferring the entire representation from the beginning and continuing to read the appended content as it's made available. Obviously, this is highly inefficient for cases where the representation is large and only the most recently appended content is needed by the client. 
@@ -177,7 +177,7 @@
         <t>
             This document describes a usage model for range requests which enables
             efficient retrieval of representations that are appended to over time
-            by utilizing large values and associated semantics for communicating
+            by using large values and associated semantics for communicating
             range end positions. This model allows representations to be
             progressively delivered by servers as new content is added. It also
             ensures compatibility with servers and intermediaries that don't
@@ -211,7 +211,8 @@
             indeterminate length by requesting a range of the resource. The server
             responds with the range that is available, but indicates that the
             length of the representation is unknown using the existing
-            Content-Range syntax. See Section 2.1 for details and examples.
+            Content-Range syntax. See <xref target="establishing-range" /> 
+            for details and examples.
 
             Once the client knows the resource has indeterminate length, it can
             request a range with a very large end position from the resource. The
@@ -221,7 +222,7 @@
             indeterminate range request by indicating that the range it is
             providing has a range end that exactly matches the client's requested
             range end rather than a range that is bounded by what is currently
-            available. See Sections 2.2 and 2.3 for details.
+            available. See <xref target="live-range-requests" /> for details.
     </t>
       
       <section anchor="establishing-range" title="Establishing the Randomly Accessible Byte Range">       
@@ -232,14 +233,17 @@
    byte-range-spec = first-byte-pos "-" [ last-byte-pos ]
 </artwork></figure>
       <t>
-      which allows a client to send a HEAD request with a first-byte-pos and leave last-byte-pos absent. A server that receives a satisfiable byte-range request (with first-byte-pos smaller than the current representation length) must respond with a 206 status code (Partial Content) with a Content-Range header indicating the currently satisfiable byte range. For example, a client-issued HEAD request performed against a continuously aggregating representation hosted on a server could contain a byte-range header of the form:
+      which allows a client to send a HEAD request with a first-byte-pos and leave last-byte-pos absent. A
+      server that receives a satisfiable byte-range request (with first-byte-pos smaller than the current
+      representation length) may respond with a 206 status code (Partial Content) with a Content-Range
+      header indicating the currently satisfiable byte range. For example:
       </t>
 <figure><artwork type="example">
       HEAD /resource HTTP/1.1
       Range: bytes=0-
 </artwork></figure>
       <t>      
-      could return a response of the form:
+      returns a response of the form:
       </t>  
 <figure><artwork type="example">
     HTTP/1.1 206 Partial Content
@@ -293,7 +297,7 @@
     Range: bytes=1230000-999999999999
 </artwork></figure>
       <t>
-        could return
+        returns
       </t>        
 <figure><artwork type="example">
     HTTP/1.1 206 Partial Content
@@ -378,7 +382,7 @@
     Range: bytes=0-
 </artwork></figure>
       <t>
-        could return
+        returns
       </t>
 <figure><artwork type="example">
     206 Partial Content
@@ -425,7 +429,7 @@
         <t>
       One potential issue with this recommendation is related to the use of very-large last-byte-pos values. Some client and server implementations may not be prepared to deal with byte position values of 2^^63 and beyond. So in applications where there's no expectation that the representation will ever exceed 2^^63, a value smaller than this value should be used as the Very Large last-byte-pos in a byte-seek request or content-range response.
       
-      Also, some implementations (e.g. JavaScript-based clients and servers) are not able to represent all values beyond 2^^53. So similarly, if there's no expectation that a representation will ever exceed 2^^63 bytes, values smaller than this limit should be used for the last-byte-pos in byte-range requests.
+      Also, some implementations (e.g. JavaScript-based clients and servers) are not able to represent all values beyond 2^^53. So similarly, if there's no expectation that a representation will ever exceed 2^^53 bytes, values smaller than this limit should be used for the last-byte-pos in byte-range requests.
     </t>
     </section>
 </middle>
