@@ -181,7 +181,7 @@ Given the following inputs:
 * `N`, an integer that represents the number of entries - a prime number smaller than 2\*\*32
 
 1. Let `f` be the number of bits per fingerprint, calculated as `P + 3`
-2. Let `b` be the bucket size, defined as 4
+2. Let `b` be the bucket size, defined as 4.
 3. Let `bytes` be `f`*`N`*`b`/8 rounded up to the nearest integer
 4. Add 5 to `bytes`
 5. Allocate memory of `bytes` and set it to zero. Assign it to `digest-value`.
@@ -229,6 +229,7 @@ Given the following inputs:
 * `digest-value`
 
 1. Let `f` be the value of the first byte of `digest-value`.
+2. Let `b` be the bucket size, defined as 4.
 3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
 4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
@@ -322,6 +323,7 @@ Given the following inputs:
 * `digest-value`, an array of bits.
 
 1. Let `f` be the value of the first byte of `digest-value`.
+2. Let `b` be the bucket size, defined as 4.
 3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
 4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
