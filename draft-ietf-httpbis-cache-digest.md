@@ -256,9 +256,9 @@ Given the following inputs:
 2. Let `h` be the number of bits in `hash-value`
 3. Let `fingerprint-value` be 0
 4. While `fingerprint-value` is 0 and `h` > `f`:
-    4.1. Let `fingerprint-value` be the `f` least significant bits of `hash-value`.
-    4.2. Let `hash-value` be the `h`-`f` most significant bits of `hash-value`.
-    4.3. Substract `f` from `h`.
+    1. Let `fingerprint-value` be the `f` least significant bits of `hash-value`.
+    2. Let `hash-value` be the `h`-`f` most significant bits of `hash-value`.
+    3. Substract `f` from `h`.
 5. If `fingerprint-value` is 0, let `fingerprint-value` be 1.
 6. Return `fingerprint-value`.
 
