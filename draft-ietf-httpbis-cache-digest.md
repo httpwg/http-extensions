@@ -102,7 +102,7 @@ allows a stream to be cancelled by a client using a RST_STREAM frame in this sit
 is still at least one round trip of potentially wasted capacity even then.
 
 This specification defines a HTTP/2 frame type to allow clients to inform the server of their
-cache's contents using a Cuckoo-fliter {{Cuckoo}} based digest. Servers can then use this to inform their
+cache's contents using a Cuckoo-filter {{Cuckoo}} based digest. Servers can then use this to inform their
 choices of what to push to clients.
 
 ## Notational Conventions
@@ -182,7 +182,7 @@ Given the following inputs:
 
 1. Let `f` be the number of bits per fingerprint, calculated as `P + 3`
 2. Let `b` be the bucket size, defined as 4.
-3. Let `bytes` be `f`*`N`*`b`/8 rounded up to the nearest integer
+3. Let `bytes` be `f`\*`N`\*`b`/8 rounded up to the nearest integer
 4. Add 5 to `bytes`
 5. Allocate memory of `bytes` and set it to zero. Assign it to `digest-value`.
 6. Set the first byte to `P`
@@ -207,7 +207,7 @@ Given the following inputs:
 7. Let `h2` be the return value of {{hash}} with `fingerprint` and `N` as inputs, XORed with `h1`.
 8. Let `h` be either `h1` or `h2`, picked in random.
 9. Let `position_start` be 40 + `h` * `f`.
-10. Let `position_end` be `position_start` + `f` * `b`.
+10. Let `position_end` be `position_start` + `f` \* `b`.
 11. While `position_start` < `position_end`:
     1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
     2. If `bits` is all zeros, set `bits` to `fingerprint` and terminate these steps.
@@ -236,8 +236,8 @@ Given the following inputs:
 6. Let `fingerprint` be the return value of {{fingerprint}} with `key`, `N` and `f` as inputs.
 7. Let `h2` be the return value of {{hash}} with `fingerprint` and `N` as inputs, XORed with `h1`.
 8. Let `h` be `h1`.
-9. Let `position_start` be 40 + `h` * `f`.
-10. Let `position_end` be `position_start` + `f` * `b`.
+9. Let `position_start` be 40 + `h` \* `f`.
+10. Let `position_end` be `position_start` + `f` \* `b`.
 11. While `position_start` < `position_end`:
     1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
     2. If `bits` is `fingerprint`, set `bits` to all zeros and terminate these steps.
@@ -257,8 +257,8 @@ Given the following inputs:
 3. Let `fingerprint-value` be 0
 4. While `fingerprint-value` is 0 and `h` > `f`:
     4.1. Let `fingerprint-value` be the `f` least significant bits of `hash-value`.
-    4.2. Let `hash-value` be the the `h`-`f` most significant bits of `hash-value`.
-    4.3. `h` -= `f`
+    4.2. Let `hash-value` be the `h`-`f` most significant bits of `hash-value`.
+    4.3. Substract `f` from `h`.
 5. If `fingerprint-value` is 0, let `fingerprint-value` be 1.
 6. Return `fingerprint-value`.
 
@@ -289,7 +289,7 @@ Given the following inputs:
 
 `hash-value` can be computed using the following algorithm:
 
-1. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, expressed as an integer.
+1. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, truncated to 32 bits, expressed as an integer.
 2. Return `hash-value` modulo N.
 
 
@@ -330,8 +330,8 @@ Given the following inputs:
 6. Let `fingerprint` be the return value of {{fingerprint}} with `key`, `N` and `f` as inputs.
 7. Let `h2` be the return value of {{hash}} with `fingerprint` and `N` as inputs, XORed with `h1`.
 8. Let `h` be `h1`.
-9. Let `position_start` be 40 + `h` * `f`.
-10. Let `position_end` be `position_start` + `f` * `b`.
+9. Let `position_start` be 40 + `h` \* `f`.
+10. Let `position_end` be `position_start` + `f` \* `b`.
 11. While `position_start` < `position_end`:
     1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
     2. If `bits` is `fingerprint`, return true
