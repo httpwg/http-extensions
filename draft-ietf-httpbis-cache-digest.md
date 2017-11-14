@@ -194,7 +194,7 @@ Given the following inputs:
 Given the following inputs:
 
 * `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached response {{RFC7234}}
-* `ETag` a string corresponding to the entity-tag {{RFC7232}} if a cached response {{RFC7234}} (if the ETag is available; otherwise, null);
+* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if the ETag is available; otherwise, null);
 * `maxcount` - max number of cuckoo hops
 * `digest-value`
 
@@ -225,7 +225,7 @@ Given the following inputs:
 Given the following inputs:
 
 * `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached response {{RFC7234}}
-* `ETag` a string corresponding to the entity-tag {{RFC7232}} if a cached response {{RFC7234}} (if the ETag is available; otherwise, null);
+* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if the ETag is available; otherwise, null);
 * `digest-value`
 
 1. Let `f` be the value of the first byte of `digest-value`.
@@ -319,7 +319,7 @@ Servers MUST ignore CACHE_DIGEST frames sent on a stream other than 0.
 Given the following inputs:
 
 * `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached response {{RFC7234}}.
-* `ETag` a string corresponding to the entity-tag {{RFC7232}} if a cached response {{RFC7234}} (if the ETag is available; otherwise, null).
+* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if the ETag is available; otherwise, null).
 * `digest-value`, an array of bits.
 
 1. Let `f` be the value of the first byte of `digest-value`.
