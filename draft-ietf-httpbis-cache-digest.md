@@ -252,7 +252,7 @@ Given the following inputs:
 * `N`, an integer
 * `f`, an integer indicating the number of output bits
 
-1. Let `hash-value` be the return value of {{hash}} with `key` and `N` as inputs.
+1. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, expressed as an integer.
 2. Let `h` be the number of bits in `hash-value`
 3. Let `fingerprint-value` be 0
 4. While `fingerprint-value` is 0 and `h` > `f`:
