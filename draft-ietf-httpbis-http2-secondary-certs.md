@@ -389,7 +389,7 @@ Client                                      Server
 A server SHOULD provide certificates for an origin before pushing resources from
 it or supplying content referencing the origin. If a client receives a
 `PUSH_PROMISE` referencing an origin for which it has not yet received the
-server's certificate, the client MUST verify the server's possession of an
+server's certificate, the client SHOULD verify the server's possession of an
 appropriate certificate by sending a `CERTIFICATE_NEEDED` frame on the pushed
 stream to inform the server that progress is blocked until the request is
 satisfied.
@@ -402,8 +402,8 @@ completing the exchange.)
 
 If the server does not have the desired certificate, it MUST respond with an
 empty `USE_CERTIFICATE` frame. In this case, or if the server has not advertised
-support for HTTP-layer certificates, the client MUST NOT process the pushed
-content.
+support for HTTP-layer certificates, or if the client chooses not to request the
+server's certificate, the client MUST NOT process the pushed content.
 
 ### Requiring a client certificate
 
