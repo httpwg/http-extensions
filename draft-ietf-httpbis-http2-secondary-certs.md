@@ -568,7 +568,7 @@ The Exported Authenticator `request` API defined in
 [I-D.ietf-tls-exported-authenticator] takes as input a set of desired
 certificate characteristics and a `certificate_request_context`. When generating
 exported authenticators for use with this extension, the
-`certificate_request_context` MUST be the two-octet Cert-ID.
+`certificate_request_context` MUST be the two-octet Request-ID.
 
 The TLS library on the authenticating peer will provide mechanisms to select an
 appropriate certificate to respond to the transported request.  TLS libraries on
@@ -643,10 +643,11 @@ Upon receipt of a completed authenticator, an endpoint MUST perform the
 following steps:
  - Using the `get context` API, retrieve the `certificate_request_context` used
    to generate the authenticator, if any.
- - Verify that the `certificate_request_context` is one previously generated or,
-   when processed by a client, is absent.
+ - Verify that the `certificate_request_context` is the Request-ID of a
+   previously-sent `CERTIFICATE_REQUEST` frame.  Alternatively, on clients the
+   `certificate_request_context` MAY also be empty.
  - Use the `validate` API to confirm the validity of the authenticator with
-   regard to the generated request.
+   regard to the generated request (if any).
 
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.
