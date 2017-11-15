@@ -244,7 +244,7 @@ Given the following inputs:
     1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
     2. If `bits` is `fingerprint`, set `bits` to all zeros and terminate these steps.
     3. Add `f` to `position_start`.
-13. If `h` is not `h2`, set `h` to `h2` and return to step 9.
+13. If `h` is not `h2`, set `h` to `h2` and return to step 10.
 
 ### Computing a fingerprint value {#fingerprint}
 
@@ -338,6 +338,7 @@ Given the following inputs:
     1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
     2. If `bits` is `fingerprint`, return true
     3. Add `f` to `position_start`.
+13. If `h` is not `h2`, set `h` to `h2` and return to step 10.
 13. Return false.
 
 # The SENDING_CACHE_DIGEST SETTINGS Parameter
