@@ -203,11 +203,11 @@ Given the following inputs:
 3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
 4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
-6. Let `fingerprint` be the return value of {{fingerprint}} with `key`, `N` and `f` as inputs.
+6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
 7. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
 8. Let `h2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with `h1`.
 9. Let `h` be either `h1` or `h2`, picked in random.
-10. Let `position_start` be 40 + `h` * `f`.
+10. Let `position_start` be 40 + `h` * `f` \* `b`.
 11. Let `position_end` be `position_start` + `f` \* `b`.
 12. While `position_start` < `position_end`:
     1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
@@ -234,11 +234,11 @@ Given the following inputs:
 3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
 4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
-6. Let `fingerprint` be the return value of {{fingerprint}} with `key`, `N` and `f` as inputs.
+6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
 7. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
 8. Let `h2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with `h1`.
 9. Let `h` be `h1`.
-10. Let `position_start` be 40 + `h` \* `f`.
+10. Let `position_start` be 40 + `h` \* `f` \* `b`.
 11. Let `position_end` be `position_start` + `f` \* `b`.
 12. While `position_start` < `position_end`:
     1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
@@ -328,11 +328,11 @@ Given the following inputs:
 3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
 4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
-6. Let `fingerprint` be the return value of {{fingerprint}} with `key`, `N` and `f` as inputs.
+6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
 7. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
 8. Let `h2` be the return value of {{hash}} with `fingerprint` and `N` as inputs, XORed with `h1`.
 9. Let `h` be `h1`.
-10. Let `position_start` be 40 + `h` \* `f`.
+10. Let `position_start` be 40 + `h` \* `f` \* `b`.
 11. Let `position_end` be `position_start` + `f` \* `b`.
 12. While `position_start` < `position_end`:
     1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
