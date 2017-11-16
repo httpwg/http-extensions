@@ -177,24 +177,35 @@ CACHE_DIGEST has no defined meaning when sent from servers, and SHOULD be ignore
 
 ### Creating a digest {#creating}
 Given the following inputs:
-* `P`, an integer smaller than 256, that indicates the probability of a false positive that is acceptable, expressed as `1/2\*\*P`.
+* `P`, an integer smaller than 256, that indicates the probability of a false positive that is
+acceptable, expressed as `1/2\*\*P`.
 * `N`, an integer that represents the number of entries - a prime number smaller than 2\*\*32
 
 1. Let `f` be the number of bits per fingerprint, calculated as `P + 3`
 2. Let `b` be the bucket size, defined as 4.
-3. Let `bytes` be `f`\*`N`\*`b`/8 rounded up to the nearest integer
-4. Add 5 to `bytes`
-5. Allocate memory of `bytes` and set it to zero. Assign it to `digest-value`.
-6. Set the first byte to `P`
-7. Set the second till fifth bytes to `N` in big endian form
-8. Return the `digest-value`.
+3. Let `allocated` be the closest power of 2 that is larger than `N`.
+4. Let `bytes` be `f`\*`allocated`\*`b`/8 rounded up to the nearest integer
+5. Add 5 to `bytes`
+6. Allocate memory of `bytes` and set it to zero. Assign it to `digest-value`.
+7. Set the first byte to `P`
+8. Set the second till fifth bytes to `N` in big endian form
+9. Return the `digest-value`.
+
+Note: `allocated` is necessary due to the nature of the way Cuckoo filters are creating the
+secondary hash, by XORing the initial hash and the fingerprint's hash. The XOR operation means
+that secondary hash can pick an entry beyond the initial number of entries, up to the next power
+of 2. In order to avoid issues there, we allocate the table appropriately. For increased space
+efficiency, it is recommended that implementations pick a number of entries that's close to the
+next power of 2.
 
 ### Adding a URL to the Digest-Value {#adding}
 
 Given the following inputs:
 
-* `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached response {{RFC7234}}
-* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if the ETag is available; otherwise, null);
+* `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached
+response {{RFC7234}}
+* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
+the ETag is available; otherwise, null);
 * `maxcount` - max number of cuckoo hops
 * `digest-value`
 
@@ -205,7 +216,8 @@ Given the following inputs:
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
 6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
 7. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
-8. Let `h2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with `h1`.
+8. Let `h2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with
+`h1`.
 9. Let `h` be either `h1` or `h2`, picked in random.
 10. Let `position_start` be 40 + `h` * `f` \* `b`.
 11. Let `position_end` be `position_start` + `f` \* `b`.
@@ -225,8 +237,10 @@ Given the following inputs:
 
 Given the following inputs:
 
-* `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached response {{RFC7234}}
-* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if the ETag is available; otherwise, null);
+* `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached
+response {{RFC7234}}
+* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
+the ETag is available; otherwise, null);
 * `digest-value`
 
 1. Let `f` be the value of the first byte of `digest-value`.
@@ -236,7 +250,8 @@ Given the following inputs:
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
 6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
 7. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
-8. Let `h2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with `h1`.
+8. Let `h2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with
+`h1`.
 9. Let `h` be `h1`.
 10. Let `position_start` be 40 + `h` \* `f` \* `b`.
 11. Let `position_end` be `position_start` + `f` \* `b`.
@@ -263,9 +278,10 @@ Given the following inputs:
 5. If `fingerprint-value` is 0, let `fingerprint-value` be 1.
 6. Return `fingerprint-value`.
 
-Note: Step 5 is to handle the extremely unlikely case where a SHA-256 digest of `key` is all zeros. The implications of it means that
-there's an infitisimaly larger probability of getting a `fingerprint-value` of 1 compared to all other values. This is not a problem for any
-practical purpose.
+Note: Step 5 is to handle the extremely unlikely case where a SHA-256 digest of `key` is all zeros.
+The implications of it means that there's an infitisimaly larger probability of getting a
+`fingerprint-value` of 1 compared to all other values. This is not a problem for any practical
+purpose.
 
 
 
@@ -278,7 +294,8 @@ Given the following inputs:
 
 1. Let `key` be `URL` converted to an ASCII string by percent-encoding as appropriate {{RFC3986}}.
 2. If `ETag` is not null:
-   1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present) and double quotes, as per {{RFC7232}}, Section 2.3.
+    1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present)
+    and double quotes, as per {{RFC7232}}, Section 2.3.
 3. Return `key`
 
 ### Computing a Hash Value {#hash}
@@ -290,7 +307,8 @@ Given the following inputs:
 
 `hash-value` can be computed using the following algorithm:
 
-1. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, truncated to 32 bits, expressed as an integer.
+1. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, truncated to 32 bits,
+expressed as an integer.
 2. Return `hash-value` modulo N.
 
 
@@ -299,9 +317,11 @@ Given the following inputs:
 In typical use, a server will query (as per {{querying}}) the CACHE_DIGESTs received on a given
 connection to inform what it pushes to that client;
 
- * If a given URL and ETag combination has a match in a current CACHE_DIGEST, a complete response need not be pushed; The server MAY push a
- 304 response for that resource, indicating the client that it hasn't changed.
- * If a given URL and ETag has no match in any current CACHE_DIGEST, the client does not have a cached copy, and a complete response can be pushed.
+* If a given URL and ETag combination has a match in a current CACHE_DIGEST, a complete response
+need not be pushed; The server MAY push a 304 response for that resource, indicating the client
+that it hasn't changed.
+* If a given URL and ETag has no match in any current CACHE_DIGEST, the client does not have a
+cached copy, and a complete response can be pushed.
 
 Servers MAY use all CACHE_DIGESTs received for a given origin as current, as long as they do not
 have the RESET flag set; a CACHE_DIGEST frame with the RESET flag set MUST clear any
@@ -319,8 +339,10 @@ Servers MUST ignore CACHE_DIGEST frames sent on a stream other than 0.
 
 Given the following inputs:
 
-* `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached response {{RFC7234}}.
-* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if the ETag is available; otherwise, null).
+* `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached
+response {{RFC7234}}.
+* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
+the ETag is available; otherwise, null).
 * `digest-value`, an array of bits.
 
 1. Let `f` be the value of the first byte of `digest-value`.
