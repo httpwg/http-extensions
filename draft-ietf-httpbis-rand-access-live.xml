@@ -444,16 +444,6 @@
     </references>
 
     <references title="Informative References">
-        <reference anchor="RANGE-UNIT-REGISTRY"
-            target="http://www.iana.org/assignments/http-parameters/http-parameters.xhtml#range-units">
-            <front>
-                <title>Hypertext Transfer Protocol (HTTP) Parameters</title>
-                <author>
-                    <organization>IANA</organization>
-                </author>
-                <date year="2016"/>
-            </front>
-        </reference>
         &RFC4234;
     </references>
         
