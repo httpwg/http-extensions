@@ -79,14 +79,8 @@ $(foreach rule,$(submit_deps),$(eval $(call makerule_submit_xml,$(rule))))
 $(addsuffix .txt,$(next)): %.txt: %.xml
 	$(xml2rfc) $< $@
 
-draft-ietf-httpbis-rand-access-live.txt: draft-ietf-httpbis-rand-access-live.xml
-	$(xml2rfc) --text draft-ietf-httpbis-rand-access-live.xml
-
 %.txt: %.redxml
 	$(xml2rfc) $< $@
-
-draft-ietf-httpbis-rand-access-live.html: draft-ietf-httpbis-rand-access-live.xml
-	$(xml2rfc) --html draft-ietf-httpbis-rand-access-live.xml
 
 stylesheet := lib/rfcbootstrap.xslt
 %.html: %.xml $(stylesheet) $(extra_css)
