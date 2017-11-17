@@ -457,7 +457,7 @@
         &RFC4234;
     </references>
         
-    <section anchor="Acknowledgements" title="Acknowledgements">
+    <section anchor="Acknowledgements" title="Acknowledgements" numbered="false">
         <t>
       Mark Nottingham, Patrick McManus, Julian Reschke, Remy Lebeau, Rodger Combs, Thorsten Lohmar, Martin Thompson, Adrien de Croy, K. Morgan, Roy T. Fielding, Jeremy Poulter.
         </t>
