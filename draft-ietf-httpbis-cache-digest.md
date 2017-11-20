@@ -215,16 +215,22 @@ the ETag is available; otherwise, null);
 4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
 6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
-7. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
-8. Let `h2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with
-`h1`.
-9. Let `h` be either `h1` or `h2`, picked in random.
-10. Let `position_start` be 40 + `h` * `f` \* `b`.
-11. Let `position_end` be `position_start` + `f` \* `b`.
-12. While `position_start` < `position_end`:
-    1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
-    2. If `bits` is all zeros, set `bits` to `fingerprint` and terminate these steps.
-    3. Add `f` to `position_start`.
+7. Let `h2` be the return value of {{hash2}} with `h1`, `fingerprint` and `N` as inputs.
+8. Let `h` be either `h1` or `h2`, picked in random.
+9. While `maxcount` is larger than zero:
+    1. Let `position_start` be 40 + `h` * `f` \* `b`.
+    2. Let `position_end` be `position_start` + `f` \* `b`.
+    3. While `position_start` < `position_end`:
+        1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
+        2. If `bits` is all zeros, set `bits` to `fingerprint` and terminate these steps.
+        3. Add `f` to `position_start`.
+    4. Let `e` be a random number from 0 to `b`.
+    5. Substract `f` * (`b` - `e`) from `position_start`.
+    6. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
+    7. Let `dest_fingerprint` be the value of bits, read as big endian.
+    8. Set `bits` to `fingerprint`.
+    9. Let `h` be {{hash2}} with `h`, `dest_fingerprint` and `N` as inputs.
+    10. Substract 1 from `maxcount`.
 13. Substract `f` from `position_start`.
 14. Let `fingerprint` be the `f` bits starting at `position_start`.
 15. Let `h1` be `h`
@@ -249,17 +255,15 @@ the ETag is available; otherwise, null);
 4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
 6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
-7. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
-8. Let `h2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with
-`h1`.
-9. Let `h` be `h1`.
-10. Let `position_start` be 40 + `h` \* `f` \* `b`.
-11. Let `position_end` be `position_start` + `f` \* `b`.
-12. While `position_start` < `position_end`:
-    1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
-    2. If `bits` is `fingerprint`, set `bits` to all zeros and terminate these steps.
-    3. Add `f` to `position_start`.
-13. If `h` is not `h2`, set `h` to `h2` and return to step 10.
+7. Let `h2` be the return value of {{hash2}} with `h1`, `fingerprint` and `N` as inputs.
+8. Let `hashes` be an array containing `h1` and `h2`.
+9. For each `h` in `hashes`:
+    1. Let `position_start` be 40 + `h` \* `f` \* `b`.
+    2. Let `position_end` be `position_start` + `f` \* `b`.
+    3. While `position_start` < `position_end`:
+        1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
+        2. If `bits` is `fingerprint`, set `bits` to all zeros and terminate these steps.
+        3. Add `f` to `position_start`.
 
 ### Computing a fingerprint value {#fingerprint}
 
@@ -298,6 +302,8 @@ Given the following inputs:
     and double quotes, as per {{RFC7232}}, Section 2.3.
 3. Return `key`
 
+TODO: Add an example of the ETag and the key calcuations.
+
 ### Computing a Hash Value {#hash}
 
 Given the following inputs:
@@ -311,6 +317,16 @@ Given the following inputs:
 expressed as an integer.
 2. Return `hash-value` modulo N.
 
+### Computing an Alternative Hash Value {#hash2}
+Given the following inputs:
+
+* `hash1`, an integer indicating the previous hash.
+* `fingerprint`, an integer indicating the fingerprint value.
+* `N`, an integer indicating the number of entries in the digest.
+
+1. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
+2. Let `hash2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with `hash1`.
+3. Return `hash2`.
 
 ## Server Behavior
 
@@ -351,17 +367,16 @@ the ETag is available; otherwise, null).
 4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
 6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
-7. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
-8. Let `h2` be the return value of {{hash}} with `fingerprint` and `N` as inputs, XORed with `h1`.
-9. Let `h` be `h1`.
-10. Let `position_start` be 40 + `h` \* `f` \* `b`.
-11. Let `position_end` be `position_start` + `f` \* `b`.
-12. While `position_start` < `position_end`:
-    1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
-    2. If `bits` is `fingerprint`, return true
-    3. Add `f` to `position_start`.
-13. If `h` is not `h2`, set `h` to `h2` and return to step 10.
-13. Return false.
+7. Let `h2` be the return value of {{hash2}} with `h1`, `fingerprint` and `N` as inputs.
+8. Let `hashes` be an array containing `h1` and `h2`.
+9. For each `h` in `hashes`:
+    1. Let `position_start` be 40 + `h` \* `f` \* `b`.
+    2. Let `position_end` be `position_start` + `f` \* `b`.
+    3. While `position_start` < `position_end`:
+        1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
+        2. If `bits` is `fingerprint`, return true
+        3. Add `f` to `position_start`.
+10. Return false.
 
 # The SENDING_CACHE_DIGEST SETTINGS Parameter
 
