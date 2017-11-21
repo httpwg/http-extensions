@@ -138,9 +138,10 @@ unsafe methods, using the techniques outlined above.
 A request might be sent partially in early data with the remainder of the
 request being sent after the handshake completes.  This does not necessarily
 affect handling of that request; what matters is when the server starts acting
-upon the contents of a request.  Any time a server might initiate processing
-prior to completion of the handshake it needs to consider how a possible replay of
-early data could affect that processing (see also {{be-consistent}}).
+upon the contents of a request.  Any time any server instance might initiate
+processing prior to completion of the handshake, all server instances need to
+consider how a possible replay of early data could affect that processing (see
+also {{be-consistent}}).
 
 A server can partially process requests that are incomplete.  Parsing header
 fields - without acting on the values - and determining request routing is
