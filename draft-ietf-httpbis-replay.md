@@ -177,7 +177,8 @@ other information, clients MAY send requests with safe HTTP methods (see
 send unsafe methods (or methods whose safety is not known) in early data.
 
 If the server rejects early data at the TLS layer, a client MUST start sending
-again as though the connection was new. For HTTP/2, this means re-sending the
+again as though the connection was new. This could include a change to the
+negotiated protocol {{?ALPN=RFC7301}}. For HTTP/2, this means re-sending the
 connection preface. Any requests sent in early data MUST be sent again, unless
 the client decides to abandon those requests.
 
