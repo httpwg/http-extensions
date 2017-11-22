@@ -1,5 +1,5 @@
 ---
-title: HTTP Header Common Structure
+title: Structured Headers for HTTP
 docname: draft-ietf-httpbis-header-structure-latest
 date: 2017
 category: std
@@ -10,583 +10,437 @@ keyword: Internet-Draft
 
 author:
  -
+    ins: M. Nottingham
+    name: Mark Nottingham
+    organization: Fastly
+    email: mnot@mnot.net
+    uri: https://www.mnot.net/
+ -
     ins: P-H. Kamp
     name: Poul-Henning Kamp
     organization: The Varnish Cache Project
     email: phk@varnish-cache.org
 
 normative:
-  RFC2119:
-  RFC5137:
-  RFC5234:
-  RFC7230:
 
 informative:
-  RFC7231:
-  RFC7232:
-  RFC7233:
-  RFC7234:
-  RFC7235:
-  RFC7239:
-  RFC7694:
+  IEEE754:
+    target: http://grouper.ieee.org/groups/754/
+    title: IEEE Standard for Floating-Point Arithmetic
+    author:
+    -
+      organization: IEEE
+    date: 2008
+
 
 --- abstract
 
-An abstract data model for HTTP headers, "Common Structure", and a
-HTTP/1 serialization of it, generalized from current HTTP headers.
+This document describes Structured Headers, a way of simplifying HTTP header field definition and parsing. It is intended for use by new HTTP header fields.
 
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org),
-which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
+Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source code and issues list
-for this draft can be found at <https://github.com/httpwg/http-extensions/labels/header-structure>.
+*RFC EDITOR: please remove this section before publication*
+
+Working Group information can be found at <https://httpwg.github.io/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/header-structure>.
 
 --- middle
 
 # Introduction
 
-The HTTP protocol does not impose any structure or datamodel on the
-information in HTTP headers, the HTTP/1 serialization is the
-datamodel:  An ASCII string without control characters.
+Specifying the syntax of new HTTP header fields is an onerous task; even with the guidance in {{?RFC7231}}, Section 8.3.1, there are many decisions -- and pitfalls -- for a prospective HTTP header field author.
 
-HTTP header definitions specify how the string must be formatted
-and while families of similar headers exist, it still requires an
-uncomfortable large number of bespoke parser and validation routines
-to process HTTP traffic correctly.
+Likewise, bespoke parsers often need to be written for specific HTTP headers, because each has slightly different handling of what looks like common syntax.
 
-In order to improve performance HTTP/2 and HPACK uses naive
-text-compression, which incidentally decoupled the on-the-wire
-serialization from the data model.
+This document introduces structured HTTP header field values (hereafter, Structured Headers) to address these problems. Structured Headers define a generic, abstract model for data, along with a concrete serialisation for expressing that model in textual HTTP headers, as used by HTTP/1 {{?RFC7230}} and HTTP/2 {{?RFC7540}}.
 
-During the development of HPACK it became evident that significantly
-bigger gains were available if semantic compression could be used,
-most notably with timestamps.  However, the lack of a common
-data structure for HTTP headers would make semantic compression
-one long list of special cases.
+HTTP headers that are defined as Structured Headers use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition and parsing.
 
-Parallel to this, various proposals for how to fulfill data-transportation
-needs, and to a lesser degree to impose some kind of order on
-HTTP headers, at least going forward, were floated.
+Additionally, future versions of HTTP can define alternative serialisations of the abstract model of Structured Headers, allowing headers that use it to be transmitted more efficiently without being redefined.
 
-All of these proposals, JSON, CBOR etc. run into the same basic
-problem:  Their serialization is incompatible with RFC 7230's {{RFC7230}}
-ABNF definition of 'field-value'.
+Note that it is not a goal of this document to redefine the syntax of existing HTTP headers; the mechanisms described herein are only intended to be used with headers that explicitly opt into them.
 
-For binary formats, such as CBOR, a wholesale base64/85
-reserialization would be needed, with negative results for
-both debugability and bandwidth.
+To specify a header field that uses Structured Headers, see {{specify}}.
 
-For textual formats, such as JSON, the format must first be neutered
-to not violate field-value's ABNF, and then workarounds added
-to reintroduce the features just lost, for instance UNICODE strings.
+{{types}} defines a number of abstract data types that can be used in Structured Headers, of which only three are allowed at the "top" level: lists, dictionaries, or items.
 
-The post-surgery format is no longer JSON, and it experience indicates
-that almost-but-not-quite compatibility is worse than no compatibility.
+Those abstract types can be serialised into textual headers -- such as those used in HTTP/1 and HTTP/2 -- using the algorithms described in {{text}}.
 
-This proposal starts from the other end, and builds and generalizes
-a data structure definition from existing HTTP headers, which means
-that HTTP/1 serialization and 'field-value' compatibility is built in.
 
-If all future HTTP headers are defined to fit into this Common Structure
-we have at least halted the proliferation of bespoke parsers and
-started to pave the road for semantic compression serializations of
-HTTP traffic.
+## Notational Conventions
 
-## Terminology
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
+"RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
+shown here.
 
-In this document, the key words "MUST", "MUST NOT", "REQUIRED",
-"SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
-and "OPTIONAL" are to be interpreted as described in BCP 14, RFC 2119
-{{RFC2119}}.
+This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
 
-# Definition of HTTP Header Common Structure
 
-The data model of Common Structure is an ordered sequence of named
-dictionaries.  Please see {{survey}} for how this model was derived.
+# Specifying Structured Headers {#specify}
 
-The definition of the data model is on purpose abstract, uncoupled
-from any protocol serialization or programming environment
-representation, it is meant as the foundation on which all such
-manifestations of the model can be built.
+HTTP headers that use Structured Headers need to be defined to do so explicitly; recipients and generators need to know that the requirements of this document are in effect. The simplest way to do that is by referencing this document in its definition.
 
-Common Structure in ABNF (Slightly bastardized relative to RFC5234 {{RFC5234}}):
+The field's definition will also need to specify the field-value's allowed syntax, in terms of the types described in {{types}}, along with their associated semantics.
+
+Field definitions MUST NOT relax or otherwise modify the requirements of this specification; doing so would preclude handling by generic software.
+
+However, field definitions are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated.
+
+For example:
+
+~~~
+# FooExample Header
+
+The FooExample HTTP header field conveys a list of numbers about how
+much Foo the sender has.
+
+FooExample is a Structured header [RFCxxxx]. Its value MUST be a
+dictionary ([RFCxxxx], Section Y.Y).
+
+The dictionary MUST contain:
+
+* A member whose key is "foo", and whose value is an integer
+  ([RFCxxxx], Section Y.Y), indicating the number of foos in
+  the message.
+* A member whose key is "bar", and whose value is a string
+  ([RFCxxxx], Section Y.Y), conveying the characteristic bar-ness
+  of the message.
+
+If the parsed header field does not contain both, it MUST be ignored.
+~~~
+
+Note that empty header field values are not allowed by the syntax, and therefore will be considered errors.
+
+
+# Parsing Requirements for Textual Headers {#text}
+
+When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
+
+Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value. Note that input_string may incorporate multiple header lines combined into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2.
+
+1. Discard any OWS from the beginning of input_string.
+2. If the field-value is defined to be a dictionary, return the result of Parsing a Dictionary from Textual headers ({{dictionary}}).
+3. If the field-value is defined to be a list, return the result of Parsing a List from Textual Headers ({{list}}).
+4. If the field-value is defined to be a parameterised label, return the result of Parsing a Parameterised Label from Textual headers ({{param}}).
+5. Otherwise, return the result of Parsing an Item from Textual Headers ({{item}}).
+
+Note that in the case of lists and dictionaries, this has the effect of combining multiple instances of the header field into one. However, for singular items and parameterised labels, it has the effect of selecting the first value and ignoring any subsequent instances of the field, as well as extraneous text afterwards.
+
+Additionally, note that the effect of the parsing algorithms as specified is generally intolerant of syntax errors; if one is encountered, the typical response is to throw an error, thereby discarding the entire header field value. This includes any non-ASCII characters in input_string.
+
+
+# Structured Header Data Types {#types}
+
+This section defines the abstract value types that can be composed into Structured Headers, along with the textual HTTP serialisations of them.
+
+## Numbers {#number}
+
+Abstractly, numbers are integers with an optional fractional part. They have a maximum of fifteen digits available to be used in one or both of the parts, as reflected in the ABNF below; this allows them to be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
+
+The textual HTTP serialisation of numbers allows a maximum of fifteen digits between the integer and fractional part, along with an optional "-" indicating negative numbers.
 
 ~~~ abnf
-  import token from RFC7230
-  import DIGIT from RFC5234
+number   = ["-"] ( "." 1*15DIGIT /
+             DIGIT "." 1*14DIGIT /
+            2DIGIT "." 1*13DIGIT /
+            3DIGIT "." 1*12DIGIT /
+            4DIGIT "." 1*11DIGIT /
+            5DIGIT "." 1*10DIGIT /
+            6DIGIT "." 1*9DIGIT /
+            7DIGIT "." 1*8DIGIT /
+            8DIGIT "." 1*7DIGIT /
+            9DIGIT "." 1*6DIGIT /
+           10DIGIT "." 1*5DIGIT /
+           11DIGIT "." 1*4DIGIT /
+           12DIGIT "." 1*3DIGIT /
+           13DIGIT "." 1*2DIGIT /
+           14DIGIT "." 1DIGIT /
+           15DIGIT )
 
-  common-structure = 1* ( identifier dictionary )
-
-  dictionary = * ( identifier [ value ] )
-
-  value = identifier /
-          integer /
-          number /
-          ascii-string /
-          unicode-string /
-          blob /
-          timestamp /
-          common-structure
+integer  = ["-"] 1*15DIGIT
+unsigned = 1*15DIGIT
 ~~~
 
-Recursion is included as a way to to support deep and more general
-data structures, but its use is highly discouraged and where it is
-used the depth of recursion SHALL always be explicitly limited
-in the specifications of the HTTP headers which allow it.
+integer and unsigned are defined as conveniences to specification authors; if their use is specified and their ABNF is not matched, a parser MUST consider it to be invalid.
+
+For example, a header whose value is defined as a number could look like:
+
+~~~
+ExampleNumberHeader: 4.5
+~~~
+
+
+### Parsing Numbers from Textual Headers
+
+TBD
+
+
+## Strings {#string}
+
+Abstractly, strings are ASCII strings {{!RFC0020}}, excluding control characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines and carriage returns. They may be at most 1024 characters long.
+
+The textual HTTP serialisation of strings uses a backslash ("\") to escape double quotes and backslashes in strings.
 
 ~~~ abnf
-
-  identifier = token  [ "/" token ]
-
-  integer = ["-"] 1*19 DIGIT
+string    = DQUOTE 1*1024(char) DQUOTE
+char      = unescaped / escape ( DQUOTE / "\" )
+unescaped = %x20-21 / %x23-5B / %x5D-7E
+escape    = "\"
 ~~~
 
-Integers SHALL be in the range +/- 2^63-1 (= +/- 9223372036854775807)
+For example, a header whose value is defined as a string could look like:
+
+~~~
+ExampleStringHeader: "hello world"
+~~~
+
+Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\" can be escaped; other sequences MUST generate an error.
+
+Unicode is not directly supported in Structured Headers, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
+
+When it is necessary for a field value to convey non-ASCII string content, binary content ({{binary}}) SHOULD be specified, along with a character encoding (most likely, UTF-8).
+
+
+### Parsing a String from Textual Headers
+
+Given an ASCII string input_string, return an unquoted string. input_string is modified to remove the parsed value.
+
+1. Let output_string be an empty string.
+2. If the first character of input_string is not DQUOTE, throw an error.
+3. Discard the first character of input_string.
+4. If input_string contains more than 1025 characters, throw an error.
+5. While input_string is not empty:
+   1. Let char be the result of removing the first character of input_string.
+   2. If char is a backslash ("\\"):
+      1. If input_string is now empty, throw an error.
+      2. Else:
+         1. Let next_char be the result of removing the first character of input_string.
+         2. If next_char is not DQUOTE or "\\", throw an error.
+         3. Append next_char to output_string.
+   3. Else, if char is DQUOTE, remove the first character of input_string and return output_string.
+   4. Else, append char to output_string.
+6. Otherwise, throw an error.
+
+
+## Labels {#label}
+
+Labels are short (up to 256 characters) textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation.
 
 ~~~ abnf
-  number = ["-"] DIGIT '.' 1*14DIGIT /
-           ["-"] 2DIGIT '.' 1*13DIGIT /
-           ["-"] 3DIGIT '.' 1*12DIGIT /
-           ... /
-           ["-"] 12DIGIT '.' 1*3DIGIT /
-           ["-"] 13DIGIT '.' 1*2DIGIT /
-           ["-"] 14DIGIT '.' 1DIGIT
+label = lcalpha *255( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
+lcalpha = %x61-7A ; a-z
 ~~~
 
-The limit of 15 significant digits is chosen so that numbers can
-be correctly represented by IEEE754 64 bit binary floating point.
+Note that labels can only contain lowercase letters.
+
+For example, a header whose value is defined as a label could look like:
+
+~~~
+ExampleLabelHeader: foo/bar
+~~~
+
+
+### Parsing a Label from Textual Headers
+
+Given an ASCII string input_string, return a label. input_string is modified to remove the parsed value.
+
+1. If input_string contains more than 256 characters, throw an error.
+2. If the first character of input_string is not lcalpha, throw an error.
+3. Let output_string be an empty string.
+4. While input_string is not empty:
+   1. Let char be the result of removing the first character of input_string.
+   2. If char is not one of lcalpha, DIGIT, "_", "-", "*" or "/":
+      1. Prepend char to input_string.
+      2. Return output_string.
+   3. Append char to output_string.
+5. Return output_string.
+
+
+## Parameterised Labels {#param}
+
+Parameterised Labels are labels ({{label}}) with up to 256 parameters; each parameter has a label and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST be considered an error.
+
+The textual HTTP serialisation uses semicolons (";") to delimit the parameters from each other, and equals ("=") to delimit the parameter name from its value.
 
 ~~~ abnf
-
-  ascii-string = * %x20-7e
+parameterised = label *256( OWS ";" OWS label [ "=" item ] )
 ~~~
 
-This is intended to be an efficient, "safe" and uncomplicated string
-type, for uses where the string content is culturally neutral or
-where it will not be user visible.
+For example,
+
+~~~
+ExampleParamHeader: abc; a=1; b=2; c
+~~~
+
+### Parsing a Parameterised Label from Textual Headers
+
+Given an ASCII string input_string, return a label with an mapping of parameters. input_string is modified to remove the parsed value.
+
+1. Let primary_label be the result of Parsing a Label from Textual Headers ({{label}}) from input_string.
+2. Let parameters be an empty mapping.
+3. In a loop:
+   1. Consume any OWS from the beginning of input_string.
+   2. If the first character of input_string is not ";", exit the loop.
+   3. Consume a ";" character from the beginning of input_string.
+   4. Consume any OWS from the beginning of input_string.
+   5. let param_name be the result of Parsing a Label from Textual Headers ({{label}}) from input_string.
+   6. If param_name is already present in parameters, throw an error.
+   7. Let param_value be a null value.
+   8. If the first character of input_string is "=":
+      1. Consume the "=" character at the beginning of input_string.
+      2. Let param_value be the result of Parsing an Item from Textual Headers ({{item}}) from input_string.
+   9. If parameters has more than 255 members, throw an error.
+   0. Add param_name to parameters with the value param_value.
+4. Return the tuple (primary_label, parameters).
+
+
+## Binary Content {#binary}
+
+Arbitrary binary content up to 16K in size can be conveyed in Structured Headers.
+
+The textual HTTP serialisation indicates their presence by a leading "*", with the data encoded using Base 64 Encoding {{!RFC4648}}, without padding (as "=" might be confused with the use of dictionaries).
 
 ~~~ abnf
-
-  unicode-string = * UNICODE
-
-  UNICODE = <U+0000-U+D7FF / U+E000-U+10FFFF>
-  # UNICODE nicked from draft-seantek-unicode-in-abnf-02
+binary = "*" 1*21846(base64)
+base64 = ALPHA / DIGIT / "+" / "/"
 ~~~
 
-Unicode-strings are unrestricted because there is no sane and/or
-culturally neutral way to subset or otherwise make unicode "safe",
-and Unicode is still evolving new and interesting code points.
+For example, a header whose value is defined as binary content could look like:
 
-Users of unicode-string SHALL be prepared for the full gammut of
-glyph-gymnastics in order to avoid U+1F4A9 U+08 U+1F574.
+~~~
+ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg
+~~~
+
+### Parsing Binary Content from Textual Headers
+
+Given an ASCII string input_string, return binary content. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not "*", throw an error.
+2. Discard the first character of input_string.
+3. Let b64_content be the result of removing content of input_string up to but not including the first character that is not in ALPHA, DIGIT, "+" or "/".
+4. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary. If an error is encountered, throw it.
+5. Return binary_content.
+
+
+## Items {#item}
+
+An item is can be a number ({{number}}), string ({{string}}), label ({{label}}) or binary content ({{binary}}).
 
 ~~~ abnf
-  blob = * %0x00-ff
+item = number / string / label / binary
 ~~~
 
-Blobs are intended primarily for cryptographic data, but can be
-used for any otherwise unsatisfied needs.
+
+### Parsing an Item from Textual Headers
+
+Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
+
+1. Discard any OWS from the beginning of input_string.
+2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{number}}) and return the result, throwing any errors encountered.
+3. If the first character of input_string is a DQUOTE, process input_string as a string ({{string}}) and return the result, throwing any errors encountered.
+4. If the first character of input_string is "*", process input_string as binary content ({{binary}}) and return the result, throwing any errors encountered.
+5. If the first character of input_string is an lcalpha, process input_string as a label ({{label}}) and return the result, throwing any errors encountered.
+5. Otherwise, throw an error.
+
+
+## Dictionaries {#dictionary}
+
+Dictionaries are unordered maps of key-value pairs, where the keys are labels ({{label}}) and the values are items ({{item}}). There can be between 1 and 1024 members, and keys are required to be unique.
+
+In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace.
 
 ~~~ abnf
-  timestamp = number
+dictionary = label "=" item *1023( OWS "," OWS label "=" item )
 ~~~
 
-A timestamp counts seconds since the UNIX time_t epoch, including
-the "invisible leap-seconds" misfeature.
+For example, a header field whose value is defined as a dictionary could look like:
+
+~~~
+ExampleDictHeader: foo=1.23, da="Applepie", en=*w4ZibGV0w6ZydGUK
+~~~
+
+Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
 
 
-# HTTP/1 Serialization of HTTP Header Common Structure
+### Parsing a Dictionary from Textual Headers
 
-In ABNF:
+Given an ASCII string input_string, return a mapping of (label, item). input_string is modified to remove the parsed value.
+
+1. Let dictionary be an empty mapping.
+2. While input_string is not empty:
+   1. Let this_key be the result of running Parse Label from Textual Headers ({{label}}) with input_string. If an error is encountered, throw it.
+   2. If dictionary already contains this_key, raise an error.
+   2. Consume a "=" from input_string; if none is present, raise an error.
+   3. Let this_value be the result of running Parse Item from Textual Headers ({{item}}) with input_string. If an error is encountered, throw it.
+   4. Add key this_key with value this_value to dictionary.
+   3. Discard any leading OWS from input_string.
+   4. If input_string is empty, return dictionary.
+   5. Consume a COMMA from input_string; if no comma is present, raise an error.
+   6. Discard any leading OWS from input_string.
+3. Return dictionary.
+
+
+## Lists {#list}
+
+Lists are arrays of items ({{item}}) or parameterised labels ({{param}}, with one to 1024 members.
+
+In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
 
 ~~~ abnf
-  import OWS from RFC7230
-  import HEXDIG, DQUOTE from RFC5234
-  import EmbeddedUnicodeChar from RFC5137
-
-  h1-common-structure-header =
-          h1-common-structure-legacy-header /
-          h1-common-structure-self-identifying-header
-
-  h1-common-structure-legacy-header =
-          field-name ":" OWS h1-common-structure
+list = list_member 1*1024( OWS "," OWS list_member )
+list_member = item / parameterised
 ~~~
 
-Only white-listed legacy headers (see {{iana}}) can use
-this format.
-
-~~~ abnf
-
-  h1-common-structure-self-identifying-header:
-          field-name ":" OWS ">" h1-common-structure "<"
-
-  h1-common-structure = h1-element * ("," h1-element)
-
-  h1-element = identifier * (";" identifier ["=" h1-value])
-
-  h1-value = identifier /
-          integer /
-          number /
-          h1-ascii-string /
-          h1-unicode-string /
-          h1-blob /
-          h1-timestamp /
-          ">" h1-common-structure "<"
-
-  h1-ascii-string = DQUOTE *(
-                    ( "\" DQUOTE ) /
-                    ( "\" "\" ) /
-                    0x20-21 /
-                    0x23-5B /
-                    0x5D-7E
-                    ) DQUOTE
-
-  h1-unicode-string = DQUOTE *(
-                      ( "\" DQUOTE )
-                      ( "\" "\" ) /
-                      EmbeddedUnicodeChar /
-                      0x20-21 /
-                      0x23-5B /
-                      0x5D-7E /
-                      ) DQUOTE
-~~~
-
-The dim prospects of ever getting a majority of HTTP1 paths 8-bit
-clean makes UTF-8 unviable as H1 serialization.  Given that very
-little of the information in HTTP headers is presented to users in
-the first place, improving H1 and HPACK efficiency by inventing a
-more efficient RFC5137 compliant escape-sequences seems unwarranted.
-
-~~~ abnf
-  h1-blob = ":" base64 ":"
-  # XXX: where to import base64 from ?
-
-  h1-timestamp = number
-~~~
-
-XXX: Allow OWS in parsers, but not in generators ?
-
-In programming environments which do not define a native representation
-or serialization of Common Structure, the HTTP/1 serialization
-should be used.
-
-# When to use Common Structure Parser
-
-All future standardized and all private HTTP headers using Common
-Structure should self identify as such.  In the HTTP/1 serialization
-by making the first character ">" and the last "<".  (These two
-characters are deliberately "the wrong way" to not clash with
-exsisting usages.)
-
-Legacy HTTP headers which fit into Common Structure, are marked as
-such in the IANA Message Header Registry (see {{iana}}), and a snapshot
-of the registry can be used to trigger parsing according to Common
-Structure of these headers.
-
-# Desired Normative Effects
-
-All new HTTP headers SHOULD use the Common Structure if at all possible.
-
-# Open/Outstanding issues to resolve
-
-## Single/Multiple Headers
-
-Should we allow splitting common structure data over multiple headers ?
-
-Pro:
-
-Avoids size restrictions, easier on-the-fly editing
-
-Contra:
-
-Cannot act on any such header until all headers have been received.
-
-We must define where headers can be split (between identifier and
-dictionary ?, in the middle of dictionaries ?)
-
-Most on-the-fly editing is hackish at best.
-
-# Future Work
-
-## Redefining existing headers for better performance
-
-The HTTP/1 serializations self-identification mechanism makes it
-possible to extend the definition of existing {{uncommon}} headers
-into Common Structure.
-
-For instance one could imagine:
+For example, a header field whose value is defined as a list of labels could look like:
 
 ~~~
-  Date: >1475061449.201<
+ExampleLabelListHeader: foo, bar, baz_45
 ~~~
 
-Which would be faster to parse and validate than
-the current definition of the Date header and more precise too.
+and a header field whose value is defined as a list of parameterised labels could look like:
 
-Some kind of signal/negotiation mechanism would be required to make
-this work in practice.
+~~~
+ExampleParamListHeader: abc/def; g="hi";j, klm/nop
+~~~
 
-## Define a validation dictionary
 
-A machine-readable specification of the legal contents of HTTP
-headers would go a long way to improve efficiency and security
-in HTTP implementations.
+### Parsing a List from Textual Headers
 
-# IANA Considerations {#iana}
+Given an ASCII string input_string, return a list of items. input_string is modified to remove the parsed value.
 
-The IANA Message Header Registry will be extended with an additional
-field named "Common Structure" which can have the values "True", "False"
-or "Unknown".
+1. Let items be an empty array.
+2. While input_string is not empty:
+   1. Let item be the result of running Parse Item from Textual Headers ({{item}}) with input_string. If an error is encountered, throw it.
+   2. Append item to items.
+   3. Discard any leading OWS from input_string.
+   4. If input_string is empty, return items.
+   5. Consume a COMMA from input_string; if no comma is present, raise an error.
+   6. Discard any leading OWS from input_string.
+3. Return items.
 
-The RFC723x headers listed in {{common}} will get the value "True" in the
-new field.
 
-The RFC723x headers listed in {{uncommon}} will get the value "False"
-in the new field.
 
-All other existing entries in the registry will be set to "Unknown"
-until and if the owner of the entry requests otherwise.
+# IANA Considerations
+
+This draft has no actions for IANA.
 
 # Security Considerations
 
-Unique dictionary keys are required to reduce the risk of
-smuggling attacks.
+TBD
 
 
 --- back
 
-
-# Do HTTP headers have any common structure ? {#survey}
-
-Several proposals have been floated in recent years to use
-some preexisting structured data serialization or other
-for HTTP headers, to impose some sanity.
-
-None of these proposals have gained traction and no obvious
-candidate data serializations have been left unexamined.
-
-This effort tries to tackle the question from the other side,
-by asking if there is a common structure in existing HTTP
-headers we can generalize for this purpose.
-
-## Survey of HTTP header structure
-
-The RFC723x family of HTTP/1 standards control 49 entries in the
-IANA Message Header Registry, and they share two common motifs.
-
-The majority of RFC723x HTTP headers are lists.  A few of them are
-ordered, ('Content-Encoding'), some are unordered ('Connection')
-and some are ordered by 'q=%f' weight parameters ('Accept')
-
-In most cases, the list elements are some kind of identifier, usually
-derived from ABNF 'token' as defined by {{!RFC7230}}.
-
-A subgroup of headers, mostly related to MIME, uses what one could
-call a 'qualified token'::
-
-~~~ abnf
-  qualified-token = token-or-asterix [ "/" token-or-asterix ]
-~~~
-
-The second motif is parameterized list elements.  The best known
-is the "q=0.5" weight parameter, but other parameters exist as well.
-
-Generalizing from these motifs, our candidate "Common Structure"
-data model becomes an ordered list of named dictionaries.
-
-In pidgin ABNF, ignoring white-space for the sake of clarity, the
-HTTP/1.1 serialization of Common Structure is is something like:
-
-~~~ abnf
-  token-or-asterix = token from RFC7230, but also allowing "*"
-
-  qualified-token = token-or-asterix [ "/" token-or-asterix ]
-
-  field-name, see RFC7230
-
-  Common-Structure-Header = field-name ":" 1#named-dictionary
-
-  named-dictionary = qualified-token [ *(";" param) ]
-
-  param = token [ "=" value ]
-
-  value = we'll get back to this in a moment.
-~~~
-
-Nineteen out of the RFC723x's 48 headers, almost 40%, can already
-be parsed using this definition, and none the rest have requirements
-which could not be met by this data model.  See {{common}} and
-{{uncommon}} for the full survey details.
-
-## Survey of values in HTTP headers
-
-Surveying the datatypes of HTTP headers, standardized as well as
-private, the following picture emerges:
-
-### Numbers
-
-Integer and floating point are both used.  Range and precision
-is mostly unspecified in controlling documents.
-
-Scientific notation (9.192631770e9) does not seem to be used anywhere.
-
-The ranges used seem to be minus several thousand to plus a couple
-of billions, the high end almost exclusively being POSIX time_t
-timestamps.
-
-### Timestamps
-
-RFC723x text format, but POSIX time_t represented as integer or
-floating point is not uncommon.  ISO8601 have also been spotted.
-
-### Strings
-
-The vast majority are pure ASCII strings, with either no escapes,
-%xx URL-like escapes or C-style back-slash escapes, possibly with
-the addition of \uxxxx UNICODE escapes.
-
-Where non-ASCII character sets are used, they are almost always
-implicit, rather than explicit.  UTF8 and ISO-8859-1 seem to be
-most common.
-
-### Binary blobs
-
-Often used for cryptographic data.  Usually in base64 encoding,
-sometimes ""-quoted more often not.  base85 encoding is also
-seen, usually quoted.
-
-### Identifiers
-
-Seems to almost always fit in the RFC723x 'token' definition.
-
-## Is this actually a useful thing to generalize ?
-
-The number one wishlist item seems to be UNICODE strings,
-with a big side order of not having to write a new parser
-routine every time somebody comes up with a new header.
-
-Having a common parser would indeed be a good thing, and having an
-underlying data model which makes it possible define a compressed
-serialization, rather than rely on serialization to text followed
-by text compression (ie: HPACK) seems like a good idea too.
-
-However, when using a datamodel and a parser general enough to
-transport useful data, it will have to be followed by a validation
-step, which checks that the data also makes sense.
-
-Today validation, such as it is, is often done by the bespoke parsers.
-
-This then is probably where the next big potential for improvement lies:
-
-Ideally a machine readable "data dictionary" which makes it possibly
-to copy that text out of RFCs, run it through a code generator which
-spits out validation code which operates on the output of the common
-parser.
-
-But history has been particularly unkind to that idea.
-
-Most attempts studied as part of this effort, have sunk under
-complexity caused by reaching for generality,  but where scope
-has been wisely limited, it seems to be possible.
-
-So file that idea under "future work".
-
-
-## RFC723x headers with "common structure" {#common}
-
-* Accept              {{RFC7231}}, Section 5.3.2
-* Accept-Charset      {{RFC7231}}, Section 5.3.3
-* Accept-Encoding     {{RFC7231}}, Section 5.3.4, {{RFC7694}}, Section 3
-* Accept-Language     {{RFC7231}}, Section 5.3.5
-* Age                 {{RFC7234}}, Section 5.1
-* Allow               {{RFC7231}}, Section 7.4.1
-* Connection          {{RFC7230}}, Section 6.1
-* Content-Encoding    {{RFC7231}}, Section 3.1.2.2
-* Content-Language    {{RFC7231}}, Section 3.1.3.2
-* Content-Length      {{RFC7230}}, Section 3.3.2
-* Content-Type        {{RFC7231}}, Section 3.1.1.5
-* Expect              {{RFC7231}}, Section 5.1.1
-* Max-Forwards        {{RFC7231}}, Section 5.1.2
-* MIME-Version        {{RFC7231}}, Appendix A.1
-* TE                  {{RFC7230}}, Section 4.3
-* Trailer             {{RFC7230}}, Section 4.4
-* Transfer-Encoding   {{RFC7230}}, Section 3.3.1
-* Upgrade             {{RFC7230}}, Section 6.7
-* Vary                {{RFC7231}}, Section 7.1.4
-
-## RFC723x headers with "uncommon structure" {#uncommon}
-
-1 of the RFC723x headers is only reserved, and therefore
-have no structure at all:
-
-*  Close               {{RFC7230}}, Section 8.1
-
-5 of the RFC723x headers are HTTP dates:
-
-* Date                {{RFC7231}}, Section 7.1.1.2
-* Expires             {{RFC7234}}, Section 5.3
-* If-Modified-Since   {{RFC7232}}, Section 3.3
-* If-Unmodified-Since {{RFC7232}}, Section 3.4
-* Last-Modified       {{RFC7232}}, Section 2.2
-
-24 of the RFC723x headers use bespoke formats
-which only a single or in rare cases two headers
-share:
-
-* Accept-Ranges       {{RFC7233}}, Section 2.3
-  - bytes-unit / other-range-unit
-* Authorization       {{RFC7235}}, Section 4.2
-* Proxy-Authorization {{RFC7235}}, Section 4.4
-  - credentials
-* Cache-Control       {{RFC7234}}, Section 5.2
-  - 1#cache-directive
-* Content-Location    {{RFC7231}}, Section 3.1.4.2
-  - absolute-URI / partial-URI
-* Content-Range       {{RFC7233}}, Section 4.2
-  - byte-content-range / other-content-range
-* ETag                {{RFC7232}}, Section 2.3
-  - entity-tag
-* Forwarded           {{RFC7239}}
-  - 1#forwarded-element
-* From                {{RFC7231}}, Section 5.5.1
-  - mailbox
-* If-Match            {{RFC7232}}, Section 3.1
-* If-None-Match       {{RFC7232}}, Section 3.2
-  - "*" / 1#entity-tag
-* If-Range            {{RFC7233}}, Section 3.2
-  - entity-tag / HTTP-date
-* Host                {{RFC7230}}, Section 5.4
-  - uri-host \[ ":" port \]
-* Location            {{RFC7231}}, Section 7.1.2
-  - URI-reference
-* Pragma              {{RFC7234}}, Section 5.4
-  - 1#pragma-directive
-* Range               {{RFC7233}}, Section 3.1
-  - byte-ranges-specifier / other-ranges-specifier
-* Referer             {{RFC7231}}, Section 5.5.2
-  - absolute-URI / partial-URI
-* Retry-After         {{RFC7231}}, Section 7.1.3
-  - HTTP-date / delay-seconds
-* Server              {{RFC7231}}, Section 7.4.2
-* User-Agent          {{RFC7231}}, Section 5.5.3
-  - product *( RWS ( product / comment ) )
-* Via                 {{RFC7230}}, Section 5.7.1
-  - 1#( received-protocol RWS received-by \[ RWS comment \] )
-* Warning             {{RFC7234}}, Section 5.5
-  - 1#warning-value
-* Proxy-Authenticate  {{RFC7235}}, Section 4.3
-* WWW-Authenticate    {{RFC7235}}, Section 4.1
-  - 1#challenge
 
 
 # Changes
 
 ## Since draft-ietf-httpbis-header-structure-01
 
-None yet.
+Replaced with draft-nottingham-structured-headers.
 
 ## Since draft-ietf-httpbis-header-structure-00
 
