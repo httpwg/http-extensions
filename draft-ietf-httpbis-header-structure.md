@@ -446,7 +446,7 @@ Replaced with draft-nottingham-structured-headers.
 
 Added signed 64bit integer type.
 
-Drop UTF8, and settle on BCP137 {{RFC5137}}::EmbeddedUnicodeChar for
+Drop UTF8, and settle on BCP137 ::EmbeddedUnicodeChar for
 h1-unicode-string.
 
 Change h1_blob delimiter to ":" since "'" is valid t_char
