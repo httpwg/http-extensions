@@ -73,9 +73,10 @@ The advice in this document also applies to use of 0-RTT in HTTP over QUIC
 
 ## Conventions and Definitions
 
-The words "MUST", "MUST NOT", "SHOULD", and "MAY" are used in this document.
-It's not shouting; when they are capitalized, they have the special meaning
-defined in {{!RFC2119}}.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}}
+when, and only when, they appear in all capitals, as shown here.
 
 
 # Early Data in HTTP
@@ -137,9 +138,10 @@ unsafe methods, using the techniques outlined above.
 A request might be sent partially in early data with the remainder of the
 request being sent after the handshake completes.  This does not necessarily
 affect handling of that request; what matters is when the server starts acting
-upon the contents of a request.  Any time a server might initiate processing
-prior to completion of the handshake it needs to consider how a possible replay of
-early data could affect that processing (see also {{be-consistent}}).
+upon the contents of a request.  Any time any server instance might initiate
+processing prior to completion of the handshake, all server instances need to
+consider how a possible replay of early data could affect that processing (see
+also {{be-consistent}}).
 
 A server can partially process requests that are incomplete.  Parsing header
 fields - without acting on the values - and determining request routing is
@@ -175,9 +177,11 @@ other information, clients MAY send requests with safe HTTP methods (see
 send unsafe methods (or methods whose safety is not known) in early data.
 
 If the server rejects early data at the TLS layer, a client MUST start sending
-again as though the connection was new. For HTTP/2, this means re-sending the
-connection preface. Any requests sent in early data MUST be sent again, unless
-the client decides to abandon those requests.
+again as though the connection was new. This could entail using a different
+negotiated protocol {{?ALPN=RFC7301}} than the one optimistically used for the
+early data. If HTTP/2 is selected after early data is rejected, a client sends
+another connection preface. Any requests sent in early data MUST be sent again,
+unless the client decides to abandon those requests.
 
 This automatic retry exposes the request to a potential replay attack.  An
 attacker sends early data to one server instance that accepts and processes the
@@ -187,7 +191,7 @@ reject early data.  The client then retries the request, resulting in the
 request being processed twice.  Replays are also possible if there are multiple
 server instances that will accept early data, or if the same server accepts
 early data multiple times (though this would be in violation of requirements in
-TLS).
+Section 8 of {{!TLS13}}).
 
 Clients that use early data MUST retry requests upon receipt of a 425 (Too
 Early) status code; see {{status}}.
@@ -210,8 +214,8 @@ client will actually perform such a retry.
 
 To meet these needs, two signalling mechanisms are defined:
 
-* The `Early-Data` header field is included in requests that are received in
-  early data.
+* The `Early-Data` header field is included in requests that might have been
+  forwarded by an intermediary prior to the TLS handshake completing.
 
 * The 425 (Too Early) status code is defined for a server to indicate that a
   request could not be processed due to the consequences of a possible replay
@@ -276,14 +280,16 @@ using the 425 (Too Early) status code.
 A 425 (Too Early) status code indicates that the server is unwilling to risk
 processing a request that might be replayed.
 
-Clients (user-agents and intermediaries) that sent the request in early data
-MUST automatically retry the request when receiving a 425 (Too Early)
-response status code. Such retries MUST NOT be sent in early data.
+User agents that send a request in early data MUST automatically retry the
+request when receiving a 425 (Too Early) response status code. Such retries MUST
+NOT be sent in early data.
 
-Intermediaries that receive a 425 (Too Early) status code MAY automatically
-retry requests after allowing the handshake to complete unless the original
-request contained the `Early-Data` header field when it was received.
-Otherwise, an intermediary MUST forward the 425 (Too Early) status code.
+In all cases, an intermediary can forward a 425 (Too Early) status code.
+Intermediaries MUST forward a 425 (Too Early) status code if the request that it
+received and forwarded contained an `Early-Data` header field. Otherwise, an
+intermediary that receives a request in early data MAY automatically retry that
+request in response to a 425 (Too Early) status code, but it MUST wait for the
+TLS handshake to complete on the connection where it received the request.
 
 The server cannot assume that a client is able to retry a request unless the
 request is received in early data or the `Early-Data` header field is set to
@@ -394,4 +400,5 @@ Reference:
 {:numbered="false"}
 This document was not easy to produce.  The following people made substantial
 contributions to the quality and completeness of the document: Subodh Iyengar,
-Benjamin Kaduk, Ilari Liusavaara, Kazuho Oku, Kyle Rose, and Victor Vasiliev.
+Benjamin Kaduk, Ilari Liusavaara, Kazuho Oku, Eric Rescorla, Kyle Rose, and
+Victor Vasiliev.
