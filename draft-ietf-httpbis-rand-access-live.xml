@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE rfc [
 <!ENTITY RFC2119 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC4234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.4234.xml">
+<!ENTITY RFC5234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.5234.xml">
 <!ENTITY RFC7230 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7230.xml">
 <!ENTITY RFC7233 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7233.xml">
 
@@ -193,6 +193,11 @@
             </t>
         </section>
 
+        <section title="Notational Conventions">
+            <t>This document cites productions in Augmented Backus-Naur Form (ABNF) productions
+            from <xref target="RFC7233"/>, using the notation defined in <xref target="RFC5234"/>.
+            </t>
+        </section>
     </section>
     
     <section anchor="definition" title="Performing Range requests on Random-Access Aggregating (&quot;live&quot;) Content">
@@ -229,7 +234,7 @@
       <t>
         Establishing if a representation is continuously aggregating ("live") and determining the randomly-accessible byte range can both be determined using the existing definition for an open-ended byte-range request. Specifically, <xref target="RFC7233"></xref> defines a byte-range request of the form:
       </t>
-<figure><artwork type="abnf2616">
+<figure><artwork type="abnf">
    byte-range-spec = first-byte-pos "-" [ last-byte-pos ]
 </artwork></figure>
       <t>
@@ -444,7 +449,7 @@
     </references>
 
     <references title="Informative References">
-        &RFC4234;
+        &RFC5234;
     </references>
         
     <section anchor="Acknowledgements" title="Acknowledgements" numbered="false">
