@@ -61,9 +61,7 @@
 
     <!-- ***** FRONT MATTER ***** -->
 <front>
-    <!-- The abbreviated title is used in the page header - it is only necessary if the 
-         full title is longer than 42 characters -->
-    <title abbrev="http-rand-access-live">HTTP Random Access and Live Content</title>
+    <title>HTTP Random Access and Live Content</title>
 
     <author
         fullname="Craig Pratt" 
