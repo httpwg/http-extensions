@@ -4,6 +4,7 @@
 <!ENTITY RFC5234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.5234.xml">
 <!ENTITY RFC7230 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7230.xml">
 <!ENTITY RFC7233 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7233.xml">
+<!ENTITY RFC8216 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.8216.xml">
 
 <!-- Fudge for XMLmind which doesn't have this built in -->
 <!ENTITY nbsp    "&#160;">
@@ -170,7 +171,7 @@
 			For instance, HTTP clients have the ability to access appended content on an indeterminate-length resource by transferring the entire representation from the beginning and continuing to read the appended content as it's made available. Obviously, this is highly inefficient for cases where the representation is large and only the most recently appended content is needed by the client. 
 		</t>
     	<t>
-			Alternatively, clients can also access appended content by sending periodic open-ended bytes Range requests using the last-known end byte position as the range start. Performing low-frequency periodic bytes Range requests in this fashion (polling) introduces latency since the client will necessarily be somewhat behind the aggregated content - mimicking the behavior (and latency) of segmented content representations such as HLS or MPEG-DASH. And while performing these Range requests at higher frequency can reduce this latency, it also incurs more processing overhead and HTTP exchanges as many of the requests will return no content - since content is usually aggregated in groups of bytes (e.g. a video frame, audio sample, block, or log entry).
+			Alternatively, clients can also access appended content by sending periodic open-ended bytes Range requests using the last-known end byte position as the range start. Performing low-frequency periodic bytes Range requests in this fashion (polling) introduces latency since the client will necessarily be somewhat behind the aggregated content - mimicking the behavior (and latency) of segmented content representations such as "HTTP Live Streaming" (HLS, <xref target="RFC8216"/>) or "Dynamic Adaptive Streaming over HTTP" (MPEG-DASH, <xref target="DASH"/>). And while performing these Range requests at higher frequency can reduce this latency, it also incurs more processing overhead and HTTP exchanges as many of the requests will return no content - since content is usually aggregated in groups of bytes (e.g. a video frame, audio sample, block, or log entry).
         </t>
         <t>
             This document describes a usage model for range requests which enables
@@ -448,6 +449,16 @@
 
     <references title="Informative References">
         &RFC5234;
+        &RFC8216;
+        <reference anchor="DASH" target="http://standards.iso.org/ittf/PubliclyAvailableStandards/c065274_ISO_IEC_23009-1_2014.zip">
+          <front>
+            <title>Information technology -- Dynamic adaptive streaming over HTTP (DASH) -- Part 1: Media presentation description and segment formats
+            </title>
+            <author><organization>ISO</organization></author>
+            <date month="May" year="2014" />
+          </front>
+          <seriesInfo name="ISO/IEC" value="23009-1:2014" />
+        </reference>
     </references>
         
     <section anchor="Acknowledgements" title="Acknowledgements" numbered="false">
