@@ -131,9 +131,10 @@ determine this. However, some resources do elect to associate side effects with
 safe methods, so this cannot be universally relied upon.
 
 It is RECOMMENDED that origin servers allow resources to explicitly configure
-whether early data is appropriate in requests. Absent such explicit
-information, they SHOULD mitigate against early data in requests that have
-unsafe methods, using the techniques outlined above.
+whether early data is appropriate in requests. Absent such explicit information,
+origin servers MUST either reject early data or implement the techniques
+described in this document for ensuring that requests are not processed prior to
+TLS handshake completion.
 
 A request might be sent partially in early data with the remainder of the
 request being sent after the handshake completes.  This does not necessarily
