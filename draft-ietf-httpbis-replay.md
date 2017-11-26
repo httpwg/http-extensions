@@ -34,10 +34,10 @@ informative:
 
 --- abstract
 
-This document explains the risks of using early data for HTTP and describes
-techniques for reducing them. In particular, it defines a mechanism that
-enables clients to communicate with servers about early data, to assure correct
-operation.
+Using TLS early data creates an exposure to the possibility of a replay attack.
+This document defines mechanisms that allows clients to communicate with servers
+about HTTP requests that are sent in early data.  Techniques are described that
+use these mechanisms to mitigate the risk of replay.
 
 
 --- middle
