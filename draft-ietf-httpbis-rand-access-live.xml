@@ -19,7 +19,8 @@
 <rfc
     category="exp"
     ipr="trust200902"
-    docName="draft-ietf-httpbis-rand-access-live-latest" >
+    docName="draft-ietf-httpbis-rand-access-live-latest"
+    xmlns:x="http://purl.org/net/xml2rfc/ext">
 
     <!-- Processing Instructions- PIs (for a complete list and description,
           see file http://xml.resource.org/authoring/README.html and below... -->
@@ -164,7 +165,7 @@
     
     <section anchor="introduction" title="Introduction">
         <t>
-             Some Hypertext Transfer Protocol (HTTP) clients use byte-range requests (Range requests using the "bytes" Range Unit) to transfer select portions of large representations. And in some cases large representations require content to be continuously or periodically appended - such as representations consisting of live audio or video sources, blockchain databases, and log files. Clients cannot access the appended/live content using a Range request with the bytes range unit using the currently defined byte-range semantics without accepting performance or behavior sacrifices which are not acceptable for many applications.
+      Some Hypertext Transfer Protocol (HTTP) clients use byte-range requests (Range requests using the "bytes" Range Unit) to transfer select portions of large representations (<xref target="RFC7233"/>). And in some cases large representations require content to be continuously or periodically appended - such as representations consisting of live audio or video sources, blockchain databases, and log files. Clients cannot access the appended/live content using a Range request with the bytes range unit using the currently defined byte-range semantics without accepting performance or behavior sacrifices which are not acceptable for many applications.
         </t>
         <t>
 			For instance, HTTP clients have the ability to access appended content on an indeterminate-length resource by transferring the entire representation from the beginning and continuing to read the appended content as it's made available. Obviously, this is highly inefficient for cases where the representation is large and only the most recently appended content is needed by the client. 
@@ -230,7 +231,7 @@
       
       <section anchor="establishing-range" title="Establishing the Randomly Accessible Byte Range">       
       <t>
-        Establishing if a representation is continuously aggregating ("live") and determining the randomly-accessible byte range can both be determined using the existing definition for an open-ended byte-range request. Specifically, <xref target="RFC7233"></xref> defines a byte-range request of the form:
+        Establishing if a representation is continuously aggregating ("live") and determining the randomly-accessible byte range can both be determined using the existing definition for an open-ended byte-range request. Specifically, <xref x:sec="2.1" x:fmt="of" target="RFC7233"/> defines a byte-range request of the form:
       </t>
 <figure><artwork type="abnf">
    byte-range-spec = first-byte-pos "-" [ last-byte-pos ]
@@ -264,7 +265,7 @@
         For example, for a large video asset, a client may wish to start a content transfer from the video "key" frame immediately before the point of aggregation and continue the content transfer indefinitely as content is aggregated - in order to support low-latency startup of a live video stream.
       </t> 
       <t>
-        Unlike a byte-range Range request, a byte-range Content-Range response header cannot be "open ended", per <xref target="RFC7233"></xref>:
+        Unlike a byte-range Range request, a byte-range Content-Range response header cannot be "open ended", per <xref x:sec="4.2" x:fmt="of" target="RFC7233"/>:
       </t>
 <figure><artwork type="abnf">
    byte-content-range  = bytes-unit SP
@@ -333,7 +334,7 @@
         A client that doesn't receive a response indicating it is continuously aggregating must use other means to access aggregated content (e.g. periodic byte-range polling).
           </t>
       <t>
-        A server that does return a continuously aggregating ("live") response should return data using chunked transfer coding and not provide a Content-Length header. A 0-length chunk indicates the end of the transfer, per section 4.1 of <xref target="RFC7230"></xref>.
+        A server that does return a continuously aggregating ("live") response should return data using chunked transfer coding and not provide a Content-Length header. A 0-length chunk indicates the end of the transfer, per <xref x:sec="4.1" x:fmt="of" target="RFC7230"/>.
           </t>
     </section>
   </section>
