@@ -81,10 +81,10 @@ when, and only when, they appear in all capitals, as shown here.
 
 # Early Data in HTTP
 
-Conceptually, early data is concatenated with other application to form a single
-stream.  This can mean that requests are entirely contained within early data,
-or only part of a request is early.  In a multiplexed protocol, like HTTP/2
-{{?RFC7540}} or HTTP/QUIC {{?HQ}}, multiple requests might be partially
+Conceptually, early data is concatenated with other application data to form a
+single stream.  This can mean that requests are entirely contained within early
+data, or only part of a request is early.  In a multiplexed protocol, like
+HTTP/2 {{?RFC7540}} or HTTP/QUIC {{?HQ}}, multiple requests might be partially
 delivered in early data.
 
 The model that this document assumes is that once the TLS handshake completes,
