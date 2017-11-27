@@ -199,18 +199,18 @@ requirements for directives are:
    field. Directives are either optional or required, as stipulated in their
    definitions.
 
-3.  Directive names are case insensitive.
+3. Directive names are case insensitive.
 
-4.  UAs MUST ignore any header fields containing directives, or other header
-    field value data, that do not conform to the syntax defined in this
-    specification.  In particular, UAs must not attempt to fix malformed header
-    fields.
+4. UAs MUST ignore any header fields containing directives, or other header
+   field value data, that do not conform to the syntax defined in this
+   specification.  In particular, UAs must not attempt to fix malformed header
+   fields.
 
-5.  If a header field contains any directive(s) the UA does not recognize, the
-    UA MUST ignore those directives.
+5. If a header field contains any directive(s) the UA does not recognize, the
+   UA MUST ignore those directives.
 
-6.  If the Expect-CT header field otherwise satisfies the above requirements (1
-    through 5), the UA MUST process the directives it recognizes.
+6. If the Expect-CT header field otherwise satisfies the above requirements (1
+   through 5), the UA MUST process the directives it recognizes.
 
 ### The report-uri Directive
 
