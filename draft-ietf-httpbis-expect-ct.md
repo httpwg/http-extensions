@@ -239,8 +239,8 @@ domain or web origin as the host being reported about.
 
 UAs SHOULD make their best effort to report Expect-CT failures to the
 `report-uri`, but they may fail to report in exceptional conditions.  For
-example, if connecting the `report-uri` itself incurs an Expect-CT failure or
-other certificate validation failure, the UA MUST cancel the connection.
+example, if connecting to the `report-uri` itself incurs an Expect-CT failure
+or other certificate validation failure, the UA MUST cancel the connection.
 Similarly, if Expect-CT Host A sets a `report-uri` referring to Expect-CT Host
 B, and if B sets a `report-uri` referring to A, and if both hosts fail to comply
 to the UA's CT Policy, the UA SHOULD detect and break the loop by failing to
