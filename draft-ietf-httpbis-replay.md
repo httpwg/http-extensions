@@ -35,7 +35,7 @@ informative:
 --- abstract
 
 Using TLS early data creates an exposure to the possibility of a replay attack.
-This document defines mechanisms that allows clients to communicate with servers
+This document defines mechanisms that allow clients to communicate with servers
 about HTTP requests that are sent in early data.  Techniques are described that
 use these mechanisms to mitigate the risk of replay.
 
