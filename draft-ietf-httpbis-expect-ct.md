@@ -538,7 +538,7 @@ The steps to report an Expect-CT failure are as follows.
 1. Prepare a JSON object `report object` with the single key `expect-ct-report`,
    whose value is the result of generating a violation report object as
    described in {{generating-a-violation-report}}.
-2. Let `report body` by the JSON stringification of `report object`.
+2. Let `report body` be the JSON stringification of `report object`.
 3. Let `report-uri` be the value of the `report-uri` directive in the Expect-CT
    header field.
 4. Send an HTTP POST request to `report-uri` with a `Content-Type` header field
