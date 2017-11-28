@@ -103,7 +103,7 @@ Origin-Len:
 : An unsigned, 16-bit integer indicating the length, in octets, of the ASCII-Origin field.
 
 Origin:
-: An OPTIONAL sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender believes this connection is or could be authoritative for.
+: An OPTIONAL sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender asserts this connection is or could be authoritative for.
 
 The ORIGIN frame does not define any flags. However, future updates to this specification MAY
 define flags. See {{process}}.
@@ -153,7 +153,7 @@ and successfully processed by a client, the connection's Origin Set is defined t
 origin.  The initial origin is composed from:
 
   - Scheme: "https"
-  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}}, Section 3), converted to lower case
+  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}}, Section 3), converted to lower case; if SNI is not present, the remote address of the connection (i.e., the server's IP address)
   - Port: the remote port of the connection (i.e., the server's port)
 
 The contents of that ORIGIN frame (and subsequent ones) allows the server to incrementally add new
