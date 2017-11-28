@@ -206,7 +206,8 @@ from the certificate `subjectAltName` field (using the rules defined in {{!RFC28
 {{!RFC5280}}, Section 4.2.1.6).
 
 Additionally, clients MAY avoid consulting DNS to establish the connection's authority for new
-requests; however, those that do so face new risks, as explained in {{sc}}.
+requests to origins in the Origin Set; however, those that do so face new risks, as explained in
+{{sc}}.
 
 Because ORIGIN can change the set of origins a connection is used for over time, it is possible
 that a client might have more than one viable connection to an origin open at any time. When this
