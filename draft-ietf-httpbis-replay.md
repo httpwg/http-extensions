@@ -113,8 +113,7 @@ to mitigate the risks of replay:
    replayed.
 
 3. If the server receives multiple requests in early data, it can determine
-   whether to defer HTTP processing on a per-request basis. This may require
-   buffering the responses to preserve ordering in HTTP/1.1.
+   whether to defer HTTP processing on a per-request basis.
 
 4. The server can cause a client to retry a request and not use early data by
    responding with the 425 (Too Early) status code ({{status}}), in cases where
