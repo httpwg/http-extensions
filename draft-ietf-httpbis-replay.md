@@ -216,7 +216,8 @@ client will actually perform such a retry.
 To meet these needs, two signalling mechanisms are defined:
 
 * The `Early-Data` header field is included in requests that might have been
-  forwarded by an intermediary prior to the TLS handshake completing.
+  forwarded by an intermediary prior to the TLS handshake with its client
+  completing.
 
 * The 425 (Too Early) status code is defined for a server to indicate that a
   request could not be processed due to the consequences of a possible replay
@@ -256,9 +257,9 @@ Early-Data: 1
 ~~~
 
 An intermediary that forwards a request prior to the completion of the TLS
-handshake MUST send it with the `Early-Data` header field set to "1" (i.e., it
-adds it if not present in the request).  An intermediary MUST use the
-`Early-Data` header field if it might have forwarded the request prior to
+handshake with its client MUST send it with the `Early-Data` header field set to
+"1" (i.e., it adds it if not present in the request).  An intermediary MUST use
+the `Early-Data` header field if it might have forwarded the request prior to
 handshake completion (see {{be-consistent}} for details).
 
 An intermediary MUST NOT remove this header field if it is present in a request.
