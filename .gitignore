@@ -5,8 +5,12 @@
 *.swp
 /*-[0-9][0-9].xml
 .refcache
-draft-ietf-httpbis-client-hints.xml
-draft-ietf-httpbis-encryption-encoding.xml
-draft-ietf-httpbis-http2-encryption.xml
-draft-ietf-httpbis-key.xml
-draft-thomson-http-replay.xml
+*.pdf
+*.upload
+.tags
+.targets.mk
+venv/
+issues.json
+pulls.json
+report.xml
+lib
