@@ -10,6 +10,8 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Using Early Data in HTTP
 
+* In WGLC Ends Dec.10 *
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/replay.html) ([plain text](https://httpwg.github.io/http-extensions/replay.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-replay) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Areplay) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-replay/)
@@ -22,6 +24,10 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 * [Editors' Draft](https://httpwg.github.io/http-extensions/rand-access-live.html) ([plain text](https://httpwg.github.io/http-extensions/rand-access-live.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rand-access-live) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Arand-access-live) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rand-access-live/)
+
+### Secondary Certificates
+
+* Consensus to adopt.. placeholder for draft links*
 
 
 ### Expect-CT
