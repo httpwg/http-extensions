@@ -10,7 +10,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Using Early Data in HTTP
 
-* In WGLC Ends Dec.10 *
+*In WGLC Ends Dec.10*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/replay.html) ([plain text](https://httpwg.github.io/http-extensions/replay.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-replay) (less recent, more official)
@@ -27,8 +27,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 ### Secondary Certificates
 
-* Consensus to adopt.. placeholder for draft links*
-
+*Consensus to adopt.. placeholder for draft links*
 
 ### Expect-CT
 
