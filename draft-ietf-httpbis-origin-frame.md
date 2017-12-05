@@ -275,7 +275,7 @@ SNI-based origin, by sending an empty ORIGIN frame. Or, a larger number of origi
 by including a payload.
 
 Generally, this information is most useful to send before sending any part of a response that might
-initiate a new connection; for example, `Link` header fields {{?RFC5988}} in a response HEADERS, or links
+initiate a new connection; for example, `Link` header fields {{?RFC8288}} in a response HEADERS, or links
 in the response body.
 
 Therefore, the ORIGIN frame ought be sent as soon as possible on a connection, ideally before any
