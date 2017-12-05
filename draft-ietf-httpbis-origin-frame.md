@@ -118,7 +118,7 @@ When received by an implementing client, it is used to initialise and manipulate
 (see {{set}}), thereby changing how the client establishes authority for origin servers (see
 {{authority}}).
 
-The origin frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST
+The ORIGIN frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST
 be ignored.
 
 Likewise, the ORIGIN frame is only valid on connections with the "h2" protocol identifier, or when
@@ -290,8 +290,8 @@ That said, senders are encouraged to include as many origins as practical within
 frame; clients need to make decisions about creating connections on the fly, and if the origin
 set is split across many frames, their behaviour might be suboptimal.
 
-Senders take note that, as per Section 4 of {{!RFC6454}}, the values in an ORIGIN header need to be
-case-normalised before serialisation.
+Senders take note that, as per Section 4, Step 5 of {{!RFC6454}}, the values in an ORIGIN header
+need to be case-normalised before serialisation.
 
 Finally, servers that host alternative services {{?RFC7838}} will need to explicitly advertise
 their origins when sending ORIGIN, because the default contents of the Origin Set (as per {{set}})
