@@ -22,7 +22,7 @@ author:
  -
     ins: M. Nottingham
     name: Mark Nottingham
-    organization: 
+    organization:
     email: mnot@mnot.net
     uri: https://www.mnot.net/
 
@@ -30,7 +30,6 @@ normative:
   RFC2119:
   RFC3986:
   RFC6234:
-  RFC6454:
   RFC7230:
   RFC7232:
   RFC7234:
@@ -53,7 +52,7 @@ informative:
     seriesinfo:
       'IEEE Transactions on Communication Technology': 19.6
       DOI: 10.1109/TCOM.1971.1090789
-      ISSN: 0018-9332 
+      ISSN: 0018-9332
   I-D.ietf-tls-tls13:
   Service-Workers:
     title: Service Workers 1
@@ -78,10 +77,10 @@ cache's contents. Servers can then use this to inform their choices of what to p
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source 
+Working Group information can be found at <http://httpwg.github.io/>; source
 code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/cache-digest>.
 
 --- middle
@@ -158,7 +157,7 @@ If the cache's state is cleared, lost, or the client otherwise wishes the server
 previously sent CACHE_DIGESTs, it can send a CACHE_DIGEST with the RESET flag set.
 
 When generating CACHE_DIGEST, a client MUST NOT include cached responses whose URLs do not share
-origins {{RFC6454}} with the indicated origin. Clients MUST NOT send CACHE_DIGEST frames on
+origins {{!RFC6454}} with the indicated origin. Clients MUST NOT send CACHE_DIGEST frames on
 connections that are not authoritative (as defined in {{RFC7540}}, 10.1) for the indicated origin.
 
 CACHE_DIGEST allows the client to indicate whether the set of URLs used to compute the digest
@@ -292,7 +291,7 @@ The initial value of the parameter is zero (0x0) meaning that the server is not 
 
 Some underlying transports allow the server's first flight of application data to reach the client at around the same time when the client sends it's first flight data. When such transport (e.g., TLS 1.3 {{I-D.ietf-tls-tls13}} in full-handshake mode) is used, a client can postpone sending the CACHE_DIGEST frame until it receives a ACCEPT_CACHE_DIGEST settings value.
 
-When the underlying transport does not have such property (e.g., TLS 1.3 in 0-RTT mode), a client can reuse the settings value found in previous connections to that origin {{RFC6454}} to make assumptions.
+When the underlying transport does not have such property (e.g., TLS 1.3 in 0-RTT mode), a client can reuse the settings value found in previous connections to that origin {{!RFC6454}} to make assumptions.
 
 # IANA Considerations
 
@@ -302,25 +301,25 @@ This document registers the following entry in the Permanent Message Headers Reg
 * Applicable protocol: http
 * Status: experimental
 * Author/Change controller: IESG
-* Specification document(s): [this document]
+* Specification document(s): \[this document]
 
 This document registers the following entry in the HTTP/2 Frame Type Registry, as per {{RFC7540}}:
 
 * Frame Type: CACHE_DIGEST
 * Code: 0xd
-* Specification: [this document]
+* Specification: \[this document]
 
 This document registers the following entry in the HTTP/2 Settings Registry, as per {{RFC7540}}:
 
 * Code: 0x7
 * Name: ACCEPT_CACHE_DIGEST
 * Initial Value: 0x0
-* Reference: [this document]
+* Reference: \[this document]
 
 # Security Considerations
 
 The contents of a User Agent's cache can be used to re-identify or "fingerprint" the user over
-time, even when other identifiers (e.g., Cookies {{RFC6265}}) are cleared. 
+time, even when other identifiers (e.g., Cookies {{RFC6265}}) are cleared.
 
 CACHE_DIGEST allows such cache-based fingerprinting to become passive, since it allows the server
 to discover the state of the client's cache without any visible change in server behaviour.

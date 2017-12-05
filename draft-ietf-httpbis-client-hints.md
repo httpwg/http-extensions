@@ -31,6 +31,7 @@ normative:
   RFC7231:
   RFC7234:
   RFC6454:
+  RFC8174:
   HTML5: W3C.REC-html5-20141028
   CSSVAL: W3C.CR-css-values-3-20160929
   CSS2:
