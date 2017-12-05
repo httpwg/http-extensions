@@ -385,7 +385,7 @@ Given an ASCII string input_string, return a mapping of (label, item). input_str
 
 ## Lists {#list}
 
-Lists are arrays of items ({{item}}) or parameterised labels ({{param}}, with one to 1024 members.
+Lists are arrays of items ({{item}}) or parameterised labels ({{param}}), with one to 1024 members.
 
 In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
 
