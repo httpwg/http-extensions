@@ -78,6 +78,14 @@ This document describes how TLS exported authenticators
 [I-D.ietf-tls-exported-authenticator] can be used to provide proof of ownership
 of additional certificates to the HTTP layer to support both scenarios.
 
+--- note_Note_to_Readers
+
+Discussion of this draft takes place on the HTTP working group mailing list 
+(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
+
+Working Group information can be found at <http://httpwg.github.io/>; source 
+code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/secondary-certs>.
+
 --- middle
 
 # Introduction
