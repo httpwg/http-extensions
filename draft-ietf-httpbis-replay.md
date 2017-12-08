@@ -330,6 +330,14 @@ request is not safe to process before the TLS handshake completes, then all
 instances of the server (including gateways) need to agree and either reject the
 request or delay processing.
 
+Disabling early data, delaying requests, or rejecting requests with the 425 (Too
+Early) status code are all equally good measures for mitigating replay attacks
+on requests that might be vulnerable to replay.  Server instances can implement
+any of these measures and be considered to be consistent, even if different
+instances use different methods.  Critically, this means that it is possible to
+employ different mitigations in reaction to other conditions, such as server
+load.
+
 A server MUST NOT act on early data before the handshake completes if it and any
 other server instance could make a different decision about how to handle the
 same data.
