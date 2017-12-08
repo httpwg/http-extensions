@@ -345,11 +345,10 @@ requests, which could result in increased load.
 
 ## Out of Order Delivery
 
-In protocols that deliver data out of order (such as QUIC {{HQ}}) early data
-can arrive after the handshake completes.  This leads to potential ambiguity
-about the status of requests and could lead to inconsistent treatment (see
-{{be-consistent}}).  Implementations MUST either ensure that any early data that
-is delivered late is either discarded or consistently identified and processed.
+In protocols that deliver data out of order (such as QUIC {{HQ}}) early data can
+arrive after the handshake completes.  A server MAY process requests received in
+early data after handshake completion if it can rely on other instances
+correctly handling replays of the same requests.
 
 
 # IANA Considerations
