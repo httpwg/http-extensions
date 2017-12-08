@@ -353,11 +353,12 @@ requests, which could result in increased load.
 
 ## Out of Order Delivery
 
-In protocols that deliver data out of order (such as QUIC {{HQ}}) early data
-can arrive after the handshake completes.  This leads to potential ambiguity
-about the status of requests and could lead to inconsistent treatment (see
+In protocols that deliver data out of order (such as QUIC {{HQ}}) early data can
+arrive after the handshake completes.  This leads to potential ambiguity about
+the status of requests and could lead to inconsistent treatment (see
 {{be-consistent}}).  Implementations MUST either ensure that any early data that
-is delivered late is either discarded or consistently identified and processed.
+is delivered after the TLS handshake completes is either discarded or
+consistently identified as early and processed.
 
 
 # IANA Considerations
