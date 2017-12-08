@@ -409,6 +409,6 @@ Reference:
 # Acknowledgments
 {:numbered="false"}
 This document was not easy to produce.  The following people made substantial
-contributions to the quality and completeness of the document: Subodh Iyengar,
-Benjamin Kaduk, Ilari Liusavaara, Kazuho Oku, Eric Rescorla, Kyle Rose, and
-Victor Vasiliev.
+contributions to the quality and completeness of the document: David Benjamin,
+Subodh Iyengar, Benjamin Kaduk, Ilari Liusavaara, Kazuho Oku, Eric Rescorla,
+Kyle Rose, and Victor Vasiliev.
