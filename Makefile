@@ -1,4 +1,5 @@
 LIBDIR := lib
+USE_XSLT := true
 include $(LIBDIR)/main.mk
 
 $(LIBDIR)/main.mk:
