@@ -3,7 +3,7 @@ saxpath ?= "lib/saxon9.jar"
 saxon ?= java -classpath $(saxpath) net.sf.saxon.Transform -l
 kramdown2629 ?= XML_RESOURCE_ORG_PREFIX=https://xml2rfc.tools.ietf.org/public/rfc kramdown-rfc2629
 
-names := rfc6265bis key client-hints origin-frame cache-digest header-structure expect-ct early-hints rand-access-live replay
+names := rfc6265bis key client-hints origin-frame cache-digest header-structure expect-ct early-hints rand-access-live replay http2-secondary-certs
 drafts := $(addprefix draft-ietf-httpbis-,$(names))
 last_tag = $(shell git tag | grep "$(draft)" | sort | tail -1 | awk -F- '{print $$NF}')
 next_ver = $(if $(last_tag),$(shell printf "%.2d" $$(( 1$(last_tag) - 99)) ),00)
@@ -11,7 +11,7 @@ next := $(foreach draft, $(drafts), $(draft)-$(next_ver))
 
 TARGETS := $(addsuffix .txt,$(drafts)) \
 	  $(addsuffix .html,$(drafts))
-friendly_names := rfc6265bis key client-hints origin-frame cache-digest header-structure expect-ct early-hints rand-access-live replay
+friendly_names := rfc6265bis key client-hints origin-frame cache-digest header-structure expect-ct early-hints rand-access-live replay secondary-certs
 FRIENDLY := $(addsuffix .txt,$(friendly_names)) \
 	    $(addsuffix .html,$(friendly_names))
 
