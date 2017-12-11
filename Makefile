@@ -66,6 +66,9 @@ rand-access-live.%: draft-ietf-httpbis-rand-access-live.%
 replay.%: draft-ietf-httpbis-replay.%
 	cp -f $< $@
 
+secondary-certs.%: draft-ietf-httpbis-http2-secondary-certs.%
+	cp -f $< $@
+
 define makerule_submit_xml =
 $(1)
 	sed -e"s/$$(basename $$<)-latest/$$(basename $$@)/" $$< > $$@
