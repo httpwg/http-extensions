@@ -27,7 +27,6 @@ author:
     email: nygren@akamai.com
 
 normative:
-  RFC2119:
 
 informative:
 
@@ -224,7 +223,7 @@ This specification adds an entry to the "HTTP/2 Frame Type" registry.
 
 * Frame Type: ORIGIN
 * Code: 0xc
-* Specification: [this document]
+* Specification: \[this document]
 
 
 # Security Considerations {#sc}

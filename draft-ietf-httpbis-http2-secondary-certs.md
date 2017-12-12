@@ -31,21 +31,10 @@ author:
 
 
 normative:
-  RFC2119:
-  RFC2459:
   RFC5246:
-  RFC5280:
   RFC6066:
   RFC7230:
   RFC7540:
-  X690:
-    target: http://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf
-    title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
-    author:
-        org: ITU-T
-    date: 2002
-    seriesinfo:
-        ISO: ISO/IEC 8825-1:2002
   I-D.ietf-tls-tls13:
   I-D.ietf-tls-exported-authenticator:
 
@@ -56,27 +45,32 @@ informative:
 
 --- abstract
 
-TLS provides fundamental mutual authentication services for HTTP,
-supporting up to one server certificate and up to one client certificate
-associated to the session to prove client and server identities as
-necessary. This draft provides mechanisms for providing additional such
-certificates at the HTTP layer when these constraints are not
-sufficient.
+TLS provides fundamental mutual authentication services for HTTP, supporting up
+to one server certificate and up to one client certificate associated to the
+session to prove client and server identities as necessary. This draft provides
+mechanisms for providing additional such certificates at the HTTP layer when
+these constraints are not sufficient.
 
-Many HTTP servers host content from several origins. HTTP/2 [RFC7540]
-permits clients to reuse an existing HTTP connection to a server
-provided that the secondary origin is also in the certificate provided
-during the TLS [I-D.ietf-tls-tls13] handshake.
+Many HTTP servers host content from several origins. HTTP/2 permits clients to
+reuse an existing HTTP connection to a server provided that the secondary origin
+is also in the certificate provided during the TLS handshake.
 
-In many cases, servers will wish to maintain separate certificates for
-different origins but still desire the benefits of a shared HTTP
-connection. Similarly, servers may require clients to present
-authentication, but have different requirements based on the content the
-client is attempting to access.
+In many cases, servers will wish to maintain separate certificates for different
+origins but still desire the benefits of a shared HTTP connection. Similarly,
+servers may require clients to present authentication, but have different
+requirements based on the content the client is attempting to access.
 
-This document describes how TLS exported authenticators
-[I-D.ietf-tls-exported-authenticator] can be used to provide proof of ownership
-of additional certificates to the HTTP layer to support both scenarios.
+This document describes how TLS exported authenticators can be used to provide
+proof of ownership of additional certificates to the HTTP layer to support both
+scenarios.
+
+--- note_Note_to_Readers
+
+Discussion of this draft takes place on the HTTP working group mailing list 
+(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
+
+Working Group information can be found at <http://httpwg.github.io/>; source
+code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/secondary-certs>.
 
 --- middle
 
@@ -293,7 +287,10 @@ exchange has not been successful.
 
 ## Terminology
 
-RFC 2119 [RFC2119] defines the terms "MUST", "MUST NOT", "SHOULD" and "MAY".
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}}
+when, and only when, they appear in all capitals, as shown here.
 
 
 # Discovering Additional Certificates at the HTTP/2 Layer {#discovery}
