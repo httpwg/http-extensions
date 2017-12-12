@@ -8,6 +8,8 @@ area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
 
+stand_alone: yes
+
 author:
  -
     ins: M. Nottingham

@@ -192,7 +192,7 @@ The HTTP Status Codes Registry will be updated with the following entry:
 
 * Code: 103
 * Description: Early Hints
-* Specification: [this document]
+* Specification: \[this document]
 
 --- back
 
