@@ -30,19 +30,13 @@ informative:
     title: HTML - Living Standard
     author:
      -
-        ins: various
-        name: various
         org: WHATWG
-    date: 2017-09-22
   FETCH:
     target: https://fetch.spec.whatwg.org
     title: Fetch - Living Standard
     author:
      -
-        ins: various
-        name: various
         org: WHATWG
-    date: 2017-09-22
 
 
 --- abstract
