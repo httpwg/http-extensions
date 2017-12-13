@@ -3,7 +3,8 @@
 A few things to know if you're an editor:
 
 * Pushing to the master branch will automatically generate the HTML on the gh-pages branch.
-* Tagging a branch with a draft name (see below) will automatically submit it for publication.
+* Tagging master with a draft name (see below) will automatically submit it for publication.
+* Creating other branches for temporary work is fine, but please prefix their names with your username, and clean them up when you're done.
 * You can build drafts locally with `make`; see the [required software](https://github.com/martinthomson/i-d-template/blob/master/doc/SETUP.md). We use `kramdown-rfc2669`.
 
 
