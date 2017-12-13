@@ -8,6 +8,14 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 [![Build Status](https://travis-ci.org/httpwg/http-extensions.svg?branch=master)](https://travis-ci.org/httpwg/http-extensions)
 
 
+### Using HTTP as a Substrate (BCP556bis)
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-bcp56bis.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-bcp56bis.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-bcp56bis) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Abcp56bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-bcp56bis/)
+
+
+
 ### Using Early Data in HTTP
 
 *In WGLC Ends Dec.10*
