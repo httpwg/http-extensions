@@ -8,7 +8,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 [![Build Status](https://travis-ci.org/httpwg/http-extensions.svg?branch=master)](https://travis-ci.org/httpwg/http-extensions)
 
 
-### Using HTTP as a Substrate (BCP556bis)
+### Using HTTP as a Substrate (BCP56bis)
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-bcp56bis.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-bcp56bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-bcp56bis) (less recent, more official)
