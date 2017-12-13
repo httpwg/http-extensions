@@ -199,18 +199,18 @@ requirements for directives are:
    field. Directives are either optional or required, as stipulated in their
    definitions.
 
-3.  Directive names are case insensitive.
+3. Directive names are case insensitive.
 
-4.  UAs MUST ignore any header fields containing directives, or other header
-    field value data, that do not conform to the syntax defined in this
-    specification.  In particular, UAs must not attempt to fix malformed header
-    fields.
+4. UAs MUST ignore any header fields containing directives, or other header
+   field value data, that do not conform to the syntax defined in this
+   specification.  In particular, UAs must not attempt to fix malformed header
+   fields.
 
-5.  If a header field contains any directive(s) the UA does not recognize, the
-    UA MUST ignore those directives.
+5. If a header field contains any directive(s) the UA does not recognize, the
+   UA MUST ignore those directives.
 
-6.  If the Expect-CT header field otherwise satisfies the above requirements (1
-    through 5), the UA MUST process the directives it recognizes.
+6. If the Expect-CT header field otherwise satisfies the above requirements (1
+   through 5), the UA MUST process the directives it recognizes.
 
 ### The report-uri Directive
 
@@ -239,8 +239,8 @@ domain or web origin as the host being reported about.
 
 UAs SHOULD make their best effort to report Expect-CT failures to the
 `report-uri`, but they may fail to report in exceptional conditions.  For
-example, if connecting the `report-uri` itself incurs an Expect-CT failure or
-other certificate validation failure, the UA MUST cancel the connection.
+example, if connecting to the `report-uri` itself incurs an Expect-CT failure
+or other certificate validation failure, the UA MUST cancel the connection.
 Similarly, if Expect-CT Host A sets a `report-uri` referring to Expect-CT Host
 B, and if B sets a `report-uri` referring to A, and if both hosts fail to comply
 to the UA's CT Policy, the UA SHOULD detect and break the loop by failing to
@@ -538,7 +538,7 @@ The steps to report an Expect-CT failure are as follows.
 1. Prepare a JSON object `report object` with the single key `expect-ct-report`,
    whose value is the result of generating a violation report object as
    described in {{generating-a-violation-report}}.
-2. Let `report body` by the JSON stringification of `report object`.
+2. Let `report body` be the JSON stringification of `report object`.
 3. Let `report-uri` be the value of the `report-uri` directive in the Expect-CT
    header field.
 4. Send an HTTP POST request to `report-uri` with a `Content-Type` header field

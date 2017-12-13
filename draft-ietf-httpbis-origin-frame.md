@@ -27,7 +27,6 @@ author:
     email: nygren@akamai.com
 
 normative:
-  RFC2119:
 
 informative:
 
@@ -103,7 +102,7 @@ Origin-Len:
 : An unsigned, 16-bit integer indicating the length, in octets, of the ASCII-Origin field.
 
 Origin:
-: An OPTIONAL sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender believes this connection is or could be authoritative for.
+: An OPTIONAL sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender asserts this connection is or could be authoritative for.
 
 The ORIGIN frame does not define any flags. However, future updates to this specification MAY
 define flags. See {{process}}.
@@ -118,7 +117,7 @@ When received by an implementing client, it is used to initialise and manipulate
 (see {{set}}), thereby changing how the client establishes authority for origin servers (see
 {{authority}}).
 
-The origin frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST
+The ORIGIN frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST
 be ignored.
 
 Likewise, the ORIGIN frame is only valid on connections with the "h2" protocol identifier, or when
@@ -153,7 +152,7 @@ and successfully processed by a client, the connection's Origin Set is defined t
 origin.  The initial origin is composed from:
 
   - Scheme: "https"
-  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}}, Section 3), converted to lower case
+  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}}, Section 3), converted to lower case; if SNI is not present, the remote address of the connection (i.e., the server's IP address)
   - Port: the remote port of the connection (i.e., the server's port)
 
 The contents of that ORIGIN frame (and subsequent ones) allows the server to incrementally add new
@@ -206,7 +205,8 @@ from the certificate `subjectAltName` field (using the rules defined in {{!RFC28
 {{!RFC5280}}, Section 4.2.1.6).
 
 Additionally, clients MAY avoid consulting DNS to establish the connection's authority for new
-requests; however, those that do so face new risks, as explained in {{sc}}.
+requests to origins in the Origin Set; however, those that do so face new risks, as explained in
+{{sc}}.
 
 Because ORIGIN can change the set of origins a connection is used for over time, it is possible
 that a client might have more than one viable connection to an origin open at any time. When this
@@ -223,7 +223,7 @@ This specification adds an entry to the "HTTP/2 Frame Type" registry.
 
 * Frame Type: ORIGIN
 * Code: 0xc
-* Specification: [this document]
+* Specification: \[this document]
 
 
 # Security Considerations {#sc}
@@ -274,7 +274,7 @@ SNI-based origin, by sending an empty ORIGIN frame. Or, a larger number of origi
 by including a payload.
 
 Generally, this information is most useful to send before sending any part of a response that might
-initiate a new connection; for example, `Link` header fields {{?RFC5988}} in a response HEADERS, or links
+initiate a new connection; for example, `Link` header fields {{?RFC8288}} in a response HEADERS, or links
 in the response body.
 
 Therefore, the ORIGIN frame ought be sent as soon as possible on a connection, ideally before any
@@ -289,8 +289,8 @@ That said, senders are encouraged to include as many origins as practical within
 frame; clients need to make decisions about creating connections on the fly, and if the origin
 set is split across many frames, their behaviour might be suboptimal.
 
-Senders take note that, as per Section 4 of {{!RFC6454}}, the values in an ORIGIN header need to be
-case-normalised before serialisation.
+Senders take note that, as per Section 4, Step 5 of {{!RFC6454}}, the values in an ORIGIN header
+need to be case-normalised before serialisation.
 
 Finally, servers that host alternative services {{?RFC7838}} will need to explicitly advertise
 their origins when sending ORIGIN, because the default contents of the Origin Set (as per {{set}})
