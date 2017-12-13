@@ -19,7 +19,8 @@
 <rfc
     category="exp"
     ipr="trust200902"
-    docName="draft-ietf-httpbis-rand-access-live-latest" >
+    docName="draft-ietf-httpbis-rand-access-live-latest"
+    xmlns:x='http://purl.org/net/xml2rfc/ext'>
 
     <!-- Processing Instructions- PIs (for a complete list and description,
           see file http://xml.resource.org/authoring/README.html and below... -->
@@ -241,16 +242,18 @@
       representation length) may respond with a 206 status code (Partial Content) with a Content-Range
       header indicating the currently satisfiable byte range. For example:
       </t>
-<figure><artwork type="example">
-      HEAD /resource HTTP/1.1
-      Range: bytes=0-
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+HEAD /resource HTTP/1.1
+Host: example.com
+Range: bytes=0-
+
 </artwork></figure>
       <t>      
       returns a response of the form:
       </t>  
-<figure><artwork type="example">
-    HTTP/1.1 206 Partial Content
-    Content-Range: bytes 0-1234567/*
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+HTTP/1.1 206 Partial Content
+Content-Range: bytes 0-1234567/*
 </artwork></figure>
       <t>
       from the server indicating that (1) the complete representation length is unknown (via the "*" in place of the complete-length field) and (2) that only bytes 0-1234567 were accessable at the time the request was processed by the server. The client can infer from this response that bytes 0-1234567 of the representation can be requested and returned in a timely fashion (the bytes are immediately available).
@@ -282,9 +285,11 @@
       <t>
         A client can indicate support for handling indeterminate-length byte-range responses by providing a Very Large Value for the last-byte-pos in the byte-range request. For example, a client can perform a byte-range GET request of the form:
       </t>
-<figure><artwork type="example">
-    GET /resource HTTP/1.1
-    Range: bytes=1230000-999999999999
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+GET /resource HTTP/1.1
+Host: example.com
+Range: bytes=1230000-999999999999
+
 </artwork></figure>
       <t>    
         where the last-byte-pos in the Request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above.
@@ -295,16 +300,18 @@
       <t>
         For example:
       </t>
-<figure><artwork type="example">
-    GET /resource HTTP/1.1
-    Range: bytes=1230000-999999999999
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+GET /resource HTTP/1.1
+Host: example.com
+Range: bytes=1230000-999999999999
+
 </artwork></figure>
       <t>
         returns
       </t>        
-<figure><artwork type="example">
-    HTTP/1.1 206 Partial Content
-    Content-Range: bytes 1230000-999999999999/*
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+HTTP/1.1 206 Partial Content
+Content-Range: bytes 1230000-999999999999/*
 </artwork></figure>
       <t>        
         from the server to indicate that the response will start at byte 1230000 and continues indefinitely to include all aggregated content, as it becomes available.
@@ -315,16 +322,18 @@
       <t>
         For example:
       </t>
-<figure><artwork type="example">
-    GET /resource HTTP/1.1
-    Range: bytes=1230000-999999999999
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+GET /resource HTTP/1.1
+Host: example.com
+Range: bytes=1230000-999999999999
+
 </artwork></figure>
       <t>
         will return
       </t>
-<figure><artwork type="example">
-    HTTP/1.1 206 Partial Content
-    Content-Range: bytes 1230000-1234567/*
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+HTTP/1.1 206 Partial Content
+Content-Range: bytes 1230000-1234567/*
 </artwork></figure>
       <t>      
         from the server to indicate that the response will start at byte 1230000 and end at byte 1234567 and will not include any aggregated content. This is the response expected from a typical HTTP server - one that doesn't support byte-range requests on aggregating content.
@@ -345,32 +354,36 @@
           learn what range the server has currently available and initiate an
           indeterminate-length transfer. For example:
       </t>
-<figure><artwork type="example">
-    HEAD /resource HTTP/1.1
-    Range: bytes=0-
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+HEAD /resource HTTP/1.1
+Host: example.com
+Range: bytes=0-
+
 </artwork></figure>
         <t>
             With the Content-Range response header indicating the (or ranges) available. For example:
         </t>
-<figure><artwork type="example">
-    206 Partial Content
-    Content-Range: bytes 0-1234567/*
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+206 Partial Content
+Content-Range: bytes 0-1234567/*
 </artwork></figure>
         <t>
             The client can then issue a request for a range starting at the end
             value (using a very large value for the end of a range) and receive
             only new content.
         </t>
-<figure><artwork type="example">
-    GET /resource HTTP/1.1
-    Range: bytes=1234567-999999999999
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+GET /resource HTTP/1.1
+Host: example.com
+Range: bytes=1234567-999999999999
+
 </artwork></figure>
         <t>
           with a server returning a Content-Range response indicating that an indeterminate-length response body will be provided
         </t>
-<figure><artwork type="example">
-    206 Partial Content
-    Content-Range: bytes 1234567-999999999999/*
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+206 Partial Content
+Content-Range: bytes 1234567-999999999999/*
 </artwork></figure>
       </section>
       <section anchor="shift-buffers" title="Shift Buffer Representations">
@@ -380,28 +393,30 @@
       <t>
         For example a Range request containing:
       </t>
-<figure><artwork type="example">
-    HEAD /resource HTTP/1.1
-    Range: bytes=0-
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+HEAD /resource HTTP/1.1
+Host: example.com
+Range: bytes=0-
+
 </artwork></figure>
       <t>
         returns
       </t>
-<figure><artwork type="example">
-    206 Partial Content
-    Content-Range: bytes 1000000-1234567/*
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+206 Partial Content
+Content-Range: bytes 1000000-1234567/*
 </artwork></figure>
       <t>
         indicating that the first 1000000 bytes were not accessible at the time the HEAD request was processed. Subsequent HEAD requests could return:
       </t>
-<figure><artwork type="example">
-    Content-Range: bytes 1000000-1234567/*
+<figure><artwork type="example" x:indent-with="    ">
+Content-Range: bytes 1000000-1234567/*
 </artwork></figure>
-<figure><artwork type="example">
-    Content-Range: bytes 1010000-1244567/*
+<figure><artwork type="example" x:indent-with="    ">
+Content-Range: bytes 1010000-1244567/*
 </artwork></figure>
-<figure><artwork type="example">
-    Content-Range: bytes 1020000-1254567/*
+<figure><artwork type="example" x:indent-with="    ">
+Content-Range: bytes 1020000-1254567/*
 </artwork></figure>
       <t>
         Note though that the difference between the first-byte-pos and last-byte-pos need not be constant.
@@ -409,16 +424,18 @@
       <t>
         The client could then follow-up with a GET Range request containing
       </t>
-<figure><artwork type="example">
-    GET /resource HTTP/1.1
-    Range: bytes=1020000-999999999999
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+GET /resource HTTP/1.1
+Host: example.com
+Range: bytes=1020000-999999999999
+
 </artwork></figure>
       <t>
         with the server returning
       </t>  
-<figure><artwork type="example">
-    206 Partial Content
-    Content-Range: bytes 1020000-999999999999/*
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+206 Partial Content
+Content-Range: bytes 1020000-999999999999/*
 </artwork></figure>
       <t>
         with the response body returning bytes 1020000-1254567 immediately and aggregated ("live") data being returned as the content is aggregated.
