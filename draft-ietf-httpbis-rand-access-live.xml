@@ -203,21 +203,21 @@
         <t>
             This document recommends a two-step process for accessing resources
             that have indeterminate length representations.
-            
+        </t><t>     
             Two steps are necessary because of limitations with the Range request
             header and the Content-Range response header fields. A server cannot
             know from a range request that a client wishes to receive a response
             that does not have a definite end. More critically, the header fields
             do not allow the server to signal that a resource has indeterminate
             length without also providing a fixed portion of the resource.
-
+        </t><t>
             A client first learns that the resource has a representation of
             indeterminate length by requesting a range of the resource. The server
             responds with the range that is available, but indicates that the
             length of the representation is unknown using the existing
             Content-Range syntax. See <xref target="establishing-range" /> 
             for details and examples.
-
+        </t><t>
             Once the client knows the resource has indeterminate length, it can
             request a range with a very large end position from the resource. The
             client chooses an explicit end value larger than can be transferred in
