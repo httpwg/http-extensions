@@ -5,7 +5,7 @@ guidelines](CONTRIBUTING.md) for information about how to participate.
 
 **Be aware that all contributions to our work fall under the "NOTE WELL" terms therein.**
 
-[![Build Status](https://travis-ci.org/httpwg/http-extensions.svg?branch=master)](https://travis-ci.org/httpwg/http-extensions)
+[![Build Status](https://circleci.com/gh/quicwg/ops-drafts/tree/master.svg?style=svg)](https://circleci.com/gh/quicwg/ops-drafts/tree/master)
 
 
 ### Using HTTP as a Substrate (BCP56bis)
