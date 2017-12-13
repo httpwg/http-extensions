@@ -1,5 +1,6 @@
 LIBDIR := lib
 USE_XSLT := true
+DISABLE_RIBBON := true
 include $(LIBDIR)/main.mk
 
 $(LIBDIR)/main.mk:
