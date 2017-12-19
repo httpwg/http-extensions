@@ -19,7 +19,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-h2-websockets.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-h2-websockets.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-h2-websockets) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Abcp56bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-h2-websockets/)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Ah2-websockets) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-h2-websockets/)
 
 ### Using Early Data in HTTP
 
