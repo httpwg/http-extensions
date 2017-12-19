@@ -40,7 +40,10 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Secondary Certificates
 
-*Consensus to adopt.. placeholder for draft links*
+* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-http2-secondary-certs.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-http2-secondary-certs.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-secondary-certs) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Asecondary-certs) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-secondary-certs/)
+
 
 ### Expect-CT
 
