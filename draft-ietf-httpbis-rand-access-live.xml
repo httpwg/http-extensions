@@ -70,13 +70,13 @@
         initials="C." 
         surname="Pratt">
 
-        <organization abbrev="CableLabs">CableLabs</organization>
         <address>
             <postal>
-                <street>858 Coal Creek Circle</street>
-                <city>Louisville</city>
-                <region>CO</region>
-                <code>80027</code>
+                <street></street>
+                <city>Portland</city>
+                <region>OR</region>
+                <code>97229</code>
+                <country>US</country>
             </postal>
         <email>pratt@acm.org</email>
         </address>
