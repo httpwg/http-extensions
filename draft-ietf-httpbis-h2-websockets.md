@@ -81,7 +81,7 @@ described in BCP 14, {{!RFC2119}}.
 # The ENABLE_CONNECT_PROTOCOL SETTINGS Parameter
 
 This document adds a new SETTINGS Parameter to those defined by
-{{!RFC7540}} Section 6.5.2.
+{{!RFC7540}}, Section 6.5.2.
 
 The new parameter is ENABLE_CONNECT_PROTOCOL (type = 0x8). The value
 of the parameter MUST be 0 or 1.
@@ -95,7 +95,7 @@ A sender MUST NOT send a ENABLE_CONNECT_PROTOCOL parameter with the
 value of 0 after previously sending a value of 1.
 
 The use of a SETTINGS Parameter to opt-in to an otherwise incompatible
-protocol change is a use of "Extending HTTP/2" defined by section 5.5
+protocol change is a use of "Extending HTTP/2" defined by Section 5.5
 of {{!RFC7540}}. If a client were to use the provisions of the extended
 CONNECT method defined in this document without first receiving a
 ENABLE_CONNECT_PROTOCOL parameter with the value of 1 it would be a
@@ -103,7 +103,7 @@ protocol violation.
 
 # The Extended CONNECT Method
 
-The CONNECT Method of {{!RFC7540}} Section 8.3 is modified in
+The CONNECT Method defined in Section 8.3 of {{!RFC7540}} is modified in
 the following ways:
 
 * A new pseudo-header :protocol MAY be included on request HEADERS
@@ -115,8 +115,8 @@ the following ways:
   :path pseudo-header fields MUST be included.
 
 * On requests bearing the :protocol pseudo-header, the :authority
-  pseudo-header field is interpreted according to {{!RFC7540}} Section
-  8.1.2.3 instead of {{!RFC7540}} Section 8.3. In particular the server
+  pseudo-header field is interpreted according to Section 8.1.2.3
+  of {{!RFC7540}} instead of Section 8.3 of {{!RFC7540}}. In particular the server
   MUST not make a new TCP connection to the host and port indicated by
   the :authority.
 
@@ -162,7 +162,7 @@ After successfully processing the opening handshake the peers should
 proceed with The WebSocket Protocol {{!RFC6455}} using the HTTP/2
 stream from the CONNECT transaction as if it were the TCP connection
 referred to in {{!RFC6455}}. The state of the WebSocket connection at
-this point is OPEN as defined by {{!RFC6455}} Section 4.1.
+this point is OPEN as defined by {{!RFC6455}}, Section 4.1.
 
 ## Example
 ~~~
@@ -231,7 +231,7 @@ specification addresses that concern in two ways:
 # IANA Considerations
 
 This document establishes a entry for the HTTP/2 Settings Registry
-that was established by {{!RFC7540}} Section 11.3
+that was established by Section 11.3 of {{!RFC7540}}.
 
 Name: ENABLE_CONNECT_PROTOCOL
 
