@@ -24,7 +24,7 @@ normative:
 --- abstract
 
 This document defines a mechanism for running the WebSocket Protocol
-{{!RFC6455}} over a single stream of an HTTP/2 connection.
+over a single stream of an HTTP/2 connection.
 
 --- note_Note_to_Readers_
 
