@@ -206,7 +206,7 @@
             that have indeterminate length representations.
         </t><t>     
             Two steps are necessary because of limitations with the Range request
-            header and the Content-Range response header fields. A server cannot
+            header fields and the Content-Range response header fields. A server cannot
             know from a range request that a client wishes to receive a response
             that does not have a definite end. More critically, the header fields
             do not allow the server to signal that a resource has indeterminate
@@ -241,7 +241,7 @@
       which allows a client to send a HEAD request with a first-byte-pos and leave last-byte-pos absent. A
       server that receives a satisfiable byte-range request (with first-byte-pos smaller than the current
       representation length) may respond with a 206 status code (Partial Content) with a Content-Range
-      header indicating the currently satisfiable byte range. For example:
+      header field indicating the currently satisfiable byte range. For example:
       </t>
 <figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
 HEAD /resource HTTP/1.1
@@ -268,7 +268,7 @@ Content-Range: bytes 0-1234567/*
         For example, for a large video asset, a client may wish to start a content transfer from the video "key" frame immediately before the point of aggregation and continue the content transfer indefinitely as content is aggregated - in order to support low-latency startup of a live video stream.
       </t> 
       <t>
-        Unlike a byte-range Range request, a byte-range Content-Range response header cannot be "open ended", per <xref x:sec="4.2" x:fmt="of" target="RFC7233"/>:
+        Unlike a byte-range Range request, a byte-range Content-Range response header field cannot be "open ended", per <xref x:sec="4.2" x:fmt="of" target="RFC7233"/>:
       </t>
 <figure><artwork type="abnf">
    byte-content-range  = bytes-unit SP
@@ -296,7 +296,7 @@ Range: bytes=1230000-999999999999
         where the last-byte-pos in the Request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above.
       </t>
       <t>
-        In response, a server may indicate that it is supplying a continuously aggregating ("live") response by supplying the client request's last-byte-pos in the Content-Range response header. 
+        In response, a server may indicate that it is supplying a continuously aggregating ("live") response by supplying the client request's last-byte-pos in the Content-Range response header field. 
       </t>
       <t>
         For example:
@@ -343,7 +343,7 @@ Content-Range: bytes 1230000-1234567/*
         A client that doesn't receive a response indicating it is continuously aggregating must use other means to access aggregated content (e.g. periodic byte-range polling).
           </t>
       <t>
-        A server that does return a continuously aggregating ("live") response should return data using chunked transfer coding and not provide a Content-Length header. A 0-length chunk indicates the end of the transfer, per <xref x:sec="4.1" x:fmt="of" target="RFC7230"/>.
+        A server that does return a continuously aggregating ("live") response should return data using chunked transfer coding and not provide a Content-Length header field. A 0-length chunk indicates the end of the transfer, per <xref x:sec="4.1" x:fmt="of" target="RFC7230"/>.
           </t>
     </section>
   </section>
@@ -362,7 +362,7 @@ Range: bytes=0-
 
 </artwork></figure>
         <t>
-            With the Content-Range response header indicating the (or ranges) available. For example:
+            With the Content-Range response header field indicating the (or ranges) available. For example:
         </t>
 <figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
 206 Partial Content
