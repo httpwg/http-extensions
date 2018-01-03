@@ -2,7 +2,7 @@
 title: "Expect-CT Extension for HTTP"
 abbrev: "Expect-CT"
 docname: draft-ietf-httpbis-expect-ct-latest
-date: 2017
+date: {DATE}
 category: exp
 area: Applications and Real-Time
 workgroup: HTTP
@@ -135,7 +135,7 @@ CT-qualified
 
 CT Policy
   : See Certificate Transparency Policy.
-  
+
 Effective Expect-CT Date
   : is the time at which a UA observed a valid Expect-CT header for a given
   host.
@@ -186,7 +186,7 @@ directive-value     = token / quoted-string
 ~~~
 {: #expect-ct-syntax title="Syntax of the Expect-CT header field"}
 
-Optional white space (`OWS`) is used as defined in Section 3.2.3 of 
+Optional white space (`OWS`) is used as defined in Section 3.2.3 of
 {{!RFC7230}}. `token` and `quoted-string` are used as defined in Section 3.2.6
 of {{!RFC7230}}.
 

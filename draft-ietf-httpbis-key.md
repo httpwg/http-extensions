@@ -2,7 +2,7 @@
 title: The Key HTTP Response Header Field
 abbrev: Key
 docname: draft-ietf-httpbis-key-latest
-date: 2017
+date: {DATE}
 category: std
 
 ipr: trust200902
@@ -28,17 +28,17 @@ author:
  -
     ins: M. Nottingham
     name: Mark Nottingham
-    organization: 
+    organization:
     email: mnot@mnot.net
     uri: https://www.mnot.net/
-    
+
 normative:
   RFC2119:
   RFC5234:
   RFC7230:
   RFC7231:
   RFC7234:
-  
+
 informative:
   RFC5226:
   RFC6265:
@@ -61,10 +61,10 @@ risk of fingerprinting.
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source 
+Working Group information can be found at <http://httpwg.github.io/>; source
 code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/key>.
 
 --- middle
@@ -108,7 +108,7 @@ For example, this response header field:
 ~~~
 
 indicates that the selected response depends upon the "_sess" and "ID" cookie values.
- 
+
 This Key:
 
 ~~~ example
@@ -136,7 +136,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This document uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} (including the
 DQUOTE rule), and the list rule extension defined in {{RFC7230}}, Section 7. It includes by
-reference the field-name, quoted-string and quoted-pair rules from that document, the OWS rule from 
+reference the field-name, quoted-string and quoted-pair rules from that document, the OWS rule from
 {{RFC7230}} and the parameter rule from {{RFC7231}}.
 
 
@@ -172,13 +172,13 @@ The following header fields have the same effect:
   Vary: Accept-Encoding, Cookie
   Key: Accept-Encoding, Cookie
 ~~~
-  
+
 However, Key's use of parameters allows:
 
 ~~~ example
   Key: Accept-Encoding, Cookie; param=foo
 ~~~
-  
+
 to indicate that the secondary cache key depends upon the Accept-Encoding header field and the
 "foo" Cookie.
 
@@ -197,7 +197,7 @@ parameters may define further capabilities.
 
 ## Relationship with Vary
 
-Origin servers SHOULD still send Vary when using Key, to ensure backwards compatibility. 
+Origin servers SHOULD still send Vary when using Key, to ensure backwards compatibility.
 
 For example,
 
@@ -249,7 +249,7 @@ response) using Key, the following steps are taken:
 2. Let `key_value` be the result of Creating a Header Field Value ({{value}}) with `key` as the `target_field_name` and the most recently seen response header list for the resource as `header_list`.
 3. Let `secondary_key` be an empty string.
 4. Create `key_list` by splitting `key_value` on "," characters, excepting "," characters within quoted strings, as per {{RFC7230}}, Section 3.2.6.
-5. For `key_item` in `key_list`: 
+5. For `key_item` in `key_list`:
 
    {: style="format %d)" counter="b"}
    1. Remove any leading and trailing WSP from `key_item`.
@@ -267,7 +267,7 @@ response) using Key, the following steps are taken:
       4. If `param_name` does not identify a Key parameter processing algorithm that is implemented, fail parameter processing ({{fail-param}}) and skip to the next `key_item`.
       5. Let `param_value` be the string after the first "=" character in `parameter`.
       6. If the first and last characters of `param_value` are both DQUOTE:
-      
+
          {: style="format %d)" counter="d"}
          1. Remove the first and last characters of `param_value`.
          2. Replace quoted-pairs within `param_value` with the octet following the backslash, as per {{RFC7230}}, Section 3.2.6.
@@ -285,7 +285,7 @@ Likewise, while the secondary cache key associated with both stored and presente
 required to use the most recently seen Key header field for the resource in question, this can be
 achieved using a variety of implementation strategies, including (but not limited to):
 
-* Generating a new secondary cache key for every stored response associated with the resource upon each request. 
+* Generating a new secondary cache key for every stored response associated with the resource upon each request.
 * Caching the secondary cache key with the stored request/response pair and re-generating it when the Key header field is observed to change.
 * Caching the secondary cache key with the stored response and invalidating the stored response(s) when the Key header field is observed to change.
 
@@ -296,7 +296,7 @@ Given a header field name `target_field_name` and `header_list`, a list of (`fie
 `field_value`) tuples:
 
 {: style="format %d)"  counter="e"}
-1. Let `target_field_values` be an empty list. 
+1. Let `target_field_values` be an empty list.
 3. For each (`field_name`, `field_value`) tuple in `header_list`:
 
    {: style="format %d)"  counter="f"}
@@ -316,7 +316,7 @@ When this happens, implementations MUST either behave as if the whole Key header
 present (i.e., abort processing of Key, ignoring it entirely and falling back to Vary), or assure
 that the nominated header fields being compared match, as per {{RFC7234}}, Section 4.1 (i.e., treat
 the failing portion of the Key header as falling back to Vary, but continuing to process the rest).
-  
+
 
 ## Key Parameters
 
@@ -371,7 +371,7 @@ Bar: 12
 Bar: 10
 Bar: 14, 1
 ~~~
- 
+
 
 ### partition
 
@@ -564,7 +564,7 @@ equivalent):
    {: style="format %d)" counter="p"}
    1. If the "=" character does not occur within `header_item`, skip to the next `header_item`.
    2. Let `item_name` be the string occurring before the first "=" character in `header_item`.
-   3. If `item_name` does not case-insensitively match `parameter_value`, skip to the next `header_item`. 
+   3. If `item_name` does not case-insensitively match `parameter_value`, skip to the next `header_item`.
    4. Return the string occurring after the first "=" character in `header_item`.
 5. Return the empty string.
 

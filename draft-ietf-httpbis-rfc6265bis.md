@@ -1,7 +1,7 @@
 ---
 title: "Cookies: HTTP State Management Mechanism"
 docname: draft-ietf-httpbis-rfc6265bis-latest
-date: 2017
+date: {DATE}
 category: std
 obsoletes: 6265
 
@@ -139,7 +139,7 @@ informative:
       ins: J. Mitchell
     seriesinfo:
       DOI: 10.1145/1455770.1455782
-      ISBN: 978-1-59593-810-7 
+      ISBN: 978-1-59593-810-7
       ACM: "CCS '08: Proceedings of the 15th ACM conference on Computer and communications security (pages 75-88)"
   Aggarwal2010:
     author:
@@ -260,7 +260,7 @@ interpreted as described in {{RFC2119}}.
 Requirements phrased in the imperative as part of algorithms (such as "strip any
 leading space characters" or "return false and abort these steps") are to be
 interpreted with the meaning of the key word ("MUST", "SHOULD", "MAY", etc.)
-used in introducing the algorithm. 
+used in introducing the algorithm.
 
 Conformance requirements phrased as algorithms or specific steps can be
 implemented in any manner, so long as the end result is equivalent. In
@@ -1196,7 +1196,7 @@ user agent MUST process the cookie-av as follows.
 
 4.  If delta-seconds is less than or equal to zero (0), let expiry-time be
     the earliest representable date and time. Otherwise, let the expiry-time
-    be the current date and time plus delta-seconds seconds. 
+    be the current date and time plus delta-seconds seconds.
 
 5.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Max-Age and an attribute-value of expiry-time.

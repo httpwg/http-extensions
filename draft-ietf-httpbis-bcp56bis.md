@@ -1,7 +1,7 @@
 ---
 title: On the use of HTTP as a Substrate
 docname: draft-ietf-httpbis-bcp56bis-00
-date: 2017
+date: {DATE}
 category: bcp
 obsoletes: 3205
 
@@ -47,7 +47,7 @@ practices for these protocols' use of HTTP.
 
 --- note_Note_to_Readers_
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
 Working Group information can be found at <http://httpwg.github.io/>; source code and issues list
