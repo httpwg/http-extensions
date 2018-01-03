@@ -1,7 +1,7 @@
 ---
 title: Structured Headers for HTTP
 docname: draft-ietf-httpbis-header-structure-latest
-date: 2017
+date: {DATE}
 category: std
 ipr: trust200902
 area: Applications and Real-Time

@@ -2,7 +2,7 @@
 title: Bootstrapping WebSockets with HTTP/2
 abbrev: H2 Websockets
 docname: draft-ietf-httpbis-h2-websockets-latest
-date: 2017-12-19
+date: {DATE}
 category: std
 area: Applications and Real Time
 workgroup: HTTPbis
@@ -13,7 +13,7 @@ stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
 author:
- - 
+ -
   ins: P. McManus
   name: Patrick McManus
   organization: Mozilla
@@ -28,7 +28,7 @@ over a single stream of an HTTP/2 connection.
 
 --- note_Note_to_Readers_
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
 Working Group information can be found at <http://httpwg.github.io/>; source code and issues list
@@ -167,7 +167,7 @@ this point is OPEN as defined by {{!RFC6455}}, Section 4.1.
 ## Example
 ~~~
 [[ From Client ]]                       [[ From Server ]]
- 
+
                                         SETTINGS
                                         ENABLE_CONNECT_PROTOCOL = 1
 
