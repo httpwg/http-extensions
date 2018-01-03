@@ -16,3 +16,9 @@ endif
 
 $(GHPAGES_EXTRA):
 	ln -sf draft-ietf-httpbis-$@ $@
+
+.PHONY: clean-extra
+clean:: clean-extra
+
+clean-extra:
+	-rm -f $(GHPAGES_EXTRA)
