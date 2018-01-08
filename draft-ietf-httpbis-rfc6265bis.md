@@ -28,7 +28,6 @@ normative:
   RFC1034:
   RFC1123:
   RFC2119:
-  RFC2616:
   RFC3490:
     override: yes
     title: "Internationalizing Domain Names in Applications (IDNA)"
@@ -45,6 +44,7 @@ normative:
   RFC5234:
   RFC5890:
   RFC6454:
+  RFC7230:
   RFC7231:
   USASCII:
     title: "Coded Character Set -- 7-bit American Standard Code for Information Interchange"
@@ -294,14 +294,14 @@ OWS SHOULD either not be produced or be produced as a single SP character.
 ## Terminology
 
 The terms "user agent", "client", "server", "proxy", and "origin server" have
-the same meaning as in the HTTP/1.1 specification ({{RFC2616}}, Section 1.3).
+the same meaning as in the HTTP/1.1 specification ({{RFC7230}}, Section 2).
 
 The request-host is the name of the host, as known by the user agent, to which
 the user agent is sending an HTTP request or from which it is receiving an HTTP
 response (i.e., the name of the host to which it sent the corresponding HTTP
 request).
 
-The term request-uri is defined in Section 5.1.2 of {{RFC2616}}.
+The term request-uri refers to "request-target" as defined in Section 5.3 of {{RFC7230}}.
 
 Two sequences of octets are said to case-insensitively match each other if and
 only if they are equivalent under the i;ascii-casemap collation defined in
@@ -361,7 +361,7 @@ caches from storing and reusing a response.
 
 Origin servers SHOULD NOT fold multiple Set-Cookie header fields into a single
 header field. The usual mechanism for folding HTTP headers fields (i.e., as
-defined in {{RFC2616}}) might change the semantics of the Set-Cookie header
+defined in Section 3.2.2 of {{RFC7230}}) might change the semantics of the Set-Cookie header
 field because the %x2C (",") character is used by Set-Cookie in a way that
 conflicts with such folding.
 
@@ -475,14 +475,14 @@ cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                       ; US-ASCII characters excluding CTLs,
                       ; whitespace DQUOTE, comma, semicolon,
                       ; and backslash
-token             = <token, defined in [RFC2616], Section 2.2>
+token             = <token, defined in [RFC7230], Section 3.2.6>
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
                     samesite-av / extension-av
 expires-av        = "Expires=" sane-cookie-date
 sane-cookie-date  =
-    <rfc1123-date, defined in [RFC2616], Section 3.3.1>
+    <IMF-fixdate, defined in [RFC7231], Section 7.1.1.1>
 max-age-av        = "Max-Age=" non-zero-digit *DIGIT
                       ; In practice, both expires-av and max-age-av
                       ; are limited to dates representable by the
