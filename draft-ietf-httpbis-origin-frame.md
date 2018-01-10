@@ -73,9 +73,9 @@ capitals, as shown here.
 
 # The ORIGIN HTTP/2 Frame
 
-The ORIGIN HTTP/2 frame ({{!RFC7540}}, Section 4) allows a server to indicate what origin(s)
-{{!RFC6454}} the server would like the client to consider as members of the Origin Set ({{set}})
-for the connection it occurs within.
+This document defines a new HTTP/2 frame type ({{!RFC7540}}, Section 4) called ORIGIN, that allows
+a server to indicate what origin(s) {{!RFC6454}} the server would like the client to consider as
+members of the Origin Set ({{set}}) for the connection it occurs within.
 
 ## Syntax {#syntax}
 
