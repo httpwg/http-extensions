@@ -6,7 +6,7 @@ category: std
 
 ipr: trust200902
 area: Applications and Real-Time
-workgroup: httpbis
+workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes
