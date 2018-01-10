@@ -5,7 +5,7 @@ docname: draft-ietf-httpbis-h2-websockets-latest
 date: {DATE}
 category: std
 area: Applications and Real-Time
-workgroup: HTTPbis
+workgroup: HTTP
 keyword: Internet-Draft
 
 ipr: trust200902
