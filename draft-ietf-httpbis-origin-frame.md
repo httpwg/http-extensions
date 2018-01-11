@@ -202,9 +202,9 @@ NOT consider a connection to be authoritative for an origin not present in the O
 SHOULD use the connection for all requests to origins in the Origin Set for which the connection is
 authoritative, unless there are operational reasons for opening a new connection.
 
-Note that for a connection to be considered authoritative for a given origin, the client is still
-required to obtain a certificate that passes suitable checks; see Section 9.1.1 of {{!RFC7540}}
-for more information. This includes verifying that the host matches a `dNSName` value
+Note that for a connection to be considered authoritative for a given origin, the server is still
+required to authenticate with certificate that passes suitable checks; see Section 9.1.1 of
+{{!RFC7540}} for more information. This includes verifying that the host matches a `dNSName` value
 from the certificate `subjectAltName` field (using the rules defined in {{!RFC2818}}; see also
 {{!RFC5280}}, Section 4.2.1.6).
 
