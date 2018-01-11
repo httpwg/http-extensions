@@ -149,7 +149,7 @@ pseudo-header which is required on every HTTP/2 transaction.
 
 Implementations using this extended CONNECT to bootstrap WebSockets do
 not do the processing of the {{!RFC6455}} Sec-WebSocket-Key and
-Sec-WebSocket-Accept headers as that functionality has been superceded
+Sec-WebSocket-Accept headers as that functionality has been superseded
 by the :protocol pseudo-header.
 
 The Sec-WebSocket-Version, Origin {{!RFC6454}}, Sec-WebSocket-Protocol,
