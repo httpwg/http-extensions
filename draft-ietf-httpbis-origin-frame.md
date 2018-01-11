@@ -141,7 +141,7 @@ origin ({{!RFC6454}}, Section 6.2). If parsing fails, the field MUST be ignored.
 
 Note that the ORIGIN frame does not support wildcard names (e.g., "*.example.com") in Origin-Entry.
 As a result, sending ORIGIN when a wildcard certificate is in use effectively disables any origins
-that are not explicitly listed in the ORIGIN frame(s).
+that are not explicitly listed in the ORIGIN frame(s) (when the client understands ORIGIN).
 
 See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 
