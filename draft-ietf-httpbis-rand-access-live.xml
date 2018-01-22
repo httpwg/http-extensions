@@ -441,6 +441,28 @@ Content-Range: bytes 1020000-999999999999/*
       <t>
         with the response body returning bytes 1020000-1254567 immediately and aggregated ("live") data being returned as the content is aggregated.
       </t>
+      <t>
+        A server that doesn't support or supply a continuously aggregating ("live") response will supply the currently satisfiable byte range, as it would with an open-ended byte request.
+      </t>
+      <t>
+        For example:
+      </t>
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+GET /resource HTTP/1.1
+Host: example.com
+Range: bytes=0-999999999999
+
+</artwork></figure>
+      <t>
+        will return
+      </t>
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+HTTP/1.1 206 Partial Content
+Content-Range: bytes 1020000-1254567/*
+</artwork></figure>
+      <t>
+        from the server to indicate that the response will start at byte 1020000, end at byte 1254567, and will not include any aggregated content. This is the response expected from a typical HTTP server - one that doesn't support byte-range requests on aggregating content.
+      </t>
       </section>
     </section>
 
