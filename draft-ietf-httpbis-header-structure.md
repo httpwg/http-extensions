@@ -140,7 +140,7 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Integers {#integer}
 
-Abstractly, integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 (i.e., a 64-bit signed integer).
+Abstractly, integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive (i.e., a 64-bit signed integer).
 
 ~~~ abnf
 integer   = ["-"] 1*19DIGIT
