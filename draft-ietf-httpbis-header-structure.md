@@ -121,7 +121,7 @@ Note that empty header field values are not allowed by the syntax, and therefore
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value. Note that input_string may incorporate multiple header lines combined into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2.
+Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value. Note that input_string will incorporate multiple header lines combined into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2.
 
 1. Discard any OWS from the beginning of input_string.
 2. If the field-value is defined to be a dictionary, return the result of Parsing a Dictionary from Textual headers ({{parse-dictionary}}).
