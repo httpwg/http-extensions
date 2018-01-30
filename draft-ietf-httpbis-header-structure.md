@@ -360,7 +360,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 
 Dictionaries are unordered maps of key-value pairs, where the keys are labels ({{label}}) and the values are items ({{item}}). There can be between 1 and 1024 members, and keys are required to be unique.
 
-In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace.
+In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST be considered an error.
 
 ~~~ abnf
 dictionary = label "=" item *1023( OWS "," OWS label "=" item )
