@@ -146,7 +146,7 @@ Abstractly, integers have a range of −9,223,372,036,854,775,808 to 9,223,372,0
 integer   = ["-"] 1*19DIGIT
 ~~~
 
-Parsers that encounter an integer outside the range defined above MUST raise an error. Therefore, the value "9223372036854775809" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST raise an error.
+Parsers that encounter an integer outside the range defined above MUST throw an error. Therefore, the value "9223372036854775809" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST throw an error.
 
 For example, a header whose value is defined as a integer could look like:
 
@@ -189,7 +189,7 @@ float    = ["-"] (
            14DIGIT "." 1DIGIT )
 ~~~
 
-Values that do not conform to the ABNF above are invalid, and MUST raise an error.
+Values that do not conform to the ABNF above are invalid, and MUST throw an error.
 
 For example, a header whose value is defined as a float could look like:
 
@@ -394,13 +394,13 @@ Given an ASCII string input_string, return a mapping of (label, item). input_str
 1. Let dictionary be an empty mapping.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parse Label from Textual Headers ({{parse-label}}) with input_string. If an error is encountered, throw it.
-   2. If dictionary already contains this_key, raise an error.
-   2. Consume a "=" from input_string; if none is present, raise an error.
+   2. If dictionary already contains this_key, throw an error.
+   2. Consume a "=" from input_string; if none is present, throw an error.
    3. Let this_value be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
    4. Add key this_key with value this_value to dictionary.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return dictionary.
-   5. Consume a COMMA from input_string; if no comma is present, raise an error.
+   5. Consume a COMMA from input_string; if no comma is present, throw an error.
    6. Discard any leading OWS from input_string.
 3. Return dictionary.
 
@@ -439,7 +439,7 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
-   5. Consume a COMMA from input_string; if no comma is present, raise an error.
+   5. Consume a COMMA from input_string; if no comma is present, throw an error.
    6. Discard any leading OWS from input_string.
 3. Return items.
 
