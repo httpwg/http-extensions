@@ -365,7 +365,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result, throwing any errors encountered.
 4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result, throwing any errors encountered.
 5. If the first character of input_string is an lcalpha, process input_string as a label ({{parse-label}}) and return the result, throwing any errors encountered.
-5. Otherwise, throw an error.
+6. Otherwise, throw an error.
 
 
 ## Dictionaries {#dictionary}
