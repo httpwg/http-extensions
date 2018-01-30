@@ -310,7 +310,7 @@ hostname) applications that use HTTP MAY define a well-known URL {{?RFC5785}} as
 
 ### URL Schemes {#scheme}
 
-Applications that use HTTP will typically use the "http" and/or "https" URL schemes. "https" is preferred to mitigate pervasive monitoring attacks {{?RFC7258}}.
+Applications that use HTTP will typically use the "http" and/or "https" URL schemes. "https" is preferred to provide authentication, integrity and confidentiality, as well as mitigate pervasive monitoring attacks {{?RFC7258}}.
 
 However, application-specific schemes can be defined as well.
 
@@ -464,8 +464,8 @@ This document has no requirements for IANA.
 {{state}} discusses the impact of using stateful mechanisms in the protocol as ambient authority,
 and suggests a mitigation.
 
-{{scheme}} requires support for 'https' URLs, and discourages the use of 'http' URLs, to mitigate
-pervasive monitoring attacks.
+{{scheme}} requires support for 'https' URLs, and discourages the use of 'http' URLs, to provide
+authentication, integrity and confidentiality, as well as mitigate pervasive monitoring attacks.
 
 Applications that use HTTP in a manner that involves modification of implementations -- for
 example, requiring support for a new URL scheme, or a non-standard method -- risk having those
