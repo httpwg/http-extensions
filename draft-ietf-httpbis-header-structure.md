@@ -294,7 +294,7 @@ parameterised = label *256( OWS ";" OWS label [ "=" item ] )
 For example,
 
 ~~~
-ExampleParamHeader: abc; a=1; b=2; c
+ExampleParamHeader: abc_123;a=1;b=2; c
 ~~~
 
 ### Parsing a Parameterised Label from Textual Headers {#parse-parameterised}
