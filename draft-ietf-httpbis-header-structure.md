@@ -96,7 +96,7 @@ For example:
 ~~~
 # FooExample Header
 
-The FooExample HTTP header field conveys a list of numbers about how
+The FooExample HTTP header field conveys a list of integers about how
 much Foo the sender has.
 
 FooExample is a Structured header [RFCxxxx]. Its value MUST be a
@@ -138,14 +138,31 @@ Additionally, note that the effect of the parsing algorithms as specified is gen
 
 This section defines the abstract value types that can be composed into Structured Headers, along with the textual HTTP serialisations of them.
 
-## Numbers {#number}
+## Integers {#integer}
 
-Abstractly, numbers are integers with an optional fractional part. They have a maximum of fifteen digits available to be used in one or both of the parts, as reflected in the ABNF below; this allows them to be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
-
-The textual HTTP serialisation of numbers allows a maximum of fifteen digits between the integer and fractional part, along with an optional "-" indicating negative numbers.
+Abstractly, integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 (i.e., a 64-bit signed integer).
 
 ~~~ abnf
-number   = ["-"] ( "." 1*15DIGIT /
+integer   = ["-"] 1*19DIGIT
+~~~
+
+Parsers that encounter an integer outside the range defined above MUST raise an error. Therefore, the value "9223372036854775809" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST raise an error.
+
+For example, a header whose value is defined as a integer could look like:
+
+~~~
+ExampleIntegerHeader: 42
+~~~
+
+
+## Floats {#float}
+
+Abstractly, floats are integers with a fractional part. They have a maximum of fifteen digits available to be used in both of the parts, as reflected in the ABNF below; this allows them to be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
+
+The textual HTTP serialisation of floats allows a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
+
+~~~ abnf
+float    = ["-"] (
              DIGIT "." 1*14DIGIT /
             2DIGIT "." 1*13DIGIT /
             3DIGIT "." 1*12DIGIT /
@@ -159,25 +176,16 @@ number   = ["-"] ( "." 1*15DIGIT /
            11DIGIT "." 1*4DIGIT /
            12DIGIT "." 1*3DIGIT /
            13DIGIT "." 1*2DIGIT /
-           14DIGIT "." 1DIGIT /
-           15DIGIT )
-
-integer  = ["-"] 1*15DIGIT
-unsigned = 1*15DIGIT
+           14DIGIT "." 1DIGIT )
 ~~~
 
-integer and unsigned are defined as conveniences to specification authors; if their use is specified and their ABNF is not matched, a parser MUST consider it to be invalid.
+Values that do not conform to the ABNF above are invalid, and MUST raise an error.
 
-For example, a header whose value is defined as a number could look like:
+For example, a header whose value is defined as a float could look like:
 
 ~~~
-ExampleNumberHeader: 4.5
+ExampleFloatHeader: 4.5
 ~~~
-
-
-### Parsing Numbers from Textual Headers
-
-TBD
 
 
 ## Strings {#string}
@@ -329,10 +337,10 @@ Given an ASCII string input_string, return binary content. input_string is modif
 
 ## Items {#item}
 
-An item is can be a number ({{number}}), string ({{string}}), label ({{label}}) or binary content ({{binary}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), label ({{label}}) or binary content ({{binary}}).
 
 ~~~ abnf
-item = number / string / label / binary
+item = integer / float / string / label / binary
 ~~~
 
 
