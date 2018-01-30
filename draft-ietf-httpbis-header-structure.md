@@ -448,15 +448,16 @@ TBD
 
 # Changes
 
+## Since draft-ietf-httpbis-header-structure-02
+
+* Split Numbers into Integers and Floats.
+
 ## Since draft-ietf-httpbis-header-structure-01
 
-Replaced with draft-nottingham-structured-headers.
+* Replaced with draft-nottingham-structured-headers.
 
 ## Since draft-ietf-httpbis-header-structure-00
 
-Added signed 64bit integer type.
-
-Drop UTF8, and settle on BCP137 ::EmbeddedUnicodeChar for
-h1-unicode-string.
-
-Change h1_blob delimiter to ":" since "'" is valid t_char
+* Added signed 64bit integer type.
+* Drop UTF8, and settle on BCP137 ::EmbeddedUnicodeChar for h1-unicode-string.
+* Change h1_blob delimiter to ":" since "'" is valid t_char
