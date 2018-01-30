@@ -117,7 +117,7 @@ If the parsed header field does not contain both, it MUST be ignored.
 Note that empty header field values are not allowed by the syntax, and therefore will be considered errors.
 
 
-# Parsing Requirements for Textual Headers {#text}
+# Parsing Textual Headers into Structured Headers {#text}
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
