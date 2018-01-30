@@ -463,6 +463,7 @@ TBD
 ## Since draft-ietf-httpbis-header-structure-02
 
 * Split Numbers into Integers and Floats.
+* Define number parsing.
 
 ## Since draft-ietf-httpbis-header-structure-01
 
