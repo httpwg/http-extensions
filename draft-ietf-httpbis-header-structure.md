@@ -124,10 +124,10 @@ When a receiving implementation parses textual HTTP header fields (e.g., in HTTP
 Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value. Note that input_string may incorporate multiple header lines combined into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2.
 
 1. Discard any OWS from the beginning of input_string.
-2. If the field-value is defined to be a dictionary, return the result of Parsing a Dictionary from Textual headers ({{dictionary}}).
-3. If the field-value is defined to be a list, return the result of Parsing a List from Textual Headers ({{list}}).
-4. If the field-value is defined to be a parameterised label, return the result of Parsing a Parameterised Label from Textual headers ({{param}}).
-5. Otherwise, return the result of Parsing an Item from Textual Headers ({{item}}).
+2. If the field-value is defined to be a dictionary, return the result of Parsing a Dictionary from Textual headers ({{parse-dictionary}}).
+3. If the field-value is defined to be a list, return the result of Parsing a List from Textual Headers ({{parse-list}}).
+4. If the field-value is defined to be a parameterised label, return the result of Parsing a Parameterised Label from Textual headers ({{parse-parameterised}}).
+5. Otherwise, return the result of Parsing an Item from Textual Headers ({{parse-item}}).
 
 Note that in the case of lists and dictionaries, this has the effect of combining multiple instances of the header field into one. However, for singular items and parameterised labels, it has the effect of selecting the first value and ignoring any subsequent instances of the field, as well as extraneous text afterwards.
 
@@ -153,6 +153,16 @@ For example, a header whose value is defined as a integer could look like:
 ~~~
 ExampleIntegerHeader: 42
 ~~~
+
+### Parsing a Number from Textual Headers {#parse-number}
+
+NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the corresponding structure.
+
+1. If the first character of input_string is not "-" or a DIGIT, throw an error.
+2. Let input_number be the result of consuming input_string up to (but not including) the first character that is not in DIGIT, "-", and ".".
+3. If input_number contains ".", parse it as a floating point number and let output_number be the result.
+4. Otherwise, parse input_number as an integer and let output_number be the result.
+5. Return output_number.
 
 
 ## Floats {#float}
@@ -187,6 +197,8 @@ For example, a header whose value is defined as a float could look like:
 ExampleFloatHeader: 4.5
 ~~~
 
+See {{parse-number}} for the parsing algorithm for floats.
+
 
 ## Strings {#string}
 
@@ -214,7 +226,7 @@ Unicode is not directly supported in Structured Headers, because it causes a num
 When it is necessary for a field value to convey non-ASCII string content, binary content ({{binary}}) SHOULD be specified, along with a character encoding (most likely, UTF-8).
 
 
-### Parsing a String from Textual Headers
+### Parsing a String from Textual Headers {#parse-string}
 
 Given an ASCII string input_string, return an unquoted string. input_string is modified to remove the parsed value.
 
@@ -253,7 +265,7 @@ ExampleLabelHeader: foo/bar
 ~~~
 
 
-### Parsing a Label from Textual Headers
+### Parsing a Label from Textual Headers {#parse-label}
 
 Given an ASCII string input_string, return a label. input_string is modified to remove the parsed value.
 
@@ -285,23 +297,23 @@ For example,
 ExampleParamHeader: abc; a=1; b=2; c
 ~~~
 
-### Parsing a Parameterised Label from Textual Headers
+### Parsing a Parameterised Label from Textual Headers {#parse-parameterised}
 
 Given an ASCII string input_string, return a label with an mapping of parameters. input_string is modified to remove the parsed value.
 
-1. Let primary_label be the result of Parsing a Label from Textual Headers ({{label}}) from input_string.
+1. Let primary_label be the result of Parsing a Label from Textual Headers ({{parse-label}}) from input_string.
 2. Let parameters be an empty mapping.
 3. In a loop:
    1. Consume any OWS from the beginning of input_string.
    2. If the first character of input_string is not ";", exit the loop.
    3. Consume a ";" character from the beginning of input_string.
    4. Consume any OWS from the beginning of input_string.
-   5. let param_name be the result of Parsing a Label from Textual Headers ({{label}}) from input_string.
+   5. let param_name be the result of Parsing a Label from Textual Headers ({{parse-label}}) from input_string.
    6. If param_name is already present in parameters, throw an error.
    7. Let param_value be a null value.
    8. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
-      2. Let param_value be the result of Parsing an Item from Textual Headers ({{item}}) from input_string.
+      2. Let param_value be the result of Parsing an Item from Textual Headers ({{parse-item}}) from input_string.
    9. If parameters has more than 255 members, throw an error.
    0. Add param_name to parameters with the value param_value.
 4. Return the tuple (primary_label, parameters).
@@ -324,7 +336,7 @@ For example, a header whose value is defined as binary content could look like:
 ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg
 ~~~
 
-### Parsing Binary Content from Textual Headers
+### Parsing Binary Content from Textual Headers {#parse-binary}
 
 Given an ASCII string input_string, return binary content. input_string is modified to remove the parsed value.
 
@@ -344,15 +356,15 @@ item = integer / float / string / label / binary
 ~~~
 
 
-### Parsing an Item from Textual Headers
+### Parsing an Item from Textual Headers {#parse-item}
 
 Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
 
 1. Discard any OWS from the beginning of input_string.
-2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{number}}) and return the result, throwing any errors encountered.
-3. If the first character of input_string is a DQUOTE, process input_string as a string ({{string}}) and return the result, throwing any errors encountered.
-4. If the first character of input_string is "*", process input_string as binary content ({{binary}}) and return the result, throwing any errors encountered.
-5. If the first character of input_string is an lcalpha, process input_string as a label ({{label}}) and return the result, throwing any errors encountered.
+2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result, throwing any errors encountered.
+3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result, throwing any errors encountered.
+4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result, throwing any errors encountered.
+5. If the first character of input_string is an lcalpha, process input_string as a label ({{parse-label}}) and return the result, throwing any errors encountered.
 5. Otherwise, throw an error.
 
 
@@ -375,16 +387,16 @@ ExampleDictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
 
 
-### Parsing a Dictionary from Textual Headers
+### Parsing a Dictionary from Textual Headers {#parse-dictionary}
 
 Given an ASCII string input_string, return a mapping of (label, item). input_string is modified to remove the parsed value.
 
 1. Let dictionary be an empty mapping.
 2. While input_string is not empty:
-   1. Let this_key be the result of running Parse Label from Textual Headers ({{label}}) with input_string. If an error is encountered, throw it.
+   1. Let this_key be the result of running Parse Label from Textual Headers ({{parse-label}}) with input_string. If an error is encountered, throw it.
    2. If dictionary already contains this_key, raise an error.
    2. Consume a "=" from input_string; if none is present, raise an error.
-   3. Let this_value be the result of running Parse Item from Textual Headers ({{item}}) with input_string. If an error is encountered, throw it.
+   3. Let this_value be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
    4. Add key this_key with value this_value to dictionary.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return dictionary.
@@ -417,13 +429,13 @@ ExampleParamListHeader: abc/def; g="hi";j, klm/nop
 ~~~
 
 
-### Parsing a List from Textual Headers
+### Parsing a List from Textual Headers {#parse-list}
 
 Given an ASCII string input_string, return a list of items. input_string is modified to remove the parsed value.
 
 1. Let items be an empty array.
 2. While input_string is not empty:
-   1. Let item be the result of running Parse Item from Textual Headers ({{item}}) with input_string. If an error is encountered, throw it.
+   1. Let item be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
