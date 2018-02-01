@@ -123,7 +123,7 @@ When a receiving implementation parses textual HTTP header fields (e.g., in HTTP
 
 Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value.
 
-1. Discard any OWS from the beginning of input_string.
+1. Discard any leading OWS from input_string.
 2. If the field-value is defined to be a dictionary, return the result of Parsing a Dictionary from Textual headers ({{parse-dictionary}}).
 3. If the field-value is defined to be a list, return the result of Parsing a List from Textual Headers ({{parse-list}}).
 4. If the field-value is defined to be a parameterised label, return the result of Parsing a Parameterised Label from Textual headers ({{parse-parameterised}}).
@@ -242,10 +242,10 @@ Given an ASCII string input_string, return a label with an mapping of parameters
 1. Let primary_label be the result of Parsing a Label from Textual Headers ({{parse-label}}) from input_string.
 2. Let parameters be an empty, unordered mapping.
 3. In a loop:
-   1. Consume any OWS from the beginning of input_string.
+   1. Discard any leading OWS from input_string.
    2. If the first character of input_string is not ";", exit the loop.
    3. Consume a ";" character from the beginning of input_string.
-   4. Consume any OWS from the beginning of input_string.
+   4. Discard any leading OWS from input_string.
    5. let param_name be the result of Parsing a Label from Textual Headers ({{parse-label}}) from input_string.
    6. If param_name is already present in parameters, throw an error.
    7. Let param_value be a null value.
@@ -270,7 +270,7 @@ item = integer / float / string / label / binary
 
 Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
 
-1. Discard any OWS from the beginning of input_string.
+1. Discard any leading OWS from input_string.
 2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result, throwing any errors encountered.
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result, throwing any errors encountered.
 4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result, throwing any errors encountered.
