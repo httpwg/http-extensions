@@ -121,7 +121,7 @@ Note that empty header field values are not allowed by the syntax, and therefore
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value. Note that input_string will incorporate multiple header lines combined into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2.
+Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value.
 
 1. Discard any OWS from the beginning of input_string.
 2. If the field-value is defined to be a dictionary, return the result of Parsing a Dictionary from Textual headers ({{parse-dictionary}}).
@@ -129,7 +129,9 @@ Given an ASCII string input_string that represents the chosen header's field-val
 4. If the field-value is defined to be a parameterised label, return the result of Parsing a Parameterised Label from Textual headers ({{parse-parameterised}}).
 5. Otherwise, return the result of Parsing an Item from Textual Headers ({{parse-item}}).
 
-Note that in the case of lists and dictionaries, this has the effect of combining multiple instances of the header field into one. However, for singular items and parameterised labels, it has the effect of selecting the first value and ignoring any subsequent instances of the field, as well as extraneous text afterwards.
+When generating input_string for a given header field, parsers MUST combine all instances of it into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
+
+Note that in the case of lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items and parameterised labels, it has the effect of selecting the first value and ignoring any subsequent instances of the field, as well as extraneous text afterwards.
 
 Additionally, note that the effect of the parsing algorithms as specified is generally intolerant of syntax errors; if one is encountered, the typical response is to throw an error, thereby discarding the entire header field value. This includes any non-ASCII characters in input_string.
 
@@ -482,6 +484,7 @@ TBD
 * Allow zero-length strings.
 * Improve string parsing algorithm.
 * Improve limits in algorithms.
+* Require parsers to combine header fields before processing.
 
 ## Since draft-ietf-httpbis-header-structure-01
 
