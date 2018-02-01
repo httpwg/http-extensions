@@ -207,7 +207,7 @@ Abstractly, strings are ASCII strings {{!RFC0020}}, excluding control characters
 The textual HTTP serialisation of strings uses a backslash ("\") to escape double quotes and backslashes in strings.
 
 ~~~ abnf
-string    = DQUOTE 1*1024(char) DQUOTE
+string    = DQUOTE 0*1024(char) DQUOTE
 char      = unescaped / escape ( DQUOTE / "\" )
 unescaped = %x20-21 / %x23-5B / %x5D-7E
 escape    = "\"
@@ -233,8 +233,7 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 1. Let output_string be an empty string.
 2. If the first character of input_string is not DQUOTE, throw an error.
 3. Discard the first character of input_string.
-4. If input_string contains more than 1025 characters, throw an error.
-5. While input_string is not empty:
+4. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
    2. If char is a backslash ("\\"):
       1. If input_string is now empty, throw an error.
@@ -242,8 +241,9 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
          1. Let next_char be the result of removing the first character of input_string.
          2. If next_char is not DQUOTE or "\\", throw an error.
          3. Append next_char to output_string.
-   3. Else, if char is DQUOTE, remove the first character of input_string and return output_string.
+   3. Else, if char is DQUOTE, return output_string.
    4. Else, append char to output_string.
+   5. If output_string contains more than 1024 characters, throw an error.
 6. Otherwise, throw an error.
 
 
@@ -269,16 +269,16 @@ ExampleLabelHeader: foo/bar
 
 Given an ASCII string input_string, return a label. input_string is modified to remove the parsed value.
 
-1. If input_string contains more than 256 characters, throw an error.
-2. If the first character of input_string is not lcalpha, throw an error.
-3. Let output_string be an empty string.
-4. While input_string is not empty:
+1. If the first character of input_string is not lcalpha, throw an error.
+2. Let output_string be an empty string.
+3. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
    2. If char is not one of lcalpha, DIGIT, "_", "-", "*" or "/":
       1. Prepend char to input_string.
       2. Return output_string.
    3. Append char to output_string.
-5. Return output_string.
+   1. If output_string contains more than 256 characters, throw an error.
+4. Return output_string.
 
 
 ## Parameterised Labels {#param}
@@ -351,8 +351,9 @@ Given an ASCII string input_string, return binary content. input_string is modif
 1. If the first character of input_string is not "*", throw an error.
 2. Discard the first character of input_string.
 3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "*".
-4. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary. If an error is encountered, throw it (note the requirements about recipient behaviour in {{binary}}).
-5. Return binary_content.
+4. If b64_content is has more than 21846 characters, throw an error.
+5. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary. If an error is encountered, throw it (note the requirements about recipient behaviour in {{binary}}).
+6. Return binary_content.
 
 
 ## Items {#item}
@@ -403,13 +404,14 @@ Given an ASCII string input_string, return a mapping of (label, item). input_str
 2. While input_string is not empty:
    1. Let this_key be the result of running Parse Label from Textual Headers ({{parse-label}}) with input_string. If an error is encountered, throw it.
    2. If dictionary already contains this_key, throw an error.
-   2. Consume a "=" from input_string; if none is present, throw an error.
-   3. Let this_value be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
-   4. Add key this_key with value this_value to dictionary.
-   3. Discard any leading OWS from input_string.
-   4. If input_string is empty, return dictionary.
-   5. Consume a COMMA from input_string; if no comma is present, throw an error.
-   6. Discard any leading OWS from input_string.
+   3. Consume a "=" from input_string; if none is present, throw an error.
+   4. Let this_value be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
+   5. Add key this_key with value this_value to dictionary.
+   6. If dictionary has more than 1024 members, throw an error.
+   7. Discard any leading OWS from input_string.
+   8. If input_string is empty, return dictionary.
+   9. Consume a COMMA from input_string; if no comma is present, throw an error.
+   0. Discard any leading OWS from input_string.
 3. Return dictionary.
 
 
@@ -445,10 +447,11 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 2. While input_string is not empty:
    1. Let item be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
    2. Append item to items.
-   3. Discard any leading OWS from input_string.
-   4. If input_string is empty, return items.
-   5. Consume a COMMA from input_string; if no comma is present, throw an error.
-   6. Discard any leading OWS from input_string.
+   3. If items has more than 1024 members, throw an error.
+   4. Discard any leading OWS from input_string.
+   5. If input_string is empty, return items.
+   6. Consume a COMMA from input_string; if no comma is present, throw an error.
+   7. Discard any leading OWS from input_string.
 3. Return items.
 
 
@@ -474,6 +477,9 @@ TBD
 * Define number parsing.
 * Tighten up binary parsing and give it an explicit end delimiter.
 * Clarify that mappings are unordered.
+* Allow zero-length strings.
+* Improve string parsing algorithm.
+* Improve limits in algorithms.
 
 ## Since draft-ietf-httpbis-header-structure-01
 
