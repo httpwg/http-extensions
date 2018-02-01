@@ -323,18 +323,26 @@ Given an ASCII string input_string, return a label with an mapping of parameters
 
 Arbitrary binary content up to 16K in size can be conveyed in Structured Headers.
 
-The textual HTTP serialisation indicates their presence by a leading "*", with the data encoded using Base 64 Encoding {{!RFC4648}}, without padding (as "=" might be confused with the use of dictionaries).
+The textual HTTP serialisation indicates their presence by a leading "*", with the data encoded using Base 64 Encoding {{!RFC4648}}, Section 4.
+
+Parsers MUST consider encoded data that is padded an error, as "=" might be confused with the use of dictionaries). See {{!RFC4648}}, Section 3.2.
+
+Likewise, parsers MUST consider encoded data that has non-zero pad bits an error. See {{!RFC4648}}, Section 3.5.
+
+This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST consider line feeds and non-alphabetic characters in encoded data as errors.
 
 ~~~ abnf
-binary = "*" 1*21846(base64)
+binary = "*" 0*21846(base64) "*"
 base64 = ALPHA / DIGIT / "+" / "/"
 ~~~
 
 For example, a header whose value is defined as binary content could look like:
 
 ~~~
-ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg
+ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg*
 ~~~
+
+
 
 ### Parsing Binary Content from Textual Headers {#parse-binary}
 
@@ -342,8 +350,8 @@ Given an ASCII string input_string, return binary content. input_string is modif
 
 1. If the first character of input_string is not "*", throw an error.
 2. Discard the first character of input_string.
-3. Let b64_content be the result of removing content of input_string up to but not including the first character that is not in ALPHA, DIGIT, "+" or "/".
-4. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary. If an error is encountered, throw it.
+3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "*".
+4. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary. If an error is encountered, throw it (note the requirements about recipient behaviour in {{binary}}).
 5. Return binary_content.
 
 
@@ -464,6 +472,7 @@ TBD
 
 * Split Numbers into Integers and Floats.
 * Define number parsing.
+* Tighten up binary parsing and give it an explicit end delimiter.
 
 ## Since draft-ietf-httpbis-header-structure-01
 
