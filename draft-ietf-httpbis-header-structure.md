@@ -473,6 +473,7 @@ TBD
 * Split Numbers into Integers and Floats.
 * Define number parsing.
 * Tighten up binary parsing and give it an explicit end delimiter.
+* Clarify that mappings are unordered.
 
 ## Since draft-ietf-httpbis-header-structure-01
 
