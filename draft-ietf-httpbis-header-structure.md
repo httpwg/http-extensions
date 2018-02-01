@@ -77,7 +77,7 @@ Note that it is not a goal of this document to redefine the syntax of existing H
 
 To specify a header field that uses Structured Headers, see {{specify}}.
 
-{{types}} defines a number of abstract data types that can be used in Structured Headers, of which only three are allowed at the "top" level: lists, dictionaries, or items.
+{{types}} defines a number of abstract data types that can be used in Structured Headers. Dictionaries and lists are only usable at the "top" level, while the remaining types can be specified appear at the top level or inside those structures.
 
 Those abstract types can be serialised into textual headers -- such as those used in HTTP/1 and HTTP/2 -- using the algorithms described in {{text}}.
 
