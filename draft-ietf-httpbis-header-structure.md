@@ -48,7 +48,7 @@ informative:
 
 --- abstract
 
-This document describes Structured Headers, a way of defining HTTP header fields in a way that simplifies parsing and generation. It is intended for use by new specifications of HTTP header fields as well as revisions of existing header field specifications when doing so does not cause interoperability issues.
+This document describes a set of data types and parsing algorithms associated with them that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by new specifications of HTTP header fields as well as revisions of existing header field specifications when doing so does not cause interoperability issues.
 
 
 --- note_Note_to_Readers
