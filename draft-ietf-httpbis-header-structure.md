@@ -89,7 +89,7 @@ The field's definition will also need to specify the field-value's allowed synta
 
 Field definitions MUST NOT relax or otherwise modify the requirements of this specification; doing so would preclude handling by generic software.
 
-However, field definitions are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated.
+However, field definitions are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated. Such additional constraints could include additional structure (e.g., a list of strings, URLs {{?RFC3986}}, etc.) that cannot be expressed using the primitives defined here.
 
 For example:
 
