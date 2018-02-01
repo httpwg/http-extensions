@@ -124,14 +124,17 @@ When a receiving implementation parses textual HTTP header fields (e.g., in HTTP
 Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value.
 
 1. Discard any leading OWS from input_string.
-2. If the field-value is defined to be a dictionary, return the result of Parsing a Dictionary from Textual headers ({{parse-dictionary}}).
-3. If the field-value is defined to be a list, return the result of Parsing a List from Textual Headers ({{parse-list}}).
-4. If the field-value is defined to be a parameterised label, return the result of Parsing a Parameterised Label from Textual headers ({{parse-parameterised}}).
-5. Otherwise, return the result of Parsing an Item from Textual Headers ({{parse-item}}).
+2. If the field-value is defined to be a dictionary, let output be the result of Parsing a Dictionary from Textual headers ({{parse-dictionary}}).
+3. If the field-value is defined to be a list, let output be the result of Parsing a List from Textual Headers ({{parse-list}}).
+4. If the field-value is defined to be a parameterised label, let output be the result of Parsing a Parameterised Label from Textual headers ({{parse-parameterised}}).
+5. Otherwise, let output be the result of Parsing an Item from Textual Headers ({{parse-item}}).
+6. Discard any leading OWS from input_string.
+7. If input_string is not empty, throw an error.
+8. Otherwise, return output.
 
 When generating input_string for a given header field, parsers MUST combine all instances of it into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
-Note that in the case of lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items and parameterised labels, it has the effect of selecting the first value and ignoring any subsequent instances of the field, as well as extraneous text afterwards.
+Note that in the case of lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items and parameterised labels, it will result in an error being thrown.
 
 Additionally, note that the effect of the parsing algorithms as specified is generally intolerant of syntax errors; if one is encountered, the typical response is to throw an error, thereby discarding the entire header field value. This includes any non-ASCII characters in input_string.
 
