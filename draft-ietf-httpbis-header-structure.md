@@ -436,7 +436,7 @@ Parsers MUST consider encoded data that is padded an error, as "=" might be conf
 
 Likewise, parsers MUST consider encoded data that has non-zero pad bits an error. See {{!RFC4648}}, Section 3.5.
 
-This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST consider line feeds and non-alphabetic characters in encoded data as errors.
+This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST consider characters outside the base64 alphabet and line feeds in encoded data as errors.
 
 ~~~ abnf
 binary = "*" 0*21846(base64) "*"
