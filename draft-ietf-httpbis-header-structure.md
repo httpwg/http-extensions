@@ -9,6 +9,7 @@ workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes
+pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
 author:
  -
@@ -488,6 +489,7 @@ TBD
 * Improve string parsing algorithm.
 * Improve limits in algorithms.
 * Require parsers to combine header fields before processing.
+* Throw an error on trailing garbage.
 
 ## Since draft-ietf-httpbis-header-structure-01
 
