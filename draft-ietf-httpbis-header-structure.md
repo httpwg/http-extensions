@@ -302,7 +302,7 @@ ExampleParamHeader: abc_123;a=1;b=2; c
 Given an ASCII string input_string, return a label with an mapping of parameters. input_string is modified to remove the parsed value.
 
 1. Let primary_label be the result of Parsing a Label from Textual Headers ({{parse-label}}) from input_string.
-2. Let parameters be an empty mapping.
+2. Let parameters be an empty, unordered mapping.
 3. In a loop:
    1. Consume any OWS from the beginning of input_string.
    2. If the first character of input_string is not ";", exit the loop.
@@ -399,7 +399,7 @@ Typically, a header field specification will define the semantics of individual 
 
 Given an ASCII string input_string, return a mapping of (label, item). input_string is modified to remove the parsed value.
 
-1. Let dictionary be an empty mapping.
+1. Let dictionary be an empty, unordered mapping.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parse Label from Textual Headers ({{parse-label}}) with input_string. If an error is encountered, throw it.
    2. If dictionary already contains this_key, throw an error.
