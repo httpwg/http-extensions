@@ -200,7 +200,7 @@ Lists are arrays of items ({{item}}) or parameterised labels ({{param}}), with o
 In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
 
 ~~~ abnf
-list = list_member 1*1024( OWS "," OWS list_member )
+list = list_member 0*1023( OWS "," OWS list_member )
 list_member = item / parameterised
 ~~~
 
