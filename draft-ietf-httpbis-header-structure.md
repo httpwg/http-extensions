@@ -94,13 +94,13 @@ This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}
 
 # Specifying Structured Headers {#specify}
 
-HTTP headers that use Structured Headers need to be defined to do so explicitly; recipients and generators need to know that the requirements of this document are in effect. The simplest way to do that is by referencing this document in its definition.
+A HTTP header that uses Structured Headers need to be defined to do so explicitly; recipients and generators need to know that the requirements of this document are in effect. The simplest way to do that is by referencing this document in its definition.
 
 The field's definition will also need to specify the field-value's allowed syntax, in terms of the types described in {{types}}, along with their associated semantics.
 
-Field definitions MUST NOT relax or otherwise modify the requirements of this specification; doing so would preclude handling by generic software.
+A header field definition cannot relax or otherwise modify the requirements of this specification; doing so would preclude handling by generic software.
 
-However, field definitions are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated. Such additional constraints could include additional structure (e.g., a list of strings, URLs {{?RFC3986}}, etc.) that cannot be expressed using the primitives defined here.
+However, header field authors are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated. Such additional constraints could include additional structure (e.g., a list of URLs {{?RFC3986}} inside a string) that cannot be expressed using the primitives defined here.
 
 For example:
 
@@ -118,11 +118,21 @@ The dictionary MUST contain:
 * A member whose key is "foo", and whose value is an integer
   ([RFCxxxx], Section Y.Y), indicating the number of foos in
   the message.
-* A member whose key is "bar", and whose value is a string
-  ([RFCxxxx], Section Y.Y), conveying the characteristic bar-ness
-  of the message.
+* A member whose key is "barUrls", and whose value is a string
+  ([RFCxxxx], Section Y.Y), conveying the Bar URLs for the message.
+  See below for processing requirements.
 
 If the parsed header field does not contain both, it MUST be ignored.
+
+"barUrls" contains a space-separated list of URI-references ([RFC3986], 
+Section 4.1):
+
+   barURLs = URI-reference *( 1*SP URI-reference )
+
+If a member of barURLs is not a valid URI-reference, it MUST be ignored.
+
+If a member of barURLs is a relative reference ([RFC3986], Section 4.2),
+it MUST be resolved ([RFC3986], Section 5) before being used.
 ~~~
 
 Note that empty header field values are not allowed by the syntax, and therefore will be considered errors.
