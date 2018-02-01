@@ -138,6 +138,145 @@ Additionally, note that the effect of the parsing algorithms as specified is gen
 
 This section defines the abstract value types that can be composed into Structured Headers, along with the textual HTTP serialisations of them.
 
+
+## Dictionaries {#dictionary}
+
+Dictionaries are unordered maps of key-value pairs, where the keys are labels ({{label}}) and the values are items ({{item}}). There can be between 1 and 1024 members, and keys are required to be unique.
+
+In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST be considered an error.
+
+~~~ abnf
+dictionary = label "=" item *1023( OWS "," OWS label "=" item )
+~~~
+
+For example, a header field whose value is defined as a dictionary could look like:
+
+~~~
+ExampleDictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK
+~~~
+
+Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
+
+
+### Parsing a Dictionary from Textual Headers {#parse-dictionary}
+
+Given an ASCII string input_string, return a mapping of (label, item). input_string is modified to remove the parsed value.
+
+1. Let dictionary be an empty, unordered mapping.
+2. While input_string is not empty:
+   1. Let this_key be the result of running Parse Label from Textual Headers ({{parse-label}}) with input_string. If an error is encountered, throw it.
+   2. If dictionary already contains this_key, throw an error.
+   3. Consume a "=" from input_string; if none is present, throw an error.
+   4. Let this_value be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
+   5. Add key this_key with value this_value to dictionary.
+   6. If dictionary has more than 1024 members, throw an error.
+   7. Discard any leading OWS from input_string.
+   8. If input_string is empty, return dictionary.
+   9. Consume a COMMA from input_string; if no comma is present, throw an error.
+   0. Discard any leading OWS from input_string.
+3. Return dictionary.
+
+
+## Lists {#list}
+
+Lists are arrays of items ({{item}}) or parameterised labels ({{param}}), with one to 1024 members.
+
+In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
+
+~~~ abnf
+list = list_member 1*1024( OWS "," OWS list_member )
+list_member = item / parameterised
+~~~
+
+For example, a header field whose value is defined as a list of labels could look like:
+
+~~~
+ExampleLabelListHeader: foo, bar, baz_45
+~~~
+
+and a header field whose value is defined as a list of parameterised labels could look like:
+
+~~~
+ExampleParamListHeader: abc/def; g="hi";j, klm/nop
+~~~
+
+
+### Parsing a List from Textual Headers {#parse-list}
+
+Given an ASCII string input_string, return a list of items. input_string is modified to remove the parsed value.
+
+1. Let items be an empty array.
+2. While input_string is not empty:
+   1. Let item be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
+   2. Append item to items.
+   3. If items has more than 1024 members, throw an error.
+   4. Discard any leading OWS from input_string.
+   5. If input_string is empty, return items.
+   6. Consume a COMMA from input_string; if no comma is present, throw an error.
+   7. Discard any leading OWS from input_string.
+3. Return items.
+
+
+## Parameterised Labels {#param}
+
+Parameterised Labels are labels ({{label}}) with up to 256 parameters; each parameter has a label and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST be considered an error.
+
+The textual HTTP serialisation uses semicolons (";") to delimit the parameters from each other, and equals ("=") to delimit the parameter name from its value.
+
+~~~ abnf
+parameterised = label *256( OWS ";" OWS label [ "=" item ] )
+~~~
+
+For example,
+
+~~~
+ExampleParamHeader: abc_123;a=1;b=2; c
+~~~
+
+### Parsing a Parameterised Label from Textual Headers {#parse-parameterised}
+
+Given an ASCII string input_string, return a label with an mapping of parameters. input_string is modified to remove the parsed value.
+
+1. Let primary_label be the result of Parsing a Label from Textual Headers ({{parse-label}}) from input_string.
+2. Let parameters be an empty, unordered mapping.
+3. In a loop:
+   1. Consume any OWS from the beginning of input_string.
+   2. If the first character of input_string is not ";", exit the loop.
+   3. Consume a ";" character from the beginning of input_string.
+   4. Consume any OWS from the beginning of input_string.
+   5. let param_name be the result of Parsing a Label from Textual Headers ({{parse-label}}) from input_string.
+   6. If param_name is already present in parameters, throw an error.
+   7. Let param_value be a null value.
+   8. If the first character of input_string is "=":
+      1. Consume the "=" character at the beginning of input_string.
+      2. Let param_value be the result of Parsing an Item from Textual Headers ({{parse-item}}) from input_string.
+   9. If parameters has more than 255 members, throw an error.
+   0. Add param_name to parameters with the value param_value.
+4. Return the tuple (primary_label, parameters).
+
+
+## Items {#item}
+
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), label ({{label}}) or binary content ({{binary}}).
+
+~~~ abnf
+item = integer / float / string / label / binary
+~~~
+
+
+### Parsing an Item from Textual Headers {#parse-item}
+
+Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
+
+1. Discard any OWS from the beginning of input_string.
+2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result, throwing any errors encountered.
+3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result, throwing any errors encountered.
+4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result, throwing any errors encountered.
+5. If the first character of input_string is an lcalpha, process input_string as a label ({{parse-label}}) and return the result, throwing any errors encountered.
+6. Otherwise, throw an error.
+
+
+
 ## Integers {#integer}
 
 Abstractly, integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive (i.e., a 64-bit signed integer).
@@ -281,44 +420,6 @@ Given an ASCII string input_string, return a label. input_string is modified to 
 4. Return output_string.
 
 
-## Parameterised Labels {#param}
-
-Parameterised Labels are labels ({{label}}) with up to 256 parameters; each parameter has a label and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST be considered an error.
-
-The textual HTTP serialisation uses semicolons (";") to delimit the parameters from each other, and equals ("=") to delimit the parameter name from its value.
-
-~~~ abnf
-parameterised = label *256( OWS ";" OWS label [ "=" item ] )
-~~~
-
-For example,
-
-~~~
-ExampleParamHeader: abc_123;a=1;b=2; c
-~~~
-
-### Parsing a Parameterised Label from Textual Headers {#parse-parameterised}
-
-Given an ASCII string input_string, return a label with an mapping of parameters. input_string is modified to remove the parsed value.
-
-1. Let primary_label be the result of Parsing a Label from Textual Headers ({{parse-label}}) from input_string.
-2. Let parameters be an empty, unordered mapping.
-3. In a loop:
-   1. Consume any OWS from the beginning of input_string.
-   2. If the first character of input_string is not ";", exit the loop.
-   3. Consume a ";" character from the beginning of input_string.
-   4. Consume any OWS from the beginning of input_string.
-   5. let param_name be the result of Parsing a Label from Textual Headers ({{parse-label}}) from input_string.
-   6. If param_name is already present in parameters, throw an error.
-   7. Let param_value be a null value.
-   8. If the first character of input_string is "=":
-      1. Consume the "=" character at the beginning of input_string.
-      2. Let param_value be the result of Parsing an Item from Textual Headers ({{parse-item}}) from input_string.
-   9. If parameters has more than 255 members, throw an error.
-   0. Add param_name to parameters with the value param_value.
-4. Return the tuple (primary_label, parameters).
-
-
 ## Binary Content {#binary}
 
 Arbitrary binary content up to 16K in size can be conveyed in Structured Headers.
@@ -343,7 +444,6 @@ ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg*
 ~~~
 
 
-
 ### Parsing Binary Content from Textual Headers {#parse-binary}
 
 Given an ASCII string input_string, return binary content. input_string is modified to remove the parsed value.
@@ -355,104 +455,6 @@ Given an ASCII string input_string, return binary content. input_string is modif
 5. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary. If an error is encountered, throw it (note the requirements about recipient behaviour in {{binary}}).
 6. Return binary_content.
 
-
-## Items {#item}
-
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), label ({{label}}) or binary content ({{binary}}).
-
-~~~ abnf
-item = integer / float / string / label / binary
-~~~
-
-
-### Parsing an Item from Textual Headers {#parse-item}
-
-Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
-
-1. Discard any OWS from the beginning of input_string.
-2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result, throwing any errors encountered.
-3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result, throwing any errors encountered.
-4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result, throwing any errors encountered.
-5. If the first character of input_string is an lcalpha, process input_string as a label ({{parse-label}}) and return the result, throwing any errors encountered.
-6. Otherwise, throw an error.
-
-
-## Dictionaries {#dictionary}
-
-Dictionaries are unordered maps of key-value pairs, where the keys are labels ({{label}}) and the values are items ({{item}}). There can be between 1 and 1024 members, and keys are required to be unique.
-
-In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST be considered an error.
-
-~~~ abnf
-dictionary = label "=" item *1023( OWS "," OWS label "=" item )
-~~~
-
-For example, a header field whose value is defined as a dictionary could look like:
-
-~~~
-ExampleDictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK
-~~~
-
-Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
-
-
-### Parsing a Dictionary from Textual Headers {#parse-dictionary}
-
-Given an ASCII string input_string, return a mapping of (label, item). input_string is modified to remove the parsed value.
-
-1. Let dictionary be an empty, unordered mapping.
-2. While input_string is not empty:
-   1. Let this_key be the result of running Parse Label from Textual Headers ({{parse-label}}) with input_string. If an error is encountered, throw it.
-   2. If dictionary already contains this_key, throw an error.
-   3. Consume a "=" from input_string; if none is present, throw an error.
-   4. Let this_value be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
-   5. Add key this_key with value this_value to dictionary.
-   6. If dictionary has more than 1024 members, throw an error.
-   7. Discard any leading OWS from input_string.
-   8. If input_string is empty, return dictionary.
-   9. Consume a COMMA from input_string; if no comma is present, throw an error.
-   0. Discard any leading OWS from input_string.
-3. Return dictionary.
-
-
-## Lists {#list}
-
-Lists are arrays of items ({{item}}) or parameterised labels ({{param}}), with one to 1024 members.
-
-In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
-
-~~~ abnf
-list = list_member 1*1024( OWS "," OWS list_member )
-list_member = item / parameterised
-~~~
-
-For example, a header field whose value is defined as a list of labels could look like:
-
-~~~
-ExampleLabelListHeader: foo, bar, baz_45
-~~~
-
-and a header field whose value is defined as a list of parameterised labels could look like:
-
-~~~
-ExampleParamListHeader: abc/def; g="hi";j, klm/nop
-~~~
-
-
-### Parsing a List from Textual Headers {#parse-list}
-
-Given an ASCII string input_string, return a list of items. input_string is modified to remove the parsed value.
-
-1. Let items be an empty array.
-2. While input_string is not empty:
-   1. Let item be the result of running Parse Item from Textual Headers ({{parse-item}}) with input_string. If an error is encountered, throw it.
-   2. Append item to items.
-   3. If items has more than 1024 members, throw an error.
-   4. Discard any leading OWS from input_string.
-   5. If input_string is empty, return items.
-   6. Consume a COMMA from input_string; if no comma is present, throw an error.
-   7. Discard any leading OWS from input_string.
-3. Return items.
 
 
 
