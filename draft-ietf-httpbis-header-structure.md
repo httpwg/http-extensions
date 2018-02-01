@@ -9,7 +9,17 @@ workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes
-pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+pi:
+  toc: yes
+  tocindent: yes
+  sortrefs: yes
+  symrefs: yes
+  strict: yes
+  compact: yes
+  comments: yes
+  inline: yes
+  tocdepth: 2
+
 
 author:
  -
