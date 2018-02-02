@@ -476,10 +476,10 @@ ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg*
 
 Given an ASCII string input_string, return binary content. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not "*", throw an error.
+1. If the first character of input_string is not "\*", throw an error.
 2. Discard the first character of input_string.
-3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "*". If there is not a "*" character before the end of input_string, throw an error.
-4. Consume the "*" character at the beginning of input_string.
+3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*". If there is not a "\*" character before the end of input_string, throw an error.
+4. Consume the "\*" character at the beginning of input_string.
 5. If b64_content is has more than 21846 characters, throw an error.
 6. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary. If an error is encountered, throw it (note the requirements about recipient behaviour in {{binary}}).
 7. Return binary_content.
