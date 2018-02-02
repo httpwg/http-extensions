@@ -124,6 +124,8 @@ The dictionary MUST contain:
 
 If the parsed header field does not contain both, it MUST be ignored.
 
+"foo" MUST be between 0 and 10, inclusive; other values MUST be ignored.
+
 "barUrls" contains a space-separated list of URI-references ([RFC3986], 
 Section 4.1):
 
