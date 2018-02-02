@@ -383,9 +383,9 @@ application is harmful, as these are not generic semantics, since the consumer n
 context of the application to understand them.
 
 Furthermore, applications using HTTP MUST NOT re-specify the semantics of HTTP status codes, even
-if it is only by copying their definition. They MUST NOT require specific status phrases to be
-used; the status phrase has no function in HTTP, and is not guaranteed to be preserved by
-implementations.
+if it is only by copying their definition. They MUST NOT require specific reason phrases to be
+used; the reason phrase has no function in HTTP, and is not guaranteed to be preserved by
+implementations. The reason phrase is not carried in the {{RFC7540}} message format.
 
 Typically, applications using HTTP will convey application-specific information in the message body
 and/or HTTP header fields, not the status code.
