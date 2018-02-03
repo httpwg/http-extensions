@@ -453,7 +453,7 @@ Given an ASCII string input_string, return a label. input_string is modified to 
 
 ## Binary Content {#binary}
 
-Arbitrary binary content up to 16K in size can be conveyed in Structured Headers.
+Arbitrary binary content up to 16384 bytes in size can be conveyed in Structured Headers.
 
 The textual HTTP serialisation indicates their presence by a leading "*", with the data encoded using Base 64 Encoding {{!RFC4648}}, Section 4.
 
