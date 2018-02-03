@@ -157,7 +157,9 @@ Given an ASCII string input_string that represents the chosen header's field-val
 
 Note that in the case of lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items and parameterised labels, it will result in an error being thrown.
 
-Additionally, note that the effect of the parsing algorithms as specified is generally intolerant of syntax errors; if one is encountered, the typical response is to throw an error, thereby discarding the entire header field value. This includes any non-ASCII characters in input_string.
+If an error is encountered during parsing, the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document MUST NOT loosen this requirement.
+
+Note that this has the effect of discarding any header field with non-ASCII characters in input_string.
 
 
 # Structured Header Data Types {#types}
@@ -499,6 +501,11 @@ TBD
 
 
 # Changes
+
+## Since draft-ietf-httpbis-header-structure-03
+
+* Strengthen language around error handling.
+
 
 ## Since draft-ietf-httpbis-header-structure-02
 
