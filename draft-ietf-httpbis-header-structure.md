@@ -115,10 +115,10 @@ dictionary ([RFCxxxx], Section Y.Y).
 
 The dictionary MUST contain:
 
-* A member whose key is "foo", and whose value is an integer
+* Exactly one member whose key is "foo", and whose value is an integer
   ([RFCxxxx], Section Y.Y), indicating the number of foos in
   the message.
-* A member whose key is "barUrls", and whose value is a string
+* Exactly one member whose key is "barUrls", and whose value is a string
   ([RFCxxxx], Section Y.Y), conveying the Bar URLs for the message.
   See below for processing requirements.
 
