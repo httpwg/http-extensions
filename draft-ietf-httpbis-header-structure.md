@@ -316,7 +316,7 @@ Abstractly, integers have a range of −9,223,372,036,854,775,808 to 9,223,372,0
 integer   = ["-"] 1*19DIGIT
 ~~~
 
-Parsers that encounter an integer outside the range defined above MUST fail parsing. Therefore, the value "9223372036854775809" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST fail parsing.
+Parsers that encounter an integer outside the range defined above MUST fail parsing. Therefore, the value "9223372036854775808" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST fail parsing.
 
 For example, a header whose value is defined as a integer could look like:
 
