@@ -174,7 +174,8 @@ Dictionaries are unordered maps of key-value pairs, where the keys are labels ({
 In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST be considered an error.
 
 ~~~ abnf
-dictionary = label "=" item *1023( OWS "," OWS label "=" item )
+dictionary        = dictionary_member *1023( OWS "," OWS dictionary_member )
+dictionary_member = label "=" item
 ~~~
 
 For example, a header field whose value is defined as a dictionary could look like:
