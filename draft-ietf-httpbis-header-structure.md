@@ -137,7 +137,7 @@ If a member of barURLs is a relative reference ([RFC3986], Section 4.2),
 it MUST be resolved ([RFC3986], Section 5) before being used.
 ~~~
 
-Note that empty header field values are not allowed by the syntax, and therefore will be considered errors.
+Note that empty header field values are not allowed by the syntax, and therefore parsing for them will fail.
 
 
 # Parsing Text into Structured Headers {#text}
@@ -152,12 +152,12 @@ Given an ASCII string input_string that represents the chosen header's field-val
 4. If the field-value is defined to be a parameterised label, let output be the result of Parsing a Parameterised Label from Textual headers ({{parse-parameterised}}).
 5. Otherwise, let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
-7. If input_string is not empty, throw an error.
+7. If input_string is not empty, fail parsing.
 8. Otherwise, return output.
 
-Note that in the case of lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items and parameterised labels, it will result in an error being thrown.
+Note that in the case of lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items and parameterised labels, parsing will fail if more than instance of that header field is present.
 
-If an error is encountered during parsing, the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document MUST NOT loosen this requirement.
+If parsing fails, the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document MUST NOT loosen this requirement.
 
 Note that this has the effect of discarding any header field with non-ASCII characters in input_string.
 
@@ -171,7 +171,7 @@ This section defines the abstract value types that can be composed into Structur
 
 Dictionaries are unordered maps of key-value pairs, where the keys are labels ({{label}}) and the values are items ({{item}}). There can be between 1 and 1024 members, and keys are required to be unique.
 
-In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST be considered an error.
+In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST cause parsing to fail.
 
 ~~~ abnf
 dictionary        = dictionary_member *1023( OWS "," OWS dictionary_member )
@@ -193,15 +193,15 @@ Given an ASCII string input_string, return a mapping of (label, item). input_str
 
 1. Let dictionary be an empty, unordered mapping.
 2. While input_string is not empty:
-   1. Let this_key be the result of running Parse Label from Text ({{parse-label}}) with input_string. If an error is encountered, throw it.
-   2. If dictionary already contains this_key, throw an error.
-   3. Consume a "=" from input_string; if none is present, throw an error.
-   4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string. If an error is encountered, throw it.
+   1. Let this_key be the result of running Parse Label from Text ({{parse-label}}) with input_string.
+   2. If dictionary already contains this_key, fail parsing.
+   3. Consume a "=" from input_string; if none is present, fail parsing.
+   4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
    5. Add key this_key with value this_value to dictionary.
-   6. If dictionary has more than 1024 members, throw an error.
+   6. If dictionary has more than 1024 members, fail parsing.
    7. Discard any leading OWS from input_string.
    8. If input_string is empty, return dictionary.
-   9. Consume a COMMA from input_string; if no comma is present, throw an error.
+   9. Consume a COMMA from input_string; if no comma is present, fail parsing.
    0. Discard any leading OWS from input_string.
 3. Return dictionary.
 
@@ -236,19 +236,19 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 
 1. Let items be an empty array.
 2. While input_string is not empty:
-   1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string. If an error is encountered, throw it.
+   1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
    2. Append item to items.
-   3. If items has more than 1024 members, throw an error.
+   3. If items has more than 1024 members, fail parsing.
    4. Discard any leading OWS from input_string.
    5. If input_string is empty, return items.
-   6. Consume a COMMA from input_string; if no comma is present, throw an error.
+   6. Consume a COMMA from input_string; if no comma is present, fail parsing.
    7. Discard any leading OWS from input_string.
 3. Return items.
 
 
 ## Parameterised Labels {#param}
 
-Parameterised Labels are labels ({{label}}) with up to 256 parameters; each parameter has a label and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST be considered an error.
+Parameterised Labels are labels ({{label}}) with up to 256 parameters; each parameter has a label and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
 
 The textual HTTP serialisation uses semicolons (";") to delimit the parameters from each other, and equals ("=") to delimit the parameter name from its value.
 
@@ -274,12 +274,12 @@ Given an ASCII string input_string, return a label with an mapping of parameters
    3. Consume a ";" character from the beginning of input_string.
    4. Discard any leading OWS from input_string.
    5. let param_name be the result of Parsing a Label from Text ({{parse-label}}) from input_string.
-   6. If param_name is already present in parameters, throw an error.
+   6. If param_name is already present in parameters, fail parsing.
    7. Let param_value be a null value.
    8. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
-   9. If parameters has more than 255 members, throw an error.
+   9. If parameters has more than 255 members, fail parsing.
    0. Add param_name to parameters with the value param_value.
 4. Return the tuple (primary_label, parameters).
 
@@ -298,11 +298,11 @@ item = integer / float / string / label / binary
 Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
 
 1. Discard any leading OWS from input_string.
-2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result, throwing any errors encountered.
-3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result, throwing any errors encountered.
-4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result, throwing any errors encountered.
-5. If the first character of input_string is an lcalpha, process input_string as a label ({{parse-label}}) and return the result, throwing any errors encountered.
-6. Otherwise, throw an error.
+2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
+3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
+4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result.
+5. If the first character of input_string is an lcalpha, process input_string as a label ({{parse-label}}) and return the result.
+6. Otherwise, fail parsing.
 
 
 
@@ -314,7 +314,7 @@ Abstractly, integers have a range of −9,223,372,036,854,775,808 to 9,223,372,0
 integer   = ["-"] 1*19DIGIT
 ~~~
 
-Parsers that encounter an integer outside the range defined above MUST throw an error. Therefore, the value "9223372036854775809" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST throw an error.
+Parsers that encounter an integer outside the range defined above MUST fail parsing. Therefore, the value "9223372036854775809" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST fail parsing.
 
 For example, a header whose value is defined as a integer could look like:
 
@@ -326,7 +326,7 @@ ExampleIntegerHeader: 42
 
 NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the corresponding structure.
 
-1. If the first character of input_string is not "-" or a DIGIT, throw an error.
+1. If the first character of input_string is not "-" or a DIGIT, fail parsing.
 2. Let input_number be the result of consuming input_string up to (but not including) the first character that is not in DIGIT, "-", and ".".
 3. If input_number contains ".", parse it as a floating point number and let output_number be the result.
 4. Otherwise, parse input_number as an integer and let output_number be the result.
@@ -357,7 +357,7 @@ float    = ["-"] (
            14DIGIT "." 1DIGIT )
 ~~~
 
-Values that do not conform to the ABNF above are invalid, and MUST throw an error.
+Values that do not conform to the ABNF above are invalid, and MUST fail parsing.
 
 For example, a header whose value is defined as a float could look like:
 
@@ -387,7 +387,7 @@ For example, a header whose value is defined as a string could look like:
 ExampleStringHeader: "hello world"
 ~~~
 
-Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\" can be escaped; other sequences MUST generate an error.
+Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\" can be escaped; other sequences MUST cause parsing to fail.
 
 Unicode is not directly supported in Structured Headers, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
 
@@ -399,20 +399,20 @@ When it is necessary for a field value to convey non-ASCII string content, binar
 Given an ASCII string input_string, return an unquoted string. input_string is modified to remove the parsed value.
 
 1. Let output_string be an empty string.
-2. If the first character of input_string is not DQUOTE, throw an error.
+2. If the first character of input_string is not DQUOTE, fail parsing.
 3. Discard the first character of input_string.
 4. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
    2. If char is a backslash ("\\"):
-      1. If input_string is now empty, throw an error.
+      1. If input_string is now empty, fail parsing.
       2. Else:
          1. Let next_char be the result of removing the first character of input_string.
-         2. If next_char is not DQUOTE or "\\", throw an error.
+         2. If next_char is not DQUOTE or "\\", fail parsing.
          3. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
    4. Else, append char to output_string.
-   5. If output_string contains more than 1024 characters, throw an error.
-6. Otherwise, throw an error.
+   5. If output_string contains more than 1024 characters, fail parsing.
+6. Otherwise, fail parsing.
 
 
 ## Labels {#label}
@@ -437,7 +437,7 @@ ExampleLabelHeader: foo/bar
 
 Given an ASCII string input_string, return a label. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not lcalpha, throw an error.
+1. If the first character of input_string is not lcalpha, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
@@ -445,7 +445,7 @@ Given an ASCII string input_string, return a label. input_string is modified to 
       1. Prepend char to input_string.
       2. Return output_string.
    3. Append char to output_string.
-   1. If output_string contains more than 256 characters, throw an error.
+   1. If output_string contains more than 256 characters, fail parsing.
 4. Return output_string.
 
 
@@ -455,11 +455,11 @@ Arbitrary binary content up to 16K in size can be conveyed in Structured Headers
 
 The textual HTTP serialisation indicates their presence by a leading "*", with the data encoded using Base 64 Encoding {{!RFC4648}}, Section 4.
 
-Parsers MUST consider encoded data that is padded an error, as "=" might be confused with the use of dictionaries). See {{!RFC4648}}, Section 3.2.
+Parsers MUST fail on encoded data that is padded, as "=" might be confused with the use of dictionaries). See {{!RFC4648}}, Section 3.2.
 
-Likewise, parsers MUST consider encoded data that has non-zero pad bits an error. See {{!RFC4648}}, Section 3.5.
+Likewise, parsers MUST fail on encoded data that has non-zero pad bits. See {{!RFC4648}}, Section 3.5.
 
-This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST consider characters outside the base64 alphabet and line feeds in encoded data as errors.
+This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet and line feeds in encoded data.
 
 ~~~ abnf
 binary = "*" 0*21846(base64) "*"
@@ -477,12 +477,12 @@ ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg*
 
 Given an ASCII string input_string, return binary content. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not "\*", throw an error.
+1. If the first character of input_string is not "\*", fail parsing.
 2. Discard the first character of input_string.
-3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*". If there is not a "\*" character before the end of input_string, throw an error.
+3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*". If there is not a "\*" character before the end of input_string, fail parsing.
 4. Consume the "\*" character at the beginning of input_string.
-5. If b64_content is has more than 21846 characters, throw an error.
-6. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary. If an error is encountered, throw it (note the requirements about recipient behaviour in {{binary}}).
+5. If b64_content is has more than 21846 characters, fail parsing.
+6. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour in {{binary}}).
 7. Return binary_content.
 
 
@@ -505,7 +505,7 @@ TBD
 
 ## Since draft-ietf-httpbis-header-structure-03
 
-* Strengthen language around error handling.
+* Strengthen language around failure handling.
 
 
 ## Since draft-ietf-httpbis-header-structure-02
