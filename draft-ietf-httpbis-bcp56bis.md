@@ -421,6 +421,11 @@ effect, there is an overhead) but appropriately specific. In particular, if a he
 specific to an application, an identifier for that application SHOULD form a prefix to the header
 field name, separated by a "-".
 
+For example, if the "example" application needs to create three headers, they might be called
+"example-foo", "example-bar" and "example-baz". Note that the primary motivation here is to avoid
+consuming more generic header names, not to reserve a portion of the namespace for the application;
+see {{!RFC6648}} for related considerations.
+
 The semantics of existing HTTP header fields MUST NOT be re-defined without updating their
 registration or defining an extension to them (if allowed). For example, an application using HTTP
 cannot specify that the `Location` header has a special meaning in a certain context.
