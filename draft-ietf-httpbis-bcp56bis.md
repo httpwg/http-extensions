@@ -317,13 +317,13 @@ However, application-specific schemes can be defined as well.
 When defining an URL scheme for an application using HTTP, there are a number of tradeoffs and
 caveats to keep in mind:
 
-* Unmodified Web browsers will not support the new scheme. While it is possible to register new URL schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML5}} Section 8.7.1.3, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities can vary.
+* Unmodified Web browsers will not support the new scheme. While it is possible to register new URL schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML5}} Section 8.7.1.3, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
 
-* Likewise, existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme, and might fail to operate. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
+* Existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
 
-* Because URLs occur in and are generated in HTTP artefacts commonly, often without human intervention (e.g., in the `Location` header), it can be difficult to assure that the new scheme is used consistently.
+* Because URLs occur in and are generated in HTTP artefacts commonly, often without human intervention (e.g., in the `Location` response header), it can be difficult to assure that the new scheme is used consistently.
 
-* The resources identified by the new scheme will still be available with "http" and/or "https" URLs to clients. While it is possible to define the relationship between these resources in the new scheme's specification, existing HTTP software (such as clients, caches, intermediaries and servers) will not be available, so there is a danger of confusion when the "wrong" URL is used.
+* The resources identified by the new scheme will still be available using "http" and/or "https" URLs. Those URLs can "leak" into use, which can present security and operability issues. For example, using a new scheme to assure that headers don't get sent to a "normal" Web site is likely to fail.
 
 * Features that rely upon the URL's origin {{?RFC6454}}, such as the Web's same-origin policy, will be impacted by a change of scheme.
 
