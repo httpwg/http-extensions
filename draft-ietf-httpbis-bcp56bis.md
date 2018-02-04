@@ -451,8 +451,8 @@ Applications that use HTTP MAY use stateful cookies {{?RFC6265}} to identify a c
 client-specific data to contextualise requests.
 
 If it is only necessary to identify clients, applications that use HTTP MAY use HTTP authentication
-{{?RFC7235}}; if the Basic authentication scheme {{?RFC7617}} is used, it MUST NOT be used with the
-'http' URL scheme.
+{{?RFC7235}}; if either of the Basic {{?RFC7617}} or Digest {{?RFC7616}} authentication schemes is
+used, it MUST NOT be used with the 'http' URL scheme.
 
 In either case, it is important to carefully specify the scoping and use of these mechanisms; if
 they expose sensitive data or capabilities (e.g., by acting as an ambient authority), exploits are
