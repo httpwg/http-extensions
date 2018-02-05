@@ -519,13 +519,13 @@ preceding `CERTIFICATE` frame. Receipt of a `USE_CERTIFICATE` frame before the
 necessary frames have been received on stream zero MUST also result in a stream
 error of type `PROTOCOL_ERROR`.
 
-The referenced certificate chain MUST conform to the requirements expressed in
-the `CERTIFICATE_REQUEST` to the best of the sender's ability.
-
-If these requirements are not satisfied, the recipient MAY at its discretion
-either return an error at the HTTP semantic layer, or respond with a stream
-error {{RFC7540}} on any stream where the certificate is used. {{errors}}
-defines certificate-related error codes which might be applicable.
+The referenced certificate chain needs to conform to the requirements expressed
+in the `CERTIFICATE_REQUEST` to the best of the sender's ability, or the
+recipient is likely to reject it as unsuitable despite properly validating the
+authenticator.  If the recipicent considers the certificate unsuitable, it MAY
+at its discretion either return an error at the HTTP semantic layer, or respond
+with a stream error {{RFC7540}} on any stream where the certificate is used.
+{{errors}} defines certificate-related error codes which might be applicable.
 
 ## The CERTIFICATE_REQUEST Frame {#http-cert-request}
 
@@ -568,8 +568,8 @@ The Exported Authenticator `request` API defined in
 [I-D.ietf-tls-exported-authenticator] takes as input a set of desired
 certificate characteristics and a `certificate_request_context`, which needs to
 be unpredictable. When generating exported authenticators for use with this
-extension, the `certificate_request_context` MUST be the two-octet Request-ID,
-followed by at least six random octets.
+extension, the `certificate_request_context` MUST contain both the two-octet
+Request-ID as well as at least 96 bits of additional entropy.
 
 The TLS library on the authenticating peer will provide mechanisms to select an
 appropriate certificate to respond to the transported request.  TLS libraries on
@@ -646,7 +646,7 @@ steps to validate the token it contains:
  - Using the `get context` API, retrieve the `certificate_request_context` used
    to generate the authenticator, if any.
  - Verify that the `certificate_request_context` is either empty (clients only)
-   or the Request-ID of a previously-sent `CERTIFICATE_REQUEST` frame.
+   or contains the Request-ID of a previously-sent `CERTIFICATE_REQUEST` frame.
  - Use the `validate` API to confirm the validity of the authenticator with
    regard to the generated request (if any).
 
