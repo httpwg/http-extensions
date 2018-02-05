@@ -66,7 +66,7 @@ scenarios.
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
 Working Group information can be found at <http://httpwg.github.io/>; source
@@ -566,9 +566,10 @@ Request:
 
 The Exported Authenticator `request` API defined in
 [I-D.ietf-tls-exported-authenticator] takes as input a set of desired
-certificate characteristics and a `certificate_request_context`. When generating
-exported authenticators for use with this extension, the
-`certificate_request_context` MUST be the two-octet Request-ID.
+certificate characteristics and a `certificate_request_context`, which needs to
+be unpredictable. When generating exported authenticators for use with this
+extension, the `certificate_request_context` MUST be the two-octet Request-ID,
+followed by at least six random octets.
 
 The TLS library on the authenticating peer will provide mechanisms to select an
 appropriate certificate to respond to the transported request.  TLS libraries on
@@ -637,15 +638,15 @@ received on any other stream MUST be rejected with a stream error of type
 
 The Exported Authenticator API defined in [I-D.ietf-tls-exported-authenticator]
 takes as input a request, a set of certificates, and supporting information
-about the certificate (OCSP, SCT, etc.).
+about the certificate (OCSP, SCT, etc.).  The result is an opaque token which is
+used when generating the `CERTIFICATE` frame.
 
-Upon receipt of a completed authenticator, an endpoint MUST perform the
-following steps:
+Upon receipt of a `CERTIFICATE` frame, an endpoint MUST perform the following
+steps to validate the token it contains:
  - Using the `get context` API, retrieve the `certificate_request_context` used
    to generate the authenticator, if any.
- - Verify that the `certificate_request_context` is the Request-ID of a
-   previously-sent `CERTIFICATE_REQUEST` frame.  Alternatively, on clients the
-   `certificate_request_context` MAY also be empty.
+ - Verify that the `certificate_request_context` is either empty (clients only)
+   or the Request-ID of a previously-sent `CERTIFICATE_REQUEST` frame.
  - Use the `validate` API to confirm the validity of the authenticator with
    regard to the generated request (if any).
 
