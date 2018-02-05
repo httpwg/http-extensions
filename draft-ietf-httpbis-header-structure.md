@@ -374,7 +374,7 @@ See {{parse-number}} for the parsing algorithm for floats.
 
 Abstractly, strings are ASCII strings {{!RFC0020}}, excluding control characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines and carriage returns. They may be at most 1024 characters long.
 
-The textual HTTP serialisation of strings uses a backslash ("\") to escape double quotes and backslashes in strings.
+The textual HTTP serialisation of strings uses a backslash ("\\") to escape double quotes and backslashes in strings.
 
 ~~~ abnf
 string    = DQUOTE 0*1024(char) DQUOTE
