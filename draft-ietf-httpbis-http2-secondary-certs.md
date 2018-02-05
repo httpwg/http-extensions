@@ -66,7 +66,7 @@ scenarios.
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
 Working Group information can be found at <http://httpwg.github.io/>; source
@@ -821,6 +821,8 @@ registered by this document.
 | CERTIFICATE_GENERAL     | 0xERROR-TBD5 | {{errors}}              |
 |-------------------------|--------------|-------------------------|
 
+--- back
+
 # Acknowledgements {#ack}
 
 Eric Rescorla pointed out several failings in an earlier revision. Andrei Popov
@@ -829,4 +831,15 @@ contributed to the TLS considerations.
 A substantial portion of Mike's work on this draft was supported by Microsoft
 during his employment there.
 
---- back
+# Change Log
+
+> **RFC Editor's Note:**  Please remove this section prior to publication of a
+> final version of this document.
+
+## Since draft-ietf-httpbis-http2-secondary-certs-00:
+
+Nothing yet.
+
+## Since draft-bishop-httpbis-http2-additional-certs-05:
+
+- Adopted as draft-ietf-httpbis-http2-secondary-certs
