@@ -522,7 +522,7 @@ error of type `PROTOCOL_ERROR`.
 The referenced certificate chain needs to conform to the requirements expressed
 in the `CERTIFICATE_REQUEST` to the best of the sender's ability, or the
 recipient is likely to reject it as unsuitable despite properly validating the
-authenticator.  If the recipicent considers the certificate unsuitable, it MAY
+authenticator.  If the recipient considers the certificate unsuitable, it MAY
 at its discretion either return an error at the HTTP semantic layer, or respond
 with a stream error {{RFC7540}} on any stream where the certificate is used.
 {{errors}} defines certificate-related error codes which might be applicable.
