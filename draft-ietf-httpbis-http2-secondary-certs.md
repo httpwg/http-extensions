@@ -519,24 +519,20 @@ preceding `CERTIFICATE` frame. Receipt of a `USE_CERTIFICATE` frame before the
 necessary frames have been received on stream zero MUST also result in a stream
 error of type `PROTOCOL_ERROR`.
 
-The referenced certificate chain MUST conform to the requirements expressed in
-the `CERTIFICATE_REQUEST` to the best of the sender's ability. Specifically, if
-the `CERTIFICATE_REQUEST` contained a non-empty `Cert-Extensions` element, the
-end-entity certificate MUST match with regard to the extensions recognized by
-the sender.
-
-If these requirements are not satisfied, the recipient MAY at its discretion
-either return an error at the HTTP semantic layer, or respond with a stream
-error {{RFC7540}} on any stream where the certificate is used. {{errors}}
-defines certificate-related error codes which might be applicable.
+The referenced certificate chain needs to conform to the requirements expressed
+in the `CERTIFICATE_REQUEST` to the best of the sender's ability, or the
+recipient is likely to reject it as unsuitable despite properly validating the
+authenticator.  If the recipient considers the certificate unsuitable, it MAY
+at its discretion either return an error at the HTTP semantic layer, or respond
+with a stream error {{RFC7540}} on any stream where the certificate is used.
+{{errors}} defines certificate-related error codes which might be applicable.
 
 ## The CERTIFICATE_REQUEST Frame {#http-cert-request}
 
-TLS 1.3 defines the `CertificateRequest` message, which prompts the client to
-provide a certificate which conforms to certain properties specified by the
-server.  This draft defines the `CERTIFICATE_REQUEST` frame (0xFRAME-TBD2),
-which uses the same set of extensions to specify a desired certificate, but
-can be sent over any TLS version and can be sent by either peer.
+The `CERTIFICATE_REQUEST` frame (id=0xFRAME-TBD2) provides a exported
+authenticator request message from the TLS layer that specifies a desired
+certificate.  This describes the certificate the sender wishes to have
+presented.
 
 The `CERTIFICATE_REQUEST` frame SHOULD NOT be sent to a peer which has not
 advertised support for HTTP-layer certificate authentication.
@@ -549,9 +545,7 @@ stream error of type `PROTOCOL_ERROR`.
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +-------------------------------+-------------------------------+
- |        Request-ID (16)        |      Extension-Count (16)     |
- +-------------------------------+-------------------------------+
- |                          Extensions(?)                      ...
+ |        Request-ID (16)        |          Request (?)        ...
  +---------------------------------------------------------------+
 ~~~~~~~~~~~~~~~
 {: #fig-cert-request title="CERTIFICATE_REQUEST frame payload"}
@@ -563,20 +557,23 @@ Request-ID:
   certificate-related frames with this request.  The identifier MUST be unique
   in the session for the sender.
 
-Extension-Count and Extensions:
-: A list of certificate selection criteria, represented in a series of
-  `Extension` structures (see [I-D.ietf-tls-tls13] section 4.2). This criteria
-  MUST be used in certificate selection as described in {{I-D.ietf-tls-tls13}}.
-  The number of `Extension` structures is given by the 16-bit `Extension-Count`
-  field, which MAY be zero.
+Request:
+: An exported authenticator request, generated using the `request` API described
+  in [I-D.ietf-tls-exported-authenticator]. See {{exp-auth}} for more details on
+  the input to this API.
 
-Some extensions used for certificate selection allow multiple values (e.g.
-oid_filters on Extended Key Usage). If the sender has included a non-empty
-Extensions list, the certificate MUST match all criteria specified by extensions
-the recipient recognizes. However, the recipient MUST ignore and skip any
-unrecognized certificate selection extensions.
+### Exported Authenticator Request Characteristics {#exp-req}
 
-Servers MUST be able to recognize the `server_name` extension ([RFC6066]) at a
+The Exported Authenticator `request` API defined in
+[I-D.ietf-tls-exported-authenticator] takes as input a set of desired
+certificate characteristics and a `certificate_request_context`, which needs to
+be unpredictable. When generating exported authenticators for use with this
+extension, the `certificate_request_context` MUST contain both the two-octet
+Request-ID as well as at least 96 bits of additional entropy.
+
+The TLS library on the authenticating peer will provide mechanisms to select an
+appropriate certificate to respond to the transported request.  TLS libraries on
+servers MUST be able to recognize the `server_name` extension ([RFC6066]) at a
 minimum. Clients MUST always specify the desired origin using this extension,
 though other extensions MAY also be included.
 
@@ -640,16 +637,18 @@ received on any other stream MUST be rejected with a stream error of type
 ### Exported Authenticator Characteristics {#exp-auth}
 
 The Exported Authenticator API defined in [I-D.ietf-tls-exported-authenticator]
-takes as input a certificate, supporting information about the certificate
-(OCSP, SCT, etc.), and an optional `certificate_request_context`.  When
-generating exported authenticators for use with this extension, the
-`certificate_request_context` MUST be the two-octet Cert-ID.
+takes as input a request, a set of certificates, and supporting information
+about the certificate (OCSP, SCT, etc.).  The result is an opaque token which is
+used when generating the `CERTIFICATE` frame.
 
-Upon receipt of a completed authenticator, an endpoint MUST check that:
-
- - the `validate` API confirms the validity of the authenticator itself
- - the `certificate_request_context` matches the Cert-ID of the frame(s) in
-   which it was received
+Upon receipt of a `CERTIFICATE` frame, an endpoint MUST perform the following
+steps to validate the token it contains:
+ - Using the `get context` API, retrieve the `certificate_request_context` used
+   to generate the authenticator, if any.
+ - Verify that the `certificate_request_context` is either empty (clients only)
+   or contains the Request-ID of a previously-sent `CERTIFICATE_REQUEST` frame.
+ - Use the `validate` API to confirm the validity of the authenticator with
+   regard to the generated request (if any).
 
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.
