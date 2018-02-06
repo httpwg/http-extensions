@@ -822,14 +822,6 @@ registered by this document.
 
 --- back
 
-# Acknowledgements {#ack}
-
-Eric Rescorla pointed out several failings in an earlier revision. Andrei Popov
-contributed to the TLS considerations.
-
-A substantial portion of Mike's work on this draft was supported by Microsoft
-during his employment there.
-
 # Change Log
 
 > **RFC Editor's Note:**  Please remove this section prior to publication of a
@@ -842,3 +834,12 @@ Nothing yet.
 ## Since draft-bishop-httpbis-http2-additional-certs-05:
 
 - Adopted as draft-ietf-httpbis-http2-secondary-certs
+
+
+# Acknowledgements {#ack}
+{:numbered="false"}
+Eric Rescorla pointed out several failings in an earlier revision. Andrei Popov
+contributed to the TLS considerations.
+
+A substantial portion of Mike's work on this draft was supported by Microsoft
+during his employment there.
