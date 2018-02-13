@@ -339,12 +339,14 @@ See {{?RFC7595}} for more information about minting new URL schemes.
 
 ### Transport Ports
 
-Applications that use HTTP SHOULD use the default port for the URL scheme in use. If it is felt
-that networks might need to distinguish the application's traffic for operational reasons, it MAY
-register a separate port, but be aware that this has privacy implications for that protocol's
-users. The impact of doing so MUST be documented in Security Considerations.
+Applications that use HTTP SHOULD use the default port for the URL scheme in use.
+
+If it is felt that networks might need to distinguish the application's traffic for operational
+reasons, it MAY register a separate port, but be aware that this has privacy implications for that
+protocol's users. The impact of doing so MUST be documented in Security Considerations.
 
 See {{?RFC7605}} for further guidance.
+
 
 ## HTTP Methods
 
