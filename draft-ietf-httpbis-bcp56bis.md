@@ -356,11 +356,16 @@ See {{?RFC7595}} for more information about minting new URL schemes.
 
 ### Transport Ports
 
-Applications that use HTTP SHOULD use the default port for the URL scheme in use.
+Applications that use HTTP can use the applicable default port (80 for HTTP, 443 for HTTPS), or
+they can be deployed upon other ports. This decision can be made at deployment time, or might be
+encouraged by the application's specification (e.g., by registering a port for that application).
 
-If it is felt that networks might need to distinguish the application's traffic for operational
-reasons, it MAY register a separate port, but be aware that this has privacy implications for that
-protocol's users. The impact of doing so MUST be documented in Security Considerations.
+In either case, non-default ports will need to be reflected in the authority of all URLs for that
+resource; the only mechanism for changing a default port is changing the scheme (see {{scheme}}).
+
+Using a port other than the default has privacy implications (i.e., the protocol can now be
+distinguished from other traffic), as well as operability concerns (as some networks might block or
+otherwise interfere with it). Privacy implications SHOULD be documented in Security Considerations.
 
 See {{?RFC7605}} for further guidance.
 
