@@ -180,8 +180,8 @@ As explained in {{!RFC7320}}, such "squatting" on a part of the URL space by a s
 server's authority over its own resources, can cause deployment issues, and is therefore bad
 practice in standards.
 
-Instead of statically defining URL paths, it is RECOMMENDED that applications using HTTP define
-links in payloads, to allow flexibility in deployment.
+Instead of statically defining URL components like paths, it is RECOMMENDED that applications using
+HTTP define links in payloads, to allow flexibility in deployment.
 
 Using runtime links in this fashion has a number of other benefits. For example, navigating with a
 link allows a request to be routed to a different server without the overhead of a redirection,
