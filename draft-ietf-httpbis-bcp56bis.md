@@ -468,15 +468,49 @@ possible to identify them unambiguously and negotiate for their use. See {{!RFC6
 information.
 
 
-## Ensuring Browser Interoperability {#browser}
+## Co-Existing with Web Browsing {#browser}
 
-TBD
+Even if there is not an intent for an application that uses HTTP to be used with a Web browser, its
+resources will remain available to browsers and other HTTP clients.
 
-## Access Control
+This means that all such applications need to consider how browsers will interact with them,
+particularly regarding security.
 
-Modern Web browsers constrain the ability of content from one origin (as defined by {{?RFC6454}})
-to access resources from another, to avoid the "confused deputy" problem. As a result, applications
-that wish to expose cross-origin data to browsers will need to implement {{!W3C.REC-cors-20140116}}.
+For example, if an application's state can be changed using a POST request, a Web browser can
+easily be coaxed into making that request by a HTML form on an arbitrary Web site.
+
+Or, if a resource reflects data from the request into a response, that can be used to perform a
+Cross-Site Scripting attack on Web browsers directed to it.
+
+This is only a small sample of the kinds of issues that applications using HTTP must consider.
+Generally, the best approach is to consider the application *as* a Web application, and to follow
+best practices for their secure development.
+
+A complete enumeration of such practices is out of scope for this document. External resources are
+numerous; e.g., <https://www.owasp.org/index.php/OWASP_Guide_Project>.
+
+
+## Co-Existing with Other Applications {#other-apps}
+
+Because the origin {{!RFC6454}} is how many HTTP capabilities are scoped, applications also need to
+consider how deployments might interact with other applications (including Web browsing) on the
+same origin.
+
+For example, if Cookies {{?RFC6265}} are used to carry application state, they will be sent with
+all requests to the origin by default, unless scoped by path, and the application might receive
+cookies from other applications on the origin. This can lead to security issues, as well as
+collisions in cookie name.
+
+As a result, when specifying the use of Cookies, HTTP authentication {{?RFC7235}}, or other
+origin-wide HTTP mechanisms, applications using HTTP SHOULD NOT mandate the use of a particular
+identifier, but instead let deployments configure them.
+
+Note that dedicating a hostname to a single application is not a solution to the issues above; see
+{{!RFC7320}}.
+
+Modern Web browsers constrain the ability of content from one origin to access resources from
+another, to avoid the "confused deputy" problem. As a result, applications that wish to expose
+cross-origin data to browsers will need to implement {{!W3C.REC-cors-20140116}}.
 
 
 ## Authentication and Application State {#state}
@@ -508,6 +542,8 @@ and suggests a mitigation.
 
 {{scheme}} requires support for 'https' URLs, and discourages the use of 'http' URLs, to provide
 authentication, integrity and confidentiality, as well as mitigate pervasive monitoring attacks.
+
+{{browser}} highlights the implications of Web browsers' capabilities on applications that use HTTP.
 
 Applications that use HTTP in a manner that involves modification of implementations -- for
 example, requiring support for a new URL scheme, or a non-standard method -- risk having those
