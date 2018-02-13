@@ -165,7 +165,7 @@ particular application.
 
 Therefore, applications that use HTTP MUST NOT re-define, refine or overlay the semantics of
 defined protocol elements. Instead, they SHOULD focus their specifications on protocol elements
-that are specific to them; namely their HTTP resources.
+that are specific to that application; namely their HTTP resources.
 
 See {{resource}} for details.
 
