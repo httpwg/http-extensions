@@ -159,7 +159,7 @@ Application-specific semantics are expressed in the payload; mostly, in the body
 header fields.
 
 This allows a HTTP message to be examined by generic HTTP software (e.g., HTTP servers,
-intermediaries, client implementatiions), and its handling to be correctly determined. It also
+intermediaries, client implementations), and its handling to be correctly determined. It also
 allows people to leverage their knowledge of HTTP semantics without special-casing them for a
 particular application.
 
