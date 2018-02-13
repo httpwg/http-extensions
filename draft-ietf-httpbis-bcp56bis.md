@@ -306,7 +306,8 @@ example, rather than specifying "the initial document is at "/foo/v1", they shou
 deployment to use any URL as the entry point for the application.
 
 In cases where doing so is impractical (e.g., it is not possible to convey a whole URL, but only a
-hostname) applications that use HTTP MAY define a well-known URL {{?RFC5785}} as an entry point.
+hostname) standard applications that use HTTP can request a well-known URL {{?RFC5785}} as an entry
+point.
 
 ### URL Schemes {#scheme}
 
