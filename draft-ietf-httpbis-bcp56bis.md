@@ -1,6 +1,6 @@
 ---
 title: On the use of HTTP as a Substrate
-docname: draft-ietf-httpbis-bcp56bis-00
+docname: draft-ietf-httpbis-bcp56bis-latest
 date: {DATE}
 category: bcp
 obsoletes: 3205
