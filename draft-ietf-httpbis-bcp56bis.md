@@ -460,7 +460,13 @@ See {{state}} for requirements regarding header fields that carry application st
 
 ## Defining Message Payloads {#payload}
 
-TBD
+There are many potential formats for payloads; for example, JSON {{?RFC8259}} and XML
+{{?W3C.REC-xml-20081126}}. Best practices for their use are out of scope for this document.
+
+Applications SHOULD register distinct media types for each format they define; this makes it
+possible to identify them unambiguously and negotiate for their use. See {{!RFC6838}} for more
+information.
+
 
 ## Ensuring Browser Interoperability {#browser}
 
