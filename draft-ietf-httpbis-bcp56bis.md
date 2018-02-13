@@ -438,8 +438,11 @@ See {{state}} for requirements regarding header fields that carry application st
 
 ## Defining Message Payloads {#payload}
 
+TBD
 
 ## Ensuring Browser Interoperability {#browser}
+
+TBD
 
 ## Access Control
 
