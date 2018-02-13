@@ -468,6 +468,24 @@ possible to identify them unambiguously and negotiate for their use. See {{!RFC6
 information.
 
 
+## Authentication and Application State {#state}
+
+Applications that use HTTP MAY use stateful cookies {{?RFC6265}} to identify a client and/or store
+client-specific data to contextualise requests.
+
+If it is only necessary to identify clients, applications that use HTTP MAY use HTTP authentication
+{{?RFC7235}}; if either of the Basic {{?RFC7617}} or Digest {{?RFC7616}} authentication schemes is
+used, it MUST NOT be used with the 'http' URL scheme.
+
+In either case, it is important to carefully specify the scoping and use of these mechanisms; if
+they expose sensitive data or capabilities (e.g., by acting as an ambient authority), exploits are
+possible. Mitigations include using a request-specific token to assure the intent of the client.
+
+Applications MUST NOT make assumptions about the relationship between separate requests on a single
+transport connection; doing so breaks many of the assumptions of HTTP as a stateless protocol, and
+will cause problems in interoperability, security, operability and evolution.
+
+
 ## Co-Existing with Web Browsing {#browser}
 
 Even if there is not an intent for an application that uses HTTP to be used with a Web browser, its
@@ -512,23 +530,6 @@ Modern Web browsers constrain the ability of content from one origin to access r
 another, to avoid the "confused deputy" problem. As a result, applications that wish to expose
 cross-origin data to browsers will need to implement {{!W3C.REC-cors-20140116}}.
 
-
-## Authentication and Application State {#state}
-
-Applications that use HTTP MAY use stateful cookies {{?RFC6265}} to identify a client and/or store
-client-specific data to contextualise requests.
-
-If it is only necessary to identify clients, applications that use HTTP MAY use HTTP authentication
-{{?RFC7235}}; if either of the Basic {{?RFC7617}} or Digest {{?RFC7616}} authentication schemes is
-used, it MUST NOT be used with the 'http' URL scheme.
-
-In either case, it is important to carefully specify the scoping and use of these mechanisms; if
-they expose sensitive data or capabilities (e.g., by acting as an ambient authority), exploits are
-possible. Mitigations include using a request-specific token to assure the intent of the client.
-
-Applications MUST NOT make assumptions about the relationship between separate requests on a single
-transport connection; doing so breaks many of the assumptions of HTTP as a stateless protocol, and
-will cause problems in interoperability, security, operability and evolution.
 
 
 # IANA Considerations
