@@ -244,6 +244,23 @@ For example, an application can specify that it uses HTTP like this:
     HTTP/1.1, and MAY support later versions. Support for common HTTP
     mechanisms such as redirection and caching are assumed.
 
+When specifying examples of protocol interactions, applications SHOULD document both the request
+and response messages, with full headers, preferably in HTTP/1.1 format. For example:
+
+~~~
+GET /thing HTTP/1.1
+Host: example.com
+Accept: application/things+json
+User-Agent: Foo/1.0
+
+HTTP/1.1 200 OK
+Content-Type: application/things+json
+Content-Length: 500
+Server: Bar/2.2
+
+[payload here]
+~~~
+
 
 ## Defining HTTP Resources {#resource}
 
