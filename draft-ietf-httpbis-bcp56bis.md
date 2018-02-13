@@ -324,7 +324,7 @@ caveats to keep in mind:
 
 * Because URLs occur in and are generated in HTTP artefacts commonly, often without human intervention (e.g., in the `Location` response header), it can be difficult to assure that the new scheme is used consistently.
 
-* The resources identified by the new scheme will still be available using "http" and/or "https" URLs. Those URLs can "leak" into use, which can present security and operability issues. For example, using a new scheme to assure that headers don't get sent to a "normal" Web site is likely to fail.
+* The resources identified by the new scheme will still be available using "http" and/or "https" URLs. Those URLs can "leak" into use, which can present security and operability issues. For example, using a new scheme to assure that requests don't get sent to a "normal" Web site is likely to fail.
 
 * Features that rely upon the URL's origin {{?RFC6454}}, such as the Web's same-origin policy, will be impacted by a change of scheme.
 
