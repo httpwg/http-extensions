@@ -379,10 +379,10 @@ New HTTP methods are rare; they are required to be registered with IETF Review (
 and are also required to be *generic*. That means that they need to be potentially applicable to
 all resources, not just those of one application.
 
-While historically some applications (e.g., {{?RFC4791}}) has defined non-generic methods,
+While historically some applications (e.g., {{?RFC4791}}) have defined non-generic methods,
 {{!RFC7231}} now forbids this.
 
-When it is believed that a new method is required, authors are encouraged to engage with the HTTP
+When authors believe that a new method is required, they are encouraged to engage with the HTTP
 community early, and document their proposal as a separate HTTP extension, rather than as part of
 an application's specification.
 
@@ -395,11 +395,11 @@ As with methods, new HTTP status codes are rare, and required (by {{!RFC7231}}) 
 with IETF review. Similarly, HTTP status codes are generic; they are required (by {{!RFC7231}}) to
 be potentially applicable to all resources, not just to those of one application.
 
-When it is believed that a new status code is required, authors are encouraged to engage with the
+When authors believe that a new status code is required, they are encouraged to engage with the
 HTTP community early, and document their proposal as a separate HTTP extension, rather than as part
 of an application's specification.
 
-Status codes' primary function is to convey HTTP semantics for the benefit of generic HTTP
+The primary function of status codes is to convey HTTP semantics for the benefit of generic HTTP
 software, not application-specific semantics. Therefore, applications MUST NOT specify additional
 semantics or refine existing semantics for status codes.
 
@@ -460,8 +460,9 @@ See {{state}} for requirements regarding header fields that carry application st
 
 ## Defining Message Payloads {#payload}
 
-There are many potential formats for payloads; for example, JSON {{?RFC8259}} and XML
-{{?W3C.REC-xml-20081126}}. Best practices for their use are out of scope for this document.
+There are many potential formats for payloads; for example, JSON {{?RFC8259}}, XML
+{{?W3C.REC-xml-20081126}}, and CBOR {{?RFC7049}}. Best practices for their use are out of scope for
+this document.
 
 Applications SHOULD register distinct media types for each format they define; this makes it
 possible to identify them unambiguously and negotiate for their use. See {{!RFC6838}} for more
