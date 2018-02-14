@@ -195,13 +195,12 @@ capability management.
 The simplest possible use of HTTP is to POST data to a single URL, thereby effectively tunnelling
 through the protocol.
 
-This "RPC" style of communication does get some benefit from using HTTP -- namely, message framing and the availability of implementations -- but fails to realise many others:
+This "RPC" style of communication does get some benefit from using HTTP -- namely, message framing and the availability of implementations -- but fails to realise many others when used exclusively:
 
 * Caching for server scalability, latency and bandwidth reduction, and reliability;
-* Authentication and access control;
-* Automatic redirection;
+* Granularity of access control (through use of a rich space of URLs);
 * Partial content to selectively request part of a response;
-* Natural support for extensions and versioning through protocol extension; and
+* Definition of an information space using URLs; and
 * The ability to interact with the application easily using a Web browser.
 
 Using such a high-level protocol to tunnel simple semantics has downsides too; because of its more
