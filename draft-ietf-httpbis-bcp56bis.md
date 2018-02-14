@@ -547,6 +547,9 @@ authentication, integrity and confidentiality, as well as mitigate pervasive mon
 
 {{browser}} highlights the implications of Web browsers' capabilities on applications that use HTTP.
 
+{{other-apps}} discusses the issues that arise when applications are deployed on the same origin
+as Web sites (and other applications).
+
 Applications that use HTTP in a manner that involves modification of implementations -- for
 example, requiring support for a new URL scheme, or a non-standard method -- risk having those
 implementations "fork" from their parent HTTP implementations, with the possible result that they
