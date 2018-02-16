@@ -203,6 +203,7 @@ Given an ASCII string input_string, return a mapping of (label, item). input_str
    8. If input_string is empty, return dictionary.
    9. Consume a COMMA from input_string; if no comma is present, fail parsing.
    0. Discard any leading OWS from input_string.
+   1. If input_string is empty, fail parsing.
 3. If dictionary is empty, fail parsing.
 4. Return dictionary.
 
@@ -244,6 +245,7 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    5. If input_string is empty, return items.
    6. Consume a COMMA from input_string; if no comma is present, fail parsing.
    7. Discard any leading OWS from input_string.
+   8. If input_string is empty, fail parsing.
 3. If items is empty, fail parsing.
 4. Return items.
 
