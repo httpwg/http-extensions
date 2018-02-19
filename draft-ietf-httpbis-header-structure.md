@@ -457,17 +457,17 @@ Given an ASCII string input_string, return a label. input_string is modified to 
 
 Arbitrary binary content up to 16384 bytes in size can be conveyed in Structured Headers.
 
-The textual HTTP serialisation indicates their presence by a leading "*", with the data encoded using Base 64 Encoding {{!RFC4648}}, Section 4.
+The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("*") to delimit from other content.
 
-Parsers MUST fail on encoded data that is padded, as "=" might be confused with the use of dictionaries). See {{!RFC4648}}, Section 3.2.
+Parsers MUST accept encoded data that is padded with "=", as well as encoded data that omits such padding. See {{!RFC4648}}, Section 3.2.
 
 Likewise, parsers MUST fail on encoded data that has non-zero pad bits. See {{!RFC4648}}, Section 3.5.
 
-This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet and line feeds in encoded data.
+This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
 ~~~ abnf
 binary = "*" 0*21846(base64) "*"
-base64 = ALPHA / DIGIT / "+" / "/"
+base64 = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
 For example, a header whose value is defined as binary content could look like:
