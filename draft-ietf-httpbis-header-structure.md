@@ -169,13 +169,13 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are unordered maps of key-value pairs, where the keys are labels ({{label}}) and the values are items ({{item}}). There can be between 1 and 1024 members, and keys are required to be unique.
+Dictionaries are unordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be between 1 and 1024 members, and keys are required to be unique.
 
 In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST cause parsing to fail.
 
 ~~~ abnf
 dictionary        = dictionary_member *1023( OWS "," OWS dictionary_member )
-dictionary_member = label "=" item
+dictionary_member = identifier "=" item
 ~~~
 
 For example, a header field whose value is defined as a dictionary could look like:
@@ -189,11 +189,11 @@ Typically, a header field specification will define the semantics of individual 
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
-Given an ASCII string input_string, return a mapping of (label, item). input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return a mapping of (identifier, item). input_string is modified to remove the parsed value.
 
 1. Let dictionary be an empty, unordered mapping.
 2. While input_string is not empty:
-   1. Let this_key be the result of running Parse Label from Text ({{parse-label}}) with input_string.
+   1. Let this_key be the result of running Parse Identifier from Text ({{parse-identifier}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
    3. Consume a "=" from input_string; if none is present, fail parsing.
    4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
@@ -219,10 +219,10 @@ list = list_member 0*1023( OWS "," OWS list_member )
 list_member = item / parameterised
 ~~~
 
-For example, a header field whose value is defined as a list of labels could look like:
+For example, a header field whose value is defined as a list of identifiers could look like:
 
 ~~~
-ExampleLabelListHeader: foo, bar, baz_45
+ExampleIdListHeader: foo, bar, baz_45
 ~~~
 
 and a header field whose value is defined as a list of parameterised labels could look like:
@@ -252,12 +252,12 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 
 ## Parameterised Labels {#param}
 
-Parameterised Labels are labels ({{label}}) with up to 256 parameters; each parameter has a label and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+Parameterised Labels are identifiers ({{identifier}}) with up to 256 parameters; each parameter has a identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
 
 The textual HTTP serialisation uses semicolons (";") to delimit the parameters from each other, and equals ("=") to delimit the parameter name from its value.
 
 ~~~ abnf
-parameterised = label *256( OWS ";" OWS label [ "=" item ] )
+parameterised = identifier *256( OWS ";" OWS identifier [ "=" item ] )
 ~~~
 
 For example,
@@ -268,16 +268,16 @@ ExampleParamHeader: abc_123;a=1;b=2; c
 
 ### Parsing a Parameterised Label from Text {#parse-parameterised}
 
-Given an ASCII string input_string, return a label with an mapping of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return a identifier with an mapping of parameters. input_string is modified to remove the parsed value.
 
-1. Let primary_label be the result of Parsing a Label from Text ({{parse-label}}) from input_string.
+1. Let primary_identifier be the result of Parsing a Identifier from Text ({{parse-identifier}}) from input_string.
 2. Let parameters be an empty, unordered mapping.
 3. In a loop:
    1. Discard any leading OWS from input_string.
    2. If the first character of input_string is not ";", exit the loop.
    3. Consume a ";" character from the beginning of input_string.
    4. Discard any leading OWS from input_string.
-   5. let param_name be the result of Parsing a Label from Text ({{parse-label}}) from input_string.
+   5. let param_name be the result of Parsing a Identifier from Text ({{parse-identifier}}) from input_string.
    6. If param_name is already present in parameters, fail parsing.
    7. Let param_value be a null value.
    8. If the first character of input_string is "=":
@@ -285,15 +285,15 @@ Given an ASCII string input_string, return a label with an mapping of parameters
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
    9. If parameters has more than 255 members, fail parsing.
    0. Add param_name to parameters with the value param_value.
-4. Return the tuple (primary_label, parameters).
+4. Return the tuple (primary_identifier, parameters).
 
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), label ({{label}}) or binary content ({{binary}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), identifier ({{identifier}}) or binary content ({{binary}}).
 
 ~~~ abnf
-item = integer / float / string / label / binary
+item = integer / float / string / identifier / binary
 ~~~
 
 
@@ -305,7 +305,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
 4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result.
-5. If the first character of input_string is an lcalpha, process input_string as a label ({{parse-label}}) and return the result.
+5. If the first character of input_string is an lcalpha, process input_string as a identifier ({{parse-identifier}}) and return the result.
 6. Otherwise, fail parsing.
 
 
@@ -419,27 +419,27 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 6. Otherwise, fail parsing.
 
 
-## Labels {#label}
+## Identifiers {#identifier}
 
-Labels are short (up to 256 characters) textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation.
+Identifiers are short (up to 256 characters) textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation.
 
 ~~~ abnf
-label = lcalpha *255( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
-lcalpha = %x61-7A ; a-z
+identifier = lcalpha *255( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
+lcalpha    = %x61-7A ; a-z
 ~~~
 
-Note that labels can only contain lowercase letters.
+Note that identifiers can only contain lowercase letters.
 
-For example, a header whose value is defined as a label could look like:
+For example, a header whose value is defined as a identifier could look like:
 
 ~~~
-ExampleLabelHeader: foo/bar
+ExampleIdHeader: foo/bar
 ~~~
 
 
-### Parsing a Label from Text {#parse-label}
+### Parsing a Identifier from Text {#parse-identifier}
 
-Given an ASCII string input_string, return a label. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return a identifier. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not lcalpha, fail parsing.
 2. Let output_string be an empty string.
