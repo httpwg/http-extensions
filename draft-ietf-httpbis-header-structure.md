@@ -459,7 +459,9 @@ Arbitrary binary content up to 16384 bytes in size can be conveyed in Structured
 
 The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("*") to delimit from other content.
 
-Parsers MUST accept encoded data that is padded with "=", as well as encoded data that omits such padding. See {{!RFC4648}}, Section 3.2.
+The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. It is
+RECOMMENDED that parsers reject encoded data that is not properly padded, although this might
+not be possible with some base64 implementations.
 
 Likewise, parsers MUST fail on encoded data that has non-zero pad bits. See {{!RFC4648}}, Section 3.5.
 
