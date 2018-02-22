@@ -454,6 +454,12 @@ The semantics of existing HTTP header fields MUST NOT be re-defined without upda
 registration or defining an extension to them (if allowed). For example, an application using HTTP
 cannot specify that the `Location` header has a special meaning in a certain context.
 
+If an application defines a request header field that might be used by a server to change the
+response's headers or body, authors should point out that this has implications for caching; in
+general, such resources need to either make their responses uncacheable (e.g., with the "no-store"
+cache-control directive defined in {{!RFC7234}}, Section 5.2.2.3) or consistently send the Vary
+response header ({{!RFC7231}}, Section 7.1.4).
+
 See {{state}} for requirements regarding header fields that carry application state (e.g,. Cookie).
 
 
