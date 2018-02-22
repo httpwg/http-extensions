@@ -103,7 +103,7 @@ application is _using HTTP_ when any of the following conditions are true:
 * The transport port in use is 80 or 443,
 * The URL scheme "http" or "https" is used,
 * The ALPN protocol ID {{!RFC7301}} generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
-* The message formats described in {{RFC7230}} and/or {{RFC7540}} are used in conjunction with the IANA registries defined for HTTP.
+* The IANA registries defined for HTTP are updated or modified.
 
 When an application is using HTTP, all of the requirements of the HTTP protocol suite (including
 but not limited to {{!RFC7230}}, {{!RFC7231}}, {{!RFC7232}}, {{!RFC7233}}, {{!RFC7234}},
@@ -461,6 +461,9 @@ cache-control directive defined in {{!RFC7234}}, Section 5.2.2.3) or consistentl
 response header ({{!RFC7231}}, Section 7.1.4).
 
 See {{state}} for requirements regarding header fields that carry application state (e.g,. Cookie).
+
+Applications that use already-defined HTTP header fields MUST NOT modify their semantics or syntax,
+unless the definition of that header field explicitly allows it (e.g., with an extension field).
 
 
 ## Defining Message Payloads {#payload}
