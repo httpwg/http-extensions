@@ -463,7 +463,9 @@ The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section
 RECOMMENDED that parsers reject encoded data that is not properly padded, although this might
 not be possible with some base64 implementations.
 
-Likewise, parsers MUST fail on encoded data that has non-zero pad bits. See {{!RFC4648}}, Section 3.5.
+Likewise, encoded data is required to have pad bits set to zero, as per {{!RFC4648}}, Section 3.5.
+It is RECOMMENDED that parsers fail on encoded data that has non-zero pad bits, although this might
+not be possible with some base64 implementations.
 
 This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
