@@ -2051,7 +2051,7 @@ Specification document:
        sense: <https://github.com/httpwg/http-extensions/issues/302>
 
 # Acknowledgements
-
+{:numbered="false"}
 This document is a minor update of RFC 6265, adding small features, and
 aligning the specification with the reality of today's deployments. Here,
 we're standing upon the shoulders of giants.
