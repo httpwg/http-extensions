@@ -673,6 +673,13 @@ Transparency requirements.
 
 # Changes
 
+## Since -02
+
+* Add concept of test reports and specify that servers must respond with 2xx
+status codes to valid reports.
+* Add "failure-mode" key to reports to allow report servers to distinguish
+report-only from enforced failures.
+
 ## Since -01
 
 * Change SCT reporting format to support both RFC 6962 and 6962-bis SCTs.
