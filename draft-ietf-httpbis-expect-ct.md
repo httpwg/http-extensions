@@ -530,6 +530,11 @@ by an Expect-CT policy in enforce or report-only mode. The value is provided
 as a string. The UA MUST set this value to "enforce" if the Expect-CT metadata
 indicates an `enforce` configuration, and "report-only" otherwise.
 
+* "test-report": the value is set to true if the report is being sent by a
+testing client to verify that the reporting server behaves correctly. The
+value is provided as a boolean, and MUST be set to true if the report serves
+to test the server's behavior and can be discarded.
+
 ## Sending a violation report
 
 The UA SHOULD report an Expect-CT failure when a connection to a Known Expect-CT
@@ -552,6 +557,19 @@ The steps to report an Expect-CT failure are as follows.
 
 The UA MAY perform other operations as part of sending the HTTP POST request,
 for example sending a CORS preflight as part of {{FETCH}}.
+
+## Receiving a violation report
+
+Upon receiving an Expect-CT violation report, the report server MUST respond
+with a 2xx (Successful) status code if it can parse the request body as valid
+JSON and recognizes the hostname in the "hostname" field of the report. If the
+report body cannot be parsed or the report server does not expect to receive
+reports for the hostname in the "hostname" field, the report server MUST respond
+with a 4xx (Client Error) status code.
+
+If the report's "test-report" key is set to true, the server MAY discard the
+report without further processing but MUST still return a 2xx (Successful)
+status code.
 
 # Security Considerations
 
