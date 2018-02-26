@@ -525,6 +525,11 @@ has the following keys:
     representing the SCT, as defined in Section 4.6 of
     {{!I-D.ietf-trans-rfc6962-bis}}.
 
+* "failure-mode": the value indicates whether the Expect-CT report was triggered
+by an Expect-CT policy in enforce or report-only mode. The value is provided
+as a string. The UA MUST set this value to "enforce" if the Expect-CT metadata
+indicates an `enforce` configuration, and "report-only" otherwise.
+
 ## Sending a violation report
 
 The UA SHOULD report an Expect-CT failure when a connection to a Known Expect-CT
