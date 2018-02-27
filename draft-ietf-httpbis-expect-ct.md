@@ -55,7 +55,7 @@ normative:
 
 --- abstract
 
-This document defines a new HTTP header, named Expect-CT, that allows web host
+This document defines a new HTTP header field, named Expect-CT, that allows web host
 operators to instruct user agents to expect valid Signed Certificate Timestamps
 (SCTs) to be served on connections to these hosts. When configured in
 enforcement mode, user agents (UAs) will remember that hosts expect SCTs and
@@ -80,12 +80,12 @@ code and issues list for this draft can be found at
 
 # Introduction
 
-This document defines a new HTTP header that enables UAs to identify web hosts
+This document defines a new HTTP header field that enables UAs to identify web hosts
 that expect the presence of Signed Certificate Timestamps (SCTs)
 {{!I-D.ietf-trans-rfc6962-bis}} in future Transport Layer Security (TLS)
 {{!RFC5246}} connections.
 
-Web hosts that serve the Expect-CT HTTP header are noted by the UA as Known
+Web hosts that serve the Expect-CT HTTP header field are noted by the UA as Known
 Expect-CT Hosts. The UA evaluates each connection to a Known Expect-CT Host for
 compliance with the UA's Certificate Transparency (CT) Policy. If the connection
 violates the CT Policy, the UA sends a report to a URI configured by the
@@ -137,7 +137,7 @@ CT Policy
   : See Certificate Transparency Policy.
 
 Effective Expect-CT Date
-  : is the time at which a UA observed a valid Expect-CT header for a given
+  : is the time at which a UA observed a valid Expect-CT header field for a given
   host.
 
 Expect-CT Host
@@ -169,9 +169,9 @@ Unknown Expect-CT Host
 
 ## Response Header Field Syntax
 
-The "Expect-CT" header field is a new response header defined in this
+The "Expect-CT" response header field is a new field defined in this
 specification. It is used by a server to indicate that UAs should evaluate
-connections to the host emitting the header for CT compliance
+connections to the host emitting the header field for CT compliance
 ({{expect-ct-compliance}}).
 
 {{expect-ct-syntax}} describes the syntax (Augmented Backus-Naur Form) of the header field,
@@ -321,7 +321,7 @@ is accomplished as follows:
 
 Expect-CT Hosts SHOULD NOT include the Expect-CT header field in HTTP responses
 conveyed over non-secure transport.  UAs MUST ignore any Expect-CT header
-received in an HTTP response conveyed over non-secure transport.
+field received in an HTTP response conveyed over non-secure transport.
 
 ## User Agent Processing Model
 
@@ -334,7 +334,7 @@ the scheme in Section 10 of {{!RFC6797}}.
 If the UA receives, over a secure transport, an HTTP response that includes an
 Expect-CT header field conforming to the grammar specified in
 {{response-header-field-syntax}}, the UA MUST evaluate the connection on which
-the header was received for compliance with the UA's CT Policy, and then process
+the header field was received for compliance with the UA's CT Policy, and then process
 the Expect-CT header field as follows.
 
 If the connection complies with the UA's CT Policy (i.e. the connection is
@@ -375,11 +375,11 @@ its associated Expect-CT directives in non-volatile storage. The domain name and
 associated Expect-CT directives are collectively known as "Expect-CT metadata".
 
 To note a host as a Known Expect-CT Host, the UA MUST set its Expect-CT metadata
-given in the most recently received valid Expect-CT header, as specified in
+given in the most recently received valid Expect-CT header field, as specified in
 {{storage-model}}.
 
 For forward compatibility, the UA MUST ignore any unrecognized Expect-CT header
-directives, while still processing those directives it does
+field directives, while still processing those directives it does
 recognize. {{response-header-field-syntax}} specifies the directives `enforce`,
 `max-age`, and `report-uri`, but future specifications and implementations might
 use additional directives.
@@ -405,7 +405,7 @@ cache. The UA caches:
 - the value of the `report-uri` directive, if present.
 
 If any other metadata from optional or future Expect-CT header directives are
-present in the Expect-CT header, and the UA understands them, the UA MAY note
+present in the Expect-CT header field, and the UA understands them, the UA MAY note
 them as well.
 
 UAs MAY set an upper limit on the value of max-age, so that UAs that have noted
@@ -414,7 +414,7 @@ chance of recovering over time.  If the server sets a max-age greater than the
 UA's upper limit, the UA MAY behave as if the server set the max-age to the UA's
 upper limit.  For example, if the UA caps max-age at 5,184,000 seconds (60
 days), and an Expect-CT Host sets a max- age directive of 90 days in its
-Expect-CT header, the UA MAY behave as if the max-age were effectively 60
+Expect-CT header field, the UA MAY behave as if the max-age were effectively 60
 days. (One way to achieve this behavior is for the UA to simply store a value of
 60 days instead of the 90-day value provided by the Expect-CT host.)
 
@@ -573,11 +573,11 @@ status code.
 
 # Security Considerations
 
-When UAs support the Expect-CT header, it becomes a potential vector for hostile
+When UAs support the Expect-CT header field, it becomes a potential vector for hostile
 header attacks against site owners. If a site owner uses a certificate issued by
 a certificate authority which does not embed SCTs nor serve SCTs via OCSP or TLS
 extension, a malicious server operator or attacker could temporarily reconfigure
-the host to comply with the UA's CT policy, and add the Expect-CT header in
+the host to comply with the UA's CT policy, and add the Expect-CT header field in
 enforcing mode with a long `max-age`.  Implementing user agents would note this
 as an Expect-CT Host (see  {{noting-expect-ct}}). After having done this, the
 configuration could then be reverted to not comply with the CT policy, prompting
@@ -613,7 +613,7 @@ considered a balance between these competing security concerns.
 Another kind of hostile header attack uses the `report-uri` mechanism on many
 hosts not currently exposing SCTs as a method to cause a denial-of-service to
 the host receiving the reports. If some highly-trafficked websites emitted
-a non-enforcing Expect-CT header with a `report-uri`, implementing UAs' reports
+a non-enforcing Expect-CT header field with a `report-uri`, implementing UAs' reports
 could flood the reporting host. It is noted in {{the-report-uri-directive}} that UAs
 should limit the rate at which they emit reports, but an attacker may alter the
 Expect-CT header's fields to induce UAs to submit different reports to different
@@ -659,10 +659,10 @@ reason why.
 ## HTTP Header
 
 Expect-CT could be specified as a TLS extension or X.509 certificate extension
-instead of an HTTP response header. Using an HTTP header as the mechanism for
+instead of an HTTP response header field. Using an HTTP header field as the mechanism for
 Expect-CT introduces a layering mismatch: for example, the software that
 terminates TLS and validates Certificate Transparency information might know
-nothing about HTTP. Nevertheless, an HTTP header was chosen primarily for ease
+nothing about HTTP. Nevertheless, an HTTP header field was chosen primarily for ease
 of deployment. In practice, deploying new certificate extensions requires
 certificate authorities to support them, and new TLS extensions require server
 software updates, including possibly to servers outside of the site owner's
