@@ -141,6 +141,10 @@ The CACHE_DIGEST frame defines the following flags:
 
 * **COMPLETE** (0x2): When set, indicates that the currently valid set of cache digests held by the server constitutes a complete representation of the cache's state regarding that origin, for the type of cached response indicated by the `STALE` flag.
 
+* **VALIDATORS** (0x4): When set, indicates that the `validators` boolean in {{key}} is true.
+
+* **STALE** (0x8): When set, indicates that all cached responses represented in the digest-value are stale {{RFC7234}} at the point in them that the digest was generated; otherwise, all are fresh.
+
 ## Client Behavior
 
 A CACHE_DIGEST frame MUST be sent from a client to a server on stream 0, and conveys a digest of
@@ -159,18 +163,23 @@ When generating CACHE_DIGEST, a client MUST NOT include cached responses whose U
 origins {{RFC6454}} with the indicated origin. Clients MUST NOT send CACHE_DIGEST frames on
 connections that are not authoritative (as defined in {{RFC7540}}, 10.1) for the indicated origin.
 
-Clients can choose to only send a subset of the suitable stored responses. However, when the
-CACHE_DIGEST frames sent represent the complete set of stored responses of a given type, the last
-such frame SHOULD have a COMPLETE flag set, to indicate to the server that it has all relevant
-state of that type. Note that for the purposes of COMPLETE, responses cached since the beginning
-of the connection or the last RESET flag on a CACHE_DIGEST frame need not be included.
+CACHE_DIGEST allows the client to indicate whether the set of URLs used to compute the digest
+represent fresh or stale stored responses, using the STALE flag. Clients MAY decide whether to only
+send CACHE_DIGEST frames representing their fresh stored responses, their stale stored responses,
+or both.
 
-CACHE_DIGEST will also include the cached responses' ETags, if they were present in the response.
-This information can be used by servers to decide if a response needs to be pushed to clients;
-If a response is cached and was not changed at the origin server, the server calculating its hash
-will find it in the digest and therefore will not push it. If a response is cached but was
-modified at the origin server, the server calculating its hash will not find it in the digest, so
-the response will be pushed.
+Clients can choose to only send a subset of the suitable stored responses of each type (fresh or
+stale). However, when the CACHE_DIGEST frames sent represent the complete set of stored responses
+of a given type, the last such frame SHOULD have a COMPLETE flag set, to indicate to the server
+that it has all relevant state of that type. Note that for the purposes of COMPLETE, responses
+cached since the beginning of the connection or the last RESET flag on a CACHE_DIGEST frame need
+not be included.
+
+CACHE_DIGEST can be computed to include cached responses' ETags, as indicated by the VALIDATORS
+flag. This information can be used by servers to decide what kinds of responses to push to clients;
+for example, a stale response that hasn't changed could be refreshed with a 304 (Not Modified)
+response; one that has changed can be replaced with a 200 (OK) response, whether the cached
+response was fresh or stale.
 
 CACHE_DIGEST has no defined meaning when sent from servers, and SHOULD be ignored by clients.
 
@@ -296,9 +305,10 @@ Given the following inputs:
 
 * `URL`, an array of characters
 * `ETag`, an array of characters
+* `validators`, a boolean indicating whether validators ({{RFC7232}}) are to be included in the digest
 
 1. Let `key` be `URL` converted to an ASCII string by percent-encoding as appropriate {{RFC3986}}.
-2. If `ETag` is not null:
+2. If `validators` is true and `ETag` is not null:
     1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present)
     and double quotes, as per {{RFC7232}}, Section 2.3.
 3. Return `key`
@@ -360,6 +370,7 @@ Given the following inputs:
 response {{RFC7234}}.
 * `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
 the ETag is available; otherwise, null).
+* `validators`, a boolean
 * `digest-value`, an array of bits.
 
 1. Let `f` be the value of the first byte of `digest-value`.
