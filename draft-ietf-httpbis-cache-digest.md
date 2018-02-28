@@ -40,20 +40,6 @@ informative:
   RFC4648:
   RFC5234:
   RFC6265:
-  Rice:
-    title: Adaptive variable-length coding for efficient compression of spacecraft television data
-    author:
-    -
-      ins: R. F. Rice
-      name: Robert F. Rice
-    -
-      ins: J. Plaunt
-      name: James Plaunt
-    date: December 1971
-    seriesinfo:
-      'IEEE Transactions on Communication Technology': 19.6
-      DOI: 10.1109/TCOM.1971.1090789
-      ISSN: 0018-9332 
   I-D.ietf-tls-tls13:
   Service-Workers:
     title: Service Workers 1
