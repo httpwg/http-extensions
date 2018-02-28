@@ -487,10 +487,7 @@ The header may represent the cache state of a client or that of a proxy, dependi
 
 # Acknowledgements
 
-Thanks to Adam Langley and Giovanni Bajo for their explorations of Golomb-coded sets. In
-particular, see
-<http://giovanni.bajo.it/post/47119962313/golomb-coded-sets-smaller-than-bloom-filters>, which
-refers to sample code.
+Thanks to Joav Weiss for his idea and text to use Cuckoo Filter.
 
 Thanks to Stefan Eissing for his suggestions.
 
