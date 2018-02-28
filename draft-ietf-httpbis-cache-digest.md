@@ -487,7 +487,7 @@ The header may represent the cache state of a client or that of a proxy, dependi
 
 # Acknowledgements
 
-Thanks to Joav Weiss for his idea and text to use Cuckoo Filter.
+Thanks to Yoav Weiss for his idea and text to use Cuckoo Filter.
 
 Thanks to Stefan Eissing for his suggestions.
 
