@@ -226,12 +226,12 @@ the ETag is available; otherwise, null);
     9. Set `dest_fingerprint` to `fingerprint`.
     10. Let `h` be {{hash2}} with `h`, `dest_fingerprint` and `N` as inputs.
     11. Subtract 1 from `maxcount`.
-13. Subtract `f` from `position_start`.
-14. Let `fingerprint` be the `f` bits starting at `position_start`.
-15. Let `h1` be `h`
-16. Subtract 1 from `maxcount`.
-17. If `maxcount` is zero, return an error.
-18. Go to step 7.
+10. Subtract `f` from `position_start`.
+11. Let `fingerprint` be the `f` bits starting at `position_start`.
+12. Let `h1` be `h`
+13. Subtract 1 from `maxcount`.
+14. If `maxcount` is zero, return an error.
+15. Go to step 7.
 
 
 ### Removing a URL to the Digest-Value {#removing}
