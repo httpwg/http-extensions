@@ -16,7 +16,7 @@ author:
  -
     ins: K. Oku
     name: Kazuho Oku
-    organization: DeNA Co, Ltd.
+    organization: Fastly
     email: kazuhooku@gmail.com
 
  -
