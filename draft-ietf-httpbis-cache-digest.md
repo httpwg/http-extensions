@@ -1,6 +1,6 @@
 ---
 title: Cache Digests for HTTP/2
-docname: draft-ietf-httpbis-cache-digest-03
+docname: draft-ietf-httpbis-cache-digest-latest
 date: {DATE}
 category: exp
 
@@ -493,6 +493,10 @@ Thanks to Yoav Weiss for his idea and text to use Cuckoo Filter.
 Thanks to Stefan Eissing for his suggestions.
 
 # Changes
+
+## Since draft-ietf-httpbis-cache-digest-03
+
+* None yet.
 
 ## Since draft-ietf-httpbis-cache-digest-02
 
