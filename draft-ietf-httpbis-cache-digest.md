@@ -486,12 +486,6 @@ Clients MUST associate Cache-Digest headers to every HTTP request, since Fetch {
 Also, due to the fact that any header that is supplied to Fetch is required to be end-to-end, there is an ambiguity in what a Cache-Digest header respresents when a request is transmitted through a proxy.
 The header may represent the cache state of a client or that of a proxy, depending on how the proxy handles the header.
 
-# Acknowledgements
-
-Thanks to Yoav Weiss for his idea and text to use Cuckoo Filter.
-
-Thanks to Stefan Eissing for his suggestions.
-
 # Changes
 
 ## Since draft-ietf-httpbis-cache-digest-03
@@ -511,3 +505,11 @@ Thanks to Stefan Eissing for his suggestions.
 ## Since draft-ietf-httpbis-cache-digest-00
 
 * Make the scope of a digest frame explicit and shift to stream 0.
+
+# Acknowledgements
++{:numbered="false"}
+
+Thanks to Yoav Weiss for his idea and text to use Cuckoo Filter.
+
+Thanks to Stefan Eissing for his suggestions.
+
