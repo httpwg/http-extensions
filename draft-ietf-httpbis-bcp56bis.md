@@ -292,6 +292,19 @@ For example, an application might specify:
     related information in the link indicated by the Link header field
     value with the "example-other-info" link relation type.
 
+## Specifying Client Behaviours {#clients}
+
+HTTP does not mandate some behaviours that have nevertheless become very common; if these are not
+explicitly specified by applications using HTTP, there may be confusing or interoperability
+problems. This section lists common examples of this, and recommends default handling for them.
+
+* Redirect handling - applications using HTTP SHOULD specify that 3xx redirect status codes be followed automatically. See {{!RFC7231}}, Section 6.4.
+* Redirect methods - applications using HTTP SHOULD specify that 301 and 302 redirect status codes rewrite the POST method to GET. See {{!RFC7231}}, Section 6.4.
+* Cookies - Applications using HTTP MUST explicitly reference the Cookie specification {{?RFC6265}} if they are required.
+* Certificates - Applications using HTTP MUST specify that TLS certificates are to be checked according to {{!RFC2818}} when HTTPS is used.
+
+In general, applications using HTTP SHOULD align their usage as closely as possible with Web browsers, to avoid interoperability issues when they are used. See {{browser}}.
+
 
 ## HTTP URLs
 
