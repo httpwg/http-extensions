@@ -39,20 +39,6 @@ informative:
   RFC4648:
   RFC5234:
   RFC6265:
-  Rice:
-    title: Adaptive variable-length coding for efficient compression of spacecraft television data
-    author:
-    -
-      ins: R. F. Rice
-      name: Robert F. Rice
-    -
-      ins: J. Plaunt
-      name: James Plaunt
-    date: December 1971
-    seriesinfo:
-      'IEEE Transactions on Communication Technology': 19.6
-      DOI: 10.1109/TCOM.1971.1090789
-      ISSN: 0018-9332
   I-D.ietf-tls-tls13:
   Service-Workers:
     title: Service Workers 1
@@ -68,6 +54,9 @@ informative:
   Fetch:
     title: Fetch Standard
     target: https://fetch.spec.whatwg.org/
+  Cuckoo:
+    title: 'Cuckoo Filter: Practically Better Than Bloom'
+    target: https://www.cs.cmu.edu/~dga/papers/cuckoo-conext2014.pdf
 
 --- abstract
 
@@ -98,9 +87,8 @@ allows a stream to be cancelled by a client using a RST_STREAM frame in this sit
 is still at least one round trip of potentially wasted capacity even then.
 
 This specification defines a HTTP/2 frame type to allow clients to inform the server of their
-cache's contents using a Golomb-Rice Coded Set {{Rice}}. Servers can then use this to inform their
+cache's contents using a Cuckoo-filter {{Cuckoo}} based digest. Servers can then use this to inform their
 choices of what to push to clients.
-
 
 ## Notational Conventions
 
@@ -130,7 +118,7 @@ Origin:
 : A sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the Digest-Value applies to.
 
 Digest-Value:
-: A sequence of octets containing the digest as computed in {{computing}}.
+: A sequence of octets containing the digest as computed in {{creating}} and {{adding}}.
 
 The CACHE_DIGEST frame defines the following flags:
 
@@ -138,7 +126,7 @@ The CACHE_DIGEST frame defines the following flags:
 
 * **COMPLETE** (0x2): When set, indicates that the currently valid set of cache digests held by the server constitutes a complete representation of the cache's state regarding that origin, for the type of cached response indicated by the `STALE` flag.
 
-* **VALIDATORS** (0x4): When set, indicates that the `validators` boolean in {{computing}} is true.
+* **VALIDATORS** (0x4): When set, indicates that the `validators` boolean in {{key}} is true.
 
 * **STALE** (0x8): When set, indicates that all cached responses represented in the digest-value are stale {{RFC7234}} at the point in them that the digest was generated; otherwise, all are fresh.
 
@@ -181,64 +169,173 @@ response was fresh or stale.
 CACHE_DIGEST has no defined meaning when sent from servers, and SHOULD be ignored by clients.
 
 
-### Computing the Digest-Value {#computing}
+### Creating a digest {#creating}
 
 Given the following inputs:
 
-* `validators`, a boolean indicating whether validators ({{RFC7232}}) are to be included in the digest;
-* `URLs'`, an array of (string `URL`, string `ETag`) tuples, each corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached response {{RFC7234}} and its entity-tag {{RFC7232}} (if `validators` is true and if the ETag is available; otherwise, null);
-* `P`, an integer that MUST be a power of 2 smaller than 2\*\*32, that indicates the probability of a false positive that is acceptable, expressed as `1/P`.
+* `P`, an integer smaller than 256, that indicates the probability of a false positive that is
+acceptable, expressed as `1/2\*\*P`.
+* `N`, an integer that represents the number of entries - a prime number smaller than 2\*\*32
 
-`digest-value` can be computed using the following algorithm:
+1. Let `f` be the number of bits per fingerprint, calculated as `P + 3`
+2. Let `b` be the bucket size, defined as 4.
+3. Let `allocated` be the closest power of 2 that is larger than `N`.
+4. Let `bytes` be `f`\*`allocated`\*`b`/8 rounded up to the nearest integer
+5. Add 5 to `bytes`
+6. Allocate memory of `bytes` and set it to zero. Assign it to `digest-value`.
+7. Set the first byte to `P`
+8. Set the second till fifth bytes to `N` in big endian form
+9. Return the `digest-value`.
 
-1. Let N be the count of `URLs`' members, rounded to the nearest power of 2 smaller than 2\*\*32.
-2. Let `hash-values` be an empty array of integers.
-3. For each (`URL`, `ETag`) in `URLs`, compute a hash value ({{hash}}) and append the result to `hash-values`.
-4. Sort `hash-values` in ascending order.
-5. Let `digest-value` be an empty array of bits.
-6. Write log base 2 of `N` to `digest-value` using 5 bits.
-7. Write log base 2 of `P` to `digest-value` using 5 bits.
-8. Let `C` be -1.
-9. For each `V` in `hash-values`:
-    1. If `V` is equal to `C`, continue to the next `V`.
-    2. Let `D` be the result of `V - C - 1`.
-    3. Let `Q` be the integer result of `D / P`.
-    4. Let `R` be the result of `D modulo P`.
-    5. Write `Q` '0' bits to `digest-value`.
-    6. Write 1 '1' bit to `digest-value`.
-    7. Write `R` to `digest-value` as binary, using log2(`P`) bits.
-    8. Let `C` be `V`
-10. If the length of `digest-value` is not a multiple of 8, pad it with 0s until it is.
+Note: `allocated` is necessary due to the nature of the way Cuckoo filters are creating the
+secondary hash, by XORing the initial hash and the fingerprint's hash. The XOR operation means
+that secondary hash can pick an entry beyond the initial number of entries, up to the next power
+of 2. In order to avoid issues there, we allocate the table appropriately. For increased space
+efficiency, it is recommended that implementations pick a number of entries that's close to the
+next power of 2.
+
+### Adding a URL to the Digest-Value {#adding}
+
+Given the following inputs:
+
+* `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached
+response {{RFC7234}}
+* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
+the ETag is available; otherwise, null);
+* `maxcount` - max number of cuckoo hops
+* `digest-value`
+
+1. Let `f` be the value of the first byte of `digest-value`.
+2. Let `b` be the bucket size, defined as 4.
+3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
+4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
+5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
+6. Let `dest_fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
+7. Let `h2` be the return value of {{hash2}} with `h1`, `dest_fingerprint` and `N` as inputs.
+8. Let `h` be either `h1` or `h2`, picked in random.
+9. While `maxcount` is larger than zero:
+    1. Let `position_start` be 40 + `h` * `f` \* `b`.
+    2. Let `position_end` be `position_start` + `f` \* `b`.
+    3. While `position_start` < `position_end`:
+        1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
+        2. If `bits` is all zeros, set `bits` to `dest_fingerprint` and terminate these steps.
+        3. Add `f` to `position_start`.
+    4. Let `e` be a random number from 0 to `b`.
+    5. Subtract `f` * (`b` - `e`) from `position_start`.
+    6. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
+    7. Let `fingerprint` be the value of bits, read as big endian.
+    8. Set `bits` to `dest_fingerprint`.
+    9. Set `dest_fingerprint` to `fingerprint`.
+    10. Let `h` be {{hash2}} with `h`, `dest_fingerprint` and `N` as inputs.
+    11. Subtract 1 from `maxcount`.
+10. Subtract `f` from `position_start`.
+11. Let `fingerprint` be the `f` bits starting at `position_start`.
+12. Let `h1` be `h`
+13. Subtract 1 from `maxcount`.
+14. If `maxcount` is zero, return an error.
+15. Go to step 7.
 
 
-### Computing a Hash Value {#hash}
+### Removing a URL to the Digest-Value {#removing}
 
-Given:
+Given the following inputs:
+
+* `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached
+response {{RFC7234}}
+* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
+the ETag is available; otherwise, null);
+* `digest-value`
+
+1. Let `f` be the value of the first byte of `digest-value`.
+2. Let `b` be the bucket size, defined as 4.
+3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
+4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
+5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
+6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
+7. Let `h2` be the return value of {{hash2}} with `h1`, `fingerprint` and `N` as inputs.
+8. Let `hashes` be an array containing `h1` and `h2`.
+9. For each `h` in `hashes`:
+    1. Let `position_start` be 40 + `h` \* `f` \* `b`.
+    2. Let `position_end` be `position_start` + `f` \* `b`.
+    3. While `position_start` < `position_end`:
+        1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
+        2. If `bits` is `fingerprint`, set `bits` to all zeros and terminate these steps.
+        3. Add `f` to `position_start`.
+
+### Computing a fingerprint value {#fingerprint}
+
+Given the following inputs:
+
+* `key`, an array of characters
+* `f`, an integer indicating the number of output bits
+
+1. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, expressed as an integer.
+2. Let `h` be the number of bits in `hash-value`
+3. Let `fingerprint-value` be 0
+4. While `fingerprint-value` is 0 and `h` > `f`:
+    1. Let `fingerprint-value` be the `f` least significant bits of `hash-value`.
+    2. Let `hash-value` be the `h`-`f` most significant bits of `hash-value`.
+    3. Subtract `f` from `h`.
+5. If `fingerprint-value` is 0, let `fingerprint-value` be 1.
+6. Return `fingerprint-value`.
+
+Note: Step 5 is to handle the extremely unlikely case where a SHA-256 digest of `key` is all zeros.
+The implications of it means that there's an infitisimaly larger probability of getting a
+`fingerprint-value` of 1 compared to all other values. This is not a problem for any practical
+purpose.
+
+
+
+### Computing the key {#key}
+
+Given the following inputs:
 
 * `URL`, an array of characters
 * `ETag`, an array of characters
-* `validators`, a boolean
-* `N`, an integer
-* `P`, an integer
-
-`hash-value` can be computed using the following algorithm:
+* `validators`, a boolean indicating whether validators ({{RFC7232}}) are to be included in the digest
 
 1. Let `key` be `URL` converted to an ASCII string by percent-encoding as appropriate {{RFC3986}}.
 2. If `validators` is true and `ETag` is not null:
-   1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present) and double quotes, as per {{RFC7232}}, Section 2.3.
-3. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, expressed as an integer.
-4. Truncate `hash-value` to log2( `N` \* `P` ) bits.
+    1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present)
+    and double quotes, as per {{RFC7232}}, Section 2.3.
+3. Return `key`
 
+TODO: Add an example of the ETag and the key calcuations.
 
+### Computing a Hash Value {#hash}
+
+Given the following inputs:
+
+* `key`, an array of characters.
+* `N`, an integer
+
+`hash-value` can be computed using the following algorithm:
+
+1. Let `hash-value` be the SHA-256 message digest {{RFC6234}} of `key`, truncated to 32 bits,
+expressed as an integer.
+2. Return `hash-value` modulo N.
+
+### Computing an Alternative Hash Value {#hash2}
+Given the following inputs:
+
+* `hash1`, an integer indicating the previous hash.
+* `fingerprint`, an integer indicating the fingerprint value.
+* `N`, an integer indicating the number of entries in the digest.
+
+1. Let `fingerprint-string` be the value of `fingerprint` in base 10, expressed as a string.
+2. Let `hash2` be the return value of {{hash}} with `fingerprint-string` and `N` as inputs, XORed with `hash1`.
+3. Return `hash2`.
 
 ## Server Behavior
 
 In typical use, a server will query (as per {{querying}}) the CACHE_DIGESTs received on a given
 connection to inform what it pushes to that client;
 
- * If a given URL has a match in a current CACHE_DIGEST with the STALE flag unset, it need not be pushed, because it is fresh in cache;
- * If a given URL and ETag combination has a match in a current CACHE_DIGEST with the STALE flag set, the client has a stale copy in cache, and a validating response can be pushed;
- * If a given URL has no match in any current CACHE_DIGEST, the client does not have a cached copy, and a complete response can be pushed.
+* If a given URL and ETag combination has a match in a current CACHE_DIGEST, a complete response
+need not be pushed; The server MAY push a 304 response for that resource, indicating the client
+that it hasn't changed.
+* If a given URL and ETag has no match in any current CACHE_DIGEST, the client does not have a
+cached copy, and a complete response can be pushed.
 
 Servers MAY use all CACHE_DIGESTs received for a given origin as current, as long as they do not
 have the RESET flag set; a CACHE_DIGEST frame with the RESET flag set MUST clear any
@@ -254,25 +351,44 @@ Servers MUST ignore CACHE_DIGEST frames sent on a stream other than 0.
 
 ### Querying the Digest for a Value {#querying}
 
-Given:
+Given the following inputs:
 
-* `digest-value`, an array of bits
-* `URL`, an array of characters
-* `ETag`, an array of characters
+* `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached
+response {{RFC7234}}.
+* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
+the ETag is available; otherwise, null).
 * `validators`, a boolean
+* `digest-value`, an array of bits.
 
-we can determine whether there is a match in the digest using the following algorithm:
+1. Let `f` be the value of the first byte of `digest-value`.
+2. Let `b` be the bucket size, defined as 4.
+3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
+4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
+5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
+6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
+7. Let `h2` be the return value of {{hash2}} with `h1`, `fingerprint` and `N` as inputs.
+8. Let `hashes` be an array containing `h1` and `h2`.
+9. For each `h` in `hashes`:
+    1. Let `position_start` be 40 + `h` \* `f` \* `b`.
+    2. Let `position_end` be `position_start` + `f` \* `b`.
+    3. While `position_start` < `position_end`:
+        1. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
+        2. If `bits` is `fingerprint`, return true
+        3. Add `f` to `position_start`.
+10. Return false.
 
-1. Read the first 5 bits of `digest-value` as an integer; let `N` be two raised to the power of that value.
-2. Read the next 5 bits of `digest-value` as an integer; let `P` be two raised to the power of that value.
-3. Let `hash-value` be the result of computing a hash value ({{hash}}).
-4. Let `C` be -1.
-5. Read '0' bits from `digest-value` until a '1' bit is found; let `Q` be the number of '0' bits. Discard the '1'.
-6. Read log2(`P`) bits from `digest-value` after the '1' as an integer; let `R` be its value.
-7. Let `D` be `Q` * `P` + `R`.
-8. Increment `C` by `D` + 1.
-9. If `C` is equal to `hash-value`, return 'true'.
-10. Otherwise, return to step 5 and continue processing; if no match is found before `digest-value` is exhausted, return 'false'.
+# The SENDING_CACHE_DIGEST SETTINGS Parameter
+
+A Client SHOULD notify its support for CACHE_DIGEST frames by sending the SENDING_CACHE_DIGEST (0xXXX) SETTINGS parameter.
+
+The value of the parameter is a bit-field of which the following bits are defined:
+
+DIGEST_PENDING (0x1): When set it indicates that the client has a digest to send, and the server may choose to wait for a digest in order to make
+server push decisions.
+
+Rest of the bits MUST be ignored and MUST be left unset when sending.
+
+The initial value of the parameter is zero (0x0) meaning that the client has no digest to send the server.
 
 # The ACCEPT_CACHE_DIGEST SETTINGS Parameter
 
@@ -281,9 +397,7 @@ If the server is tempted to making optimizations based on CACHE_DIGEST frames, i
 
 The value of the parameter is a bit-field of which the following bits are defined:
 
-FRESH (0x1): When set, it indicates that the server is willing to make use of a digest of freshly-cached responses.
-
-STALE (0x2): When set, it indicates that the server is willing to make use of a digest of stale-cached responses.
+ACCEPT (0x1): When set, it indicates that the server is willing to make use of a digest of cached responses.
 
 Rest of the bits MUST be ignored and MUST be left unset when sending.
 
@@ -374,10 +488,7 @@ The header may represent the cache state of a client or that of a proxy, dependi
 
 # Acknowledgements
 
-Thanks to Adam Langley and Giovanni Bajo for their explorations of Golomb-coded sets. In
-particular, see
-<http://giovanni.bajo.it/post/47119962313/golomb-coded-sets-smaller-than-bloom-filters>, which
-refers to sample code.
+Thanks to Yoav Weiss for his idea and text to use Cuckoo Filter.
 
 Thanks to Stefan Eissing for his suggestions.
 
