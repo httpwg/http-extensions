@@ -305,6 +305,12 @@ problems. This section lists common examples of this, and recommends default han
 
 In general, applications using HTTP SHOULD align their usage as closely as possible with Web browsers, to avoid interoperability issues when they are used. See {{browser}}.
 
+Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported.
+For example, requiring that clients support responses with a certain content-encoding
+({{?RFC7231}}, Section 3.1.2.2) instead of negotiating for it ({{?RFC7231}}, Section 5.3.4) means
+that otherwise conformant clients cannot interoperate with the application. Applications MAY
+encourage the implementation of such features, though.
+
 
 ## HTTP URLs
 
