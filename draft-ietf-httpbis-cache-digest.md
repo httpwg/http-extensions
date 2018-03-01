@@ -1,6 +1,6 @@
 ---
 title: Cache Digests for HTTP/2
-docname: draft-ietf-httpbis-cache-digest-latest
+docname: draft-ietf-httpbis-cache-digest-03
 date: {DATE}
 category: exp
 
@@ -496,7 +496,7 @@ Thanks to Stefan Eissing for his suggestions.
 
 ## Since draft-ietf-httpbis-cache-digest-02
 
-* None yet.
+* Switch to Cuckoo Filter.
 
 ## Since draft-ietf-httpbis-cache-digest-01
 
