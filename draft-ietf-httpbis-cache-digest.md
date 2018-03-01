@@ -170,7 +170,9 @@ CACHE_DIGEST has no defined meaning when sent from servers, and SHOULD be ignore
 
 
 ### Creating a digest {#creating}
+
 Given the following inputs:
+
 * `P`, an integer smaller than 256, that indicates the probability of a false positive that is
 acceptable, expressed as `1/2\*\*P`.
 * `N`, an integer that represents the number of entries - a prime number smaller than 2\*\*32
