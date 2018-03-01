@@ -219,17 +219,17 @@ the ETag is available; otherwise, null);
         2. If `bits` is all zeros, set `bits` to `dest_fingerprint` and terminate these steps.
         3. Add `f` to `position_start`.
     4. Let `e` be a random number from 0 to `b`.
-    5. Substract `f` * (`b` - `e`) from `position_start`.
+    5. Subtract `f` * (`b` - `e`) from `position_start`.
     6. Let `bits` be `f` bits from `digest_value` starting at `position_start`.
     7. Let `fingerprint` be the value of bits, read as big endian.
     8. Set `bits` to `dest_fingerprint`.
     9. Set `dest_fingerprint` to `fingerprint`.
     10. Let `h` be {{hash2}} with `h`, `dest_fingerprint` and `N` as inputs.
-    11. Substract 1 from `maxcount`.
-13. Substract `f` from `position_start`.
+    11. Subtract 1 from `maxcount`.
+13. Subtract `f` from `position_start`.
 14. Let `fingerprint` be the `f` bits starting at `position_start`.
 15. Let `h1` be `h`
-16. Substract 1 from `maxcount`.
+16. Subtract 1 from `maxcount`.
 17. If `maxcount` is zero, return an error.
 18. Go to step 7.
 
@@ -273,7 +273,7 @@ Given the following inputs:
 4. While `fingerprint-value` is 0 and `h` > `f`:
     1. Let `fingerprint-value` be the `f` least significant bits of `hash-value`.
     2. Let `hash-value` be the `h`-`f` most significant bits of `hash-value`.
-    3. Substract `f` from `h`.
+    3. Subtract `f` from `h`.
 5. If `fingerprint-value` is 0, let `fingerprint-value` be 1.
 6. Return `fingerprint-value`.
 
