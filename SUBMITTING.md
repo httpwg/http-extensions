@@ -1,29 +1,25 @@
 # Working with the Drafts
 
-If you're an editor, or forking a copy of the draft, a few things to know:
+A few things to know if you're an editor:
 
-* Pushing to the master branch will automatically generate the HTML on the
-  gh-pages branch.
-* You'll need xml2rfc, Java and Saxon-HE available. You can override the
-  default locations in the environment.
-* For some drafts, you will need [kramdown-rfc2629](https://github.com/cabo/kramdown-rfc2629)
-* Making the txt and html for the latest drafts is done with "make".
-
-## On OSX
-
-For those on OSX using [Homebrew](http://brew.sh/):
-
-    brew tap homebrew/dupes
-    brew install saxon make ruby python
-    gem install kramdown-rfc2629
-    pip install xml2rfc
-
-and then
-
-    saxon=/usr/local/bin/saxon gmake [target]
+* Pushing to the master branch will automatically generate the HTML on the gh-pages branch.
+* Tagging master with a draft name (see below) will automatically submit it for publication.
+* Creating other branches for temporary work is fine, but please prefix their names with your username, and clean them up when you're done.
+* You can build drafts locally with `make`; see the [required software](https://github.com/martinthomson/i-d-template/blob/master/doc/SETUP.md). We use `kramdown-rfc2669`.
 
 
-# Submitting
+## Starting a New Draft
+
+If you have been asked to start work on a new draft, you'll be given access to the repo. Once that happens, you'll need to:
+
+1. Check in your draft using the `draft-ietf-httpbis-NAME.md` convention. We strongly recommend using Markdown; see the [template](https://github.com/martinthomson/i-d-template/blob/master/doc/example.md).
+
+2. Assure that the document metadata is correct; if not sure, ask the Chairs.
+
+3. Submit the draft, as per below. The `-00` version will need to be approved by the Chairs.
+
+
+## Submitting A Draft Revision
 
 When you're ready to submit a new version of a draft:
 
@@ -34,20 +30,9 @@ When you're ready to submit a new version of a draft:
 2. Check the "Changes" section for this draft to make sure it's appropriate
    (e.g., replace "None yet" with "None").
 
-3. `make submit`
-
-4. Submit draft-ietf-httpbis-<name>-NN to https://datatracker.ietf.org/submit/
-
-5. `make clean`
-
-6. `git tag draft-ietf-httpbis-<name>-NN;`
+3. `git tag -a draft-ietf-httpbis-<name>-NN;`
    `git push --tags`
 
-7. Add "Since draft-ietf-httpbis-<name>-...-NN" subsection to "Changes".
-
-8. Add/remove any "implementation draft" notices from the abstract.
+4. Add "Since draft-ietf-httpbis-<name>-...-NN" subsection to "Changes" (if tracking them).
 
 
-# Troubleshooting
-
-* Some of the make targets (including `submit`) require GNU Make 4.0

@@ -2,7 +2,7 @@
 title: HTTP Client Hints
 abbrev:
 docname: draft-ietf-httpbis-client-hints-latest
-date: 2017
+date: {DATE}
 category: exp
 
 ipr: trust200902
@@ -25,7 +25,6 @@ author:
     uri: https://www.igvita.com/
 
 normative:
-  RFC2119:
   RFC5234:
   RFC7230:
   RFC7231:
@@ -90,7 +89,7 @@ Client Hints does not supersede or replace the User-Agent header field. Existing
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals, as shown here.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
 This document uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}} with the list rule extension defined in {{RFC7230}}, Appendix B. It includes by reference the DIGIT rule from {{RFC5234}} and the OWS and field-name rules from {{RFC7230}}.
 
@@ -101,7 +100,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 ## Sending Client Hints
 
-Clients control which Client Hints are sent in requests, based on their default settings, user configuration and/or preferences. The client and server can use an opt-in mechanism outlined below to negotiate which fields should be sent to allow for efficient content adaption.
+Clients control which Client Hints are sent in requests, based on their default settings, user configuration, and server preferences. The client and server can use an opt-in mechanism outlined below to negotiate which fields should be sent to allow for efficient content adaption, and optinally use additional mechanisms to negotiate delegation policies that control access of third parties to same fields.
 
 Implementers should be aware of the passive fingerprinting and network information disclosure implications when implementing support for Client Hints, and follow the considerations outlined in "Security Considerations" section of this document.
 
@@ -264,6 +263,7 @@ Transmitted Client Hints header fields SHOULD NOT provide new information that i
 
 Implementers ought to consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
+  - Implementers SHOULD restrict delivery of some or all Client Hints header fields to the opt-in origin only, unless the opt-in origin has explicitly delegated permission to another origin to request Client Hints header fields.
   - Implementers MAY provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting or network information disclosure to users may be challenging.
   - Implementations specific to certain use cases or threat models MAY avoid transmitting some or all of Client Hints header fields. For example, avoid transmission of header fields that can carry higher risks of linkability.
 

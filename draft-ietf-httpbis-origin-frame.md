@@ -2,7 +2,7 @@
 title: The ORIGIN HTTP/2 Frame
 abbrev: ORIGIN Frames
 docname: draft-ietf-httpbis-origin-frame-latest
-date: 2017
+date: {DATE}
 category: std
 
 ipr: trust200902
@@ -27,7 +27,6 @@ author:
     email: nygren@akamai.com
 
 normative:
-  RFC2119:
 
 informative:
 
@@ -74,9 +73,9 @@ capitals, as shown here.
 
 # The ORIGIN HTTP/2 Frame
 
-The ORIGIN HTTP/2 frame ({{!RFC7540}}, Section 4) allows a server to indicate what origin(s)
-{{!RFC6454}} the server would like the client to consider as members of the Origin Set ({{set}})
-for the connection it occurs within.
+This document defines a new HTTP/2 frame type ({{!RFC7540}}, Section 4) called ORIGIN, that allows
+a server to indicate what origin(s) {{!RFC6454}} the server would like the client to consider as
+members of the Origin Set ({{set}}) for the connection it occurs within.
 
 ## Syntax {#syntax}
 
@@ -103,7 +102,7 @@ Origin-Len:
 : An unsigned, 16-bit integer indicating the length, in octets, of the ASCII-Origin field.
 
 Origin:
-: An OPTIONAL sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender believes this connection is or could be authoritative for.
+: An OPTIONAL sequence of characters containing the ASCII serialization of an origin ({{!RFC6454}}, Section 6.2) that the sender asserts this connection is or could be authoritative for.
 
 The ORIGIN frame does not define any flags. However, future updates to this specification MAY
 define flags. See {{process}}.
@@ -118,7 +117,7 @@ When received by an implementing client, it is used to initialise and manipulate
 (see {{set}}), thereby changing how the client establishes authority for origin servers (see
 {{authority}}).
 
-The origin frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST
+The ORIGIN frame MUST be sent on stream 0; an ORIGIN frame on any other stream is invalid and MUST
 be ignored.
 
 Likewise, the ORIGIN frame is only valid on connections with the "h2" protocol identifier, or when
@@ -140,6 +139,10 @@ ORIGIN frames received from it.
 Each ASCII-Origin field in the frame's payload MUST be parsed as an ASCII serialisation of an
 origin ({{!RFC6454}}, Section 6.2). If parsing fails, the field MUST be ignored.
 
+Note that the ORIGIN frame does not support wildcard names (e.g., "*.example.com") in Origin-Entry.
+As a result, sending ORIGIN when a wildcard certificate is in use effectively disables any origins
+that are not explicitly listed in the ORIGIN frame(s) (when the client understands ORIGIN).
+
 See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 
 
@@ -148,12 +151,14 @@ See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 The set of origins (as per {{!RFC6454}}) that a given connection might be used for is known in this
 specification as the Origin Set.
 
-By default, the Origin Set for a connection is uninitialised. When an ORIGIN frame is first received
-and successfully processed by a client, the connection's Origin Set is defined to contain an initial
-origin.  The initial origin is composed from:
+By default, the Origin Set for a connection is uninitialised. An uninitialized Origin Set means
+that clients apply the coalescing rules from Section 9.1.1 of {{!RFC7540}}.
+
+When an ORIGIN frame is first received and successfully processed by a client, the connection's
+Origin Set is defined to contain an initial origin. The initial origin is composed from:
 
   - Scheme: "https"
-  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}}, Section 3), converted to lower case
+  - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}}, Section 3), converted to lower case; if SNI is not present, the remote address of the connection (i.e., the server's IP address)
   - Port: the remote port of the connection (i.e., the server's port)
 
 The contents of that ORIGIN frame (and subsequent ones) allows the server to incrementally add new
@@ -199,14 +204,15 @@ NOT consider a connection to be authoritative for an origin not present in the O
 SHOULD use the connection for all requests to origins in the Origin Set for which the connection is
 authoritative, unless there are operational reasons for opening a new connection.
 
-Note that for a connection to be considered authoritative for a given origin, the client is still
-required to obtain a certificate that passes suitable checks; see Section 9.1.1 of {{!RFC7540}}
-for more information. This includes verifying that the host matches a `dNSName` value
+Note that for a connection to be considered authoritative for a given origin, the server is still
+required to authenticate with certificate that passes suitable checks; see Section 9.1.1 of
+{{!RFC7540}} for more information. This includes verifying that the host matches a `dNSName` value
 from the certificate `subjectAltName` field (using the rules defined in {{!RFC2818}}; see also
 {{!RFC5280}}, Section 4.2.1.6).
 
 Additionally, clients MAY avoid consulting DNS to establish the connection's authority for new
-requests; however, those that do so face new risks, as explained in {{sc}}.
+requests to origins in the Origin Set; however, those that do so face new risks, as explained in
+{{sc}}.
 
 Because ORIGIN can change the set of origins a connection is used for over time, it is possible
 that a client might have more than one viable connection to an origin open at any time. When this
@@ -223,7 +229,7 @@ This specification adds an entry to the "HTTP/2 Frame Type" registry.
 
 * Frame Type: ORIGIN
 * Code: 0xc
-* Specification: [this document]
+* Specification: \[this document]
 
 
 # Security Considerations {#sc}
@@ -239,7 +245,7 @@ order to coalesce connections to the target onto their existing connection.
 As a result, clients opting not to consult DNS ought to employ some alternative means to establish
 a high degree of confidence that the certificate is legitimate. For example, clients might skip
 consulting DNS only if they receive proof of inclusion in a Certificate Transparency log
-{{?RFC6929}} or they have a recent OCSP response {{?RFC6960}} (possibly using the "status_request"
+{{?RFC6962}} or they have a recent OCSP response {{?RFC6960}} (possibly using the "status_request"
 TLS extension {{?RFC6066}}) showing that the certificate was not revoked.
 
 The Origin Set's size is unbounded by this specification, and thus could be used by attackers to
@@ -274,7 +280,7 @@ SNI-based origin, by sending an empty ORIGIN frame. Or, a larger number of origi
 by including a payload.
 
 Generally, this information is most useful to send before sending any part of a response that might
-initiate a new connection; for example, `Link` header fields {{?RFC5988}} in a response HEADERS, or links
+initiate a new connection; for example, `Link` header fields {{?RFC8288}} in a response HEADERS, or links
 in the response body.
 
 Therefore, the ORIGIN frame ought be sent as soon as possible on a connection, ideally before any
@@ -289,8 +295,8 @@ That said, senders are encouraged to include as many origins as practical within
 frame; clients need to make decisions about creating connections on the fly, and if the origin
 set is split across many frames, their behaviour might be suboptimal.
 
-Senders take note that, as per Section 4 of {{!RFC6454}}, the values in an ORIGIN header need to be
-case-normalised before serialisation.
+Senders take note that, as per Section 4, Step 5 of {{!RFC6454}}, the values in an ORIGIN header
+need to be case-normalised before serialisation.
 
 Finally, servers that host alternative services {{?RFC7838}} will need to explicitly advertise
 their origins when sending ORIGIN, because the default contents of the Origin Set (as per {{set}})

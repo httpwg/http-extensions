@@ -2,7 +2,7 @@
 title: "Expect-CT Extension for HTTP"
 abbrev: "Expect-CT"
 docname: draft-ietf-httpbis-expect-ct-latest
-date: 2017
+date: {DATE}
 category: exp
 area: Applications and Real-Time
 workgroup: HTTP
@@ -135,7 +135,7 @@ CT-qualified
 
 CT Policy
   : See Certificate Transparency Policy.
-  
+
 Effective Expect-CT Date
   : is the time at which a UA observed a valid Expect-CT header for a given
   host.
@@ -186,7 +186,7 @@ directive-value     = token / quoted-string
 ~~~
 {: #expect-ct-syntax title="Syntax of the Expect-CT header field"}
 
-Optional white space (`OWS`) is used as defined in Section 3.2.3 of 
+Optional white space (`OWS`) is used as defined in Section 3.2.3 of
 {{!RFC7230}}. `token` and `quoted-string` are used as defined in Section 3.2.6
 of {{!RFC7230}}.
 
@@ -199,18 +199,18 @@ requirements for directives are:
    field. Directives are either optional or required, as stipulated in their
    definitions.
 
-3.  Directive names are case insensitive.
+3. Directive names are case insensitive.
 
-4.  UAs MUST ignore any header fields containing directives, or other header
-    field value data, that do not conform to the syntax defined in this
-    specification.  In particular, UAs must not attempt to fix malformed header
-    fields.
+4. UAs MUST ignore any header fields containing directives, or other header
+   field value data, that do not conform to the syntax defined in this
+   specification.  In particular, UAs must not attempt to fix malformed header
+   fields.
 
-5.  If a header field contains any directive(s) the UA does not recognize, the
-    UA MUST ignore those directives.
+5. If a header field contains any directive(s) the UA does not recognize, the
+   UA MUST ignore those directives.
 
-6.  If the Expect-CT header field otherwise satisfies the above requirements (1
-    through 5), the UA MUST process the directives it recognizes.
+6. If the Expect-CT header field otherwise satisfies the above requirements (1
+   through 5), the UA MUST process the directives it recognizes.
 
 ### The report-uri Directive
 
@@ -239,8 +239,8 @@ domain or web origin as the host being reported about.
 
 UAs SHOULD make their best effort to report Expect-CT failures to the
 `report-uri`, but they may fail to report in exceptional conditions.  For
-example, if connecting the `report-uri` itself incurs an Expect-CT failure or
-other certificate validation failure, the UA MUST cancel the connection.
+example, if connecting to the `report-uri` itself incurs an Expect-CT failure
+or other certificate validation failure, the UA MUST cancel the connection.
 Similarly, if Expect-CT Host A sets a `report-uri` referring to Expect-CT Host
 B, and if B sets a `report-uri` referring to A, and if both hosts fail to comply
 to the UA's CT Policy, the UA SHOULD detect and break the loop by failing to
@@ -525,6 +525,16 @@ has the following keys:
     representing the SCT, as defined in Section 4.6 of
     {{!I-D.ietf-trans-rfc6962-bis}}.
 
+* "failure-mode": the value indicates whether the Expect-CT report was triggered
+by an Expect-CT policy in enforce or report-only mode. The value is provided
+as a string. The UA MUST set this value to "enforce" if the Expect-CT metadata
+indicates an `enforce` configuration, and "report-only" otherwise.
+
+* "test-report": the value is set to true if the report is being sent by a
+testing client to verify that the reporting server behaves correctly. The
+value is provided as a boolean, and MUST be set to true if the report serves
+to test the server's behavior and can be discarded.
+
 ## Sending a violation report
 
 The UA SHOULD report an Expect-CT failure when a connection to a Known Expect-CT
@@ -538,7 +548,7 @@ The steps to report an Expect-CT failure are as follows.
 1. Prepare a JSON object `report object` with the single key `expect-ct-report`,
    whose value is the result of generating a violation report object as
    described in {{generating-a-violation-report}}.
-2. Let `report body` by the JSON stringification of `report object`.
+2. Let `report body` be the JSON stringification of `report object`.
 3. Let `report-uri` be the value of the `report-uri` directive in the Expect-CT
    header field.
 4. Send an HTTP POST request to `report-uri` with a `Content-Type` header field
@@ -547,6 +557,19 @@ The steps to report an Expect-CT failure are as follows.
 
 The UA MAY perform other operations as part of sending the HTTP POST request,
 for example sending a CORS preflight as part of {{FETCH}}.
+
+## Receiving a violation report
+
+Upon receiving an Expect-CT violation report, the report server MUST respond
+with a 2xx (Successful) status code if it can parse the request body as valid
+JSON and recognizes the hostname in the "hostname" field of the report. If the
+report body cannot be parsed or the report server does not expect to receive
+reports for the hostname in the "hostname" field, the report server MUST respond
+with a 4xx (Client Error) status code.
+
+If the report's "test-report" key is set to true, the server MAY discard the
+report without further processing but MUST still return a 2xx (Successful)
+status code.
 
 # Security Considerations
 
@@ -649,6 +672,13 @@ mechanism for user agents that are transitioning to universal Certificate
 Transparency requirements.
 
 # Changes
+
+## Since -02
+
+* Add concept of test reports and specify that servers must respond with 2xx
+status codes to valid reports.
+* Add "failure-mode" key to reports to allow report servers to distinguish
+report-only from enforced failures.
 
 ## Since -01
 

@@ -1,0 +1,67 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: martinthomson/i-d-template:latest
+    working_directory: ~/draft
+
+    steps:
+      - checkout
+
+      # Prime caches for faster checkout
+      - restore_cache:
+          keys:
+            - git-reference
+      - run:
+          name: "Update Cache"
+          command: "git -C ~/git-reference fetch --all --prune"
+      - save_cache:
+          key: git-reference
+          paths:
+            - ~/git-reference
+
+      # Build txt and html versions of drafts
+      - restore_cache:
+          keys:
+            - refcache
+      - run:
+          name: "Build Drafts"
+          command: "make 'CLONE_ARGS=--reference ~/git-reference'"
+      - save_cache:
+          key: refcache
+          paths:
+            - ~/.cache/xml2rfc
+
+      # Create and store artifacts
+      - run:
+          name: "Create Artifacts"
+          command: "make artifacts CI_ARTIFACTS=/tmp/artifacts"
+
+      - store_artifacts:
+          path: /tmp/artifacts
+
+      # Update gh-pages and gh-issues branches
+      - run:
+          name: "Update GitHub Pages"
+          command: "make gh-pages"
+
+      - run:
+          name: "Save Issues"
+          command: "make gh-issues || true"
+
+      # For tagged builds, upload to the datatracker.
+      - deploy:
+          name: "Upload to Datatracker"
+          command: |
+            if [ "${CIRCLE_TAG#draft-}" != "${CIRCLE_TAG}" ]; then
+              make upload
+            fi
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*?/
