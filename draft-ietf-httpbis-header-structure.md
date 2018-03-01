@@ -147,15 +147,15 @@ When a receiving implementation parses textual HTTP header fields (e.g., in HTTP
 Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value. When generating input_string, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
 1. Discard any leading OWS from input_string.
-2. If the field-value is defined to be a dictionary, let output be the result of Parsing a Dictionary from Textual headers ({{parse-dictionary}}).
+2. If the field-value is defined to be a dictionary, let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 3. If the field-value is defined to be a list, let output be the result of Parsing a List from Text ({{parse-list}}).
-4. If the field-value is defined to be a parameterised label, let output be the result of Parsing a Parameterised Label from Textual headers ({{parse-parameterised}}).
+4. If the field-value is defined to be a parameterised list, let output be the result of Parsing a Parameterised List from Text ({{parse-param-list}}).
 5. Otherwise, let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
 7. If input_string is not empty, fail parsing.
 8. Otherwise, return output.
 
-Note that in the case of lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items and parameterised labels, parsing will fail if more than instance of that header field is present.
+Note that in the case of lists, parameterised lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items, parsing will fail if more than instance of that header field is present.
 
 If parsing fails, the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document MUST NOT loosen this requirement.
 
@@ -210,25 +210,19 @@ Given an ASCII string input_string, return a mapping of (identifier, item). inpu
 
 ## Lists {#list}
 
-Lists are arrays of items ({{item}}) or parameterised labels ({{param}}), with one to 1024 members.
+Lists are arrays of items ({{item}}) with one to 1024 members.
 
 In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
 
 ~~~ abnf
 list = list_member 0*1023( OWS "," OWS list_member )
-list_member = item / parameterised
+list_member = item
 ~~~
 
 For example, a header field whose value is defined as a list of identifiers could look like:
 
 ~~~
 ExampleIdListHeader: foo, bar, baz_45
-~~~
-
-and a header field whose value is defined as a list of parameterised labels could look like:
-
-~~~
-ExampleParamListHeader: abc/def; g="hi";j, klm/nop
 ~~~
 
 
@@ -250,23 +244,45 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 4. Return items.
 
 
-## Parameterised Labels {#param}
+## Parameterised Lists {#param}
 
-Parameterised Labels are identifiers ({{identifier}}) with up to 256 parameters; each parameter has a identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+Parameterised Lists are arrays of a parameterised identifiers with 1 to 256 members.
 
-The textual HTTP serialisation uses semicolons (";") to delimit the parameters from each other, and equals ("=") to delimit the parameter name from its value.
+A parameterised identifier is an identifier ({{identifier}}) with up to 256 parameters, each parameter having a identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+
+In the textual HTTP serialisation, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value.
 
 ~~~ abnf
-parameterised = identifier *256( OWS ";" OWS identifier [ "=" item ] )
+param_list = 0*255( OWS "," OWS param_id )
+param_id   = identifier 0*256( OWS ";" OWS identifier [ "=" item ] )
 ~~~
 
 For example,
 
 ~~~
-ExampleParamHeader: abc_123;a=1;b=2; c
+ExampleParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
 ~~~
 
-### Parsing a Parameterised Label from Text {#parse-parameterised}
+
+### Parsing a Parameterised List from Text {#parse-param-list}
+
+Given an ASCII string input_string, return a list of parameterised identifiers. input_string is modified to remove the parsed value.
+
+1. Let items be an empty array.
+2. While input_string is not empty:
+   1. Let item be the result of running Parse Parameterised Identifier from Text ({{parse-param-id}}) with input_string.
+   2. Append item to items.
+   3. If items has more than 1024 members, fail parsing.
+   4. Discard any leading OWS from input_string.
+   5. If input_string is empty, return items.
+   6. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   7. Discard any leading OWS from input_string.
+   8. If input_string is empty, fail parsing.
+3. If items is empty, fail parsing.
+4. Return items.
+
+
+### Parsing a Parameterised Identifier from Text {#parse-param-id}
 
 Given an ASCII string input_string, return a identifier with an mapping of parameters. input_string is modified to remove the parsed value.
 
