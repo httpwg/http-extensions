@@ -169,7 +169,7 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are unordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be between 1 and 1024 members, and keys are required to be unique.
+Dictionaries are unordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be from 1 to 1024 members, and keys are required to be unique.
 
 In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST cause parsing to fail.
 
@@ -181,7 +181,7 @@ dictionary_member = identifier "=" item
 For example, a header field whose value is defined as a dictionary could look like:
 
 ~~~
-ExampleDictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK
+ExampleDictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK*
 ~~~
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
@@ -390,7 +390,7 @@ See {{parse-number}} for the parsing algorithm for floats.
 
 ## Strings {#string}
 
-Abstractly, strings are up to 1024 printable ASCII {{!RFC0020}} characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines and carriage returns.
+Abstractly, strings are up to 1024 printable ASCII {{!RFC0020}} characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
 The textual HTTP serialisation of strings uses a backslash ("\\") to escape double quotes and backslashes in strings.
 
