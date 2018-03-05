@@ -272,7 +272,7 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
 2. While input_string is not empty:
    1. Let item be the result of running Parse Parameterised Identifier from Text ({{parse-param-id}}) with input_string.
    2. Append item to items.
-   3. If items has more than 1024 members, fail parsing.
+   3. If items has more than 256 members, fail parsing.
    4. Discard any leading OWS from input_string.
    5. If input_string is empty, return items.
    6. Consume a COMMA from input_string; if no comma is present, fail parsing.
