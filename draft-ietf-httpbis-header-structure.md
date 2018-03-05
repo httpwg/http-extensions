@@ -253,7 +253,7 @@ A parameterised identifier is an identifier ({{identifier}}) with up to 256 para
 In the textual HTTP serialisation, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value.
 
 ~~~ abnf
-param_list = 0*255( OWS "," OWS param_id )
+param_list = param_id 0*255( OWS "," OWS param_id )
 param_id   = identifier 0*256( OWS ";" OWS identifier [ "=" item ] )
 ~~~
 
