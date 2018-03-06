@@ -206,8 +206,7 @@ Given an ASCII string input_string, return a mapping of (identifier, item). inpu
    9. Consume a COMMA from input_string; if no comma is present, fail parsing.
    0. Discard any leading OWS from input_string.
    1. If input_string is empty, fail parsing.
-3. If dictionary is empty, fail parsing.
-4. Return dictionary.
+3. No structured data has been found; fail parsing.
 
 
 ## Lists {#list}
@@ -242,8 +241,7 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    6. Consume a COMMA from input_string; if no comma is present, fail parsing.
    7. Discard any leading OWS from input_string.
    8. If input_string is empty, fail parsing.
-3. If items is empty, fail parsing.
-4. Return items.
+3. No structured data has been found; fail parsing.
 
 
 ## Parameterised Lists {#param}
@@ -280,8 +278,7 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
    6. Consume a COMMA from input_string; if no comma is present, fail parsing.
    7. Discard any leading OWS from input_string.
    8. If input_string is empty, fail parsing.
-3. If items is empty, fail parsing.
-4. Return items.
+3. No structured data has been found; fail parsing.
 
 
 ### Parsing a Parameterised Identifier from Text {#parse-param-id}
