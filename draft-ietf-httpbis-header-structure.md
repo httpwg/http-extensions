@@ -299,7 +299,7 @@ Given an ASCII string input_string, return a identifier with an mapping of param
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
    9. If parameters has more than 255 members, fail parsing.
-   0. Add param_name to parameters with the value param_value.
+   0. Insert (param_name, param_value) into parameters.
 4. Return the tuple (primary_identifier, parameters).
 
 
