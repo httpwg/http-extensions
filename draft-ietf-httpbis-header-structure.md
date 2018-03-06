@@ -176,7 +176,7 @@ Dictionaries are unordered maps of key-value pairs, where the keys are identifie
 In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST cause parsing to fail.
 
 ~~~ abnf
-dictionary        = dictionary_member *1023( OWS "," OWS dictionary_member )
+dictionary        = dictionary_member 0*1023( OWS "," OWS dictionary_member )
 dictionary_member = identifier "=" item
 ~~~
 
@@ -439,7 +439,7 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 Identifiers are short (up to 256 characters) textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation.
 
 ~~~ abnf
-identifier = lcalpha *255( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
+identifier = lcalpha 0*255( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
 lcalpha    = %x61-7A ; a-z
 ~~~
 
