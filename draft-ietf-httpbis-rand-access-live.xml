@@ -4,6 +4,7 @@
 <!ENTITY RFC5234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.5234.xml">
 <!ENTITY RFC7230 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7230.xml">
 <!ENTITY RFC7233 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7233.xml">
+<!ENTITY RFC7234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7234.xml">
 <!ENTITY RFC8216 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.8216.xml">
 
 <!-- Fudge for XMLmind which doesn't have this built in -->
@@ -389,7 +390,7 @@ Content-Range: bytes 1234567-999999999999/*
       </section>
       <section anchor="shift-buffers" title="Shift Buffer Representations">
       <t>
-        Some representations lend themselves to front-end content deletion in addition to aggregation. While still supporting random access, representations of this type have a portion at the beginning (the "0" end) of the randomly-accessible region that become inaccessible over time. Examples of this kind of representation would be an audio-video time-shift buffer or a rolling log file.
+        Some representations lend themselves to front-end content removal in addition to aggregation. While still supporting random access, representations of this type have a portion at the beginning (the "0" end) of the randomly-accessible region that become inaccessible over time. Examples of this kind of representation would be an audio-video time-shift buffer or a rolling log file.
       </t>
       <t>
         For example a Range request containing:
@@ -463,6 +464,16 @@ Content-Range: bytes 1020000-1254567/*
       <t>
         from the server to indicate that the response will start at byte 1020000, end at byte 1254567, and will not include any aggregated content. This is the response expected from a typical HTTP server - one that doesn't support byte-range requests on aggregating content.
       </t>
+      <t>
+          Note that responses to GET requests against shift-buffer representations using Range 
+          can be cached by intermediaries, since the Content-Range response header indicates 
+          which portion of the representation is being returned in the response body. However 
+          GET requests without a Range header cannot be cached since the first byte of the response 
+          body can vary from request to request. So Range-less GET requests against shift-buffer
+          representations must indicate the response is non-cacheable. e,g, By including a 
+          "Cache-control: no-cache" header in the response. See HTTP Caching (<xref target="RFC7234"/>) 
+          for details on HTTP cache control.
+      </t>
       </section>
     </section>
 
@@ -484,6 +495,7 @@ Content-Range: bytes 1020000-1254567/*
         &RFC2119;
         &RFC7230;
         &RFC7233;
+        &RFC7234;
     </references>
 
     <references title="Informative References">
