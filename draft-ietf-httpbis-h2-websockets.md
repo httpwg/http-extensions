@@ -176,7 +176,7 @@ HEADERS + END_HEADERS
 :protocol = websocket
 :scheme = https
 :path = /chat
-:authority = server.example.com:443
+:authority = server.example.com
 sec-websocket-protocol = chat, superchat
 sec-websocket-extensions = permessage-deflate
 sec-websocket-version = 13
