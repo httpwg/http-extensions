@@ -488,7 +488,7 @@ unless the definition of that header field explicitly allows it (e.g., with an e
 ## Defining Message Payloads {#payload}
 
 There are many potential formats for payloads; for example, JSON {{?RFC8259}}, XML
-{{?W3C.REC-xml-20081126}}, and CBOR {{?RFC7049}}. Best practices for their use are out of scope for
+{{?XML=W3C.REC-xml-20081126}}, and CBOR {{?RFC7049}}. Best practices for their use are out of scope for
 this document.
 
 Applications SHOULD register distinct media types for each format they define; this makes it
