@@ -139,7 +139,8 @@ be implemented, supported and used.
 However, this can easily lead to an unintended profile of HTTP's behaviour. For example, it's
 common to see specifications with language like this:
 
-    A `200 OK` response means that the widget has successfully been updated.
+    A `200 OK` response means that the widget has successfully been
+    updated.
 
 This sort of specification is bad practice, because it is adding new semantics to HTTP's status
 codes and methods, respectively; a recipient -- whether it's an origin server, client library,
