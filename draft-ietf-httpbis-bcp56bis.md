@@ -239,7 +239,7 @@ their task cannot be completed).
 
 For example, an application can specify that it uses HTTP like this:
 
-    Foo Application uses HTTP {{!RFC7230}}. Implementations MUST support
+    Foo Application uses HTTP [RFC7230]. Implementations MUST support
     HTTP/1.1, and MAY support later versions. Support for common HTTP
     mechanisms such as redirection and caching are assumed.
 
@@ -287,7 +287,7 @@ For example, an application might specify:
     The "Example-Count" response header field on Widget representations
     indicates how many Widgets are held by the sender.
 
-    The "application/example-widget+json" format is a JSON {{?RFC7159}}
+    The "application/example-widget+json" format is a JSON [RFC7159]
     format representing the state of a Widget. It contains links to
     related information in the link indicated by the Link header field
     value with the "example-other-info" link relation type.
@@ -591,6 +591,3 @@ RFC3205 captured the Best Current Practice in the early 2000's, based on the con
 protocol designers at the time. Use of HTTP has changed considerably since then, and as a result
 this document is substantially different. As a result, the changes are too numerous to list
 individually.
-
-
-
