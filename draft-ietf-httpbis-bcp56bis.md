@@ -44,6 +44,8 @@ informative:
 HTTP is often used as a substrate for other application protocols. This document specifies best
 practices for these protocols' use of HTTP.
 
+This document obsoletes RFC 3205.
+
 
 --- note_Note_to_Readers_
 
@@ -585,9 +587,9 @@ do not benefit from patches and other security improvements incorporated upstrea
 
 --- back
 
-# Changes from RFC3205
+# Changes from RFC 3205
 
-RFC3205 captured the Best Current Practice in the early 2000's, based on the concerns facing
+{{?RFC3205}} captured the Best Current Practice in the early 2000's, based on the concerns facing
 protocol designers at the time. Use of HTTP has changed considerably since then, and as a result
 this document is substantially different. As a result, the changes are too numerous to list
 individually.
