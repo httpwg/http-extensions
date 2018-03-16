@@ -267,7 +267,7 @@ Server: Bar/2.2
 
 HTTP Applications SHOULD focus on defining the following application-specific protocol elements:
 
-* Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC7159}},
+* Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
 * HTTP header fields, as per {{headers}}, and
 * The behaviour of resources, as identified by link relations {{!RFC8288}}.
 
@@ -289,7 +289,7 @@ For example, an application might specify:
     The "Example-Count" response header field on Widget representations
     indicates how many Widgets are held by the sender.
 
-    The "application/example-widget+json" format is a JSON {{?RFC7159}}
+    The "application/example-widget+json" format is a JSON {{?RFC8259}}
     format representing the state of a Widget. It contains links to
     related information in the link indicated by the Link header field
     value with the "example-other-info" link relation type.
