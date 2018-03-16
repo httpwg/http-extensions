@@ -267,7 +267,7 @@ HTTP Applications SHOULD focus on defining the following application-specific pr
 
 * Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC7159}},
 * HTTP header fields, as per {{headers}}, and
-* The behaviour of resources, as identified by link relations {{!RFC5988}}.
+* The behaviour of resources, as identified by link relations {{!RFC8288}}.
 
 By composing these protocol elements, an application can define a set of resources, identified by
 link relations, that implement specified behaviours, including:
@@ -326,7 +326,7 @@ Likewise, specifying "The widget API is at the path /bar" violates {{!RFC7320}}.
 
 Instead, applications that use HTTP are encouraged to ensure that URLs are discovered at runtime,
 allowing HTTP-based services to describe their own capabilities. One way to do this is to use typed
-links {{?RFC5988}} to convey the URIs that are in use, as well as the semantics of the resources
+links {{?RFC8288}} to convey the URIs that are in use, as well as the semantics of the resources
 that they identify. See {{resource}} for details.
 
 
@@ -591,6 +591,3 @@ RFC3205 captured the Best Current Practice in the early 2000's, based on the con
 protocol designers at the time. Use of HTTP has changed considerably since then, and as a result
 this document is substantially different. As a result, the changes are too numerous to list
 individually.
-
-
-
