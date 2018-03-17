@@ -368,7 +368,7 @@ caveats to keep in mind:
 
 * HTTP-specific features such as cookies {{?RFC6265}}, authentication {{?RFC7235}}, caching {{?RFC7234}}, and CORS {{FETCH}} might or might not work correctly, depending on how they are defined and implemented. Generally, they are designed and implemented with an assumption that the URL will always be "http" or "https".
 
-* Web features that require a secure context {{?W3C.CR-secure-contexts-20160915}} will likely treat a new scheme as insecure.
+* Web features that require a secure context {{?SECCTXT=W3C.CR-secure-contexts-20160915}} will likely treat a new scheme as insecure.
 
 
 See {{?RFC7595}} for more information about minting new URL schemes.
