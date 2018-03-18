@@ -124,7 +124,7 @@ The CACHE_DIGEST frame defines the following flags:
 
 * **RESET** (0x1): When set, indicates that any and all cache digests for the applicable origin held by the recipient MUST be considered invalid.
 
-* **COMPLETE** (0x2): When set, indicates that the currently valid set of cache digests held by the server constitutes a complete representation of the cache's state regarding that origin, for the type of cached response indicated by the `STALE` flag.
+* **COMPLETE** (0x2): When set, indicates that the currently valid set of cache digests held by the server constitutes a complete representation of the cache's state regarding that origin.
 
 ## Client Behavior
 
@@ -143,11 +143,6 @@ previously sent CACHE_DIGESTs, it can send a CACHE_DIGEST with the RESET flag se
 When generating CACHE_DIGEST, a client MUST NOT include cached responses whose URLs do not share
 origins {{!RFC6454}} with the indicated origin. Clients MUST NOT send CACHE_DIGEST frames on
 connections that are not authoritative (as defined in {{RFC7540}}, 10.1) for the indicated origin.
-
-CACHE_DIGEST allows the client to indicate whether the set of URLs used to compute the digest
-represent fresh or stale stored responses, using the STALE flag. Clients MAY decide whether to only
-send CACHE_DIGEST frames representing their fresh stored responses, their stale stored responses,
-or both.
 
 Clients can choose to only send a subset of the suitable stored responses of each type (fresh or
 stale). However, when the CACHE_DIGEST frames sent represent the complete set of stored responses
