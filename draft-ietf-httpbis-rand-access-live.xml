@@ -469,10 +469,12 @@ Content-Range: bytes 1020000-1254567/*
           can be cached by intermediaries, since the Content-Range response header indicates 
           which portion of the representation is being returned in the response body. However 
           GET requests without a Range header cannot be cached since the first byte of the response 
-          body can vary from request to request. So Range-less GET requests against shift-buffer
-          representations must indicate the response is non-cacheable. e,g, By including a 
-          "Cache-control: no-cache" header in the response. See HTTP Caching (<xref target="RFC7234"/>) 
-          for details on HTTP cache control.
+          body can vary from request to request. To ensure Range-less GET requests against 
+          shift-buffer representations are not buffered, servers hosting a shift-buffer 
+          representation should either not return a 200-level response (e.g. sending a 
+          300-level redirect response with a URI that represents the current start of the 
+          shift-buffer) or indicate the response is non-cacheable. See HTTP Caching 
+          (<xref target="RFC7234"/>) for details on HTTP cache control.
       </t>
       </section>
     </section>
