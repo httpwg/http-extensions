@@ -109,7 +109,7 @@ However, header field authors are encouraged to clearly state additional constra
 
 For example:
 
-~~~
+~~~ example
 # FooExample Header
 
 The FooExample HTTP header field conveys a list of integers about how
@@ -120,26 +120,29 @@ dictionary ([RFCxxxx], Section Y.Y).
 
 The dictionary MUST contain:
 
-* Exactly one member whose key is "foo", and whose value is an integer
-  ([RFCxxxx], Section Y.Y), indicating the number of foos in
+* Exactly one member whose key is "foo", and whose value is an
+  integer ([RFCxxxx], Section Y.Y), indicating the number of foos in
   the message.
-* Exactly one member whose key is "barUrls", and whose value is a string
-  ([RFCxxxx], Section Y.Y), conveying the Bar URLs for the message.
-  See below for processing requirements.
+* Exactly one member whose key is "barUrls", and whose value is a
+  string ([RFCxxxx], Section Y.Y), conveying the Bar URLs for the
+  message. See below for processing requirements.
 
 If the parsed header field does not contain both, it MUST be ignored.
 
-"foo" MUST be between 0 and 10, inclusive; other values MUST be ignored.
+"foo" MUST be between 0 and 10, inclusive; other values MUST be
+ignored.
 
-"barUrls" contains a space-separated list of URI-references ([RFC3986], 
-Section 4.1):
+"barUrls" contains a space-separated list of URI-references
+([RFC3986], Section 4.1):
 
    barURLs = URI-reference *( 1*SP URI-reference )
 
-If a member of barURLs is not a valid URI-reference, it MUST be ignored.
+If a member of barURLs is not a valid URI-reference, it MUST be
+ignored.
 
-If a member of barURLs is a relative reference ([RFC3986], Section 4.2),
-it MUST be resolved ([RFC3986], Section 5) before being used.
+If a member of barURLs is a relative reference ([RFC3986],
+Section 4.2), it MUST be resolved ([RFC3986], Section 5) before being
+used.
 ~~~
 
 Note that empty header field values are not allowed by the syntax, and therefore parsing for them will fail.
@@ -181,13 +184,13 @@ Dictionaries are unordered maps of key-value pairs, where the keys are identifie
 In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST cause parsing to fail.
 
 ~~~ abnf
-dictionary        = dictionary_member 0*1023( OWS "," OWS dictionary_member )
-dictionary_member = identifier "=" item
+dictionary  = dict_member 0*1023( OWS "," OWS dict_member )
+dict_member = identifier "=" item
 ~~~
 
 For example, a header field whose value is defined as a dictionary could look like:
 
-~~~
+~~~ example
 ExampleDictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK*
 ~~~
 
@@ -227,7 +230,7 @@ list_member = item
 
 For example, a header field whose value is defined as a list of identifiers could look like:
 
-~~~
+~~~ example
 ExampleIdListHeader: foo, bar, baz_45
 ~~~
 
@@ -264,7 +267,7 @@ param_id   = identifier 0*256( OWS ";" OWS identifier [ "=" item ] )
 
 For example,
 
-~~~
+~~~ example
 ExampleParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
 ~~~
 
@@ -342,7 +345,7 @@ Parsers that encounter an integer outside the range defined above MUST fail pars
 
 For example, a header whose value is defined as a integer could look like:
 
-~~~
+~~~ example
 ExampleIntegerHeader: 42
 ~~~
 
@@ -385,7 +388,7 @@ Values that do not conform to the ABNF above are invalid, and MUST fail parsing.
 
 For example, a header whose value is defined as a float could look like:
 
-~~~
+~~~ example
 ExampleFloatHeader: 4.5
 ~~~
 
@@ -407,7 +410,7 @@ escape    = "\"
 
 For example, a header whose value is defined as a string could look like:
 
-~~~
+~~~ example
 ExampleStringHeader: "hello world"
 ~~~
 
@@ -452,7 +455,7 @@ Note that identifiers can only contain lowercase letters.
 
 For example, a header whose value is defined as a identifier could look like:
 
-~~~
+~~~ example
 ExampleIdHeader: foo/bar
 ~~~
 
@@ -496,7 +499,7 @@ base64 = ALPHA / DIGIT / "+" / "/" / "="
 
 For example, a header whose value is defined as binary content could look like:
 
-~~~
+~~~ example
 ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg*
 ~~~
 
