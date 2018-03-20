@@ -2,7 +2,7 @@
 title: An HTTP Status Code for Indicating Hints
 abbrev: Early Hints
 docname: draft-ietf-httpbis-early-hints-latest
-date: 2017
+date: {DATE}
 category: exp
 
 ipr: trust200902

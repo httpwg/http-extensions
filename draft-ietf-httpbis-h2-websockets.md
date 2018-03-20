@@ -2,10 +2,10 @@
 title: Bootstrapping WebSockets with HTTP/2
 abbrev: H2 Websockets
 docname: draft-ietf-httpbis-h2-websockets-latest
-date: 2017-12-19
+date: {DATE}
 category: std
-area: Applications and Real Time
-workgroup: HTTPbis
+area: Applications and Real-Time
+workgroup: HTTP
 keyword: Internet-Draft
 
 ipr: trust200902
@@ -13,7 +13,7 @@ stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
 author:
- - 
+ -
   ins: P. McManus
   name: Patrick McManus
   organization: Mozilla
@@ -28,7 +28,7 @@ over a single stream of an HTTP/2 connection.
 
 --- note_Note_to_Readers_
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
 Working Group information can be found at <http://httpwg.github.io/>; source code and issues list
@@ -78,27 +78,27 @@ In this document, the key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL 
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" are to be interpreted as
 described in BCP 14, {{!RFC2119}}.
 
-# The ENABLE_CONNECT_PROTOCOL SETTINGS Parameter
+# The SETTINGS_ENABLE_CONNECT_PROTOCOL SETTINGS Parameter
 
 This document adds a new SETTINGS Parameter to those defined by
 {{!RFC7540}}, Section 6.5.2.
 
-The new parameter is ENABLE_CONNECT_PROTOCOL (type = 0x8). The value
+The new parameter name is SETTINGS_ENABLE_CONNECT_PROTOCOL. The value
 of the parameter MUST be 0 or 1.
 
-Upon receipt of ENABLE_CONNECT_PROTOCOL with a value of 1 a client MAY
+Upon receipt of SETTINGS_ENABLE_CONNECT_PROTOCOL with a value of 1 a client MAY
 use the Extended CONNECT definition of this document when creating new
 streams. Receipt of this parameter by a server does not have any
 impact.
 
-A sender MUST NOT send a ENABLE_CONNECT_PROTOCOL parameter with the
+A sender MUST NOT send a SETTINGS_ENABLE_CONNECT_PROTOCOL parameter with the
 value of 0 after previously sending a value of 1.
 
 The use of a SETTINGS Parameter to opt-in to an otherwise incompatible
 protocol change is a use of "Extending HTTP/2" defined by Section 5.5
 of {{!RFC7540}}. If a client were to use the provisions of the extended
 CONNECT method defined in this document without first receiving a
-ENABLE_CONNECT_PROTOCOL parameter with the value of 1 it would be a
+SETTINGS_ENABLE_CONNECT_PROTOCOL parameter with the value of 1 it would be a
 protocol violation.
 
 # The Extended CONNECT Method
@@ -149,7 +149,7 @@ pseudo-header which is required on every HTTP/2 transaction.
 
 Implementations using this extended CONNECT to bootstrap WebSockets do
 not do the processing of the {{!RFC6455}} Sec-WebSocket-Key and
-Sec-WebSocket-Accept headers as that functionality has been superceded
+Sec-WebSocket-Accept headers as that functionality has been superseded
 by the :protocol pseudo-header.
 
 The Sec-WebSocket-Version, Origin {{!RFC6454}}, Sec-WebSocket-Protocol,
@@ -167,16 +167,16 @@ this point is OPEN as defined by {{!RFC6455}}, Section 4.1.
 ## Example
 ~~~
 [[ From Client ]]                       [[ From Server ]]
- 
+
                                         SETTINGS
-                                        ENABLE_CONNECT_PROTOCOL = 1
+                                        SETTINGS_ENABLE_CONNECT_PROTOCOL = 1
 
 HEADERS + END_HEADERS
 :method = CONNECT
 :protocol = websocket
 :scheme = https
 :path = /chat
-:authority = server.example.com:443
+:authority = server.example.com
 sec-websocket-protocol = chat, superchat
 sec-websocket-extensions = permessage-deflate
 sec-websocket-version = 13
@@ -230,10 +230,10 @@ specification addresses that concern in two ways:
 
 # IANA Considerations
 
-This document establishes a entry for the HTTP/2 Settings Registry
+This document establishes an entry for the HTTP/2 Settings Registry
 that was established by Section 11.3 of {{!RFC7540}}.
 
-Name: ENABLE_CONNECT_PROTOCOL
+Name: SETTINGS_ENABLE_CONNECT_PROTOCOL
 
 Code: 0x8
 

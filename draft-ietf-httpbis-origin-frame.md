@@ -2,7 +2,7 @@
 title: The ORIGIN HTTP/2 Frame
 abbrev: ORIGIN Frames
 docname: draft-ietf-httpbis-origin-frame-latest
-date: 2017
+date: {DATE}
 category: std
 
 ipr: trust200902
@@ -73,9 +73,9 @@ capitals, as shown here.
 
 # The ORIGIN HTTP/2 Frame
 
-The ORIGIN HTTP/2 frame ({{!RFC7540}}, Section 4) allows a server to indicate what origin(s)
-{{!RFC6454}} the server would like the client to consider as members of the Origin Set ({{set}})
-for the connection it occurs within.
+This document defines a new HTTP/2 frame type ({{!RFC7540}}, Section 4) called ORIGIN, that allows
+a server to indicate what origin(s) {{!RFC6454}} the server would like the client to consider as
+members of the Origin Set ({{set}}) for the connection it occurs within.
 
 ## Syntax {#syntax}
 
@@ -139,6 +139,10 @@ ORIGIN frames received from it.
 Each ASCII-Origin field in the frame's payload MUST be parsed as an ASCII serialisation of an
 origin ({{!RFC6454}}, Section 6.2). If parsing fails, the field MUST be ignored.
 
+Note that the ORIGIN frame does not support wildcard names (e.g., "*.example.com") in Origin-Entry.
+As a result, sending ORIGIN when a wildcard certificate is in use effectively disables any origins
+that are not explicitly listed in the ORIGIN frame(s) (when the client understands ORIGIN).
+
 See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 
 
@@ -147,9 +151,11 @@ See {{algo}} for an illustrative algorithm for processing ORIGIN frames.
 The set of origins (as per {{!RFC6454}}) that a given connection might be used for is known in this
 specification as the Origin Set.
 
-By default, the Origin Set for a connection is uninitialised. When an ORIGIN frame is first received
-and successfully processed by a client, the connection's Origin Set is defined to contain an initial
-origin.  The initial origin is composed from:
+By default, the Origin Set for a connection is uninitialised. An uninitialized Origin Set means
+that clients apply the coalescing rules from Section 9.1.1 of {{!RFC7540}}.
+
+When an ORIGIN frame is first received and successfully processed by a client, the connection's
+Origin Set is defined to contain an initial origin. The initial origin is composed from:
 
   - Scheme: "https"
   - Host: the value sent in Server Name Indication (SNI, {{!RFC6066}}, Section 3), converted to lower case; if SNI is not present, the remote address of the connection (i.e., the server's IP address)
@@ -198,9 +204,9 @@ NOT consider a connection to be authoritative for an origin not present in the O
 SHOULD use the connection for all requests to origins in the Origin Set for which the connection is
 authoritative, unless there are operational reasons for opening a new connection.
 
-Note that for a connection to be considered authoritative for a given origin, the client is still
-required to obtain a certificate that passes suitable checks; see Section 9.1.1 of {{!RFC7540}}
-for more information. This includes verifying that the host matches a `dNSName` value
+Note that for a connection to be considered authoritative for a given origin, the server is still
+required to authenticate with certificate that passes suitable checks; see Section 9.1.1 of
+{{!RFC7540}} for more information. This includes verifying that the host matches a `dNSName` value
 from the certificate `subjectAltName` field (using the rules defined in {{!RFC2818}}; see also
 {{!RFC5280}}, Section 4.2.1.6).
 
@@ -239,7 +245,7 @@ order to coalesce connections to the target onto their existing connection.
 As a result, clients opting not to consult DNS ought to employ some alternative means to establish
 a high degree of confidence that the certificate is legitimate. For example, clients might skip
 consulting DNS only if they receive proof of inclusion in a Certificate Transparency log
-{{?RFC6929}} or they have a recent OCSP response {{?RFC6960}} (possibly using the "status_request"
+{{?RFC6962}} or they have a recent OCSP response {{?RFC6960}} (possibly using the "status_request"
 TLS extension {{?RFC6066}}) showing that the certificate was not revoked.
 
 The Origin Set's size is unbounded by this specification, and thus could be used by attackers to

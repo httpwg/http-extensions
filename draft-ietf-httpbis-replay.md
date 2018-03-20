@@ -6,7 +6,7 @@ category: std
 
 ipr: trust200902
 area: Applications and Real-Time
-workgroup: httpbis
+workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes
@@ -338,6 +338,14 @@ request is not safe to process before the TLS handshake completes, then all
 instances of the server (including gateways) need to agree and either reject the
 request or delay processing.
 
+Disabling early data, delaying requests, or rejecting requests with the 425 (Too
+Early) status code are all equally good measures for mitigating replay attacks
+on requests that might be vulnerable to replay.  Server instances can implement
+any of these measures and be considered to be consistent, even if different
+instances use different methods.  Critically, this means that it is possible to
+employ different mitigations in reaction to other conditions, such as server
+load.
+
 A server MUST NOT act on early data before the handshake completes if it and any
 other server instance could make a different decision about how to handle the
 same data.
@@ -353,11 +361,10 @@ requests, which could result in increased load.
 
 ## Out of Order Delivery
 
-In protocols that deliver data out of order (such as QUIC {{HQ}}) early data
-can arrive after the handshake completes.  This leads to potential ambiguity
-about the status of requests and could lead to inconsistent treatment (see
-{{be-consistent}}).  Implementations MUST either ensure that any early data that
-is delivered late is either discarded or consistently identified and processed.
+In protocols that deliver data out of order (such as QUIC {{HQ}}) early data can
+arrive after the handshake completes.  A server MAY process requests received in
+early data after handshake completion if it can rely on other instances
+correctly handling replays of the same requests.
 
 
 # IANA Considerations
@@ -410,6 +417,6 @@ Reference:
 # Acknowledgments
 {:numbered="false"}
 This document was not easy to produce.  The following people made substantial
-contributions to the quality and completeness of the document: Subodh Iyengar,
-Benjamin Kaduk, Ilari Liusavaara, Kazuho Oku, Eric Rescorla, Kyle Rose, and
-Victor Vasiliev.
+contributions to the quality and completeness of the document: David Benjamin,
+Subodh Iyengar, Benjamin Kaduk, Ilari Liusavaara, Kazuho Oku, Eric Rescorla,
+Kyle Rose, and Victor Vasiliev.

@@ -4,6 +4,7 @@
 <!ENTITY RFC5234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.5234.xml">
 <!ENTITY RFC7230 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7230.xml">
 <!ENTITY RFC7233 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7233.xml">
+<!ENTITY RFC7234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7234.xml">
 <!ENTITY RFC8216 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.8216.xml">
 
 <!-- Fudge for XMLmind which doesn't have this built in -->
@@ -206,7 +207,7 @@
             that have indeterminate length representations.
         </t><t>     
             Two steps are necessary because of limitations with the Range request
-            header and the Content-Range response header fields. A server cannot
+            header fields and the Content-Range response header fields. A server cannot
             know from a range request that a client wishes to receive a response
             that does not have a definite end. More critically, the header fields
             do not allow the server to signal that a resource has indeterminate
@@ -241,7 +242,7 @@
       which allows a client to send a HEAD request with a first-byte-pos and leave last-byte-pos absent. A
       server that receives a satisfiable byte-range request (with first-byte-pos smaller than the current
       representation length) may respond with a 206 status code (Partial Content) with a Content-Range
-      header indicating the currently satisfiable byte range. For example:
+      header field indicating the currently satisfiable byte range. For example:
       </t>
 <figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
 HEAD /resource HTTP/1.1
@@ -268,7 +269,7 @@ Content-Range: bytes 0-1234567/*
         For example, for a large video asset, a client may wish to start a content transfer from the video "key" frame immediately before the point of aggregation and continue the content transfer indefinitely as content is aggregated - in order to support low-latency startup of a live video stream.
       </t> 
       <t>
-        Unlike a byte-range Range request, a byte-range Content-Range response header cannot be "open ended", per <xref x:sec="4.2" x:fmt="of" target="RFC7233"/>:
+        Unlike a byte-range Range request, a byte-range Content-Range response header field cannot be "open ended", per <xref x:sec="4.2" x:fmt="of" target="RFC7233"/>:
       </t>
 <figure><artwork type="abnf">
    byte-content-range  = bytes-unit SP
@@ -296,7 +297,7 @@ Range: bytes=1230000-999999999999
         where the last-byte-pos in the Request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above.
       </t>
       <t>
-        In response, a server may indicate that it is supplying a continuously aggregating ("live") response by supplying the client request's last-byte-pos in the Content-Range response header. 
+        In response, a server may indicate that it is supplying a continuously aggregating ("live") response by supplying the client request's last-byte-pos in the Content-Range response header field. 
       </t>
       <t>
         For example:
@@ -343,7 +344,7 @@ Content-Range: bytes 1230000-1234567/*
         A client that doesn't receive a response indicating it is continuously aggregating must use other means to access aggregated content (e.g. periodic byte-range polling).
           </t>
       <t>
-        A server that does return a continuously aggregating ("live") response should return data using chunked transfer coding and not provide a Content-Length header. A 0-length chunk indicates the end of the transfer, per <xref x:sec="4.1" x:fmt="of" target="RFC7230"/>.
+        A server that does return a continuously aggregating ("live") response should return data using chunked transfer coding and not provide a Content-Length header field. A 0-length chunk indicates the end of the transfer, per <xref x:sec="4.1" x:fmt="of" target="RFC7230"/>.
           </t>
     </section>
   </section>
@@ -362,7 +363,7 @@ Range: bytes=0-
 
 </artwork></figure>
         <t>
-            With the Content-Range response header indicating the range (or ranges) available. For example:
+            With the Content-Range response header field indicating the range (or ranges) available. For example:
         </t>
 <figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
 206 Partial Content
@@ -389,7 +390,7 @@ Content-Range: bytes 1234567-999999999999/*
       </section>
       <section anchor="shift-buffers" title="Shift Buffer Representations">
       <t>
-        Some representations lend themselves to front-end content deletion in addition to aggregation. While still supporting random access, representations of this type have a portion at the beginning (the "0" end) of the randomly-accessible region that become inaccessible over time. Examples of this kind of representation would be an audio-video time-shift buffer or a rolling log file.
+        Some representations lend themselves to front-end content removal in addition to aggregation. While still supporting random access, representations of this type have a portion at the beginning (the "0" end) of the randomly-accessible region that become inaccessible over time. Examples of this kind of representation would be an audio-video time-shift buffer or a rolling log file.
       </t>
       <t>
         For example a Range request containing:
@@ -441,6 +442,40 @@ Content-Range: bytes 1020000-999999999999/*
       <t>
         with the response body returning bytes 1020000-1254567 immediately and aggregated ("live") data being returned as the content is aggregated.
       </t>
+      <t>
+        A server that doesn't support or supply a continuously aggregating ("live") response will supply the currently satisfiable byte range, as it would with an open-ended byte request.
+      </t>
+      <t>
+        For example:
+      </t>
+<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+GET /resource HTTP/1.1
+Host: example.com
+Range: bytes=0-999999999999
+
+</artwork></figure>
+      <t>
+        will return
+      </t>
+<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+HTTP/1.1 206 Partial Content
+Content-Range: bytes 1020000-1254567/*
+</artwork></figure>
+      <t>
+        from the server to indicate that the response will start at byte 1020000, end at byte 1254567, and will not include any aggregated content. This is the response expected from a typical HTTP server - one that doesn't support byte-range requests on aggregating content.
+      </t>
+      <t>
+          Note that responses to GET requests against shift-buffer representations using Range 
+          can be cached by intermediaries, since the Content-Range response header indicates 
+          which portion of the representation is being returned in the response body. However 
+          GET requests without a Range header cannot be cached since the first byte of the response 
+          body can vary from request to request. To ensure Range-less GET requests against 
+          shift-buffer representations are not cached, servers hosting a shift-buffer 
+          representation should either not return a 200-level response (e.g. sending a 
+          300-level redirect response with a URI that represents the current start of the 
+          shift-buffer) or indicate the response is non-cacheable. See HTTP Caching 
+          (<xref target="RFC7234"/>) for details on HTTP cache control.
+      </t>
       </section>
     </section>
 
@@ -462,6 +497,7 @@ Content-Range: bytes 1020000-999999999999/*
         &RFC2119;
         &RFC7230;
         &RFC7233;
+        &RFC7234;
     </references>
 
     <references title="Informative References">
