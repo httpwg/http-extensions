@@ -363,7 +363,7 @@ Range: bytes=0-
 
 </artwork></figure>
         <t>
-            With the Content-Range response header field indicating the (or ranges) available. For example:
+            With the Content-Range response header field indicating the range (or ranges) available. For example:
         </t>
 <figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
 206 Partial Content
