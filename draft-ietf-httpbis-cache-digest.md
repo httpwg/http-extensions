@@ -377,9 +377,9 @@ the ETag is available; otherwise, null).
         3. Add `f` to `position_start`.
 10. Return false.
 
-# The SENDING_CACHE_DIGEST SETTINGS Parameter
+# The SETTINGS_SENDING_CACHE_DIGEST SETTINGS Parameter
 
-A Client SHOULD notify its support for CACHE_DIGEST frames by sending the SENDING_CACHE_DIGEST (0xXXX) SETTINGS parameter.
+A Client SHOULD notify its support for CACHE_DIGEST frames by sending the SETTINGS_SENDING_CACHE_DIGEST (0xXXX) SETTINGS parameter.
 
 The value of the parameter is a bit-field of which the following bits are defined:
 
@@ -390,9 +390,9 @@ Rest of the bits MUST be ignored and MUST be left unset when sending.
 
 The initial value of the parameter is zero (0x0) meaning that the client has no digest to send the server.
 
-# The ACCEPT_CACHE_DIGEST SETTINGS Parameter
+# The SETTINGS_ACCEPT_CACHE_DIGEST SETTINGS Parameter
 
-A server can notify its support for CACHE_DIGEST frame by sending the ACCEPT_CACHE_DIGEST (0x7) SETTINGS parameter.
+A server can notify its support for CACHE_DIGEST frame by sending the SETTINGS_ACCEPT_CACHE_DIGEST (0x7) SETTINGS parameter.
 If the server is tempted to making optimizations based on CACHE_DIGEST frames, it SHOULD send the SETTINGS parameter immediately after the connection is established.
 
 The value of the parameter is a bit-field of which the following bits are defined:
@@ -403,7 +403,7 @@ Rest of the bits MUST be ignored and MUST be left unset when sending.
 
 The initial value of the parameter is zero (0x0) meaning that the server is not interested in seeing a CACHE_DIGEST frame.
 
-Some underlying transports allow the server's first flight of application data to reach the client at around the same time when the client sends it's first flight data. When such transport (e.g., TLS 1.3 {{I-D.ietf-tls-tls13}} in full-handshake mode) is used, a client can postpone sending the CACHE_DIGEST frame until it receives a ACCEPT_CACHE_DIGEST settings value.
+Some underlying transports allow the server's first flight of application data to reach the client at around the same time when the client sends it's first flight data. When such transport (e.g., TLS 1.3 {{I-D.ietf-tls-tls13}} in full-handshake mode) is used, a client can postpone sending the CACHE_DIGEST frame until it receives a SETTINGS_ACCEPT_CACHE_DIGEST settings value.
 
 When the underlying transport does not have such property (e.g., TLS 1.3 in 0-RTT mode), a client can reuse the settings value found in previous connections to that origin {{!RFC6454}} to make assumptions.
 
@@ -426,7 +426,7 @@ This document registers the following entry in the HTTP/2 Frame Type Registry, a
 This document registers the following entry in the HTTP/2 Settings Registry, as per {{RFC7540}}:
 
 * Code: 0x7
-* Name: ACCEPT_CACHE_DIGEST
+* Name: SETTINGS_ACCEPT_CACHE_DIGEST
 * Initial Value: 0x0
 * Reference: \[this document]
 
@@ -496,7 +496,7 @@ Thanks to Stefan Eissing for his suggestions.
 
 ## Since draft-ietf-httpbis-cache-digest-03
 
-* None yet.
+* Add SETTINGS_ prefix to parameter names.
 
 ## Since draft-ietf-httpbis-cache-digest-02
 
