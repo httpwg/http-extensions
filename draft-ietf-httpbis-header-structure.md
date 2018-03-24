@@ -500,7 +500,7 @@ base64 = ALPHA / DIGIT / "+" / "/" / "="
 For example, a header whose value is defined as binary content could look like:
 
 ~~~ example
-ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg*
+ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
 ~~~
 
 
