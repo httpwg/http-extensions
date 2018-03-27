@@ -330,11 +330,6 @@ This document defines the "Accept-CH", "DPR", "Save-Data", "Viewport-Width", and
 - Specification document(s): {{width}} of this document
 - Related information: for Client Hints
 
-# Acknowledgements
-
-Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Yoav Weiss, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.
-
-
 --- back
 
 # Interaction with Key Response Header Field
@@ -387,4 +382,8 @@ Above example indicates that the cache key needs to include the value of the Wid
 
 ## Since -06
 * None
+
+# Acknowledgements
+{:numbered="false"}
+Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Yoav Weiss, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.
 
