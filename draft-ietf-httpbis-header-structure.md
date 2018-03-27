@@ -184,8 +184,8 @@ Dictionaries are unordered maps of key-value pairs, where the keys are identifie
 In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST cause parsing to fail.
 
 ~~~ abnf
-dictionary  = dict_member 0*1023( OWS "," OWS dict_member )
-dict_member = identifier "=" item
+dictionary  = dict-member 0*1023( OWS "," OWS dict-member )
+dict-member = identifier "=" item
 ~~~
 
 For example, a header field whose value is defined as a dictionary could look like:
@@ -224,8 +224,8 @@ Lists are arrays of items ({{item}}) with one to 1024 members.
 In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
 
 ~~~ abnf
-list = list_member 0*1023( OWS "," OWS list_member )
-list_member = item
+list = list-member 0*1023( OWS "," OWS list-member )
+list-member = item
 ~~~
 
 For example, a header field whose value is defined as a list of identifiers could look like:
@@ -261,8 +261,8 @@ A parameterised identifier is an identifier ({{identifier}}) with up to 256 para
 In the textual HTTP serialisation, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value.
 
 ~~~ abnf
-param_list = param_id 0*255( OWS "," OWS param_id )
-param_id   = identifier 0*256( OWS ";" OWS identifier [ "=" item ] )
+param-list = param-id 0*255( OWS "," OWS param-id )
+param-id   = identifier 0*256( OWS ";" OWS identifier [ "=" item ] )
 ~~~
 
 For example,
@@ -402,10 +402,10 @@ Abstractly, strings are up to 1024 printable ASCII {{!RFC0020}} characters (i.e.
 The textual HTTP serialisation of strings uses a backslash ("\\") to escape double quotes and backslashes in strings.
 
 ~~~ abnf
-string    = DQUOTE 0*1024(char) DQUOTE
-char      = unescaped / escape ( DQUOTE / "\" )
+string    = DQUOTE 0*1024(chr) DQUOTE
+chr       = unescaped / escaped
 unescaped = %x20-21 / %x23-5B / %x5D-7E
-escape    = "\"
+escaped   = "\" ( DQUOTE / "\" )
 ~~~
 
 For example, a header whose value is defined as a string could look like:
