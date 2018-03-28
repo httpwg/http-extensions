@@ -70,10 +70,8 @@
         fullname="Craig Pratt" 
         initials="C." 
         surname="Pratt">
-
         <address>
             <postal>
-                <street></street>
                 <city>Portland</city>
                 <region>OR</region>
                 <code>97229</code>
@@ -81,22 +79,6 @@
             </postal>
         <email>pratt@acm.org</email>
         </address>
-    </author>
-    
-    <author fullname="Barbara Stark" 
-            initials="B.H." 
-            surname="Stark" >
-      <organization>AT&amp;T</organization>
-      <address>
-        <postal>
-          <street></street>
-          <city>Atlanta</city>
-          <region>GA</region>
-          <code></code>
-          <country>US</country>
-        </postal>
-        <email>barbara.stark@att.com</email>
-      </address>
     </author>
     
     <author fullname="Darshak Thakore"
@@ -109,12 +91,27 @@
                 <city>Louisville</city>
                 <region>CO</region>
                 <code>80027</code>
+                <country>US</country>
             </postal>
             <email>d.thakore@cablelabs.com</email>
         </address>
     </author>
     
-    <date year="2017" month="November"/>
+    <author fullname="Barbara Stark"
+            initials="B.H."
+            surname="Stark" >
+      <organization>AT&amp;T</organization>
+      <address>
+        <postal>
+          <city>Atlanta</city>
+          <region>GA</region>
+          <country>US</country>
+        </postal>
+        <email>barbara.stark@att.com</email>
+      </address>
+    </author>
+
+    <date year="2018" month="March"/>
          
     <!-- Meta-data Declarations -->
     
@@ -480,6 +477,10 @@ Content-Range: bytes 1020000-1254567/*
     </section>
 
 <!-- Possibly a 'Contributors' section ... -->
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This document has no actions for IANA.</t>
+    </section>
 
     <section anchor="Security" title="Security Considerations">
         <t>
