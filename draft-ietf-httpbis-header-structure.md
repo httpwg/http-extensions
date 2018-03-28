@@ -152,12 +152,12 @@ Note that empty header field values are not allowed by the syntax, and therefore
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value.
+Given an ASCII string input_string that represents the chosen header's field-value, and header_type, one of "dictionary", "list", "param-list", or "item", return the parsed header value.
 
 1. Discard any leading OWS from input_string.
-2. If the field-value is defined to be a dictionary, let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
-3. If the field-value is defined to be a list, let output be the result of Parsing a List from Text ({{parse-list}}).
-4. If the field-value is defined to be a parameterised list, let output be the result of Parsing a Parameterised List from Text ({{parse-param-list}}).
+2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
+3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
+4. If header_type is "param-list", let output be the result of Parsing a Parameterised List from Text ({{parse-param-list}}).
 5. Otherwise, let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
 7. If input_string is not empty, fail parsing.
