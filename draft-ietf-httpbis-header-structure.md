@@ -112,8 +112,8 @@ For example:
 ~~~ example
 # FooExample Header
 
-The FooExample HTTP header field conveys a list of integers about how
-much Foo the sender has.
+The FooExample HTTP header field conveys information about how
+much Foo the message has.
 
 FooExample is a Structured header [RFCxxxx]. Its value MUST be a
 dictionary ([RFCxxxx], Section Y.Y).
@@ -129,23 +129,23 @@ The dictionary MUST contain:
 
 If the parsed header field does not contain both, it MUST be ignored.
 
-"foo" MUST be between 0 and 10, inclusive; other values MUST be
-ignored.
+"foo" MUST be between 0 and 10, inclusive; other values MUST cause
+the header to be ignored.
 
 "barUrls" contains a space-separated list of URI-references
 ([RFC3986], Section 4.1):
 
    barURLs = URI-reference *( 1*SP URI-reference )
 
-If a member of barURLs is not a valid URI-reference, it MUST be
-ignored.
+If a member of barURLs is not a valid URI-reference, it MUST cause
+that value to be ignored.
 
 If a member of barURLs is a relative reference ([RFC3986],
 Section 4.2), it MUST be resolved ([RFC3986], Section 5) before being
 used.
 ~~~
 
-Note that empty header field values are not allowed by the syntax, and therefore parsing for them will fail.
+Note that empty header field values are not allowed, and therefore parsing for them will fail.
 
 
 # Parsing Text into Structured Headers {#text}
