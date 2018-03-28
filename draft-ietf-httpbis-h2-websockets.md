@@ -26,14 +26,6 @@ normative:
 This document defines a mechanism for running the WebSocket Protocol
 over a single stream of an HTTP/2 connection.
 
---- note_Note_to_Readers_
-
-Discussion of this draft takes place on the HTTP working group mailing list
-(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <http://httpwg.github.io/>; source code and issues list
-for this draft can be found at <https://github.com/httpwg/http-extensions/labels/h2-websockets>.
-
 --- middle
 
 # Introduction
@@ -98,8 +90,9 @@ The use of a SETTINGS Parameter to opt-in to an otherwise incompatible
 protocol change is a use of "Extending HTTP/2" defined by Section 5.5
 of {{!RFC7540}}. If a client were to use the provisions of the extended
 CONNECT method defined in this document without first receiving a
-SETTINGS_ENABLE_CONNECT_PROTOCOL parameter with the value of 1 it would be a
-protocol violation.
+SETTINGS_ENABLE_CONNECT_PROTOCOL parameter, a non-supporting peer would
+detect a malformed request and generate a stream error (Section
+8.1.2.6 of {{!RFC7540}}).
 
 # The Extended CONNECT Method
 
