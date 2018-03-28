@@ -228,10 +228,10 @@ list = list-member 0*1023( OWS "," OWS list-member )
 list-member = item
 ~~~
 
-For example, a header field whose value is defined as a list of identifiers could look like:
+For example, a header field whose value is defined as a list of strings could look like:
 
 ~~~ example
-ExampleIdListHeader: foo, bar, baz_45
+ExampleStrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
 
@@ -313,10 +313,10 @@ Given an ASCII string input_string, return a identifier with an mapping of param
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), identifier ({{identifier}}) or binary content ({{binary}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), or binary content ({{binary}}).
 
 ~~~ abnf
-item = integer / float / string / identifier / binary
+item = integer / float / string / binary
 ~~~
 
 
@@ -328,7 +328,6 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
 4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result.
-5. If the first character of input_string is an lcalpha, process input_string as a identifier ({{parse-identifier}}) and return the result.
 6. Otherwise, fail parsing.
 
 
@@ -533,6 +532,11 @@ TBD
 
 
 # Changes
+
+## Since draft-ietf-httpbis-header-structure-04
+
+* Remove identifiers from item.
+
 
 ## Since draft-ietf-httpbis-header-structure-03
 
