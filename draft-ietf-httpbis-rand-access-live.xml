@@ -4,6 +4,7 @@
 <!ENTITY RFC5234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.5234.xml">
 <!ENTITY RFC7230 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7230.xml">
 <!ENTITY RFC7233 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7233.xml">
+<!ENTITY RFC7234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7234.xml">
 <!ENTITY RFC8216 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.8216.xml">
 
 <!-- Fudge for XMLmind which doesn't have this built in -->
@@ -13,10 +14,10 @@
 <!-- Extra statement used by XSLT processors to control the output style. -->
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<!-- Processing Instructions can be placed here but if you are editing 
+<!-- Processing Instructions can be placed here but if you are editing
      with XMLmind (and maybe other XML editors) they are better placed
      after the rfc element start tag as shown below. -->
-     
+
 <rfc
     category="exp"
     ipr="trust200902"
@@ -27,7 +28,7 @@
           see file http://xml.resource.org/authoring/README.html and below... -->
 
     <!-- Some of the more generally applicable PIs that most I-Ds might want to use -->
-    
+
     <!-- Try to enforce the ID-nits conventions and DTD validity -->
     <?rfc strict="yes" ?>
 
@@ -35,27 +36,27 @@
     <?rfc comments="no" ?>  <!-- Controls display of <cref> elements -->
     <?rfc inline="no" ?>    <!-- When no, put comments at end in comments section,
                                  otherwise, put inline -->
-    <?rfc editing="no" ?>   <!-- When yes, insert editing marks: editing marks consist of a 
-                                 string such as <29> printed in the blank line at the 
+    <?rfc editing="no" ?>   <!-- When yes, insert editing marks: editing marks consist of a
+                                 string such as <29> printed in the blank line at the
                                  beginning of each paragraph of text. -->
 
-    <!-- Create Table of Contents (ToC) and set some options for it.  
-         Note the ToC may be omitted for very short documents,but idnits insists on a ToC 
-         if the document has more than 15 pages. --> 
+    <!-- Create Table of Contents (ToC) and set some options for it.
+         Note the ToC may be omitted for very short documents,but idnits insists on a ToC
+         if the document has more than 15 pages. -->
    <?rfc toc="yes"?>
    <?rfc tocompact="yes"?> <!-- If "yes" eliminates blank lines before main section entries. -->
-   <?rfc tocdepth="4"?>    <!-- Sets the number of levels of sections/subsections... in ToC --> 
+   <?rfc tocdepth="4"?>    <!-- Sets the number of levels of sections/subsections... in ToC -->
 
-    <!-- Choose the options for the references. 
-         Some like symbolic tags in the references (and citations) and others prefer 
+    <!-- Choose the options for the references.
+         Some like symbolic tags in the references (and citations) and others prefer
          numbers. The RFC Editor always uses symbolic tags.
-         The tags used are the anchor attributes of the references. --> 
+         The tags used are the anchor attributes of the references. -->
     <?rfc symrefs="yes"?>
     <?rfc sortrefs="yes" ?> <!-- If "yes", causes the references to be sorted in order of tags.
                                  This doesn't have any effect unless symrefs is "yes" also. -->
 
-    <!-- These two save paper: Just setting compact to "yes" makes savings by not starting each 
-         main section on a new page but does not omit the blank lines between list items. 
+    <!-- These two save paper: Just setting compact to "yes" makes savings by not starting each
+         main section on a new page but does not omit the blank lines between list items.
          If subcompact is also "yes" the blank lines between list items are also omitted. -->
     <?rfc compact="yes" ?>
     <?rfc subcompact="no" ?>
@@ -66,13 +67,11 @@
     <title>HTTP Random Access and Live Content</title>
 
     <author
-        fullname="Craig Pratt" 
-        initials="C." 
+        fullname="Craig Pratt"
+        initials="C."
         surname="Pratt">
-
         <address>
             <postal>
-                <street></street>
                 <city>Portland</city>
                 <region>OR</region>
                 <code>97229</code>
@@ -81,25 +80,9 @@
         <email>pratt@acm.org</email>
         </address>
     </author>
-    
-    <author fullname="Barbara Stark" 
-            initials="B.H." 
-            surname="Stark" >
-      <organization>AT&amp;T</organization>
-      <address>
-        <postal>
-          <street></street>
-          <city>Atlanta</city>
-          <region>GA</region>
-          <code></code>
-          <country>US</country>
-        </postal>
-        <email>barbara.stark@att.com</email>
-      </address>
-    </author>
-    
+
     <author fullname="Darshak Thakore"
-            initials="D." 
+            initials="D."
             surname="Thakore" >
         <organization abbrev="CableLabs">CableLabs</organization>
         <address>
@@ -108,15 +91,30 @@
                 <city>Louisville</city>
                 <region>CO</region>
                 <code>80027</code>
+                <country>US</country>
             </postal>
             <email>d.thakore@cablelabs.com</email>
         </address>
     </author>
-    
-    <date year="2017" month="November"/>
-         
+
+    <author fullname="Barbara Stark"
+            initials="B.H."
+            surname="Stark" >
+      <organization>AT&amp;T</organization>
+      <address>
+        <postal>
+          <city>Atlanta</city>
+          <region>GA</region>
+          <country>US</country>
+        </postal>
+        <email>barbara.stark@att.com</email>
+      </address>
+    </author>
+
+    <date year="2018" month="March"/>
+
     <!-- Meta-data Declarations -->
-    
+
     <!-- Notice the use of &amp; as an escape for & which would otherwise
          start an entity declaration, whereas we want a literal &. -->
     <area>Applications and Real-Time</area>
@@ -126,21 +124,21 @@
          omit this element in which case in defaults to "Network Working Group" -
          a hangover from the ancient history of the IETF! -->
     <workgroup>HTTP</workgroup>
-    
+
     <keyword>http range unit live aggregation</keyword>
-    
+
     <!-- The DTD allows multiple area and workgroup elements but only the first one has any
          effect on output.  -->
     <!-- You can add <keyword/> elements here.  They will be incorporated into HTML output
          files in a meta tag but they have no effect on text or nroff output. -->
-    
-    
+
+
     <abstract>
         <t>
-            To accommodate byte range requests for content that has 
-            data appended over time, this document defines semantics 
+            To accommodate byte range requests for content that has
+            data appended over time, this document defines semantics
             that allow a HTTP client and server to perform byte-range
-      GET and HEAD requests that start at an arbitrary byte offset 
+      GET and HEAD requests that start at an arbitrary byte offset
       within the representation and ends at an indeterminate offset.
         </t>
     </abstract>
@@ -163,13 +161,13 @@
 </front>
 
 <middle>
-    
+
     <section anchor="introduction" title="Introduction">
         <t>
       Some Hypertext Transfer Protocol (HTTP) clients use byte-range requests (Range requests using the "bytes" Range Unit) to transfer select portions of large representations (<xref target="RFC7233"/>). And in some cases large representations require content to be continuously or periodically appended - such as representations consisting of live audio or video sources, blockchain databases, and log files. Clients cannot access the appended/live content using a Range request with the bytes range unit using the currently defined byte-range semantics without accepting performance or behavior sacrifices which are not acceptable for many applications.
         </t>
         <t>
-			For instance, HTTP clients have the ability to access appended content on an indeterminate-length resource by transferring the entire representation from the beginning and continuing to read the appended content as it's made available. Obviously, this is highly inefficient for cases where the representation is large and only the most recently appended content is needed by the client. 
+			For instance, HTTP clients have the ability to access appended content on an indeterminate-length resource by transferring the entire representation from the beginning and continuing to read the appended content as it's made available. Obviously, this is highly inefficient for cases where the representation is large and only the most recently appended content is needed by the client.
 		</t>
     	<t>
 			Alternatively, clients can also access appended content by sending periodic open-ended bytes Range requests using the last-known end byte position as the range start. Performing low-frequency periodic bytes Range requests in this fashion (polling) introduces latency since the client will necessarily be somewhat behind the aggregated content - mimicking the behavior (and latency) of segmented content representations such as "HTTP Live Streaming" (HLS, <xref target="RFC8216"/>) or "Dynamic Adaptive Streaming over HTTP" (MPEG-DASH, <xref target="DASH"/>). And while performing these Range requests at higher frequency can reduce this latency, it also incurs more processing overhead and HTTP exchanges as many of the requests will return no content - since content is usually aggregated in groups of bytes (e.g. a video frame, audio sample, block, or log entry).
@@ -199,14 +197,14 @@
             </t>
         </section>
     </section>
-    
+
     <section anchor="definition" title="Performing Range requests on Random-Access Aggregating (&quot;live&quot;) Content">
         <t>
             This document recommends a two-step process for accessing resources
             that have indeterminate length representations.
-        </t><t>     
+        </t><t>
             Two steps are necessary because of limitations with the Range request
-            header and the Content-Range response header fields. A server cannot
+            header fields and the Content-Range response header fields. A server cannot
             know from a range request that a client wishes to receive a response
             that does not have a definite end. More critically, the header fields
             do not allow the server to signal that a resource has indeterminate
@@ -216,7 +214,7 @@
             indeterminate length by requesting a range of the resource. The server
             responds with the range that is available, but indicates that the
             length of the representation is unknown using the existing
-            Content-Range syntax. See <xref target="establishing-range" /> 
+            Content-Range syntax. See <xref target="establishing-range" />
             for details and examples.
         </t><t>
             Once the client knows the resource has indeterminate length, it can
@@ -229,8 +227,8 @@
             range end rather than a range that is bounded by what is currently
             available. See <xref target="live-range-requests" /> for details.
     </t>
-      
-      <section anchor="establishing-range" title="Establishing the Randomly Accessible Byte Range">       
+
+      <section anchor="establishing-range" title="Establishing the Randomly Accessible Byte Range">
       <t>
         Establishing if a representation is continuously aggregating ("live") and determining the randomly-accessible byte range can both be determined using the existing definition for an open-ended byte-range request. Specifically, <xref x:sec="2.1" x:fmt="of" target="RFC7233"/> defines a byte-range request of the form:
       </t>
@@ -241,7 +239,7 @@
       which allows a client to send a HEAD request with a first-byte-pos and leave last-byte-pos absent. A
       server that receives a satisfiable byte-range request (with first-byte-pos smaller than the current
       representation length) may respond with a 206 status code (Partial Content) with a Content-Range
-      header indicating the currently satisfiable byte range. For example:
+      header field indicating the currently satisfiable byte range. For example:
       </t>
 <figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
 HEAD /resource HTTP/1.1
@@ -249,9 +247,9 @@ Host: example.com
 Range: bytes=0-
 
 </artwork></figure>
-      <t>      
+      <t>
       returns a response of the form:
-      </t>  
+      </t>
 <figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
 HTTP/1.1 206 Partial Content
 Content-Range: bytes 0-1234567/*
@@ -262,13 +260,13 @@ Content-Range: bytes 0-1234567/*
     </section>
     <section anchor="live-range-requests" title="Byte-Range Requests Beyond the Randomly Accessible Byte Range">
       <t>
-        Once a client has determined that a representation has an indeterminate length and established the byte range that can be accessed, it may want to perform a request with a start position within the randomly-accessible content range and an end position at an indefinite "live" point - a point where the byte-range GET request is fulfilled on-demand as the content is aggregated. 
+        Once a client has determined that a representation has an indeterminate length and established the byte range that can be accessed, it may want to perform a request with a start position within the randomly-accessible content range and an end position at an indefinite "live" point - a point where the byte-range GET request is fulfilled on-demand as the content is aggregated.
       </t>
       <t>
         For example, for a large video asset, a client may wish to start a content transfer from the video "key" frame immediately before the point of aggregation and continue the content transfer indefinitely as content is aggregated - in order to support low-latency startup of a live video stream.
-      </t> 
+      </t>
       <t>
-        Unlike a byte-range Range request, a byte-range Content-Range response header cannot be "open ended", per <xref x:sec="4.2" x:fmt="of" target="RFC7233"/>:
+        Unlike a byte-range Range request, a byte-range Content-Range response header field cannot be "open ended", per <xref x:sec="4.2" x:fmt="of" target="RFC7233"/>:
       </t>
 <figure><artwork type="abnf">
    byte-content-range  = bytes-unit SP
@@ -277,11 +275,11 @@ Content-Range: bytes 0-1234567/*
    byte-range-resp     = byte-range "/" ( complete-length / "*" )
    byte-range          = first-byte-pos "-" last-byte-pos
    unsatisfied-range   = "*/" complete-length
-                          
+
    complete-length     = 1*DIGIT
 </artwork></figure>
       <t>
-        Specifically, last-byte-pos is required in byte-range. So in order to preserve interoperability with existing HTTP clients, servers, proxies, and caches, this document proposes a mechanism for a client to indicate support for handling an indeterminate-length byte-range response, and a mechanism for a server to indicate if/when it's providing a indeterminate-length response. 
+        Specifically, last-byte-pos is required in byte-range. So in order to preserve interoperability with existing HTTP clients, servers, proxies, and caches, this document proposes a mechanism for a client to indicate support for handling an indeterminate-length byte-range response, and a mechanism for a server to indicate if/when it's providing a indeterminate-length response.
       </t>
       <t>
         A client can indicate support for handling indeterminate-length byte-range responses by providing a Very Large Value for the last-byte-pos in the byte-range request. For example, a client can perform a byte-range GET request of the form:
@@ -292,11 +290,11 @@ Host: example.com
 Range: bytes=1230000-999999999999
 
 </artwork></figure>
-      <t>    
+      <t>
         where the last-byte-pos in the Request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above.
       </t>
       <t>
-        In response, a server may indicate that it is supplying a continuously aggregating ("live") response by supplying the client request's last-byte-pos in the Content-Range response header. 
+        In response, a server may indicate that it is supplying a continuously aggregating ("live") response by supplying the client request's last-byte-pos in the Content-Range response header field.
       </t>
       <t>
         For example:
@@ -309,12 +307,12 @@ Range: bytes=1230000-999999999999
 </artwork></figure>
       <t>
         returns
-      </t>        
+      </t>
 <figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
 HTTP/1.1 206 Partial Content
 Content-Range: bytes 1230000-999999999999/*
 </artwork></figure>
-      <t>        
+      <t>
         from the server to indicate that the response will start at byte 1230000 and continues indefinitely to include all aggregated content, as it becomes available.
       </t>
       <t>
@@ -336,18 +334,18 @@ Range: bytes=1230000-999999999999
 HTTP/1.1 206 Partial Content
 Content-Range: bytes 1230000-1234567/*
 </artwork></figure>
-      <t>      
+      <t>
         from the server to indicate that the response will start at byte 1230000 and end at byte 1234567 and will not include any aggregated content. This is the response expected from a typical HTTP server - one that doesn't support byte-range requests on aggregating content.
       </t>
       <t>
         A client that doesn't receive a response indicating it is continuously aggregating must use other means to access aggregated content (e.g. periodic byte-range polling).
           </t>
       <t>
-        A server that does return a continuously aggregating ("live") response should return data using chunked transfer coding and not provide a Content-Length header. A 0-length chunk indicates the end of the transfer, per <xref x:sec="4.1" x:fmt="of" target="RFC7230"/>.
+        A server that does return a continuously aggregating ("live") response should return data using chunked transfer coding and not provide a Content-Length header field. A 0-length chunk indicates the end of the transfer, per <xref x:sec="4.1" x:fmt="of" target="RFC7230"/>.
           </t>
     </section>
   </section>
-    <section anchor="other-applications" title="Other Applications of Random-Access Aggregating Content">    
+    <section anchor="other-applications" title="Other Applications of Random-Access Aggregating Content">
       <section anchor="starting-at-live" title="Requests Starting at the Aggregation (&quot;Live&quot;) Point">
       <t>
           A client that wishes to only receive newly-aggregated portions of a
@@ -362,7 +360,7 @@ Range: bytes=0-
 
 </artwork></figure>
         <t>
-            With the Content-Range response header indicating the (or ranges) available. For example:
+            With the Content-Range response header field indicating the range (or ranges) available. For example:
         </t>
 <figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
 206 Partial Content
@@ -389,7 +387,7 @@ Content-Range: bytes 1234567-999999999999/*
       </section>
       <section anchor="shift-buffers" title="Shift Buffer Representations">
       <t>
-        Some representations lend themselves to front-end content deletion in addition to aggregation. While still supporting random access, representations of this type have a portion at the beginning (the "0" end) of the randomly-accessible region that become inaccessible over time. Examples of this kind of representation would be an audio-video time-shift buffer or a rolling log file.
+        Some representations lend themselves to front-end content removal in addition to aggregation. While still supporting random access, representations of this type have a portion at the beginning (the "0" end) of the randomly-accessible region that become inaccessible over time. Examples of this kind of representation would be an audio-video time-shift buffer or a rolling log file.
       </t>
       <t>
         For example a Range request containing:
@@ -433,7 +431,7 @@ Range: bytes=1020000-999999999999
 </artwork></figure>
       <t>
         with the server returning
-      </t>  
+      </t>
 <figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
 206 Partial Content
 Content-Range: bytes 1020000-999999999999/*
@@ -463,15 +461,31 @@ Content-Range: bytes 1020000-1254567/*
       <t>
         from the server to indicate that the response will start at byte 1020000, end at byte 1254567, and will not include any aggregated content. This is the response expected from a typical HTTP server - one that doesn't support byte-range requests on aggregating content.
       </t>
+      <t>
+          Note that responses to GET requests against shift-buffer representations using Range
+          can be cached by intermediaries, since the Content-Range response header indicates
+          which portion of the representation is being returned in the response body. However
+          GET requests without a Range header cannot be cached since the first byte of the response
+          body can vary from request to request. To ensure Range-less GET requests against
+          shift-buffer representations are not cached, servers hosting a shift-buffer
+          representation should either not return a 200-level response (e.g. sending a
+          300-level redirect response with a URI that represents the current start of the
+          shift-buffer) or indicate the response is non-cacheable. See HTTP Caching
+          (<xref target="RFC7234"/>) for details on HTTP cache control.
+      </t>
       </section>
     </section>
 
 <!-- Possibly a 'Contributors' section ... -->
 
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This document has no actions for IANA.</t>
+    </section>
+
     <section anchor="Security" title="Security Considerations">
         <t>
       One potential issue with this recommendation is related to the use of very-large last-byte-pos values. Some client and server implementations may not be prepared to deal with byte position values of 2^^63 and beyond. So in applications where there's no expectation that the representation will ever exceed 2^^63, a value smaller than this value should be used as the Very Large last-byte-pos in a byte-seek request or content-range response.
-      
+
       Also, some implementations (e.g. JavaScript-based clients and servers) are not able to represent all values beyond 2^^53. So similarly, if there's no expectation that a representation will ever exceed 2^^53 bytes, values smaller than this limit should be used for the last-byte-pos in byte-range requests.
     </t>
     </section>
@@ -484,6 +498,7 @@ Content-Range: bytes 1020000-1254567/*
         &RFC2119;
         &RFC7230;
         &RFC7233;
+        &RFC7234;
     </references>
 
     <references title="Informative References">
@@ -499,13 +514,13 @@ Content-Range: bytes 1020000-1254567/*
           <seriesInfo name="ISO/IEC" value="23009-1:2014" />
         </reference>
     </references>
-        
+
     <section anchor="Acknowledgements" title="Acknowledgements" numbered="false">
         <t>
       Mark Nottingham, Patrick McManus, Julian Reschke, Remy Lebeau, Rodger Combs, Thorsten Lohmar, Martin Thompson, Adrien de Croy, K. Morgan, Roy T. Fielding, Jeremy Poulter.
         </t>
     </section>
-    
+
 </back>
 
 </rfc>

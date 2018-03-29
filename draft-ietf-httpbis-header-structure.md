@@ -38,12 +38,17 @@ normative:
 
 informative:
   IEEE754:
-    target: http://grouper.ieee.org/groups/754/
+    target: http://ieeexplore.ieee.org/document/4610935/
     title: IEEE Standard for Floating-Point Arithmetic
     author:
     -
       organization: IEEE
-    date: 2008
+    date: 2008-08
+    seriesinfo:
+      IEEE: 754-2008
+      DOI:  10.1109/IEEESTD.2008.4610935
+      ISBN: 978-0-7381-5752-8
+    annotation: See also <http://grouper.ieee.org/groups/754/>.
 
 
 --- abstract
@@ -104,52 +109,55 @@ However, header field authors are encouraged to clearly state additional constra
 
 For example:
 
-~~~
+~~~ example
 # FooExample Header
 
-The FooExample HTTP header field conveys a list of integers about how
-much Foo the sender has.
+The FooExample HTTP header field conveys information about how
+much Foo the message has.
 
 FooExample is a Structured header [RFCxxxx]. Its value MUST be a
 dictionary ([RFCxxxx], Section Y.Y).
 
 The dictionary MUST contain:
 
-* Exactly one member whose key is "foo", and whose value is an integer
-  ([RFCxxxx], Section Y.Y), indicating the number of foos in
+* Exactly one member whose key is "foo", and whose value is an
+  integer ([RFCxxxx], Section Y.Y), indicating the number of foos in
   the message.
-* Exactly one member whose key is "barUrls", and whose value is a string
-  ([RFCxxxx], Section Y.Y), conveying the Bar URLs for the message.
-  See below for processing requirements.
+* Exactly one member whose key is "barUrls", and whose value is a
+  string ([RFCxxxx], Section Y.Y), conveying the Bar URLs for the
+  message. See below for processing requirements.
 
 If the parsed header field does not contain both, it MUST be ignored.
 
-"foo" MUST be between 0 and 10, inclusive; other values MUST be ignored.
+"foo" MUST be between 0 and 10, inclusive; other values MUST cause
+the header to be ignored.
 
-"barUrls" contains a space-separated list of URI-references ([RFC3986], 
-Section 4.1):
+"barUrls" contains a space-separated list of URI-references
+([RFC3986], Section 4.1):
 
    barURLs = URI-reference *( 1*SP URI-reference )
 
-If a member of barURLs is not a valid URI-reference, it MUST be ignored.
+If a member of barURLs is not a valid URI-reference, it MUST cause
+that value to be ignored.
 
-If a member of barURLs is a relative reference ([RFC3986], Section 4.2),
-it MUST be resolved ([RFC3986], Section 5) before being used.
+If a member of barURLs is a relative reference ([RFC3986],
+Section 4.2), it MUST be resolved ([RFC3986], Section 5) before being
+used.
 ~~~
 
-Note that empty header field values are not allowed by the syntax, and therefore parsing for them will fail.
+Note that empty header field values are not allowed, and therefore parsing for them will fail.
 
 
 # Parsing Text into Structured Headers {#text}
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an ASCII string input_string that represents the chosen header's field-value, return the parsed header value.
+Given an ASCII string input_string that represents the chosen header's field-value, and header_type, one of "dictionary", "list", "param-list", or "item", return the parsed header value.
 
 1. Discard any leading OWS from input_string.
-2. If the field-value is defined to be a dictionary, let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
-3. If the field-value is defined to be a list, let output be the result of Parsing a List from Text ({{parse-list}}).
-4. If the field-value is defined to be a parameterised list, let output be the result of Parsing a Parameterised List from Text ({{parse-param-list}}).
+2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
+3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
+4. If header_type is "param-list", let output be the result of Parsing a Parameterised List from Text ({{parse-param-list}}).
 5. Otherwise, let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
 7. If input_string is not empty, fail parsing.
@@ -159,7 +167,7 @@ When generating input_string, parsers MUST combine all instances of the target h
 
 Note that in the case of lists, parameterised lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items, parsing will fail if more than instance of that header field is present.
 
-If parsing fails, the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
+If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
 
 Note that this has the effect of discarding any header field with non-ASCII characters in input_string.
 
@@ -176,13 +184,13 @@ Dictionaries are unordered maps of key-value pairs, where the keys are identifie
 In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST cause parsing to fail.
 
 ~~~ abnf
-dictionary        = dictionary_member 0*1023( OWS "," OWS dictionary_member )
-dictionary_member = identifier "=" item
+dictionary  = dict-member 0*1023( OWS "," OWS dict-member )
+dict-member = identifier "=" item
 ~~~
 
 For example, a header field whose value is defined as a dictionary could look like:
 
-~~~
+~~~ example
 ExampleDictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK*
 ~~~
 
@@ -216,14 +224,14 @@ Lists are arrays of items ({{item}}) with one to 1024 members.
 In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
 
 ~~~ abnf
-list = list_member 0*1023( OWS "," OWS list_member )
-list_member = item
+list = list-member 0*1023( OWS "," OWS list-member )
+list-member = item
 ~~~
 
-For example, a header field whose value is defined as a list of identifiers could look like:
+For example, a header field whose value is defined as a list of strings could look like:
 
-~~~
-ExampleIdListHeader: foo, bar, baz_45
+~~~ example
+ExampleStrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
 
@@ -253,13 +261,13 @@ A parameterised identifier is an identifier ({{identifier}}) with up to 256 para
 In the textual HTTP serialisation, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value.
 
 ~~~ abnf
-param_list = param_id 0*255( OWS "," OWS param_id )
-param_id   = identifier 0*256( OWS ";" OWS identifier [ "=" item ] )
+param-list = param-id 0*255( OWS "," OWS param-id )
+param-id   = identifier 0*256( OWS ";" OWS identifier [ "=" item ] )
 ~~~
 
 For example,
 
-~~~
+~~~ example
 ExampleParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
 ~~~
 
@@ -305,10 +313,10 @@ Given an ASCII string input_string, return a identifier with an mapping of param
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), identifier ({{identifier}}) or binary content ({{binary}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), or binary content ({{binary}}).
 
 ~~~ abnf
-item = integer / float / string / identifier / binary
+item = integer / float / string / binary
 ~~~
 
 
@@ -320,7 +328,6 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
 4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result.
-5. If the first character of input_string is an lcalpha, process input_string as a identifier ({{parse-identifier}}) and return the result.
 6. Otherwise, fail parsing.
 
 
@@ -337,7 +344,7 @@ Parsers that encounter an integer outside the range defined above MUST fail pars
 
 For example, a header whose value is defined as a integer could look like:
 
-~~~
+~~~ example
 ExampleIntegerHeader: 42
 ~~~
 
@@ -380,7 +387,7 @@ Values that do not conform to the ABNF above are invalid, and MUST fail parsing.
 
 For example, a header whose value is defined as a float could look like:
 
-~~~
+~~~ example
 ExampleFloatHeader: 4.5
 ~~~
 
@@ -394,15 +401,15 @@ Abstractly, strings are up to 1024 printable ASCII {{!RFC0020}} characters (i.e.
 The textual HTTP serialisation of strings uses a backslash ("\\") to escape double quotes and backslashes in strings.
 
 ~~~ abnf
-string    = DQUOTE 0*1024(char) DQUOTE
-char      = unescaped / escape ( DQUOTE / "\" )
+string    = DQUOTE 0*1024(chr) DQUOTE
+chr       = unescaped / escaped
 unescaped = %x20-21 / %x23-5B / %x5D-7E
-escape    = "\"
+escaped   = "\" ( DQUOTE / "\" )
 ~~~
 
 For example, a header whose value is defined as a string could look like:
 
-~~~
+~~~ example
 ExampleStringHeader: "hello world"
 ~~~
 
@@ -447,7 +454,7 @@ Note that identifiers can only contain lowercase letters.
 
 For example, a header whose value is defined as a identifier could look like:
 
-~~~
+~~~ example
 ExampleIdHeader: foo/bar
 ~~~
 
@@ -491,8 +498,8 @@ base64 = ALPHA / DIGIT / "+" / "/" / "="
 
 For example, a header whose value is defined as binary content could look like:
 
-~~~
-ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg*
+~~~ example
+ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
 ~~~
 
 
@@ -525,6 +532,11 @@ TBD
 
 
 # Changes
+
+## Since draft-ietf-httpbis-header-structure-04
+
+* Remove identifiers from item.
+
 
 ## Since draft-ietf-httpbis-header-structure-03
 

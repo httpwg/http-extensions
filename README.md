@@ -17,13 +17,15 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Bootstrapping Websockets with HTTP/2
 
+*In WGLC; ends 2018-04-12*
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-h2-websockets.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-h2-websockets.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-h2-websockets) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Ah2-websockets) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-h2-websockets/)
 
 ### Using Early Data in HTTP
 
-*In WGLC Ends Dec.10*
+*Sent to IESG*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-replay.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-replay.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-replay) (less recent, more official)
@@ -64,15 +66,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cache-digest.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cache-digest.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cache-digest) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acache-digest) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-cache-digest/)
-
-
-### Origin Frame
-
-*Sent to IESG*
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-origin-frame.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-origin-frame.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-origin-frame) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aorigin-frame) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-origin-frame/)
 
 
 ### Client Hints

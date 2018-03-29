@@ -44,6 +44,8 @@ informative:
 HTTP is often used as a substrate for other application protocols. This document specifies best
 practices for these protocols' use of HTTP.
 
+This document obsoletes RFC 3205.
+
 
 --- note_Note_to_Readers_
 
@@ -68,9 +70,20 @@ variety of reasons, including:
 * presence of HTTP servers and clients in target deployments, and
 * its ability to traverse firewalls.
 
-The Internet community has a long tradition of protocol reuse, dating back to the use of Telnet
-{{?RFC0854}} as a substrate for FTP {{?RFC0959}} and SMTP {{?RFC2821}}. However, layering new
-protocols over HTTP brings its own set of issues:
+In many cases, these protocols are ad hoc; they are intended for only deployment on the server
+side, and consumption by a limited set of clients. A body of practices and tools has arisen around
+defining such "HTTP APIs" that favours these conditions.
+
+However, when such a protocol is standarised, it is typically deployed on multiple servers,
+implemented a number of times, and might be consumed by a broader variety of clients. Such
+diversity brings a different set of concerns, and tools and practices intended for a single-server
+deployment might not be suitable.
+
+In particular, standards-defined HTTP APIs need to more carefully consider how extensibility and
+evolution will be handled, how different deployment requirements will be accommodated, and how
+clients will evolve with the API.
+
+At the same time, the Internet community has a tradition of protocol reuse (e.g., Telnet {{?RFC0854}} as a substrate for FTP {{?RFC0959}} and SMTP {{?RFC2821}}), but less experience using HTTP as a substrate. Because HTTP is extensible in many ways, a number of questions arise, such as:
 
 * Should an application using HTTP define a new URL scheme? Use new ports?
 * Should it use standard HTTP methods and status codes, or define new ones?
@@ -139,7 +152,8 @@ be implemented, supported and used.
 However, this can easily lead to an unintended profile of HTTP's behaviour. For example, it's
 common to see specifications with language like this:
 
-    A `200 OK` response means that the widget has successfully been updated.
+    A `200 OK` response means that the widget has successfully been
+    updated.
 
 This sort of specification is bad practice, because it is adding new semantics to HTTP's status
 codes and methods, respectively; a recipient -- whether it's an origin server, client library,
@@ -265,9 +279,9 @@ Server: Bar/2.2
 
 HTTP Applications SHOULD focus on defining the following application-specific protocol elements:
 
-* Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC7159}},
+* Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
 * HTTP header fields, as per {{headers}}, and
-* The behaviour of resources, as identified by link relations {{!RFC5988}}.
+* The behaviour of resources, as identified by link relations {{!RFC8288}}.
 
 By composing these protocol elements, an application can define a set of resources, identified by
 link relations, that implement specified behaviours, including:
@@ -287,7 +301,7 @@ For example, an application might specify:
     The "Example-Count" response header field on Widget representations
     indicates how many Widgets are held by the sender.
 
-    The "application/example-widget+json" format is a JSON [RFC7159]
+    The "application/example-widget+json" format is a JSON [RFC8259]
     format representing the state of a Widget. It contains links to
     related information in the link indicated by the Link header field
     value with the "example-other-info" link relation type.
@@ -326,7 +340,7 @@ Likewise, specifying "The widget API is at the path /bar" violates {{!RFC7320}}.
 
 Instead, applications that use HTTP are encouraged to ensure that URLs are discovered at runtime,
 allowing HTTP-based services to describe their own capabilities. One way to do this is to use typed
-links {{?RFC5988}} to convey the URIs that are in use, as well as the semantics of the resources
+links {{?RFC8288}} to convey the URIs that are in use, as well as the semantics of the resources
 that they identify. See {{resource}} for details.
 
 
@@ -365,7 +379,7 @@ caveats to keep in mind:
 
 * HTTP-specific features such as cookies {{?RFC6265}}, authentication {{?RFC7235}}, caching {{?RFC7234}}, and CORS {{FETCH}} might or might not work correctly, depending on how they are defined and implemented. Generally, they are designed and implemented with an assumption that the URL will always be "http" or "https".
 
-* Web features that require a secure context {{?W3C.CR-secure-contexts-20160915}} will likely treat a new scheme as insecure.
+* Web features that require a secure context {{?SECCTXT=W3C.CR-secure-contexts-20160915}} will likely treat a new scheme as insecure.
 
 
 See {{?RFC7595}} for more information about minting new URL schemes.
@@ -488,7 +502,7 @@ unless the definition of that header field explicitly allows it (e.g., with an e
 ## Defining Message Payloads {#payload}
 
 There are many potential formats for payloads; for example, JSON {{?RFC8259}}, XML
-{{?W3C.REC-xml-20081126}}, and CBOR {{?RFC7049}}. Best practices for their use are out of scope for
+{{?XML=W3C.REC-xml-20081126}}, and CBOR {{?RFC7049}}. Best practices for their use are out of scope for
 this document.
 
 Applications SHOULD register distinct media types for each format they define; this makes it
@@ -585,9 +599,9 @@ do not benefit from patches and other security improvements incorporated upstrea
 
 --- back
 
-# Changes from RFC3205
+# Changes from RFC 3205
 
-RFC3205 captured the Best Current Practice in the early 2000's, based on the concerns facing
+{{?RFC3205}} captured the Best Current Practice in the early 2000's, based on the concerns facing
 protocol designers at the time. Use of HTTP has changed considerably since then, and as a result
 this document is substantially different. As a result, the changes are too numerous to list
 individually.
