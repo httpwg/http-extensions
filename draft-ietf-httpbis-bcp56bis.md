@@ -70,9 +70,20 @@ variety of reasons, including:
 * presence of HTTP servers and clients in target deployments, and
 * its ability to traverse firewalls.
 
-The Internet community has a long tradition of protocol reuse, dating back to the use of Telnet
-{{?RFC0854}} as a substrate for FTP {{?RFC0959}} and SMTP {{?RFC2821}}. However, layering new
-protocols over HTTP brings its own set of issues:
+In many cases, these protocols are ad hoc; they are intended for only deployment on the server
+side, and consumption by a limited set of clients. A body of practices and tools has arisen around
+defining such "HTTP APIs" that favours these conditions.
+
+However, when such a protocol is standarised, it is typically deployed on multiple servers,
+implemented a number of times, and might be consumed by a broader variety of clients. Such
+diversity brings a different set of concerns, and tools and practices intended for a single-server
+deployment might not be suitable.
+
+In particular, standards-defined HTTP APIs need to more carefully consider how extensibility and
+evolution will be handled, how different deployment requirements will be accommodated, and how
+clients will evolve with the API.
+
+At the same time, the Internet community has a tradition of protocol reuse (e.g., Telnet {{?RFC0854}} as a substrate for FTP {{?RFC0959}} and SMTP {{?RFC2821}}), but less experience using HTTP as a substrate. Because HTTP is extensible in many ways, a number of questions arise, such as:
 
 * Should an application using HTTP define a new URL scheme? Use new ports?
 * Should it use standard HTTP methods and status codes, or define new ones?
