@@ -581,7 +581,7 @@ Note that dedicating a hostname to a single application is not a solution to the
 
 Modern Web browsers constrain the ability of content from one origin to access resources from
 another, to avoid leaking private information. As a result, applications that wish to expose
-cross-origin data to browsers will need to implement {{!W3C.REC-cors-20140116}}.
+cross-origin data to browsers will need to implement CORS {{FETCH}}.
 
 
 
