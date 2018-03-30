@@ -510,10 +510,21 @@ possible to identify them unambiguously and negotiate for their use. See {{!RFC6
 information.
 
 
-## Authentication and Application State {#state}
+## Application State {#state}
 
 Applications that use HTTP MAY use stateful cookies {{?RFC6265}} to identify a client and/or store
 client-specific data to contextualise requests.
+
+When used, it is important to carefully specify the scoping and use of cookies; if the application
+exposes sensitive data or capabilities (e.g., by acting as an ambient authority), exploits are
+possible. Mitigations include using a request-specific token to assure the intent of the client.
+
+Applications MUST NOT make assumptions about the relationship between separate requests on a single
+transport connection; doing so breaks many of the assumptions of HTTP as a stateless protocol, and
+will cause problems in interoperability, security, operability and evolution.
+
+
+## Client Authentication {#client-auth}
 
 Applications that use HTTP MAY use HTTP authentication {{?RFC7235}} to identify clients. The Basic
 authentication scheme {{?RFC7617}} MUST NOT be used unless the underlying transport is
@@ -521,13 +532,11 @@ authenticated, integrity-protected and confidential (e.g., as provided the "HTTP
 another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the underlying transport
 is similarly secure, or the chosen hash algorithm is not "MD5".
 
-In either case, it is important to carefully specify the scoping and use of these mechanisms; if
-they expose sensitive data or capabilities (e.g., by acting as an ambient authority), exploits are
-possible. Mitigations include using a request-specific token to assure the intent of the client.
+When used, it is important to carefully specify the scoping and use of authentication; if the
+application exposes sensitive data or capabilities (e.g., by acting as an ambient authority),
+exploits are possible. Mitigations include using a request-specific token to assure the intent of
+the client.
 
-Applications MUST NOT make assumptions about the relationship between separate requests on a single
-transport connection; doing so breaks many of the assumptions of HTTP as a stateless protocol, and
-will cause problems in interoperability, security, operability and evolution.
 
 
 ## Co-Existing with Web Browsing {#browser}
