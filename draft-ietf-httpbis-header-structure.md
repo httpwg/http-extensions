@@ -110,12 +110,12 @@ However, header field authors are encouraged to clearly state additional constra
 For example:
 
 ~~~ example
-# FooExample Header
+# Foo-Example Header
 
-The FooExample HTTP header field conveys information about how
+The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
 
-FooExample is a Structured header [RFCxxxx]. Its value MUST be a
+Foo-Example is a Structured header [RFCxxxx]. Its value MUST be a
 dictionary ([RFCxxxx], Section Y.Y).
 
 The dictionary MUST contain:
@@ -191,7 +191,7 @@ dict-member = identifier "=" item
 For example, a header field whose value is defined as a dictionary could look like:
 
 ~~~ example
-ExampleDictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK*
+Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK*
 ~~~
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
@@ -231,7 +231,7 @@ list-member = item
 For example, a header field whose value is defined as a list of strings could look like:
 
 ~~~ example
-ExampleStrListHeader: "foo", "bar", "It was the best of times."
+Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
 
@@ -268,7 +268,7 @@ param-id   = identifier 0*256( OWS ";" OWS identifier [ "=" item ] )
 For example,
 
 ~~~ example
-ExampleParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
+Example-ParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
 ~~~
 
 
@@ -345,7 +345,7 @@ Parsers that encounter an integer outside the range defined above MUST fail pars
 For example, a header whose value is defined as a integer could look like:
 
 ~~~ example
-ExampleIntegerHeader: 42
+Example-IntegerHeader: 42
 ~~~
 
 ### Parsing a Number from Text {#parse-number}
@@ -388,7 +388,7 @@ Values that do not conform to the ABNF above are invalid, and MUST fail parsing.
 For example, a header whose value is defined as a float could look like:
 
 ~~~ example
-ExampleFloatHeader: 4.5
+Example-FloatHeader: 4.5
 ~~~
 
 See {{parse-number}} for the parsing algorithm for floats.
@@ -410,7 +410,7 @@ escaped   = "\" ( DQUOTE / "\" )
 For example, a header whose value is defined as a string could look like:
 
 ~~~ example
-ExampleStringHeader: "hello world"
+Example-StringHeader: "hello world"
 ~~~
 
 Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\\" can be escaped; other sequences MUST cause parsing to fail.
@@ -455,7 +455,7 @@ Note that identifiers can only contain lowercase letters.
 For example, a header whose value is defined as a identifier could look like:
 
 ~~~ example
-ExampleIdHeader: foo/bar
+Example-IdHeader: foo/bar
 ~~~
 
 
@@ -499,7 +499,7 @@ base64 = ALPHA / DIGIT / "+" / "/" / "="
 For example, a header whose value is defined as binary content could look like:
 
 ~~~ example
-ExampleBinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
+Example-BinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
 ~~~
 
 
