@@ -367,7 +367,7 @@ However, application-specific schemes can be defined as well.
 When defining an URL scheme for an application using HTTP, there are a number of tradeoffs and
 caveats to keep in mind:
 
-* Unmodified Web browsers will not support the new scheme. While it is possible to register new URL schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML5}} Section 8.7.1.3, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
+* Unmodified Web browsers will not support the new scheme. While it is possible to register new URL schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML5}}, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
 
 * Existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
 
