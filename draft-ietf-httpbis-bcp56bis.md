@@ -515,10 +515,11 @@ information.
 Applications that use HTTP MAY use stateful cookies {{?RFC6265}} to identify a client and/or store
 client-specific data to contextualise requests.
 
-If it is only necessary to identify clients, applications that use HTTP MAY use HTTP authentication
-{{?RFC7235}}. If the Basic authentication scheme {{?RFC7617}} is used, it MUST NOT be used with the
-'http' URL scheme. If the Digest scheme {{?RFC7616}} is used, it MUST NOT be used with the 'http'
-URL scheme, unless the chosen hash algorithm is not "MD5".
+Applications that use HTTP MAY use HTTP authentication {{?RFC7235}} to identify clients. The Basic
+authentication scheme {{?RFC7617}} MUST NOT be used unless the underlying transport is
+authenticated, integrity-protected and confidential (e.g., as provided the "HTTPS" URL scheme, or
+another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the underlying transport
+is similarly secure, or the chosen hash algorithm is not "MD5".
 
 In either case, it is important to carefully specify the scoping and use of these mechanisms; if
 they expose sensitive data or capabilities (e.g., by acting as an ambient authority), exploits are
