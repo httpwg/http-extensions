@@ -452,11 +452,6 @@ lcalpha    = %x61-7A ; a-z
 
 Note that identifiers can only contain lowercase letters.
 
-For example, a header whose value is defined as a identifier could look like:
-
-~~~ example
-Example-IdHeader: foo/bar
-~~~
 
 
 ### Parsing a Identifier from Text {#parse-identifier}
