@@ -580,7 +580,7 @@ Note that dedicating a hostname to a single application is not a solution to the
 {{!RFC7320}}.
 
 Modern Web browsers constrain the ability of content from one origin to access resources from
-another, to avoid the "confused deputy" problem. As a result, applications that wish to expose
+another, to avoid leaking private information. As a result, applications that wish to expose
 cross-origin data to browsers will need to implement {{!W3C.REC-cors-20140116}}.
 
 
