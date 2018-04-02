@@ -245,7 +245,7 @@ it is not necessary to reference all of the specifications in the HTTP suite unl
 specific reasons to do so (e.g., a particular feature is called out).
 
 Applications using HTTP MAY specify a minimum version to be supported (HTTP/1.1 is suggested), and
-MUST NOT specify a maximum version.
+MUST NOT specify a maximum version, to preserve the protocol's ability to evolve.
 
 Likewise, applications need not specify what HTTP mechanisms -- such as redirection, caching,
 authentication, proxy authentication, and so on -- are to be supported. Full featured support for
@@ -257,7 +257,7 @@ For example, an application can specify that it uses HTTP like this:
 
     Foo Application uses HTTP [RFC7230]. Implementations MUST support
     HTTP/1.1, and MAY support later versions. Support for common HTTP
-    mechanisms such as redirection and caching are assumed.
+    mechanisms such as automatic redirection and caching are assumed.
 
 When specifying examples of protocol interactions, applications SHOULD document both the request
 and response messages, with full headers, preferably in HTTP/1.1 format. For example:
