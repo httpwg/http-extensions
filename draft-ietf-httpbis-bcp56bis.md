@@ -352,13 +352,14 @@ Generally, a client will begin interacting with a given application server by re
 document that contains information about that particular deployment, potentially including links to
 other relevant resources.
 
-Applications that use HTTP SHOULD allow an arbitrary URL to be used as that entry point. For
-example, rather than specifying "the initial document is at "/foo/v1", they should allow a
+Applications that use HTTP are encouraged to allow an arbitrary URL to be used as that entry point.
+For example, rather than specifying "the initial document is at "/foo/v1", they should allow a
 deployment to use any URL as the entry point for the application.
 
 In cases where doing so is impractical (e.g., it is not possible to convey a whole URL, but only a
 hostname) standard applications that use HTTP can request a well-known URL {{?RFC5785}} as an entry
 point.
+
 
 ### URL Schemes {#scheme}
 
