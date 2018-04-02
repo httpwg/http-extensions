@@ -329,7 +329,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 1. Discard any leading OWS from input_string.
 2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
-4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result.
+4. If the first character of input_string is "\*", process input_string as binary content ({{parse-binary}}) and return the result.
 6. Otherwise, fail parsing.
 
 
@@ -465,7 +465,7 @@ Given an ASCII string input_string, return a identifier. input_string is modifie
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "_", "-", "*" or "/":
+   2. If char is not one of lcalpha, DIGIT, "\_", "-", "\*" or "/":
       1. Prepend char to input_string.
       2. Return output_string.
    3. Append char to output_string.
@@ -477,7 +477,7 @@ Given an ASCII string input_string, return a identifier. input_string is modifie
 
 Arbitrary binary content up to 16384 bytes in size can be conveyed in Structured Headers.
 
-The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("*") to delimit from other content.
+The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("\*") to delimit from other content.
 
 The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. It is
 RECOMMENDED that parsers reject encoded data that is not properly padded, although this might
