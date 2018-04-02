@@ -312,7 +312,7 @@ For example, an application might specify:
 ## Specifying Client Behaviours {#clients}
 
 HTTP does not mandate some behaviours that have nevertheless become very common; if these are not
-explicitly specified by applications using HTTP, there may be confusing or interoperability
+explicitly specified by applications using HTTP, there may be confusion and interoperability
 problems. This section lists common examples of this, and recommends default handling for them.
 
 * Redirect handling - applications using HTTP SHOULD specify that 3xx redirect status codes be followed automatically. See {{!RFC7231}}, Section 6.4.
