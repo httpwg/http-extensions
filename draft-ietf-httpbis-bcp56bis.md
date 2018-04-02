@@ -421,6 +421,41 @@ community early, and document their proposal as a separate HTTP extension, rathe
 an application's specification.
 
 
+### GET
+
+GET is one of the most common and useful HTTP methods; its retrieval semantics allow caching,
+side-effect free linking and forms the basis of many of the benefits of using HTTP.
+
+A common use of GET is to perform queries, often using the query component of the URL; this is this
+a familiar pattern from Web browsing, and the results can be cached, improving efficiency of an
+often expensive process.
+
+In some cases, however, GET might be unwieldy for expressing queries, because of the limited syntax
+of the URL; in particular, if binary data forms part of the query terms, it needs to be encoded to
+conform to URL syntax.
+
+While this is not an issue for short queries, it can become one for larger query terms, or ones
+which need to sustain a high rate of requests. Additionally, some HTTP implementations limit the
+size of URLs they support -- although modern HTTP software has much more generous limits than
+previously (typically, considerably more than 8000 octets, as required by {{!RFC78230}} Section
+3.1.1).
+
+In these cases, an application using HTTP might consider using POST to express queries in the
+request body; doing so avoids encoding overhead and URL length limits in implementations. However,
+in doing so it should be noted that the benefits of GET such as caching and linking to query
+results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought
+consider allowing both methods.
+
+Applications that use HTTP SHOULD NOT define GET requests to have side effects, since
+implementations can and do retry HTTP GET requests that fail.
+
+Finally, note that while HTTP allows GET requests to have a body syntactically, this is done only
+to allow parsers to be generic; as per {{!RFC7231}}, Section 4.3.1, a body on a GET has no meaning,
+and will be either ignored or rejected by generic HTTP software. As a result, applications that use
+HTTP SHOULD NOT define GET to have any sde effects upon their resources.
+
+
+
 ## HTTP Status Codes
 
 Applications that use HTTP MUST only use registered HTTP status codes.
