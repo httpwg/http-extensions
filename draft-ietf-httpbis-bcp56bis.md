@@ -437,7 +437,7 @@ conform to URL syntax.
 While this is not an issue for short queries, it can become one for larger query terms, or ones
 which need to sustain a high rate of requests. Additionally, some HTTP implementations limit the
 size of URLs they support -- although modern HTTP software has much more generous limits than
-previously (typically, considerably more than 8000 octets, as required by {{!RFC78230}} Section
+previously (typically, considerably more than 8000 octets, as required by {{!RFC7230}} Section
 3.1.1).
 
 In these cases, an application using HTTP might consider using POST to express queries in the
