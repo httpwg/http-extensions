@@ -491,10 +491,11 @@ helpful. The problem with doing so is that such a list is never complete; for ex
 proxy is interposed, the client might encounter a `407 Proxy Authentication Required` response; or,
 if the server is rate limiting the client, it might receive a `429 Too Many Requests` response.
 
-Since the list of HTTP status codes can be added to, it's safer to refer to it directly, and point
-out that clients SHOULD be able to handle all applicable protocol elements gracefully (i.e.,
-falling back to the generic `n00` semantics of a given status code; e.g., `499` can be safely
-handled as `400` by clients that don't recognise it).
+Since the list of HTTP status codes can be added to, it's safer to specify behaviours in terms of
+general response classes (e.g., "successful response" for 2xx; "client error" for 4xx and "server
+error" for 5xx), pointing out that clients SHOULD be able to handle all applicable protocol
+elements gracefully (i.e., falling back to the generic `n00` semantics of a given status code;
+e.g., `499` can be safely handled as `400` by clients that don't recognise it).
 
 
 ## HTTP Header Fields {#headers}
