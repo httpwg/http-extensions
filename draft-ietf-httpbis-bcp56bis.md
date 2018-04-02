@@ -509,8 +509,6 @@ Typically, using HTTP header fields is appropriate in a few different situations
 * Their content is useful to generic HTTP software (e.g., clients, servers), and/or
 * It is not possible to include their content in the message body (usually because a format does not allow it).
 
-If none of these motivations apply, using a header field is NOT RECOMMENDED.
-
 New header fields MUST be registered, as per {{!RFC7231}} and {{!RFC3864}}.
 
 It is RECOMMENDED that header field names be short (even when HTTP/2 header compression is in
