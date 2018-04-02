@@ -206,7 +206,7 @@ applications on the same server, and offers a natural path for extensibility, ve
 capability management.
 
 
-## Getting Value from HTTP
+## Rich Functionality
 
 The simplest possible use of HTTP is to POST data to a single URL, thereby effectively tunnelling
 through the protocol.
