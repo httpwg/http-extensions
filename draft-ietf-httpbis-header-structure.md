@@ -358,17 +358,20 @@ NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the 
 2. Let sign be 1.
 3. Let input_number be an empty string.
 4. If the first character of input_string is "-", remove it from input_string and set sign to -1.
-5. If the first character of input_string is not a DIGIT, fail parsing.
-6. While input_string is not empty:
+5. If input_string is empty, fail parsing.
+6. If the first character of input_string is not a DIGIT, fail parsing.
+7. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
    2. If char is a DIGIT, append it to input_number.
    3. Else, if type is "integer" and char is ".", append char to input_number and set type to "float".
    4. Otherwise, fail parsing.
    5. If type is "integer" and input_number contains more than 19 characters, fail parsing.
    6. If type is "float" and input_number contains more than 16 characters, fail parsing.
-7. If type is "integer", parse input_number as an integers and let output_number be the result.
-8. Otherwise, parse input_number as a float and let output_number be the result.
-9. Return the product of output_number and sign.
+8. If type is "integer", parse input_number as an integers and let output_number be the result.
+9. Otherwise:
+   1. If the final character of input_number is ".", fail parsing.
+   2. Parse input_number as a float and let output_number be the result.
+0. Return the product of output_number and sign.
 
 
 ## Floats {#float}
