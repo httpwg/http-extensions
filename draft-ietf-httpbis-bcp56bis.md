@@ -482,7 +482,8 @@ used; the reason phrase has no function in HTTP, and is not guaranteed to be pre
 implementations. The reason phrase is not carried in the {{RFC7540}} message format.
 
 Typically, applications using HTTP will convey application-specific information in the message body
-and/or HTTP header fields, not the status code.
+and/or HTTP header fields, not the status code. {{?RFC7807}} provides one way for applications
+using HTTP to do this.
 
 Specifications sometimes also create a "laundry list" of potential status codes, in an effort to be
 helpful. The problem with doing so is that such a list is never complete; for example, if a network
