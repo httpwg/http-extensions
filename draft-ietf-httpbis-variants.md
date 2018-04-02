@@ -64,7 +64,7 @@ For example, if a cache has stored the following request/response pair:
 ~~~
 GET /foo HTTP/1.1
 Host: www.example.com
-Accept-Language: en;q=1.0, fr;q=0.5
+Accept-Language: en;q=0.5, fr;q=1.0
 
 HTTP/1.1 200 OK
 Content-Type: text/html
@@ -84,7 +84,7 @@ Its companion the Variant-Key response header field ({{variant-key}}) indicates 
 ~~~
 GET /foo HTTP/1.1
 Host: www.example.com
-Accept-Language: en;q=1.0, fr;q=0.5
+Accept-Language: en;q=0.5, fr;q=1.0
 
 HTTP/1.1 200 OK
 Content-Type: text/html
