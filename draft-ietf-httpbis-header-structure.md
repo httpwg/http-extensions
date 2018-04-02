@@ -354,9 +354,10 @@ NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the 
 
 1. If the first character of input_string is not "-" or a DIGIT, fail parsing.
 2. Let input_number be the result of consuming input_string up to (but not including) the first character that is not in DIGIT, "-", and ".".
-3. If input_number contains ".", parse it as a floating point number and let output_number be the result.
-4. Otherwise, parse input_number as an integer and let output_number be the result.
-5. Return output_number.
+3. If any character of input_number after the first is "-", fail parsing.
+4. If input_number contains ".", parse it as a floating point number and let output_number be the result.
+5. Otherwise, parse input_number as an integer and let output_number be the result.
+6. Return output_number.
 
 
 ## Floats {#float}
