@@ -533,9 +533,6 @@ response header ({{!RFC7231}}, Section 7.1.4).
 
 See {{state}} for requirements regarding header fields that carry application state (e.g,. Cookie).
 
-Applications that use already-defined HTTP header fields MUST NOT modify their semantics or syntax,
-unless the definition of that header field explicitly allows it (e.g., with an extension field).
-
 
 ## Defining Message Payloads {#payload}
 
