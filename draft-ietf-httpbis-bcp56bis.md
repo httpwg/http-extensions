@@ -328,7 +328,7 @@ that otherwise conformant clients cannot interoperate with the application. Appl
 encourage the implementation of such features, though.
 
 If an application using HTTP has browser compatibility as a goal, client interaction ought to be
-defined in terms of {{?FETCH}}, since that is the abstraction that browsers use for HTTP; it
+defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
 enforces many of these best practices.
 
 
@@ -603,7 +603,7 @@ A complete enumeration of such practices is out of scope for this document. Exte
 numerous; e.g., <https://www.owasp.org/index.php/OWASP_Guide_Project>.
 
 If an application using HTTP has browser compatibility as a goal, client interaction ought to be
-defined in terms of {{?FETCH}}, since that is the abstraction that browsers use for HTTP; it
+defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
 enforces many of these best practices.
 
 
