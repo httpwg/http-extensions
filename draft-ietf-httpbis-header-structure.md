@@ -193,7 +193,7 @@ dict-member = identifier "=" item
 For example, a header field whose value is defined as a dictionary could look like:
 
 ~~~ example
-Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK*
+Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK=*
 ~~~
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
