@@ -313,24 +313,24 @@ For example, an application might specify:
 
 HTTP does not mandate some behaviours that have nevertheless become very common; if these are not
 explicitly specified by applications using HTTP, there may be confusion and interoperability
-problems. This section lists common examples of this, and recommends default handling for them.
+problems. This section recommends default handling for these mechanisms.
 
 * Redirect handling - applications using HTTP SHOULD specify that 3xx redirect status codes be followed automatically. See {{!RFC7231}}, Section 6.4.
 * Redirect methods - applications using HTTP SHOULD specify that 301 and 302 redirect status codes rewrite the POST method to GET. See {{!RFC7231}}, Section 6.4.
 * Cookies - Applications using HTTP MUST explicitly reference the Cookie specification {{?RFC6265}} if they are required.
 * Certificates - Applications using HTTP MUST specify that TLS certificates are to be checked according to {{!RFC2818}} when HTTPS is used.
 
-In general, applications using HTTP SHOULD align their usage as closely as possible with Web browsers, to avoid interoperability issues when they are used. See {{browser}}.
+In general, applications using HTTP ought to align their usage as closely as possible with Web browsers, to avoid interoperability issues when they are used. See {{browser}}.
+
+If an application using HTTP has browser compatibility as a goal, client interaction ought to be
+defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
+enforces many of these best practices.
 
 Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported.
 For example, requiring that clients support responses with a certain content-encoding
 ({{?RFC7231}}, Section 3.1.2.2) instead of negotiating for it ({{?RFC7231}}, Section 5.3.4) means
 that otherwise conformant clients cannot interoperate with the application. Applications MAY
 encourage the implementation of such features, though.
-
-If an application using HTTP has browser compatibility as a goal, client interaction ought to be
-defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
-enforces many of these best practices.
 
 
 ## HTTP URLs
