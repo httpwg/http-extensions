@@ -279,7 +279,8 @@ Server: Bar/2.2
 
 ## Defining HTTP Resources {#resource}
 
-HTTP Applications SHOULD focus on defining the following application-specific protocol elements:
+Applications that use HTTP should focus on defining the following application-specific protocol
+elements:
 
 * Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
 * HTTP header fields, as per {{headers}}, and
