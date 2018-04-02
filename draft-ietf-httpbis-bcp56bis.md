@@ -327,6 +327,10 @@ For example, requiring that clients support responses with a certain content-enc
 that otherwise conformant clients cannot interoperate with the application. Applications MAY
 encourage the implementation of such features, though.
 
+If an application using HTTP has browser compatibility as a goal, client interaction ought to be
+defined in terms of {{?FETCH}}, since that is the abstraction that browsers use for HTTP; it
+enforces many of these best practices.
+
 
 ## HTTP URLs
 
@@ -597,6 +601,10 @@ best practices for their secure development.
 
 A complete enumeration of such practices is out of scope for this document. External resources are
 numerous; e.g., <https://www.owasp.org/index.php/OWASP_Guide_Project>.
+
+If an application using HTTP has browser compatibility as a goal, client interaction ought to be
+defined in terms of {{?FETCH}}, since that is the abstraction that browsers use for HTTP; it
+enforces many of these best practices.
 
 
 ## Co-Existing with Other Applications {#other-apps}
