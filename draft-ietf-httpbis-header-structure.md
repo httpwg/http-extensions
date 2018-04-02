@@ -96,6 +96,8 @@ shown here.
 
 This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
 
+This document uses algorithms to specify normative parsing behaviours, and ABNF to illustrate the on-wire format expected. Implementations MUST follow the normative algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the algorithms and ABNF, the specified algorithms take precedence.
+
 
 # Specifying Structured Headers {#specify}
 
