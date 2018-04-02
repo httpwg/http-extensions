@@ -9,6 +9,13 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.github
 See also the [official document listing](https://datatracker.ietf.org/wg/httpbis/documents/), which is authoritative.
 
 
+### HTTP Representation Variants
+
+* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-variants.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-variants.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-variants) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Avariants) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-variants/)
+
+
 ### Using HTTP as a Substrate (BCP56bis)
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-bcp56bis.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-bcp56bis.txt))
