@@ -354,12 +354,21 @@ Example-IntegerHeader: 42
 
 NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the corresponding structure.
 
-1. If the first character of input_string is not "-" or a DIGIT, fail parsing.
-2. Let input_number be the result of consuming input_string up to (but not including) the first character that is not in DIGIT, "-", and ".".
-3. If any character of input_number after the first is "-", fail parsing.
-4. If input_number contains ".", parse it as a floating point number and let output_number be the result.
-5. Otherwise, parse input_number as an integer and let output_number be the result.
-6. Return output_number.
+1. Let type be "integer".
+2. Let sign be 1.
+3. Let input_number be an empty string.
+4. If the first character of input_string is "-", remove it from input_string and set sign to -1.
+5. If the first character of input_string is not a DIGIT, fail parsing.
+6. While input_string is not empty:
+   1. Let char be the result of removing the first character of input_string.
+   2. If char is a DIGIT, append it to input_number.
+   3. Else, if type is "integer" and char is ".", append char to input_number and set type to "float".
+   4. Otherwise, fail parsing.
+   5. If type is "integer" and input_number contains more than 19 characters, fail parsing.
+   6. If type is "float" and input_number contains more than 16 characters, fail parsing.
+7. If type is "integer", parse input_number as an integers and let output_number be the result.
+8. Otherwise, parse input_number as a float and let output_number be the result.
+9. Return the product of output_number and sign.
 
 
 ## Floats {#float}
