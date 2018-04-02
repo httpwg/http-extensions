@@ -248,16 +248,11 @@ Applications using HTTP MAY specify a minimum version to be supported (HTTP/1.1 
 MUST NOT specify a maximum version, to preserve the protocol's ability to evolve.
 
 Likewise, applications need not specify what HTTP mechanisms -- such as redirection, caching,
-authentication, proxy authentication, and so on -- are to be supported. Full featured support for
-HTTP SHOULD be taken for granted in servers and clients, and the application's function SHOULD
-degrade gracefully if they are not (although this might be achieved by informing the user that
-their task cannot be completed).
-
-For example, an application can specify that it uses HTTP like this:
+authentication, proxy authentication, and so on -- are to be supported. For example, an application
+can specify that it uses HTTP like this:
 
     Foo Application uses HTTP [RFC7230]. Implementations MUST support
-    HTTP/1.1, and MAY support later versions. Support for common HTTP
-    mechanisms such as automatic redirection and caching are assumed.
+    HTTP/1.1, and MAY support later versions.
 
 When specifying examples of protocol interactions, applications SHOULD document both the request
 and response messages, with full headers, preferably in HTTP/1.1 format. For example:
