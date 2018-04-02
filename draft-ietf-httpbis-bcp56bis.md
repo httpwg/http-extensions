@@ -400,7 +400,7 @@ resource; the only mechanism for changing a default port is changing the scheme 
 
 Using a port other than the default has privacy implications (i.e., the protocol can now be
 distinguished from other traffic), as well as operability concerns (as some networks might block or
-otherwise interfere with it). Privacy implications SHOULD be documented in Security Considerations.
+otherwise interfere with it). Privacy implications should be documented in Security Considerations.
 
 See {{?RFC7605}} for further guidance.
 
