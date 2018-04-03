@@ -452,8 +452,7 @@ implementations can and do retry HTTP GET requests that fail.
 
 Finally, note that while HTTP allows GET requests to have a body syntactically, this is done only
 to allow parsers to be generic; as per {{!RFC7231}}, Section 4.3.1, a body on a GET has no meaning,
-and will be either ignored or rejected by generic HTTP software. As a result, applications that use
-HTTP SHOULD NOT define GET to have any side effects upon their resources.
+and will be either ignored or rejected by generic HTTP software.
 
 
 
