@@ -525,13 +525,11 @@ The semantics of existing HTTP header fields MUST NOT be re-defined without upda
 registration or defining an extension to them (if allowed). For example, an application using HTTP
 cannot specify that the `Location` header has a special meaning in a certain context.
 
-If an application defines a request header field that might be used by a server to change the
-response's headers or body, authors should point out that this has implications for caching; in
-general, such resources need to either make their responses uncacheable (e.g., with the "no-store"
-cache-control directive defined in {{!RFC7234}}, Section 5.2.2.3) or consistently send the Vary
-response header ({{!RFC7231}}, Section 7.1.4).
+See {{caching}} for the interaction between headers and HTTP caching; in particular, request
+headers that are used to "select" a response have impact there, and need to be carefully considered.
 
-See {{state}} for requirements regarding header fields that carry application state (e.g,. Cookie).
+See {{state}} for considerations regarding header fields that carry application state (e.g,.
+Cookie).
 
 
 ## Defining Message Payloads {#payload}
@@ -543,6 +541,51 @@ for this document.
 Applications SHOULD register distinct media types for each format they define; this makes it
 possible to identify them unambiguously and negotiate for their use. See {{!RFC6838}} for more
 information.
+
+
+## HTTP Caching {#caching}
+
+HTTP caching {{?RFC7234}} is one of the primary benefits of using HTTP for applications; it
+provides scalability, reduces latency and improves reliability. Furthermore, HTTP caches are
+readily available in browsers and other clients, networks as forward and reverse proxies, Content
+Delivery Networks and as part of server software.
+
+Assigning even a short freshness lifetime ({{?RFC7234}}, Section 4.2) -- e.g., 5 seconds -- allows
+a response to be reused to satisfy multiple clients, and/or a single client making the same request
+repeatedly. In general, if it is safe to reuse something, consider assigning a freshness lifetime;
+cache implementations take active measures to expire content intelligently when they are out of
+space, so "it will fill up the cache" is not a valid concern.
+
+Understand that stale responses (e.g., one with "Cache-Control: max-age=0") can be reused when the
+cache is disconnected from the origin server; this can be useful for handling network issues. See
+{{?RFC7234}}, Section 4.2.4, and also {{?RFC5861}} for additional controls over stale content.
+
+Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and
+latency for large responses; see {{RFC7232}}.
+
+In some situations, responses without explicit cache directives (e.g., Cache-Control or Expires)
+will be stored and served using a heuristic freshness lifetime; see {{?RFC7234}}, Section 4.2.2. As
+the heuristic is not under control of the application, it is generally preferable to set an
+explicit freshness lifetime.
+
+If caching of a response is not desired, the appropriate response directive is "Cache-Control:
+no-store". This only need be sent in situations where the response might be cached; see
+{{?RFC7234}}, Section 3.
+
+If an application defines a request header field that might be used by a server to change the
+response's headers or body, authors should point out that this has implications for caching; in
+general, such resources need to either make their responses uncacheable (e.g., with the "no-store"
+cache-control directive defined in {{!RFC7234}}, Section 5.2.2.3) or consistently send the Vary
+response header ({{!RFC7231}}, Section 7.1.4).
+
+When an application has a need to express a lifetime that's separate from the freshness lifetime,
+this should be expressed separately, either in the response's body or in a separate header field.
+When this happens, the relationship between HTTP caching and that lifetime need to be carefully
+considered, since the response will be used as long as it is considered fresh.
+
+Like other functions, HTTP caching is generic; it does not have knowledge of the application in
+use. Therefore, caching extensions need to be backwards-compatible, as per {{?RFC7234}}, Section
+5.2.3.
 
 
 ## Application State {#state}
