@@ -193,7 +193,7 @@ dict-member = identifier "=" item
 For example, a header field whose value is defined as a dictionary could look like:
 
 ~~~ example
-Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK*
+Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK=*
 ~~~
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
@@ -329,7 +329,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 1. Discard any leading OWS from input_string.
 2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
-4. If the first character of input_string is "*", process input_string as binary content ({{parse-binary}}) and return the result.
+4. If the first character of input_string is "\*", process input_string as binary content ({{parse-binary}}) and return the result.
 6. Otherwise, fail parsing.
 
 
@@ -354,12 +354,24 @@ Example-IntegerHeader: 42
 
 NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the corresponding structure.
 
-1. If the first character of input_string is not "-" or a DIGIT, fail parsing.
-2. Let input_number be the result of consuming input_string up to (but not including) the first character that is not in DIGIT, "-", and ".".
-3. If any character of input_number after the first is "-", fail parsing.
-4. If input_number contains ".", parse it as a floating point number and let output_number be the result.
-5. Otherwise, parse input_number as an integer and let output_number be the result.
-6. Return output_number.
+1. Let type be "integer".
+2. Let sign be 1.
+3. Let input_number be an empty string.
+4. If the first character of input_string is "-", remove it from input_string and set sign to -1.
+5. If input_string is empty, fail parsing.
+6. If the first character of input_string is not a DIGIT, fail parsing.
+7. While input_string is not empty:
+   1. Let char be the result of removing the first character of input_string.
+   2. If char is a DIGIT, append it to input_number.
+   3. Else, if type is "integer" and char is ".", append char to input_number and set type to "float".
+   4. Otherwise, fail parsing.
+   5. If type is "integer" and input_number contains more than 19 characters, fail parsing.
+   6. If type is "float" and input_number contains more than 16 characters, fail parsing.
+8. If type is "integer", parse input_number as an integer and let output_number be the result.
+9. Otherwise:
+   1. If the final character of input_number is ".", fail parsing.
+   2. Parse input_number as a float and let output_number be the result.
+0. Return the product of output_number and sign.
 
 
 ## Floats {#float}
@@ -465,7 +477,7 @@ Given an ASCII string input_string, return a identifier. input_string is modifie
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "_", "-", "*" or "/":
+   2. If char is not one of lcalpha, DIGIT, "\_", "-", "\*" or "/":
       1. Prepend char to input_string.
       2. Return output_string.
    3. Append char to output_string.
@@ -477,7 +489,7 @@ Given an ASCII string input_string, return a identifier. input_string is modifie
 
 Arbitrary binary content up to 16384 bytes in size can be conveyed in Structured Headers.
 
-The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("*") to delimit from other content.
+The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("\*") to delimit from other content.
 
 The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. It is
 RECOMMENDED that parsers reject encoded data that is not properly padded, although this might
