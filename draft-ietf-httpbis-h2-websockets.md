@@ -129,7 +129,7 @@ the GET-based request in {{!RFC6455}} and is used to process the
 WebSockets opening handshake.
 
 The scheme of the Target URI {{!RFC7230}} MUST be `https` for `wss` schemed
-WebSockets and http for ws schemed WebSockets. The websocket URI is
+WebSockets and `http` for `ws` schemed WebSockets. The websocket URI is
 still used for proxy autoconfiguration.
 
 {{!RFC6455}} requires the use of Connection and Upgrade headers that
@@ -198,9 +198,9 @@ HTTP/2 and WebSockets concurrently.
 
 # About Intermediaries
 
-This document does not change how WebSockets interacts with HTTP
+This document does not change how WebSockets interacts with HTTP forward
 proxies. If a client wishing to speak WebSockets connects via HTTP/2
-to a HTTP proxy it should continue to use a traditional (i.e. not with
+to an HTTP proxy it should continue to use a traditional (i.e. not with
 a :protocol pseudo-header) CONNECT to tunnel through that proxy to the
 WebSocket server via HTTP.
 
@@ -213,7 +213,7 @@ described in this document.
 {{!RFC6455}} ensures that non-WebSockets clients, especially
 XMLHttpRequest based clients, cannot make a WebSocket connection. Its
 primary mechanism for doing that is the use of Sec- prefixed request
-headers that cannot be created by XMLHttpRequest based clients. This
+headers that cannot be created by XMLHttpRequest-based clients. This
 specification addresses that concern in two ways:
 
 * The CONNECT method is prohibited from being used by XMLHttpRequest
