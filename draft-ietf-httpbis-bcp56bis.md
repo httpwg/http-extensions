@@ -600,7 +600,7 @@ defined in terms of {{FETCH}}, since that is the abstraction that browsers use f
 enforces many of these best practices.
 
 
-## Co-Existing with Other Applications {#other-apps}
+## Application Boundaries {#other-apps}
 
 Because the origin {{!RFC6454}} is how many HTTP capabilities are scoped, applications also need to
 consider how deployments might interact with other applications (including Web browsing) on the
@@ -609,19 +609,22 @@ same origin.
 For example, if Cookies {{?RFC6265}} are used to carry application state, they will be sent with
 all requests to the origin by default, unless scoped by path, and the application might receive
 cookies from other applications on the origin. This can lead to security issues, as well as
-collisions in cookie name.
+collision in cookie names.
 
-As a result, when specifying the use of Cookies, HTTP authentication {{?RFC7235}}, or other
-origin-wide HTTP mechanisms, applications using HTTP SHOULD NOT mandate the use of a particular
-identifier, but instead let deployments configure them.
+One solution to these issues is to require a dedicated hostname for the application, so that it has
+a unique origin. However, it is often desirable to allow multiple applications to be deployed on a
+single hostname; doing so provides the most deployment flexibility and enables them to be "mixed"
+together (See {{RFC7320}} for details). Therefore, applications using HTTP should strive to allow
+multiple applications on an origin.
 
-Note that dedicating a hostname to a single application is not a solution to the issues above; see
-{{!RFC7320}}.
+To enable this, when specifying the use of Cookies, HTTP authentication realms {{?RFC7235}}, or
+other origin-wide HTTP mechanisms, applications using HTTP SHOULD NOT mandate the use of a
+particular identifier, but instead let deployments configure them. Consideration SHOULD be given to
+scoping them to part of the origin, using their specified mechanisms for doing so.
 
 Modern Web browsers constrain the ability of content from one origin to access resources from
 another, to avoid leaking private information. As a result, applications that wish to expose
-cross-origin data to browsers will need to implement CORS {{FETCH}}.
-
+cross-origin data to browsers will need to implement the CORS protocol; see {{FETCH}}.
 
 
 # IANA Considerations
