@@ -30,8 +30,8 @@ over a single stream of an HTTP/2 connection.
 
 # Introduction
 
-The Hypertext Transfer Protocol (HTTP) provides compatible resource
-level semantics across different versions but it does not offer
+The Hypertext Transfer Protocol (HTTP) provides compatible resource-level
+semantics across different versions but it does not offer
 compatibility at the connection management level. Other protocols,
 such as WebSockets, that rely on connection management details of HTTP
 must be updated for new versions of HTTP.
@@ -39,7 +39,7 @@ must be updated for new versions of HTTP.
 The WebSocket Protocol {{!RFC6455}} uses the HTTP/1.1 {{!RFC7230}}
 Upgrade mechanism to transition a TCP connection from HTTP into a
 WebSocket connection. A different approach must be taken with HTTP/2
-{{!RFC7540}}. HTTP/2 does not allow connection wide header and status
+{{!RFC7540}}. HTTP/2 does not allow connection-wide headers and status
 codes such as the Upgrade and Connection request headers or the 101
 response code due to its multiplexing nature. These are all required
 by the {{!RFC6455}} opening handshake.
@@ -61,7 +61,7 @@ control features of HTTP/2.
 
 Streams that successfully establish a WebSocket connection using a
 tunneled stream and the modifications to the opening handshake defined
-in this document then use the traditional WebSocket Protocol treating
+in this document then use the traditional WebSocket Protocol, treating
 the stream as if were the TCP connection in that specification.
 
 # Terminology
@@ -78,8 +78,8 @@ This document adds a new SETTINGS Parameter to those defined by
 The new parameter name is SETTINGS_ENABLE_CONNECT_PROTOCOL. The value
 of the parameter MUST be 0 or 1.
 
-Upon receipt of SETTINGS_ENABLE_CONNECT_PROTOCOL with a value of 1 a client MAY
-use the Extended CONNECT definition of this document when creating new
+Upon receipt of SETTINGS_ENABLE_CONNECT_PROTOCOL with a value of 1, a client
+MAY use the Extended CONNECT definition of this document when creating new
 streams. Receipt of this parameter by a server does not have any
 impact.
 
@@ -121,15 +121,15 @@ co-located with the server.
 # Using Extended CONNECT To Bootstrap The WebSocket Protocol
 
 The pseudo-header :protocol MUST be included in the CONNECT request
-and it MUST have a value of websocket to initiate a WebSocket
+and it MUST have a value of `websocket` to initiate a WebSocket
 connection on an HTTP/2 stream. Other HTTP request and response
 headers, such as those for manipulating cookies, may be included in
-the HEADERS with the CONNECT :method as usual. This request replaces
-the GET based request in {{!RFC6455}} and is used to process the
+the HEADERS with the CONNECT method as usual. This request replaces
+the GET-based request in {{!RFC6455}} and is used to process the
 WebSockets opening handshake.
 
-The scheme of the Target URI {{!RFC7230}} MUST be https for wss schemed
-WebSockets and http for ws schemed WebSockets. The websocket URI is
+The scheme of the Target URI {{!RFC7230}} MUST be `https` for `wss` schemed
+WebSockets and `http` for `ws` schemed WebSockets. The websocket URI is
 still used for proxy autoconfiguration.
 
 {{!RFC6455}} requires the use of Connection and Upgrade headers that
@@ -148,10 +148,10 @@ by the :protocol pseudo-header.
 The Sec-WebSocket-Version, Origin {{!RFC6454}}, Sec-WebSocket-Protocol,
 and Sec-WebSocket-Extensions headers are used on the CONNECT request
 and response headers in the same way as defined in {{!RFC6455}}. Note
-that HTTP/1 header names were case insensitive and HTTP/2 requires
+that HTTP/1 header names were case-insensitive and HTTP/2 requires
 they be encoded as lower case.
 
-After successfully processing the opening handshake the peers should
+After successfully processing the opening handshake, the peers should
 proceed with The WebSocket Protocol {{!RFC6455}} using the HTTP/2
 stream from the CONNECT transaction as if it were the TCP connection
 referred to in {{!RFC6455}}. The state of the WebSocket connection at
@@ -198,9 +198,9 @@ HTTP/2 and WebSockets concurrently.
 
 # About Intermediaries
 
-This document does not change how WebSockets interacts with HTTP
+This document does not change how WebSockets interacts with HTTP forward
 proxies. If a client wishing to speak WebSockets connects via HTTP/2
-to a HTTP proxy it should continue to use a traditional (i.e. not with
+to an HTTP proxy it should continue to use a traditional (i.e. not with
 a :protocol pseudo-header) CONNECT to tunnel through that proxy to the
 WebSocket server via HTTP.
 
@@ -210,10 +210,10 @@ described in this document.
 
 # Security Considerations
 
-{{!RFC6455}} ensures that non WebSockets clients, especially
+{{!RFC6455}} ensures that non-WebSockets clients, especially
 XMLHttpRequest based clients, cannot make a WebSocket connection. Its
 primary mechanism for doing that is the use of Sec- prefixed request
-headers that cannot be created by XMLHttpRequest based clients. This
+headers that cannot be created by XMLHttpRequest-based clients. This
 specification addresses that concern in two ways:
 
 * The CONNECT method is prohibited from being used by XMLHttpRequest
