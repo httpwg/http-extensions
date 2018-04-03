@@ -82,15 +82,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
 
 
-### Key
-
-_Parked; waiting for implementation feedback._
-
-* [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-key.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-key.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-key) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Akey) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-key/)
-
-
 ### RFC6265bis
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-rfc6265bis.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-rfc6265bis.txt))
