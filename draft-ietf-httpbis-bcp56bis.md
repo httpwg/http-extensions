@@ -592,8 +592,18 @@ This is only a small sample of the kinds of issues that applications using HTTP 
 Generally, the best approach is to consider the application *as* a Web application, and to follow
 best practices for their secure development.
 
-A complete enumeration of such practices is out of scope for this document. External resources are
-numerous; e.g., <https://www.owasp.org/index.php/OWASP_Guide_Project>.
+A complete enumeration of such practices is out of scope for this document, but some considerations
+include:
+
+* Using Strict Transport Security {{?RFC6797}} to assure that HTTPS is used
+* Using Content-Security-Policy {{?W3C.WD-CSP3-20160913}} to constrain the capabilities of content, thereby mitigating Cross-Site Scripting attacks (which are possible if client-provided data is exposed in any part of a response in the application)
+* Using X-Frame-Options {{?RFC7034}} to prevent content from being included in a HTML frame from another origin, thereby enabling "clickjacking"
+* Using Referrer-Policy {{?W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header
+* Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?RFC6265}}
+
+Depending on how they are intended to be deployed, specifications for applications using HTTP might
+require the use of these mechanisms in specific ways, or might merely point them out in Security
+Considerations.
 
 If an application using HTTP has browser compatibility as a goal, client interaction ought to be
 defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
