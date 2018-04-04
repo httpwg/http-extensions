@@ -569,7 +569,8 @@ explicit freshness lifetime.
 
 If caching of a response is not desired, the appropriate response directive is "Cache-Control:
 no-store". This only need be sent in situations where the response might be cached; see
-{{?RFC7234}}, Section 3.
+{{?RFC7234}}, Section 3. Note that "Cache-Control: no-cache" allows a response to be stored, just
+not reused by a cache; it does not prevent caching (despite its name).
 
 If an application defines a request header field that might be used by a server to change the
 response's headers or body, authors should point out that this has implications for caching; in
