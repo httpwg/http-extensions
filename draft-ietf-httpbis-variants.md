@@ -11,7 +11,7 @@ area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
 keyword: Vary
-keyword: Conneg
+keyword: conneg
 keyword: content negotiation
 
 stand_alone: yes
