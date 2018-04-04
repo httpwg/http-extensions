@@ -499,8 +499,8 @@ e.g., `499` can be safely handled as `400` by clients that don't recognise it).
 
 ## HTTP Header Fields {#headers}
 
-Applications that use HTTP MAY define new HTTP header fields, following the advice in {{!RFC7231}},
-Section 8.3.1.
+Applications that use HTTP MAY define new HTTP header fields. See {{!RFC7231}}, Section 8.3.1 for
+guidelines to consider when minting new header fields.
 
 Typically, using HTTP header fields is appropriate in a few different situations:
 
