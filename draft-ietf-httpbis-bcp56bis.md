@@ -639,9 +639,9 @@ A complete enumeration of such practices is out of scope for this document, but 
 include:
 
 * Using Strict Transport Security {{?RFC6797}} to assure that HTTPS is used
-* Using Content-Security-Policy {{?W3C.WD-CSP3-20160913}} to constrain the capabilities of content, thereby mitigating Cross-Site Scripting attacks (which are possible if client-provided data is exposed in any part of a response in the application)
+* Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of content, thereby mitigating Cross-Site Scripting attacks (which are possible if client-provided data is exposed in any part of a response in the application)
 * Using X-Frame-Options {{?RFC7034}} to prevent content from being included in a HTML frame from another origin, thereby enabling "clickjacking"
-* Using Referrer-Policy {{?W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header
+* Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header
 * Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?RFC6265}}
 
 Depending on how they are intended to be deployed, specifications for applications using HTTP might
