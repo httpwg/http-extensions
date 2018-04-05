@@ -1,6 +1,6 @@
 ## Draft HTTP Extension Specifications
 
-This is the working area for the [IETF HTTP Working Group](https://httpwg.github.io/) draft extensions. See [our contribution guidelines](CONTRIBUTING.md) for information about how to participate.
+This is the working area for the [IETF HTTP Working Group](https://httpwg.github.io/) draft extensions. See also the [core HTTP specifications](https://github.com/httpwg/http-core/) and [our contribution guidelines](CONTRIBUTING.md) for information about how to participate.
 
 **Be aware that all contributions to our work fall under the "NOTE WELL" terms therein.**
 
