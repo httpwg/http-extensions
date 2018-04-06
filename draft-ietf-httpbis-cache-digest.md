@@ -1,6 +1,6 @@
 ---
 title: Cache Digests for HTTP/2
-docname: draft-ietf-httpbis-cache-digest-latest
+docname: draft-ietf-httpbis-cache-digest-04
 date: {DATE}
 category: exp
 
@@ -494,7 +494,7 @@ Thanks to Stefan Eissing for his suggestions.
 
 ## Since draft-ietf-httpbis-cache-digest-03
 
-* None yet.
+* Yoav becomes an author; Mark steps down.
 
 ## Since draft-ietf-httpbis-cache-digest-02
 
