@@ -1,6 +1,6 @@
 ---
 title: Cache Digests for HTTP/2
-docname: draft-ietf-httpbis-cache-digest-04
+docname: draft-ietf-httpbis-cache-digest-latest
 date: {DATE}
 category: exp
 
@@ -491,6 +491,10 @@ The header may represent the cache state of a client or that of a proxy, dependi
 Thanks to Stefan Eissing for his suggestions.
 
 # Changes
+
+## Since draft-ietf-httpbis-cache-digest-04
+
+* None yet.
 
 ## Since draft-ietf-httpbis-cache-digest-03
 
