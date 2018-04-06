@@ -20,11 +20,11 @@ author:
     email: kazuhooku@gmail.com
 
  -
-    ins: M. Nottingham
-    name: Mark Nottingham
-    organization:
-    email: mnot@mnot.net
-    uri: https://www.mnot.net/
+    ins: Y. Weiss
+    name: Yoav Weiss
+    organization: Akamai
+    email: yoav@yoav.ws
+    uri: https://blog.yoav.ws/
 
 normative:
   RFC2119:
@@ -487,8 +487,6 @@ Also, due to the fact that any header that is supplied to Fetch is required to b
 The header may represent the cache state of a client or that of a proxy, depending on how the proxy handles the header.
 
 # Acknowledgements
-
-Thanks to Yoav Weiss for his idea and text to use Cuckoo Filter.
 
 Thanks to Stefan Eissing for his suggestions.
 
