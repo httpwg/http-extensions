@@ -641,9 +641,9 @@ best practices for their secure development.
 A complete enumeration of such practices is out of scope for this document, but some considerations
 include:
 
-* Using Strict Transport Security {{?RFC6797}} to assure that only HTTPS is used
+* Using an application-specific media type in the Content-Type header, and requiring clients to fail if it is not used
+* Using X-Content-Type-Options: nosniff {{FETCH}}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser
 * Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML5}}), thereby mitigating Cross-Site Scripting attacks
-* Using X-Frame-Options {{?RFC7034}} to prevent content from being included in a HTML frame from another origin, thereby enabling "clickjacking"
 * Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header
 * Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?RFC6265}}
 * Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the path of the communication, they can use this capability to recover that information.
@@ -651,6 +651,19 @@ include:
 Depending on how they are intended to be deployed, specifications for applications using HTTP might
 require the use of these mechanisms in specific ways, or might merely point them out in Security
 Considerations.
+
+An example of a HTTP response from an application that does not intend for its content to be treated as active by browsers might look like this:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/example+json
+X-Content-Type-Options: nosniff
+Content-Security-Policy: default-src 'none'
+Cache-Control: max-age=3600
+Referrer-Policy: no-referrer
+
+[content]
+~~~
 
 If an application using HTTP has browser compatibility as a goal, client interaction ought to be
 defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
