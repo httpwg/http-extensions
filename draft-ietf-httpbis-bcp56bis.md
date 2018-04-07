@@ -628,8 +628,11 @@ particularly regarding security.
 For example, if an application's state can be changed using a POST request, a Web browser can
 easily be coaxed into making that request by a HTML form on an arbitrary Web site.
 
-Or, if a resource reflects data from the request into a response, that can be used to perform a
-Cross-Site Scripting attack on Web browsers directed to it.
+Or, If content returned from the application's resources is under control of an attacker (for
+example, part of the request is reflected in the response, or the response contains external
+information that might be under the control of the attacker), a cross-site scripting attack is
+possible, whereby an attacker can inject code into the browser and access data and capabilities on
+that origin.
 
 This is only a small sample of the kinds of issues that applications using HTTP must consider.
 Generally, the best approach is to consider the application *as* a Web application, and to follow
@@ -639,7 +642,7 @@ A complete enumeration of such practices is out of scope for this document, but 
 include:
 
 * Using Strict Transport Security {{?RFC6797}} to assure that HTTPS is used
-* Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of content, thereby mitigating Cross-Site Scripting attacks (which are possible if client-provided data is exposed in any part of a response in the application)
+* Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of content, thereby mitigating Cross-Site Scripting attacks
 * Using X-Frame-Options {{?RFC7034}} to prevent content from being included in a HTML frame from another origin, thereby enabling "clickjacking"
 * Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header
 * Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?RFC6265}}
