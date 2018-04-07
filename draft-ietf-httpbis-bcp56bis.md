@@ -641,7 +641,7 @@ best practices for their secure development.
 A complete enumeration of such practices is out of scope for this document, but some considerations
 include:
 
-* Using Strict Transport Security {{?RFC6797}} to assure that HTTPS is used
+* Using Strict Transport Security {{?RFC6797}} to assure that only HTTPS is used
 * Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of content, thereby mitigating Cross-Site Scripting attacks
 * Using X-Frame-Options {{?RFC7034}} to prevent content from being included in a HTML frame from another origin, thereby enabling "clickjacking"
 * Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header
