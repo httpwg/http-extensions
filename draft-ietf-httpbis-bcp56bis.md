@@ -121,9 +121,9 @@ application is "using HTTP" when any of the following conditions are true:
 * The ALPN protocol ID {{!RFC7301}} generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
 * The IANA registries defined for HTTP are updated or modified.
 
-When an application is using HTTP, all of the requirements of the HTTP protocol suite (including
-but not limited to {{!RFC7230}}, {{!RFC7231}}, {{!RFC7232}}, {{!RFC7233}}, {{!RFC7234}},
-{{!RFC7235}} and {{!RFC7540}}) are in force.
+When an application is using HTTP, all of the requirements of the HTTP protocol suite are in force
+(including but not limited to {{!RFC7230}}, {{!RFC7231}}, {{!RFC7232}}, {{!RFC7233}}, {{!RFC7234}},
+{{!RFC7235}} and {{!RFC7540}}).
 
 An application might not be using HTTP according to this definition, but still relying upon the
 HTTP specifications in some manner. For example, an application might wish to avoid re-specifying
