@@ -114,7 +114,7 @@ shown here.
 # Is HTTP Being Used? {#used}
 
 Different applications have different goals when using HTTP. In this document, we say an
-application is _using HTTP_ when any of the following conditions are true:
+application is "using HTTP" when any of the following conditions are true:
 
 * The transport port in use is 80 or 443,
 * The URL scheme "http" or "https" is used,
@@ -125,11 +125,11 @@ When an application is using HTTP, all of the requirements of the HTTP protocol 
 but not limited to {{!RFC7230}}, {{!RFC7231}}, {{!RFC7232}}, {{!RFC7233}}, {{!RFC7234}},
 {{!RFC7235}} and {{!RFC7540}}) are in force.
 
-An application might not be _using HTTP_ according to this definition, but still relying upon the
+An application might not be using HTTP according to this definition, but still relying upon the
 HTTP specifications in some manner. For example, an application might wish to avoid re-specifying
 parts of the message format, but change others; or, it might want to use a different set of methods.
 
-Such applications are referred to as _protocols based upon HTTP_ in this document. These have more
+Such applications are referred to as "protocols based upon HTTP" in this document. These have more
 freedom to modify protocol operation, but are also likely to lose at least a portion of the
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
 and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
@@ -170,7 +170,7 @@ This forms an expectation in the client that the response will always be `201 Cr
 fact there are a number of reasons why the status code might differ in a real deployment. If the
 client does not anticipate this, the application's deployment is brittle.
 
-Much of the value of HTTP is in its _generic semantics_ -- that is, the protocol elements defined
+Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined
 by HTTP are potentially applicable to every resource, not specific to a particular context.
 Application-specific semantics are expressed in the payload; mostly, in the body, but also in
 header fields.
@@ -223,8 +223,8 @@ This "RPC" style of communication does get some benefit from using HTTP -- namel
 Using such a high-level protocol to tunnel simple semantics has downsides too; because of its more
 advanced capabilities, breadth of deployment and age, HTTP's complexity can cause interoperability
 problems that could be avoided by using a simpler substrate (e.g., WebSockets {{?RFC6455}}, if
-browser support is necessary, or TCP {{?RFC0793}} if not), or making the application be _based upon
-HTTP_, instead of using it (as defined in {{used}}).
+browser support is necessary, or TCP {{?RFC0793}} if not), or making the application be based upon
+HTTP, instead of using it (as defined in {{used}}).
 
 Applications that use HTTP are encouraged to accommodate the various features that the protocol
 offers, so that their users receive the maximum benefit from it. This document does not require
