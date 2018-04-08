@@ -83,9 +83,10 @@ In particular, standards-defined HTTP APIs need to more carefully consider how e
 evolution will be handled, how different deployment requirements will be accommodated, and how
 clients will evolve with the API.
 
-At the same time, the Internet community has a tradition of protocol reuse (e.g., Telnet
-{{?RFC0854}} as a substrate for FTP {{?RFC0959}} and SMTP {{?RFC2821}}), but less experience using
-HTTP as a substrate. Because HTTP is extensible in many ways, a number of questions arise, such as:
+At the same time, the IETF has a tradition of protocol reuse (e.g., {{?TELNET=RFC0854}} as a
+substrate for {{?FTP=RFC0959}} and {{?SMTP=RFC2821}}; HTTP as a substrate for {{?IPP=8011}} and
+{{?RESTCONF=RFC8040}}). Because HTTP is extensible in many ways, a number of questions arise, such
+as:
 
 * Should an application using HTTP define a new URL scheme? Use new ports?
 * Should it use standard HTTP methods and status codes, or define new ones?
