@@ -528,8 +528,7 @@ cannot specify that the `Location` header has a special meaning in a certain con
 See {{caching}} for the interaction between headers and HTTP caching; in particular, request
 headers that are used to "select" a response have impact there, and need to be carefully considered.
 
-See {{state}} for considerations regarding header fields that carry application state (e.g,.
-Cookie).
+See {{state}} for considerations regarding header fields that carry application state (e.g., Cookie).
 
 
 ## Defining Message Payloads {#payload}
