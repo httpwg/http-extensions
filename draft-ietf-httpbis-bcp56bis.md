@@ -84,7 +84,7 @@ evolution will be handled, how different deployment requirements will be accommo
 clients will evolve with the API.
 
 At the same time, the IETF has a tradition of protocol reuse (e.g., {{?TELNET=RFC0854}} as a
-substrate for {{?FTP=RFC0959}} and {{?SMTP=RFC2821}}; HTTP as a substrate for {{?IPP=8011}} and
+substrate for {{?FTP=RFC0959}} and {{?SMTP=RFC2821}}; HTTP as a substrate for {{?IPP=RFC8011}} and
 {{?RESTCONF=RFC8040}}). Because HTTP is extensible in many ways, a number of questions arise, such
 as:
 
@@ -480,7 +480,7 @@ context of the application to understand them.
 Furthermore, applications using HTTP MUST NOT re-specify the semantics of HTTP status codes, even
 if it is only by copying their definition. They MUST NOT require specific reason phrases to be
 used; the reason phrase has no function in HTTP, and is not guaranteed to be preserved by
-implementations. The reason phrase is not carried in the {{RFC7540}} message format.
+implementations. The reason phrase is not carried in the {{?RFC7540}} message format.
 
 Typically, applications using HTTP will convey application-specific information in the message body
 and/or HTTP header fields, not the status code. {{?RFC7807}} provides one way for applications
@@ -560,7 +560,7 @@ cache is disconnected from the origin server; this can be useful for handling ne
 {{?RFC7234}}, Section 4.2.4, and also {{?RFC5861}} for additional controls over stale content.
 
 Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and
-latency for large responses; see {{RFC7232}}.
+latency for large responses; see {{?RFC7232}}.
 
 In some situations, responses without explicit cache directives (e.g., Cache-Control or Expires)
 will be stored and served using a heuristic freshness lifetime; see {{?RFC7234}}, Section 4.2.2. As
@@ -684,7 +684,7 @@ collision in cookie names.
 One solution to these issues is to require a dedicated hostname for the application, so that it has
 a unique origin. However, it is often desirable to allow multiple applications to be deployed on a
 single hostname; doing so provides the most deployment flexibility and enables them to be "mixed"
-together (See {{RFC7320}} for details). Therefore, applications using HTTP should strive to allow
+together (See {{?RFC7320}} for details). Therefore, applications using HTTP should strive to allow
 multiple applications on an origin.
 
 To enable this, when specifying the use of Cookies, HTTP authentication realms {{?RFC7235}}, or
