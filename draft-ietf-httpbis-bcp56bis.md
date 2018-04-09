@@ -103,6 +103,7 @@ It is written primarily to guide IETF efforts to define application protocols us
 deployment on the Internet, but might be applicable in other situations. Note that the requirements
 herein do not necessarily apply to the development of generic HTTP extensions.
 
+
 ## Notational Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
@@ -232,7 +233,6 @@ specific features to be used, since the appropriate design tradeoffs are highly 
 situation. However, following the practices in {{bp}} will help make them available.
 
 
-
 # Best Practices for Using HTTP {#bp}
 
 This section contains best practices regarding the use of HTTP by applications, including practices
@@ -304,6 +304,7 @@ For example, an application might specify:
     format representing the state of a Widget. It contains links to
     related information in the link indicated by the Link header field
     value with the "example-other-info" link relation type.
+
 
 ## Specifying Client Behaviours {#clients}
 
@@ -385,9 +386,7 @@ caveats to keep in mind:
 
 * Web features that require a secure context {{?SECCTXT=W3C.CR-secure-contexts-20160915}} will likely treat a new scheme as insecure.
 
-
 See {{?RFC7595}} for more information about minting new URL schemes.
-
 
 
 ### Transport Ports
@@ -454,7 +453,6 @@ implementations can and do retry HTTP GET requests that fail.
 Finally, note that while HTTP allows GET requests to have a body syntactically, this is done only
 to allow parsers to be generic; as per {{!RFC7231}}, Section 4.3.1, a body on a GET has no meaning,
 and will be either ignored or rejected by generic HTTP software.
-
 
 
 ## HTTP Status Codes
@@ -528,7 +526,8 @@ cannot specify that the `Location` header has a special meaning in a certain con
 See {{caching}} for the interaction between headers and HTTP caching; in particular, request
 headers that are used to "select" a response have impact there, and need to be carefully considered.
 
-See {{state}} for considerations regarding header fields that carry application state (e.g., Cookie).
+See {{state}} for considerations regarding header fields that carry application state (e.g.,
+Cookie).
 
 
 ## Defining Message Payloads {#payload}
@@ -640,7 +639,6 @@ exploits are possible. Mitigations include using a request-specific token to ass
 the client.
 
 
-
 ## Co-Existing with Web Browsing {#browser}
 
 Even if there is not an intent for an application that uses HTTP to be used with a Web browser, its
@@ -724,6 +722,7 @@ cross-origin data to browsers will need to implement the CORS protocol; see {{FE
 # IANA Considerations
 
 This document has no requirements for IANA.
+
 
 # Security Considerations
 
