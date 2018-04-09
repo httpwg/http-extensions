@@ -167,7 +167,7 @@ Given an ASCII string input_string that represents the chosen header's field-val
 
 When generating input_string, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
-Note that in the case of lists, parameterised lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items, parsing will fail if more than instance of that header field is present.
+Note that in the case of lists, parameterised lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items, parsing will fail if more than one instance of that header field is present, unless the header fields combine into a syntactically valid String.
 
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
 
@@ -536,6 +536,9 @@ This draft has no actions for IANA.
 
 TBD
 
+
+It is possible for parties with the ability to inject new HTTP header fields to change the meaning
+of structured headers. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
 --- back
 
