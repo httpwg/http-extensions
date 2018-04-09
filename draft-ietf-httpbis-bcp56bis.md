@@ -562,6 +562,24 @@ cache is disconnected from the origin server; this can be useful for handling ne
 Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and
 latency for large responses; see {{?RFC7232}}.
 
+If an application defines a request header field that might be used by a server to change the
+response's headers or body, authors should point out that this has implications for caching; in
+general, such resources need to either make their responses uncacheable (e.g., with the "no-store"
+cache-control directive defined in {{!RFC7234}}, Section 5.2.2.3) or consistently send the Vary
+response header ({{!RFC7231}}, Section 7.1.4).
+
+For example, this response:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/example+xml
+Cache-Control: max-age=60
+ETag: "sa0f8wf20fs0f"
+Vary: Accept-Encoding
+~~~
+
+can be stored for 60 seconds by both private and shared caches, can be revalidated with If-None-Match, and varies on the Accept-Encoding request header field.
+
 In some situations, responses without explicit cache directives (e.g., Cache-Control or Expires)
 will be stored and served using a heuristic freshness lifetime; see {{?RFC7234}}, Section 4.2.2. As
 the heuristic is not under control of the application, it is generally preferable to set an
@@ -572,11 +590,13 @@ no-store". This only need be sent in situations where the response might be cach
 {{?RFC7234}}, Section 3. Note that "Cache-Control: no-cache" allows a response to be stored, just
 not reused by a cache; it does not prevent caching (despite its name).
 
-If an application defines a request header field that might be used by a server to change the
-response's headers or body, authors should point out that this has implications for caching; in
-general, such resources need to either make their responses uncacheable (e.g., with the "no-store"
-cache-control directive defined in {{!RFC7234}}, Section 5.2.2.3) or consistently send the Vary
-response header ({{!RFC7231}}, Section 7.1.4).
+For example, this response cannot be stored or reused by a cache:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/example+xml
+Cache-Control: no-store
+~~~
 
 When an application has a need to express a lifetime that's separate from the freshness lifetime,
 this should be expressed separately, either in the response's body or in a separate header field.
