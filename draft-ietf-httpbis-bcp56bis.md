@@ -576,6 +576,8 @@ Content-Type: application/example+xml
 Cache-Control: max-age=60
 ETag: "sa0f8wf20fs0f"
 Vary: Accept-Encoding
+
+[content]
 ~~~
 
 can be stored for 60 seconds by both private and shared caches, can be revalidated with If-None-Match, and varies on the Accept-Encoding request header field.
@@ -596,6 +598,8 @@ For example, this response cannot be stored or reused by a cache:
 HTTP/1.1 200 OK
 Content-Type: application/example+xml
 Cache-Control: no-store
+
+[content]
 ~~~
 
 When an application has a need to express a lifetime that's separate from the freshness lifetime,
