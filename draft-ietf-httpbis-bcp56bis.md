@@ -156,15 +156,6 @@ be implemented, supported and used.
 However, this can easily lead to an unintended profile of HTTP's behaviour. For example, it's
 common to see specifications with language like this:
 
-    A `200 OK` response means that the widget has successfully
-    been updated.
-
-This sort of specification is bad practice, because it is adding new semantics to HTTP's status
-codes and methods, respectively; a recipient -- whether it's an origin server, client library,
-intermediary or cache -- now has to know these extra semantics to understand the message.
-
-Some applications even require specific behaviours, such as:
-
     A `POST` request MUST result in a `201 Created` response.
 
 This forms an expectation in the client that the response will always be `201 Created`, when in
@@ -312,8 +303,8 @@ HTTP does not mandate some behaviours that have nevertheless become very common;
 explicitly specified by applications using HTTP, there may be confusion and interoperability
 problems. This section recommends default handling for these mechanisms.
 
-* Redirect handling - applications using HTTP SHOULD specify that 3xx redirect status codes be followed automatically. See {{!RFC7231}}, Section 6.4.
-* Redirect methods - applications using HTTP SHOULD specify that 301 and 302 redirect status codes rewrite the POST method to GET. See {{!RFC7231}}, Section 6.4.
+* Redirect handling - Applications using HTTP SHOULD specify that 3xx redirect status codes be followed automatically. See {{!RFC7231}}, Section 6.4.
+* Redirect methods - Applications using HTTP SHOULD specify that 301 and 302 redirect status codes rewrite the POST method to GET, in order to be compatible with browsers. See {{!RFC7231}}, Section 6.4.
 * Cookies - Applications using HTTP MUST explicitly reference the Cookie specification {{?RFC6265}} if they are required.
 * Certificates - Applications using HTTP MUST specify that TLS certificates are to be checked according to {{!RFC2818}} when HTTPS is used.
 
