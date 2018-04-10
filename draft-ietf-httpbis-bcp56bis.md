@@ -548,7 +548,7 @@ Delivery Networks and as part of server software.
 Assigning even a short freshness lifetime ({{?RFC7234}}, Section 4.2) -- e.g., 5 seconds -- allows
 a response to be reused to satisfy multiple clients, and/or a single client making the same request
 repeatedly. In general, if it is safe to reuse something, consider assigning a freshness lifetime;
-cache implementations take active measures to expire content intelligently when they are out of
+cache implementations take active measures to remove content intelligently when they are out of
 space, so "it will fill up the cache" is not a valid concern.
 
 Understand that stale responses (e.g., one with "Cache-Control: max-age=0") can be reused when the
