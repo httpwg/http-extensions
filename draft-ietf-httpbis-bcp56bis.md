@@ -478,7 +478,8 @@ code. {{?RFC7807}} provides one way for applications using HTTP to do so for err
 
 There are limited exceptions to this; for example, applications might use 201 (Created) or 404 (Not
 Found) to convey application semantics that are compatible with the generic HTTP semantics of those
-status codes. In general, though, applications should resist the temptation to map their semantics into fine-grained status codes.
+status codes. In general, though, applications should resist the temptation to map their semantics
+into fine-grained status codes.
 
 Because the set of registered HTTP status codes can expand, applications using HTTP should
 explicitly point out that clients ought to be able to handle all applicable status codes gracefully
