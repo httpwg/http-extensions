@@ -282,7 +282,7 @@ Content-Range: bytes 0-1234567/*
         Specifically, last-byte-pos is required in byte-range. So in order to preserve interoperability with existing HTTP clients, servers, proxies, and caches, this document proposes a mechanism for a client to indicate support for handling an indeterminate-length byte-range response, and a mechanism for a server to indicate if/when it's providing a indeterminate-length response.
       </t>
       <t>
-        A client can indicate support for handling indeterminate-length byte-range responses by providing a Very Large Value for the last-byte-pos in the byte-range request. For example, a client can perform a byte-range GET request of the form:
+        A client can indicate support for handling indeterminate-length byte-range responses by providing a very large value for the last-byte-pos in the byte-range request. For example, a client can perform a byte-range GET request of the form:
       </t>
 <figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
 GET /resource HTTP/1.1
@@ -484,9 +484,9 @@ Content-Range: bytes 1020000-1254567/*
 
     <section anchor="Security" title="Security Considerations">
         <t>
-      One potential issue with this recommendation is related to the use of very-large last-byte-pos values. Some client and server implementations may not be prepared to deal with byte position values of 2^^63 and beyond. So in applications where there's no expectation that the representation will ever exceed 2^^63, a value smaller than this value should be used as the Very Large last-byte-pos in a byte-seek request or content-range response.
+      One potential issue with this recommendation is related to the use of very-large last-byte-pos values. Some client and server implementations may not be prepared to deal with byte position values of 2^63 and beyond. So in applications where there's no expectation that the representation will ever exceed 2^63, a value smaller than this value should be used as the very large last-byte-pos in a byte-seek request or content-range response.
 
-      Also, some implementations (e.g. JavaScript-based clients and servers) are not able to represent all values beyond 2^^53. So similarly, if there's no expectation that a representation will ever exceed 2^^53 bytes, values smaller than this limit should be used for the last-byte-pos in byte-range requests.
+      Also, some implementations (e.g. JavaScript-based clients and servers) are not able to represent all values beyond 2^53. So similarly, if there's no expectation that a representation will ever exceed 2^53 bytes, values smaller than this limit should be used for the last-byte-pos in byte-range requests.
     </t>
     </section>
 </middle>
