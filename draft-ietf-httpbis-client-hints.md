@@ -102,7 +102,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 Clients control which Client Hints are sent in requests, based on their default settings, user configuration, and server preferences. The client and server can use an opt-in mechanism outlined below to negotiate which fields should be sent to allow for efficient content adaption, and optinally use additional mechanisms to negotiate delegation policies that control access of third parties to same fields.
 
-Implementers should be aware of the passive fingerprinting and network information disclosure implications when implementing support for Client Hints, and follow the considerations outlined in "Security Considerations" section of this document.
+Implementers should be aware of the passive fingerprinting implications when implementing support for Client Hints, and follow the considerations outlined in "Security Considerations" section of this document.
 
 
 ## Server Processing of Client Hints
@@ -220,20 +220,6 @@ The "Viewport-Width" request header field is a number that indicates the layout 
 If Viewport-Width occurs in a message more than once, the last value overrides all previous occurrences.
 
 
-## The Save-Data Header Field {#save-data}
-
-The "Save-Data" request header field consists of one or more tokens that indicate client's preference for reduced data usage, due to high transfer costs, slow connection speeds, or other reasons.
-
-~~~ abnf7230
-  Save-Data = sd-token *( OWS ";" OWS [sd-token] )
-  sd-token = token
-~~~
-
-This document defines the "on" sd-token value, which is used as a signal indicating explicit user opt-in into a reduced data usage mode on the client, and when communicated to origins allows them to deliver alternate content honoring such preference - e.g. smaller image and video resources, alternate markup, and so on. New token and extension token values can be defined by updates to this specification.
-
-If Save-Data occurs in a message more than once, the last value overrides all previous occurrences.
-
-
 # Examples
 
 For example, given the following request header fields:
@@ -264,7 +250,7 @@ Transmitted Client Hints header fields SHOULD NOT provide new information that i
 Implementers ought to consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
   - Implementers SHOULD restrict delivery of some or all Client Hints header fields to the opt-in origin only, unless the opt-in origin has explicitly delegated permission to another origin to request Client Hints header fields.
-  - Implementers MAY provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting or network information disclosure to users may be challenging.
+  - Implementers MAY provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting to users may be challenging.
   - Implementations specific to certain use cases or threat models MAY avoid transmitting some or all of Client Hints header fields. For example, avoid transmission of header fields that can carry higher risks of linkability.
 
 Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when site data, browsing history, browsing cache, or similar, are cleared.
@@ -272,7 +258,7 @@ Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persis
 
 # IANA Considerations
 
-This document defines the "Accept-CH", "DPR", "Save-Data", "Viewport-Width", and "Width" HTTP request fields, "Accept-CH", "Accept-CH-Lifetime", and "Content-DPR" HTTP response field, and registers them in the Permanent Message Header Fields registry.
+This document defines the "Accept-CH", "DPR", "Viewport-Width", and "Width" HTTP request fields, "Accept-CH", "Accept-CH-Lifetime", and "Content-DPR" HTTP response field, and registers them in the Permanent Message Header Fields registry.
 
 ## Accept-CH {#iana-accept-ch}
 - Header field name: Accept-CH
@@ -306,14 +292,6 @@ This document defines the "Accept-CH", "DPR", "Save-Data", "Viewport-Width", and
 - Specification document(s): {{dpr}} of this document
 - Related information: for Client Hints
 
-## Save-Data {#iana-save-data}
-- Header field name: Save-Data
-- Applicable protocol: HTTP
-- Status: standard
-- Author/Change controller: IETF
-- Specification document(s): {{save-data}} of this document
-- Related information: for Client Hints
-
 ## Viewport-Width {#iana-viewport-width}
 - Header field name: Viewport-Width
 - Applicable protocol: HTTP
@@ -329,6 +307,7 @@ This document defines the "Accept-CH", "DPR", "Save-Data", "Viewport-Width", and
 - Author/Change controller: IETF
 - Specification document(s): {{width}} of this document
 - Related information: for Client Hints
+
 
 --- back
 
@@ -381,9 +360,8 @@ Above example indicates that the cache key needs to include the value of the Wid
 * Issue 373: Bind CH opt-in to origin
 
 ## Since -06
-* None
+* Issue 524: Save-Data is now defined by NetInfo spec, dropping
 
 # Acknowledgements
 {:numbered="false"}
 Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Yoav Weiss, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.
-
