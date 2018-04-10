@@ -64,6 +64,8 @@ Discussion of this draft takes place on the HTTP working group mailing list (iet
 
 Working Group information can be found at <https://httpwg.github.io/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/header-structure>.
 
+Tests for implementations are collected at <https://github.com/httpwg/structured-header-tests>.
+
 --- middle
 
 # Introduction
