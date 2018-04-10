@@ -495,16 +495,18 @@ of an application's specification.
 
 ## HTTP Header Fields {#headers}
 
-Applications that use HTTP MAY define new HTTP header fields. See {{!RFC7231}}, Section 8.3.1 for
-guidelines to consider when minting new header fields.
-
-Typically, using HTTP header fields is appropriate in a few different situations:
+Applications that use HTTP MAY define new HTTP header fields. Typically, using HTTP header fields
+is appropriate in a few different situations:
 
 * Their content is useful to intermediaries (who often wish to avoid parsing the body), and/or
 * Their content is useful to generic HTTP software (e.g., clients, servers), and/or
 * It is not possible to include their content in the message body (usually because a format does not allow it).
 
 New header fields MUST be registered, as per {{!RFC7231}} and {{!RFC3864}}.
+
+See {{!RFC7231}}, Section 8.3.1 for guidelines to consider when minting new header fields.
+{{?I-D.ietf-httpbis-header-structure}} provides a common structure for new header fields, and
+avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
 
 It is RECOMMENDED that header field names be short (even when HTTP/2 header compression is in
 effect, there is an overhead) but appropriately specific. In particular, if a header field is
