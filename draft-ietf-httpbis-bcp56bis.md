@@ -194,9 +194,10 @@ HTTP define links in payloads, to allow flexibility in deployment.
 
 Using runtime links in this fashion has a number of other benefits. For example, navigating with a
 link allows a request to be routed to a different server without the overhead of a redirection,
-thereby supporting deployment across machines well. It becomes possible to "mix" different
-applications on the same server, and offers a natural path for extensibility, versioning and
-capability management.
+thereby supporting deployment across machines well.
+
+It also becomes possible to "mix" different applications on the same server, and offers a natural
+mechanism for extensibility, versioning and capability management.
 
 
 ## Rich Functionality
