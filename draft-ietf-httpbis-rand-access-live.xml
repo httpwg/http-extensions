@@ -291,7 +291,7 @@ Range: bytes=1230000-999999999999
 
 </artwork></figure>
       <t>
-        where the last-byte-pos in the Request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above. The client should provide a value much larger than the expected maximum size of the representation. See <xref target="Security"/> for range value considerations.
+        where the last-byte-pos in the Request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above, and much larger than the expected maximum size of the representation. See <xref target="Security"/> for range value considerations.
       </t>
       <t>
         In response, a server may indicate that it is supplying a continuously aggregating ("live") response by supplying the client request's last-byte-pos in the Content-Range response header field.
