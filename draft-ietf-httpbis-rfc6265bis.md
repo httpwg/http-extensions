@@ -667,7 +667,7 @@ If the "SameSite" attribute's value is "Strict", the cookie will only be sent
 along with "same-site" requests. If the value is "Lax", the cookie will be sent
 with same-site requests, and with "cross-site" top-level navigations, as
 described in {{strict-lax}}. If the "SameSite" attribute's value is neither of
-these, the cookie will be ignored.
+these, the attribute will be ignored.
 
 ### Cookie Name Prefixes
 
@@ -2049,6 +2049,11 @@ Specification document:
 
    *   Fixed the "site for cookies" algorithm to return something that makes
        sense: <https://github.com/httpwg/http-extensions/issues/302>
+
+## draft-ietf-httpbis-rfc6265bis-03
+
+*  Clarified handling of invalid SameSite values:
+   <https://github.com/httpwg/http-extensions/issues/389>
 
 # Acknowledgements
 {:numbered="false"}
