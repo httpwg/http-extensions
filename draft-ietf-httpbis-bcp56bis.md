@@ -59,8 +59,9 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 
 # Introduction
 
-HTTP {{!RFC7230}} is often used as a substrate for other application protocols. This is done for a
-variety of reasons, including:
+HTTP {{!RFC7230}} is often used as a substrate for other application protocols; this is sometimes
+referred to as creating "HTTP-based APIs", or just "HTTP APIs", although the latter is ambiguous.
+This is done for a variety of reasons, including:
 
 * familiarity by implementers, specifiers, administrators, developers and users,
 * availability of a variety of client, server and proxy implementations,
@@ -72,15 +73,15 @@ variety of reasons, including:
 
 In many cases, these protocols are ad hoc; they are intended for only deployment on the server
 side, and consumption by a limited set of clients. A body of practices and tools has arisen around
-defining such "HTTP APIs" that favours these conditions.
+defining HTTP-based APIs that favours these conditions.
 
 However, when such a protocol is standarised, it is typically deployed on multiple servers,
 implemented a number of times, and might be consumed by a broader variety of clients. Such
 diversity brings a different set of concerns, and tools and practices intended for a single-server
 deployment might not be suitable.
 
-In particular, standards-defined HTTP APIs need to more carefully consider how extensibility and
-evolution will be handled, how different deployment requirements will be accommodated, and how
+In particular, standards-defined HTTP-based APIs need to more carefully consider how extensibility
+and evolution will be handled, how different deployment requirements will be accommodated, and how
 clients will evolve with the API.
 
 At the same time, the IETF has a tradition of protocol reuse (e.g., {{?TELNET=RFC0854}} as a
