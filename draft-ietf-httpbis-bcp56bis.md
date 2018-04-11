@@ -448,6 +448,25 @@ to allow parsers to be generic; as per {{!RFC7231}}, Section 4.3.1, a body on a 
 and will be either ignored or rejected by generic HTTP software.
 
 
+### OPTIONS
+
+The OPTIONS method was defined for metadata retrieval, and is used both by WebDAV {{?RFC4918}} and
+CORS {{FETCH}}. Because HTTP-based APIs often need to retrieve metadata about resources, it is
+often considered for their use.
+
+However, OPTIONS does have significant limitations:
+
+* It isn't possible to link to the metadata with a simple URL, because OPTIONS is not the default GET method.
+* OPTIONS responses are not cacheable, because HTTP caches operate on representations of the resource (i.e., GET and HEAD). If OPTIONS responses are cached separately, their interaction with HTTP cache expiry, secondary keys and other mechanisms needs to be considered.
+* OPTIONS is "chatty" - always separating metadata out into a separate request increases the number of requests needed to interact with the application.
+* Implementation support for OPTIONS is not universal; some servers do not expose the ability to respond to OPTIONS requests without significant effort.
+
+Instead of OPTIONS, one of these alternative approaches might be more appropriate:
+
+* For server-wide metadata, create a well-known URI {{?RFC5785}}, or using an already existing one if it’s appropriate (e.g., HostMeta {{?RFC6415}}).
+* For metadata about a specific resource, use a Link response header, or a link in the representation format for that resource. See {{?RFC8288}}. Note that the Link header is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
+
+
 ## HTTP Status Codes
 
 The primary function of a HTTP status code is to convey semantics for the benefit of generic HTTP
