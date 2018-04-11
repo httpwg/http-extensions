@@ -41,8 +41,8 @@ informative:
 
 --- abstract
 
-HTTP is often used as a substrate for other application protocols. This document specifies best
-practices for these protocols' use of HTTP.
+HTTP is often used as a substrate for other application protocols (a.k.a. HTTP-based APIs). This
+document specifies best practices for these protocols' use of HTTP.
 
 This document obsoletes RFC 3205.
 
