@@ -206,7 +206,7 @@ Variants: Content-Encoding;gzip;br, Content-Language;en ;fr
 Variant-Key: gzip;identity, fr
 ~~~
 
-Indicates that this response can be used for requests whose Content-Encoding algorithm selects "gzip" or "identity", as long as the Content-Language algorithm selects "fr" -- perhaps because there is no gzip-compressed French representation.
+indicates that this response can be used for requests whose Content-Encoding algorithm selects "gzip" or "identity", as long as the Content-Language algorithm selects "fr" -- perhaps because there is no gzip-compressed French representation.
 
 This highlights an important aspect of Variant-Key; it is only used to indicate what request attributes are associated with the response containing it; this is different from headers like Content-Encoding, which indicate attributes of the response itself.
 
