@@ -179,7 +179,7 @@ In practice, implementation of Vary varies considerably. As a result, cache effi
 
 # The "Variant-Key" HTTP Header Field {#variant-key}
 
-The Variant-Key HTTP response header field is used to indicate the value(s) from the Variants header field that identify the representation it occurs within.
+The Variant-Key HTTP response header field is used to indicate the values from the Variants header field that identify the representation it occurs within.
 
 ~~~
 Variant-Key      =  available-values
