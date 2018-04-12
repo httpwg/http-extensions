@@ -225,7 +225,7 @@ Given stored-headers, a set of headers from a stored response, a normalised list
    1. Remove all whitespace from value.
    2. Let items be the result of splitting value on ";".
    3. append items to variant-keys.
-5. Return result of running Compute Possible Keys ({{find}}) on variant-keys, an empty string and an empty list.
+5. Return the result of running Compute Possible Keys ({{find}}) on variant-keys, an empty string and an empty list.
 
 
 # Cache Behaviour {#cache}
