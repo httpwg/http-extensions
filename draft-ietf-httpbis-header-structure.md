@@ -200,6 +200,8 @@ Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK=*
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
 
+Parsers MUST support dictionaries containing at least 1024 key/value pairs.
+
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
@@ -237,6 +239,8 @@ For example, a header field whose value is defined as a list of strings could lo
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
+Parsers MUST support lists containing at least 1024 members.
+
 
 ### Parsing a List from Text {#parse-list}
 
@@ -272,6 +276,8 @@ For example,
 ~~~ example
 Example-ParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
 ~~~
+
+Parsers MUST support parameterised lists containing at least 1024 members, and support members with at least 256 parameters.
 
 
 ### Parsing a Parameterised List from Text {#parse-param-list}
@@ -432,6 +438,8 @@ Unicode is not directly supported in Structured Headers, because it causes a num
 
 When it is necessary for a field value to convey non-ASCII string content, binary content ({{binary}}) SHOULD be specified, along with a character encoding (preferably, UTF-8).
 
+Parsers MUST support strings with at least 1024 characters.
+
 
 ### Parsing a String from Text {#parse-string}
 
@@ -508,6 +516,8 @@ For example, a header whose value is defined as binary content could look like:
 ~~~ example
 Example-BinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
 ~~~
+
+Parsers MUST support binary content with at least 16384 octets after decoding.
 
 
 ### Parsing Binary Content from Text {#parse-binary}
