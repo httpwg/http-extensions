@@ -183,12 +183,12 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are unordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be from 1 to 1024 members, and keys are required to be unique.
+Dictionaries are unordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
 
 In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST cause parsing to fail.
 
 ~~~ abnf
-dictionary  = dict-member 0*1023( OWS "," OWS dict-member )
+dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member = identifier "=" item
 ~~~
 
@@ -212,23 +212,22 @@ Given an ASCII string input_string, return a mapping of (identifier, item). inpu
    3. Consume a "=" from input_string; if none is present, fail parsing.
    4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
    5. Add key this_key with value this_value to dictionary.
-   6. If dictionary has more than 1024 members, fail parsing.
-   7. Discard any leading OWS from input_string.
-   8. If input_string is empty, return dictionary.
-   9. Consume a COMMA from input_string; if no comma is present, fail parsing.
-   0. Discard any leading OWS from input_string.
-   1. If input_string is empty, fail parsing.
+   6. Discard any leading OWS from input_string.
+   7. If input_string is empty, return dictionary.
+   8. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   9. Discard any leading OWS from input_string.
+   0. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
 
 
 ## Lists {#list}
 
-Lists are arrays of items ({{item}}) with one to 1024 members.
+Lists are arrays of items ({{item}}) with one or more members.
 
 In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
 
 ~~~ abnf
-list = list-member 0*1023( OWS "," OWS list-member )
+list = list-member *( OWS "," OWS list-member )
 list-member = item
 ~~~
 
@@ -247,26 +246,25 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 2. While input_string is not empty:
    1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
    2. Append item to items.
-   3. If items has more than 1024 members, fail parsing.
-   4. Discard any leading OWS from input_string.
-   5. If input_string is empty, return items.
-   6. Consume a COMMA from input_string; if no comma is present, fail parsing.
-   7. Discard any leading OWS from input_string.
-   8. If input_string is empty, fail parsing.
+   3. Discard any leading OWS from input_string.
+   4. If input_string is empty, return items.
+   5. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   6. Discard any leading OWS from input_string.
+   7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
 
 
 ## Parameterised Lists {#param}
 
-Parameterised Lists are arrays of a parameterised identifiers with 1 to 256 members.
+Parameterised Lists are arrays of a parameterised identifiers.
 
-A parameterised identifier is an identifier ({{identifier}}) with up to 256 parameters, each parameter having a identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+A parameterised identifier is an identifier ({{identifier}}) with an optional set of parameters, each parameter having a identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
 
 In the textual HTTP serialisation, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value.
 
 ~~~ abnf
-param-list = param-id 0*255( OWS "," OWS param-id )
-param-id   = identifier 0*256( OWS ";" OWS identifier [ "=" item ] )
+param-list = param-id *( OWS "," OWS param-id )
+param-id   = identifier *( OWS ";" OWS identifier [ "=" item ] )
 ~~~
 
 For example,
@@ -284,12 +282,11 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
 2. While input_string is not empty:
    1. Let item be the result of running Parse Parameterised Identifier from Text ({{parse-param-id}}) with input_string.
    2. Append item to items.
-   3. If items has more than 256 members, fail parsing.
-   4. Discard any leading OWS from input_string.
-   5. If input_string is empty, return items.
-   6. Consume a COMMA from input_string; if no comma is present, fail parsing.
-   7. Discard any leading OWS from input_string.
-   8. If input_string is empty, fail parsing.
+   3. Discard any leading OWS from input_string.
+   4. If input_string is empty, return items.
+   5. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   6. Discard any leading OWS from input_string.
+   7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
 
 
@@ -310,8 +307,7 @@ Given an ASCII string input_string, return a identifier with an mapping of param
    8. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
-   9. If parameters has more than 255 members, fail parsing.
-   0. Insert (param_name, param_value) into parameters.
+   9. Insert (param_name, param_value) into parameters.
 4. Return the tuple (primary_identifier, parameters).
 
 
@@ -413,12 +409,12 @@ See {{parse-number}} for the parsing algorithm for floats.
 
 ## Strings {#string}
 
-Abstractly, strings are up to 1024 printable ASCII {{!RFC0020}} characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines, carriage returns, etc.
+Abstractly, strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
 The textual HTTP serialisation of strings uses a backslash ("\\") to escape double quotes and backslashes in strings.
 
 ~~~ abnf
-string    = DQUOTE 0*1024(chr) DQUOTE
+string    = DQUOTE *(chr) DQUOTE
 chr       = unescaped / escaped
 unescaped = %x20-21 / %x23-5B / %x5D-7E
 escaped   = "\" ( DQUOTE / "\" )
@@ -454,13 +450,12 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
          3. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
    4. Else, append char to output_string.
-   5. If output_string contains more than 1024 characters, fail parsing.
 6. Otherwise, fail parsing.
 
 
 ## Identifiers {#identifier}
 
-Identifiers are short (up to 256 characters) textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation.
+Identifiers are short (one to 256 characters) textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation.
 
 ~~~ abnf
 identifier = lcalpha 0*255( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
@@ -489,7 +484,7 @@ Given an ASCII string input_string, return a identifier. input_string is modifie
 
 ## Binary Content {#binary}
 
-Arbitrary binary content up to 16384 bytes in size can be conveyed in Structured Headers.
+Arbitrary binary content can be conveyed in Structured Headers.
 
 The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("\*") to delimit from other content.
 
@@ -504,7 +499,7 @@ not be possible with some base64 implementations.
 This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
 ~~~ abnf
-binary = "*" 0*21846(base64) "*"
+binary = "*" *(base64) "*"
 base64 = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
@@ -523,9 +518,8 @@ Given an ASCII string input_string, return binary content. input_string is modif
 2. Discard the first character of input_string.
 3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*". If there is not a "\*" character before the end of input_string, fail parsing.
 4. Consume the "\*" character at the beginning of input_string.
-5. If b64_content is has more than 21846 characters, fail parsing.
-6. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour in {{binary}}).
-7. Return binary_content.
+5. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour in {{binary}}).
+6. Return binary_content.
 
 
 
@@ -551,6 +545,7 @@ of structured headers. In some circumstances, this will cause parsing to fail, b
 ## Since draft-ietf-httpbis-header-structure-04
 
 * Remove identifiers from item.
+* Remove most limits on sizes.
 
 
 ## Since draft-ietf-httpbis-header-structure-03
