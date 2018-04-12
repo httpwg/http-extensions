@@ -79,7 +79,7 @@ Provided that the cache has full knowledge of the semantics of Accept-Language a
 
 This specification introduces the HTTP Variants response header field ({{variants}}) to enumerate the available variant representations on the origin server, to provide clients and caches with enough information to properly satisfy requests -- either by selecting a response from cache or by forwarding the request towards the origin -- by following the algorithm defined in {{cache}}.
 
-Its companion the Variant-Key response header field ({{variant-key}}) indicates which representation was selected, so that it can be reliably reused in the future. When this specification is in use, the example above might become:
+Its companion Variant-Key response header field ({{variant-key}}) indicates the applicable key(s) that the response is associated with, so that it can be reliably reused in the future. When this specification is in use, the example above might become:
 
 ~~~
 GET /foo HTTP/1.1
