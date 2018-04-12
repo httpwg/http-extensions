@@ -358,7 +358,9 @@ point.
 
 ### URL Schemes {#scheme}
 
-Applications that use HTTP will typically employ the "http" and/or "https" URL schemes. "https" is preferred to provide authentication, integrity and confidentiality, as well as mitigate pervasive monitoring attacks {{?RFC7258}}.
+Applications that use HTTP will typically employ the "http" and/or "https" URL schemes. "https" is
+RECOMMENDED to provide authentication, integrity and confidentiality, as well as mitigate pervasive
+monitoring attacks {{?RFC7258}}.
 
 However, application-specific schemes can be defined as well.
 
