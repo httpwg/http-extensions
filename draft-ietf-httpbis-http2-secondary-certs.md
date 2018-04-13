@@ -854,6 +854,8 @@ this document.
 
 - All frames sent on stream zero; replaced `AUTOMATIC_USE` on `CERTIFICATE` with
   `UNSOLICITED` on `USE_CERTIFICATE`. (#482,#566)
+- `CERTIFICATE_NEEDED` and `USE_CERTIFICATE` can reference stream zero.
+  (#564,#586)
 
 ## Since draft-bishop-httpbis-http2-additional-certs-05:
 
