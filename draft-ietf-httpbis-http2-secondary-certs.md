@@ -333,7 +333,7 @@ certificates are available for reference by future `USE_CERTIFICATE` frames.
 Certificates supplied by servers can be considered by clients without further
 action by the server. A server SHOULD NOT send certificates which do not cover
 origins which it is prepared to service on the current connection, but MAY use
-the ORIGIN frame [?RFC8336] to indicate that not all covered origins will be
+the ORIGIN frame {{?RFC8336}} to indicate that not all covered origins will be
 served.
 
 ~~~
