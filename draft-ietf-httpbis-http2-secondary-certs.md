@@ -856,7 +856,8 @@ this document.
 
 ## Since draft-ietf-httpbis-http2-secondary-certs-00:
 
-Nothing yet.
+- All frames sent on stream zero; replaced `AUTOMATIC_USE` on `CERTIFICATE` with
+  `UNSOLICITED` on `USE_CERTIFICATE`. (#482,#566)
 
 ## Since draft-bishop-httpbis-http2-additional-certs-05:
 
