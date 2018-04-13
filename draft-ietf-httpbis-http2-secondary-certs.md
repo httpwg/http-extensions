@@ -39,7 +39,6 @@ normative:
   I-D.ietf-tls-exported-authenticator:
 
 informative:
-  I-D.ietf-httpbis-origin-frame:
   RFC7838:
 
 
@@ -99,9 +98,9 @@ address of the server, they are considered authoritative just as if DNS resolved
 the origin itself to that address. However, the server's one TLS certificate is
 still required to contain the name of each origin in question.
 
-[I-D.ietf-httpbis-origin-frame] relaxes the requirement to perform the DNS
-lookup if already connected to a server with an appropriate certificate which
-claims support for a particular origin.
+{{?RFC8336}} relaxes the requirement to perform the DNS lookup if already
+connected to a server with an appropriate certificate which claims support for a
+particular origin.
 
 Servers which host many origins often would prefer to have separate certificates
 for some sets of origins. This may be for ease of certificate management (the
@@ -366,11 +365,10 @@ the TLS certificate provided contains the new origin as well, and if so, reuse
 the connection.
 
 If the TLS certificate does not contain the new origin, but the server has
-claimed support for that origin (with an ORIGIN frame, see
-[I-D.ietf-httpbis-origin-frame]) and advertised support for HTTP-layer
-certificates (see {{setting}}), the client MAY send a `CERTIFICATE_REQUEST`
-frame describing the desired origin.  Servers SHOULD provide a corresponding
-certificate if one is available.
+claimed support for that origin (with an ORIGIN frame, see {{?RFC8336}}) and
+advertised support for HTTP-layer certificates (see {{setting}}), the client MAY
+send a `CERTIFICATE_REQUEST` frame describing the desired origin.  Servers
+SHOULD provide a corresponding certificate if one is available.
 
 If the server does not have the desired certificate, it MUST \[see issue #564].
 In this case, or if the server has not advertised support for HTTP-layer
@@ -720,9 +718,8 @@ This mechanism could increase the impact of a key compromise. Rather than
 needing to subvert DNS or IP routing in order to use a compromised certificate,
 a malicious server now only needs a client to connect to *some* HTTPS site under
 its control in order to present the compromised certificate. As recommended in
-[I-D.ietf-httpbis-origin-frame], clients opting not to consult DNS ought to
-employ some alternative means to increase confidence that the certificate is
-legitimate.
+{{?RFC8336}}, clients opting not to consult DNS ought to employ some alternative
+means to increase confidence that the certificate is legitimate.
 
 As noted in the Security Considerations of
 [I-D.ietf-tls-exported-authenticator], it difficult to formally prove that an
