@@ -350,9 +350,10 @@ Client                                      Server
 
 Likewise, either party can supply a `CERTIFICATE_REQUEST` that outlines
 parameters of a certificate they might request in the future.  Upon receipt of a
-`CERTIFICATE_REQUEST`, servers SHOULD provide a corresponding certificate.
-Clients MAY wait for a `CERTIFICATE_NEEDED` frame to assist in associating the
-certificate request with a particular HTTP transition.
+`CERTIFICATE_REQUEST`, endpoints SHOULD provide a corresponding certificate in
+anticipation of a request shortly being blocked. Clients MAY wait for a
+`CERTIFICATE_NEEDED` frame to assist in associating the certificate request with
+a particular HTTP transition.
 
 ## Requiring certificate authentication {#cert-challenge}
 
@@ -367,19 +368,23 @@ the connection.
 If the TLS certificate does not contain the new origin, but the server has
 claimed support for that origin (with an ORIGIN frame, see {{?RFC8336}}) and
 advertised support for HTTP-layer certificates (see {{setting}}), the client MAY
-send a `CERTIFICATE_REQUEST` frame describing the desired origin.  Servers
-SHOULD provide a corresponding certificate if one is available.
+send a `CERTIFICATE_REQUEST` frame describing the desired origin.  The client
+then sends a `CERTIFICATE_NEEDED` frame for stream zero referencing the request,
+indicating that the connection cannot be used for that origin until the
+certificate is provided.
 
-If the server does not have the desired certificate, it MUST \[see issue #564].
-In this case, or if the server has not advertised support for HTTP-layer
-certificates, the client MUST NOT send any requests for resources in that origin
-on the current connection.
+If the server does not have the desired certificate, it MUST send an empty
+`USE_CERTIFICATE` frame for stream zero.  In this case, or if the server has not
+advertised support for HTTP-layer certificates, the client MUST NOT send any
+requests for resources in that origin on the current connection.
 
 ~~~
 Client                                      Server
    <----------------------- (stream 0) ORIGIN --
    -- (stream 0) CERTIFICATE_REQUEST ---------->
+   -- (stream 0) CERTIFICATE_NEEDED (S=0) ----->
    <------------------ (stream 0) CERTIFICATE --
+   <-------- (stream 0) USE_CERTIFICATE (S=0) --
    -- (stream N) GET /from-new-origin --------->
    <----------------------- (stream N) 200 OK --
 ~~~
@@ -482,7 +487,9 @@ required certificate). To reduce the risk of client confusion, servers SHOULD
 NOT have multiple outstanding `CERTIFICATE_NEEDED` frames for the same stream at
 any given time.
 
-Clients MUST NOT send multiple `CERTIFICATE_NEEDED` frames for the same stream.
+Clients MUST only send multiple `CERTIFICATE_NEEDED` frames for stream zero.
+Multiple `CERTIFICATE_NEEDED` frames on any other stream MUST be considered
+a stream error of type `PROTOCOL_ERROR`.
 
 The `CERTIFICATE_NEEDED` frame MUST NOT be sent to a peer which has not
 advertised support for HTTP-layer certificate authentication.
