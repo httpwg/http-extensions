@@ -45,24 +45,10 @@ informative:
 
 --- abstract
 
-TLS provides fundamental mutual authentication services for HTTP, supporting up
-to one server certificate and up to one client certificate associated to the
-session to prove client and server identities as necessary. This draft provides
-mechanisms for providing additional such certificates at the HTTP layer when
-these constraints are not sufficient.
-
-Many HTTP servers host content from several origins. HTTP/2 permits clients to
-reuse an existing HTTP connection to a server provided that the secondary origin
-is also in the certificate provided during the TLS handshake.
-
-In many cases, servers will wish to maintain separate certificates for different
-origins but still desire the benefits of a shared HTTP connection. Similarly,
-servers may require clients to present authentication, but have different
-requirements based on the content the client is attempting to access.
-
-This document describes how TLS exported authenticators can be used to provide
-proof of ownership of additional certificates to the HTTP layer to support both
-scenarios.
+A use of TLS Exported Authenticators is described which enables HTTP/2 clients
+and servers to offer additional certificate-based credentials after the
+connection is established. The means by which these credentials are used with
+requests is defined.
 
 --- note_Note_to_Readers
 
@@ -80,7 +66,7 @@ code and issues list for this draft can be found at
 
 HTTP clients need to know that the content they receive on a connection comes
 from the origin that they intended to retrieve in from. The traditional form of
-server authentication in HTTP has been in the form of X.509 certificates
+server authentication in HTTP has been in the form of a single X.509 certificate
 provided during the TLS [RFC5246][I-D.ietf-tls-tls13] handshake.
 
 Many existing HTTP [RFC7230] servers also have authentication requirements for
@@ -92,6 +78,12 @@ the underlying TLS layer.
 TLS 1.2 [RFC5246] supports one server and one client certificate on a
 connection. These certificates may contain multiple identities, but only one
 certificate may be provided.
+
+Many HTTP servers host content from several origins. HTTP/2 permits clients to
+reuse an existing HTTP connection to a server provided that the secondary origin
+is also in the certificate provided during the TLS handshake.  In many cases,
+servers choose to maintain separate certificates for different origins but
+still desire the benefits of a shared HTTP connection.
 
 ## Server Certificate Authentication
 
