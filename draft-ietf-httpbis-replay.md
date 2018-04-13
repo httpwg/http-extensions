@@ -370,7 +370,7 @@ correctly handling replays of the same requests.
 # IANA Considerations
 
 This document registers the `Early-Data` header field in the "Message Headers"
-registry {{!HEADERS=RFC3864}}.
+registry located at <https://www.iana.org/assignments/message-headers>.
 
 Header field name:
 
