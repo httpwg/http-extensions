@@ -80,12 +80,12 @@ implemented a number of times, and might be consumed by a broader variety of cli
 diversity brings a different set of concerns, and tools and practices intended for a single-server
 deployment might not be suitable.
 
-In particular, standards-defined HTTP-based APIs need to more carefully consider how extensibility
-and evolution will be handled, how different deployment requirements will be accommodated, and how
-clients will evolve with the API.
+In particular, HTTP-based APIs defined by standards need to more carefully consider how
+extensibility and evolution will be handled, how different deployment requirements will be
+accommodated, and how clients will evolve with the API.
 
-At the same time, the IETF has a tradition of protocol reuse (e.g., {{?TELNET=RFC0854}} as a
-substrate for {{?FTP=RFC0959}} and {{?SMTP=RFC2821}}; HTTP as a substrate for {{?IPP=RFC8011}} and
+The IETF has a tradition of protocol reuse (e.g., {{?TELNET=RFC0854}} as a substrate for
+{{?FTP=RFC0959}} and {{?SMTP=RFC2821}}; HTTP as a substrate for {{?IPP=RFC8011}} and
 {{?RESTCONF=RFC8040}}). Because HTTP is extensible in many ways, a number of questions arise, such
 as:
 
@@ -132,7 +132,7 @@ HTTP specifications in some manner. For example, an application might wish to av
 parts of the message format, but change others; or, it might want to use a different set of methods.
 
 Such applications are referred to as "protocols based upon HTTP" in this document. These have more
-freedom to modify protocol operation, but are also likely to lose at least a portion of the
+freedom to modify protocol operations, but are also likely to lose at least a portion of the
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
 and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
 
@@ -371,7 +371,7 @@ caveats to keep in mind:
 
 * Existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
 
-* Because URLs occur in and are generated in HTTP artefacts commonly, often without human intervention (e.g., in the `Location` response header), it can be difficult to assure that the new scheme is used consistently.
+* Because URLs occur in HTTP artefacts commonly, often being generated automatically (e.g., in the `Location` response header), it can be difficult to assure that the new scheme is used consistently.
 
 * The resources identified by the new scheme will still be available using "http" and/or "https" URLs. Those URLs can "leak" into use, which can present security and operability issues. For example, using a new scheme to assure that requests don't get sent to a "normal" Web site is likely to fail.
 
@@ -406,7 +406,7 @@ Applications that use HTTP MUST confine themselves to using registered HTTP meth
 POST, PUT, DELETE, and PATCH.
 
 New HTTP methods are rare; they are required to be registered with IETF Review (see {{!RFC7232}}),
-and are also required to be *generic*. That means that they need to be potentially applicable to
+and are also required to be generic. That means that they need to be potentially applicable to
 all resources, not just those of one application.
 
 While historically some applications (e.g., {{?RFC4791}}) have defined non-generic methods,
@@ -679,8 +679,8 @@ possible, whereby an attacker can inject code into the browser and access data a
 that origin.
 
 This is only a small sample of the kinds of issues that applications using HTTP must consider.
-Generally, the best approach is to consider the application *as* a Web application, and to follow
-best practices for their secure development.
+Generally, the best approach is to consider the application actually as a Web application, and to
+follow best practices for their secure development.
 
 A complete enumeration of such practices is out of scope for this document, but some considerations
 include:
