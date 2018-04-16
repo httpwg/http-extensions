@@ -192,7 +192,7 @@ Therefore, Variant-Key MUST be the same length (in comma-separated members) as V
 For example:
 
 ~~~
-Variants: Content-Encoding;gzip;br, Content-Language;en ;fr
+Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
 Variant-Key: gzip, fr
 ~~~
 
@@ -353,7 +353,7 @@ HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
 Cache-Control: max-age=3600
-Variants: Content-Language;en;de
+Variants: Accept-Language;en;de
 Variant-Key: en
 Vary: Accept-Language
 Transfer-Encoding: chunked
@@ -384,8 +384,8 @@ HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
 Content-Encoding: br
-Variants: Content-Language;en;jp;de
-Variants: Content-Encoding;br;gzip
+Variants: Accept-Language;en;jp;de
+Variants: Accept-Encoding;br;gzip
 Variant-Key: en, br
 Vary: Accept-Language, Accept-Encoding
 Transfer-Encoding: chunked
@@ -398,7 +398,8 @@ Upon a subsequent request, if both selection algorithms return a stored represen
 
 ### Partial Coverage {#partial}
 
-Now, consider the previous example, but where only one of the Vary'd axes is listed in Variants:
+Now, consider the previous example, but where only one of the Vary'd axes (Content-Encoding) is
+listed in Variants:
 
 ~~~
 GET /bar HTTP/1.1
@@ -410,7 +411,7 @@ HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
 Content-Encoding: br
-Variants: Content-Encoding;br;gzip
+Variants: Accept-Encoding;br;gzip
 Variant-Key: br
 Vary: Accept-Language, Accept-Encoding
 Transfer-Encoding: chunked
