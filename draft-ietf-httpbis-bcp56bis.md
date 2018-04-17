@@ -519,7 +519,7 @@ of an application's specification.
 
 The 3xx series of status codes specified in {{!RFC7231}}, Section 6.4 are used to direct the user
 agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and
-308, all of which use the Location response header field to indicate where the client should send
+308 ({{RFC7538}}), all of which use the Location response header field to indicate where the client should send
 the request to.
 
 There are two ways that this group of status codes differ:
