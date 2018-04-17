@@ -390,7 +390,7 @@ Applications that use HTTP can use the applicable default port (80 for HTTP, 443
 they can be deployed upon other ports. This decision can be made at deployment time, or might be
 encouraged by the application's specification (e.g., by registering a port for that application).
 
-In either case, non-default ports will need to be reflected in the authority of all URLs for that
+If a non-default port is used, it needs to be reflected in the authority of all URLs for that
 resource; the only mechanism for changing a default port is changing the scheme (see {{scheme}}).
 
 Using a port other than the default has privacy implications (i.e., the protocol can now be
