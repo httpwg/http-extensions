@@ -544,7 +544,7 @@ code. However, they aren't required to do so; therefore, if an application using
 redirects to be automatically followed, it needs to explicitly specify the circumstances when this
 is required.
 
-Applications using HTTP SHOULD specify that 301 and 32 requests change the request method from POST
+Applications using HTTP SHOULD specify that 301 and 302 requests change the request method from POST
 (but no other method) to GET, to be compatible with browsers.
 
 Generally, when a redirected request is made, its header fields are copied from the original
