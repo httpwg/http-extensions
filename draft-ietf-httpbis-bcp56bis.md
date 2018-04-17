@@ -305,8 +305,7 @@ HTTP does not mandate some behaviours that have nevertheless become very common;
 explicitly specified by applications using HTTP, there may be confusion and interoperability
 problems. This section recommends default handling for these mechanisms.
 
-* Redirect handling - Applications using HTTP SHOULD specify that 3xx redirect status codes be followed automatically. See {{!RFC7231}}, Section 6.4.
-* Redirect methods - Applications using HTTP SHOULD specify that 301 and 302 redirect status codes rewrite the POST method to GET, in order to be compatible with browsers. See {{!RFC7231}}, Section 6.4.
+* Redirect handling - Applications need to specify how redirects are expected to be handled; see {{redirects}}.
 * Cookies - Applications using HTTP MUST explicitly reference the Cookie specification {{?RFC6265}} if they are required.
 * Certificates - Applications using HTTP MUST specify that TLS certificates are to be checked according to {{!RFC2818}} when HTTPS is used.
 
@@ -514,6 +513,46 @@ all resources, not just to those of one application.
 When authors believe that a new status code is required, they are encouraged to engage with the
 HTTP community early, and document their proposal as a separate HTTP extension, rather than as part
 of an application's specification.
+
+
+### Redirection {#redirects}
+
+The 3xx series of status codes specified in {{!RFC7231}}, Section 6.4 are used to direct the user
+agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and
+308, all of which use the Location response header field to indicate where the client should send
+the request to.
+
+There are two ways that this group of status codes differ:
+
+* Whether they are permanent or temporary. Permanent redirects can be used to update links stored
+  in the client (e.g., bookmarks), whereas temporary ones are not. Note that this has no effect on
+  HTTP caching; it is completely separate.
+
+* Whether they allow the redirected request to change the request method from POST to GET. Web
+  browsers generally do change POST to GET for 301 and 302; therefore, 308 and 307 were created to
+  allow redirection without changing the method.
+
+This table summarises their relationships:
+
+|                                                     | Permanent | Temporary |
+| Allows changing the request method from POST to GET | 301       | 302       |
+| Does not allow changing the request method          | 308       | 307       |
+
+As noted in {{?RFC7231}}, a user agent is allowed to automatically follow a 3xx redirect that has a
+Location response header field, even if they don't understand the semantics of the specific status
+code. However, they aren't required to do so; therefore, if an application using HTTP desires
+redirects to be automatically followed, it needs to explicitly specify the circumstances when this
+is required.
+
+Applications using HTTP SHOULD specify that 301 and 32 requests change the request method from POST
+(but no other method) to GET, to be compatible with browsers.
+
+Generally, when a redirected request is made, its header fields are copied from the original
+request's. However, they can be modified by various mechanisms; e.g., sent Authorization
+({{?RFC7235}}) and Cookie ({{?RFC6265}}) headers will change if they origin (and sometimes path) of
+the request changes. Applications using HTTP SHOULD specify if any request headers need to be
+modified or removed upon a redirect; however, this behaviour cannot be relied upon, since a generic
+client (like a browser) will be unaware of such requirements.
 
 
 ## HTTP Header Fields {#headers}
