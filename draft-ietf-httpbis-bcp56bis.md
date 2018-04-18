@@ -251,12 +251,14 @@ can specify that it uses HTTP like this:
 When specifying examples of protocol interactions, applications SHOULD document both the request
 and response messages, with full headers, preferably in HTTP/1.1 format. For example:
 
-~~~
+~~~ example
 GET /thing HTTP/1.1
 Host: example.com
 Accept: application/things+json
 User-Agent: Foo/1.0
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: application/things+json
 Content-Length: 500
