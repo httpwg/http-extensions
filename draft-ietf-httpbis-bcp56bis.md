@@ -800,6 +800,29 @@ another, to avoid leaking private information. As a result, applications that wi
 cross-origin data to browsers will need to implement the CORS protocol; see {{FETCH}}.
 
 
+## Server Push {#server-push}
+
+HTTP/2 adds the ability for servers to "push" request/response pairs to clients in {{?RFC7540}},
+Section 8.2. While server push seems like a natural fit for many common application semantics
+(e.g., "fanout" and publish/subscribe), a few caveats should be noted:
+
+* Server push is hop-by-hop; that is, it is not automatically forwarded by intermediaries. As a result, it might not work easily (or at all) with proxies, reverse proxies and Content Delivery Networks.
+
+* Server push can have negative performance impact on HTTP when used incorrectly; in particular, if there is contention with resources that have actually been requested by the client.
+
+* There are several ambiguities about the interaction of Server Push with other HTTP features (e.g., caching, validation). As a result, it might be implemented differently in different clients, and capabilities might vary.
+
+* APIs for Server Push are currently unavailable in some implementations, and vary widely in others. In particular, there is no current browser API for it.
+
+* Server push is not supported in HTTP/1.1 or HTTP/1.0, and therefore will not transit hops over those protocols.
+
+* Server push does not form part of the "core" semantics of HTTP, and therefore might not be supported by future versions of the protocol.
+
+Applications wishing to optimise cases where the client can perform work related to requests before
+the full response is available (e.g., fetching links for things likely to be contained within)
+might benefit from using the 103 (Early Hints) status code; see {{?RFC8297}}.
+
+
 # IANA Considerations
 
 This document has no requirements for IANA.
