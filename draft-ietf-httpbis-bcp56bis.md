@@ -206,7 +206,8 @@ mechanism for extensibility, versioning and capability management.
 The simplest possible use of HTTP is to POST data to a single URL, thereby effectively tunnelling
 through the protocol.
 
-This "RPC" style of communication does get some benefit from using HTTP -- namely, message framing and the availability of implementations -- but fails to realise many others when used exclusively:
+This "RPC" style of communication does get some benefit from using HTTP -- namely, message framing
+and the availability of implementations -- but fails to realise many others when used exclusively:
 
 * Caching for server scalability, latency and bandwidth reduction, and reliability;
 * Granularity of access control (through use of a rich space of URLs);
@@ -331,7 +332,9 @@ standards cannot usurp this space, since it might conflict with existing resourc
 implementation and deployment.
 
 In other words, applications that use HTTP shouldn't associate application semantics with specific
-URL paths on arbitrary servers. Doing so inappropriately conflates the identity of the resource (its URL) with the capabilities that resource supports, bringing about many of the same interoperability problems that {{?RFC4367}} warns of.
+URL paths on arbitrary servers. Doing so inappropriately conflates the identity of the resource
+(its URL) with the capabilities that resource supports, bringing about many of the same
+interoperability problems that {{?RFC4367}} warns of.
 
 For example, specifying that a "GET to the URL /foo retrieves a bar document" is bad practice.
 Likewise, specifying "The widget API is at the path /bar" violates {{!RFC7320}}.
@@ -521,8 +524,8 @@ of an application's specification.
 
 The 3xx series of status codes specified in {{!RFC7231}}, Section 6.4 are used to direct the user
 agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and
-308 ({{?RFC7538}}), all of which use the Location response header field to indicate where the client should send
-the request to.
+308 ({{?RFC7538}}), all of which use the Location response header field to indicate where the
+client should send the request to.
 
 There are two ways that this group of status codes differ:
 
@@ -546,8 +549,8 @@ code. However, they aren't required to do so; therefore, if an application using
 redirects to be automatically followed, it needs to explicitly specify the circumstances when this
 is required.
 
-Applications using HTTP SHOULD specify that 301 and 302 responses change the subsequent request method from POST
-(but no other method) to GET, to be compatible with browsers.
+Applications using HTTP SHOULD specify that 301 and 302 responses change the subsequent request
+method from POST (but no other method) to GET, to be compatible with browsers.
 
 Generally, when a redirected request is made, its header fields are copied from the original
 request's. However, they can be modified by various mechanisms; e.g., sent Authorization
@@ -642,7 +645,8 @@ Vary: Accept-Encoding
 [content]
 ~~~
 
-can be stored for 60 seconds by both private and shared caches, can be revalidated with If-None-Match, and varies on the Accept-Encoding request header field.
+can be stored for 60 seconds by both private and shared caches, can be revalidated with
+If-None-Match, and varies on the Accept-Encoding request header field.
 
 In some situations, responses without explicit cache directives (e.g., Cache-Control or Expires)
 will be stored and served using a heuristic freshness lifetime; see {{?RFC7234}}, Section 4.2.2. As
