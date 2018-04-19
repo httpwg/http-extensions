@@ -193,12 +193,19 @@ practice in standards.
 Instead of statically defining URL components like paths, it is RECOMMENDED that applications using
 HTTP define links in payloads, to allow flexibility in deployment.
 
-Using runtime links in this fashion has a number of other benefits. For example, navigating with a
-link allows a request to be routed to a different server without the overhead of a redirection,
-thereby supporting deployment across machines well.
+Using runtime links in this fashion has a number of other benefits -- especially when an
+application is to have multiple implementations and/or deployments (as is often the case for those
+that are standardised).
 
-It also becomes possible to "mix" different applications on the same server, and offers a natural
-mechanism for extensibility, versioning and capability management.
+For example, navigating with a link allows a request to be routed to a different server without the
+overhead of a redirection, thereby supporting deployment across machines well.
+
+It also becomes possible to "mix and match" different applications on the same server, and offers a
+natural mechanism for extensibility, versioning and capability management, since the document
+containing the links can also contain information about their targets.
+
+Using links also offers a form of cache invalidation that's seen on the Web; when a resource's
+state changes, the application can change its link to it so that a fresh copy is always fetched.
 
 
 ## Rich Functionality
