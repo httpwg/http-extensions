@@ -149,7 +149,7 @@ Section 4.2), it MUST be resolved ([RFC3986], Section 5) before being
 used.
 ~~~
 
-Note that specifications using Structured Headers do not re-specify its ABNF or parsing algorithms; however, they can do so for substructures inside its values.
+Note that specifications using Structured Headers do not re-specify its ABNF or parsing algorithms; instead, they should be specified in terms of its abstract data structures.
 
 Also, empty header field values are not allowed, and therefore parsing for them will fail.
 
