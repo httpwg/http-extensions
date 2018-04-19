@@ -107,7 +107,7 @@ A HTTP header that uses Structured Headers need to be defined to do so explicitl
 
 The field's definition will also need to specify the field-value's allowed syntax, in terms of the types described in {{types}}, along with their associated semantics.
 
-A header field definition cannot relax or otherwise modify the requirements of this specification; doing so would preclude handling by generic software.
+A header field definition cannot relax or otherwise modify the requirements of this specification, or change the nature of its data structures; doing so would preclude handling by generic software.
 
 However, header field authors are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated. Such additional constraints could include additional structure (e.g., a list of URLs {{?RFC3986}} inside a string) that cannot be expressed using the primitives defined here.
 
@@ -149,7 +149,9 @@ Section 4.2), it MUST be resolved ([RFC3986], Section 5) before being
 used.
 ~~~
 
-Note that empty header field values are not allowed, and therefore parsing for them will fail.
+Note that specifications using Structured Headers do not re-specify its ABNF or parsing algorithms; however, they can do so for substructures inside its values.
+
+Also, empty header field values are not allowed, and therefore parsing for them will fail.
 
 
 # Parsing Text into Structured Headers {#text}
