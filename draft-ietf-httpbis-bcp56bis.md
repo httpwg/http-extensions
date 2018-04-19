@@ -239,15 +239,17 @@ When specifying the use of HTTP, an application SHOULD use {{!RFC7230}} as the p
 it is not necessary to reference all of the specifications in the HTTP suite unless there are
 specific reasons to do so (e.g., a particular feature is called out).
 
-Applications using HTTP MAY specify a minimum version to be supported (HTTP/1.1 is suggested), and
-MUST NOT specify a maximum version, to preserve the protocol's ability to evolve.
+Applications using SHOULD NOT specify a minimum version of HTTP to be used; because it is a
+hop-by-hop protocol, a HTTP connection can be handled implementations that are not controlled by
+the application; for example, proxies, CDNs, firewalls and so on. Requiring a particular version of
+HTTP makes it difficult to use in these situations, and harms interoperability for little reason
+(since HTTP's semantics are stable between protocol versions).
 
-Likewise, applications need not specify what HTTP mechanisms -- such as redirection, caching,
-authentication, proxy authentication, and so on -- are to be supported. For example, an application
-can specify that it uses HTTP like this:
+However, if an application's deployment would benefit from the use of a particular version of HTTP
+(for example, HTTP/2's multiplexing), this SHOULD be noted.
 
-    Foo Application uses HTTP [RFC7230]. Implementations MUST support
-    HTTP/1.1, and MAY support later versions.
+Applications using HTTP MUST NOT specify a maximum version, to preserve the protocol's ability to
+evolve.
 
 When specifying examples of protocol interactions, applications SHOULD document both the request
 and response messages, with full headers, preferably in HTTP/1.1 format. For example:
