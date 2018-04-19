@@ -620,6 +620,11 @@ repeatedly. In general, if it is safe to reuse something, consider assigning a f
 cache implementations take active measures to remove content intelligently when they are out of
 space, so "it will fill up the cache" is not a valid concern.
 
+The most common method for specifying freshness is the max-age response directive ({{?RFC7234}},
+Section 5.2.2.8). The Expires header ({{?RFC7234}}, Section 5.3) can also be used, but it is not
+necessary to specify it; all modern cache implementations support Cache-Control, and specifying
+freshness as a delta is both more convenient in most cases, and less error-prone.
+
 Understand that stale responses (e.g., one with "Cache-Control: max-age=0") can be reused when the
 cache is disconnected from the origin server; this can be useful for handling network issues. See
 {{?RFC7234}}, Section 4.2.4, and also {{?RFC5861}} for additional controls over stale content.
