@@ -74,15 +74,15 @@ Specifying the syntax of new HTTP header fields is an onerous task; even with th
 
 Once a header field is defined, bespoke parsers for it often need to be written, because each header has slightly different handling of what looks like common syntax.
 
-This document introduces structured HTTP header field values (hereafter, Structured Headers) to address these problems. Structured Headers define a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in textual HTTP headers, as used by HTTP/1 {{?RFC7230}} and HTTP/2 {{?RFC7540}}.
+This document introduces a set of common data structures for use in HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in textual HTTP headers, as used by HTTP/1 {{?RFC7230}} and HTTP/2 {{?RFC7540}}.
 
-HTTP headers that are defined as Structured Headers use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition and parsing.
+HTTP headers that are defined as "Structured Headers" use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition and parsing.
 
-Additionally, future versions of HTTP can define alternative serialisations of the abstract model of Structured Headers, allowing headers that use it to be transmitted more efficiently without being redefined.
+Additionally, future versions of HTTP can define alternative serialisations of the abstract model of these structures, allowing headers that use it to be transmitted more efficiently without being redefined.
 
 Note that it is not a goal of this document to redefine the syntax of existing HTTP headers; the mechanisms described herein are only intended to be used with headers that explicitly opt into them.
 
-To specify a header field that uses Structured Headers, see {{specify}}.
+To specify a header field that is a Structured Header, see {{specify}}.
 
 {{types}} defines a number of abstract data types that can be used in Structured Headers. Dictionaries and lists are only usable at the "top" level, while the remaining types can be specified appear at the top level or inside those structures.
 
@@ -101,9 +101,11 @@ This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}
 This document uses algorithms to specify normative parsing behaviours, and ABNF to illustrate the on-wire format expected. Implementations MUST follow the normative algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the algorithms and ABNF, the specified algorithms take precedence.
 
 
-# Specifying Structured Headers {#specify}
+# Defining New Structured Headers {#specify}
 
-A HTTP header that uses Structured Headers need to be defined to do so explicitly; recipients and generators need to know that the requirements of this document are in effect. The simplest way to do that is by referencing this document in its definition.
+A HTTP header that uses the structures in this specification need to be defined to do so
+explicitly; recipients and generators need to know that the requirements of this document are in
+effect. The simplest way to do that is by referencing this document in its definition.
 
 The field's definition will also need to specify the field-value's allowed syntax, in terms of the types described in {{types}}, along with their associated semantics.
 
@@ -119,7 +121,7 @@ For example:
 The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
 
-Foo-Example is a Structured header [RFCxxxx]. Its value MUST be a
+Foo-Example is a Structured Header [RFCxxxx]. Its value MUST be a
 dictionary ([RFCxxxx], Section Y.Y).
 
 The dictionary MUST contain:
@@ -154,7 +156,7 @@ Note that specifications using Structured Headers do not re-specify its ABNF or 
 Also, empty header field values are not allowed, and therefore parsing for them will fail.
 
 
-# Parsing Text into Structured Headers {#text}
+# Parsing Textual Header Fields {#text}
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
@@ -434,7 +436,7 @@ Example-StringHeader: "hello world"
 
 Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\\" can be escaped; other sequences MUST cause parsing to fail.
 
-Unicode is not directly supported in Structured Headers, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
+Unicode is not directly supported in this document, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
 
 When it is necessary for a field value to convey non-ASCII string content, binary content ({{binary}}) SHOULD be specified, along with a character encoding (preferably, UTF-8).
 
@@ -542,7 +544,7 @@ TBD
 
 
 It is possible for parties with the ability to inject new HTTP header fields to change the meaning
-of structured headers. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
+of a Structured Headers. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
 --- back
 
