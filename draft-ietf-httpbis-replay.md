@@ -269,6 +269,7 @@ the `Early-Data` header field if it might have forwarded the request prior to
 handshake completion (see {{be-consistent}} for details).
 
 An intermediary MUST NOT remove this header field if it is present in a request.
+`Early-Data` MUST NOT appear in a `Connection` header field.
 
 The `Early-Data` header field is not intended for use by user agents (that is,
 the original initiator of a request).  Sending a request in early data implies
@@ -281,6 +282,13 @@ for processing by waiting for the handshake to complete. A request that is
 marked with Early-Data was sent in early data on a previous hop. Requests that
 contain the Early-Data field and cannot be safely processed MUST be rejected
 using the 425 (Too Early) status code.
+
+The `Early-Data` header field carries a single bit of information and clients
+MUST include at most one instance.  However multiple instances MUST be treated
+as equivalent to a single instance by a server.
+
+A `Early-Data` header field MUST NOT be included in responses or request
+trailers.
 
 
 ## The 425 (Too Early) Status Code {#status}
