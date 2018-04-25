@@ -246,7 +246,7 @@ When specifying the use of HTTP, an application SHOULD use {{!RFC7230}} as the p
 it is not necessary to reference all of the specifications in the HTTP suite unless there are
 specific reasons to do so (e.g., a particular feature is called out).
 
-Applications using SHOULD NOT specify a minimum version of HTTP to be used; because it is a
+Applications using HTTP SHOULD NOT specify a minimum version of HTTP to be used; because it is a
 hop-by-hop protocol, a HTTP connection can be handled implementations that are not controlled by
 the application; for example, proxies, CDNs, firewalls and so on. Requiring a particular version of
 HTTP makes it difficult to use in these situations, and harms interoperability for little reason
