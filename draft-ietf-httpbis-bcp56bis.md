@@ -806,7 +806,7 @@ HTTP/2 adds the ability for servers to "push" request/response pairs to clients 
 Section 8.2. While server push seems like a natural fit for many common application semantics
 (e.g., "fanout" and publish/subscribe), a few caveats should be noted:
 
-* Server push is hop-by-hop; that is, it is not automatically forwarded by intermediaries. As a result, it might not work easily (or at all) with proxies, reverse proxies and Content Delivery Networks.
+* Server push is hop-by-hop; that is, it is not automatically forwarded by intermediaries. As a result, it might not work easily (or at all) with proxies, reverse proxies, and Content Delivery Networks.
 
 * Server push can have negative performance impact on HTTP when used incorrectly; in particular, if there is contention with resources that have actually been requested by the client.
 
