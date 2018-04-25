@@ -539,7 +539,7 @@ client should send the request to.
 There are two ways that this group of status codes differ:
 
 * Whether they are permanent or temporary. Permanent redirects can be used to update links stored
-  in the client (e.g., bookmarks), whereas temporary ones are not. Note that this has no effect on
+  in the client (e.g., bookmarks), whereas temporary ones can not. Note that this has no effect on
   HTTP caching; it is completely separate.
 
 * Whether they allow the redirected request to change the request method from POST to GET. Web
