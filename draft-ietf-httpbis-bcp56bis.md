@@ -810,7 +810,7 @@ Section 8.2. While server push seems like a natural fit for many common applicat
 
 * Server push can have negative performance impact on HTTP when used incorrectly; in particular, if there is contention with resources that have actually been requested by the client.
 
-* There are several ambiguities about the interaction of server push with other HTTP features (e.g., caching, validation). As a result, it might be implemented differently in different clients, and capabilities might vary.
+* Server push is implemented differently in different clients, especially regarding interaction with HTTP caching, and capabilities might vary.
 
 * APIs for server push are currently unavailable in some implementations, and vary widely in others. In particular, there is no current browser API for it.
 
