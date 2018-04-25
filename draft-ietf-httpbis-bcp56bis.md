@@ -814,7 +814,7 @@ Section 8.2. While server push seems like a natural fit for many common applicat
 
 * APIs for server push are currently unavailable in some implementations, and vary widely in others. In particular, there is no current browser API for it.
 
-* Server push is not supported in HTTP/1.1 or HTTP/1.0, and therefore will not transit hops over those protocols.
+* Server push is not supported in HTTP/1.1 or HTTP/1.0.
 
 * Server push does not form part of the "core" semantics of HTTP, and therefore might not be supported by future versions of the protocol.
 
