@@ -44,8 +44,6 @@ informative:
 HTTP is often used as a substrate for other application protocols (a.k.a. HTTP-based APIs). This
 document specifies best practices for these protocols' use of HTTP.
 
-This document obsoletes RFC 3205.
-
 
 --- note_Note_to_Readers_
 
