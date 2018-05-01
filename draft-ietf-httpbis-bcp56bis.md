@@ -59,37 +59,34 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 
 # Introduction
 
-HTTP {{!RFC7230}} is often used as a substrate for other application protocols; this is sometimes
-referred to as creating "HTTP-based APIs", or just "HTTP APIs", although the latter is ambiguous.
-This is done for a variety of reasons, including:
+HTTP {{!RFC7230}} is often used as a substrate for applications other than Web browsing; this is
+sometimes referred to as creating "HTTP-based APIs", or just "HTTP APIs". This is done for a
+variety of reasons, including:
 
 * familiarity by implementers, specifiers, administrators, developers and users,
 * availability of a variety of client, server and proxy implementations,
 * ease of use,
-* ubiquity of Web browsers,
+* availability of Web browsers,
 * reuse of existing mechanisms like authentication and encryption,
 * presence of HTTP servers and clients in target deployments, and
 * its ability to traverse firewalls.
 
-In many cases, these protocols are ad hoc; they are intended for only deployment on the server
-side, and consumption by a limited set of clients. A body of practices and tools has arisen around
-defining HTTP-based APIs that favours these conditions.
+These protocols are often ad hoc; they are intended for only deployment by one or a few servers,
+and consumption by a limited set of clients. As a result, a body of practices and tools has arisen
+around defining HTTP-based APIs that favours these conditions.
 
-However, when such a protocol is standarised, it is typically deployed on multiple servers,
-implemented a number of times, and might be consumed by a broader variety of clients. Such
+However, when such a protocol is standarised, it is typically deployed on multiple uncoordinated
+servers, implemented a number of times, and consumed by a broader variety of clients. Such
 diversity brings a different set of concerns, and tools and practices intended for a single-server
 deployment might not be suitable.
 
-In particular, HTTP-based APIs defined by standards need to more carefully consider how
-extensibility and evolution will be handled, how different deployment requirements will be
-accommodated, and how clients will evolve with the API.
+For example, HTTP-based APIs deployed in these circumstances need to more carefully consider how
+extensibility and evolution of the service will be handled, how different deployment requirements
+will be accommodated, and how clients will evolve with the API.
 
-The IETF has a tradition of protocol reuse (e.g., {{?TELNET=RFC0854}} as a substrate for
-{{?FTP=RFC0959}} and {{?SMTP=RFC2821}}; HTTP as a substrate for {{?IPP=RFC8011}} and
-{{?RESTCONF=RFC8040}}). Because HTTP is extensible in many ways, a number of questions arise, such
-as:
+More generally, application protocols using HTTP face a number of design decisions, including:
 
-* Should an application using HTTP define a new URL scheme? Use new ports?
+* Should it define a new URL scheme? Use new ports?
 * Should it use standard HTTP methods and status codes, or define new ones?
 * How can the maximum value be extracted from the use of HTTP?
 * How does it coexist with other uses of HTTP -- especially Web browsing?
