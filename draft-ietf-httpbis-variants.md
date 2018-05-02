@@ -234,7 +234,7 @@ Caches that implement the Variants header field and the relevant semantics of th
 
 They do so by running this algorithm (or its functional equivalent) upon receiving a request:
 
-Given incoming-request, a mapping of field-names to lists of field values, and stored-responses, a list of stored responses suitable for reuse as defined in {{!RFC7234}} Section 4, excepting the requirement to calculate a secondary cache key:
+Given incoming-request, a mapping of field-names to lists of field values, and stored-responses, a list of stored responses suitable for reuse as defined in Section 4 of {{!RFC7234}}, excepting the requirement to calculate a secondary cache key:
 
 1. If stored-responses is empty, return an empty list.
 2. Order stored-responses by the "Date" header field, most recent to least recent.
@@ -486,15 +486,15 @@ This appendix defines the required information to use existing proactive content
 
 ## Accept {#content-type}
 
-This section defines handling for Accept variants, as per {{!RFC7231}} Section 5.3.2.
+This section defines handling for Accept variants, as per Section 5.3.2 of {{!RFC7231}}.
 
 To perform content negotiation for Accept given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-types be a list of the types in the request-value, ordered by their weight, highest to lowest, as per {{!RFC7231}} Section 5.3.2 (omitting any coding with a weight of 0). If "Accept" is not present or empty, preferred-types will be empty. If a type lacks an explicit weight, an implementation MAY assign one.
+2. Let preferred-types be a list of the types in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.2 of {{!RFC7231}} (omitting any coding with a weight of 0). If "Accept" is not present or empty, preferred-types will be empty. If a type laSection 5.3.2 of cks an explicit weight, an implementation MAY assign one.
 3. If the first member of available-values is not a member of preferred-types, append it to preferred-types (thus making it the default). 
 4. For each preferred-type in preferred-types:
-   1. If any member of available-values matches preferred-type, using the media-range matching mechanism specified in {{!RFC7231}} Section 5.3.2 (which is case-insensitive), append those members of available-values to preferred-available (preserving the precedence order implied by the media ranges' specificity).
+   1. If any member of available-values matches preferred-type, using the media-range matching mechanism specified in Section 5.3.2 of {{!RFC7231}} (which is case-insensitive), append those members of available-values to preferred-available (preserving the precedence order implied by the media ranges' specificity).
 5. Return preferred-available.
 
 Note that this algorithm explicitly ignores extension parameters on media types (e.g., "charset").
@@ -502,30 +502,30 @@ Note that this algorithm explicitly ignores extension parameters on media types 
 
 ## Accept-Encoding {#content-encoding}
 
-This section defines handling for Accept-Encoding variants, as per {{!RFC7231}} Section 5.3.4.
+This section defines handling for Accept-Encoding variants, as per Section 5.3.4 of {{!RFC7231}}.
 
 To perform content negotiation for Accept-Encoding given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-codings be a list of the codings in the request-value, ordered by their weight, highest to lowest, as per {{!RFC7231}} Section 5.3.1 (omitting any coding with a weight of 0). If "Accept-Encoding" is not present or empty, preferred-codings will be empty. If a coding lacks an explicit weight, an implementation MAY assign one.
+2. Let preferred-codings be a list of the codings in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any coding with a weight of 0). If "Accept-Encoding" is not present or empty, preferred-codings will be empty. If a coding lacks an explicit weight, an implementation MAY assign one.
 3. If "identity" is not a member of preferred-codings, append "identity".
 4. Append "identity" to available-values.
 5. For each preferred-coding in preferred-codings:
    1. If there is a case-insensitive, character-for-character match for preferred-coding in available-values, append that member of available-values to preferred-available.
 6. Return preferred-available.
 
-Note that the unencoded variant needs to have a Variant-Key header field with a value of "identity" (as defined in {{!RFC7231}} Section 5.3.4).
+Note that the unencoded variant needs to have a Variant-Key header field with a value of "identity" (as defined in Section 5.3.4 of {{!RFC7231}}).
 
 ## Accept-Language {#content-language}
 
-This section defines handling for Accept-Language variants, as per {{!RFC7231}} Section 5.3.5.
+This section defines handling for Accept-Language variants, as per Section 5.3.5 of {{!RFC7231}}.
 
 To perform content negotiation for Accept-Language given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-langs be a list of the language-ranges in the request-value, ordered by their weight, highest to lowest, as per {{!RFC7231}} Section 5.3.1 (omitting any language-range with a weight of 0). If a language-range lacks a weight, an implementation MAY assign one.
+2. Let preferred-langs be a list of the language-ranges in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any language-range with a weight of 0). If a language-range lacks a weight, an implementation MAY assign one.
 3. If the first member of available-values is not a member of preferred-langs, append it to preferred-langs (thus making it the default).
 4. For each preferred-lang in preferred-langs:
-   1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in {{!RFC4647}} Section 3.3, append those members of available-values to preferred-available (preserving their order).
+   1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in Section 3.3 of {{!RFC4647}}, append those members of available-values to preferred-available (preserving their order).
 5. Return preferred-available.
 
