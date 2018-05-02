@@ -61,11 +61,13 @@ Even when the headers' semantics are understood, a cache does not know enough ab
 
 For example, if a cache has stored the following request/response pair:
 
-~~~
+~~~ example
 GET /foo HTTP/1.1
 Host: www.example.com
 Accept-Language: en;q=0.5, fr;q=1.0
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Language: fr
@@ -81,11 +83,13 @@ This specification introduces the HTTP Variants response header field ({{variant
 
 Its companion Variant-Key response header field ({{variant-key}}) indicates the applicable key(s) that the response is associated with, so that it can be reliably reused in the future. When this specification is in use, the example above might become:
 
-~~~
+~~~ example
 GET /foo HTTP/1.1
 Host: www.example.com
 Accept-Language: en;q=0.5, fr;q=1.0
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Language: fr
@@ -120,7 +124,7 @@ Additionally, it uses the "field-name", "OWS" and "token" rules from {{!RFC7230}
 
 The Variants HTTP response header field indicates what representations are available for a given resource at the time that the response is produced, by enumerating the request header fields that it varies on, along with the values that are available for each.
 
-~~~
+~~~ abnf
 Variants        = 1#variant-item
 variant-item    = field-name *( OWS ";" OWS available-value )
 available-value = token
@@ -130,7 +134,7 @@ Each "variant-item" indicates a request header field that carries a value that c
 
 So, given this example header field:
 
-~~~
+~~~ example
 Variants: Accept-Encoding;gzip
 ~~~
 
@@ -138,7 +142,7 @@ a recipient can infer that the only content-coding available for that resource i
 
 Given:
 
-~~~
+~~~ example
 Variants: accept-encoding
 ~~~
 
@@ -146,13 +150,13 @@ a recipient can infer that no content-codings (beyond identity) are supported. N
 
 A more complex example:
 
-~~~
+~~~ example
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
 ~~~
 
 Here, recipients can infer that two content-codings in addition to "identity" are available, as well as two content languages. Note that, as with all HTTP header fields that use the "#" list rule (see {{!RFC7230}}, Section 7), they might occur in the same header field or separately, like this:
 
-~~~
+~~~ example
 Variants: Accept-Encoding;gzip;brotli
 Variants: Accept-Language;en ;fr
 ~~~
@@ -181,7 +185,7 @@ In practice, implementation of Vary varies considerably. As a result, cache effi
 
 The Variant-Key HTTP response header field is used to indicate the values from the Variants header field that identify the representation it occurs within.
 
-~~~
+~~~ abnf
 Variant-Key      = 1#available-values
 available-values = available-value *( ";" available-value )
 ~~~
@@ -192,7 +196,7 @@ Therefore, Variant-Key MUST be the same length (in comma-separated members) as V
 
 For example:
 
-~~~
+~~~ example
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
 Variant-Key: gzip, fr
 ~~~
@@ -201,7 +205,7 @@ This header pair indicates that the representation has a "gzip" content-coding a
 
 A more complex example involves listing multiple available-values in a list member, to indicate that the response can be used to satisfy requests with any of those values. For example:
 
-~~~
+~~~ example
 Variants: Content-Encoding;gzip;br, Content-Language;en ;fr
 Variant-Key: gzip;identity, fr
 ~~~
@@ -293,20 +297,20 @@ Note that implementation of the Vary header field varies in practice, and the al
 
 For example, if the selected variants-header was:
 
-~~~
+~~~ example
 Variants: Accept-Language;en;fr,de, Accept-Encoding;gzip,br
 ~~~
 
 and the request contained the headers:
 
-~~~
+~~~ example
 Accept-Language: fr;q=1.0, en;q=0.1
 Accept-Encoding: gzip
 ~~~
 
 Then the sorted-variants would be:
 
-~~~
+~~~ example
 [
   ["fr", "en"]           // prefers French, will accept English
   ["gzip", "identity"]   // prefers gzip encoding, will accept identity
@@ -315,7 +319,7 @@ Then the sorted-variants would be:
 
 Which means that the sorted-keys would be:
 
-~~~
+~~~ example
 [
   'fr gzip',
   'fr identity',
@@ -326,7 +330,7 @@ Which means that the sorted-keys would be:
 
 Representing a first preference of a French, gzip'd response. Thus, if a cache has a response with:
 
-~~~
+~~~ example
 Variant-Key: fr, gzip
 ~~~
 
@@ -354,11 +358,13 @@ The operation of Variants is illustrated by the examples below.
 
 Given a request/response pair:
 
-~~~
+~~~ example
 GET /clancy HTTP/1.1
 Host: www.example.com
 Accept-Language: en;q=1.0, fr;q=0.5
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
@@ -384,12 +390,14 @@ Note that Accept-Language is listed in Vary, to assure backwards-compatibility w
 
 A more complicated request/response pair:
 
-~~~
+~~~ example
 GET /murray HTTP/1.1
 Host: www.example.net
 Accept-Language: en;q=1.0, fr;q=0.5
 Accept-Encoding: gzip, br
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
@@ -411,12 +419,14 @@ Upon a subsequent request, if both selection algorithms return a stored represen
 Now, consider the previous example, but where only one of the Vary'd axes (Content-Encoding) is
 listed in Variants:
 
-~~~
+~~~ example
 GET /bar HTTP/1.1
 Host: www.example.net
 Accept-Language: en;q=1.0, fr;q=0.5
 Accept-Encoding: gzip, br
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
