@@ -96,8 +96,8 @@ detect a malformed request and generate a stream error (Section
 
 # The Extended CONNECT Method
 
-The CONNECT Method defined in Section 8.3 of {{!RFC7540}} is modified in
-the following ways:
+Usage of the CONNECT method in HTTP/2 is defined by Section 8.3 of
+{{!RFC7540}}. This extension modifies the method in the following ways:
 
 * A new pseudo-header :protocol MAY be included on request HEADERS
   indicating the desired protocol to be spoken on the tunnel created
