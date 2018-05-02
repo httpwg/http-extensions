@@ -467,15 +467,6 @@ If the number or advertised characteristics of the representations available for
 
 Note that the Variants header is not a commitment to make representations of a certain nature available; the runtime behaviour of the server always overrides hints like Variants.
 
-
-# Acknowledgments
-
-This protocol is conceptually similar to, but simpler than, Transparent Content Negotiation {{?RFC2295}}. Thanks to its authors for their inspiration.
-
-It is also a generalisation of a Fastly VCL feature designed by Rogier 'DocWilco' Mulhuijzen.
-
-Thanks to Hooman Beheshti for his review and input.
-
 --- back
 
 
@@ -529,3 +520,11 @@ To perform content negotiation for Accept-Language given a request-value and ava
    1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in {{!RFC4647}} Section 3.3, append those members of available-values to preferred-available (preserving their order).
 5. Return preferred-available.
 
+
+# Acknowledgements
+{:numbered="false"}
+This protocol is conceptually similar to, but simpler than, Transparent Content Negotiation {{?RFC2295}}. Thanks to its authors for their inspiration.
+
+It is also a generalisation of a Fastly VCL feature designed by Rogier 'DocWilco' Mulhuijzen.
+
+Thanks to Hooman Beheshti for his review and input.
