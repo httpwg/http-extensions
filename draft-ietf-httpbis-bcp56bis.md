@@ -8,10 +8,11 @@ obsoletes: 3205
 ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
-keyword: Internet-Draft
 keyword: HTTP
 keyword: Web
 keyword: substrate
+keyword: protocol
+keyword: HTTP API
 
 stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
