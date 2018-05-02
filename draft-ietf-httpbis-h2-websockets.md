@@ -4,6 +4,7 @@ abbrev: H2 Websockets
 docname: draft-ietf-httpbis-h2-websockets-latest
 date: {DATE}
 category: std
+updates: 6455
 area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
