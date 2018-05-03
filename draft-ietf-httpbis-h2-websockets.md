@@ -169,7 +169,8 @@ with the RST_STREAM ({{!RFC7540}} Section 6.4) frame with the CANCEL
 [[ From Client ]]                       [[ From Server ]]
 
                                         SETTINGS
-                                        SETTINGS_ENABLE_CONNECT_PROTOCOL = 1
+                                        SETTINGS_ENABLE_CONNECT_PROTOCOL
+                                          = 1
 
 HEADERS + END_HEADERS
 :method = CONNECT
