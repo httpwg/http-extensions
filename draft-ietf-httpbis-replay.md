@@ -114,16 +114,18 @@ to mitigate the risks of replay:
    anti-replay techniques reduce but don't completely eliminate the chance of
    data being replayed and ensure a fixed upper limit to the number of replays.
 
-2. The server can choose whether it will process early data before the TLS
-   handshake completes. By deferring processing, it can ensure that only a
-   successfully completed connection is used for the request(s) therein.
-   This provides the server with some assurance that the early data was not
-   replayed.
+2. The server can reject early data.  A server cannot selectively reject early
+   data, so this results in all requests sent in early data being discarded.
 
-3. If the server receives multiple requests in early data, it can determine
+3. The server can choose to delay processing of early data until after the TLS
+   handshake completes. By deferring processing, it can ensure that only a
+   successfully completed connection is used for the request(s) therein.  This
+   provides the server with some assurance that the early data was not replayed.
+
+4. If the server receives multiple requests in early data, it can determine
    whether to defer HTTP processing on a per-request basis.
 
-4. The server can cause a client to retry a request and not use early data by
+5. The server can cause a client to retry a request and not use early data by
    responding with the 425 (Too Early) status code ({{status}}), in cases where
    the risk of replay is judged too great.
 
