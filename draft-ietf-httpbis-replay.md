@@ -115,8 +115,7 @@ to mitigate the risks of replay:
    data being replayed and ensure a fixed upper limit to the number of replays.
 
 2. The server can reject early data.  A server cannot selectively reject early
-   data, so this results in all requests that are sent in early data being
-   rejected.
+   data, so this results in all requests sent in early data being rejected.
 
 3. The server can choose to delay processing of early data until after the TLS
    handshake completes. By deferring processing, it can ensure that only a
