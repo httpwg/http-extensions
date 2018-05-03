@@ -190,15 +190,17 @@ negotiated protocol {{?ALPN=RFC7301}} than the one optimistically used for the
 early data. Any requests sent in early data MUST be sent again, unless the
 client decides to abandon those requests.
 
-This automatic retry exposes the request to a potential replay attack.  An
-attacker sends early data to one server instance that accepts and processes the
-early data, but allows that connection to proceed no further.  The attacker then
-forwards the same messages from the client to another server instance that will
-reject early data.  The client then retries the request, resulting in the
-request being processed twice.  Replays are also possible if there are multiple
-server instances that will accept early data, or if the same server accepts
-early data multiple times (though this would be in violation of requirements in
-Section 8 of {{!TLS13}}).
+Automatic retry creates the potential for a replay attack.  An attacker
+intercepts a connection that uses early data and copies the early data to
+another server instance.  The second server instance accepts and processes the
+early data.  The attacker then allows the original connection to complete.  Even
+if the early data is detected as a duplicate and rejected, the first server
+instance might allow the connection to complete.  If the client then retries
+requests that were sent in early data, the request will be processed twice.
+
+Replays are also possible if there are multiple server instances that will
+accept early data, or if the same server accepts early data multiple times
+(though this would be in violation of requirements in Section 8 of {{!TLS13}}).
 
 Clients that use early data MUST retry requests upon receipt of a 425 (Too
 Early) status code; see {{status}}.
