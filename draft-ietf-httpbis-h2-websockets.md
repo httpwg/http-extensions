@@ -160,9 +160,9 @@ this point is OPEN as defined by {{!RFC6455}}, Section 4.1.
 
 The HTTP/2 stream closure is also analogous to the TCP connection of
 {{!RFC6455}}. Orderly TCP level closures are represented as END_STREAM
-({{!RFC7540}} Section 6.1) flags and RST exceptions are represented
-with the RST_STREAM ({{!RFC7540}} Section 6.4) frame with the CANCEL
-({{!RFC7540}} Secion 7) error code.
+({{!RFC7540}}, Section 6.1) flags and RST exceptions are represented
+with the RST_STREAM ({{!RFC7540}}, Section 6.4) frame with the CANCEL
+({{!RFC7540}}, Section 7) error code.
 
 ## Example
 ~~~
