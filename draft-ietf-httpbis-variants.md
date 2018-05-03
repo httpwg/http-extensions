@@ -61,11 +61,13 @@ Even when the headers' semantics are understood, a cache does not know enough ab
 
 For example, if a cache has stored the following request/response pair:
 
-~~~
+~~~ example
 GET /foo HTTP/1.1
 Host: www.example.com
 Accept-Language: en;q=0.5, fr;q=1.0
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Language: fr
@@ -81,11 +83,13 @@ This specification introduces the HTTP Variants response header field ({{variant
 
 Its companion Variant-Key response header field ({{variant-key}}) indicates the applicable key(s) that the response is associated with, so that it can be reliably reused in the future. When this specification is in use, the example above might become:
 
-~~~
+~~~ example
 GET /foo HTTP/1.1
 Host: www.example.com
 Accept-Language: en;q=0.5, fr;q=1.0
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Language: fr
@@ -120,7 +124,7 @@ Additionally, it uses the "field-name", "OWS" and "token" rules from {{!RFC7230}
 
 The Variants HTTP response header field indicates what representations are available for a given resource at the time that the response is produced, by enumerating the request header fields that it varies on, along with the values that are available for each.
 
-~~~
+~~~ abnf
 Variants        = 1#variant-item
 variant-item    = field-name *( OWS ";" OWS available-value )
 available-value = token
@@ -130,7 +134,7 @@ Each "variant-item" indicates a request header field that carries a value that c
 
 So, given this example header field:
 
-~~~
+~~~ example
 Variants: Accept-Encoding;gzip
 ~~~
 
@@ -138,7 +142,7 @@ a recipient can infer that the only content-coding available for that resource i
 
 Given:
 
-~~~
+~~~ example
 Variants: accept-encoding
 ~~~
 
@@ -146,13 +150,13 @@ a recipient can infer that no content-codings (beyond identity) are supported. N
 
 A more complex example:
 
-~~~
+~~~ example
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
 ~~~
 
 Here, recipients can infer that two content-codings in addition to "identity" are available, as well as two content languages. Note that, as with all HTTP header fields that use the "#" list rule (see {{!RFC7230}}, Section 7), they might occur in the same header field or separately, like this:
 
-~~~
+~~~ example
 Variants: Accept-Encoding;gzip;brotli
 Variants: Accept-Language;en ;fr
 ~~~
@@ -181,7 +185,7 @@ In practice, implementation of Vary varies considerably. As a result, cache effi
 
 The Variant-Key HTTP response header field is used to indicate the values from the Variants header field that identify the representation it occurs within.
 
-~~~
+~~~ abnf
 Variant-Key      = 1#available-values
 available-values = available-value *( ";" available-value )
 ~~~
@@ -192,7 +196,7 @@ Therefore, Variant-Key MUST be the same length (in comma-separated members) as V
 
 For example:
 
-~~~
+~~~ example
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
 Variant-Key: gzip, fr
 ~~~
@@ -201,7 +205,7 @@ This header pair indicates that the representation has a "gzip" content-coding a
 
 A more complex example involves listing multiple available-values in a list member, to indicate that the response can be used to satisfy requests with any of those values. For example:
 
-~~~
+~~~ example
 Variants: Content-Encoding;gzip;br, Content-Language;en ;fr
 Variant-Key: gzip;identity, fr
 ~~~
@@ -234,7 +238,7 @@ Caches that implement the Variants header field and the relevant semantics of th
 
 They do so by running this algorithm (or its functional equivalent) upon receiving a request:
 
-Given incoming-request, a mapping of field-names to lists of field values, and stored-responses, a list of stored responses suitable for reuse as defined in {{!RFC7234}} Section 4, excepting the requirement to calculate a secondary cache key:
+Given incoming-request, a mapping of field-names to lists of field values, and stored-responses, a list of stored responses suitable for reuse as defined in Section 4 of {{!RFC7234}}, excepting the requirement to calculate a secondary cache key:
 
 1. If stored-responses is empty, return an empty list.
 2. Order stored-responses by the "Date" header field, most recent to least recent.
@@ -293,20 +297,20 @@ Note that implementation of the Vary header field varies in practice, and the al
 
 For example, if the selected variants-header was:
 
-~~~
+~~~ example
 Variants: Accept-Language;en;fr,de, Accept-Encoding;gzip,br
 ~~~
 
 and the request contained the headers:
 
-~~~
+~~~ example
 Accept-Language: fr;q=1.0, en;q=0.1
 Accept-Encoding: gzip
 ~~~
 
 Then the sorted-variants would be:
 
-~~~
+~~~ example
 [
   ["fr", "en"]           // prefers French, will accept English
   ["gzip", "identity"]   // prefers gzip encoding, will accept identity
@@ -315,7 +319,7 @@ Then the sorted-variants would be:
 
 Which means that the sorted-keys would be:
 
-~~~
+~~~ example
 [
   'fr gzip',
   'fr identity',
@@ -326,7 +330,7 @@ Which means that the sorted-keys would be:
 
 Representing a first preference of a French, gzip'd response. Thus, if a cache has a response with:
 
-~~~
+~~~ example
 Variant-Key: fr, gzip
 ~~~
 
@@ -354,11 +358,13 @@ The operation of Variants is illustrated by the examples below.
 
 Given a request/response pair:
 
-~~~
+~~~ example
 GET /clancy HTTP/1.1
 Host: www.example.com
 Accept-Language: en;q=1.0, fr;q=0.5
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
@@ -384,12 +390,14 @@ Note that Accept-Language is listed in Vary, to assure backwards-compatibility w
 
 A more complicated request/response pair:
 
-~~~
+~~~ example
 GET /murray HTTP/1.1
 Host: www.example.net
 Accept-Language: en;q=1.0, fr;q=0.5
 Accept-Encoding: gzip, br
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
@@ -411,12 +419,14 @@ Upon a subsequent request, if both selection algorithms return a stored represen
 Now, consider the previous example, but where only one of the Vary'd axes (Content-Encoding) is
 listed in Variants:
 
-~~~
+~~~ example
 GET /bar HTTP/1.1
 Host: www.example.net
 Accept-Language: en;q=1.0, fr;q=0.5
 Accept-Encoding: gzip, br
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
@@ -467,15 +477,6 @@ If the number or advertised characteristics of the representations available for
 
 Note that the Variants header is not a commitment to make representations of a certain nature available; the runtime behaviour of the server always overrides hints like Variants.
 
-
-# Acknowledgments
-
-This protocol is conceptually similar to, but simpler than, Transparent Content Negotiation {{?RFC2295}}. Thanks to its authors for their inspiration.
-
-It is also a generalisation of a Fastly VCL feature designed by Rogier 'DocWilco' Mulhuijzen.
-
-Thanks to Hooman Beheshti for his review and input.
-
 --- back
 
 
@@ -486,15 +487,15 @@ This appendix defines the required information to use existing proactive content
 
 ## Accept {#content-type}
 
-This section defines handling for Accept variants, as per {{!RFC7231}} Section 5.3.2.
+This section defines handling for Accept variants, as per Section 5.3.2 of {{!RFC7231}}.
 
 To perform content negotiation for Accept given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-types be a list of the types in the request-value, ordered by their weight, highest to lowest, as per {{!RFC7231}} Section 5.3.2 (omitting any coding with a weight of 0). If "Accept" is not present or empty, preferred-types will be empty. If a type lacks an explicit weight, an implementation MAY assign one.
+2. Let preferred-types be a list of the types in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.2 of {{!RFC7231}} (omitting any coding with a weight of 0). If "Accept" is not present or empty, preferred-types will be empty. If a type lacks an explicit weight, an implementation MAY assign one.
 3. If the first member of available-values is not a member of preferred-types, append it to preferred-types (thus making it the default). 
 4. For each preferred-type in preferred-types:
-   1. If any member of available-values matches preferred-type, using the media-range matching mechanism specified in {{!RFC7231}} Section 5.3.2 (which is case-insensitive), append those members of available-values to preferred-available (preserving the precedence order implied by the media ranges' specificity).
+   1. If any member of available-values matches preferred-type, using the media-range matching mechanism specified in Section 5.3.2 of {{!RFC7231}} (which is case-insensitive), append those members of available-values to preferred-available (preserving the precedence order implied by the media ranges' specificity).
 5. Return preferred-available.
 
 Note that this algorithm explicitly ignores extension parameters on media types (e.g., "charset").
@@ -502,30 +503,38 @@ Note that this algorithm explicitly ignores extension parameters on media types 
 
 ## Accept-Encoding {#content-encoding}
 
-This section defines handling for Accept-Encoding variants, as per {{!RFC7231}} Section 5.3.4.
+This section defines handling for Accept-Encoding variants, as per Section 5.3.4 of {{!RFC7231}}.
 
 To perform content negotiation for Accept-Encoding given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-codings be a list of the codings in the request-value, ordered by their weight, highest to lowest, as per {{!RFC7231}} Section 5.3.1 (omitting any coding with a weight of 0). If "Accept-Encoding" is not present or empty, preferred-codings will be empty. If a coding lacks an explicit weight, an implementation MAY assign one.
+2. Let preferred-codings be a list of the codings in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any coding with a weight of 0). If "Accept-Encoding" is not present or empty, preferred-codings will be empty. If a coding lacks an explicit weight, an implementation MAY assign one.
 3. If "identity" is not a member of preferred-codings, append "identity".
 4. Append "identity" to available-values.
 5. For each preferred-coding in preferred-codings:
    1. If there is a case-insensitive, character-for-character match for preferred-coding in available-values, append that member of available-values to preferred-available.
 6. Return preferred-available.
 
-Note that the unencoded variant needs to have a Variant-Key header field with a value of "identity" (as defined in {{!RFC7231}} Section 5.3.4).
+Note that the unencoded variant needs to have a Variant-Key header field with a value of "identity" (as defined in Section 5.3.4 of {{!RFC7231}}).
 
 ## Accept-Language {#content-language}
 
-This section defines handling for Accept-Language variants, as per {{!RFC7231}} Section 5.3.5.
+This section defines handling for Accept-Language variants, as per Section 5.3.5 of {{!RFC7231}}.
 
 To perform content negotiation for Accept-Language given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-langs be a list of the language-ranges in the request-value, ordered by their weight, highest to lowest, as per {{!RFC7231}} Section 5.3.1 (omitting any language-range with a weight of 0). If a language-range lacks a weight, an implementation MAY assign one.
+2. Let preferred-langs be a list of the language-ranges in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any language-range with a weight of 0). If a language-range lacks a weight, an implementation MAY assign one.
 3. If the first member of available-values is not a member of preferred-langs, append it to preferred-langs (thus making it the default).
 4. For each preferred-lang in preferred-langs:
-   1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in {{!RFC4647}} Section 3.3, append those members of available-values to preferred-available (preserving their order).
+   1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in Section 3.3 of {{!RFC4647}}, append those members of available-values to preferred-available (preserving their order).
 5. Return preferred-available.
 
+
+# Acknowledgements
+{:numbered="false"}
+This protocol is conceptually similar to, but simpler than, Transparent Content Negotiation {{?RFC2295}}. Thanks to its authors for their inspiration.
+
+It is also a generalisation of a Fastly VCL feature designed by Rogier 'DocWilco' Mulhuijzen.
+
+Thanks to Hooman Beheshti for his review and input.
