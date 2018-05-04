@@ -4,6 +4,7 @@ abbrev: H2 Websockets
 docname: draft-ietf-httpbis-h2-websockets-latest
 date: {DATE}
 category: std
+updates: 6455
 area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
@@ -96,8 +97,8 @@ detect a malformed request and generate a stream error (Section
 
 # The Extended CONNECT Method
 
-The CONNECT Method defined in Section 8.3 of {{!RFC7540}} is modified in
-the following ways:
+Usage of the CONNECT method in HTTP/2 is defined by Section 8.3 of
+{{!RFC7540}}. This extension modifies the method in the following ways:
 
 * A new pseudo-header :protocol MAY be included on request HEADERS
   indicating the desired protocol to be spoken on the tunnel created
@@ -157,12 +158,18 @@ stream from the CONNECT transaction as if it were the TCP connection
 referred to in {{!RFC6455}}. The state of the WebSocket connection at
 this point is OPEN as defined by {{!RFC6455}}, Section 4.1.
 
+The HTTP/2 stream closure is also analogous to the TCP connection of
+{{!RFC6455}}. Orderly TCP level closures are represented as END_STREAM
+({{!RFC7540}}, Section 6.1) flags and RST exceptions are represented
+with the RST_STREAM ({{!RFC7540}}, Section 6.4) frame with the CANCEL
+({{!RFC7540}}, Section 7) error code.
+
 ## Example
 ~~~
 [[ From Client ]]                       [[ From Server ]]
 
                                         SETTINGS
-                                        SETTINGS_ENABLE_CONNECT_PROTOCOL = 1
+                                        SETTINGS_ENABLE_CONNECT_P[..] = 1
 
 HEADERS + END_HEADERS
 :method = CONNECT

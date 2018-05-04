@@ -114,16 +114,18 @@ to mitigate the risks of replay:
    anti-replay techniques reduce but don't completely eliminate the chance of
    data being replayed and ensure a fixed upper limit to the number of replays.
 
-2. The server can choose whether it will process early data before the TLS
-   handshake completes. By deferring processing, it can ensure that only a
-   successfully completed connection is used for the request(s) therein.
-   This provides the server with some assurance that the early data was not
-   replayed.
+2. The server can reject early data.  A server cannot selectively reject early
+   data, so this results in all requests sent in early data being discarded.
 
-3. If the server receives multiple requests in early data, it can determine
+3. The server can choose to delay processing of early data until after the TLS
+   handshake completes. By deferring processing, it can ensure that only a
+   successfully completed connection is used for the request(s) therein.  This
+   provides the server with some assurance that the early data was not replayed.
+
+4. If the server receives multiple requests in early data, it can determine
    whether to defer HTTP processing on a per-request basis.
 
-4. The server can cause a client to retry a request and not use early data by
+5. The server can cause a client to retry a request and not use early data by
    responding with the 425 (Too Early) status code ({{status}}), in cases where
    the risk of replay is judged too great.
 
@@ -190,15 +192,17 @@ negotiated protocol {{?ALPN=RFC7301}} than the one optimistically used for the
 early data. Any requests sent in early data MUST be sent again, unless the
 client decides to abandon those requests.
 
-This automatic retry exposes the request to a potential replay attack.  An
-attacker sends early data to one server instance that accepts and processes the
-early data, but allows that connection to proceed no further.  The attacker then
-forwards the same messages from the client to another server instance that will
-reject early data.  The client then retries the request, resulting in the
-request being processed twice.  Replays are also possible if there are multiple
-server instances that will accept early data, or if the same server accepts
-early data multiple times (though this would be in violation of requirements in
-Section 8 of {{!TLS13}}).
+Automatic retry creates the potential for a replay attack.  An attacker
+intercepts a connection that uses early data and copies the early data to
+another server instance.  The second server instance accepts and processes the
+early data.  The attacker then allows the original connection to complete.  Even
+if the early data is detected as a duplicate and rejected, the first server
+instance might allow the connection to complete.  If the client then retries
+requests that were sent in early data, the request will be processed twice.
+
+Replays are also possible if there are multiple server instances that will
+accept early data, or if the same server accepts early data multiple times
+(though this would be in violation of requirements in Section 8 of {{!TLS13}}).
 
 Clients that use early data MUST retry requests upon receipt of a 425 (Too
 Early) status code; see {{status}}.
