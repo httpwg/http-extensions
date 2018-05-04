@@ -172,7 +172,7 @@ Likewise, servers MUST send the Variant-Key response header field when sending V
 
 ## Relationship to Vary {#vary}
 
-Caches that implement this specification SHOULD ignore request header fields in the Vary header for the purposes of secondary cache key calculation ({{!RFC7234}}, Section 4.1) when their semantics are implemented as per this specification and their corresponding response header field is listed in Variants.
+This specification updates {{!RFC7234}} to allow caches that implement this specification to ignore request header fields in the Vary header for the purposes of secondary cache key calculation ({{!RFC7234}}, Section 4.1) when their semantics are implemented as per this specification and their corresponding response header field is listed in Variants.
 
 If any member of the Vary header does not have a corresponding variant that is understood by the implementation, it is still subject to the requirements there.
 
