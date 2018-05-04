@@ -24,7 +24,7 @@ normative:
 
 --- abstract
 
-This document defines a mechanism for running the WebSocket Protocol
+This document defines a mechanism for running the WebSocket Protocol {{!RFC6455}}
 over a single stream of an HTTP/2 connection.
 
 --- middle
@@ -67,9 +67,11 @@ the stream as if were the TCP connection in that specification.
 
 # Terminology
 
-In this document, the key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" are to be interpreted as
-described in BCP 14, {{!RFC2119}}.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY",
+and "OPTIONAL" in this document are to be interpreted as described in
+BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they
+appear in all capitals, as shown here.
 
 # The SETTINGS_ENABLE_CONNECT_PROTOCOL SETTINGS Parameter
 
@@ -111,7 +113,7 @@ Usage of the CONNECT method in HTTP/2 is defined by Section 8.3 of
 * On requests bearing the :protocol pseudo-header, the :authority
   pseudo-header field is interpreted according to Section 8.1.2.3
   of {{!RFC7540}} instead of Section 8.3 of {{!RFC7540}}. In particular the server
-  MUST not make a new TCP connection to the host and port indicated by
+  MUST NOT make a new TCP connection to the host and port indicated by
   the :authority.
 
 Upon receiving a CONNECT request bearing the :protocol pseudo-header
@@ -134,7 +136,7 @@ WebSockets and `http` for `ws` schemed WebSockets. The websocket URI is
 still used for proxy autoconfiguration.
 
 {{!RFC6455}} requires the use of Connection and Upgrade headers that
-are not part of HTTP/2. They MUST not be included in the CONNECT
+are not part of HTTP/2. They MUST NOT be included in the CONNECT
 request defined here.
 
 {{!RFC6455}} requires the use of a Host header which is also not part of
