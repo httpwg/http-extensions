@@ -822,6 +822,17 @@ Applications using server push directly need to enforce the requirements regardi
 {{?RFC7540}}, Section 8.2, to avoid cross-origin push attacks.
 
 
+## Versioning and Evolution {#versioning}
+
+It's often necessary to introduce new features into application protocols, and change existing ones.
+
+In HTTP, backwards-incompatible changes are possible using a number of mechanisms:
+
+* Using a distinct link relation type {{!RFC8288}} to identify a URL for a resource that implements the new functionality
+* Using a distinct media type {{!RFC6838}} to identify formats that enable the new functionality
+* Using a distinct HTTP header field to implement new functionality outside the message body
+
+
 # IANA Considerations
 
 This document has no requirements for IANA.
