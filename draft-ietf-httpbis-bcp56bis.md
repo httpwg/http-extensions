@@ -1,5 +1,5 @@
 ---
-title: On the use of HTTP as a Substrate
+title: Building Protocols with HTTP
 docname: draft-ietf-httpbis-bcp56bis-latest
 date: {DATE}
 category: bcp
