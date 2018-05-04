@@ -241,8 +241,10 @@ Initial Value: 0
 
 Specification: This document
 
-# Acknowledgments
+--- back
 
+# Acknowledgments
+{:numbered="false"}
 The 2017 HTTP Workshop had a very productive discussion that helped
 determine the key problem and acceptable level of solution complexity.
 
