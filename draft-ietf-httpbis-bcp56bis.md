@@ -741,7 +741,7 @@ A complete enumeration of such practices is out of scope for this document, but 
 include:
 
 * Using an application-specific media type in the Content-Type header, and requiring clients to fail if it is not used
-* Using X-Content-Type-Options: nosniff {{FETCH}}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser
+* Using X-Content-Type-Options: nosniff {{FETCH}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser
 * Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML5}}), thereby mitigating Cross-Site Scripting attacks
 * Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header
 * Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?RFC6265}}
