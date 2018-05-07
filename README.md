@@ -24,7 +24,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Bootstrapping Websockets with HTTP/2
 
-*In WGLC; ends 2018-04-12*
+*Sent to IESG*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-h2-websockets.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-h2-websockets.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-h2-websockets) (less recent, more official)
