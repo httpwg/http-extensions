@@ -167,11 +167,11 @@ with the RST_STREAM ({{!RFC7540}}, Section 6.4) frame with the CANCEL
 ({{!RFC7540}}, Section 7) error code.
 
 ## Example
-~~~
+~~~ example
 [[ From Client ]]                       [[ From Server ]]
 
                                         SETTINGS
-                                        SETTINGS_ENABLE_CONNECT_P[..] = 1
+                                        SETTINGS_ENABLE_CONNECT_[..] = 1
 
 HEADERS + END_HEADERS
 :method = CONNECT
