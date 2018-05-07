@@ -24,7 +24,8 @@ consensus that CONNECT is "special" in this regard.
 
 ## 3. Intellectual Property
 
-[ Confirm that each author has stated that their direct, personal knowledge of any IPR related to this document has already been disclosed, in conformance with BCPs 78 and 79. Explain briefly the working group discussion about any IPR disclosures regarding this document, and summarize the outcome. ]
+Patrick has confirmed that to his direct, personal knowledge, no IPR related to this document needs
+to be disclosed.
 
 ## 4. Other Points
 
