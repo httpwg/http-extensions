@@ -206,28 +206,24 @@ state changes, the application can change its link to it so that a fresh copy is
 
 ## Rich Functionality
 
-The simplest possible use of HTTP is to POST data to a single URL, thereby effectively tunnelling
-through the protocol.
+HTTP offers a number of features to applications, such as:
 
-This "RPC" style of communication does get some benefit from using HTTP -- namely, message framing
-and the availability of implementations -- but fails to realise many others when used exclusively:
+* Message framing
+* Multiplexing (in HTTP/2)
+* Integration with TLS
+* Support for intermediaries (proxies, gateways, Content Delivery Networks)
+* Client authentication
+* Content negotiation for format, language, and other features
+* Caching for server scalability, latency and bandwidth reduction, and reliability
+* Granularity of access control (through use of a rich space of URLs)
+* Partial content to selectively request part of a response
+* The ability to interact with the application easily using a Web browser
 
-* Caching for server scalability, latency and bandwidth reduction, and reliability;
-* Granularity of access control (through use of a rich space of URLs);
-* Partial content to selectively request part of a response;
-* Definition of an information space using URLs; and
-* The ability to interact with the application easily using a Web browser.
-
-Using such a high-level protocol to tunnel simple semantics has downsides too; because of its more
-advanced capabilities, breadth of deployment and age, HTTP's complexity can cause interoperability
-problems that could be avoided by using a simpler substrate (e.g., WebSockets {{?RFC6455}}, if
-browser support is necessary, or TCP {{?RFC0793}} if not), or making the application be based upon
-HTTP, instead of using it (as defined in {{used}}).
-
-Applications that use HTTP are encouraged to accommodate the various features that the protocol
-offers, so that their users receive the maximum benefit from it. This document does not require
-specific features to be used, since the appropriate design tradeoffs are highly specific to a given
-situation. However, following the practices in {{bp}} will help make them available.
+Applications that use HTTP are encouraged to utilise the various features that the protocol offers,
+so that their users receive the maximum benefit from it, and to allow it to be deployed in a
+variety of situations. This document does not require specific features to be used, since the
+appropriate design tradeoffs are highly specific to a given situation. However, following the
+practices in {{bp}} is a good starting point.
 
 
 # Best Practices for Using HTTP {#bp}
