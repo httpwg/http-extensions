@@ -68,8 +68,9 @@ be used to reduce the likelihood that an attacker can successfully replay a
 request, but these techniques can be difficult to deploy, and still leave some
 possibility of a successful attack.
 
-Note that this is different from automated or user-initiated retries; replays
-are initiated by an attacker without the awareness of the client.
+Replay attacks are different than clients initiating retries automatically or at
+the request of a user; replays are initiated by an attacker without the
+awareness of the client.
 
 To help mitigate the risk of replays in HTTP, this document gives an overview
 of techniques for controlling these risks in servers, and defines requirements
