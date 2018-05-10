@@ -333,7 +333,7 @@ such as the one maintained by Mozilla at {{PSL}}.
 An origin's "registered domain" is the origin's host's public suffix plus the
 label to its left. That is, for `https://www.example.com`, the public suffix is
 `com`, and the registered domain is `example.com`. This concept is defined more
-rigorously in {{PSL}}, and is also know as "effective top-level domain plus one"
+rigorously in {{PSL}}, and is also known as "effective top-level domain plus one"
 (eTLD+1).
 
 The term "request", as well as a request's "client", "current url", "method",
