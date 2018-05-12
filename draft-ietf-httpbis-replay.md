@@ -409,7 +409,8 @@ Related information:
 : (empty)
 
 This document registers the 425 (Too Early) status code in the "Hypertext
-Transfer Protocol (HTTP) Status Code" registry established in {{!RFC7231}}.
+Transfer Protocol (HTTP) Status Code" registry located at
+<https://www.iana.org/assignments/http-status-codes>.
 
 Value:
 
