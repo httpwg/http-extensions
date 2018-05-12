@@ -288,8 +288,9 @@ contain the Early-Data field and cannot be safely processed MUST be rejected
 using the 425 (Too Early) status code.
 
 The `Early-Data` header field carries a single bit of information and clients
-MUST include at most one instance.  Multiple instances MUST be treated as
-equivalent to a single instance by a server.
+MUST include at most one instance.  Multiple or invalid instances of the header
+field MUST be treated as equivalent to a single instance with a value of 1 by a
+server.
 
 A `Early-Data` header field MUST NOT be included in responses or request
 trailers.
