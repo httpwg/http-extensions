@@ -493,7 +493,7 @@ To perform content negotiation for Accept given a request-value and available-va
 
 1. Let preferred-available be an empty list.
 2. Let preferred-types be a list of the types in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.2 of {{!RFC7231}} (omitting any coding with a weight of 0). If "Accept" is not present or empty, preferred-types will be empty. If a type lacks an explicit weight, an implementation MAY assign one.
-3. If the first member of available-values is not a member of preferred-types, append it to preferred-types (thus making it the default). 
+3. If the first member of available-values is not a member of preferred-types, append it to preferred-types (thus making it the default).
 4. For each preferred-type in preferred-types:
    1. If any member of available-values matches preferred-type, using the media-range matching mechanism specified in Section 5.3.2 of {{!RFC7231}} (which is case-insensitive), append those members of available-values to preferred-available (preserving the precedence order implied by the media ranges' specificity).
 5. Return preferred-available.
