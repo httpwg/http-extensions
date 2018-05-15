@@ -153,6 +153,8 @@ Section 4.2), it MUST be resolved ([RFC3986], Section 5) before being
 used.
 ~~~
 
+This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
+
 Note that specifications using Structured Headers do not re-specify its ABNF or parsing algorithms; instead, they should be specified in terms of its abstract data structures.
 
 Also, empty header field values are not allowed, and therefore parsing for them will fail.
