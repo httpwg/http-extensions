@@ -4,6 +4,7 @@ abbrev: H2 Websockets
 docname: draft-ietf-httpbis-h2-websockets-latest
 date: {DATE}
 category: std
+updates: 6455
 area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
@@ -23,7 +24,7 @@ normative:
 
 --- abstract
 
-This document defines a mechanism for running the WebSocket Protocol
+This document defines a mechanism for running the WebSocket Protocol (RFC 6455)
 over a single stream of an HTTP/2 connection.
 
 --- middle
@@ -66,9 +67,11 @@ the stream as if were the TCP connection in that specification.
 
 # Terminology
 
-In this document, the key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" are to be interpreted as
-described in BCP 14, {{!RFC2119}}.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY",
+and "OPTIONAL" in this document are to be interpreted as described in
+BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they
+appear in all capitals, as shown here.
 
 # The SETTINGS_ENABLE_CONNECT_PROTOCOL SETTINGS Parameter
 
@@ -96,8 +99,8 @@ detect a malformed request and generate a stream error (Section
 
 # The Extended CONNECT Method
 
-The CONNECT Method defined in Section 8.3 of {{!RFC7540}} is modified in
-the following ways:
+Usage of the CONNECT method in HTTP/2 is defined by Section 8.3 of
+{{!RFC7540}}. This extension modifies the method in the following ways:
 
 * A new pseudo-header :protocol MAY be included on request HEADERS
   indicating the desired protocol to be spoken on the tunnel created
@@ -110,7 +113,7 @@ the following ways:
 * On requests bearing the :protocol pseudo-header, the :authority
   pseudo-header field is interpreted according to Section 8.1.2.3
   of {{!RFC7540}} instead of Section 8.3 of {{!RFC7540}}. In particular the server
-  MUST not make a new TCP connection to the host and port indicated by
+  MUST NOT make a new TCP connection to the host and port indicated by
   the :authority.
 
 Upon receiving a CONNECT request bearing the :protocol pseudo-header
@@ -133,7 +136,7 @@ WebSockets and `http` for `ws` schemed WebSockets. The websocket URI is
 still used for proxy autoconfiguration.
 
 {{!RFC6455}} requires the use of Connection and Upgrade headers that
-are not part of HTTP/2. They MUST not be included in the CONNECT
+are not part of HTTP/2. They MUST NOT be included in the CONNECT
 request defined here.
 
 {{!RFC6455}} requires the use of a Host header which is also not part of
@@ -157,12 +160,18 @@ stream from the CONNECT transaction as if it were the TCP connection
 referred to in {{!RFC6455}}. The state of the WebSocket connection at
 this point is OPEN as defined by {{!RFC6455}}, Section 4.1.
 
+The HTTP/2 stream closure is also analogous to the TCP connection of
+{{!RFC6455}}. Orderly TCP level closures are represented as END_STREAM
+({{!RFC7540}}, Section 6.1) flags and RST exceptions are represented
+with the RST_STREAM ({{!RFC7540}}, Section 6.4) frame with the CANCEL
+({{!RFC7540}}, Section 7) error code.
+
 ## Example
-~~~
+~~~ example
 [[ From Client ]]                       [[ From Server ]]
 
                                         SETTINGS
-                                        SETTINGS_ENABLE_CONNECT_PROTOCOL = 1
+                                        SETTINGS_ENABLE_CONNECT_[..] = 1
 
 HEADERS + END_HEADERS
 :method = CONNECT
@@ -234,8 +243,10 @@ Initial Value: 0
 
 Specification: This document
 
-# Acknowledgments
+--- back
 
+# Acknowledgments
+{:numbered="false"}
 The 2017 HTTP Workshop had a very productive discussion that helped
 determine the key problem and acceptable level of solution complexity.
 
