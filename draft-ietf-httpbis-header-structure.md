@@ -111,7 +111,9 @@ The field's definition will also need to specify the field-value's allowed synta
 
 A header field definition cannot relax or otherwise modify the requirements of this specification, or change the nature of its data structures; doing so would preclude handling by generic software.
 
-However, header field authors are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated. Such additional constraints could include additional structure (e.g., a list of URLs {{?RFC3986}} inside a string) that cannot be expressed using the primitives defined here.
+However, header field authors are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text}}); in most situations, header-specific constraints should do likewise.
+
+Such constraints could include additional structure inside those defined here (e.g., a list of URLs {{?RFC3986}} inside a string).
 
 For example:
 
