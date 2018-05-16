@@ -474,7 +474,7 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation. Parsers MUST support identifiers with at least 64 characters.
 
 ~~~ abnf
-identifier = lcalpha 1*( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
+identifier = lcalpha *( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
 lcalpha    = %x61-7A ; a-z
 ~~~
 
