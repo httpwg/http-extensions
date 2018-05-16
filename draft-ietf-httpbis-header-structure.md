@@ -471,10 +471,10 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 
 ## Identifiers {#identifier}
 
-Identifiers are short (one to 256 characters) textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation.
+Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation. Parsers MUST support identifiers with at least 64 characters.
 
 ~~~ abnf
-identifier = lcalpha 0*255( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
+identifier = lcalpha 1*( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
 lcalpha    = %x61-7A ; a-z
 ~~~
 
@@ -494,7 +494,6 @@ Given an ASCII string input_string, return a identifier. input_string is modifie
       1. Prepend char to input_string.
       2. Return output_string.
    3. Append char to output_string.
-   1. If output_string contains more than 256 characters, fail parsing.
 4. Return output_string.
 
 
