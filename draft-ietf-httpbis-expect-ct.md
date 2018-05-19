@@ -120,50 +120,35 @@ document are to be interpreted as described in RFC 2119 {{!RFC2119}}.
 
 Terminology is defined in this section.
 
-Certificate Transparency Policy
-  : is a policy defined by the UA concerning the number, sources, and delivery
-  mechanisms of Signed Certificate Timestamps that are served on TLS
-  connections. The policy defines the properties of a connection that must be
-  met in order for the UA to consider it CT-qualified.
+* "Certificate Transparency Policy" is a policy defined by the UA concerning the
+  number, sources, and delivery mechanisms of Signed Certificate Timestamps that
+  are served on TLS connections. The policy defines the properties of a
+  connection that must be met in order for the UA to consider it CT-qualified.
 
-Certificate Transparency Qualified
-  : describes a TLS connection for which the UA has determined that a sufficient
-  quantity and quality of Signed Certificate Timestamps have been provided.
+* "Certificate Transparency Qualified" describes a TLS connection for which the
+  UA has determined that a sufficient quantity and quality of Signed Certificate
+  Timestamps have been provided.
 
-CT-qualified
-  : See Certificate Transparency Qualified.
+* "CT-qualified" is an abbreviation for "Certificate Transparency Qualified".
 
-CT Policy
-  : See Certificate Transparency Policy.
+* "CT Policy" is an abbreviation for "Certificate Transparency Policy".
 
-Effective Expect-CT Date
-  : is the time at which a UA observed a valid Expect-CT header field for a given
-  host.
+* "Effective Expect-CT Date" is the time at which a UA observed a valid
+  Expect-CT header field for a given host.
 
-Expect-CT Host
-  : See HTTP Expect-CT Host.
-
-HTTP Expect-CT
-  : is the overall name for the combined UA- and server-side security policy
-  defined by this specification.
-
-HTTP Expect-CT Host
-  : is a conformant host implementing the HTTP server aspects of HTTP
+* "Expect-CT Host" is a conformant host implementing the HTTP server aspects of
   Expect-CT. This means that an Expect-CT Host returns the "Expect-CT" HTTP
   response header field in its HTTP response messages sent over secure
   transport.
 
-Known Expect-CT Host
-  : is an Expect-CT Host that the UA has noted as such. See
+* "Known Expect-CT Host" is an Expect-CT Host that the UA has noted as such. See
   {{noting-expect-ct}} for particulars.
 
-UA
-  : is an acronym for "user agent". For the purposes of this specification, a UA
-  is an HTTP client application typically actively manipulated by a user
+* UA is an acronym for "user agent". For the purposes of this specification, a
+  UA is an HTTP client application typically actively manipulated by a user
   {{!RFC7230}}.
 
-Unknown Expect-CT Host
-  : is an Expect-CT Host that the UA has not noted.
+* "Unknown Expect-CT Host" is an Expect-CT Host that the UA has not noted.
 
 # Server and Client Behavior
 
@@ -284,9 +269,9 @@ delta-seconds = 1*DIGIT
 The following examples demonstrate valid Expect-CT response header fields:
 
 ~~~ inline
-Expect-CT: max-age=86400,enforce
+Expect-CT: max-age=86400, enforce
 
-Expect-CT: max-age=86400, enforce, report-uri="https://foo.example/report"
+Expect-CT: max-age=86400,enforce,report-uri="https://foo.example/report"
 
 Expect-CT: max-age=86400,report-uri="https://foo.example/report"
 ~~~
