@@ -19,39 +19,20 @@ author:
     email: estark@google.com
 
 
-normative:
-  FETCH:
-    target: https://fetch.spec.whatwg.org/
-    title: Fetch
-    author:
-    -
-      ins: A. van Kesteren
-      name: Anne van Kesteren
-      organization: Mozilla
+informative:
   HTML:
-    target: https://html.spec.whatwg.org/
-    title: HTML
+    target: https://html.spec.whatwg.org
+    title: HTML - Living Standard
     author:
-    -
-      ins: I. Hickson
-      name: Ian Hickson
-      organization: Google, Inc.
-    -
-      ins: S. Pieters
-      name: Simon Pieters
-      organization: Opera
-    -
-      ins: A. van Kesteren
-      name: Anne van Kesteren
-      organization: Mozilla
-    -
-      ins: P. Jägenstedt
-      name: Philip Jägenstedt
-      organization: Opera
-    -
-      ins: D. Denicola
-      name: Domenic Denicola
-      organization: Google, Inc.
+     -
+        org: WHATWG
+  FETCH:
+    target: https://fetch.spec.whatwg.org
+    title: Fetch - Living Standard
+    author:
+     -
+        org: WHATWG
+  HTML5: W3C.REC-html52-20171214
 
 --- abstract
 
@@ -83,7 +64,7 @@ code and issues list for this draft can be found at
 This document defines a new HTTP header field that enables UAs to identify web hosts
 that expect the presence of Signed Certificate Timestamps (SCTs)
 {{!I-D.ietf-trans-rfc6962-bis}} in future Transport Layer Security (TLS)
-{{!RFC5246}} connections.
+{{?RFC5246}} connections.
 
 Web hosts that serve the Expect-CT HTTP header field are noted by the UA as Known
 Expect-CT Hosts. The UA evaluates each connection to a Known Expect-CT Host for
@@ -349,7 +330,7 @@ specified in {{response-header-field-syntax}}.
 ### HTTP-Equiv \<meta\> Element Attribute
 
 UAs MUST NOT heed `http-equiv="Expect-CT"` attribute settings on `<meta>`
-elements {{!W3C.REC-html51-20161101}} in received content.
+elements {{HTML}} {{?HTML5}} in received content.
 
 ### Noting Expect-CT {#noting-expect-ct}
 
@@ -541,7 +522,7 @@ The steps to report an Expect-CT failure are as follows.
    `report body`.
 
 The UA MAY perform other operations as part of sending the HTTP POST request,
-for example sending a CORS preflight as part of {{FETCH}}.
+for example sending a CORS preflight as part of {{?FETCH}}.
 
 ## Receiving a violation report
 
