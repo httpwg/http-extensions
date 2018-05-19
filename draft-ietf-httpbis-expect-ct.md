@@ -641,6 +641,10 @@ Transparency requirements.
 
 # Changes
 
+## Since -03
+
+* Editorial changes
+
 ## Since -02
 
 * Add concept of test reports and specify that servers must respond with 2xx
