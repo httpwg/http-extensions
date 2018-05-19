@@ -522,7 +522,7 @@ The steps to report an Expect-CT failure are as follows.
    `report body`.
 
 The UA MAY perform other operations as part of sending the HTTP POST request,
-for example sending a CORS preflight as part of {{?FETCH}}.
+for example sending a CORS preflight as part of {{FETCH}}.
 
 ## Receiving a violation report
 
