@@ -612,7 +612,33 @@ hosts, and allow users to query the current state of Known Expect-CT Hosts.
 
 # IANA Considerations
 
-TBD
+This document registers the `Expect-CT` header field in the "Message Headers"
+registry located at <https://www.iana.org/assignments/message-headers>.
+
+Header field name:
+
+: Expect-CT
+
+Applicable protocol:
+
+: http
+
+Status:
+
+: standard
+
+Author/Change controller:
+
+: IETF
+
+Specification document(s):
+
+: This document
+
+Related information:
+
+: (empty)
+
 
 # Usability Considerations {#usability-considerations}
 
