@@ -247,12 +247,14 @@ delta-seconds = 1*DIGIT
 
 ### Examples
 
-The following examples demonstrate valid Expect-CT response header fields:
+The following three examples demonstrate valid Expect-CT response header fields
+(where the second splits the directives into two field instances):
 
 ~~~ inline
 Expect-CT: max-age=86400, enforce
 
-Expect-CT: max-age=86400,enforce,report-uri="https://foo.example/report"
+Expect-CT: max-age=86400,enforce
+Expect-CT: report-uri="https://foo.example/report"
 
 Expect-CT: max-age=86400,report-uri="https://foo.example/report"
 ~~~
