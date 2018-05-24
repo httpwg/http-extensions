@@ -392,7 +392,7 @@ NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the 
 
 ## Floats {#float}
 
-Abstractly, floats are integers with a fractional part. They have a maximum of fifteen digits available to be used in both of the parts, as reflected in the ABNF below; this allows them to be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
+Abstractly, floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
 
 The textual HTTP serialisation of floats allows a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
 
