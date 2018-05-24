@@ -566,6 +566,7 @@ of a Structured Headers. In some circumstances, this will cause parsing to fail,
 
 * Remove identifiers from item.
 * Remove most limits on sizes.
+* Refine number parsing.
 
 
 ## Since draft-ietf-httpbis-header-structure-03
