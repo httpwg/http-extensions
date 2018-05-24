@@ -353,7 +353,7 @@ parameters of a certificate they might request in the future.  Upon receipt of a
 `CERTIFICATE_REQUEST`, endpoints SHOULD provide a corresponding certificate in
 anticipation of a request shortly being blocked. Clients MAY wait for a
 `CERTIFICATE_NEEDED` frame to assist in associating the certificate request with
-a particular HTTP transition.
+a particular HTTP transaction.
 
 ## Requiring certificate authentication {#cert-challenge}
 
