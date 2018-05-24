@@ -177,7 +177,11 @@ Given an ASCII string input_string that represents the chosen header's field-val
 
 When generating input_string, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
-Note that in the case of lists, parameterised lists and dictionaries, this has the effect of coalescing all of the values for that field. However, for singular items, parsing will fail if more than one instance of that header field is present, unless the header fields combine into a syntactically valid String.
+For Lists, Parameterised Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field.
+
+Strings can but SHOULD NOT be split across multiple header instances, because comma(s) inserted upon combination will become part of the string output by the parser.
+
+Integers, Floats and Binary Content cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
 
