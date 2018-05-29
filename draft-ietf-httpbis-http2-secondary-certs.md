@@ -152,7 +152,7 @@ request the client's certificate.
 {{ex-http11}} shows the server initiating a TLS-layer renegotiation in response
 to receiving an HTTP/1.1 request to a protected resource.
 
-~~~
+~~~ drawing
 Client                                      Server
    -- (HTTP) GET /protected -------------------> *1
    <---------------------- (TLS) HelloRequest -- *2
@@ -193,7 +193,7 @@ For the purposes of authenticating an HTTP request, this is functionally
 equivalent to renegotiation.  {{ex-tls13}} shows the simpler exchange this
 enables.
 
-~~~
+~~~ drawing
 Client                                      Server
    -- (HTTP) GET /protected ------------------->
    <---------------- (TLS) CertificateRequest --
@@ -327,7 +327,7 @@ origins which it is prepared to service on the current connection, but MAY use
 the ORIGIN frame {{?RFC8336}} to indicate that not all covered origins will be
 served.
 
-~~~
+~~~ drawing
 Client                                      Server
    <------------------ (stream 0) CERTIFICATE --
    ...
@@ -337,7 +337,7 @@ Client                                      Server
 ~~~
 {: #ex-http2-server-proactive title="Proactive Server Certificate"}
 
-~~~
+~~~ drawing
 Client                                      Server
    -- (stream 0) CERTIFICATE ------------------>
    -- (stream 0) USE_CERTIFICATE (S=1) -------->
@@ -375,7 +375,7 @@ In this case, or if the server has not advertised support for HTTP-layer
 certificates, the client MUST NOT send any requests for resources in that origin
 on the current connection.
 
-~~~
+~~~ drawing
 Client                                      Server
    <----------------------- (stream 0) ORIGIN --
    -- (stream 0) CERTIFICATE_REQUEST ---------->
@@ -392,7 +392,7 @@ request parameters or the responding certificate are not already available, they
 will need to be sent as described in {{cert-available}} as part of this
 exchange.
 
-~~~
+~~~ drawing
 Client                                      Server
    <---------- (stream 0) CERTIFICATE_REQUEST --
    ...
@@ -455,7 +455,7 @@ be used to correlate the stream with a previous `CERTIFICATE_REQUEST` frame sent
 on stream zero. The `CERTIFICATE_REQUEST` describes the certificate the sender
 requires to make progress on the stream in question.
 
-~~~~~~~~~~~~~~~
+~~~ drawing
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +---------------------------------------------------------------+
@@ -463,7 +463,7 @@ requires to make progress on the stream in question.
  +-------------------------------+-------------------------------+
  |        Request-ID (16)        |
  +-------------------------------+
-~~~~~~~~~~~~~~~
+~~~
 {: #fig-cert-needed title="CERTIFICATE_NEEDED frame payload"}
 
 The `CERTIFICATE_NEEDED` frame contains 6 octets.  The first four octets
@@ -505,7 +505,7 @@ UNSOLICITED (0x01):
 
 The payload of the `USE_CERTIFICATE` frame is as follows:
 
-~~~~~~~~~~~~~~~
+~~~ drawing
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +---------------------------------------------------------------+
@@ -513,7 +513,7 @@ The payload of the `USE_CERTIFICATE` frame is as follows:
  +-------------------------------+-------------------------------+
  |         [Cert-ID (16)]        |
  +-------------------------------+
-~~~~~~~~~~~~~~~
+~~~
 {: #fig-use-cert title="USE_CERTIFICATE frame payload"}
 
 The first four octets indicate the Stream ID of the affected stream.  The
@@ -571,13 +571,13 @@ The `CERTIFICATE_REQUEST` frame MUST be sent on stream zero.  A
 `CERTIFICATE_REQUEST` frame received on any other stream MUST be rejected with a
 stream error of type `PROTOCOL_ERROR`.
 
-~~~~~~~~~~~~~~~
+~~~ drawing
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +-------------------------------+-------------------------------+
  |        Request-ID (16)        |          Request (?)        ...
  +---------------------------------------------------------------+
-~~~~~~~~~~~~~~~
+~~~
 {: #fig-cert-request title="CERTIFICATE_REQUEST frame payload"}
 
 The frame contains the following fields:
@@ -619,13 +619,13 @@ The `CERTIFICATE` frame defines two flags:
 TO_BE_CONTINUED (0x01):
 : Indicates that the exported authenticator spans more than one frame.
 
-~~~~~~~~~~~~
+~~~ drawing
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +-------------------------------+-------------------------------+
  |          Cert-ID (16)         |   Authenticator Fragment (*)...
  +---------------------------------------------------------------+
-~~~~~~~~~~~~~~~
+~~~
 {: #fig-proof-frame title="CERTIFICATE frame payload"}
 
 The `Exported Authenticator Fragment` field contains a portion of the opaque
