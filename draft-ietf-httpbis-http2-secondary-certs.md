@@ -843,10 +843,17 @@ this document.
 > **RFC Editor's Note:**  Please remove this section prior to publication of a
 > final version of this document.
 
+## Since draft-ietf-httpbis-http2-secondary-certs-01:
+
+Nothing yet.
+
 ## Since draft-ietf-httpbis-http2-secondary-certs-00:
 
 - All frames sent on stream zero; replaced `AUTOMATIC_USE` on `CERTIFICATE` with
   `UNSOLICITED` on `USE_CERTIFICATE`. (#482,#566)
+- Use Exported Requests from the TLS Exported Authenticators draft; eliminate
+  facilities for expressing certificate requirements in `CERTIFICATE_REQUEST`
+  frame. (#481)
 
 ## Since draft-bishop-httpbis-http2-additional-certs-05:
 
