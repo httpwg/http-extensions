@@ -20,19 +20,12 @@ author:
 
 
 informative:
-  HTML:
-    target: https://html.spec.whatwg.org
-    title: HTML - Living Standard
-    author:
-     -
-        org: WHATWG
   FETCH:
     target: https://fetch.spec.whatwg.org
     title: Fetch - Living Standard
     author:
      -
         org: WHATWG
-  HTML5: W3C.REC-html52-20171214
 
 --- abstract
 
@@ -328,11 +321,6 @@ the UA SHOULD send a report to the specified `report-uri` as specified in
 
 The UA MUST ignore any Expect-CT header field not conforming to the grammar
 specified in {{response-header-field-syntax}}.
-
-### HTTP-Equiv \<meta\> Element Attribute
-
-UAs MUST NOT heed `http-equiv="Expect-CT"` attribute settings on `<meta>`
-elements {{HTML}} {{?HTML5}} in received content.
 
 ### Noting Expect-CT {#noting-expect-ct}
 
