@@ -66,7 +66,7 @@ code and issues list for this draft can be found at
 HTTP clients need to know that the content they receive on a connection comes
 from the origin that they intended to retrieve in from. The traditional form of
 server authentication in HTTP has been in the form of a single X.509 certificate
-provided during the TLS [RFC5246][I-D.ietf-tls-tls13] handshake.
+provided during the TLS ([RFC5246], [I-D.ietf-tls-tls13]) handshake.
 
 Many existing HTTP [RFC7230] servers also have authentication requirements for
 the resources they serve.  Of the bountiful authentication options available for
