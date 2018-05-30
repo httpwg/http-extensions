@@ -657,6 +657,10 @@ Transparency requirements.
 
 # Changes
 
+## Since -04
+
+* Editorial changes
+
 ## Since -03
 
 * Editorial changes
