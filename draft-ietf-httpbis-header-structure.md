@@ -597,6 +597,12 @@ of a Structured Headers. In some circumstances, this will cause parsing to fail,
 
 # Changes
 
+## Since draft-ietf-httpbis-header-structure-05
+
+* Reorganise specification to separate parsing out.
+* Allow referencing specs to use ABNF.
+
+
 ## Since draft-ietf-httpbis-header-structure-04
 
 * Remove identifiers from item.
