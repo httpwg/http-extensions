@@ -53,7 +53,7 @@ informative:
 
 --- abstract
 
-This document describes a set of data types and parsing algorithms associated with them that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by new specifications of HTTP header fields as well as revisions of existing header field specifications when doing so does not cause interoperability issues.
+This document describes a set of data types and algorithms associated with them that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by new specifications of HTTP header fields as well as revisions of existing header field specifications when doing so does not cause interoperability issues.
 
 
 --- note_Note_to_Readers
@@ -74,7 +74,7 @@ Implementations are tracked at <https://github.com/httpwg/wiki/wiki/Structured-H
 
 Specifying the syntax of new HTTP header fields is an onerous task; even with the guidance in {{?RFC7231}}, Section 8.3.1, there are many decisions -- and pitfalls -- for a prospective HTTP header field author.
 
-Once a header field is defined, bespoke parsers for it often need to be written, because each header has slightly different handling of what looks like common syntax.
+Once a header field is defined, bespoke parsers and serialisers often need to be written, because each header has slightly different handling of what looks like common syntax.
 
 This document introduces a set of common data structures for use in HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in HTTP/1 {{?RFC7230}} header fields.
 
@@ -100,7 +100,7 @@ shown here.
 
 This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
 
-This document uses algorithms to specify normative parsing behaviours, and ABNF to illustrate expected syntax. Implementations MUST follow the normative algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the algorithms and ABNF, the specified algorithms take precedence.
+This document uses algorithms to specify normative parsing/serialisation behaviours, and ABNF to illustrate expected syntax. Implementations MUST follow the normative algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the algorithms and ABNF, the specified algorithms take precedence.
 
 
 # Defining New Structured Headers {#specify}
