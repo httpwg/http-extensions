@@ -76,7 +76,7 @@ Specifying the syntax of new HTTP header fields is an onerous task; even with th
 
 Once a header field is defined, bespoke parsers for it often need to be written, because each header has slightly different handling of what looks like common syntax.
 
-This document introduces a set of common data structures for use in HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in HTTP/1 {{?RFC7230}} and HTTP/2 {{?RFC7540}} header fields.
+This document introduces a set of common data structures for use in HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in HTTP/1 {{?RFC7230}} header fields.
 
 HTTP headers that are defined as "Structured Headers" use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition by specification writers and handling by implementations.
 
@@ -88,7 +88,7 @@ To specify a header field that is a Structured Header, see {{specify}}.
 
 {{types}} defines a number of abstract data types that can be used in Structured Headers.
 
-Those abstract types can be serialised into and parsed from textual headers -- such as those used in HTTP/1 and HTTP/2 -- using the algorithms described in {{text}}.
+Those abstract types can be serialised into and parsed from textual headers -- such as those used in HTTP/1 -- using the algorithms described in {{text}}.
 
 
 ## Notational Conventions
@@ -160,7 +160,7 @@ This specification defines minimums for the length or number of various structur
 
 # Structured Header Data Types {#types}
 
-This section defines the abstract value types that can be composed into Structured Headers, along with the textual HTTP serialisations of them.
+This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP/1.
 
 
 ## Dictionaries {#dictionary}
@@ -176,7 +176,7 @@ sh_dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member = identifier "=" sh_item
 ~~~
 
-In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example, a header field whose value is defined as a dictionary could look like:
+In HTTP/1 headers, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example, a header field whose value is defined as a dictionary could look like:
 
 ~~~ example
 Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK=*
@@ -198,7 +198,7 @@ sh_list = list-member *( OWS "," OWS list-member )
 list-member = sh_item
 ~~~
 
-In the textual HTTP serialisation, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
+In HTTP/1 headers, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
 
 ~~~ example
 Example-StrListHeader: "foo", "bar", "It was the best of times."
@@ -221,7 +221,7 @@ sh_param-list = param-id *( OWS "," OWS param-id )
 param-id   = identifier *( OWS ";" OWS identifier [ "=" sh_item ] )
 ~~~
 
-In the textual HTTP serialisation, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value. For example,
+In HTTP/1 headers, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value. For example,
 
 ~~~ example
 Example-ParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
@@ -264,8 +264,6 @@ Example-IntegerHeader: 42
 
 Floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
 
-The textual HTTP serialisation of floats allows a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
-
 The ABNF for floats is:
 
 ~~~ abnf
@@ -287,6 +285,8 @@ sh_float    = ["-"] (
 ~~~
 
 Values that do not conform to the ABNF above are invalid, and MUST fail parsing.
+
+In HTTP/1 headers, floats are allowed a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
 
 For example, a header whose value is defined as a float could look like:
 
@@ -310,7 +310,7 @@ unescaped    = %x20-21 / %x23-5B / %x5D-7E
 escaped      = "\" ( DQUOTE / "\" )
 ~~~
 
-The textual HTTP serialisation of strings uses a backslash ("\\") to escape double quotes and backslashes in strings.
+In HTTP/1 headers, strings use a backslash ("\\") to escape double quotes and backslashes.
 
 For example, a header whose value is defined as a string could look like:
 
@@ -374,10 +374,11 @@ Parsers MUST support binary content with at least 16384 octets after decoding.
 
 
 
-# Textual Structured Headers {#text}
+# Structured Headers in HTTP/1 {#text}
 
+This section defines how to serialise and parse Structured Headers in HTTP/1 textual header fields, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
 
-## Parsing Textual Header Fields {#text-parse}
+## Parsing HTTP/1 Header Fields {#text-parse}
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
