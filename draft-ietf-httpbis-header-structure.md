@@ -131,13 +131,14 @@ dictionary ([RFCxxxx], Section Y.Y). Its ABNF is:
 The dictionary MUST contain:
 
 * Exactly one member whose key is "foo", and whose value is an
-  integer ([RFCxxxx], Section Y.Y), indicating the number of foos in
-  the message.
+  integer ([RFCxxxx], Section Y.Y), indicating the number of foos
+  in the message.
 * Exactly one member whose key is "barUrls", and whose value is a
   string ([RFCxxxx], Section Y.Y), conveying the Bar URLs for the
   message. See below for processing requirements.
 
-If the parsed header field does not contain both, it MUST be ignored.
+If the parsed header field does not contain both, it MUST be
+ignored.
 
 "foo" MUST be between 0 and 10, inclusive; other values MUST cause
 the header to be ignored.
@@ -151,8 +152,8 @@ If a member of barURLs is not a valid URI-reference, it MUST cause
 that value to be ignored.
 
 If a member of barURLs is a relative reference ([RFC3986],
-Section 4.2), it MUST be resolved ([RFC3986], Section 5) before being
-used.
+Section 4.2), it MUST be resolved ([RFC3986], Section 5) before
+being used.
 ~~~
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
@@ -179,7 +180,7 @@ member-value   = sh-item
 In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
 
 ~~~ example
-Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK=*
+Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGUK=*
 ~~~
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
@@ -229,7 +230,7 @@ param-value   = sh-item
 In HTTP/1, each param-id is separated by a comma and optional whitespace (as in Lists), and the parameters are separated by semicolons. For example:
 
 ~~~ example
-Example-ParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
+Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, ghi;q="9";r=w
 ~~~
 
 Parsers MUST support parameterised lists containing at least 1024 members, and support members with at least 256 parameters.
@@ -350,7 +351,7 @@ base64    = ALPHA / DIGIT / "+" / "/" / "="
 In HTTP/1 headers, binary content is delimited with asterisks and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
-Example-BinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
+Example-BinaryHdr: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
 ~~~
 
 Parsers MUST support binary content with at least 16384 octets after decoding.
