@@ -109,7 +109,7 @@ To define a HTTP header as a structured header, its specification needs to:
 
 * Reference this specification. Recipients and generators of the header need to know that the requirements of this document are in effect.
 
-* Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh_" defined in this specification.
+* Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification.
 
 * Specify any additional constraints upon the syntax of the structured sued, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
@@ -126,7 +126,7 @@ much Foo the message has.
 Foo-Example is a Structured Header [RFCxxxx]. Its value MUST be a
 dictionary ([RFCxxxx], Section Y.Y). Its ABNF is:
 
-  Foo-Example = sh_dictionary
+  Foo-Example = sh-dictionary
 
 The dictionary MUST contain:
 
@@ -170,8 +170,10 @@ Dictionaries are unordered maps of key-value pairs, where the keys are identifie
 The ABNF for dictionaries is:
 
 ~~~ abnf
-sh_dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member = identifier "=" sh_item
+sh-dictionary  = dict-member *( OWS "," OWS dict-member )
+dict-member    = member-name "=" member-value
+member-name    = identifier
+member-value   = sh-item
 ~~~
 
 In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
@@ -192,8 +194,8 @@ Lists are arrays of items ({{item}}) with one or more members.
 The ABNF for lists is:
 
 ~~~ abnf
-sh_list = list-member *( OWS "," OWS list-member )
-list-member = sh_item
+sh-list     = list-member *( OWS "," OWS list-member )
+list-member = sh-item
 ~~~
 
 In HTTP/1, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
@@ -217,8 +219,11 @@ A parameterised identifier is an identifier ({{identifier}}) with an optional se
 The ABNF for parameterised lists is:
 
 ~~~ abnf
-sh_param-list = param-id *( OWS "," OWS param-id )
-param-id   = identifier *( OWS ";" OWS identifier [ "=" sh_item ] )
+sh-param-list = param-id *( OWS "," OWS param-id )
+param-id      = identifier *parameter
+parameter     = OWS ";" OWS param-name [ "=" param-value ]
+param-name    = identifier
+param-value   = sh-item
 ~~~
 
 In HTTP/1, each param-id is separated by a comma and optional whitespace (as in Lists), and the parameters are separated by semicolons. For example:
@@ -237,7 +242,7 @@ An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}
 The ABNF for items is:
 
 ~~~ abnf
-sh_item = sh_integer / sh_float / sh_string / sh_binary
+sh-item = sh-integer / sh-float / sh-string / sh-binary
 ~~~
 
 
@@ -248,7 +253,7 @@ Integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,8
 The ABNF for integers is:
 
 ~~~ abnf
-sh_integer   = ["-"] 1*19DIGIT
+sh-integer = ["-"] 1*19DIGIT
 ~~~
 
 For example:
@@ -265,7 +270,7 @@ Floats are integers with a fractional part, that can be stored as IEEE 754 doubl
 The ABNF for floats is:
 
 ~~~ abnf
-sh_float    = ["-"] (
+sh-float    = ["-"] (
              DIGIT "." 1*14DIGIT /
             2DIGIT "." 1*13DIGIT /
             3DIGIT "." 1*12DIGIT /
@@ -296,10 +301,10 @@ Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the rang
 The ABNF for strings is:
 
 ~~~ abnf
-sh_string    = DQUOTE *(chr) DQUOTE
-chr          = unescaped / escaped
-unescaped    = %x20-21 / %x23-5B / %x5D-7E
-escaped      = "\" ( DQUOTE / "\" )
+sh-string = DQUOTE *(chr) DQUOTE
+chr       = unescaped / escaped
+unescaped = %x20-21 / %x23-5B / %x5D-7E
+escaped   = "\" ( DQUOTE / "\" )
 ~~~
 
 In HTTP/1 headers, strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
@@ -338,7 +343,7 @@ Arbitrary binary content can be conveyed in Structured Headers.
 The ABNF for binary content is:
 
 ~~~ abnf
-sh_binary = "*" *(base64) "*"
+sh-binary = "*" *(base64) "*"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
@@ -358,9 +363,134 @@ This section defines how to serialise and parse Structured Headers in HTTP/1 tex
 
 ## Serialising Structured Headers into HTTP/1 {#text-serialise}
 
+Given a structured defined in this specification:
+
+1. If the structure is a dictionary, let output be the result of Serialising a Dictionary {#ser-dictionary}.
+2. If the structure is a list, let output be the result of Serialising a List {#ser-list}.
+3. If the structure is a parameterised list, let output be the result of Serialising a Parameterised List {#ser-param-list}.
+4. If the structure is an item, let output be the result of Serialising an Item {#ser-item}.
+5. If the structure is anything else (including an identifier), fail serialisation.
+6. Return output.
 
 
-### Serialising Binary Content
+### Serialising a Dictionary {#ser-dictionary}
+
+Given a dictionary as input:
+
+1. Let output be an empty string.
+2. For each member mem of input:
+   1. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to mem's member-name.
+   2. Append name to output.
+   3. Append "=" to output.
+   4. Let value be the result of applying Serialising an Item {{ser-item}} to mem's member-value.
+   5. Append value to output.
+3. Return output.
+
+
+### Serialising a List {#ser-list}
+
+Given a list as input:
+
+1. Let output be an empty string.
+2. For each member mem of input:
+   1. Let value be the result of applying Serialising an Item {{ser-item}} to mem.
+   2. Append value to output.
+   3. If more members remain in input:
+      1. Append a COMMA to output.
+      2. Append a single WS to output.
+3. Return output.
+
+
+### Serialising a Parameterised List {#ser-param-list}
+
+Given a parameterised list as input:
+
+1. Let output be an empty string.
+2. For each member mem of input:
+   1. Let id be the result of applying Serialising an Identifier {{ser-identifier}} to mem's identifier.
+   2. Append id to output.
+   3. For each parameter in mem's parameters:
+      1. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to parameter's param-name.
+      2. Append name to output.
+      3. If parameter has a param-value:
+         1. Let value be the result of applying Serialising an Item {{ser-item}} to parameter's param-value.
+         2. Append "=" to output.
+         3. Append value to output.
+3. Return output.
+
+
+### Serialising an Item {#ser-item}
+
+Given an item as input:
+
+0. If input is a type other than an integer, float, string or binary content, fail serialisation.
+1. Let output be an empty string.
+2. If input is an integer, let value be the result of applying Serialising an Integer {{ser-integer}} to input.
+3. If input is a float, let value be the result of applying Serialising a Float {{ser-float}} to input.
+4. If input is a string, let value be the result of applying Serialising a String {{ser-string}} to input.
+5. If input is binary content, let value be the result of applying Serialising Binary Content {{ser-binary}} to input.
+6. Return output.
+
+
+### Serialising an Integer {#ser-integer}
+
+Given an integer as input:
+
+0. If input is not an integer in the range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive, fail serialisation.
+1. Let output be an empty string.
+2. If input is less than (but not equal to) 0, append "-" to output.
+3. Append input's numeric value represented in base 10 using only decimal digits to output.
+4. Return output.
+
+
+### Serialising a Float {#ser-float}
+
+Given a float as input:
+
+0. If input is not a IEEE 754 double precision number, fail serialisation.
+1. Let output be an empty string.
+2. If input is less than (but not equal to) 0, append "-" to output.
+3. Append input's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+4. Append "." to output.
+5. Append input's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+6. Return output.
+
+
+### Serialising a String {#ser-string}
+
+Given a string as input:
+
+0. If input is not a sequence of characters, or contains characters outside the range allowed by the ABNF defined in {{string}}, fail serialisation.
+1. Let output be an empty string.
+2. Append DQUOTE to output.
+3. For each character char in input:
+   1. If char is "\" or DQUOTE:
+      1. Append "\" to output.
+   2. Append char to output, using ASCII encoding {{!RFC0020}}.
+4. Append DQUOTE to output.
+5. Return output.
+
+
+### Serialising an Identifier {#ser-identifier}
+
+Given an identifier as input:
+
+0. If input is not a sequence of characters, or contains characters not allowed in {{identifier}}, fail serialisation.
+1. Let output be an empty string.
+2. Append input to output, using ASCII encoding {{!RFC0020}}.
+3. Return output.
+
+
+### Serialising Binary Content {#ser-binary}
+
+Given binary content as input:
+
+0. If input is not a sequence of bytes, fail serialisation.
+1. Let output be an empty string.
+2. Append "\*" to output.
+3. Append the result of base64-encoding input as per {{!RFC4648}}, Section 4, taking account of the requirements below.
+4. Append "\*" to output.
+5. Return output.
 
 The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. Likewise, encoded data is required to have pad bits set to zero, as per {{!RFC4648}}, Section 3.5.
 
