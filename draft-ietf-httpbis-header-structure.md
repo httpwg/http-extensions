@@ -76,9 +76,9 @@ Specifying the syntax of new HTTP header fields is an onerous task; even with th
 
 Once a header field is defined, bespoke parsers for it often need to be written, because each header has slightly different handling of what looks like common syntax.
 
-This document introduces a set of common data structures for use in HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in textual HTTP headers, as used by HTTP/1 {{?RFC7230}} and HTTP/2 {{?RFC7540}}.
+This document introduces a set of common data structures for use in HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in HTTP/1 {{?RFC7230}} and HTTP/2 {{?RFC7540}} header fields.
 
-HTTP headers that are defined as "Structured Headers" use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition and parsing.
+HTTP headers that are defined as "Structured Headers" use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition by specification writers and handling by implementations.
 
 Additionally, future versions of HTTP can define alternative serialisations of the abstract model of these structures, allowing headers that use it to be transmitted more efficiently without being redefined.
 
@@ -86,9 +86,9 @@ Note that it is not a goal of this document to redefine the syntax of existing H
 
 To specify a header field that is a Structured Header, see {{specify}}.
 
-{{types}} defines a number of abstract data types that can be used in Structured Headers. Dictionaries and lists are only usable at the "top" level, while the remaining types can be specified appear at the top level or inside those structures.
+{{types}} defines a number of abstract data types that can be used in Structured Headers.
 
-Those abstract types can be serialised into textual headers -- such as those used in HTTP/1 and HTTP/2 -- using the algorithms described in {{text}}.
+Those abstract types can be serialised into and parsed from textual headers -- such as those used in HTTP/1 and HTTP/2 -- using the algorithms described in {{text}}.
 
 
 ## Notational Conventions
