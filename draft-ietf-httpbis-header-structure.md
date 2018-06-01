@@ -113,7 +113,7 @@ The field's definition will also need to specify the field-value's allowed synta
 
 A header field definition cannot relax or otherwise modify the requirements of this specification, or change the nature of its data structures; doing so would preclude handling by generic software.
 
-However, header field authors are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text}}); in most situations, header-specific constraints should do likewise.
+However, header field authors are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
 Such constraints could include additional structure inside those defined here (e.g., a list of URLs {{?RFC3986}} inside a string).
 
@@ -162,7 +162,209 @@ Note that specifications using Structured Headers do not re-specify its ABNF or 
 Also, empty header field values are not allowed, and therefore parsing for them will fail.
 
 
-# Parsing Textual Header Fields {#text}
+
+# Structured Header Data Types {#types}
+
+This section defines the abstract value types that can be composed into Structured Headers, along with the textual HTTP serialisations of them.
+
+
+## Dictionaries {#dictionary}
+
+Dictionaries are unordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
+
+Duplicate keys MUST cause parsing to fail.
+
+~~~ abnf
+dictionary  = dict-member *( OWS "," OWS dict-member )
+dict-member = identifier "=" item
+~~~
+
+In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example, a header field whose value is defined as a dictionary could look like:
+
+~~~ example
+Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK=*
+~~~
+
+Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
+
+Parsers MUST support dictionaries containing at least 1024 key/value pairs.
+
+
+## Lists {#list}
+
+Lists are arrays of items ({{item}}) with one or more members.
+
+~~~ abnf
+list = list-member *( OWS "," OWS list-member )
+list-member = item
+~~~
+
+In the textual HTTP serialisation, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
+
+~~~ example
+Example-StrListHeader: "foo", "bar", "It was the best of times."
+~~~
+
+Parsers MUST support lists containing at least 1024 members.
+
+
+
+## Parameterised Lists {#param}
+
+Parameterised Lists are arrays of a parameterised identifiers.
+
+A parameterised identifier is an identifier ({{identifier}}) with an optional set of parameters, each parameter having a identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+
+~~~ abnf
+param-list = param-id *( OWS "," OWS param-id )
+param-id   = identifier *( OWS ";" OWS identifier [ "=" item ] )
+~~~
+
+In the textual HTTP serialisation, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value. For example,
+
+~~~ example
+Example-ParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
+~~~
+
+Parsers MUST support parameterised lists containing at least 1024 members, and support members with at least 256 parameters.
+
+
+## Items {#item}
+
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), or binary content ({{binary}}).
+
+~~~ abnf
+item = integer / float / string / binary
+~~~
+
+
+## Integers {#integer}
+
+Integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive (i.e., a 64-bit signed integer).
+
+~~~ abnf
+integer   = ["-"] 1*19DIGIT
+~~~
+
+Parsers that encounter an integer outside the range defined above MUST fail parsing. Therefore, the value "9223372036854775808" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST fail parsing.
+
+For example, a header whose value is defined as a integer could look like:
+
+~~~ example
+Example-IntegerHeader: 42
+~~~
+
+
+## Floats {#float}
+
+Floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
+
+The textual HTTP serialisation of floats allows a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
+
+~~~ abnf
+float    = ["-"] (
+             DIGIT "." 1*14DIGIT /
+            2DIGIT "." 1*13DIGIT /
+            3DIGIT "." 1*12DIGIT /
+            4DIGIT "." 1*11DIGIT /
+            5DIGIT "." 1*10DIGIT /
+            6DIGIT "." 1*9DIGIT /
+            7DIGIT "." 1*8DIGIT /
+            8DIGIT "." 1*7DIGIT /
+            9DIGIT "." 1*6DIGIT /
+           10DIGIT "." 1*5DIGIT /
+           11DIGIT "." 1*4DIGIT /
+           12DIGIT "." 1*3DIGIT /
+           13DIGIT "." 1*2DIGIT /
+           14DIGIT "." 1DIGIT )
+~~~
+
+Values that do not conform to the ABNF above are invalid, and MUST fail parsing.
+
+For example, a header whose value is defined as a float could look like:
+
+~~~ example
+Example-FloatHeader: 4.5
+~~~
+
+See {{parse-number}} for the parsing algorithm for floats.
+
+
+## Strings {#string}
+
+Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines, carriage returns, etc.
+
+~~~ abnf
+string    = DQUOTE *(chr) DQUOTE
+chr       = unescaped / escaped
+unescaped = %x20-21 / %x23-5B / %x5D-7E
+escaped   = "\" ( DQUOTE / "\" )
+~~~
+
+The textual HTTP serialisation of strings uses a backslash ("\\") to escape double quotes and backslashes in strings.
+
+For example, a header whose value is defined as a string could look like:
+
+~~~ example
+Example-StringHeader: "hello world"
+~~~
+
+Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\\" can be escaped; other sequences MUST cause parsing to fail.
+
+Unicode is not directly supported in this document, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
+
+When it is necessary for a field value to convey non-ASCII string content, binary content ({{binary}}) SHOULD be specified, along with a character encoding (preferably, UTF-8).
+
+Parsers MUST support strings with at least 1024 characters.
+
+
+## Identifiers {#identifier}
+
+Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation. Parsers MUST support identifiers with at least 64 characters.
+
+~~~ abnf
+identifier = lcalpha *( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
+lcalpha    = %x61-7A ; a-z
+~~~
+
+Note that identifiers can only contain lowercase letters.
+
+
+## Binary Content {#binary}
+
+Arbitrary binary content can be conveyed in Structured Headers.
+
+The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("\*") to delimit from other content.
+
+The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. It is
+RECOMMENDED that parsers reject encoded data that is not properly padded, although this might
+not be possible with some base64 implementations.
+
+Likewise, encoded data is required to have pad bits set to zero, as per {{!RFC4648}}, Section 3.5.
+It is RECOMMENDED that parsers fail on encoded data that has non-zero pad bits, although this might
+not be possible with some base64 implementations.
+
+This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
+
+~~~ abnf
+binary = "*" *(base64) "*"
+base64 = ALPHA / DIGIT / "+" / "/" / "="
+~~~
+
+For example, a header whose value is defined as binary content could look like:
+
+~~~ example
+Example-BinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
+~~~
+
+Parsers MUST support binary content with at least 16384 octets after decoding.
+
+
+
+# Textual Structured Headers {#text}
+
+
+## Parsing Textual Header Fields {#text-parse}
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
@@ -190,33 +392,6 @@ If parsing fails -- including when calling another algorithm -- the entire heade
 Note that this has the effect of discarding any header field with non-ASCII characters in input_string.
 
 
-# Structured Header Data Types {#types}
-
-This section defines the abstract value types that can be composed into Structured Headers, along with the textual HTTP serialisations of them.
-
-
-## Dictionaries {#dictionary}
-
-Dictionaries are unordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
-
-In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. Duplicate keys MUST cause parsing to fail.
-
-~~~ abnf
-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member = identifier "=" item
-~~~
-
-For example, a header field whose value is defined as a dictionary could look like:
-
-~~~ example
-Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK=*
-~~~
-
-Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
-
-Parsers MUST support dictionaries containing at least 1024 key/value pairs.
-
-
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
 Given an ASCII string input_string, return a mapping of (identifier, item). input_string is modified to remove the parsed value.
@@ -236,26 +411,6 @@ Given an ASCII string input_string, return a mapping of (identifier, item). inpu
 3. No structured data has been found; fail parsing.
 
 
-## Lists {#list}
-
-Lists are arrays of items ({{item}}) with one or more members.
-
-In the textual HTTP serialisation, each member is separated by a comma and optional whitespace.
-
-~~~ abnf
-list = list-member *( OWS "," OWS list-member )
-list-member = item
-~~~
-
-For example, a header field whose value is defined as a list of strings could look like:
-
-~~~ example
-Example-StrListHeader: "foo", "bar", "It was the best of times."
-~~~
-
-Parsers MUST support lists containing at least 1024 members.
-
-
 ### Parsing a List from Text {#parse-list}
 
 Given an ASCII string input_string, return a list of items. input_string is modified to remove the parsed value.
@@ -270,28 +425,6 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
-
-
-## Parameterised Lists {#param}
-
-Parameterised Lists are arrays of a parameterised identifiers.
-
-A parameterised identifier is an identifier ({{identifier}}) with an optional set of parameters, each parameter having a identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
-
-In the textual HTTP serialisation, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value.
-
-~~~ abnf
-param-list = param-id *( OWS "," OWS param-id )
-param-id   = identifier *( OWS ";" OWS identifier [ "=" item ] )
-~~~
-
-For example,
-
-~~~ example
-Example-ParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
-~~~
-
-Parsers MUST support parameterised lists containing at least 1024 members, and support members with at least 256 parameters.
 
 
 ### Parsing a Parameterised List from Text {#parse-param-list}
@@ -331,15 +464,6 @@ Given an ASCII string input_string, return a identifier with an mapping of param
 4. Return the tuple (primary_identifier, parameters).
 
 
-## Items {#item}
-
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), or binary content ({{binary}}).
-
-~~~ abnf
-item = integer / float / string / binary
-~~~
-
-
 ### Parsing an Item from Text {#parse-item}
 
 Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
@@ -350,23 +474,6 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 4. If the first character of input_string is "\*", process input_string as binary content ({{parse-binary}}) and return the result.
 6. Otherwise, fail parsing.
 
-
-
-## Integers {#integer}
-
-Abstractly, integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive (i.e., a 64-bit signed integer).
-
-~~~ abnf
-integer   = ["-"] 1*19DIGIT
-~~~
-
-Parsers that encounter an integer outside the range defined above MUST fail parsing. Therefore, the value "9223372036854775808" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST fail parsing.
-
-For example, a header whose value is defined as a integer could look like:
-
-~~~ example
-Example-IntegerHeader: 42
-~~~
 
 ### Parsing a Number from Text {#parse-number}
 
@@ -392,69 +499,6 @@ NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the 
 0. Return the product of output_number and sign.
 
 
-## Floats {#float}
-
-Abstractly, floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
-
-The textual HTTP serialisation of floats allows a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
-
-~~~ abnf
-float    = ["-"] (
-             DIGIT "." 1*14DIGIT /
-            2DIGIT "." 1*13DIGIT /
-            3DIGIT "." 1*12DIGIT /
-            4DIGIT "." 1*11DIGIT /
-            5DIGIT "." 1*10DIGIT /
-            6DIGIT "." 1*9DIGIT /
-            7DIGIT "." 1*8DIGIT /
-            8DIGIT "." 1*7DIGIT /
-            9DIGIT "." 1*6DIGIT /
-           10DIGIT "." 1*5DIGIT /
-           11DIGIT "." 1*4DIGIT /
-           12DIGIT "." 1*3DIGIT /
-           13DIGIT "." 1*2DIGIT /
-           14DIGIT "." 1DIGIT )
-~~~
-
-Values that do not conform to the ABNF above are invalid, and MUST fail parsing.
-
-For example, a header whose value is defined as a float could look like:
-
-~~~ example
-Example-FloatHeader: 4.5
-~~~
-
-See {{parse-number}} for the parsing algorithm for floats.
-
-
-## Strings {#string}
-
-Abstractly, strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines, carriage returns, etc.
-
-The textual HTTP serialisation of strings uses a backslash ("\\") to escape double quotes and backslashes in strings.
-
-~~~ abnf
-string    = DQUOTE *(chr) DQUOTE
-chr       = unescaped / escaped
-unescaped = %x20-21 / %x23-5B / %x5D-7E
-escaped   = "\" ( DQUOTE / "\" )
-~~~
-
-For example, a header whose value is defined as a string could look like:
-
-~~~ example
-Example-StringHeader: "hello world"
-~~~
-
-Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\\" can be escaped; other sequences MUST cause parsing to fail.
-
-Unicode is not directly supported in this document, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
-
-When it is necessary for a field value to convey non-ASCII string content, binary content ({{binary}}) SHOULD be specified, along with a character encoding (preferably, UTF-8).
-
-Parsers MUST support strings with at least 1024 characters.
-
-
 ### Parsing a String from Text {#parse-string}
 
 Given an ASCII string input_string, return an unquoted string. input_string is modified to remove the parsed value.
@@ -475,20 +519,7 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 6. Otherwise, fail parsing.
 
 
-## Identifiers {#identifier}
-
-Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation. Parsers MUST support identifiers with at least 64 characters.
-
-~~~ abnf
-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
-lcalpha    = %x61-7A ; a-z
-~~~
-
-Note that identifiers can only contain lowercase letters.
-
-
-
-### Parsing a Identifier from Text {#parse-identifier}
+### Parsing an Identifier from Text {#parse-identifier}
 
 Given an ASCII string input_string, return a identifier. input_string is modified to remove the parsed value.
 
@@ -501,36 +532,6 @@ Given an ASCII string input_string, return a identifier. input_string is modifie
       2. Return output_string.
    3. Append char to output_string.
 4. Return output_string.
-
-
-## Binary Content {#binary}
-
-Arbitrary binary content can be conveyed in Structured Headers.
-
-The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("\*") to delimit from other content.
-
-The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. It is
-RECOMMENDED that parsers reject encoded data that is not properly padded, although this might
-not be possible with some base64 implementations.
-
-Likewise, encoded data is required to have pad bits set to zero, as per {{!RFC4648}}, Section 3.5.
-It is RECOMMENDED that parsers fail on encoded data that has non-zero pad bits, although this might
-not be possible with some base64 implementations.
-
-This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
-
-~~~ abnf
-binary = "*" *(base64) "*"
-base64 = ALPHA / DIGIT / "+" / "/" / "="
-~~~
-
-For example, a header whose value is defined as binary content could look like:
-
-~~~ example
-Example-BinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
-~~~
-
-Parsers MUST support binary content with at least 16384 octets after decoding.
 
 
 ### Parsing Binary Content from Text {#parse-binary}
