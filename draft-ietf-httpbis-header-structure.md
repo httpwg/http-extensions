@@ -167,8 +167,6 @@ This section defines the abstract value types that can be composed into Structur
 
 Dictionaries are unordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
 
-Duplicate keys MUST cause parsing to fail.
-
 The ABNF for dictionaries is:
 
 ~~~ abnf
@@ -176,7 +174,7 @@ sh_dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member = identifier "=" sh_item
 ~~~
 
-In HTTP/1 headers, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example, a header field whose value is defined as a dictionary could look like:
+In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
 
 ~~~ example
 Example-DictHeader: foo=1.23, en="Applepie", da=*w4ZibGV0w6ZydGUK=*
@@ -198,11 +196,13 @@ sh_list = list-member *( OWS "," OWS list-member )
 list-member = sh_item
 ~~~
 
-In HTTP/1 headers, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
+In HTTP/1, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
 
 ~~~ example
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
+
+Header specifications can constrain the types of individual values if necessary.
 
 Parsers MUST support lists containing at least 1024 members.
 
@@ -221,7 +221,7 @@ sh_param-list = param-id *( OWS "," OWS param-id )
 param-id   = identifier *( OWS ";" OWS identifier [ "=" sh_item ] )
 ~~~
 
-In HTTP/1 headers, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value. For example,
+In HTTP/1, each param-id is separated by a comma and optional whitespace (as in Lists), and the parameters are separated by semicolons. For example:
 
 ~~~ example
 Example-ParamListHeader: abc_123;a=1;b=2; c, def_456, ghi;q="19";r=foo
@@ -251,9 +251,7 @@ The ABNF for integers is:
 sh_integer   = ["-"] 1*19DIGIT
 ~~~
 
-Parsers that encounter an integer outside the range defined above MUST fail parsing. Therefore, the value "9223372036854775808" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST fail parsing.
-
-For example, a header whose value is defined as a integer could look like:
+For example:
 
 ~~~ example
 Example-IntegerHeader: 42
@@ -284,17 +282,11 @@ sh_float    = ["-"] (
            14DIGIT "." 1DIGIT )
 ~~~
 
-Values that do not conform to the ABNF above are invalid, and MUST fail parsing.
-
-In HTTP/1 headers, floats are allowed a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
-
 For example, a header whose value is defined as a float could look like:
 
 ~~~ example
 Example-FloatHeader: 4.5
 ~~~
-
-See {{parse-number}} for the parsing algorithm for floats.
 
 
 ## Strings {#string}
@@ -310,9 +302,7 @@ unescaped    = %x20-21 / %x23-5B / %x5D-7E
 escaped      = "\" ( DQUOTE / "\" )
 ~~~
 
-In HTTP/1 headers, strings use a backslash ("\\") to escape double quotes and backslashes.
-
-For example, a header whose value is defined as a string could look like:
+In HTTP/1 headers, strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
 ~~~ example
 Example-StringHeader: "hello world"
@@ -345,18 +335,6 @@ Note that identifiers can only contain lowercase letters.
 
 Arbitrary binary content can be conveyed in Structured Headers.
 
-The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("\*") to delimit from other content.
-
-The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. It is
-RECOMMENDED that parsers reject encoded data that is not properly padded, although this might
-not be possible with some base64 implementations.
-
-Likewise, encoded data is required to have pad bits set to zero, as per {{!RFC4648}}, Section 3.5.
-It is RECOMMENDED that parsers fail on encoded data that has non-zero pad bits, although this might
-not be possible with some base64 implementations.
-
-This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
-
 The ABNF for binary content is:
 
 ~~~ abnf
@@ -364,7 +342,7 @@ sh_binary = "*" *(base64) "*"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-For example, a header whose value is defined as binary content could look like:
+In HTTP/1 headers, binary content is delimited with asterisks and encoded using base64. For example:
 
 ~~~ example
 Example-BinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
@@ -378,7 +356,43 @@ Parsers MUST support binary content with at least 16384 octets after decoding.
 
 This section defines how to serialise and parse Structured Headers in HTTP/1 textual header fields, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
 
-## Parsing HTTP/1 Header Fields {#text-parse}
+## Serialising Structured Headers into HTTP/1 {#text-serialise}
+
+### Serialising a Dictionary
+
+### Serialising a List
+
+### Serialising a Parameterised List
+
+In HTTP/1 headers, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value.
+
+### Serialising an Item
+
+### Serialising a Number
+
+In HTTP/1 headers, floats are allowed a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
+
+
+### Serialising a String
+
+### Serialising an Identifier
+
+### Serialising Binary Content
+
+The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("\*") to delimit from other content.
+
+The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. It is
+RECOMMENDED that parsers reject encoded data that is not properly padded, although this might
+not be possible with some base64 implementations.
+
+Likewise, encoded data is required to have pad bits set to zero, as per {{!RFC4648}}, Section 3.5.
+It is RECOMMENDED that parsers fail on encoded data that has non-zero pad bits, although this might
+not be possible with some base64 implementations.
+
+This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
+
+
+## Parsing HTTP/1 Header Fields into Structured Headers {#text-parse}
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
@@ -491,7 +505,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 
 ### Parsing a Number from Text {#parse-number}
 
-NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the corresponding structure.
+NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and returns the corresponding structure.
 
 1. Let type be "integer".
 2. Let sign be 1.
@@ -511,6 +525,10 @@ NOTE: This algorithm parses both Integers and Floats {{float}}, and returns the 
    1. If the final character of input_number is ".", fail parsing.
    2. Parse input_number as a float and let output_number be the result.
 0. Return the product of output_number and sign.
+
+Parsers that encounter an integer outside the range defined in {{integer}} MUST fail parsing. Therefore, the value "9223372036854775808" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST fail parsing.
+
+Parsers that encounter a float that does not conform to the ABNF in {{float}} MUST fail parsing.
 
 
 ### Parsing a String from Text {#parse-string}
