@@ -100,7 +100,7 @@ shown here.
 
 This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
 
-This document uses algorithms to specify normative parsing behaviours, and ABNF to illustrate the on-wire format expected. Implementations MUST follow the normative algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the algorithms and ABNF, the specified algorithms take precedence.
+This document uses algorithms to specify normative parsing behaviours, and ABNF to illustrate expected syntax. Implementations MUST follow the normative algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the algorithms and ABNF, the specified algorithms take precedence.
 
 
 # Defining New Structured Headers {#specify}
@@ -109,7 +109,7 @@ A HTTP header that uses the structures in this specification need to be defined 
 explicitly; recipients and generators need to know that the requirements of this document are in
 effect. The simplest way to do that is by referencing this document in its definition.
 
-The field's definition will also need to specify the field-value's allowed syntax, in terms of the types described in {{types}}, along with their associated semantics.
+The field's definition will also need to specify the field-value's allowed syntax, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh_" defined in this specification.
 
 A header field definition cannot relax or otherwise modify the requirements of this specification, or change the nature of its data structures; doing so would preclude handling by generic software.
 
@@ -126,7 +126,9 @@ The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
 
 Foo-Example is a Structured Header [RFCxxxx]. Its value MUST be a
-dictionary ([RFCxxxx], Section Y.Y).
+dictionary ([RFCxxxx], Section Y.Y). Its ABNF is:
+
+  Foo-Example = sh_dictionary
 
 The dictionary MUST contain:
 
@@ -174,9 +176,11 @@ Dictionaries are unordered maps of key-value pairs, where the keys are identifie
 
 Duplicate keys MUST cause parsing to fail.
 
+The ABNF for dictionaries is:
+
 ~~~ abnf
-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member = identifier "=" item
+sh_dictionary  = dict-member *( OWS "," OWS dict-member )
+dict-member = identifier "=" sh_item
 ~~~
 
 In the textual HTTP serialisation, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example, a header field whose value is defined as a dictionary could look like:
@@ -194,9 +198,11 @@ Parsers MUST support dictionaries containing at least 1024 key/value pairs.
 
 Lists are arrays of items ({{item}}) with one or more members.
 
+The ABNF for lists is:
+
 ~~~ abnf
-list = list-member *( OWS "," OWS list-member )
-list-member = item
+sh_list = list-member *( OWS "," OWS list-member )
+list-member = sh_item
 ~~~
 
 In the textual HTTP serialisation, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
@@ -215,9 +221,11 @@ Parameterised Lists are arrays of a parameterised identifiers.
 
 A parameterised identifier is an identifier ({{identifier}}) with an optional set of parameters, each parameter having a identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
 
+The ABNF for parameterised lists is:
+
 ~~~ abnf
-param-list = param-id *( OWS "," OWS param-id )
-param-id   = identifier *( OWS ";" OWS identifier [ "=" item ] )
+sh_param-list = param-id *( OWS "," OWS param-id )
+param-id   = identifier *( OWS ";" OWS identifier [ "=" sh_item ] )
 ~~~
 
 In the textual HTTP serialisation, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value. For example,
@@ -233,8 +241,10 @@ Parsers MUST support parameterised lists containing at least 1024 members, and s
 
 An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), or binary content ({{binary}}).
 
+The ABNF for items is:
+
 ~~~ abnf
-item = integer / float / string / binary
+sh_item = sh_integer / sh_float / sh_string / sh_binary
 ~~~
 
 
@@ -242,8 +252,10 @@ item = integer / float / string / binary
 
 Integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive (i.e., a 64-bit signed integer).
 
+The ABNF for integers is:
+
 ~~~ abnf
-integer   = ["-"] 1*19DIGIT
+sh_integer   = ["-"] 1*19DIGIT
 ~~~
 
 Parsers that encounter an integer outside the range defined above MUST fail parsing. Therefore, the value "9223372036854775808" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST fail parsing.
@@ -261,8 +273,10 @@ Floats are integers with a fractional part, that can be stored as IEEE 754 doubl
 
 The textual HTTP serialisation of floats allows a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
 
+The ABNF for floats is:
+
 ~~~ abnf
-float    = ["-"] (
+sh_float    = ["-"] (
              DIGIT "." 1*14DIGIT /
             2DIGIT "." 1*13DIGIT /
             3DIGIT "." 1*12DIGIT /
@@ -294,11 +308,13 @@ See {{parse-number}} for the parsing algorithm for floats.
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
+The ABNF for strings is:
+
 ~~~ abnf
-string    = DQUOTE *(chr) DQUOTE
-chr       = unescaped / escaped
-unescaped = %x20-21 / %x23-5B / %x5D-7E
-escaped   = "\" ( DQUOTE / "\" )
+sh_string    = DQUOTE *(chr) DQUOTE
+chr          = unescaped / escaped
+unescaped    = %x20-21 / %x23-5B / %x5D-7E
+escaped      = "\" ( DQUOTE / "\" )
 ~~~
 
 The textual HTTP serialisation of strings uses a backslash ("\\") to escape double quotes and backslashes in strings.
@@ -321,6 +337,8 @@ Parsers MUST support strings with at least 1024 characters.
 ## Identifiers {#identifier}
 
 Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation. Parsers MUST support identifiers with at least 64 characters.
+
+The ABNF for identifiers is:
 
 ~~~ abnf
 identifier = lcalpha *( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
@@ -346,9 +364,11 @@ not be possible with some base64 implementations.
 
 This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
+The ABNF for binary content is:
+
 ~~~ abnf
-binary = "*" *(base64) "*"
-base64 = ALPHA / DIGIT / "+" / "/" / "="
+sh_binary = "*" *(base64) "*"
+base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
 For example, a header whose value is defined as binary content could look like:
