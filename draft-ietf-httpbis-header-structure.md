@@ -710,6 +710,7 @@ of a Structured Headers. In some circumstances, this will cause parsing to fail,
 
 * Reorganise specification to separate parsing out.
 * Allow referencing specs to use ABNF.
+* Define serialisation algorithms.
 
 
 ## Since draft-ietf-httpbis-header-structure-04
