@@ -105,17 +105,15 @@ This document uses algorithms to specify normative parsing behaviours, and ABNF 
 
 # Defining New Structured Headers {#specify}
 
-A HTTP header that uses the structures in this specification need to be defined to do so
-explicitly; recipients and generators need to know that the requirements of this document are in
-effect. The simplest way to do that is by referencing this document in its definition.
+To define a HTTP header as a structured header, its specification needs to:
 
-The field's definition will also need to specify the field-value's allowed syntax, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh_" defined in this specification.
+* Reference this specification. Recipients and generators of the header need to know that the requirements of this document are in effect.
 
-A header field definition cannot relax or otherwise modify the requirements of this specification, or change the nature of its data structures; doing so would preclude handling by generic software.
+* Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh_" defined in this specification.
 
-However, header field authors are encouraged to clearly state additional constraints upon the syntax, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
+* Specify any additional constraints upon the syntax of the structured sued, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
-Such constraints could include additional structure inside those defined here (e.g., a list of URLs {{?RFC3986}} inside a string).
+Note that a header field definition cannot relax the requirements of a structure or its processing; they can only add additional constraints, because doing so would preclude handling by generic software.
 
 For example:
 
@@ -158,11 +156,6 @@ used.
 ~~~
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
-
-Note that specifications using Structured Headers do not re-specify its ABNF or parsing algorithms; instead, they should be specified in terms of its abstract data structures.
-
-Also, empty header field values are not allowed, and therefore parsing for them will fail.
-
 
 
 # Structured Header Data Types {#types}
