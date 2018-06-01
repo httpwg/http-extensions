@@ -366,12 +366,11 @@ This section defines how to serialise and parse Structured Headers in HTTP/1 tex
 
 Given a structured defined in this specification:
 
-1. If the structure is a dictionary, let output be the result of Serialising a Dictionary {#ser-dictionary}.
-2. If the structure is a list, let output be the result of Serialising a List {#ser-list}.
-3. If the structure is a parameterised list, let output be the result of Serialising a Parameterised List {#ser-param-list}.
-4. If the structure is an item, let output be the result of Serialising an Item {#ser-item}.
-5. If the structure is anything else (including an identifier), fail serialisation.
-6. Return output.
+1. If the structure is a dictionary, return the result of Serialising a Dictionary {#ser-dictionary}.
+2. If the structure is a list, return the result of Serialising a List {#ser-list}.
+3. If the structure is a parameterised list, return the result of Serialising a Parameterised List {#ser-param-list}.
+4. If the structure is an item, return the result of Serialising an Item {#ser-item}.
+5. Otherwise, fail serialisation.
 
 
 ### Serialising a Dictionary {#ser-dictionary}
