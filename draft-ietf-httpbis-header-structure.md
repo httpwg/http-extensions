@@ -342,7 +342,7 @@ sh_binary = "*" *(base64) "*"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-In HTTP/1 headers, binary content is delimited with asterisks and encoded using base64. For example:
+In HTTP/1 headers, binary content is delimited with asterisks and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
 Example-BinaryHeader: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
@@ -358,38 +358,11 @@ This section defines how to serialise and parse Structured Headers in HTTP/1 tex
 
 ## Serialising Structured Headers into HTTP/1 {#text-serialise}
 
-### Serialising a Dictionary
 
-### Serialising a List
-
-### Serialising a Parameterised List
-
-In HTTP/1 headers, each parameterised identifier is separated by a comma and optional whitespace. Parameters are delimited from each other using semicolons (";"), and equals ("=") delimits the parameter name from its value.
-
-### Serialising an Item
-
-### Serialising a Number
-
-In HTTP/1 headers, floats are allowed a maximum of fifteen digits between the integer and fractional part, with at least one required on each side, along with an optional "-" indicating negative numbers.
-
-
-### Serialising a String
-
-### Serialising an Identifier
 
 ### Serialising Binary Content
 
-The textual HTTP serialisation encodes the data using Base 64 Encoding {{!RFC4648}}, Section 4, and surrounds it with a pair of asterisks ("\*") to delimit from other content.
-
-The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. It is
-RECOMMENDED that parsers reject encoded data that is not properly padded, although this might
-not be possible with some base64 implementations.
-
-Likewise, encoded data is required to have pad bits set to zero, as per {{!RFC4648}}, Section 3.5.
-It is RECOMMENDED that parsers fail on encoded data that has non-zero pad bits, although this might
-not be possible with some base64 implementations.
-
-This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
+The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. Likewise, encoded data is required to have pad bits set to zero, as per {{!RFC4648}}, Section 3.5.
 
 
 ## Parsing HTTP/1 Header Fields into Structured Headers {#text-parse}
@@ -574,10 +547,15 @@ Given an ASCII string input_string, return binary content. input_string is modif
 2. Discard the first character of input_string.
 3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*". If there is not a "\*" character before the end of input_string, fail parsing.
 4. Consume the "\*" character at the beginning of input_string.
-5. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour in {{binary}}).
+5. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour below).
 6. Return binary_content.
 
+As per {{!RFC4648}}, Section 3.2, it is RECOMMENDED that parsers reject encoded data that is not
+properly padded, although this might not be possible in some base64 implementations.
 
+As per {{!RFC4648}}, Section 3.5, it is RECOMMENDED that parsers fail on encoded data that has non-zero pad bits, although this might not be possible in some base64 implementations.
+
+This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
 
 # IANA Considerations
