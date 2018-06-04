@@ -419,9 +419,9 @@ connection, then the UA SHOULD report Expect-CT failures to the configured
 To generate a violation report object, the UA constructs a JSON {{!RFC8259}}
 object with the following keys and values:
 
-* "date-time": the value for this key indicates the time the UA observed the CT
-compliance failure. The value is a string formatted according to Section 5.6,
-"Internet Date/Time Format", of {{!RFC3339}}.
+* "date-time": the value for this key indicates the UTC time that the UA
+observed the CT compliance failure. The value is a string formatted according to
+Section 5.6, "Internet Date/Time Format", of {{!RFC3339}}.
 
 * "hostname": the value is the hostname to which the UA made the original
 request that failed the CT compliance check. The value is provided as a string.
@@ -431,8 +431,8 @@ failed the CT compliance check. The value is provided as an integer.
 
 * "effective-expiration-date": the value indicates the Effective Expiration Date
 (see {{storage-model}}) for the Expect-CT Host that failed the CT compliance
-check. The value is provided as a string formatted according to Section 5.6  of {{!RFC3339}}
-("Internet Date/Time Format").
+check, in UTC. The value is provided as a string formatted according to Section
+5.6 of {{!RFC3339}} ("Internet Date/Time Format").
 
 * "served-certificate-chain": the value is the certificate chain as served by
 the Expect-CT Host during TLS session setup. The value is provided as an array
