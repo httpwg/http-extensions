@@ -263,17 +263,14 @@ such as TCP.
 
 ### HTTP-over-Secure-Transport Request Type
 
-When replying to an HTTP request that was conveyed over a secure transport, an
-Expect-CT Host SHOULD include in its response exactly one Expect-CT header
-field. The header field MUST satisfy the grammar specified in
-{{response-header-field-syntax}}.
+An Expect-CT Host includes an Expect-CT header field in its response. The header
+field MUST satisfy the grammar specified in {{response-header-field-syntax}}.
 
 Establishing a given host as an Expect-CT Host, in the context of a given UA,
 is accomplished as follows:
 
 1.  Over the HTTP protocol running over secure transport, by correctly returning
-    (per this specification) at least one valid Expect-CT header field to the
-    UA.
+    (per this specification) a valid Expect-CT header field to the UA.
 
 2.  Through other mechanisms, such as a client-side preloaded Expect-CT Host
     list.
