@@ -113,7 +113,7 @@ Terminology is defined in this section.
 * "Expect-CT Host" is a conformant host implementing the HTTP server aspects of
   Expect-CT. This means that an Expect-CT Host returns the "Expect-CT" HTTP
   response header field in its HTTP response messages sent over secure
-  transport.
+  transport. The term "host" is equivalent to "server" in this specification.
 
 * "Known Expect-CT Host" is an Expect-CT Host that the UA has noted as such. See
   {{noting-expect-ct}} for particulars.
