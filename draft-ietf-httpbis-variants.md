@@ -261,6 +261,8 @@ This returns a list of strings suitable for comparing to normalised Variant-Keys
 
 ## Compute Possible Keys {#find}
 
+This algorithm computes the cross-product of the elements of key-facets.
+
 Given key-facets (a list of lists), and key-stub (a string representing a partial key), and possible-keys (a list):
 
 1. Let values be the first member of key-facets.
