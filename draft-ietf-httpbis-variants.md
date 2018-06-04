@@ -117,7 +117,7 @@ shown here.
 
 This specification uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} with a list extension, defined in Section 7 of {{!RFC7230}}, that allows for compact definition of comma-separated lists using a '#' operator (similar to how the '*' operator indicates repetition).
 
-Additionally, it uses the "field-name", "OWS" and "token" rules from {{!RFC7230}}.
+Additionally, it uses the "field-name", "OWS" and "token" rules from {{!RFC7230}}, and "type", "subtype", "content-coding" and "language-range" from {{!RFC7231}}.
 
 
 # The "Variants" HTTP Header Field {#variants}
@@ -128,6 +128,8 @@ The Variants HTTP response header field indicates what representations are avail
 Variants        = 1#variant-item
 variant-item    = field-name *( OWS ";" OWS available-value )
 available-value = token
+                  / "/" / "?" / "\" / "[" / "]"
+                  / ":" / "@" / "(" / ")"
 ~~~
 
 Each "variant-item" indicates a request header field that carries a value that clients might proactively negotiate for; each parameter on it indicates a value for which there is an available representation on the origin server.
@@ -448,7 +450,7 @@ Here, the cache will need to calculate a secondary cache key as per {{!RFC7234}}
 To be usable with Variants, proactive content negotiation mechanisms need to be specified to take advantage of it. Specifically, they:
 
 * MUST define a request header field that advertises the clients preferences or capabilities, whose field-name SHOULD begin with "Accept-".
-* MUST define the syntax of available-values that will occur in Variants and Variant-Key.
+* MUST define the syntax of an available-value that will occur in Variants and Variant-Key.
 * MUST define an algorithm for selecting a result. It MUST return a list of available-values that are suitable for the request, in order of preference, given the value of the request header nominated above and an available-values list from the Variants header. If the result is an empty list, it implies that the cache cannot satisfy the request.
 
 {{backports}} fulfils these requirements for some existing proactive content negotiation mechanisms in HTTP.
@@ -489,7 +491,13 @@ This appendix defines the required information to use existing proactive content
 
 ## Accept {#content-type}
 
-This section defines handling for Accept variants, as per Section 5.3.2 of {{!RFC7231}}.
+This section defines variant handling for the Accept request header (section 5.3.2 of {{!RFC7231}}).
+
+The syntax of an available-value for Accept is:
+
+~~~ abnf
+accept-available-value = type "/" subtype
+~~~
 
 To perform content negotiation for Accept given a request-value and available-values:
 
@@ -505,7 +513,13 @@ Note that this algorithm explicitly ignores extension parameters on media types 
 
 ## Accept-Encoding {#content-encoding}
 
-This section defines handling for Accept-Encoding variants, as per Section 5.3.4 of {{!RFC7231}}.
+This section defines variant handling for the Accept-Encoding request header (section 5.3.4 of {{!RFC7231}}).
+
+The syntax of an available-value for Accept-Encoding is:
+
+~~~ abnf
+accept-encoding-available-value = content-coding / "identity"
+~~~
 
 To perform content negotiation for Accept-Encoding given a request-value and available-values:
 
@@ -521,7 +535,13 @@ Note that the unencoded variant needs to have a Variant-Key header field with a 
 
 ## Accept-Language {#content-language}
 
-This section defines handling for Accept-Language variants, as per Section 5.3.5 of {{!RFC7231}}.
+This section defines variant handling for the Accept-Language request header (section 5.3.5 of {{!RFC7231}}).
+
+The syntax of an available-value for Accept-Language is:
+
+~~~ abnf
+accept-encoding-available-value = language-range
+~~~
 
 To perform content negotiation for Accept-Language given a request-value and available-values:
 
