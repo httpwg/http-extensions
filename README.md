@@ -56,12 +56,14 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Expect-CT
 
+*In WGLC; ends 2018-06-08*
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-expect-ct.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-expect-ct.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-expect-ct) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aexpect-ct) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-expect-ct/)
 
 
-### Header Common Structure
+### Structured Headers
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-header-structure.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-header-structure.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-header-structure) (less recent, more official)
