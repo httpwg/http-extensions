@@ -245,7 +245,7 @@ Given incoming-request, a mapping of field-names to lists of field values, and s
 3. Let sorted-variants be an empty list.
 4. If the freshest member of stored-responses (as per {{!RFC7234}}, Section 4.2) has one or more "Variants" header field(s):
    1. Select one member of stored-responses and let variants-header be its "Variants" header field-value(s). This SHOULD be the most recent response, but MAY be from an older one as long as it is still fresh.
-   3. For each variant in variants-header:
+   3. For each variant in variants-header, parsed according to the ABNF:
       1. If variant's field-name corresponds to the request header field identified by a content negotiation mechanism that the implementation supports:
          1. Let request-value be the field-value(s) associated with field-name in incoming-request.
          2. Let available-values be a list containing all available-value for variant.
