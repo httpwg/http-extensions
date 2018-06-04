@@ -272,7 +272,7 @@ Given key-facets, a list of lists, and key-stub, a string representing a partial
       3. Append value to this-key.
    3. Let remaining-facets be a copy of all of the members of key-facets except the first.
    4. If remaining-facets is empty, append this-key to possible-keys.
-   5. Otherwise, run Find Available Keys on remaining-facets, this-key and possible-keys.
+   5. Otherwise, run Compute Possible Keys on remaining-facets, this-key and possible-keys.
 3. Return possible-keys.
 
 
