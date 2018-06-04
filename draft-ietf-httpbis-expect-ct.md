@@ -287,6 +287,15 @@ The UA processing model relies on parsing domain names.  Note that
 internationalized domain names SHALL be canonicalized according to
 the scheme in Section 10 of {{!RFC6797}}.
 
+The UA stores Known Expect-CT Hosts and their associated Expect-CT
+directives. This data is collectively known as a host's "Expect-CT" metadata".
+
+### Missing or Malformed Expect-CT Header Fields
+
+If an HTTP response does not include an Expect-CT header field that conforms to
+the grammar specified in {{response-header-field-syntax}}, then the UA MUST NOT
+update any Expect-CT metadata.
+
 ### Expect-CT Header Field Processing
 
 If the UA receives, over a secure transport, an HTTP response that includes an
@@ -294,6 +303,11 @@ Expect-CT header field conforming to the grammar specified in
 {{response-header-field-syntax}}, the UA MUST evaluate the connection on which
 the header field was received for compliance with the UA's CT Policy, and then process
 the Expect-CT header field as follows.
+
+If the connection does not comply with the UA's CT Policy (i.e., the connection
+is not CT-qualified), then the UA MUST NOT update any Expect-CT metadata. If the
+header field includes a `report-uri` directive, the UA SHOULD send a report to
+the specified `report-uri` ({{header-field-processing-reporting}}).
 
 If the connection complies with the UA's CT Policy (i.e., the connection is
 CT-qualified), then the UA MUST either:
@@ -307,25 +321,12 @@ CT-qualified), then the UA MUST either:
   information if the host was previously noted as a Known Expect-CT Host, and
   MUST NOT note this host as a Known Expect-CT Host if it is not already noted.
 
-If the connection does not comply with the UA's CT Policy (i.e., is not
-CT-qualified), then the UA MUST NOT note this host as a Known Expect-CT Host.
-
-If the header field includes a `report-uri` directive, and the connection does
-not comply with the UA's CT Policy (i.e., the connection is not CT-qualified),
-and the UA has not already sent an Expect-CT report for this connection, then
-the UA SHOULD send a report to the specified `report-uri` as specified in
-{{reporting-expect-ct-failure}}.
-
-The UA MUST ignore any Expect-CT header field not conforming to the grammar
-specified in {{response-header-field-syntax}}.
-
-### Noting Expect-CT {#noting-expect-ct}
+#### Noting Expect-CT {#noting-expect-ct}
 
 Upon receipt of the Expect-CT response header field over an error-free TLS
 connection (including the validation adding in {{expect-ct-compliance}}), the UA
 MUST note the host as a Known Expect-CT Host, storing the host's domain name and
-its associated Expect-CT directives in non-volatile storage. The domain name and
-associated Expect-CT directives are collectively known as "Expect-CT metadata".
+its associated Expect-CT directives in non-volatile storage.
 
 To note a host as a Known Expect-CT Host, the UA MUST set its Expect-CT metadata
 given in the most recently received valid Expect-CT header field, as specified in
@@ -337,7 +338,7 @@ recognize. {{response-header-field-syntax}} specifies the directives `enforce`,
 `max-age`, and `report-uri`, but future specifications and implementations might
 use additional directives.
 
-### Storage Model {#storage-model}
+#### Storage Model {#storage-model}
 
 Known Expect-CT Hosts are identified only by domain names, and never IP
 addresses. If the substring matching the host production from the Request-URI
@@ -370,6 +371,15 @@ days), and an Expect-CT Host sets a max- age directive of 90 days in its
 Expect-CT header field, the UA MAY behave as if the max-age were effectively 60
 days. (One way to achieve this behavior is for the UA to simply store a value of
 60 days instead of the 90-day value provided by the Expect-CT host.)
+
+### Reporting {#header-field-processing-reporting}
+
+If the UA receives, over a secure transport, an HTTP response that includes an
+Expect-CT header field with a `report-uri` directive, and the connection does
+not comply with the UA's CT Policy (i.e., the connection is not CT-qualified),
+and the UA has not already sent an Expect-CT report for this connection, then
+the UA SHOULD send a report to the specified `report-uri` as specified in
+{{reporting-expect-ct-failure}}.
 
 ## Evaluating Expect-CT Connections for CT Compliance {#expect-ct-compliance}
 
