@@ -298,7 +298,7 @@ Expect-CT header field conforming to the grammar specified in
 the header field was received for compliance with the UA's CT Policy, and then process
 the Expect-CT header field as follows.
 
-If the connection complies with the UA's CT Policy (i.e. the connection is
+If the connection complies with the UA's CT Policy (i.e., the connection is
 CT-qualified), then the UA MUST either:
 
 - Note the host as a Known Expect-CT Host if it is not already so noted (see
@@ -310,11 +310,11 @@ CT-qualified), then the UA MUST either:
   information if the host was previously noted as a Known Expect-CT Host, and
   MUST NOT note this host as a Known Expect-CT Host if it is not already noted.
 
-If the connection does not comply with the UA's CT Policy (i.e. is not
+If the connection does not comply with the UA's CT Policy (i.e., is not
 CT-qualified), then the UA MUST NOT note this host as a Known Expect-CT Host.
 
 If the header field includes a `report-uri` directive, and the connection does
-not comply with the UA's CT Policy (i.e. the connection is not CT-qualified),
+not comply with the UA's CT Policy (i.e., the connection is not CT-qualified),
 and the UA has not already sent an Expect-CT report for this connection, then
 the UA SHOULD send a report to the specified `report-uri` as specified in
 {{reporting-expect-ct-failure}}.
@@ -393,7 +393,7 @@ An Expect-CT Host is "expired" if the effective expiration date refers to a date
 in the past. The UA MUST ignore any expired Expect-CT Hosts in its cache and not
 treat such hosts as Known Expect-CT hosts.
 
-If a connection to a Known CT Host violates the UA's CT policy (i.e. the
+If a connection to a Known CT Host violates the UA's CT policy (i.e., the
 connection is not CT-qualified), and if the Known Expect-CT Host's Expect-CT
 metadata indicates an `enforce` configuration, the UA MUST treat the CT
 compliance failure as a non-recoverable error.
@@ -406,7 +406,7 @@ A UA that has previously noted a host as a Known Expect-CT Host MUST evaluate CT
 compliance when setting up the TLS session, before beginning an HTTP
 conversation over the TLS channel.
 
-If the UA does not evaluate CT compliance, e.g. because the user has elected to
+If the UA does not evaluate CT compliance, e.g., because the user has elected to
 disable it, or because a presented certificate chain chains up to a user-defined
 trust anchor, UAs SHOULD NOT send Expect-CT reports.
 
@@ -470,7 +470,7 @@ has the following keys:
     {{!I-D.ietf-trans-rfc6962-bis}}), or "invalid" (indicating that the SCT
     validation failed because of, e.g., a bad signature).
   * The "source" key, with a string value that indicates from where the UA
-    obtained the SCT, as defined in Section 3 or {{!RFC6962}} and Section 6 of
+    obtained the SCT, as defined in Section 3 of {{!RFC6962}} and Section 6 of
     {{!I-D.ietf-trans-rfc6962-bis}}. The UA MUST set the value to one of
     "tls-extension", "ocsp", or "embedded".
   * The "serialized_sct" key, with a string value. If the value of the "version"
@@ -637,8 +637,6 @@ users will experience denials of service. It is advisable for UAs to explain the
 reason why.
 
 # Authoring Considerations {#authoring-considerations}
-
-## HTTP Header
 
 Expect-CT could be specified as a TLS extension or X.509 certificate extension
 instead of an HTTP response header field. Using an HTTP header field as the mechanism for
