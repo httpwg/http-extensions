@@ -70,14 +70,14 @@ Accept-Language: en;q=0.5, fr;q=1.0
 ~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
-Content-Language: fr
+Content-Language: en
 Vary: Accept-Language
 Transfer-Encoding: chunked
 
 [French content]
 ~~~
 
-Provided that the cache has full knowledge of the semantics of Accept-Language and Content-Language, it will know that a French representation is available and might be able to infer that an English representation is not available. But, it does not know (for example) whether a Japanese representation is available without making another request, incurring possibly unnecessary latency.
+Provided that the cache has full knowledge of the semantics of Accept-Language and Content-Language, it will know that an English representation is available and might be able to infer that a French representation is not available. But, it does not know (for example) whether a Japanese representation is available without making another request, incurring possibly unnecessary latency.
 
 This specification introduces the HTTP Variants response header field ({{variants}}) to enumerate the available variant representations on the origin server, to provide clients and caches with enough information to properly satisfy requests -- either by selecting a response from cache or by forwarding the request towards the origin -- by following the algorithm defined in {{cache}}.
 
@@ -92,10 +92,10 @@ Accept-Language: en;q=0.5, fr;q=1.0
 ~~~ example
 HTTP/1.1 200 OK
 Content-Type: text/html
-Content-Language: fr
+Content-Language: en
 Vary: Accept-Language
-Variants: Accept-Language;fr;de;en;jp
-Variant-Key: fr
+Variants: Accept-Language;de;en;jp
+Variant-Key: en
 Transfer-Encoding: chunked
 
 [French content]
