@@ -374,11 +374,7 @@ days. (One way to achieve this behavior is for the UA to simply store a value of
 ## Evaluating Expect-CT Connections for CT Compliance {#expect-ct-compliance}
 
 When a UA connects to a Known Expect-CT Host using a TLS connection, if the TLS
-connection has errors, the UA MUST terminate the connection without allowing the
-user to proceed anyway. (This behavior is the same as that required by
-{{!RFC6797}}.)
-
-If the connection has no errors, then the UA will apply an additional
+connection has no errors, then the UA will apply an additional
 correctness check: compliance with a CT Policy. A UA should evaluate compliance
 with its CT Policy whenever connecting to a Known Expect-CT Host, as soon as
 possible. It is acceptable to skip this CT compliance check for some hosts
@@ -651,6 +647,12 @@ Transparency requirements.
 --- back
 
 # Changes
+
+## Since -05
+
+* Remove SHOULD requirement that UAs disallow certificate error overrides for
+  Known Expect-CT Hosts.
+* Editorial changes
 
 ## Since -04
 
