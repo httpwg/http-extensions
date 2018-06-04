@@ -416,8 +416,8 @@ connection, then the UA SHOULD report Expect-CT failures to the configured
 
 ## Generating a violation report {#generating-a-violation-report}
 
-To generate a violation report object, the UA constructs a JSON object with the
-following keys and values:
+To generate a violation report object, the UA constructs a JSON {{!RFC8259}}
+object with the following keys and values:
 
 * "date-time": the value for this key indicates the time the UA observed the CT
 compliance failure. The value is a string formatted according to Section 5.6,
