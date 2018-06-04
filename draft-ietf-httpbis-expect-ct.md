@@ -373,31 +373,36 @@ days. (One way to achieve this behavior is for the UA to simply store a value of
 
 ## Evaluating Expect-CT Connections for CT Compliance {#expect-ct-compliance}
 
-When a UA connects to a Known Expect-CT Host using a TLS connection, if the TLS
-connection has no errors, then the UA will apply an additional
-correctness check: compliance with a CT Policy. A UA should evaluate compliance
-with its CT Policy whenever connecting to a Known Expect-CT Host, as soon as
-possible. It is acceptable to skip this CT compliance check for some hosts
-according to local policy. For example, a UA may disable CT compliance checks
-for hosts whose validated certificate chain terminates at a user-defined trust
-anchor, rather than a trust anchor built-in to the UA (or underlying platform).
+When a UA sets up a TLS connection, the UA determines whether the host is a
+Known Expect-CT Host according to its Known Expect-CT Host cache. An Expect-CT
+Host is "expired" if the effective expiration date refers to a date in the
+past. The UA MUST ignore any expired Expect-CT Hosts in its cache and not treat
+such hosts as Known Expect-CT hosts.
 
-An Expect-CT Host is "expired" if the effective expiration date refers to a date
-in the past. The UA MUST ignore any expired Expect-CT Hosts in its cache and not
-treat such hosts as Known Expect-CT hosts.
+When a UA connects to a Known Expect-CT Host using a TLS connection, if the TLS
+connection has no errors, then the UA will apply an additional correctness
+check: compliance with a CT Policy. A UA should evaluate compliance with its CT
+Policy whenever connecting to a Known Expect-CT Host, as soon as possible
+(though the check can be skipped, as discussed in
+{{skipping-ct-compliance-checks}}). When CT compliance is evaluted for a Known
+Expect-CT Host, the UA MUST evaluate compliance when setting up the TLS session,
+before beginning an HTTP conversation over the TLS channel.
 
 If a connection to a Known Expect-CT Host violates the UA's CT policy (i.e., the
 connection is not CT-qualified), and if the Known Expect-CT Host's Expect-CT
 metadata indicates an `enforce` configuration, the UA MUST treat the CT
-compliance failure as a non-recoverable error.
+compliance failure as an error.
 
 If a connection to a Known Expect-CT Host violates the UA's CT policy, and if the
 Known Expect-CT Host's Expect-CT metadata includes a `report-uri`, the UA SHOULD
 send an Expect-CT report to that `report-uri` ({{reporting-expect-ct-failure}}).
 
-A UA that has previously noted a host as a Known Expect-CT Host MUST evaluate CT
-compliance when setting up the TLS session, before beginning an HTTP
-conversation over the TLS channel.
+### Skipping CT compliance checks {#skipping-ct-compliance-checks}
+
+It is acceptable for a UA to skip CT compliance checks for some hosts according
+to local policy. For example, a UA may disable CT compliance checks for hosts
+whose validated certificate chain terminates at a user-defined trust anchor,
+rather than a trust anchor built-in to the UA (or underlying platform).
 
 If the UA does not evaluate CT compliance, e.g., because the user has elected to
 disable it, or because a presented certificate chain chains up to a user-defined
