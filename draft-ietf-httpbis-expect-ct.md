@@ -460,7 +460,7 @@ of JSON objects. The SCTs may appear in any order. Each JSON object in the array
 has the following keys:
   * A "version" key, with an integer value. The UA MUST set this value to `1` if
     the SCT is in the format defined in Section 3.2 of {{!RFC6962}} and `2` if
-    it is in the format defined in Section 4.6 of
+    it is in the format defined in Section 4.5 of
     {{!I-D.ietf-trans-rfc6962-bis}}.
   * The "status" key, with a string value that the UA MUST set to one of the
     following values: "unknown" (indicating that the UA does not have or does
@@ -478,7 +478,7 @@ has the following keys:
     serialized `SignedCertificateTimestamp` structure from Section 3.2 of
     {{!RFC6962}}. If the value of the "version" key is `2`, the UA MUST set this
     value to the base64 encoded {{!RFC4648}} serialized `TransItem` structure
-    representing the SCT, as defined in Section 4.6 of
+    representing the SCT, as defined in Section 4.5 of
     {{!I-D.ietf-trans-rfc6962-bis}}.
 
 * "failure-mode": the value indicates whether the Expect-CT report was triggered
