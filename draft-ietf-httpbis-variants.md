@@ -559,4 +559,4 @@ This protocol is conceptually similar to, but simpler than, Transparent Content 
 
 It is also a generalisation of a Fastly VCL feature designed by Rogier 'DocWilco' Mulhuijzen.
 
-Thanks to Hooman Beheshti for his review and input.
+Thanks to Hooman Beheshti, Ilya Grigorik and Jeffrey Yasskin for their review and input.
