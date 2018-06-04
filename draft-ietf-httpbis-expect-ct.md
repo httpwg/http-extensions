@@ -393,14 +393,14 @@ An Expect-CT Host is "expired" if the effective expiration date refers to a date
 in the past. The UA MUST ignore any expired Expect-CT Hosts in its cache and not
 treat such hosts as Known Expect-CT hosts.
 
-If a connection to a Known CT Host violates the UA's CT policy (i.e., the
+If a connection to a Known Expect-CT Host violates the UA's CT policy (i.e., the
 connection is not CT-qualified), and if the Known Expect-CT Host's Expect-CT
 metadata indicates an `enforce` configuration, the UA MUST treat the CT
 compliance failure as a non-recoverable error.
 
-If a connection to a Known CT Host violates the UA's CT policy, and if the Known
-Expect-CT Host's Expect-CT metadata includes a `report-uri`, the UA SHOULD send
-an Expect-CT report to that `report-uri` ({{reporting-expect-ct-failure}}).
+If a connection to a Known Expect-CT Host violates the UA's CT policy, and if the
+Known Expect-CT Host's Expect-CT metadata includes a `report-uri`, the UA SHOULD
+send an Expect-CT report to that `report-uri` ({{reporting-expect-ct-failure}}).
 
 A UA that has previously noted a host as a Known Expect-CT Host MUST evaluate CT
 compliance when setting up the TLS session, before beginning an HTTP
