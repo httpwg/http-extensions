@@ -709,6 +709,8 @@ of a Structured Headers. In some circumstances, this will cause parsing to fail,
 
 # Changes
 
+_RFC Editor: Please remove this section before publication._
+
 ## Since draft-ietf-httpbis-header-structure-05
 
 * Reorganise specification to separate parsing out.
