@@ -196,10 +196,11 @@ client decides to abandon those requests.
 Automatic retry creates the potential for a replay attack.  An attacker
 intercepts a connection that uses early data and copies the early data to
 another server instance.  The second server instance accepts and processes the
-early data.  The attacker then allows the original connection to complete.  Even
-if the early data is detected as a duplicate and rejected, the first server
-instance might allow the connection to complete.  If the client then retries
-requests that were sent in early data, the request will be processed twice.
+early data, even though it will not complete the TLS handshake.  The attacker
+then allows the original connection to complete.  Even if the early data is
+detected as a duplicate and rejected, the first server instance might allow the
+connection to complete.  If the client then retries requests that were sent in
+early data, the request will be processed twice.
 
 Replays are also possible if there are multiple server instances that will
 accept early data, or if the same server accepts early data multiple times
