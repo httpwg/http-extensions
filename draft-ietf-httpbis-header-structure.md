@@ -468,8 +468,8 @@ Given a string as input:
 1. Let output be an empty string.
 2. Append DQUOTE to output.
 3. For each character char in input:
-   1. If char is "\" or DQUOTE:
-      1. Append "\" to output.
+   1. If char is "\\" or DQUOTE:
+      1. Append "\\" to output.
    2. Append char to output, using ASCII encoding {{!RFC0020}}.
 4. Append DQUOTE to output.
 5. Return output.
