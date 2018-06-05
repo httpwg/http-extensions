@@ -329,7 +329,9 @@ Using early data exposes a client to the risk that their request is replayed.  A
 retried or replayed request can produce different side effects on the server.
 In addition to those side effects, replays and retries might be used for traffic
 analysis to recover information about requests or the resources those requests
-target.
+target.  In particular, a request that is replayed might result in a different
+response, which might be observable from the length of protected data even if
+the content remains confidential.
 
 ## Gateways and Early Data
 
