@@ -100,7 +100,11 @@ shown here.
 
 This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
 
-This document uses algorithms to specify normative parsing/serialisation behaviours, and ABNF to illustrate expected syntax. Implementations MUST follow the normative algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the algorithms and ABNF, the specified algorithms take precedence.
+This document uses algorithms to specify parsing and serialisation behaviours, and ABNF to illustrate expected syntax.
+
+For parsing, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
+
+For serialisation, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behaviour so long as the output still matches the ABNF.
 
 
 # Defining New Structured Headers {#specify}
