@@ -158,10 +158,10 @@ A server can partially process requests that are incomplete.  Parsing header
 fields - without acting on the values - and determining request routing is
 likely to be safe from side-effects, but other actions might not be.
 
-Intermediary servers do not have sufficient information to make this
-determination, so {{status}} describes a way for the origin to signal to them
-that a particular request isn't appropriate for early data. Intermediaries that
-accept early data MUST implement that mechanism.
+Intermediary servers do not have sufficient information to decide whether early
+data can be processed, so {{status}} describes a way for the origin to signal to
+them that a particular request isn't appropriate for early data. Intermediaries
+that accept early data MUST implement that mechanism.
 
 Note that a server cannot choose to selectively reject early data at the TLS
 layer. TLS only permits a server to accept all early data, or none of it. Once
