@@ -132,13 +132,16 @@ to mitigate the risks of replay:
 
 
 For a given request, the level of tolerance to replay risk is specific to the
-resource it operates upon (and therefore only known to the origin server). In
-general, if processing a request does not have state-changing side effects, the
-consequences of replay are not significant.
+resource it operates upon (and therefore only known to the origin server). The
+primary risk associated with using early data is in the actions a server takes
+when processing a request; processing a duplicated request might result in
+duplicated effects and side effects.  Appendix E.5 of {{!TLS13}} also describes
+other effects produced by processing duplicated requests.
 
 The request method's safety ({{!RFC7231}}, Section 4.2.1) is one way to
-determine this. However, some resources do elect to associate side effects with
-safe methods, so this cannot be universally relied upon.
+determine if a request is free from side effects. However, some resources do
+elect to associate side effects with safe methods, so this cannot be universally
+relied upon.
 
 It is RECOMMENDED that origin servers allow resources to explicitly configure
 whether early data is appropriate in requests. Absent such explicit information,
