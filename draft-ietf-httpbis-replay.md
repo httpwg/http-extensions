@@ -172,11 +172,10 @@ a server has decided to accept early data, it MUST process all requests in
 early data, even if the server rejects the request by sending a 425 (Too Early)
 response.
 
-A server can limit the amount of early data with the `max_early_data_size`
-field of the `early_data` TLS extension. This can be used to avoid committing
-an arbitrary amount of memory for deferred requests. A server SHOULD ensure
-that when it accepts early data, it can defer processing of requests until
-after the TLS handshake completes.
+A server can limit the amount of early data with the `max_early_data_size` field
+of the `early_data` TLS extension. This can be used to avoid committing an
+arbitrary amount of memory for requests that it might defer until the handshake
+completes.
 
 
 # Using Early Data in HTTP Clients
