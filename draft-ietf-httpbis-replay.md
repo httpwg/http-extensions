@@ -378,7 +378,7 @@ requests, which could result in increased load.
 
 In protocols that deliver data out of order (such as QUIC {{HQ}}) early data can
 arrive after the handshake completes.  A server MAY process requests received in
-early data after handshake completion if it can rely on other instances
+early data after handshake completion only if it can rely on other instances
 correctly handling replays of the same requests.
 
 
