@@ -41,6 +41,8 @@ use these mechanisms to mitigate the risk of replay.
 
 --- note_Note_to_Readers
 
+RFC Editor: Please remove this section before publication.
+
 Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
