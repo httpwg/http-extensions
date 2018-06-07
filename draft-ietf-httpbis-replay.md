@@ -220,10 +220,10 @@ data if the request either arrived in early data or arrived with the
 # Extensions for Early Data in HTTP
 
 Because HTTP requests can span multiple "hops", it is necessary to explicitly
-communicate whether a request has been sent in early data on another
-connection. Likewise, some means of explicitly triggering a retry when early
-data is not desirable is necessary. Finally, it is necessary to know whether the
-client will actually perform such a retry.
+communicate whether a request has been sent in early data on a previous
+hop. Likewise, some means of explicitly triggering a retry when early data is
+not desirable is necessary. Finally, it is necessary to know whether the client
+will actually perform such a retry.
 
 To meet these needs, two signalling mechanisms are defined:
 
