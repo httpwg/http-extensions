@@ -129,6 +129,8 @@ to mitigate the risks of replay:
    responding with the 425 (Too Early) status code ({{status}}), in cases where
    the risk of replay is judged too great.
 
+Aside from the first of these, which TLS mandates, any of these techniques is
+equally effective and a server can use the method that best suits it.
 
 For a given request, the level of tolerance to replay risk is specific to the
 resource it operates upon (and therefore only known to the origin server). In
