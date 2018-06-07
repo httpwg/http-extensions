@@ -192,8 +192,8 @@ send unsafe methods (or methods whose safety is not known) in early data.
 If the server rejects early data at the TLS layer, a client MUST start sending
 again as though the connection was new. This could entail using a different
 negotiated protocol {{?ALPN=RFC7301}} than the one optimistically used for the
-early data. Any requests sent in early data MUST be sent again, unless the
-client decides to abandon those requests.
+early data. Any requests sent in early data will need to be sent again, unless
+the client decides to abandon those requests.
 
 Automatic retry creates the potential for a replay attack.  An attacker
 intercepts a connection that uses early data and copies the early data to
