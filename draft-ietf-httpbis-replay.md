@@ -220,7 +220,7 @@ data if the request either arrived in early data or arrived with the
 # Extensions for Early Data in HTTP
 
 Because HTTP requests can span multiple "hops", it is necessary to explicitly
-communicate whether a request has been sent in early data on a previous
+communicate whether a request has been sent in early data on another
 connection. Likewise, some means of explicitly triggering a retry when early
 data is not desirable is necessary. Finally, it is necessary to know whether the
 client will actually perform such a retry.
@@ -303,9 +303,9 @@ trailers.
 A 425 (Too Early) status code indicates that the server is unwilling to risk
 processing a request that might be replayed.
 
-User agents that send a request in early data MUST automatically retry the
-request when receiving a 425 (Too Early) response status code. Such retries MUST
-NOT be sent in early data.
+User agents that send a request in early data are expected to retry the request
+when receiving a 425 (Too Early) response status code. A user agent MAY do so
+automatically, but any retries MUST NOT be sent in early data.
 
 In all cases, an intermediary can forward a 425 (Too Early) status code.
 Intermediaries MUST forward a 425 (Too Early) status code if the request that it
