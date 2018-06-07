@@ -205,7 +205,8 @@ requests that were sent in early data, the request will be processed twice.
 
 Replays are also possible if there are multiple server instances that will
 accept early data, or if the same server accepts early data multiple times
-(though this would be in violation of requirements in Section 8 of {{!TLS13}}).
+(though the latter would be in violation of requirements in Section 8 of
+{{!TLS13}}).
 
 Clients that use early data MUST retry requests upon receipt of a 425 (Too
 Early) status code; see {{status}}.
