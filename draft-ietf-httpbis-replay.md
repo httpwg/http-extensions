@@ -126,9 +126,9 @@ to mitigate the risks of replay:
 4. If the server receives multiple requests in early data, it can determine
    whether to defer HTTP processing on a per-request basis.
 
-5. The server can cause a client to retry each request and not use early data by
-   responding with the 425 (Too Early) status code ({{status}}), in cases where
-   the risk of replay is judged too great.
+5. The server can cause a client to retry individual requests and not use early
+   data by responding with the 425 (Too Early) status code ({{status}}), in
+   cases where the risk of replay is judged too great.
 
 
 For a given request, the level of tolerance to replay risk is specific to the
