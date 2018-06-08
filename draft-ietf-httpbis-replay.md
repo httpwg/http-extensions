@@ -136,8 +136,8 @@ general, if processing a request does not have state-changing side effects, the
 consequences of replay are not significant.
 
 The request method's safety ({{!RFC7231}}, Section 4.2.1) is one way to
-determine this. However, some resources do elect to associate side effects with
-safe methods, so this cannot be universally relied upon.
+determine this. However, some resources do produce side effects with safe
+methods, so this cannot be universally relied upon.
 
 It is RECOMMENDED that origin servers allow resources to explicitly configure
 whether early data is appropriate in requests. Absent such explicit information,
@@ -150,8 +150,8 @@ request being sent after the handshake completes.  This does not necessarily
 affect handling of that request; what matters is when the server starts acting
 upon the contents of a request.  Any time any server instance might initiate
 processing prior to completion of the handshake, all server instances need to
-consider how a possible replay of early data could affect that processing (see
-also {{be-consistent}}).
+account for the possibility of replay of early data and how that could affect
+that processing (see also {{be-consistent}}).
 
 A server can partially process requests that are incomplete.  Parsing header
 fields - without acting on the values - and determining request routing is
