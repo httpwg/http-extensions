@@ -355,7 +355,9 @@ cache. The UA caches:
 - whether the `enforce` directive is present
 - the Effective Expiration Date, which is the Effective Expect-CT Date plus the
   value of the `max-age` directive. Alternatively, the UA MAY cache enough
-  information to calculate the Effective Expiration Date.
+  information to calculate the Effective Expiration Date. The Effective
+  Expiration Date is calculated from when the UA observed the Expect-CT header
+  field and is independent of when the response was generated.
 - the value of the `report-uri` directive, if present.
 
 If any other metadata from optional or future Expect-CT header directives are
