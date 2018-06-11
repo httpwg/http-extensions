@@ -107,20 +107,20 @@ Usage of the CONNECT method in HTTP/2 is defined by Section 8.3 of
   <https://www.iana.org/assignments/http-upgrade-tokens/http-upgrade-tokens.xhtml>.
 
 * On requests bearing the :protocol pseudo-header, the :scheme and
-  :path pseudo-header fields MUST be included.
+  :path pseudo-header fields of the target URI (See {{usingExtended}}) MUST be included.
 
 * On requests bearing the :protocol pseudo-header, the :authority
   pseudo-header field is interpreted according to Section 8.1.2.3
-  of {{!RFC7540}} instead of Section 8.3 of {{!RFC7540}}. In particular the server
-  MUST NOT make a new TCP connection to the host and port indicated by
-  the :authority.
+  of {{!RFC7540}} instead of Section 8.3 of {{!RFC7540}}. In particular, the server
+  MUST NOT create a tunnel to the host indicated by the :authority as it
+  would with a CONNECT method request that was not modified by this extension.
 
 Upon receiving a CONNECT request bearing the :protocol pseudo-header
 the server establishes a tunnel to another service of the protocol
 type indicated by the pseudo-header. This service may or may not be
 co-located with the server.
 
-# Using Extended CONNECT To Bootstrap the WebSocket Protocol
+# Using Extended CONNECT To Bootstrap the WebSocket Protocol {#usingExtended}
 
 The pseudo-header :protocol MUST be included in the CONNECT request
 and it MUST have a value of `websocket` to initiate a WebSocket
@@ -130,8 +130,9 @@ the HEADERS with the CONNECT method as usual. This request replaces
 the GET-based request in {{!RFC6455}} and is used to process the
 WebSockets opening handshake.
 
-The scheme of the Target URI (Section 5.1 of {{!RFC7230}}) MUST be `https` for `wss` schemed
-WebSockets and `http` for `ws` schemed WebSockets. The websocket URI is still used for proxy
+The scheme of the target URI (Section 5.1 of {{!RFC7230}}) MUST be `https` for `wss` schemed
+WebSockets and `http` for `ws` schemed WebSockets. The remainder of the Target URI is the same as
+the websocket URI. The websocket URI is still used for proxy
 autoconfiguration.
 
 {{!RFC6455}} requires the use of Connection and Upgrade headers that
