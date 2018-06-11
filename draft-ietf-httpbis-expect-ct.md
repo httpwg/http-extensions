@@ -546,7 +546,7 @@ If the report's "test-report" key is set to true, the server MAY discard the
 report without further processing but MUST still return a 2xx (Successful)
 status code.
 
-# Security Considerations
+# Security Considerations {#security-considerations}
 
 When UAs support the Expect-CT header field, it becomes a potential vector for hostile
 header attacks against site owners. If a site owner uses a certificate issued by
@@ -621,6 +621,8 @@ hosts, and allow users to query the current state of Known Expect-CT Hosts.
 
 # IANA Considerations
 
+## Header Field Registry
+
 This document registers the `Expect-CT` header field in the "Message Headers"
 registry located at <https://www.iana.org/assignments/message-headers>.
 
@@ -648,6 +650,78 @@ Related information:
 
 : (empty)
 
+## Media Types Registry
+
+The MIME media type for Expect-CT violation reports is
+"application/expect-ct-report+json" (which uses the suffix established in
+{{!RFC6839}}).
+
+Type name:
+
+: application
+
+Subtype name:
+
+: expect-ct-report+json
+
+Required parameters:
+: n/a
+
+Optional parameters:
+
+: n/a
+
+Encoding considerations:
+
+: binary
+
+Security considerations:
+
+: See {{security-considerations}}
+
+Interoperability considerations:
+
+: n/a
+
+Published specification:
+
+: This document
+
+Applications that use this media type:
+
+: UAs that implement Certificate Transparency compliance checks and reporting
+
+Additional information:
+
+: 
+
+: Deprecated alias names for this type: n/a
+
+: Magic number(s): n/a
+
+: File extension(s): n/a
+
+: Macintosh file type code(s): n/a
+
+Person & email address to contact for further information:
+
+: Emily Stark (estark@google.com)
+
+Intended usage:
+
+: COMMON
+
+Restrictions on usage:
+
+: none
+
+Author:
+
+: Emily Stark (estark@google.com)
+
+Change controller:
+
+: IETF
 
 # Usability Considerations {#usability-considerations}
 
