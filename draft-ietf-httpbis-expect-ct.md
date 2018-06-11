@@ -394,9 +394,18 @@ such hosts as Known Expect-CT hosts.
 When a UA connects to a Known Expect-CT Host using a TLS connection, if the TLS
 connection has no errors, then the UA will apply an additional correctness
 check: compliance with a CT Policy. A UA should evaluate compliance with its CT
-Policy whenever connecting to a Known Expect-CT Host, as soon as possible
-(though the check can be skipped, as discussed in
-{{skipping-ct-compliance-checks}}). When CT compliance is evaluted for a Known
+Policy whenever connecting to a Known Expect-CT Host, as soon as
+possible. However, the check can be skipped for local policy reasons (as
+discussed in {{skipping-ct-compliance-checks}}), or in the event that other
+checks cause the UA to terminate the connection before CT compliance is
+evaluated. For example, a Public Key Pinning failure {{?RFC7469}} could cause
+the UA to terminate the connection before CT compliance is checked. Similarly,
+if the UA terminates the connection due to an Expect-CT failure, this could
+cause the UA to skip subsequent correctness checks. When the CT compliance check
+is skipped or bypassed, Expect-CT reports ({{reporting-expect-ct-failure}}) will
+not be sent.
+
+When CT compliance is evaluted for a Known
 Expect-CT Host, the UA MUST evaluate compliance when setting up the TLS session,
 before beginning an HTTP conversation over the TLS channel.
 
