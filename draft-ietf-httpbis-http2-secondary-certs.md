@@ -311,7 +311,35 @@ authentication indicate this using the HTTP/2 `SETTINGS_HTTP_CERT_AUTH`
 
 The initial value for the `SETTINGS_HTTP_CERT_AUTH` setting is 0, indicating
 that the peer does not support HTTP-layer certificate authentication. If a peer
-does support HTTP-layer certificate authentication, the value is 1.
+does support HTTP-layer certificate authentication, the value is non-zero.
+
+In order to ensure that the TLS connection is direct to the server, rather than
+via a TLS-terminating proxy, each side will separately compute and confirm the
+value of this setting.  The setting is derived from a TLS exporter (see Section
+7.5 of [I-D.ietf-tls-tls13] and {{?RFC5705}} for more details on exporters).
+Clients MAY use an early exporter during their 0-RTT flight, but MUST send an
+updated SETTINGS frame using a regular exporter after the TLS handshake
+completes.
+
+The exporter is constructed with the following input:
+
+- Label:
+  - "EXPORTER HTTP CERTIFICATE client" for clients
+  - "EXPORTER HTTP CERTIFICATE server" for servers
+- Context:  Empty
+- Length:  Four bytes
+
+The resulting exporter is converted to a setting value as:
+
+~~~
+Exporter & 0x3fffffff | (Early ? 0xc0000000 : 0x80000000)
+~~~
+
+That is, the most significant bit will always be set, and the next most
+significant bit indicates whether the value is derived from an early exporter.
+Each endpoint will compute the expected value from their peer.  If the setting
+is not received, or if the value received is not the expected value, the
+frames defined in this document MUST NOT be sent.
 
 ## Making certificates or requests available {#cert-available}
 
