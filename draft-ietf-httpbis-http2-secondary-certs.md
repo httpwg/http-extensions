@@ -850,6 +850,11 @@ this document.
 > **RFC Editor's Note:**  Please remove this section prior to publication of a
 > final version of this document.
 
+## Since draft-ietf-httpbis-http2-secondary-certs-01:
+
+- Clients can send `CERTIFICATE_NEEDED` for stream 0 rather than speculatively
+  reserving a stream for an origin.
+
 ## Since draft-ietf-httpbis-http2-secondary-certs-00:
 
 - All frames sent on stream zero; replaced `AUTOMATIC_USE` on `CERTIFICATE` with
