@@ -373,8 +373,11 @@ then sends a `CERTIFICATE_NEEDED` frame for stream zero referencing the request,
 indicating that the connection cannot be used for that origin until the
 certificate is provided.
 
-If the server does not have the desired certificate, it MUST send an empty
-`USE_CERTIFICATE` frame for stream zero.  In this case, or if the server has not
+If the server does not have the desired certificate, it MUST send an Empty
+Authenticator, as described in Section 5 of
+[I-D.ietf-tls-exported-authenticator], in a `CERTIFICATE` frame in response to
+the request, followed by a `USE_CERTIFICATE` frame for stream zero which
+references the Empty Authenticator.  In this case, or if the server has not
 advertised support for HTTP-layer certificates, the client MUST NOT send any
 requests for resources in that origin on the current connection.
 
