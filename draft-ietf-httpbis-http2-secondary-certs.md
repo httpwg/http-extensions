@@ -339,7 +339,7 @@ That is, the most significant bit will always be set, and the next most
 significant bit indicates whether the value is derived from an early exporter.
 Each endpoint will compute the expected value from their peer.  If the setting
 is not received, or if the value received is not the expected value, the
-frames defined in this document MUST NOT be sent.
+frames defined in this document SHOULD NOT be sent.
 
 ## Making certificates or requests available {#cert-available}
 
