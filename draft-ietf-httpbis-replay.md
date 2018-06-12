@@ -41,10 +41,10 @@ use these mechanisms to mitigate the risk of replay.
 
 --- note_Note_to_Readers
 
-Discussion of this draft takes place on the HTTP working group mailing list 
+Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source 
+Working Group information can be found at <http://httpwg.github.io/>; source
 code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/replay>.
 
 
@@ -114,16 +114,18 @@ to mitigate the risks of replay:
    anti-replay techniques reduce but don't completely eliminate the chance of
    data being replayed and ensure a fixed upper limit to the number of replays.
 
-2. The server can choose whether it will process early data before the TLS
-   handshake completes. By deferring processing, it can ensure that only a
-   successfully completed connection is used for the request(s) therein.
-   This provides the server with some assurance that the early data was not
-   replayed.
+2. The server can reject early data.  A server cannot selectively reject early
+   data, so this results in all requests sent in early data being discarded.
 
-3. If the server receives multiple requests in early data, it can determine
+3. The server can choose to delay processing of early data until after the TLS
+   handshake completes. By deferring processing, it can ensure that only a
+   successfully completed connection is used for the request(s) therein.  This
+   provides the server with some assurance that the early data was not replayed.
+
+4. If the server receives multiple requests in early data, it can determine
    whether to defer HTTP processing on a per-request basis.
 
-4. The server can cause a client to retry a request and not use early data by
+5. The server can cause a client to retry a request and not use early data by
    responding with the 425 (Too Early) status code ({{status}}), in cases where
    the risk of replay is judged too great.
 
@@ -190,15 +192,17 @@ negotiated protocol {{?ALPN=RFC7301}} than the one optimistically used for the
 early data. Any requests sent in early data MUST be sent again, unless the
 client decides to abandon those requests.
 
-This automatic retry exposes the request to a potential replay attack.  An
-attacker sends early data to one server instance that accepts and processes the
-early data, but allows that connection to proceed no further.  The attacker then
-forwards the same messages from the client to another server instance that will
-reject early data.  The client then retries the request, resulting in the
-request being processed twice.  Replays are also possible if there are multiple
-server instances that will accept early data, or if the same server accepts
-early data multiple times (though this would be in violation of requirements in
-Section 8 of {{!TLS13}}).
+Automatic retry creates the potential for a replay attack.  An attacker
+intercepts a connection that uses early data and copies the early data to
+another server instance.  The second server instance accepts and processes the
+early data.  The attacker then allows the original connection to complete.  Even
+if the early data is detected as a duplicate and rejected, the first server
+instance might allow the connection to complete.  If the client then retries
+requests that were sent in early data, the request will be processed twice.
+
+Replays are also possible if there are multiple server instances that will
+accept early data, or if the same server accepts early data multiple times
+(though this would be in violation of requirements in Section 8 of {{!TLS13}}).
 
 Clients that use early data MUST retry requests upon receipt of a 425 (Too
 Early) status code; see {{status}}.
@@ -269,6 +273,7 @@ the `Early-Data` header field if it might have forwarded the request prior to
 handshake completion (see {{be-consistent}} for details).
 
 An intermediary MUST NOT remove this header field if it is present in a request.
+`Early-Data` MUST NOT appear in a `Connection` header field.
 
 The `Early-Data` header field is not intended for use by user agents (that is,
 the original initiator of a request).  Sending a request in early data implies
@@ -281,6 +286,14 @@ for processing by waiting for the handshake to complete. A request that is
 marked with Early-Data was sent in early data on a previous hop. Requests that
 contain the Early-Data field and cannot be safely processed MUST be rejected
 using the 425 (Too Early) status code.
+
+The `Early-Data` header field carries a single bit of information and clients
+MUST include at most one instance.  Multiple or invalid instances of the header
+field MUST be treated as equivalent to a single instance with a value of 1 by a
+server.
+
+A `Early-Data` header field MUST NOT be included in responses or request
+trailers.
 
 
 ## The 425 (Too Early) Status Code {#status}
@@ -370,7 +383,7 @@ correctly handling replays of the same requests.
 # IANA Considerations
 
 This document registers the `Early-Data` header field in the "Message Headers"
-registry {{!HEADERS=RFC3864}}.
+registry located at <https://www.iana.org/assignments/message-headers>.
 
 Header field name:
 
@@ -397,7 +410,8 @@ Related information:
 : (empty)
 
 This document registers the 425 (Too Early) status code in the "Hypertext
-Transfer Protocol (HTTP) Status Code" registry established in {{!RFC7231}}.
+Transfer Protocol (HTTP) Status Code" registry located at
+<https://www.iana.org/assignments/http-status-codes>.
 
 Value:
 

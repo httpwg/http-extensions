@@ -1,5 +1,5 @@
 ---
-title: On the use of HTTP as a Substrate
+title: Building Protocols with HTTP
 docname: draft-ietf-httpbis-bcp56bis-latest
 date: {DATE}
 category: bcp
@@ -8,10 +8,11 @@ obsoletes: 3205
 ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
-keyword: Internet-Draft
 keyword: HTTP
 keyword: Web
 keyword: substrate
+keyword: protocol
+keyword: HTTP API
 
 stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
@@ -44,8 +45,6 @@ informative:
 HTTP is often used as a substrate for other application protocols (a.k.a. HTTP-based APIs). This
 document specifies best practices for these protocols' use of HTTP.
 
-This document obsoletes RFC 3205.
-
 
 --- note_Note_to_Readers_
 
@@ -59,37 +58,34 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 
 # Introduction
 
-HTTP {{!RFC7230}} is often used as a substrate for other application protocols; this is sometimes
-referred to as creating "HTTP-based APIs", or just "HTTP APIs", although the latter is ambiguous.
-This is done for a variety of reasons, including:
+HTTP {{!RFC7230}} is often used as a substrate for applications other than Web browsing; this is
+sometimes referred to as creating "HTTP-based APIs", or just "HTTP APIs". This is done for a
+variety of reasons, including:
 
 * familiarity by implementers, specifiers, administrators, developers and users,
 * availability of a variety of client, server and proxy implementations,
 * ease of use,
-* ubiquity of Web browsers,
+* availability of Web browsers,
 * reuse of existing mechanisms like authentication and encryption,
 * presence of HTTP servers and clients in target deployments, and
 * its ability to traverse firewalls.
 
-In many cases, these protocols are ad hoc; they are intended for only deployment on the server
-side, and consumption by a limited set of clients. A body of practices and tools has arisen around
-defining HTTP-based APIs that favours these conditions.
+These protocols are often ad hoc; they are intended for only deployment by one or a few servers,
+and consumption by a limited set of clients. As a result, a body of practices and tools has arisen
+around defining HTTP-based APIs that favours these conditions.
 
-However, when such a protocol is standarised, it is typically deployed on multiple servers,
-implemented a number of times, and might be consumed by a broader variety of clients. Such
+However, when such a protocol is standarised, it is typically deployed on multiple uncoordinated
+servers, implemented a number of times, and consumed by a broader variety of clients. Such
 diversity brings a different set of concerns, and tools and practices intended for a single-server
 deployment might not be suitable.
 
-In particular, standards-defined HTTP-based APIs need to more carefully consider how extensibility
-and evolution will be handled, how different deployment requirements will be accommodated, and how
-clients will evolve with the API.
+For example, HTTP-based APIs deployed in these circumstances need to more carefully consider how
+extensibility and evolution of the service will be handled, how different deployment requirements
+will be accommodated, and how clients will evolve with the API.
 
-At the same time, the IETF has a tradition of protocol reuse (e.g., {{?TELNET=RFC0854}} as a
-substrate for {{?FTP=RFC0959}} and {{?SMTP=RFC2821}}; HTTP as a substrate for {{?IPP=RFC8011}} and
-{{?RESTCONF=RFC8040}}). Because HTTP is extensible in many ways, a number of questions arise, such
-as:
+More generally, application protocols using HTTP face a number of design decisions, including:
 
-* Should an application using HTTP define a new URL scheme? Use new ports?
+* Should it define a new URL scheme? Use new ports?
 * Should it use standard HTTP methods and status codes, or define new ones?
 * How can the maximum value be extracted from the use of HTTP?
 * How does it coexist with other uses of HTTP -- especially Web browsing?
@@ -132,7 +128,7 @@ HTTP specifications in some manner. For example, an application might wish to av
 parts of the message format, but change others; or, it might want to use a different set of methods.
 
 Such applications are referred to as "protocols based upon HTTP" in this document. These have more
-freedom to modify protocol operation, but are also likely to lose at least a portion of the
+freedom to modify protocol operations, but are also likely to lose at least a portion of the
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
 and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
 
@@ -193,37 +189,41 @@ practice in standards.
 Instead of statically defining URL components like paths, it is RECOMMENDED that applications using
 HTTP define links in payloads, to allow flexibility in deployment.
 
-Using runtime links in this fashion has a number of other benefits. For example, navigating with a
-link allows a request to be routed to a different server without the overhead of a redirection,
-thereby supporting deployment across machines well.
+Using runtime links in this fashion has a number of other benefits -- especially when an
+application is to have multiple implementations and/or deployments (as is often the case for those
+that are standardised).
 
-It also becomes possible to "mix" different applications on the same server, and offers a natural
-mechanism for extensibility, versioning and capability management.
+For example, navigating with a link allows a request to be routed to a different server without the
+overhead of a redirection, thereby supporting deployment across machines well.
+
+It also becomes possible to "mix and match" different applications on the same server, and offers a
+natural mechanism for extensibility, versioning and capability management, since the document
+containing the links can also contain information about their targets.
+
+Using links also offers a form of cache invalidation that's seen on the Web; when a resource's
+state changes, the application can change its link to it so that a fresh copy is always fetched.
 
 
 ## Rich Functionality
 
-The simplest possible use of HTTP is to POST data to a single URL, thereby effectively tunnelling
-through the protocol.
+HTTP offers a number of features to applications, such as:
 
-This "RPC" style of communication does get some benefit from using HTTP -- namely, message framing and the availability of implementations -- but fails to realise many others when used exclusively:
+* Message framing
+* Multiplexing (in HTTP/2)
+* Integration with TLS
+* Support for intermediaries (proxies, gateways, Content Delivery Networks)
+* Client authentication
+* Content negotiation for format, language, and other features
+* Caching for server scalability, latency and bandwidth reduction, and reliability
+* Granularity of access control (through use of a rich space of URLs)
+* Partial content to selectively request part of a response
+* The ability to interact with the application easily using a Web browser
 
-* Caching for server scalability, latency and bandwidth reduction, and reliability;
-* Granularity of access control (through use of a rich space of URLs);
-* Partial content to selectively request part of a response;
-* Definition of an information space using URLs; and
-* The ability to interact with the application easily using a Web browser.
-
-Using such a high-level protocol to tunnel simple semantics has downsides too; because of its more
-advanced capabilities, breadth of deployment and age, HTTP's complexity can cause interoperability
-problems that could be avoided by using a simpler substrate (e.g., WebSockets {{?RFC6455}}, if
-browser support is necessary, or TCP {{?RFC0793}} if not), or making the application be based upon
-HTTP, instead of using it (as defined in {{used}}).
-
-Applications that use HTTP are encouraged to accommodate the various features that the protocol
-offers, so that their users receive the maximum benefit from it. This document does not require
-specific features to be used, since the appropriate design tradeoffs are highly specific to a given
-situation. However, following the practices in {{bp}} will help make them available.
+Applications that use HTTP are encouraged to utilise the various features that the protocol offers,
+so that their users receive the maximum benefit from it, and to allow it to be deployed in a
+variety of situations. This document does not require specific features to be used, since the
+appropriate design tradeoffs are highly specific to a given situation. However, following the
+practices in {{bp}} is a good starting point.
 
 
 # Best Practices for Using HTTP {#bp}
@@ -238,25 +238,29 @@ When specifying the use of HTTP, an application SHOULD use {{!RFC7230}} as the p
 it is not necessary to reference all of the specifications in the HTTP suite unless there are
 specific reasons to do so (e.g., a particular feature is called out).
 
-Applications using HTTP MAY specify a minimum version to be supported (HTTP/1.1 is suggested), and
-MUST NOT specify a maximum version, to preserve the protocol's ability to evolve.
+Applications using HTTP SHOULD NOT specify a minimum version of HTTP to be used; because it is a
+hop-by-hop protocol, a HTTP connection can be handled by implementations that are not controlled by
+the application; for example, proxies, CDNs, firewalls and so on. Requiring a particular version of
+HTTP makes it difficult to use in these situations, and harms interoperability for little reason
+(since HTTP's semantics are stable between protocol versions).
 
-Likewise, applications need not specify what HTTP mechanisms -- such as redirection, caching,
-authentication, proxy authentication, and so on -- are to be supported. For example, an application
-can specify that it uses HTTP like this:
+However, if an application's deployment would benefit from the use of a particular version of HTTP
+(for example, HTTP/2's multiplexing), this SHOULD be noted.
 
-    Foo Application uses HTTP [RFC7230]. Implementations MUST support
-    HTTP/1.1, and MAY support later versions.
+Applications using HTTP MUST NOT specify a maximum version, to preserve the protocol's ability to
+evolve.
 
 When specifying examples of protocol interactions, applications SHOULD document both the request
 and response messages, with full headers, preferably in HTTP/1.1 format. For example:
 
-~~~
+~~~ example
 GET /thing HTTP/1.1
 Host: example.com
 Accept: application/things+json
 User-Agent: Foo/1.0
 
+~~~
+~~~ example
 HTTP/1.1 200 OK
 Content-Type: application/things+json
 Content-Length: 500
@@ -305,8 +309,7 @@ HTTP does not mandate some behaviours that have nevertheless become very common;
 explicitly specified by applications using HTTP, there may be confusion and interoperability
 problems. This section recommends default handling for these mechanisms.
 
-* Redirect handling - Applications using HTTP SHOULD specify that 3xx redirect status codes be followed automatically. See {{!RFC7231}}, Section 6.4.
-* Redirect methods - Applications using HTTP SHOULD specify that 301 and 302 redirect status codes rewrite the POST method to GET, in order to be compatible with browsers. See {{!RFC7231}}, Section 6.4.
+* Redirect handling - Applications need to specify how redirects are expected to be handled; see {{redirects}}.
 * Cookies - Applications using HTTP MUST explicitly reference the Cookie specification {{?RFC6265}} if they are required.
 * Certificates - Applications using HTTP MUST specify that TLS certificates are to be checked according to {{!RFC2818}} when HTTPS is used.
 
@@ -330,7 +333,9 @@ standards cannot usurp this space, since it might conflict with existing resourc
 implementation and deployment.
 
 In other words, applications that use HTTP shouldn't associate application semantics with specific
-URL paths on arbitrary servers. Doing so inappropriately conflates the identity of the resource (its URL) with the capabilities that resource supports, bringing about many of the same interoperability problems that {{?RFC4367}} warns of.
+URL paths on arbitrary servers. Doing so inappropriately conflates the identity of the resource
+(its URL) with the capabilities that resource supports, bringing about many of the same
+interoperability problems that {{?RFC4367}} warns of.
 
 For example, specifying that a "GET to the URL /foo retrieves a bar document" is bad practice.
 Likewise, specifying "The widget API is at the path /bar" violates {{!RFC7320}}.
@@ -371,13 +376,13 @@ caveats to keep in mind:
 
 * Existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
 
-* Because URLs occur in and are generated in HTTP artefacts commonly, often without human intervention (e.g., in the `Location` response header), it can be difficult to assure that the new scheme is used consistently.
+* Because URLs occur in HTTP artefacts commonly, often being generated automatically (e.g., in the `Location` response header), it can be difficult to assure that the new scheme is used consistently.
 
 * The resources identified by the new scheme will still be available using "http" and/or "https" URLs. Those URLs can "leak" into use, which can present security and operability issues. For example, using a new scheme to assure that requests don't get sent to a "normal" Web site is likely to fail.
 
 * Features that rely upon the URL's origin {{?RFC6454}}, such as the Web's same-origin policy, will be impacted by a change of scheme.
 
-* HTTP-specific features such as cookies {{?RFC6265}}, authentication {{?RFC7235}}, caching {{?RFC7234}}, and CORS {{FETCH}} might or might not work correctly, depending on how they are defined and implemented. Generally, they are designed and implemented with an assumption that the URL will always be "http" or "https".
+* HTTP-specific features such as cookies {{?RFC6265}}, authentication {{?RFC7235}}, caching {{?RFC7234}}, HSTS {{?RFC6797}}, and CORS {{FETCH}} might or might not work correctly, depending on how they are defined and implemented. Generally, they are designed and implemented with an assumption that the URL will always be "http" or "https".
 
 * Web features that require a secure context {{?SECCTXT=W3C.CR-secure-contexts-20160915}} will likely treat a new scheme as insecure.
 
@@ -390,7 +395,7 @@ Applications that use HTTP can use the applicable default port (80 for HTTP, 443
 they can be deployed upon other ports. This decision can be made at deployment time, or might be
 encouraged by the application's specification (e.g., by registering a port for that application).
 
-In either case, non-default ports will need to be reflected in the authority of all URLs for that
+If a non-default port is used, it needs to be reflected in the authority of all URLs for that
 resource; the only mechanism for changing a default port is changing the scheme (see {{scheme}}).
 
 Using a port other than the default has privacy implications (i.e., the protocol can now be
@@ -406,7 +411,7 @@ Applications that use HTTP MUST confine themselves to using registered HTTP meth
 POST, PUT, DELETE, and PATCH.
 
 New HTTP methods are rare; they are required to be registered with IETF Review (see {{!RFC7232}}),
-and are also required to be *generic*. That means that they need to be potentially applicable to
+and are also required to be generic. That means that they need to be potentially applicable to
 all resources, not just those of one application.
 
 While historically some applications (e.g., {{?RFC4791}}) have defined non-generic methods,
@@ -422,7 +427,7 @@ an application's specification.
 GET is one of the most common and useful HTTP methods; its retrieval semantics allow caching,
 side-effect free linking and forms the basis of many of the benefits of using HTTP.
 
-A common use of GET is to perform queries, often using the query component of the URL; this is this
+A common use of GET is to perform queries, often using the query component of the URL; this is
 a familiar pattern from Web browsing, and the results can be cached, improving efficiency of an
 often expensive process.
 
@@ -516,6 +521,46 @@ HTTP community early, and document their proposal as a separate HTTP extension, 
 of an application's specification.
 
 
+### Redirection {#redirects}
+
+The 3xx series of status codes specified in {{!RFC7231}}, Section 6.4 are used to direct the user
+agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and
+308 ({{?RFC7538}}), all of which use the Location response header field to indicate where the
+client should send the request to.
+
+There are two ways that this group of status codes differ:
+
+* Whether they are permanent or temporary. Permanent redirects can be used to update links stored
+  in the client (e.g., bookmarks), whereas temporary ones can not. Note that this has no effect on
+  HTTP caching; it is completely separate.
+
+* Whether they allow the redirected request to change the request method from POST to GET. Web
+  browsers generally do change POST to GET for 301 and 302; therefore, 308 and 307 were created to
+  allow redirection without changing the method.
+
+This table summarises their relationships:
+
+|                                                     | Permanent | Temporary |
+| Allows changing the request method from POST to GET | 301       | 302       |
+| Does not allow changing the request method          | 308       | 307       |
+
+As noted in {{?RFC7231}}, a user agent is allowed to automatically follow a 3xx redirect that has a
+Location response header field, even if they don't understand the semantics of the specific status
+code. However, they aren't required to do so; therefore, if an application using HTTP desires
+redirects to be automatically followed, it needs to explicitly specify the circumstances when this
+is required.
+
+Applications using HTTP SHOULD specify that 301 and 302 responses change the subsequent request
+method from POST (but no other method) to GET, to be compatible with browsers.
+
+Generally, when a redirected request is made, its header fields are copied from the original
+request's. However, they can be modified by various mechanisms; e.g., sent Authorization
+({{?RFC7235}}) and Cookie ({{?RFC6265}}) headers will change if the origin (and sometimes path) of
+the request changes. Applications using HTTP SHOULD specify if any request headers need to be
+modified or removed upon a redirect; however, this behaviour cannot be relied upon, since a generic
+client (like a browser) will be unaware of such requirements.
+
+
 ## HTTP Header Fields {#headers}
 
 Applications that use HTTP MAY define new HTTP header fields. Typically, using HTTP header fields
@@ -576,6 +621,11 @@ repeatedly. In general, if it is safe to reuse something, consider assigning a f
 cache implementations take active measures to remove content intelligently when they are out of
 space, so "it will fill up the cache" is not a valid concern.
 
+The most common method for specifying freshness is the max-age response directive ({{?RFC7234}},
+Section 5.2.2.8). The Expires header ({{?RFC7234}}, Section 5.3) can also be used, but it is not
+necessary to specify it; all modern cache implementations support Cache-Control, and specifying
+freshness as a delta is both more convenient in most cases, and less error-prone.
+
 Understand that stale responses (e.g., one with "Cache-Control: max-age=0") can be reused when the
 cache is disconnected from the origin server; this can be useful for handling network issues. See
 {{?RFC7234}}, Section 4.2.4, and also {{?RFC5861}} for additional controls over stale content.
@@ -601,7 +651,8 @@ Vary: Accept-Encoding
 [content]
 ~~~
 
-can be stored for 60 seconds by both private and shared caches, can be revalidated with If-None-Match, and varies on the Accept-Encoding request header field.
+can be stored for 60 seconds by both private and shared caches, can be revalidated with
+If-None-Match, and varies on the Accept-Encoding request header field.
 
 In some situations, responses without explicit cache directives (e.g., Cache-Control or Expires)
 will be stored and served using a heuristic freshness lifetime; see {{?RFC7234}}, Section 4.2.2. As
@@ -655,6 +706,8 @@ authenticated, integrity-protected and confidential (e.g., as provided the "HTTP
 another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the underlying transport
 is similarly secure, or the chosen hash algorithm is not "MD5".
 
+With HTTPS, clients might also be authenticated using certificates {{?RFC5246}}.
+
 When used, it is important to carefully specify the scoping and use of authentication; if the
 application exposes sensitive data or capabilities (e.g., by acting as an ambient authority),
 exploits are possible. Mitigations include using a request-specific token to assure the intent of
@@ -679,14 +732,14 @@ possible, whereby an attacker can inject code into the browser and access data a
 that origin.
 
 This is only a small sample of the kinds of issues that applications using HTTP must consider.
-Generally, the best approach is to consider the application *as* a Web application, and to follow
-best practices for their secure development.
+Generally, the best approach is to consider the application actually as a Web application, and to
+follow best practices for their secure development.
 
 A complete enumeration of such practices is out of scope for this document, but some considerations
 include:
 
 * Using an application-specific media type in the Content-Type header, and requiring clients to fail if it is not used
-* Using X-Content-Type-Options: nosniff {{FETCH}}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser
+* Using X-Content-Type-Options: nosniff {{FETCH}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser
 * Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML5}}), thereby mitigating Cross-Site Scripting attacks
 * Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header
 * Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?RFC6265}}
@@ -741,6 +794,43 @@ another, to avoid leaking private information. As a result, applications that wi
 cross-origin data to browsers will need to implement the CORS protocol; see {{FETCH}}.
 
 
+## Server Push {#server-push}
+
+HTTP/2 adds the ability for servers to "push" request/response pairs to clients in {{?RFC7540}},
+Section 8.2. While server push seems like a natural fit for many common application semantics
+(e.g., "fanout" and publish/subscribe), a few caveats should be noted:
+
+* Server push is hop-by-hop; that is, it is not automatically forwarded by intermediaries. As a result, it might not work easily (or at all) with proxies, reverse proxies, and Content Delivery Networks.
+
+* Server push can have negative performance impact on HTTP when used incorrectly; in particular, if there is contention with resources that have actually been requested by the client.
+
+* Server push is implemented differently in different clients, especially regarding interaction with HTTP caching, and capabilities might vary.
+
+* APIs for server push are currently unavailable in some implementations, and vary widely in others. In particular, there is no current browser API for it.
+
+* Server push is not supported in HTTP/1.1 or HTTP/1.0.
+
+* Server push does not form part of the "core" semantics of HTTP, and therefore might not be supported by future versions of the protocol.
+
+Applications wishing to optimise cases where the client can perform work related to requests before
+the full response is available (e.g., fetching links for things likely to be contained within)
+might benefit from using the 103 (Early Hints) status code; see {{?RFC8297}}.
+
+Applications using server push directly need to enforce the requirements regarding authority in
+{{?RFC7540}}, Section 8.2, to avoid cross-origin push attacks.
+
+
+## Versioning and Evolution {#versioning}
+
+It's often necessary to introduce new features into application protocols, and change existing ones.
+
+In HTTP, backwards-incompatible changes are possible using a number of mechanisms:
+
+* Using a distinct link relation type {{!RFC8288}} to identify a URL for a resource that implements the new functionality
+* Using a distinct media type {{!RFC6838}} to identify formats that enable the new functionality
+* Using a distinct HTTP header field to implement new functionality outside the message body
+
+
 # IANA Considerations
 
 This document has no requirements for IANA.
@@ -758,6 +848,8 @@ authentication, integrity and confidentiality, as well as mitigate pervasive mon
 
 {{other-apps}} discusses the issues that arise when applications are deployed on the same origin
 as Web sites (and other applications).
+
+{{server-push}} highlights risks of using HTTP/2 server push in a manner other than specified.
 
 Applications that use HTTP in a manner that involves modification of implementations -- for
 example, requiring support for a new URL scheme, or a non-standard method -- risk having those
