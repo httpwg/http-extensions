@@ -316,8 +316,8 @@ Then the sorted-variants would be:
 
 ~~~ example
 [
-  ["fr", "en"]           // prefers French, will accept English
-  ["gzip", "identity"]   // prefers gzip encoding, will accept identity
+  ["fr", "en"]         // prefers French, will accept English
+  ["gzip", "identity"] // prefers gzip encoding, will accept identity
 ]
 ~~~
 
