@@ -535,12 +535,12 @@ Given an ASCII string input_string, return a mapping of (identifier, item). inpu
 2. While input_string is not empty:
    1. Let this_key be the result of running Parse Identifier from Text ({{parse-identifier}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
-   3. Consume a "=" from input_string; if none is present, fail parsing.
+   3. Consume the first character of input_string; if it is not "=", fail parsing.
    4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
    5. Add key this_key with value this_value to dictionary.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, return dictionary.
-   8. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
    9. Discard any leading OWS from input_string.
    0. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
@@ -556,7 +556,7 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
-   5. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   5. Consume the first character of input_string; if it is not COMMA, fail parsing.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
@@ -572,7 +572,7 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
-   5. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   5. Consume the first character of input_string; if it is not COMMA, fail parsing.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
