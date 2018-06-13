@@ -712,7 +712,7 @@ of a Structured Headers. In some circumstances, this will cause parsing to fail,
 
 ## Why Not JSON?
 
-Earlier proposals for structured headers were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields requires senders and recipients to implement specific additional handling. 
+Earlier proposals for structured headers were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields requires senders and recipients to implement specific additional handling.
 
 Because of JSON's broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability.
 
