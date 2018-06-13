@@ -706,6 +706,18 @@ of a Structured Headers. In some circumstances, this will cause parsing to fail,
 --- back
 
 
+# Frequently Asked Questions {#faq}
+
+## Why Not JSON?
+
+Earlier proposals for structured headers were based upon JSON {{?RFC8259}}, but failed to get traction for a variety of reasons, including:
+
+* Interoperability issues (e.g., regarding large numbers and objects with duplicate members)
+* Difficulties specifying field values using ABNF {{?RFC5234}}
+* Reluctance to embed a JSON parser in some HTTP implementations (e.g., servers and intermediaries)
+* Concerns about JSON's ability to nest to arbitrary depths, and the resulting memory commitment that might involve
+* Feelings that JSON doesn't "look right" in HTTP headers
+
 
 # Changes
 
