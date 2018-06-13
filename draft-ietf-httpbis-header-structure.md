@@ -714,6 +714,7 @@ Earlier proposals for structured headers were based upon JSON {{?RFC8259}}, but 
 
 * Interoperability issues (e.g., regarding large numbers and objects with duplicate members)
 * Difficulties specifying field values using ABNF {{?RFC5234}}
+* Need to encode JSON to appear in HTTP headers, thereby making it not-JSON
 * Reluctance to embed a JSON parser in some HTTP implementations (e.g., servers and intermediaries)
 * Concerns about JSON's ability to nest to arbitrary depths, and the resulting memory commitment that might involve
 * Feelings that JSON doesn't "look right" in HTTP headers
