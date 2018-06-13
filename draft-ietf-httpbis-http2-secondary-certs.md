@@ -311,7 +311,34 @@ authentication indicate this using the HTTP/2 `SETTINGS_HTTP_CERT_AUTH`
 
 The initial value for the `SETTINGS_HTTP_CERT_AUTH` setting is 0, indicating
 that the peer does not support HTTP-layer certificate authentication. If a peer
-does support HTTP-layer certificate authentication, the value is 1.
+does support HTTP-layer certificate authentication, the value is non-zero.
+
+In order to ensure that the TLS connection is direct to the server, rather than
+via a TLS-terminating proxy, each side will separately compute and confirm the
+value of this setting.  The setting is derived from a TLS exporter (see Section
+7.5 of [I-D.ietf-tls-tls13] and {{?RFC5705}} for more details on exporters).
+Clients MUST NOT use an early exporter during their 0-RTT flight, but MUST send
+an updated SETTINGS frame using a regular exporter after the TLS handshake
+completes.
+
+The exporter is constructed with the following input:
+
+- Label:
+  - "EXPORTER HTTP CERTIFICATE client" for clients
+  - "EXPORTER HTTP CERTIFICATE server" for servers
+- Context:  Empty
+- Length:  Four bytes
+
+The resulting exporter is converted to a setting value as:
+
+~~~
+(Exporter & 0x3fffffff) | 0x80000000
+~~~
+
+That is, the most significant bit will always be set, regardless of the value of
+the exporter. Each endpoint will compute the expected value from their peer.  If
+the setting is not received, or if the value received is not the expected value,
+the frames defined in this document SHOULD NOT be sent.
 
 ## Making certificates or requests available {#cert-available}
 
@@ -857,6 +884,7 @@ this document.
 
 - Clients can send `CERTIFICATE_NEEDED` for stream 0 rather than speculatively
   reserving a stream for an origin.
+- Use SETTINGS to disable when a TLS-terminating proxy is present (#617,#651)
 
 ## Since draft-ietf-httpbis-http2-secondary-certs-00:
 
