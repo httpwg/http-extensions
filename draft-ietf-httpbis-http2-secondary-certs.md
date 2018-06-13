@@ -317,8 +317,8 @@ In order to ensure that the TLS connection is direct to the server, rather than
 via a TLS-terminating proxy, each side will separately compute and confirm the
 value of this setting.  The setting is derived from a TLS exporter (see Section
 7.5 of [I-D.ietf-tls-tls13] and {{?RFC5705}} for more details on exporters).
-Clients MAY use an early exporter during their 0-RTT flight, but MUST send an
-updated SETTINGS frame using a regular exporter after the TLS handshake
+Clients MUST NOT use an early exporter during their 0-RTT flight, but MUST send
+an updated SETTINGS frame using a regular exporter after the TLS handshake
 completes.
 
 The exporter is constructed with the following input:
@@ -332,14 +332,13 @@ The exporter is constructed with the following input:
 The resulting exporter is converted to a setting value as:
 
 ~~~
-Exporter & 0x3fffffff | (Early ? 0xc0000000 : 0x80000000)
+(Exporter & 0x3fffffff) | 0x80000000
 ~~~
 
-That is, the most significant bit will always be set, and the next most
-significant bit indicates whether the value is derived from an early exporter.
-Each endpoint will compute the expected value from their peer.  If the setting
-is not received, or if the value received is not the expected value, the
-frames defined in this document SHOULD NOT be sent.
+That is, the most significant bit will always be set, regardless of the value of
+the exporter. Each endpoint will compute the expected value from their peer.  If
+the setting is not received, or if the value received is not the expected value,
+the frames defined in this document SHOULD NOT be sent.
 
 ## Making certificates or requests available {#cert-available}
 
