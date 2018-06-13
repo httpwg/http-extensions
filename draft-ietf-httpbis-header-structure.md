@@ -712,14 +712,17 @@ of a Structured Headers. In some circumstances, this will cause parsing to fail,
 
 ## Why Not JSON?
 
-Earlier proposals for structured headers were based upon JSON {{?RFC8259}}, but failed to get traction for a variety of reasons, including:
+Earlier proposals for structured headers were based upon JSON {{?RFC8259}}. However, constraining its use requires senders and recipients to implement specific additional handling. Because of JSON's broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability.
 
-* Interoperability issues (e.g., regarding large numbers and objects with duplicate members)
-* Difficulties specifying field values using ABNF {{?RFC5234}}
-* Need to process JSON to assure that characters are escaped in a manner that's appropriate for HTTP headers
-* Reluctance to embed a JSON parser in some HTTP implementations (e.g., servers and intermediaries)
-* Concerns about JSON's ability to nest to arbitrary depths, and the resulting memory commitment that might involve
-* Feelings that JSON doesn't "look right" in HTTP headers
+For example, JSON has specification issues around large numbers and objects with duplicate members. Although advice for avoiding these issues is available (e.g., {{?RFC7493}}), it cannot be relied upon.
+
+Likewise, JSON strings are by default Unicode strings, which have a number of potential interoperability issues (e.g., in comparison). Although implementers can be advised to avoid non-ASCII content where unnecessary, this is difficult to enforce.
+
+Since a major goal for Structured Headers is to improve interoperability and simplify implementation, these concerns led to a format that requires a dedicated parser and serialiser.
+
+Furthermore, JSON's ability to nest content to arbitrary depths caused some discomfort, as the resulting memory commitment might be unsuitable (e.g., in embedded and other limited server deployments).
+
+Finally, there were widely shared feelings that JSON doesn't "look right" in HTTP headers.
 
 
 # Changes
