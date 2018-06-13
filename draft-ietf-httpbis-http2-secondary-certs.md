@@ -872,7 +872,7 @@ this document.
 
 ## Since draft-ietf-httpbis-http2-secondary-certs-01:
 
-Nothing yet.
+- Use SETTINGS to disable when a TLS-terminating proxy is present (#617,#651)
 
 ## Since draft-ietf-httpbis-http2-secondary-certs-00:
 
