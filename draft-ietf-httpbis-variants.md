@@ -51,7 +51,7 @@ There is a prototype implementation of the algorithms herein at <https://github.
 
 # Introduction
 
-HTTP proactive content negotiation ({{!RFC7231}}, Section 3.4.1) is seeing renewed interest, both for existing request headers like Content-Language and for newer ones (for example, see {{?I-D.ietf-httpbis-client-hints}}).
+HTTP proactive content negotiation ({{!RFC7231}}, Section 3.4.1) is seeing renewed interest, both for existing request headers like Accept-Language and for newer ones (for example, see {{?I-D.ietf-httpbis-client-hints}}).
 
 Successfully reusing negotiated responses that have been stored in a HTTP cache requires establishment of a secondary cache key ({{!RFC7234}}, Section 4.1). Currently, the Vary header ({{!RFC7231}}, Section 7.1.4) does this by nominating a set of request headers.
 
@@ -208,11 +208,11 @@ This header pair indicates that the representation has a "gzip" content-coding a
 A more complex example involves listing multiple available-values in a list member, to indicate that the response can be used to satisfy requests with any of those values. For example:
 
 ~~~ example
-Variants: Content-Encoding;gzip;br, Content-Language;en ;fr
+Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
 Variant-Key: gzip;identity, fr
 ~~~
 
-indicates that this response can be used for requests whose Content-Encoding algorithm selects "gzip" or "identity", as long as the Content-Language algorithm selects "fr" -- perhaps because there is no gzip-compressed French representation.
+indicates that this response can be used for requests whose Accept-Encoding algorithm selects "gzip" or "identity", as long as the Accept-Language algorithm selects "fr" -- perhaps because there is no gzip-compressed French representation.
 
 This highlights an important aspect of Variant-Key; it is only used to indicate what request attributes are associated with the response containing it; this is different from headers like Content-Encoding, which indicate attributes of the response itself.
 
@@ -379,7 +379,7 @@ Vary: Accept-Language
 Transfer-Encoding: chunked
 ~~~
 
-Upon receipt of this response, the cache knows that two representations of this resource are available, one with a Content-Language of "en", and another whose Content-Language is "de".
+Upon receipt of this response, the cache knows that two representations of this resource are available, one with a language of "en", and another whose language is "de".
 
 Subsequent requests (while this response is fresh) will cause the cache to either reuse this response or forward the request, depending on what the selection algorithm determines.
 
@@ -413,14 +413,14 @@ Vary: Accept-Language, Accept-Encoding
 Transfer-Encoding: chunked
 ~~~
 
-Here, the cache knows that there are two axes that the response varies upon; Content-Language and Content-Encoding. Thus, there are a total of nine possible representations for the resource (including the identity encoding), and the cache needs to consider the selection algorithms for both axes.
+Here, the cache knows that there are two axes that the response varies upon; language and encoding. Thus, there are a total of nine possible representations for the resource (including the identity encoding), and the cache needs to consider the selection algorithms for both axes.
 
 Upon a subsequent request, if both selection algorithms return a stored representation, it can be served from cache; otherwise, the request will need to be forwarded to origin.
 
 
 ### Partial Coverage {#partial}
 
-Now, consider the previous example, but where only one of the Vary'd axes (Content-Encoding) is
+Now, consider the previous example, but where only one of the Vary'd axes (encoding) is
 listed in Variants:
 
 ~~~ example
