@@ -420,6 +420,13 @@ Client                                      Server
 ~~~
 {: #ex-http2-server-requested title="Client-Requested Certificate"}
 
+If a client receives a `PUSH_PROMISE` referencing an origin for which it has not
+yet received the server's certificate, this is a fatal connection error (see
+section 8.2 of [RFC7540]).  To avoid this, servers MUST supply the associated
+certificates before pushing resources from a different origin.
+
+### Requiring additional client certificates
+
 Likewise, the server sends a `CERTIFICATE_NEEDED` frame for each stream where
 certificate authentication is required.  The client answers with a
 `USE_CERTIFICATE` frame indicating the certificate to use on that stream. If the
@@ -438,11 +445,6 @@ Client                                      Server
    <----------------------- (stream N) 200 OK --
 ~~~
 {: #ex-http2-client-requested title="Reactive Certificate Authentication"}
-
-If a client receives a `PUSH_PROMISE` referencing an origin for which it has not
-yet received the server's certificate, this is a fatal connection error (see
-section 8.2 of [RFC7540]).  To avoid this, servers MUST supply the associated
-certificates before pushing resources from a different origin.
 
 # Certificates Frames for HTTP/2 {#certs-http2}
 
