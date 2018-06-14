@@ -446,6 +446,15 @@ Client                                      Server
 ~~~
 {: #ex-http2-client-requested title="Reactive Certificate Authentication"}
 
+If the client does not have the desired certificate, it instead sends an Empty
+Authenticator, as described in Section 5 of
+[I-D.ietf-tls-exported-authenticator], in a `CERTIFICATE` frame in response to
+the request, followed by a `USE_CERTIFICATE` frame which references the Empty
+Authenticator.  In this case, or if the client has not advertised support for
+HTTP-layer certificates, the server processes the request based solely on the
+certificate provided during the TLS handshake, if any.  This might result in an
+error response via HTTP, such as a status code 403 (Not Authorized).
+
 # Certificates Frames for HTTP/2 {#certs-http2}
 
 The `CERTIFICATE_REQUEST` and `CERTIFICATE_NEEDED` frames are correlated by
