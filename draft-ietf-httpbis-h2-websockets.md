@@ -39,9 +39,9 @@ be updated for new versions of HTTP.
 The WebSocket Protocol {{!RFC6455}} uses the HTTP/1.1
 Upgrade mechanism (Section 6.7 of {{!RFC7230}}) to transition a TCP connection from HTTP into a
 WebSocket connection. A different approach must be taken with HTTP/2
-{{!RFC7540}}. HTTP/2 does not allow connection-wide headers and status
-codes such as the Upgrade and Connection request headers or the 101
-response code due to its multiplexing nature. These are all required
+{{!RFC7540}}. HTTP/2 does not allow connection-wide header fields and status
+codes such as the Upgrade and Connection request header fields or the 101
+(Switching Protocols) response code due to its multiplexing nature. These are all required
 by the {{!RFC6455}} opening handshake.
 
 Being able to bootstrap WebSockets from HTTP/2 allows one TCP
@@ -89,8 +89,8 @@ value of 0 after previously sending a value of 1.
 
 The use of a SETTINGS Parameter to opt-in to an otherwise incompatible
 protocol change is a use of "Extending HTTP/2" defined by Section 5.5
-of {{!RFC7540}}. Specifically, the addition a new pseudo-header ":protocol" and the change in meaning
-of the ":authority" pseudo-header in {{method}} require opt-in negotiation. If a client were to use the provisions of the extended
+of {{!RFC7540}}. Specifically, the addition a new pseudo-header field ":protocol" and the change in meaning
+of the ":authority" pseudo-header field in {{method}} require opt-in negotiation. If a client were to use the provisions of the extended
 CONNECT method defined in this document without first receiving a
 SETTINGS_ENABLE_CONNECT_PROTOCOL parameter, a non-supporting peer would
 detect a malformed request and generate a stream error (Section
@@ -101,31 +101,31 @@ detect a malformed request and generate a stream error (Section
 Usage of the CONNECT method in HTTP/2 is defined by Section 8.3 of
 {{!RFC7540}}. This extension modifies the method in the following ways:
 
-* A new pseudo-header :protocol MAY be included on request HEADERS indicating the desired protocol
-  to be spoken on the tunnel created by CONNECT. The pseudo-header is single valued and contains a
+* A new pseudo-header field :protocol MAY be included on request HEADERS indicating the desired protocol
+  to be spoken on the tunnel created by CONNECT. The pseudo-header field is single valued and contains a
   value from the HTTP Upgrade Token Registry located at
-  <https://www.iana.org/assignments/http-upgrade-tokens/http-upgrade-tokens.xhtml>.
+  https://www.iana.org/assignments/http-upgrade-tokens/http-upgrade-tokens.xhtml
 
-* On requests bearing the :protocol pseudo-header, the :scheme and
-  :path pseudo-header fields of the target URI (See {{usingExtended}}) MUST be included.
+* On requests that contain the :protocol pseudo-header field, the :scheme and
+  :path pseudo-header fields of the target URI (See {{usingExtended}}) MUST also be included.
 
-* On requests bearing the :protocol pseudo-header, the :authority
+* On requests bearing the :protocol pseudo-header field, the :authority
   pseudo-header field is interpreted according to Section 8.1.2.3
   of {{!RFC7540}} instead of Section 8.3 of {{!RFC7540}}. In particular, the server
   MUST NOT create a tunnel to the host indicated by the :authority as it
   would with a CONNECT method request that was not modified by this extension.
 
-Upon receiving a CONNECT request bearing the :protocol pseudo-header
+Upon receiving a CONNECT request bearing the :protocol pseudo-header field
 the server establishes a tunnel to another service of the protocol
-type indicated by the pseudo-header. This service may or may not be
+type indicated by the pseudo-header field. This service may or may not be
 co-located with the server.
 
 # Using Extended CONNECT To Bootstrap the WebSocket Protocol {#usingExtended}
 
-The pseudo-header :protocol MUST be included in the CONNECT request
+The :protocol pseudo-header field MUST be included in the CONNECT request
 and it MUST have a value of `websocket` to initiate a WebSocket
 connection on an HTTP/2 stream. Other HTTP request and response
-headers, such as those for manipulating cookies, may be included in
+header fields, such as those for manipulating cookies, may be included in
 the HEADERS with the CONNECT method as usual. This request replaces
 the GET-based request in {{!RFC6455}} and is used to process the
 WebSockets opening handshake.
@@ -135,23 +135,23 @@ WebSockets and `http` for `ws` schemed WebSockets. The remainder of the Target U
 the websocket URI. The websocket URI is still used for proxy
 autoconfiguration.
 
-{{!RFC6455}} requires the use of Connection and Upgrade headers that
+{{!RFC6455}} requires the use of Connection and Upgrade header fields that
 are not part of HTTP/2. They MUST NOT be included in the CONNECT
 request defined here.
 
-{{!RFC6455}} requires the use of a Host header which is also not part of
+{{!RFC6455}} requires the use of a Host header field which is also not part of
 HTTP/2. The Host information is conveyed as part of the :authority
-pseudo-header which is required on every HTTP/2 transaction.
+pseudo-header field which is required on every HTTP/2 transaction.
 
 Implementations using this extended CONNECT to bootstrap WebSockets do
 not do the processing of the {{!RFC6455}} Sec-WebSocket-Key and
-Sec-WebSocket-Accept headers as that functionality has been superseded
-by the :protocol pseudo-header.
+Sec-WebSocket-Accept header fields as that functionality has been superseded
+by the :protocol pseudo-header field.
 
 The Origin {{!RFC6454}}, Sec-WebSocket-Version, Sec-WebSocket-Protocol,
-and Sec-WebSocket-Extensions headers are used on the CONNECT request
-and response headers in the same way as defined in {{!RFC6455}}. Note
-that HTTP/1 header names were case-insensitive and HTTP/2 requires
+and Sec-WebSocket-Extensions header fields are used in the CONNECT request
+and response header fields in the same way as defined in {{!RFC6455}}. Note
+that HTTP/1 header field names were case-insensitive and HTTP/2 requires
 they be encoded as lower case.
 
 After successfully processing the opening handshake, the peers should
@@ -160,7 +160,7 @@ stream from the CONNECT transaction as if it were the TCP connection
 referred to in {{!RFC6455}}. The state of the WebSocket connection at
 this point is OPEN as defined by {{!RFC6455}}, Section 4.1.
 
-The HTTP/2 stream closure is also analogous to the TCP connection of
+The HTTP/2 stream closure is also analogous to the TCP connection closure of
 {{!RFC6455}}. Orderly TCP level closures are represented as END_STREAM
 ({{!RFC7540}}, Section 6.1) flags and RST exceptions are represented
 with the RST_STREAM ({{!RFC7540}}, Section 6.4) frame with the CANCEL
@@ -210,7 +210,7 @@ HTTP/2 and WebSockets concurrently.
 This document does not change how WebSockets interacts with HTTP forward
 proxies. If a client wishing to speak WebSockets connects via HTTP/2
 to an HTTP proxy it should continue to use a traditional (i.e. not with
-a :protocol pseudo-header) CONNECT to tunnel through that proxy to the
+a :protocol pseudo-header field) CONNECT to tunnel through that proxy to the
 WebSocket server via HTTP.
 
 The resulting version of HTTP on that tunnel determines whether
@@ -222,13 +222,13 @@ described in this document.
 {{!RFC6455}} ensures that non-WebSockets clients, especially
 XMLHttpRequest based clients, cannot make a WebSocket connection. Its
 primary mechanism for doing that is the use of Sec- prefixed request
-headers that cannot be created by XMLHttpRequest-based clients. This
+header fields that cannot be created by XMLHttpRequest-based clients. This
 specification addresses that concern in two ways:
 
 * XMLHttpRequest also prohibits use of the CONNECT method in addition to Sec- prefixed request
-  headers.
+  header fields.
 
-* The use of a pseudo-header is something that is connection specific
+* The use of a pseudo-header field is something that is connection specific
   and HTTP/2 does not ever allow to be created outside of the protocol stack.
 
 The security considerations of {{!RFC6455}} section 10 continue to apply to the use of the WebSocket
