@@ -231,6 +231,10 @@ specification addresses that concern in two ways:
 * The use of a pseudo-header is something that is connection specific
   and HTTP/2 does not ever allow to be created outside of the protocol stack.
 
+The security considerations of {{!RFC6455}} section 10 continue to apply to the use of the WebSocket
+Protocol when using this specification with the exception of 10.8. That section is not relevant
+because it is specific to the boostrapping handshake that is changed in this document.
+
 # IANA Considerations
 
 This document establishes an entry for the HTTP/2 Settings Registry
