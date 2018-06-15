@@ -132,8 +132,9 @@ WebSockets opening handshake.
 
 The scheme of the target URI (Section 5.1 of {{!RFC7230}}) MUST be `https` for `wss` schemed
 WebSockets and `http` for `ws` schemed WebSockets. The remainder of the Target URI is the same as
-the websocket URI. The websocket URI is still used for proxy
-autoconfiguration.
+the websocket URI. The websocket URI is still used for proxy autoconfiguration.  The security
+requirements for the HTTP/2 connection used by this specification are established by {{!RFC7540}}
+for https requests and {{!RFC8164}} for http requests.
 
 {{!RFC6455}} requires the use of Connection and Upgrade header fields that
 are not part of HTTP/2. They MUST NOT be included in the CONNECT
