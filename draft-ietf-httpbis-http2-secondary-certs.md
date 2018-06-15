@@ -140,7 +140,7 @@ certificate that is used for all resources. Many other uses for client
 certificates are reactive, that is, certificates are requested in response to
 the client making a request.
 
-### HTTP/1.1 using TLS 1.2 and previous
+### HTTP/1.1 Using TLS 1.2 and Earlier
 
 In HTTP/1.1, a server that relies on client authentication for a subset of users
 or resources does not request a certificate when the connection is established.
@@ -164,7 +164,7 @@ Client                                      Server
    <-------------------------- (TLS) Finished --
    <--------------------------- (HTTP) 200 OK -- *5
 ~~~
-{: #ex-http11 title="HTTP/1.1 Reactive Certificate Authentication with TLS 1.2"}
+{: #ex-http11 title="HTTP/1.1 reactive certificate authentication with TLS 1.2"}
 
 In this example, the server receives a request for a protected resource (at \*1
 on {{ex-http11}}).  Upon performing an authorization check, the server
@@ -185,7 +185,7 @@ When the handshake completes, the server performs any authorization checks a
 second time.  With the client certificate available, it then authorizes the
 request and provides a response (\*5).
 
-### HTTP/1.1 using TLS 1.3
+### HTTP/1.1 Using TLS 1.3
 
 TLS 1.3 [I-D.ietf-tls-tls13] introduces a new client authentication mechanism
 that allows for clients to authenticate after the handshake has been completed.
@@ -201,7 +201,7 @@ Client                                      Server
                Finished ----------------------->
    <--------------------------- (HTTP) 200 OK --
 ~~~
-{: #ex-tls13 title="HTTP/1.1 Reactive Certificate Authentication with TLS 1.3"}
+{: #ex-tls13 title="HTTP/1.1 reactive certificate authentication with TLS 1.3"}
 
 TLS 1.3 does not support renegotiation, instead supporting direct client
 authentication.  In contrast to the TLS 1.2 example, in TLS 1.3, a server can
@@ -303,7 +303,7 @@ unrelated to values used by the other peer, even if each uses the same ID in
 certain cases.  `USE_CERTIFICATE` frames indicate whether they are sent
 proactively or are in response to a `CERTIFICATE_NEEDED` frame.
 
-## Indicating support for HTTP-layer certificate authentication {#setting}
+## Indicating Support for HTTP-Layer Certificate Authentication {#setting}
 
 Clients and servers that will accept requests for HTTP-layer certificate
 authentication indicate this using the HTTP/2 `SETTINGS_HTTP_CERT_AUTH`
@@ -340,7 +340,7 @@ the exporter. Each endpoint will compute the expected value from their peer.  If
 the setting is not received, or if the value received is not the expected value,
 the frames defined in this document SHOULD NOT be sent.
 
-## Making certificates or requests available {#cert-available}
+## Making Certificates or Requests Available {#cert-available}
 
 When both peers have advertised support for HTTP-layer certificates as in
 {{setting}}, either party can supply additional certificates into the connection
@@ -362,7 +362,7 @@ Client                                      Server
    <----------------------- (stream N) 200 OK --
 
 ~~~
-{: #ex-http2-server-proactive title="Proactive Server Certificate"}
+{: #ex-http2-server-proactive title="Proactive server authentication"}
 
 ~~~ drawing
 Client                                      Server
@@ -373,7 +373,7 @@ Client                                      Server
    <-------------------- (streams 1,3) 200 OK --
 
 ~~~
-{: #ex-http2-client-proactive title="Proactive Client Certificate"}
+{: #ex-http2-client-proactive title="Proactive client authentication"}
 
 Likewise, either party can supply a `CERTIFICATE_REQUEST` that outlines
 parameters of a certificate they might request in the future.  Upon receipt of a
@@ -382,9 +382,9 @@ anticipation of a request shortly being blocked. Clients MAY wait for a
 `CERTIFICATE_NEEDED` frame to assist in associating the certificate request with
 a particular HTTP transaction.
 
-## Requiring certificate authentication {#cert-challenge}
+## Requiring Certificate Authentication {#cert-challenge}
 
-### Requiring additional server certificates
+### Requiring Additional Server Certificates
 
 As defined in [RFC7540], when a client finds that a https:// origin (or
 Alternative Service [RFC7838]) to which it needs to make a request has the same
@@ -418,7 +418,14 @@ Client                                      Server
    -- (stream N) GET /from-new-origin --------->
    <----------------------- (stream N) 200 OK --
 ~~~
-{: #ex-http2-server-requested title="Client-Requested Certificate"}
+{: #ex-http2-server-requested title="Client-requested certificate"}
+
+If a client receives a `PUSH_PROMISE` referencing an origin for which it has not
+yet received the server's certificate, this is a fatal connection error (see
+section 8.2 of [RFC7540]).  To avoid this, servers MUST supply the associated
+certificates before pushing resources from a different origin.
+
+### Requiring Additional Client Certificates
 
 Likewise, the server sends a `CERTIFICATE_NEEDED` frame for each stream where
 certificate authentication is required.  The client answers with a
@@ -437,12 +444,16 @@ Client                                      Server
    -- (stream 0) USE_CERTIFICATE (S=N) -------->
    <----------------------- (stream N) 200 OK --
 ~~~
-{: #ex-http2-client-requested title="Reactive Certificate Authentication"}
+{: #ex-http2-client-requested title="Reactive certificate authentication"}
 
-If a client receives a `PUSH_PROMISE` referencing an origin for which it has not
-yet received the server's certificate, this is a fatal connection error (see
-section 8.2 of [RFC7540]).  To avoid this, servers MUST supply the associated
-certificates before pushing resources from a different origin.
+If the client does not have the desired certificate, it instead sends an Empty
+Authenticator, as described in Section 5 of
+[I-D.ietf-tls-exported-authenticator], in a `CERTIFICATE` frame in response to
+the request, followed by a `USE_CERTIFICATE` frame which references the Empty
+Authenticator.  In this case, or if the client has not advertised support for
+HTTP-layer certificates, the server processes the request based solely on the
+certificate provided during the TLS handshake, if any.  This might result in an
+error response via HTTP, such as a status code 403 (Not Authorized).
 
 # Certificates Frames for HTTP/2 {#certs-http2}
 
@@ -481,7 +492,7 @@ same value by the other peer or in the other context does not imply any
 correlation between these frames. These values MUST be unique per sender for
 each space over the lifetime of the connection.
 
-## The CERTIFICATE_NEEDED frame {#http-cert-needed}
+## The CERTIFICATE_NEEDED Frame {#http-cert-needed}
 
 The `CERTIFICATE_NEEDED` frame (0xFRAME-TBD1) is sent on stream zero to indicate
 that the HTTP request on the indicated stream is blocked pending certificate
@@ -705,7 +716,7 @@ steps to validate the token it contains:
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.
 
-# Indicating failures during HTTP-Layer Certificate Authentication {#errors}
+# Indicating Failures During HTTP-Layer Certificate Authentication {#errors}
 
 Because this draft permits certificates to be exchanged at the HTTP framing
 layer instead of the TLS layer, several certificate-related errors which are
