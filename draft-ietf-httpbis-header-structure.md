@@ -98,7 +98,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
+This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the VCHAR, DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
 
 This document uses algorithms to specify parsing and serialisation behaviours, and ABNF to illustrate expected syntax.
 
@@ -115,7 +115,7 @@ To define a HTTP header as a structured header, its specification needs to:
 
 * Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification.
 
-* Specify any additional constraints upon the syntax of the structured sued, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
+* Specify any additional constraints upon the syntax of the structured used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
 Note that a header field definition cannot relax the requirements of a structure or its processing; they can only add additional constraints, because doing so would preclude handling by generic software.
 
@@ -464,12 +464,12 @@ Given a float as input:
 
 Given a string as input:
 
-0. If input is not a sequence of characters, or contains characters outside the range allowed by the ABNF defined in {{string}}, fail serialisation.
+0. If input is not a sequence of characters, or contains characters outside the range allowed by VCHAR, fail serialisation.
 1. Let output be an empty string.
 2. Append DQUOTE to output.
 3. For each character char in input:
-   1. If char is "\" or DQUOTE:
-      1. Append "\" to output.
+   1. If char is "\\" or DQUOTE:
+      1. Append "\\" to output.
    2. Append char to output, using ASCII encoding {{!RFC0020}}.
 4. Append DQUOTE to output.
 5. Return output.
@@ -535,12 +535,12 @@ Given an ASCII string input_string, return a mapping of (identifier, item). inpu
 2. While input_string is not empty:
    1. Let this_key be the result of running Parse Identifier from Text ({{parse-identifier}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
-   3. Consume a "=" from input_string; if none is present, fail parsing.
+   3. Consume the first character of input_string; if it is not "=", fail parsing.
    4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
    5. Add key this_key with value this_value to dictionary.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, return dictionary.
-   8. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
    9. Discard any leading OWS from input_string.
    0. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
@@ -556,7 +556,7 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
-   5. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   5. Consume the first character of input_string; if it is not COMMA, fail parsing.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
@@ -572,7 +572,7 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
-   5. Consume a COMMA from input_string; if no comma is present, fail parsing.
+   5. Consume the first character of input_string; if it is not COMMA, fail parsing.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
@@ -654,6 +654,7 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
          2. If next_char is not DQUOTE or "\\", fail parsing.
          3. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
+   4. Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR), fail parsing.
    4. Else, append char to output_string.
 6. Otherwise, fail parsing.
 
@@ -681,6 +682,7 @@ Given an ASCII string input_string, return binary content. input_string is modif
 2. Discard the first character of input_string.
 3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*". If there is not a "\*" character before the end of input_string, fail parsing.
 4. Consume the "\*" character at the beginning of input_string.
+5. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
 5. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour below).
 6. Return binary_content.
 
@@ -706,8 +708,28 @@ of a Structured Headers. In some circumstances, this will cause parsing to fail,
 --- back
 
 
+# Frequently Asked Questions {#faq}
+
+## Why Not JSON?
+
+Earlier proposals for structured headers were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields requires senders and recipients to implement specific additional handling.
+
+Because of JSON's broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability.
+
+For example, JSON has specification issues around large numbers and objects with duplicate members. Although advice for avoiding these issues is available (e.g., {{?RFC7493}}), it cannot be relied upon.
+
+Likewise, JSON strings are by default Unicode strings, which have a number of potential interoperability issues (e.g., in comparison). Although implementers can be advised to avoid non-ASCII content where unnecessary, this is difficult to enforce.
+
+Another example is JSON's ability to nest content to arbitrary depths. Since the resulting memory commitment might be unsuitable (e.g., in embedded and other limited server deployments), it's necessary to limit it in some fashion; however, existing JSON implementations have no such limits, and even if a limit is specified, it's likely that some header field definition will find a need to violate it.
+
+Since a major goal for Structured Headers is to improve interoperability and simplify implementation, these concerns led to a format that requires a dedicated parser and serialiser.
+
+Finally, there were widely shared feelings that JSON doesn't "look right" in HTTP headers.
+
 
 # Changes
+
+_RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-05
 

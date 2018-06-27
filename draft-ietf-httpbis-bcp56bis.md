@@ -706,6 +706,8 @@ authenticated, integrity-protected and confidential (e.g., as provided the "HTTP
 another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the underlying transport
 is similarly secure, or the chosen hash algorithm is not "MD5".
 
+With HTTPS, clients might also be authenticated using certificates {{?RFC5246}}.
+
 When used, it is important to carefully specify the scoping and use of authentication; if the
 application exposes sensitive data or capabilities (e.g., by acting as an ambient authority),
 exploits are possible. Mitigations include using a request-specific token to assure the intent of

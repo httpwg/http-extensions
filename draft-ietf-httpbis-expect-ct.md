@@ -355,7 +355,9 @@ cache. The UA caches:
 - whether the `enforce` directive is present
 - the Effective Expiration Date, which is the Effective Expect-CT Date plus the
   value of the `max-age` directive. Alternatively, the UA MAY cache enough
-  information to calculate the Effective Expiration Date.
+  information to calculate the Effective Expiration Date. The Effective
+  Expiration Date is calculated from when the UA observed the Expect-CT header
+  field and is independent of when the response was generated.
 - the value of the `report-uri` directive, if present.
 
 If any other metadata from optional or future Expect-CT header directives are
@@ -392,9 +394,18 @@ such hosts as Known Expect-CT hosts.
 When a UA connects to a Known Expect-CT Host using a TLS connection, if the TLS
 connection has no errors, then the UA will apply an additional correctness
 check: compliance with a CT Policy. A UA should evaluate compliance with its CT
-Policy whenever connecting to a Known Expect-CT Host, as soon as possible
-(though the check can be skipped, as discussed in
-{{skipping-ct-compliance-checks}}). When CT compliance is evaluted for a Known
+Policy whenever connecting to a Known Expect-CT Host, as soon as
+possible. However, the check can be skipped for local policy reasons (as
+discussed in {{skipping-ct-compliance-checks}}), or in the event that other
+checks cause the UA to terminate the connection before CT compliance is
+evaluated. For example, a Public Key Pinning failure {{?RFC7469}} could cause
+the UA to terminate the connection before CT compliance is checked. Similarly,
+if the UA terminates the connection due to an Expect-CT failure, this could
+cause the UA to skip subsequent correctness checks. When the CT compliance check
+is skipped or bypassed, Expect-CT reports ({{reporting-expect-ct-failure}}) will
+not be sent.
+
+When CT compliance is evaluted for a Known
 Expect-CT Host, the UA MUST evaluate compliance when setting up the TLS session,
 before beginning an HTTP conversation over the TLS channel.
 
@@ -535,7 +546,7 @@ If the report's "test-report" key is set to true, the server MAY discard the
 report without further processing but MUST still return a 2xx (Successful)
 status code.
 
-# Security Considerations
+# Security Considerations {#security-considerations}
 
 When UAs support the Expect-CT header field, it becomes a potential vector for hostile
 header attacks against site owners. If a site owner uses a certificate issued by
@@ -610,6 +621,8 @@ hosts, and allow users to query the current state of Known Expect-CT Hosts.
 
 # IANA Considerations
 
+## Header Field Registry
+
 This document registers the `Expect-CT` header field in the "Message Headers"
 registry located at <https://www.iana.org/assignments/message-headers>.
 
@@ -637,6 +650,78 @@ Related information:
 
 : (empty)
 
+## Media Types Registry
+
+The MIME media type for Expect-CT violation reports is
+"application/expect-ct-report+json" (which uses the suffix established in
+{{!RFC6839}}).
+
+Type name:
+
+: application
+
+Subtype name:
+
+: expect-ct-report+json
+
+Required parameters:
+: n/a
+
+Optional parameters:
+
+: n/a
+
+Encoding considerations:
+
+: binary
+
+Security considerations:
+
+: See {{security-considerations}}
+
+Interoperability considerations:
+
+: n/a
+
+Published specification:
+
+: This document
+
+Applications that use this media type:
+
+: UAs that implement Certificate Transparency compliance checks and reporting
+
+Additional information:
+
+: 
+
+: Deprecated alias names for this type: n/a
+
+: Magic number(s): n/a
+
+: File extension(s): n/a
+
+: Macintosh file type code(s): n/a
+
+Person & email address to contact for further information:
+
+: Emily Stark (estark@google.com)
+
+Intended usage:
+
+: COMMON
+
+Restrictions on usage:
+
+: none
+
+Author:
+
+: Emily Stark (estark@google.com)
+
+Change controller:
+
+: IETF
 
 # Usability Considerations {#usability-considerations}
 
