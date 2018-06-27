@@ -109,30 +109,31 @@ early data will not be or has not been replayed on another connection.
 A server decides whether or not to offer a client the ability to send early
 data on future connections when sending the TLS session ticket.
 
+TLS {{?TLS13}} mandates the use of replay detection strategies that reduce the
+ability of an attacker to successfully replay early data.  These anti-replay
+techniques reduce but don't completely eliminate the chance of data being
+replayed and ensure a fixed upper limit to the number of replays.
+
 When a server enables early data, there are a number of techniques it can use
 to mitigate the risks of replay:
 
-1. TLS {{?TLS13}} mandates the use of replay detection strategies that reduce
-   the ability of an attacker to successfully replay early data.  These
-   anti-replay techniques reduce but don't completely eliminate the chance of
-   data being replayed and ensure a fixed upper limit to the number of replays.
-
-2. The server can reject early data at the TLS layer.  A server cannot
+1. The server can reject early data at the TLS layer.  A server cannot
    selectively reject early data, so this results in all requests sent in early
    data being discarded.
 
-3. The server can choose to delay processing of early data until after the TLS
+2. The server can choose to delay processing of early data until after the TLS
    handshake completes. By deferring processing, it can ensure that only a
    successfully completed connection is used for the request(s) therein.  This
    provides the server with some assurance that the early data was not replayed.
-
-4. If the server receives multiple requests in early data, it can determine
+   If the server receives multiple requests in early data, it can determine
    whether to defer HTTP processing on a per-request basis.
 
-5. The server can cause a client to retry individual requests and not use early
+3. The server can cause a client to retry individual requests and not use early
    data by responding with the 425 (Too Early) status code ({{status}}), in
    cases where the risk of replay is judged too great.
 
+Any of these techniques is equally effective and a server can use the method
+that best suits it.
 
 For a given request, the level of tolerance to replay risk is specific to the
 resource it operates upon (and therefore only known to the origin server). The
@@ -227,9 +228,9 @@ data if the request either arrived in early data or arrived with the
 
 Because HTTP requests can span multiple "hops", it is necessary to explicitly
 communicate whether a request has been sent in early data on a previous
-connection. Likewise, some means of explicitly triggering a retry when early
-data is not desirable is necessary. Finally, it is necessary to know whether the
-client will actually perform such a retry.
+hop. Likewise, some means of explicitly triggering a retry when early data is
+not desirable is necessary. Finally, it is necessary to know whether the client
+will actually perform such a retry.
 
 To meet these needs, two signalling mechanisms are defined:
 
@@ -310,9 +311,9 @@ trailers.
 A 425 (Too Early) status code indicates that the server is unwilling to risk
 processing a request that might be replayed.
 
-User agents that send a request in early data MUST automatically retry the
-request when receiving a 425 (Too Early) response status code. Such retries MUST
-NOT be sent in early data.
+User agents that send a request in early data are expected to retry the request
+when receiving a 425 (Too Early) response status code. A user agent MAY do so
+automatically, but any retries MUST NOT be sent in early data.
 
 In all cases, an intermediary can forward a 425 (Too Early) status code.
 Intermediaries MUST forward a 425 (Too Early) status code if the request that it
@@ -387,7 +388,7 @@ requests, which could result in increased load.
 
 In protocols that deliver data out of order (such as QUIC {{HQ}}) early data can
 arrive after the handshake completes.  A server MAY process requests received in
-early data after handshake completion if it can rely on other instances
+early data after handshake completion only if it can rely on other instances
 correctly handling replays of the same requests.
 
 
