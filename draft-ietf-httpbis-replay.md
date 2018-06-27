@@ -117,8 +117,9 @@ to mitigate the risks of replay:
    anti-replay techniques reduce but don't completely eliminate the chance of
    data being replayed and ensure a fixed upper limit to the number of replays.
 
-2. The server can reject early data.  A server cannot selectively reject early
-   data, so this results in all requests sent in early data being discarded.
+2. The server can reject early data at the TLS layer.  A server cannot
+   selectively reject early data, so this results in all requests sent in early
+   data being discarded.
 
 3. The server can choose to delay processing of early data until after the TLS
    handshake completes. By deferring processing, it can ensure that only a
@@ -128,19 +129,22 @@ to mitigate the risks of replay:
 4. If the server receives multiple requests in early data, it can determine
    whether to defer HTTP processing on a per-request basis.
 
-5. The server can cause a client to retry a request and not use early data by
-   responding with the 425 (Too Early) status code ({{status}}), in cases where
-   the risk of replay is judged too great.
+5. The server can cause a client to retry individual requests and not use early
+   data by responding with the 425 (Too Early) status code ({{status}}), in
+   cases where the risk of replay is judged too great.
 
 
 For a given request, the level of tolerance to replay risk is specific to the
-resource it operates upon (and therefore only known to the origin server). In
-general, if processing a request does not have state-changing side effects, the
-consequences of replay are not significant.
+resource it operates upon (and therefore only known to the origin server). The
+primary risk associated with using early data is in the actions a server takes
+when processing a request; processing a duplicated request might result in
+duplicated effects and side effects.  Appendix E.5 of {{!TLS13}} also describes
+other effects produced by processing duplicated requests.
 
 The request method's safety ({{!RFC7231}}, Section 4.2.1) is one way to
-determine this. However, some resources do elect to associate side effects with
-safe methods, so this cannot be universally relied upon.
+determine if a request is free from side effects. However, some resources do
+elect to associate side effects with safe methods, so this cannot be universally
+relied upon.
 
 It is RECOMMENDED that origin servers allow resources to explicitly configure
 whether early data is appropriate in requests. Absent such explicit information,
@@ -171,11 +175,10 @@ a server has decided to accept early data, it MUST process all requests in
 early data, even if the server rejects the request by sending a 425 (Too Early)
 response.
 
-A server can limit the amount of early data with the `max_early_data_size`
-field of the `early_data` TLS extension. This can be used to avoid committing
-an arbitrary amount of memory for deferred requests. A server SHOULD ensure
-that when it accepts early data, it can defer processing of requests until
-after the TLS handshake completes.
+A server can limit the amount of early data with the `max_early_data_size` field
+of the `early_data` TLS extension. This can be used to avoid committing an
+arbitrary amount of memory for requests that it might defer until the handshake
+completes.
 
 
 # Using Early Data in HTTP Clients
@@ -192,8 +195,8 @@ send unsafe methods (or methods whose safety is not known) in early data.
 If the server rejects early data at the TLS layer, a client MUST start sending
 again as though the connection were new. This could entail using a different
 negotiated protocol {{?ALPN=RFC7301}} than the one optimistically used for the
-early data. Any requests sent in early data MUST be sent again, unless the
-client decides to abandon those requests.
+early data. Any requests sent in early data will need to be sent again, unless
+the client decides to abandon those requests.
 
 Automatic retry creates the potential for a replay attack.  An attacker
 intercepts a connection that uses early data and copies the early data to
@@ -206,7 +209,8 @@ early data, the request will be processed twice.
 
 Replays are also possible if there are multiple server instances that will
 accept early data, or if the same server accepts early data multiple times
-(though this would be in violation of requirements in Section 8 of {{!TLS13}}).
+(though the latter would be in violation of requirements in Section 8 of
+{{!TLS13}}).
 
 Clients that use early data MUST retry requests upon receipt of a 425 (Too
 Early) status code; see {{status}}.
@@ -274,7 +278,8 @@ An intermediary that forwards a request prior to the completion of the TLS
 handshake with its client MUST send it with the `Early-Data` header field set to
 "1" (i.e., it adds it if not present in the request).  An intermediary MUST use
 the `Early-Data` header field if it might have forwarded the request prior to
-handshake completion (see {{be-consistent}} for details).
+handshake completion ({{be-consistent}} describes considerations for clusters of
+servers).
 
 An intermediary MUST NOT remove this header field if it is present in a request.
 `Early-Data` MUST NOT appear in a `Connection` header field.
