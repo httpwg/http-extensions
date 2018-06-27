@@ -41,6 +41,8 @@ use these mechanisms to mitigate the risk of replay.
 
 --- note_Note_to_Readers
 
+RFC Editor: Please remove this section before publication.
+
 Discussion of this draft takes place on the HTTP working group mailing list
 (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
@@ -188,7 +190,7 @@ other information, clients MAY send requests with safe HTTP methods (see
 send unsafe methods (or methods whose safety is not known) in early data.
 
 If the server rejects early data at the TLS layer, a client MUST start sending
-again as though the connection was new. This could entail using a different
+again as though the connection were new. This could entail using a different
 negotiated protocol {{?ALPN=RFC7301}} than the one optimistically used for the
 early data. Any requests sent in early data MUST be sent again, unless the
 client decides to abandon those requests.
