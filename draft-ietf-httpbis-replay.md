@@ -143,9 +143,8 @@ duplicated effects and side effects.  Appendix E.5 of {{!TLS13}} also describes
 other effects produced by processing duplicated requests.
 
 The request method's safety ({{!RFC7231}}, Section 4.2.1) is one way to
-determine if a request is free from side effects. However, some resources do
-elect to associate side effects with safe methods, so this cannot be universally
-relied upon.
+determine this. However, some resources do produce side effects with safe
+methods, so this cannot be universally relied upon.
 
 It is RECOMMENDED that origin servers allow resources to explicitly configure
 whether early data is appropriate in requests. Absent such explicit information,
@@ -158,8 +157,8 @@ request being sent after the handshake completes.  This does not necessarily
 affect handling of that request; what matters is when the server starts acting
 upon the contents of a request.  Any time any server instance might initiate
 processing prior to completion of the handshake, all server instances need to
-consider how a possible replay of early data could affect that processing (see
-also {{be-consistent}}).
+account for the possibility of replay of early data and how that could affect
+that processing (see also {{be-consistent}}).
 
 A server can partially process requests that are incomplete.  Parsing header
 fields - without acting on the values - and determining request routing is
@@ -278,9 +277,9 @@ Early-Data: 1
 An intermediary that forwards a request prior to the completion of the TLS
 handshake with its client MUST send it with the `Early-Data` header field set to
 "1" (i.e., it adds it if not present in the request).  An intermediary MUST use
-the `Early-Data` header field if it might have forwarded the request prior to
-handshake completion ({{be-consistent}} describes considerations for clusters of
-servers).
+the `Early-Data` header field if it - or another instance (see
+{{be-consistent}}) - could have forwarded the request prior to handshake
+completion if circumstances were different.
 
 An intermediary MUST NOT remove this header field if it is present in a request.
 `Early-Data` MUST NOT appear in a `Connection` header field.
@@ -343,12 +342,12 @@ the content remains confidential.
 
 ## Gateways and Early Data
 
-A gateway that forwards requests that were received in early data MUST only do
-so if it knows that the origin server that receives those requests understands
-the `Early-Data` header field and will correctly generate a 425 (Too Early)
-status code.  A gateway that is uncertain about origin server support for a
-given request SHOULD either delay forwarding the request until the TLS handshake
-with its client completes, or send a 425 (Too Early) status code in response.
+A gateway MUST NOT forward requests that were received in early data unless it
+knows that the origin server it will forward to understands the `Early-Data`
+header field and will correctly generate a 425 (Too Early) status code.  A
+gateway that is uncertain about origin server support for a given request SHOULD
+either delay forwarding the request until the TLS handshake with its client
+completes, or send a 425 (Too Early) status code in response.
 
 A gateway without at least one potential origin server that supports
 `Early-Data` header field expends significant effort for what can at best be a
