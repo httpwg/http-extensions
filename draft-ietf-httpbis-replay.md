@@ -52,10 +52,11 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 # Introduction
 
-TLS 1.3 {{?TLS13=I-D.ietf-tls-tls13}} introduces the concept of early data
-(also known as zero round trip data or 0-RTT data). Early data allows a client to send data
-to a server in the first round trip of a connection, without waiting for the
-TLS handshake to complete if the client has spoken to the same server recently.
+TLS 1.3 {{?TLS13=I-D.ietf-tls-tls13}} introduces the concept of early data (also
+known as zero round trip data or 0-RTT data). Early data allows a client to send
+data to a server in the first round trip of a connection, without waiting for
+the TLS handshake to complete, if the client has spoken to the same server
+recently.
 
 When used with HTTP {{!HTTP=RFC7230}}, early data allows clients to send
 requests immediately, avoiding the one or two round trip delay needed for the
@@ -157,10 +158,10 @@ A server can partially process requests that are incomplete.  Parsing header
 fields - without acting on the values - and determining request routing is
 likely to be safe from side-effects, but other actions might not be.
 
-Intermediary servers do not have sufficient information to make this
-determination, so {{status}} describes a way for the origin to signal to them
-that a particular request isn't appropriate for early data. Intermediaries that
-accept early data MUST implement that mechanism.
+Intermediary servers do not have sufficient information to decide whether early
+data can be processed, so {{status}} describes a way for the origin to signal to
+them that a particular request isn't appropriate for early data. Intermediaries
+that accept early data MUST implement that mechanism.
 
 Note that a server cannot choose to selectively reject early data at the TLS
 layer. TLS only permits a server to accept all early data, or none of it. Once
@@ -183,7 +184,7 @@ immediately after sending the TLS ClientHello.
 By their nature, clients have control over whether a given request is sent in
 early data -- thereby giving the client control over risk of replay. Absent
 other information, clients MAY send requests with safe HTTP methods (see
-{{!RFC7231}}, Section 4.2.1) in early data when it is available, and SHOULD NOT
+{{!RFC7231}}, Section 4.2.1) in early data when it is available, and MUST NOT
 send unsafe methods (or methods whose safety is not known) in early data.
 
 If the server rejects early data at the TLS layer, a client MUST start sending
@@ -195,10 +196,11 @@ client decides to abandon those requests.
 Automatic retry creates the potential for a replay attack.  An attacker
 intercepts a connection that uses early data and copies the early data to
 another server instance.  The second server instance accepts and processes the
-early data.  The attacker then allows the original connection to complete.  Even
-if the early data is detected as a duplicate and rejected, the first server
-instance might allow the connection to complete.  If the client then retries
-requests that were sent in early data, the request will be processed twice.
+early data, even though it will not complete the TLS handshake.  The attacker
+then allows the original connection to complete.  Even if the early data is
+detected as a duplicate and rejected, the first server instance might allow the
+connection to complete.  If the client then retries requests that were sent in
+early data, the request will be processed twice.
 
 Replays are also possible if there are multiple server instances that will
 accept early data, or if the same server accepts early data multiple times
@@ -327,7 +329,9 @@ Using early data exposes a client to the risk that their request is replayed.  A
 retried or replayed request can produce different side effects on the server.
 In addition to those side effects, replays and retries might be used for traffic
 analysis to recover information about requests or the resources those requests
-target.
+target.  In particular, a request that is replayed might result in a different
+response, which might be observable from the length of protected data even if
+the content remains confidential.
 
 ## Gateways and Early Data
 
