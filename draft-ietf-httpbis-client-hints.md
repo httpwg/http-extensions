@@ -100,7 +100,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 ## Sending Client Hints
 
-Clients control which Client Hints are sent in requests, based on their default settings, user configuration, and server preferences. The client and server can use an opt-in mechanism outlined below to negotiate which fields should be sent to allow for efficient content adaption, and optinally use additional mechanisms to negotiate delegation policies that control access of third parties to same fields.
+Clients control which Client Hints are sent in requests, based on their default settings, user configuration, and server preferences. The client and server can use an opt-in mechanism outlined below to negotiate which fields should be sent to allow for efficient content adaption, and optionally use additional mechanisms to negotiate delegation policies that control access of third parties to same fields.
 
 Implementers should be aware of the passive fingerprinting implications when implementing support for Client Hints, and follow the considerations outlined in "Security Considerations" section of this document.
 
@@ -148,7 +148,7 @@ The preference MUST be delivered over a secure transport, and MUST NOT be persis
   Accept-CH-Lifetime: 86400
 ~~~
 
-For example, based on the Accept-CH and Accept-CH-Lifetime example above, which is received from "https://bar.example.com" in response to a resource request initiated by "https://foo.example.com", both delivered over a secure transport: a user agent SHOULD persist an Accept-CH preference bound to "https://foo.example.com", for requests initiated to "https://bar.example.com" from "https://foo.example.com", for up to 86400 seconds (1 day). This preference SHOULD NOT extend to requests initiated to "https://bar.example.com" from other origins.
+For example, based on the Accept-CH and Accept-CH-Lifetime example above, which is received in response to a user agent navigating to "https://example.com", and delivered over a secure transport: a user agent SHOULD persist an Accept-CH preference bound to "https://example.com" for up to 86400 seconds (1 day), and use it for user agent navigations to "https://example.com" and any same-origin resource requests initiated by the page constructed from the navigation's response. This preference SHOULD NOT extend to resource requests initiated to "https://example.com" from other origins.
 
 If Accept-CH-Lifetime occurs in a message more than once, the last value overrides all previous occurrences.
 
