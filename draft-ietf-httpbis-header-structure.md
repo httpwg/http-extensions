@@ -751,8 +751,10 @@ _RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-06
 
-* FAQ
+* Add a FAQ.
 * Allow non-zero pad bits.
+* Explicitly check for integers that violate constraints.
+
 
 ## Since draft-ietf-httpbis-header-structure-05
 
