@@ -496,7 +496,9 @@ Given binary content as input:
 4. Append "\*" to output.
 5. Return output.
 
-The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2. Likewise, encoded data is required to have pad bits set to zero, as per {{!RFC4648}}, Section 3.5.
+The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2.
+
+Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Section 3.5, unless it is not possible to do so due to implementation constraints.
 
 
 ## Parsing HTTP/1 Header Fields into Structured Headers {#text-parse}
@@ -689,7 +691,7 @@ Given an ASCII string input_string, return binary content. input_string is modif
 As per {{!RFC4648}}, Section 3.2, it is RECOMMENDED that parsers reject encoded data that is not
 properly padded, although this might not be possible in some base64 implementations.
 
-As per {{!RFC4648}}, Section 3.5, it is RECOMMENDED that parsers fail on encoded data that has non-zero pad bits, although this might not be possible in some base64 implementations.
+Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{!RFC4648}}, Section 3.5), parsers SHOULD NOT fail when it is present, unless they cannot be configured to handle it.
 
 This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
@@ -752,6 +754,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-06
 
 * FAQ
+* Allow non-zero pad bits.
 
 ## Since draft-ietf-httpbis-header-structure-05
 
