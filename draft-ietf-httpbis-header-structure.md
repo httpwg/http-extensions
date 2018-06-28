@@ -731,6 +731,10 @@ Finally, there were widely shared feelings that JSON doesn't "look right" in HTT
 
 _RFC Editor: Please remove this section before publication._
 
+## Since draft-ietf-httpbis-header-structure-06
+
+_None yet_
+
 ## Since draft-ietf-httpbis-header-structure-05
 
 * Reorganise specification to separate parsing out.
