@@ -629,15 +629,13 @@ NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and 
    4. Otherwise, fail parsing.
    5. If type is "integer" and input_number contains more than 19 characters, fail parsing.
    6. If type is "float" and input_number contains more than 16 characters, fail parsing.
-8. If type is "integer", parse input_number as an integer and let output_number be the result.
+8. If type is "integer":
+   1. Parse input_number as an integer and let output_number be the result.
+   2. If output_number is outside the range defined in {{integer}}, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
    2. Parse input_number as a float and let output_number be the result.
 0. Return the product of output_number and sign.
-
-Parsers that encounter an integer outside the range defined in {{integer}} MUST fail parsing. Therefore, the value "9223372036854775808" would be invalid. Likewise, values that do not conform to the ABNF above are invalid, and MUST fail parsing.
-
-Parsers that encounter a float that does not conform to the ABNF in {{float}} MUST fail parsing.
 
 
 ### Parsing a String from Text {#parse-string}
