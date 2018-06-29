@@ -277,7 +277,7 @@ Early-Data: 1
 An intermediary that forwards a request prior to the completion of the TLS
 handshake with its client MUST send it with the `Early-Data` header field set to
 "1" (i.e., it adds it if not present in the request).  An intermediary MUST use
-the "Early-Data" header field if the request might have been subject to a replay
+the `Early-Data` header field if the request might have been subject to a replay
 and might already have been forwarded by it or another instance (see
 {{be-consistent}}).
 
