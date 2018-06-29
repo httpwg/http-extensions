@@ -706,7 +706,8 @@ used when generating the `CERTIFICATE` frame.
 
 Upon receipt of a `CERTIFICATE` frame, an endpoint MUST perform the following
 steps to validate the token it contains:
- - Using the `get context` API, retrieve the `certificate_request_context` used
+
+- Using the `get context` API, retrieve the `certificate_request_context` used
    to generate the authenticator, if any.
  - Verify that the `certificate_request_context` is either empty (clients only)
    or contains the Request-ID of a previously-sent `CERTIFICATE_REQUEST` frame.
