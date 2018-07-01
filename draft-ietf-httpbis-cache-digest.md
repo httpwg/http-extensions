@@ -87,7 +87,7 @@ allows a stream to be cancelled by a client using a RST_STREAM frame in this sit
 is still at least one round trip of potentially wasted capacity even then.
 
 This specification defines a HTTP/2 frame type to allow clients to inform the server of their
-cache's contents using a Cuckoo-filter {{Cuckoo}} based digest. Servers can then use this to inform their
+freshly cached contents using a Cuckoo-filter {{Cuckoo}} based digest. Servers can then use this to inform their
 choices of what to push to clients.
 
 ## Notational Conventions
@@ -124,11 +124,7 @@ The CACHE_DIGEST frame defines the following flags:
 
 * **RESET** (0x1): When set, indicates that any and all cache digests for the applicable origin held by the recipient MUST be considered invalid.
 
-* **COMPLETE** (0x2): When set, indicates that the currently valid set of cache digests held by the server constitutes a complete representation of the cache's state regarding that origin, for the type of cached response indicated by the `STALE` flag.
-
-* **VALIDATORS** (0x4): When set, indicates that the `validators` boolean in {{key}} is true.
-
-* **STALE** (0x8): When set, indicates that all cached responses represented in the digest-value are stale {{RFC7234}} at the point in them that the digest was generated; otherwise, all are fresh.
+* **COMPLETE** (0x2): When set, indicates that the currently valid set of cache digests held by the server constitutes a complete representation of the cache's state regarding that origin.
 
 ## Client Behavior
 
@@ -144,30 +140,17 @@ CACHE_DIGEST at other times.
 If the cache's state is cleared, lost, or the client otherwise wishes the server to stop using
 previously sent CACHE_DIGESTs, it can send a CACHE_DIGEST with the RESET flag set.
 
-When generating CACHE_DIGEST, a client MUST NOT include cached responses whose URLs do not share
+When generating CACHE_DIGEST, a client MUST NOT include stale-cached responses or responses whose URLs do not share
 origins {{!RFC6454}} with the indicated origin. Clients MUST NOT send CACHE_DIGEST frames on
 connections that are not authoritative (as defined in {{RFC7540}}, 10.1) for the indicated origin.
 
-CACHE_DIGEST allows the client to indicate whether the set of URLs used to compute the digest
-represent fresh or stale stored responses, using the STALE flag. Clients MAY decide whether to only
-send CACHE_DIGEST frames representing their fresh stored responses, their stale stored responses,
-or both.
-
-Clients can choose to only send a subset of the suitable stored responses of each type (fresh or
-stale). However, when the CACHE_DIGEST frames sent represent the complete set of stored responses
-of a given type, the last such frame SHOULD have a COMPLETE flag set, to indicate to the server
-that it has all relevant state of that type. Note that for the purposes of COMPLETE, responses
+When the CACHE_DIGEST frames sent represent the complete set of stored responses,
+the last such frame SHOULD have a COMPLETE flag set, to indicate to the server
+that it has all relevant state. Note that for the purposes of COMPLETE, responses
 cached since the beginning of the connection or the last RESET flag on a CACHE_DIGEST frame need
 not be included.
 
-CACHE_DIGEST can be computed to include cached responses' ETags, as indicated by the VALIDATORS
-flag. This information can be used by servers to decide what kinds of responses to push to clients;
-for example, a stale response that hasn't changed could be refreshed with a 304 (Not Modified)
-response; one that has changed can be replaced with a 200 (OK) response, whether the cached
-response was fresh or stale.
-
 CACHE_DIGEST has no defined meaning when sent from servers, and SHOULD be ignored by clients.
-
 
 ### Creating a digest {#creating}
 
@@ -200,15 +183,13 @@ Given the following inputs:
 
 * `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached
 response {{RFC7234}}
-* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
-the ETag is available; otherwise, null);
 * `maxcount` - max number of cuckoo hops
 * `digest-value`
 
 1. Let `f` be the value of the first byte of `digest-value`.
 2. Let `b` be the bucket size, defined as 4.
 3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
-4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
+4. Let `key` be the return value of {{key}} with `URL` as input.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
 6. Let `dest_fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
 7. Let `h2` be the return value of {{hash2}} with `h1`, `dest_fingerprint` and `N` as inputs.
@@ -242,14 +223,12 @@ Given the following inputs:
 
 * `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached
 response {{RFC7234}}
-* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
-the ETag is available; otherwise, null);
 * `digest-value`
 
 1. Let `f` be the value of the first byte of `digest-value`.
 2. Let `b` be the bucket size, defined as 4.
 3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
-4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
+4. Let `key` be the return value of {{key}} with `URL` as input.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
 6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
 7. Let `h2` be the return value of {{hash2}} with `h1`, `fingerprint` and `N` as inputs.
@@ -291,16 +270,9 @@ purpose.
 Given the following inputs:
 
 * `URL`, an array of characters
-* `ETag`, an array of characters
-* `validators`, a boolean indicating whether validators ({{RFC7232}}) are to be included in the digest
 
 1. Let `key` be `URL` converted to an ASCII string by percent-encoding as appropriate {{RFC3986}}.
-2. If `validators` is true and `ETag` is not null:
-    1. Append `ETag` to `key` as an ASCII string, including both the `weak` indicator (if present)
-    and double quotes, as per {{RFC7232}}, Section 2.3.
-3. Return `key`
-
-TODO: Add an example of the ETag and the key calcuations.
+2. Return `key`
 
 ### Computing a Hash Value {#hash}
 
@@ -331,10 +303,10 @@ Given the following inputs:
 In typical use, a server will query (as per {{querying}}) the CACHE_DIGESTs received on a given
 connection to inform what it pushes to that client;
 
-* If a given URL and ETag combination has a match in a current CACHE_DIGEST, a complete response
+* If a given URL has a match in a current CACHE_DIGEST, a complete response
 need not be pushed; The server MAY push a 304 response for that resource, indicating the client
 that it hasn't changed.
-* If a given URL and ETag has no match in any current CACHE_DIGEST, the client does not have a
+* If a given URL has no match in any current CACHE_DIGEST, the client does not have a
 cached copy, and a complete response can be pushed.
 
 Servers MAY use all CACHE_DIGESTs received for a given origin as current, as long as they do not
@@ -355,15 +327,12 @@ Given the following inputs:
 
 * `URL` a string corresponding to the Effective Request URI ({{RFC7230}}, Section 5.5) of a cached
 response {{RFC7234}}.
-* `ETag` a string corresponding to the entity-tag {{RFC7232}} of a cached response {{RFC7234}} (if
-the ETag is available; otherwise, null).
-* `validators`, a boolean
 * `digest-value`, an array of bits.
 
 1. Let `f` be the value of the first byte of `digest-value`.
 2. Let `b` be the bucket size, defined as 4.
 3. Let `N` be the value of the second to fifth bytes of `digest-value` in big endian form.
-4. Let `key` be the return value of {{key}} with `URL` and `ETag` as inputs.
+4. Let `key` be the return value of {{key}} with `URL` as input.
 5. Let `h1` be the return value of {{hash}} with `key` and `N` as inputs.
 6. Let `fingerprint` be the return value of {{fingerprint}} with `key` and `f` as inputs.
 7. Let `h2` be the return value of {{hash2}} with `h1`, `fingerprint` and `N` as inputs.
@@ -475,7 +444,7 @@ Origin is omitted in the header form.
 The value is implied from the value of the `:authority` pseudo header.
 Client MUST only send Cache-Digest headers containing digests that belong to the origin specified by the HTTP request.
 
-The example below contains one digest of fresh resource and has only the `COMPLETE` flag set.
+The example below contains a digest of one resource and has only the `COMPLETE` flag set.
 
 ~~~ example
   Cache-Digest: AfdA; complete
