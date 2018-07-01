@@ -743,6 +743,10 @@ Transparency requirements.
 
 # Changes
 
+## Since -06
+
+* None yet
+
 ## Since -05
 
 * Remove SHOULD requirement that UAs disallow certificate error overrides for
