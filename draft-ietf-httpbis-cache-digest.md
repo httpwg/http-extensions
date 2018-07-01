@@ -87,7 +87,7 @@ allows a stream to be cancelled by a client using a RST_STREAM frame in this sit
 is still at least one round trip of potentially wasted capacity even then.
 
 This specification defines a HTTP/2 frame type to allow clients to inform the server of their
-cache's contents using a Cuckoo-filter {{Cuckoo}} based digest. Servers can then use this to inform their
+freshly cached contents using a Cuckoo-filter {{Cuckoo}} based digest. Servers can then use this to inform their
 choices of what to push to clients.
 
 ## Notational Conventions
@@ -140,7 +140,7 @@ CACHE_DIGEST at other times.
 If the cache's state is cleared, lost, or the client otherwise wishes the server to stop using
 previously sent CACHE_DIGESTs, it can send a CACHE_DIGEST with the RESET flag set.
 
-When generating CACHE_DIGEST, a client MUST NOT include cached responses whose URLs do not share
+When generating CACHE_DIGEST, a client MUST NOT include stale-cached responses or responses whose URLs do not share
 origins {{!RFC6454}} with the indicated origin. Clients MUST NOT send CACHE_DIGEST frames on
 connections that are not authoritative (as defined in {{RFC7540}}, 10.1) for the indicated origin.
 
