@@ -144,10 +144,9 @@ When generating CACHE_DIGEST, a client MUST NOT include cached responses whose U
 origins {{!RFC6454}} with the indicated origin. Clients MUST NOT send CACHE_DIGEST frames on
 connections that are not authoritative (as defined in {{RFC7540}}, 10.1) for the indicated origin.
 
-Clients can choose to only send a subset of the suitable stored responses of each type (fresh or
-stale). However, when the CACHE_DIGEST frames sent represent the complete set of stored responses
-of a given type, the last such frame SHOULD have a COMPLETE flag set, to indicate to the server
-that it has all relevant state of that type. Note that for the purposes of COMPLETE, responses
+When the CACHE_DIGEST frames sent represent the complete set of stored responses,
+the last such frame SHOULD have a COMPLETE flag set, to indicate to the server
+that it has all relevant state. Note that for the purposes of COMPLETE, responses
 cached since the beginning of the connection or the last RESET flag on a CACHE_DIGEST frame need
 not be included.
 
@@ -445,7 +444,7 @@ Origin is omitted in the header form.
 The value is implied from the value of the `:authority` pseudo header.
 Client MUST only send Cache-Digest headers containing digests that belong to the origin specified by the HTTP request.
 
-The example below contains one digest of fresh resource and has only the `COMPLETE` flag set.
+The example below contains a digest of one resource and has only the `COMPLETE` flag set.
 
 ~~~ example
   Cache-Digest: AfdA; complete
