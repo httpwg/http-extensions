@@ -1,6 +1,6 @@
 ---
 title: Cache Digests for HTTP/2
-docname: draft-ietf-httpbis-cache-digest-05
+docname: draft-ietf-httpbis-cache-digest-latest
 date: {DATE}
 category: exp
 
@@ -456,6 +456,10 @@ Also, due to the fact that any header that is supplied to Fetch is required to b
 The header may represent the cache state of a client or that of a proxy, depending on how the proxy handles the header.
 
 # Changes
+
+## Since draft-ietf-httpbis-cache-digest-05
+
+* None yet.
 
 ## Since draft-ietf-httpbis-cache-digest-04
 
