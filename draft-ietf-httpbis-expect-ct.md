@@ -340,16 +340,11 @@ use additional directives.
 
 #### Storage Model {#storage-model}
 
-Known Expect-CT Hosts are identified only by domain names, and never IP
-addresses. If the substring matching the host production from the Request-URI
-(of the message to which the host responded) syntactically matches the
-IP-literal or IPv4address productions from Section 3.2.2 of {{!RFC3986}}, then
-the UA MUST NOT note this host as a Known Expect-CT Host.
-
-Otherwise, if the substring does not congruently match an existing Known
-Expect-CT Host's domain name, per the matching procedure specified in Section
-8.2 of {{!RFC6797}}, then the UA MUST add this host to the Known Expect-CT Host
-cache. The UA caches:
+If the substring matching the host production from the Request-URI (of the
+message to which the host responded) does not congruently match an existing
+Known Expect-CT Host's domain name, per the matching procedure specified in
+Section 8.2 of {{!RFC6797}}, then the UA MUST add this host to the Known
+Expect-CT Host cache. The UA caches:
 
 - the Expect-CT Host's domain name,
 - whether the `enforce` directive is present
@@ -748,10 +743,15 @@ Transparency requirements.
 
 # Changes
 
+## Since -06
+
+* None yet
+
 ## Since -05
 
 * Remove SHOULD requirement that UAs disallow certificate error overrides for
   Known Expect-CT Hosts.
+* Remove restriction that Expect-CT Hosts cannot be IP addresses.
 * Editorial changes
 
 ## Since -04
