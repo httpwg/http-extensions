@@ -1,6 +1,6 @@
 ---
 title: Cache Digests for HTTP/2
-docname: draft-ietf-httpbis-cache-digest-latest
+docname: draft-ietf-httpbis-cache-digest-05
 date: {DATE}
 category: exp
 
@@ -459,6 +459,7 @@ The header may represent the cache state of a client or that of a proxy, dependi
 
 ## Since draft-ietf-httpbis-cache-digest-04
 
+* Remove ETag from the digest key calculations.
 * Add SETTINGS_ prefix to parameter names.
 
 ## Since draft-ietf-httpbis-cache-digest-03
