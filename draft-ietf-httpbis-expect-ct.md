@@ -739,6 +739,10 @@ Transparency requirements.
 
 # Changes
 
+## Since -07
+
+* None yet
+
 ## Since -06
 
 * Editorial changes
