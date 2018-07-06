@@ -29,16 +29,12 @@ informative:
 
 --- abstract
 
-This document defines a new HTTP header field, named Expect-CT, that allows web host
-operators to instruct user agents to expect valid Signed Certificate Timestamps
-(SCTs) to be served on connections to these hosts. When configured in
-enforcement mode, user agents (UAs) will remember that hosts expect SCTs and
-will refuse connections that do not conform to the UA's Certificate Transparency
-policy. When configured in report-only mode, UAs will report the lack of valid
-SCTs to a URI configured by the host, but will allow the connection. By turning
-on Expect-CT, web host operators can discover misconfigurations in their
-Certificate Transparency deployments and ensure that misissued certificates
-accepted by UAs are discoverable in Certificate Transparency logs.
+This document defines a new HTTP header field, named Expect-CT, that allows web
+host operators to instruct user agents to expect valid Signed Certificate
+Timestamps (SCTs) to be served on connections to these hosts. Expect-CT allows
+web host operators to discover misconfigurations in their Certificate
+Transparency deployments and ensure that misissued certificates accepted by UAs
+are discoverable in Certificate Transparency logs.
 
 --- note_Note_to_Readers
 
@@ -618,7 +614,7 @@ hosts, and allow users to query the current state of Known Expect-CT Hosts.
 
 ## Header Field Registry
 
-This document registers the `Expect-CT` header field in the "Message Headers"
+This document registers the `Expect-CT` header field in the "Permanent Message Header Field Names"
 registry located at <https://www.iana.org/assignments/message-headers>.
 
 Header field name:
@@ -745,7 +741,7 @@ Transparency requirements.
 
 ## Since -06
 
-* None yet
+* Editorial changes
 
 ## Since -05
 
