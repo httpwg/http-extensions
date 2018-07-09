@@ -6,12 +6,9 @@ Mark Nottingham is the document shepherd. Alexey Melnikov is the responsible Are
 
 This document defines a new HTTP header field, named Expect-CT, that allows web host operators to
 instruct user agents to expect valid Signed Certificate Timestamps (SCTs) to be served on
-connections to these hosts. When configured in enforcement mode, user agents (UAs) will remember
-that hosts expect SCTs and will refuse connections that do not conform to the UA's Certificate
-Transparency policy. When configured in report-only mode, UAs will report the lack of valid SCTs to
-a URI configured by the host, but will allow the connection. By turning on Expect-CT, web host
-operators can discover misconfigurations in their Certificate Transparency deployments and ensure
-that misissued certificates accepted by UAs are discoverable in Certificate Transparency logs.
+connections to these hosts. Expect-CT allows web host operators to discover misconfigurations in
+their Certificate Transparency deployments and ensure that misissued certificates accepted by UAs
+are discoverable in Certificate Transparency logs.
 
 ## 2. Review and Consensus
 
@@ -23,4 +20,4 @@ The author has confirmed that to her direct, personal knowledge, all IPR related
 
 ## 4. Other Points
 
-The IANA considerations seem correct, except that the requested registry needs to be more specific - it will be a permanent registration.
+The IANA considerations seem correct, except that the requested registry needs to be more specific - it will be a permanent registration. This will be corrected in the next revision (currently the submission queue is closed).
