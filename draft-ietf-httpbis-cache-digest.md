@@ -485,6 +485,6 @@ The header may represent the cache state of a client or that of a proxy, dependi
 * Make the scope of a digest frame explicit and shift to stream 0.
 
 # Acknowledgements
-+{:numbered="false"}
+{:numbered="false"}
 
 Thanks to Stefan Eissing for his suggestions.
