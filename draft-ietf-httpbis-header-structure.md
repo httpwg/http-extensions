@@ -464,7 +464,7 @@ Given a float as input:
 
 Given a string as input:
 
-0. If input is not a sequence of characters, or contains characters outside the range allowed by VCHAR, fail serialisation.
+0. If input is not a sequence of characters, or contains characters outside the range allowed by VCHAR or SP, fail serialisation.
 1. Let output be an empty string.
 2. Append DQUOTE to output.
 3. For each character char in input:
