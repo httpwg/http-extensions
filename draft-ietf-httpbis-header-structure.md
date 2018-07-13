@@ -98,7 +98,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the VCHAR, DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
+This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
 
 This document uses algorithms to specify parsing and serialisation behaviours, and ABNF to illustrate expected syntax.
 
@@ -654,7 +654,7 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
          2. If next_char is not DQUOTE or "\\", fail parsing.
          3. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
-   4. Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR), fail parsing.
+   4. Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail parsing.
    4. Else, append char to output_string.
 6. Otherwise, fail parsing.
 
