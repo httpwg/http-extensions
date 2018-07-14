@@ -414,9 +414,10 @@ Given a parameterised list as input:
    1. Let id be the result of applying Serialising an Identifier {{ser-identifier}} to mem's identifier.
    2. Append id to output.
    3. For each parameter in mem's parameters:
-      1. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to parameter's param-name.
-      2. Append name to output.
-      3. If parameter has a param-value:
+      1. Append ";" to output.
+      2. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to parameter's param-name.
+      3. Append name to output.
+      4. If parameter has a param-value:
          1. Let value be the result of applying Serialising an Item {{ser-item}} to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
