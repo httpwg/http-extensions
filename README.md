@@ -56,7 +56,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Expect-CT
 
-*In WGLC; ends 2018-06-08*
+*Sent to IESG*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-expect-ct.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-expect-ct.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-expect-ct) (less recent, more official)
@@ -78,6 +78,8 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 
 ### Client Hints
+
+*In WGLC; ends 2018-08-07*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-client-hints.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-client-hints.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
