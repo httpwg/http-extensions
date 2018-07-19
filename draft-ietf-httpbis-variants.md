@@ -458,7 +458,7 @@ To be usable with Variants, proactive content negotiation mechanisms need to be 
 
 # IANA Considerations
 
-This specification registers two values in the Permanent Message Header Field Names registry established by {{?RFC3864}}:
+This specification registers the following entry in the Permanent Message Header Field Names registry established by {{?RFC3864}}:
 
 * Header field name: Variants
 * Applicable protocol: http
@@ -467,13 +467,14 @@ This specification registers two values in the Permanent Message Header Field Na
 * Specification document(s): [this document]
 * Related information:
 
+This specification registers the following entry in the Permanent Message Header Field Names registry established by {{?RFC3864}}:
+
 * Header field name: Variant-Key
 * Applicable protocol: http
 * Status: standard
 * Author/Change Controller: IETF
 * Specification document(s): [this document]
 * Related information:
-
 
 # Security Considerations
 
