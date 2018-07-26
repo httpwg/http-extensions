@@ -117,7 +117,7 @@ To define a HTTP header as a structured header, its specification needs to:
 
 * Specify any additional constraints upon the syntax of the structured used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
-Note that a header field definition cannot relax the requirements of a structure or its processing; they can only add additional constraints, because doing so would preclude handling by generic software.
+Note that a header field definition cannot relax the requirements of a structure or its processing because doing so would preclude handling by generic software; they can only add additional constraints.
 
 For example:
 
@@ -322,7 +322,7 @@ Note that strings only use DQUOTE as a delimiter; single quotes do not delimit s
 
 Unicode is not directly supported in this document, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
 
-When it is necessary for a field value to convey non-ASCII string content, binary content ({{binary}}) SHOULD be specified, along with a character encoding (preferably, UTF-8).
+When it is necessary for a field value to convey non-ASCII string content, binary content ({{binary}}) SHOULD be specified, along with a character encoding (preferably UTF-8).
 
 Parsers MUST support strings with at least 1024 characters.
 
