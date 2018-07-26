@@ -219,7 +219,7 @@ Parsers MUST support lists containing at least 1024 members.
 
 Parameterised Lists are arrays of a parameterised identifiers.
 
-A parameterised identifier is an identifier ({{identifier}}) with an optional set of parameters, each parameter having a identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+A parameterised identifier is an identifier ({{identifier}}) with an optional set of parameters, each parameter having an identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
 
 The ABNF for parameterised lists is:
 
@@ -583,16 +583,16 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
 
 ### Parsing a Parameterised Identifier from Text {#parse-param-id}
 
-Given an ASCII string input_string, return a identifier with an mapping of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an identifier with a mapping of parameters. input_string is modified to remove the parsed value.
 
-1. Let primary_identifier be the result of Parsing a Identifier from Text ({{parse-identifier}}) from input_string.
+1. Let primary_identifier be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
 2. Let parameters be an empty, unordered mapping.
 3. In a loop:
    1. Discard any leading OWS from input_string.
    2. If the first character of input_string is not ";", exit the loop.
    3. Consume a ";" character from the beginning of input_string.
    4. Discard any leading OWS from input_string.
-   5. let param_name be the result of Parsing a Identifier from Text ({{parse-identifier}}) from input_string.
+   5. let param_name be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
    6. If param_name is already present in parameters, fail parsing.
    7. Let param_value be a null value.
    8. If the first character of input_string is "=":
@@ -662,7 +662,7 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 
 ### Parsing an Identifier from Text {#parse-identifier}
 
-Given an ASCII string input_string, return a identifier. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an identifier. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not lcalpha, fail parsing.
 2. Let output_string be an empty string.
@@ -704,7 +704,7 @@ This draft has no actions for IANA.
 The size of most types defined by Structured Headers is not limited; as a result, extremely large header fields could be an attack vector (e.g., for resource consumption). Most HTTP implementations limit the sizes of size of individual header fields as well as the overall header block size to mitigate such attacks.
 
 It is possible for parties with the ability to inject new HTTP header fields to change the meaning
-of a Structured Headers. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
+of a Structured Header. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
 --- back
 
