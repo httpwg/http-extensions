@@ -388,6 +388,9 @@ Given a dictionary as input:
    3. Append "=" to output.
    4. Let value be the result of applying Serialising an Item {{ser-item}} to mem's member-value.
    5. Append value to output.
+   6. If more members remain in input:
+      1. Append a COMMA to output.
+      2. Append a single WS to output.
 3. Return output.
 
 
@@ -421,6 +424,9 @@ Given a parameterised list as input:
          1. Let value be the result of applying Serialising an Item {{ser-item}} to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
+   4. If more members remain in input:
+      1. Append a COMMA to output.
+      2. Append a single WS to output.
 3. Return output.
 
 
