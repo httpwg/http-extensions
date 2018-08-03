@@ -440,7 +440,8 @@ Given an item as input:
 3. If input is a float, let value be the result of applying Serialising a Float {{ser-float}} to input.
 4. If input is a string, let value be the result of applying Serialising a String {{ser-string}} to input.
 5. If input is binary content, let value be the result of applying Serialising Binary Content {{ser-binary}} to input.
-6. Return output.
+6. Append value to output.
+7. Return output.
 
 
 ### Serialising an Integer {#ser-integer}
