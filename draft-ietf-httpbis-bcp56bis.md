@@ -786,7 +786,7 @@ multiple applications on an origin.
 
 To enable this, when specifying the use of Cookies, HTTP authentication realms {{?RFC7235}}, or
 other origin-wide HTTP mechanisms, applications using HTTP SHOULD NOT mandate the use of a
-particular identifier, but instead let deployments configure them. Consideration SHOULD be given to
+particular name, but instead let deployments configure them. Consideration SHOULD be given to
 scoping them to part of the origin, using their specified mechanisms for doing so.
 
 Modern Web browsers constrain the ability of content from one origin to access resources from
