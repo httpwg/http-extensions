@@ -723,11 +723,11 @@ This means that all such applications need to consider how browsers will interac
 particularly regarding security.
 
 For example, if an application's state can be changed using a POST request, a Web browser can
-easily be coaxed into making that request by a HTML form on an arbitrary Web site.
+easily be coaxed into cross-site request forgery (CSRF) from arbitrary Web sites.
 
 Or, If content returned from the application's resources is under control of an attacker (for
 example, part of the request is reflected in the response, or the response contains external
-information that might be under the control of the attacker), a cross-site scripting attack is
+information that might be under the control of the attacker), a cross-site scripting (XSS) attack is
 possible, whereby an attacker can inject code into the browser and access data and capabilities on
 that origin.
 
