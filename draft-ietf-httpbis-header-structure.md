@@ -234,7 +234,7 @@ param-value   = sh-item
 In HTTP/1, each param-id is separated by a comma and optional whitespace (as in Lists), and the parameters are separated by semicolons. For example:
 
 ~~~ example
-Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, ghi;q="9";r=w
+Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, ghi;q="9";r="w"
 ~~~
 
 Parsers MUST support parameterised lists containing at least 1024 members, and support members with at least 256 parameters.
