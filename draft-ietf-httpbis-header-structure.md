@@ -184,7 +184,7 @@ member-value   = sh-item
 In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
 
 ~~~ example
-Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGUK=*
+Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGUK*
 ~~~
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
