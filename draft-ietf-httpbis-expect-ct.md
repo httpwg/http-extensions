@@ -141,10 +141,6 @@ directive-value     = token / quoted-string
 ~~~
 {: #expect-ct-syntax title="Syntax of the Expect-CT header field"}
 
-Optional white space (`OWS`) is used as defined in Section 3.2.3 of
-{{!RFC7230}}. `token` and `quoted-string` are used as defined in Section 3.2.6
-of {{!RFC7230}}.
-
 The directives defined in this specification are described below. The overall
 requirements for directives are:
 
@@ -186,8 +182,8 @@ report-uri-value = absolute-URI
 Hosts may set `report-uri`s that use HTTP or HTTPS. If the scheme in the
 `report-uri` is one that uses TLS (e.g., HTTPS), UAs MUST check Expect-CT
 compliance when the host in the `report-uri` is a Known Expect-CT Host;
-similarly, UAs MUST apply HSTS if the host in the `report-uri` is a Known HSTS
-Host.
+similarly, UAs MUST apply HSTS {{!RFC6797}} if the host in the `report-uri` is a
+Known HSTS Host.
 
 Note that the report-uri need not necessarily be in the same Internet
 domain or web origin as the host being reported about.
@@ -202,7 +198,7 @@ to the UA's CT Policy, the UA SHOULD detect and break the loop by failing to
 send reports to and about those hosts.
 
 UAs SHOULD limit the rate at which they send reports. For example, it is
-unnecessary to send the same report to the same `report-uri` more than once.
+unnecessary to send the same report to the same `report-uri` more than once in the same web browsing session.
 
 ### The enforce Directive
 
@@ -627,7 +623,7 @@ Applicable protocol:
 
 Status:
 
-: standard
+: experimental
 
 Author/Change controller:
 
@@ -741,7 +737,7 @@ Transparency requirements.
 
 ## Since -07
 
-* None yet
+* Editorial changes
 
 ## Since -06
 
