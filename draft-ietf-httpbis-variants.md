@@ -302,7 +302,7 @@ Note that implementation of the Vary header field varies in practice, and the al
 For example, if the selected variants-header was:
 
 ~~~ example
-Variants: Accept-Language;en;fr,de, Accept-Encoding;gzip;br
+Variants: Accept-Language;en;fr;de, Accept-Encoding;gzip;br
 ~~~
 
 and the request contained the headers:
