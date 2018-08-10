@@ -438,7 +438,7 @@ Given an item as input:
 1. If input is an integer, return the result of applying Serialising an Integer {{ser-integer}} to input.
 2. If input is a float, return the result of applying Serialising a Float {{ser-float}} to input.
 3. If input is a string, return the result of applying Serialising a String {{ser-string}} to input.
-4. If input is binary content, return the result of applying Serialising Binary Content {{ser-binary}} to input.
+4. Otherwise, return the result of applying Serialising Binary Content {{ser-binary}} to input.
 
 
 ### Serialising an Integer {#ser-integer}
