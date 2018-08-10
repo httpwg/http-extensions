@@ -184,7 +184,7 @@ member-value   = sh-item
 In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
 
 ~~~ example
-Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGUK=*
+Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
 ~~~
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
@@ -234,7 +234,7 @@ param-value   = sh-item
 In HTTP/1, each param-id is separated by a comma and optional whitespace (as in Lists), and the parameters are separated by semicolons. For example:
 
 ~~~ example
-Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, ghi;q="9";r=w
+Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, ghi;q="9";r="w"
 ~~~
 
 Parsers MUST support parameterised lists containing at least 1024 members, and support members with at least 256 parameters.
