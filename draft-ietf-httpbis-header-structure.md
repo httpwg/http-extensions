@@ -663,7 +663,7 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
    3. Else, if char is DQUOTE, return output_string.
    4. Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail parsing.
    4. Else, append char to output_string.
-6. Unterminated string; fail parsing.
+6. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
 
 ### Parsing an Identifier from Text {#parse-identifier}
