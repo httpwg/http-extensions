@@ -637,12 +637,12 @@ NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and 
    5. If type is "integer" and input_number contains more than 19 characters, fail parsing.
    6. If type is "float" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
-   1. Parse input_number as an integer and let output_number be the result.
+   1. Parse input_number as an integer and let output_number be the product of the result and sign.
    2. If output_number is outside the range defined in {{integer}}, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
-   2. Parse input_number as a float and let output_number be the result.
-0. Return the product of output_number and sign.
+   2. Parse input_number as a float and let output_number be the product of the result and sign.
+0. Return output_number.
 
 
 ### Parsing a String from Text {#parse-string}
