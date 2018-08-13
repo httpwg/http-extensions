@@ -43,7 +43,8 @@ informative:
 --- abstract
 
 HTTP is often used as a substrate for other application protocols (a.k.a. HTTP-based APIs). This
-document specifies best practices for these protocols' use of HTTP.
+document specifies best practices for such protocols' use of HTTP when they are defined for diverse
+implementation and broad deployment (e.g., in standards efforts).
 
 
 --- note_Note_to_Readers_
@@ -71,17 +72,17 @@ variety of reasons, including:
 * its ability to traverse firewalls.
 
 These protocols are often ad hoc; they are intended for only deployment by one or a few servers,
-and consumption by a limited set of clients. As a result, a body of practices and tools has arisen
-around defining HTTP-based APIs that favours these conditions.
+and consumption by a limited set of clients. Perhaps because of the factors cited above, a body of
+practices and tools has arisen around defining HTTP-based APIs that favours these conditions.
 
-However, when such a protocol is standarised, it is typically deployed on multiple uncoordinated
-servers, implemented a number of times, and consumed by a broader variety of clients. Such
-diversity brings a different set of concerns, and tools and practices intended for a single-server
-deployment might not be suitable.
+However, when such a protocol has separate implementations of the service, is deployed on multiple
+uncoordinated servers, and is consumed by diverse clients -- as is often the case for standards
+efforts to define new HTTP APIs -- tools and practices intended for limited deployment can become
+unsuitable.
 
-For example, HTTP-based APIs deployed in these circumstances need to more carefully consider how
-extensibility and evolution of the service will be handled, how different deployment requirements
-will be accommodated, and how clients will evolve with the API.
+For example, because implementations (both client and server) will implement and evolve at
+different paces, a HTTP-based API might need to more carefully consider how extensibility of the
+service will be handled, and how different deployment requirements will be accommodated.
 
 More generally, application protocols using HTTP face a number of design decisions, including:
 
