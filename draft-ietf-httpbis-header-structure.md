@@ -435,12 +435,10 @@ Given a parameterised list as input:
 Given an item as input:
 
 0. If input is a type other than an integer, float, string or binary content, fail serialisation.
-1. Let output be an empty string.
-2. If input is an integer, let value be the result of applying Serialising an Integer {{ser-integer}} to input.
-3. If input is a float, let value be the result of applying Serialising a Float {{ser-float}} to input.
-4. If input is a string, let value be the result of applying Serialising a String {{ser-string}} to input.
-5. If input is binary content, let value be the result of applying Serialising Binary Content {{ser-binary}} to input.
-6. Return output.
+1. If input is an integer, return the result of applying Serialising an Integer {{ser-integer}} to input.
+2. If input is a float, return the result of applying Serialising a Float {{ser-float}} to input.
+3. If input is a string, return the result of applying Serialising a String {{ser-string}} to input.
+4. Otherwise, return the result of applying Serialising Binary Content {{ser-binary}} to input.
 
 
 ### Serialising an Integer {#ser-integer}
