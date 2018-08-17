@@ -753,6 +753,45 @@ any stream which references the failing certificate in question or process the
 requests as unauthenticated and provide error information at the HTTP semantic
 layer.
 
+# Affiliated Domain Certificate Extension {#extension}
+
+The affiliated domain extension allows groups of certificates under the same
+control or cooperative control to be identified.  The identities stated as
+affiliated domains are not bound to the subject of the certificate, but this
+extension indicates that there is a trust or agent relationship between the
+subject and the affiliated domains.
+
+Because the affiliated domains are considered to be definitively bound to the
+public key, each affiliated domain MUST be verified by the CA.  Conforming CAs
+SHOULD mark the affiliatedDomain extension as non-critical.
+
+Each affiliated domain is represented as an IA5String. The name MUST be in the
+"preferred name syntax", as specified by Section 3.5 of {{!RFC1034}} and as
+modified by Section 2.1 of {{!RFC1123}}.  Note that while uppercase and lowercase
+letters are allowed in domain names, no significance is attached to the case. In
+addition, while the string " " is a legal domain name, affiliatedDomain
+extensions MUST NOT contain " ".  Rules for encoding internationalized domain
+names are specified in Section 7.2 of {{!RFC5280}}.
+
+Affiliated domains MAY be constrained in the same manner as subject
+distinguished names using the name constraints extension as described in Section
+4.2.1.10 of {{!RFC5280}}.
+
+If the affiliatedDomain extension is present, the sequence MUST contain at least
+one entry.  Unlike the subject field, conforming CAs MUST NOT issue certificates
+with subjectAltNames containing empty GeneralName fields.  Clients that
+encounter such a certificate when processing a certification path MUST ignore
+that extension.
+
+Finally, the semantics of affiliated domains that include wildcard characters
+(e.g., as a placeholder for a set of names) are not addressed by this
+specification.  Applications with specific requirements MAY use such names, but
+they must define the semantics.
+
+    id-ce-affiliatedDomain OBJECT IDENTIFIER ::=  { id-ce TBD }
+
+    AffiliatedDomains ::= SEQUENCE SIZE (1..MAX) OF IA5String
+
 # Security Considerations {#security}
 
 This mechanism defines an alternate way to obtain server and client certificates
@@ -769,6 +808,11 @@ a malicious server now only needs a client to connect to *some* HTTPS site under
 its control in order to present the compromised certificate. As recommended in
 {{?RFC8336}}, clients opting not to consult DNS ought to employ some alternative
 means to increase confidence that the certificate is legitimate.
+
+One such means is the Affiliated Domain certificate extension defined in
+{extension}. Clients SHOULD require that server certificates presented via this
+mechanism share at least one affiliated domain with the certificate presented in
+the TLS handshake.
 
 As noted in the Security Considerations of
 [I-D.ietf-tls-exported-authenticator], it difficult to formally prove that an
