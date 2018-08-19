@@ -538,9 +538,9 @@ Note that this has the effect of discarding any header field with non-ASCII char
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
-Given an ASCII string input_string, return an ordered mapping of (identifier, item). input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an ordered map of (identifier, item). input_string is modified to remove the parsed value.
 
-1. Let dictionary be an empty, ordered mapping.
+1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parse Identifier from Text ({{parse-identifier}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
@@ -589,10 +589,10 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
 
 ### Parsing a Parameterised Identifier from Text {#parse-param-id}
 
-Given an ASCII string input_string, return an identifier with an unordered mapping of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an identifier with an unordered map of parameters. input_string is modified to remove the parsed value.
 
 1. Let primary_identifier be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
-2. Let parameters be an empty, unordered mapping.
+2. Let parameters be an empty, unordered map.
 3. In a loop:
    1. Discard any leading OWS from input_string.
    2. If the first character of input_string is not ";", exit the loop.
@@ -760,6 +760,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Make Dictionaries ordered mappings (#659).
 * Changed "binary content" to "byte sequence" to align with Infra specification (#671).
+* Changed "mapping" to "map" for #671.
 
 ## Since draft-ietf-httpbis-header-structure-06
 
