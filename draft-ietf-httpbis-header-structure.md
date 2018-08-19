@@ -244,12 +244,12 @@ Parsers MUST support parameterised lists containing at least 1024 members, and s
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), or a byte sequence ({{binary}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
 
 The ABNF for items in HTTP/1 headers is:
 
 ~~~ abnf
-sh-item = sh-integer / sh-float / sh-string / sh-binary
+sh-item = sh-integer / sh-float / sh-string / sh-binary / sh-boolean
 ~~~
 
 
@@ -363,6 +363,23 @@ Example-BinaryHdr: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
 Parsers MUST support byte sequences with at least 16384 octets after decoding.
 
 
+## Booleans {#boolean}
+
+Boolean values can be conveyed in Structured Headers.
+
+The ABNF for a Boolean in HTTP/1 headers is:
+
+~~~ abnf
+sh-boolean = "!" boolean
+boolean    = "T" / "F"
+~~~
+
+In HTTP/1 headers, a byte sequence is delimited with a "!" character. For example:
+
+~~~ example
+Example-BoolHdr: !T
+~~~
+
 
 # Structured Headers in HTTP/1 {#text}
 
@@ -436,11 +453,12 @@ Given a parameterised list as input:
 
 Given an item as input:
 
-0. If input is a type other than an integer, float, string or a byte sequence, fail serialisation.
+0. If input is a type other than an integer, float, string, byte sequence, or Boolean, fail serialisation.
 1. If input is an integer, return the result of applying Serialising an Integer {{ser-integer}} to input.
 2. If input is a float, return the result of applying Serialising a Float {{ser-float}} to input.
 3. If input is a string, return the result of applying Serialising a String {{ser-string}} to input.
-4. Otherwise, return the result of applying Serialising a Byte Sequence {{ser-binary}} to input.
+4. If input is a Boolean, return the result of applying Serialising a Boolean {{ser-boolean}} to input.
+5. Otherwise, return the result of applying Serialising a Byte Sequence {{ser-binary}} to input.
 
 
 ### Serialising an Integer {#ser-integer}
@@ -492,9 +510,9 @@ Given an identifier as input:
 3. Return output.
 
 
-### Serialising Byte Sequences {#ser-binary}
+### Serialising a Byte Sequence {#ser-binary}
 
-Given byte sequences as input:
+Given a byte sequence as input:
 
 0. If input is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
@@ -506,6 +524,18 @@ Given byte sequences as input:
 The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2.
 
 Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Section 3.5, unless it is not possible to do so due to implementation constraints.
+
+
+### Serialising a Boolean {#ser-boolean}
+
+Given a Boolean as input:
+
+0. If input is not a boolean, fail serialisation.
+1. Let output be an empty string.
+2. Append "!" to output.
+3. If input is true, append "T" to output.
+4. If input is false, append "F" to output.
+5. Return output.
 
 
 ## Parsing HTTP/1 Header Fields into Structured Headers {#text-parse}
@@ -616,6 +646,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
 4. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
+5. If the first character of input_string is "!", process input_string as a Boolean ({{parse-boolean}}) and return the result.
 6. Otherwise, fail parsing.
 
 
@@ -700,6 +731,17 @@ Because some implementations of base64 do not allow rejection of encoded data th
 This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
 
+### Parsing a Boolean from Text {#parse-boolean}
+
+Given an ASCII string input_string, return a Boolean. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not "!", fail parsing.
+2. Discard the first character of input_string.
+3. If the first character of input_string case-sensitively matches "T", return true.
+4. If the first character of input_string case-sensitively matches "F", return false.
+5. No value has matched; fail parsing.
+
+
 # IANA Considerations
 
 This draft has no actions for IANA.
@@ -761,6 +803,7 @@ _RFC Editor: Please remove this section before publication._
 * Changed "binary content" to "byte sequence" to align with Infra specification (#671).
 * Changed "mapping" to "map" for #671.
 * Don't fail if byte sequences aren't "=" padded (#658).
+* Add Booleans (#683).
 
 ## Since draft-ietf-httpbis-header-structure-06
 
