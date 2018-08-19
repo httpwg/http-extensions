@@ -100,11 +100,11 @@ shown here.
 
 This document uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}}, including the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from that document. It also includes the OWS rule from {{!RFC7230}}.
 
-This document uses algorithms to specify parsing and serialisation behaviours, and ABNF to illustrate expected syntax.
+This document uses algorithms to specify parsing and serialisation behaviours, and ABNF to illustrate expected syntax in HTTP/1-style header fields.
 
-For parsing, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
+For parsing from HTTP/1 header fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
-For serialisation, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behaviour so long as the output still matches the ABNF.
+For serialisation to HTTP/1 header fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behaviour so long as the output still matches the ABNF.
 
 
 # Defining New Structured Headers {#specify}
@@ -174,7 +174,7 @@ Dictionaries are ordered maps of key-value pairs, where the keys are identifiers
 
 Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
-The ABNF for dictionaries is:
+The ABNF for dictionaries in HTTP/1 headers is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
@@ -198,7 +198,7 @@ Parsers MUST support dictionaries containing at least 1024 key/value pairs.
 
 Lists are arrays of items ({{item}}) with one or more members.
 
-The ABNF for lists is:
+The ABNF for lists in HTTP/1 headers is:
 
 ~~~ abnf
 sh-list     = list-member *( OWS "," OWS list-member )
@@ -223,7 +223,7 @@ Parameterised Lists are arrays of a parameterised identifiers.
 
 A parameterised identifier is an identifier ({{identifier}}) with an optional set of parameters, each parameter having an identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
 
-The ABNF for parameterised lists is:
+The ABNF for parameterised lists in HTTP/1 headers is:
 
 ~~~ abnf
 sh-param-list = param-id *( OWS "," OWS param-id )
@@ -246,7 +246,7 @@ Parsers MUST support parameterised lists containing at least 1024 members, and s
 
 An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), or a byte sequence ({{binary}}).
 
-The ABNF for items is:
+The ABNF for items in HTTP/1 headers is:
 
 ~~~ abnf
 sh-item = sh-integer / sh-float / sh-string / sh-binary
@@ -257,7 +257,7 @@ sh-item = sh-integer / sh-float / sh-string / sh-binary
 
 Integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive (i.e., a 64-bit signed integer).
 
-The ABNF for integers is:
+The ABNF for integers in HTTP/1 headers is:
 
 ~~~ abnf
 sh-integer = ["-"] 1*19DIGIT
@@ -274,7 +274,7 @@ Example-IntegerHeader: 42
 
 Floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
 
-The ABNF for floats is:
+The ABNF for floats in HTTP/1 headers is:
 
 ~~~ abnf
 sh-float    = ["-"] (
@@ -305,7 +305,7 @@ Example-FloatHeader: 4.5
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
-The ABNF for strings is:
+The ABNF for strings in HTTP/1 headers is:
 
 ~~~ abnf
 sh-string = DQUOTE *(chr) DQUOTE
@@ -333,7 +333,7 @@ Parsers MUST support strings with at least 1024 characters.
 
 Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation. Parsers MUST support identifiers with at least 64 characters.
 
-The ABNF for identifiers is:
+The ABNF for identifiers in HTTP/1 headers is:
 
 ~~~ abnf
 identifier = lcalpha *( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
@@ -347,7 +347,7 @@ Note that identifiers can only contain lowercase letters.
 
 Byte sequences can be conveyed in Structured Headers.
 
-The ABNF for a byte sequence is:
+The ABNF for a byte sequence in HTTP/1 headers is:
 
 ~~~ abnf
 sh-binary = "*" *(base64) "*"
