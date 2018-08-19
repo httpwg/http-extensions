@@ -693,10 +693,9 @@ Given an ASCII string input_string, return a byte sequence. input_string is modi
 5. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour below).
 6. Return binary_content.
 
-As per {{!RFC4648}}, Section 3.2, it is RECOMMENDED that parsers reject encoded data that is not
-properly padded, although this might not be possible in some base64 implementations.
+Because some implementations of base64 do not allow reject of encoded data that is not properly "=" padded (see {{!RFC4648}}, Section 3.2), parsers SHOULD NOT fail when it is not present, unless they cannot be configured to do so.
 
-Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{!RFC4648}}, Section 3.5), parsers SHOULD NOT fail when it is present, unless they cannot be configured to handle it.
+Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{!RFC4648}}, Section 3.5), parsers SHOULD NOT fail when it is present, unless they cannot be configured to do so.
 
 This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
@@ -761,6 +760,7 @@ _RFC Editor: Please remove this section before publication._
 * Make Dictionaries ordered mappings (#659).
 * Changed "binary content" to "byte sequence" to align with Infra specification (#671).
 * Changed "mapping" to "map" for #671.
+* Don't fail if byte sequences aren't "=" padded (#658).
 
 ## Since draft-ietf-httpbis-header-structure-06
 
