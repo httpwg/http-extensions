@@ -244,7 +244,7 @@ Parsers MUST support parameterised lists containing at least 1024 members, and s
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), or binary content ({{binary}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), or a byte sequence ({{binary}}).
 
 The ABNF for items is:
 
@@ -324,7 +324,7 @@ Note that strings only use DQUOTE as a delimiter; single quotes do not delimit s
 
 Unicode is not directly supported in this document, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
 
-When it is necessary for a field value to convey non-ASCII string content, binary content ({{binary}}) SHOULD be specified, along with a character encoding (preferably UTF-8).
+When it is necessary for a field value to convey non-ASCII string content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably UTF-8).
 
 Parsers MUST support strings with at least 1024 characters.
 
@@ -343,24 +343,24 @@ lcalpha    = %x61-7A ; a-z
 Note that identifiers can only contain lowercase letters.
 
 
-## Binary Content {#binary}
+## Byte Sequences {#binary}
 
-Arbitrary binary content can be conveyed in Structured Headers.
+Byte sequences can be conveyed in Structured Headers.
 
-The ABNF for binary content is:
+The ABNF for a byte sequence is:
 
 ~~~ abnf
 sh-binary = "*" *(base64) "*"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-In HTTP/1 headers, binary content is delimited with asterisks and encoded using base64 ({{!RFC4648}}, Section 4). For example:
+In HTTP/1 headers, a byte sequence is delimited with asterisks and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
 Example-BinaryHdr: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
 ~~~
 
-Parsers MUST support binary content with at least 16384 octets after decoding.
+Parsers MUST support byte sequences with at least 16384 octets after decoding.
 
 
 
@@ -436,11 +436,11 @@ Given a parameterised list as input:
 
 Given an item as input:
 
-0. If input is a type other than an integer, float, string or binary content, fail serialisation.
+0. If input is a type other than an integer, float, string or a byte sequence, fail serialisation.
 1. If input is an integer, return the result of applying Serialising an Integer {{ser-integer}} to input.
 2. If input is a float, return the result of applying Serialising a Float {{ser-float}} to input.
 3. If input is a string, return the result of applying Serialising a String {{ser-string}} to input.
-4. Otherwise, return the result of applying Serialising Binary Content {{ser-binary}} to input.
+4. Otherwise, return the result of applying Serialising a Byte Sequence {{ser-binary}} to input.
 
 
 ### Serialising an Integer {#ser-integer}
@@ -492,9 +492,9 @@ Given an identifier as input:
 3. Return output.
 
 
-### Serialising Binary Content {#ser-binary}
+### Serialising Byte Sequences {#ser-binary}
 
-Given binary content as input:
+Given byte sequences as input:
 
 0. If input is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
@@ -529,7 +529,7 @@ For Lists, Parameterised Lists and Dictionaries, this has the effect of correctl
 
 Strings can but SHOULD NOT be split across multiple header instances, because comma(s) inserted upon combination will become part of the string output by the parser.
 
-Integers, Floats and Binary Content cannot be split across multiple headers because the inserted commas will cause parsing to fail.
+Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
 
@@ -615,7 +615,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 1. Discard any leading OWS from input_string.
 2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
-4. If the first character of input_string is "\*", process input_string as binary content ({{parse-binary}}) and return the result.
+4. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
 6. Otherwise, fail parsing.
 
 
@@ -681,9 +681,9 @@ Given an ASCII string input_string, return an identifier. input_string is modifi
 4. Return output_string.
 
 
-### Parsing Binary Content from Text {#parse-binary}
+### Parsing a Byte Sequence from Text {#parse-binary}
 
-Given an ASCII string input_string, return binary content. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return a byte sequence. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not "\*", fail parsing.
 2. Discard the first character of input_string.
@@ -759,6 +759,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-07
 
 * Make Dictionaries ordered mappings (#659).
+* Changed "binary content" to "byte sequence" to align with Infra specification (#671).
 
 ## Since draft-ietf-httpbis-header-structure-06
 
