@@ -170,7 +170,9 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are unordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
+Dictionaries are ordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
+
+Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
 The ABNF for dictionaries is:
 
@@ -536,9 +538,9 @@ Note that this has the effect of discarding any header field with non-ASCII char
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
-Given an ASCII string input_string, return a mapping of (identifier, item). input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an ordered mapping of (identifier, item). input_string is modified to remove the parsed value.
 
-1. Let dictionary be an empty, unordered mapping.
+1. Let dictionary be an empty, ordered mapping.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parse Identifier from Text ({{parse-identifier}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
@@ -587,7 +589,7 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
 
 ### Parsing a Parameterised Identifier from Text {#parse-param-id}
 
-Given an ASCII string input_string, return an identifier with a mapping of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an identifier with an unordered mapping of parameters. input_string is modified to remove the parsed value.
 
 1. Let primary_identifier be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
 2. Let parameters be an empty, unordered mapping.
@@ -753,6 +755,10 @@ If you need to fit arbitrarily complex data into a header, Structured Headers is
 # Changes
 
 _RFC Editor: Please remove this section before publication._
+
+## Since draft-ietf-httpbis-header-structure-07
+
+* Make Dictionaries ordered mappings (#659).
 
 ## Since draft-ietf-httpbis-header-structure-06
 
