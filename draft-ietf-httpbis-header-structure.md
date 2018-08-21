@@ -737,8 +737,8 @@ Given an ASCII string input_string, return a Boolean. input_string is modified t
 
 1. If the first character of input_string is not "!", fail parsing.
 2. Discard the first character of input_string.
-3. If the first character of input_string case-sensitively matches "T", return true.
-4. If the first character of input_string case-sensitively matches "F", return false.
+3. If the first character of input_string case-sensitively matches "T", discard the first character, and return true.
+4. If the first character of input_string case-sensitively matches "F", discard the first character, and return false.
 5. No value has matched; fail parsing.
 
 
