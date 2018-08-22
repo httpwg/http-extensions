@@ -558,6 +558,11 @@ This table summarises their relationships:
 | Allows changing the request method from POST to GET | 301       | 302       |
 | Does not allow changing the request method          | 308       | 307       |
 
+A common use-case for redirects that change the request method to GET, is communicate to a browser
+that the result of an operation can be found at a different location. The appropriate status code
+for this is 303 See Other. This status code is widely supported and the recommended status code
+for these purposes.
+
 As noted in {{?I-D.ietf-httpbis-semantics}}, a user agent is allowed to automatically follow a 3xx
 redirect that has a Location response header field, even if they don't understand the semantics of
 the specific status code. However, they aren't required to do so; therefore, if an application
