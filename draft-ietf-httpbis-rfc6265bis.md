@@ -1456,12 +1456,13 @@ user agent MUST process the cookie as follows:
     3.  The cookie-attribute-list contains an attribute with an attribute-name
         of "Path", and the cookie's path is `/`.
 
-17. If the cookie store contains a cookie with the same name, domain, and
-    path as the newly-created cookie:
+17. If the cookie store contains a cookie with the same name, domain,
+    host-only-flag, and path as the newly-created cookie:
 
     1.  Let old-cookie be the existing cookie with the same name, domain,
-        and path as the newly-created cookie. (Notice that this algorithm
-        maintains the invariant that there is at most one such cookie.)
+        host-only-flag, and path as the newly-created cookie. (Notice that this
+        algorithm maintains the invariant that there is at most one such
+        cookie.)
 
     2.  If the newly-created cookie was received from a "non-HTTP" API and the
         old-cookie's http-only-flag is true, abort these steps and ignore the
@@ -2054,6 +2055,10 @@ Specification document:
 
 *  Clarified handling of invalid SameSite values:
    <https://github.com/httpwg/http-extensions/issues/389>
+
+*  Reflect widespread implementation practice of including a cookie's
+   `host-only-flag` when calculating its uniqueness:
+   <https://github.com/httpwg/http-extensions/issues/199>
 
 # Acknowledgements
 {:numbered="false"}
