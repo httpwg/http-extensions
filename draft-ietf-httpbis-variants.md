@@ -74,7 +74,7 @@ Content-Language: en
 Vary: Accept-Language
 Transfer-Encoding: chunked
 
-[French content]
+[English content]
 ~~~
 
 Provided that the cache has full knowledge of the semantics of Accept-Language and Content-Language, it will know that an English representation is available and might be able to infer that a French representation is not available. But, it does not know (for example) whether a Japanese representation is available without making another request, incurring possibly unnecessary latency.
@@ -98,7 +98,7 @@ Variants: Accept-Language;de;en;jp
 Variant-Key: en
 Transfer-Encoding: chunked
 
-[French content]
+[English content]
 ~~~
 
 Proactive content negotiation mechanisms that wish to be used with Variants need to define how to do so explicitly; see {{define}}. As a result, it is best suited for negotiation over request headers that are well-understood.
