@@ -255,6 +255,27 @@ Implementers ought to consider both user and server controlled mechanisms and po
 
 Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when site data, browsing history, browsing cache, or similar, are cleared.
 
+## Opt-in via Feature Policy
+
+Implementers that implement [Fetch](http://fetch.spec.whatwg.org) SHOULD provide authors the ability to opt-into sending specific Client Hints to specific origins using [Feature Policy](https://wicg.github.io/feature-policy/).
+
+This document defines [policy-controlled features](https://wicg.github.io/feature-policy/#features) for the following Client Hints header fields:
+
+| Client Hints header field | policy-controlled feature | [default allowlist](https://wicg.github.io/feature-policy/#default-allowlists) |
+|--|--|--|
+| `DPR` | `ch-dpr` | `'self'` |
+| `Width` | `ch-width` | `'self'` |
+| `Viewport-Width` | `ch-viewport-width` | `'self'` |
+
+These feature policies are set on the [client](https://fetch.spec.whatwg.org/#concept-request-client), and enforced on requests made by that client.
+
+For example, after receiving a document with the following [policy directives](https://wicg.github.io/feature-policy/#policy-directives)
+
+~~~ example
+  Feature-Policy: ch-dpr image-cdn.com 'self'; ch-width image-cdn.com 'self'; ch-viewport-width: 'none';
+~~~
+
+the client may send `DPR` and `Width` headers on requests to both `image-cdn.com` and its own origin, but must not send `Viewport-Width` hints on any request.
 
 # IANA Considerations
 
