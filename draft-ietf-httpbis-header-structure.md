@@ -179,7 +179,7 @@ The ABNF for dictionaries in HTTP/1 headers is:
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member    = member-name "=" member-value
-member-name    = identifier
+member-name    = sh-identifier
 member-value   = sh-item
 ~~~
 
@@ -227,9 +227,9 @@ The ABNF for parameterised lists in HTTP/1 headers is:
 
 ~~~ abnf
 sh-param-list = param-id *( OWS "," OWS param-id )
-param-id      = identifier *parameter
+param-id      = sh-identifier *parameter
 parameter     = OWS ";" OWS param-name [ "=" param-value ]
-param-name    = identifier
+param-name    = sh-identifier
 param-value   = sh-item
 ~~~
 
@@ -244,12 +244,12 @@ Parsers MUST support parameterised lists containing at least 1024 members, and s
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), identifier ({{identifier}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
 
 The ABNF for items in HTTP/1 headers is:
 
 ~~~ abnf
-sh-item = sh-integer / sh-float / sh-string / sh-binary / sh-boolean
+sh-item = sh-integer / sh-float / sh-string / sh-identifier / sh-binary / sh-boolean
 ~~~
 
 
@@ -336,8 +336,8 @@ Identifiers are short textual identifiers; their abstract model is identical to 
 The ABNF for identifiers in HTTP/1 headers is:
 
 ~~~ abnf
-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
-lcalpha    = %x61-7A ; a-z
+sh-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
+lcalpha       = %x61-7A ; a-z
 ~~~
 
 Note that identifiers can only contain lowercase letters.
@@ -457,8 +457,9 @@ Given an item as input:
 1. If input is an integer, return the result of applying Serialising an Integer {{ser-integer}} to input.
 2. If input is a float, return the result of applying Serialising a Float {{ser-float}} to input.
 3. If input is a string, return the result of applying Serialising a String {{ser-string}} to input.
-4. If input is a Boolean, return the result of applying Serialising a Boolean {{ser-boolean}} to input.
-5. Otherwise, return the result of applying Serialising a Byte Sequence {{ser-binary}} to input.
+4. If input is an identifier, return the result of Serialising an Identifier {#ser-identifier}.
+5. If input is a Boolean, return the result of applying Serialising a Boolean {{ser-boolean}} to input.
+6. Otherwise, return the result of applying Serialising a Byte Sequence {{ser-binary}} to input.
 
 
 ### Serialising an Integer {#ser-integer}
@@ -647,7 +648,8 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
 4. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
 5. If the first character of input_string is "!", process input_string as a Boolean ({{parse-boolean}}) and return the result.
-6. Otherwise, fail parsing.
+6. If the first character of input_string is a lcalpha, process input_string as an identifier ({{parse-identifier}}) and return the result.
+7. Otherwise, fail parsing.
 
 
 ### Parsing a Number from Text {#parse-number}
@@ -804,6 +806,8 @@ _RFC Editor: Please remove this section before publication._
 * Changed "mapping" to "map" for #671.
 * Don't fail if byte sequences aren't "=" padded (#658).
 * Add Booleans (#683).
+* Allow identifiers in items again (#629).
+
 
 ## Since draft-ietf-httpbis-header-structure-06
 
