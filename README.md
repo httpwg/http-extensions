@@ -32,7 +32,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### HTTP Random Access And Live Content
 
-*In WGLC; ends 2018-04-19*
+*Sent to IESG*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-rand-access-live.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-rand-access-live.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rand-access-live) (less recent, more official)
