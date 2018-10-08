@@ -411,9 +411,9 @@ See {{?RFC7605}} for further guidance.
 Applications that use HTTP MUST confine themselves to using registered HTTP methods such as GET,
 POST, PUT, DELETE, and PATCH.
 
-New HTTP methods are rare; they are required to be registered with IETF Review (see {{!RFC7232}}),
-and are also required to be generic. That means that they need to be potentially applicable to
-all resources, not just those of one application.
+New HTTP methods are rare; they are required to be registered in the HTTP Method Registry with IETF
+Review (see {{!RFC7231}}), and are also required to be generic. That means that they need to be
+potentially applicable to all resources, not just those of one application.
 
 While historically some applications (e.g., {{?RFC4791}}) have defined non-generic methods,
 {{!RFC7231}} now forbids this.
