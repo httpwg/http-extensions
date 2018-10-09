@@ -625,17 +625,16 @@ Given an ASCII string input_string, return an identifier with an unordered map o
 1. Let primary_identifier be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
 2. Let parameters be an empty, unordered map.
 3. In a loop:
-   1. Discard any leading OWS from input_string.
-   2. If the first character of input_string is not ";", exit the loop.
-   3. Consume a ";" character from the beginning of input_string.
-   4. Discard any leading OWS from input_string.
-   5. let param_name be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
-   6. If param_name is already present in parameters, fail parsing.
-   7. Let param_value be a null value.
-   8. If the first character of input_string is "=":
+   1. If the first character of input_string is not ";", exit the loop.
+   2. Consume a ";" character from the beginning of input_string.
+   3. Discard any leading OWS from input_string.
+   4. let param_name be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
+   5. If param_name is already present in parameters, fail parsing.
+   6. Let param_value be a null value.
+   7. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
-   9. Insert (param_name, param_value) into parameters.
+   8. Insert (param_name, param_value) into parameters.
 4. Return the tuple (primary_identifier, parameters).
 
 
@@ -807,6 +806,7 @@ _RFC Editor: Please remove this section before publication._
 * Don't fail if byte sequences aren't "=" padded (#658).
 * Add Booleans (#683).
 * Allow identifiers in items again (#629).
+* Disallowed whitespace before items (#703).
 
 
 ## Since draft-ietf-httpbis-header-structure-06
