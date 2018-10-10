@@ -249,7 +249,8 @@ An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}
 The ABNF for items in HTTP/1 headers is:
 
 ~~~ abnf
-sh-item = sh-integer / sh-float / sh-string / sh-identifier / sh-binary / sh-boolean
+sh-item = sh-integer / sh-float / sh-string / sh-identifier / sh-binary
+          / sh-boolean
 ~~~
 
 
