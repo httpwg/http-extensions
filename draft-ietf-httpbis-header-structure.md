@@ -453,7 +453,7 @@ Given a parameterised list as input:
 
 Given an item as input:
 
-0. If input is a type other than an integer, float, string, byte sequence, or Boolean, fail serialisation.
+0. If input is a type other than an integer, float, string, identifier, byte sequence, or Boolean, fail serialisation.
 1. If input is an integer, return the result of applying Serialising an Integer {{ser-integer}} to input.
 2. If input is a float, return the result of applying Serialising a Float {{ser-float}} to input.
 3. If input is a string, return the result of applying Serialising a String {{ser-string}} to input.
