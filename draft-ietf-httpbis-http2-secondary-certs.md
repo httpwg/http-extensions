@@ -753,17 +753,21 @@ any stream which references the failing certificate in question or process the
 requests as unauthenticated and provide error information at the HTTP semantic
 layer.
 
-# Affiliated Domain Certificate Extension {#extension}
+# Certificate Extensions {#extension}
+
+## Affiliated Domain Certificate Extension {#extension-affiliated}
 
 The affiliated domain extension allows groups of certificates under the same
-control or cooperative control to be identified.  The identities stated as
-affiliated domains are not bound to the subject of the certificate, but this
-extension indicates that there is a trust or agent relationship between the
-subject and the affiliated domains.
+control to be identified without giving each certificate full identity with the
+domain.  The identities stated as affiliated domains are not bound to the
+subject of the certificate, but this extension indicates that there is a common
+management relationship between the subject and the affiliated domains.
 
 Because the affiliated domains are considered to be definitively bound to the
-public key, each affiliated domain MUST be verified by the CA.  Conforming CAs
-SHOULD mark the affiliatedDomain extension as non-critical.
+public key, control of each affiliated domain MUST be verified by the CA using
+the same mechanisms as if the affiliated domain were listed in the
+subjectAltName extension.  Conforming CAs SHOULD mark the affiliatedDomain
+extension as non-critical.
 
 Each affiliated domain is represented as an IA5String. The name MUST be in the
 "preferred name syntax", as specified by Section 3.5 of {{!RFC1034}} and as
@@ -779,9 +783,9 @@ distinguished names using the name constraints extension as described in Section
 
 If the affiliatedDomain extension is present, the sequence MUST contain at least
 one entry.  Unlike the subject field, conforming CAs MUST NOT issue certificates
-with subjectAltNames containing empty GeneralName fields.  Clients that
-encounter such a certificate when processing a certification path MUST ignore
-that extension.
+with an affiliatedDomain extension containing empty GeneralName fields.  Clients
+that encounter such a certificate when processing a certification path MUST
+ignore that extension.
 
 Finally, the semantics of affiliated domains that include wildcard characters
 (e.g., as a placeholder for a set of names) are not addressed by this
