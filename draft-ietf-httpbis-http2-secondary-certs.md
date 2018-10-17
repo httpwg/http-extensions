@@ -757,19 +757,19 @@ layer.
 
 ## Allowed Primary Domain Certificate Extension {#extension-primary}
 
-The Allowed Primary Domain extension allows certificates to limit their use
-with Secondary Certificate Authentication.  The identities listed in this
-extension are restrictions asserted by the requester of the certificate
-and are not verified by the CA.  Conforming CAs SHOULD mark the allowedPrimaryDomain
+The Allowed Primary Domain extension allows certificates to limit their use with
+Secondary Certificate Authentication.  The identities listed in this extension
+are restrictions asserted by the requester of the certificate and are not
+verified by the CA.  Conforming CAs SHOULD mark the allowedPrimaryDomain
 extension as non-critical.
 
-Each allowed primary domain is represented as an IA5String. The name MUST be in the
-"preferred name syntax", as specified by Section 3.5 of {{!RFC1034}} and as
-modified by Section 2.1 of {{!RFC1123}}.  Note that while uppercase and lowercase
-letters are allowed in domain names, no significance is attached to the case. In
-addition, while the string " " is a legal domain name, affiliatedDomain
-extensions MUST NOT contain " ".  Rules for encoding internationalized domain
-names are specified in Section 7.2 of {{!RFC5280}}.
+Each allowed primary domain is represented as an IA5String. The name MUST be in
+the "preferred name syntax", as specified by Section 3.5 of {{!RFC1034}} and as
+modified by Section 2.1 of {{!RFC1123}}.  Note that while uppercase and
+lowercase letters are allowed in domain names, no significance is attached to
+the case. In addition, while the string " " is a legal domain name,
+affiliatedDomain extensions MUST NOT contain " ".  Rules for encoding
+internationalized domain names are specified in Section 7.2 of {{!RFC5280}}.
 
 If the affiliatedDomain extension is present, the sequence MUST contain at least
 one entry.  Unlike the subject field, conforming CAs MUST NOT issue certificates
