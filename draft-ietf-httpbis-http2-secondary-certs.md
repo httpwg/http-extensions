@@ -755,9 +755,40 @@ layer.
 
 # Certificate Extensions {#extension}
 
+## Allowed Primary Domain Certificate Extension {#extension-primary}
+
+The Allowed Primary Domain extension allows certificates to limit their use
+with Secondary Certificate Authentication.  The identities listed in this
+extension are restrictions asserted by the requester of the certificate
+and are not verified by the CA.  Conforming CAs SHOULD mark the allowedPrimaryDomain
+extension as non-critical.
+
+Each allowed primary domain is represented as an IA5String. The name MUST be in the
+"preferred name syntax", as specified by Section 3.5 of {{!RFC1034}} and as
+modified by Section 2.1 of {{!RFC1123}}.  Note that while uppercase and lowercase
+letters are allowed in domain names, no significance is attached to the case. In
+addition, while the string " " is a legal domain name, affiliatedDomain
+extensions MUST NOT contain " ".  Rules for encoding internationalized domain
+names are specified in Section 7.2 of {{!RFC5280}}.
+
+If the affiliatedDomain extension is present, the sequence MUST contain at least
+one entry.  Unlike the subject field, conforming CAs MUST NOT issue certificates
+with an affiliatedDomain extension containing empty GeneralName fields.  Clients
+that encounter such a certificate when processing a certification path MUST
+ignore that extension.
+
+The wildcard character "*" MAY be used to represent that any set of subdomains
+is acceptable.  This character MUST be the entirety of the first label if used,
+and MUST NOT occur elsewhere.  (That is, "*.example.com" and "*" are acceptable,
+but "www.*.com" and "w*.example.com" are not).
+
+    id-ce-allowedPrimaryDomain OBJECT IDENTIFIER ::=  { id-ce TBD1 }
+
+    AllowedPrimaryDomain ::= SEQUENCE SIZE (1..MAX) OF IA5String
+
 ## Affiliated Domain Certificate Extension {#extension-affiliated}
 
-The affiliated domain extension allows groups of certificates under the same
+The Affiliated Domain extension allows groups of certificates under the same
 control to be identified without giving each certificate full identity with the
 domain.  The identities stated as affiliated domains are not bound to the
 subject of the certificate, but this extension indicates that there is a common
@@ -792,7 +823,7 @@ Finally, the semantics of affiliated domains that include wildcard characters
 specification.  Applications with specific requirements MAY use such names, but
 they must define the semantics.
 
-    id-ce-affiliatedDomain OBJECT IDENTIFIER ::=  { id-ce TBD }
+    id-ce-affiliatedDomains OBJECT IDENTIFIER ::=  { id-ce TBD2 }
 
     AffiliatedDomains ::= SEQUENCE SIZE (1..MAX) OF IA5String
 
@@ -813,10 +844,12 @@ its control in order to present the compromised certificate. As recommended in
 {{?RFC8336}}, clients opting not to consult DNS ought to employ some alternative
 means to increase confidence that the certificate is legitimate.
 
-One such means is the Affiliated Domain certificate extension defined in
+One such means is the Allowed Primary Domain certificate extension defined in
 {extension}. Clients SHOULD require that server certificates presented via this
-mechanism share at least one affiliated domain with the certificate presented in
-the TLS handshake.
+mechanism contain the Allowed Primary Domain extension and require that a
+certificate previously accepted on the connection (including the certificate
+presented in TLS) lists one of the Allowed Primary Domains in the Subject field,
+the Subject Alternative Name extension, or the Affiliated Domains extension.
 
 As noted in the Security Considerations of
 [I-D.ietf-tls-exported-authenticator], it difficult to formally prove that an
