@@ -192,29 +192,29 @@ Variant-Key      = 1#available-values
 available-values = available-value *( ";" available-value )
 ~~~
 
-Each member of the list contains the selected available-value(s), in the same order as the variants listed in the Variants header field.
+Each member of the list contains a set of selected available-value(s) that identify this representation, in the same order as the variants listed in the Variants header field.
 
-Therefore, Variant-Key MUST be the same length (in comma-separated members) as Variants, and each member MUST correspond in position to its companion in Variants.
+Therefore, each member of Variant-Key MUST be the same length (in semicolon-separated members) as Variants, and each member's available-values MUST correspond in position to their companions in Variants.
 
 For example:
 
 ~~~ example
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
-Variant-Key: gzip, fr
+Variant-Key: gzip;fr
 ~~~
 
 This header pair indicates that the representation has a "gzip" content-coding and "fr" content-language.
 
-A more complex example involves listing multiple available-values in a list member, to indicate that the response can be used to satisfy requests with any of those values. For example:
+If the response can be used to satisfy more than one request), they can be listed in additional members.  For example:
 
 ~~~ example
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
-Variant-Key: gzip;identity, fr
+Variant-Key: gzip;fr, identity;fr
 ~~~
 
 indicates that this response can be used for requests whose Accept-Encoding algorithm selects "gzip" or "identity", as long as the Accept-Language algorithm selects "fr" -- perhaps because there is no gzip-compressed French representation.
 
-This highlights an important aspect of Variant-Key; it is only used to indicate what request attributes are associated with the response containing it; this is different from headers like Content-Encoding, which indicate attributes of the response itself.
+When more than one Variant-Key value is in a response, the first one present MUST indicate the variant-key for the response it occurs within.
 
 
 ## Generating a Variant-Key List {#gen-variant-key}
@@ -229,9 +229,8 @@ Given stored-headers (a set of headers from a stored response), a normalised lis
 3. Let value-list be the result of splitting variant-key-header on commas (",").
 4. For each value in value-list:
    1. Remove all whitespace from value.
-   2. Let items be the result of splitting value on ";".
-   3. append items to variant-keys.
-5. Return the result of running Compute Possible Keys ({{find}}) on variant-keys, an empty string and an empty list.
+   2. Append value to variant-keys.
+5. Return variant-keys.
 
 
 # Cache Behaviour {#cache}
@@ -272,7 +271,7 @@ Given key-facets (a list of lists), and key-stub (a string representing a partia
    1. If key-stub is an empty string, let this-key be a copy of value.
    1. Otherwise:
       1. Let this-key be a copy of key-stub.
-      2. Append a comma (",") to this-key.
+      2. Append a semicolon (";") to this-key.
       3. Append value to this-key.
    3. Let remaining-facets be a copy of all of the members of key-facets except the first.
    4. If remaining-facets is empty, append this-key to possible-keys.
@@ -408,7 +407,7 @@ Content-Language: en
 Content-Encoding: br
 Variants: Accept-Language;en;jp;de
 Variants: Accept-Encoding;br;gzip
-Variant-Key: en, br
+Variant-Key: en;br
 Vary: Accept-Language, Accept-Encoding
 Transfer-Encoding: chunked
 ~~~
@@ -560,4 +559,4 @@ This protocol is conceptually similar to, but simpler than, Transparent Content 
 
 It is also a generalisation of a Fastly VCL feature designed by Rogier 'DocWilco' Mulhuijzen.
 
-Thanks to Hooman Beheshti, Ilya Grigorik and Jeffrey Yasskin for their review and input.
+Thanks to Hooman Beheshti, Ilya Grigorik, Leif Hedstrom, and Jeffrey Yasskin for their review and input.
