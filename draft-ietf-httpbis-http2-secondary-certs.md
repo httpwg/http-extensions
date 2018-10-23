@@ -145,7 +145,7 @@ the client making a request.
 In HTTP/1.1, a server that relies on client authentication for a subset of users
 or resources does not request a certificate when the connection is established.
 Instead, it only requests a client certificate when a request is made to a
-resource that requires a certificate.  TLS 1.2 [RFC5246] accomodates this by
+resource that requires a certificate.  TLS 1.2 [RFC5246] accommodates this by
 permitting the server to request a new TLS handshake, in which the server will
 request the client's certificate.
 
@@ -781,7 +781,7 @@ As noted in the Security Considerations of
 [I-D.ietf-tls-exported-authenticator], it difficult to formally prove that an
 endpoint is jointly authoritative over multiple certificates, rather than
 individually authoritative on each certificate.  As a result, clients MUST NOT
-assume that because one origin was previously colocated with another, those
+assume that because one origin was previously collocated with another, those
 origins will be reachable via the same endpoints in the future.  Clients MUST
 NOT consider previous secondary certificates to be validated after TLS session
 resumption.  However, clients MAY proactively query for previously-presented
