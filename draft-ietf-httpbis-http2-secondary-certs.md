@@ -815,6 +815,23 @@ SHOULD be treated as a session error, to avoid further attacks from the peer,
 though an implementation MAY instead disable HTTP-layer certificates for the
 current connection instead.
 
+## Persistence of Service
+
+CNAME records in the DNS are frequently used to delegate authority for an origin
+to a third-party provider.  This delegation can be changed without notice, even
+to the third-party provider, simply by modifying the CNAME record in question.
+
+After the owner of the domain has redirected traffic elsewhere by changing the
+CNAME, new connections will not arrive for that origin, but connections which
+are properly directed to this provider for other origins would continue to claim
+control of this origin (via ORIGIN frame and Secondary Certificates).  This is
+proper behavior based on the third-party provider's configuration, but would
+likely not be what is intended by the owner of the origin.
+
+This is not an issue which can be mitigated by the protocol, but something about
+which third-party providers SHOULD educate their customers before using the
+features described in this document.
+
 ## Confusion About State
 
 Implementations need to be aware of the potential for confusion about the state
