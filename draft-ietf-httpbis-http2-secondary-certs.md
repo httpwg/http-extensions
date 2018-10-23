@@ -649,6 +649,10 @@ be unpredictable. When generating exported authenticators for use with this
 extension, the `certificate_request_context` MUST contain both the two-octet
 Request-ID as well as at least 96 bits of additional entropy.
 
+Upon receipt of a `CERTIFICATE_REQUEST` frame, the recipient MUST verify that
+the first two octets of the authenticator's `certificate_request_context`
+matches the Request-ID presented in the frame.
+
 The TLS library on the authenticating peer will provide mechanisms to select an
 appropriate certificate to respond to the transported request.  TLS libraries on
 servers MUST be able to recognize the `server_name` extension ([RFC6066]) at a
