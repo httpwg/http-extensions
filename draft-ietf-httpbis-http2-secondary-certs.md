@@ -899,6 +899,14 @@ this document.
 > **RFC Editor's Note:**  Please remove this section prior to publication of a
 > final version of this document.
 
+## Since draft-ietf-httpbis-http2-secondary-certs-03:
+
+Nothing yet.
+
+## Since draft-ietf-httpbis-http2-secondary-certs-02:
+
+Editorial updates only.
+
 ## Since draft-ietf-httpbis-http2-secondary-certs-01:
 
 - Clients can send `CERTIFICATE_NEEDED` for stream 0 rather than speculatively
