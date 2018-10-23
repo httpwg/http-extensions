@@ -559,7 +559,7 @@ When generating input_string, parsers MUST combine all instances of the target h
 
 For Lists, Parameterised Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field.
 
-Strings can but SHOULD NOT be split across multiple header instances, because comma(s) inserted upon combination will become part of the string output by the parser.
+Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serialiser or the parser.
 
 Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
@@ -808,6 +808,7 @@ _RFC Editor: Please remove this section before publication._
 * Add Booleans (#683).
 * Allow identifiers in items again (#629).
 * Disallowed whitespace before items (#703).
+* Explain the consequences of splitting a string across multiple headers (#686).
 
 
 ## Since draft-ietf-httpbis-header-structure-06
