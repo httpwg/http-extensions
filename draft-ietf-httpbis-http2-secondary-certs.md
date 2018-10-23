@@ -781,7 +781,7 @@ As noted in the Security Considerations of
 [I-D.ietf-tls-exported-authenticator], it difficult to formally prove that an
 endpoint is jointly authoritative over multiple certificates, rather than
 individually authoritative on each certificate.  As a result, clients MUST NOT
-assume that because one origin was previously collocated with another, those
+assume that because one origin was previously colocated with another, those
 origins will be reachable via the same endpoints in the future.  Clients MUST
 NOT consider previous secondary certificates to be validated after TLS session
 resumption.  However, clients MAY proactively query for previously-presented
