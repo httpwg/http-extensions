@@ -53,7 +53,7 @@ code and issues list for this draft can be found at
 This document defines a new HTTP header field that enables UAs to identify web hosts
 that expect the presence of Signed Certificate Timestamps (SCTs)
 {{!I-D.ietf-trans-rfc6962-bis}} in future Transport Layer Security (TLS)
-{{?RFC5246}} connections.
+{{?RFC8446}} connections.
 
 Web hosts that serve the Expect-CT HTTP header field are noted by the UA as Known
 Expect-CT Hosts. The UA evaluates each connection to a Known Expect-CT Host for
