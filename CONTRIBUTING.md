@@ -74,21 +74,22 @@ Some issues might be labeled as `editorial`; they can be dealt with by the edito
 consensus or notification. Typically, any discussion will take place on the issue itself.
 
 Otherwise, the `open` issues in the issues list are those that we are currently or plan to discuss.
+
+Issues can be discussed on the mailing list or the issues list. The editors can also propose
+resolutions to issues for the group's consideration by incorporating them into the draft(s).
+
 When an issue is `closed`, it implies that the issue's proposed resolution is reflected in the
-draft; if a closed issue is labeled with `has-consensus`, it means that the incorporated resolution
-has Working Group consensus.
+draft(s). When a new draft is published, the issues that have been closed since the last draft will
+be highlighted in the draft's change notes and/or on the mailing list, to aid reviewers.
 
-Issues can be discussed on the mailing list or the issues list. The editors can also propose resolutions to issues for the group's consideration by incorporating them into the draft(s).
+Note that whether or not an issue is closed does not necessarily reflect consensus of the Working
+Group; an issue's `open`/`closed` state is only used to organise our discussions. If you have a
+question or problem with an issue in the `closed` state, please comment on it (either in the issues
+list or mailing list), and we'll adjust its state accordingly.
 
-When a new draft is published, the issues that have been closed since the last draft will be
-highlighted on the mailing list, to aid reviewers. Once consensus is confirmed, those issues will
-be labeled with `has-consensus`.
-
-Note that whether or not an issue is closed does **not** reflect consensus of the Working Group; an
-issue's `open`/`closed` state is only used to organise our discussions. If you have a question or
-problem with an issue in the `closed` state, please comment on it (either in the issues list or
-mailing list), and we'll adjust its state accordingly. Note that reopening issues with
-`has-consensus` requires new information.
+Some issues might require an explicit consensus call; if consensus is achieved in this
+manner, the issue will be labeled with `has-consensus`. Reopening issues with
+`has-consensus` requires new information (in the judgement of the chairs).
 
 
 ## Pull Requests
