@@ -80,6 +80,12 @@ allowing UAs to detect the use of unlogged certificates after the initial
 communication, and 2) allowing web hosts to be confident that UAs are only
 trusting publicly-auditable certificates.
 
+Expect-CT is similar to HSTS {{!RFC6797}} and HPKP {{!RFC7469}}. HSTS allows web
+sites to declare themselves accessible only via secure connections, and HPKP
+allows web sites to declare their cryptographic identifies. Similarly, Expect-CT
+allows web sites to declare themselves accessible only via connections that are
+compliant with CT policy.
+
 ## Requirements Language
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
@@ -154,7 +160,7 @@ requirements for directives are:
 
 4. UAs MUST ignore any header fields containing directives, or other header
    field value data, that do not conform to the syntax defined in this
-   specification.  In particular, UAs must not attempt to fix malformed header
+   specification.  In particular, UAs MUST NOT attempt to fix malformed header
    fields.
 
 5. If a header field contains any directive(s) the UA does not recognize, the
@@ -187,9 +193,6 @@ compliance when the host in the `report-uri` is a Known Expect-CT Host;
 similarly, UAs MUST apply HSTS {{!RFC6797}} if the host in the `report-uri` is a
 Known HSTS Host.
 
-Note that the report-uri need not necessarily be in the same Internet
-domain or web origin as the host being reported about.
-
 UAs SHOULD make their best effort to report Expect-CT failures to the
 `report-uri`, but they may fail to report in exceptional conditions.  For
 example, if connecting to the `report-uri` itself incurs an Expect-CT failure
@@ -199,8 +202,14 @@ B, and if B sets a `report-uri` referring to A, and if both hosts fail to comply
 to the UA's CT Policy, the UA SHOULD detect and break the loop by failing to
 send reports to and about those hosts.
 
+Note that the report-uri need not necessarily be in the same Internet domain or
+web origin as the host being reported about. Hosts are in fact encouraged to use
+a separate host as the report-uri, so that CT failures on the Expect-CT host do
+not prevent reports from being sent.
+
 UAs SHOULD limit the rate at which they send reports. For example, it is
-unnecessary to send the same report to the same `report-uri` more than once in the same web browsing session.
+unnecessary to send the same report to the same `report-uri` more than once in
+the same web browsing session.
 
 ### The enforce Directive
 
@@ -247,7 +256,7 @@ Expect-CT: max-age=86400,report-uri="https://foo.example/report"
 ~~~
 {: #example-header-fields title="Examples of valid Expect-CT response header fields"}
 
-## Server Processing Model
+## Host Processing Model
 
 This section describes the processing model that Expect-CT Hosts implement.  The
 model has 2 parts: (1) the processing rules for HTTP request messages received
@@ -502,11 +511,15 @@ to test the server's behavior and can be discarded.
 
 ## Sending a violation report
 
-The UA SHOULD report an Expect-CT failure when a connection to a Known Expect-CT
-Host does not comply with the UA's CT Policy and the host's Expect-CT metadata
-contains a `report-uri`. Additionally, the UA SHOULD report an Expect-CT failure
-when it receives an Expect-CT header field which contains the `report-uri`
-directive over a connection that does not comply with the UA's CT Policy.
+The UA SHOULD report Expect-CT failures for Known Expect-CT Hosts: that is, when
+a connection to a Known Expect-CT Host does not comply with the UA's CT Policy
+and the host's Expect-CT metadata contains a `report-uri`.
+
+Additionally, the UA SHOULD report Expect-CT failures for hosts for which it
+does not have any stored Expect-CT metadata. That is, when the UA connects to a
+host and receives an Expect-CT header field which contains the `report-uri`
+directive, the UA SHOULD report an Expect-CT failure if the the connection does
+not comply with the UA's CT Policy.
 
 The steps to report an Expect-CT failure are as follows.
 
