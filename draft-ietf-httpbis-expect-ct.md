@@ -482,7 +482,8 @@ has the following keys:
   * The "serialized_sct" key, with a string value. If the value of the "version"
     key is `1`, the UA MUST set this value to the base64 encoded {{!RFC4648}}
     serialized `SignedCertificateTimestamp` structure from Section 3.2 of
-    {{!RFC6962}}. If the value of the "version" key is `2`, the UA MUST set this
+    {{!RFC6962}}. The base64 encoding is defined in Section 4 of {{!RFC4648}}.
+    If the value of the "version" key is `2`, the UA MUST set this
     value to the base64 encoded {{!RFC4648}} serialized `TransItem` structure
     representing the SCT, as defined in Section 4.5 of
     {{!I-D.ietf-trans-rfc6962-bis}}.
