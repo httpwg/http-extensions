@@ -66,11 +66,11 @@ If misconfigured, Expect-CT can cause unwanted connection failures (for example,
 if a host deploys Expect-CT but then switches to a legitimate certificate that
 is not logged in Certificate Transparency logs, or if a web host operator
 believes their certificate to conform to all UAs' CT policies but is
-mistaken). Web host operators are advised to deploy Expect-CT with caution, by
-using the reporting feature and gradually increasing the interval where the UA
-remembers the host as a Known Expect-CT Host. These precautions can help web
-host operators gain confidence that their Expect-CT deployment is not causing
-unwanted connection failures.
+mistaken). Web host operators are advised to deploy Expect-CT with precautions,
+by using the reporting feature and gradually increasing the time interval during
+which the UA regards the host as a Known Expect-CT Host. These precautions can
+help web host operators gain confidence that their Expect-CT deployment is not
+causing unwanted connection failures.
 
 Expect-CT is a trust-on-first-use (TOFU) mechanism. The first time a UA
 connects to a host, it lacks the information necessary to require SCTs for the
@@ -505,7 +505,7 @@ as a string. The UA MUST set this value to "enforce" if the Expect-CT metadata
 indicates an `enforce` configuration, and "report-only" otherwise.
 
 * "test-report": the value is set to true if the report is being sent by a
-testing client to verify that the reporting server behaves correctly. The
+testing client to verify that the report server behaves correctly. The
 value is provided as a boolean, and MUST be set to true if the report serves
 to test the server's behavior and can be discarded.
 
@@ -552,8 +552,8 @@ status code.
 # Usability Considerations {#usability-considerations}
 
 When the UA detects a Known Expect-CT Host in violation of the UA's CT Policy,
-users will experience denials of service. It is advisable for UAs to explain the
-reason why.
+end users will experience denials of service. It is advisable for UAs to explain to
+users why they cannot access the Expect-CT Host.
 
 # Authoring Considerations {#authoring-considerations}
 
@@ -592,7 +592,7 @@ this may include information about the interception tools and design used by the
 organization that the organization would otherwise prefer not be disclosed.
 
 Because Expect-CT causes remotely-detectable behavior, it's advisable that UAs
-offer a way for privacy-sensitive users to clear currently noted Expect-CT
+offer a way for privacy-sensitive end users to clear currently noted Expect-CT
 hosts, and allow users to query the current state of Known Expect-CT Hosts.
 
 # Security Considerations {#security-considerations}
