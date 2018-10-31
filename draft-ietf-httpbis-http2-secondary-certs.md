@@ -384,7 +384,7 @@ a particular HTTP transaction.
 
 ### Requiring Additional Server Certificates
 
-As defined in [RFC7540], when a client finds that a https:// origin (or
+As defined in [RFC7540], when a client finds that an https:// origin (or
 Alternative Service [RFC7838]) to which it needs to make a request has the same
 IP address as a server to which it is already connected, it MAY check whether
 the TLS certificate provided contains the new origin as well, and if so, reuse
