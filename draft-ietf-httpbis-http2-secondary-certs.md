@@ -776,7 +776,7 @@ its control in order to present the compromised certificate. As recommended in
 means to increase confidence that the certificate is legitimate.
 
 As noted in the Security Considerations of
-[I-D.ietf-tls-exported-authenticator], it difficult to formally prove that an
+[I-D.ietf-tls-exported-authenticator], it is difficult to formally prove that an
 endpoint is jointly authoritative over multiple certificates, rather than
 individually authoritative on each certificate.  As a result, clients MUST NOT
 assume that because one origin was previously colocated with another, those
