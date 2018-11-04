@@ -384,7 +384,7 @@ a particular HTTP transaction.
 
 ### Requiring Additional Server Certificates
 
-As defined in [RFC7540], when a client finds that a https:// origin (or
+As defined in [RFC7540], when a client finds that an https:// origin (or
 Alternative Service [RFC7838]) to which it needs to make a request has the same
 IP address as a server to which it is already connected, it MAY check whether
 the TLS certificate provided contains the new origin as well, and if so, reuse
@@ -605,7 +605,7 @@ with a stream error {{RFC7540}} on any stream where the certificate is used.
 
 ## The CERTIFICATE_REQUEST Frame {#http-cert-request}
 
-The `CERTIFICATE_REQUEST` frame (id=0xFRAME-TBD2) provides a exported
+The `CERTIFICATE_REQUEST` frame (id=0xFRAME-TBD2) provides an exported
 authenticator request message from the TLS layer that specifies a desired
 certificate.  This describes the certificate the sender wishes to have
 presented.
@@ -655,7 +655,7 @@ though other extensions MAY also be included.
 
 ## The CERTIFICATE Frame {#http-cert}
 
-The `CERTIFICATE` frame (id=0xFRAME-TBD3) provides a exported authenticator
+The `CERTIFICATE` frame (id=0xFRAME-TBD3) provides an exported authenticator
 message from the TLS layer that provides a chain of certificates, associated
 extensions and proves possession of the private key corresponding to the
 end-entity certificate.
