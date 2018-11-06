@@ -599,6 +599,8 @@ hosts, and allow users to query the current state of Known Expect-CT Hosts.
 
 # Security Considerations {#security-considerations}
 
+## Hostile header attacks
+
 When UAs support the Expect-CT header field, it becomes a potential vector for hostile
 header attacks against site owners. If a site owner uses a certificate issued by
 a certificate authority which does not embed SCTs nor serve SCTs via OCSP or TLS
