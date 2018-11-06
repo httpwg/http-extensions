@@ -29,7 +29,7 @@ informative:
 
 --- abstract
 
-This document defines a new HTTP header field, named Expect-CT, that allows web
+This document defines a new HTTP header field named Expect-CT, which allows web
 host operators to instruct user agents to expect valid Signed Certificate
 Timestamps (SCTs) to be served on connections to these hosts. Expect-CT allows
 web host operators to discover misconfigurations in their Certificate
@@ -52,7 +52,7 @@ code and issues list for this draft can be found at
 
 This document defines a new HTTP header field that enables UAs to identify web hosts
 that expect the presence of Signed Certificate Timestamps (SCTs)
-{{!I-D.ietf-trans-rfc6962-bis}} in future Transport Layer Security (TLS)
+{{!I-D.ietf-trans-rfc6962-bis}} in subsequent Transport Layer Security (TLS)
 {{?RFC8446}} connections.
 
 Web hosts that serve the Expect-CT HTTP header field are noted by the UA as Known
@@ -159,7 +159,7 @@ requirements for directives are:
 3. Directive names are case insensitive.
 
 4. UAs MUST ignore any header fields containing directives, or other header
-   field value data, that do not conform to the syntax defined in this
+   field value data that do not conform to the syntax defined in this
    specification.  In particular, UAs MUST NOT attempt to fix malformed header
    fields.
 
@@ -300,7 +300,7 @@ update any Expect-CT metadata.
 
 ### Expect-CT Header Field Processing
 
-If the UA receives, over a secure transport, an HTTP response that includes an
+If the UA receives an HTTP response over a secure transport that includes an
 Expect-CT header field conforming to the grammar specified in
 {{response-header-field-syntax}}, the UA MUST evaluate the connection on which
 the header field was received for compliance with the UA's CT Policy, and then
@@ -327,9 +327,10 @@ CT-qualified), then the UA MUST either:
 #### Noting Expect-CT {#noting-expect-ct}
 
 Upon receipt of the Expect-CT response header field over an error-free TLS
-connection (including the validation adding in {{expect-ct-compliance}}), the UA
-MUST note the host as a Known Expect-CT Host, storing the host's domain name and
-its associated Expect-CT directives in non-volatile storage.
+connection (with X.509 certificate chain validation as described in
+{{!RFC5280}}, as well as the validation described in {{expect-ct-compliance}}),
+the UA MUST note the host as a Known Expect-CT Host, storing the host's domain
+name and its associated Expect-CT directives in non-volatile storage.
 
 To note a host as a Known Expect-CT Host, the UA MUST set its Expect-CT metadata
 given in the most recently received valid Expect-CT header field, as specified in
@@ -552,8 +553,9 @@ status code.
 # Usability Considerations {#usability-considerations}
 
 When the UA detects a Known Expect-CT Host in violation of the UA's CT Policy,
-end users will experience denials of service. It is advisable for UAs to explain to
-users why they cannot access the Expect-CT Host.
+end users will experience denials of service. It is advisable for UAs to explain
+to users why they cannot access the Expect-CT Host, e.g., in a user interface
+that explains that the host's certificate cannot be validated.
 
 # Authoring Considerations {#authoring-considerations}
 
@@ -610,14 +612,13 @@ control over the infrastructure in question, being able to obtain different
 certificates, change server software, or act as a man-in-the-middle in
 connections.
 
-Site operators could themselves only cure this situation by one of:
-reconfiguring their web server to transmit SCTs using the TLS extension defined
-in Section 6.5 of {{!I-D.ietf-trans-rfc6962-bis}}, obtaining a certificate from
-an alternative certificate authority which provides SCTs by one of the other
-methods, or by waiting for the user agents' persisted notation of this as an
-Expect-CT host to reach its `max-age`. User agents may choose to implement
-mechanisms for users to cure this situation, as noted in
-{{usability-considerations}}.
+Site operators can mitigate this situation by one of: reconfiguring their web
+server to transmit SCTs using the TLS extension defined in Section 6.5 of
+{{!I-D.ietf-trans-rfc6962-bis}}, obtaining a certificate from an alternative
+certificate authority which provides SCTs by one of the other methods, or by
+waiting for the user agents' persisted notation of this as an Expect-CT host to
+reach its `max-age`. User agents may choose to implement mechanisms for users to
+cure this situation, as noted in {{usability-considerations}}.
 
 ## Maximum max-age
 
