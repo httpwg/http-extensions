@@ -189,11 +189,10 @@ report-uri-value = absolute-URI
 
 `absolute-URI` is defined in Section 4.3 of {{!RFC3986}}.
 
-Hosts may set `report-uri`s that use HTTP or HTTPS. If the scheme in the
-`report-uri` is one that uses TLS (e.g., HTTPS), UAs MUST check Expect-CT
-compliance when the host in the `report-uri` is a Known Expect-CT Host;
-similarly, UAs MUST apply HSTS {{!RFC6797}} if the host in the `report-uri` is a
-Known HSTS Host.
+UAs MUST ignore `report-uri`s that do not use the HTTPS scheme. UAs MUST check
+Expect-CT compliance when the host in the `report-uri` is a Known Expect-CT
+Host; similarly, UAs MUST apply HSTS {{!RFC6797}} if the host in the
+`report-uri` is a Known HSTS Host.
 
 UAs SHOULD make their best effort to report Expect-CT failures to the
 `report-uri`, but they may fail to report in exceptional conditions.  For
@@ -660,7 +659,7 @@ is primarily a policy-expansion and investigation technology rather than an
 end-user protection, a value on the order of 30 days (2,592,000 seconds) may be
 considered a balance between these competing security concerns.
 
-## Avoiding amplification attacks
+## Amplification attacks
 
 Another kind of hostile header attack uses the `report-uri` mechanism on many
 hosts not currently exposing SCTs as a method to cause a denial-of-service to
@@ -788,6 +787,7 @@ Change controller:
   specification.
 * Add optional "scheme" key to report format.
 * Specify exact status codes for report server errors.
+* Limit report-uris to HTTPS only.
 
 ## Since -06
 
