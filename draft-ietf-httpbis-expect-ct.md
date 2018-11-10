@@ -230,9 +230,11 @@ The `max-age` directive specifies the number of seconds after the reception of
 the Expect-CT header field during which the UA SHOULD regard the host from whom
 the message was received as a Known Expect-CT Host.
 
-The `max-age` directive is REQUIRED to be present within an "Expect-CT" header
-field. The `max-age` directive is REQUIRED to have a directive value, for which
-the syntax (after quoted-string unescaping, if necessary) is defined in
+If a response contains an "Expect-CT" header field, then the response MUST
+contain an "Expect-CT" header field with a `max-age` directive. (A `max-age`
+directive need not appear in every "Expect-CT" header field in the response.)
+The `max-age` directive is REQUIRED to have a directive value, for which the
+syntax (after quoted-string unescaping, if necessary) is defined in
 {{maxage-syntax}}.
 
 ~~~ abnf
@@ -456,6 +458,10 @@ request that failed the CT compliance check. The value is provided as a string.
 * "port": the value is the port to which the UA made the original request that
 failed the CT compliance check. The value is provided as an integer.
 
+* "scheme": the value is the scheme with which the UA made the original request
+that failed the CT compliance check. The value is provided as a string. This
+key is optional and is assumed to be "https" if not present.
+
 * "effective-expiration-date": the value indicates the Effective Expiration Date
 (see {{storage-model}}) for the Expect-CT Host that failed the CT compliance
 check, in UTC. The value is provided as a string formatted according to Section
@@ -550,17 +556,17 @@ report servers should handle report formats that they do not support.
 Upon receiving an Expect-CT violation report, the report server MUST respond
 with a 2xx (Successful) status code if it can parse the request body as valid
 JSON, the report conforms to the format described in
-{{generating-a-violation-report}}, and it recognizes the hostname in the
-"hostname" field of the report. If the report body cannot be parsed, or the
-report does not conform to the format described in
+{{generating-a-violation-report}}, and it recognizes the scheme, hostname, and
+port in the "scheme", "hostname", and "port" fields of the report. If the report
+body cannot be parsed, or the report does not conform to the format described in
 {{generating-a-violation-report}}, or the report server does not expect to
-receive reports for the hostname in the "hostname" field, the report server MUST
-respond with a 4xx (Client Error) status code.
+receive reports for the scheme, hostname, or port in the report, then the report
+server MUST respond with a 400 Bad Request status code.
 
 As described in {{sending-report}}, future versions of this specification may
 define new report formats that are sent with a different top-level key. If the
 report server does not recognize the report format, the report server MUST
-respond with a 5xx (Server Error) status code.
+respond with a 501 Not Implemented status code.
 
 If the report's "test-report" key is set to true, the server MAY discard the
 report without further processing but MUST still return a 2xx (Successful)
@@ -602,8 +608,9 @@ a third party about which webpage is being accessed and by which IP address, by
 using individual `report-uri` values for individually-tracked pages. This
 information could be leaked even if client-side scripting were disabled.
 
-Implementations must store state about Known Expect-CT Hosts, and hence which
-domains the UA has contacted.
+Implementations store state about Known Expect-CT Hosts, and hence which domains
+the UA has contacted. Implementations may choose to not store this state subject
+to local policy (e.g., in the private browsing mode of a web browser).
 
 Violation reports, as noted in {{reporting-expect-ct-failure}}, contain
 information about the certificate chain that has violated the CT policy. In some
@@ -779,6 +786,8 @@ Change controller:
   "validated-certificate-chain" field of an Expect-CT report.
 * Define how report format can be extended by future versions of this
   specification.
+* Add optional "scheme" key to report format.
+* Specify exact status codes for report server errors.
 
 ## Since -06
 
