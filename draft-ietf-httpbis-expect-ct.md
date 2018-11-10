@@ -90,7 +90,8 @@ compliant with CT policy.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
-document are to be interpreted as described in RFC 2119 {{!RFC2119}}.
+document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}}
+when, and only when, they appear in all capitals, as shown here.
 
 ## Terminology
 
@@ -98,7 +99,7 @@ Terminology is defined in this section.
 
 * "Certificate Transparency Policy" is a policy defined by the UA concerning the
   number, sources, and delivery mechanisms of Signed Certificate Timestamps that
-  are served on TLS connections. The policy defines the properties of a
+  are associated with TLS connections. The policy defines the properties of a
   connection that must be met in order for the UA to consider it CT-qualified.
 
 * "Certificate Transparency Qualified" describes a TLS connection for which the
@@ -135,12 +136,13 @@ specification. It is used by a server to indicate that UAs should evaluate
 connections to the host emitting the header field for CT compliance
 ({{expect-ct-compliance}}).
 
-{{expect-ct-syntax}} describes the syntax (Augmented Backus-Naur Form) of the header field,
-using the grammar defined in {{!RFC5234}} and the rules defined in
-Section 3.2 of {{!RFC7230}}.
+{{expect-ct-syntax}} describes the syntax (Augmented Backus-Naur Form) of the
+header field, using the grammar defined in {{!RFC5234}} and the rules defined in
+Section 3.2 of {{!RFC7230}}. The "#" ABNF extension is specified in Section 7 of
+{{!RFC7230}}.
 
 ~~~ abnf
-Expect-CT           = #expect-ct-directive
+Expect-CT           = 1#expect-ct-directive
 expect-ct-directive = directive-name [ "=" directive-value ]
 directive-name      = token
 directive-value     = token / quoted-string
@@ -470,7 +472,8 @@ constructed by the UA during certificate chain verification. (This may differ
 from the value of the "served-certificate-chain" key.) The value is provided as
 an array of strings, which MUST appear in the order matching the chain that the
 UA validated; each string in the array is the Privacy-Enhanced Mail (PEM)
-representation of each X.509 certificate as described in {{!RFC7468}}.
+representation of each X.509 certificate as described in {{!RFC7468}}. The first
+certificate in the chain represents the end-entity certificate being verified.
 
 * "scts": the value represents the SCTs (if any) that the UA received for the
 Expect-CT host and their validation statuses. The value is provided as an array
@@ -510,7 +513,7 @@ testing client to verify that the report server behaves correctly. The
 value is provided as a boolean, and MUST be set to true if the report serves
 to test the server's behavior and can be discarded.
 
-## Sending a violation report
+## Sending a violation report {#sending-report}
 
 The UA SHOULD report Expect-CT failures for Known Expect-CT Hosts: that is, when
 a connection to a Known Expect-CT Host does not comply with the UA's CT Policy
@@ -524,7 +527,7 @@ not comply with the UA's CT Policy.
 
 The steps to report an Expect-CT failure are as follows.
 
-1. Prepare a JSON object `report object` with the single key `expect-ct-report`,
+1. Prepare a JSON object `report object` with the single key "expect-ct-report",
    whose value is the result of generating a violation report object as
    described in {{generating-a-violation-report}}.
 2. Let `report body` be the JSON stringification of `report object`.
@@ -537,18 +540,33 @@ The steps to report an Expect-CT failure are as follows.
 The UA MAY perform other operations as part of sending the HTTP POST request,
 for example sending a CORS preflight as part of {{FETCH}}.
 
-## Receiving a violation report
+Future versions of this specification may need to modify or extend the Expect-CT
+report format. They may do so by defining a new top-level key to contain the
+report, replacing the "expect-ct-report" key. {{receiving-report}} defines how
+report servers should handle report formats that they do not support.
+
+## Receiving a violation report {#receiving-report}
 
 Upon receiving an Expect-CT violation report, the report server MUST respond
 with a 2xx (Successful) status code if it can parse the request body as valid
-JSON and recognizes the hostname in the "hostname" field of the report. If the
-report body cannot be parsed or the report server does not expect to receive
-reports for the hostname in the "hostname" field, the report server MUST respond
-with a 4xx (Client Error) status code.
+JSON, the report conforms to the format described in
+{{generating-a-violation-report}}, and it recognizes the hostname in the
+"hostname" field of the report. If the report body cannot be parsed, or the
+report does not conform to the format described in
+{{generating-a-violation-report}}, or the report server does not expect to
+receive reports for the hostname in the "hostname" field, the report server MUST
+respond with a 4xx (Client Error) status code.
+
+As described in {{sending-report}}, future versions of this specification may
+define new report formats that are sent with a different top-level key. If the
+report server does not recognize the report format, the report server MUST
+respond with a 5xx (Server Error) status code.
 
 If the report's "test-report" key is set to true, the server MAY discard the
 report without further processing but MUST still return a 2xx (Successful)
-status code.
+status code. If the "test-report" key is absent or set to false, the server
+SHOULD store the report for processing and analysis by the owner of the
+Expect-CT Host.
 
 # Usability Considerations {#usability-considerations}
 
@@ -574,10 +592,10 @@ Transparency requirements.
 
 # Privacy Considerations
 
-Expect-CT can be used to infer what Certificate Transparency policy is in use,
-by attempting to retrieve specially-configured websites which pass one user
-agents' policies but not another's. Note that this consideration is true of UAs
-which enforce CT policies without Expect-CT as well.
+Expect-CT can be used to infer what Certificate Transparency policy a UA is
+using, by attempting to retrieve specially-configured websites which pass one
+user agents' policies but not another's. Note that this consideration is true of
+UAs which enforce CT policies without Expect-CT as well.
 
 Additionally, reports submitted to the `report-uri` could reveal information to
 a third party about which webpage is being accessed and by which IP address, by
@@ -757,6 +775,10 @@ Change controller:
 ## Since -07
 
 * Editorial changes
+* Specify that the end-entity certificate appears first in the
+  "validated-certificate-chain" field of an Expect-CT report.
+* Define how report format can be extended by future versions of this
+  specification.
 
 ## Since -06
 
