@@ -485,11 +485,11 @@ Instead of OPTIONS, one of these alternative approaches might be more appropriat
 The primary function of a HTTP status code is to convey semantics for the benefit of generic HTTP
 software, not to convey application-specific semantics.
 
-In particular, status codes are often generated or overwritten by intermediaries, as well as server
-and client implementations; for example, when network errors are encountered, a captive portal is
-present, when an implementation is overloaded, or it thinks it is under attack. As a result, the
-status code that a server-side application generates and the one that the client software receives
-often differ.
+Status codes are often generated or overwritten by intermediaries, as well as server and client
+implementations. This can happen, for example, when network errors are encountered, a captive
+portal is present, when an implementation is overloaded, or it thinks it is under attack. As a
+result, the status code that a server-side application generates and the one that the client
+software receives often differ.
 
 This means that status codes are not a reliable way to carry application-specific signals.
 Specifying that a particular status code has a specific meaning in the context of an application
@@ -514,12 +514,12 @@ safely handled as `400` by clients that don't recognise it). This is preferable 
 
 Applications using HTTP MUST NOT re-specify the semantics of HTTP status codes, even if it is only
 by copying their definition. They MUST NOT require specific reason phrases to be used; the reason
-phrase has no function in HTTP, and is not guaranteed to be preserved by implementations, and the
-reason phrase is not carried at all in the {{?RFC7540}} message format.
+phrase has no function in HTTP, is not guaranteed to be preserved by implementations, and the
+reason phrase is not carried at all in the HTTP/2 {{?RFC7540}} message format.
 
 Applications that use HTTP MUST only use registered HTTP status codes. As with methods, new HTTP
 status codes are rare, and required (by {{!I-D.ietf-httpbis-semantics}}) to be registered with IETF
-review. Similarly, HTTP status codes are generic; they are required (by
+Review. Similarly, HTTP status codes are generic; they are required (by
 {{!I-D.ietf-httpbis-semantics}}) to be potentially applicable to all resources, not just to those
 of one application.
 
