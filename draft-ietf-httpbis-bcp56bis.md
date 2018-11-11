@@ -635,7 +635,7 @@ The most common method for specifying freshness is the max-age response directiv
 it; all modern cache implementations support Cache-Control, and specifying freshness as a delta is
 usually more convenient and always less error-prone.
 
-Understand that stale responses (e.g., one with "Cache-Control: max-age=0") can be reused when the
+Understand that stale responses (e.g., with "Cache-Control: max-age=0") can be reused when the
 cache is disconnected from the origin server; this can be useful for handling network issues. See
 {{?I-D.ietf-httpbis-cache}}, Section 4.2.4, and also {{?RFC5861}} for additional controls over
 stale content.
@@ -643,11 +643,12 @@ stale content.
 Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and
 latency for large responses; see {{?I-D.ietf-httpbis-semantics}}.
 
-If an application defines a request header field that might be used by a server to change the
-response's headers or body, authors should point out that this has implications for caching; in
-general, such resources need to either make their responses uncacheable (e.g., with the "no-store"
-cache-control directive defined in {{!I-D.ietf-httpbis-cache}}, Section 5.2.2.3) or consistently
-send the Vary response header ({{!I-D.ietf-httpbis-semantics}}, Section 10.1.4).
+If an application uses a request header field to change the response's headers or body, authors
+should point out that this has implications for caching; in general, such resources need to either
+make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in
+{{!I-D.ietf-httpbis-cache}}, Section 5.2.2.3) or send the Vary response header
+({{!I-D.ietf-httpbis-semantics}}, Section 10.1.4) on all responses from that resource (including
+the "default" response).
 
 For example, this response:
 
