@@ -361,8 +361,8 @@ For example, rather than specifying "the initial document is at "/foo/v1", they 
 deployment to use any URL as the entry point for the application.
 
 In cases where doing so is impractical (e.g., it is not possible to convey a whole URL, but only a
-hostname) standard applications that use HTTP can request a well-known URL {{?RFC5785}} as an entry
-point.
+hostname) standard applications that use HTTP can request a well-known URL
+{{?I-D.nottingham-rfc5785bis}} as an entry point.
 
 
 ### URL Schemes {#scheme}
@@ -478,7 +478,7 @@ However, OPTIONS does have significant limitations:
 
 Instead of OPTIONS, one of these alternative approaches might be more appropriate:
 
-* For server-wide metadata, create a well-known URI {{?RFC5785}}, or using an already existing one if it’s appropriate (e.g., HostMeta {{?RFC6415}}).
+* For server-wide metadata, create a well-known URI {{?I-D.nottingham-rfc5785bis}}, or using an already existing one if it’s appropriate (e.g., HostMeta {{?RFC6415}}).
 * For metadata about a specific resource, create a separate resource and link to it using a Link response header or a link serialised into the representation's body. See {{?RFC8288}}. Note that the Link header is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
 
 
