@@ -148,8 +148,8 @@ This section examines the facets of the protocol that are important to preserve 
 
 ## Generic Semantics
 
-When writing an application's specification, it's often tempting to specify exactly how HTTP is to
-be implemented, supported and used.
+When writing a specification, it's often tempting to specify exactly how HTTP is to be implemented,
+supported and used.
 
 However, this can easily lead to an unintended profile of HTTP's behaviour. For example, it's
 common to see specifications with language like this:
@@ -165,10 +165,10 @@ by HTTP are potentially applicable to every resource, not specific to a particul
 Application-specific semantics are expressed in the payload; mostly, in the body, but also in
 header fields.
 
-This allows a HTTP message to be examined by generic HTTP software (e.g., HTTP servers,
-intermediaries, client implementations), and its handling to be correctly determined. It also
-allows people to leverage their knowledge of HTTP semantics without special-casing them for a
-particular application.
+This allows a HTTP message to be examined by generic software (e.g., HTTP servers, intermediaries,
+client implementations, and caches) and its handling to be correctly determined. It also allows
+people to leverage their knowledge of HTTP semantics without special-casing them for a particular
+application.
 
 Therefore, applications that use HTTP MUST NOT re-define, refine or overlay the semantics of
 defined protocol elements. Instead, they should focus their specifications on protocol elements
@@ -306,9 +306,11 @@ For example, an application might specify:
 
 ## Specifying Client Behaviours {#clients}
 
-HTTP does not mandate some behaviours that have nevertheless become very common; if these are not
-explicitly specified by applications using HTTP, there may be confusion and interoperability
-problems. This section recommends default handling for these mechanisms.
+Some behaviours (e.g., automatic redirect handling) and extensions (e.g., Cookies) are not required
+by HTTP, but nevertheless have become very common, possibly because they are supported by Web
+browsers. If their use is not explicitly specified by applications using HTTP, there may be
+confusion and interoperability problems. This section recommends default handling for these
+mechanisms.
 
 * Redirect handling - Applications need to specify how redirects are expected to be handled; see {{redirects}}.
 * Cookies - Applications using HTTP MUST explicitly reference the Cookie specification {{?I-D.ietf-httpbis-rfc6265bis}} if they are required.
@@ -320,8 +322,8 @@ If an application using HTTP has browser compatibility as a goal, client interac
 defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
 enforces many of these best practices.
 
-Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported.
-For example, requiring that clients support responses with a certain content-coding
+Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported
+by clients. For example, requiring that clients support responses with a certain content-coding
 ({{?I-D.ietf-httpbis-semantics}}, Section 6.2.2) instead of negotiating for it
 ({{?I-D.ietf-httpbis-semantics, Section 8.4.4) means that otherwise conformant clients cannot
 interoperate with the application. Applications MAY encourage the implementation of such features,
