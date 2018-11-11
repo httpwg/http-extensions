@@ -113,8 +113,8 @@ shown here.
 
 # Is HTTP Being Used? {#used}
 
-Different applications have different goals when using HTTP. In this document, we say an
-application is "using HTTP" when any of the following conditions are true:
+Different applications have different goals when using HTTP. The requirements in this document
+apply when any of the following conditions are true:
 
 * The transport port in use is 80 or 443,
 * The URL scheme "http" or "https" is used,
@@ -344,10 +344,10 @@ interoperability problems that {{?RFC4367}} warns of.
 For example, specifying that a "GET to the URL /foo retrieves a bar document" is bad practice.
 Likewise, specifying "The widget API is at the path /bar" violates {{!RFC7320}}.
 
-Instead, applications that use HTTP are encouraged to ensure that URLs are discovered at runtime,
-allowing HTTP-based services to describe their own capabilities. One way to do this is to use typed
-links {{?RFC8288}} to convey the URIs that are in use, as well as the semantics of the resources
-that they identify. See {{resource}} for details.
+Instead, applications are encouraged to ensure that URLs are discovered at runtime, allowing
+HTTP-based services to describe their own capabilities. One way to do this is to use typed links
+{{?RFC8288}} to convey the URIs that are in use, as well as the semantics of the resources that
+they identify. See {{resource}} for details.
 
 
 ### Initial URL Discovery
@@ -356,13 +356,13 @@ Generally, a client will begin interacting with a given application server by re
 document that contains information about that particular deployment, potentially including links to
 other relevant resources.
 
-Applications that use HTTP are encouraged to allow an arbitrary URL to be used as that entry point.
+Applications are encouraged to allow an arbitrary URL to be used as that entry point.
 For example, rather than specifying "the initial document is at "/foo/v1", they should allow a
 deployment to use any URL as the entry point for the application.
 
 In cases where doing so is impractical (e.g., it is not possible to convey a whole URL, but only a
-hostname) standard applications that use HTTP can request a well-known URL
-{{?I-D.nottingham-rfc5785bis}} as an entry point.
+hostname) applications can request a well-known URL {{?I-D.nottingham-rfc5785bis}} as an entry
+point.
 
 
 ### URL Schemes {#scheme}
@@ -397,9 +397,9 @@ See {{?RFC7595}} for more information about minting new URL schemes.
 
 ### Transport Ports
 
-Applications that use HTTP can use the applicable default port (80 for HTTP, 443 for HTTPS), or
-they can be deployed upon other ports. This decision can be made at deployment time, or might be
-encouraged by the application's specification (e.g., by registering a port for that application).
+Applications can use the applicable default port (80 for HTTP, 443 for HTTPS), or they can be
+deployed upon other ports. This decision can be made at deployment time, or might be encouraged by
+the application's specification (e.g., by registering a port for that application).
 
 If a non-default port is used, it needs to be reflected in the authority of all URLs for that
 resource; the only mechanism for changing a default port is changing the scheme (see {{scheme}}).
@@ -453,8 +453,8 @@ in doing so it should be noted that the benefits of GET such as caching and link
 results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought
 consider allowing both methods.
 
-Applications that use HTTP SHOULD NOT define GET requests to have side effects, since
-implementations can and do retry HTTP GET requests that fail.
+Applications SHOULD NOT define GET requests to have side effects, since implementations can and do
+retry HTTP GET requests that fail.
 
 Finally, note that while HTTP allows GET requests to have a body syntactically, this is done only
 to allow parsers to be generic; as per {{!I-D.ietf-httpbis-semantics}}, Section 7.3.1, a body on a
@@ -517,11 +517,10 @@ by copying their definition. They MUST NOT require specific reason phrases to be
 phrase has no function in HTTP, is not guaranteed to be preserved by implementations, and the
 reason phrase is not carried at all in the HTTP/2 {{?RFC7540}} message format.
 
-Applications that use HTTP MUST only use registered HTTP status codes. As with methods, new HTTP
-status codes are rare, and required (by {{!I-D.ietf-httpbis-semantics}}) to be registered with IETF
-Review. Similarly, HTTP status codes are generic; they are required (by
-{{!I-D.ietf-httpbis-semantics}}) to be potentially applicable to all resources, not just to those
-of one application.
+Applications MUST only use registered HTTP status codes. As with methods, new HTTP status codes are
+rare, and required (by {{!I-D.ietf-httpbis-semantics}}) to be registered with IETF Review.
+Similarly, HTTP status codes are generic; they are required (by {{!I-D.ietf-httpbis-semantics}}) to
+be potentially applicable to all resources, not just to those of one application.
 
 When authors believe that a new status code is required, they are encouraged to engage with the
 HTTP community early, and document their proposal as a separate HTTP extension, rather than as part
@@ -570,8 +569,8 @@ cannot be relied upon, since a generic client (like a browser) will be unaware o
 
 ## HTTP Header Fields {#headers}
 
-Applications that use HTTP MAY define new HTTP header fields. Typically, using HTTP header fields
-is appropriate in a few different situations:
+Applications MAY define new HTTP header fields. Typically, using HTTP header fields is appropriate
+in a few different situations:
 
 * Their content is useful to intermediaries (who often wish to avoid parsing the body), and/or
 * Their content is useful to generic HTTP software (e.g., clients, servers), and/or
@@ -697,8 +696,8 @@ use. Therefore, caching extensions need to be backwards-compatible, as per
 
 ## Application State {#state}
 
-Applications that use HTTP MAY use stateful cookies {{?I-D.ietf-httpbis-rfc6265bis}} to identify a
-client and/or store client-specific data to contextualise requests.
+Applications MAY use stateful cookies {{?I-D.ietf-httpbis-rfc6265bis}} to identify a client and/or
+store client-specific data to contextualise requests.
 
 When used, it is important to carefully specify the scoping and use of cookies; if the application
 exposes sensitive data or capabilities (e.g., by acting as an ambient authority), exploits are
@@ -711,11 +710,11 @@ will cause problems in interoperability, security, operability and evolution.
 
 ## Client Authentication {#client-auth}
 
-Applications that use HTTP MAY use HTTP authentication {{?I-D.ietf-httpbis-semantics}} to identify
-clients. The Basic authentication scheme {{?RFC7617}} MUST NOT be used unless the underlying
-transport is authenticated, integrity-protected and confidential (e.g., as provided the "HTTPS" URL
-scheme, or another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the
-underlying transport is similarly secure, or the chosen hash algorithm is not "MD5".
+Applications MAY use HTTP authentication {{?I-D.ietf-httpbis-semantics}} to identify clients. The
+Basic authentication scheme {{?RFC7617}} MUST NOT be used unless the underlying transport is
+authenticated, integrity-protected and confidential (e.g., as provided the "HTTPS" URL scheme, or
+another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the underlying transport
+is similarly secure, or the chosen hash algorithm is not "MD5".
 
 With HTTPS, clients might also be authenticated using certificates {{?RFC5246}}.
 
@@ -727,16 +726,16 @@ the client.
 
 ## Co-Existing with Web Browsing {#browser}
 
-Even if there is not an intent for an application that uses HTTP to be used with a Web browser, its
-resources will remain available to browsers and other HTTP clients.
+Even if there is not an intent for an application to be used with a Web browser, its resources will
+remain available to browsers and other HTTP clients.
 
-This means that all such applications need to consider how browsers will interact with them,
-particularly regarding security.
+This means that all such applications that use HTTP need to consider how browsers will interact
+with them, particularly regarding security.
 
 For example, if an application's state can be changed using a POST request, a Web browser can
 easily be coaxed into cross-site request forgery (CSRF) from arbitrary Web sites.
 
-Or, If content returned from the application's resources is under control of an attacker (for
+Or, if content returned from the application's resources is under control of an attacker (for
 example, part of the request is reflected in the response, or the response contains external
 information that might be under the control of the attacker), a cross-site scripting (XSS) attack is
 possible, whereby an attacker can inject code into the browser and access data and capabilities on
