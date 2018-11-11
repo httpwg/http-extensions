@@ -139,9 +139,9 @@ protocol IDs or IANA registries; rather, they are encouraged to establish their 
 
 # What's Important About HTTP {#overview}
 
-There are many ways that applications using HTTP are defined and deployed, and sometimes they are
-brought to the IETF for standardisation. In that process, what might be workable for deployment in
-a limited fashion isn't appropriate for standardisation and the corresponding broader deployment.
+Applications using HTTP are defined and deployed in many ways; sometimes they are brought to the
+IETF for standardisation. What might be workable for deployment in a limited fashion isn't
+appropriate for standardisation and the corresponding broader deployment.
 
 This section examines the facets of the protocol that are important to preserve in these situations.
 
