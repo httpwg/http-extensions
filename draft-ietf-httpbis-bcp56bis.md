@@ -124,7 +124,7 @@ application is "using HTTP" when any of the following conditions are true:
 When an application is using HTTP, all of the requirements of the HTTP protocol suite are in force
 (including but not limited to {{!I-D.ietf-httpbis-semantics}}, {{!I-D.ietf-httpbis-cache}}, {{!I-D.ietf-httpbis-messaging}}, and {{!RFC7540}}).
 
-An application might not be using HTTP according to this definition, but still relying upon the
+An application might not use HTTP according to this definition and still rely upon the
 HTTP specifications in some manner. For example, an application might wish to avoid re-specifying
 parts of the message format, but change others; or, it might want to use a different set of methods.
 
