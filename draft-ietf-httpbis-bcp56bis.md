@@ -371,10 +371,8 @@ Applications that use HTTP will typically employ the "http" and/or "https" URL s
 RECOMMENDED to provide authentication, integrity and confidentiality, as well as mitigate pervasive
 monitoring attacks {{?RFC7258}}.
 
-However, application-specific schemes can be defined as well.
-
-When defining an URL scheme for an application using HTTP, there are a number of tradeoffs and
-caveats to keep in mind:
+However, application-specific schemes can also be defined. When defining an URL scheme for an
+application using HTTP, there are a number of tradeoffs and caveats to keep in mind:
 
 * Unmodified Web browsers will not support the new scheme. While it is possible to register new URL schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML5}}, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
 
