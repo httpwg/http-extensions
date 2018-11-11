@@ -633,7 +633,7 @@ The most common method for specifying freshness is the max-age response directiv
 ({{?I-D.ietf-httpbis-cache}}, Section 5.2.2.8). The Expires header
 ({{?I-D.ietf-httpbis-cache}}, Section 5.3) can also be used, but it is not necessary to specify
 it; all modern cache implementations support Cache-Control, and specifying freshness as a delta is
-both more convenient in most cases, and less error-prone.
+usually more convenient and always less error-prone.
 
 Understand that stale responses (e.g., one with "Cache-Control: max-age=0") can be reused when the
 cache is disconnected from the origin server; this can be useful for handling network issues. See
