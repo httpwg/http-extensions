@@ -772,9 +772,9 @@ Referrer-Policy: no-referrer
 [content]
 ~~~
 
-If an application using HTTP has browser compatibility as a goal, client interaction ought to be
-defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
-enforces many of these best practices.
+If an application has browser compatibility as a goal, client interaction ought to be defined in
+terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it enforces many of
+these best practices.
 
 
 ## Application Boundaries {#other-apps}
