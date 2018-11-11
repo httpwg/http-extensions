@@ -84,8 +84,8 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A6265bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/)
 
 This will incorporate the following drafts:
-* [Leave Secure Cookies Alone](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-alone)
-* [Cookie Prefixes](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes)
-* [Same-Site Cookies](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site)
+* [Leave Secure Cookies Alone](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-alone) ✅
+* [Cookie Prefixes](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes) ✅
+* [Same-Site Cookies](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site) ✅
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
 
