@@ -339,7 +339,7 @@ Identifiers are short textual identifiers; their abstract model is identical to 
 The ABNF for identifiers in HTTP/1 headers is:
 
 ~~~ abnf
-sh-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" / "/" )
+sh-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-" / "." / ":" / "%" / "*" / "/" )
 ~~~
 
 Note that identifiers can only contain lowercase letters.
@@ -732,7 +732,7 @@ Given an ASCII string input_string, return an identifier. input_string is modifi
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "\_", "-", "\*" or "/":
+   2. If char is not one of lcalpha, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/":
       1. Prepend char to input_string.
       2. Return output_string.
    3. Append char to output_string.
