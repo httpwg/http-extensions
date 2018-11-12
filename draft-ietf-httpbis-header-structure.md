@@ -179,8 +179,10 @@ The ABNF for dictionaries in HTTP/1 headers is:
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member    = member-name "=" member-value
-member-name    = sh-identifier
+member-name    = key
 member-value   = sh-item
+key            = lcalpha *( lcalpha / DIGIT / "_" / "-" )
+lcalpha        = %x61-7A ; a-z
 ~~~
 
 In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
@@ -229,7 +231,7 @@ The ABNF for parameterised lists in HTTP/1 headers is:
 sh-param-list = param-id *( OWS "," OWS param-id )
 param-id      = sh-identifier *parameter
 parameter     = OWS ";" OWS param-name [ "=" param-value ]
-param-name    = sh-identifier
+param-name    = key
 param-value   = sh-item
 ~~~
 
@@ -337,8 +339,7 @@ Identifiers are short textual identifiers; their abstract model is identical to 
 The ABNF for identifiers in HTTP/1 headers is:
 
 ~~~ abnf
-sh-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
-lcalpha       = %x61-7A ; a-z
+sh-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" / "/" )
 ~~~
 
 Note that identifiers can only contain lowercase letters.
@@ -406,11 +407,20 @@ Given a dictionary as input:
    1. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. Let value be the result of applying Serialising an Item {{ser-item}} to mem's member-value.
+   4. Let value be the result of applying Serialising a Key {{ser-key}} to mem's member-value.
    5. Append value to output.
    6. If more members remain in input:
       1. Append a COMMA to output.
       2. Append a single WS to output.
+3. Return output.
+
+#### Serialising a Key {#ser-key}
+
+Given a key as input:
+
+0. If input is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
+1. Let output be an empty string.
+2. Append input to output, using ASCII encoding {{!RFC0020}}.
 3. Return output.
 
 
@@ -441,7 +451,7 @@ Given a parameterised list as input:
       2. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to parameter's param-name.
       3. Append name to output.
       4. If parameter has a param-value:
-         1. Let value be the result of applying Serialising an Item {{ser-item}} to parameter's param-value.
+         1. Let value be the result of applying Serialising a Key {{ser-key}} to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
    4. If more members remain in input:
@@ -574,7 +584,7 @@ Given an ASCII string input_string, return an ordered map of (identifier, item).
 
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
-   1. Let this_key be the result of running Parse Identifier from Text ({{parse-identifier}}) with input_string.
+   1. Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
    4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
@@ -585,6 +595,21 @@ Given an ASCII string input_string, return an ordered map of (identifier, item).
    9. Discard any leading OWS from input_string.
    0. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
+
+
+### Parsing a Key from Text {#parse-key}
+
+Given an ASCII string input_string, return a key. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not lcalpha, fail parsing.
+2. Let output_string be an empty string.
+3. While input_string is not empty:
+   1. Let char be the result of removing the first character of input_string.
+   2. If char is not one of lcalpha, DIGIT, "\_", or "-":
+      1. Prepend char to input_string.
+      2. Return output_string.
+   3. Append char to output_string.
+4. Return output_string.
 
 
 ### Parsing a List from Text {#parse-list}
@@ -630,7 +655,7 @@ Given an ASCII string input_string, return an identifier with an unordered map o
    2. If the first character of input_string is not ";", exit the loop.
    3. Consume a ";" character from the beginning of input_string.
    4. Discard any leading OWS from input_string.
-   5. let param_name be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
+   5. let param_name be the result of Parsing a key from Text ({{parse-key}}) from input_string.
    6. If param_name is already present in parameters, fail parsing.
    7. Let param_value be a null value.
    8. If the first character of input_string is "=":
