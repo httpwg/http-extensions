@@ -91,6 +91,17 @@ To specify a header field that is a Structured Header, see {{specify}}.
 Those abstract types can be serialised into and parsed from textual headers -- such as those used in HTTP/1 -- using the algorithms described in {{text}}.
 
 
+## Intentionally Strict Processing
+
+This specification intentionally defines strict parsing and serialisation behaviours using step-by-step algorithms; the only error handling defined is to fail the operation altogether.
+
+This is designed to encourage faithful implementation and therefore good interoperability. Therefore, implementations that try to be "helpful" by being more tolerant of input are doing a disservice to the overall community, since it will encourage other implementations to implement similar (but likely subtly different) workarounds.
+
+In other words, strict processing is an intentional feature of this specification; it allows non-conformant input to be discovered and corrected early, and avoids both interoperability and security issues that might otherwise result.
+
+Note that as a result of this strictness, if a header field is appended to by multiple parties (e.g., intermediaries, or different components in the sender), it could be that an error in one party's value causes the entire header field to fail parsing.
+
+
 ## Notational Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
@@ -117,7 +128,7 @@ To define a HTTP header as a structured header, its specification needs to:
 
 * Specify any additional constraints upon the syntax of the structured used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
-Note that a header field definition cannot relax the requirements of a structure or its processing because doing so would preclude handling by generic software; they can only add additional constraints.
+Note that a header field definition cannot relax the requirements of a structure or its processing because doing so would preclude handling by generic software; they can only add additional constraints. Likewise, header field definitions should use Structured Headers for the entire header field value, not a portion thereof.
 
 For example:
 
@@ -829,7 +840,8 @@ _RFC Editor: Please remove this section before publication._
 * Disallow whitespace before items properly (#703).
 * Created "key" for use in dictionaries and parameters, rather than relying on identifier (#702).
 * Expanded the range of special characters allowed in identifier to include ".", ":", and "%" (#702).
-* use "?" instead of "!" to indicate a Boolean (#719).
+* Use "?" instead of "!" to indicate a Boolean (#719).
+* Added "Intentionally Strict Processing" (#684).
 
 
 ## Since draft-ietf-httpbis-header-structure-07
