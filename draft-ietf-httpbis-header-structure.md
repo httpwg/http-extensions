@@ -372,11 +372,11 @@ Boolean values can be conveyed in Structured Headers.
 The ABNF for a Boolean in HTTP/1 headers is:
 
 ~~~ abnf
-sh-boolean = "!" boolean
+sh-boolean = "?" boolean
 boolean    = "T" / "F"
 ~~~
 
-In HTTP/1 headers, a byte sequence is delimited with a "!" character. For example:
+In HTTP/1 headers, a byte sequence is indicated with a leading "?" character. For example:
 
 ~~~ example
 Example-BoolHdr: !T
@@ -544,7 +544,7 @@ Given a Boolean as input:
 
 0. If input is not a boolean, fail serialisation.
 1. Let output be an empty string.
-2. Append "!" to output.
+2. Append "?" to output.
 3. If input is true, append "T" to output.
 4. If input is false, append "F" to output.
 5. Return output.
@@ -672,7 +672,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 1. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 2. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
 3. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
-4. If the first character of input_string is "!", process input_string as a Boolean ({{parse-boolean}}) and return the result.
+4. If the first character of input_string is "?", process input_string as a Boolean ({{parse-boolean}}) and return the result.
 5. If the first character of input_string is a lcalpha, process input_string as an identifier ({{parse-identifier}}) and return the result.
 6. Otherwise, fail parsing.
 
@@ -762,7 +762,7 @@ This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 
 
 Given an ASCII string input_string, return a Boolean. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not "!", fail parsing.
+1. If the first character of input_string is not "?", fail parsing.
 2. Discard the first character of input_string.
 3. If the first character of input_string case-sensitively matches "T", discard the first character, and return true.
 4. If the first character of input_string case-sensitively matches "F", discard the first character, and return false.
@@ -829,6 +829,7 @@ _RFC Editor: Please remove this section before publication._
 * Disallow whitespace before items properly (#703).
 * Created "key" for use in dictionaries and parameters, rather than relying on identifier (#702).
 * Expanded the range of special characters allowed in identifier to include ".", ":", and "%" (#702).
+* use "?" instead of "!" to indicate a Boolean (#719).
 
 
 ## Since draft-ietf-httpbis-header-structure-07
