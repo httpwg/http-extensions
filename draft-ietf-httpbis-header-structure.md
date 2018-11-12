@@ -827,6 +827,8 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-08
 
 * Disallow whitespace before items properly (#703).
+* Created "key" for use in dictionaries and parameters, rather than relying on identifier (#702).
+* Expanded the range of special characters allowed in identifier to include ".", ":", and "%" (#702).
 
 
 ## Since draft-ietf-httpbis-header-structure-07
