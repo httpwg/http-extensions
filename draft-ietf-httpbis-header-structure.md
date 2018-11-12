@@ -391,10 +391,10 @@ This section defines how to serialise and parse Structured Headers in HTTP/1 tex
 
 Given a structured defined in this specification:
 
-1. If the structure is a dictionary, return the result of Serialising a Dictionary {#ser-dictionary}.
-2. If the structure is a list, return the result of Serialising a List {#ser-list}.
-3. If the structure is a parameterised list, return the result of Serialising a Parameterised List {#ser-param-list}.
-4. If the structure is an item, return the result of Serialising an Item {#ser-item}.
+1. If the structure is a dictionary, return the result of Serialising a Dictionary ({{ser-dictionary}}).
+2. If the structure is a list, return the result of Serialising a List {{ser-list}}.
+3. If the structure is a parameterised list, return the result of Serialising a Parameterised List ({{ser-param-list}}).
+4. If the structure is an item, return the result of Serialising an Item ({{ser-item}}).
 5. Otherwise, fail serialisation.
 
 
@@ -404,10 +404,10 @@ Given a dictionary as input:
 
 1. Let output be an empty string.
 2. For each member mem of input:
-   1. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to mem's member-name.
+   1. Let name be the result of applying Serialising an Identifier ({{ser-identifier}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. Let value be the result of applying Serialising a Key {{ser-key}} to mem's member-value.
+   4. Let value be the result of applying Serialising a Key ({{ser-key}}) to mem's member-value.
    5. Append value to output.
    6. If more members remain in input:
       1. Append a COMMA to output.
@@ -430,7 +430,7 @@ Given a list as input:
 
 1. Let output be an empty string.
 2. For each member mem of input:
-   1. Let value be the result of applying Serialising an Item {{ser-item}} to mem.
+   1. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem.
    2. Append value to output.
    3. If more members remain in input:
       1. Append a COMMA to output.
@@ -444,14 +444,14 @@ Given a parameterised list as input:
 
 1. Let output be an empty string.
 2. For each member mem of input:
-   1. Let id be the result of applying Serialising an Identifier {{ser-identifier}} to mem's identifier.
+   1. Let id be the result of applying Serialising an Identifier ({{ser-identifier}}) to mem's identifier.
    2. Append id to output.
    3. For each parameter in mem's parameters:
       1. Append ";" to output.
-      2. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to parameter's param-name.
+      2. Let name be the result of applying Serialising an Identifier ({{ser-identifier}}) to parameter's param-name.
       3. Append name to output.
       4. If parameter has a param-value:
-         1. Let value be the result of applying Serialising a Key {{ser-key}} to parameter's param-value.
+         1. Let value be the result of applying Serialising a Key ({{ser-key}}) to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
    4. If more members remain in input:
@@ -465,12 +465,12 @@ Given a parameterised list as input:
 Given an item as input:
 
 0. If input is a type other than an integer, float, string, identifier, byte sequence, or Boolean, fail serialisation.
-1. If input is an integer, return the result of applying Serialising an Integer {{ser-integer}} to input.
-2. If input is a float, return the result of applying Serialising a Float {{ser-float}} to input.
-3. If input is a string, return the result of applying Serialising a String {{ser-string}} to input.
-4. If input is an identifier, return the result of Serialising an Identifier {#ser-identifier}.
-5. If input is a Boolean, return the result of applying Serialising a Boolean {{ser-boolean}} to input.
-6. Otherwise, return the result of applying Serialising a Byte Sequence {{ser-binary}} to input.
+1. If input is an integer, return the result of applying Serialising an Integer ({{ser-integer}}) to input.
+2. If input is a float, return the result of applying Serialising a Float ({{ser-float}}) to input.
+3. If input is a string, return the result of applying Serialising a String ({{ser-string}}) to input.
+4. If input is an identifier, return the result of Serialising an Identifier ({{ser-identifier}}).
+5. If input is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input.
+6. Otherwise, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input.
 
 
 ### Serialising an Integer {#ser-integer}
