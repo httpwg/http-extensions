@@ -799,6 +799,11 @@ If you need to fit arbitrarily complex data into a header, Structured Headers is
 
 _RFC Editor: Please remove this section before publication._
 
+## Since draft-ietf-httpbis-header-structure-08
+
+* Disallow whitespace before items properly (#703).
+
+
 ## Since draft-ietf-httpbis-header-structure-07
 
 * Make Dictionaries ordered mappings (#659).
