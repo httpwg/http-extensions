@@ -11,6 +11,8 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### CDN Loop Prevention
 
+_WGLC Ended_
+
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cdn-loop.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cdn-loop.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cdn-loop) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acdn-loop) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-cdn-loop/)
