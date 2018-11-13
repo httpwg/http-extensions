@@ -232,15 +232,16 @@ Parsers MUST support lists containing at least 1024 members.
 
 ## Parameterised Lists {#param}
 
-Parameterised Lists are arrays of a parameterised identifiers.
+Parameterised Lists are arrays of a parameterised identifiers with one or more members.
 
-A parameterised identifier is an identifier ({{identifier}}) with an optional set of parameters, each parameter having an identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+A parameterised identifier is a primary identifier ({{identifier}}) with an optional set of parameters, each parameter having a name and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
 
 The ABNF for parameterised lists in HTTP/1 headers is:
 
 ~~~ abnf
-sh-param-list = param-id *( OWS "," OWS param-id )
-param-id      = sh-identifier *parameter
+sh-param-list = param-item *( OWS "," OWS param-item )
+param-item    = primary-id *parameter
+primary-id    = sh-identifier
 parameter     = OWS ";" OWS param-name [ "=" param-value ]
 param-name    = key
 param-value   = sh-item
@@ -842,6 +843,7 @@ _RFC Editor: Please remove this section before publication._
 * Expanded the range of special characters allowed in identifier to include ".", ":", and "%" (#702).
 * Use "?" instead of "!" to indicate a Boolean (#719).
 * Added "Intentionally Strict Processing" (#684).
+* Gave better names for referring specs to use in Parameterised Lists (#720).
 
 
 ## Since draft-ietf-httpbis-header-structure-07
