@@ -416,10 +416,10 @@ Given a dictionary as input:
 
 1. Let output be an empty string.
 2. For each member mem of input:
-   1. Let name be the result of applying Serialising an Identifier ({{ser-identifier}}) to mem's member-name.
+   1. Let name be the result of applying Serialising an Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. Let value be the result of applying Serialising a Key ({{ser-key}}) to mem's member-value.
+   4. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem's member-value.
    5. Append value to output.
    6. If more members remain in input:
       1. Append a COMMA to output.
@@ -460,10 +460,10 @@ Given a parameterised list as input:
    2. Append id to output.
    3. For each parameter in mem's parameters:
       1. Append ";" to output.
-      2. Let name be the result of applying Serialising an Identifier ({{ser-identifier}}) to parameter's param-name.
+      2. Let name be the result of applying Serialising a Key ({{ser-key}}) to parameter's param-name.
       3. Append name to output.
       4. If parameter has a param-value:
-         1. Let value be the result of applying Serialising a Key ({{ser-key}}) to parameter's param-value.
+         1. Let value be the result of applying Serialising an Item ({{ser-item}}) to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
    4. If more members remain in input:
