@@ -391,7 +391,7 @@ boolean    = "T" / "F"
 In HTTP/1 headers, a byte sequence is indicated with a leading "?" character. For example:
 
 ~~~ example
-Example-BoolHdr: !T
+Example-BoolHdr: ?T
 ~~~
 
 
