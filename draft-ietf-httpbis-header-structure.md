@@ -385,7 +385,7 @@ The ABNF for a Boolean in HTTP/1 headers is:
 
 ~~~ abnf
 sh-boolean = "?" boolean
-boolean    = %54 / %56  ; capital "T" or "F"
+boolean    = %54 / %46  ; capital "T" or "F"
 ~~~
 
 In HTTP/1 headers, a byte sequence is indicated with a leading "?" character. For example:
