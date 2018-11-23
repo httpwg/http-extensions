@@ -476,13 +476,13 @@ Given a parameterised list as input_plist:
 
 Given an item as input_item:
 
-0. If input_item is a type other than an integer, float, string, identifier, byte sequence, or Boolean, fail serialisation.
 1. If input_item is an integer, return the result of applying Serialising an Integer ({{ser-integer}}) to input_item.
 2. If input_item is a float, return the result of applying Serialising a Float ({{ser-float}}) to input_item.
 3. If input_item is a string, return the result of applying Serialising a String ({{ser-string}}) to input_item.
 4. If input_item is an identifier, return the result of Serialising an Identifier ({{ser-identifier}}) to input_item.
 5. If input_item is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input_item.
-6. Otherwise, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input_item.
+6. If input_item is a byte sequence, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input_item.
+7. Otherwise, fail serialisation.
 
 
 ### Serialising an Integer {#ser-integer}
