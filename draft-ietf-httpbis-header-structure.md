@@ -673,7 +673,7 @@ Given an ASCII string input_string, return an identifier with an unordered map o
    8. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
-   9. Insert (param_name, param_value) into parameters.
+   9. Add key param_name with value param_value to parameters.
 4. Return the tuple (primary_identifier, parameters).
 
 
