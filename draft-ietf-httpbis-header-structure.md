@@ -572,7 +572,7 @@ Given an ASCII string input_string that represents the chosen header's field-val
 2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
 4. If header_type is "param-list", let output be the result of Parsing a Parameterised List from Text ({{parse-param-list}}).
-5. Otherwise, let output be the result of Parsing an Item from Text ({{parse-item}}).
+5. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
 7. If input_string is not empty, fail parsing.
 8. Otherwise, return output.
