@@ -346,7 +346,7 @@ Parsers MUST support strings with at least 1024 characters.
 
 ## Identifiers {#identifier}
 
-Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation. Parsers MUST support identifiers with at least 64 characters.
+Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation.
 
 The ABNF for identifiers in HTTP/1 headers is:
 
@@ -355,6 +355,8 @@ sh-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-" / "." / ":" / "%" / "*" /
 ~~~
 
 Note that identifiers can only contain lowercase letters.
+
+Parsers MUST support identifiers with at least 64 characters.
 
 
 ## Byte Sequences {#binary}
