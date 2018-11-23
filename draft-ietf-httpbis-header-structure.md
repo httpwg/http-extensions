@@ -412,39 +412,39 @@ Given a structured defined in this specification:
 
 ### Serialising a Dictionary {#ser-dictionary}
 
-Given a dictionary as input:
+Given a dictionary as input_dictionary:
 
 1. Let output be an empty string.
-2. For each member mem of input:
+2. For each member mem of input_dictionary:
    1. Let name be the result of applying Serialising an Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
    4. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem's member-value.
    5. Append value to output.
-   6. If more members remain in input:
+   6. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
 
 #### Serialising a Key {#ser-key}
 
-Given a key as input:
+Given a key as input_key:
 
-0. If input is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
+0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
 1. Let output be an empty string.
-2. Append input to output, using ASCII encoding {{!RFC0020}}.
+2. Append input_key to output, using ASCII encoding {{!RFC0020}}.
 3. Return output.
 
 
 ### Serialising a List {#ser-list}
 
-Given a list as input:
+Given a list as input_list:
 
 1. Let output be an empty string.
-2. For each member mem of input:
+2. For each member mem of input_list:
    1. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem.
    2. Append value to output.
-   3. If more members remain in input:
+   3. If more members remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -452,10 +452,10 @@ Given a list as input:
 
 ### Serialising a Parameterised List {#ser-param-list}
 
-Given a parameterised list as input:
+Given a parameterised list as input_plist:
 
 1. Let output be an empty string.
-2. For each member mem of input:
+2. For each member mem of input_plist:
    1. Let id be the result of applying Serialising an Identifier ({{ser-identifier}}) to mem's identifier.
    2. Append id to output.
    3. For each parameter in mem's parameters:
@@ -466,7 +466,7 @@ Given a parameterised list as input:
          1. Let value be the result of applying Serialising an Item ({{ser-item}}) to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
-   4. If more members remain in input:
+   4. If more members remain in input_plist:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -474,49 +474,49 @@ Given a parameterised list as input:
 
 ### Serialising an Item {#ser-item}
 
-Given an item as input:
+Given an item as input_item:
 
-0. If input is a type other than an integer, float, string, identifier, byte sequence, or Boolean, fail serialisation.
-1. If input is an integer, return the result of applying Serialising an Integer ({{ser-integer}}) to input.
-2. If input is a float, return the result of applying Serialising a Float ({{ser-float}}) to input.
-3. If input is a string, return the result of applying Serialising a String ({{ser-string}}) to input.
-4. If input is an identifier, return the result of Serialising an Identifier ({{ser-identifier}}).
-5. If input is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input.
-6. Otherwise, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input.
+0. If input_item is a type other than an integer, float, string, identifier, byte sequence, or Boolean, fail serialisation.
+1. If input_item is an integer, return the result of applying Serialising an Integer ({{ser-integer}}) to input_item.
+2. If input_item is a float, return the result of applying Serialising a Float ({{ser-float}}) to input_item.
+3. If input_item is a string, return the result of applying Serialising a String ({{ser-string}}) to input_item.
+4. If input_item is an identifier, return the result of Serialising an Identifier ({{ser-identifier}}) to input_item.
+5. If input_item is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input_item.
+6. Otherwise, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input_item.
 
 
 ### Serialising an Integer {#ser-integer}
 
-Given an integer as input:
+Given an integer as input_integer:
 
-0. If input is not an integer in the range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive, fail serialisation.
+0. If input_integer is not an integer in the range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive, fail serialisation.
 1. Let output be an empty string.
-2. If input is less than (but not equal to) 0, append "-" to output.
-3. Append input's numeric value represented in base 10 using only decimal digits to output.
+2. If input_integer is less than (but not equal to) 0, append "-" to output.
+3. Append input_integer's numeric value represented in base 10 using only decimal digits to output.
 4. Return output.
 
 
 ### Serialising a Float {#ser-float}
 
-Given a float as input:
+Given a float as input_float:
 
-0. If input is not a IEEE 754 double precision number, fail serialisation.
+0. If input_float is not a IEEE 754 double precision number, fail serialisation.
 1. Let output be an empty string.
-2. If input is less than (but not equal to) 0, append "-" to output.
-3. Append input's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+2. If input_float is less than (but not equal to) 0, append "-" to output.
+3. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
 4. Append "." to output.
-5. Append input's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+5. Append input_float's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
 6. Return output.
 
 
 ### Serialising a String {#ser-string}
 
-Given a string as input:
+Given a string as input_string:
 
-0. If input is not a sequence of characters, or contains characters outside the range allowed by VCHAR or SP, fail serialisation.
+0. If input_string is not a sequence of characters, or contains characters outside the range allowed by VCHAR or SP, fail serialisation.
 1. Let output be an empty string.
 2. Append DQUOTE to output.
-3. For each character char in input:
+3. For each character char in input_string:
    1. If char is "\\" or DQUOTE:
       1. Append "\\" to output.
    2. Append char to output, using ASCII encoding {{!RFC0020}}.
@@ -526,22 +526,22 @@ Given a string as input:
 
 ### Serialising an Identifier {#ser-identifier}
 
-Given an identifier as input:
+Given an identifier as input_identifier:
 
-0. If input is not a sequence of characters, or contains characters not allowed in {{identifier}}, fail serialisation.
+0. If input_identifier is not a sequence of characters, or contains characters not allowed in {{identifier}}, fail serialisation.
 1. Let output be an empty string.
-2. Append input to output, using ASCII encoding {{!RFC0020}}.
+2. Append input_identifier to output, using ASCII encoding {{!RFC0020}}.
 3. Return output.
 
 
 ### Serialising a Byte Sequence {#ser-binary}
 
-Given a byte sequence as input:
+Given a byte sequence as input_bytes:
 
-0. If input is not a sequence of bytes, fail serialisation.
+0. If input_bytes is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
 2. Append "\*" to output.
-3. Append the result of base64-encoding input as per {{!RFC4648}}, Section 4, taking account of the requirements below.
+3. Append the result of base64-encoding input_bytes as per {{!RFC4648}}, Section 4, taking account of the requirements below.
 4. Append "\*" to output.
 5. Return output.
 
@@ -552,13 +552,13 @@ Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Se
 
 ### Serialising a Boolean {#ser-boolean}
 
-Given a Boolean as input:
+Given a Boolean as input_boolean:
 
-0. If input is not a boolean, fail serialisation.
+0. If input_boolean is not a boolean, fail serialisation.
 1. Let output be an empty string.
 2. Append "?" to output.
-3. If input is true, append "T" to output.
-4. If input is false, append "F" to output.
+3. If input_boolean is true, append "T" to output.
+4. If input_boolean is false, append "F" to output.
 5. Return output.
 
 
