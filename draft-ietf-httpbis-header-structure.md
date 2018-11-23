@@ -204,7 +204,7 @@ Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
 
-Parsers MUST support dictionaries containing at least 1024 key/value pairs.
+Parsers MUST support dictionaries containing at least 1024 key/value pairs, and dictionary keys with at least 64 characters.
 
 
 ## Lists {#list}
@@ -253,7 +253,7 @@ In HTTP/1, each param-id is separated by a comma and optional whitespace (as in 
 Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, ghi;q="9";r="w"
 ~~~
 
-Parsers MUST support parameterised lists containing at least 1024 members, and support members with at least 256 parameters.
+Parsers MUST support parameterised lists containing at least 1024 members, support members with at least 256 parameters, and support parameter keys with at least 64 characters.
 
 
 ## Items {#item}
@@ -356,7 +356,7 @@ sh-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-" / "." / ":" / "%" / "*" /
 
 Note that identifiers can only contain lowercase letters.
 
-Parsers MUST support identifiers with at least 64 characters.
+Parsers MUST support identifiers with at least 512 characters.
 
 
 ## Byte Sequences {#binary}
@@ -844,7 +844,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-08
 
 * Disallow whitespace before items properly (#703).
-* Created "key" for use in dictionaries and parameters, rather than relying on identifier (#702).
+* Created "key" for use in dictionaries and parameters, rather than relying on identifier (#702). Identifiers have a separate minimum supported size.
 * Expanded the range of special characters allowed in identifier to include ".", ":", and "%" (#702).
 * Use "?" instead of "!" to indicate a Boolean (#719).
 * Added "Intentionally Strict Processing" (#684).
