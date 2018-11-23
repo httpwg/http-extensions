@@ -691,6 +691,8 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 
 ### Parsing a Number from Text {#parse-number}
 
+Given an ASCII string input_string, return a number. input_string is modified to remove the parsed value.
+
 NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and returns the corresponding structure.
 
 1. Let type be "integer".
