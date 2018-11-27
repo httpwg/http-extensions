@@ -351,10 +351,8 @@ Identifiers are short textual identifiers; their abstract model is identical to 
 The ABNF for identifiers in HTTP/1 headers is:
 
 ~~~ abnf
-sh-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-" / "." / ":" / "%" / "*" / "/" )
+sh-identifier = ALPHA *( ALPHA / DIGIT / "_" / "-" / "." / ":" / "%" / "*" / "/" )
 ~~~
-
-Note that identifiers can only contain lowercase letters.
 
 Parsers MUST support identifiers with at least 512 characters.
 
@@ -744,11 +742,11 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 
 Given an ASCII string input_string, return an identifier. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not lcalpha, fail parsing.
+1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/":
+   2. If char is not one of ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/":
       1. Prepend char to input_string.
       2. Return output_string.
    3. Append char to output_string.
@@ -845,7 +843,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Disallow whitespace before items properly (#703).
 * Created "key" for use in dictionaries and parameters, rather than relying on identifier (#702). Identifiers have a separate minimum supported size.
-* Expanded the range of special characters allowed in identifier to include ".", ":", and "%" (#702).
+* Expanded the range of special characters allowed in identifier to include all of ALPHA, ".", ":", and "%" (#702).
 * Use "?" instead of "!" to indicate a Boolean (#719).
 * Added "Intentionally Strict Processing" (#684).
 * Gave better names for referring specs to use in Parameterised Lists (#720).
