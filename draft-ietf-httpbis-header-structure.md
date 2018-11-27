@@ -685,7 +685,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 2. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
 3. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
 4. If the first character of input_string is "?", process input_string as a Boolean ({{parse-boolean}}) and return the result.
-5. If the first character of input_string is a lcalpha, process input_string as an identifier ({{parse-identifier}}) and return the result.
+5. If the first character of input_string is an ALPHA, process input_string as an identifier ({{parse-identifier}}) and return the result.
 6. Otherwise, fail parsing.
 
 
