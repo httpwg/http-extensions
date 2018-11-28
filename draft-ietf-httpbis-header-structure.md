@@ -479,13 +479,14 @@ Given a list of lists of items as input_list:
 1. Let output be an empty string.
 2. For each member inner_list of input_list:
    1. If inner_list is not a list, fail serialisation.
-   2. For each inner_mem of inner_list:
+   2. If inner_list is empty, fail serialisation.
+   3. For each inner_mem of inner_list:
       1. Let value be the result of applying Serialising an Item ({{ser-item}}) to inner_mem.
       2. Append value to output.
       3. If more members remain in inner_list:
          1. Append a ";" to output.
          2. Append a single WS to output.
-   3. If more members remain in input_list:
+   4. If more members remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
