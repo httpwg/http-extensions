@@ -229,6 +229,27 @@ Header specifications can constrain the types of individual values if necessary.
 Parsers MUST support lists containing at least 1024 members.
 
 
+## Lists of Lists {#listlist}
+
+Lists are arrays of arrays containing items ({{item}}).
+
+The ABNF for lists of lists in HTTP/1 headers is:
+
+~~~ abnf
+sh-listlist = inner-list *( OWS "," OWS inner-list )
+inner-list  = list-member *( OWS ";" OWS list-member )
+~~~
+
+In HTTP/1, each inner-list is separated by a comma and optional whitespace, and members of the inner-list are separated by semicolons and optional whitespace. For example, a header field whose value is defined as a list of lists of strings could look like:
+
+~~~ example
+Example-StrListListHeader: "foo";"bar", "baz", "bat"; "one"
+~~~
+
+Header specifications can constrain the types of individual inner-list values if necessary.
+
+Parsers MUST support lists of lists containing at least 1024 members, and inner-lists containing at least 256 members.
+
 
 ## Parameterised Lists {#param}
 
@@ -405,9 +426,10 @@ Given a structured defined in this specification:
 
 1. If the structure is a dictionary, return the result of Serialising a Dictionary ({{ser-dictionary}}).
 2. If the structure is a parameterised list, return the result of Serialising a Parameterised List ({{ser-param-list}}).
-3. If the structure is a list, return the result of Serialising a List {{ser-list}}.
-4. If the structure is an item, return the result of Serialising an Item ({{ser-item}}).
-5. Otherwise, fail serialisation.
+3. If the structure is a list of lists, return the result of Serialising a List of Lists ({ser-listlist}).
+4. If the structure is a list, return the result of Serialising a List {{ser-list}}.
+5. If the structure is an item, return the result of Serialising an Item ({{ser-item}}).
+6. Otherwise, fail serialisation.
 
 
 ### Serialising a Dictionary {#ser-dictionary}
@@ -444,6 +466,25 @@ Given a list as input_list:
 2. For each member mem of input_list:
    1. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem.
    2. Append value to output.
+   3. If more members remain in input_list:
+      1. Append a COMMA to output.
+      2. Append a single WS to output.
+3. Return output.
+
+
+### Serialising a List of Lists {#ser-listlist}
+
+Given a list of lists of items as input_list:
+
+1. Let output be an empty string.
+2. For each member inner_list of input_list:
+   1. If inner_list is not a list, fail serialisation.
+   2. For each inner_mem of inner_list:
+      1. Let value be the result of applying Serialising an Item ({{ser-item}}) to inner_mem.
+      2. Append value to output.
+      3. If more members remain in inner_list:
+         1. Append a ";" to output.
+         2. Append a single WS to output.
    3. If more members remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
@@ -566,11 +607,12 @@ Given a Boolean as input_boolean:
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an ASCII string input_string that represents the chosen header's field-value, and header_type, one of "dictionary", "list", "param-list", or "item", return the parsed header value.
+Given an ASCII string input_string that represents the chosen header's field-value, and header_type, one of "dictionary", "list", "list-list", "param-list", or "item", return the parsed header value.
 
 1. Discard any leading OWS from input_string.
 2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
+4. If header_type is "list-list", let output be the result of Parsing a List of Lists from Text ({{parse-listlist}}).
 4. If header_type is "param-list", let output be the result of Parsing a Parameterised List from Text ({{parse-param-list}}).
 5. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
@@ -579,7 +621,7 @@ Given an ASCII string input_string that represents the chosen header's field-val
 
 When generating input_string, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
-For Lists, Parameterised Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field.
+For Lists, Lists of Lists, Parameterised Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
 
 Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serialiser or the parser.
 
@@ -638,6 +680,27 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
+
+
+### Parsing a List of Lists from Text {#parse-listlist}
+
+Given an ASCII string input_string, return a list of lists of items. input_string is modified to remove the parsed value.
+
+1. let top_list be an empty array.
+2. Let inner_list be an empty array.
+3. While input_string is not empty:
+   1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
+   2. Append item to inner_list.
+   3. Discard any leading OWS from input_string.
+   4. If input_string is empty, append inner_list to top_list and return top_list.
+   5. Let char be the result of consuming the first character of input_string.
+   6. If char is COMMA:
+      1. Append inner_list to top_list.
+      2. Let inner_list be an empty array.
+   7. Else if char is not ";", fail parsing.
+   8. Discard any leading OWS from input_string.
+   9. If input_string is empty, fail parsing.
+4. No structured data has been found; fail parsing.
 
 
 ### Parsing a Parameterised List from Text {#parse-param-list}
@@ -847,6 +910,7 @@ _RFC Editor: Please remove this section before publication._
 * Use "?" instead of "!" to indicate a Boolean (#719).
 * Added "Intentionally Strict Processing" (#684).
 * Gave better names for referring specs to use in Parameterised Lists (#720).
+* Added Lists of Lists (#721).
 
 
 ## Since draft-ietf-httpbis-header-structure-07
