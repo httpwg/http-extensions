@@ -181,7 +181,7 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
+Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
 
 Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
@@ -253,16 +253,16 @@ Parsers MUST support lists of lists containing at least 1024 members, and inner-
 
 ## Parameterised Lists {#param}
 
-Parameterised Lists are arrays of a parameterised identifiers with one or more members.
+Parameterised Lists are arrays of parameterised identifier with one or more members.
 
-A parameterised identifier is a primary identifier ({{identifier}}) with an optional set of parameters, each parameter having a name and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+A parameterised identifier is a token ({{token}}}) with an optional set of parameters, each parameter having a textual name and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
 
 The ABNF for parameterised lists in HTTP/1 headers is:
 
 ~~~ abnf
 sh-param-list = param-item *( OWS "," OWS param-item )
 param-item    = primary-id *parameter
-primary-id    = sh-identifier
+primary-id    = sh-token
 parameter     = OWS ";" OWS param-name [ "=" param-value ]
 param-name    = key
 param-value   = sh-item
@@ -279,12 +279,12 @@ Parsers MUST support parameterised lists containing at least 1024 members, suppo
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), identifier ({{identifier}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
 
 The ABNF for items in HTTP/1 headers is:
 
 ~~~ abnf
-sh-item = sh-integer / sh-float / sh-string / sh-identifier / sh-binary
+sh-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
           / sh-boolean
 ~~~
 
@@ -365,17 +365,17 @@ When it is necessary for a field value to convey non-ASCII string content, a byt
 Parsers MUST support strings with at least 1024 characters.
 
 
-## Identifiers {#identifier}
+## Tokens {#token}
 
-Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation.
+Tokens are short textual words; their abstract model is identical to their expression in the textual HTTP serialisation.
 
-The ABNF for identifiers in HTTP/1 headers is:
+The ABNF for tokens in HTTP/1 headers is:
 
 ~~~ abnf
-sh-identifier = ALPHA *( ALPHA / DIGIT / "_" / "-" / "." / ":" / "%" / "*" / "/" )
+sh-token = ALPHA *( ALPHA / DIGIT / "_" / "-" / "." / ":" / "%" / "*" / "/" )
 ~~~
 
-Parsers MUST support identifiers with at least 512 characters.
+Parsers MUST support tokens with at least 512 characters.
 
 
 ## Byte Sequences {#binary}
@@ -497,7 +497,7 @@ Given a parameterised list as input_plist:
 
 1. Let output be an empty string.
 2. For each member mem of input_plist:
-   1. Let id be the result of applying Serialising an Identifier ({{ser-identifier}}) to mem's identifier.
+   1. Let id be the result of applying Serialising a Token ({{ser-token}}) to mem's token.
    2. Append id to output.
    3. For each parameter in mem's parameters:
       1. Append ";" to output.
@@ -520,7 +520,7 @@ Given an item as input_item:
 1. If input_item is an integer, return the result of applying Serialising an Integer ({{ser-integer}}) to input_item.
 2. If input_item is a float, return the result of applying Serialising a Float ({{ser-float}}) to input_item.
 3. If input_item is a string, return the result of applying Serialising a String ({{ser-string}}) to input_item.
-4. If input_item is an identifier, return the result of Serialising an Identifier ({{ser-identifier}}) to input_item.
+4. If input_item is a token, return the result of Serialising a Token ({{ser-token}}) to input_item.
 5. If input_item is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input_item.
 6. If input_item is a byte sequence, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input_item.
 7. Otherwise, fail serialisation.
@@ -565,13 +565,13 @@ Given a string as input_string:
 5. Return output.
 
 
-### Serialising an Identifier {#ser-identifier}
+### Serialising a Token {#ser-token}
 
-Given an identifier as input_identifier:
+Given a token as input_token:
 
-0. If input_identifier is not a sequence of characters, or contains characters not allowed in {{identifier}}, fail serialisation.
+0. If input_token is not a sequence of characters, or contains characters not allowed in {{token}}}, fail serialisation.
 1. Let output be an empty string.
-2. Append input_identifier to output, using ASCII encoding {{!RFC0020}}.
+2. Append input_token to output, using ASCII encoding {{!RFC0020}}.
 3. Return output.
 
 
@@ -634,7 +634,7 @@ Note that this has the effect of discarding any header field with non-ASCII char
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
-Given an ASCII string input_string, return an ordered map of (identifier, item). input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an ordered map of (key, item). input_string is modified to remove the parsed value.
 
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
@@ -721,9 +721,9 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
 
 ### Parsing a Parameterised Identifier from Text {#parse-param-id}
 
-Given an ASCII string input_string, return an identifier with an unordered map of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an token with an unordered map of parameters. input_string is modified to remove the parsed value.
 
-1. Let primary_identifier be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
+1. Let primary_identifier be the result of Parsing a Token from Text ({{parse-token}}) from input_string.
 2. Let parameters be an empty, unordered map.
 3. In a loop:
    1. Discard any leading OWS from input_string.
@@ -748,7 +748,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 2. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
 3. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
 4. If the first character of input_string is "?", process input_string as a Boolean ({{parse-boolean}}) and return the result.
-5. If the first character of input_string is an ALPHA, process input_string as an identifier ({{parse-identifier}}) and return the result.
+5. If the first character of input_string is an ALPHA, process input_string as a token ({{parse-token}}) and return the result.
 6. Otherwise, fail parsing.
 
 
@@ -801,9 +801,9 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 6. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
 
-### Parsing an Identifier from Text {#parse-identifier}
+### Parsing a Token from Text {#parse-token}
 
-Given an ASCII string input_string, return an identifier. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return a token. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
@@ -891,7 +891,7 @@ Example-Description: foo; url="https://example.net"; context=123,
                      bar; url="https://example.org"; context=456
 ~~~
 
-Since the description contains a list of key/value pairs, we use a Parameterised List to represent them, with the identifier for each item in the list used to identify it in the "descriptions" member of the Example-Thing header.
+Since the description contains a list of key/value pairs, we use a Parameterised List to represent them, with the token for each item in the list used to identify it in the "descriptions" member of the Example-Thing header.
 
 When specifying more than one header, it's important to remember to describe what a processor's behaviour should be when one of the headers is missing.
 
@@ -911,6 +911,7 @@ _RFC Editor: Please remove this section before publication._
 * Added "Intentionally Strict Processing" (#684).
 * Gave better names for referring specs to use in Parameterised Lists (#720).
 * Added Lists of Lists (#721).
+* Rename Identifier to Token (#725).
 
 
 ## Since draft-ietf-httpbis-header-structure-07
