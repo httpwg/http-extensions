@@ -231,7 +231,7 @@ Parsers MUST support lists containing at least 1024 members.
 
 ## Lists of Lists {#listlist}
 
-Lists are arrays of arrays containing items ({{item}}).
+Lists of Lists are arrays of arrays containing items ({{item}}).
 
 The ABNF for lists of lists in HTTP/1 headers is:
 
