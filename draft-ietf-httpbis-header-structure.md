@@ -861,6 +861,10 @@ of a Structured Header. In some circumstances, this will cause parsing to fail, 
 
 --- back
 
+# Acknowledgements
+
+Many thanks to Matthew Kerwin for his detailed feedback and careful consideration during the development of this specification.
+
 
 # Frequently Asked Questions {#faq}
 
