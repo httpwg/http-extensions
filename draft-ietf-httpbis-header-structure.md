@@ -904,7 +904,7 @@ If you need to fit arbitrarily complex data into a header, Structured Headers is
 
 ## What should generic Structured Headers implementations expose?
 
-A generic implementation should expose the top-level parse ({{#text-parse}}) and serialise ({{#text-serialise}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
+A generic implementation should expose the top-level parse ({{text-parse}}) and serialise ({{text-serialise}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
 For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community; see <https://github.com/httpwg/structured-header-tests>.
 
