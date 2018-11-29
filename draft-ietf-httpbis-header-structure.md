@@ -91,7 +91,7 @@ To specify a header field that is a Structured Header, see {{specify}}.
 Those abstract types can be serialised into and parsed from textual headers -- such as those used in HTTP/1 -- using the algorithms described in {{text}}.
 
 
-## Intentionally Strict Processing
+## Intentionally Strict Processing {#strict}
 
 This specification intentionally defines strict parsing and serialisation behaviours using step-by-step algorithms; the only error handling defined is to fail the operation altogether.
 
@@ -901,6 +901,12 @@ Since the description contains a list of key/value pairs, we use a Parameterised
 When specifying more than one header, it's important to remember to describe what a processor's behaviour should be when one of the headers is missing.
 
 If you need to fit arbitrarily complex data into a header, Structured Headers is probably a poor fit for your use case.
+
+## What should generic Structured Headers implementations expose?
+
+A generic implementation should expose the top-level parse ({{#text-parse}}) and serialise ({{#text-serialise}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
+
+For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community; see <https://github.com/httpwg/structured-header-tests>.
 
 
 # Changes
