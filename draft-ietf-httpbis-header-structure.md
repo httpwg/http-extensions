@@ -923,6 +923,7 @@ _RFC Editor: Please remove this section before publication._
 * Gave better names for referring specs to use in Parameterised Lists (#720).
 * Added Lists of Lists (#721).
 * Rename Identifier to Token (#725).
+* Add implementation guidance (#727).
 
 
 ## Since draft-ietf-httpbis-header-structure-07
