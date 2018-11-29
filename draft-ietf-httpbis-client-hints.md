@@ -54,7 +54,11 @@ informative:
 
 --- abstract
 
-This specification defines an extensible and configurable set of HTTP request header fields, colloquially known as Client Hints. They are intended to be used as input to proactive content negotiation; just as the Accept header field allows user agents to indicate what formats they prefer, Client Hints allow user agents to indicate device and agent specific preferences.
+HTTP defines proactive content negotiation to allow servers to select the appropriate response for a given request, based upon the user agent's characteristics, as expressed in request headers. In practice, clients are often unwilling to send those request headers, because it is not clear whether they will be used, and sending them impacts both performance and privacy.
+
+This specification defines a response header, Accept-CH, that servers can use to advertise their use of request headers for proactive content negotiation, along with a set of guidelines for the creation of such headers, colloquially known as "Client Hints."
+
+It also defines an initial set of Client Hints.
 
 
 --- note_Note_to_Readers
