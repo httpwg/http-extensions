@@ -83,7 +83,7 @@ One way to infer some of these capabilities is through User-Agent (Section 5.5.3
   - User agent detection requires an external device database
   - User agent detection is not cache friendly
 
-A popular alternative strategy is to use HTTP cookies ({{RFC6265}}) to communicate some information about the user agent. However, this approach is also not cache friendly, bound by same origin policy, and imposes additional client-side latency by requiring JavaScript execution to create and manage HTTP cookies.
+A popular alternative strategy is to use HTTP cookies ({{RFC6265}}) to communicate some information about the user agent. However, this approach is also not cache friendly, bound by same origin policy, and often imposes additional client-side latency by requiring JavaScript execution to create and manage HTTP cookies.
 
 This document defines a set of new request header fields that allow user agent to perform proactive content negotiation (Section 3.4.1 of {{RFC7231}}) by indicating device and agent specific preferences, through a mechanism similar to the Accept header field which is used to indicate preferred response formats.
 
