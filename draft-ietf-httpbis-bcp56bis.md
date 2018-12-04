@@ -325,7 +325,7 @@ enforces many of these best practices.
 Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported
 by clients. For example, requiring that clients support responses with a certain content-coding
 ({{?I-D.ietf-httpbis-semantics}}, Section 6.2.2) instead of negotiating for it
-({{?I-D.ietf-httpbis-semantics, Section 8.4.4) means that otherwise conformant clients cannot
+({{?I-D.ietf-httpbis-semantics}}, Section 8.4.4) means that otherwise conformant clients cannot
 interoperate with the application. Applications MAY encourage the implementation of such features,
 though.
 
