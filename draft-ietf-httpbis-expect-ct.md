@@ -805,6 +805,8 @@ Change controller:
 * Add optional "scheme" key to report format.
 * Specify exact status codes for report server errors.
 * Limit report-uris to HTTPS only.
+* Note that this version of Expect-CT is only compatible with RFC 6962 and
+  6962-bis, not any future versions of CT.
 
 ## Since -06
 
