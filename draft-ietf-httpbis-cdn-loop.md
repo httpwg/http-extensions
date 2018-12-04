@@ -45,7 +45,6 @@ informative:
     - name: Vern Paxson
     date: 2016/02/21
     seriesinfo:
-      ISBN: 1-891562-41-X
       DOI: 10.14722/ndss.2016.23442
     target: http://www.icir.org/vern/papers/cdn-loops.NDSS16.pdf
 
