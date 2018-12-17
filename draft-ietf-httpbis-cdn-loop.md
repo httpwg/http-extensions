@@ -114,7 +114,7 @@ CDN-Loop = #cdn-id
 cdn-id   = token *( OWS ";" OWS parameter )
 ~~~
 
-Conforming Content Delivery Networks SHOULD add a value to this header field to all requests they
+Conforming Content Delivery Networks SHOULD add a value to this header field in all requests they
 generate or forward (creating the header if necessary).
 
 The token identifies the CDN as a whole. Chosen token values SHOULD be unique enough that a
