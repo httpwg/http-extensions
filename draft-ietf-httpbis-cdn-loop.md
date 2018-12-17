@@ -75,7 +75,7 @@ between multiple CDNs be used as an attack vector (e.g., see {{loop-attack}}), e
 CDN unintentionally strips the loop detection headers of another.
 
 This specification defines the CDN-Loop request header field for HTTP to enable secure
-interoperability of forwarding CDNs. Having a header that is guaranteed not to be modified by other
+interoperability of forwarding CDNs. Having a header that will not be modified by other
 CDNs that are used by a shared customer helps give each CDN additional confidence that any purpose
 (debugging, data gathering, enforcement) that they use this header for is free from tampering due
 to how that customer configured the other CDNs.
