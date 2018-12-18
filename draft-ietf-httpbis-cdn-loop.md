@@ -52,7 +52,10 @@ informative:
 
 --- abstract
 
-This specification defines the CDN-Loop request header field for HTTP.
+This document defines the CDN-Loop request header field for HTTP. CDN-Loop addresses an operational
+need that occurs when an HTTP request is intentionally forwarded between Content Delivery Networks
+(CDNs), but is then accidentally or maliciously re-routed back into the original CDN causing a
+non-terminating loop. The new header field can be used to identify the error and terminate the loop.
 
 --- middle
 
