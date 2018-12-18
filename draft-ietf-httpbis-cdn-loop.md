@@ -126,7 +126,7 @@ As with all HTTP headers defined using the "#" rule, the CDN-Loop header can be 
 For example:
 
 ~~~ example
-CDN-Loop: FooCDN, barcdn; host="foo123.bar.cdn"
+CDN-Loop: FooCDN, barcdn; host="foo123.cdn.example"
 CDN-Loop: baz-cdn; abc="123"; def="456", anotherCDN
 ~~~
 
