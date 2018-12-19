@@ -159,6 +159,7 @@ It is possible to sign the contents of the header (either by putting the signatu
 the field's content, or using another header field), but such use is not defined (or required) by
 this specification.
 
+Depending on how it is used, CDN-Loop can expose information about the internal configuration of the CDN; for example, the number of hops inside the CDN, and the hostnames of nodes.
 
 
 # IANA Considerations
