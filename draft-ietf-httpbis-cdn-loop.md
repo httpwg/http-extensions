@@ -1,5 +1,5 @@
 ---
-title: CDN Loop Prevention
+title: CDN Loop Detection
 docname: draft-ietf-httpbis-cdn-loop-latest
 category: std
 
@@ -77,7 +77,7 @@ When this happens, it is difficult to debug. Additionally, it sometimes isn't ac
 between multiple CDNs can be used as an attack vector (e.g., see {{loop-attack}}), especially if one
 CDN unintentionally strips the loop detection headers of another.
 
-This specification defines the CDN-Loop HTTP request header field to help prevent such attacks and accidents among implementing forwarding CDNs, by disallowing its modification by their customers.
+This specification defines the CDN-Loop HTTP request header field to help detect such attacks and accidents among implementing forwarding CDNs, by disallowing its modification by their customers.
 
 
 ## Relationship to Via
@@ -106,7 +106,7 @@ Additionally, it uses the OWS rule from {{!RFC7230}} and the parameter rule from
 
 # The CDN-Loop Request Header Field {#header}
 
-The CDN-Loop request header field is intended to help a Content Delivery Network identify when an incoming request has already passed through that CDN's servers, to prevent loops.
+The CDN-Loop request header field is intended to help a Content Delivery Network identify when an incoming request has already passed through that CDN's servers, to detect loops.
 
 ~~~ abnf
 CDN-Loop = #cdn-id
