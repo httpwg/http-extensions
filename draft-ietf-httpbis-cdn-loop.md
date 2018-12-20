@@ -133,7 +133,7 @@ Note that the token syntax does not allow whitespace, DQUOTE or any of the chara
 "(),/:;<=>?@[\]{}". See {{!RFC7230}}, Section 3.2.6. Likewise, note the rules for when parameter
 values need to be quoted in {{!RFC7231}}, Section 3.1.1.
 
-To be effective, intermediaries -- including Content Delivery Networks -- MUST NOT remove this
+To be effective, intermediaries -- including Content Delivery Networks -- must not remove this
 header field, or allow it to be removed (e.g., through configuration) and servers (including
 intermediaries) SHOULD NOT use it for other purposes.
 
