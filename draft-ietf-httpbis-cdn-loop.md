@@ -74,14 +74,10 @@ because routing is achieved through a combination of DNS and forwarding rules, a
 configurations are sometimes complex and managed by several parties.
 
 When this happens, it is difficult to debug. Additionally, it sometimes isn't accidental; loops
-between multiple CDNs be used as an attack vector (e.g., see {{loop-attack}}), especially if one
+between multiple CDNs can be used as an attack vector (e.g., see {{loop-attack}}), especially if one
 CDN unintentionally strips the loop detection headers of another.
 
-This specification defines the CDN-Loop request header field for HTTP to enable secure
-interoperability of forwarding CDNs. Having a header that will not be modified by other
-CDNs that are used by a shared customer helps give each CDN additional confidence that any purpose
-(debugging, data gathering, enforcement) that they use this header for is free from tampering due
-to how that customer configured the other CDNs.
+This specification defines the CDN-Loop HTTP request header field to help prevent such attacks and accidents among implementing forwarding CDNs, by disallowing its modification by their customers.
 
 
 ## Relationship to Via
