@@ -133,10 +133,12 @@ Note that the token syntax does not allow whitespace, DQUOTE or any of the chara
 "(),/:;<=>?@[\]{}". See {{!RFC7230}}, Section 3.2.6. Likewise, note the rules for when parameter
 values need to be quoted in {{!RFC7231}}, Section 3.1.1.
 
-To be effective, intermediaries -- including Content Delivery Networks -- must not remove this
-header field, or allow it to be removed (e.g., through configuration) and servers (including
-intermediaries) SHOULD NOT use it for other purposes.
-
+The effectiveness of this mechanism relies on all intermediaries preserving the header field, since
+removing (or allowing it to be removed, e.g., by customer configuration) would prevent downstream
+CDNs from using it to detect looping. In general, unknown header fields are not removed by
+intermediaries, but there may be need to add CDN-Loop to an implementation's list of header fields
+that are not to be removed under any circumstances. The header field SHOULD NOT be used for other
+purposes.
 
 # Security Considerations
 
