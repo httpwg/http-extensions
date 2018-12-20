@@ -141,7 +141,7 @@ intermediaries) SHOULD NOT use it for other purposes.
 # Security Considerations
 
 The threat model that the CDN-Loop header field addresses is a customer who is attempting to attack
-a service provider by configuring a forwarding loop by accident or malice. For it to function, CDNs cannot allow it to be modified by customers (see {{header}}).
+a service provider by configuring a forwarding loop by accident or malice. For it to function, CDNs cannot allow customers to modify or remove it in their configuration (see {{header}}).
 
 Note that a CDN that allows customers to remove or modify the CDN-Loop header field (i.e., they do
 not implement this specification) remains an attack vector against both implementing and
