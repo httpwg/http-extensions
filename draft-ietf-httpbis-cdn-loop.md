@@ -128,8 +128,12 @@ As with all HTTP header fields defined using the "#" rule, the CDN-Loop header f
 For example:
 
 ~~~ example
+GET /image.jpg HTTP/1.1
+Host: cdn-customer.example
+User-Agent: ExampleBrowser/5
 CDN-Loop: foo123.foocdn.example, barcdn.example; trace="abcdef"
 CDN-Loop: AnotherCDN; abc=123; def="456"
+
 ~~~
 
 Note that the pseudonym syntax does not allow whitespace, DQUOTE or any of the characters
