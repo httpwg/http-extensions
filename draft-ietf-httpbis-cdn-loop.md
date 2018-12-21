@@ -101,7 +101,8 @@ shown here.
 This specification uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} with a list
 extension, defined in Section 7 of {{!RFC7230}}, that allows for compact definition of
 comma-separated lists using a ‘#’ operator (similar to how the ‘*’ operator indicates repetition).
-Additionally, it uses the OWS rule from {{!RFC7230}} and the parameter rule from {{!RFC7231}}.
+Additionally, it uses the token, OWS, uri-host and port rules from {{!RFC7230}} and the parameter
+rule from {{!RFC7231}}.
 
 
 # The CDN-Loop Request Header Field {#header}
@@ -109,27 +110,29 @@ Additionally, it uses the OWS rule from {{!RFC7230}} and the parameter rule from
 The CDN-Loop request header field is intended to help a Content Delivery Network identify when an incoming request has already passed through that CDN's servers, to detect loops.
 
 ~~~ abnf
-CDN-Loop = #cdn-id
-cdn-id   = token *( OWS ";" OWS parameter )
+CDN-Loop  = #cdn-info
+cdn-info  = cdn-id *( OWS ";" OWS parameter )
+cdn-id    = ( uri-host [ ":" port ] ) / pseudonym
+pseudonym = token
 ~~~
 
-Conforming Content Delivery Networks SHOULD add a value to this header field in all requests they
-generate or forward (creating the header field if necessary).
+The cdn-id identifies the CDN using either a hostname under its control or a pseudonym; hostnames
+are preferred, to help avoid accidental collisions. Optionally, cdn-info can have
+semicolon-separated key/value parameters, to accommodate additional information for the CDN's use.
 
-The token identifies the CDN as a whole. Chosen token values SHOULD be unique enough that a
-collision with other CDNs is unlikely. Optionally, the token can have semicolon-separated key/value
-parameters, to accommodate additional information for the CDN's use.
+Conforming Content Delivery Networks SHOULD add a cdn-info to this header field in all requests they
+generate or forward (creating the header field if necessary).
 
 As with all HTTP header fields defined using the "#" rule, the CDN-Loop header field can be added to by comma-separating values, or by creating a new header field with the desired value.
 
 For example:
 
 ~~~ example
-CDN-Loop: FooCDN, barcdn; host="foo123.cdn.example"
-CDN-Loop: baz-cdn; abc="123"; def="456", anotherCDN
+CDN-Loop: foo123.foocdn.example, barcdn.example; trace="abcdef"
+CDN-Loop: AnotherCDN; abc=123; def="456"
 ~~~
 
-Note that the token syntax does not allow whitespace, DQUOTE or any of the characters
+Note that the pseudonym syntax does not allow whitespace, DQUOTE or any of the characters
 "(),/:;<=>?@[\]{}". See {{!RFC7230}}, Section 3.2.6. Likewise, note the rules for when parameter
 values need to be quoted in {{!RFC7231}}, Section 3.1.1.
 
