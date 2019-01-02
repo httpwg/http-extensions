@@ -11,7 +11,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### CDN Loop Prevention
 
-_WGLC Ended_
+*Sent to IESG*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cdn-loop.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-cdn-loop.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cdn-loop) (less recent, more official)
@@ -26,6 +26,8 @@ _WGLC Ended_
 
 
 ### Using HTTP as a Substrate (BCP56bis)
+
+*WGLC concluded*
 
 * [Editors' Draft](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-bcp56bis.html) ([plain text](https://httpwg.github.io/http-extensions/draft-ietf-httpbis-bcp56bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-bcp56bis) (less recent, more official)
