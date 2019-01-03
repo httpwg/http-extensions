@@ -248,8 +248,8 @@ Given incoming-request (a mapping of field-names to lists of field values), and 
 1. If stored-responses is empty, return an empty list.
 2. Order stored-responses by the "Date" header field, most recent to least recent.
 3. Let sorted-variants be an empty list.
-4. If the freshest member of stored-responses (as per {{!RFC7234}}, Section 4.2) has one or more "Variants" header field(s):
-   1. Select one member of stored-responses and let variants-header be its "Variants" header field-value(s), parsed according to {{variants}}. This SHOULD be the most recent response, but MAY be from an older one as long as it is still fresh.
+4. If the freshest member of stored-responses (as per {{!RFC7234}}, Section 4.2) has one or more "Variants" header field(s) that successfully parse according to {{variants}}:
+   1. Select one member of stored-responses with a "Variants" header field-value(s) that successfully parses according to {{variants}} and let variants-header be this parsed value. This SHOULD be the most recent response, but MAY be from an older one as long as it is still fresh.
    2. For each variant-axis in variants-header:
       1. If variant-axis' field-name corresponds to the request header field identified by a content negotiation mechanism that the implementation supports:
          1. Let request-value be the field-value associated with field-name in incoming-request (after being combined as allowed by Section 3.2.2 of {{RFC7230}}), or null if field-name is not in incoming-request.
