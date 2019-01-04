@@ -219,6 +219,8 @@ Variant-Key: gzip;fr, "identity";fr
 
 indicates that this response can be used for requests whose Accept-Encoding algorithm selects "gzip" or "identity", as long as the Accept-Language algorithm selects "fr" -- perhaps because there is no gzip-compressed French representation.
 
+When more than one Variant-Key value is in a response, the first one present MUST correspond to the request that caused that response to be generated.
+
 Parsing is strict. For example:
 
 ~~~ example
