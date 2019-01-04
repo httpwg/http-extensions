@@ -341,7 +341,7 @@ it could be used to satisfy the first preference. If not, responses correspondin
 
 ### A Variant Missing From the Cache
 
-If the selected `variants-header` was:
+If the selected variants-header was:
 
 ~~~ example
 Variants: Accept-Language;en;fr;de
@@ -353,7 +353,7 @@ And a request comes in with the following headers:
 Accept-Language: de;q=1.0, es;q=0.8
 ~~~
 
-Then the `sorted-variants` in {{cache}}{:format="title"} is:
+Then sorted-variants in {{cache}}{:format="title"} is:
 
 ~~~ example
 [
@@ -368,11 +368,11 @@ Variant-Key: fr
 Variant-Key: en
 ~~~
 
-Then the cache needs to forward the request to the origin server, since `Variants` indicates that `de` is available, and that is acceptable to the client.
+Then the cache needs to forward the request to the origin server, since Variants indicates that "de" is available, and that is acceptable to the client.
 
 ### Variants That Don't Overlap the Client's Request
 
-If the selected `variants-header` was:
+If the selected variants-header was:
 
 ~~~ example
 Variants: Accept-Language;en;fr;de
@@ -384,7 +384,7 @@ And a request comes in with the following headers:
 Accept-Language: es;q=1.0, ja;q=0.8
 ~~~
 
-Then the `sorted-variants` in {{cache}}{:format="title"} are:
+Then sorted-variants in {{cache}}{:format="title"} are:
 
 ~~~ example
 [
@@ -392,7 +392,7 @@ Then the `sorted-variants` in {{cache}}{:format="title"} are:
 ]
 ~~~
 
-This allows the cache to return a `Variant-Key: en` response even though it's not in the set the client prefers.
+This allows the cache to return a "Variant-Key: en" response even though it's not in the set the client prefers.
 
 # Origin Server Behaviour {#origin}
 
