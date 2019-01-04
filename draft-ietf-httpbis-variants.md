@@ -361,14 +361,6 @@ Then the `sorted-variants` in {{cache}}{:format="title"} is:
 ]
 ~~~
 
-{{cache}}{:format="title"} returns:
-
-~~~ example
-[
-  'de'
-]
-~~~
-
 If the cache contains responses with the following Variant-Keys:
 
 ~~~ example
@@ -376,7 +368,7 @@ Variant-Key: fr
 Variant-Key: en
 ~~~
 
-Then the cache needs to forward the request to the origin server, since it offered an exact match to the client's request, `Variant-Key: de`.
+Then the cache needs to forward the request to the origin server, since `Variants` indicates that `de` is available, and that is acceptable to the client.
 
 ### Variants That Don't Overlap the Client's Request
 
@@ -392,19 +384,11 @@ And a request comes in with the following headers:
 Accept-Language: es;q=1.0, ja;q=0.8
 ~~~
 
-Then the `sorted-variants` in {{cache}}{:format="title"} can be:
+Then the `sorted-variants` in {{cache}}{:format="title"} are:
 
 ~~~ example
 [
   ["en"]
-]
-~~~
-
-or
-
-~~~ example
-[
-  []
 ]
 ~~~
 
@@ -575,9 +559,7 @@ To perform content negotiation for Accept given a request-value and available-va
 2. Let preferred-types be a list of the types in the request-value (or the empty list if request-value is null), ordered by their weight, highest to lowest, as per Section 5.3.2 of {{!RFC7231}} (omitting any coding with a weight of 0). If a type lacks an explicit weight, an implementation MAY assign one.
 3. For each preferred-type in preferred-types:
    1. If any member of available-values matches preferred-type, using the media-range matching mechanism specified in Section 5.3.2 of {{!RFC7231}} (which is case-insensitive), append those members of available-values to preferred-available (preserving the precedence order implied by the media ranges' specificity).
-4. If preferred-available is empty, the cache MAY append the first member of available-values to preferred-available.
-
-   This matches the choice in {{RFC7231}} to "either honor the header field by sending a 406 (Not Acceptable) response or disregard the header field by treating the response as if it is not subject to content negotiation."
+4. If preferred-available is empty, append the first member of available-values to preferred-available. This makes the first available-value the default when none of the client's preferences are available.
 5. Return preferred-available.
 
 Note that this algorithm explicitly ignores extension parameters on media types (e.g., "charset").
@@ -597,7 +579,7 @@ To perform content negotiation for Accept-Encoding given a request-value and ava
 
 1. Let preferred-available be an empty list.
 2. Let preferred-codings be a list of the codings in the request-value (or the empty list if request-value is null), ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any coding with a weight of 0). If a coding lacks an explicit weight, an implementation MAY assign one.
-3. If "identity" is not a member of preferred-codings, and it is not specifically excluded by the request-value stating either "identity;q=0" or "*;q=0" without a more specific entry for "identity", append "identity" to preferred-codings.
+3. If "identity" is not a member of preferred-codings, append "identity".
 4. Append "identity" to available-values.
 5. For each preferred-coding in preferred-codings:
    1. If there is a case-insensitive, character-for-character match for preferred-coding in available-values, append that member of available-values to preferred-available.
@@ -621,9 +603,7 @@ To perform content negotiation for Accept-Language given a request-value and ava
 2. Let preferred-langs be a list of the language-ranges in the request-value (or the empty list if request-value is null), ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any language-range with a weight of 0). If a language-range lacks a weight, an implementation MAY assign one.
 3. For each preferred-lang in preferred-langs:
    1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in Section 3.3 of {{!RFC4647}}, append those members of available-values to preferred-available (preserving their order).
-4. If preferred-available is empty, the cache MAY append the first member of available-values to preferred-available.
-
-   This matches the choice in {{RFC7231}} to "either disregard the header field by treating the response as if it is not subject to content negotiation or honor the header field by sending a 406 (Not Acceptable) response.  However, the latter is not encouraged, as doing so can prevent users from accessing content that they might be able to use (with translation software, for example)."
+4. If preferred-available is empty, append the first member of available-values to preferred-available. This makes the first available-value the default when none of the client's preferences are available.
 5. Return preferred-available.
 
 
