@@ -248,7 +248,7 @@ Given incoming-request (a mapping of field-names to lists of field values), and 
    1. Select one member of stored-responses and let variants-header be its "Variants" header field-value(s). This SHOULD be the most recent response, but MAY be from an older one as long as it is still fresh.
    3. For each variant in variants-header, parsed according to the ABNF:
       1. If variant's field-name corresponds to the request header field identified by a content negotiation mechanism that the implementation supports:
-         1. Let request-value be the field-value(s) associated with field-name in incoming-request.
+         1. Let request-value be the field-value associated with field-name in incoming-request (after being combined as allowed by Section 3.2.2 of {{RFC7230}}), or null if field-name is not in incoming-request.
          2. Let available-values be a list containing all available-value for variant.
          3. Let sorted-values be the result of running the algorithm defined by the content negotiation mechanism with request-value and available-values.
          4. Append sorted-values to sorted-variants.
@@ -450,7 +450,7 @@ To be usable with Variants, proactive content negotiation mechanisms need to be 
 
 * MUST define a request header field that advertises the clients preferences or capabilities, whose field-name SHOULD begin with "Accept-".
 * MUST define the syntax of an available-value that will occur in Variants and Variant-Key.
-* MUST define an algorithm for selecting a result. It MUST return a list of available-values that are suitable for the request, in order of preference, given the value of the request header nominated above and an available-values list from the Variants header. If the result is an empty list, it implies that the cache cannot satisfy the request.
+* MUST define an algorithm for selecting a result. It MUST return a list of available-values that are suitable for the request, in order of preference, given the value of the request header nominated above (or null if the request header is absent) and an available-values list from the Variants header. If the result is an empty list, it implies that the cache cannot satisfy the request.
 
 {{backports}} fulfils these requirements for some existing proactive content negotiation mechanisms in HTTP.
 
@@ -502,7 +502,7 @@ accept-available-value = type "/" subtype
 To perform content negotiation for Accept given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-types be a list of the types in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.2 of {{!RFC7231}} (omitting any coding with a weight of 0). If "Accept" is not present or empty, preferred-types will be empty. If a type lacks an explicit weight, an implementation MAY assign one.
+2. Let preferred-types be a list of the types in the request-value (or the empty list if request-value is null), ordered by their weight, highest to lowest, as per Section 5.3.2 of {{!RFC7231}} (omitting any coding with a weight of 0). If a type lacks an explicit weight, an implementation MAY assign one.
 3. If the first member of available-values is not a member of preferred-types, append it to preferred-types (thus making it the default).
 4. For each preferred-type in preferred-types:
    1. If any member of available-values matches preferred-type, using the media-range matching mechanism specified in Section 5.3.2 of {{!RFC7231}} (which is case-insensitive), append those members of available-values to preferred-available (preserving the precedence order implied by the media ranges' specificity).
@@ -524,7 +524,7 @@ accept-encoding-available-value = content-coding / "identity"
 To perform content negotiation for Accept-Encoding given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-codings be a list of the codings in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any coding with a weight of 0). If "Accept-Encoding" is not present or empty, preferred-codings will be empty. If a coding lacks an explicit weight, an implementation MAY assign one.
+2. Let preferred-codings be a list of the codings in the request-value (or the empty list if request-value is null), ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any coding with a weight of 0). If a coding lacks an explicit weight, an implementation MAY assign one.
 3. If "identity" is not a member of preferred-codings, append "identity".
 4. Append "identity" to available-values.
 5. For each preferred-coding in preferred-codings:
@@ -546,7 +546,7 @@ accept-encoding-available-value = language-range
 To perform content negotiation for Accept-Language given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-langs be a list of the language-ranges in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any language-range with a weight of 0). If a language-range lacks a weight, an implementation MAY assign one.
+2. Let preferred-langs be a list of the language-ranges in the request-value (or the empty list if request-value is null), ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any language-range with a weight of 0). If a language-range lacks a weight, an implementation MAY assign one.
 3. If the first member of available-values is not a member of preferred-langs, append it to preferred-langs (thus making it the default).
 4. For each preferred-lang in preferred-langs:
    1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in Section 3.3 of {{!RFC4647}}, append those members of available-values to preferred-available (preserving their order).
