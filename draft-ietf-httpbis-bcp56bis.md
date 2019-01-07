@@ -303,6 +303,9 @@ For example, an application might specify:
     related information in the link indicated by the Link header field
     value with the "example-other-info" link relation type.
 
+Applications can also specify the use of URI Templates {{?RFC6570}} to allow clients to generate
+URLs based upon runtime data.
+
 
 ## Specifying Client Behaviours {#clients}
 
