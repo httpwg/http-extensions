@@ -205,7 +205,7 @@ Variant-Key: gzip;fr
 
 This header pair indicates that the representation has a "gzip" content-coding and "fr" content-language.
 
-If the response can be used to satisfy more than one request), they can be listed in additional members.  For example:
+If the response can be used to satisfy more than one request, they can be listed in additional members.  For example:
 
 ~~~ example
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
