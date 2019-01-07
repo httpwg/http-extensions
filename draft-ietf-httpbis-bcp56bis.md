@@ -430,8 +430,8 @@ an application's specification.
 
 ### GET
 
-GET is one of the most common and useful HTTP methods; its retrieval semantics allow caching,
-side-effect free linking and underlies many of the benefits of using HTTP.
+GET is the most common and useful HTTP method; its retrieval semantics allow caching, side-effect
+free linking and underlies many of the benefits of using HTTP.
 
 A common use of GET is to perform queries, often using the query component of the URL; this is
 a familiar pattern from Web browsing, and the results can be cached, improving efficiency of an
