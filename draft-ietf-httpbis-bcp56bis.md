@@ -116,10 +116,10 @@ shown here.
 Different applications have different goals when using HTTP. The requirements in this document
 apply when any of the following conditions are true:
 
-* The transport port in use is 80 or 443,
-* The URL scheme "http" or "https" is used,
-* The ALPN protocol ID {{!RFC7301}} generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
-* The IANA registries defined for HTTP are updated or modified.
+* the transport port in use is 80 or 443,
+* the URL scheme "http" or "https" is used,
+* the ALPN protocol ID {{!RFC7301}} generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
+* the IANA registries defined for HTTP are updated or modified.
 
 When an application is using HTTP, all of the requirements of the HTTP protocol suite are in force
 (including but not limited to {{!I-D.ietf-httpbis-semantics}}, {{!I-D.ietf-httpbis-cache}}, {{!I-D.ietf-httpbis-messaging}}, and {{!RFC7540}}).
@@ -276,16 +276,16 @@ Server: Bar/2.2
 Applications that use HTTP should focus on defining the following application-specific protocol
 elements:
 
-* Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
+* media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
 * HTTP header fields, as per {{headers}}, and
-* The behaviour of resources, as identified by link relations {{!RFC8288}}.
+* the behaviour of resources, as identified by link relations {{!RFC8288}}.
 
 By composing these protocol elements, an application can define a set of resources, identified by
 link relations, that implement specified behaviours, including:
 
-* Retrieval of their state using GET, in one or more formats identified by media type;
-* Resource creation or update using POST or PUT, with an appropriately identified request body format;
-* Data processing using POST and identified request and response body format(s); and
+* retrieval of their state using GET, in one or more formats identified by media type;
+* resource creation or update using POST or PUT, with an appropriately identified request body format;
+* data processing using POST and identified request and response body format(s); and
 * Resource deletion using DELETE.
 
 For example, an application might specify:
@@ -748,12 +748,12 @@ follow best practices for their secure development.
 A complete enumeration of such practices is out of scope for this document, but some considerations
 include:
 
-* Using an application-specific media type in the Content-Type header, and requiring clients to fail if it is not used
-* Using X-Content-Type-Options: nosniff {{FETCH}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser
-* Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML5}}), thereby mitigating Cross-Site Scripting attacks
-* Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header
-* Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?I-D.ietf-httpbis-rfc6265bis}}
-* Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the path of the communication, they can use this capability to recover that information
+* Using an application-specific media type in the Content-Type header, and requiring clients to fail if it is not used.
+* Using X-Content-Type-Options: nosniff {{FETCH}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser.
+* Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML5}}), thereby mitigating Cross-Site Scripting attacks.
+* Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header.
+* Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?I-D.ietf-httpbis-rfc6265bis}}.
+* Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the path of the communication, they can use this capability to recover that information.
 
 Depending on how they are intended to be deployed, specifications for applications using HTTP might
 require the use of these mechanisms in specific ways, or might merely point them out in Security
@@ -837,9 +837,9 @@ It's often necessary to introduce new features into application protocols, and c
 
 In HTTP, backwards-incompatible changes are possible using a number of mechanisms:
 
-* Using a distinct link relation type {{!RFC8288}} to identify a URL for a resource that implements the new functionality
-* Using a distinct media type {{!RFC6838}} to identify formats that enable the new functionality
-* Using a distinct HTTP header field to implement new functionality outside the message body
+* Using a distinct link relation type {{!RFC8288}} to identify a URL for a resource that implements the new functionality.
+* Using a distinct media type {{!RFC6838}} to identify formats that enable the new functionality.
+* Using a distinct HTTP header field to implement new functionality outside the message body.
 
 
 # IANA Considerations
