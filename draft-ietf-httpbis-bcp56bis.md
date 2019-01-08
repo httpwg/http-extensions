@@ -566,9 +566,10 @@ method from POST (but no other method) to GET, to be compatible with browsers.
 Generally, when a redirected request is made, its header fields are copied from the original
 request's. However, they can be modified by various mechanisms; e.g., sent Authorization
 ({{?I-D.ietf-httpbis-semantics}}) and Cookie ({{?I-D.ietf-httpbis-rfc6265bis}}) headers will change
-if the origin (and sometimes path) of the request changes. Applications using HTTP SHOULD specify
-if any request headers need to be modified or removed upon a redirect; however, this behaviour
-cannot be relied upon, since a generic client (like a browser) will be unaware of such requirements.
+if the origin (and sometimes path) of the request changes. An application using HTTP SHOULD specify
+if any request headers that it defines need to be modified or removed upon a redirect; however,
+this behaviour cannot be relied upon, since a generic client (like a browser) will be unaware of
+such requirements.
 
 
 ## HTTP Header Fields {#headers}
