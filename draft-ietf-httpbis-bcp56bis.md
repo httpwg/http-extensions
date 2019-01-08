@@ -364,7 +364,7 @@ For example, rather than specifying "the initial document is at "/foo/v1", they 
 deployment to use any URL as the entry point for the application.
 
 In cases where doing so is impractical (e.g., it is not possible to convey a whole URL, but only a
-hostname) applications can request a well-known URL {{?I-D.nottingham-rfc5785bis}} as an entry
+hostname) applications can request a well-known URI {{?I-D.nottingham-rfc5785bis}} as an entry
 point.
 
 
