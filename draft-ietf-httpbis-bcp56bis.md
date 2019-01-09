@@ -458,7 +458,7 @@ consider allowing both methods.
 
 Applications should not change their state or have other side effects that might be significant to
 the client, since implementations can and do retry HTTP GET requests that fail. Note that this does
-ynot include logging and similar functions; see {{!I-D.ietf-httpbis-semantics}}, Section 7.2.1.
+not include logging and similar functions; see {{!I-D.ietf-httpbis-semantics}}, Section 7.2.1.
 
 Finally, note that while HTTP allows GET requests to have a body syntactically, this is done only
 to allow parsers to be generic; as per {{!I-D.ietf-httpbis-semantics}}, Section 7.3.1, a body on a
