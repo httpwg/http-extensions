@@ -377,6 +377,9 @@ sh-token = ALPHA *( ALPHA / DIGIT / "_" / "-" / "." / ":" / "%" / "*" / "/" )
 
 Parsers MUST support tokens with at least 512 characters.
 
+Note that a Structured Header token is not the same as the "token" ABNF rule defined in
+{{?RFC7230}}.
+
 
 ## Byte Sequences {#binary}
 
