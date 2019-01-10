@@ -305,6 +305,10 @@ For example:
 Example-IntegerHeader: 42
 ~~~
 
+Parsers MUST accurately support integers in the range -9,007,199,254,740,991 to
+9,007,199,254,740,991 inclusive (i.e., -2^53+1 to 2^53-1) at a minimum, and MUST fail parsing on
+values outside this range if they are not supported by the parser.
+
 
 ## Floats {#float}
 
@@ -777,7 +781,8 @@ NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and 
    6. If type is "float" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
    1. Parse input_number as an integer and let output_number be the product of the result and sign.
-   2. If output_number is outside the range defined in {{integer}}, fail parsing.
+   2. If output_number is outside the range for integers defined in {{integer}}, fail parsing.
+   3. If output_number is not supported accurately by the implementation (as noted in {{integer}}), fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
    2. Parse input_number as a float and let output_number be the product of the result and sign.
