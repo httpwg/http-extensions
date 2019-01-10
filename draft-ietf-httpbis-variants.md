@@ -173,6 +173,10 @@ Origin servers SHOULD consistently send Variant header fields on all cacheable (
 
 Likewise, servers MUST send the Variant-Key response header field when sending Variants, since its absence means that the stored response will not be reused when this specification is implemented.
 
+*RFC EDITOR: Please remove the next paragraph before publication.*
+
+Implementations of drafts of this specification MUST implement an HTTP header field named "Variants-##" instead of the "Variants" header field specified by the final RFC, with "##" replaced by the draft number being implemented. For example, implementations of draft-ietf-httpbis-variants-05 would implement "Variants-05".
+
 
 ## Relationship to Vary {#vary}
 
@@ -238,6 +242,11 @@ Variant-Key: "gzip ";fr
 ~~~
 
 The whitespace after "gzip" in the first header field value is excluded by the token parsing algorithm, but the whitespace in the second header field value is included by the string parsing algorithm. This will likely cause the second header field value to fail to match client requests.
+
+*RFC EDITOR: Please remove the next paragraph before publication.*
+
+Implementations of drafts of this specification MUST implement an HTTP header field named "Variant-Key-##" instead of the "Variant-Key" header field specified by the final RFC, with "##" replaced by the draft number being implemented. For example, implementations of draft-ietf-httpbis-variants-05 would implement "Variant-Key-05".
+
 
 # Cache Behaviour {#cache}
 
