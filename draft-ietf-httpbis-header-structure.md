@@ -306,8 +306,8 @@ Example-IntegerHeader: 42
 ~~~
 
 Parsers MUST accurately support integers in the range -9,007,199,254,740,991 to
-9,007,199,254,740,991 inclusive (i.e., -2^53+1 to 2^53-1) at a minimum, and MUST fail parsing on
-values outside this range if they are not supported by the parser.
+9,007,199,254,740,991 inclusive (i.e., -2^53+1 to 2^53-1) at a minimum. Parsers MUST fail parsing
+on values not within the range supported accurately.
 
 
 ## Floats {#float}
