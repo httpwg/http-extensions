@@ -932,6 +932,7 @@ _RFC Editor: Please remove this section before publication._
 * Added Lists of Lists (#721).
 * Rename Identifier to Token (#725).
 * Add implementation guidance (#727).
+* Require minimum range for integers, and predictable failure (#737).
 
 
 ## Since draft-ietf-httpbis-header-structure-07
