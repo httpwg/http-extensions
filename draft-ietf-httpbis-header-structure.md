@@ -279,41 +279,23 @@ Parsers MUST support parameterised lists containing at least 1024 members, suppo
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
+An item is can be a number ({{number}}), string ({{string}}), token ({{token}}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
 
 The ABNF for items in HTTP/1 headers is:
 
 ~~~ abnf
-sh-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
-          / sh-boolean
+sh-item = sh-number / sh-string / sh-token / sh-binary / sh-boolean
 ~~~
 
 
-## Integers {#integer}
+## Numbers {#number}
 
-Integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive (i.e., a 64-bit signed integer).
+Numbers have an integer and an optional fractional part and can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
 
-The ABNF for integers in HTTP/1 headers is:
+The ABNF for numbers in HTTP/1 headers is:
 
 ~~~ abnf
-sh-integer = ["-"] 1*19DIGIT
-~~~
-
-For example:
-
-~~~ example
-Example-IntegerHeader: 42
-~~~
-
-
-## Floats {#float}
-
-Floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
-
-The ABNF for floats in HTTP/1 headers is:
-
-~~~ abnf
-sh-float    = ["-"] (
+sh-number    = ["-"] (
              DIGIT "." 1*14DIGIT /
             2DIGIT "." 1*13DIGIT /
             3DIGIT "." 1*12DIGIT /
@@ -327,13 +309,14 @@ sh-float    = ["-"] (
            11DIGIT "." 1*4DIGIT /
            12DIGIT "." 1*3DIGIT /
            13DIGIT "." 1*2DIGIT /
-           14DIGIT "." 1DIGIT )
+           14DIGIT "." 1DIGIT /
+           15DIGIT )
 ~~~
 
-For example, a header whose value is defined as a float could look like:
+For example, a header whose value is defined as a number could look like:
 
 ~~~ example
-Example-FloatHeader: 4.5
+Example-NumberHeader: 4.5
 ~~~
 
 
@@ -521,36 +504,24 @@ Given a parameterised list as input_plist:
 
 Given an item as input_item:
 
-1. If input_item is an integer, return the result of applying Serialising an Integer ({{ser-integer}}) to input_item.
-2. If input_item is a float, return the result of applying Serialising a Float ({{ser-float}}) to input_item.
-3. If input_item is a string, return the result of applying Serialising a String ({{ser-string}}) to input_item.
-4. If input_item is a token, return the result of Serialising a Token ({{ser-token}}) to input_item.
-5. If input_item is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input_item.
-6. If input_item is a byte sequence, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input_item.
-7. Otherwise, fail serialisation.
+1. If input_item is an number, return the result of applying Serialising a Number ({{ser-number}}) to input_item.
+2. If input_item is a string, return the result of applying Serialising a String ({{ser-string}}) to input_item.
+3. If input_item is a token, return the result of Serialising a Token ({{ser-token}}) to input_item.
+4. If input_item is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input_item.
+5. If input_item is a byte sequence, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input_item.
+6. Otherwise, fail serialisation.
 
 
-### Serialising an Integer {#ser-integer}
+### Serialising a Number {#ser-number}
 
-Given an integer as input_integer:
+Given a number as input_number:
 
-0. If input_integer is not an integer in the range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive, fail serialisation.
+0. If input_number is not representable in a IEEE 754 double precision number, fail serialisation.
 1. Let output be an empty string.
-2. If input_integer is less than (but not equal to) 0, append "-" to output.
-3. Append input_integer's numeric value represented in base 10 using only decimal digits to output.
-4. Return output.
-
-
-### Serialising a Float {#ser-float}
-
-Given a float as input_float:
-
-0. If input_float is not a IEEE 754 double precision number, fail serialisation.
-1. Let output be an empty string.
-2. If input_float is less than (but not equal to) 0, append "-" to output.
-3. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+2. If input_number is less than (but not equal to) 0, append "-" to output.
+3. Append input_number's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
 4. Append "." to output.
-5. Append input_float's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+5. Append input_number's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
 6. Return output.
 
 
@@ -629,7 +600,7 @@ For Lists, Lists of Lists, Parameterised Lists and Dictionaries, this has the ef
 
 Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serialiser or the parser.
 
-Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
+Numbers and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
 
@@ -760,28 +731,20 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 
 Given an ASCII string input_string, return a number. input_string is modified to remove the parsed value.
 
-NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and returns the corresponding structure.
-
-1. Let type be "integer".
-2. Let sign be 1.
-3. Let input_number be an empty string.
-4. If the first character of input_string is "-", remove it from input_string and set sign to -1.
-5. If input_string is empty, fail parsing.
-6. If the first character of input_string is not a DIGIT, fail parsing.
-7. While input_string is not empty:
+1. Let sign be 1.
+2. Let input_number be an empty string.
+3. If the first character of input_string is "-", remove it from input_string and set sign to -1.
+4. If input_string is empty, fail parsing.
+5. If the first character of input_string is not a DIGIT, fail parsing.
+6. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
    2. If char is a DIGIT, append it to input_number.
-   3. Else, if type is "integer" and char is ".", append char to input_number and set type to "float".
+   3. Else, if char is ".", append char to input_number.
    4. Otherwise, prepend char to input_string, and exit the loop.
-   5. If type is "integer" and input_number contains more than 19 characters, fail parsing.
-   6. If type is "float" and input_number contains more than 16 characters, fail parsing.
-8. If type is "integer":
-   1. Parse input_number as an integer and let output_number be the product of the result and sign.
-   2. If output_number is outside the range defined in {{integer}}, fail parsing.
-9. Otherwise:
-   1. If the final character of input_number is ".", fail parsing.
-   2. Parse input_number as a float and let output_number be the product of the result and sign.
-0. Return output_number.
+   5. If input_number contains more than 16 characters, fail parsing.
+7. If the final character of input_number is ".", fail parsing.
+8. Parse input_number as a number and let output_number be the product of the result and sign.
+9. Return output_number.
 
 
 ### Parsing a String from Text {#parse-string}
