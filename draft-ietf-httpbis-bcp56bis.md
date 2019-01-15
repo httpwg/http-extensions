@@ -252,7 +252,7 @@ Applications using HTTP MUST NOT specify a maximum version, to preserve the prot
 evolve.
 
 When specifying examples of protocol interactions, applications SHOULD document both the request
-and response messages, with full headers, preferably in HTTP/1.1 format. For example:
+and response messages, with full header fields, preferably in HTTP/1.1 format. For example:
 
 ~~~ example
 GET /thing HTTP/1.1
@@ -381,7 +381,7 @@ application using HTTP, there are a number of tradeoffs and caveats to keep in m
 
 * Existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
 
-* Because URLs occur in HTTP artefacts commonly, often being generated automatically (e.g., in the `Location` response header), it can be difficult to assure that the new scheme is used consistently.
+* Because URLs occur in HTTP artefacts commonly, often being generated automatically (e.g., in the `Location` response header field), it can be difficult to assure that the new scheme is used consistently.
 
 * The resources identified by the new scheme will still be available using "http" and/or "https" URLs. Those URLs can "leak" into use, which can present security and operability issues. For example, using a new scheme to assure that requests don't get sent to a "normal" Web site is likely to fail.
 
@@ -480,8 +480,8 @@ However, OPTIONS does have significant limitations:
 
 Instead of OPTIONS, one of these alternative approaches might be more appropriate:
 
-* For server-wide metadata, create a well-known URI {{?I-D.nottingham-rfc5785bis}}, or using an already existing one if it’s appropriate (e.g., HostMeta {{?RFC6415}}).
-* For metadata about a specific resource, create a separate resource and link to it using a Link response header or a link serialised into the representation's body. See {{?RFC8288}}. Note that the Link header is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
+* For server-wide metadata, create a well-known URI {{?I-D.nottingham-rfc5785bis}}, or using an already existing one if itâ€™s appropriate (e.g., HostMeta {{?RFC6415}}).
+* For metadata about a specific resource, create a separate resource and link to it using a Link response header field or a link serialised into the representation's body. See {{?RFC8288}}. Note that the Link header field is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
 
 
 ## HTTP Status Codes
@@ -565,9 +565,9 @@ method from POST (but no other method) to GET, to be compatible with browsers.
 
 Generally, when a redirected request is made, its header fields are copied from the original
 request's. However, they can be modified by various mechanisms; e.g., sent Authorization
-({{?I-D.ietf-httpbis-semantics}}) and Cookie ({{?I-D.ietf-httpbis-rfc6265bis}}) headers will change
+({{?I-D.ietf-httpbis-semantics}}) and Cookie ({{?I-D.ietf-httpbis-rfc6265bis}}) header fields will change
 if the origin (and sometimes path) of the request changes. An application using HTTP SHOULD specify
-if any request headers that it defines need to be modified or removed upon a redirect; however,
+if any request header fields that it defines need to be modified or removed upon a redirect; however,
 this behaviour cannot be relied upon, since a generic client (like a browser) will be unaware of
 such requirements.
 
@@ -588,22 +588,22 @@ header fields. {{?I-D.ietf-httpbis-header-structure}} provides a common structur
 fields, and avoids many issues in their parsing and handling; it is RECOMMENDED that new header
 fields use it.
 
-It is RECOMMENDED that header field names be short (even when HTTP/2 header compression is in
+It is RECOMMENDED that header field names be short (even when HTTP/2 header field compression is in
 effect, there is an overhead) but appropriately specific. In particular, if a header field is
 specific to an application, an identifier for that application SHOULD form a prefix to the header
 field name, separated by a "-".
 
-For example, if the "example" application needs to create three headers, they might be called
+For example, if the "example" application needs to create three header fields, they might be called
 "example-foo", "example-bar" and "example-baz". Note that the primary motivation here is to avoid
-consuming more generic header names, not to reserve a portion of the namespace for the application;
+consuming more generic field names, not to reserve a portion of the namespace for the application;
 see {{!RFC6648}} for related considerations.
 
 The semantics of existing HTTP header fields MUST NOT be re-defined without updating their
 registration or defining an extension to them (if allowed). For example, an application using HTTP
-cannot specify that the `Location` header has a special meaning in a certain context.
+cannot specify that the `Location` header field has a special meaning in a certain context.
 
-See {{caching}} for the interaction between headers and HTTP caching; in particular, request
-headers that are used to "select" a response have impact there, and need to be carefully considered.
+See {{caching}} for the interaction between header fields and HTTP caching; in particular, request
+header fields that are used to "select" a response have impact there, and need to be carefully considered.
 
 See {{state}} for considerations regarding header fields that carry application state (e.g.,
 Cookie).
@@ -634,7 +634,7 @@ assigning a freshness lifetime; cache implementations take active measures to re
 intelligently when they are out of space, so "it will fill up the cache" is not a valid concern.
 
 The most common method for specifying freshness is the max-age response directive
-({{?I-D.ietf-httpbis-cache}}, Section 5.2.2.8). The Expires header
+({{?I-D.ietf-httpbis-cache}}, Section 5.2.2.8). The Expires header field
 ({{?I-D.ietf-httpbis-cache}}, Section 5.3) can also be used, but it is not necessary to specify
 it; all modern cache implementations support Cache-Control, and specifying freshness as a delta is
 usually more convenient and always less error-prone.
@@ -647,10 +647,10 @@ stale content.
 Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and
 latency for large responses; see {{?I-D.ietf-httpbis-semantics}}.
 
-If an application uses a request header field to change the response's headers or body, authors
+If an application uses a request header field to change the response's header fields or body, authors
 should point out that this has implications for caching; in general, such resources need to either
 make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in
-{{!I-D.ietf-httpbis-cache}}, Section 5.2.2.3) or send the Vary response header
+{{!I-D.ietf-httpbis-cache}}, Section 5.2.2.3) or send the Vary response header field
 ({{!I-D.ietf-httpbis-semantics}}, Section 10.1.4) on all responses from that resource (including
 the "default" response).
 
@@ -753,10 +753,10 @@ follow best practices for their secure development.
 A complete enumeration of such practices is out of scope for this document, but some considerations
 include:
 
-* Using an application-specific media type in the Content-Type header, and requiring clients to fail if it is not used.
+* Using an application-specific media type in the Content-Type header field, and requiring clients to fail if it is not used.
 * Using X-Content-Type-Options: nosniff {{FETCH}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser.
 * Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML5}}), thereby mitigating Cross-Site Scripting attacks.
-* Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header.
+* Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header field.
 * Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?I-D.ietf-httpbis-rfc6265bis}}.
 * Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the path of the communication, they can use this capability to recover that information.
 
@@ -880,7 +880,7 @@ This includes session information, tracking the client through fingerprinting, a
 
 Session information includes things like the IP address of the client, TLS session tickets, Cookies, ETags stored in the client's cache, and other stateful mechanisms. Applications are advised to avoid using session mechanisms unless they are unavoidable or necessary for operation, in which case these risks needs to be documented. When they are used, implementations should be encouraged to allow clearing such state.
 
-Fingerprinting uses unique aspects of a client's messages and behaviours to connect disparate requests and connections. For example, the User-Agent request header conveys specific information about the implementation; the Accept-Language request header conveys the users' preferred language. In combination, a number of these markers can be used to uniquely identify a client, impacting its control over its data. As a result, applications are advised to specify that clients should only emit the information they need to function in requests.
+Fingerprinting uses unique aspects of a client's messages and behaviours to connect disparate requests and connections. For example, the User-Agent request header field conveys specific information about the implementation; the Accept-Language request header field conveys the users' preferred language. In combination, a number of these markers can be used to uniquely identify a client, impacting its control over its data. As a result, applications are advised to specify that clients should only emit the information they need to function in requests.
 
 Finally, if an application exposes the ability to run mobile code, great care needs to be taken, since any ability to observe its environment can be used as an opportunity to both fingerprint the client and to obtain and manipulate private data (including session information). For example, access to high-resolution timers (even indirectly) can be used to profile the underlying hardware, creating a unique identifier for the system. Applications are advised to avoid allowing the use of mobile code where possible; when it cannot be avoided, the resulting system's security properties need be carefully scrutinised.
 
