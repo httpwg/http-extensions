@@ -182,15 +182,6 @@
             support this technique.
         </t>
 
-        <section title="Requirements Language">
-            <t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;,
-            &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
-            &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;,
-            &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be
-            interpreted as described in <xref target="RFC2119">RFC 2119</xref>.
-            </t>
-        </section>
-
         <section title="Notational Conventions">
             <t>This document cites productions in Augmented Backus-Naur Form (ABNF) productions
             from <xref target="RFC7233"/>, using the notation defined in <xref target="RFC5234"/>.
