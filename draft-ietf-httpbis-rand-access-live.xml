@@ -481,10 +481,6 @@ Content-Range: bytes 1020000-1254567/*
 
 <!-- Possibly a 'Contributors' section ... -->
 
-    <section anchor="IANA" title="IANA Considerations">
-      <t>This document has no actions for IANA.</t>
-    </section>
-
     <section anchor="RecommendedVLV" title="Recommendations for Very Large Values">
         <t>
             While it would be ideal to define a single numerical Very Large Value, there's no single value that would work for all applications and platforms. e.g. JavaScript numbers cannot represent integer values above 2^^53, so a JavaScript application may want to use 2^^53-1 for a Very Large Value. This value, however, would not be sufficient for all applications. So this draft recommends 2^^53-1 (9007199254740991) as a Very Large Value unless an application has a good justification to use a smaller or larger value. e.g. If it's always known that the resource won't exceed a value smaller than the recommended Very Large Value for an application, a smaller value can be used for efficiency. And if it's likely that an application will utilize resources larger than the recommended Very Large Value, a larger value should be used.
@@ -494,9 +490,13 @@ Content-Range: bytes 1020000-1254567/*
         </t>
     </section>
 
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This document has no actions for IANA.</t>
+    </section>
+
     <section anchor="Security" title="Security Considerations">
         <t>
-            As described above, servers need to be prepared to receive values of last-byte-pos in Range requests that may be larger than the numerical representations of the language or platform the server is implemented upon - and return these values in Content-Range response header field. Servers should check the last-byte-pos value before converting and storing them into numeric form. The simplest way to satisfy the live-range semantics defined in this document is to store the last-byte-pos as a string value and return it in the byte-range Content-Range response header's last-byte-pos field.
+            As described above, servers need to be prepared to receive values of last-byte-pos in Range requests that may be larger than the numerical representations of the language or platform the server is implemented upon - and return these values in Content-Range response header fields. Servers should check the last-byte-pos value before converting and storing them into numeric form. The simplest way to satisfy the live-range semantics defined in this document without potential overflow issues is to store the last-byte-pos as a string value and return it in the byte-range Content-Range response header's last-byte-pos field.
         </t>
     </section>
 </middle>
