@@ -65,13 +65,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aheader-structure) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-header-structure/)
 
 
-### Cache Digest
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-cache-digest.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-cache-digest.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cache-digest) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acache-digest) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-cache-digest/)
-
-
 ### Client Hints
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-hints.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-hints.txt))
