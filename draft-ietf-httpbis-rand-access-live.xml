@@ -440,6 +440,9 @@ Content-Range: bytes 1020000-999999999999/*
         with the response body returning bytes 1020000-1254567 immediately and aggregated ("live") data being returned as the content is aggregated.
       </t>
       <t>
+        While it would be ideal to define a single numerical Very Large Value, there's no single value that would work for all applications and platforms. e.g. JavaScript numbers cannot represent integer values above 2^^53, so a JavaScript application may want to use 2^^53-1 for a Very Large Value. This value, however, would not be sufficient for all applications. So this draft recommends 2^^53-1 (9007199254740991) as a Very Large Value unless an application has a good justification to use a smaller or larger value. e.g. If it's always known that the resource won't exceed a value smaller than the recommended Very Large Value for an application, a smaller value can be used for efficiency. And if it's likely that an application will utilize resources larger than the recommended Very Large Value, a larger value should be used.
+      </t>
+      <t>
         A server that doesn't support or supply a continuously aggregating ("live") response will supply the currently satisfiable byte range, as it would with an open-ended byte request.
       </t>
       <t>
@@ -482,12 +485,19 @@ Content-Range: bytes 1020000-1254567/*
       <t>This document has no actions for IANA.</t>
     </section>
 
+    <section anchor="RecommendedVLV" title="Recommendations for Very Large Values">
+        <t>
+            While it would be ideal to define a single numerical Very Large Value, there's no single value that would work for all applications and platforms. e.g. JavaScript numbers cannot represent integer values above 2^^53, so a JavaScript application may want to use 2^^53-1 for a Very Large Value. This value, however, would not be sufficient for all applications. So this draft recommends 2^^53-1 (9007199254740991) as a Very Large Value unless an application has a good justification to use a smaller or larger value. e.g. If it's always known that the resource won't exceed a value smaller than the recommended Very Large Value for an application, a smaller value can be used for efficiency. And if it's likely that an application will utilize resources larger than the recommended Very Large Value, a larger value should be used.
+        </t>
+        <t>
+            Note that, in accordance with the semantics defined above, servers that support random-access live content will in some cases receive requests with Very Large Values in the last-byte-pos that they cannot internally represent. Servers that support or supply a continuously aggregating ("live") response must return the Very Large Value supplied by the client, even if the server has no ability to return values beyond what they can internally support/represent. As is the case with any live/continuously aggregating resource, the server will stop the content transfer when the end of the resource is reached - whether the end is due to termination of the content source or the content exceeds the server's maximum representation length.
+        </t>
+    </section>
+
     <section anchor="Security" title="Security Considerations">
         <t>
-      One potential issue with this recommendation is related to the use of very-large last-byte-pos values. Some client and server implementations may not be prepared to deal with byte position values of 2^63 and beyond. So in applications where there's no expectation that the representation will ever exceed 2^63, a value smaller than this value should be used as the very large last-byte-pos in a byte-seek request or content-range response.
-
-      Also, some implementations (e.g. JavaScript-based clients and servers) are not able to represent all values beyond 2^53. So similarly, if there's no expectation that a representation will ever exceed 2^53 bytes, values smaller than this limit should be used for the last-byte-pos in byte-range requests.
-    </t>
+            As described above, servers need to be prepared to receive values of last-byte-pos in Range requests that may be larger than the numerical representations of the language or platform the server is implemented upon - and return these values in Content-Range response header field. Servers should check the last-byte-pos value before converting and storing them into numeric form. The simplest way to satisfy the live-range semantics defined in this document is to store the last-byte-pos as a string value and return it in the byte-range Content-Range response header's last-byte-pos field.
+        </t>
     </section>
 </middle>
 
