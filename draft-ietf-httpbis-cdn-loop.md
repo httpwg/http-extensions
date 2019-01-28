@@ -4,8 +4,8 @@ docname: draft-ietf-httpbis-cdn-loop-latest
 category: std
 
 ipr: trust200902
-area: General
-workgroup: HTTP Working Group
+area: Applications and Real-Time
+workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes
