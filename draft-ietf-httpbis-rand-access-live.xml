@@ -255,7 +255,7 @@ HTTP/1.1 206 Partial Content
 Content-Range: bytes 0-1234567/*
 </artwork></figure>
       <t>
-      from the server indicating that (1) the complete representation length is unknown (via the "*" in place of the complete-length field) and (2) that only bytes 0-1234567 were accessable at the time the request was processed by the server. The client can infer from this response that bytes 0-1234567 of the representation can be requested and returned in a timely fashion (the bytes are immediately available).
+      from the server indicating that (1) the complete representation length is unknown (via the "*" in place of the complete-length field) and (2) that only bytes 0-1234567 were accessible at the time the request was processed by the server. The client can infer from this response that bytes 0-1234567 of the representation can be requested and returned in a timely fashion (the bytes are immediately available).
       </t>
     </section>
     <section anchor="live-range-requests" title="Byte-Range Requests Beyond the Randomly Accessible Byte Range">
@@ -279,7 +279,7 @@ Content-Range: bytes 0-1234567/*
    complete-length     = 1*DIGIT
 </artwork></figure>
       <t>
-        Specifically, last-byte-pos is required in byte-range. So in order to preserve interoperability with existing HTTP clients, servers, proxies, and caches, this document proposes a mechanism for a client to indicate support for handling an indeterminate-length byte-range response, and a mechanism for a server to indicate if/when it's providing a indeterminate-length response.
+        Specifically, last-byte-pos is required in byte-range. So in order to preserve interoperability with existing HTTP clients, servers, proxies, and caches, this document proposes a mechanism for a client to indicate support for handling an indeterminate-length byte-range response, and a mechanism for a server to indicate if/when it's providing an  indeterminate-length response.
       </t>
       <t>
         A client can indicate support for handling indeterminate-length byte-range responses by providing a very large value for the last-byte-pos in the byte-range request. For example, a client can perform a byte-range GET request of the form:
