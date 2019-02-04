@@ -116,9 +116,11 @@ cdn-id    = ( uri-host [ ":" port ] ) / pseudonym
 pseudonym = token
 ~~~
 
-The cdn-id identifies the CDN using either a hostname under its control or a pseudonym; hostnames
-are preferred, to help avoid accidental collisions. Optionally, cdn-info can have
-semicolon-separated key/value parameters, to accommodate additional information for the CDN's use.
+The cdn-id identifies the CDN using either a hostname under its control or a pseudonym. Hostnames
+are preferred, to help avoid accidental collisions. If a pseudonym is used, unintentional collisions are more likely, and therefore values should be carefully chosen to prevent them; for example, using a well-known value (such as the recognized name of the CDN in question), or a generated value with enough entropy to make collisions unlikely (such as a UUID {{?RFC4122}}).
+
+Optionally, cdn-info can have semicolon-separated key/value parameters, to accommodate additional
+information for the CDN's use.
 
 Conforming Content Delivery Networks SHOULD add a cdn-info to this header field in all requests they
 generate or forward (creating the header field if necessary).
