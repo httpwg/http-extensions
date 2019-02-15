@@ -279,7 +279,7 @@ Parsers MUST support parameterised lists containing at least 1024 members, suppo
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
 
 The ABNF for items in HTTP/1 headers is:
 
