@@ -39,6 +39,7 @@ normative:
   I-D.ietf-tls-exported-authenticator:
 
 informative:
+  RFC7301:
   RFC7838:
 
 
@@ -231,6 +232,14 @@ identifier could be added to TLS 1.2 by means of an extension to TLS.
 Unfortunately, many TLS 1.2 implementations do not permit application data to
 continue during a renegotiation. This is problematic for a multiplexed protocol
 like HTTP/2.
+
+TLS 1.3's post-handshake client authentication mechanism shares similar problems
+for use with HTTP/2. HTTP/2 clients that offer multiple ALPN {{RFC7301}}
+protocols in a TLS ClientHello MAY include the `post_handshake_auth` extension
+to support those other protocols, but this does not indicate support for
+post-handshake client authentication in HTTP/2. HTTP/2 servers MUST NOT send
+post-handshake TLS CertificateRequest messages, even if the client offered the
+`post_handshake_auth` extension.
 
 ## HTTP-Layer Certificate Authentication
 
