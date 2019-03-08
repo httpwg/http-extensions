@@ -93,9 +93,9 @@ This document defines a new response header, Accept-CH, that allows an origin se
 
 Client Hints mitigate the performance concerns by assuring that clients will only send the request headers when they're actually going to be used, and the privacy concerns of passive fingerprinting by requiring explicit opt-in and disclosure of required headers by the server through the use of the Accept-CH response header.
 
-This document also defines an initial set of Client Hints.
+This document defined the Client Hints infrastructure, but does not define any specific features that will use it. Those features will be defined in their respective specifications.
 
-It does not supersede or replace the User-Agent header field. Existing device detection mechanisms can continue to use both mechanisms if necessary. By advertising user agent capabilities within a request header field, Client Hints allow for cache friendly and proactive content negotiation.
+This document does not supersede or replace the User-Agent header field. Existing device detection mechanisms can continue to use both mechanisms if necessary. By advertising user agent capabilities within a request header field, Client Hints allow for cache friendly and proactive content negotiation.
 
 ## Notational Conventions
 
@@ -119,8 +119,7 @@ Implementers should be aware of the passive fingerprinting implications when imp
 
 When presented with a request that contains one or more client hint header fields, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
-Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing. For example, this document defines the "Content-DPR" response header field that needs to be returned by the server when the "DPR" hint is used to select the response.
-
+Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing.
 
 ### Advertising Support via Accept-CH Header Field {#accept-ch}
 
@@ -133,12 +132,12 @@ Servers can advertise support for Client Hints using the Accept-CH header field 
 For example:
 
 ~~~ example
-  Accept-CH: DPR, Width, Viewport-Width
+  Accept-CH: Example-CH-Hint, Example-CH-Hint-2
 ~~~
 
 When a client receives an HTTP response advertising support for Client Hints, it should process it as origin ({{RFC6454}}) opt-in to receive Client Hint header fields advertised in the field-value. The opt-in MUST be delivered over a secure transport.
 
-For example, based on Accept-CH example above, a user agent could append DPR, Width, and Viewport-Width header fields to all same-origin resource requests initiated by the page constructed from the response.
+For example, based on Accept-CH example above, a user agent could append the Example-CH-Hint and Example-CH-Hint-2 header fields to all same-origin resource requests initiated by the page constructed from the response.
 
 
 ### The Accept-CH-Lifetime Header Field {#accept-ch-lifetime}
@@ -153,8 +152,8 @@ When a client receives an HTTP response that contains Accept-CH-Lifetime header 
 The preference MUST be delivered over a secure transport, and MUST NOT be persisted for an origin that isn't HTTPS.
 
 ~~~ example
-  Accept-CH: DPR, Width
-  Accept-CH: Viewport-Width
+  Accept-CH: Example-CH-Hint, Example-CH-Hint-2
+  Accept-CH: Example-CH-Hint-3
   Accept-CH-Lifetime: 86400
 ~~~
 
@@ -168,87 +167,16 @@ If Accept-CH-Lifetime occurs in a message more than once, the last value overrid
 When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server needs to generate a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 ~~~ example
-  Vary: DPR
+  Vary: Example-CH-Hint
 ~~~
 
-Above example indicates that the cache key needs to include the DPR header field.
+Above example indicates that the cache key needs to include the Example-CH-Hint header field.
 
 ~~~ example
-  Vary: DPR, Width
+  Vary: Example-CH-Hint, Example-CH-Hint-2
 ~~~
 
-Above example indicates that the cache key needs to include the DPR and Width header fields.
-
-
-# Client Hints
-
-## The DPR Header Field {#dpr}
-
-The "DPR" request header field is a number that indicates the client's current Device Pixel Ratio (DPR), which is the ratio of physical pixels over CSS px (Section 5.2 of {{CSSVAL}}) of the layout viewport (Section 9.1.1 of [CSS2]) on the device.
-
-~~~ abnf7230
-  DPR = 1*DIGIT [ "." 1*DIGIT ]
-~~~
-
-If DPR occurs in a message more than once, the last value overrides all previous occurrences.
-
-
-### Confirming Selected DPR {#content-dpr}
-
-The "Content-DPR" response header field is a number that indicates the ratio between physical pixels over CSS px of the selected image response.
-
-~~~ abnf7230
-  Content-DPR = 1*DIGIT [ "." 1*DIGIT ]
-~~~
-
-DPR ratio affects the calculation of intrinsic size of image resources on the client - i.e. typically, the client automatically scales the natural size of the image by the DPR ratio to derive its display dimensions. As a result, the server MUST explicitly indicate the DPR of the selected image response whenever the DPR hint is used, and the client MUST use the DPR value returned by the server to perform its calculations. In case the server returned Content-DPR value contradicts previous client-side DPR indication, the server returned value MUST take precedence.
-
-Note that DPR confirmation is only required for image responses, and the server does not need to confirm the resource width as this value can be derived from the resource itself once it is decoded by the client.
-
-If Content-DPR occurs in a message more than once, the last value overrides all previous occurrences.
-
-
-## The Width Header Field {#width}
-
-The "Width" request header field is a number that indicates the desired resource width in physical px (i.e. intrinsic size of an image). The provided physical px value is a number rounded to the smallest following integer (i.e. ceiling value).
-
-~~~ abnf7230
-  Width = 1*DIGIT
-~~~
-
-If the desired resource width is not known at the time of the request or the resource does not have a display width, the Width header field can be omitted. If Width occurs in a message more than once, the last value overrides all previous occurrences.
-
-
-## The Viewport-Width Header Field {#viewport-width}
-
-The "Viewport-Width" request header field is a number that indicates the layout viewport width in CSS px. The provided CSS px value is a number rounded to the smallest following integer (i.e. ceiling value).
-
-~~~ abnf7230
-  Viewport-Width = 1*DIGIT
-~~~
-
-If Viewport-Width occurs in a message more than once, the last value overrides all previous occurrences.
-
-
-# Examples
-
-For example, given the following request header fields:
-
-~~~ example
-  DPR: 2.0
-  Width: 320
-  Viewport-Width: 320
-~~~
-
-The server knows that the device pixel ratio is 2.0, that the intended display width of the requested resource is 160 CSS px (320 physical pixels at 2x resolution), and that the viewport width is 320 CSS px.
-
-If the server uses above hints to perform resource selection for an image asset, it must confirm its selection via the Content-DPR response header to allow the client to calculate the appropriate intrinsic size of the image response. The server does not need to confirm resource width, only the ratio between physical pixels and CSS px of the selected image resource:
-
-~~~ example
-  Content-DPR: 1.0
-~~~
-
-The Content-DPR response header field indicates to the client that the server has selected resource with DPR ratio of 1.0. The client can use this information to perform additional processing on the resource - for example, calculate the appropriate intrinsic size of the image resource such that it is displayed at the correct resolution.
+Above example indicates that the cache key needs to include the Example-CH-Hint and Example-CH-Hint-2 header fields.
 
 
 # Security Considerations
@@ -268,7 +196,7 @@ Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persis
 
 # IANA Considerations
 
-This document defines the "Accept-CH", "DPR", "Viewport-Width", and "Width" HTTP request fields, "Accept-CH", "Accept-CH-Lifetime", and "Content-DPR" HTTP response field, and registers them in the Permanent Message Header Fields registry.
+This document defines the "Accept-CH" and "Accept-CH-Lifetime" HTTP response fields, and registers them in the Permanent Message Header Fields registry.
 
 ## Accept-CH {#iana-accept-ch}
 - Header field name: Accept-CH
@@ -286,38 +214,6 @@ This document defines the "Accept-CH", "DPR", "Viewport-Width", and "Width" HTTP
 - Specification document(s): {{accept-ch-lifetime}} of this document
 - Related information: for Client Hints
 
-## Content-DPR {#iana-content-dpr}
-- Header field name: Content-DPR
-- Applicable protocol: HTTP
-- Status: standard
-- Author/Change controller: IETF
-- Specification document(s): {{content-dpr}} of this document
-- Related information: for Client Hints
-
-## DPR {#iana-dpr}
-- Header field name: DPR
-- Applicable protocol: HTTP
-- Status: standard
-- Author/Change controller: IETF
-- Specification document(s): {{dpr}} of this document
-- Related information: for Client Hints
-
-## Viewport-Width {#iana-viewport-width}
-- Header field name: Viewport-Width
-- Applicable protocol: HTTP
-- Status: standard
-- Author/Change controller: IETF
-- Specification document(s): {{viewport-width}} of this document
-- Related information: for Client Hints
-
-## Width {#iana-width}
-- Header field name: Width
-- Applicable protocol: HTTP
-- Status: standard
-- Author/Change controller: IETF
-- Specification document(s): {{width}} of this document
-- Related information: for Client Hints
-
 
 --- back
 
@@ -326,16 +222,16 @@ This document defines the "Accept-CH", "DPR", "Viewport-Width", and "Width" HTTP
 Client Hints may be combined with Key response header field ({{KEY}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
 
 ~~~ example
-  Key: DPR;partition=1.5:2.5:4.0
+  Key: Example-CH-Hint;partition=1.5:2.5:4.0
 ~~~
 
-Above example indicates that the cache key needs to include the value of the DPR header field with three segments: less than 1.5, 1.5 to less than 2.5, and 4.0 or greater.
+Above example indicates that the cache key needs to include the value of the Example-CH-Hint header field with three segments: less than 1.5, 1.5 to less than 2.5, and 4.0 or greater.
 
 ~~~ example
-  Key: Width;div=320
+  Key: Width;Example-CH-Hint=320
 ~~~
 
-Above example indicates that the cache key needs to include the value of the Width header field and be partitioned into groups of 320: 0-320, 320-640, and so on.
+Above example indicates that the cache key needs to include the value of the Example-CH-Hint header field and be partitioned into groups of 320: 0-320, 320-640, and so on.
 
 
 # Changes
@@ -371,6 +267,9 @@ Above example indicates that the cache key needs to include the value of the Wid
 
 ## Since -06
 * Issue 524: Save-Data is now defined by NetInfo spec, dropping
+
+## Since -07
+* Removed specific features to be defined in other specifications
 
 # Acknowledgements
 {:numbered="false"}
