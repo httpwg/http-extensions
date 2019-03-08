@@ -93,7 +93,7 @@ This document defines a new response header, Accept-CH, that allows an origin se
 
 Client Hints mitigate the performance concerns by assuring that clients will only send the request headers when they're actually going to be used, and the privacy concerns of passive fingerprinting by requiring explicit opt-in and disclosure of required headers by the server through the use of the Accept-CH response header.
 
-This document defined the Client Hints infrastructure, but does not define any specific features that will use it. Those features will be defined in their respective specifications.
+This document defines the Client Hints infrastructure, a framework that enables servers to opt-in to specific proactive content negotiation features, which will enable them to adapt their content accordingly. However, it does not define any specific features that will use that infrastructure. Those features will be defined in their respective specifications.
 
 This document does not supersede or replace the User-Agent header field. Existing device detection mechanisms can continue to use both mechanisms if necessary. By advertising user agent capabilities within a request header field, Client Hints allow for cache friendly and proactive content negotiation.
 
@@ -132,12 +132,12 @@ Servers can advertise support for Client Hints using the Accept-CH header field 
 For example:
 
 ~~~ example
-  Accept-CH: Example-CH-Hint, Example-CH-Hint-2
+  Accept-CH: Sec-CH-Example, Sec-CH-Example-2
 ~~~
 
 When a client receives an HTTP response advertising support for Client Hints, it should process it as origin ({{RFC6454}}) opt-in to receive Client Hint header fields advertised in the field-value. The opt-in MUST be delivered over a secure transport.
 
-For example, based on Accept-CH example above, a user agent could append the Example-CH-Hint and Example-CH-Hint-2 header fields to all same-origin resource requests initiated by the page constructed from the response.
+For example, based on Accept-CH example above, a user agent could append the Sec-CH-Example and Sec-CH-Example-2 header fields to all same-origin resource requests initiated by the page constructed from the response.
 
 
 ### The Accept-CH-Lifetime Header Field {#accept-ch-lifetime}
@@ -152,8 +152,8 @@ When a client receives an HTTP response that contains Accept-CH-Lifetime header 
 The preference MUST be delivered over a secure transport, and MUST NOT be persisted for an origin that isn't HTTPS.
 
 ~~~ example
-  Accept-CH: Example-CH-Hint, Example-CH-Hint-2
-  Accept-CH: Example-CH-Hint-3
+  Accept-CH: Sec-CH-Example, Sec-CH-Example-2
+  Accept-CH: Sec-CH-Example-3
   Accept-CH-Lifetime: 86400
 ~~~
 
@@ -167,16 +167,16 @@ If Accept-CH-Lifetime occurs in a message more than once, the last value overrid
 When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server needs to generate a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 ~~~ example
-  Vary: Example-CH-Hint
+  Vary: Sec-CH-Example
 ~~~
 
-Above example indicates that the cache key needs to include the Example-CH-Hint header field.
+Above example indicates that the cache key needs to include the Sec-CH-Example header field.
 
 ~~~ example
-  Vary: Example-CH-Hint, Example-CH-Hint-2
+  Vary: Sec-CH-Example, Sec-CH-Example-2
 ~~~
 
-Above example indicates that the cache key needs to include the Example-CH-Hint and Example-CH-Hint-2 header fields.
+Above example indicates that the cache key needs to include the Sec-CH-Example and Sec-CH-Example-2 header fields.
 
 
 # Security Considerations
@@ -222,16 +222,16 @@ This document defines the "Accept-CH" and "Accept-CH-Lifetime" HTTP response fie
 Client Hints may be combined with Key response header field ({{KEY}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
 
 ~~~ example
-  Key: Example-CH-Hint;partition=1.5:2.5:4.0
+  Key: Sec-CH-Example;partition=1.5:2.5:4.0
 ~~~
 
-Above example indicates that the cache key needs to include the value of the Example-CH-Hint header field with three segments: less than 1.5, 1.5 to less than 2.5, and 4.0 or greater.
+Above example indicates that the cache key needs to include the value of the Sec-CH-Example header field with three segments: less than 1.5, 1.5 to less than 2.5, and 4.0 or greater.
 
 ~~~ example
-  Key: Width;Example-CH-Hint=320
+  Key: Width;Sec-CH-Example=320
 ~~~
 
-Above example indicates that the cache key needs to include the value of the Example-CH-Hint header field and be partitioned into groups of 320: 0-320, 320-640, and so on.
+Above example indicates that the cache key needs to include the value of the Sec-CH-Example header field and be partitioned into groups of 320: 0-320, 320-640, and so on.
 
 
 # Changes
