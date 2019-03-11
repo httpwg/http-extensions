@@ -163,6 +163,7 @@ Above example indicates that the cache key needs to include the Sec-CH-Example a
 
 # Security Considerations
 
+## Information Exposure
 The request header fields defined in this document, and those that extend it, expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
 Transmitted Client Hints header fields SHOULD NOT provide new information that is otherwise not available to the application via other means, such as using HTML, CSS, or JavaScript. Further, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Reducing the set of field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users. However, such precautions can still be insufficient for some types of data, especially data that can change over time.
@@ -174,6 +175,11 @@ Implementers ought to consider both user and server controlled mechanisms and po
   - Implementations specific to certain use cases or threat models MAY avoid transmitting some or all of Client Hints header fields. For example, avoid transmission of header fields that can carry higher risks of linkability.
 
 Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, or similar, are cleared.
+
+
+## Backend Security
+Adding new request headers increases the risk that legacy server systems already use those values for a different purpose. Changing the request header values such legacy systems receive may result in server bugs.
+While that risk is significantly mitigated by the opt-in mechanisms of Client Hints, other specifications relying on Client Hints SHOULD reduce it even further by adding a `Sec-` prefix to Client Hints request header names they pick for their features.
 
 
 # IANA Considerations
