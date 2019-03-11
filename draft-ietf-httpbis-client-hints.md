@@ -1,7 +1,7 @@
 ---
 title: HTTP Client Hints
 abbrev:
-docname: draft-ietf-httpbis-client-hints-latest
+docname: draft-ietf-httpbis-client-hints-07
 date: {DATE}
 category: exp
 
@@ -31,22 +31,6 @@ normative:
   RFC7234:
   RFC6454:
   HTML5: W3C.REC-html5-20141028
-  CSSVAL: W3C.CR-css-values-3-20160929
-  CSS2:
-    target: http://www.w3.org/TR/2011/REC-CSS2-20110607
-    title: "Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification"
-    date: 2011-06
-    author:
-    -
-      ins: B. Bos
-    -
-      ins: T. Celic
-    -
-      ins: I. Hickson
-    -
-      ins: H. W. Lie
-    seriesinfo:
-      "W3C Recommendation": REC-CSS2-20110607
 
 informative:
   RFC6265:
