@@ -1,6 +1,6 @@
 ---
-title: The Cache HTTP Response Header
-abbrev: Cache Header
+title: The Cache-Status HTTP Response Header
+abbrev: Cache-Status Header
 docname: draft-ietf-httpbis-cache-header-latest
 date: 2019
 category: std
@@ -51,12 +51,12 @@ To aid debugging, HTTP caches often append headers to a response detailing how t
 
 Unfortunately, the semantics of these headers are often unclear, and both the semantics and syntax used vary greatly between implementations.
 
-This specification defines a single, new HTTP response header field, "Cache" for this purpose.
+This specification defines a single, new HTTP response header field, "Cache-Status" for this purpose.
 
 For example:
 
 ~~~ example
-Cache: HIT_FRESH; node="reverse-proxy.example.com:80";
+Cache-Status: HIT_FRESH; node="reverse-proxy.example.com:80";
                   key="https://example.com/foo|Accept-Encoding:gzip",
        HIT_STALE; node="FooCDN parent"; fresh=-45; age=200; latency=3,
        MISS; node="FooCDN edge"; fresh=-45; age=200; latency=98
@@ -72,23 +72,23 @@ shown here.
 
 This document uses ABNF as defined in {{!RFC5234}}, along with the "%s" extension for case sensitivity defined in {{!RFC7405}}.
 
-# The Cache HTTP Response Header
+# The Cache-Status HTTP Response Header
 
-The Cache HTTP response header indicates the handling of the request corresponding to the response it occurs within by caches along the path.
+The Cache-Status HTTP response header indicates the handling of the request corresponding to the response it occurs within by caches along the path.
 
 Its value is a Parameterised List {{!I-D.ietf-httpbis-header-structure}}:
 
 ~~~ abnf
-Cache   = sh-param-list
+Cache-Status   = sh-param-list
 ~~~
 
 Each member of the parameterised list represents a cache that has handled the request.
 
 The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the user agent (possibly including the user agent's cache itself, if it chooses to append a value).
 
-Caches determine when it is appropriate to add the Cache header field to a response. Some might decide to add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
+Caches determine when it is appropriate to add the Cache-Status header field to a response. Some might decide to add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
-When adding a value to the Cache header field, caches SHOULD preserve the existing contents of the header, to allow debugging of the entire chain of caches handling the request.
+When adding a value to the Cache-Status header field, caches SHOULD preserve the existing contents of the header, to allow debugging of the entire chain of caches handling the request.
 
 Identifiers in the parameterised list members are expected to be cache-actions:
 
@@ -118,7 +118,7 @@ The semantics of cache-actions are:
 
 Caches SHOULD use the most specific cache-action to a given response, but are not required to use all cache-actions. Future updates to this specification can add additional cache-actions.
 
-Each member of the Cache header can also have any (or all, or none) of the following parameters:
+Each member of the Cache-Status header can also have any (or all, or none) of the following parameters:
 
 ~~~ abnf
 node           = sh-string
@@ -148,11 +148,11 @@ While all of these parameters are OPTIONAL, caches are encouraged to use the 'no
 
 Information about a cache's content can be used to infer the activity of those using it. Generally, access to sensitive information in a cache is limited to those who are authorised to access that information (using a variety of techniques), so this does not represent an attack vector in the general sense.
 
-However, if the Cache header is exposed to parties who are not authorised to obtain the response it occurs within, it could expose information about that data.
+However, if the Cache-Status header is exposed to parties who are not authorised to obtain the response it occurs within, it could expose information about that data.
 
-For example, if an attacker were able to obtain the Cache header from a response containing sensitive information and access were limited to one person (or limited set of people), they could determine whether that information had been accessed before. This is similar to the information exposed by various timing attacks, but is arguably more reliable, since the cache is directly reporting its state.
+For example, if an attacker were able to obtain the Cache-Status header from a response containing sensitive information and access were limited to one person (or limited set of people), they could determine whether that information had been accessed before. This is similar to the information exposed by various timing attacks, but is arguably more reliable, since the cache is directly reporting its state.
 
-Mitigations include use of encryption (e.g., TLS {{?RFC8446}})) to protect the response, and careful controls over access to response headers (as are present in the Web platform). When in doubt, the Cache header field can be omitted.
+Mitigations include use of encryption (e.g., TLS {{?RFC8446}})) to protect the response, and careful controls over access to response headers (as are present in the Web platform). When in doubt, the Cache-Status header field can be omitted.
 
 
 --- back
