@@ -761,10 +761,13 @@ layer.
 # Required Domain Certificate Extension {#extension}
 
 The Required Domain extension allows certificates to limit their use with
-Secondary Certificate Authentication.  The identities listed in this extension
-are restrictions asserted by the requester of the certificate and are not
-verified by the CA.  Conforming CAs SHOULD mark the requiredDomain extension as
-non-critical.
+Secondary Certificate Authentication.  A client MUST verify that the server
+has proven ownership of at least one of the indicated identities before
+accepting the limited certificate over Secondary Certificate Authentication.
+
+The identities listed in this extension are restrictions asserted by the
+requester of the certificate and are not verified by the CA.  Conforming CAs
+SHOULD mark the requiredDomain extension as non-critical.
 
 Each required domain is represented as an IA5String. The name MUST be in the
 "preferred name syntax", as specified by Section 3.5 of {{!RFC1034}} and as
@@ -778,7 +781,7 @@ If the requiredDomain extension is present, the sequence MUST contain at least
 one entry.  Unlike the subject field, conforming CAs MUST NOT issue certificates
 with a requiredDomain extension containing empty GeneralName fields.  Clients
 that encounter such a certificate when processing a certification path MUST
-ignore that extension.
+consider the certificate invalid.
 
 The wildcard character "*" MAY be used to represent that any set of subdomains
 is acceptable.  This character MUST be the entirety of the first label if used,
@@ -807,7 +810,7 @@ its control in order to present the compromised certificate. As recommended in
 means to increase confidence that the certificate is legitimate.
 
 One such means is the Required Domain certificate extension defined in
-{extension}. Clients SHOULD require that server certificates presented via this
+{extension}. Clients MUST require that server certificates presented via this
 mechanism contain the Required Domain extension and require that a certificate
 previously accepted on the connection (including the certificate presented in
 TLS) lists one of the Required Domains in the Subject field or the Subject
