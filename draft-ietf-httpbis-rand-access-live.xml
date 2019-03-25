@@ -111,7 +111,7 @@
       </address>
     </author>
 
-    <date year="2018" month="March"/>
+    <date year="2019" month="March"/>
 
     <!-- Meta-data Declarations -->
 
@@ -255,7 +255,7 @@ HTTP/1.1 206 Partial Content
 Content-Range: bytes 0-1234567/*
 </artwork></figure>
       <t>
-      from the server indicating that (1) the complete representation length is unknown (via the "*" in place of the complete-length field) and (2) that only bytes 0-1234567 were accessable at the time the request was processed by the server. The client can infer from this response that bytes 0-1234567 of the representation can be requested and returned in a timely fashion (the bytes are immediately available).
+      from the server indicating that (1) the complete representation length is unknown (via the "*" in place of the complete-length field) and (2) that only bytes 0-1234567 were accessible at the time the request was processed by the server. The client can infer from this response that bytes 0-1234567 of the representation can be requested and returned in a timely fashion (the bytes are immediately available).
       </t>
     </section>
     <section anchor="live-range-requests" title="Byte-Range Requests Beyond the Randomly Accessible Byte Range">
@@ -279,7 +279,7 @@ Content-Range: bytes 0-1234567/*
    complete-length     = 1*DIGIT
 </artwork></figure>
       <t>
-        Specifically, last-byte-pos is required in byte-range. So in order to preserve interoperability with existing HTTP clients, servers, proxies, and caches, this document proposes a mechanism for a client to indicate support for handling an indeterminate-length byte-range response, and a mechanism for a server to indicate if/when it's providing a indeterminate-length response.
+        Specifically, last-byte-pos is required in byte-range. So in order to preserve interoperability with existing HTTP clients, servers, proxies, and caches, this document proposes a mechanism for a client to indicate support for handling an indeterminate-length byte-range response, and a mechanism for a server to indicate if/when it's providing an  indeterminate-length response.
       </t>
       <t>
         A client can indicate support for handling indeterminate-length byte-range responses by providing a very large value for the last-byte-pos in the byte-range request. For example, a client can perform a byte-range GET request of the form:
@@ -291,7 +291,7 @@ Range: bytes=1230000-999999999999
 
 </artwork></figure>
       <t>
-        where the last-byte-pos in the Request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above, and much larger than the expected maximum size of the representation. See <xref target="Security"/> for range value considerations.
+        where the last-byte-pos in the Request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above, and much larger than the expected maximum size of the representation. See <xref target="Security" /> for range value considerations.
       </t>
       <t>
         In response, a server may indicate that it is supplying a continuously aggregating ("live") response by supplying the client request's last-byte-pos in the Content-Range response header field.
@@ -478,16 +478,23 @@ Content-Range: bytes 1020000-1254567/*
 
 <!-- Possibly a 'Contributors' section ... -->
 
+    <section anchor="RecommendedVLV" title="Recommendations for Very Large Values">
+        <t>
+            While it would be ideal to define a single numerical Very Large Value, there's no single value that would work for all applications and platforms. e.g. JavaScript numbers cannot represent all integer values above 2^^53, so a JavaScript application may want to use 2^^53-1 for a Very Large Value. This value, however, would not be sufficient for all applications, such as continuously-streaming high-bitrate streams. So the value 2^^53-1 (9007199254740991) is recommended as a Very Large Value unless an application has a good justification to use a smaller or larger value. e.g. If it's always known that the resource won't exceed a value smaller than the recommended Very Large Value for an application, a smaller value can be used. And if it's likely that an application will utilize resources larger than the recommended Very Large Value - such as a continuously aggregating high-bitrate media stream - a larger value should be used.
+        </t>
+        <t>
+            Note that, in accordance with the semantics defined above, servers that support random-access live content will need to return the last-byte-pos provided in the Range request in some cases - even if the last-byte-pos cannot be represented as a numerical value internally by the server. As is the case with any live/continuously aggregating resource, the server should terminate the content transfer when the end of the resource is reached - whether the end is due to termination of the content source or the content length exceeds the server's maximum representation length.
+        </t>
+    </section>
+
     <section anchor="IANA" title="IANA Considerations">
       <t>This document has no actions for IANA.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
         <t>
-      One potential issue with this recommendation is related to the use of very-large last-byte-pos values. Some client and server implementations may not be prepared to deal with byte position values of 2^63 and beyond. So in applications where there's no expectation that the representation will ever exceed 2^63, a value smaller than this value should be used as the very large last-byte-pos in a byte-seek request or content-range response.
-
-      Also, some implementations (e.g. JavaScript-based clients and servers) are not able to represent all values beyond 2^53. So similarly, if there's no expectation that a representation will ever exceed 2^53 bytes, values smaller than this limit should be used for the last-byte-pos in byte-range requests.
-    </t>
+            As described above, servers need to be prepared to receive last-byte-pos values in Range requests that are numerically larger than the server implementation supports - and return these values in Content-Range response header fields. Servers should check the last-byte-pos value before converting and storing them into numeric form to ensure the value doesn't cause an overflow or index incorrect data. The simplest way to satisfy the live-range semantics defined in this document without potential overflow issues is to store the last-byte-pos as a string value and return it in the byte-range Content-Range response header's last-byte-pos field.
+        </t>
     </section>
 </middle>
 

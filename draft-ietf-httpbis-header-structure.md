@@ -91,6 +91,17 @@ To specify a header field that is a Structured Header, see {{specify}}.
 Those abstract types can be serialised into and parsed from textual headers -- such as those used in HTTP/1 -- using the algorithms described in {{text}}.
 
 
+## Intentionally Strict Processing {#strict}
+
+This specification intentionally defines strict parsing and serialisation behaviours using step-by-step algorithms; the only error handling defined is to fail the operation altogether.
+
+This is designed to encourage faithful implementation and therefore good interoperability. Therefore, implementations that try to be "helpful" by being more tolerant of input are doing a disservice to the overall community, since it will encourage other implementations to implement similar (but likely subtly different) workarounds.
+
+In other words, strict processing is an intentional feature of this specification; it allows non-conformant input to be discovered and corrected early, and avoids both interoperability and security issues that might otherwise result.
+
+Note that as a result of this strictness, if a header field is appended to by multiple parties (e.g., intermediaries, or different components in the sender), it could be that an error in one party's value causes the entire header field to fail parsing.
+
+
 ## Notational Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
@@ -117,7 +128,7 @@ To define a HTTP header as a structured header, its specification needs to:
 
 * Specify any additional constraints upon the syntax of the structured used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
-Note that a header field definition cannot relax the requirements of a structure or its processing because doing so would preclude handling by generic software; they can only add additional constraints.
+Note that a header field definition cannot relax the requirements of a structure or its processing because doing so would preclude handling by generic software; they can only add additional constraints. Likewise, header field definitions should use Structured Headers for the entire header field value, not a portion thereof.
 
 For example:
 
@@ -170,7 +181,7 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of key-value pairs, where the keys are identifiers ({{identifier}}) and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
+Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
 
 Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
@@ -179,8 +190,10 @@ The ABNF for dictionaries in HTTP/1 headers is:
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member    = member-name "=" member-value
-member-name    = sh-identifier
+member-name    = key
 member-value   = sh-item
+key            = lcalpha *( lcalpha / DIGIT / "_" / "-" )
+lcalpha        = %x61-7A ; a-z
 ~~~
 
 In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
@@ -191,7 +204,7 @@ Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
 
-Parsers MUST support dictionaries containing at least 1024 key/value pairs.
+Parsers MUST support dictionaries containing at least 1024 key/value pairs, and dictionary keys with at least 64 characters.
 
 
 ## Lists {#list}
@@ -216,20 +229,42 @@ Header specifications can constrain the types of individual values if necessary.
 Parsers MUST support lists containing at least 1024 members.
 
 
+## Lists of Lists {#listlist}
+
+Lists of Lists are arrays of arrays containing items ({{item}}).
+
+The ABNF for lists of lists in HTTP/1 headers is:
+
+~~~ abnf
+sh-listlist = inner-list *( OWS "," OWS inner-list )
+inner-list  = list-member *( OWS ";" OWS list-member )
+~~~
+
+In HTTP/1, each inner-list is separated by a comma and optional whitespace, and members of the inner-list are separated by semicolons and optional whitespace. For example, a header field whose value is defined as a list of lists of strings could look like:
+
+~~~ example
+Example-StrListListHeader: "foo";"bar", "baz", "bat"; "one"
+~~~
+
+Header specifications can constrain the types of individual inner-list values if necessary.
+
+Parsers MUST support lists of lists containing at least 1024 members, and inner-lists containing at least 256 members.
+
 
 ## Parameterised Lists {#param}
 
-Parameterised Lists are arrays of a parameterised identifiers.
+Parameterised Lists are arrays of parameterised identifier with one or more members.
 
-A parameterised identifier is an identifier ({{identifier}}) with an optional set of parameters, each parameter having an identifier and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+A parameterised identifier is a token ({{token}}}) with an optional set of parameters, each parameter having a textual name and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
 
 The ABNF for parameterised lists in HTTP/1 headers is:
 
 ~~~ abnf
-sh-param-list = param-id *( OWS "," OWS param-id )
-param-id      = sh-identifier *parameter
+sh-param-list = param-item *( OWS "," OWS param-item )
+param-item    = primary-id *parameter
+primary-id    = sh-token
 parameter     = OWS ";" OWS param-name [ "=" param-value ]
-param-name    = sh-identifier
+param-name    = key
 param-value   = sh-item
 ~~~
 
@@ -239,17 +274,17 @@ In HTTP/1, each param-id is separated by a comma and optional whitespace (as in 
 Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, ghi;q="9";r="w"
 ~~~
 
-Parsers MUST support parameterised lists containing at least 1024 members, and support members with at least 256 parameters.
+Parsers MUST support parameterised lists containing at least 1024 members, support members with at least 256 parameters, and support parameter keys with at least 64 characters.
 
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), identifier ({{identifier}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
 
 The ABNF for items in HTTP/1 headers is:
 
 ~~~ abnf
-sh-item = sh-integer / sh-float / sh-string / sh-identifier / sh-binary
+sh-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
           / sh-boolean
 ~~~
 
@@ -330,18 +365,20 @@ When it is necessary for a field value to convey non-ASCII string content, a byt
 Parsers MUST support strings with at least 1024 characters.
 
 
-## Identifiers {#identifier}
+## Tokens {#token}
 
-Identifiers are short textual identifiers; their abstract model is identical to their expression in the textual HTTP serialisation. Parsers MUST support identifiers with at least 64 characters.
+Tokens are short textual words; their abstract model is identical to their expression in the textual HTTP serialisation.
 
-The ABNF for identifiers in HTTP/1 headers is:
+The ABNF for tokens in HTTP/1 headers is:
 
 ~~~ abnf
-sh-identifier = lcalpha *( lcalpha / DIGIT / "_" / "-"/ "*" / "/" )
-lcalpha       = %x61-7A ; a-z
+sh-token = ALPHA *( ALPHA / DIGIT / "_" / "-" / "." / ":" / "%" / "*" / "/" )
 ~~~
 
-Note that identifiers can only contain lowercase letters.
+Parsers MUST support tokens with at least 512 characters.
+
+Note that a Structured Header token is not the same as the "token" ABNF rule defined in
+{{?RFC7230}}.
 
 
 ## Byte Sequences {#binary}
@@ -371,14 +408,14 @@ Boolean values can be conveyed in Structured Headers.
 The ABNF for a Boolean in HTTP/1 headers is:
 
 ~~~ abnf
-sh-boolean = "!" boolean
-boolean    = "T" / "F"
+sh-boolean = "?" boolean
+boolean    = %54 / %46  ; capital "T" or "F"
 ~~~
 
-In HTTP/1 headers, a byte sequence is delimited with a "!" character. For example:
+In HTTP/1 headers, a byte sequence is indicated with a leading "?" character. For example:
 
 ~~~ example
-Example-BoolHdr: !T
+Example-BoolHdr: ?T
 ~~~
 
 
@@ -390,39 +427,69 @@ This section defines how to serialise and parse Structured Headers in HTTP/1 tex
 
 Given a structured defined in this specification:
 
-1. If the structure is a dictionary, return the result of Serialising a Dictionary {#ser-dictionary}.
-2. If the structure is a list, return the result of Serialising a List {#ser-list}.
-3. If the structure is a parameterised list, return the result of Serialising a Parameterised List {#ser-param-list}.
-4. If the structure is an item, return the result of Serialising an Item {#ser-item}.
-5. Otherwise, fail serialisation.
+1. If the structure is a dictionary, return the result of Serialising a Dictionary ({{ser-dictionary}}).
+2. If the structure is a parameterised list, return the result of Serialising a Parameterised List ({{ser-param-list}}).
+3. If the structure is a list of lists, return the result of Serialising a List of Lists ({ser-listlist}).
+4. If the structure is a list, return the result of Serialising a List {{ser-list}}.
+5. If the structure is an item, return the result of Serialising an Item ({{ser-item}}).
+6. Otherwise, fail serialisation.
 
 
 ### Serialising a Dictionary {#ser-dictionary}
 
-Given a dictionary as input:
+Given a dictionary as input_dictionary:
 
 1. Let output be an empty string.
-2. For each member mem of input:
-   1. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to mem's member-name.
+2. For each member mem of input_dictionary:
+   1. Let name be the result of applying Serialising an Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. Let value be the result of applying Serialising an Item {{ser-item}} to mem's member-value.
+   4. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem's member-value.
    5. Append value to output.
-   6. If more members remain in input:
+   6. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
+3. Return output.
+
+#### Serialising a Key {#ser-key}
+
+Given a key as input_key:
+
+0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
+1. Let output be an empty string.
+2. Append input_key to output, using ASCII encoding {{!RFC0020}}.
 3. Return output.
 
 
 ### Serialising a List {#ser-list}
 
-Given a list as input:
+Given a list as input_list:
 
 1. Let output be an empty string.
-2. For each member mem of input:
-   1. Let value be the result of applying Serialising an Item {{ser-item}} to mem.
+2. For each member mem of input_list:
+   1. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem.
    2. Append value to output.
-   3. If more members remain in input:
+   3. If more members remain in input_list:
+      1. Append a COMMA to output.
+      2. Append a single WS to output.
+3. Return output.
+
+
+### Serialising a List of Lists {#ser-listlist}
+
+Given a list of lists of items as input_list:
+
+1. Let output be an empty string.
+2. For each member inner_list of input_list:
+   1. If inner_list is not a list, fail serialisation.
+   2. If inner_list is empty, fail serialisation.
+   3. For each inner_mem of inner_list:
+      1. Let value be the result of applying Serialising an Item ({{ser-item}}) to inner_mem.
+      2. Append value to output.
+      3. If more members remain in inner_list:
+         1. Append a ";" to output.
+         2. Append a single WS to output.
+   4. If more members remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -430,21 +497,21 @@ Given a list as input:
 
 ### Serialising a Parameterised List {#ser-param-list}
 
-Given a parameterised list as input:
+Given a parameterised list as input_plist:
 
 1. Let output be an empty string.
-2. For each member mem of input:
-   1. Let id be the result of applying Serialising an Identifier {{ser-identifier}} to mem's identifier.
+2. For each member mem of input_plist:
+   1. Let id be the result of applying Serialising a Token ({{ser-token}}) to mem's token.
    2. Append id to output.
    3. For each parameter in mem's parameters:
       1. Append ";" to output.
-      2. Let name be the result of applying Serialising an Identifier {{ser-identifier}} to parameter's param-name.
+      2. Let name be the result of applying Serialising a Key ({{ser-key}}) to parameter's param-name.
       3. Append name to output.
       4. If parameter has a param-value:
-         1. Let value be the result of applying Serialising an Item {{ser-item}} to parameter's param-value.
+         1. Let value be the result of applying Serialising an Item ({{ser-item}}) to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
-   4. If more members remain in input:
+   4. If more members remain in input_plist:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -452,49 +519,49 @@ Given a parameterised list as input:
 
 ### Serialising an Item {#ser-item}
 
-Given an item as input:
+Given an item as input_item:
 
-0. If input is a type other than an integer, float, string, identifier, byte sequence, or Boolean, fail serialisation.
-1. If input is an integer, return the result of applying Serialising an Integer {{ser-integer}} to input.
-2. If input is a float, return the result of applying Serialising a Float {{ser-float}} to input.
-3. If input is a string, return the result of applying Serialising a String {{ser-string}} to input.
-4. If input is an identifier, return the result of Serialising an Identifier {#ser-identifier}.
-5. If input is a Boolean, return the result of applying Serialising a Boolean {{ser-boolean}} to input.
-6. Otherwise, return the result of applying Serialising a Byte Sequence {{ser-binary}} to input.
+1. If input_item is an integer, return the result of applying Serialising an Integer ({{ser-integer}}) to input_item.
+2. If input_item is a float, return the result of applying Serialising a Float ({{ser-float}}) to input_item.
+3. If input_item is a string, return the result of applying Serialising a String ({{ser-string}}) to input_item.
+4. If input_item is a token, return the result of Serialising a Token ({{ser-token}}) to input_item.
+5. If input_item is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input_item.
+6. If input_item is a byte sequence, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input_item.
+7. Otherwise, fail serialisation.
 
 
 ### Serialising an Integer {#ser-integer}
 
-Given an integer as input:
+Given an integer as input_integer:
 
-0. If input is not an integer in the range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive, fail serialisation.
+0. If input_integer is not an integer in the range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive, fail serialisation.
 1. Let output be an empty string.
-2. If input is less than (but not equal to) 0, append "-" to output.
-3. Append input's numeric value represented in base 10 using only decimal digits to output.
+2. If input_integer is less than (but not equal to) 0, append "-" to output.
+3. Append input_integer's numeric value represented in base 10 using only decimal digits to output.
 4. Return output.
 
 
 ### Serialising a Float {#ser-float}
 
-Given a float as input:
+Given a float as input_float:
 
-0. If input is not a IEEE 754 double precision number, fail serialisation.
+0. If input_float is not a IEEE 754 double precision number, fail serialisation.
 1. Let output be an empty string.
-2. If input is less than (but not equal to) 0, append "-" to output.
-3. Append input's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+2. If input_float is less than (but not equal to) 0, append "-" to output.
+3. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
 4. Append "." to output.
-5. Append input's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+5. Append input_float's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
 6. Return output.
 
 
 ### Serialising a String {#ser-string}
 
-Given a string as input:
+Given a string as input_string:
 
-0. If input is not a sequence of characters, or contains characters outside the range allowed by VCHAR or SP, fail serialisation.
+0. If input_string is not a sequence of characters, or contains characters outside the range allowed by VCHAR or SP, fail serialisation.
 1. Let output be an empty string.
 2. Append DQUOTE to output.
-3. For each character char in input:
+3. For each character char in input_string:
    1. If char is "\\" or DQUOTE:
       1. Append "\\" to output.
    2. Append char to output, using ASCII encoding {{!RFC0020}}.
@@ -502,24 +569,24 @@ Given a string as input:
 5. Return output.
 
 
-### Serialising an Identifier {#ser-identifier}
+### Serialising a Token {#ser-token}
 
-Given an identifier as input:
+Given a token as input_token:
 
-0. If input is not a sequence of characters, or contains characters not allowed in {{identifier}}, fail serialisation.
+0. If input_token is not a sequence of characters, or contains characters not allowed in {{token}}}, fail serialisation.
 1. Let output be an empty string.
-2. Append input to output, using ASCII encoding {{!RFC0020}}.
+2. Append input_token to output, using ASCII encoding {{!RFC0020}}.
 3. Return output.
 
 
 ### Serialising a Byte Sequence {#ser-binary}
 
-Given a byte sequence as input:
+Given a byte sequence as input_bytes:
 
-0. If input is not a sequence of bytes, fail serialisation.
+0. If input_bytes is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
 2. Append "\*" to output.
-3. Append the result of base64-encoding input as per {{!RFC4648}}, Section 4, taking account of the requirements below.
+3. Append the result of base64-encoding input_bytes as per {{!RFC4648}}, Section 4, taking account of the requirements below.
 4. Append "\*" to output.
 5. Return output.
 
@@ -530,13 +597,13 @@ Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Se
 
 ### Serialising a Boolean {#ser-boolean}
 
-Given a Boolean as input:
+Given a Boolean as input_boolean:
 
-0. If input is not a boolean, fail serialisation.
+0. If input_boolean is not a boolean, fail serialisation.
 1. Let output be an empty string.
-2. Append "!" to output.
-3. If input is true, append "T" to output.
-4. If input is false, append "F" to output.
+2. Append "?" to output.
+3. If input_boolean is true, append "T" to output.
+4. If input_boolean is false, append "F" to output.
 5. Return output.
 
 
@@ -544,22 +611,23 @@ Given a Boolean as input:
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an ASCII string input_string that represents the chosen header's field-value, and header_type, one of "dictionary", "list", "param-list", or "item", return the parsed header value.
+Given an ASCII string input_string that represents the chosen header's field-value, and header_type, one of "dictionary", "list", "list-list", "param-list", or "item", return the parsed header value.
 
 1. Discard any leading OWS from input_string.
 2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
+4. If header_type is "list-list", let output be the result of Parsing a List of Lists from Text ({{parse-listlist}}).
 4. If header_type is "param-list", let output be the result of Parsing a Parameterised List from Text ({{parse-param-list}}).
-5. Otherwise, let output be the result of Parsing an Item from Text ({{parse-item}}).
+5. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
 7. If input_string is not empty, fail parsing.
 8. Otherwise, return output.
 
 When generating input_string, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
-For Lists, Parameterised Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field.
+For Lists, Lists of Lists, Parameterised Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
 
-Strings can but SHOULD NOT be split across multiple header instances, because comma(s) inserted upon combination will become part of the string output by the parser.
+Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serialiser or the parser.
 
 Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
@@ -570,11 +638,11 @@ Note that this has the effect of discarding any header field with non-ASCII char
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
-Given an ASCII string input_string, return an ordered map of (identifier, item). input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an ordered map of (key, item). input_string is modified to remove the parsed value.
 
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
-   1. Let this_key be the result of running Parse Identifier from Text ({{parse-identifier}}) with input_string.
+   1. Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
    4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
@@ -585,6 +653,21 @@ Given an ASCII string input_string, return an ordered map of (identifier, item).
    9. Discard any leading OWS from input_string.
    0. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
+
+
+### Parsing a Key from Text {#parse-key}
+
+Given an ASCII string input_string, return a key. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not lcalpha, fail parsing.
+2. Let output_string be an empty string.
+3. While input_string is not empty:
+   1. Let char be the result of removing the first character of input_string.
+   2. If char is not one of lcalpha, DIGIT, "\_", or "-":
+      1. Prepend char to input_string.
+      2. Return output_string.
+   3. Append char to output_string.
+4. Return output_string.
 
 
 ### Parsing a List from Text {#parse-list}
@@ -601,6 +684,27 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
+
+
+### Parsing a List of Lists from Text {#parse-listlist}
+
+Given an ASCII string input_string, return a list of lists of items. input_string is modified to remove the parsed value.
+
+1. let top_list be an empty array.
+2. Let inner_list be an empty array.
+3. While input_string is not empty:
+   1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
+   2. Append item to inner_list.
+   3. Discard any leading OWS from input_string.
+   4. If input_string is empty, append inner_list to top_list and return top_list.
+   5. Let char be the result of consuming the first character of input_string.
+   6. If char is COMMA:
+      1. Append inner_list to top_list.
+      2. Let inner_list be an empty array.
+   7. Else if char is not ";", fail parsing.
+   8. Discard any leading OWS from input_string.
+   9. If input_string is empty, fail parsing.
+4. No structured data has been found; fail parsing.
 
 
 ### Parsing a Parameterised List from Text {#parse-param-list}
@@ -621,21 +725,22 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
 
 ### Parsing a Parameterised Identifier from Text {#parse-param-id}
 
-Given an ASCII string input_string, return an identifier with an unordered map of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an token with an unordered map of parameters. input_string is modified to remove the parsed value.
 
-1. Let primary_identifier be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
+1. Let primary_identifier be the result of Parsing a Token from Text ({{parse-token}}) from input_string.
 2. Let parameters be an empty, unordered map.
 3. In a loop:
-   1. If the first character of input_string is not ";", exit the loop.
-   2. Consume a ";" character from the beginning of input_string.
-   3. Discard any leading OWS from input_string.
-   4. let param_name be the result of Parsing an Identifier from Text ({{parse-identifier}}) from input_string.
-   5. If param_name is already present in parameters, fail parsing.
-   6. Let param_value be a null value.
-   7. If the first character of input_string is "=":
+   1. Discard any leading OWS from input_string.
+   2. If the first character of input_string is not ";", exit the loop.
+   3. Consume a ";" character from the beginning of input_string.
+   4. Discard any leading OWS from input_string.
+   5. let param_name be the result of Parsing a key from Text ({{parse-key}}) from input_string.
+   6. If param_name is already present in parameters, fail parsing.
+   7. Let param_value be a null value.
+   8. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
-   8. Insert (param_name, param_value) into parameters.
+   9. Add key param_name with value param_value to parameters.
 4. Return the tuple (primary_identifier, parameters).
 
 
@@ -643,16 +748,17 @@ Given an ASCII string input_string, return an identifier with an unordered map o
 
 Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
 
-1. Discard any leading OWS from input_string.
-2. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
-3. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
-4. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
-5. If the first character of input_string is "!", process input_string as a Boolean ({{parse-boolean}}) and return the result.
-6. If the first character of input_string is a lcalpha, process input_string as an identifier ({{parse-identifier}}) and return the result.
-7. Otherwise, fail parsing.
+1. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
+2. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
+3. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
+4. If the first character of input_string is "?", process input_string as a Boolean ({{parse-boolean}}) and return the result.
+5. If the first character of input_string is an ALPHA, process input_string as a token ({{parse-token}}) and return the result.
+6. Otherwise, fail parsing.
 
 
 ### Parsing a Number from Text {#parse-number}
+
+Given an ASCII string input_string, return a number. input_string is modified to remove the parsed value.
 
 NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and returns the corresponding structure.
 
@@ -699,15 +805,15 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 6. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
 
-### Parsing an Identifier from Text {#parse-identifier}
+### Parsing a Token from Text {#parse-token}
 
-Given an ASCII string input_string, return an identifier. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return a token. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not lcalpha, fail parsing.
+1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "\_", "-", "\*" or "/":
+   2. If char is not one of ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/":
       1. Prepend char to input_string.
       2. Return output_string.
    3. Append char to output_string.
@@ -720,11 +826,12 @@ Given an ASCII string input_string, return a byte sequence. input_string is modi
 
 1. If the first character of input_string is not "\*", fail parsing.
 2. Discard the first character of input_string.
-3. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*". If there is not a "\*" character before the end of input_string, fail parsing.
-4. Consume the "\*" character at the beginning of input_string.
-5. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
-5. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour below).
-6. Return binary_content.
+3. If there is not a "\*" character before the end of input_string, fail parsing.
+4. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*".
+5. Consume the "\*" character at the beginning of input_string.
+6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
+7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour below).
+8. Return binary_content.
 
 Because some implementations of base64 do not allow reject of encoded data that is not properly "=" padded (see {{!RFC4648}}, Section 3.2), parsers SHOULD NOT fail when it is not present, unless they cannot be configured to do so.
 
@@ -737,7 +844,7 @@ This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 
 
 Given an ASCII string input_string, return a Boolean. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not "!", fail parsing.
+1. If the first character of input_string is not "?", fail parsing.
 2. Discard the first character of input_string.
 3. If the first character of input_string case-sensitively matches "T", discard the first character, and return true.
 4. If the first character of input_string case-sensitively matches "F", discard the first character, and return false.
@@ -756,6 +863,10 @@ It is possible for parties with the ability to inject new HTTP header fields to 
 of a Structured Header. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
 --- back
+
+# Acknowledgements
+
+Many thanks to Matthew Kerwin for his detailed feedback and careful consideration during the development of this specification.
 
 
 # Frequently Asked Questions {#faq}
@@ -788,16 +899,35 @@ Example-Description: foo; url="https://example.net"; context=123,
                      bar; url="https://example.org"; context=456
 ~~~
 
-Since the description contains a list of key/value pairs, we use a Parameterised List to represent them, with the identifier for each item in the list used to identify it in the "descriptions" member of the Example-Thing header.
+Since the description contains a list of key/value pairs, we use a Parameterised List to represent them, with the token for each item in the list used to identify it in the "descriptions" member of the Example-Thing header.
 
 When specifying more than one header, it's important to remember to describe what a processor's behaviour should be when one of the headers is missing.
 
 If you need to fit arbitrarily complex data into a header, Structured Headers is probably a poor fit for your use case.
 
+## What should generic Structured Headers implementations expose?
+
+A generic implementation should expose the top-level parse ({{text-parse}}) and serialise ({{text-serialise}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
+
+For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community; see <https://github.com/httpwg/structured-header-tests>.
+
 
 # Changes
 
 _RFC Editor: Please remove this section before publication._
+
+## Since draft-ietf-httpbis-header-structure-08
+
+* Disallow whitespace before items properly (#703).
+* Created "key" for use in dictionaries and parameters, rather than relying on identifier (#702). Identifiers have a separate minimum supported size.
+* Expanded the range of special characters allowed in identifier to include all of ALPHA, ".", ":", and "%" (#702).
+* Use "?" instead of "!" to indicate a Boolean (#719).
+* Added "Intentionally Strict Processing" (#684).
+* Gave better names for referring specs to use in Parameterised Lists (#720).
+* Added Lists of Lists (#721).
+* Rename Identifier to Token (#725).
+* Add implementation guidance (#727).
+
 
 ## Since draft-ietf-httpbis-header-structure-07
 
@@ -808,6 +938,7 @@ _RFC Editor: Please remove this section before publication._
 * Add Booleans (#683).
 * Allow identifiers in items again (#629).
 * Disallowed whitespace before items (#703).
+* Explain the consequences of splitting a string across multiple headers (#686).
 
 
 ## Since draft-ietf-httpbis-header-structure-06

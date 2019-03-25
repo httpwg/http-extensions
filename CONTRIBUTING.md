@@ -70,21 +70,26 @@ Group Last Call; consensus established in discussion of issues provides a limite
 prevent revisiting topics unnecessarily. Our issues list provides a mechanism for tracking those
 discussions and their outcome.
 
-Issues will be labeled by the Chairs as either `editorial` or `design`:
+Some issues might be labeled as `editorial`; they can be dealt with by the editor(s) without
+consensus or notification. Typically, any discussion will take place on the issue itself.
 
-* **Design** issues require discussion and consensus in the Working Group. This discussion can happen both in the issue and on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/), as outlined below. 
+Otherwise, the `open` issues in the issues list are those that we are currently or plan to discuss.
 
-* **Editorial** issues can be dealt with by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself.
+Issues can be discussed on the mailing list or the issues list. The editors can also propose
+resolutions to issues for the group's consideration by incorporating them into the draft(s).
 
-The `open` design issues in the issues list are those that we are currently or plan to discuss.
-When a design issue is `closed`, it implies that the issue's proposed resolution is reflected in
-the draft; if a closed design issue is labeled with `has-consensus`, it means that the incorporated resolution has Working Group consensus.
+When an issue is `closed`, it implies that the issue's proposed resolution is reflected in the
+draft(s). When a new draft is published, the issues that have been closed since the last draft will
+be highlighted in the draft's change notes and/or on the mailing list, to aid reviewers.
 
-Design issues can be discussed on the mailing list or the issues list. The editors can also propose resolutions to design issues for the group's consideration by incorporating them into the draft(s).
+Note that whether or not an issue is closed does not necessarily reflect consensus of the Working
+Group; an issue's `open`/`closed` state is only used to organise our discussions. If you have a
+question or problem with an issue in the `closed` state, please comment on it (either in the issues
+list or mailing list), and we'll adjust its state accordingly.
 
-When a new draft is published, the design issues that have been closed since the last draft will be highlighted on the mailing list, to aid reviewers. Once consensus is confirmed, those issues will be labeled with `has-consensus`.
-
-Note that whether or not a design issue is closed does **not** reflect consensus of the Working Group; an issue's `open`/`closed` state is only used to organise our discussions. If you have a question or problem with an issue in the `closed` state, please comment on it (either in the issues list or mailing list), and we'll adjust its state accordingly. Note that reopening issues with `has-consensus` requires new information.
+Some issues might require an explicit consensus call; if consensus is achieved in this
+manner, the issue will be labeled with `has-consensus`. Reopening issues with
+`has-consensus` requires new information (in the judgement of the chairs).
 
 
 ## Pull Requests
@@ -92,7 +97,7 @@ Note that whether or not a design issue is closed does **not** reflect consensus
 We welcome pull requests, both for editorial suggestions and to resolve open issues. In the latter
 case, please identify the relevant issue.
 
-Please do not use a pull request to open a new design issue.
+Please do not use a pull request to open a new issue.
 
 
 ## Code of Conduct

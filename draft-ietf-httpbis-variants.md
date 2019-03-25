@@ -115,24 +115,26 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This specification uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} with a list extension, defined in Section 7 of {{!RFC7230}}, that allows for compact definition of comma-separated lists using a '#' operator (similar to how the '*' operator indicates repetition).
+This specification uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} but relies on Structured Headers from {{!I-D.ietf-httpbis-header-structure}} for parsing.
 
-Additionally, it uses the "field-name", "OWS" and "token" rules from {{!RFC7230}}, and "type", "subtype", "content-coding" and "language-range" from {{!RFC7231}}.
+Additionally, it uses the "field-name" rule from {{!RFC7230}}, and "type", "subtype", "content-coding" and "language-range" from {{!RFC7231}}.
 
 
 # The "Variants" HTTP Header Field {#variants}
 
 The Variants HTTP response header field indicates what representations are available for a given resource at the time that the response is produced, by enumerating the request header fields that it varies on, along with the values that are available for each.
 
+Variants is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a list-of-lists (Section 3.3 of {{!I-D.ietf-httpbis-header-structure}}) whose members are strings (Section 3.8 of {{!I-D.ietf-httpbis-header-structure}}) or tokens (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
+
 ~~~ abnf
-Variants        = 1#variant-item
-variant-item    = field-name *( OWS ";" OWS available-value )
-available-value = token
-                  / "/" / "?" / "\" / "[" / "]"
-                  / ":" / "@" / "(" / ")"
+Variants        = sh-list-of-lists
 ~~~
 
-Each "variant-item" indicates a request header field that carries a value that clients might proactively negotiate for; each parameter on it indicates a value for which there is an available representation on the origin server.
+If Structured Header parsing fails or a list-member has the wrong type, the client MUST treat the representation as having no Variants header field.
+
+The Variants header field represents an ordered list of "variant-axes", each of which consists of a request header "field-name" string and a list of "available-value" strings. Each inner-list in the Variants header field value is parsed into a variant-axis. The first list-member of the inner-list is interpreted as the field-name, and the remaining list-members are the available-values. Any list-member that is a token (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}) is interpreted as a string containing the same characters.
+
+Field-names in the Variants header field value MUST match the field-name production (Section 3.2 of {{!RFC7230}}). Clients receiving an invalid field-name MUST NOT match it to any content negotiating mechanism.
 
 So, given this example header field:
 
@@ -156,7 +158,7 @@ A more complex example:
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
 ~~~
 
-Here, recipients can infer that two content-codings in addition to "identity" are available, as well as two content languages. Note that, as with all HTTP header fields that use the "#" list rule (see {{!RFC7230}}, Section 7), they might occur in the same header field or separately, like this:
+Here, recipients can infer that two content-codings in addition to "identity" are available, as well as two content languages. Note that, as with all Structured Header lists, they might occur in the same header field or separately, like this:
 
 ~~~ example
 Variants: Accept-Encoding;gzip;brotli
@@ -170,6 +172,10 @@ The ordering of the request header fields themselves indicates descending applic
 Origin servers SHOULD consistently send Variant header fields on all cacheable (as per {{!RFC7234}}, Section 3) responses for a resource, since its absence will trigger caches to fall back to Vary processing.
 
 Likewise, servers MUST send the Variant-Key response header field when sending Variants, since its absence means that the stored response will not be reused when this specification is implemented.
+
+*RFC EDITOR: Please remove the next paragraph before publication.*
+
+Implementations of drafts of this specification MUST implement an HTTP header field named "Variants-##" instead of the "Variants" header field specified by the final RFC, with "##" replaced by the draft number being implemented. For example, implementations of draft-ietf-httpbis-variants-05 would implement "Variants-05".
 
 
 ## Relationship to Vary {#vary}
@@ -185,58 +191,66 @@ In practice, implementation of Vary varies considerably. As a result, cache effi
 
 # The "Variant-Key" HTTP Header Field {#variant-key}
 
-The Variant-Key HTTP response header field is used to indicate the values from the Variants header field that identify the representation it occurs within.
+The Variant-Key HTTP response header field identifies a set of variants provided by the representation it occurs within. A variant is identified by a selection of one available-value from each variant-axis from the Variants header field.
+
+Variant-Key is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a list-of-lists (Section 3.3 of {{!I-D.ietf-httpbis-header-structure}}) whose members are strings (Section 3.8 of {{!I-D.ietf-httpbis-header-structure}}) or tokens (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
 ~~~ abnf
-Variant-Key      = 1#available-values
-available-values = available-value *( ";" available-value )
+Variant-Key      = sh-list-of-lists
 ~~~
 
-Each member of the list contains the selected available-value(s), in the same order as the variants listed in the Variants header field.
+If Structured Header parsing fails or a list-member has the wrong type, the client MUST treat the representation as having no Variant-Key header field.
 
-Therefore, Variant-Key MUST be the same length (in comma-separated members) as Variants, and each member MUST correspond in position to its companion in Variants.
+Each inner-list MUST have the same number of list-members as there are variant-axes in the representation's Variants header field. If not, the client MUST treat the representation as having no Variant-Key header field.
+
+Each list-member is treated as identifying an available-value for the corresponding variant-axis' field-name. Any list-member that is a token (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}) is interpreted as a string containing the same characters. These available-values do not need to explicitly appear in the Variants header field. For example, Accept-Encoding defines an implicit "identity" available-value ({{content-encoding}}).
 
 For example:
 
 ~~~ example
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
-Variant-Key: gzip, fr
+Variant-Key: gzip;fr
 ~~~
 
 This header pair indicates that the representation has a "gzip" content-coding and "fr" content-language.
 
-A more complex example involves listing multiple available-values in a list member, to indicate that the response can be used to satisfy requests with any of those values. For example:
+If the response can be used to satisfy more than one request, they can be listed in additional members.  For example:
 
 ~~~ example
 Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
-Variant-Key: gzip;identity, fr
+Variant-Key: gzip;fr, "identity";fr
 ~~~
 
 indicates that this response can be used for requests whose Accept-Encoding algorithm selects "gzip" or "identity", as long as the Accept-Language algorithm selects "fr" -- perhaps because there is no gzip-compressed French representation.
 
-This highlights an important aspect of Variant-Key; it is only used to indicate what request attributes are associated with the response containing it; this is different from headers like Content-Encoding, which indicate attributes of the response itself.
+When more than one Variant-Key value is in a response, the first one present MUST correspond to the request that caused that response to be generated.
 
+Parsing is strict. For example:
 
-## Generating a Variant-Key List {#gen-variant-key}
+~~~ example
+Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
+Variant-Key: gzip;fr, identity;fr, br;fr;oops
+~~~
 
-This algorithm generates a list of normalised strings from Variant-Key, suitable for comparison with
-values generated by {{cache}}.
+is treated as if the Variant-Key header were completely absent, which will tend to disable caching for the representation that contains it.
 
-Given stored-headers (a set of headers from a stored response), a normalised list of variant-keys for that message can be generated by following this algorithm:
+Note that in
 
-1. Let variant-keys be an empty list.
-2. Let variant-key-header be a string, the result of selecting all field-values of stored-headers whose field-name is "Variant-Key" and joining them with a comma (",").
-3. Let value-list be the result of splitting variant-key-header on commas (",").
-4. For each value in value-list:
-   1. Remove all whitespace from value.
-   2. Let items be the result of splitting value on ";".
-   3. append items to variant-keys.
-5. Return the result of running Compute Possible Keys ({{find}}) on variant-keys, an empty string and an empty list.
+~~~ example
+Variant-Key: gzip ;fr
+Variant-Key: "gzip ";fr
+~~~
+
+The whitespace after "gzip" in the first header field value is excluded by the token parsing algorithm, but the whitespace in the second header field value is included by the string parsing algorithm. This will likely cause the second header field value to fail to match client requests.
+
+*RFC EDITOR: Please remove the next paragraph before publication.*
+
+Implementations of drafts of this specification MUST implement an HTTP header field named "Variant-Key-##" instead of the "Variant-Key" header field specified by the final RFC, with "##" replaced by the draft number being implemented. For example, implementations of draft-ietf-httpbis-variants-05 would implement "Variant-Key-05".
 
 
 # Cache Behaviour {#cache}
 
-Caches that implement the Variants header field and the relevant semantics of the field-name it contains can use that knowledge to either select an appropriate stored representation, or forward the request if no appropriate representation is stored.
+Caches that implement the Variants header field and the relevant semantics of the field-names it contains can use that knowledge to either select an appropriate stored representation, or forward the request if no appropriate representation is stored.
 
 They do so by running this algorithm (or its functional equivalent) upon receiving a request:
 
@@ -245,36 +259,32 @@ Given incoming-request (a mapping of field-names to lists of field values), and 
 1. If stored-responses is empty, return an empty list.
 2. Order stored-responses by the "Date" header field, most recent to least recent.
 3. Let sorted-variants be an empty list.
-4. If the freshest member of stored-responses (as per {{!RFC7234}}, Section 4.2) has one or more "Variants" header field(s):
-   1. Select one member of stored-responses and let variants-header be its "Variants" header field-value(s). This SHOULD be the most recent response, but MAY be from an older one as long as it is still fresh.
-   3. For each variant in variants-header, parsed according to the ABNF:
-      1. If variant's field-name corresponds to the request header field identified by a content negotiation mechanism that the implementation supports:
-         1. Let request-value be the field-value(s) associated with field-name in incoming-request.
-         2. Let available-values be a list containing all available-value for variant.
-         3. Let sorted-values be the result of running the algorithm defined by the content negotiation mechanism with request-value and available-values.
+4. If the freshest member of stored-responses (as per {{!RFC7234}}, Section 4.2) has one or more "Variants" header field(s) that successfully parse according to {{variants}}:
+   1. Select one member of stored-responses with a "Variants" header field-value(s) that successfully parses according to {{variants}} and let variants-header be this parsed value. This SHOULD be the most recent response, but MAY be from an older one as long as it is still fresh.
+   2. For each variant-axis in variants-header:
+      1. If variant-axis' field-name corresponds to the request header field identified by a content negotiation mechanism that the implementation supports:
+         1. Let request-value be the field-value associated with field-name in incoming-request (after being combined as allowed by Section 3.2.2 of {{RFC7230}}), or null if field-name is not in incoming-request.
+         3. Let sorted-values be the result of running the algorithm defined by the content negotiation mechanism with request-value and variant-axis' available-values.
          4. Append sorted-values to sorted-variants.
 
-      At this point, sorted-variants will be a list of lists, each member of the top-level list corresponding to a variant-item in the Variants header field-value, containing zero or more items indicating available-values that are acceptable to the client, in order of preference, greatest to least.
+      At this point, sorted-variants will be a list of lists, each member of the top-level list corresponding to a variant-axis in the Variants header field-value, containing zero or more items indicating available-values that are acceptable to the client, in order of preference, greatest to least.
 
-5. Return result of running Compute Possible Keys ({{find}}) on sorted-variants, an empty string and an empty list.
+5. Return result of running Compute Possible Keys ({{find}}) on sorted-variants, an empty list and an empty list.
 
-This returns a list of strings suitable for comparing to normalised Variant-Keys ({{gen-variant-key}}) that represent possible responses on the server that can be used to satisfy the request, in preference order, provided that their secondary cache key (after removing the headers covered by Variants) matches. {{check_vary}} illustrates one way to do this.
+This returns a list of lists of strings suitable for comparing to the parsed Variant-Keys ({{variant-key}}) that represent possible responses on the server that can be used to satisfy the request, in preference order, provided that their secondary cache key (after removing the headers covered by Variants) matches. {{check_vary}} illustrates one way to do this.
 
 
 ## Compute Possible Keys {#find}
 
 This algorithm computes the cross-product of the elements of key-facets.
 
-Given key-facets (a list of lists), and key-stub (a string representing a partial key), and possible-keys (a list):
+Given key-facets (a list of lists of strings), and key-stub (a list of strings representing a partial key), and possible-keys (a list of lists of strings):
 
 1. Let values be the first member of key-facets.
+1. Let remaining-facets be a copy of all of the members of key-facets except the first.
 2. For each value in values:
-   1. If key-stub is an empty string, let this-key be a copy of value.
-   1. Otherwise:
-      1. Let this-key be a copy of key-stub.
-      2. Append a comma (",") to this-key.
-      3. Append value to this-key.
-   3. Let remaining-facets be a copy of all of the members of key-facets except the first.
+   1. Let this-key be a copy of key-stub.
+   2. Append value to this-key.
    4. If remaining-facets is empty, append this-key to possible-keys.
    5. Otherwise, run Compute Possible Keys on remaining-facets, this-key and possible-keys.
 3. Return possible-keys.
@@ -321,25 +331,79 @@ Then the sorted-variants would be:
 ]
 ~~~
 
-Which means that the sorted-keys would be:
+Which means that the result of the {{cache}}{:format="title"} algorithm would be:
 
 ~~~ example
 [
-  'fr gzip',
-  'fr identity',
-  'en gzip',
-  'en identity'
+  ["fr", "gzip"],
+  ["fr", "identity"],
+  ["en", "gzip"],
+  ["en", "identity"]
 ]
 ~~~
 
 Representing a first preference of a French, gzip'd response. Thus, if a cache has a response with:
 
 ~~~ example
-Variant-Key: fr, gzip
+Variant-Key: fr; gzip
 ~~~
 
 it could be used to satisfy the first preference. If not, responses corresponding to the other keys could be returned, or the request could be forwarded towards the origin.
 
+### A Variant Missing From the Cache
+
+If the selected variants-header was:
+
+~~~ example
+Variants: Accept-Language;en;fr;de
+~~~
+
+And a request comes in with the following headers:
+
+~~~ example
+Accept-Language: de;q=1.0, es;q=0.8
+~~~
+
+Then sorted-variants in {{cache}}{:format="title"} is:
+
+~~~ example
+[
+  ["de"]         // prefers German; will not accept English
+]
+~~~
+
+If the cache contains responses with the following Variant-Keys:
+
+~~~ example
+Variant-Key: fr
+Variant-Key: en
+~~~
+
+Then the cache needs to forward the request to the origin server, since Variants indicates that "de" is available, and that is acceptable to the client.
+
+### Variants That Don't Overlap the Client's Request
+
+If the selected variants-header was:
+
+~~~ example
+Variants: Accept-Language;en;fr;de
+~~~
+
+And a request comes in with the following headers:
+
+~~~ example
+Accept-Language: es;q=1.0, ja;q=0.8
+~~~
+
+Then sorted-variants in {{cache}}{:format="title"} are:
+
+~~~ example
+[
+  ["en"]
+]
+~~~
+
+This allows the cache to return a "Variant-Key: en" response even though it's not in the set the client prefers.
 
 # Origin Server Behaviour {#origin}
 
@@ -408,7 +472,7 @@ Content-Language: en
 Content-Encoding: br
 Variants: Accept-Language;en;jp;de
 Variants: Accept-Encoding;br;gzip
-Variant-Key: en, br
+Variant-Key: en;br
 Vary: Accept-Language, Accept-Encoding
 Transfer-Encoding: chunked
 ~~~
@@ -451,7 +515,7 @@ To be usable with Variants, proactive content negotiation mechanisms need to be 
 
 * MUST define a request header field that advertises the clients preferences or capabilities, whose field-name SHOULD begin with "Accept-".
 * MUST define the syntax of an available-value that will occur in Variants and Variant-Key.
-* MUST define an algorithm for selecting a result. It MUST return a list of available-values that are suitable for the request, in order of preference, given the value of the request header nominated above and an available-values list from the Variants header. If the result is an empty list, it implies that the cache cannot satisfy the request.
+* MUST define an algorithm for selecting a result. It MUST return a list of available-values that are suitable for the request, in order of preference, given the value of the request header nominated above (or null if the request header is absent) and an available-values list from the Variants header. If the result is an empty list, it implies that the cache cannot satisfy the request.
 
 {{backports}} fulfils these requirements for some existing proactive content negotiation mechanisms in HTTP.
 
@@ -503,10 +567,10 @@ accept-available-value = type "/" subtype
 To perform content negotiation for Accept given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-types be a list of the types in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.2 of {{!RFC7231}} (omitting any coding with a weight of 0). If "Accept" is not present or empty, preferred-types will be empty. If a type lacks an explicit weight, an implementation MAY assign one.
-3. If the first member of available-values is not a member of preferred-types, append it to preferred-types (thus making it the default).
-4. For each preferred-type in preferred-types:
+2. Let preferred-types be a list of the types in the request-value (or the empty list if request-value is null), ordered by their weight, highest to lowest, as per Section 5.3.2 of {{!RFC7231}} (omitting any coding with a weight of 0). If a type lacks an explicit weight, an implementation MAY assign one.
+3. For each preferred-type in preferred-types:
    1. If any member of available-values matches preferred-type, using the media-range matching mechanism specified in Section 5.3.2 of {{!RFC7231}} (which is case-insensitive), append those members of available-values to preferred-available (preserving the precedence order implied by the media ranges' specificity).
+4. If preferred-available is empty, append the first member of available-values to preferred-available. This makes the first available-value the default when none of the client's preferences are available.
 5. Return preferred-available.
 
 Note that this algorithm explicitly ignores extension parameters on media types (e.g., "charset").
@@ -525,7 +589,7 @@ accept-encoding-available-value = content-coding / "identity"
 To perform content negotiation for Accept-Encoding given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-codings be a list of the codings in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any coding with a weight of 0). If "Accept-Encoding" is not present or empty, preferred-codings will be empty. If a coding lacks an explicit weight, an implementation MAY assign one.
+2. Let preferred-codings be a list of the codings in the request-value (or the empty list if request-value is null), ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any coding with a weight of 0). If a coding lacks an explicit weight, an implementation MAY assign one.
 3. If "identity" is not a member of preferred-codings, append "identity".
 4. Append "identity" to available-values.
 5. For each preferred-coding in preferred-codings:
@@ -547,10 +611,10 @@ accept-encoding-available-value = language-range
 To perform content negotiation for Accept-Language given a request-value and available-values:
 
 1. Let preferred-available be an empty list.
-2. Let preferred-langs be a list of the language-ranges in the request-value, ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any language-range with a weight of 0). If a language-range lacks a weight, an implementation MAY assign one.
-3. If the first member of available-values is not a member of preferred-langs, append it to preferred-langs (thus making it the default).
-4. For each preferred-lang in preferred-langs:
+2. Let preferred-langs be a list of the language-ranges in the request-value (or the empty list if request-value is null), ordered by their weight, highest to lowest, as per Section 5.3.1 of {{!RFC7231}} (omitting any language-range with a weight of 0). If a language-range lacks a weight, an implementation MAY assign one.
+3. For each preferred-lang in preferred-langs:
    1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in Section 3.3 of {{!RFC4647}}, append those members of available-values to preferred-available (preserving their order).
+4. If preferred-available is empty, append the first member of available-values to preferred-available. This makes the first available-value the default when none of the client's preferences are available.
 5. Return preferred-available.
 
 
@@ -560,4 +624,4 @@ This protocol is conceptually similar to, but simpler than, Transparent Content 
 
 It is also a generalisation of a Fastly VCL feature designed by Rogier 'DocWilco' Mulhuijzen.
 
-Thanks to Hooman Beheshti, Ilya Grigorik and Jeffrey Yasskin for their review and input.
+Thanks to Hooman Beheshti, Ilya Grigorik, Leif Hedstrom, and Jeffrey Yasskin for their review and input.
