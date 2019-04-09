@@ -498,7 +498,7 @@ path-value        = *av-octet
 secure-av         = "Secure"
 httponly-av       = "HttpOnly"
 samesite-av       = "SameSite=" samesite-value
-samesite-value    = "Strict" / "Lax"
+samesite-value    = "Strict" / "Lax" / "None"
 extension-av      = *av-octet
 av-octet          = %x20-3A / %x3C-7E
                       ; any CHAR except CTLs or ";"
@@ -666,8 +666,10 @@ initiated from a context whose "site for cookies" is "example.com".
 If the "SameSite" attribute's value is "Strict", the cookie will only be sent
 along with "same-site" requests. If the value is "Lax", the cookie will be sent
 with same-site requests, and with "cross-site" top-level navigations, as
-described in {{strict-lax}}. If the "SameSite" attribute's value is neither of
-these, the attribute will be ignored.
+described in {{strict-lax}}. If the value is "None", the cookie will be sent
+with same-site and cross-site requests. If the "SameSite" attribute's value is
+something other than these three known keywords, the attribute's value will be
+treated as "None".
 
 ### Cookie Name Prefixes
 
@@ -1257,14 +1259,20 @@ attribute-name of HttpOnly and an empty attribute-value.
 If the attribute-name case-insensitively matches the string "SameSite", the
 user agent MUST process the cookie-av as follows:
 
-1.  If cookie-av's attribute-value is not a case-insensitive match for "Strict"
-    or "Lax", ignore the `cookie-av`.
+1.  Let `enforcement` be "None".
 
-2.  Let `enforcement` be "Lax" if cookie-av's attribute-value is a
-    case-insensitive match for "Lax", and "Strict" otherwise.
+2.  If cookie-av's attribute-value is a case-insensitive match for "Strict",
+    set `enforcement` to "Strict".
 
-3.  Append an attribute to the cookie-attribute-list with an attribute-name
+3.  If cookie-av's attribute-value is a case-insensitive match for "Lax", set
+    `enforcement` to "Lax".
+
+4.  Append an attribute to the cookie-attribute-list with an attribute-name
     of "SameSite" and an attribute-value of `enforcement`.
+
+Note: This algorithm maps the "None" value, as well as any unknown value, to
+the "None" behavior, which is helpful for backwards compatibility when
+introducing new variants.
 
 #### "Strict" and "Lax" enforcement {#strict-lax}
 
@@ -1433,8 +1441,8 @@ user agent MUST process the cookie as follows:
 
 13. If the cookie-attribute-list contains an attribute with an
     attribute-name of "SameSite", set the cookie's same-site-flag to
-    attribute-value (i.e. either "Strict" or "Lax"). Otherwise, set the cookie's
-    same-site-flag to "None".
+    attribute-value (i.e. either "Strict", "Lax", or "None"). Otherwise, set the
+    cookie's same-site-flag to "None".
 
 14. If the cookie's `same-site-flag` is not "None", and the cookie is being set
     from a context whose "site for cookies" is not an exact match for
@@ -2059,6 +2067,9 @@ Specification document:
 *  Reflect widespread implementation practice of including a cookie's
    `host-only-flag` when calculating its uniqueness:
    <https://github.com/httpwg/http-extensions/issues/199>
+
+*  Introduced an explicit "None" value for the SameSite attribute:
+   <https://github.com/httpwg/http-extensions/issues/788>
 
 # Acknowledgements
 {:numbered="false"}
