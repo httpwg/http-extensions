@@ -291,12 +291,12 @@ sh-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
 
 ## Integers {#integer}
 
-Integers have a range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive (i.e., a 64-bit signed integer).
+Integers have a range of −999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed).
 
 The ABNF for integers in HTTP/1 headers is:
 
 ~~~ abnf
-sh-integer = ["-"] 1*19DIGIT
+sh-integer = ["-"] 1*15DIGIT
 ~~~
 
 For example:
@@ -534,7 +534,7 @@ Given an item as input_item:
 
 Given an integer as input_integer:
 
-0. If input_integer is not an integer in the range of −9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 inclusive, fail serialisation.
+0. If input_integer is not an integer in the range of −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialisation.
 1. Let output be an empty string.
 2. If input_integer is less than (but not equal to) 0, append "-" to output.
 3. Append input_integer's numeric value represented in base 10 using only decimal digits to output.
@@ -773,7 +773,7 @@ NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and 
    2. If char is a DIGIT, append it to input_number.
    3. Else, if type is "integer" and char is ".", append char to input_number and set type to "float".
    4. Otherwise, prepend char to input_string, and exit the loop.
-   5. If type is "integer" and input_number contains more than 19 characters, fail parsing.
+   5. If type is "integer" and input_number contains more than 15 characters, fail parsing.
    6. If type is "float" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
    1. Parse input_number as an integer and let output_number be the product of the result and sign.
@@ -922,6 +922,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Changed Boolean from T/F to 1/0 (#784).
 * Parameters are now ordered maps (#765).
+* Clamp integers to 15 digits (#737).
 
 
 ## Since draft-ietf-httpbis-header-structure-08
