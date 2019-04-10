@@ -253,9 +253,9 @@ Parsers MUST support lists of lists containing at least 1024 members, and inner-
 
 ## Parameterised Lists {#param}
 
-Parameterised Lists are arrays of parameterised identifier with one or more members.
+Parameterised Lists are arrays of parameterised identifiers, with one or more members.
 
-A parameterised identifier is a token ({{token}}}) with an optional set of parameters, each parameter having a textual name and an optional value that is an item ({{item}}). Ordering between parameters is not significant, and duplicate parameters MUST cause parsing to fail.
+A parameterised identifier is a primary identifier (a {{token}}}) with associated parameters, an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters, and keys are required to be unique.
 
 The ABNF for parameterised lists in HTTP/1 headers is:
 
@@ -728,7 +728,7 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
 Given an ASCII string input_string, return an token with an unordered map of parameters. input_string is modified to remove the parsed value.
 
 1. Let primary_identifier be the result of Parsing a Token from Text ({{parse-token}}) from input_string.
-2. Let parameters be an empty, unordered map.
+2. Let parameters be an empty, ordered map.
 3. In a loop:
    1. Discard any leading OWS from input_string.
    2. If the first character of input_string is not ";", exit the loop.
@@ -911,6 +911,8 @@ A generic implementation should expose the top-level parse ({{text-parse}}) and 
 
 For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community; see <https://github.com/httpwg/structured-header-tests>.
 
+Implementers should note that dictionaries and parameters are order-preserving maps. Some headers may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
+
 
 # Changes
 
@@ -919,6 +921,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-09
 
 * Changed Boolean from T/F to 1/0 (#784).
+* Parameters are now ordered maps (#765).
 
 
 ## Since draft-ietf-httpbis-header-structure-08
