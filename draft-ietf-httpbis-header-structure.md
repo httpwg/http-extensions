@@ -409,13 +409,13 @@ The ABNF for a Boolean in HTTP/1 headers is:
 
 ~~~ abnf
 sh-boolean = "?" boolean
-boolean    = %54 / %46  ; capital "T" or "F"
+boolean    = "0" / "1"
 ~~~
 
-In HTTP/1 headers, a byte sequence is indicated with a leading "?" character. For example:
+In HTTP/1 headers, a boolean is indicated with a leading "?" character. For example:
 
 ~~~ example
-Example-BoolHdr: ?T
+Example-BoolHdr: ?1
 ~~~
 
 
@@ -602,8 +602,8 @@ Given a Boolean as input_boolean:
 0. If input_boolean is not a boolean, fail serialisation.
 1. Let output be an empty string.
 2. Append "?" to output.
-3. If input_boolean is true, append "T" to output.
-4. If input_boolean is false, append "F" to output.
+3. If input_boolean is true, append "1" to output.
+4. If input_boolean is false, append "0" to output.
 5. Return output.
 
 
@@ -846,8 +846,8 @@ Given an ASCII string input_string, return a Boolean. input_string is modified t
 
 1. If the first character of input_string is not "?", fail parsing.
 2. Discard the first character of input_string.
-3. If the first character of input_string case-sensitively matches "T", discard the first character, and return true.
-4. If the first character of input_string case-sensitively matches "F", discard the first character, and return false.
+3. If the first character of input_string matches "1", discard the first character, and return true.
+4. If the first character of input_string matches "0", discard the first character, and return false.
 5. No value has matched; fail parsing.
 
 
@@ -915,6 +915,11 @@ For interoperability, it's important that generic implementations be complete an
 # Changes
 
 _RFC Editor: Please remove this section before publication._
+
+## Since draft-ietf-httpbis-header-structure-09
+
+* Changed Boolean from T/F to 1/0 (#784).
+
 
 ## Since draft-ietf-httpbis-header-structure-08
 
