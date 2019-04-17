@@ -918,6 +918,12 @@ Implementers should note that dictionaries and parameters are order-preserving m
 
 _RFC Editor: Please remove this section before publication._
 
+
+## Since draft-ietf-httpbis-header-structure-10
+
+_None yet._
+
+
 ## Since draft-ietf-httpbis-header-structure-09
 
 * Changed Boolean from T/F to 1/0 (#784).
