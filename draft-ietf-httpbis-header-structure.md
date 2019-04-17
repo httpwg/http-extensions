@@ -372,7 +372,9 @@ Tokens are short textual words; their abstract model is identical to their expre
 The ABNF for tokens in HTTP/1 headers is:
 
 ~~~ abnf
-sh-token = ALPHA *( ALPHA / DIGIT / "_" / "-" / "." / ":" / "%" / "*" / "/" )
+sh-token = ALPHA
+           *( ALPHA / DIGIT / "_" / "-" / "." / ":" / "%"
+              / "*" / "/" )
 ~~~
 
 Parsers MUST support tokens with at least 512 characters.
