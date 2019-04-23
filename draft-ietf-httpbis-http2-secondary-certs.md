@@ -807,8 +807,8 @@ One such means is the Required Domain certificate extension defined in
 {extension}. Clients MUST require that server certificates presented via this
 mechanism contain the Required Domain extension and require that a certificate
 previously accepted on the connection (including the certificate presented in
-TLS) lists one of the Required Domains in the Subject field or the Subject
-Alternative Name extension.
+TLS) lists the Required Domain in the Subject field or the Subject Alternative
+Name extension.
 
 As noted in the Security Considerations of
 [I-D.ietf-tls-exported-authenticator], it is difficult to formally prove that an
