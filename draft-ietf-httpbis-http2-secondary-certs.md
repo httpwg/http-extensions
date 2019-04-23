@@ -777,10 +777,10 @@ certificates with a requiredDomain extension containing empty GeneralName
 fields.  Clients that encounter such a certificate when processing a
 certification path MUST consider the certificate invalid.
 
-The wildcard character "*" MAY be used to represent that any set of subdomains
-is acceptable.  This character MUST be the entirety of the first label if used,
-and MUST NOT occur elsewhere.  (That is, "*.example.com" and "*" are acceptable,
-but "www.*.com" and "w*.example.com" are not).
+The wildcard character "*" MAY be used to represent that any previously
+authenticated identity is acceptable.  This character MUST be the entirety of
+the name if used and MUST have a type of "dNSName".  (That is, "*" is
+acceptable, but "*.com" and "w*.example.com" are not).
 
     id-ce-requiredDomain OBJECT IDENTIFIER ::=  { id-ce TBD1 }
 
