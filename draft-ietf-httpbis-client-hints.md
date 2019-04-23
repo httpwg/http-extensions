@@ -42,8 +42,6 @@ HTTP defines proactive content negotiation to allow servers to select the approp
 
 This document defines two response headers, Accept-CH and Accept-CH-Lifetime, that servers can use to advertise their use of request headers for proactive content negotiation, along with a set of guidelines for the creation of such headers, colloquially known as "Client Hints."
 
-It also defines an initial set of Client Hints.
-
 
 --- note_Note_to_Readers
 
