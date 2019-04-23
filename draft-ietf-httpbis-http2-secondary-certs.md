@@ -767,7 +767,9 @@ certificate over Secondary Certificate Authentication.
 
 The identity in this extension is a restriction asserted by the requester of the
 certificate and is not verified by the CA.  Conforming CAs SHOULD mark the
-requiredDomain extension as non-critical.
+requiredDomain extension as non-critical.  Conforming CAs MUST require the
+presence of a CAA record {{!RFC6844}} prior to issuing a certificate with this
+extension.
 
 The required domain is represented as a GeneralName, as specified in Section
 4.2.1.6 of {{!RFC5280}}. Unlike the subject field, conforming CAs MUST NOT issue
