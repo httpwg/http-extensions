@@ -761,27 +761,19 @@ layer.
 # Required Domain Certificate Extension {#extension}
 
 The Required Domain extension allows certificates to limit their use with
-Secondary Certificate Authentication.  A client MUST verify that the server
-has proven ownership of at least one of the indicated identities before
-accepting the limited certificate over Secondary Certificate Authentication.
+Secondary Certificate Authentication.  A client MUST verify that the server has
+proven ownership of the indicated identity before accepting the limited
+certificate over Secondary Certificate Authentication.
 
-The identities listed in this extension are restrictions asserted by the
-requester of the certificate and are not verified by the CA.  Conforming CAs
-SHOULD mark the requiredDomain extension as non-critical.
+The identity in this extension is a restriction asserted by the requester of the
+certificate and is not verified by the CA.  Conforming CAs SHOULD mark the
+requiredDomain extension as non-critical.
 
-Each required domain is represented as an IA5String. The name MUST be in the
-"preferred name syntax", as specified by Section 3.5 of {{!RFC1034}} and as
-modified by Section 2.1 of {{!RFC1123}}.  Note that while uppercase and
-lowercase letters are allowed in domain names, no significance is attached to
-the case. In addition, while the string " " is a legal domain name,
-requiredDomain extensions MUST NOT contain " ".  Rules for encoding
-internationalized domain names are specified in Section 7.2 of {{!RFC5280}}.
-
-If the requiredDomain extension is present, the sequence MUST contain at least
-one entry.  Unlike the subject field, conforming CAs MUST NOT issue certificates
-with a requiredDomain extension containing empty GeneralName fields.  Clients
-that encounter such a certificate when processing a certification path MUST
-consider the certificate invalid.
+The required domain is represented as a GeneralName, as specified in Section
+4.2.1.6 of {{!RFC5280}}. Unlike the subject field, conforming CAs MUST NOT issue
+certificates with a requiredDomain extension containing empty GeneralName
+fields.  Clients that encounter such a certificate when processing a
+certification path MUST consider the certificate invalid.
 
 The wildcard character "*" MAY be used to represent that any set of subdomains
 is acceptable.  This character MUST be the entirety of the first label if used,
@@ -790,7 +782,7 @@ but "www.*.com" and "w*.example.com" are not).
 
     id-ce-requiredDomain OBJECT IDENTIFIER ::=  { id-ce TBD1 }
 
-    RequiredDomain ::= SEQUENCE SIZE (1..MAX) OF IA5String
+    RequiredDomain ::= GeneralName
 
 # Security Considerations {#security}
 
