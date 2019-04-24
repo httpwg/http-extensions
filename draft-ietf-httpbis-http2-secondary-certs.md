@@ -720,7 +720,9 @@ steps to validate the token it contains:
    regard to the generated request (if any).
 
 Once the authenticator is accepted, the endpoint can perform any other checks
-for the acceptability of the certificate itself.
+for the acceptability of the certificate itself.  Clients MUST NOT accept any
+end-entity certificate from an exported authenticator which does not contain
+the Required Domain extension; see {{extension}} and {{impersonation}}.
 
 # Indicating Failures During HTTP-Layer Certificate Authentication {#errors}
 
