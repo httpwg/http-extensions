@@ -771,7 +771,9 @@ The identity in this extension is a restriction asserted by the requester of the
 certificate and is not verified by the CA.  Conforming CAs SHOULD mark the
 requiredDomain extension as non-critical.  Conforming CAs MUST require the
 presence of a CAA record {{!RFC6844}} prior to issuing a certificate with this
-extension.
+extension.  Because a Required Domain value of "*" has a much higher risk of
+reuse if compromised, conforming Certificate Authorities are encouraged to
+require more extensive verification prior to issuing such a certificate.
 
 The required domain is represented as a GeneralName, as specified in Section
 4.2.1.6 of {{!RFC5280}}. Unlike the subject field, conforming CAs MUST NOT issue
