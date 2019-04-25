@@ -720,7 +720,9 @@ steps to validate the token it contains:
    regard to the generated request (if any).
 
 Once the authenticator is accepted, the endpoint can perform any other checks
-for the acceptability of the certificate itself.
+for the acceptability of the certificate itself.  Clients MUST NOT accept any
+end-entity certificate from an exported authenticator which does not contain
+the Required Domain extension; see {{extension}} and {{impersonation}}.
 
 # Indicating Failures During HTTP-Layer Certificate Authentication {#errors}
 
@@ -758,6 +760,36 @@ any stream which references the failing certificate in question or process the
 requests as unauthenticated and provide error information at the HTTP semantic
 layer.
 
+# Required Domain Certificate Extension {#extension}
+
+The Required Domain extension allows certificates to limit their use with
+Secondary Certificate Authentication.  A client MUST verify that the server has
+proven ownership of the indicated identity before accepting the limited
+certificate over Secondary Certificate Authentication.
+
+The identity in this extension is a restriction asserted by the requester of the
+certificate and is not verified by the CA.  Conforming CAs SHOULD mark the
+requiredDomain extension as non-critical.  Conforming CAs MUST require the
+presence of a CAA record {{!RFC6844}} prior to issuing a certificate with this
+extension.  Because a Required Domain value of "*" has a much higher risk of
+reuse if compromised, conforming Certificate Authorities are encouraged to
+require more extensive verification prior to issuing such a certificate.
+
+The required domain is represented as a GeneralName, as specified in Section
+4.2.1.6 of {{!RFC5280}}. Unlike the subject field, conforming CAs MUST NOT issue
+certificates with a requiredDomain extension containing empty GeneralName
+fields.  Clients that encounter such a certificate when processing a
+certification path MUST consider the certificate invalid.
+
+The wildcard character "*" MAY be used to represent that any previously
+authenticated identity is acceptable.  This character MUST be the entirety of
+the name if used and MUST have a type of "dNSName".  (That is, "*" is
+acceptable, but "*.com" and "w*.example.com" are not).
+
+    id-ce-requiredDomain OBJECT IDENTIFIER ::=  { id-ce TBD1 }
+
+    RequiredDomain ::= GeneralName
+
 # Security Considerations {#security}
 
 This mechanism defines an alternate way to obtain server and client certificates
@@ -774,6 +806,13 @@ a malicious server now only needs a client to connect to *some* HTTPS site under
 its control in order to present the compromised certificate. As recommended in
 {{?RFC8336}}, clients opting not to consult DNS ought to employ some alternative
 means to increase confidence that the certificate is legitimate.
+
+One such means is the Required Domain certificate extension defined in
+{extension}. Clients MUST require that server certificates presented via this
+mechanism contain the Required Domain extension and require that a certificate
+previously accepted on the connection (including the certificate presented in
+TLS) lists the Required Domain in the Subject field or the Subject Alternative
+Name extension.
 
 As noted in the Security Considerations of
 [I-D.ietf-tls-exported-authenticator], it is difficult to formally prove that an
