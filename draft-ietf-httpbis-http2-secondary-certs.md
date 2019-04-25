@@ -900,17 +900,6 @@ during the processing of a request, potentially multiple times, as
 authentication needs to be prepared to reevaluate the authorization state of a
 request as the set of certificates changes.
 
-Client implementations need to carefully consider the impact of setting the
-`AUTOMATIC_USE` flag. This flag is a performance optimization, permitting the
-client to avoid a round-trip on each request where the server checks for
-certificate authentication. However, once this flag has been sent, the client
-has zero knowledge about whether the server will use the referenced cert for any
-future request, or even for an existing request which has not yet completed.
-Clients MUST NOT set this flag on any certificate which is not appropriate for
-currently-in-flight requests, and MUST NOT make any future requests on the same
-connection which they are not willing to have associated with the provided
-certificate.
-
 # IANA Considerations {#iana}
 
 This draft adds entries in three registries.
