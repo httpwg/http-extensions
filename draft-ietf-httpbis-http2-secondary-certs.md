@@ -863,7 +863,7 @@ which certificates would be acceptable.
 
 ## Denial of Service
 
-Failure to provide a certificate on a stream after receiving
+Failure to provide a certificate for a stream after receiving
 `CERTIFICATE_NEEDED` blocks processing, and SHOULD be subject to standard
 timeouts used to guard against unresponsive peers.
 
