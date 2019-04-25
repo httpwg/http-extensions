@@ -977,7 +977,13 @@ this document.
 
 ## Since draft-ietf-httpbis-http2-secondary-certs-03:
 
-Nothing yet.
+- `CERTIFICATE_REQUEST` frames contain the Request-ID, which MUST be checked
+  against the `certificate_request_context` of the Exported Authenticator
+  Request
+- `CERTIFICATE` frames contain the Request-ID to which they respond, unless the
+  UNSOLICITED flag is set
+- The Required Domain extension is defined for certificates, which must be
+  present for certificates presented by servers
 
 ## Since draft-ietf-httpbis-http2-secondary-certs-02:
 
