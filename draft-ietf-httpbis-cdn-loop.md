@@ -1,13 +1,12 @@
 ---
-title: CDN Loop Detection
+title: Loop Detection in Content Delivery Networks (CDNs)
 docname: draft-ietf-httpbis-cdn-loop-latest
 category: std
-
+abbrev: CDN Loop Detection
 ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
-
 stand_alone: yes
 pi: [toc, sortrefs, symrefs]
 
@@ -45,7 +44,6 @@ informative:
     - name: Vern Paxson
     date: 2016/02/21
     seriesinfo:
-      DOI: 10.14722/ndss.2016.23442
     target: http://www.icir.org/vern/papers/cdn-loops.NDSS16.pdf
 
 
@@ -62,14 +60,14 @@ non-terminating loop. The new header field can be used to identify the error and
 # Introduction
 
 In modern deployments of HTTP servers, it is common to interpose Content Delivery Networks (CDNs)
-in front of origin servers to improve end-user perceived latency, reduce operational costs, and
+in front of origin servers to improve latency perceived by end users, reduce operational costs, and
 improve scalability and reliability of services.
 
 Often, more than one CDN is in use by a given origin. This happens for a variety of reasons, such
-as cost savings, arranging for failover should one CDN have issues, or to directly compare their
-services.
+as cost savings, arranging for failover should one CDN have issues, or direct comparison
+of the CDNs' services.
 
-As a result, it is not unknown for forwarding CDNs to be configured in a "loop" accidentally;
+As a result, it is possible for forwarding CDNs to be configured in a "loop" accidentally;
 because routing is achieved through a combination of DNS and forwarding rules, and site
 configurations are sometimes complex and managed by several parties.
 
@@ -77,12 +75,13 @@ When this happens, it is difficult to debug. Additionally, it sometimes isn't ac
 between multiple CDNs can be used as an attack vector (e.g., see {{loop-attack}}), especially if one
 CDN unintentionally strips the loop detection headers of another.
 
-This specification defines the CDN-Loop HTTP request header field to help detect such attacks and accidents among implementing forwarding CDNs, by disallowing its modification by their customers.
-
+This specification defines the CDN-Loop HTTP request header field to help
+detect such attacks and accidents among forwarding CDNs that have implemented
+it; the header field may not be modified by their customers.
 
 ## Relationship to Via
 
-HTTP defines the Via header field in {{!RFC7230}}, Section 5.7.1 for "tracking message forwards,
+HTTP defines the Via header field in Section 5.7.1 of {{!RFC7230}} for "tracking message forwards,
 avoiding request loops, and identifying the protocol capabilities of senders along the
 request/response chain."
 
@@ -100,14 +99,14 @@ shown here.
 
 This specification uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} with a list
 extension, defined in Section 7 of {{!RFC7230}}, that allows for compact definition of
-comma-separated lists using a ‘#’ operator (similar to how the ‘*’ operator indicates repetition).
-Additionally, it uses the token, OWS, uri-host and port rules from {{!RFC7230}} and the parameter
+comma-separated lists using a '#' operator (similar to how the '*' operator indicates repetition).
+Additionally, it uses a token (OWS), uri-host, and port rules from {{!RFC7230}} and the parameter
 rule from {{!RFC7231}}.
 
 
 # The CDN-Loop Request Header Field {#header}
 
-The CDN-Loop request header field is intended to help a Content Delivery Network identify when an incoming request has already passed through that CDN's servers, to detect loops.
+The CDN-Loop request header field is intended to help a Content Delivery Network identify when an incoming request has already passed through that CDN's servers to detect loops.
 
 ~~~ abnf
 CDN-Loop  = #cdn-info
@@ -119,7 +118,7 @@ pseudonym = token
 The cdn-id identifies the CDN using either a hostname under its control or a pseudonym. Hostnames
 are preferred, to help avoid accidental collisions. If a pseudonym is used, unintentional collisions are more likely, and therefore values should be carefully chosen to prevent them; for example, using a well-known value (such as the recognized name of the CDN in question), or a generated value with enough entropy to make collisions unlikely (such as a UUID {{?RFC4122}}).
 
-Optionally, cdn-info can have semicolon-separated key/value parameters, to accommodate additional
+Optionally, cdn-info can have semicolon-separated key/value parameters to accommodate additional
 information for the CDN's use.
 
 Conforming Content Delivery Networks SHOULD add a cdn-info to this header field in all requests they
@@ -138,14 +137,14 @@ CDN-Loop: AnotherCDN; abc=123; def="456"
 
 ~~~
 
-Note that the pseudonym syntax does not allow whitespace, DQUOTE or any of the characters
-"(),/:;<=>?@[\]{}". See {{!RFC7230}}, Section 3.2.6. Likewise, note the rules for when parameter
-values need to be quoted in {{!RFC7231}}, Section 3.1.1.
+Note that the pseudonym syntax does not allow whitespace, DQUOTE, or any of the characters
+"(),/:;<=>?@[\]{}". See Section 3.2.6 of {{!RFC7230}}. Likewise, note the rules for when parameter
+values need to be quoted in Section 3.1.1 of {{!RFC7231}}.
 
 The effectiveness of this mechanism relies on all intermediaries preserving the header field, since
 removing (or allowing it to be removed, e.g., by customer configuration) would prevent downstream
 CDNs from using it to detect looping. In general, unknown header fields are not removed by
-intermediaries, but there may be need to add CDN-Loop to an implementation's list of header fields
+intermediaries, but there may be a need to add CDN-Loop to an implementation's list of header fields
 that are not to be removed under any circumstances. The header field SHOULD NOT be used for other
 purposes.
 
@@ -162,11 +161,11 @@ non-implementing CDNs.
 A CDN's use of the CDN-Loop header field might expose its presence. For example, if CDN A is configured to forward its requests to CDN B for a given origin, CDN B's presence can be revealed if it behaves differently based upon the presence of the CDN-Loop header field.
 
 The CDN-Loop header field can be generated by any client, and therefore its contents cannot be
-trusted. CDNs who modify their behaviour based upon its contents should assure that this does not
-become an attack vector (e.g., for Denial-of-Service).
+trusted. CDNs who modify their behavior based upon its contents should assure that this does not
+become an attack vector (e.g., for Denial of Service).
 
 It is possible to sign the contents of the header field (either by putting the signature directly
-into the field's content, or using another header field), but such use is not defined (or required)
+into the field's content or using another header field), but such use is not defined (or required)
 by this specification.
 
 Depending on how it is used, CDN-Loop can expose information about the internal configuration of the CDN; for example, the number of hops inside the CDN, and the hostnames of nodes.
@@ -174,12 +173,12 @@ Depending on how it is used, CDN-Loop can expose information about the internal 
 
 # IANA Considerations
 
-This document registers the "CDN-Loop" header field in the Permanent Message Header Field Names registry.
+This document registers the "CDN-Loop" header field in the "Permanent Message Header Field Names" registry.
 
 * Header Field Name: CDN-Loop
 * Protocol: http
 * Status: standard
-* Reference: (this document)
+* Reference: RFC 8586
 
 
 --- back
