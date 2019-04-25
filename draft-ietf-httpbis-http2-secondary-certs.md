@@ -647,6 +647,10 @@ be unpredictable. When generating exported authenticators for use with this
 extension, the `certificate_request_context` MUST contain both the two-octet
 Request-ID as well as at least 96 bits of additional entropy.
 
+Upon receipt of a `CERTIFICATE_REQUEST` frame, the recipient MUST verify that
+the first two octets of the authenticator's `certificate_request_context`
+matches the Request-ID presented in the frame.
+
 The TLS library on the authenticating peer will provide mechanisms to select an
 appropriate certificate to respond to the transported request.  TLS libraries on
 servers MUST be able to recognize the `server_name` extension ([RFC6066]) at a
@@ -665,11 +669,16 @@ The `CERTIFICATE` frame defines two flags:
 TO_BE_CONTINUED (0x01):
 : Indicates that the exported authenticator spans more than one frame.
 
+UNSOLICITED (0x02):
+: Indicates that the exported authenticator does not contain a Request-ID.
+
 ~~~ drawing
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +-------------------------------+-------------------------------+
- |          Cert-ID (16)         |   Authenticator Fragment (*)...
+ |          Cert-ID (16)         |        Request-ID (16)        |
+ +-------------------------------+-------------------------------+
+ |                   Authenticator Fragment (*)                ...
  +---------------------------------------------------------------+
 ~~~
 {: #fig-proof-frame title="CERTIFICATE frame payload"}
@@ -679,6 +688,11 @@ The frame contains the following fields:
 Cert-ID:
 : `Cert-ID` is a 16-bit opaque identifier used to correlate other certificate-
   related frames with this exported authenticator fragment.
+
+Request-ID:
+: `Request-ID` is an optional 16-bit opaque identifier used to correlate this
+  exported authenticator with the request which triggered it, if any.  This field
+  is present only if the `UNSOLICITED` flag is not set.
 
 Authenticator Fragment:
 : A portion of the opaque data returned from the TLS connection exported
@@ -692,6 +706,12 @@ the `TO_BE_CONTINUED` flag unset.  Each of these frames contains the same
 any `CERTIFICATE` frame with the same `Cert-ID` following the receipt of a
 `CERTIFICATE` frame with `TO_BE_CONTINUED` unset MUST be treated as a connection
 error of type `PROTOCOL_ERROR`.
+
+If the `UNSOLICITED` flag is not set, the `CERTIFICATE` frame also contains
+a Request-ID indicating the certificate request which caused this exported
+authenticator to be generated.  The value of this flag and the contents
+of the Request-ID field MUST NOT differ between frames with the same
+Cert-ID.
 
 Upon receiving a complete series of `CERTIFICATE` frames, the receiver may
 validate the Exported Authenticator value by using the exported authenticator
@@ -712,12 +732,14 @@ used when generating the `CERTIFICATE` frame.
 Upon receipt of a `CERTIFICATE` frame, an endpoint MUST perform the following
 steps to validate the token it contains:
 
+- Verify that either the `UNSOLICITED` flag is set (clients only) or that the
+  Request-ID field contains the Request-ID of a previously-sent
+  `CERTIFICATE_REQUEST` frame.
 - Using the `get context` API, retrieve the `certificate_request_context` used
-   to generate the authenticator, if any.
- - Verify that the `certificate_request_context` is either empty (clients only)
-   or contains the Request-ID of a previously-sent `CERTIFICATE_REQUEST` frame.
- - Use the `validate` API to confirm the validity of the authenticator with
-   regard to the generated request (if any).
+  to generate the authenticator, if any.  Verify that the `certificate_request_context`
+  begins with the supplied Request-ID, if any.
+- Use the `validate` API to confirm the validity of the authenticator with
+  regard to the generated request (if any).
 
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.  Clients MUST NOT accept any
