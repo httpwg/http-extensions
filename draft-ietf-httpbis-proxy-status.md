@@ -385,7 +385,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 
 New Proxy Status Types can be defined by registering them in the HTTP Proxy Status Types registry.
 
-Registration requests are reviewed and approved by a Designated Expert, as per {{!RFC8126}} Section 4.5. A specification document is appreciated, but not required.
+Registration requests are reviewed and approved by a Designated Expert, as per {{!RFC8126}}, Section 4.5. A specification document is appreciated, but not required.
 
 The Expert(s) should consider the following factors when evaluating requests:
 
