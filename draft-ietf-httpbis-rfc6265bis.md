@@ -1444,10 +1444,29 @@ user agent MUST process the cookie as follows:
     attribute-value (i.e. either "Strict", "Lax", or "None"). Otherwise, set the
     cookie's same-site-flag to "None".
 
-14. If the cookie's `same-site-flag` is not "None", and the cookie is being set
-    from a context whose "site for cookies" is not an exact match for
-    request-uri's host's registered domain, then abort these steps and ignore
-    the newly created cookie entirely.
+14. If the cookie's `same-site-flag` is not "None":
+
+    1.  If the cookie was received from a "non-HTTP" API, and the API was called
+        from a context whose "site for cookies" is not an exact match for
+        request-uri's host's regisgered domain, then abort these steps and
+        ignore the newly created cookie entirely.
+
+    2.  If the cookie was received from a "same-site" request (as defined in
+        {{same-site-requests}}), skip the remaining substeps and continue
+        processing the cookie.
+
+    3.  If the cookie's `same-site-flag` is "Lax", and the cookie was received
+        from a request which is navigating a top-level browsing context {{HTML}}
+        (e.g. if the request's "reserved client" is either `null` or an
+        environment whose target browsing context is a top-level browing context
+        {{FETCH}}), skip the remaining substeps and continue processing the
+        cookie.
+
+    4.  Abort these steps and ignore the newly created cookie entirely.
+
+        Note: This includes cookies set with `SameSite=Strict` from any
+        non-same-site context, as well as cookies set with `SameSite=Lax` from a
+        context that is neither same-site nor a top-level navigation.
 
 15. If the cookie-name begins with a case-sensitive match for the string
     "__Secure-", abort these steps and ignore the cookie entirely unless the
