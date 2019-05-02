@@ -133,7 +133,7 @@ Note that a header field definition cannot relax the requirements of a structure
 For example:
 
 ~~~ example
-# Foo-Example Header
+2. Foo-Example Header
 
 The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
