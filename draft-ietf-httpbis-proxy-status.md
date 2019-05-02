@@ -395,10 +395,10 @@ The Expert(s) should consider the following factors when evaluating requests:
 
 Registration requests should use the following template:
 
-* Name: [a name for the Proxy Status Type that is allowable as a sh-param-list key]
-* Description: [a description of the conditions that generate the Proxy Status Types]
-* Extra Parameters: [zero or more optional parameters, typed using one of the types available in sh-item]
-* Recommended HTTP status code: [the appropriate HTTP status code for this entry]
+* Name: \[a name for the Proxy Status Type that is allowable as a sh-param-list key\]
+* Description: \[a description of the conditions that generate the Proxy Status Types\]
+* Extra Parameters: \[zero or more optional parameters, typed using one of the types available in sh-item\]
+* Recommended HTTP status code: \[the appropriate HTTP status code for this entry\]
 
 See the registry at <https://iana.org/assignments/http-proxy-statuses> for details on where to send registration requests.
 
