@@ -74,7 +74,7 @@ Implementations are tracked at <https://github.com/httpwg/wiki/wiki/Structured-H
 
 Specifying the syntax of new HTTP header fields is an onerous task; even with the guidance in {{?RFC7231}}, Section 8.3.1, there are many decisions -- and pitfalls -- for a prospective HTTP header field author.
 
-Once a header field is defined, bespoke parsers and serialisers often need to be written, because each header has slightly different handling of what looks like common syntax.
+Once a header field is defined, bespoke parsers and serializers often need to be written, because each header has slightly different handling of what looks like common syntax.
 
 This document introduces a set of common data structures for use in HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in HTTP/1 {{?RFC7230}} header fields.
 
@@ -88,7 +88,7 @@ To specify a header field that is a Structured Header, see {{specify}}.
 
 {{types}} defines a number of abstract data types that can be used in Structured Headers.
 
-Those abstract types can be serialised into and parsed from textual headers -- such as those used in HTTP/1 -- using the algorithms described in {{text}}.
+Those abstract types can be serialized into and parsed from textual headers -- such as those used in HTTP/1 -- using the algorithms described in {{text}}.
 
 
 ## Intentionally Strict Processing {#strict}
@@ -251,13 +251,13 @@ Header specifications can constrain the types of individual inner-list values if
 Parsers MUST support lists of lists containing at least 1024 members, and inner-lists containing at least 256 members.
 
 
-## Parameterised Lists {#param}
+## Parameterized Lists {#param}
 
-Parameterised Lists are arrays of parameterised identifiers, with one or more members.
+Parameterized Lists are arrays of parameterized identifiers, with one or more members.
 
-A parameterised identifier is a primary identifier (a {{token}}}) with associated parameters, an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters, and keys are required to be unique.
+A parameterized identifier is a primary identifier (a {{token}}}) with associated parameters, an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters, and keys are required to be unique.
 
-The ABNF for parameterised lists in HTTP/1 headers is:
+The ABNF for parameterized lists in HTTP/1 headers is:
 
 ~~~ abnf
 sh-param-list = param-item *( OWS "," OWS param-item )
@@ -274,7 +274,7 @@ In HTTP/1, each param-id is separated by a comma and optional whitespace (as in 
 Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, ghi;q="9";r="w"
 ~~~
 
-Parsers MUST support parameterised lists containing at least 1024 members, support members with at least 256 parameters, and support parameter keys with at least 64 characters.
+Parsers MUST support parameterized lists containing at least 1024 members, support members with at least 256 parameters, and support parameter keys with at least 64 characters.
 
 
 ## Items {#item}
@@ -423,37 +423,37 @@ Example-BoolHdr: ?1
 
 # Structured Headers in HTTP/1 {#text}
 
-This section defines how to serialise and parse Structured Headers in HTTP/1 textual header fields, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
+This section defines how to serialize and parse Structured Headers in HTTP/1 textual header fields, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
 
-## Serialising Structured Headers into HTTP/1 {#text-serialise}
+## Serializing Structured Headers into HTTP/1 {#text-serialize}
 
 Given a structured defined in this specification:
 
-1. If the structure is a dictionary, return the result of Serialising a Dictionary ({{ser-dictionary}}).
-2. If the structure is a parameterised list, return the result of Serialising a Parameterised List ({{ser-param-list}}).
-3. If the structure is a list of lists, return the result of Serialising a List of Lists ({ser-listlist}).
-4. If the structure is a list, return the result of Serialising a List {{ser-list}}.
-5. If the structure is an item, return the result of Serialising an Item ({{ser-item}}).
+1. If the structure is a dictionary, return the result of Serializing a Dictionary ({{ser-dictionary}}).
+2. If the structure is a parameterized list, return the result of Serializing a Parameterized List ({{ser-param-list}}).
+3. If the structure is a list of lists, return the result of Serializing a List of Lists ({ser-listlist}).
+4. If the structure is a list, return the result of Serializing a List {{ser-list}}.
+5. If the structure is an item, return the result of Serializing an Item ({{ser-item}}).
 6. Otherwise, fail serialisation.
 
 
-### Serialising a Dictionary {#ser-dictionary}
+### Serializing a Dictionary {#ser-dictionary}
 
 Given a dictionary as input_dictionary:
 
 1. Let output be an empty string.
 2. For each member mem of input_dictionary:
-   1. Let name be the result of applying Serialising an Key ({{ser-key}}) to mem's member-name.
+   1. Let name be the result of applying Serializing a Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem's member-value.
+   4. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem's member-value.
    5. Append value to output.
    6. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
 
-#### Serialising a Key {#ser-key}
+#### Serializing a Key {#ser-key}
 
 Given a key as input_key:
 
@@ -463,13 +463,13 @@ Given a key as input_key:
 3. Return output.
 
 
-### Serialising a List {#ser-list}
+### Serializing a List {#ser-list}
 
 Given a list as input_list:
 
 1. Let output be an empty string.
 2. For each member mem of input_list:
-   1. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem.
+   1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
    2. Append value to output.
    3. If more members remain in input_list:
       1. Append a COMMA to output.
@@ -477,7 +477,7 @@ Given a list as input_list:
 3. Return output.
 
 
-### Serialising a List of Lists {#ser-listlist}
+### Serializing a List of Lists {#ser-listlist}
 
 Given a list of lists of items as input_list:
 
@@ -486,7 +486,7 @@ Given a list of lists of items as input_list:
    1. If inner_list is not a list, fail serialisation.
    2. If inner_list is empty, fail serialisation.
    3. For each inner_mem of inner_list:
-      1. Let value be the result of applying Serialising an Item ({{ser-item}}) to inner_mem.
+      1. Let value be the result of applying Serializing an Item ({{ser-item}}) to inner_mem.
       2. Append value to output.
       3. If more members remain in inner_list:
          1. Append a ";" to output.
@@ -497,20 +497,20 @@ Given a list of lists of items as input_list:
 3. Return output.
 
 
-### Serialising a Parameterised List {#ser-param-list}
+### Serializing a Parameterized List {#ser-param-list}
 
-Given a parameterised list as input_plist:
+Given a parameterized list as input_plist:
 
 1. Let output be an empty string.
 2. For each member mem of input_plist:
-   1. Let id be the result of applying Serialising a Token ({{ser-token}}) to mem's token.
+   1. Let id be the result of applying Serializing a Token ({{ser-token}}) to mem's token.
    2. Append id to output.
    3. For each parameter in mem's parameters:
       1. Append ";" to output.
-      2. Let name be the result of applying Serialising a Key ({{ser-key}}) to parameter's param-name.
+      2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
       3. Append name to output.
       4. If parameter has a param-value:
-         1. Let value be the result of applying Serialising an Item ({{ser-item}}) to parameter's param-value.
+         1. Let value be the result of applying Serializing an Item ({{ser-item}}) to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
    4. If more members remain in input_plist:
@@ -519,20 +519,20 @@ Given a parameterised list as input_plist:
 3. Return output.
 
 
-### Serialising an Item {#ser-item}
+### Serializing an Item {#ser-item}
 
 Given an item as input_item:
 
-1. If input_item is an integer, return the result of applying Serialising an Integer ({{ser-integer}}) to input_item.
-2. If input_item is a float, return the result of applying Serialising a Float ({{ser-float}}) to input_item.
-3. If input_item is a string, return the result of applying Serialising a String ({{ser-string}}) to input_item.
-4. If input_item is a token, return the result of Serialising a Token ({{ser-token}}) to input_item.
-5. If input_item is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input_item.
-6. If input_item is a byte sequence, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input_item.
+1. If input_item is an integer, return the result of applying Serializing an Integer ({{ser-integer}}) to input_item.
+2. If input_item is a float, return the result of applying Serializing a Float ({{ser-float}}) to input_item.
+3. If input_item is a string, return the result of applying Serializing a String ({{ser-string}}) to input_item.
+4. If input_item is a token, return the result of Serializing a Token ({{ser-token}}) to input_item.
+5. If input_item is a Boolean, return the result of applying Serializing a Boolean ({{ser-boolean}}) to input_item.
+6. If input_item is a byte sequence, return the result of applying Serializing a Byte Sequence ({{ser-binary}}) to input_item.
 7. Otherwise, fail serialisation.
 
 
-### Serialising an Integer {#ser-integer}
+### Serializing an Integer {#ser-integer}
 
 Given an integer as input_integer:
 
@@ -543,7 +543,7 @@ Given an integer as input_integer:
 4. Return output.
 
 
-### Serialising a Float {#ser-float}
+### Serializing a Float {#ser-float}
 
 Given a float as input_float:
 
@@ -556,7 +556,7 @@ Given a float as input_float:
 6. Return output.
 
 
-### Serialising a String {#ser-string}
+### Serializing a String {#ser-string}
 
 Given a string as input_string:
 
@@ -571,7 +571,7 @@ Given a string as input_string:
 5. Return output.
 
 
-### Serialising a Token {#ser-token}
+### Serializing a Token {#ser-token}
 
 Given a token as input_token:
 
@@ -581,7 +581,7 @@ Given a token as input_token:
 3. Return output.
 
 
-### Serialising a Byte Sequence {#ser-binary}
+### Serializing a Byte Sequence {#ser-binary}
 
 Given a byte sequence as input_bytes:
 
@@ -597,7 +597,7 @@ The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section
 Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Section 3.5, unless it is not possible to do so due to implementation constraints.
 
 
-### Serialising a Boolean {#ser-boolean}
+### Serializing a Boolean {#ser-boolean}
 
 Given a Boolean as input_boolean:
 
@@ -619,7 +619,7 @@ Given an ASCII string input_string that represents the chosen header's field-val
 2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
 4. If header_type is "list-list", let output be the result of Parsing a List of Lists from Text ({{parse-listlist}}).
-4. If header_type is "param-list", let output be the result of Parsing a Parameterised List from Text ({{parse-param-list}}).
+4. If header_type is "param-list", let output be the result of Parsing a Parameterized List from Text ({{parse-param-list}}).
 5. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
 7. If input_string is not empty, fail parsing.
@@ -627,9 +627,9 @@ Given an ASCII string input_string that represents the chosen header's field-val
 
 When generating input_string, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
-For Lists, Lists of Lists, Parameterised Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
+For Lists, Lists of Lists, Parameterized Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
 
-Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serialiser or the parser.
+Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser.
 
 Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
@@ -709,13 +709,13 @@ Given an ASCII string input_string, return a list of lists of items. input_strin
 4. No structured data has been found; fail parsing.
 
 
-### Parsing a Parameterised List from Text {#parse-param-list}
+### Parsing a Parameterized List from Text {#parse-param-list}
 
-Given an ASCII string input_string, return a list of parameterised identifiers. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return a list of parameterized identifiers. input_string is modified to remove the parsed value.
 
 1. Let items be an empty array.
 2. While input_string is not empty:
-   1. Let item be the result of running Parse Parameterised Identifier from Text ({{parse-param-id}}) with input_string.
+   1. Let item be the result of running Parse Parameterized Identifier from Text ({{parse-param-id}}) with input_string.
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
@@ -725,7 +725,7 @@ Given an ASCII string input_string, return a list of parameterised identifiers. 
 3. No structured data has been found; fail parsing.
 
 
-### Parsing a Parameterised Identifier from Text {#parse-param-id}
+### Parsing a Parameterized Identifier from Text {#parse-param-id}
 
 Given an ASCII string input_string, return an token with an unordered map of parameters. input_string is modified to remove the parsed value.
 
@@ -832,7 +832,7 @@ Given an ASCII string input_string, return a byte sequence. input_string is modi
 4. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*".
 5. Consume the "\*" character at the beginning of input_string.
 6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
-7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour below).
+7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behaviour below).
 8. Return binary_content.
 
 Because some implementations of base64 do not allow reject of encoded data that is not properly "=" padded (see {{!RFC4648}}, Section 3.2), parsers SHOULD NOT fail when it is not present, unless they cannot be configured to do so.
@@ -885,7 +885,7 @@ Another example is JSON's ability to nest content to arbitrary depths. Since the
 
 Because of JSON's broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability.
 
-Since a major goal for Structured Headers is to improve interoperability and simplify implementation, these concerns led to a format that requires a dedicated parser and serialiser.
+Since a major goal for Structured Headers is to improve interoperability and simplify implementation, these concerns led to a format that requires a dedicated parser and serializer.
 
 Additionally, there were widely shared feelings that JSON doesn't "look right" in HTTP headers.
 
@@ -901,7 +901,7 @@ Example-Description: foo; url="https://example.net"; context=123,
                      bar; url="https://example.org"; context=456
 ~~~
 
-Since the description contains a list of key/value pairs, we use a Parameterised List to represent them, with the token for each item in the list used to identify it in the "descriptions" member of the Example-Thing header.
+Since the description contains a list of key/value pairs, we use a Parameterized List to represent them, with the token for each item in the list used to identify it in the "descriptions" member of the Example-Thing header.
 
 When specifying more than one header, it's important to remember to describe what a processor's behaviour should be when one of the headers is missing.
 
@@ -909,7 +909,7 @@ If you need to fit arbitrarily complex data into a header, Structured Headers is
 
 ## What should generic Structured Headers implementations expose?
 
-A generic implementation should expose the top-level parse ({{text-parse}}) and serialise ({{text-serialise}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
+A generic implementation should expose the top-level parse ({{text-parse}}) and serialize ({{text-serialize}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
 For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community; see <https://github.com/httpwg/structured-header-tests>.
 
