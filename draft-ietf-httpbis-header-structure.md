@@ -443,7 +443,7 @@ Given a dictionary as input_dictionary:
 
 1. Let output be an empty string.
 2. For each member mem of input_dictionary:
-   1. Let name be the result of applying Serializing an Key ({{ser-key}}) to mem's member-name.
+   1. Let name be the result of applying Serializing a Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
    4. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem's member-value.
