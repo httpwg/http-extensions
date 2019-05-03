@@ -2089,6 +2089,11 @@ Specification document:
 *  Introduced an explicit "None" value for the SameSite attribute:
    <https://github.com/httpwg/http-extensions/issues/788>
 
+## draft-ietf-httpbis-rfc6265bis-04
+
+*  Allow `SameSite` cookies to be set for all top-level navigations.
+   <https://github.com/httpwg/http-extensions/issues/594>
+
 # Acknowledgements
 {:numbered="false"}
 This document is a minor update of RFC 6265, adding small features, and
