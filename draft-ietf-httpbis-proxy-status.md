@@ -365,6 +365,13 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Extra Parameters: None.
 * Recommended HTTP status code: 502
 
+## Proxy Internal Response
+
+* Name: proxy_internal_response
+* Description: The intermediary generated the response locally, without attempting to connect to the next hop (e.g. in response to a request to a debug endpoint terminated at the intermediary).
+* Extra Parameters: None.
+* Recommended HTTP status code:
+
 ## Proxy Internal Error
 
 * Name: proxy_internal_error
