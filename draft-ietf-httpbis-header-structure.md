@@ -291,7 +291,7 @@ sh-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
 
 ## Integers {#integer}
 
-Integers have a range of −999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed).
+Integers have a range of −999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ({{IEEE754}}).
 
 The ABNF for integers in HTTP/1 headers is:
 
