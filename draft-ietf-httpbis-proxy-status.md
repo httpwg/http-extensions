@@ -216,7 +216,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 ## HTTP Response Status
 
 * Name: http_response_status
-* Description: The intermediary has received a 4xx or 5xx status code from the next hop and forwarded it to the client.
+* Description: The intermediary has received a response from the next hop and forwarded it to the client.
 * Extra Parameters: None.
 * Recommended HTTP status code:
 
