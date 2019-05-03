@@ -1462,7 +1462,7 @@ user agent MUST process the cookie as follows:
         and continue processing the cookie.
 
         Note: Top-level navigations can create a cookie with any `SameSite`
-        value, even if the new cookie wouldn't have been delivered along with
+        value, even if the new cookie wouldn't have been sent along with
         the request had it already existed prior to the navigation.
 
     4.  Abort these steps and ignore the newly created cookie entirely.
