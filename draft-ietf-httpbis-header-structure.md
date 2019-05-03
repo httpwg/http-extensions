@@ -425,35 +425,35 @@ Example-BoolHdr: ?1
 
 This section defines how to serialize and parse Structured Headers in HTTP/1 textual header fields, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
 
-## Serialising Structured Headers into HTTP/1 {#text-serialize}
+## Serializing Structured Headers into HTTP/1 {#text-serialize}
 
 Given a structured defined in this specification:
 
-1. If the structure is a dictionary, return the result of Serialising a Dictionary ({{ser-dictionary}}).
-2. If the structure is a parameterized list, return the result of Serialising a Parameterized List ({{ser-param-list}}).
-3. If the structure is a list of lists, return the result of Serialising a List of Lists ({ser-listlist}).
-4. If the structure is a list, return the result of Serialising a List {{ser-list}}.
-5. If the structure is an item, return the result of Serialising an Item ({{ser-item}}).
+1. If the structure is a dictionary, return the result of Serializing a Dictionary ({{ser-dictionary}}).
+2. If the structure is a parameterized list, return the result of Serializing a Parameterized List ({{ser-param-list}}).
+3. If the structure is a list of lists, return the result of Serializing a List of Lists ({ser-listlist}).
+4. If the structure is a list, return the result of Serializing a List {{ser-list}}.
+5. If the structure is an item, return the result of Serializing an Item ({{ser-item}}).
 6. Otherwise, fail serialisation.
 
 
-### Serialising a Dictionary {#ser-dictionary}
+### Serializing a Dictionary {#ser-dictionary}
 
 Given a dictionary as input_dictionary:
 
 1. Let output be an empty string.
 2. For each member mem of input_dictionary:
-   1. Let name be the result of applying Serialising an Key ({{ser-key}}) to mem's member-name.
+   1. Let name be the result of applying Serializing an Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem's member-value.
+   4. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem's member-value.
    5. Append value to output.
    6. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
 
-#### Serialising a Key {#ser-key}
+#### Serializing a Key {#ser-key}
 
 Given a key as input_key:
 
@@ -463,13 +463,13 @@ Given a key as input_key:
 3. Return output.
 
 
-### Serialising a List {#ser-list}
+### Serializing a List {#ser-list}
 
 Given a list as input_list:
 
 1. Let output be an empty string.
 2. For each member mem of input_list:
-   1. Let value be the result of applying Serialising an Item ({{ser-item}}) to mem.
+   1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
    2. Append value to output.
    3. If more members remain in input_list:
       1. Append a COMMA to output.
@@ -477,7 +477,7 @@ Given a list as input_list:
 3. Return output.
 
 
-### Serialising a List of Lists {#ser-listlist}
+### Serializing a List of Lists {#ser-listlist}
 
 Given a list of lists of items as input_list:
 
@@ -486,7 +486,7 @@ Given a list of lists of items as input_list:
    1. If inner_list is not a list, fail serialisation.
    2. If inner_list is empty, fail serialisation.
    3. For each inner_mem of inner_list:
-      1. Let value be the result of applying Serialising an Item ({{ser-item}}) to inner_mem.
+      1. Let value be the result of applying Serializing an Item ({{ser-item}}) to inner_mem.
       2. Append value to output.
       3. If more members remain in inner_list:
          1. Append a ";" to output.
@@ -497,20 +497,20 @@ Given a list of lists of items as input_list:
 3. Return output.
 
 
-### Serialising a Parameterized List {#ser-param-list}
+### Serializing a Parameterized List {#ser-param-list}
 
 Given a parameterized list as input_plist:
 
 1. Let output be an empty string.
 2. For each member mem of input_plist:
-   1. Let id be the result of applying Serialising a Token ({{ser-token}}) to mem's token.
+   1. Let id be the result of applying Serializing a Token ({{ser-token}}) to mem's token.
    2. Append id to output.
    3. For each parameter in mem's parameters:
       1. Append ";" to output.
-      2. Let name be the result of applying Serialising a Key ({{ser-key}}) to parameter's param-name.
+      2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
       3. Append name to output.
       4. If parameter has a param-value:
-         1. Let value be the result of applying Serialising an Item ({{ser-item}}) to parameter's param-value.
+         1. Let value be the result of applying Serializing an Item ({{ser-item}}) to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
    4. If more members remain in input_plist:
@@ -519,20 +519,20 @@ Given a parameterized list as input_plist:
 3. Return output.
 
 
-### Serialising an Item {#ser-item}
+### Serializing an Item {#ser-item}
 
 Given an item as input_item:
 
-1. If input_item is an integer, return the result of applying Serialising an Integer ({{ser-integer}}) to input_item.
-2. If input_item is a float, return the result of applying Serialising a Float ({{ser-float}}) to input_item.
-3. If input_item is a string, return the result of applying Serialising a String ({{ser-string}}) to input_item.
-4. If input_item is a token, return the result of Serialising a Token ({{ser-token}}) to input_item.
-5. If input_item is a Boolean, return the result of applying Serialising a Boolean ({{ser-boolean}}) to input_item.
-6. If input_item is a byte sequence, return the result of applying Serialising a Byte Sequence ({{ser-binary}}) to input_item.
+1. If input_item is an integer, return the result of applying Serializing an Integer ({{ser-integer}}) to input_item.
+2. If input_item is a float, return the result of applying Serializing a Float ({{ser-float}}) to input_item.
+3. If input_item is a string, return the result of applying Serializing a String ({{ser-string}}) to input_item.
+4. If input_item is a token, return the result of Serializing a Token ({{ser-token}}) to input_item.
+5. If input_item is a Boolean, return the result of applying Serializing a Boolean ({{ser-boolean}}) to input_item.
+6. If input_item is a byte sequence, return the result of applying Serializing a Byte Sequence ({{ser-binary}}) to input_item.
 7. Otherwise, fail serialisation.
 
 
-### Serialising an Integer {#ser-integer}
+### Serializing an Integer {#ser-integer}
 
 Given an integer as input_integer:
 
@@ -543,7 +543,7 @@ Given an integer as input_integer:
 4. Return output.
 
 
-### Serialising a Float {#ser-float}
+### Serializing a Float {#ser-float}
 
 Given a float as input_float:
 
@@ -556,7 +556,7 @@ Given a float as input_float:
 6. Return output.
 
 
-### Serialising a String {#ser-string}
+### Serializing a String {#ser-string}
 
 Given a string as input_string:
 
@@ -571,7 +571,7 @@ Given a string as input_string:
 5. Return output.
 
 
-### Serialising a Token {#ser-token}
+### Serializing a Token {#ser-token}
 
 Given a token as input_token:
 
@@ -581,7 +581,7 @@ Given a token as input_token:
 3. Return output.
 
 
-### Serialising a Byte Sequence {#ser-binary}
+### Serializing a Byte Sequence {#ser-binary}
 
 Given a byte sequence as input_bytes:
 
@@ -597,7 +597,7 @@ The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section
 Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Section 3.5, unless it is not possible to do so due to implementation constraints.
 
 
-### Serialising a Boolean {#ser-boolean}
+### Serializing a Boolean {#ser-boolean}
 
 Given a Boolean as input_boolean:
 
@@ -832,7 +832,7 @@ Given an ASCII string input_string, return a byte sequence. input_string is modi
 4. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*".
 5. Consume the "\*" character at the beginning of input_string.
 6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
-7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesising padding if necessary (note the requirements about recipient behaviour below).
+7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behaviour below).
 8. Return binary_content.
 
 Because some implementations of base64 do not allow reject of encoded data that is not properly "=" padded (see {{!RFC4648}}, Section 3.2), parsers SHOULD NOT fail when it is not present, unless they cannot be configured to do so.
