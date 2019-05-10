@@ -24,15 +24,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acache-header) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-cache-header/)
 
 
-### CDN Loop Prevention
-
-*Sent to IESG*
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-cdn-loop.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-cdn-loop.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cdn-loop) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Acdn-loop) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-cdn-loop/)
-
-
 ### HTTP Representation Variants
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-variants.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-variants.txt))
