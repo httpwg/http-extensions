@@ -84,6 +84,14 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3A6265bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/)
 
+
+### Using TLS 1.3 with HTTP/2
+
+* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-tls13.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-tls13.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-tls13) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Ahttp2-tls13) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-tls13/)
+
+
 This will incorporate the following drafts:
 * [Leave Secure Cookies Alone](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-alone) ✅
 * [Cookie Prefixes](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes) ✅
