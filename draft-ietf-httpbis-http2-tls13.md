@@ -5,7 +5,7 @@ category: std
 updates: 7540
 
 ipr: trust200902
-area: General
+area: Applications and Real-Time
 workgroup: HTTP
 
 pi: [toc, sortrefs, symrefs]
