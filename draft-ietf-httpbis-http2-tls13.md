@@ -108,9 +108,4 @@ refreshed in long-lived HTTP/2 connections.
 
 This document has no IANA actions.
 
-~~~
-RFC EDITOR: PLEASE REMOVE THIS PARAGRAPH. (This is a workaround for
-https://github.com/martinthomson/i-d-template/issues/188)
-~~~
-
 --- back
