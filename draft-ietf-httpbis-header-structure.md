@@ -181,7 +181,7 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
+Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more members, and keys are required to be unique.
 
 Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
@@ -209,7 +209,7 @@ Parsers MUST support dictionaries containing at least 1024 key/value pairs, and 
 
 ## Lists {#list}
 
-Lists are arrays of items ({{item}}) with one or more members.
+Lists are arrays of items ({{item}}) with zero or more members.
 
 The ABNF for lists in HTTP/1 headers is:
 
@@ -231,7 +231,7 @@ Parsers MUST support lists containing at least 1024 members.
 
 ## Lists of Lists {#listlist}
 
-Lists of Lists are arrays of arrays containing items ({{item}}).
+Lists of Lists are arrays of arrays containing items ({{item}}). Outer lists can contain zero or more members; inner lists must contain at least one member.
 
 The ABNF for lists of lists in HTTP/1 headers is:
 
@@ -253,7 +253,7 @@ Parsers MUST support lists of lists containing at least 1024 members, and inner-
 
 ## Parameterized Lists {#param}
 
-Parameterized Lists are arrays of parameterized identifiers, with one or more members.
+Parameterized Lists are arrays of parameterized identifiers, with zero or more members.
 
 A parameterized identifier is a primary identifier (a {{token}}}) with associated parameters, an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters, and keys are required to be unique.
 
@@ -429,12 +429,13 @@ This section defines how to serialize and parse Structured Headers in HTTP/1 tex
 
 Given a structured defined in this specification:
 
-1. If the structure is a dictionary, return the result of Serializing a Dictionary ({{ser-dictionary}}).
-2. If the structure is a parameterized list, return the result of Serializing a Parameterized List ({{ser-param-list}}).
-3. If the structure is a list of lists, return the result of Serializing a List of Lists ({ser-listlist}).
-4. If the structure is a list, return the result of Serializing a List {{ser-list}}.
-5. If the structure is an item, return the result of Serializing an Item ({{ser-item}}).
-6. Otherwise, fail serialisation.
+1. If the structure is a dictionary, list, parameterized list, or list of lists, and its value is empty (i.e., it has no members), do not serialise the header field.
+2. If the structure is a dictionary, return the result of Serializing a Dictionary ({{ser-dictionary}}).
+3. If the structure is a parameterized list, return the result of Serializing a Parameterized List ({{ser-param-list}}).
+4. If the structure is a list of lists, return the result of Serializing a List of Lists ({ser-listlist}).
+5. If the structure is a list, return the result of Serializing a List {{ser-list}}.
+6. If the structure is an item, return the result of Serializing an Item ({{ser-item}}).
+7. Otherwise, fail serialisation.
 
 
 ### Serializing a Dictionary {#ser-dictionary}
@@ -613,7 +614,7 @@ Given a Boolean as input_boolean:
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an ASCII string input_string that represents the chosen header's field-value, and header_type, one of "dictionary", "list", "list-list", "param-list", or "item", return the parsed header value.
+Given an ASCII string input_string that represents the chosen header's field-value (which is an empty string if that header is not present), and header_type, one of "dictionary", "list", "list-list", "param-list", or "item", return the parsed header value.
 
 1. Discard any leading OWS from input_string.
 2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
@@ -654,7 +655,7 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
    8. Consume the first character of input_string; if it is not COMMA, fail parsing.
    9. Discard any leading OWS from input_string.
    0. If input_string is empty, fail parsing.
-3. No structured data has been found; fail parsing.
+3. No structured data has been found; return dictionary (which is empty).
 
 
 ### Parsing a Key from Text {#parse-key}
@@ -685,7 +686,7 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    5. Consume the first character of input_string; if it is not COMMA, fail parsing.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
-3. No structured data has been found; fail parsing.
+3. No structured data has been found; return items (which is empty).
 
 
 ### Parsing a List of Lists from Text {#parse-listlist}
@@ -706,7 +707,7 @@ Given an ASCII string input_string, return a list of lists of items. input_strin
    7. Else if char is not ";", fail parsing.
    8. Discard any leading OWS from input_string.
    9. If input_string is empty, fail parsing.
-4. No structured data has been found; fail parsing.
+4. No structured data has been found; return top_list (which is empty).
 
 
 ### Parsing a Parameterized List from Text {#parse-param-list}
@@ -722,7 +723,7 @@ Given an ASCII string input_string, return a list of parameterized identifiers. 
    5. Consume the first character of input_string; if it is not COMMA, fail parsing.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
-3. No structured data has been found; fail parsing.
+3. No structured data has been found; return items (which is empty).
 
 
 ### Parsing a Parameterized Identifier from Text {#parse-param-id}
@@ -923,7 +924,7 @@ _RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-10
 
-_None yet._
+* Allowed empty dictionaries and lists (#781).
 
 
 ## Since draft-ietf-httpbis-header-structure-09
