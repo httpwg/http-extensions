@@ -896,7 +896,7 @@ Structured headers intentionally limits the complexity of data structures, to as
 Sometimes, this can be achieved by creating limited substructures in values, and/or using more than one header. For example, consider:
 
 ~~~
-Example-Thing: name="Widget", cost=89.2, descriptions="foo bar"
+Example-Thing: name="Widget", cost=89.2, descriptions=foo;bar
 Example-Description: foo; url="https://example.net"; context=123,
                      bar; url="https://example.org"; context=456
 ~~~
