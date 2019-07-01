@@ -231,8 +231,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 
 * Name: http_protocol_error
 * Description: The intermediary encountered a HTTP protocol error when communicating with the next hop. This error should only be used when a more specific one is not defined.
-* Extra Parameters:
-  - details: a sh-string containing details about the error condition. For example, this might be the HTTP/2 error code or free-form text describing the condition.
+* Extra Parameters: None.
 * Recommended HTTP status code: 502
 
 ## HTTP Response Header Block Too Large
@@ -265,7 +264,6 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Description: The intermediary encountered an error decoding the transfer-coding of the response.
 * Extra Parameters:
   - coding: a sh-token containing the specific coding that caused the error.
-  - details: a sh-string containing details about the error condition.
 * Recommended HTTP status code: 502
 
 ## HTTP Response Content-Coding Error
@@ -274,7 +272,6 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Description: The intermediary encountered an error decoding the content-coding of the response.
 * Extra Parameters:
   - coding: a sh-token containing the specific coding that caused the error.
-  - details: a sh-string containing details about the error condition.
 * Recommended HTTP status code: 502
 
 ## HTTP Response Timeout
