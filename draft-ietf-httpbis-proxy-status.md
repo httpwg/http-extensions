@@ -120,7 +120,7 @@ This section lists parameters that are potentially applicable to most Proxy Stat
 * proxy - a sh-token identifying the HTTP intermediary generating this response.
 * origin - a sh-token identifying the origin server whose behaviour triggered this response.
 * protocol - a sh-token indicating the ALPN protocol identifier {{!RFC7301}} used to connect to the next hop. This is only applicable when that connection was actually established.
-* tries - a sh-integer indicating the number of times that the error has occurred before this response.
+* tries - a sh-integer indicating the number of times that the indicated error occurred when attempting to satisfy the request.
 * details - a sh-string containing additional information not captured anywhere else. This can include implementation-specific or deployment-specific information.
 
 
