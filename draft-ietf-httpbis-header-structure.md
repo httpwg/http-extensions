@@ -181,7 +181,7 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}) or lists thereof ({{list}}). There can be one or more members, and keys are required to be unique.
+Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}) or arrays thereof. There can be one or more members, and keys are required to be unique.
 
 Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
@@ -191,7 +191,7 @@ The ABNF for dictionaries in HTTP/1 headers is:
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member    = member-name "=" member-value
 member-name    = key
-member-value   = sh-item | inner-list
+member-value   = sh-item / inner-list
 key            = lcalpha *( lcalpha / DIGIT / "_" / "-" )
 lcalpha        = %x61-7A ; a-z
 ~~~
