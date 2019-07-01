@@ -53,7 +53,7 @@ informative:
 
 --- abstract
 
-This document describes a set of data types and algorithms associated with them that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by new specifications of HTTP header fields as well as revisions of existing header field specifications when doing so does not cause interoperability issues.
+This document describes a set of data types and associated algorithms associated with them that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by specifications of new HTTP header fields that wish to use a common syntax that is more restrictive than traditional HTTP/1.x field values.
 
 
 --- note_Note_to_Readers
@@ -923,7 +923,7 @@ _RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-10
 
-_None yet._
+* Update abstract (#799).
 
 
 ## Since draft-ietf-httpbis-header-structure-09
