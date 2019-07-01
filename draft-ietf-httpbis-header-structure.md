@@ -427,13 +427,13 @@ This section defines how to serialize and parse Structured Headers in HTTP/1 tex
 
 ## Serializing Structured Headers into HTTP/1 {#text-serialize}
 
-Given a structured defined in this specification:
+Given a structure defined in this specification:
 
-1. If the structure is a dictionary, return the result of Serializing a Dictionary ({{ser-dictionary}}).
-2. If the structure is a parameterized list, return the result of Serializing a Parameterized List ({{ser-param-list}}).
-3. If the structure is a list of lists, return the result of Serializing a List of Lists ({ser-listlist}).
-4. If the structure is a list, return the result of Serializing a List {{ser-list}}.
-5. If the structure is an item, return the result of Serializing an Item ({{ser-item}}).
+1. If the structure is a dictionary, return the result of applying Serializing a Dictionary ({{ser-dictionary}}) to the structure.
+2. If the structure is a parameterized list, return the result of applying Serializing a Parameterized List ({{ser-param-list}}) to the structure.
+3. If the structure is a list of lists, return the result of applying Serializing a List of Lists ({{ser-listlist}}) to the structure.
+4. If the structure is a list, return the result of applying Serializing a List {{ser-list}} to the structure and "Outer".
+5. If the structure is an item, return the result of applying Serializing an Item ({{ser-item}}) to the structure.
 6. Otherwise, fail serialisation.
 
 
@@ -446,9 +446,11 @@ Given a dictionary as input_dictionary:
    1. Let name be the result of applying Serializing a Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem's member-value.
-   5. Append value to output.
-   6. If more members remain in input_dictionary:
+   4. If the member is a list, let value be the result of applying Serializing a List {{ser-list}} to mem's member-value and "Inner".
+   5. If the member is an item, let value be the result of applying Serializing an Item ({{ser-item}}) to mem's member-value.
+   6. If the member is neither a list nor an item, fail serialization.
+   7. Append value to output.
+   8. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -465,15 +467,16 @@ Given a key as input_key:
 
 ### Serializing a List {#ser-list}
 
-Given a list as input_list:
+Given a list as input_list, and either "Inner" or "Outer" as list_type:
 
 1. Let output be an empty string.
 2. For each member mem of input_list:
    1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
    2. Append value to output.
    3. If more members remain in input_list:
-      1. Append a COMMA to output.
-      2. Append a single WS to output.
+      1. If list_type is "Outer", append "," to output.
+      2. If list_type is "Inner", append ";" to output.
+      3. Append a single WS to output.
 3. Return output.
 
 
@@ -485,12 +488,7 @@ Given a list of lists of items as input_list:
 2. For each member inner_list of input_list:
    1. If inner_list is not a list, fail serialisation.
    2. If inner_list is empty, fail serialisation.
-   3. For each inner_mem of inner_list:
-      1. Let value be the result of applying Serializing an Item ({{ser-item}}) to inner_mem.
-      2. Append value to output.
-      3. If more members remain in inner_list:
-         1. Append a ";" to output.
-         2. Append a single WS to output.
+   3. Append the result of applying Serializing a List ({{ser-list}}) to inner_list and "Inner"
    4. If more members remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
@@ -616,11 +614,11 @@ When a receiving implementation parses textual HTTP header fields (e.g., in HTTP
 Given an ASCII string input_string that represents the chosen header's field-value, and header_type, one of "dictionary", "list", "list-list", "param-list", or "item", return the parsed header value.
 
 1. Discard any leading OWS from input_string.
-2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
-3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
-4. If header_type is "list-list", let output be the result of Parsing a List of Lists from Text ({{parse-listlist}}).
-4. If header_type is "param-list", let output be the result of Parsing a Parameterized List from Text ({{parse-param-list}}).
-5. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
+2. If header_type is "dictionary", let output be the result of running Parsing a Dictionary from Text ({{parse-dictionary}}) with input_string.
+3. If header_type is "list", let output be the result of running Parsing a List from Text ({{parse-list}}) with input_string and "Outer".
+4. If header_type is "list-list", let output be the result of Parsing a List of Lists from Text ({{parse-listlist}}) with input_string.
+4. If header_type is "param-list", let output be the result of running Parsing a Parameterized List from Text ({{parse-param-list}}) with input_string.
+5. If header_type is "item", let output be the result of running Parsing an Item from Text ({{parse-item}}) with input_string.
 6. Discard any leading OWS from input_string.
 7. If input_string is not empty, fail parsing.
 8. Otherwise, return output.
@@ -644,16 +642,17 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
 
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
-   1. Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
-   2. If dictionary already contains this_key, fail parsing.
-   3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
-   5. Add key this_key with value this_value to dictionary.
-   6. Discard any leading OWS from input_string.
-   7. If input_string is empty, return dictionary.
-   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   9. Discard any leading OWS from input_string.
-   0. If input_string is empty, fail parsing.
+   1.  Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
+   2.  If dictionary already contains this_key, fail parsing.
+   3.  Consume the first character of input_string; if it is not "=", fail parsing.
+   4.  If the dictionary's this_key value is an item, let this_value be the result of Parsing an Item from Text ({{parse-item}}) with input_string.
+   5.  If the dictionary's this_key value is a list, let this_value be the result of Parsing a List from Text ({{parse-list}}) with input_string and "Inner".
+   6.  Add key this_key with value this_value to dictionary.
+   7.  Discard any leading OWS from input_string.
+   8.  If input_string is empty, return dictionary.
+   9.  Consume the first character of input_string; if it is not COMMA, fail parsing.
+   10. Discard any leading OWS from input_string.
+   11. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
 
 
@@ -674,7 +673,7 @@ Given an ASCII string input_string, return a key. input_string is modified to re
 
 ### Parsing a List from Text {#parse-list}
 
-Given an ASCII string input_string, return a list of items. input_string is modified to remove the parsed value.
+Given an ASCII string input_string and either "Inner" or "Outer" as list_type, return a list of items. input_string is modified to remove the parsed value.
 
 1. Let items be an empty array.
 2. While input_string is not empty:
@@ -682,7 +681,11 @@ Given an ASCII string input_string, return a list of items. input_string is modi
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
-   5. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   5. Let char be the result of consuming the first character of input_string.
+   6.  If list_type is "Outer", and char is not COMMA, fail parsing.
+   7.  If list_type is "Inner":
+       1.  If char is COMMA, return items.
+       2.  If char is not ";", fail parsing.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, fail parsing.
 3. No structured data has been found; fail parsing.
@@ -693,20 +696,11 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 Given an ASCII string input_string, return a list of lists of items. input_string is modified to remove the parsed value.
 
 1. let top_list be an empty array.
-2. Let inner_list be an empty array.
-3. While input_string is not empty:
-   1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
-   2. Append item to inner_list.
-   3. Discard any leading OWS from input_string.
-   4. If input_string is empty, append inner_list to top_list and return top_list.
-   5. Let char be the result of consuming the first character of input_string.
-   6. If char is COMMA:
-      1. Append inner_list to top_list.
-      2. Let inner_list be an empty array.
-   7. Else if char is not ";", fail parsing.
-   8. Discard any leading OWS from input_string.
-   9. If input_string is empty, fail parsing.
-4. No structured data has been found; fail parsing.
+2. While input_string is not empty:
+   1. Let inner_list be the result of running Parsing a List from Text ({{parse-list}}) with input_string and "Inner".
+   2. Append inner_list to top_list.
+   3. If input_string is empty, return top_list.
+3. No structured data has been found; fail parsing.
 
 
 ### Parsing a Parameterized List from Text {#parse-param-list}
