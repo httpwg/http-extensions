@@ -837,15 +837,6 @@ Specification document(s):  {{digest-header}} of this document
 RFC EDITOR PLEASE DELETE THIS SECTION.
 
 
-# Acknowledgements
-
-The vast majority of this document is inherited from [RFC3230], so thanks
-to J. Mogul and A. Van Hoff for their great work.
-The original idea of refreshing this document arose from an interesting
-discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
-the MICE content coding.
-
-
 # FAQ
 
 1. Why remove all references to content-md5?
@@ -891,3 +882,10 @@ the MICE content coding.
    and adds two more algorithms: ID-SHA-256 and ID-SHA-512 which allows to
    send a checksum of a resource representation with no content codings applied.
 
+# Acknowledgements
+{:numbered="false"}
+The vast majority of this document is inherited from [RFC3230], so thanks
+to J. Mogul and A. Van Hoff for their great work.
+The original idea of refreshing this document arose from an interesting
+discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
+the MICE content coding.
