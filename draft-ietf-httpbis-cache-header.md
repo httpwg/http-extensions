@@ -132,7 +132,7 @@ cl_nm          = sh-boolean
 
 Their semantics are:
 
-- "node" - a string identifying for the cache node. MAY be a hostname, IP address, or alias.
+- "node" - a string identifying the cache node adding the cache-action. MAY be a hostname, IP address, or alias.
 - "fresh" - an integer indicating the cache's estimation of the freshness lifetime ({{!RFC7234}}, Section 4.2.1) of this response in seconds, including any locally applied configuration. MAY be negative.
 - "age" - an integer indicating the cache's estimation of the age ({{!RFC7234}}, Section 4.2.3) of this response in seconds. MUST be 0 or greater.
 - "cacheable" - a boolean indicating whether the cache can store this response, according to {{!RFC7234}}, Section 3 and any locally applied configuration.
