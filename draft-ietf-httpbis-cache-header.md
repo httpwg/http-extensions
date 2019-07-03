@@ -132,13 +132,13 @@ cl_nm          = sh-boolean
 
 Their semantics are:
 
-- "node" - a string identifying the cache node adding the cache-action. MAY be a hostname, IP address, or alias.
-- "fresh" - an integer indicating the cache's estimation of the freshness lifetime ({{!RFC7234}}, Section 4.2.1) of this response in seconds, including any locally applied configuration. MAY be negative.
-- "age" - an integer indicating the cache's estimation of the age ({{!RFC7234}}, Section 4.2.3) of this response in seconds. MUST be 0 or greater.
-- "cacheable" - a boolean indicating whether the cache can store this response, according to {{!RFC7234}}, Section 3 and any locally applied configuration.
+- "node" - a sh-string identifying the cache node adding the cache-action. MAY be a hostname, IP address, or alias.
+- "fresh" - a sh-integer indicating the cache's estimation of the freshness lifetime ({{!RFC7234}}, Section 4.2.1) of this response in seconds, including any locally applied configuration. MAY be negative.
+- "age" - a sh-integer indicating the cache's estimation of the age ({{!RFC7234}}, Section 4.2.3) of this response in seconds. MUST be 0 or greater.
+- "cacheable" - a sh-boolean indicating whether the cache can store this response, according to {{!RFC7234}}, Section 3 and any locally applied configuration.
 - "key" - a string representing the key that the cache has associated with this response. This might include the request URL, request headers, and other values.
-- "latency" - an integer indicating the amount of time in milliseconds between the receipt of a complete set of request headers and sending the complete set of response headers of this response, from the viewpoint of the cache. Note that this may not include buffering time in transport protocols and similar delays.
-- "cl_nm" - a boolean indicating whether the response to the client had a 304 Not Modified status code.
+- "latency" - a sh-integer indicating the amount of time in milliseconds between the receipt of a complete set of request headers and sending the complete set of response headers of this response, from the viewpoint of the cache. Note that this may not include buffering time in transport protocols and similar delays.
+- "cl_nm" - a sh-boolean indicating whether the response to the client had a 304 Not Modified status code.
 
 While all of these parameters are OPTIONAL, caches are encouraged to use the 'node' parameter to identify themselves.
 
