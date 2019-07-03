@@ -7,7 +7,7 @@ category: std
 ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
-keyword:
+keyword: Digest
 
 stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline, docmapping]
