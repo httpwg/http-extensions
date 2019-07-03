@@ -767,11 +767,11 @@ NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and 
 1. Let type be "integer".
 2. Let sign be 1.
 3. Let input_number be an empty string.
-4. If the first character of input_string is "-", remove it from input_string and set sign to -1.
+4. If the first character of input_string is "-", consume it and set sign to -1.
 5. If input_string is empty, fail parsing.
 6. If the first character of input_string is not a DIGIT, fail parsing.
 7. While input_string is not empty:
-   1. Let char be the result of removing the first character of input_string.
+   1. Let char be the result of consuming the first character of input_string.
    2. If char is a DIGIT, append it to input_number.
    3. Else, if type is "integer" and char is ".", append char to input_number and set type to "float".
    4. Otherwise, prepend char to input_string, and exit the loop.
@@ -794,11 +794,11 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 2. If the first character of input_string is not DQUOTE, fail parsing.
 3. Discard the first character of input_string.
 4. While input_string is not empty:
-   1. Let char be the result of removing the first character of input_string.
+   1. Let char be the result of consuming the first character of input_string.
    2. If char is a backslash ("\\"):
       1. If input_string is now empty, fail parsing.
       2. Else:
-         1. Let next_char be the result of removing the first character of input_string.
+         1. Let next_char be the result of consuming the first character of input_string.
          2. If next_char is not DQUOTE or "\\", fail parsing.
          3. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
@@ -814,7 +814,7 @@ Given an ASCII string input_string, return a token. input_string is modified to 
 1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
-   1. Let char be the result of removing the first character of input_string.
+   1. Let char be the result of consuming the first character of input_string.
    2. If char is not one of ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/":
       1. Prepend char to input_string.
       2. Return output_string.
@@ -829,7 +829,7 @@ Given an ASCII string input_string, return a byte sequence. input_string is modi
 1. If the first character of input_string is not "\*", fail parsing.
 2. Discard the first character of input_string.
 3. If there is not a "\*" character before the end of input_string, fail parsing.
-4. Let b64_content be the result of removing content of input_string up to but not including the first instance of the character "\*".
+4. Let b64_content be the result of consuming content of input_string up to but not including the first instance of the character "\*".
 5. Consume the "\*" character at the beginning of input_string.
 6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
 7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behaviour below).
