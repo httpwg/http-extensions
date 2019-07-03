@@ -51,13 +51,6 @@ normative:
       ins: National Institute of Standards and Technology, U.S. Department of Commerce
     date: 2008-10
     target: https://csrc.nist.gov/csrc/media/publications/fips/180/3/archive/2008-10-31/documents/fips180-3_final.pdf
-  FIPS180-4:
-    title: NIST FIPS 180-4, Secure Hash Standard
-    author:
-      name: NIST
-      ins: National Institute of Standards and Technology, U.S. Department of Commerce
-    date: 2012-03
-    target: http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf
   UNIX:
     title: The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98
     author:
