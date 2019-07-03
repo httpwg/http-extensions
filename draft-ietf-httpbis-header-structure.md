@@ -179,34 +179,6 @@ This specification defines minimums for the length or number of various structur
 This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP/1.
 
 
-## Dictionaries {#dictionary}
-
-Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
-
-Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
-
-The ABNF for dictionaries in HTTP/1 headers is:
-
-~~~ abnf
-sh-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-name "=" member-value
-member-name    = key
-member-value   = sh-item
-key            = lcalpha *( lcalpha / DIGIT / "_" / "-" )
-lcalpha        = %x61-7A ; a-z
-~~~
-
-In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
-
-~~~ example
-Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
-~~~
-
-Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
-
-Parsers MUST support dictionaries containing at least 1024 key/value pairs, and dictionary keys with at least 64 characters.
-
-
 ## Lists {#list}
 
 Lists are arrays of items ({{item}}) with one or more members.
@@ -234,6 +206,34 @@ Example-StrListListHeader: "foo";"bar", "baz", "bat"; "one"
 Header specifications can constrain the types of individual values (including that of individual inner-list members) if necessary.
 
 Parsers MUST support lists containing at least 1024 members, and inner-lists containing at least 256 member.
+
+
+## Dictionaries {#dictionary}
+
+Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
+
+Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
+
+The ABNF for dictionaries in HTTP/1 headers is:
+
+~~~ abnf
+sh-dictionary  = dict-member *( OWS "," OWS dict-member )
+dict-member    = member-name "=" member-value
+member-name    = key
+member-value   = sh-item
+key            = lcalpha *( lcalpha / DIGIT / "_" / "-" )
+lcalpha        = %x61-7A ; a-z
+~~~
+
+In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
+
+~~~ example
+Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
+~~~
+
+Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
+
+Parsers MUST support dictionaries containing at least 1024 key/value pairs, and dictionary keys with at least 64 characters.
 
 
 ## Parameterized Lists {#param}
