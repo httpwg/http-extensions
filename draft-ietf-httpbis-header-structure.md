@@ -662,7 +662,7 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 
 1. Let items be an empty array.
 2. While input_string is not empty:
-   1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
+   1. Let item be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
@@ -672,25 +672,26 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 3. No structured data has been found; fail parsing.
 
 
-### Parsing a List of Lists from Text {#parse-listlist}
+#### Parsing an Inner List {#parse-innerlist}
 
-Given an ASCII string input_string, return a list of lists of items. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return either a single item or an array of items. input_string is modified to remove the parsed value.
 
-1. let top_list be an empty array.
+1. Let is_array be a boolean, initially set to false.
 2. Let inner_list be an empty array.
 3. While input_string is not empty:
    1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
    2. Append item to inner_list.
    3. Discard any leading OWS from input_string.
-   4. If input_string is empty, append inner_list to top_list and return top_list.
-   5. Let char be the result of consuming the first character of input_string.
-   6. If char is COMMA:
-      1. Append inner_list to top_list.
-      2. Let inner_list be an empty array.
-   7. Else if char is not ";", fail parsing.
-   8. Discard any leading OWS from input_string.
-   9. If input_string is empty, fail parsing.
-4. No structured data has been found; fail parsing.
+   4. If input_string is empty:
+      1. If is_array, return inner_list.
+      2. Else, return item.
+   5. If the first character of input_string is ";":
+      1. Discard the first character of input_string.
+      2. Let is_array be true.
+      3. Discard any leading OWS from input_string.
+      4. If the first character of input_string is COMMA, return inner_list.
+4. If is_array, return inner_list.
+5. Else, return item.
 
 
 ### Parsing a Parameterized List from Text {#parse-param-list}
