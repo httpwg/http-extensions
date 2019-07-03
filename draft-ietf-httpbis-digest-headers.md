@@ -1,7 +1,7 @@
 ---
 title: Resource Digests for HTTP
 abbrev:
-docname: draft-ietf-httpbis-digest-headers
+docname: draft-ietf-httpbis-digest-headers-latest
 category: std
 
 ipr: trust200902
