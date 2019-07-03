@@ -429,12 +429,13 @@ This section defines how to serialize and parse Structured Headers in HTTP/1 tex
 
 Given a structured defined in this specification:
 
-1. If the structure is a dictionary, return the result of Serializing a Dictionary ({{ser-dictionary}}).
-2. If the structure is a parameterized list, return the result of Serializing a Parameterized List ({{ser-param-list}}).
-3. If the structure is a list of lists, return the result of Serializing a List of Lists ({ser-listlist}).
-4. If the structure is a list, return the result of Serializing a List {{ser-list}}.
-5. If the structure is an item, return the result of Serializing an Item ({{ser-item}}).
-6. Otherwise, fail serialisation.
+1. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
+2. Else if the structure is a parameterized list, let output_string be the result of Serializing a Parameterized List ({{ser-param-list}}).
+3. Else if the structure is a list of lists, let output_string be the result of Serializing a List of Lists ({ser-listlist}).
+4. Else if the structure is a list, let output_string be the result of Serializing a List {{ser-list}}.
+5. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
+6. Else, fail serialisation.
+7. Return output_string converted in to an array of bytes, using ASCII encoding {{!RFC0020}}.
 
 
 ### Serializing a Dictionary {#ser-dictionary}
@@ -459,7 +460,7 @@ Given a key as input_key:
 
 0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
 1. Let output be an empty string.
-2. Append input_key to output, using ASCII encoding {{!RFC0020}}.
+2. Append input_key to output.
 3. Return output.
 
 
@@ -566,7 +567,7 @@ Given a string as input_string:
 3. For each character char in input_string:
    1. If char is "\\" or DQUOTE:
       1. Append "\\" to output.
-   2. Append char to output, using ASCII encoding {{!RFC0020}}.
+   2. Append char to output.
 4. Append DQUOTE to output.
 5. Return output.
 
@@ -577,7 +578,7 @@ Given a token as input_token:
 
 0. If input_token is not a sequence of characters, or contains characters not allowed in {{token}}}, fail serialisation.
 1. Let output be an empty string.
-2. Append input_token to output, using ASCII encoding {{!RFC0020}}.
+2. Append input_token to output.
 3. Return output.
 
 
@@ -613,8 +614,9 @@ Given a Boolean as input_boolean:
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an ASCII string input_string that represents the chosen header's field-value, and header_type, one of "dictionary", "list", "list-list", "param-list", or "item", return the parsed header value.
+Given an array of bytes input_bytes that represents the chosen header's field-value, and header_type (one of "dictionary", "list", "list-list", "param-list", or "item"), return the parsed header value.
 
+0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading OWS from input_string.
 2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
@@ -625,7 +627,7 @@ Given an ASCII string input_string that represents the chosen header's field-val
 7. If input_string is not empty, fail parsing.
 8. Otherwise, return output.
 
-When generating input_string, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
+When generating input_bytes, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
 For Lists, Lists of Lists, Parameterized Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
 
@@ -634,8 +636,6 @@ Strings split across multiple header instances will have unpredictable results, 
 Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
-
-Note that this has the effect of discarding any header field with non-ASCII characters in input_string.
 
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
@@ -924,6 +924,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-10
 
 * Update abstract (#799).
+* Input and output are now arrays of bytes (#662).
 
 
 ## Since draft-ietf-httpbis-header-structure-09
