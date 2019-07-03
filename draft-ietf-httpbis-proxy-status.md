@@ -117,10 +117,10 @@ Origin servers MUST NOT generate the Proxy-Status header field.
 
 This section lists parameters that are potentially applicable to most Proxy Status Types.
 
-* proxy - a sh-token identifying the HTTP intermediary generating this response.
-* origin - a sh-token identifying the origin server whose behaviour triggered this response.
+* node - a sh-string identifying the intermediary generating this Proxy Status Type. MAY be a hostname, IP address, or alias.
+* origin - a sh-string identifying the origin server whose behaviour triggered this response. MAY be a hostname, IP address, or alias.
 * protocol - a sh-token indicating the ALPN protocol identifier {{!RFC7301}} used to connect to the next hop. This is only applicable when that connection was actually established.
-* tries - a sh-integer indicating the number of times that the error has occurred before this response.
+* tries - a sh-integer indicating the number of times that the indicated error occurred when attempting to satisfy the request.
 * details - a sh-string containing additional information not captured anywhere else. This can include implementation-specific or deployment-specific information.
 
 
@@ -231,8 +231,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 
 * Name: http_protocol_error
 * Description: The intermediary encountered a HTTP protocol error when communicating with the next hop. This error should only be used when a more specific one is not defined.
-* Extra Parameters:
-  - details: a sh-string containing details about the error condition. For example, this might be the HTTP/2 error code or free-form text describing the condition.
+* Extra Parameters: None.
 * Recommended HTTP status code: 502
 
 ## HTTP Response Header Block Too Large
@@ -265,7 +264,6 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Description: The intermediary encountered an error decoding the transfer-coding of the response.
 * Extra Parameters:
   - coding: a sh-token containing the specific coding that caused the error.
-  - details: a sh-string containing details about the error condition.
 * Recommended HTTP status code: 502
 
 ## HTTP Response Content-Coding Error
@@ -274,7 +272,6 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Description: The intermediary encountered an error decoding the content-coding of the response.
 * Extra Parameters:
   - coding: a sh-token containing the specific coding that caused the error.
-  - details: a sh-string containing details about the error condition.
 * Recommended HTTP status code: 502
 
 ## HTTP Response Timeout
@@ -365,6 +362,13 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Extra Parameters: None.
 * Recommended HTTP status code: 502
 
+## Proxy Internal Response
+
+* Name: proxy_internal_response
+* Description: The intermediary generated the response locally, without attempting to connect to the next hop (e.g. in response to a request to a debug endpoint terminated at the intermediary).
+* Extra Parameters: None.
+* Recommended HTTP status code:
+
 ## Proxy Internal Error
 
 * Name: proxy_internal_error
@@ -376,7 +380,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 ## Proxy Loop Detected
 
 * Name: proxy_loop_detected
-* Description: The intermediary tried to forward the request to itself, or a loop has been detected using different means (e.g. {{?I-D.ietf-httpbis-cdn-loop}}).
+* Description: The intermediary tried to forward the request to itself, or a loop has been detected using different means (e.g. {{?RFC8586}}).
 * Extra Parameters: None.
 * Recommended HTTP status code: 502
 
