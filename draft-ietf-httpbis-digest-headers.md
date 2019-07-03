@@ -88,7 +88,6 @@ normative:
 
 informative:
   RFC2818:
-  RFC6962:
   RFC7396:
   SRI:
     title: "Subresource Integrity"
