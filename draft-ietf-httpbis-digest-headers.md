@@ -84,6 +84,7 @@ informative:
   RFC7396:
   SRI:
     title: "Subresource Integrity"
+    date: 2016-06-23
     author:
       - ins: D. Akhawe
       - ins: F. Braun
