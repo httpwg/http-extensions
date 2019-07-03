@@ -669,7 +669,7 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
    1. Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
+   4. Let this_value be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
    5. Add key this_key with value this_value to dictionary.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, return dictionary.
