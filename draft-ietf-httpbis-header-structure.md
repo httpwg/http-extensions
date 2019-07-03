@@ -427,7 +427,7 @@ This section defines how to serialize and parse Structured Headers in HTTP/1 tex
 
 ## Serializing Structured Headers into HTTP/1 {#text-serialize}
 
-Given a structured defined in this specification:
+Given a structure defined in this specification:
 
 1. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
 2. Else if the structure is a parameterized list, let output_string be the result of Serializing a Parameterized List ({{ser-param-list}}).
