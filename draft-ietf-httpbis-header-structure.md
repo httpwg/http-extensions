@@ -220,7 +220,7 @@ The ABNF for dictionaries in HTTP/1 headers is:
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member    = member-name "=" member-value
 member-name    = key
-member-value   = sh-item
+member-value   = sh-item / inner-list
 key            = lcalpha *( lcalpha / DIGIT / "_" / "-" )
 lcalpha        = %x61-7A ; a-z
 ~~~
