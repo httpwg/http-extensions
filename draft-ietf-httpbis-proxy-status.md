@@ -117,8 +117,8 @@ Origin servers MUST NOT generate the Proxy-Status header field.
 
 This section lists parameters that are potentially applicable to most Proxy Status Types.
 
-* proxy - a sh-token identifying the HTTP intermediary generating this response.
-* origin - a sh-token identifying the origin server whose behaviour triggered this response.
+* node - a sh-string identifying the intermediary generating this Proxy Status Type. MAY be a hostname, IP address, or alias.
+* origin - a sh-string identifying the origin server whose behaviour triggered this response. MAY be a hostname, IP address, or alias.
 * protocol - a sh-token indicating the ALPN protocol identifier {{!RFC7301}} used to connect to the next hop. This is only applicable when that connection was actually established.
 * tries - a sh-integer indicating the number of times that the indicated error occurred when attempting to satisfy the request.
 * details - a sh-string containing additional information not captured anywhere else. This can include implementation-specific or deployment-specific information.
