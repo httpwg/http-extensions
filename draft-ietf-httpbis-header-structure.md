@@ -215,7 +215,8 @@ The ABNF for lists in HTTP/1 headers is:
 
 ~~~ abnf
 sh-list     = list-member *( OWS "," OWS list-member )
-list-member = sh-item
+list-member = sh-item / inner-list
+inner-list     = sh-item *( OWS ";" OWS sh-item )
 ~~~
 
 In HTTP/1, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
@@ -224,31 +225,15 @@ In HTTP/1, each member is separated by a comma and optional whitespace. For exam
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
-Header specifications can constrain the types of individual values if necessary.
-
-Parsers MUST support lists containing at least 1024 members.
-
-
-## Lists of Lists {#listlist}
-
-Lists of Lists are arrays of arrays containing items ({{item}}).
-
-The ABNF for lists of lists in HTTP/1 headers is:
-
-~~~ abnf
-sh-listlist = inner-list *( OWS "," OWS inner-list )
-inner-list  = list-member *( OWS ";" OWS list-member )
-~~~
-
-In HTTP/1, each inner-list is separated by a comma and optional whitespace, and members of the inner-list are separated by semicolons and optional whitespace. For example, a header field whose value is defined as a list of lists of strings could look like:
+A header field whose value is defined as a list of lists of strings could look like:
 
 ~~~ example
 Example-StrListListHeader: "foo";"bar", "baz", "bat"; "one"
 ~~~
 
-Header specifications can constrain the types of individual inner-list values if necessary.
+Header specifications can constrain the types of individual values (including that of individual inner-list members) if necessary.
 
-Parsers MUST support lists of lists containing at least 1024 members, and inner-lists containing at least 256 members.
+Parsers MUST support lists containing at least 1024 members, and inner-lists containing at least 256 member.
 
 
 ## Parameterized Lists {#param}
