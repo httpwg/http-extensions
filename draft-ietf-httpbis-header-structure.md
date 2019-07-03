@@ -181,14 +181,14 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Lists {#list}
 
-Lists are arrays of items ({{item}}) with one or more members.
+Lists are arrays of items ({{item}}) with one or more members. Members can also be an "inner list", itself an array of items.
 
 The ABNF for lists in HTTP/1 headers is:
 
 ~~~ abnf
 sh-list     = list-member *( OWS "," OWS list-member )
 list-member = sh-item / inner-list
-inner-list     = sh-item *( OWS ";" OWS sh-item )
+inner-list  = sh-item *( OWS ";" OWS sh-item )
 ~~~
 
 In HTTP/1, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
@@ -197,10 +197,16 @@ In HTTP/1, each member is separated by a comma and optional whitespace. For exam
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
-A header field whose value is defined as a list of lists of strings could look like:
+Inner lists have their values delimited by a semicolon in HTTP/1. A header field whose value is defined as a list of lists of strings could look like:
 
 ~~~ example
 Example-StrListListHeader: "foo";"bar", "baz", "bat"; "one"
+~~~
+
+If an inner list has only one member, it is denoted by a trailing semicolon; for example:
+
+~~~ example
+Example-SingleItemListHeader: "justone";, "one"; "two"
 ~~~
 
 Header specifications can constrain the types of individual values (including that of individual inner-list members) if necessary.
@@ -210,7 +216,7 @@ Parsers MUST support lists containing at least 1024 members, and inner-lists con
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
+Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}) or arrays of items. There can be one or more members, and keys are required to be unique.
 
 Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
