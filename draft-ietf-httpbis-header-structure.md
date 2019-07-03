@@ -428,33 +428,6 @@ Given a structured defined in this specification:
 7. Return output_string converted in to an array of bytes, using ASCII encoding {{!RFC0020}}.
 
 
-### Serializing a Dictionary {#ser-dictionary}
-
-Given a dictionary as input_dictionary:
-
-1. Let output be an empty string.
-2. For each member mem of input_dictionary:
-   1. Let name be the result of applying Serializing a Key ({{ser-key}}) to mem's member-name.
-   2. Append name to output.
-   3. Append "=" to output.
-   4. If mem is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to mem.
-   5. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
-   6. Append value to output.
-   7. If more members remain in input_dictionary:
-      1. Append a COMMA to output.
-      2. Append a single WS to output.
-3. Return output.
-
-#### Serializing a Key {#ser-key}
-
-Given a key as input_key:
-
-0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
-1. Let output be an empty string.
-2. Append input_key to output.
-3. Return output.
-
-
 ### Serializing a List {#ser-list}
 
 Given a list as input_list:
@@ -481,6 +454,34 @@ Given an array inner_list:
   3. Append a ";" to output.
   4. Append a single WS to output.
 4. Return output.
+
+
+### Serializing a Dictionary {#ser-dictionary}
+
+Given a dictionary as input_dictionary:
+
+1. Let output be an empty string.
+2. For each member mem of input_dictionary:
+   1. Let name be the result of applying Serializing a Key ({{ser-key}}) to mem's member-name.
+   2. Append name to output.
+   3. Append "=" to output.
+   4. If mem is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to mem.
+   5. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
+   6. Append value to output.
+   7. If more members remain in input_dictionary:
+      1. Append a COMMA to output.
+      2. Append a single WS to output.
+3. Return output.
+
+#### Serializing a Key {#ser-key}
+
+Given a key as input_key:
+
+0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
+1. Let output be an empty string.
+2. Append input_key to output.
+3. Return output.
+
 
 ### Serializing a Parameterized List {#ser-param-list}
 
