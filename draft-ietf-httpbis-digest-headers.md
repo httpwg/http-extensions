@@ -157,7 +157,7 @@ This document updates the `Digest` and `Want-Digest` header field definitions to
 
 This approach can be easily adapted to use-cases where the transferred data
 does require some sort of manipulation to be considered a representation
-or conveys a partial representation of a resource (eg. Range Requests).
+or conveys a partial representation of a resource (eg. Range Requests [RFC7233]).
 
 Changes are semantically compatible with existing implementations
 and better cover both the request and response cases.
@@ -227,7 +227,7 @@ interpreted as described in [RFC7230] and [RFC7231].
 To avoid inconsistencies, an integrity mechanism for HTTP messages
 should decouple the checksum calculation:
 
-- from the payload body - which may be altered by mechanism like Range Requests or the method (eg. HEAD);
+- from the payload body - which may be altered by mechanism like Range Requests [RFC7233] or the method (eg. HEAD);
 
 - and from the message body - which depends on `Transfer-Encoding` and whatever tranformations
 the intermediaries may apply.
