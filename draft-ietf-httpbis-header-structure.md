@@ -622,40 +622,6 @@ Integers, Floats and Byte Sequences cannot be split across multiple headers beca
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
 
 
-### Parsing a Dictionary from Text {#parse-dictionary}
-
-Given an ASCII string input_string, return an ordered map of (key, item). input_string is modified to remove the parsed value.
-
-1. Let dictionary be an empty, ordered map.
-2. While input_string is not empty:
-   1. Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
-   2. If dictionary already contains this_key, fail parsing.
-   3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
-   5. Add key this_key with value this_value to dictionary.
-   6. Discard any leading OWS from input_string.
-   7. If input_string is empty, return dictionary.
-   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   9. Discard any leading OWS from input_string.
-   0. If input_string is empty, fail parsing.
-3. No structured data has been found; fail parsing.
-
-
-### Parsing a Key from Text {#parse-key}
-
-Given an ASCII string input_string, return a key. input_string is modified to remove the parsed value.
-
-1. If the first character of input_string is not lcalpha, fail parsing.
-2. Let output_string be an empty string.
-3. While input_string is not empty:
-   1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "\_", or "-":
-      1. Prepend char to input_string.
-      2. Return output_string.
-   3. Append char to output_string.
-4. Return output_string.
-
-
 ### Parsing a List from Text {#parse-list}
 
 Given an ASCII string input_string, return a list of items. input_string is modified to remove the parsed value.
@@ -692,6 +658,40 @@ Given an ASCII string input_string, return either a single item or an array of i
       4. If the first character of input_string is COMMA, return inner_list.
 4. If is_array, return inner_list.
 5. Else, return item.
+
+
+### Parsing a Dictionary from Text {#parse-dictionary}
+
+Given an ASCII string input_string, return an ordered map of (key, item). input_string is modified to remove the parsed value.
+
+1. Let dictionary be an empty, ordered map.
+2. While input_string is not empty:
+   1. Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
+   2. If dictionary already contains this_key, fail parsing.
+   3. Consume the first character of input_string; if it is not "=", fail parsing.
+   4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
+   5. Add key this_key with value this_value to dictionary.
+   6. Discard any leading OWS from input_string.
+   7. If input_string is empty, return dictionary.
+   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   9. Discard any leading OWS from input_string.
+   0. If input_string is empty, fail parsing.
+3. No structured data has been found; fail parsing.
+
+
+### Parsing a Key from Text {#parse-key}
+
+Given an ASCII string input_string, return a key. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not lcalpha, fail parsing.
+2. Let output_string be an empty string.
+3. While input_string is not empty:
+   1. Let char be the result of removing the first character of input_string.
+   2. If char is not one of lcalpha, DIGIT, "\_", or "-":
+      1. Prepend char to input_string.
+      2. Return output_string.
+   3. Append char to output_string.
+4. Return output_string.
 
 
 ### Parsing a Parameterized List from Text {#parse-param-list}
