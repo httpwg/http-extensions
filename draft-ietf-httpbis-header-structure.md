@@ -422,7 +422,6 @@ Given a structured defined in this specification:
 
 1. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
 2. Else if the structure is a parameterized list, let output_string be the result of Serializing a Parameterized List ({{ser-param-list}}).
-3. Else if the structure is a list of lists, let output_string be the result of Serializing a List of Lists ({ser-listlist}).
 4. Else if the structure is a list, let output_string be the result of Serializing a List {{ser-list}}.
 5. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
 6. Else, fail serialisation.
@@ -438,9 +437,10 @@ Given a dictionary as input_dictionary:
    1. Let name be the result of applying Serializing a Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem's member-value.
-   5. Append value to output.
-   6. If more members remain in input_dictionary:
+   4. If mem is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to mem.
+   5. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
+   6. Append value to output.
+   7. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -461,33 +461,26 @@ Given a list as input_list:
 
 1. Let output be an empty string.
 2. For each member mem of input_list:
-   1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
-   2. Append value to output.
-   3. If more members remain in input_list:
-      1. Append a COMMA to output.
-      2. Append a single WS to output.
-3. Return output.
-
-
-### Serializing a List of Lists {#ser-listlist}
-
-Given a list of lists of items as input_list:
-
-1. Let output be an empty string.
-2. For each member inner_list of input_list:
-   1. If inner_list is not a list, fail serialisation.
-   2. If inner_list is empty, fail serialisation.
-   3. For each inner_mem of inner_list:
-      1. Let value be the result of applying Serializing an Item ({{ser-item}}) to inner_mem.
-      2. Append value to output.
-      3. If more members remain in inner_list:
-         1. Append a ";" to output.
-         2. Append a single WS to output.
+   1. If mem is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to mem.
+   2. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
+   3. Append value to output.
    4. If more members remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
 
+#### Serialising an Inner List {#ser-innerlist}
+
+Given an array inner_list:
+
+1. Let output be an empty string.
+2. If inner_list is not a list, fail serialisation.
+3. For each member mem of inner_list:
+  1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
+  2. Append value to output.
+  3. Append a ";" to output.
+  4. Append a single WS to output.
+4. Return output.
 
 ### Serializing a Parameterized List {#ser-param-list}
 
@@ -605,13 +598,12 @@ Given a Boolean as input_boolean:
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an array of bytes input_bytes that represents the chosen header's field-value, and header_type (one of "dictionary", "list", "list-list", "param-list", or "item"), return the parsed header value.
+Given an array of bytes input_bytes that represents the chosen header's field-value, and header_type (one of "dictionary", "list", "param-list", or "item"), return the parsed header value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading OWS from input_string.
 2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
-4. If header_type is "list-list", let output be the result of Parsing a List of Lists from Text ({{parse-listlist}}).
 4. If header_type is "param-list", let output be the result of Parsing a Parameterized List from Text ({{parse-param-list}}).
 5. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
