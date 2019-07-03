@@ -435,7 +435,7 @@ Given a structure defined in this specification:
 4. Else if the structure is a list, let output_string be the result of Serializing a List {{ser-list}}.
 5. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
 6. Else, fail serialisation.
-7. Return output_string converted in to an array of bytes, using ASCII encoding {{!RFC0020}}.
+7. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
 
 
 ### Serializing a Dictionary {#ser-dictionary}
