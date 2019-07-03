@@ -346,7 +346,7 @@ Response:
       algorithm is encoded using the base64 encoding  [RFC4648].
       The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
       to collision attacks [IACR-2019-459].
-    * Reference: [FIPS-180-3], [RFC4648], this document.
+    * Reference: [FIPS180-3], [RFC4648], this document.
     * Status: obsoleted
 
   UNIXsum:
