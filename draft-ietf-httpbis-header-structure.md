@@ -913,6 +913,7 @@ _RFC Editor: Please remove this section before publication._
 * Update abstract (#799).
 * Input and output are now arrays of bytes (#662).
 * Implementations need to preserve difference between token and string (#790).
+* Allow inner lists in both dictionaries and lists; removes lists of lists (#816).
 
 
 ## Since draft-ietf-httpbis-header-structure-09
