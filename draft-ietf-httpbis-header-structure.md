@@ -907,13 +907,15 @@ When specifying more than one header, it's important to remember to describe wha
 
 If you need to fit arbitrarily complex data into a header, Structured Headers is probably a poor fit for your use case.
 
-## What should generic Structured Headers implementations expose?
+# Implementation Notes
 
-A generic implementation should expose the top-level parse ({{text-parse}}) and serialize ({{text-serialize}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
+A generic implementation of this specification should expose the top-level parse ({{text-parse}}) and serialize ({{text-serialize}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
 For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community; see <https://github.com/httpwg/structured-header-tests>.
 
 Implementers should note that dictionaries and parameters are order-preserving maps. Some headers may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
+
+Likewise, implementations should note that it's important to preserve the distinction between tokens and strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper "token" object or use a parameter on functions to assure that these types remain separate.
 
 
 # Changes
@@ -925,6 +927,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Update abstract (#799).
 * Input and output are now arrays of bytes (#662).
+* Implementations need to preserve difference between token and string (#790).
 
 
 ## Since draft-ietf-httpbis-header-structure-09
