@@ -51,13 +51,6 @@ normative:
       ins: National Institute of Standards and Technology, U.S. Department of Commerce
     date: 2008-10
     target: https://csrc.nist.gov/csrc/media/publications/fips/180/3/archive/2008-10-31/documents/fips180-3_final.pdf
-  FIPS180-4:
-    title: NIST FIPS 180-4, Secure Hash Standard
-    author:
-      name: NIST
-      ins: National Institute of Standards and Technology, U.S. Department of Commerce
-    date: 2012-03
-    target: http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf
   UNIX:
     title: The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98
     author:
@@ -88,11 +81,10 @@ normative:
 
 informative:
   RFC2818:
-  RFC5788:
-  RFC6962:
   RFC7396:
   SRI:
     title: "Subresource Integrity"
+    date: 2016-06-23
     author:
       - ins: D. Akhawe
       - ins: F. Braun
@@ -126,7 +118,7 @@ The source code and issues list for this draft can be found at
 
 Integrity protection for HTTP content is multi layered and
 is usually achieved across the protocol stack:
-TCP checksums and TLS record to name but some.
+TCP checksums and TLS [RFC2818] record to name but some.
 
 The HTTP protocol does not provide means to protect the various
 message parts. Besides, it might be desirable to add additional guarantees
@@ -157,7 +149,7 @@ This document updates the `Digest` and `Want-Digest` header field definitions to
 
 This approach can be easily adapted to use-cases where the transferred data
 does require some sort of manipulation to be considered a representation
-or conveys a partial representation of a resource (eg. Range Requests).
+or conveys a partial representation of a resource (eg. Range Requests [RFC7233]).
 
 Changes are semantically compatible with existing implementations
 and better cover both the request and response cases.
@@ -227,7 +219,7 @@ interpreted as described in [RFC7230] and [RFC7231].
 To avoid inconsistencies, an integrity mechanism for HTTP messages
 should decouple the checksum calculation:
 
-- from the payload body - which may be altered by mechanism like Range Requests or the method (eg. HEAD);
+- from the payload body - which may be altered by mechanism like Range Requests [RFC7233] or the method (eg. HEAD);
 
 - and from the message body - which depends on `Transfer-Encoding` and whatever tranformations
 the intermediaries may apply.
