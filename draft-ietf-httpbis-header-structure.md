@@ -53,7 +53,7 @@ informative:
 
 --- abstract
 
-This document describes a set of data types and algorithms associated with them that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by new specifications of HTTP header fields as well as revisions of existing header field specifications when doing so does not cause interoperability issues.
+This document describes a set of data types and associated algorithms associated with them that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by specifications of new HTTP header fields that wish to use a common syntax that is more restrictive than traditional HTTP/1.x field values.
 
 
 --- note_Note_to_Readers
@@ -76,7 +76,7 @@ Specifying the syntax of new HTTP header fields is an onerous task; even with th
 
 Once a header field is defined, bespoke parsers and serializers often need to be written, because each header has slightly different handling of what looks like common syntax.
 
-This document introduces a set of common data structures for use in HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in HTTP/1 {{?RFC7230}} header fields.
+This document introduces a set of common data structures for use in definitions of new HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in HTTP/1 {{?RFC7230}} header fields.
 
 HTTP headers that are defined as "Structured Headers" use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition by specification writers and handling by implementations.
 
@@ -430,12 +430,13 @@ This section defines how to serialize and parse Structured Headers in HTTP/1 tex
 Given a structured defined in this specification:
 
 1. If the structure is a dictionary, list, parameterized list, or list of lists, and its value is empty (i.e., it has no members), do not serialise the header field.
-2. If the structure is a dictionary, return the result of Serializing a Dictionary ({{ser-dictionary}}).
-3. If the structure is a parameterized list, return the result of Serializing a Parameterized List ({{ser-param-list}}).
-4. If the structure is a list of lists, return the result of Serializing a List of Lists ({ser-listlist}).
-5. If the structure is a list, return the result of Serializing a List {{ser-list}}.
-6. If the structure is an item, return the result of Serializing an Item ({{ser-item}}).
-7. Otherwise, fail serialisation.
+2. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
+3. Else if the structure is a parameterized list, let output_string be the result of Serializing a Parameterized List ({{ser-param-list}}).
+4. Else if the structure is a list of lists, let output_string be the result of Serializing a List of Lists ({ser-listlist}).
+5. Else if the structure is a list, let output_string be the result of Serializing a List {{ser-list}}.
+6. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
+7. Else, fail serialisation.
+8. Return output_string converted in to an array of bytes, using ASCII encoding {{!RFC0020}}.
 
 
 ### Serializing a Dictionary {#ser-dictionary}
@@ -460,7 +461,7 @@ Given a key as input_key:
 
 0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
 1. Let output be an empty string.
-2. Append input_key to output, using ASCII encoding {{!RFC0020}}.
+2. Append input_key to output.
 3. Return output.
 
 
@@ -567,7 +568,7 @@ Given a string as input_string:
 3. For each character char in input_string:
    1. If char is "\\" or DQUOTE:
       1. Append "\\" to output.
-   2. Append char to output, using ASCII encoding {{!RFC0020}}.
+   2. Append char to output.
 4. Append DQUOTE to output.
 5. Return output.
 
@@ -578,7 +579,7 @@ Given a token as input_token:
 
 0. If input_token is not a sequence of characters, or contains characters not allowed in {{token}}}, fail serialisation.
 1. Let output be an empty string.
-2. Append input_token to output, using ASCII encoding {{!RFC0020}}.
+2. Append input_token to output.
 3. Return output.
 
 
@@ -614,8 +615,9 @@ Given a Boolean as input_boolean:
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an ASCII string input_string that represents the chosen header's field-value (which is an empty string if that header is not present), and header_type, one of "dictionary", "list", "list-list", "param-list", or "item", return the parsed header value.
+Given an array of bytes input_bytes that represents the chosen header's field-value (which is an empty string if that header is not present), and header_type (one of "dictionary", "list", "list-list", "param-list", or "item"), return the parsed header value.
 
+0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading OWS from input_string.
 2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
@@ -626,7 +628,7 @@ Given an ASCII string input_string that represents the chosen header's field-val
 7. If input_string is not empty, fail parsing.
 8. Otherwise, return output.
 
-When generating input_string, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
+When generating input_bytes, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
 For Lists, Lists of Lists, Parameterized Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
 
@@ -635,8 +637,6 @@ Strings split across multiple header instances will have unpredictable results, 
 Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
-
-Note that this has the effect of discarding any header field with non-ASCII characters in input_string.
 
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
@@ -908,13 +908,15 @@ When specifying more than one header, it's important to remember to describe wha
 
 If you need to fit arbitrarily complex data into a header, Structured Headers is probably a poor fit for your use case.
 
-## What should generic Structured Headers implementations expose?
+# Implementation Notes
 
-A generic implementation should expose the top-level parse ({{text-parse}}) and serialize ({{text-serialize}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
+A generic implementation of this specification should expose the top-level parse ({{text-parse}}) and serialize ({{text-serialize}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
 For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community; see <https://github.com/httpwg/structured-header-tests>.
 
 Implementers should note that dictionaries and parameters are order-preserving maps. Some headers may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
+
+Likewise, implementations should note that it's important to preserve the distinction between tokens and strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper "token" object or use a parameter on functions to assure that these types remain separate.
 
 
 # Changes
@@ -924,7 +926,10 @@ _RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-10
 
-* Allowed empty dictionaries and lists (#781).
+* Update abstract (#799).
+* Input and output are now arrays of bytes (#662).
+* Implementations need to preserve difference between token and string (#790).
+* Allow empty dictionaries and lists (#781).
 
 
 ## Since draft-ietf-httpbis-header-structure-09
