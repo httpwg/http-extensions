@@ -246,22 +246,22 @@ Parsers MUST support dictionaries containing at least 1024 key/value pairs, and 
 
 ## Parameterized Lists {#param}
 
-Parameterized Lists are arrays of parameterized identifiers, with one or more members.
+Parameterized Lists are arrays of parameterized items, with one or more members.
 
-A parameterized identifier is a primary identifier (a {{token}}}) with associated parameters, an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters, and keys are required to be unique.
+A parameterized item is an item ({{item}}) with associated parameters, an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters, and keys are required to be unique.
 
 The ABNF for parameterized lists in HTTP/1 headers is:
 
 ~~~ abnf
 sh-param-list = param-item *( OWS "," OWS param-item )
-param-item    = primary-id *parameter
-primary-id    = sh-token
+param-item    = primary-item *parameter
+primary-item  = item
 parameter     = OWS ";" OWS param-name [ "=" param-value ]
 param-name    = key
 param-value   = sh-item
 ~~~
 
-In HTTP/1, each param-id is separated by a comma and optional whitespace (as in Lists), and the parameters are separated by semicolons. For example:
+In HTTP/1, each param-item is separated by a comma and optional whitespace (as in Lists), and the parameters are separated by semicolons. For example:
 
 ~~~ example
 Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, ghi;q="9";r="w"
@@ -491,8 +491,8 @@ Given a parameterized list as input_plist:
 
 1. Let output be an empty string.
 2. For each member mem of input_plist:
-   1. Let id be the result of applying Serializing a Token ({{ser-token}}) to mem's token.
-   2. Append id to output.
+   1. Let item be the result of applying Serializing an item ({{ser-item}}) to mem's primary-item.
+   2. Append item to output.
    3. For each parameter in mem's parameters:
       1. Append ";" to output.
       2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
@@ -694,11 +694,11 @@ Given an ASCII string input_string, return a key. input_string is modified to re
 
 ### Parsing a Parameterized List from Text {#parse-param-list}
 
-Given an ASCII string input_string, return a list of parameterized identifiers. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return a list of parameterized items. input_string is modified to remove the parsed value.
 
 1. Let items be an empty array.
 2. While input_string is not empty:
-   1. Let item be the result of running Parse Parameterized Identifier from Text ({{parse-param-id}}) with input_string.
+   1. Let item be the result of running Parse Parameterized Item from Text ({{parse-param-item}}) with input_string.
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
@@ -708,11 +708,11 @@ Given an ASCII string input_string, return a list of parameterized identifiers. 
 3. No structured data has been found; fail parsing.
 
 
-### Parsing a Parameterized Identifier from Text {#parse-param-id}
+### Parsing a Parameterized Item from Text {#parse-param-item}
 
 Given an ASCII string input_string, return an token with an unordered map of parameters. input_string is modified to remove the parsed value.
 
-1. Let primary_identifier be the result of Parsing a Token from Text ({{parse-token}}) from input_string.
+1. Let primary_item be the result of Parsing an item from Text ({{parse-item}}) from input_string.
 2. Let parameters be an empty, ordered map.
 3. In a loop:
    1. Discard any leading OWS from input_string.
@@ -726,7 +726,7 @@ Given an ASCII string input_string, return an token with an unordered map of par
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
    9. Add key param_name with value param_value to parameters.
-4. Return the tuple (primary_identifier, parameters).
+4. Return the tuple (primary_item, parameters).
 
 
 ### Parsing an Item from Text {#parse-item}
@@ -911,6 +911,7 @@ _RFC Editor: Please remove this section before publication._
 * Update abstract (#799).
 * Input and output are now arrays of bytes (#662).
 * Implementations need to preserve difference between token and string (#790).
+* Change parameterized lists to have primary items (#797).
 * Allow inner lists in both dictionaries and lists; removes lists of lists (#816).
 
 
