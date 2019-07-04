@@ -188,7 +188,7 @@ The ABNF for lists in HTTP/1 headers is:
 ~~~ abnf
 sh-list     = list-member *( OWS "," OWS list-member )
 list-member = sh-item / inner-list
-inner-list  = sh-item *( OWS ";" OWS sh-item )
+inner-list  = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")"
 ~~~
 
 In HTTP/1, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
@@ -197,17 +197,13 @@ In HTTP/1, each member is separated by a comma and optional whitespace. For exam
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
-Inner lists have their values delimited by a semicolon in HTTP/1. A header field whose value is defined as a list of lists of strings could look like:
+In HTTP/1, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of lists of strings could look like:
 
 ~~~ example
-Example-StrListListHeader: "foo";"bar", "baz", "bat"; "one"
+Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 ~~~
 
-If an inner list has only one member, it is denoted by a trailing semicolon; for example:
-
-~~~ example
-Example-SingleItemListHeader: "justone";, "one"; "two"
-~~~
+Note that the last member in this example is an empty inner list.
 
 Header specifications can constrain the types of individual values (including that of individual inner-list members) if necessary.
 
@@ -235,6 +231,12 @@ In HTTP/1, keys and values are separated by "=" (without whitespace), and key/va
 
 ~~~ example
 Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
+~~~
+
+A dictionary with a member whose value is an inner-list of tokens:
+
+~~~ example
+Example-DictListHeader: rating=1.5, feelings=(joy sadness)
 ~~~
 
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
@@ -446,13 +448,13 @@ Given a list as input_list:
 
 Given an array inner_list:
 
-1. Let output be an empty string.
+1. Let output be the string "(".
 2. If inner_list is not a list, fail serialisation.
 3. For each member mem of inner_list:
   1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
   2. Append value to output.
-  3. Append a ";" to output.
-  4. Append a single WS to output.
+  3. Append a single WS to output.
+4. Append ")" to output.
 4. Return output.
 
 
@@ -628,7 +630,8 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 
 1. Let items be an empty array.
 2. While input_string is not empty:
-   1. Let item be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
+   1. If the first character of input_string is "(", let item be the result of running Parse an Inner List ({{parse-innerlist}}) with input_string.
+   2. Else, let item be the result of running Parsing an Item ({{parse-item}}) with input_string.
    2. Append item to items.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return items.
@@ -640,24 +643,18 @@ Given an ASCII string input_string, return a list of items. input_string is modi
 
 #### Parsing an Inner List {#parse-innerlist}
 
-Given an ASCII string input_string, return either a single item or an array of items. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return either an array of items. input_string is modified to remove the parsed value.
 
-1. Let is_array be a boolean, initially set to false.
+1. Consume the first character of input_string; if it is not "(", fail parsing.
 2. Let inner_list be an empty array.
 3. While input_string is not empty:
-   1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
-   2. Append item to inner_list.
-   3. Discard any leading OWS from input_string.
-   4. If input_string is empty:
-      1. If is_array, return inner_list.
-      2. Else, return item.
-   5. If the first character of input_string is ";":
+   1. Let leading_ws be the result of consuming any leading OWS from input_string.
+   2. If the first character of input_string is ")":
       1. Discard the first character of input_string.
-      2. Let is_array be true.
-      3. Discard any leading OWS from input_string.
-      4. If the first character of input_string is COMMA, return inner_list.
-4. If is_array, return inner_list.
-5. Else, return item.
+      2. Return inner_list.
+   3. If inner_list is not empty and leading_ws is empty, inner list members are not delimited by whitespace; fail parsing.
+   4. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
+   5. Append item to inner_list.
 
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
@@ -669,7 +666,8 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
    1. Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let this_value be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
+   4. If the first character of input_string is "(", let this_value be the result of running Parse an Inner List ({{parse-innerlist}}) with input_string.
+   5. Else, let this_value be the result of running Parsing an Item ({{parse-item}}) with input_string.
    5. Add key this_key with value this_value to dictionary.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, return dictionary.
@@ -881,7 +879,7 @@ Structured headers intentionally limits the complexity of data structures, to as
 Sometimes, this can be achieved by creating limited substructures in values, and/or using more than one header. For example, consider:
 
 ~~~
-Example-Thing: name="Widget", cost=89.2, descriptions=foo;bar
+Example-Thing: name="Widget", cost=89.2, descriptions=(foo bar)
 Example-Description: foo; url="https://example.net"; context=123,
                      bar; url="https://example.org"; context=456
 ~~~
