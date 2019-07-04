@@ -179,9 +179,40 @@ This specification defines minimums for the length or number of various structur
 This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP/1.
 
 
+## Lists {#list}
+
+Lists are arrays of items ({{item}}) with one or more members. Members can also be an "inner list", itself an array of items.
+
+The ABNF for lists in HTTP/1 headers is:
+
+~~~ abnf
+sh-list     = list-member *( OWS "," OWS list-member )
+list-member = sh-item / inner-list
+inner-list  = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")"
+~~~
+
+In HTTP/1, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
+
+~~~ example
+Example-StrListHeader: "foo", "bar", "It was the best of times."
+~~~
+
+In HTTP/1, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of lists of strings could look like:
+
+~~~ example
+Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
+~~~
+
+Note that the last member in this example is an empty inner list.
+
+Header specifications can constrain the types of individual values (including that of individual inner-list members) if necessary.
+
+Parsers MUST support lists containing at least 1024 members, and inner-lists containing at least 256 member.
+
+
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}). There can be one or more members, and keys are required to be unique.
+Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}) or arrays of items. There can be one or more members, and keys are required to be unique.
 
 Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
@@ -191,7 +222,7 @@ The ABNF for dictionaries in HTTP/1 headers is:
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member    = member-name "=" member-value
 member-name    = key
-member-value   = sh-item
+member-value   = sh-item / inner-list
 key            = lcalpha *( lcalpha / DIGIT / "_" / "-" )
 lcalpha        = %x61-7A ; a-z
 ~~~
@@ -202,53 +233,15 @@ In HTTP/1, keys and values are separated by "=" (without whitespace), and key/va
 Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
 ~~~
 
+A dictionary with a member whose value is an inner-list of tokens:
+
+~~~ example
+Example-DictListHeader: rating=1.5, feelings=(joy sadness)
+~~~
+
 Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
 
 Parsers MUST support dictionaries containing at least 1024 key/value pairs, and dictionary keys with at least 64 characters.
-
-
-## Lists {#list}
-
-Lists are arrays of items ({{item}}) with one or more members.
-
-The ABNF for lists in HTTP/1 headers is:
-
-~~~ abnf
-sh-list     = list-member *( OWS "," OWS list-member )
-list-member = sh-item
-~~~
-
-In HTTP/1, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
-
-~~~ example
-Example-StrListHeader: "foo", "bar", "It was the best of times."
-~~~
-
-Header specifications can constrain the types of individual values if necessary.
-
-Parsers MUST support lists containing at least 1024 members.
-
-
-## Lists of Lists {#listlist}
-
-Lists of Lists are arrays of arrays containing items ({{item}}).
-
-The ABNF for lists of lists in HTTP/1 headers is:
-
-~~~ abnf
-sh-listlist = inner-list *( OWS "," OWS inner-list )
-inner-list  = list-member *( OWS ";" OWS list-member )
-~~~
-
-In HTTP/1, each inner-list is separated by a comma and optional whitespace, and members of the inner-list are separated by semicolons and optional whitespace. For example, a header field whose value is defined as a list of lists of strings could look like:
-
-~~~ example
-Example-StrListListHeader: "foo";"bar", "baz", "bat"; "one"
-~~~
-
-Header specifications can constrain the types of individual inner-list values if necessary.
-
-Parsers MUST support lists of lists containing at least 1024 members, and inner-lists containing at least 256 members.
 
 
 ## Parameterized Lists {#param}
@@ -431,11 +424,38 @@ Given a structure defined in this specification:
 
 1. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
 2. Else if the structure is a parameterized list, let output_string be the result of Serializing a Parameterized List ({{ser-param-list}}).
-3. Else if the structure is a list of lists, let output_string be the result of Serializing a List of Lists ({ser-listlist}).
 4. Else if the structure is a list, let output_string be the result of Serializing a List {{ser-list}}.
 5. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
 6. Else, fail serialisation.
 7. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
+
+
+### Serializing a List {#ser-list}
+
+Given a list as input_list:
+
+1. Let output be an empty string.
+2. For each member mem of input_list:
+   1. If mem is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to mem.
+   2. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
+   3. Append value to output.
+   4. If more members remain in input_list:
+      1. Append a COMMA to output.
+      2. Append a single WS to output.
+3. Return output.
+
+#### Serialising an Inner List {#ser-innerlist}
+
+Given an array inner_list:
+
+1. Let output be the string "(".
+2. If inner_list is not a list, fail serialisation.
+3. For each member mem of inner_list:
+  1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
+  2. Append value to output.
+  3. Append a single WS to output.
+4. Append ")" to output.
+4. Return output.
 
 
 ### Serializing a Dictionary {#ser-dictionary}
@@ -447,9 +467,10 @@ Given a dictionary as input_dictionary:
    1. Let name be the result of applying Serializing a Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem's member-value.
-   5. Append value to output.
-   6. If more members remain in input_dictionary:
+   4. If mem is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to mem.
+   5. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
+   6. Append value to output.
+   7. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -461,40 +482,6 @@ Given a key as input_key:
 0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
 1. Let output be an empty string.
 2. Append input_key to output.
-3. Return output.
-
-
-### Serializing a List {#ser-list}
-
-Given a list as input_list:
-
-1. Let output be an empty string.
-2. For each member mem of input_list:
-   1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
-   2. Append value to output.
-   3. If more members remain in input_list:
-      1. Append a COMMA to output.
-      2. Append a single WS to output.
-3. Return output.
-
-
-### Serializing a List of Lists {#ser-listlist}
-
-Given a list of lists of items as input_list:
-
-1. Let output be an empty string.
-2. For each member inner_list of input_list:
-   1. If inner_list is not a list, fail serialisation.
-   2. If inner_list is empty, fail serialisation.
-   3. For each inner_mem of inner_list:
-      1. Let value be the result of applying Serializing an Item ({{ser-item}}) to inner_mem.
-      2. Append value to output.
-      3. If more members remain in inner_list:
-         1. Append a ";" to output.
-         2. Append a single WS to output.
-   4. If more members remain in input_list:
-      1. Append a COMMA to output.
-      2. Append a single WS to output.
 3. Return output.
 
 
@@ -614,13 +601,12 @@ Given a Boolean as input_boolean:
 
 When a receiving implementation parses textual HTTP header fields (e.g., in HTTP/1 or HTTP/2) that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an array of bytes input_bytes that represents the chosen header's field-value, and header_type (one of "dictionary", "list", "list-list", "param-list", or "item"), return the parsed header value.
+Given an array of bytes input_bytes that represents the chosen header's field-value, and header_type (one of "dictionary", "list", "param-list", or "item"), return the parsed header value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading OWS from input_string.
 2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
-4. If header_type is "list-list", let output be the result of Parsing a List of Lists from Text ({{parse-listlist}}).
 4. If header_type is "param-list", let output be the result of Parsing a Parameterized List from Text ({{parse-param-list}}).
 5. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
@@ -629,13 +615,46 @@ Given an array of bytes input_bytes that represents the chosen header's field-va
 
 When generating input_bytes, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
-For Lists, Lists of Lists, Parameterized Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
+For Lists, Parameterized Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
 
 Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser.
 
 Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document cannot loosen this requirement.
+
+
+### Parsing a List from Text {#parse-list}
+
+Given an ASCII string input_string, return a list of items. input_string is modified to remove the parsed value.
+
+1. Let items be an empty array.
+2. While input_string is not empty:
+   1. If the first character of input_string is "(", let item be the result of running Parse an Inner List ({{parse-innerlist}}) with input_string.
+   2. Else, let item be the result of running Parsing an Item ({{parse-item}}) with input_string.
+   2. Append item to items.
+   3. Discard any leading OWS from input_string.
+   4. If input_string is empty, return items.
+   5. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   6. Discard any leading OWS from input_string.
+   7. If input_string is empty, fail parsing.
+3. No structured data has been found; fail parsing.
+
+
+#### Parsing an Inner List {#parse-innerlist}
+
+Given an ASCII string input_string, return either an array of items. input_string is modified to remove the parsed value.
+
+1. Consume the first character of input_string; if it is not "(", fail parsing.
+2. Let inner_list be an empty array.
+3. While input_string is not empty:
+   1. Let leading_ws be the result of consuming any leading OWS from input_string.
+   2. If the first character of input_string is ")":
+      1. Discard the first character of input_string.
+      2. Return inner_list.
+   3. If inner_list is not empty and leading_ws is empty, inner list members are not delimited by whitespace; fail parsing.
+   4. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
+   5. Append item to inner_list.
 
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
@@ -647,7 +666,8 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
    1. Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let this_value be the result of running Parse Item from Text ({{parse-item}}) with input_string.
+   4. If the first character of input_string is "(", let this_value be the result of running Parse an Inner List ({{parse-innerlist}}) with input_string.
+   5. Else, let this_value be the result of running Parsing an Item ({{parse-item}}) with input_string.
    5. Add key this_key with value this_value to dictionary.
    6. Discard any leading OWS from input_string.
    7. If input_string is empty, return dictionary.
@@ -670,43 +690,6 @@ Given an ASCII string input_string, return a key. input_string is modified to re
       2. Return output_string.
    3. Append char to output_string.
 4. Return output_string.
-
-
-### Parsing a List from Text {#parse-list}
-
-Given an ASCII string input_string, return a list of items. input_string is modified to remove the parsed value.
-
-1. Let items be an empty array.
-2. While input_string is not empty:
-   1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
-   2. Append item to items.
-   3. Discard any leading OWS from input_string.
-   4. If input_string is empty, return items.
-   5. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   6. Discard any leading OWS from input_string.
-   7. If input_string is empty, fail parsing.
-3. No structured data has been found; fail parsing.
-
-
-### Parsing a List of Lists from Text {#parse-listlist}
-
-Given an ASCII string input_string, return a list of lists of items. input_string is modified to remove the parsed value.
-
-1. let top_list be an empty array.
-2. Let inner_list be an empty array.
-3. While input_string is not empty:
-   1. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
-   2. Append item to inner_list.
-   3. Discard any leading OWS from input_string.
-   4. If input_string is empty, append inner_list to top_list and return top_list.
-   5. Let char be the result of consuming the first character of input_string.
-   6. If char is COMMA:
-      1. Append inner_list to top_list.
-      2. Let inner_list be an empty array.
-   7. Else if char is not ";", fail parsing.
-   8. Discard any leading OWS from input_string.
-   9. If input_string is empty, fail parsing.
-4. No structured data has been found; fail parsing.
 
 
 ### Parsing a Parameterized List from Text {#parse-param-list}
@@ -896,7 +879,7 @@ Structured headers intentionally limits the complexity of data structures, to as
 Sometimes, this can be achieved by creating limited substructures in values, and/or using more than one header. For example, consider:
 
 ~~~
-Example-Thing: name="Widget", cost=89.2, descriptions="foo bar"
+Example-Thing: name="Widget", cost=89.2, descriptions=(foo bar)
 Example-Description: foo; url="https://example.net"; context=123,
                      bar; url="https://example.org"; context=456
 ~~~
@@ -928,6 +911,7 @@ _RFC Editor: Please remove this section before publication._
 * Update abstract (#799).
 * Input and output are now arrays of bytes (#662).
 * Implementations need to preserve difference between token and string (#790).
+* Allow inner lists in both dictionaries and lists; removes lists of lists (#816).
 
 
 ## Since draft-ietf-httpbis-header-structure-09
