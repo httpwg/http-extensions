@@ -294,7 +294,7 @@ Given key-facets (a list of lists of strings), and key-stub (a list of strings r
 
 This algorithm is an example of how an implementation can meet the requirement to apply the members of the Vary header field that are not covered by Variants.
 
-Given stored-response (a stored response):
+Given incoming-request (a mapping of field-names to field-values, after being combined as allowed by Section 3.2.2 of {{!RFC7230}}), and stored-response (a stored response):
 
 1. Let filtered-vary be the field-value(s) of stored-response's "Vary" header field.
 2. Let processed-variants be a list containing the request header fields that identify the content negotiation mechanisms supported by the implementation.
