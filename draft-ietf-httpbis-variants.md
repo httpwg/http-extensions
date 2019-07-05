@@ -254,7 +254,7 @@ Caches that implement the Variants header field and the relevant semantics of th
 
 They do so by running this algorithm (or its functional equivalent) upon receiving a request:
 
-Given incoming-request (a mapping of field-names to lists of field values), and stored-responses (a list of stored responses suitable for reuse as defined in Section 4 of {{!RFC7234}}, excepting the requirement to calculate a secondary cache key):
+Given incoming-request (a mapping of field-names to field-values, after being combined as allowed by Section 3.2.2 of {{!RFC7230}}), and stored-responses (a list of stored responses suitable for reuse as defined in Section 4 of {{!RFC7234}}, excepting the requirement to calculate a secondary cache key):
 
 1. If stored-responses is empty, return an empty list.
 2. Order stored-responses by the "Date" header field, most recent to least recent.
@@ -263,7 +263,7 @@ Given incoming-request (a mapping of field-names to lists of field values), and 
    1. Select one member of stored-responses with a "Variants" header field-value(s) that successfully parses according to {{variants}} and let variants-header be this parsed value. This SHOULD be the most recent response, but MAY be from an older one as long as it is still fresh.
    2. For each variant-axis in variants-header:
       1. If variant-axis' field-name corresponds to the request header field identified by a content negotiation mechanism that the implementation supports:
-         1. Let request-value be the field-value associated with field-name in incoming-request (after being combined as allowed by Section 3.2.2 of {{RFC7230}}), or null if field-name is not in incoming-request.
+         1. Let request-value be the field-value associated with field-name in incoming-request, or null if field-name is not in incoming-request.
          3. Let sorted-values be the result of running the algorithm defined by the content negotiation mechanism with request-value and variant-axis' available-values.
          4. Append sorted-values to sorted-variants.
 
