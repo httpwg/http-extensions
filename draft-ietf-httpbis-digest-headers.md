@@ -132,7 +132,7 @@ to the ones provided by the transport layer (eg. HTTPS). This may be in order to
 ## Brief history of integrity headers
 
 The Content-MD5 header field was originally introduced to provide integrity,
-but HTTP/1.1  [RFC7231] in appendix-B obsoleted it:
+but HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
 
   > The Content-MD5 header field has been removed because it was
   >  inconsistently implemented with respect to partial responses.
