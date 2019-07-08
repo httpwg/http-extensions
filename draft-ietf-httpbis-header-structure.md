@@ -93,7 +93,7 @@ Note that it is not a goal of this document to redefine the syntax of existing H
 
 This specification intentionally defines strict parsing and serialisation behaviours using step-by-step algorithms; the only error handling defined is to fail the operation altogether.
 
-This is designed to encourage faithful implementation and therefore good interoperability. Therefore, implementations that try to be "helpful" by being more tolerant of input are doing a disservice to the overall community, since it will encourage other implementations to implement similar (but likely subtly different) workarounds.
+It is designed to encourage faithful implementation and therefore good interoperability. Therefore, an implementation that tried to be "helpful" by being more tolerant of input would make interoperability worse, since that would create pressure on other implementations to implement similar (but likely subtly different) workarounds.
 
 In other words, strict processing is an intentional feature of this specification; it allows non-conformant input to be discovered and corrected early, and avoids both interoperability and security issues that might otherwise result.
 
