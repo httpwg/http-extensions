@@ -398,11 +398,11 @@ This section defines how to serialize and parse Structured Headers in HTTP/1 tex
 Given a structure defined in this specification:
 
 1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not serialise the header field.
-1. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
-4. Else if the structure is a list, let output_string be the result of Serializing a List {{ser-list}}.
-5. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
-6. Else, fail serialisation.
-7. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
+2. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
+3. Else if the structure is a list, let output_string be the result of Serializing a List {{ser-list}}.
+4. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
+5. Else, fail serialisation.
+6. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
 
 
 
@@ -415,7 +415,7 @@ Given a list of (member, parameters) as input_list:
    1. If member is an array, let mem_value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to member.
    2. Otherwise, let mem_value be the result of applying Serializing an Item ({{ser-item}}) to member.
    3. Append mem_value to output.
-   3. For each parameter in parameters:
+   4. For each parameter in parameters:
       1. Append ";" to output.
       2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
       3. Append name to output.
@@ -423,7 +423,7 @@ Given a list of (member, parameters) as input_list:
          1. Let value be the result of applying Serializing an Item ({{ser-item}}) to parameter's param-value.
          2. Append "=" to output.
          3. Append value to output.
-   4. If more members remain in input_plist:
+   5. If more members remain in input_plist:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -439,7 +439,7 @@ Given an array inner_list:
   2. Append value to output.
   3. Append a single WS to output.
 4. Append ")" to output.
-4. Return output.
+5. Return output.
 
 #### Serializing a Key {#ser-key}
 
@@ -569,10 +569,10 @@ Given an array of bytes input_bytes that represents the chosen header's field-va
 1. Discard any leading OWS from input_string.
 2. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
 3. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
-5. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
-6. Discard any leading OWS from input_string.
-7. If input_string is not empty, fail parsing.
-8. Otherwise, return output.
+4. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
+5. Discard any leading OWS from input_string.
+6. If input_string is not empty, fail parsing.
+7. Otherwise, return output.
 
 When generating input_bytes, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
@@ -608,8 +608,8 @@ Given an ASCII string input_string, return an token with an ordered map of param
 
 1. If the first character of input_string is "(", let member be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
 2. Else, let member be the result of running Parsing an Item ({{parse-item}}) with input_string.
-2. Let parameters be an empty, ordered map.
-3. In a loop:
+3. Let parameters be an empty, ordered map.
+4. In a loop:
    1. Discard any leading OWS from input_string.
    2. If the first character of input_string is not ";", exit the loop.
    3. Consume a ";" character from the beginning of input_string.
@@ -621,7 +621,7 @@ Given an ASCII string input_string, return an token with an ordered map of param
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
    9. Add key param_name with value param_value to parameters.
-4. Return the tuple (member, parameters).
+5. Return the tuple (member, parameters).
 
 #### Parsing an Inner List {#parse-innerlist}
 
@@ -650,12 +650,12 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
    3. Consume the first character of input_string; if it is not "=", fail parsing.
    4. If the first character of input_string is "(", let this_value be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
    5. Else, let this_value be the result of running Parsing an Item ({{parse-item}}) with input_string.
-   5. Add key this_key with value this_value to dictionary.
-   6. Discard any leading OWS from input_string.
-   7. If input_string is empty, return dictionary.
-   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   9. Discard any leading OWS from input_string.
-   0. If input_string is empty, fail parsing.
+   6. Add key this_key with value this_value to dictionary.
+   7. Discard any leading OWS from input_string.
+   8. If input_string is empty, return dictionary.
+   9. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   0. Discard any leading OWS from input_string.
+   1. If input_string is empty, fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
 
@@ -731,8 +731,8 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
          3. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
    4. Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail parsing.
-   4. Else, append char to output_string.
-6. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
+   5. Else, append char to output_string.
+5. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
 
 ### Parsing a Token from Text {#parse-token}
