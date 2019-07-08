@@ -632,13 +632,14 @@ Given an ASCII string input_string, return an array of items. input_string is mo
 1. Consume the first character of input_string; if it is not "(", fail parsing.
 2. Let inner_list be an empty array.
 3. While input_string is not empty:
-   1. Let leading_ws be the result of consuming any leading OWS from input_string.
+   1. Discard any leading OWS from input_string.
    2. If the first character of input_string is ")":
-      1. Discard the first character of input_string.
+      1. Consume the first character of input_string.
       2. Return inner_list.
-   3. If inner_list is not empty and leading_ws is empty, inner list members are not delimited by whitespace; fail parsing.
-   4. Let item be the result of running Parsing an Item from Text ({{parse-item}}) with input_string.
-   5. Append item to inner_list.
+   3. Let item be the result of running Parsing an Item from Text ({{parse-item}}) with input_string.
+   4. Append item to inner_list.
+   5. If the first character of input_string is not SP or ")", fail parsing.
+4. The end of the inner list was not found; fail parsing.
 
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
