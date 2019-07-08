@@ -53,7 +53,7 @@ informative:
 
 --- abstract
 
-This document describes a set of data types and associated algorithms associated with them that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by specifications of new HTTP header fields that wish to use a common syntax that is more restrictive than traditional HTTP/1.x field values.
+This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by specifications of new HTTP header fields that wish to use a common syntax that is more restrictive than traditional HTTP/1.x field values.
 
 
 --- note_Note_to_Readers
