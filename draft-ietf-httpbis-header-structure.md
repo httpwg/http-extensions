@@ -408,7 +408,7 @@ Given a structure defined in this specification:
 
 ### Serializing a List {#ser-list}
 
-Given a list as input_list:
+Given a list of (member, parameters) as input_list:
 
 1. Let output be an empty string.
 2. For each (member, parameters) of input_list:
