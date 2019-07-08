@@ -144,8 +144,8 @@ The dictionary MUST contain:
 * Exactly one member whose key is "foo", and whose value is an
   integer ([RFCxxxx], Section Y.Y), indicating the number of foos
   in the message.
-* Exactly one member whose key is "barUrls", and whose value is a
-  string ([RFCxxxx], Section Y.Y), conveying the Bar URLs for the
+* Exactly one member whose key is "barUrl", and whose value is a
+  string ([RFCxxxx], Section Y.Y), conveying the Bar URL for the
   message. See below for processing requirements.
 
 If the parsed header field does not contain both, it MUST be
@@ -154,17 +154,11 @@ ignored.
 "foo" MUST be between 0 and 10, inclusive; other values MUST cause
 the header to be ignored.
 
-"barUrls" contains a space-separated list of URI-references
-([RFC3986], Section 4.1):
+"barUrl" contains a URI-reference ([RFC3986], Section 4.1).
 
-   barURLs = URI-reference *( 1*SP URI-reference )
-
-If a member of barURLs is not a valid URI-reference, it MUST cause
-that value to be ignored.
-
-If a member of barURLs is a relative reference ([RFC3986],
-Section 4.2), it MUST be resolved ([RFC3986], Section 5) before
-being used.
+If barURL is not a valid URI-reference, it MUST be ignored.
+If barURL is a relative reference ([RFC3986], Section 4.2),
+it MUST be resolved ([RFC3986], Section 5) before being used.
 ~~~
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
