@@ -434,14 +434,13 @@ Given a list of (member, parameters) as input_list:
 
 Given an array inner_list:
 
-1. If inner_list is not an array, fail serialisation.
-2. Let output be the string "(".
-3. For each member mem of inner_list:
+1. Let output be the string "(".
+2. For each member mem of inner_list:
    1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
    2. Append value to output.
    3. If inner_list is not empty, append a single WS to output.
-4. Append ")" to output.
-5. Return output.
+3. Append ")" to output.
+4. Return output.
 
 #### Serializing a Key {#ser-key}
 
