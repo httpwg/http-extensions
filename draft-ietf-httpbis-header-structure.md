@@ -126,10 +126,12 @@ To define a HTTP header as a structured header, its specification needs to:
 
 Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and floats, the format of strings and tokens, or the number of items in a list). Likewise, header field definitions should use Structured Headers for the entire header field value, not a portion thereof.
 
-For example:
+This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
+
+For example,
 
 ~~~ example
-2. Foo-Example Header
+42. Foo-Example Header
 
 The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
@@ -160,8 +162,6 @@ If barURL is not a valid URI-reference, it MUST be ignored.
 If barURL is a relative reference ([RFC3986], Section 4.2),
 it MUST be resolved ([RFC3986], Section 5) before being used.
 ~~~
-
-This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
 
 
 # Structured Header Data Types {#types}
