@@ -141,10 +141,10 @@ dictionary ([RFCxxxx], Section Y.Y). Its ABNF is:
 
 The dictionary MUST contain:
 
-* Exactly one member whose key is "foo", and whose value is an
+* Exactly one member whose name is "foo", and whose value is an
   integer ([RFCxxxx], Section Y.Y), indicating the number of foos
   in the message.
-* Exactly one member whose key is "barUrl", and whose value is a
+* Exactly one member whose name is "barUrl", and whose value is a
   string ([RFCxxxx], Section Y.Y), conveying the Bar URL for the
   message. See below for processing requirements.
 
@@ -215,9 +215,9 @@ Header specifications can constrain the types of individual list values (includi
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of key-value pairs, where the keys are short, textual strings and the values are items ({{item}}) or arrays of items. There can be zero or more members, and keys are required to be unique.
+Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items. There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
 
-Implementations MUST provide access to dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
+Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
 The ABNF for dictionaries in HTTP/1 headers is:
 
@@ -228,7 +228,7 @@ member-name    = key
 member-value   = sh-item / inner-list
 ~~~
 
-In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
+In HTTP/1, members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
 
 ~~~ example
 Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
@@ -240,9 +240,9 @@ A dictionary with a member whose value is an inner-list of tokens:
 Example-DictListHeader: rating=1.5, feelings=(joy sadness)
 ~~~
 
-Typically, a header field specification will define the semantics of individual keys, as well as whether their presence is required or optional. Recipients MUST ignore keys that are undefined or unknown, unless the header field's specification specifically disallows them.
+Typically, a header field specification will define the semantics of individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
 
-Parsers MUST support dictionaries containing at least 1024 key/value pairs, and dictionary keys with at least 64 characters.
+Parsers MUST support dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters.
 
 
 ## Items {#item}
