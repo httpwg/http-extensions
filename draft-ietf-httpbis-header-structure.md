@@ -171,18 +171,20 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Lists {#list}
 
-Lists are arrays of zero or more members, which can be items ({{item}}) or inner lists -- themselves arrays of zero or more items.
+Lists are arrays of zero or more members, each of which can be an item ({{item}}) or an inner list (an array of zero or more items).
 
-Each member of the top-level list can also have associated parameters -- an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters, and keys are required to be unique.
+Each member of the top-level list can also have associated parameters -- an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters on a member, and their keys are required to be unique within that scope.
 
 The ABNF for lists in HTTP/1 headers is:
 
 ~~~ abnf
-sh-list     = list-member *( OWS "," OWS list-member )
-list-member = ( sh-item / inner-list ) *parameter
-inner-list  = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")"
+sh-list       = list-member *( OWS "," OWS list-member )
+list-member   = ( sh-item / inner-list ) *parameter
+inner-list    = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")"
 parameter     = OWS ";" OWS param-name [ "=" param-value ]
 param-name    = key
+key           = lcalpha *( lcalpha / DIGIT / "_" / "-" )
+lcalpha       = %x61-7A ; a-z
 param-value   = sh-item
 ~~~
 
@@ -206,9 +208,9 @@ In HTTP/1, members' parameters are separated from the member and each other by s
 Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, (ghi jkl);q="9";r="w"
 ~~~
 
-Parsers MUST support containing at least 1024 members, support members with at least 256 parameters, support inner-lists containing at least 256 members, and support parameter keys with at least 64 characters.
+Parsers MUST support lists containing at least 1024 members, support members with at least 256 parameters, support inner-lists containing at least 256 members, and support parameter keys with at least 64 characters.
 
-Header specifications can constrain the types of individual values (including that of individual inner-list members and parameters) if necessary.
+Header specifications can constrain the types of individual list values (including that of individual inner-list members and parameters) if necessary.
 
 
 ## Dictionaries {#dictionary}
@@ -224,8 +226,6 @@ sh-dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member    = member-name "=" member-value
 member-name    = key
 member-value   = sh-item / inner-list
-key            = lcalpha *( lcalpha / DIGIT / "_" / "-" )
-lcalpha        = %x61-7A ; a-z
 ~~~
 
 In HTTP/1, keys and values are separated by "=" (without whitespace), and key/value pairs are separated by a comma with optional whitespace. For example:
