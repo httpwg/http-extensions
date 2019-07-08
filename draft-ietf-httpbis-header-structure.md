@@ -600,7 +600,7 @@ Given an ASCII string input_string, return an array of (member, parameters). inp
    4. If input_string is empty, return members.
    5. Consume the first character of input_string; if it is not COMMA, fail parsing.
    6. Discard any leading OWS from input_string.
-   7. If input_string is empty, fail parsing.
+   7. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return members (which is empty).
 
 
@@ -617,7 +617,7 @@ Given an ASCII string input_string, return an token with an ordered map of param
    3. Consume a ";" character from the beginning of input_string.
    4. Discard any leading OWS from input_string.
    5. let param_name be the result of Parsing a key from Text ({{parse-key}}) from input_string.
-   6. If param_name is already present in parameters, fail parsing.
+   6. If param_name is already present in parameters, there is a duplicate; fail parsing.
    7. Let param_value be a null value.
    8. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
@@ -649,7 +649,7 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parsing a Key from Text ({{parse-key}}) with input_string.
-   2. If dictionary already contains the name this_key, fail parsing.
+   2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
    4. If the first character of input_string is "(", let this_value be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
    5. Else, let this_value be the result of running Parsing an Item ({{parse-item}}) with input_string.
@@ -658,7 +658,7 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
    8. If input_string is empty, return dictionary.
    9. Consume the first character of input_string; if it is not COMMA, fail parsing.
    0. Discard any leading OWS from input_string.
-   1. If input_string is empty, fail parsing.
+   1. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
 
@@ -686,7 +686,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 3. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
 4. If the first character of input_string is "?", process input_string as a Boolean ({{parse-boolean}}) and return the result.
 5. If the first character of input_string is an ALPHA, process input_string as a token ({{parse-token}}) and return the result.
-6. Otherwise, fail parsing.
+6. Otherwise, the item type is unrecognized; fail parsing.
 
 
 ### Parsing a Number from Text {#parse-number}
@@ -699,7 +699,7 @@ NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and 
 2. Let sign be 1.
 3. Let input_number be an empty string.
 4. If the first character of input_string is "-", consume it and set sign to -1.
-5. If input_string is empty, fail parsing.
+5. If input_string is empty, there is an empty integer; fail parsing.
 6. If the first character of input_string is not a DIGIT, fail parsing.
 7. While input_string is not empty:
    1. Let char be the result of consuming the first character of input_string.
