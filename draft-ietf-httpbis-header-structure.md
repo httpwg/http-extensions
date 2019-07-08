@@ -567,8 +567,8 @@ Given an array of bytes input_bytes that represents the chosen header's field-va
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading OWS from input_string.
-2. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
-3. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
+2. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
+3. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
 5. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
 6. Discard any leading OWS from input_string.
 7. If input_string is not empty, fail parsing.
