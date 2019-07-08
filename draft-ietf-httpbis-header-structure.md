@@ -389,7 +389,7 @@ Example-BoolHdr: ?1
 ~~~
 
 
-# Structured Headers in HTTP/1 {#text}
+# Working With Structured Headers in HTTP/1 {#text}
 
 This section defines how to serialize and parse Structured Headers in HTTP/1 textual header fields, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
 
