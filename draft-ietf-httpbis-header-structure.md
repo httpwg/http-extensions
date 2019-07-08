@@ -627,7 +627,7 @@ Given an ASCII string input_string, return an token with an ordered map of param
 
 #### Parsing an Inner List {#parse-innerlist}
 
-Given an ASCII string input_string, return either an array of items. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return an array of items. input_string is modified to remove the parsed value.
 
 1. Consume the first character of input_string; if it is not "(", fail parsing.
 2. Let inner_list be an empty array.
