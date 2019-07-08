@@ -129,16 +129,16 @@ to the ones provided by the transport layer (eg. HTTPS). This may be in order to
 - implement signature mechanisms that cover the desired parts of an HTTP exchange;
 - provide additional protection against failures or attack (see [SRI]).
 
-## Brief history of integrity headers
+## Brief history of integrity header fields
 
 The Content-MD5 header field was originally introduced to provide integrity,
-but HTTP/1.1  [RFC7231] in appendix-B obsoleted it:
+but HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
 
   > The Content-MD5 header field has been removed because it was
   >  inconsistently implemented with respect to partial responses.
 
 [RFC3230] provided a more flexible solution introducing the concept of "instance",
-and the headers `Digest` and `Want-Digest`.
+and the header fields `Digest` and `Want-Digest`.
 
 ## This proposal
 
@@ -180,10 +180,10 @@ The goals do not include:
     nor its semantic, as representation metadata are not included in the
     checksum.
 
-  Header integrity:
+  Header field integrity:
   : The digest mechanisms described here cover only representation and selected representation data,
     and do not protect the integrity of associated
-    representation metadata headers or other message headers.
+    representation metadata or other message header fields.
 
   Authentication:
   : The digest mechanisms described here are not meant to support
@@ -424,7 +424,7 @@ The "UNIXsum" digest-algorithm uses ASCII string of decimal digits.
 UNIXsum=30637
 ~~~
 
-# Header Specifications
+# Header Field Specifications
 
 The following headers are defined
 
@@ -478,7 +478,7 @@ representation data that would have been enclosed in the payload body
 if the same request had been a GET.
 
 Digest can be used in requests too.
-Returned value depends on the representation metadata headers.
+Returned value depends on the representation metadata header fields.
 
 A Digest header field MAY contain multiple representation-data-digest values.
 This could be useful for responses expected to reside in caches
@@ -497,7 +497,7 @@ knowing that the recipient will ignore it.
 # Deprecate Negotiation of Content-MD5
 
 This RFC deprecates the negotiation of Content-MD5 as
-this header has been obsoleted by [RFC7231]
+it has been obsoleted by [RFC7231]
 
 # Broken cryptographic algorithms are NOT RECOMMENDED
 
@@ -568,7 +568,7 @@ Response:
 
 ### Digest in both Request and Response. Returned value depends on representation metadata
 
-Digest can be used in requests too. Returned value depends on the representation metadata headers.
+Digest can be used in requests too. Returned value depends on the representation metadata header fields.
 
 ~~~
 Request:
@@ -657,7 +657,7 @@ Response:
 ## Digest does not protect the full HTTP message
 
 This document specifies a data integrity mechanism that protects HTTP
-`representation data`, but not HTTP `representation metadata` headers,
+`representation data`, but not HTTP `representation metadata` header fields,
 from certain kinds of accidental corruption.
 
 While it is not intended as general protection
@@ -696,15 +696,15 @@ Even a simple mechanism for end-to-end validation is thus valuable.
 Digital signatures are widely used together with checksums to provide
 the certain identification of the origin of a message [NIST800-32].
 
-It's important to note that, being the `Digest` header an hash of a resource representation,
-signing only the `Digest` header, without all the `representation metatada` (eg.
+It's important to note that, being the `Digest` header field an hash of a resource representation,
+signing only the `Digest` header field, without all the `representation metatada` (eg.
 the values of `Content-Type` and `Content-Encoding`) may expose the communication
 to tampering.
 
 `Digest` SHOULD always be used over a connection which provides
-integrity at transport layer that protects HTTP headers.
+integrity at transport layer that protects HTTP header fields.
 
-A `Digest` header using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in signatures.
+A `Digest` header field using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in signatures.
 
 
 ## Message Truncation
@@ -843,7 +843,7 @@ RFC EDITOR PLEASE DELETE THIS SECTION.
 
 3. How to use `Digest` with `PATCH` method?
 
-   The PATCH verb brings some complexities (eg. about representation metadata headers, patch document format, ...),
+   The PATCH verb brings some complexities (eg. about representation metadata header fields, patch document format, ...),
 
    - PATCH entity-headers apply to the patch document and MUST NOT be applied to the target resource,
      see [RFC5789], Section 2.
