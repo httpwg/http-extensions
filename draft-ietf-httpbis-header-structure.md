@@ -622,7 +622,7 @@ Given an ASCII string input_string, return an token with an ordered map of param
    8. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
-   9. Add key param_name with value param_value to parameters.
+   9. Append key param_name with value param_value to parameters.
 5. Return the tuple (member, parameters).
 
 #### Parsing an Inner List {#parse-innerlist}
