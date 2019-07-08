@@ -273,6 +273,8 @@ For example:
 Example-IntegerHeader: 42
 ~~~
 
+Note that commas in integers are used in this section's prose only for readability; they are not valid in the wire format.
+
 
 ## Floats {#float}
 
@@ -397,7 +399,7 @@ This section defines how to serialize and parse Structured Headers in HTTP/1 tex
 
 Given a structure defined in this specification:
 
-1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not serialise the header field.
+1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not send the serialize field at all (i.e., omit both the field-name and field-value).
 2. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
 3. Else if the structure is a list, let output_string be the result of Serializing a List {{ser-list}}.
 4. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
