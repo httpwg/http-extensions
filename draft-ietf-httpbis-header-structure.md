@@ -84,11 +84,9 @@ Additionally, future versions of HTTP can define alternative serialisations of t
 
 Note that it is not a goal of this document to redefine the syntax of existing HTTP headers; the mechanisms described herein are only intended to be used with headers that explicitly opt into them.
 
-To specify a header field that is a Structured Header, see {{specify}}.
+{{specify}} describes how to specify a Structured Header.
 
-{{types}} defines a number of abstract data types that can be used in Structured Headers.
-
-Those abstract types can be serialized into and parsed from textual headers -- such as those used in HTTP/1 -- using the algorithms described in {{text}}.
+{{types}} defines a number of abstract data types that can be used in Structured Headers. Those abstract types can be serialized into and parsed from textual headers -- such as those used in HTTP/1 -- using the algorithms described in {{text}}.
 
 
 ## Intentionally Strict Processing {#strict}
