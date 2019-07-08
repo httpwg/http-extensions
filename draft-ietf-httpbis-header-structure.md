@@ -646,11 +646,11 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parsing a Key from Text ({{parse-key}}) with input_string.
-   2. If dictionary already contains this_key, fail parsing.
+   2. If dictionary already contains the name this_key, fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
    4. If the first character of input_string is "(", let this_value be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
    5. Else, let this_value be the result of running Parsing an Item ({{parse-item}}) with input_string.
-   6. Add key this_key with value this_value to dictionary.
+   6. Add name this_key with value this_value to dictionary.
    7. Discard any leading OWS from input_string.
    8. If input_string is empty, return dictionary.
    9. Consume the first character of input_string; if it is not COMMA, fail parsing.
