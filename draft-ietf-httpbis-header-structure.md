@@ -439,7 +439,7 @@ Given an array inner_list:
 3. For each member mem of inner_list:
    1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
    2. Append value to output.
-   3. Append a single WS to output.
+   3. If inner_list is not empty, append a single WS to output.
 4. Append ")" to output.
 5. Return output.
 
