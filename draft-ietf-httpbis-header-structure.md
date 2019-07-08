@@ -437,9 +437,9 @@ Given an array inner_list:
 1. If inner_list is not an array, fail serialisation.
 2. Let output be the string "(".
 3. For each member mem of inner_list:
-  1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
-  2. Append value to output.
-  3. Append a single WS to output.
+   1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
+   2. Append value to output.
+   3. Append a single WS to output.
 4. Append ")" to output.
 5. Return output.
 
