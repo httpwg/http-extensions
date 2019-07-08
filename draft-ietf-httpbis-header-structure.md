@@ -602,7 +602,7 @@ Given an ASCII string input_string, return an array of (member, parameters). inp
 
 1. Let members be an empty array.
 2. While input_string is not empty:
-   1. Let member be the result of running Parse Parameterized Member from Text ({{parse-param}}) with input_string.
+   1. Let member be the result of running Parsing a Parameterized Member from Text ({{parse-param}}) with input_string.
    2. Append member to members.
    3. Discard any leading OWS from input_string.
    4. If input_string is empty, return members.
@@ -616,7 +616,7 @@ Given an ASCII string input_string, return an array of (member, parameters). inp
 
 Given an ASCII string input_string, return an token with an ordered map of parameters. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is "(", let member be the result of running Parse an Inner List ({{parse-innerlist}}) with input_string.
+1. If the first character of input_string is "(", let member be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
 2. Else, let member be the result of running Parsing an Item ({{parse-item}}) with input_string.
 2. Let parameters be an empty, ordered map.
 3. In a loop:
@@ -645,7 +645,7 @@ Given an ASCII string input_string, return either an array of items. input_strin
       1. Discard the first character of input_string.
       2. Return inner_list.
    3. If inner_list is not empty and leading_ws is empty, inner list members are not delimited by whitespace; fail parsing.
-   4. Let item be the result of running Parse Item from Text ({{parse-item}}) with input_string.
+   4. Let item be the result of running Parsing an Item from Text ({{parse-item}}) with input_string.
    5. Append item to inner_list.
 
 
@@ -655,10 +655,10 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
 
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
-   1. Let this_key be the result of running Parse a Key from Text ({{parse-key}}) with input_string.
+   1. Let this_key be the result of running Parsing a Key from Text ({{parse-key}}) with input_string.
    2. If dictionary already contains this_key, fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. If the first character of input_string is "(", let this_value be the result of running Parse an Inner List ({{parse-innerlist}}) with input_string.
+   4. If the first character of input_string is "(", let this_value be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
    5. Else, let this_value be the result of running Parsing an Item ({{parse-item}}) with input_string.
    5. Add key this_key with value this_value to dictionary.
    6. Discard any leading OWS from input_string.
