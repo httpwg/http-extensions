@@ -441,6 +441,15 @@ Given an array inner_list:
 4. Append ")" to output.
 4. Return output.
 
+#### Serializing a Key {#ser-key}
+
+Given a key as input_key:
+
+0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
+1. Let output be an empty string.
+2. Append input_key to output.
+3. Return output.
+
 
 ### Serializing a Dictionary {#ser-dictionary}
 
@@ -457,15 +466,6 @@ Given a dictionary as input_dictionary:
    7. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
-3. Return output.
-
-#### Serializing a Key {#ser-key}
-
-Given a key as input_key:
-
-0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
-1. Let output be an empty string.
-2. Append input_key to output.
 3. Return output.
 
 
