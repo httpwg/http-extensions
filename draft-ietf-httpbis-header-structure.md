@@ -401,7 +401,7 @@ Given a structure defined in this specification:
 
 1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not send the serialize field at all (i.e., omit both the field-name and field-value).
 2. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
-3. Else if the structure is a list, let output_string be the result of Serializing a List {{ser-list}}.
+3. Else if the structure is a list, let output_string be the result of Serializing a List ({{ser-list}}).
 4. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
 5. Else, fail serialisation.
 6. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
