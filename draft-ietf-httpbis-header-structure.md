@@ -526,7 +526,7 @@ Given a string as input_string:
 
 Given a token as input_token:
 
-0. If input_token is not a sequence of characters, or contains characters not allowed in {{token}}}, fail serialisation.
+0. If input_token is not a sequence of characters, or contains characters not allowed in {{token}}, fail serialisation.
 1. Let output be an empty string.
 2. Append input_token to output.
 3. Return output.
@@ -692,7 +692,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 
 Given an ASCII string input_string, return a number. input_string is modified to remove the parsed value.
 
-NOTE: This algorithm parses both Integers {{integer}} and Floats {{float}}, and returns the corresponding structure.
+NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), and returns the corresponding structure.
 
 1. Let type be "integer".
 2. Let sign be 1.
