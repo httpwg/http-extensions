@@ -178,8 +178,9 @@ Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persis
 
 
 ## Backend Security
-Adding new request headers increases the risk that legacy server systems already use those values for a different purpose. Changing the request header values such legacy systems receive may result in server bugs.
-While that risk is significantly mitigated by the opt-in mechanisms of Client Hints, other specifications relying on Client Hints SHOULD reduce it even further by adding a `Sec-` prefix to Client Hints request header names they pick for their features.
+Adding new request headers introduces potential deployment risks. For example, some servers may already use the same header for a different purpose, which may result in conflicts or other undesired behaviors.
+
+While this risk is significantly mitigated by the opt-in mechanisms of Client Hints, specifications and features relying on Client Hints should use the Sec- prefix for request header names. User agents reserve this namespace for headers that can only be emitted by the browser and thus can guarantee and enforce the type and format of the data communicated in the header value fields.
 
 
 # IANA Considerations
