@@ -109,7 +109,7 @@ Servers can advertise support for Client Hints using the Accept-CH header field 
 Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a list-of-tokens (Section 3.3 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
 ~~~ abnf7230
-  Accept-CH = #sh-list-of-tokens
+  Accept-CH = sh-list-of-tokens
 ~~~
 
 For example:
@@ -130,7 +130,7 @@ Servers can ask the client to remember the set of Client Hints that the server s
 Accept-CH-Lifetime is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be sh-integer (Section 3.4 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
 ~~~ abnf7230
-  Accept-CH-Lifetime = #sh-integer
+  Accept-CH-Lifetime = sh-integer
 ~~~
 
 When a client receives an HTTP response that contains Accept-CH-Lifetime header field, the field-value indicates that the Accept-CH preference SHOULD be persisted and bound to the origin, and be considered stale after response's age ({{RFC7234}}, section 4.2) is greater than the specified number of seconds.
