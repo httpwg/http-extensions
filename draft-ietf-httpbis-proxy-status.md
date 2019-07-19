@@ -374,7 +374,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Name: proxy_internal_error
 * Description: The intermediary encountered an internal error unrelated to the origin.
 * Extra Parameters:
-  - details: a sh-string containing details about the error condition.
+  - error: a sh-string containing details about the error condition.
 * Recommended HTTP status code: 500
 
 ## Proxy Loop Detected
