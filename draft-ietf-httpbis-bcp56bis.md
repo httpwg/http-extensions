@@ -87,7 +87,7 @@ accommodated.
 
 More generally, application protocols using HTTP face a number of design decisions, including:
 
-* Should it define a new URI scheme? Use new ports?
+* Should it define a new URL scheme? Use new ports?
 * Should it use standard HTTP methods and status codes, or define new ones?
 * How can the maximum value be extracted from the use of HTTP?
 * How does it coexist with other uses of HTTP -- especially Web browsing?
@@ -117,7 +117,7 @@ Different applications have different goals when using HTTP. The requirements in
 apply when any of the following conditions are true:
 
 * the transport port in use is 80 or 443,
-* the URI scheme "http" or "https" is used,
+* the URL scheme "http" or "https" is used,
 * the ALPN protocol ID {{!RFC7301}} generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
 * the IANA registries defined for HTTP are updated or modified.
 
@@ -133,7 +133,7 @@ freedom to modify protocol operations, but are also likely to lose at least a po
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
 and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
 
-Protocols that are based upon HTTP MUST NOT reuse HTTP's URI schemes, transport ports, ALPN
+Protocols that are based upon HTTP MUST NOT reuse HTTP's URL schemes, transport ports, ALPN
 protocol IDs or IANA registries; rather, they are encouraged to establish their own.
 
 
@@ -187,7 +187,7 @@ As explained in {{!RFC7320}}, such "squatting" on a part of the URL space by a s
 server's authority over its own resources, can cause deployment issues, and is therefore bad
 practice in standards.
 
-Instead of statically defining URI components like paths, it is RECOMMENDED that applications using
+Instead of statically defining URL components like paths, it is RECOMMENDED that applications using
 HTTP define links in payloads, to allow flexibility in deployment.
 
 Using runtime links in this fashion has a number of other benefits -- especially when an
@@ -349,7 +349,7 @@ Likewise, specifying "The widget API is at the path /bar" violates {{!RFC7320}}.
 
 Instead, applications are encouraged to ensure that URLs are discovered at runtime, allowing
 HTTP-based services to describe their own capabilities. One way to do this is to use typed links
-{{?RFC8288}} to convey the URLs that are in use, as well as the semantics of the resources that
+{{?RFC8288}} to convey the URIs that are in use, as well as the semantics of the resources that
 they identify. See {{resource}} for details.
 
 
@@ -368,16 +368,16 @@ hostname) applications can request a well-known URI {{?I-D.nottingham-rfc5785bis
 point.
 
 
-### URI Schemes {#scheme}
+### URL Schemes {#scheme}
 
-Applications that use HTTP will typically employ the "http" and/or "https" URI schemes. "https" is
+Applications that use HTTP will typically employ the "http" and/or "https" URL schemes. "https" is
 RECOMMENDED to provide authentication, integrity and confidentiality, as well as mitigate pervasive
 monitoring attacks {{?RFC7258}}.
 
-However, application-specific schemes can also be defined. When defining an URI scheme for an
+However, application-specific schemes can also be defined. When defining an URL scheme for an
 application using HTTP, there are a number of tradeoffs and caveats to keep in mind:
 
-* Unmodified Web browsers will not support the new scheme. While it is possible to register new URI schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML5}}, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
+* Unmodified Web browsers will not support the new scheme. While it is possible to register new URL schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML5}}, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
 
 * Existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
 
@@ -395,7 +395,7 @@ application using HTTP, there are a number of tradeoffs and caveats to keep in m
 
 * Web features that require a secure context {{?SECCTXT=W3C.CR-secure-contexts-20160915}} will likely treat a new scheme as insecure.
 
-See {{?RFC7595}} for more information about minting new URI schemes.
+See {{?RFC7595}} for more information about minting new URL schemes.
 
 
 ### Transport Ports
@@ -441,8 +441,8 @@ a familiar pattern from Web browsing, and the results can be cached, improving e
 often expensive process.
 
 In some cases, however, GET might be unwieldy for expressing queries, because of the limited syntax
-of the URI; in particular, if binary data forms part of the query terms, it needs to be encoded to
-conform to URI syntax.
+of the URL; in particular, if binary data forms part of the query terms, it needs to be encoded to
+conform to URL syntax.
 
 While this is not an issue for short queries, it can become one for larger query terms, or ones
 which need to sustain a high rate of requests. Additionally, some HTTP implementations limit the
@@ -480,7 +480,7 @@ However, OPTIONS does have significant limitations:
 
 Instead of OPTIONS, one of these alternative approaches might be more appropriate:
 
-* For server-wide metadata, create a well-known URI {{?I-D.nottingham-rfc5785bis}}, or using an already existing one if it's appropriate (e.g., HostMeta {{?RFC6415}}).
+* For server-wide metadata, create a well-known URI {{?I-D.nottingham-rfc5785bis}}, or using an already existing one if it’s appropriate (e.g., HostMeta {{?RFC6415}}).
 * For metadata about a specific resource, create a separate resource and link to it using a Link response header or a link serialised into the representation's body. See {{?RFC8288}}. Note that the Link header is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
 
 
@@ -721,7 +721,7 @@ will cause problems in interoperability, security, operability and evolution.
 
 Applications MAY use HTTP authentication {{?I-D.ietf-httpbis-semantics}} to identify clients. The
 Basic authentication scheme {{?RFC7617}} MUST NOT be used unless the underlying transport is
-authenticated, integrity-protected and confidential (e.g., as provided the "HTTPS" URI scheme, or
+authenticated, integrity-protected and confidential (e.g., as provided the "HTTPS" URL scheme, or
 another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the underlying transport
 is similarly secure, or the chosen hash algorithm is not "MD5".
 
@@ -872,7 +872,7 @@ as Web sites (and other applications).
 {{server-push}} highlights risks of using HTTP/2 server push in a manner other than specified.
 
 Applications that use HTTP in a manner that involves modification of implementations -- for
-example, requiring support for a new URI scheme, or a non-standard method -- risk having those
+example, requiring support for a new URL scheme, or a non-standard method -- risk having those
 implementations "fork" from their parent HTTP implementations, with the possible result that they
 do not benefit from patches and other security improvements incorporated upstream.
 
