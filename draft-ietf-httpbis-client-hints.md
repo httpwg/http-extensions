@@ -144,6 +144,13 @@ For example, based on the Accept-CH and Accept-CH-Lifetime example above, which 
 If Accept-CH-Lifetime occurs in a message more than once, the last value overrides all previous occurrences.
 
 
+### The "accept-ch" Alt-Svc extension
+
+Origins can advertise support for Client Hints using `accept-ch` parameter in their alternative service entry.
+
+Syntax:
+   accept-ch = sh-list
+
 ### Interaction with Caches
 
 When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server needs to generate a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
@@ -159,7 +166,6 @@ Above example indicates that the cache key needs to include the Sec-CH-Example h
 ~~~
 
 Above example indicates that the cache key needs to include the Sec-CH-Example and Sec-CH-Example-2 header fields.
-
 
 # Security Considerations
 
