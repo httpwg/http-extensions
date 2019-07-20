@@ -308,15 +308,9 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Name: tls_unexpected_peer_certificate
 * Description: The intermediary received unexpected peer certificate (e.g., SPKI doesn't match) during TLS handshake with the next hop.
 * Extra Parameters:
-  - details: a sh-string containing the checksum or SPKI of the certificate received from the next hop.
-* Recommended HTTP status code: 502
-
-## TLS Unexpected Peer Identity
-
-* Name: tls_unexpected_peer_identity
-* Description: The intermediary received peer certificate with unexpected identity (e.g., Subject Alternative Name doesn't match) during TLS handshake with the next hop.
-* Extra Parameters:
-  - details: a sh-string containing the identity of the next hop.
+  - identity: a sh-string containing a comma-separated list of Subject Alternative Names from the certificate received from the next hop.
+  - sha256: a sh-string containing the hex-encoded SHA-256 of the certificate received from the next hop.
+  - spki: a sh-string containing the base64-encoded SHA-256 of the Subject Public Key Info (SPKI) from the certificate received from the next hop.
 * Recommended HTTP status code: 502
 
 ## TLS Missing Proxy Certificate
