@@ -106,10 +106,10 @@ Further, depending on the hint used, the server can generate additional response
 ### Advertising Support via Accept-CH Header Field {#accept-ch}
 
 Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{HTML5}}).
-Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a list-of-tokens (Section 3.3 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
+Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be an sh-list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
 ~~~ abnf7230
-  Accept-CH = sh-list-of-tokens
+  Accept-CH = sh-list
 ~~~
 
 For example:
