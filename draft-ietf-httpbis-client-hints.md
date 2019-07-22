@@ -202,7 +202,7 @@ This document defines the "Accept-CH" and "Accept-CH-Lifetime" HTTP response fie
 # Interaction with Variants Response Header Field
 
 Client Hints may be combined with Variants response header field {{?VARIANTS=I-D.ietf-httpbis-variants}} to enable fine-grained control of the cache key for improved cache efficiency.
-Features that define Client Hints will need to specify the related variants algorithms as described in <https://tools.ietf.org/html/draft-ietf-httpbis-variants-05#section-6>.
+Features that define Client Hints will need to specify the related variants algorithms as described in Section 6 of {{?VARIANTS}}.
 
 # Changes
 
