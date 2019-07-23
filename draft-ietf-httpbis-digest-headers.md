@@ -962,6 +962,24 @@ Specification document(s):  {{digest-header}} of this document
 
 --- back
 
+# Use Cases
+
+## Integrity
+
+While `Digest` alone does not cover the complete resource integrity,
+it can be combined with other mechanisms, like digital signatures,
+that protect representation-metadata.
+
+Signing `Digest` together with other HTTP headers you can
+create an L7 protection solution that transcend transport.
+
+## Recostructing resources
+
+`Digest` allows to reconstruct a resource
+retrieving partial representations from different sources,
+and validate its integrity before passing it to
+an application for processing.
+
 
 # FAQ
 
@@ -1068,3 +1086,4 @@ _RFC Editor: Please remove this section before publication._
 * Deprecate MD5
 * Obsolete ADLER-32 but don't forbid it
 * Update CRC32C value in IANA table
+* Add use-case section [#872](https://github.com/httpwg/http-extensions/issues/872)
