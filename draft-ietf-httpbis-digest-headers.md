@@ -330,7 +330,7 @@ Response:
       The MD5 algorithm MUST NOT be used as it's now vulnerable
       to collision attacks [CMU-836068].
     * Reference: [RFC1321], [RFC4648], this document.
-    * Status: obsoleted
+    * Status: deprecated
 
   SHA:
   :  
@@ -737,7 +737,7 @@ registry. The allowed values for the "Status" fields are described below.
       and status of the primary document in which the algorithm
       is defined.
 
-## Obsolete "MD5" Digest Algorithm {#iana-MD5}
+## Deprecate "MD5" Digest Algorithm {#iana-MD5}
 
 This memo updates the "MD5" digest algorithm in the [HTTP Digest
 Algorithm
@@ -784,9 +784,11 @@ registry:
 
 ## Changes compared to RFC5843
 
-The status has been updated to "obsoleted" for both "SHA" and "MD5",
-and their descriptions states that those algorithms are either NOT RECOMMENDED
-(for SHA) or MUST NOT be used (MD5).
+The status of "MD5" has been updated to "deprecated",
+and its description states that this algoritm MUST NOT be used.
+
+The status of "SHA" has been updated to "obsoleted",
+and its description states that this algorithm is NOT RECOMMENDED.
 
 The status for all other algorithms have been updated to "standard".
 
