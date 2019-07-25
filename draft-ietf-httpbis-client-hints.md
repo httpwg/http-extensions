@@ -231,7 +231,6 @@ In order to address both of these concerns, specifications and features relying 
 Features relying on Client Hints are also encouraged to add "CH-" to the header name, in order to make it easier to distinguish Client Hint request headers from others.
  
 
-
 # IANA Considerations
 
 This document defines the "Accept-CH" and "Accept-CH-Lifetime" HTTP response fields, and registers them in the Permanent Message Header Fields registry.
