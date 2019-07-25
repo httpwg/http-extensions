@@ -228,7 +228,7 @@ The latter is a security concern. CORS {{FETCH}} would have helped to eleviate t
 
 In order to address both of these concerns, specifications and features relying on Client Hints MUST use the "Sec-" prefix for request header names. User agents reserve this namespace for headers that can only be emitted by the browser and thus can guarantee and enforce the type and format of the data communicated in the header value fields. That restriction also means that servers are not likely to be using such prefixed-headers for other purposes.
 
-Features relying on Client Hints are also encouraged to add "CH-" to the header name, in order to make it easier to distinguish Client Hint request headers from others.
+Features relying on Client Hints are also encouraged to add "CH-" to the header name, in order to make it easier to distinguish Client Hint request headers from others. Servers and intermediaries handling those headers should take special care when storing them, as they are likely to contain entropy that can contribute to user fingerprinting.
  
 
 # IANA Considerations
