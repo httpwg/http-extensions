@@ -23,6 +23,12 @@ author:
     organization: Google
     email: ilya@igvita.com
     uri: https://www.igvita.com/
+ -
+    ins: Y. Weiss
+    name: Yoav Weiss
+    organization: Google
+    email: yoav@yoav.ws
+    uri: https://blog.yoav.ws/
 
 normative:
   RFC5234:
