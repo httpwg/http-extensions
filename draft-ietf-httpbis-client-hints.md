@@ -103,10 +103,15 @@ When presented with a request that contains one or more client hint header field
 
 Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing.
 
-### Advertising Support via Accept-CH Header Field {#accept-ch}
+# Advertising Server Support
 
-Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{HTML5}}).
+Servers can advertise support for Client Hints using the mechnisms described below.
+
+## The Accept-CH Response Header Field {#accept-ch}
+
+The Accept-CH response header field or the equivalent HTML meta element with http-equiv attribute ({{HTML5}}) indicate server support for particular hints indicated in its value.
 Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be an sh-list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
+
 
 ~~~ abnf7230
   Accept-CH = sh-list
@@ -123,7 +128,7 @@ When a client receives an HTTP response advertising support for Client Hints, it
 For example, based on Accept-CH example above, a user agent could append the Sec-CH-Example and Sec-CH-Example-2 header fields to all same-origin resource requests initiated by the page constructed from the response.
 
 
-### The Accept-CH-Lifetime Header Field {#accept-ch-lifetime}
+## The Accept-CH-Lifetime Response Header Field {#accept-ch-lifetime}
 
 Servers can ask the client to remember the set of Client Hints that the server supports for a specified period of time, to enable delivery of Client Hints on subsequent requests to the server's origin ({{RFC6454}}).
 
