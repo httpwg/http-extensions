@@ -110,9 +110,11 @@ Servers can advertise support for Client Hints using the mechnisms described bel
 ## The Accept-CH Response Header Field {#accept-ch}
 
 The Accept-CH response header field or the equivalent HTML meta element with http-equiv attribute ({{HTML5}}) indicate server support for particular hints indicated in its value.
+Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be an sh-list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
+
 
 ~~~ abnf7230
-  Accept-CH = #field-name
+  Accept-CH = sh-list
 ~~~
 
 For example:
@@ -130,8 +132,10 @@ For example, based on Accept-CH example above, a user agent could append the Sec
 
 Servers can ask the client to remember the set of Client Hints that the server supports for a specified period of time, to enable delivery of Client Hints on subsequent requests to the server's origin ({{RFC6454}}).
 
+Accept-CH-Lifetime is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be sh-integer (Section 3.4 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
+
 ~~~ abnf7230
-  Accept-CH-Lifetime = #delta-seconds
+  Accept-CH-Lifetime = sh-integer
 ~~~
 
 When a client receives an HTTP response that contains Accept-CH-Lifetime header field, the field-value indicates that the Accept-CH preference SHOULD be persisted and bound to the origin, and be considered stale after response's age ({{RFC7234}}, section 4.2) is greater than the specified number of seconds.
@@ -203,22 +207,10 @@ This document defines the "Accept-CH" and "Accept-CH-Lifetime" HTTP response fie
 
 --- back
 
-# Interaction with Key Response Header Field
+# Interaction with Variants Response Header Field
 
-Client Hints may be combined with Key response header field ({{KEY}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
-
-~~~ example
-  Key: Sec-CH-Example;partition=1.5:2.5:4.0
-~~~
-
-Above example indicates that the cache key needs to include the value of the Sec-CH-Example header field with three segments: less than 1.5, 1.5 to less than 2.5, and 4.0 or greater.
-
-~~~ example
-  Key: Width;Sec-CH-Example=320
-~~~
-
-Above example indicates that the cache key needs to include the value of the Sec-CH-Example header field and be partitioned into groups of 320: 0-320, 320-640, and so on.
-
+Client Hints may be combined with Variants response header field {{?VARIANTS=I-D.ietf-httpbis-variants}} to enable fine-grained control of the cache key for improved cache efficiency.
+Features that define Client Hints will need to specify the related variants algorithms as described in Section 6 of {{?VARIANTS}}.
 
 # Changes
 
