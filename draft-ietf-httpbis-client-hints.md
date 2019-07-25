@@ -30,11 +30,41 @@ normative:
   RFC7231:
   RFC7234:
   RFC6454:
-  HTML5: W3C.REC-html5-20141028
+  HTML:
+    target: https://html.spec.whatwg.org/
+    title: HTML
+    author:
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+      organization: Google, Inc.
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+      organization: Bocoup
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+      organization: Google, Inc.
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+      organization: Google, Inc.
+  FETCH:
+    target: https://fetch.spec.whatwg.org/
+    title: Fetch
+    author:
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
 
 informative:
   RFC6265:
-  KEY: I-D.ietf-httpbis-key
 
 --- abstract
 
@@ -103,7 +133,15 @@ When presented with a request that contains one or more client hint header field
 
 Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing.
 
-### Advertising Support via Accept-CH Header Field {#accept-ch}
+# Advertising Server Support
+
+Servers can advertise support for Client Hints using the mechnisms described below.
+
+## The Accept-CH Response Header Field {#accept-ch}
+
+The Accept-CH response header field or the equivalent HTML meta element with http-equiv attribute ({{HTML}}) indicate server support for particular hints indicated in its value.
+
+Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be an sh-list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
 Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{HTML5}}).
 
@@ -177,11 +215,21 @@ Implementers ought to consider both user and server controlled mechanisms and po
 Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, or similar, are cleared.
 
 
-## Backend Security
-Adding new request headers introduces potential deployment risks. For example, some servers may already use the same header for a different purpose, which may result in conflicts or other undesired behaviors.
+## Deployment and Security Risks
+Adding new request headers forces us to think about two aspects:
 
-While this risk is significantly mitigated by the opt-in mechanisms of Client Hints, specifications and features relying on Client Hints MUST use the Sec- prefix for request header names. User agents reserve this namespace for headers that can only be emitted by the browser and thus can guarantee and enforce the type and format of the data communicated in the header value fields.
-Features relying on Client-Hints are also encouraged to add "CH-" to the header name, in order to make it easier to distinguish Client Hint request headers from others.
+  - Will user-agent emitted values impact current servers which could be using these headers for a different purpose?
+  - Can malicious content impact servers on the user's network by crafting such request headers with malicious header values?
+
+The former concern is a deployment risk, slightly mitigated by the opt-in mechanisms of Client Hints.
+
+The latter is a security concern. CORS {{FETCH}} would have helped to eleviate the latter concern, but for performance purposes, we want to make sure Client Hints request headers are considered CORS-safe.
+
+
+In order to address both of these concerns, specifications and features relying on Client Hints MUST use the "Sec-" prefix for request header names. User agents reserve this namespace for headers that can only be emitted by the browser and thus can guarantee and enforce the type and format of the data communicated in the header value fields. That restriction also means that servers are not likely to be using such prefixed-headers for other purposes.
+
+Features relying on Client Hints are also encouraged to add "CH-" to the header name, in order to make it easier to distinguish Client Hint request headers from others.
+ 
 
 
 # IANA Considerations
