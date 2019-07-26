@@ -216,20 +216,14 @@ Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persis
 
 
 ## Deployment and Security Risks
-Adding new request headers forces us to think about two aspects:
+Deployment of new request headers requires several considerations:
 
-  - Will user-agent emitted values impact current servers which could be using these headers for a different purpose?
-  - Can malicious content impact servers on the user's network by crafting such request headers with malicious header values?
+  - Potential conflicts due to existing use of field name
+  - Properties of the data communicated in field value
 
-The former concern is a deployment risk, slightly mitigated by the opt-in mechanisms of Client Hints.
+In order to avoid conflicts and provide some guaranties regarding field values sent by user agents, specifications and features relying on Client Hints MUST use the "Sec-" prefix for request header names. User agents reserve this namespace to headers that can only be emitted by the browser. Therefore, they can guarantee and enforce the type and format of the data communicated in the header value fields. Further, specifications and features relying on Client Hints are encouraged to include "CH-" in the header name, in order to make it easier to distinguish Client Hint request headers from others.
 
-The latter is a security concern. CORS {{FETCH}} would have helped to eleviate the latter concern, but for performance purposes, we want to make sure Client Hints request headers are considered CORS-safe.
-
-
-In order to address both of these concerns, specifications and features relying on Client Hints MUST use the "Sec-" prefix for request header names. User agents reserve this namespace for headers that can only be emitted by the browser and thus can guarantee and enforce the type and format of the data communicated in the header value fields. That restriction also means that servers are not likely to be using such prefixed-headers for other purposes.
-
-Features relying on Client Hints are also encouraged to add "CH-" to the header name, in order to make it easier to distinguish Client Hint request headers from others. Servers and intermediaries handling those headers should take special care when storing them, as they are likely to contain entropy that can contribute to user fingerprinting.
- 
+The combination of the above recommendations and requirements, plus the opt-in mechanism of Client Hints, helps minimize deployment risks. Further, these requirements enable server and intermediaries handling requests with Client Hints to identify such request headers and take precautions in how they are used and processed — e.g. opt out from storing them as they may expose information about the user.
 
 # IANA Considerations
 
