@@ -189,7 +189,7 @@ Features relying on this document to define Client Hints headers SHOULD take int
   - Change over time
     - The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g. through JavaScript callbacks).
 
-Different features will be positioned in different spots on the spectrum between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agents SHOULD carefully consider the feature's position on that spectrum before exposing it as a Client Hint.
+Different features will be positioned in different spots on the spectrum between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agents SHOULD consider the value provided by a particular feature vs these considerations, and MAY have different policies regarding that tradeoff on a per-feature basis.
 
 Implementers ought to consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
