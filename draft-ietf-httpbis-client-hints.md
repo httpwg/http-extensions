@@ -54,6 +54,14 @@ normative:
       ins: D. Denicola
       name: Domenic Denicola
       organization: Google, Inc.
+  FETCH:
+    target: https://fetch.spec.whatwg.org/
+    title: Fetch
+    author:
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
 
 informative:
   RFC6265:
@@ -213,9 +221,10 @@ Deployment of new request headers requires several considerations:
   - Potential conflicts due to existing use of field name
   - Properties of the data communicated in field value
 
-In order to avoid conflicts and provide some guaranties regarding field values sent by user agents, specifications and features relying on Client Hints MUST use the "Sec-" prefix for request header names. User agents reserve this namespace to headers that can only be emitted by the browser. Therefore, they can guarantee and enforce the type and format of the data communicated in the header value fields. Further, specifications and features relying on Client Hints are encouraged to include "CH-" in the header name, in order to make it easier to distinguish Client Hint request headers from others.
+Specifications and features relying on Client Hints MUST prefix request header names with a "Sec-" prefix. User agents, such as web browsers, ensure such prefixed headers can only be emitted by the browser, and application content, such as scripts, are forbidden from emitting such headers {{FETCH}}. This provides assurance that, when transmitted by user agents, the type, format and value of data communicated in such request headers are enforced by the user agent.
 
-The combination of the above recommendations and requirements, plus the opt-in mechanism of Client Hints, helps minimize deployment risks. Further, these requirements enable server and intermediaries handling requests with Client Hints to identify such request headers and take precautions in how they are used and processed — e.g. opt out from storing them as they may expose information about the user.
+Additionally, specifications and features relying on Client Hints are RECOMMENDED to include the "CH-" in the header name, for example, in the form Sec-CH-Foo for a hypothetical Client Hint Foo. Client Hints can provide additional information about a user agent that previously only have been accessible to scripts or content, and not necessarily transmitted in requests. Servers that wish to minimize the data collected in intermediate steps MAY filter out all unrecognized or unprocessed "CH-" values from its records or intermediate steps, and a consistent use of "CH-" helps facilitate filtering new and unrecognized Client Hint Values.
+
 
 # IANA Considerations
 
