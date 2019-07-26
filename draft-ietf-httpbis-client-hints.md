@@ -203,7 +203,7 @@ Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persis
 ## Abuse Detection
 A user agent that tracks access to active fingerprinting information SHOULD consider emission of Client Hints headers similarly to the way it would consider access to the equivalent API.
 
-User agents which detect abuse through forensic means can observe HTTP responses to requests containing Client Hints, and their variance based on those hints. As Client Hints are provided in order to allow variation and optimization of the content to the provided Client-Hints, resource responses that do not vary on the Client Hints provided can indicate that such Hints are being used for nefarious purposes.
+User agents which detect abuse through forensic means can observe HTTP responses to requests containing Client Hints, and their variance based on those hints. As Client Hints are provided in order to allow variation and optimization of the content to the provided Client-Hints, resource responses that do not vary on the Client Hints provided can indicate that such Hints are being used for nefarious purposes. Detection of variance can be done using the explicit Vary header, or by observing content changes as a result of different Client Hints sent.
 
 
 # IANA Considerations
