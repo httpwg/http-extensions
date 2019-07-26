@@ -54,14 +54,6 @@ normative:
       ins: D. Denicola
       name: Domenic Denicola
       organization: Google, Inc.
-  FETCH:
-    target: https://fetch.spec.whatwg.org/
-    title: Fetch
-    author:
-    -
-      ins: A. van Kesteren
-      name: Anne van Kesteren
-      organization: Mozilla
 
 informative:
   RFC6265:
