@@ -179,17 +179,17 @@ Above example indicates that the cache key needs to include the Sec-CH-Example a
 
 The request header fields defined in this document, and those that extend it, expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
-Features relying on this document to define Client Hints headers SHOULD take into account the following aspects of the information exposed by the feature: 
+Features relying on this document to define Client Hints headers SHOULD take into account the following aspects of the information exposed: 
 
   - Entropy
     - The feature SHOULD NOT provide new information that is otherwise not available to the application via other means, such as existing request headers, HTML, CSS, or JavaScript.
-    - Exposing highly granular data may help identify users across multiple requests. Reducing the set of field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users.
+    - Exposing highly granular data may help identify users across multiple requests to different origins. Reducing the set of field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users.
   - Sensitivity
     - The feature SHOULD NOT expose user sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g. a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
   - Change over time
-    - The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g. through JavaScript callbacks)
+    - The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g. through JavaScript callbacks).
 
-Different features will be positioned in different places on the spectrum between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agent SHOULD carefully consider the feature's position on that spectrum before exposing it as a Client Hint.
+Different features will be positioned in different spots on the spectrum between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agents SHOULD carefully consider the feature's position on that spectrum before exposing it as a Client Hint.
 
 Implementers ought to consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
@@ -203,7 +203,7 @@ Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persis
 ## Abuse Detection
 A user agent that tracks access to active fingerprinting information SHOULD consider emission of Client Hints headers similarly to the way it would consider access to the equivalent API.
 
-User agents which track abuse through forensic means can observe HTTP responses to requests containing Client Hints, and their variance based on those hints. Origins which opt-in but don't vary their responses are likely using that information for nefarious purposes.
+User agents which detect abuse through forensic means can observe HTTP responses to requests containing Client Hints, and their variance based on those hints. Origins which opt-in to Client Hints but don't vary any of their responses accordingly are likely using that information for nefarious purposes.
 
 
 # IANA Considerations
