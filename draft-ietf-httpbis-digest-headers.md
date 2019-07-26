@@ -327,10 +327,10 @@ Response:
     * Description: The MD5 algorithm, as specified in [RFC1321].
       The output of this algorithm is encoded using the
       base64 encoding  [RFC4648].
-      The MD5 algorithm is NOT RECOMMENDED as it's now vulnerable
+      The MD5 algorithm MUST NOT be used as it's now vulnerable
       to collision attacks [CMU-836068].
     * Reference: [RFC1321], [RFC4648], this document.
-    * Status: obsoleted
+    * Status: deprecated
 
   SHA:
   :  
@@ -499,9 +499,9 @@ knowing that the recipient will ignore it.
 This RFC deprecates the negotiation of Content-MD5 as
 it has been obsoleted by [RFC7231]
 
-# Broken cryptographic algorithms are NOT RECOMMENDED
+# Broken cryptographic algorithms 
 
-The MD5 algorithm is NOT RECOMMENDED as it's now vulnerable
+The MD5 algorithm MUST NOT be used as it's now vulnerable
 to collision attacks [CMU-836068].
 
 The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
@@ -671,8 +671,8 @@ Cryptogrphic alorithms are intended to provide a proof of integrity
 suited towards cryptographic constructions such as signatures.
 
 However, these rely on collision-resistance for their security proofs [CMU-836068].
-The MD5 and SHA-1 algorithms are vulnerable to collisions attacks and 
-they are NOT RECOMMENDED.
+The MD5 and SHA-1 algorithms are vulnerable to collisions attacks,
+so MD5 MUST NOT be used and SHA-1 is NOT RECOMMENDED.
 
 ## Digest for end-to-end integrity
 
@@ -737,7 +737,7 @@ registry. The allowed values for the "Status" fields are described below.
       and status of the primary document in which the algorithm
       is defined.
 
-## Obsolete "MD5" Digest Algorithm {#iana-MD5}
+## Deprecate "MD5" Digest Algorithm {#iana-MD5}
 
 This memo updates the "MD5" digest algorithm in the [HTTP Digest
 Algorithm
@@ -784,8 +784,11 @@ registry:
 
 ## Changes compared to RFC5843
 
-The status has been updated to "obsoleted" for both "SHA" and "MD5",
-and their descriptions states that those algorithms are NOT RECOMMENDED.
+The status of "MD5" has been updated to "deprecated",
+and its description states that this algoritm MUST NOT be used.
+
+The status of "SHA" has been updated to "obsoleted",
+and its description states that this algorithm is NOT RECOMMENDED.
 
 The status for all other algorithms have been updated to "standard".
 
