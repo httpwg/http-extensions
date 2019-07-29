@@ -853,6 +853,11 @@ Likewise, implementations should note that it's important to preserve the distin
 _RFC Editor: Please remove this section before publication._
 
 
+## Since draft-ietf-httpbis-header-structure-11
+
+_None yet._
+
+
 ## Since draft-ietf-httpbis-header-structure-10
 
 * Update abstract (#799).
