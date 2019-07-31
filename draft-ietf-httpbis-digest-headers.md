@@ -538,7 +538,7 @@ Response:
 
 ###  Representation data is not contained in the payload
 
-As there is no content coding applied, the `id-sha` and the `id-sha-256`
+As there is no content coding applied, the `sha-256` and the `id-sha-256`
 digest-values are the same.
 
 ~~~
