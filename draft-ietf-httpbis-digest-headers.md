@@ -577,7 +577,7 @@ Request:
   Content-Type: application/json
   Content-Encoding: identity
   Accept-Encoding: br
-  Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
   {"hello": "world"}
 
@@ -585,7 +585,7 @@ Response:
 
   Content-Type: application/json
   Content-Encoding: br
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+  Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 
   iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 
