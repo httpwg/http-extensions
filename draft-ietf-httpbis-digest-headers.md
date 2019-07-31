@@ -492,6 +492,13 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even
 knowing that the recipient will ignore it.
 
+Examples:
+
+~~~
+  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+  Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
+  Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+~~~
 ...
 
 # Deprecate Negotiation of Content-MD5
@@ -531,6 +538,9 @@ Response:
 
 ###  Representation data is not contained in the payload
 
+As there is no content coding applied, the `id-sha` and the `id-sha-256`
+digest-values are the same.
+
 ~~~
 Request:
 
@@ -541,7 +551,7 @@ Response:
   HTTP/1.1 200 Ok
   Content-Type: application/json
   Content-Encoding: identity
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+  Digest: id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ~~~
 
@@ -591,6 +601,35 @@ Response:
 
 ~~~
 
+### Digest in both Request and Response. Response uses id-sha-256.
+
+The response contains two digest values:
+
+- one with no content coding applied, which in this case accidentally
+  matches the unencoded digest-value sent in the request;
+- one taking into account the `Content-Encoding`.
+
+~~~
+Request:
+
+  PUT /items/123
+  Content-Type: application/json
+  Content-Encoding: identity
+  Accept-Encoding: br
+  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+
+  {"hello": "world"}
+
+Response:
+
+  Content-Type: application/json
+  Content-Encoding: br
+  Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+
+  iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
+
+~~~
+
 ## Want-Digest solicited digest responses
 
 ### Client request data is fully contained in the payload
@@ -628,7 +667,7 @@ Response:
   HTTP/1.1 200 Ok
   Content-Type: application/json
   Content-Encoding: identity
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+  Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 
   {"hello": "world"}
 ~~~
