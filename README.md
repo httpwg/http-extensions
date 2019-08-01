@@ -45,7 +45,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Avariants) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-variants/)
 
 
-### Using HTTP as a Substrate (BCP56bis)
+### Building Protocols with HTTP (BCP56bis)
 
 *WGLC concluded*
 
