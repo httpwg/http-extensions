@@ -458,7 +458,7 @@ Examples:
 
 ## Digest {#digest-header}
 
-The Digest header field provides a digest of the representation data
+The Digest header field provides a digest of the representation data.
 
 ~~~
       Digest = "Digest" ":" OWS 1#representation-data-digest
