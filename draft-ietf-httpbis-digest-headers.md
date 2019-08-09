@@ -449,7 +449,7 @@ If multiple acceptable digest-algorithm values are given, the
 sender's preferred digest-algorithm is the one (or ones) with the
 highest qvalue.
 
-Examples:
+Two examples of its use are
 
 ~~~
    Want-Digest: sha-256
@@ -492,7 +492,7 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even
 knowing that the recipient will ignore it.
 
-Examples:
+Two examples of its use are
 
 ~~~
   Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
