@@ -449,7 +449,7 @@ If multiple acceptable digest-algorithm values are given, the
 sender's preferred digest-algorithm is the one (or ones) with the
 highest qvalue.
 
-Examples:
+Two examples of its use are
 
 ~~~
    Want-Digest: sha-256
@@ -458,7 +458,7 @@ Examples:
 
 ## Digest {#digest-header}
 
-The Digest header field provides a digest of the representation data
+The Digest header field provides a digest of the representation data.
 
 ~~~
       Digest = "Digest" ":" OWS 1#representation-data-digest
@@ -492,10 +492,9 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even
 knowing that the recipient will ignore it.
 
-Examples:
+Two examples of its use are
 
 ~~~
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
   Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
   Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
@@ -538,7 +537,7 @@ Response:
 
 ###  Representation data is not contained in the payload
 
-As there is no content coding applied, the `id-sha` and the `id-sha-256`
+As there is no content coding applied, the `sha-256` and the `id-sha-256`
 digest-values are the same.
 
 ~~~
