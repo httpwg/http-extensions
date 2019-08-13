@@ -278,26 +278,19 @@ Note that commas in integers are used in this section's prose only for readabili
 
 ## Floats {#float}
 
-Floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
+Floats are integers with a fractional part, which can be at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
+
 
 The ABNF for floats in textual HTTP headers is:
 
+
 ~~~ abnf
-sh-float    = ["-"] (
-             DIGIT "." 1*14DIGIT /
-            2DIGIT "." 1*13DIGIT /
-            3DIGIT "." 1*12DIGIT /
-            4DIGIT "." 1*11DIGIT /
-            5DIGIT "." 1*10DIGIT /
-            6DIGIT "." 1*9DIGIT /
-            7DIGIT "." 1*8DIGIT /
-            8DIGIT "." 1*7DIGIT /
-            9DIGIT "." 1*6DIGIT /
-           10DIGIT "." 1*5DIGIT /
-           11DIGIT "." 1*4DIGIT /
-           12DIGIT "." 1*3DIGIT /
-           13DIGIT "." 1*2DIGIT /
-           14DIGIT "." 1DIGIT )
+sh-float    = ["-"] (1*9DIGIT "." 1*6DIGIT /
+                      10DIGIT "." 1*5DIGIT /
+                      11DIGIT "." 1*4DIGIT /
+                      12DIGIT "." 1*3DIGIT /
+                      13DIGIT "." 1*2DIGIT /
+                      14DIGIT "." 1DIGIT )
 ~~~
 
 For example, a header whose value is defined as a float could look like:
