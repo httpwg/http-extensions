@@ -856,6 +856,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Allow \* in key (#844).
 * Allow dictionary members to have parameters (#842).
+* Constrain floats to six digits of precision (#848).
 
 
 ## Since draft-ietf-httpbis-header-structure-10
