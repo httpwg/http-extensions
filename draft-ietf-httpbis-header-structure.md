@@ -217,15 +217,13 @@ Header specifications can constrain the types of individual list values (includi
 
 Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items. There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
 
-Each member of the dictionary can also have associated parameters -- an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters on a member, and their keys are required to be unique within that scope.
-
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
 The ABNF for dictionaries in textual HTTP headers is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-name "=" member-value *parameter
+dict-member    = member-name "=" member-value
 member-name    = key
 member-value   = sh-item / inner-list
 ~~~
@@ -242,13 +240,7 @@ A dictionary with a member whose value is an inner-list of tokens:
 Example-DictListHeader: rating=1.5, feelings=(joy sadness)
 ~~~
 
-A dictionary with a mix of singular and list values, some with parameters:
-
-~~~ example
-Example-MixDict: a=(1,2), b=3, c=4;aa=bb, d=(5,6);valid=?T
-~~~
-
-Typically, a header field specification will define the semantics using individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
+Typically, a header field specification will define the semantics of individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
 
 Parsers MUST support dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters.
 
@@ -286,18 +278,26 @@ Note that commas in integers are used in this section's prose only for readabili
 
 ## Floats {#float}
 
-Floats are integers with a fractional part, which can be at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
+Floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
 
 The ABNF for floats in textual HTTP headers is:
 
 ~~~ abnf
 sh-float    = ["-"] (
-            1*9DIGIT "." 1*6DIGIT /
-             10DIGIT "." 1*5DIGIT /
-             11DIGIT "." 1*4DIGIT /
-             12DIGIT "." 1*3DIGIT /
-             13DIGIT "." 1*2DIGIT /
-             14DIGIT "." 1DIGIT )
+             DIGIT "." 1*14DIGIT /
+            2DIGIT "." 1*13DIGIT /
+            3DIGIT "." 1*12DIGIT /
+            4DIGIT "." 1*11DIGIT /
+            5DIGIT "." 1*10DIGIT /
+            6DIGIT "." 1*9DIGIT /
+            7DIGIT "." 1*8DIGIT /
+            8DIGIT "." 1*7DIGIT /
+            9DIGIT "." 1*6DIGIT /
+           10DIGIT "." 1*5DIGIT /
+           11DIGIT "." 1*4DIGIT /
+           12DIGIT "." 1*3DIGIT /
+           13DIGIT "." 1*2DIGIT /
+           14DIGIT "." 1DIGIT )
 ~~~
 
 For example, a header whose value is defined as a float could look like:
@@ -417,7 +417,14 @@ Given a list of (member, parameters) as input_list:
    1. If member is an array, let mem_value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to member.
    2. Otherwise, let mem_value be the result of applying Serializing an Item ({{ser-item}}) to member.
    3. Append mem_value to output.
-   4. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
+   4. For each parameter in parameters:
+      1. Append ";" to output.
+      2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
+      3. Append name to output.
+      4. If parameter has a param-value:
+         1. Let value be the result of applying Serializing an Item ({{ser-item}}) to parameter's param-value.
+         2. Append "=" to output.
+         3. Append value to output.
    5. If more members remain in input_plist:
       1. Append a COMMA to output.
       2. Append a single WS to output.
@@ -435,22 +442,6 @@ Given an array inner_list:
 3. Append ")" to output.
 4. Return output.
 
-#### Serializing Parameters {#ser-params}
-
-Given an ordered dictionary parameters:
-
-0. Let output be an empty string.
-1. For each parameter in parameters:
-  1. Append ";" to output.
-  2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
-  3. Append name to output.
-  4. If parameter has a param-value:
-     1. Let value be the result of applying Serializing an Item ({{ser-item}}) to parameter's param-value.
-     2. Append "=" to output.
-     3. Append value to output.
-2. Return output.
-
-
 #### Serializing a Key {#ser-key}
 
 Given a key as input_key:
@@ -466,15 +457,14 @@ Given a key as input_key:
 Given a dictionary as input_dictionary:
 
 1. Let output be an empty string.
-2. For each (member, parameters) of input_dictionary:
-   1. Let name be the result of applying Serializing a Key ({{ser-key}}) to member's member-name.
+2. For each member mem of input_dictionary:
+   1. Let name be the result of applying Serializing a Key ({{ser-key}}) to mem's member-name.
    2. Append name to output.
    3. Append "=" to output.
-   4. If member is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to member.
-   5. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to member.
+   4. If mem is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to mem.
+   5. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
    6. Append value to output.
-   7. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
-   8. If more members remain in input_dictionary:
+   7. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -661,8 +651,9 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
    1. Let this_key be the result of running Parsing a Key from Text ({{parse-key}}) with input_string.
    2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let member be the result of running Parsing a Parameterized Member from Text ({{parse-param}}) with input_string.
-   6. Add name this_key with value member to dictionary.
+   4. If the first character of input_string is "(", let this_value be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
+   5. Else, let this_value be the result of running Parsing an Item ({{parse-item}}) with input_string.
+   6. Add name this_key with value this_value to dictionary.
    7. Discard any leading OWS from input_string.
    8. If input_string is empty, return dictionary.
    9. Consume the first character of input_string; if it is not COMMA, fail parsing.
