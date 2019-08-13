@@ -710,6 +710,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), 
    2. If output_number is outside the range defined in {{integer}}, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
+   2. If the number of characters after "." in input_number is greater than six, fail parsing.
    2. Parse input_number as a float and let output_number be the product of the result and sign.
 0. Return output_number.
 
