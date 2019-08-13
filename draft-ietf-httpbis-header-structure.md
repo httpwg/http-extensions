@@ -37,6 +37,18 @@ author:
 normative:
 
 informative:
+  IEEE754:
+     target: http://ieeexplore.ieee.org/document/4610935/
+     title: IEEE Standard for Floating-Point Arithmetic
+     author:
+     -
+       organization: IEEE
+     date: 2008-08
+     seriesinfo:
+       IEEE: 754-2008
+       DOI:  10.1109/IEEESTD.2008.4610935
+       ISBN: 978-0-7381-5752-8
+     annotation: See also <http://grouper.ieee.org/groups/754/>.
 
 
 --- abstract
