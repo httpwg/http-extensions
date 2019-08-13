@@ -496,13 +496,14 @@ Given an integer as input_integer:
 
 Given a float as input_float:
 
-0. If input_float is not a IEEE 754 double precision number, fail serialisation.
-1. Let output be an empty string.
-2. If input_float is less than (but not equal to) 0, append "-" to output.
-3. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
-4. Append "." to output.
-5. Append input_float's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
-6. Return output.
+0. If input_float's fractional part has more than six digits of precision, fail serialisation.
+1. If the number of digits of precision in input_float's fractional part plus those in its integer part add to more than fifteen digits, fail serialisation.
+2. Let output be an empty string.
+3. If input_float is less than (but not equal to) 0, append "-" to output.
+4. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+5. Append "." to output.
+6. Append input_float's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+7. Return output.
 
 
 ### Serializing a String {#ser-string}
