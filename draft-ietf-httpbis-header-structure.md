@@ -183,7 +183,7 @@ list-member   = ( sh-item / inner-list ) *parameter
 inner-list    = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")"
 parameter     = OWS ";" OWS param-name [ "=" param-value ]
 param-name    = key
-key           = lcalpha *( lcalpha / DIGIT / "_" / "-" )
+key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = sh-item
 ~~~
@@ -669,7 +669,7 @@ Given an ASCII string input_string, return a key. input_string is modified to re
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "\_", or "-":
+   2. If char is not one of lcalpha, DIGIT, "\*", "\_", or "-":
       1. Prepend char to input_string.
       2. Return output_string.
    3. Append char to output_string.
@@ -855,7 +855,7 @@ _RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-11
 
-_None yet._
+* Allow \* in key (#844).
 
 
 ## Since draft-ietf-httpbis-header-structure-10
