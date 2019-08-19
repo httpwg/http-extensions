@@ -208,6 +208,8 @@ In textual HTTP headers, members' parameters are separated from the member and e
 Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, (ghi jkl);q="9";r="w"
 ~~~
 
+In textual HTTP headers, an empty list is denoted by not serialising the header at all.
+
 Parsers MUST support lists containing at least 1024 members, support members with at least 256 parameters, support inner-lists containing at least 256 members, and support parameter keys with at least 64 characters.
 
 Header specifications can constrain the types of individual list values (including that of individual inner-list members and parameters) if necessary.
@@ -247,6 +249,8 @@ A dictionary with a mix of singular and list values, some with parameters:
 ~~~ example
 Example-MixDict: a=(1,2), b=3, c=4;aa=bb, d=(5,6);valid=?T
 ~~~
+
+As with lists, an empty dictionary is represented in textual HTTP headers by omitting the entire header field.
 
 Typically, a header field specification will define the semantics using individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
 
