@@ -1,5 +1,5 @@
 ---
-title: Resource Digests for HTTP
+title: Digest Headers
 abbrev:
 docname: draft-ietf-httpbis-digest-headers-latest
 category: std
