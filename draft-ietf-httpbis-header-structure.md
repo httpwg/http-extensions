@@ -491,13 +491,13 @@ Given an integer as input_integer:
 
 Given a float as input_float:
 
-0. If input_float's fractional part has more than six digits of precision, fail serialisation.
-1. If the number of digits of precision in input_float's fractional part plus those in its integer part add to more than fifteen digits, fail serialisation.
+0. If input_float's fractional component has more than six digits of precision, fail serialisation.
+1. If the number of digits of precision in input_float's fractional component plus those in its integer component add to more than fifteen digits, fail serialisation.
 2. Let output be an empty string.
 3. If input_float is less than (but not equal to) 0, append "-" to output.
 4. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
 5. Append "." to output.
-6. Append input_float's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+6. Append input_float's fractional component represented in base 10 using only decimal digits to output; if it is zero, append "0".
 7. Return output.
 
 
