@@ -278,7 +278,7 @@ Note that commas in integers are used in this section's prose only for readabili
 
 ## Floats {#float}
 
-Floats are integers with a fractional part, which can be at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
+Floats are decimal numbers with an integer and a fractional part. The fractional part has at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
 
 
 The ABNF for floats in textual HTTP headers is:
