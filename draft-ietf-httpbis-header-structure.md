@@ -205,7 +205,7 @@ Note that the last member in this example is an empty inner list.
 In textual HTTP headers, members' parameters are separated from the member and each other by semicolons. For example:
 
 ~~~ example
-Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, (ghi jkl);q="9";r="w"
+Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi jkl);q="9";r=w
 ~~~
 
 In textual HTTP headers, an empty list is denoted by not serialising the header at all.
