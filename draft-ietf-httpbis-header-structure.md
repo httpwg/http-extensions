@@ -290,26 +290,19 @@ Note that commas in integers are used in this section's prose only for readabili
 
 ## Floats {#float}
 
-Floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
+Floats are decimal numbers with an integer and a fractional component. The fractional component has at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
+
 
 The ABNF for floats in textual HTTP headers is:
 
+
 ~~~ abnf
-sh-float    = ["-"] (
-             DIGIT "." 1*14DIGIT /
-            2DIGIT "." 1*13DIGIT /
-            3DIGIT "." 1*12DIGIT /
-            4DIGIT "." 1*11DIGIT /
-            5DIGIT "." 1*10DIGIT /
-            6DIGIT "." 1*9DIGIT /
-            7DIGIT "." 1*8DIGIT /
-            8DIGIT "." 1*7DIGIT /
-            9DIGIT "." 1*6DIGIT /
-           10DIGIT "." 1*5DIGIT /
-           11DIGIT "." 1*4DIGIT /
-           12DIGIT "." 1*3DIGIT /
-           13DIGIT "." 1*2DIGIT /
-           14DIGIT "." 1DIGIT )
+sh-float    = ["-"] (1*9DIGIT "." 1*6DIGIT /
+                      10DIGIT "." 1*5DIGIT /
+                      11DIGIT "." 1*4DIGIT /
+                      12DIGIT "." 1*3DIGIT /
+                      13DIGIT "." 1*2DIGIT /
+                      14DIGIT "." 1DIGIT )
 ~~~
 
 For example, a header whose value is defined as a float could look like:
@@ -520,13 +513,14 @@ Given an integer as input_integer:
 
 Given a float as input_float:
 
-0. If input_float is not a IEEE 754 double precision number, fail serialisation.
-1. Let output be an empty string.
-2. If input_float is less than (but not equal to) 0, append "-" to output.
-3. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
-4. Append "." to output.
-5. Append input_float's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
-6. Return output.
+0. If input_float's fractional component has more than six digits of precision, fail serialisation.
+1. If the number of digits of precision in input_float's fractional component plus those in its integer component add to more than fifteen digits, fail serialisation.
+2. Let output be an empty string.
+3. If input_float is less than (but not equal to) 0, append "-" to output.
+4. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+5. Append "." to output.
+6. Append input_float's fractional component represented in base 10 using only decimal digits to output; if it is zero, append "0".
+7. Return output.
 
 
 ### Serializing a String {#ser-string}
@@ -733,6 +727,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), 
    2. If output_number is outside the range defined in {{integer}}, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
+   2. If the number of characters after "." in input_number is greater than six, fail parsing.
    2. Parse input_number as a float and let output_number be the product of the result and sign.
 0. Return output_number.
 
@@ -877,6 +872,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-11
 
 * Allow \* in key (#844).
+* Constrain floats to six digits of precision (#848).
 * Allow dictionary members to have parameters (#842).
 
 
