@@ -621,7 +621,7 @@ Given an ASCII string input_string, return an array of (member, parameters). inp
 
 #### Parsing a Parameterized Member from Text {#parse-param}
 
-Given an ASCII string input_string, return an token with an ordered map of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string input_string, return a member (either a list of items, or a single item) with an ordered map of parameters. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is "(", let member be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
 2. Else, let member be the result of running Parsing an Item ({{parse-item}}) with input_string.
