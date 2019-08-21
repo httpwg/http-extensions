@@ -446,13 +446,13 @@ Given an ordered dictionary parameters:
 
 0. Let output be an empty string.
 1. For each parameter in parameters:
-  1. Append ";" to output.
-  2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
-  3. Append name to output.
-  4. If parameter has a param-value:
-     1. Let value be the result of applying Serializing an Item ({{ser-item}}) to parameter's param-value.
-     2. Append "=" to output.
-     3. Append value to output.
+   1. Append ";" to output.
+   2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
+   3. Append name to output.
+   4. If parameter has a param-value:
+      1. Let value be the result of applying Serializing an Item ({{ser-item}}) to parameter's param-value.
+      2. Append "=" to output.
+      3. Append value to output.
 2. Return output.
 
 
