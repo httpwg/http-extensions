@@ -442,7 +442,7 @@ Given an array inner_list:
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered dictionary parameters:
+Given an ordered dictionary parameters (each with a param-name and an optional param-value):
 
 0. Let output be an empty string.
 1. For each parameter in parameters:
