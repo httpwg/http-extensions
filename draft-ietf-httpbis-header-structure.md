@@ -656,6 +656,20 @@ Given an ASCII string input_string, return an array of items. input_string is mo
    5. If the first character of input_string is not SP or ")", fail parsing.
 4. The end of the inner list was not found; fail parsing.
 
+#### Parsing a Key from Text {#parse-key}
+
+Given an ASCII string input_string, return a key. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not lcalpha, fail parsing.
+2. Let output_string be an empty string.
+3. While input_string is not empty:
+   1. Let char be the result of removing the first character of input_string.
+   2. If char is not one of lcalpha, DIGIT, "\*", "\_", or "-":
+      1. Prepend char to input_string.
+      2. Return output_string.
+   3. Append char to output_string.
+4. Return output_string.
+
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
@@ -674,21 +688,6 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
    0. Discard any leading OWS from input_string.
    1. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
-
-
-### Parsing a Key from Text {#parse-key}
-
-Given an ASCII string input_string, return a key. input_string is modified to remove the parsed value.
-
-1. If the first character of input_string is not lcalpha, fail parsing.
-2. Let output_string be an empty string.
-3. While input_string is not empty:
-   1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "\*", "\_", or "-":
-      1. Prepend char to input_string.
-      2. Return output_string.
-   3. Append char to output_string.
-4. Return output_string.
 
 
 ### Parsing an Item from Text {#parse-item}
