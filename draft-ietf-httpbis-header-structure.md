@@ -124,7 +124,7 @@ To define a HTTP header as a structured header, its specification needs to:
 
 * Specify any additional constraints upon the syntax of the structures used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
-Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and floats, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, header field definitions should use Structured Headers for the entire header field value, not a portion thereof.
+Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and floats, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, header field definitions can only use Structured Headers for the entire header field value, not a portion thereof.
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
 
