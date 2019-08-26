@@ -137,17 +137,17 @@ The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
 
 Foo-Example is a Structured Header [RFCxxxx]. Its value MUST be a
-dictionary ([RFCxxxx], Section Y.Y). Its ABNF is:
+dictionary (Section Y.Y of [RFCxxxx]). Its ABNF is:
 
   Foo-Example = sh-dictionary
 
 The dictionary MUST contain:
 
 * Exactly one member whose name is "foo", and whose value is an
-  integer ([RFCxxxx], Section Y.Y), indicating the number of foos
+  integer (Section Y.Y of [RFCxxxx]), indicating the number of foos
   in the message.
 * Exactly one member whose name is "barUrl", and whose value is a
-  list of strings ([RFCxxxx], Section Y.Y), conveying the Bar URLs
+  list of strings (Section Y.Y of [RFCxxxx]), conveying the Bar URLs
   for the message. See below for processing requirements.
 
 If the parsed header field does not contain both, it MUST be
@@ -156,11 +156,11 @@ ignored.
 "foo" MUST be between 0 and 10, inclusive; other values MUST cause
 the header to be ignored.
 
-"barUrl" contains a URI-reference ([RFC3986], Section 4.1).
-
-If barURL is not a valid URI-reference, it MUST be ignored.
-If barURL is a relative reference ([RFC3986], Section 4.2),
-it MUST be resolved ([RFC3986], Section 5) before being used.
+"barUrl" contains one or more URI-references (Section 4.1 of
+[RFC3986], Section 4.1). If barURL is not a valid URI-reference,
+it MUST be ignored. If barURL is a relative reference (Section 4.2
+of [RFC3986]), it MUST be resolved (Section 5 of [RFC3986]) before
+being used.
 
 For example:
 
