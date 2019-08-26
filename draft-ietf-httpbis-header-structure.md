@@ -122,7 +122,7 @@ To define a HTTP header as a structured header, its specification needs to:
 
 * Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for use outside it.
 
-* Specify any additional constraints upon the syntax of the structures used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
+* Specify any additional constraints upon the syntax of the structures used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is ignored (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
 Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and floats, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, header field definitions can only use Structured Headers for the entire header field value, not a portion thereof.
 
@@ -597,7 +597,9 @@ Strings split across multiple header instances will have unpredictable results, 
 
 Tokens, Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
-If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
+If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be ignored (i.e., treated as if the header field were not present in the message). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
+
+Note that this requirement does not apply to software that is not parsing the header field as a Structured Header; for example, an intermediary is not required to strip a failing header field from a message before forwarding it.
 
 
 
