@@ -511,14 +511,16 @@ Given an integer as input_integer, return an ASCII string suitable for use in a 
 
 Given a float as input_float, return an ASCII string suitable for use in a textual HTTP header value.
 
-0. If input_float's fractional component has more than six digits of precision, fail serialisation.
-1. If the number of digits of precision in input_float's fractional component plus those in its integer component add to more than fifteen digits, fail serialisation.
-2. Let output be an empty string.
-3. If input_float is less than (but not equal to) 0, append "-" to output.
-4. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
-5. Append "." to output.
-6. Append input_float's fractional component represented in base 10 using only decimal digits to output; if it is zero, append "0".
-7. Return output.
+1. Let output be an empty string.
+2. If input_float is less than (but not equal to) 0, append "-" to output.
+3. Append input_float's integer component represented in base 10 (using only decimal digits) to output; if it is zero, append "0".
+4. Let integer_digits be the number of characters appended in the previous step.
+5. If integer_digits is greater than 14, fail serialisation.
+6. Let digits_avail be 15 minus integer_digits.
+7. Let fractional_digits_avail be the maximum of digits_avail and 6.
+8. Append "." to output.
+9. Append at most fractional_digits_avail digits of input_float's fractional component represented in base 10 to output (using only decimal digits, and truncating any remaining digits); if it is zero, append "0".
+0. Return output.
 
 
 ### Serializing a String {#ser-string}
