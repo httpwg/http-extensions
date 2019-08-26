@@ -147,8 +147,8 @@ The dictionary MUST contain:
   integer ([RFCxxxx], Section Y.Y), indicating the number of foos
   in the message.
 * Exactly one member whose name is "barUrl", and whose value is a
-  string ([RFCxxxx], Section Y.Y), conveying the Bar URL for the
-  message. See below for processing requirements.
+  list of strings ([RFCxxxx], Section Y.Y), conveying the Bar URLs
+  for the message. See below for processing requirements.
 
 If the parsed header field does not contain both, it MUST be
 ignored.
@@ -161,6 +161,10 @@ the header to be ignored.
 If barURL is not a valid URI-reference, it MUST be ignored.
 If barURL is a relative reference ([RFC3986], Section 4.2),
 it MUST be resolved ([RFC3986], Section 5) before being used.
+
+For example:
+
+  Foo-Example: foo=2, barUrl=("https://bar.example.com/")
 ~~~
 
 
