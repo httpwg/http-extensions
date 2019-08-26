@@ -620,7 +620,7 @@ Given an ASCII string as input_string, return a member (either a list of items, 
 1. If the first character of input_string is "(", let member be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
 2. Else, let member be the result of running Parsing an Item ({{parse-item}}) with input_string.
 3. Let parameters be an empty, ordered map.
-4. In a loop:
+4. While input_string is not empty:
    1. Discard any leading OWS from input_string.
    2. If the first character of input_string is not ";", exit the loop.
    3. Consume a ";" character from the beginning of input_string.
