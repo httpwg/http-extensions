@@ -170,7 +170,7 @@ For example:
 
 # Structured Header Data Types {#types}
 
-This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP.
+This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in textual HTTP headers.
 
 
 ## Lists {#list}
