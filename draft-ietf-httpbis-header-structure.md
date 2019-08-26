@@ -429,7 +429,7 @@ Given a list of (member-value, parameters) as input_list:
 
 #### Serialising an Inner List {#ser-innerlist}
 
-Given an array inner_list:
+Given an array as inner_list:
 
 1. Let output be the string "(".
 2. For each member-value of inner_list:
@@ -440,7 +440,7 @@ Given an array inner_list:
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered dictionary parameters (each with a param-name and an optional param-value):
+Given an ordered dictionary as parameters (each with a param-name and an optional param-value):
 
 0. Let output be an empty string.
 1. For each parameter-name with a value of param-value in parameters:
@@ -599,7 +599,7 @@ If parsing fails -- including when calling another algorithm -- the entire heade
 
 ### Parsing a List from Text {#parse-list}
 
-Given an ASCII string input_string, return an array of (member, parameters). input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an array of (member, parameters). input_string is modified to remove the parsed value.
 
 1. Let members be an empty array.
 2. While input_string is not empty:
@@ -615,7 +615,7 @@ Given an ASCII string input_string, return an array of (member, parameters). inp
 
 #### Parsing a Parameterized Member from Text {#parse-param}
 
-Given an ASCII string input_string, return a member (either a list of items, or a single item) with an ordered map of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a member (either a list of items, or a single item) with an ordered map of parameters. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is "(", let member be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
 2. Else, let member be the result of running Parsing an Item ({{parse-item}}) with input_string.
@@ -636,7 +636,7 @@ Given an ASCII string input_string, return a member (either a list of items, or 
 
 #### Parsing an Inner List {#parse-innerlist}
 
-Given an ASCII string input_string, return an array of items. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an array of items. input_string is modified to remove the parsed value.
 
 1. Consume the first character of input_string; if it is not "(", fail parsing.
 2. Let inner_list be an empty array.
@@ -652,7 +652,7 @@ Given an ASCII string input_string, return an array of items. input_string is mo
 
 #### Parsing a Key from Text {#parse-key}
 
-Given an ASCII string input_string, return a key. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a key. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not lcalpha, fail parsing.
 2. Let output_string be an empty string.
@@ -665,7 +665,7 @@ Given an ASCII string input_string, return a key. input_string is modified to re
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
-Given an ASCII string input_string, return an ordered map of (key, item). input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an ordered map of (key, item). input_string is modified to remove the parsed value.
 
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
@@ -684,7 +684,7 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
 
 ### Parsing an Item from Text {#parse-item}
 
-Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an item. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 2. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
@@ -696,7 +696,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 
 ### Parsing a Number from Text {#parse-number}
 
-Given an ASCII string input_string, return a number. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a number. input_string is modified to remove the parsed value.
 
 NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), and returns the corresponding structure.
 
@@ -725,7 +725,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), 
 
 ### Parsing a String from Text {#parse-string}
 
-Given an ASCII string input_string, return an unquoted string. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an unquoted string. input_string is modified to remove the parsed value.
 
 1. Let output_string be an empty string.
 2. If the first character of input_string is not DQUOTE, fail parsing.
@@ -745,7 +745,7 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 
 ### Parsing a Token from Text {#parse-token}
 
-Given an ASCII string input_string, return a token. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a token. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
@@ -758,7 +758,7 @@ Given an ASCII string input_string, return a token. input_string is modified to 
 
 ### Parsing a Byte Sequence from Text {#parse-binary}
 
-Given an ASCII string input_string, return a byte sequence. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a byte sequence. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not "\*", fail parsing.
 2. Discard the first character of input_string.
@@ -778,7 +778,7 @@ This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 
 
 ### Parsing a Boolean from Text {#parse-boolean}
 
-Given an ASCII string input_string, return a Boolean. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a Boolean. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not "?", fail parsing.
 2. Discard the first character of input_string.
