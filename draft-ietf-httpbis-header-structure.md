@@ -423,10 +423,10 @@ Given a list of (member-value, parameters) as input_list, return an ASCII string
 
 1. Let output be an empty string.
 2. For each (member-value, parameters) of input_list:
-   1. If member is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with member-value to output.
+   1. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with member-value to output.
    2. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
    3. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
-   4. If more members remain in input_plist:
+   4. If more member-values remain in input_plist:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
