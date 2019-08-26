@@ -663,10 +663,8 @@ Given an ASCII string input_string, return a key. input_string is modified to re
 1. If the first character of input_string is not lcalpha, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
-   1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "\*", "\_", or "-":
-      1. Prepend char to input_string.
-      2. Return output_string.
+   1. If the first character of input_string is not one of lcalpha, DIGIT, "\*", "\_", or "-", return output_string.
+   2. Let char be the result of removing the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
 
@@ -759,10 +757,8 @@ Given an ASCII string input_string, return a token. input_string is modified to 
 1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
-   1. Let char be the result of consuming the first character of input_string.
-   2. If char is not one of ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/":
-      1. Prepend char to input_string.
-      2. Return output_string.
+   1. If the first character of input_string is not one of ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/", return output_string.
+   2. Let char be the result of consuming the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
 
