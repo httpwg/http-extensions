@@ -517,7 +517,7 @@ Given a float as input_float, return an ASCII string suitable for use in a textu
 4. Let integer_digits be the number of characters appended in the previous step.
 5. If integer_digits is greater than 14, fail serialisation.
 6. Let digits_avail be 15 minus integer_digits.
-7. Let fractional_digits_avail be the maximum of digits_avail and 6.
+7. Let fractional_digits_avail be the minimum of digits_avail and 6.
 8. Append "." to output.
 9. Append at most fractional_digits_avail digits of input_float's fractional component represented in base 10 to output (using only decimal digits, and truncating any remaining digits); if it is zero, append "0".
 0. Return output.
