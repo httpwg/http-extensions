@@ -72,7 +72,7 @@ Implementations are tracked at <https://github.com/httpwg/wiki/wiki/Structured-H
 
 # Introduction
 
-Specifying the syntax of new HTTP header fields is an onerous task; even with the guidance in {{?RFC7231}}, Section 8.3.1, there are many decisions -- and pitfalls -- for a prospective HTTP header field author.
+Specifying the syntax of new HTTP header fields is an onerous task; even with the guidance in Section 8.3.1 of {{?RFC7231}}, there are many decisions -- and pitfalls -- for a prospective HTTP header field author.
 
 Once a header field is defined, bespoke parsers and serializers often need to be written, because each header has slightly different handling of what looks like common syntax.
 
