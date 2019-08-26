@@ -740,10 +740,9 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
    1. Let char be the result of consuming the first character of input_string.
    2. If char is a backslash ("\\"):
       1. If input_string is now empty, fail parsing.
-      2. Else:
-         1. Let next_char be the result of consuming the first character of input_string.
-         2. If next_char is not DQUOTE or "\\", fail parsing.
-         3. Append next_char to output_string.
+      2. Let next_char be the result of consuming the first character of input_string.
+      3. If next_char is not DQUOTE or "\\", fail parsing.
+      4. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
    4. Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail parsing.
    5. Else, append char to output_string.
