@@ -468,17 +468,15 @@ Given a key as input_key:
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given a dictionary as input_dictionary:
+Given a dictionary whose values are (member-value, parameters) tuples as input_dictionary:
 
 1. Let output be an empty string.
-2. For each (member, parameters) of input_dictionary:
-   1. Let name be the result of applying Serializing a Key ({{ser-key}}) to member's member-name.
-   2. Append name to output.
-   3. Append "=" to output.
-   4. If member is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to member.
-   5. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to member.
-   6. Append value to output.
-   7. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
+2. For each member-name with a value of (member-value, parameters) in input_dictionary:
+   1. Append the result of applying Serializing a Key ({{ser-key}}) with member's member-name to output.
+   2. Append "=" to output.
+   3. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with member-value to output.
+   4. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
+   5. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
    8. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
