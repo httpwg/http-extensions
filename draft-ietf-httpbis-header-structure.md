@@ -402,7 +402,7 @@ This section defines how to serialize and parse Structured Headers in textual he
 
 ## Serializing Structured Headers {#text-serialize}
 
-Given a structure defined in this specification:
+Given a structure defined in this specification, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not send the serialize field at all (i.e., omit both the field-name and field-value).
 2. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
@@ -415,7 +415,7 @@ Given a structure defined in this specification:
 
 ### Serializing a List {#ser-list}
 
-Given a list of (member-value, parameters) as input_list:
+Given a list of (member-value, parameters) as input_list, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. Let output be an empty string.
 2. For each (member-value, parameters) of input_list:
@@ -429,7 +429,7 @@ Given a list of (member-value, parameters) as input_list:
 
 #### Serialising an Inner List {#ser-innerlist}
 
-Given an array as inner_list:
+Given an array as inner_list, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. Let output be the string "(".
 2. For each member-value of inner_list:
@@ -440,7 +440,7 @@ Given an array as inner_list:
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered dictionary as parameters (each with a param-name and an optional param-value):
+Given an ordered dictionary as parameters (each with a param-name and an optional param-value), return an ASCII string suitable for use in a textual HTTP header value.
 
 0. Let output be an empty string.
 1. For each parameter-name with a value of param-value in parameters:
@@ -454,7 +454,7 @@ Given an ordered dictionary as parameters (each with a param-name and an optiona
 
 #### Serializing a Key {#ser-key}
 
-Given a key as input_key:
+Given a key as input_key, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
 1. Let output be an empty string.
@@ -464,7 +464,7 @@ Given a key as input_key:
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given a dictionary whose values are (member-value, parameters) tuples as input_dictionary:
+Given a dictionary whose values are (member-value, parameters) tuples as input_dictionary, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. Let output be an empty string.
 2. For each member-name with a value of (member-value, parameters) in input_dictionary:
@@ -481,7 +481,7 @@ Given a dictionary whose values are (member-value, parameters) tuples as input_d
 
 ### Serializing an Item {#ser-item}
 
-Given an item as input_item:
+Given an item as input_item, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. If input_item is an integer, return the result of applying Serializing an Integer ({{ser-integer}}) to input_item.
 2. If input_item is a float, return the result of applying Serializing a Float ({{ser-float}}) to input_item.
@@ -494,7 +494,7 @@ Given an item as input_item:
 
 ### Serializing an Integer {#ser-integer}
 
-Given an integer as input_integer:
+Given an integer as input_integer, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_integer is not an integer in the range of −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialisation.
 1. Let output be an empty string.
@@ -505,7 +505,7 @@ Given an integer as input_integer:
 
 ### Serializing a Float {#ser-float}
 
-Given a float as input_float:
+Given a float as input_float, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_float's fractional component has more than six digits of precision, fail serialisation.
 1. If the number of digits of precision in input_float's fractional component plus those in its integer component add to more than fifteen digits, fail serialisation.
@@ -519,7 +519,7 @@ Given a float as input_float:
 
 ### Serializing a String {#ser-string}
 
-Given a string as input_string:
+Given a string as input_string, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_string is not a sequence of characters, or contains characters outside the range allowed by VCHAR or SP, fail serialisation.
 1. Let output be an empty string.
@@ -534,7 +534,7 @@ Given a string as input_string:
 
 ### Serializing a Token {#ser-token}
 
-Given a token as input_token:
+Given a token as input_token, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_token is not a sequence of characters, or contains characters not allowed in {{token}}, fail serialisation.
 1. Let output be an empty string.
@@ -544,7 +544,7 @@ Given a token as input_token:
 
 ### Serializing a Byte Sequence {#ser-binary}
 
-Given a byte sequence as input_bytes:
+Given a byte sequence as input_bytes, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_bytes is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
@@ -560,7 +560,7 @@ Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Se
 
 ### Serializing a Boolean {#ser-boolean}
 
-Given a Boolean as input_boolean:
+Given a Boolean as input_boolean, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_boolean is not a boolean, fail serialisation.
 1. Let output be an empty string.
