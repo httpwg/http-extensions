@@ -456,7 +456,7 @@ Given an ordered dictionary as input_parameters (each member having a param-name
 
 Given a key as input_key, return an ASCII string suitable for use in a textual HTTP header value.
 
-0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
+0. If input_key is not a sequence of characters, or contains characters not in lcalpha, DIGIT, "\*", "\_", or "-", fail serialisation.
 1. Let output be an empty string.
 2. Append input_key to output.
 3. Return output.
@@ -521,7 +521,7 @@ Given a float as input_float, return an ASCII string suitable for use in a textu
 
 Given a string as input_string, return an ASCII string suitable for use in a textual HTTP header value.
 
-0. If input_string is not a sequence of characters, or contains characters outside the range allowed by VCHAR or SP, fail serialisation.
+0. If input_string is not a sequence of characters, or contains characters outside the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail serialisation.
 1. Let output be an empty string.
 2. Append DQUOTE to output.
 3. For each character char in input_string:
@@ -536,7 +536,7 @@ Given a string as input_string, return an ASCII string suitable for use in a tex
 
 Given a token as input_token, return an ASCII string suitable for use in a textual HTTP header value.
 
-0. If input_token is not a sequence of characters, or contains characters not allowed in {{token}}, fail serialisation.
+0. If input_token is not a sequence of characters, or contains characters not in ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/", fail serialisation.
 1. Let output be an empty string.
 2. Append input_token to output.
 3. Return output.
