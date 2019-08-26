@@ -868,6 +868,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-12
 
 * Editorial improvements.
+* Reworked float serialisation (#896).
 
 
 ## Since draft-ietf-httpbis-header-structure-11
