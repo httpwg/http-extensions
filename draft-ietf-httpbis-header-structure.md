@@ -464,7 +464,7 @@ Given a key as input_key, return an ASCII string suitable for use in a textual H
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given a dictionary whose values are (member-value, parameters) tuples as input_dictionary, return an ASCII string suitable for use in a textual HTTP header value.
+Given an ordered dictionary whose values are (member-value, parameters) tuples as input_dictionary, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. Let output be an empty string.
 2. For each member-name with a value of (member-value, parameters) in input_dictionary:
