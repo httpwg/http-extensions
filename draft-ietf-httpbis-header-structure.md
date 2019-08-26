@@ -432,10 +432,9 @@ Given a list of (member-value, parameters) as input_list:
 Given an array inner_list:
 
 1. Let output be the string "(".
-2. For each member mem of inner_list:
-   1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
-   2. Append value to output.
-   3. If inner_list is not empty, append a single WS to output.
+2. For each member-value of inner_list:
+   1. Append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
+   2. If inner_list is not empty, append a single WS to output.
 3. Append ")" to output.
 4. Return output.
 
@@ -444,14 +443,12 @@ Given an array inner_list:
 Given an ordered dictionary parameters (each with a param-name and an optional param-value):
 
 0. Let output be an empty string.
-1. For each parameter in parameters:
+1. For each parameter-name with a value of param-value in parameters:
    1. Append ";" to output.
-   2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
-   3. Append name to output.
-   4. If parameter has a param-value:
-      1. Let value be the result of applying Serializing an Item ({{ser-item}}) to parameter's param-value.
-      2. Append "=" to output.
-      3. Append value to output.
+   2. Append the result of applying Serializing a Key ({{ser-key}}) with param-name to output.
+   4. If param-value is not null:
+      1. Append "=" to output.
+      2. Append the result of applying Serializing an Item ({{ser-item}}) with param-value to output.
 2. Return output.
 
 
