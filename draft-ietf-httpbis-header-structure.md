@@ -128,7 +128,7 @@ Note that a header field definition cannot relax the requirements of this specif
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
 
-For example a fictitious Foo-Example header field might be specified as:
+For example, a fictitious Foo-Example header field might be specified as:
 
 ~~~ example
 42. Foo-Example Header
