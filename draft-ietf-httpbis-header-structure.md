@@ -415,15 +415,14 @@ Given a structure defined in this specification:
 
 ### Serializing a List {#ser-list}
 
-Given a list of (member, parameters) as input_list:
+Given a list of (member-value, parameters) as input_list:
 
 1. Let output be an empty string.
-2. For each (member, parameters) of input_list:
-   1. If member is an array, let mem_value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to member.
-   2. Otherwise, let mem_value be the result of applying Serializing an Item ({{ser-item}}) to member.
-   3. Append mem_value to output.
-   4. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
-   5. If more members remain in input_plist:
+2. For each (member-value, parameters) of input_list:
+   1. If member is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with member-value to output.
+   2. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
+   3. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
+   4. If more members remain in input_plist:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
