@@ -120,7 +120,7 @@ To define a HTTP header as a structured header, its specification needs to:
 
 * Reference this specification. Recipients and generators of the header need to know that the requirements of this document are in effect.
 
-* Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification.
+* Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for use outside it.
 
 * Specify any additional constraints upon the syntax of the structures used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
