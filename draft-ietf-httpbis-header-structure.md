@@ -601,7 +601,7 @@ Tokens, Integers, Floats and Byte Sequences cannot be split across multiple head
 
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be ignored (i.e., treated as if the header field were not present in the message). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
 
-Note that this requirement does not apply to software that is not parsing the header field as a Structured Header; for example, an intermediary is not required to strip a failing header field from a message before forwarding it.
+Note that this requirement does not apply to an implementation that is not parsing the header field as a Structured Header; for example, an intermediary is not required to strip a failing header field from a message before forwarding it.
 
 
 
