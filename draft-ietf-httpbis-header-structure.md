@@ -440,10 +440,10 @@ Given an array as inner_list, return an ASCII string suitable for use in a textu
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered dictionary as parameters (each with a param-name and an optional param-value), return an ASCII string suitable for use in a textual HTTP header value.
+Given an ordered dictionary as input_parameters (each member having a param-name and a param-value), return an ASCII string suitable for use in a textual HTTP header value.
 
 0. Let output be an empty string.
-1. For each parameter-name with a value of param-value in parameters:
+1. For each parameter-name with a value of param-value in input_parameters:
    1. Append ";" to output.
    2. Append the result of applying Serializing a Key ({{ser-key}}) with param-name to output.
    4. If param-value is not null:
@@ -464,7 +464,7 @@ Given a key as input_key, return an ASCII string suitable for use in a textual H
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given an ordered dictionary whose values are (member-value, parameters) tuples as input_dictionary, return an ASCII string suitable for use in a textual HTTP header value.
+Given an ordered dictionary as input_dictionary (each member having a member-name and a tuple value of (member-value, parameters)), return an ASCII string suitable for use in a textual HTTP header value.
 
 1. Let output be an empty string.
 2. For each member-name with a value of (member-value, parameters) in input_dictionary:
