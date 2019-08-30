@@ -119,7 +119,7 @@ shown here.
 
 This specification uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} but relies on Structured Headers from {{!I-D.ietf-httpbis-header-structure}} for parsing.
 
-Additionally, it uses the "field-name" rule from {{!RFC7230}}, and "type", "subtype", "content-coding" and "language-range" from {{!RFC7231}}.
+Additionally, it uses the "field-name" rule from {{!RFC7230}}, "type", "subtype", "content-coding" and "language-range" from {{!RFC7231}}, and "cookie-name" from {{!RFC6265}}.
 
 
 # The "Variants" HTTP Header Field {#variants}
@@ -618,6 +618,62 @@ To perform content negotiation for Accept-Language given a request-value and ava
    1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in Section 3.3 of {{!RFC4647}}, append those members of available-values to preferred-available (preserving their order).
 4. If preferred-available is empty, append the first member of available-values to preferred-available. This makes the first available-value the default when none of the client's preferences are available.
 5. Return preferred-available.
+
+
+## Cookie {#cookie}
+
+This section defines variant handling for the Cookie request header ({{!RFC6265}}).
+
+This syntax of an available-value for Cookie is:
+
+~~~ abnf
+cookie-available-value = cookie-name
+~~~
+
+To perform content negotiation for Cookie given a request-value and available-values:
+
+1. Let cookies-available be an empty list.
+3. For each available-value of available-values:
+   1. Parse request-value as a Cookie header field {{!RFC6265}} and let request-cookie-value be the cookie-value corresponding to a cookie with a cookie-name that matches available-value.
+      If no match is found, continue to the next available-value.
+   2. append request-cookie-value to cookies-available.
+3. Return cookies-available.
+
+
+A simple example is allowing a page designed for users that aren't logged in (denoted by the `logged_in` cookie-name) to be cached:
+
+~~~ example
+Variants: Cookie=(logged_in)
+Variant-Key: (0)
+~~~
+
+Here, a cache that implements Variants will only use this response to satisfy requests with `Cookie: logged_in=0`.
+
+Or, consider this example:
+
+~~~ example
+Variants: Cookie=(user_priority)
+Variant-Key: (silver), ("bronze")
+~~~
+
+Here, the `user_priority` cookie-name allows requests from "gold" users to be separated from "silver" and "bronze" ones; this response is only served to the latter two.
+
+It is possible to target a response to a single user; for example:
+
+~~~ example
+Variants: Cookie=(user_id)
+Variant-Key: (some_person)
+~~~
+
+Here, only the "some_person" `user_id` will have this response served to them again.
+
+Note that if more than one cookie-name serves as a cache key, they'll need to be listed in separate Variants members, like this:
+
+~~~ example
+Variants: Cookie=(user_priority), Cookie=(user_region)
+Variant-Key: (gold europe)
+~~~
+
 
 
 # Acknowledgements
