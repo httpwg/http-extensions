@@ -55,7 +55,7 @@ HTTP proactive content negotiation ({{!RFC7231}}, Section 3.4.1) is seeing renew
 
 Successfully reusing negotiated responses that have been stored in a HTTP cache requires establishment of a secondary cache key ({{!RFC7234}}, Section 4.1). Currently, the Vary header ({{!RFC7231}}, Section 7.1.4) does this by nominating a set of request headers. Their values collectively form the secondary cache key for a given response.
 
-HTTP's caching model allows a certain amount of latitude in normalising those request header field values, so as to increase the chances of a cache hit while still respecting the semantics of that header. However, normalisation is not formally defined, leading to divergence in cache behaviours.
+HTTP's caching model allows a certain amount of latitude in normalising those request header field values, so as to increase the chances of a cache hit while still respecting the semantics of that header. However, normalisation is not formally defined, leading to infrequent implementation in cache, and divergence of behaviours when it is.
 
 Even when the headers' semantics are understood, a cache does not know enough about the possible alternative representations available on the origin server to make an appropriate decision.
 
