@@ -162,17 +162,18 @@ client does not anticipate this, the application's deployment is brittle.
 
 Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined
 by HTTP are potentially applicable to every resource, not specific to a particular context.
-Application-specific semantics are expressed in the payload; mostly, in the body, but also in
+Application-specific semantics are best expressed in the payload; oten in the body, but also in
 header fields.
 
-This allows a HTTP message to be examined by generic software (e.g., HTTP servers, intermediaries,
-client implementations, and caches) and its handling to be correctly determined. It also allows
-people to leverage their knowledge of HTTP semantics without special-casing them for a particular
-application.
+This generic/application-specific split allows a HTTP message to be handled by software (e.g., HTTP
+servers, intermediaries, client implementations, and caches) without understanding the specific
+application. It also allows people to leverage their knowledge of HTTP semantics without
+special-casing them for a particular application.
 
 Therefore, applications that use HTTP MUST NOT re-define, refine or overlay the semantics of
-defined protocol elements. Instead, they should focus their specifications on protocol elements
-that are specific to that application; namely their HTTP resources.
+generic protocol elements such as methods, status codes or existing header fields. Instead, they
+should focus their specifications on protocol elements that are specific to that application;
+namely their HTTP resources.
 
 See {{resource}} for details.
 
