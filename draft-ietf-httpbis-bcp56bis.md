@@ -632,25 +632,73 @@ applications; it provides scalability, reduces latency and improves reliability.
 caches are readily available in browsers and other clients, networks as forward and reverse
 proxies, Content Delivery Networks and as part of server software.
 
-Assigning even a short freshness lifetime ({{?I-D.ietf-httpbis-cache}}, Section 4.2) -- e.g., 5
+Even when an application using HTTP isn't designed to take advantage of caching, it needs to
+consider how caches will handle its responses, to preserve correct behaviour when one is interposed
+(whether in the network, server, client, or intervening infrastructure).
+
+### Freshness
+
+Assigning even a short freshness lifetime (Section 4.2 of {{?I-D.ietf-httpbis-cache}}) -- e.g., 5
 seconds -- allows a response to be reused to satisfy multiple clients, and/or a single client
 making the same request repeatedly. In general, if it is safe to reuse something, consider
-assigning a freshness lifetime; cache implementations take active measures to remove content
-intelligently when they are out of space, so "it will fill up the cache" is not a valid concern.
+assigning a freshness lifetime.
 
-The most common method for specifying freshness is the max-age response directive
-({{?I-D.ietf-httpbis-cache}}, Section 5.2.2.8). The Expires header
-({{?I-D.ietf-httpbis-cache}}, Section 5.3) can also be used, but it is not necessary to specify
-it; all modern cache implementations support Cache-Control, and specifying freshness as a delta is
-usually more convenient and always less error-prone.
+The most common method for specifying freshness is the max-age response directive (Section 5.2.2.8
+of {{?I-D.ietf-httpbis-cache}}). The Expires header (Section 5.3 of {{?I-D.ietf-httpbis-cache}})
+can also be used, but it is not necessary; all modern cache implementations support Cache-Control,
+and specifying freshness as a delta is usually more convenient and less error-prone.
 
-Understand that stale responses (e.g., with "Cache-Control: max-age=0") can be reused when the
-cache is disconnected from the origin server; this can be useful for handling network issues. See
-{{?I-D.ietf-httpbis-cache}}, Section 4.2.4, and also {{?RFC5861}} for additional controls over
-stale content.
+In some situations, responses without explicit cache freshness directives will be stored and served
+using a heuristic freshness lifetime; see {{?I-D.ietf-httpbis-cache}}, Section 4.2.2. As the
+heuristic is not under control of the application, it is generally preferable to set an explicit
+freshness lifetime, or make the response explicitly uncacheable.
+
+If caching of a response is not desired, the appropriate response directive is "Cache-Control:
+no-store". This only need be sent in situations where the response might be cached; see
+{{?I-D.ietf-httpbis-cache}}, Section 3. Note that "Cache-Control: no-cache" allows a response to be
+stored, just not reused by a cache without validation; it does not prevent caching (despite its
+name).
+
+For example, this response cannot be stored or reused by a cache:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/example+xml
+Cache-Control: no-store
+
+[content]
+~~~
+
+### Stale Responses
+
+Authors should understand that stale responses (e.g., with "Cache-Control: max-age=0") can be
+reused by caches when disconnected from the origin server; this can be useful for handling network
+issues.
+
+If doing so is not suitable for a given response, the origin should use "Cache-Control:
+must-revalidate". See {{?I-D.ietf-httpbis-cache}}, Section 4.2.4, and also {{?RFC5861}} for
+additional controls over stale content.
 
 Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and
 latency for large responses; see {{?I-D.ietf-httpbis-semantics}}.
+
+
+### Caching and Application Semantics
+
+When an application has a need to express a lifetime that's separate from the freshness lifetime,
+this should be expressed separately, either in the response's body or in a separate header field.
+When this happens, the relationship between HTTP caching and that lifetime need to be carefully
+considered, since the response will be used as long as it is considered fresh.
+
+In particular, application authors need to consider how responses that are not freshly obtained
+from the origin server should be handled; if they have a concept like a validity period, this will
+need to be calculated considering the age of the response (see Section 4.2.3 of
+{{?I-D.ietf-httpbis-cache}}).
+
+One way to address this is to explicitly specify that all responses be fresh upon use.
+
+
+### Varying Content Based Upon the Request
 
 If an application uses a request header field to change the response's headers or body, authors
 should point out that this has implications for caching; in general, such resources need to either
@@ -673,35 +721,6 @@ Vary: Accept-Encoding
 
 can be stored for 60 seconds by both private and shared caches, can be revalidated with
 If-None-Match, and varies on the Accept-Encoding request header field.
-
-In some situations, responses without explicit cache directives (e.g., Cache-Control or Expires)
-will be stored and served using a heuristic freshness lifetime; see {{?I-D.ietf-httpbis-cache}},
-Section 4.2.2. As the heuristic is not under control of the application, it is generally preferable
-to set an explicit freshness lifetime.
-
-If caching of a response is not desired, the appropriate response directive is "Cache-Control:
-no-store". This only need be sent in situations where the response might be cached; see
-{{?I-D.ietf-httpbis-cache}}, Section 3. Note that "Cache-Control: no-cache" allows a response to
-be stored, just not reused by a cache; it does not prevent caching (despite its name).
-
-For example, this response cannot be stored or reused by a cache:
-
-~~~
-HTTP/1.1 200 OK
-Content-Type: application/example+xml
-Cache-Control: no-store
-
-[content]
-~~~
-
-When an application has a need to express a lifetime that's separate from the freshness lifetime,
-this should be expressed separately, either in the response's body or in a separate header field.
-When this happens, the relationship between HTTP caching and that lifetime need to be carefully
-considered, since the response will be used as long as it is considered fresh.
-
-Like other functions, HTTP caching is generic; it does not have knowledge of the application in
-use. Therefore, caching extensions need to be backwards-compatible, as per
-{{?I-D.ietf-httpbis-cache}}, Section 5.2.3.
 
 
 ## Application State {#state}
