@@ -128,6 +128,8 @@ Note that a header field definition cannot relax the requirements of this specif
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
 
+Specifications can refer to a Structured Header's field-name as a "structured header name" and its field-value as a "structured header value" as necessary.
+
 For example, a fictitious Foo-Example header field might be specified as:
 
 ~~~ example
@@ -150,7 +152,7 @@ The dictionary MUST contain:
   list of strings (Section Y.Y of [RFCxxxx]), conveying the Bar URLs
   for the message. See below for processing requirements.
 
-If the parsed header field does not contain both, it MUST be
+If the structured header value does not contain both, it MUST be
 ignored.
 
 "foo" MUST be between 0 and 10, inclusive; other values MUST cause
@@ -868,6 +870,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-13
 
 * Editorial improvements.
+* Define "structured header name" and "structured header value" terms (#908).
 
 
 ## Since draft-ietf-httpbis-header-structure-12
