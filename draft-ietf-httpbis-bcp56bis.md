@@ -585,10 +585,10 @@ in a few different situations:
 
 * Their content is useful to intermediaries (who often wish to avoid parsing the body), and/or
 * Their content is useful to generic HTTP software (e.g., clients, servers), and/or
-* It is not possible to include their content in the message body (usually because a format does not allow it).
+* It is not possible to include their content in the payload body (usually because a format does not allow it).
 
 When the conditions above are not met, it is usually better to convey application-specific
-information in other places; e.g., the message body or the URL query string.
+information in other places; e.g., the payload body or the URL query string.
 
 New header fields MUST be registered, as per {{!I-D.ietf-httpbis-semantics}}.
 
