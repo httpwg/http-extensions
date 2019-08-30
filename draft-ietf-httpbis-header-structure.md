@@ -251,7 +251,7 @@ Example-DictListHeader: rating=1.5, feelings=(joy sadness)
 A dictionary with a mix of singular and list values, some with parameters:
 
 ~~~ example
-Example-MixDict: a=(1,2), b=3, c=4;aa=bb, d=(5,6);valid=?T
+Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid=?1
 ~~~
 
 As with lists, an empty dictionary is represented in textual HTTP headers by omitting the entire header field.
