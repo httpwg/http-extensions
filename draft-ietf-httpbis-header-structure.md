@@ -440,7 +440,7 @@ Given an array as inner_list, return an ASCII string suitable for use in a textu
 1. Let output be the string "(".
 2. For each member-value of inner_list:
    1. Append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
-   2. If inner_list is not empty, append a single WS to output.
+   2. If more member-values remain in inner_list, append a single WS to output.
 3. Append ")" to output.
 4. Return output.
 
@@ -877,6 +877,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Editorial improvements.
 * Reworked float serialisation (#896).
+* Don't add a trailing space in inner-list (#904).
 
 
 ## Since draft-ietf-httpbis-header-structure-11
