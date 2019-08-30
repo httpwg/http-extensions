@@ -124,7 +124,7 @@ Additionally, it uses the "field-name" rule from {{!RFC7230}}, and "type", "subt
 
 # The "Variants" HTTP Header Field {#variants}
 
-The Variants HTTP response header field indicates what representations are available for a given resource at the time that the response is produced, by enumerating the request header fields that it varies on, along with the values that are available for each.
+The Variants HTTP response header field indicates what representations are available for a given resource at the time that the response is produced, by enumerating the request header fields that it varies on, along with a representation of the values that are available for each.
 
 Variants is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a list-of-lists (Section 3.3 of {{!I-D.ietf-httpbis-header-structure}}) whose members are strings (Section 3.8 of {{!I-D.ietf-httpbis-header-structure}}) or tokens (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
