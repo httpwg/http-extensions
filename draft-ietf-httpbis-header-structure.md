@@ -407,7 +407,7 @@ sh-boolean = "?" boolean
 boolean    = "0" / "1"
 ~~~
 
-In textual HTTP headers, a boolean is indicated with a leading "?" character. For example:
+In textual HTTP headers, a boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ example
 Example-BoolHdr: ?1
