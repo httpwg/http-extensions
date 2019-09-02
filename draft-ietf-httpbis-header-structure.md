@@ -50,6 +50,18 @@ informative:
       ISBN: 978-0-7381-5752-8
     annotation: See also <http://grouper.ieee.org/groups/754/>.
 
+  UTF-8:
+    title: UTF-8, a transformation format of ISO 10646
+    author:
+    - ins: F. Yergeau
+      name: F. Yergeau
+    date: 2003-11
+    seriesinfo:
+      STD: 63
+      RFC: 3629
+      DOI: 10.17487/RFC3629
+    target: http://www.rfc-editor.org/info/std63
+
 
 --- abstract
 
@@ -341,7 +353,7 @@ Note that strings only use DQUOTE as a delimiter; single quotes do not delimit s
 
 Unicode is not directly supported in this document, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
 
-When it is necessary for a field value to convey non-ASCII string content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably UTF-8).
+When it is necessary for a field value to convey non-ASCII string content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably {{UTF-8}}).
 
 Parsers MUST support strings with at least 1024 characters.
 
