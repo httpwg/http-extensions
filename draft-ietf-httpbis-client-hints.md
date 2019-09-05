@@ -221,9 +221,9 @@ Deployment of new request headers requires several considerations:
   - Potential conflicts due to existing use of field name
   - Properties of the data communicated in field value
 
-Specifications and features relying on Client Hints MUST prefix request header names with a "Sec-" prefix. User agents, such as web browsers, ensure such prefixed headers can only be emitted by the browser, and application content, such as scripts, are forbidden from emitting such headers {{FETCH}}. This provides assurance that, when transmitted by user agents, the type, format and value of data communicated in such request headers are enforced by the user agent.
+Specifications and features relying on Client Hints are advised to prefix request header names with a "Sec-" prefix. User agents, such as web browsers, ensure such prefixed headers can only be emitted by the browser, and application content, such as scripts, are forbidden from emitting such headers {{FETCH}}. This provides assurance that, when transmitted by user agents, the type, format and value of data communicated in such request headers are enforced by the user agent.
 
-Additionally, specifications and features relying on Client Hints are RECOMMENDED to include the "CH-" in the header name, for example, in the form Sec-CH-Foo for a hypothetical Client Hint Foo. Client Hints can provide additional information about the user that previously only have been accessible to scripts or content, and not necessarily transmitted in requests. Servers that wish to minimize the data collected in intermediate steps MAY filter out all unrecognized or unprocessed "CH-" values from its records or intermediate steps, and a consistent use of "CH-" helps facilitate filtering new and unrecognized Client Hint Values.
+By convention, request headers that are client hints use a CH- prefix, to make them easier to identify as using this framework; for example, Sec-CH-Foo. Doing so makes them easier to identify programmatically (e.g., for stripping unrecognised hints from requests by privacy filters).
 
 
 # IANA Considerations
