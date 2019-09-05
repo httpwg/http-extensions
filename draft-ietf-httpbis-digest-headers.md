@@ -26,6 +26,7 @@ author:
 
 normative:
   RFC1321:
+  RFC3174:
   RFC3230:
   RFC2119:
   RFC5789:
@@ -321,11 +322,11 @@ Response:
 
   SHA:
   :  
-    * Description:  The SHA-1 algorithm [RFC6234].  The output of this
+    * Description:  The SHA-1 algorithm [RFC3174].  The output of this
       algorithm is encoded using the base64 encoding  [RFC4648].
       The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
       to collision attacks [IACR-2019-459].
-    * Reference: [RFC6234], [RFC4648], this document.
+    * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
     * Status: obsoleted
 
   UNIXsum:
