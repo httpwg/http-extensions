@@ -38,17 +38,28 @@ normative:
 
 informative:
   IEEE754:
-    target: http://ieeexplore.ieee.org/document/4610935/
+    target: https://ieeexplore.ieee.org/document/8766229
     title: IEEE Standard for Floating-Point Arithmetic
     author:
     -
       organization: IEEE
-    date: 2008-08
+    date: 2019-07
     seriesinfo:
-      IEEE: 754-2008
-      DOI:  10.1109/IEEESTD.2008.4610935
-      ISBN: 978-0-7381-5752-8
-    annotation: See also <http://grouper.ieee.org/groups/754/>.
+      IEEE: 754-2019
+      DOI:  10.1109/IEEESTD.2019.8766229
+      ISBN: 978-1-5044-5924-2
+
+  UTF-8:
+    title: UTF-8, a transformation format of ISO 10646
+    author:
+    - ins: F. Yergeau
+      name: F. Yergeau
+    date: 2003-11
+    seriesinfo:
+      STD: 63
+      RFC: 3629
+      DOI: 10.17487/RFC3629
+    target: http://www.rfc-editor.org/info/std63
 
 
 --- abstract
@@ -72,7 +83,7 @@ Implementations are tracked at <https://github.com/httpwg/wiki/wiki/Structured-H
 
 # Introduction
 
-Specifying the syntax of new HTTP header fields is an onerous task; even with the guidance in {{?RFC7231}}, Section 8.3.1, there are many decisions -- and pitfalls -- for a prospective HTTP header field author.
+Specifying the syntax of new HTTP header fields is an onerous task; even with the guidance in Section 8.3.1 of {{?RFC7231}}, there are many decisions -- and pitfalls -- for a prospective HTTP header field author.
 
 Once a header field is defined, bespoke parsers and serializers often need to be written, because each header has slightly different handling of what looks like common syntax.
 
@@ -120,15 +131,17 @@ To define a HTTP header as a structured header, its specification needs to:
 
 * Reference this specification. Recipients and generators of the header need to know that the requirements of this document are in effect.
 
-* Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification.
+* Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for use outside it.
 
-* Specify any additional constraints upon the syntax of the structured used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is discarded (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
+* Specify any additional constraints upon the syntax of the structures used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is ignored (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
 
-Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and floats, the format of strings and tokens, or the number of items in a list). Likewise, header field definitions should use Structured Headers for the entire header field value, not a portion thereof.
+Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and floats, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, header field definitions can only use Structured Headers for the entire header field value, not a portion thereof.
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
 
-For example,
+Specifications can refer to a Structured Header's field-name as a "structured header name" and its field-value as a "structured header value" as necessary.
+
+For example, a fictitious Foo-Example header field might be specified as:
 
 ~~~ example
 42. Foo-Example Header
@@ -137,36 +150,40 @@ The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
 
 Foo-Example is a Structured Header [RFCxxxx]. Its value MUST be a
-dictionary ([RFCxxxx], Section Y.Y). Its ABNF is:
+dictionary (Section Y.Y of [RFCxxxx]). Its ABNF is:
 
   Foo-Example = sh-dictionary
 
 The dictionary MUST contain:
 
 * Exactly one member whose name is "foo", and whose value is an
-  integer ([RFCxxxx], Section Y.Y), indicating the number of foos
+  integer (Section Y.Y of [RFCxxxx]), indicating the number of foos
   in the message.
 * Exactly one member whose name is "barUrl", and whose value is a
-  string ([RFCxxxx], Section Y.Y), conveying the Bar URL for the
-  message. See below for processing requirements.
+  list of strings (Section Y.Y of [RFCxxxx]), conveying the Bar URLs
+  for the message. See below for processing requirements.
 
-If the parsed header field does not contain both, it MUST be
+If the structured header value does not contain both, it MUST be
 ignored.
 
 "foo" MUST be between 0 and 10, inclusive; other values MUST cause
 the header to be ignored.
 
-"barUrl" contains a URI-reference ([RFC3986], Section 4.1).
+"barUrl" contains one or more URI-references (Section 4.1 of
+[RFC3986], Section 4.1). If barURL is not a valid URI-reference,
+it MUST be ignored. If barURL is a relative reference (Section 4.2
+of [RFC3986]), it MUST be resolved (Section 5 of [RFC3986]) before
+being used.
 
-If barURL is not a valid URI-reference, it MUST be ignored.
-If barURL is a relative reference ([RFC3986], Section 4.2),
-it MUST be resolved ([RFC3986], Section 5) before being used.
+For example:
+
+  Foo-Example: foo=2, barUrl=("https://bar.example.com/")
 ~~~
 
 
 # Structured Header Data Types {#types}
 
-This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP.
+This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in textual HTTP headers.
 
 
 ## Lists {#list}
@@ -183,7 +200,7 @@ list-member   = ( sh-item / inner-list ) *parameter
 inner-list    = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")"
 parameter     = OWS ";" OWS param-name [ "=" param-value ]
 param-name    = key
-key           = lcalpha *( lcalpha / DIGIT / "_" / "-" )
+key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = sh-item
 ~~~
@@ -205,8 +222,10 @@ Note that the last member in this example is an empty inner list.
 In textual HTTP headers, members' parameters are separated from the member and each other by semicolons. For example:
 
 ~~~ example
-Example-ParamListHeader: abc_123;a=1;b=2; cdef_456, (ghi jkl);q="9";r="w"
+Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi jkl);q="9";r=w
 ~~~
+
+In textual HTTP headers, an empty list is denoted by not serialising the header at all.
 
 Parsers MUST support lists containing at least 1024 members, support members with at least 256 parameters, support inner-lists containing at least 256 members, and support parameter keys with at least 64 characters.
 
@@ -217,13 +236,15 @@ Header specifications can constrain the types of individual list values (includi
 
 Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items. There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
 
+Each member of the dictionary can also have associated parameters -- an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters on a member, and their keys are required to be unique within that scope.
+
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
 The ABNF for dictionaries in textual HTTP headers is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-name "=" member-value
+dict-member    = member-name "=" member-value *parameter
 member-name    = key
 member-value   = sh-item / inner-list
 ~~~
@@ -240,7 +261,15 @@ A dictionary with a member whose value is an inner-list of tokens:
 Example-DictListHeader: rating=1.5, feelings=(joy sadness)
 ~~~
 
-Typically, a header field specification will define the semantics of individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
+A dictionary with a mix of singular and list values, some with parameters:
+
+~~~ example
+Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid=?1
+~~~
+
+As with lists, an empty dictionary is represented in textual HTTP headers by omitting the entire header field.
+
+Typically, a header field specification will define the semantics using individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
 
 Parsers MUST support dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters.
 
@@ -278,26 +307,19 @@ Note that commas in integers are used in this section's prose only for readabili
 
 ## Floats {#float}
 
-Floats are integers with a fractional part, that can be stored as IEEE 754 double precision numbers (binary64) ({{IEEE754}}).
+Floats are decimal numbers with an integer and a fractional component. The fractional component has at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
+
 
 The ABNF for floats in textual HTTP headers is:
 
+
 ~~~ abnf
-sh-float    = ["-"] (
-             DIGIT "." 1*14DIGIT /
-            2DIGIT "." 1*13DIGIT /
-            3DIGIT "." 1*12DIGIT /
-            4DIGIT "." 1*11DIGIT /
-            5DIGIT "." 1*10DIGIT /
-            6DIGIT "." 1*9DIGIT /
-            7DIGIT "." 1*8DIGIT /
-            8DIGIT "." 1*7DIGIT /
-            9DIGIT "." 1*6DIGIT /
-           10DIGIT "." 1*5DIGIT /
-           11DIGIT "." 1*4DIGIT /
-           12DIGIT "." 1*3DIGIT /
-           13DIGIT "." 1*2DIGIT /
-           14DIGIT "." 1DIGIT )
+sh-float    = ["-"] (1*9DIGIT "." 1*6DIGIT /
+                      10DIGIT "." 1*5DIGIT /
+                      11DIGIT "." 1*4DIGIT /
+                      12DIGIT "." 1*3DIGIT /
+                      13DIGIT "." 1*2DIGIT /
+                      14DIGIT "." 1DIGIT )
 ~~~
 
 For example, a header whose value is defined as a float could look like:
@@ -330,7 +352,7 @@ Note that strings only use DQUOTE as a delimiter; single quotes do not delimit s
 
 Unicode is not directly supported in this document, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
 
-When it is necessary for a field value to convey non-ASCII string content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably UTF-8).
+When it is necessary for a field value to convey non-ASCII string content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably {{UTF-8}}).
 
 Parsers MUST support strings with at least 1024 characters.
 
@@ -384,7 +406,7 @@ sh-boolean = "?" boolean
 boolean    = "0" / "1"
 ~~~
 
-In textual HTTP headers, a boolean is indicated with a leading "?" character. For example:
+In textual HTTP headers, a boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ example
 Example-BoolHdr: ?1
@@ -397,7 +419,7 @@ This section defines how to serialize and parse Structured Headers in textual he
 
 ## Serializing Structured Headers {#text-serialize}
 
-Given a structure defined in this specification:
+Given a structure defined in this specification, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not send the serialize field at all (i.e., omit both the field-name and field-value).
 2. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
@@ -410,43 +432,48 @@ Given a structure defined in this specification:
 
 ### Serializing a List {#ser-list}
 
-Given a list of (member, parameters) as input_list:
+Given a list of (member-value, parameters) as input_list, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. Let output be an empty string.
-2. For each (member, parameters) of input_list:
-   1. If member is an array, let mem_value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to member.
-   2. Otherwise, let mem_value be the result of applying Serializing an Item ({{ser-item}}) to member.
-   3. Append mem_value to output.
-   4. For each parameter in parameters:
-      1. Append ";" to output.
-      2. Let name be the result of applying Serializing a Key ({{ser-key}}) to parameter's param-name.
-      3. Append name to output.
-      4. If parameter has a param-value:
-         1. Let value be the result of applying Serializing an Item ({{ser-item}}) to parameter's param-value.
-         2. Append "=" to output.
-         3. Append value to output.
-   5. If more members remain in input_plist:
+2. For each (member-value, parameters) of input_list:
+   1. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with member-value to output.
+   2. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
+   3. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
+   4. If more member-values remain in input_plist:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
 
 #### Serialising an Inner List {#ser-innerlist}
 
-Given an array inner_list:
+Given an array as inner_list, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. Let output be the string "(".
-2. For each member mem of inner_list:
-   1. Let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
-   2. Append value to output.
-   3. If inner_list is not empty, append a single WS to output.
+2. For each member-value of inner_list:
+   1. Append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
+   2. If more member-values remain in inner_list, append a single WS to output.
 3. Append ")" to output.
 4. Return output.
 
+#### Serializing Parameters {#ser-params}
+
+Given an ordered dictionary as input_parameters (each member having a param-name and a param-value), return an ASCII string suitable for use in a textual HTTP header value.
+
+0. Let output be an empty string.
+1. For each parameter-name with a value of param-value in input_parameters:
+   1. Append ";" to output.
+   2. Append the result of applying Serializing a Key ({{ser-key}}) with param-name to output.
+   4. If param-value is not null:
+      1. Append "=" to output.
+      2. Append the result of applying Serializing an Item ({{ser-item}}) with param-value to output.
+2. Return output.
+
+
 #### Serializing a Key {#ser-key}
 
-Given a key as input_key:
+Given a key as input_key, return an ASCII string suitable for use in a textual HTTP header value.
 
-0. If input_key is not a sequence of characters, or contains characters not allowed in the ABNF for key, fail serialisation.
+0. If input_key is not a sequence of characters, or contains characters not in lcalpha, DIGIT, "\*", "\_", or "-", fail serialisation.
 1. Let output be an empty string.
 2. Append input_key to output.
 3. Return output.
@@ -454,17 +481,16 @@ Given a key as input_key:
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given a dictionary as input_dictionary:
+Given an ordered dictionary as input_dictionary (each member having a member-name and a tuple value of (member-value, parameters)), return an ASCII string suitable for use in a textual HTTP header value.
 
 1. Let output be an empty string.
-2. For each member mem of input_dictionary:
-   1. Let name be the result of applying Serializing a Key ({{ser-key}}) to mem's member-name.
-   2. Append name to output.
-   3. Append "=" to output.
-   4. If mem is an array, let value be the result of applying Serialising an Inner List ({{ser-innerlist}}) to mem.
-   5. Otherwise, let value be the result of applying Serializing an Item ({{ser-item}}) to mem.
-   6. Append value to output.
-   7. If more members remain in input_dictionary:
+2. For each member-name with a value of (member-value, parameters) in input_dictionary:
+   1. Append the result of applying Serializing a Key ({{ser-key}}) with member's member-name to output.
+   2. Append "=" to output.
+   3. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with member-value to output.
+   4. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
+   5. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
+   8. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -472,7 +498,7 @@ Given a dictionary as input_dictionary:
 
 ### Serializing an Item {#ser-item}
 
-Given an item as input_item:
+Given an item as input_item, return an ASCII string suitable for use in a textual HTTP header value.
 
 1. If input_item is an integer, return the result of applying Serializing an Integer ({{ser-integer}}) to input_item.
 2. If input_item is a float, return the result of applying Serializing a Float ({{ser-float}}) to input_item.
@@ -485,7 +511,7 @@ Given an item as input_item:
 
 ### Serializing an Integer {#ser-integer}
 
-Given an integer as input_integer:
+Given an integer as input_integer, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_integer is not an integer in the range of −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialisation.
 1. Let output be an empty string.
@@ -496,22 +522,25 @@ Given an integer as input_integer:
 
 ### Serializing a Float {#ser-float}
 
-Given a float as input_float:
+Given a float as input_float, return an ASCII string suitable for use in a textual HTTP header value.
 
-0. If input_float is not a IEEE 754 double precision number, fail serialisation.
 1. Let output be an empty string.
 2. If input_float is less than (but not equal to) 0, append "-" to output.
-3. Append input_float's integer component represented in base 10 using only decimal digits to output; if it is zero, append "0".
-4. Append "." to output.
-5. Append input_float's decimal component represented in base 10 using only decimal digits to output; if it is zero, append "0".
-6. Return output.
+3. Append input_float's integer component represented in base 10 (using only decimal digits) to output; if it is zero, append "0".
+4. Let integer_digits be the number of characters appended in the previous step.
+5. If integer_digits is greater than 14, fail serialisation.
+6. Let digits_avail be 15 minus integer_digits.
+7. Let fractional_digits_avail be the minimum of digits_avail and 6.
+8. Append "." to output.
+9. Append at most fractional_digits_avail digits of input_float's fractional component represented in base 10 to output (using only decimal digits, and truncating any remaining digits); if it is zero, append "0".
+0. Return output.
 
 
 ### Serializing a String {#ser-string}
 
-Given a string as input_string:
+Given a string as input_string, return an ASCII string suitable for use in a textual HTTP header value.
 
-0. If input_string is not a sequence of characters, or contains characters outside the range allowed by VCHAR or SP, fail serialisation.
+0. If input_string is not a sequence of characters, or contains characters outside the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail serialisation.
 1. Let output be an empty string.
 2. Append DQUOTE to output.
 3. For each character char in input_string:
@@ -524,9 +553,9 @@ Given a string as input_string:
 
 ### Serializing a Token {#ser-token}
 
-Given a token as input_token:
+Given a token as input_token, return an ASCII string suitable for use in a textual HTTP header value.
 
-0. If input_token is not a sequence of characters, or contains characters not allowed in {{token}}, fail serialisation.
+0. If input_token is not a sequence of characters, or contains characters not in ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/", fail serialisation.
 1. Let output be an empty string.
 2. Append input_token to output.
 3. Return output.
@@ -534,7 +563,7 @@ Given a token as input_token:
 
 ### Serializing a Byte Sequence {#ser-binary}
 
-Given a byte sequence as input_bytes:
+Given a byte sequence as input_bytes, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_bytes is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
@@ -550,7 +579,7 @@ Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Se
 
 ### Serializing a Boolean {#ser-boolean}
 
-Given a Boolean as input_boolean:
+Given a Boolean as input_boolean, return an ASCII string suitable for use in a textual HTTP header value.
 
 0. If input_boolean is not a boolean, fail serialisation.
 1. Let output be an empty string.
@@ -583,13 +612,15 @@ Strings split across multiple header instances will have unpredictable results, 
 
 Tokens, Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
-If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be discarded. This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
+If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be ignored (i.e., treated as if the header field were not present in the message). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
+
+Note that this requirement does not apply to an implementation that is not parsing the header field; for example, an intermediary is not required to strip a failing header field from a message before forwarding it.
 
 
 
 ### Parsing a List from Text {#parse-list}
 
-Given an ASCII string input_string, return an array of (member, parameters). input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an array of (member, parameters). input_string is modified to remove the parsed value.
 
 1. Let members be an empty array.
 2. While input_string is not empty:
@@ -605,12 +636,12 @@ Given an ASCII string input_string, return an array of (member, parameters). inp
 
 #### Parsing a Parameterized Member from Text {#parse-param}
 
-Given an ASCII string input_string, return an token with an ordered map of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a member (either a list of items, or a single item) with an ordered map of parameters. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is "(", let member be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
 2. Else, let member be the result of running Parsing an Item ({{parse-item}}) with input_string.
 3. Let parameters be an empty, ordered map.
-4. In a loop:
+4. While input_string is not empty:
    1. Discard any leading OWS from input_string.
    2. If the first character of input_string is not ";", exit the loop.
    3. Consume a ";" character from the beginning of input_string.
@@ -626,7 +657,7 @@ Given an ASCII string input_string, return an token with an ordered map of param
 
 #### Parsing an Inner List {#parse-innerlist}
 
-Given an ASCII string input_string, return an array of items. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an array of items. input_string is modified to remove the parsed value.
 
 1. Consume the first character of input_string; if it is not "(", fail parsing.
 2. Let inner_list be an empty array.
@@ -640,19 +671,30 @@ Given an ASCII string input_string, return an array of items. input_string is mo
    5. If the first character of input_string is not SP or ")", fail parsing.
 4. The end of the inner list was not found; fail parsing.
 
+#### Parsing a Key from Text {#parse-key}
+
+Given an ASCII string as input_string, return a key. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not lcalpha, fail parsing.
+2. Let output_string be an empty string.
+3. While input_string is not empty:
+   1. If the first character of input_string is not one of lcalpha, DIGIT, "\*", "\_", or "-", return output_string.
+   2. Let char be the result of removing the first character of input_string.
+   3. Append char to output_string.
+4. Return output_string.
+
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
-Given an ASCII string input_string, return an ordered map of (key, item). input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an ordered map of (key, item). input_string is modified to remove the parsed value.
 
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parsing a Key from Text ({{parse-key}}) with input_string.
    2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. If the first character of input_string is "(", let this_value be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
-   5. Else, let this_value be the result of running Parsing an Item ({{parse-item}}) with input_string.
-   6. Add name this_key with value this_value to dictionary.
+   4. Let member be the result of running Parsing a Parameterized Member from Text ({{parse-param}}) with input_string.
+   6. Add name this_key with value member to dictionary.
    7. Discard any leading OWS from input_string.
    8. If input_string is empty, return dictionary.
    9. Consume the first character of input_string; if it is not COMMA, fail parsing.
@@ -661,24 +703,9 @@ Given an ASCII string input_string, return an ordered map of (key, item). input_
 3. No structured data has been found; return dictionary (which is empty).
 
 
-### Parsing a Key from Text {#parse-key}
-
-Given an ASCII string input_string, return a key. input_string is modified to remove the parsed value.
-
-1. If the first character of input_string is not lcalpha, fail parsing.
-2. Let output_string be an empty string.
-3. While input_string is not empty:
-   1. Let char be the result of removing the first character of input_string.
-   2. If char is not one of lcalpha, DIGIT, "\_", or "-":
-      1. Prepend char to input_string.
-      2. Return output_string.
-   3. Append char to output_string.
-4. Return output_string.
-
-
 ### Parsing an Item from Text {#parse-item}
 
-Given an ASCII string input_string, return an item. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an item. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
 2. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
@@ -690,7 +717,7 @@ Given an ASCII string input_string, return an item. input_string is modified to 
 
 ### Parsing a Number from Text {#parse-number}
 
-Given an ASCII string input_string, return a number. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a number. input_string is modified to remove the parsed value.
 
 NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), and returns the corresponding structure.
 
@@ -712,13 +739,14 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), 
    2. If output_number is outside the range defined in {{integer}}, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
+   2. If the number of characters after "." in input_number is greater than six, fail parsing.
    2. Parse input_number as a float and let output_number be the product of the result and sign.
 0. Return output_number.
 
 
 ### Parsing a String from Text {#parse-string}
 
-Given an ASCII string input_string, return an unquoted string. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an unquoted string. input_string is modified to remove the parsed value.
 
 1. Let output_string be an empty string.
 2. If the first character of input_string is not DQUOTE, fail parsing.
@@ -727,10 +755,9 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
    1. Let char be the result of consuming the first character of input_string.
    2. If char is a backslash ("\\"):
       1. If input_string is now empty, fail parsing.
-      2. Else:
-         1. Let next_char be the result of consuming the first character of input_string.
-         2. If next_char is not DQUOTE or "\\", fail parsing.
-         3. Append next_char to output_string.
+      2. Let next_char be the result of consuming the first character of input_string.
+      3. If next_char is not DQUOTE or "\\", fail parsing.
+      4. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
    4. Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail parsing.
    5. Else, append char to output_string.
@@ -739,22 +766,20 @@ Given an ASCII string input_string, return an unquoted string. input_string is m
 
 ### Parsing a Token from Text {#parse-token}
 
-Given an ASCII string input_string, return a token. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a token. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
-   1. Let char be the result of consuming the first character of input_string.
-   2. If char is not one of ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/":
-      1. Prepend char to input_string.
-      2. Return output_string.
+   1. If the first character of input_string is not one of ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/", return output_string.
+   2. Let char be the result of consuming the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
 
 
 ### Parsing a Byte Sequence from Text {#parse-binary}
 
-Given an ASCII string input_string, return a byte sequence. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a byte sequence. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not "\*", fail parsing.
 2. Discard the first character of input_string.
@@ -774,7 +799,7 @@ This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 
 
 ### Parsing a Boolean from Text {#parse-boolean}
 
-Given an ASCII string input_string, return a Boolean. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a Boolean. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not "?", fail parsing.
 2. Discard the first character of input_string.
@@ -841,7 +866,7 @@ If you need to fit arbitrarily complex data into a header, Structured Headers is
 
 A generic implementation of this specification should expose the top-level parse ({{text-parse}}) and serialize ({{text-serialize}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
-For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community; see <https://github.com/httpwg/structured-header-tests>.
+For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-header-tests>.
 
 Implementers should note that dictionaries and parameters are order-preserving maps. Some headers may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
 
@@ -853,9 +878,24 @@ Likewise, implementations should note that it's important to preserve the distin
 _RFC Editor: Please remove this section before publication._
 
 
+## Since draft-ietf-httpbis-header-structure-13
+
+* Editorial improvements.
+* Define "structured header name" and "structured header value" terms (#908).
+
+
+## Since draft-ietf-httpbis-header-structure-12
+
+* Editorial improvements.
+* Reworked float serialisation (#896).
+* Don't add a trailing space in inner-list (#904).
+
+
 ## Since draft-ietf-httpbis-header-structure-11
 
-_None yet._
+* Allow \* in key (#844).
+* Constrain floats to six digits of precision (#848).
+* Allow dictionary members to have parameters (#842).
 
 
 ## Since draft-ietf-httpbis-header-structure-10

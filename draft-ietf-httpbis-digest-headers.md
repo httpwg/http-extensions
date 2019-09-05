@@ -1,5 +1,5 @@
 ---
-title: Resource Digests for HTTP
+title: Digest Headers
 abbrev:
 docname: draft-ietf-httpbis-digest-headers-latest
 category: std
@@ -26,31 +26,19 @@ author:
 
 normative:
   RFC1321:
+  RFC3174:
   RFC3230:
   RFC2119:
   RFC5789:
   RFC5843:
   RFC4648:
   RFC5234:
+  RFC6234:
   RFC7230:
   RFC7231:
   RFC7233:
   RFC7405:
   RFC8174:
-  FIPS180-1:
-    title: NIST FIPS 180-1, Secure Hash Standard
-    author:
-      name: NIST
-      ins: National Institute of Standards and Technology, U.S. Department of Commerce
-    date: 1995-04
-    target: http://csrc.nist.gov/fips/fip180-1.txt
-  FIPS180-3:
-    title: NIST FIPS 180-3, Secure Hash Standard
-    author:
-      name: NIST
-      ins: National Institute of Standards and Technology, U.S. Department of Commerce
-    date: 2008-10
-    target: https://csrc.nist.gov/csrc/media/publications/fips/180/3/archive/2008-10-31/documents/fips180-3_final.pdf
   UNIX:
     title: The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98
     author:
@@ -310,16 +298,16 @@ Response:
 
   SHA-256:
   :  
-    * Description: The SHA-256 algorithm [FIPS180-3].  The output of
+    * Description: The SHA-256 algorithm [RFC6234].  The output of
       this algorithm is encoded using the base64 encoding [RFC4648].
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
   SHA-512:
   :  
-    * Description: The SHA-512 algorithm [FIPS180-3].  The output of
+    * Description: The SHA-512 algorithm [RFC6234].  The output of
       this algorithm is encoded using the base64 encoding [RFC4648].
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
   MD5:
@@ -334,11 +322,11 @@ Response:
 
   SHA:
   :  
-    * Description:  The SHA-1 algorithm [FIPS180-1].  The output of this
+    * Description:  The SHA-1 algorithm [RFC3174].  The output of this
       algorithm is encoded using the base64 encoding  [RFC4648].
       The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
       to collision attacks [IACR-2019-459].
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
     * Status: obsoleted
 
   UNIXsum:
@@ -370,7 +358,7 @@ the following additional algorithms are defined:
   :  
     * Description: The sha-512 digest of the representation-data of the resource when no
     content coding is applied (eg. `Content-Encoding: identity`)
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
 
@@ -378,7 +366,7 @@ the following additional algorithms are defined:
   :  
     * Description: The sha-256 digest of the representation-data of the resource when no
       content coding is applied (eg. `Content-Encoding: identity`)
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
    If other digest-algorithm values are defined, the associated encoding

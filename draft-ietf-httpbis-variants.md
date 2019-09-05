@@ -53,9 +53,9 @@ There is a prototype implementation of the algorithms herein at <https://github.
 
 HTTP proactive content negotiation ({{!RFC7231}}, Section 3.4.1) is seeing renewed interest, both for existing request headers like Accept-Language and for newer ones (for example, see {{?I-D.ietf-httpbis-client-hints}}).
 
-Successfully reusing negotiated responses that have been stored in a HTTP cache requires establishment of a secondary cache key ({{!RFC7234}}, Section 4.1). Currently, the Vary header ({{!RFC7231}}, Section 7.1.4) does this by nominating a set of request headers.
+Successfully reusing negotiated responses that have been stored in a HTTP cache requires establishment of a secondary cache key ({{!RFC7234}}, Section 4.1). Currently, the Vary header ({{!RFC7231}}, Section 7.1.4) does this by nominating a set of request headers. Their values collectively form the secondary cache key for a given response.
 
-HTTP's caching model allows a certain amount of latitude in normalising those request header field values, so as to increase the chances of a cache hit while still respecting the semantics of that header. However, normalisation is not formally defined, leading to divergence in cache behaviours.
+HTTP's caching model allows a certain amount of latitude in normalising those request header field values, so as to increase the chances of a cache hit while still respecting the semantics of that header. However, normalisation is not formally defined, leading to infrequent implementation in cache, and divergence of behaviours when it is.
 
 Even when the headers' semantics are understood, a cache does not know enough about the possible alternative representations available on the origin server to make an appropriate decision.
 
@@ -81,7 +81,9 @@ Provided that the cache has full knowledge of the semantics of Accept-Language a
 
 This specification introduces the HTTP Variants response header field ({{variants}}) to enumerate the available variant representations on the origin server, to provide clients and caches with enough information to properly satisfy requests -- either by selecting a response from cache or by forwarding the request towards the origin -- by following the algorithm defined in {{cache}}.
 
-Its companion Variant-Key response header field ({{variant-key}}) indicates the applicable key(s) that the response is associated with, so that it can be reliably reused in the future. When this specification is in use, the example above might become:
+Its companion Variant-Key response header field ({{variant-key}}) indicates the applicable key(s) that the response is associated with, so that it can be reliably reused in the future. Effectively, it allows the specification of a request header field to define how it affects the secondary cache key.
+
+When this specification is in use, the example above might become:
 
 ~~~ example
 GET /foo HTTP/1.1
@@ -117,29 +119,31 @@ shown here.
 
 This specification uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} but relies on Structured Headers from {{!I-D.ietf-httpbis-header-structure}} for parsing.
 
-Additionally, it uses the "field-name" rule from {{!RFC7230}}, and "type", "subtype", "content-coding" and "language-range" from {{!RFC7231}}.
+Additionally, it uses the "field-name" rule from {{!RFC7230}}, "type", "subtype", "content-coding" and "language-range" from {{!RFC7231}}, and "cookie-name" from {{!RFC6265}}.
 
 
 # The "Variants" HTTP Header Field {#variants}
 
-The Variants HTTP response header field indicates what representations are available for a given resource at the time that the response is produced, by enumerating the request header fields that it varies on, along with the values that are available for each.
+The Variants HTTP response header field indicates what representations are available for a given resource at the time that the response is produced, by enumerating the request header fields that it varies on, along with a representation of the values that are available for each.
 
-Variants is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a list-of-lists (Section 3.3 of {{!I-D.ietf-httpbis-header-structure}}) whose members are strings (Section 3.8 of {{!I-D.ietf-httpbis-header-structure}}) or tokens (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
+Variants is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a Dictionary (Section 3.2 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
 ~~~ abnf
-Variants        = sh-list-of-lists
+Variants        = sh-dict
 ~~~
 
-If Structured Header parsing fails or a list-member has the wrong type, the client MUST treat the representation as having no Variants header field.
+Its member-names are tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}), each representing the field-names of a request header that is part of the secondary cache key. The member-values are a list of strings (Section 3.6 of {{!I-D.ietf-httpbis-header-structure}}) or tokens that convey representations of potential values for that header field, hereafter referred to as "available-values".
 
-The Variants header field represents an ordered list of "variant-axes", each of which consists of a request header "field-name" string and a list of "available-value" strings. Each inner-list in the Variants header field value is parsed into a variant-axis. The first list-member of the inner-list is interpreted as the field-name, and the remaining list-members are the available-values. Any list-member that is a token (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}) is interpreted as a string containing the same characters.
+If Structured Header parsing fails or a member's value does have the structure outlined above, the client MUST treat the representation as having no Variants header field.
 
-Field-names in the Variants header field value MUST match the field-name production (Section 3.2 of {{!RFC7230}}). Clients receiving an invalid field-name MUST NOT match it to any content negotiating mechanism.
+Note that a available-value that is a token is interpreted as a string containing the same characters, and vice versa.
+
+Field-names in the member-names MUST match the field-name production (Section 3.2 of {{!RFC7230}}). Clients receiving an invalid field-name MUST NOT match it to any content negotiating mechanism.
 
 So, given this example header field:
 
 ~~~ example
-Variants: Accept-Encoding;gzip
+Variants: Accept-Encoding=(gzip)
 ~~~
 
 a recipient can infer that the only content-coding available for that resource is "gzip" (along with the "identity" non-encoding; see {{content-encoding}}).
@@ -147,7 +151,7 @@ a recipient can infer that the only content-coding available for that resource i
 Given:
 
 ~~~ example
-Variants: accept-encoding
+Variants: accept-encoding=()
 ~~~
 
 a recipient can infer that no content-codings (beyond identity) are supported. Note that as always, field-name is case-insensitive.
@@ -155,17 +159,17 @@ a recipient can infer that no content-codings (beyond identity) are supported. N
 A more complex example:
 
 ~~~ example
-Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
+Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
 ~~~
 
-Here, recipients can infer that two content-codings in addition to "identity" are available, as well as two content languages. Note that, as with all Structured Header lists, they might occur in the same header field or separately, like this:
+Here, recipients can infer that two content-codings in addition to "identity" are available, as well as two content languages. Note that, as with all Structured Header dictionaries, they might occur in the same header field or separately, like this:
 
 ~~~ example
-Variants: Accept-Encoding;gzip;brotli
-Variants: Accept-Language;en ;fr
+Variants: Accept-Encoding=(gzip brotli)
+Variants: Accept-Language=(en fr)
 ~~~
 
-The ordering of available-values after the field-name is significant, as it might be used by the header's algorithm for selecting a response (in this example, the first language is the default; see {{content-language}}).
+The ordering of available-values is significant, as it might be used by the header's algorithm for selecting a response (in this example, the first language is the default; see {{content-language}}).
 
 The ordering of the request header fields themselves indicates descending application of preferences; in the example above, a cache that has all of the possible permutations stored will honour the client's preferences for Accept-Encoding before honouring Accept-Language.
 
@@ -191,25 +195,25 @@ In practice, implementation of Vary varies considerably. As a result, cache effi
 
 # The "Variant-Key" HTTP Header Field {#variant-key}
 
-The Variant-Key HTTP response header field identifies a set of variants provided by the representation it occurs within. A variant is identified by a selection of one available-value from each variant-axis from the Variants header field.
+The Variant-Key HTTP response header field identifies one or more sets of available-values that identify the secondary cache key(s) that the response it occurs within are associated with.
 
-Variant-Key is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a list-of-lists (Section 3.3 of {{!I-D.ietf-httpbis-header-structure}}) whose members are strings (Section 3.8 of {{!I-D.ietf-httpbis-header-structure}}) or tokens (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
+Variant-Key is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are lists of strings (Section 3.6 of {{!I-D.ietf-httpbis-header-structure}}) or tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
 ~~~ abnf
-Variant-Key      = sh-list-of-lists
+Variant-Key      = sh-list
 ~~~
 
-If Structured Header parsing fails or a list-member has the wrong type, the client MUST treat the representation as having no Variant-Key header field.
+Each member MUST be a list, and MUST itself have the same number of members as there are members of the representation's Variants header field. If not, the client MUST treat the representation as having no Variant-Key header field.
 
-Each inner-list MUST have the same number of list-members as there are variant-axes in the representation's Variants header field. If not, the client MUST treat the representation as having no Variant-Key header field.
+Each member identifies a list of available-values corresponding to the header field-names in the Variants header field, thereby identifying a secondary cache key that can be used with this response. These available-values do not need to explicitly appear in the Variants header field; they can be interpreted by the algorithm specific to processing that field. For example, Accept-Encoding defines an implicit "identity" available-value ({{content-encoding}}).
 
-Each list-member is treated as identifying an available-value for the corresponding variant-axis' field-name. Any list-member that is a token (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}) is interpreted as a string containing the same characters. These available-values do not need to explicitly appear in the Variants header field. For example, Accept-Encoding defines an implicit "identity" available-value ({{content-encoding}}).
+Each inner-list member is treated as identifying an available-value for the corresponding variant-axis' field-name. Any list-member that is a token (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}) is interpreted as a string containing the same characters.
 
 For example:
 
 ~~~ example
-Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
-Variant-Key: gzip;fr
+Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variant-Key: (gzip fr)
 ~~~
 
 This header pair indicates that the representation has a "gzip" content-coding and "fr" content-language.
@@ -217,19 +221,17 @@ This header pair indicates that the representation has a "gzip" content-coding a
 If the response can be used to satisfy more than one request, they can be listed in additional members.  For example:
 
 ~~~ example
-Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
-Variant-Key: gzip;fr, "identity";fr
+Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variant-Key: (gzip fr), ("identity" fr)
 ~~~
 
 indicates that this response can be used for requests whose Accept-Encoding algorithm selects "gzip" or "identity", as long as the Accept-Language algorithm selects "fr" -- perhaps because there is no gzip-compressed French representation.
 
-When more than one Variant-Key value is in a response, the first one present MUST correspond to the request that caused that response to be generated.
-
-Parsing is strict. For example:
+When more than one Variant-Key value is in a response, the first one present MUST correspond to the request that caused that response to be generated. For example:
 
 ~~~ example
-Variants: Accept-Encoding;gzip;br, Accept-Language;en ;fr
-Variant-Key: gzip;fr, identity;fr, br;fr;oops
+Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variant-Key: (gzip fr), (identity fr), (br fr oops)
 ~~~
 
 is treated as if the Variant-Key header were completely absent, which will tend to disable caching for the representation that contains it.
@@ -237,8 +239,8 @@ is treated as if the Variant-Key header were completely absent, which will tend 
 Note that in
 
 ~~~ example
-Variant-Key: gzip ;fr
-Variant-Key: "gzip ";fr
+Variant-Key: (gzip fr)
+Variant-Key: ("gzip " fr)
 ~~~
 
 The whitespace after "gzip" in the first header field value is excluded by the token parsing algorithm, but the whitespace in the second header field value is included by the string parsing algorithm. This will likely cause the second header field value to fail to match client requests.
@@ -312,7 +314,7 @@ Note that implementation of the Vary header field varies in practice, and the al
 For example, if the selected variants-header was:
 
 ~~~ example
-Variants: Accept-Language;en;fr;de, Accept-Encoding;gzip;br
+Variants: Accept-Language=(en fr de), Accept-Encoding=(gzip br)
 ~~~
 
 and the request contained the headers:
@@ -345,7 +347,7 @@ Which means that the result of the {{cache}}{:format="title"} algorithm would be
 Representing a first preference of a French, gzip'd response. Thus, if a cache has a response with:
 
 ~~~ example
-Variant-Key: fr; gzip
+Variant-Key: (fr gzip)
 ~~~
 
 it could be used to satisfy the first preference. If not, responses corresponding to the other keys could be returned, or the request could be forwarded towards the origin.
@@ -355,7 +357,7 @@ it could be used to satisfy the first preference. If not, responses correspondin
 If the selected variants-header was:
 
 ~~~ example
-Variants: Accept-Language;en;fr;de
+Variants: Accept-Language=(en fr de)
 ~~~
 
 And a request comes in with the following headers:
@@ -375,8 +377,8 @@ Then sorted-variants in {{cache}}{:format="title"} is:
 If the cache contains responses with the following Variant-Keys:
 
 ~~~ example
-Variant-Key: fr
-Variant-Key: en
+Variant-Key: (fr)
+Variant-Key: (en)
 ~~~
 
 Then the cache needs to forward the request to the origin server, since Variants indicates that "de" is available, and that is acceptable to the client.
@@ -386,7 +388,7 @@ Then the cache needs to forward the request to the origin server, since Variants
 If the selected variants-header was:
 
 ~~~ example
-Variants: Accept-Language;en;fr;de
+Variants: Accept-Language=(en fr de)
 ~~~
 
 And a request comes in with the following headers:
@@ -437,8 +439,8 @@ HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
 Cache-Control: max-age=3600
-Variants: Accept-Language;en;de
-Variant-Key: en
+Variants: Accept-Language=(en de)
+Variant-Key: (en)
 Vary: Accept-Language
 Transfer-Encoding: chunked
 ~~~
@@ -470,9 +472,9 @@ HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
 Content-Encoding: br
-Variants: Accept-Language;en;jp;de
-Variants: Accept-Encoding;br;gzip
-Variant-Key: en;br
+Variants: Accept-Language=(en jp de)
+Variants: Accept-Encoding=(br gzip)
+Variant-Key: (en br)
 Vary: Accept-Language, Accept-Encoding
 Transfer-Encoding: chunked
 ~~~
@@ -499,8 +501,8 @@ HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
 Content-Encoding: br
-Variants: Accept-Encoding;br;gzip
-Variant-Key: br
+Variants: Accept-Encoding=(br gzip)
+Variant-Key: (br)
 Vary: Accept-Language, Accept-Encoding
 Transfer-Encoding: chunked
 ~~~
@@ -616,6 +618,62 @@ To perform content negotiation for Accept-Language given a request-value and ava
    1. If any member of available-values matches preferred-lang, using either the Basic or Extended Filtering scheme defined in Section 3.3 of {{!RFC4647}}, append those members of available-values to preferred-available (preserving their order).
 4. If preferred-available is empty, append the first member of available-values to preferred-available. This makes the first available-value the default when none of the client's preferences are available.
 5. Return preferred-available.
+
+
+## Cookie {#cookie}
+
+This section defines variant handling for the Cookie request header ({{!RFC6265}}).
+
+This syntax of an available-value for Cookie is:
+
+~~~ abnf
+cookie-available-value = cookie-name
+~~~
+
+To perform content negotiation for Cookie given a request-value and available-values:
+
+1. Let cookies-available be an empty list.
+3. For each available-value of available-values:
+   1. Parse request-value as a Cookie header field {{!RFC6265}} and let request-cookie-value be the cookie-value corresponding to a cookie with a cookie-name that matches available-value.
+      If no match is found, continue to the next available-value.
+   2. append request-cookie-value to cookies-available.
+3. Return cookies-available.
+
+
+A simple example is allowing a page designed for users that aren't logged in (denoted by the `logged_in` cookie-name) to be cached:
+
+~~~ example
+Variants: Cookie=(logged_in)
+Variant-Key: (0)
+~~~
+
+Here, a cache that implements Variants will only use this response to satisfy requests with `Cookie: logged_in=0`.
+
+Or, consider this example:
+
+~~~ example
+Variants: Cookie=(user_priority)
+Variant-Key: (silver), ("bronze")
+~~~
+
+Here, the `user_priority` cookie-name allows requests from "gold" users to be separated from "silver" and "bronze" ones; this response is only served to the latter two.
+
+It is possible to target a response to a single user; for example:
+
+~~~ example
+Variants: Cookie=(user_id)
+Variant-Key: (some_person)
+~~~
+
+Here, only the "some_person" `user_id` will have this response served to them again.
+
+Note that if more than one cookie-name serves as a cache key, they'll need to be listed in separate Variants members, like this:
+
+~~~ example
+Variants: Cookie=(user_priority), Cookie=(user_region)
+Variant-Key: (gold europe)
+~~~
+
 
 
 # Acknowledgements
