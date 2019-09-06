@@ -42,28 +42,29 @@ normative:
   UNIX:
     title: The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98
     author:
-      name: The Open Group
-      ins: The Open Group
+      org: The Open Group
     date: 1997-02
   NIST800-32:
     title: Introduction to Public Key Technology and the Federal PKI Infrastructure
     author:
-      name: NIST
-      ins: National Institute of Standards and Technology, U.S. Department of Commerce
+      org: National Institute of Standards and Technology, U.S. Department of Commerce
     date: 2001-02
     target: https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-32.pdf
   CMU-836068:
     title: MD5 Vulnerable to collision attacks
     author:
-      name: CMU
-      ins: Carnagie Mellon University, Software Engineering Institute
+      org: Carnagie Mellon University, Software Engineering Institute
     date: 2008-12-31
     target: https://www.kb.cert.org/vuls/id/836068/
   IACR-2019-459:
     title: From Collisions to Chosen-Prefix Collisions Application to Full SHA-1
     author:
-      name: Leurent, G, Peyrin, T
-      ins: Inria, France; Nanyang Technological University, Singapore; Temasek Laboratories, Singapore
+      -
+         ins: G. Leurent
+         org: Inria, France
+      -
+         ins: T. Peyrin
+         org: Nanyang Technological University, Singapore; Temasek Laboratories, Singapore
     date: 2019-05-06
     target: https://eprint.iacr.org/2019/459.pdf
 
@@ -78,6 +79,9 @@ informative:
       - ins: F. Braun
       - ins: F. Marier
       - ins: J. Weinberger
+    seriesinfo:
+      W3C Recommendation: REC-SRI-20160623
+    target: https://www.w3.org/TR/2016/REC-SRI-20160623/
 
 --- abstract
 
@@ -910,3 +914,16 @@ to J. Mogul and A. Van Hoff for their great work.
 The original idea of refreshing this document arose from an interesting
 discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
 the MICE content coding.
+
+# Changes
+
+_RFC Editor: Please remove this section before publication._
+
+
+## Since draft-ietf-httpbis-digest-headers-00
+
+* Align title with document name
+* Add id-sha-* algorithm examples
+* Reference RFC6234 and RFC3174 instead of FIPS-1
+* Deprecate MD5
+
