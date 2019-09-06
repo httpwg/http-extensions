@@ -910,3 +910,16 @@ to J. Mogul and A. Van Hoff for their great work.
 The original idea of refreshing this document arose from an interesting
 discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
 the MICE content coding.
+
+# Changes
+
+_RFC Editor: Please remove this section before publication._
+
+
+## Since draft-ietf-httpbis-digest-headers-00
+
+* Align title with document name
+* Add id-sha-* algorithm examples
+* Reference RFC6234 and RFC3174 instead of FIPS-1
+* Deprecate MD5
+
