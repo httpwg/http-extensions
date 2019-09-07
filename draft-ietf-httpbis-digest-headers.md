@@ -857,10 +857,6 @@ Specification document(s):  {{digest-header}} of this document
 
 --- back
 
-# Change Log
-
-RFC EDITOR PLEASE DELETE THIS SECTION.
-
 
 # FAQ
 
