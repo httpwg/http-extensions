@@ -27,6 +27,7 @@ normative:
   RFC8446:
 
 informative:
+  RFC8470:
 
 
 --- abstract
@@ -100,10 +101,21 @@ in a TLS ClientHello MAY include the `post_handshake_auth` extension to support
 those other protocols. This does not indicate support in HTTP/2.
 
 
-# Key Updates in HTTP/2
+# Other Post-Handshake TLS Messages in HTTP/2
 
-Section 9.2.1 of {{RFC7540}} does not extend to TLS 1.3 KeyUpdate messages.
-HTTP/2 implementations MUST support key updates when TLS 1.3 is negotiated.
+Section 9.2.1 of {{RFC7540}} does not extend to TLS 1.3 messages that are
+exchanged after the handshake is complete. This includes KeyUpdate messages,
+which only affect TLS itself and do not require any interaction with the
+application protocol. HTTP/2 implementations MUST support key updates when TLS
+1.3 is negotiated.
+
+Unless the use of a new type of TLS message depends on an interaction with the
+application layer protocol, that TLS message can be sent after the handshake
+completes.
+
+NewSessionTicket messages are explicitly permitted. Though these interact with
+HTTP when early data is enabled, these interactions are defined in {{RFC8470}}
+and allowed for in the design of HTTP/2.
 
 
 # Security Considerations
