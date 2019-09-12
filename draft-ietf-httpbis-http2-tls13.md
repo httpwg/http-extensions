@@ -32,8 +32,8 @@ informative:
 
 --- abstract
 
-This document clarifies the use of TLS 1.3 post-handshake authentication and
-key update with HTTP/2.
+This document updates HTTP/2 to prohibit TLS 1.3 post-handshake authentication,
+as an analog to existing TLS 1.2 renegotiation restriction.
 
 --- note_Note_to_Readers
 
@@ -63,12 +63,11 @@ certificate request with the HTTP request which triggered it. Thus, section
 
 TLS 1.3 {{RFC8446}} updates TLS 1.2 to remove renegotiation in favor of
 separate post-handshake authentication and key update mechanisms. The former
-shares the same problems with multiplexed protocols, but has a different name.
-This makes it ambiguous whether post-handshake authentication is allowed in TLS
-1.3.
+shares the same problems with multiplexed protocols, but the prohibition in
+HTTP/2 only applies to TLS 1.2 renegotiation.
 
-This document clarifies that the prohibition applies to post-handshake
-authentication but not to key updates.
+This document updates HTTP/2 to similarly forbid TLS 1.3 post-handshake
+authentication.
 
 
 # Requirements Language
@@ -81,11 +80,9 @@ when, and only when, they appear in all capitals, as shown here.
 
 # Post-Handshake Authentication in HTTP/2
 
-The prohibition on renegotiation in section 9.2.1 of {{RFC7540}} additionally
-applies to TLS 1.3 post-handshake authentication.  HTTP/2 servers MUST NOT send
-post-handshake TLS 1.3 CertificateRequest messages. HTTP/2 clients MUST treat
-TLS 1.3 post-handshake authentication as a connection error (see section 5.4.1
-of {{RFC7540}}) of type PROTOCOL\_ERROR.
+HTTP/2 servers MUST NOT send post-handshake TLS 1.3 CertificateRequest messages.
+HTTP/2 clients MUST treat TLS 1.3 post-handshake authentication as a connection
+error (see section 5.4.1 of {{RFC7540}}) of type PROTOCOL\_ERROR.
 
 {{RFC7540}} permitted renegotiation before the HTTP/2 connection preface to
 provide confidentiality of the client certificate. TLS 1.3 encrypts the client
@@ -103,28 +100,27 @@ those other protocols. This does not indicate support in HTTP/2.
 
 # Other Post-Handshake TLS Messages in HTTP/2
 
-Section 9.2.1 of {{RFC7540}} does not extend to TLS 1.3 messages that are
-exchanged after the handshake is complete. This includes KeyUpdate messages,
-which only affect TLS itself and do not require any interaction with the
-application protocol. HTTP/2 implementations MUST support key updates when TLS
-1.3 is negotiated.
+{{RFC8446}} defines two other messages that are exchanged after the handshake is
+complete, KeyUpdate and NewSessionTicket.
+
+KeyUpdate messages only affect TLS itself and do not require any interaction
+with the application protocol. HTTP/2 implementations MUST support key updates
+when TLS 1.3 is negotiated.
+
+NewSessionTicket messages are also permitted. Though these interact with HTTP
+when early data is enabled, these interactions are defined in {{RFC8470}} and
+allowed for in the design of HTTP/2.
 
 Unless the use of a new type of TLS message depends on an interaction with the
 application layer protocol, that TLS message can be sent after the handshake
 completes.
 
-NewSessionTicket messages are explicitly permitted. Though these interact with
-HTTP when early data is enabled, these interactions are defined in {{RFC8470}}
-and allowed for in the design of HTTP/2.
-
 
 # Security Considerations
 
-This document clarifies how to use HTTP/2 with TLS 1.3 and resolves a
-compatibility concern when supporting post-handshake authentication with
-HTTP/1.1. This lowers the barrier for deploying TLS 1.3, a major security
-improvement over TLS 1.2. Permitting key updates allows key material to be
-refreshed in long-lived HTTP/2 connections.
+This document resolves a compatibility concern between HTTP/2 and TLS 1.3 when
+supporting post-handshake authentication with HTTP/1.1. This lowers the barrier
+for deploying TLS 1.3, a major security improvement over TLS 1.2.
 
 
 # IANA Considerations
