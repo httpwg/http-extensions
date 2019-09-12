@@ -477,7 +477,7 @@ This could be useful for responses expected to reside in caches
 shared by users with different browsers, for example.
 
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
-header field. This allows the recipient to chose which digest-algorithm(s) to use for
+header field. This allows the recipient to chose which digest-algorithm(s) to use for 
 validation instead of verifying every received representation-data-digest.
 
 A sender MAY send a representation-data-digest using a digest-algorithm without
@@ -497,7 +497,7 @@ Two examples of its use are
 This RFC deprecates the negotiation of Content-MD5 as
 it has been obsoleted by [RFC7231]
 
-# Broken cryptographic algorithms
+# Broken cryptographic algorithms 
 
 The MD5 algorithm MUST NOT be used as it's now vulnerable
 to collision attacks [CMU-836068].
@@ -924,6 +924,6 @@ _RFC Editor: Please remove this section before publication._
 
 * Align title with document name
 * Add id-sha-* algorithm examples
-* Reference [RFC6234] and [RFC3174] instead of FIPS-1
+* Reference RFC6234 and RFC3174 instead of FIPS-1
 * Deprecate MD5
 
