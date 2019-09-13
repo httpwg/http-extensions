@@ -26,56 +26,45 @@ author:
 
 normative:
   RFC1321:
+  RFC3174:
   RFC3230:
   RFC2119:
   RFC5789:
   RFC5843:
   RFC4648:
   RFC5234:
+  RFC6234:
   RFC7230:
   RFC7231:
   RFC7233:
   RFC7405:
   RFC8174:
-  FIPS180-1:
-    title: NIST FIPS 180-1, Secure Hash Standard
-    author:
-      name: NIST
-      ins: National Institute of Standards and Technology, U.S. Department of Commerce
-    date: 1995-04
-    target: http://csrc.nist.gov/fips/fip180-1.txt
-  FIPS180-3:
-    title: NIST FIPS 180-3, Secure Hash Standard
-    author:
-      name: NIST
-      ins: National Institute of Standards and Technology, U.S. Department of Commerce
-    date: 2008-10
-    target: https://csrc.nist.gov/csrc/media/publications/fips/180/3/archive/2008-10-31/documents/fips180-3_final.pdf
   UNIX:
     title: The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98
     author:
-      name: The Open Group
-      ins: The Open Group
+      org: The Open Group
     date: 1997-02
   NIST800-32:
     title: Introduction to Public Key Technology and the Federal PKI Infrastructure
     author:
-      name: NIST
-      ins: National Institute of Standards and Technology, U.S. Department of Commerce
+      org: National Institute of Standards and Technology, U.S. Department of Commerce
     date: 2001-02
     target: https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-32.pdf
   CMU-836068:
     title: MD5 Vulnerable to collision attacks
     author:
-      name: CMU
-      ins: Carnagie Mellon University, Software Engineering Institute
+      org: Carnagie Mellon University, Software Engineering Institute
     date: 2008-12-31
     target: https://www.kb.cert.org/vuls/id/836068/
   IACR-2019-459:
     title: From Collisions to Chosen-Prefix Collisions Application to Full SHA-1
     author:
-      name: Leurent, G, Peyrin, T
-      ins: Inria, France; Nanyang Technological University, Singapore; Temasek Laboratories, Singapore
+      -
+         ins: G. Leurent
+         org: Inria, France
+      -
+         ins: T. Peyrin
+         org: Nanyang Technological University, Singapore; Temasek Laboratories, Singapore
     date: 2019-05-06
     target: https://eprint.iacr.org/2019/459.pdf
 
@@ -90,6 +79,9 @@ informative:
       - ins: F. Braun
       - ins: F. Marier
       - ins: J. Weinberger
+    seriesinfo:
+      W3C Recommendation: REC-SRI-20160623
+    target: https://www.w3.org/TR/2016/REC-SRI-20160623/
 
 --- abstract
 
@@ -310,16 +302,16 @@ Response:
 
   SHA-256:
   :  
-    * Description: The SHA-256 algorithm [FIPS180-3].  The output of
+    * Description: The SHA-256 algorithm [RFC6234].  The output of
       this algorithm is encoded using the base64 encoding [RFC4648].
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
   SHA-512:
   :  
-    * Description: The SHA-512 algorithm [FIPS180-3].  The output of
+    * Description: The SHA-512 algorithm [RFC6234].  The output of
       this algorithm is encoded using the base64 encoding [RFC4648].
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
   MD5:
@@ -334,11 +326,11 @@ Response:
 
   SHA:
   :  
-    * Description:  The SHA-1 algorithm [FIPS180-1].  The output of this
+    * Description:  The SHA-1 algorithm [RFC3174].  The output of this
       algorithm is encoded using the base64 encoding  [RFC4648].
       The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
       to collision attacks [IACR-2019-459].
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
     * Status: obsoleted
 
   UNIXsum:
@@ -370,7 +362,7 @@ the following additional algorithms are defined:
   :  
     * Description: The sha-512 digest of the representation-data of the resource when no
     content coding is applied (eg. `Content-Encoding: identity`)
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
 
@@ -378,7 +370,7 @@ the following additional algorithms are defined:
   :  
     * Description: The sha-256 digest of the representation-data of the resource when no
       content coding is applied (eg. `Content-Encoding: identity`)
-    * Reference: [FIPS180-3], [RFC4648], this document.
+    * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
    If other digest-algorithm values are defined, the associated encoding
@@ -485,7 +477,7 @@ This could be useful for responses expected to reside in caches
 shared by users with different browsers, for example.
 
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
-header field. This allows the recipient to chose which digest-algorithm(s) to use for 
+header field. This allows the recipient to chose which digest-algorithm(s) to use for
 validation instead of verifying every received representation-data-digest.
 
 A sender MAY send a representation-data-digest using a digest-algorithm without
@@ -505,7 +497,7 @@ Two examples of its use are
 This RFC deprecates the negotiation of Content-MD5 as
 it has been obsoleted by [RFC7231]
 
-# Broken cryptographic algorithms 
+# Broken cryptographic algorithms
 
 The MD5 algorithm MUST NOT be used as it's now vulnerable
 to collision attacks [CMU-836068].
@@ -922,3 +914,16 @@ to J. Mogul and A. Van Hoff for their great work.
 The original idea of refreshing this document arose from an interesting
 discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
 the MICE content coding.
+
+# Changes
+
+_RFC Editor: Please remove this section before publication._
+
+
+## Since draft-ietf-httpbis-digest-headers-00
+
+* Align title with document name
+* Add id-sha-* algorithm examples
+* Reference [RFC6234] and [RFC3174] instead of FIPS-1
+* Deprecate MD5
+

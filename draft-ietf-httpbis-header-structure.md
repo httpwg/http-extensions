@@ -38,17 +38,28 @@ normative:
 
 informative:
   IEEE754:
-    target: http://ieeexplore.ieee.org/document/4610935/
+    target: https://ieeexplore.ieee.org/document/8766229
     title: IEEE Standard for Floating-Point Arithmetic
     author:
     -
       organization: IEEE
-    date: 2008-08
+    date: 2019-07
     seriesinfo:
-      IEEE: 754-2008
-      DOI:  10.1109/IEEESTD.2008.4610935
-      ISBN: 978-0-7381-5752-8
-    annotation: See also <http://grouper.ieee.org/groups/754/>.
+      IEEE: 754-2019
+      DOI:  10.1109/IEEESTD.2019.8766229
+      ISBN: 978-1-5044-5924-2
+
+  UTF-8:
+    title: UTF-8, a transformation format of ISO 10646
+    author:
+    - ins: F. Yergeau
+      name: F. Yergeau
+    date: 2003-11
+    seriesinfo:
+      STD: 63
+      RFC: 3629
+      DOI: 10.17487/RFC3629
+    target: http://www.rfc-editor.org/info/std63
 
 
 --- abstract
@@ -341,7 +352,7 @@ Note that strings only use DQUOTE as a delimiter; single quotes do not delimit s
 
 Unicode is not directly supported in this document, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
 
-When it is necessary for a field value to convey non-ASCII string content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably UTF-8).
+When it is necessary for a field value to convey non-ASCII string content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably {{UTF-8}}).
 
 Parsers MUST support strings with at least 1024 characters.
 
@@ -395,7 +406,7 @@ sh-boolean = "?" boolean
 boolean    = "0" / "1"
 ~~~
 
-In textual HTTP headers, a boolean is indicated with a leading "?" character. For example:
+In textual HTTP headers, a boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ example
 Example-BoolHdr: ?1
