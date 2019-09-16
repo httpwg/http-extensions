@@ -58,7 +58,7 @@ request.
 
 HTTP/2 {{RFC7540}} multiplexes multiple HTTP requests over a single connection,
 which is incompatible with the mechanism above. Clients cannot correlate the
-certificate request with the HTTP request which triggered it. Thus, section
+certificate request with the HTTP request which triggered it. Thus, Section
 9.2.1 of {{RFC7540}} forbids renegotiation.
 
 TLS 1.3 {{RFC8446}} updates TLS 1.2 to remove renegotiation in favor of
@@ -82,7 +82,7 @@ when, and only when, they appear in all capitals, as shown here.
 
 HTTP/2 servers MUST NOT send post-handshake TLS 1.3 CertificateRequest messages.
 HTTP/2 clients MUST treat TLS 1.3 post-handshake authentication as a connection
-error (see section 5.4.1 of {{RFC7540}}) of type PROTOCOL\_ERROR.
+error (see Section 5.4.1 of {{RFC7540}}) of type PROTOCOL\_ERROR.
 
 {{RFC7540}} permitted renegotiation before the HTTP/2 connection preface to
 provide confidentiality of the client certificate. TLS 1.3 encrypts the client
