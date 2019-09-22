@@ -857,10 +857,6 @@ Specification document(s):  {{digest-header}} of this document
 
 --- back
 
-# Change Log
-
-RFC EDITOR PLEASE DELETE THIS SECTION.
-
 
 # FAQ
 
@@ -916,6 +912,7 @@ discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
 the MICE content coding.
 
 # Changes
+{:numbered="false"}
 
 _RFC Editor: Please remove this section before publication._
 
