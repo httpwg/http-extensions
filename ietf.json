@@ -2,7 +2,7 @@
     "group": "httpbis",
     "contacts": ["mnot"],
     "repo_type": "specs",
-    "spec_regex": "draft-ietf-httpbis-[.+].md",
+    "spec_regex": "draft-ietf-httpbis-.+\\.md",
     "group_email": "ietf-http-wg@w3.org",
     "report_to": "group_email"
 }
