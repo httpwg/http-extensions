@@ -572,9 +572,7 @@ Response:
 Digest can be used in requests too. Returned value depends on the representation metadata header fields.
 
 ~~~
-
 Request:
-
 
   PUT /items/123
   Content-Type: application/json
@@ -583,7 +581,6 @@ Request:
   Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
   {"hello": "world"}
-
 
 Response:
 
