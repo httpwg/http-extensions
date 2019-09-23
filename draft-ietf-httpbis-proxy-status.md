@@ -9,6 +9,7 @@ area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
 stand_alone: yes
+issue_label: proxy-status
 pi: [toc, sortrefs, symrefs]
 
 author:
