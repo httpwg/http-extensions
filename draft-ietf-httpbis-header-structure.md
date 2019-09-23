@@ -331,7 +331,7 @@ Example-FloatHeader: 4.5
 
 ## Strings {#string}
 
-Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range 0x20 to 0x7E). Note that this excludes tabs, newlines, carriage returns, etc.
+Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
 The ABNF for strings in textual HTTP headers is:
 
@@ -540,7 +540,7 @@ Given a float as input_float, return an ASCII string suitable for use in a textu
 
 Given a string as input_string, return an ASCII string suitable for use in a textual HTTP header value.
 
-0. If input_string is not a sequence of characters, or contains characters outside the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail serialisation.
+0. If input_string is not a sequence of characters, or contains characters in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail serialisation.
 1. Let output be an empty string.
 2. Append DQUOTE to output.
 3. For each character char in input_string:
@@ -882,6 +882,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Editorial improvements.
 * Define "structured header name" and "structured header value" terms (#908).
+* Corrected text about valid characters in strings (#931).
 
 
 ## Since draft-ietf-httpbis-header-structure-12
