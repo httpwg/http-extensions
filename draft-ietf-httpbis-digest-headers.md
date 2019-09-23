@@ -619,6 +619,7 @@ Response:
   Content-Type: application/json
   Content-Encoding: br
   Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+
 ~~~
 
 ### Digest in both Request and Response. Response uses id-sha-256.
