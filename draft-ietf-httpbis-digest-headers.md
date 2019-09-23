@@ -597,6 +597,7 @@ Response:
 
 Request `Digest` value is calculated on the enclosed payload.
 Response `Digest` value depends on the representation metadata header fields,
+including `Content-Encoding: br`
 even when the response does not contain a payload body.
 
 
