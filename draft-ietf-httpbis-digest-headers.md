@@ -603,8 +603,10 @@ Response:
 Returned `Digest` value depends on the representation metadata header fields,
 even when the response does not contain a payload body.
 
-~~~
+
 Request:
+
+~~~
 
   PUT /items/123
   Content-Type: application/json
@@ -614,13 +616,16 @@ Request:
 
   {"hello": "world"}
 
+~~~
+
 Response:
+
+~~~
 
   HTTP/1.1 204 No Content
   Content-Type: application/json
   Content-Encoding: br
   Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
-
 
 ~~~
 
