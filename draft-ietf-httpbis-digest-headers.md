@@ -224,11 +224,11 @@ Here is a gzip-compressed json object
 Request:
 
 ~~~
-    PUT /entries/1234 HTTP/1.1
-    Content-Type: application/json
-    Content-Encoding: gzip
+PUT /entries/1234 HTTP/1.1
+Content-Type: application/json
+Content-Encoding: gzip
 
-    H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
+H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 
 Now the same payload body conveys a malformed json object.
@@ -236,10 +236,10 @@ Now the same payload body conveys a malformed json object.
 Request:
 
 ~~~
-    PUT /entries/1234 HTTP/1.1
-    Content-Type: application/json
+PUT /entries/1234 HTTP/1.1
+Content-Type: application/json
 
-    H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
+H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 
 A Range-Request alters the payload body, conveying a partial representation.
@@ -247,20 +247,20 @@ A Range-Request alters the payload body, conveying a partial representation.
 Request:
 
 ~~~
-    GET /entries/1234 HTTP/1.1
-    Range: bytes=1-7
+GET /entries/1234 HTTP/1.1
+Range: bytes=1-7
 
 ~~~
 
 Response:
 
 ~~~
-    HTTP/1.1 206 Partial Content
-    Content-Encoding: gzip
-    Content-Type: application/json
-    Content-Range: bytes=1-7
+HTTP/1.1 206 Partial Content
+Content-Encoding: gzip
+Content-Type: application/json
+Content-Range: bytes=1-7
 
-    iwgAla3RXA==
+iwgAla3RXA==
 ~~~
 
 
@@ -269,18 +269,18 @@ Now the method too alters the payload body.
 Request:
 
 ~~~
-    HEAD /entries/1234 HTTP/1.1
-    Accept: application/json
-    Accept-Encoding: gzip
+HEAD /entries/1234 HTTP/1.1
+Accept: application/json
+Accept-Encoding: gzip
 
 ~~~
 
 Response:
 
 ~~~
-    HTTP/1.1 200 OK
-    Content-Type: application/json
-    Content-Encoding: gzip
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: gzip
 
 ~~~
 
@@ -292,7 +292,7 @@ Response:
    supplied.
 
 ~~~
-      digest-algorithm = token
+   digest-algorithm = token
 ~~~
 
    The BNF for "parameter" is as is used in [RFC7230].
@@ -388,8 +388,8 @@ algorithm, together with an indication of the algorithm used (and any
 parameters).
 
 ~~~
-    representation-data-digest = digest-algorithm "="
-                            <encoded digest output>
+   representation-data-digest = digest-algorithm "="
+                                <encoded digest output>
 ~~~
 
 As explained in {{resource-representation}} the digest
@@ -397,7 +397,7 @@ is computed on the entire selected `representation data` of the resource
 defined in [RFC7231]:
 
 ~~~
-  representation-data := Content-Encoding( Content-Type( bits ) )
+   representation-data := Content-Encoding( Content-Type( bits ) )
 ~~~
 
 
@@ -411,13 +411,13 @@ Note that digest-algoritm values are case insensitive.
 
 
 ~~~
-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+   sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
 
 The "UNIXsum" digest-algorithm uses ASCII string of decimal digits.
 
 ~~~
-UNIXsum=30637
+   UNIXsum=30637
 ~~~
 
 # Header Field Specifications
@@ -430,9 +430,11 @@ The Want-Digest message header field indicates the sender's desire to
 receive a representation digest on messages associated with the Request-
 URI and representation metadata.
 
-    Want-Digest = "Want-Digest" ":" OWS 1#want-digest-value
-    want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
-    qvalue = ( "0"  [ "."  0*1DIGIT ] ) /  ( "1"  [ "."  0*1( "0" ) ] )
+~~~
+   Want-Digest = "Want-Digest" ":" OWS 1#want-digest-value
+   want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
+   qvalue = ( "0"  [ "."  0*1DIGIT ] ) /  ( "1"  [ "."  0*1( "0" ) ] )
+~~~
 
 If a digest-algorithm is not accompanied by a qvalue, it is treated
 as if its associated qvalue were 1.0.
@@ -457,7 +459,7 @@ Two examples of its use are
 The Digest header field provides a digest of the representation data.
 
 ~~~
-      Digest = "Digest" ":" OWS 1#representation-data-digest
+   Digest = "Digest" ":" OWS 1#representation-data-digest
 ~~~
 
 `Representation data` might be:
@@ -491,8 +493,8 @@ knowing that the recipient will ignore it.
 Two examples of its use are
 
 ~~~
-  Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
-  Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+   Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
+   Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
 ...
 
@@ -519,19 +521,19 @@ to collision attacks [IACR-2019-459].
 Request:
 
 ~~~
-  GET /items/123
+GET /items/123
 
 ~~~
 
 Response:
 
 ~~~
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Content-Encoding: identity
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: identity
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
-  {"hello": "world"}
+{"hello": "world"}
 ~~~
 
 ###  Representation data is not contained in the payload
@@ -542,17 +544,17 @@ digest-values are the same.
 Request:
 
 ~~~
-  HEAD /items/123
+HEAD /items/123
 
 ~~~
 
 Response:
 
 ~~~
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Content-Encoding: identity
-  Digest: id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: identity
+Digest: id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ~~~
 
@@ -562,21 +564,21 @@ Response:
 Request:
 
 ~~~
-  GET /items/123
-  Range: bytes=1-7
+GET /items/123
+Range: bytes=1-7
 
 ~~~
 
 Response:
 
 ~~~
-  HTTP/1.1 206 Partial Content
-  Content-Type: application/json
-  Content-Encoding: identity
-  Content-Range: bytes 1-7/18
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+HTTP/1.1 206 Partial Content
+Content-Type: application/json
+Content-Encoding: identity
+Content-Range: bytes 1-7/18
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
-  "hello"
+"hello"
 ~~~
 
 ### Digest in both Request and Response. Returned value depends on representation metadata
@@ -586,23 +588,23 @@ Digest can be used in requests too. Returned value depends on the representation
 Request:
 
 ~~~
-  PUT /items/123
-  Content-Type: application/json
-  Content-Encoding: identity
-  Accept-Encoding: br
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+PUT /items/123
+Content-Type: application/json
+Content-Encoding: identity
+Accept-Encoding: br
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
-  {"hello": "world"}
+{"hello": "world"}
 ~~~
 
 Response:
 
 ~~~
-  Content-Type: application/json
-  Content-Encoding: br
-  Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+Content-Type: application/json
+Content-Encoding: br
+Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 
-  iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
+iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
 
 
@@ -617,23 +619,23 @@ even when the response does not contain a payload body.
 Request:
 
 ~~~
-  PUT /items/123
-  Content-Type: application/json
-  Content-Encoding: identity
-  Content-Length: 18
-  Accept-Encoding: br
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+PUT /items/123
+Content-Type: application/json
+Content-Encoding: identity
+Content-Length: 18
+Accept-Encoding: br
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
-  {"hello": "world"}
+{"hello": "world"}
 ~~~
 
 Response:
 
 ~~~
-  HTTP/1.1 204 No Content
-  Content-Type: application/json
-  Content-Encoding: br
-  Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+HTTP/1.1 204 No Content
+Content-Type: application/json
+Content-Encoding: br
+Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 
 ~~~
 
@@ -648,24 +650,24 @@ The response contains two digest values:
 Request:
 
 ~~~
-  PUT /items/123 HTTP/1.1
-  Content-Type: application/json
-  Content-Encoding: identity
-  Accept-Encoding: br
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+PUT /items/123 HTTP/1.1
+Content-Type: application/json
+Content-Encoding: identity
+Accept-Encoding: br
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
-  {"hello": "world"}
+{"hello": "world"}
 ~~~
 
 Response:
 
 ~~~
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Content-Encoding: br
-  Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: br
+Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
-  iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
+iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
 
 ## Want-Digest solicited digest responses
@@ -677,20 +679,20 @@ The client requests a digest, preferring sha. The server is free to reply with s
 Request:
 
 ~~~
-  GET /items/123 HTTP/1.1
-  Want-Digest: sha-256;q=0.3, sha;q=1
+GET /items/123 HTTP/1.1
+Want-Digest: sha-256;q=0.3, sha;q=1
 
 ~~~
 
 Response:
 
 ~~~
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Content-Encoding: identity
-  Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: identity
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
-  {"hello": "world"}
+{"hello": "world"}
 ~~~
 
 ###  A client requests an unsupported Digest, the server MAY reply with an unsupported digest
@@ -700,20 +702,20 @@ The client requests a sha digest only. The server is currently free to reply wit
 Request:
 
 ~~~
-  GET /items/123
-  Want-Digest: sha;q=1
+GET /items/123
+Want-Digest: sha;q=1
 
 ~~~
 
 Response:
 
 ~~~
-  HTTP/1.1 200 OK
-  Content-Type: application/json
-  Content-Encoding: identity
-  Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: identity
+Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 
-  {"hello": "world"}
+{"hello": "world"}
 ~~~
 
 ### A client requests an unsupported Digest, the server MAY reply with a 400
@@ -723,16 +725,16 @@ The client requests a sha Digest, the server advises for sha-256 and sha-512
 Request:
 
 ~~~
-  GET /items/123
-  Want-Digest: sha;q=1
+GET /items/123
+Want-Digest: sha;q=1
 
 ~~~
 
 Response:
 
 ~~~
-  HTTP/1.1 400 Bad Request
-  Want-Digest: sha-256, sha-512
+HTTP/1.1 400 Bad Request
+Want-Digest: sha-256, sha-512
 
 ~~~
 
