@@ -221,39 +221,40 @@ impacts on the message and payload body.
 
 Here is a gzip-compressed json object
 
-~~~
 Request:
 
+~~~
     PUT /entries/1234 HTTP/1.1
     Content-Type: application/json
     Content-Encoding: gzip
 
     H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
-
 ~~~
 
 Now the same payload body conveys a malformed json object.
 
-~~~
 Request:
 
+~~~
     PUT /entries/1234 HTTP/1.1
     Content-Type: application/json
 
     H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
-
 ~~~
 
 A Range-Request alters the payload body, conveying a partial representation.
 
-~~~
 Request:
 
+~~~
     GET /entries/1234 HTTP/1.1
     Range: bytes=1-7
 
+~~~
+
 Response:
 
+~~~
     HTTP/1.1 206 Partial Content
     Content-Encoding: gzip
     Content-Type: application/json
@@ -265,15 +266,18 @@ Response:
 
 Now the method too alters the payload body.
 
-~~~
 Request:
 
+~~~
     HEAD /entries/1234 HTTP/1.1
     Accept: application/json
     Accept-Encoding: gzip
 
+~~~
+
 Response:
 
+~~~
     HTTP/1.1 200 OK
     Content-Type: application/json
     Content-Encoding: gzip
@@ -512,14 +516,17 @@ to collision attacks [IACR-2019-459].
 
 ### Representation data is fully contained in the payload
 
-~~~
 Request:
 
+~~~
   GET /items/123
+
+~~~
 
 Response:
 
-  HTTP/1.1 200 Ok
+~~~
+  HTTP/1.1 200 OK
   Content-Type: application/json
   Content-Encoding: identity
   Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -532,14 +539,17 @@ Response:
 As there is no content coding applied, the `sha-256` and the `id-sha-256`
 digest-values are the same.
 
-~~~
 Request:
 
+~~~
   HEAD /items/123
+
+~~~
 
 Response:
 
-  HTTP/1.1 200 Ok
+~~~
+  HTTP/1.1 200 OK
   Content-Type: application/json
   Content-Encoding: identity
   Digest: id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -548,15 +558,18 @@ Response:
 
 ###  Representation data is partially contained in the payload i.e. range request
 
-~~~
 
 Request:
 
+~~~
   GET /items/123
   Range: bytes=1-7
 
+~~~
+
 Response:
 
+~~~
   HTTP/1.1 206 Partial Content
   Content-Type: application/json
   Content-Encoding: identity
@@ -564,16 +577,15 @@ Response:
   Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
   "hello"
-
 ~~~
 
 ### Digest in both Request and Response. Returned value depends on representation metadata
 
 Digest can be used in requests too. Returned value depends on the representation metadata header fields.
 
-~~~
 Request:
 
+~~~
   PUT /items/123
   Content-Type: application/json
   Content-Encoding: identity
@@ -581,15 +593,16 @@ Request:
   Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
   {"hello": "world"}
+~~~
 
 Response:
 
+~~~
   Content-Type: application/json
   Content-Encoding: br
   Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 
   iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
-
 ~~~
 
 
@@ -632,25 +645,27 @@ The response contains two digest values:
   matches the unencoded digest-value sent in the request;
 - one taking into account the `Content-Encoding`.
 
-~~~
 Request:
 
-  PUT /items/123
+~~~
+  PUT /items/123 HTTP/1.1
   Content-Type: application/json
   Content-Encoding: identity
   Accept-Encoding: br
   Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
   {"hello": "world"}
+~~~
 
 Response:
 
+~~~
+  HTTP/1.1 200 OK
   Content-Type: application/json
   Content-Encoding: br
   Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
   iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
-
 ~~~
 
 ## Want-Digest solicited digest responses
@@ -659,15 +674,18 @@ Response:
 
 The client requests a digest, preferring sha. The server is free to reply with sha-256 anyway.
 
-~~~
 Request:
 
-  GET /items/123
+~~~
+  GET /items/123 HTTP/1.1
   Want-Digest: sha-256;q=0.3, sha;q=1
+
+~~~
 
 Response:
 
-  HTTP/1.1 200 Ok
+~~~
+  HTTP/1.1 200 OK
   Content-Type: application/json
   Content-Encoding: identity
   Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -679,15 +697,18 @@ Response:
 
 The client requests a sha digest only. The server is currently free to reply with a Digest containing an unsupported algorithm
 
-~~~
 Request:
 
+~~~
   GET /items/123
   Want-Digest: sha;q=1
 
+~~~
+
 Response:
 
-  HTTP/1.1 200 Ok
+~~~
+  HTTP/1.1 200 OK
   Content-Type: application/json
   Content-Encoding: identity
   Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
@@ -699,16 +720,20 @@ Response:
 
 The client requests a sha Digest, the server advises for sha-256 and sha-512
 
-~~~
 Request:
 
+~~~
   GET /items/123
   Want-Digest: sha;q=1
 
+~~~
+
 Response:
 
+~~~
   HTTP/1.1 400 Bad Request
   Want-Digest: sha-256, sha-512
+
 ~~~
 
 ...
