@@ -5,5 +5,6 @@
     "spec_regex": "draft-ietf-httpbis-.+\\.md",
     "revisions_tagged": true,
     "group_email": "ietf-http-wg@w3.org",
-    "report_to": "group_email"
+    "report_to": "group_email",
+    "report_exclude_labels": ["editorial"]
 }
