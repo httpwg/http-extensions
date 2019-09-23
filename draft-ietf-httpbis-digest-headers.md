@@ -571,8 +571,9 @@ Response:
 
 Digest can be used in requests too. Returned value depends on the representation metadata header fields.
 
-~~~
 Request:
+
+~~~
 
   PUT /items/123
   Content-Type: application/json
@@ -582,7 +583,11 @@ Request:
 
   {"hello": "world"}
 
+~~~
+
 Response:
+
+~~~
 
   Content-Type: application/json
   Content-Encoding: br
