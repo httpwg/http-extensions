@@ -596,7 +596,7 @@ Response:
 ### Digest in both Request and Response. Representation data is not contained in the response payload
 
 Request `Digest` value is calculated on the enclosed payload.
-Returned `Digest` value depends on the representation metadata header fields,
+Response `Digest` value depends on the representation metadata header fields,
 even when the response does not contain a payload body.
 
 
