@@ -606,6 +606,7 @@ Request:
   PUT /items/123
   Content-Type: application/json
   Content-Encoding: identity
+  Content-Length: 18
   Accept-Encoding: br
   Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
