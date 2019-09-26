@@ -2,7 +2,6 @@
     "group": "httpbis",
     "primary": true,
     "repo_type": "specs",
-    "spec_regex": "draft-ietf-httpbis-.+\\.(md|xml)",
     "revisions_tagged": true,
     "group_chairs": ["mnot", "tfpauly"],
     "group_email": "ietf-http-wg@w3.org",
