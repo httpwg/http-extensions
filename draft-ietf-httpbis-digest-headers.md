@@ -18,6 +18,7 @@ author:
     name: Roberto Polli
     org: Team Digitale, Italian Government
     email: robipolli@gmail.com
+    country: Italy
  -
     ins: L. Pardue
     name: Lucas Pardue
