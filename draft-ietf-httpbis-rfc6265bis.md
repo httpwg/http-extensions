@@ -207,6 +207,15 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 # Introduction
 
+TODO: Update to include explanation of global benefit of adding mechanisms
+      to enable user agents to aid in compliance with EU Cookie Law, such
+      as enabling standard placement and formatting of cookie banners per
+      user agent and ability to consent in advance, and by category and
+      domain, via settings or other means.
+TODO: Add references to ePrivacy Directive, GDPR, and secondary sources.
+      
+TODO: Update to explain new consent requirement prior to storage by user agent.
+
 This document defines the HTTP Cookie and Set-Cookie header fields. Using
 the Set-Cookie header field, an HTTP server can pass name/value pairs and
 associated metadata (called cookies) to a user agent. When the user agent makes
@@ -237,6 +246,8 @@ to the well-behaved profile defined in {{sane-profile}} when generating cookies.
 User agents MUST implement the more liberal processing rules defined in Section
 5, in order to maximize interoperability with existing servers that do not
 conform to the well-behaved profile defined in {{sane-profile}}.
+
+TODO: Update to explain new syntax and semantics for EU Cookie Law mechanisms.
 
 This document specifies the syntax and semantics of these headers as they are
 actually used on the Internet. In particular, this document does not create
@@ -293,6 +304,9 @@ OWS SHOULD either not be produced or be produced as a single SP character.
 
 ## Terminology
 
+TODO: Define first-party cookie.
+TODO: Define third-party cookie.
+
 The terms "user agent", "client", "server", "proxy", and "origin server" have
 the same meaning as in the HTTP/1.1 specification ({{RFC7230}}, Section 2).
 
@@ -345,6 +359,8 @@ This section outlines a way for an origin server to send state information to a
 user agent and for the user agent to return the state information to the origin
 server.
 
+TODO: Update to explain new consent requirement prior to storage by user agent.
+
 To store state, the origin server includes a Set-Cookie header in an HTTP
 response. In subsequent requests, the user agent returns a Cookie request
 header to the origin server. The Cookie header contains cookies the user agent
@@ -366,6 +382,8 @@ field because the %x2C (",") character is used by Set-Cookie in a way that
 conflicts with such folding.
 
 ## Examples
+
+TODO: Add examples using new EU Cookie Law mechanisms.
 
 Using the Set-Cookie header, a server can send the user agent a short string
 in an HTTP response that the user agent will return in future HTTP requests that
@@ -454,10 +472,19 @@ Cookie and Set-Cookie headers.
 
 ## Set-Cookie {#sane-set-cookie}
 
+TODO: Update to clarify this is a request now dependant on consent.
+
 The Set-Cookie HTTP response header is used to send cookies from the server to
 the user agent.
 
 ### Syntax
+
+TODO: Handle unencoded DQUOTE embedded in purpose-value and policy-value.
+TODO: Determine if purpose-value should have a max length.
+TODO: Cookie banners must display a notice. Determine if this can be
+      dynamically generated from the information provided, or if a
+      mechanism need be created to supply the additional information
+      to the user agent.
 
 Informally, the Set-Cookie response header contains the header name
 "Set-Cookie" followed by a ":" and a cookie. Each cookie begins with a
@@ -479,7 +506,9 @@ token             = <token, defined in [RFC7230], Section 3.2.6>
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
-                    samesite-av / extension-av
+                    samesite-av / category-av / purpose-av /
+                    exempt-av / third-party-av / policy-av /
+                    extension-av
 expires-av        = "Expires=" sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [RFC7231], Section 7.1.1.1>
@@ -499,6 +528,20 @@ secure-av         = "Secure"
 httponly-av       = "HttpOnly"
 samesite-av       = "SameSite=" samesite-value
 samesite-value    = "Strict" / "Lax" / "None"
+category-av       = "Category=" category-value *( "," category-value)
+category-value    = "Necessary" / "Preference" / "Analytical" /
+                    "Marketing" / "Other"
+purpose-av        = "Purpose=" purpose-value
+purpose-value     = DQUOTE VCHAR *( SP VCHAR ) DQUOTE
+exempt-av         = "Exempt"
+third-party-av    = "ThirdParty"
+policy-av         = "Policy=" policy-value
+policy-value      = DQUOTE ( <http-URI> / <https-URI> ) DQUOTE
+                      ; http-URI defined in [RFC7230], Section 2.7.1
+                      ; https-URI defined in [RFC7230], Section 2.7.2
+consent-av        = "Consent=" consent-value
+consent-value     = <IMF-fixdate>
+                      ; IMF-fixdate defined in [RFC7231], Section 7.1.1.1
 extension-av      = *av-octet
 av-octet          = %x20-3A / %x3C-7E
                       ; any CHAR except CTLs or ";"
@@ -542,22 +585,46 @@ values. Implementation bugs in the libraries supporting time_t processing on
 some systems might cause such user agents to process dates after the year 2038
 incorrectly.
 
+TODO: Add note indicating it is the responsibility of the server to properly
+      use attributes to ensure legal compliance, to confirm usage of such
+      attributes satisfy such requirements, and to provide alternative
+      mechanisms to achieve compliance with older and noncompliant
+      user agents.
+
 ### Semantics (Non-Normative) {#sane-set-cookie-semantics}
 
 This section describes simplified semantics of the Set-Cookie header. These
 semantics are detailed enough to be useful for understanding the most common
 uses of cookies by servers. The full semantics are described in {{ua-requirements}}.
 
-When the user agent receives a Set-Cookie header, the user agent stores the
-cookie together with its attributes. Subsequently, when the user agent makes
-an HTTP request, the user agent includes the applicable, non-expired cookies
-in the Cookie header.
+TODO: Determine if it's necessary to create a mechanism whereby servers request
+      consent, user agents confirm consent to servers, and user agents wait for
+      confirmation of receipt before storing cookies, as servers are required
+      to be able to prove consent was obtained; and there are scenarios where
+      user agent will have obtained consent, and stored the cookie, but the
+      server will never become aware of this.
+
+When the user agent receives a Set-Cookie header, the user agent provides the
+information in the category, purpose, and policy attributes to the user; and if the
+third-party attribute is set, the user agent indicates to the user the cookie is a
+third-party cookie. If the exempt attribute is set, the user agent stores the cookie
+together with its attributes. If the exempt attribute is not set, and the consent
+attribute is set, the user agent stores the cookie together with its attributes. If
+the exempt attribute is not set, and the consent attribute is not set, the user
+agent requests the user's consent, if not already provided by the user via settings
+or another manner. If the user's consent is obtained, the user agent sets the consent
+attribute and stores the cookie together with its attributes. Subsequently, when the
+user agent makes an HTTP request, the user agent includes the applicable, non-expired
+cookies in the Cookie header.
+
+TODO: Determine how user agents can revoke consent.
 
 If the user agent receives a new cookie with the same cookie-name,
 domain-value, and path-value as a cookie that it has already stored, the
 existing cookie is evicted and replaced with the new cookie. Notice that
 servers can delete cookies by sending the user agent a new cookie with an
-Expires attribute with a value in the past.
+Expires attribute with a value in the past. Servers can revoke consent
+by sending the user agent a new cookie without the consent attribute set.
 
 Unless the cookie's attributes indicate otherwise, the cookie is returned only
 to the origin server (and not, for example, to any subdomains), and it expires
@@ -671,7 +738,89 @@ with same-site and cross-site requests. If the "SameSite" attribute's value is
 something other than these three known keywords, the attribute's value will be
 treated as "None".
 
+#### The Category Attribute
+
+TODO: Determine if all valid category values should be standardized in a
+      seperate RFC, or if at least other, or additional values should be.
+TODO: Require user agents to display the same, standard description of the
+      categories defined here, or abandon this approach in favor of
+      requiring categories and descriptions to be provided by servers (This
+      may preclude advance user consent by category via settings.)
+
+The Category attribute specifies the categories to which the cookie belongs.
+Valid values are "Necessary", "Preference", "Analytical", "Marketing", and
+"Other". Cookies can belong to one more than one categories, indicated by
+a comma seperated list, without spaces, in the Categories attribute.
+
+Necessary cookies enable basic functions, such as navigation or access; and
+these cookies are strictly necesssary, because the application can not
+function properly without the storage of these cookies by the user agent.
+Preference cookies allow for persistence of user customization of
+application appearance or behavior, such as color schemes, region, or
+preferred language. Analytical cookies assist application administrators
+understand how users interact with application, are used to agregate and
+report information in an anonymous manner. Marketing cookies track users
+across applications, usually for the purpose of displaying targeted
+advertising. Other cookies are cookies that belong to a category other than
+any of the categories listed here.
+
+The Category attribute enables user agents to allow users to consent to
+store of all cookies in a category, rather than individually.
+
+#### The Purpose Attribute
+
+TODO: Determine if all valid purpose values should be standardized.
+
+The Purpose attribute describes the purpose of the cookie, and enables
+user agents to provide the user with this information before requesting
+the user's informed consent for the user agent to store the cookie.
+
+#### The Exempt Attribute
+
+The Exempt attribute informs the user agent if the user's consent must be
+obtained prior to storing the cookie. If this attribute is set, the user
+agent is advised that consent must be obtained. If this attribute is not
+set, the user agent is advised that consent isn't necessary.
+
+#### The Third-Party Attribute
+
+The Third-Party attribute enables the user agent to indicate to the user
+if the cookie is a third-party cookie. If this attribute is set, the user
+agent is advised that the cookie is a third-party cookie. If this
+attribute is not set, the use agent is advised that the cookie is a
+first-party cookie, and not a third-party cookie.
+
+#### The Policy Attribute
+
+TODO: Determine if user agents should be required to make the link active.
+TODO: Determine if user agents should attempt to locate, retrieve, and
+      provide the policy content to the user directly.
+TODO: Determine if the format for policy content should be standardized
+      in another RFC.
+TODO: Determine if the http-URI or https-URI values used are affected
+      by the Secure or HttpOnly attributes, and how.
+
+The Policy attribute is used to provide a URL that points to the
+relevent cookie policy; and it enables user agents to either provide
+the link to users or to locate, retrieve, and provide the policy content
+to the user directly.
+
+#### The Consent Attribute
+
+TODO: Determine if it's feasible that not set can represent either
+      consent not provided or consent revoked, depending on context.
+TODO: Determine if this attribute should include a combination of
+      action (unconfirmed, granted, revoked) and a time.
+
+The Consent attribute is used to specify the time at which the user
+provided consent for the user agent to store the cookie. If the Exempt
+attribute is not set, and this attribute is not set, the user has not
+provided consent, or the user has revoked their consent.
+
 ### Cookie Name Prefixes
+
+TODO: Determine if prefixes can be used by user agents to signal
+      acquisition and rejection of consent to servers.
 
 {{weak-confidentiality}} and {{weak-integrity}} of this document spell out some of the drawbacks of cookies'
 historical implementation. In particular, it is impossible for a server to have
@@ -1070,6 +1219,9 @@ Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
 
 ## The Set-Cookie Header {#set-cookie}
 
+TODO: Determine how user agents should behave when not all required attributes
+      enabling EU Cookie Law compliance are provided correctly.
+
 When a user agent receives a Set-Cookie header field in an HTTP response, the
 user agent MAY ignore the Set-Cookie header field in its entirety. For
 example, the user agent might wish to block responses to "third-party" requests
@@ -1274,6 +1426,158 @@ Note: This algorithm maps the "None" value, as well as any unknown value, to
 the "None" behavior, which is helpful for backwards compatibility when
 introducing new variants.
 
+### The Category Attribute
+
+TODO: Require user agents not to store a cookie consented to by category,
+      when the cookie is also member of other categories not consented to,
+      unless the cookie is individually consented to.
+
+If the attribute-name case-insensitively matches the string "Category", the
+user agent MUST process the cookie-av as follows:
+
+1.  If the attribute-value contains a %x2c (",") character:
+
+    1.  The cookie-category string consists of the characters up to, but not
+        including, the first %x2c (","), and the unparsed-category-values
+        consist of the remainder of the attribute-value (including the
+        %x2c (",") in question).
+
+    Otherwise:
+
+    1.  The cookie-category string consists of all the characters contained in
+        the attribute-value, and the unparsed-category-values is the empty
+        string.
+        
+2.  Remove any leading or trailing WSP characters from the cookie-category
+    string.
+
+3.  If the cookie-category is not a case-insensitive match for "Necessary",
+    "Preference", "Analytical", "Marketing", or "Other":
+
+    1.  Ignore the cookie-category.
+
+    Otherwise:
+
+    1.  Append an attribute to the cookie-attribute-list with an attribute-name
+    of "Category" and an attribute-value of cookie-category.
+    
+The user agent MUST use an algorithm equivalent to the following algorithm to
+parse the unparsed-category-values:
+
+1.  If the unparsed-category-values string is empty, skip the rest of these
+    steps.
+
+2.  Discard the first character of the unparsed-category-values (which will be
+    a %x2c (",") character).
+
+3.  If the remaining unparsed-category-values contains a %x2c (",") character:
+
+    1.  Consume the characters of the unparsed-category-values up to, but not
+        including, the first %x2c (",") character.
+
+    Otherwise:
+
+    1. Consume the remainder of the unparsed-category-values.
+
+    Let the cookie-category string be the characters consumed in this step.
+
+4.  Remove any leading or trailing WSP characters from the cookie-category
+    string.
+
+5.  If the cookie-category is not a case-insensitive match for "Necessary",
+    "Preference", "Analytical", "Marketing", or "Other":
+
+    1.  Ignore the cookie-category.
+
+    Otherwise:
+
+    TODO: Properly append additional categories.
+
+    1.  Append an attribute to the cookie-attribute-list with an
+    attribute-name of "Category" and an attribute-value of cookie-category.
+
+6.  Return to Step 1 of this algorithm.
+
+### The Purpose Attribute
+
+TODO: Handle unencoded DQUOTE embedded in cookie-purpose.
+
+If the attribute-name case-insensitively matches the string "Purpose", the
+user agent MUST process the cookie-av as follows:
+
+1.  The cookie-purpose string consists of all the characters contained in
+    the attribute-value.
+
+2.  If the first and last characters of the cookie-purpose are not DQUOTE
+    characters, ignore the cookie-av.
+
+3.  If the first character of the cookie-purpose after the first DQUOTE
+    character is not a VCHAR character, ignore the cookie-av.
+    
+4.  If cookie-purpose contains any non-SP or non-VCHAR characters, ignore
+    the cookie-av.
+    
+5.  Append an attribute to the cookie-attribute-list with an
+    attribute-name of "Purpose" and an attribute-value of cookie-purpose.
+
+### The Exempt Attribute
+
+If the attribute-name case-insensitively matches the string "Exempt", the
+user agent MUST append an attribute to the cookie-attribute-list with an
+attribute-name of Exempt and an empty attribute-value.
+
+### The Third-Party Attribute
+
+If the attribute-name case-insensitively matches the string "Third-Party",
+the user agent MUST append an attribute to the cookie-attribute-list with
+an attribute-name of Third-Party and an empty attribute-value.
+
+### The Policy Attribute
+
+If the attribute-name case-insensitively matches the string "Policy", the
+user agent MUST process the cookie-av as follows:
+
+TODO: Handle unencoded DQUOTE embedded in policy-value.
+TODO: Determine how user agents should behave if cookie-policy contains
+      a URI query or fragment.
+TODO: Determine how user agents should behave if unable to locate or
+      retrieve policy content.
+
+If the attribute-name case-insensitively matches the string "Policy", the
+user agent MUST process the cookie-av as follows:
+
+1.  The cookie-policy string consists of all the characters contained in
+    the attribute-value.
+
+2.  If the first and last characters of the cookie-policy are not DQUOTE
+    characters, ignore the cookie-av.
+
+3.  If the characters between the first and last characters of the
+    cookie-policy do not constitute a valid http-URL or https-URI, ignore
+    the cookie-av.
+    
+4.  Append an attribute to the cookie-attribute-list with an
+    attribute-name of "Policy" and an attribute-value of cookie-policy.
+
+### The Consent Attribute
+
+TODO: Handle empty cookie-consent value.
+TODO: Clarify that servers should keep a record of consent, even if
+      subsequently revoked, as servers are required to be able to
+      prove consent was obtained.
+
+If the attribute-name case-insensitively matches the string "Consent", the
+user agent MUST process the cookie-av as follows:
+
+1.  The cookie-consent string consists of all the characters contained in
+    the attribute-value.
+    
+2.  If the cookie-policy does not constitute a valid IMF-fixdate, ignore
+    the cookie-av.
+    
+3.  Append an attribute to the cookie-attribute-list with an
+    attribute-name of "Consent" and an attribute-value of cookie-consent.
+
 #### "Strict" and "Lax" enforcement {#strict-lax}
 
 Same-site cookies in "Strict" enforcement mode will not be sent along with
@@ -1302,6 +1606,8 @@ that described in {{top-level-navigations}} to mitigate the risk of CSRF more
 completely.
 
 ## Storage Model {#storage-model}
+
+TODO: Update with EU Cookie Law mechanisms.
 
 The user agent stores the following fields about each cookie: name, value,
 expiry-time, domain, path, creation-time, last-access-time,
@@ -1710,6 +2016,8 @@ using cookies at all by injecting identifying information into dynamic URLs.
 
 ## User Controls
 
+TODO: Update to indicate user agents should allow users to revoke consent.
+
 User agents SHOULD provide users with a mechanism for managing the cookies
 stored in the cookie store. For example, a user agent might let users delete
 all cookies received during a specified time period or all the cookies related
@@ -1726,6 +2034,11 @@ cookies across sessions. When configured thusly, user agents MUST treat all
 received cookies as if the persistent-flag were set to false. Some popular
 user agents expose this functionality via "private browsing" mode
 {{Aggarwal2010}}.
+
+TODO: Update to indicate user agents should allow consent to be provided
+      per category, per domain, individually, or any combination thereof,
+      either at the time of cookie receipt, or in advance via settings or
+      other means.
 
 Some user agents provide users with the ability to approve individual writes to
 the cookie store. In many common usage scenarios, these controls generate a
