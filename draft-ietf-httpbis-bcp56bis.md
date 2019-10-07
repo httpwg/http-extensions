@@ -627,7 +627,7 @@ possible to identify them unambiguously and negotiate for their use. See {{!RFC6
 information.
 
 
-## Accommodating HTTP Caching {#caching}
+## Leveraging HTTP Caching {#caching}
 
 HTTP caching {{?I-D.ietf-httpbis-cache}} is one of the primary benefits of using HTTP for
 applications; it provides scalability, reduces latency and improves reliability. Furthermore, HTTP
