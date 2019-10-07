@@ -167,7 +167,7 @@ client does not anticipate this, the application's deployment is brittle.
 
 Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined
 by HTTP are potentially applicable to every resource, not specific to a particular context.
-Application-specific semantics are best expressed in the payload; oten in the body, but also in
+Application-specific semantics are best expressed in the payload; often in the body, but also in
 header fields.
 
 This generic/application-specific split allows a HTTP message to be handled by software (e.g., HTTP
