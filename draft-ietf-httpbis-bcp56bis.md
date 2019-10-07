@@ -76,10 +76,10 @@ These protocols are often ad hoc; they are intended for only deployment by one o
 and consumption by a limited set of clients. As a result, a body of practices and tools has arisen
 around defining HTTP-based APIs that favours these conditions.
 
-However, when such an application has multiple, separate implementations of the server component,
-is deployed on multiple uncoordinated servers, and is consumed by diverse clients -- as is often
-the case for standards efforts to define new HTTP APIs -- tools and practices intended for limited
-deployment can become unsuitable.
+However, when such an application has multiple, separate implementations, is deployed on multiple
+uncoordinated servers, and is consumed by diverse clients -- as is often the case for standards
+efforts to define new HTTP APIs -- tools and practices intended for limited deployment can become
+unsuitable.
 
 This is largely because implementations (both client and server) will implement and evolve at
 different paces. As a result, such an HTTP-based API will need to more carefully consider how
