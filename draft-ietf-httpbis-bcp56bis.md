@@ -279,14 +279,13 @@ Server: Bar/2.2
 ~~~
 
 
-## Defining HTTP Resources {#resource}
+## Specifying Server Behaviour {#resource}
 
-Applications that use HTTP should focus on defining the following application-specific protocol
-elements:
+The most effective way to specify an application's server-side HTTP behaviours is in terms of the following protocol elements:
 
-* media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
+* Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
 * HTTP header fields, as per {{headers}}, and
-* the behaviour of resources, as identified by link relations {{!RFC8288}}.
+* The behaviour of resources, as identified by link relations {{!RFC8288}}.
 
 By composing these protocol elements, an application can define a set of resources, identified by
 link relations, that implement specified behaviours, including:
@@ -315,7 +314,7 @@ Applications can also specify the use of URI Templates {{?RFC6570}} to allow cli
 URLs based upon runtime data.
 
 
-## Specifying Client Behaviours {#clients}
+## Specifying Client Behaviour {#clients}
 
 Some behaviours (e.g., automatic redirect handling) and extensions (e.g., Cookies) are not required
 by HTTP, but nevertheless have become very common, possibly because they are supported by Web
