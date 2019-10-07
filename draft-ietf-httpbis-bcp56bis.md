@@ -144,11 +144,7 @@ registries; rather, they are encouraged to establish their own.
 
 # What's Important About HTTP {#overview}
 
-Applications using HTTP are defined and deployed in many ways; sometimes they are brought to the
-IETF for standardisation. What might be workable for deployment in a limited fashion isn't
-appropriate for standardisation and the corresponding broader deployment.
-
-This section examines the facets of the protocol that are important to preserve in these situations.
+This section examines the facets of the protocol that are important to consider when using HTTP to define an application protocol.
 
 
 ## Generic Semantics
