@@ -230,7 +230,7 @@ appropriate design tradeoffs are highly specific to a given situation. However, 
 practices in {{bp}} is a good starting point.
 
 
-# Best Practices for Using HTTP {#bp}
+# Best Practices for Specifying the Use of HTTP {#bp}
 
 This section contains best practices regarding the use of HTTP by applications, including practices
 for specific HTTP protocol elements.
