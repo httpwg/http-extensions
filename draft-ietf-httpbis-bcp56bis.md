@@ -340,40 +340,39 @@ though.
 
 ## Specifying URLs
 
-In HTTP, URLs are opaque identifiers under the control of the server. As outlined in {{!RFC7320}},
-standards cannot usurp this space, since it might conflict with existing resources, and constrain
-implementation and deployment.
+In HTTP, the server resources that clients interact with are identified with URLs {{!RFC3986}}. As {{!RFC7320}} explains, parts of the URL are designed to be under the control of the owner (also known as the "authority") of that server, to give them the flexibility in deployment.
 
-In other words, applications that use HTTP shouldn't associate application semantics with specific
-URL paths on arbitrary servers. Doing so inappropriately conflates the identity of the resource
-(its URL) with the capabilities that resource supports, bringing about many of the same
-interoperability problems that {{?RFC4367}} warns of.
+This means that in most cases, specifications for applications that use HTTP won't contain its URLs; while it is common practice for a specification of a single-deployment API to specify the path prefix "/app/v1" (for example), doing so in an IETF specification is inappropriate.
 
-For example, specifying that a "GET to the URL /foo retrieves a bar document" is bad practice.
-Likewise, specifying "The widget API is at the path /bar" violates {{!RFC7320}}.
-
-Instead, applications are encouraged to ensure that URLs are discovered at runtime, allowing
-HTTP-based services to describe their own capabilities. One way to do this is to use typed links
-{{?RFC8288}} to convey the URLs that are in use, as well as the semantics of the resources that
-they identify. See {{resource}} for details.
+Therefore, the specification writer needs some mechanism to allow clients to discovery an application's URLs. Additionally, they need to specify what URL scheme(s) the application should be used with, and whether to use a dedicated port, or reuse HTTP's port(s).
 
 
-### Initial URL Discovery
+### Discovering an Application's URLs
 
 Generally, a client will begin interacting with a given application server by requesting an initial
 document that contains information about that particular deployment, potentially including links to
-other relevant resources.
+other relevant resources. Doing so assures that the deployment is as flexible as possible (potentially spanning multiple servers), allows evolution, and also gives the application the opportunity to tailor the 'discovery document' to the client.
 
-Applications are encouraged to allow an arbitrary URL to be used as that entry point.
-For example, rather than specifying "the initial document is at "/foo/v1", they should allow a
-deployment to use any URL as the entry point for the application.
+There are a few common patterns for discovering that initial URL.
 
-In cases where doing so is impractical (e.g., it is not possible to convey a whole URL, but only a
-hostname) applications can request a well-known URI {{?I-D.nottingham-rfc5785bis}} as an entry
-point.
+The most straightforward mechanism for URL discovery is to configure the client with (or otherwise convey to it) a full URL. This might be done in a configuration document, in DNS or mDNS, or through another discovery mechanism.
+
+However, if the client only knows the server's hostname and the identity of the application, there needs to be some way to derive the initial URL from that information.
+
+Applications MUST NOT define a fixed prefix for its URL paths; for reasons explained in {{!RFC7320}}, this is bad practice.
+
+Instead, a specification for such an application can use one of the following strategies:
+
+* Register a Well-Known URI {{!I-D.nottingham-rfc5785bis}} as an entry point for that application. This provides a fixed path on every potential server that will not collide with other applications.
+
+* Enable the server authority to convey a URL Template {{?RFC6570}} or similar mechanism for generating a URL for an entry point. For example, this might be done in a DNS RR, a configuration document, or other artefact.
+
+Once the discovery document is located, it can be fetched, cached for later reuse (if allowed by its metadata), and used to locate other resources that are relevant to the application, using full URIs or URL Templates.
+
+In some cases, an application may not wish to use such a discovery document; for example, when communication is very brief, or when the latency concerns of doing so precludes the use of a discovery document. These situations can be addressed by placing all of the application's resources under a well-known location.
 
 
-### URI Schemes {#scheme}
+### Considering URI Schemes {#scheme}
 
 Applications that use HTTP will typically employ the "http" and/or "https" URI schemes. "https" is
 RECOMMENDED to provide authentication, integrity and confidentiality, as well as mitigate pervasive
