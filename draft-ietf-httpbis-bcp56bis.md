@@ -692,7 +692,7 @@ latency for large responses; see {{?I-D.ietf-httpbis-semantics}}.
 ### Caching and Application Semantics
 
 When an application has a need to express a lifetime that's separate from the freshness lifetime,
-this should be expressed separately, either in the response's body or in a separate header field.
+this should be conveyed separately, either in the response's body or in a separate header field.
 When this happens, the relationship between HTTP caching and that lifetime need to be carefully
 considered, since the response will be used as long as it is considered fresh.
 
