@@ -26,7 +26,7 @@ author:
     uri: https://www.mnot.net/
 
 informative:
-  HTML5:
+  HTML:
     target: https://html.spec.whatwg.org
     title: HTML - Living Standard
     author:
@@ -379,7 +379,7 @@ monitoring attacks {{?RFC7258}}.
 However, application-specific schemes can also be defined. When defining an URI scheme for an
 application using HTTP, there are a number of tradeoffs and caveats to keep in mind:
 
-* Unmodified Web browsers will not support the new scheme. While it is possible to register new URI schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML5}}, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
+* Unmodified Web browsers will not support the new scheme. While it is possible to register new URI schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML}}, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
 
 * Existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
 
@@ -783,7 +783,7 @@ include:
 
 * Using an application-specific media type in the Content-Type header, and requiring clients to fail if it is not used.
 * Using X-Content-Type-Options: nosniff {{FETCH}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser.
-* Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML5}}), thereby mitigating Cross-Site Scripting attacks.
+* Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML}}), thereby mitigating Cross-Site Scripting attacks.
 * Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header.
 * Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?I-D.ietf-httpbis-rfc6265bis}}.
 * Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the path of the communication, they can use this capability to recover that information.
