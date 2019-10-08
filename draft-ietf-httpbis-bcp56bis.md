@@ -73,8 +73,8 @@ done for a variety of reasons, including:
 * its ability to traverse firewalls.
 
 These protocols are often ad hoc; they are intended for only deployment by one or a few servers,
-and consumption by a limited set of clients. Perhaps because of the factors cited above, a body of
-practices and tools has arisen around defining HTTP-based APIs that favours these conditions.
+and consumption by a limited set of clients. As a result, a body of practices and tools has arisen
+around defining HTTP-based APIs that favours these conditions.
 
 However, when such an application has multiple, separate implementations of the server component,
 is deployed on multiple uncoordinated servers, and is consumed by diverse clients -- as is often
