@@ -316,21 +316,19 @@ URLs based upon runtime data.
 
 ## Specifying Client Behaviour {#clients}
 
-Some behaviours (e.g., automatic redirect handling) and extensions (e.g., Cookies) are not required
-by HTTP, but nevertheless have become very common, possibly because they are supported by Web
-browsers. If their use is not explicitly specified by applications using HTTP, there may be
-confusion and interoperability problems. This section recommends default handling for these
-mechanisms.
+In general, applications using HTTP ought to align their expectations for client behaviour as
+closely as possible with that of Web browsers, to avoid interoperability issues when they are used.
+
+One way to do this is to define it in terms of {{FETCH}}, since that is the abstraction that
+browsers use for HTTP.
+
+Some client behaviours (e.g., automatic redirect handling) and extensions (e.g., Cookies) are not
+required by HTTP, but nevertheless have become very common. If their use is not explicitly
+specified by applications using HTTP, there may be confusion and interoperability problems. In particular:
 
 * Redirect handling - Applications need to specify how redirects are expected to be handled; see {{redirects}}.
 * Cookies - Applications using HTTP should explicitly reference the Cookie specification {{?I-D.ietf-httpbis-rfc6265bis}} if they are required.
 * Certificates - Applications using HTTP should specify that TLS certificates are to be checked according to {{!RFC2818}} when HTTPS is used.
-
-In general, applications using HTTP ought to align their usage as closely as possible with Web browsers, to avoid interoperability issues when they are used. See {{browser}}.
-
-If an application using HTTP has browser compatibility as a goal, client interaction ought to be
-defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
-enforces many of these best practices.
 
 Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported
 by clients. For example, requiring that clients support responses with a certain content-coding
