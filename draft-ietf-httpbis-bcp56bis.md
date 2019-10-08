@@ -232,8 +232,8 @@ practices in {{bp}} is a good starting point.
 
 # Best Practices for Specifying the Use of HTTP {#bp}
 
-This section contains best practices regarding the use of HTTP by applications, including practices
-for specific HTTP protocol elements.
+This section contains best practices for specifying the use of HTTP by applications, including
+practices for specific HTTP protocol elements.
 
 
 ## Specifying the Use of HTTP
