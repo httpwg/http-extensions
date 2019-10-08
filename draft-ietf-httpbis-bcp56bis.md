@@ -94,10 +94,9 @@ More generally, application protocols using HTTP face a number of design decisio
 * How does it coexist with other uses of HTTP -- especially Web browsing?
 * How can interoperability problems and "protocol dead ends" be avoided?
 
-This document contains best current practices regarding how to specify use of HTTP by applications
-other than Web browsing. {{used}} defines what applications it applies to; {{overview}} surveys the
-properties of HTTP that are important to preserve, and {{bp}} conveys best practices for those
-applications that do use HTTP.
+This document contains best current practices for the specification of such applications. {{used}}
+defines when it applies; {{overview}} surveys the properties of HTTP that are
+important to preserve, and {{bp}} conveys best practices for the specifying them.
 
 It is written primarily to guide IETF efforts to define application protocols using HTTP for
 deployment on the Internet, but might be applicable in other situations. Note that the requirements
