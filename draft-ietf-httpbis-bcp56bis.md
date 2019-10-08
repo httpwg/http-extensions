@@ -153,19 +153,6 @@ This section examines the facets of the protocol that are important to preserve 
 
 ## Generic Semantics
 
-When writing a specification, it's often tempting to specify exactly how HTTP is to be implemented,
-supported and used.
-
-However, this can easily lead to an unintended profile of HTTP's behaviour. For example, it's
-common to see specifications with language like this:
-
-    A `POST` request MUST result in a `201 Created` response.
-
-This forms an expectation in the client that the response will always be `201 Created`, when in
-fact there are a number of reasons why the status code might differ in a real deployment; for
-example, there might be a proxy that requires authentication, or a server-side error, or a
-redirection. If the client does not anticipate this, the application's deployment is brittle.
-
 Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined
 by HTTP are potentially applicable to every resource, not specific to a particular context.
 Application-specific semantics are best expressed in the payload; often in the body, but also in
@@ -181,7 +168,20 @@ generic protocol elements such as methods, status codes or existing header field
 should focus their specifications on protocol elements that are specific to that application;
 namely their HTTP resources.
 
-See {{resource}} for details.
+For example, when writing a specification, it's often tempting to specify exactly how HTTP is to be
+implemented, supported and used.
+
+However, this can easily lead to an unintended profile of HTTP's behaviour. For example, it's
+common to see specifications with language like this:
+
+    A `POST` request MUST result in a `201 Created` response.
+
+This forms an expectation in the client that the response will always be `201 Created`, when in
+fact there are a number of reasons why the status code might differ in a real deployment; for
+example, there might be a proxy that requires authentication, or a server-side error, or a
+redirection. If the client does not anticipate this, the application's deployment is brittle.
+
+See {{resource}} for more details.
 
 
 ## Links
