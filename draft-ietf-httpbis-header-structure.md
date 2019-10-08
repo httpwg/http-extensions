@@ -87,7 +87,7 @@ Specifying the syntax of new HTTP header fields is an onerous task; even with th
 
 Once a header field is defined, bespoke parsers and serializers often need to be written, because each header has slightly different handling of what looks like common syntax.
 
-This document introduces a set of common data structures for use in definitions of new HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in textual HTTP {{?RFC7230}} header fields.
+This document introduces a set of common data structures for use in definitions of new HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in HTTP {{?RFC7230}} header fields.
 
 HTTP headers that are defined as "Structured Headers" use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition by specification writers and handling by implementations.
 
@@ -97,7 +97,7 @@ Note that it is not a goal of this document to redefine the syntax of existing H
 
 {{specify}} describes how to specify a Structured Header.
 
-{{types}} defines a number of abstract data types that can be used in Structured Headers. Those abstract types can be serialized into and parsed from textual HTTP headers using the algorithms described in {{text}}.
+{{types}} defines a number of abstract data types that can be used in Structured Headers. Those abstract types can be serialized into and parsed from HTTP headers using the algorithms described in {{text}}.
 
 
 ## Intentionally Strict Processing {#strict}
@@ -118,11 +118,11 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in textual HTTP header fields. In doing so, uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the OWS rule from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the OWS rule from {{!RFC7230}}.
 
-When parsing from textual HTTP header fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
+When parsing from HTTP header fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
 
-For serialisation to textual header fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behaviour so long as the output still matches the ABNF.
+For serialisation to header fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behaviour so long as the output still matches the ABNF.
 
 
 # Defining New Structured Headers {#specify}
@@ -183,7 +183,7 @@ For example:
 
 # Structured Header Data Types {#types}
 
-This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in textual HTTP headers.
+This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP headers.
 
 
 ## Lists {#list}
@@ -205,13 +205,13 @@ lcalpha       = %x61-7A ; a-z
 param-value   = sh-item
 ~~~
 
-In textual HTTP headers, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
+In HTTP headers, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
 
 ~~~ example
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
-In textual HTTP headers, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of lists of strings could look like:
+In HTTP headers, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of lists of strings could look like:
 
 ~~~ example
 Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
@@ -219,13 +219,13 @@ Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 
 Note that the last member in this example is an empty inner list.
 
-In textual HTTP headers, members' parameters are separated from the member and each other by semicolons. For example:
+In HTTP headers, members' parameters are separated from the member and each other by semicolons. For example:
 
 ~~~ example
 Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi jkl);q="9";r=w
 ~~~
 
-In textual HTTP headers, an empty list is denoted by not serialising the header at all.
+In HTTP headers, an empty list is denoted by not serialising the header at all.
 
 Parsers MUST support lists containing at least 1024 members, support members with at least 256 parameters, support inner-lists containing at least 256 members, and support parameter keys with at least 64 characters.
 
@@ -240,7 +240,7 @@ Each member of the dictionary can also have associated parameters -- an ordered 
 
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
-The ABNF for dictionaries in textual HTTP headers is:
+The ABNF for dictionaries in HTTP headers is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
@@ -249,7 +249,7 @@ member-name    = key
 member-value   = sh-item / inner-list
 ~~~
 
-In textual HTTP headers, members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
+In HTTP headers, members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
 
 ~~~ example
 Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
@@ -267,7 +267,7 @@ A dictionary with a mix of singular and list values, some with parameters:
 Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid=?1
 ~~~
 
-As with lists, an empty dictionary is represented in textual HTTP headers by omitting the entire header field.
+As with lists, an empty dictionary is represented in HTTP headers by omitting the entire header field.
 
 Typically, a header field specification will define the semantics using individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
 
@@ -278,7 +278,7 @@ Parsers MUST support dictionaries containing at least 1024 name/value pairs, and
 
 An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
 
-The ABNF for items in textual HTTP headers is:
+The ABNF for items in HTTP headers is:
 
 ~~~ abnf
 sh-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
@@ -290,7 +290,7 @@ sh-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
 
 Integers have a range of −999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ({{IEEE754}}).
 
-The ABNF for integers in textual HTTP headers is:
+The ABNF for integers in HTTP headers is:
 
 ~~~ abnf
 sh-integer = ["-"] 1*15DIGIT
@@ -310,7 +310,7 @@ Note that commas in integers are used in this section's prose only for readabili
 Floats are decimal numbers with an integer and a fractional component. The fractional component has at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
 
 
-The ABNF for floats in textual HTTP headers is:
+The ABNF for floats in HTTP headers is:
 
 
 ~~~ abnf
@@ -333,7 +333,7 @@ Example-FloatHeader: 4.5
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
-The ABNF for strings in textual HTTP headers is:
+The ABNF for strings in HTTP headers is:
 
 ~~~ abnf
 sh-string = DQUOTE *(chr) DQUOTE
@@ -342,7 +342,7 @@ unescaped = %x20-21 / %x23-5B / %x5D-7E
 escaped   = "\" ( DQUOTE / "\" )
 ~~~
 
-In textual HTTP headers, strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
+In HTTP headers, strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
 ~~~ example
 Example-StringHeader: "hello world"
@@ -359,9 +359,9 @@ Parsers MUST support strings with at least 1024 characters.
 
 ## Tokens {#token}
 
-Tokens are short textual words; their abstract model is identical to their expression in the textual HTTP serialisation.
+Tokens are short textual words; their abstract model is identical to their expression in the HTTP header serialisation.
 
-The ABNF for tokens in textual HTTP headers is:
+The ABNF for tokens in HTTP headers is:
 
 ~~~ abnf
 sh-token = ALPHA
@@ -379,14 +379,14 @@ Note that a Structured Header token is not the same as the "token" ABNF rule def
 
 Byte sequences can be conveyed in Structured Headers.
 
-The ABNF for a byte sequence in textual HTTP headers is:
+The ABNF for a byte sequence in HTTP headers is:
 
 ~~~ abnf
 sh-binary = "*" *(base64) "*"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-In textual HTTP headers, a byte sequence is delimited with asterisks and encoded using base64 ({{!RFC4648}}, Section 4). For example:
+In HTTP headers, a byte sequence is delimited with asterisks and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
 Example-BinaryHdr: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
@@ -399,27 +399,27 @@ Parsers MUST support byte sequences with at least 16384 octets after decoding.
 
 Boolean values can be conveyed in Structured Headers.
 
-The ABNF for a Boolean in textual HTTP headers is:
+The ABNF for a Boolean in HTTP headers is:
 
 ~~~ abnf
 sh-boolean = "?" boolean
 boolean    = "0" / "1"
 ~~~
 
-In textual HTTP headers, a boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
+In HTTP headers, a boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ example
 Example-BoolHdr: ?1
 ~~~
 
 
-# Working With Structured Headers in Textual HTTP Headers {#text}
+# Working With Structured Headers in HTTP Headers {#text}
 
-This section defines how to serialize and parse Structured Headers in textual header fields, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
+This section defines how to serialize and parse Structured Headers in header fields, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
 
 ## Serializing Structured Headers {#text-serialize}
 
-Given a structure defined in this specification, return an ASCII string suitable for use in a textual HTTP header value.
+Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP header value.
 
 1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not send the serialize field at all (i.e., omit both the field-name and field-value).
 2. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
@@ -432,7 +432,7 @@ Given a structure defined in this specification, return an ASCII string suitable
 
 ### Serializing a List {#ser-list}
 
-Given a list of (member-value, parameters) as input_list, return an ASCII string suitable for use in a textual HTTP header value.
+Given a list of (member-value, parameters) as input_list, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
 2. For each (member-value, parameters) of input_list:
@@ -446,7 +446,7 @@ Given a list of (member-value, parameters) as input_list, return an ASCII string
 
 #### Serialising an Inner List {#ser-innerlist}
 
-Given an array as inner_list, return an ASCII string suitable for use in a textual HTTP header value.
+Given an array as inner_list, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be the string "(".
 2. For each member-value of inner_list:
@@ -457,7 +457,7 @@ Given an array as inner_list, return an ASCII string suitable for use in a textu
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered dictionary as input_parameters (each member having a param-name and a param-value), return an ASCII string suitable for use in a textual HTTP header value.
+Given an ordered dictionary as input_parameters (each member having a param-name and a param-value), return an ASCII string suitable for use in a HTTP header value.
 
 0. Let output be an empty string.
 1. For each parameter-name with a value of param-value in input_parameters:
@@ -471,7 +471,7 @@ Given an ordered dictionary as input_parameters (each member having a param-name
 
 #### Serializing a Key {#ser-key}
 
-Given a key as input_key, return an ASCII string suitable for use in a textual HTTP header value.
+Given a key as input_key, return an ASCII string suitable for use in a HTTP header value.
 
 0. If input_key is not a sequence of characters, or contains characters not in lcalpha, DIGIT, "\*", "\_", or "-", fail serialisation.
 1. Let output be an empty string.
@@ -481,7 +481,7 @@ Given a key as input_key, return an ASCII string suitable for use in a textual H
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given an ordered dictionary as input_dictionary (each member having a member-name and a tuple value of (member-value, parameters)), return an ASCII string suitable for use in a textual HTTP header value.
+Given an ordered dictionary as input_dictionary (each member having a member-name and a tuple value of (member-value, parameters)), return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
 2. For each member-name with a value of (member-value, parameters) in input_dictionary:
@@ -498,7 +498,7 @@ Given an ordered dictionary as input_dictionary (each member having a member-nam
 
 ### Serializing an Item {#ser-item}
 
-Given an item as input_item, return an ASCII string suitable for use in a textual HTTP header value.
+Given an item as input_item, return an ASCII string suitable for use in a HTTP header value.
 
 1. If input_item is an integer, return the result of applying Serializing an Integer ({{ser-integer}}) to input_item.
 2. If input_item is a float, return the result of applying Serializing a Float ({{ser-float}}) to input_item.
@@ -511,7 +511,7 @@ Given an item as input_item, return an ASCII string suitable for use in a textua
 
 ### Serializing an Integer {#ser-integer}
 
-Given an integer as input_integer, return an ASCII string suitable for use in a textual HTTP header value.
+Given an integer as input_integer, return an ASCII string suitable for use in a HTTP header value.
 
 0. If input_integer is not an integer in the range of −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialisation.
 1. Let output be an empty string.
@@ -522,7 +522,7 @@ Given an integer as input_integer, return an ASCII string suitable for use in a 
 
 ### Serializing a Float {#ser-float}
 
-Given a float as input_float, return an ASCII string suitable for use in a textual HTTP header value.
+Given a float as input_float, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
 2. If input_float is less than (but not equal to) 0, append "-" to output.
@@ -538,7 +538,7 @@ Given a float as input_float, return an ASCII string suitable for use in a textu
 
 ### Serializing a String {#ser-string}
 
-Given a string as input_string, return an ASCII string suitable for use in a textual HTTP header value.
+Given a string as input_string, return an ASCII string suitable for use in a HTTP header value.
 
 0. If input_string is not a sequence of characters, or contains characters in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail serialisation.
 1. Let output be an empty string.
@@ -553,7 +553,7 @@ Given a string as input_string, return an ASCII string suitable for use in a tex
 
 ### Serializing a Token {#ser-token}
 
-Given a token as input_token, return an ASCII string suitable for use in a textual HTTP header value.
+Given a token as input_token, return an ASCII string suitable for use in a HTTP header value.
 
 0. If input_token is not a sequence of characters, or contains characters not in ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/", fail serialisation.
 1. Let output be an empty string.
@@ -563,7 +563,7 @@ Given a token as input_token, return an ASCII string suitable for use in a textu
 
 ### Serializing a Byte Sequence {#ser-binary}
 
-Given a byte sequence as input_bytes, return an ASCII string suitable for use in a textual HTTP header value.
+Given a byte sequence as input_bytes, return an ASCII string suitable for use in a HTTP header value.
 
 0. If input_bytes is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
@@ -579,7 +579,7 @@ Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Se
 
 ### Serializing a Boolean {#ser-boolean}
 
-Given a Boolean as input_boolean, return an ASCII string suitable for use in a textual HTTP header value.
+Given a Boolean as input_boolean, return an ASCII string suitable for use in a HTTP header value.
 
 0. If input_boolean is not a boolean, fail serialisation.
 1. Let output be an empty string.
@@ -591,7 +591,7 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in a t
 
 ## Parsing Header Fields into Structured Headers {#text-parse}
 
-When a receiving implementation parses textual HTTP header fields that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
+When a receiving implementation parses HTTP header fields that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
 Given an array of bytes input_bytes that represents the chosen header's field-value (which is an empty string if that header is not present), and header_type (one of "dictionary", "list", or "item"), return the parsed header value.
 
@@ -883,7 +883,7 @@ _RFC Editor: Please remove this section before publication._
 * Editorial improvements.
 * Define "structured header name" and "structured header value" terms (#908).
 * Corrected text about valid characters in strings (#931).
-
+* Removed most instances of the word "textual", as it was redundant (#915).
 
 ## Since draft-ietf-httpbis-header-structure-12
 
