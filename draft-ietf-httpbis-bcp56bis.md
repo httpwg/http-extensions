@@ -338,7 +338,7 @@ interoperate with the application. Applications can encourage the implementation
 though.
 
 
-## HTTP URLs
+## Specifying URLs
 
 In HTTP, URLs are opaque identifiers under the control of the server. As outlined in {{!RFC7320}},
 standards cannot usurp this space, since it might conflict with existing resources, and constrain
@@ -419,7 +419,7 @@ otherwise interfere with it). Privacy implications should be documented in Secur
 See {{?RFC7605}} for further guidance.
 
 
-## HTTP Methods
+## Using HTTP Methods
 
 Applications that use HTTP MUST confine themselves to using registered HTTP methods such as GET,
 POST, PUT, DELETE, and PATCH.
@@ -489,7 +489,7 @@ Instead of OPTIONS, one of these alternative approaches might be more appropriat
 * For metadata about a specific resource, create a separate resource and link to it using a Link response header or a link serialised into the representation's body. See {{?RFC8288}}. Note that the Link header is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
 
 
-## HTTP Status Codes
+## Using HTTP Status Codes
 
 HTTP status codes convey semantics both for the benefit of generic HTTP components -- such as
 caches, intermediaries, and clients -- and applications themselves. However, applications can
@@ -581,7 +581,7 @@ this behaviour cannot be relied upon, since a generic client (like a browser) wi
 such requirements.
 
 
-## HTTP Header Fields {#headers}
+## Specifying HTTP Header Fields {#headers}
 
 Applications often define new HTTP header fields. Typically, using HTTP header fields is appropriate
 in a few different situations:
@@ -632,7 +632,7 @@ possible to identify them unambiguously and negotiate for their use. See {{!RFC6
 information.
 
 
-## HTTP Caching {#caching}
+## Accommodating HTTP Caching {#caching}
 
 HTTP caching {{?I-D.ietf-httpbis-cache}} is one of the primary benefits of using HTTP for
 applications; it provides scalability, reduces latency and improves reliability. Furthermore, HTTP
@@ -730,7 +730,7 @@ can be stored for 60 seconds by both private and shared caches, can be revalidat
 If-None-Match, and varies on the Accept-Encoding request header field.
 
 
-## Application State {#state}
+## Handling Application State {#state}
 
 Applications can use stateful cookies {{?I-D.ietf-httpbis-rfc6265bis}} to identify a client and/or
 store client-specific data to contextualise requests.
@@ -813,7 +813,7 @@ terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
 these best practices.
 
 
-## Application Boundaries {#other-apps}
+## Maintaining Application Boundaries {#other-apps}
 
 Because the origin {{!RFC6454}} is how many HTTP capabilities are scoped, applications also need to
 consider how deployments might interact with other applications (including Web browsing) on the
@@ -841,7 +841,7 @@ another, to avoid leaking private information. As a result, applications that wi
 cross-origin data to browsers will need to implement the CORS protocol; see {{FETCH}}.
 
 
-## Server Push {#server-push}
+## Using Server Push {#server-push}
 
 HTTP/2 adds the ability for servers to "push" request/response pairs to clients in {{?RFC7540}},
 Section 8.2. While server push seems like a natural fit for many common application semantics
@@ -867,7 +867,7 @@ Applications using server push directly need to enforce the requirements regardi
 {{?RFC7540}}, Section 8.2, to avoid cross-origin push attacks.
 
 
-## Versioning and Evolution {#versioning}
+## Allowing Versioning and Evolution {#versioning}
 
 It's often necessary to introduce new features into application protocols, and change existing ones.
 
