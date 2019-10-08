@@ -162,8 +162,9 @@ common to see specifications with language like this:
     A `POST` request MUST result in a `201 Created` response.
 
 This forms an expectation in the client that the response will always be `201 Created`, when in
-fact there are a number of reasons why the status code might differ in a real deployment. If the
-client does not anticipate this, the application's deployment is brittle.
+fact there are a number of reasons why the status code might differ in a real deployment; for
+example, there might be a proxy that requires authentication, or a server-side error, or a
+redirection. If the client does not anticipate this, the application's deployment is brittle.
 
 Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined
 by HTTP are potentially applicable to every resource, not specific to a particular context.
