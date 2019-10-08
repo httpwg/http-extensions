@@ -93,10 +93,10 @@ More generally, application protocols using HTTP face a number of design decisio
 * How does it coexist with other uses of HTTP -- especially Web browsing?
 * How can interoperability problems and "protocol dead ends" be avoided?
 
-This document contains best current practices regarding the use of HTTP by applications other than
-Web browsing. {{used}} defines what applications it applies to; {{overview}} surveys the properties
-of HTTP that are important to preserve, and {{bp}} conveys best practices for those applications
-that do use HTTP.
+This document contains best current practices regarding how to specify use of HTTP by applications
+other than Web browsing. {{used}} defines what applications it applies to; {{overview}} surveys the
+properties of HTTP that are important to preserve, and {{bp}} conveys best practices for those
+applications that do use HTTP.
 
 It is written primarily to guide IETF efforts to define application protocols using HTTP for
 deployment on the Internet, but might be applicable in other situations. Note that the requirements
@@ -114,27 +114,32 @@ shown here.
 # Is HTTP Being Used? {#used}
 
 Different applications have different goals when using HTTP. The requirements in this document
-apply when any of the following conditions are true:
+apply when a specification defines an application that:
 
-* the transport port in use is 80 or 443,
-* the URI scheme "http" or "https" is used,
-* the ALPN protocol ID {{!RFC7301}} generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
-* the IANA registries defined for HTTP are updated or modified.
+* uses the transport port 80 or 443, or
+* uses the URI scheme "http" or "https", or
+* uses an ALPN protocol ID {{!RFC7301}} that generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
+* updates or modifies the IANA registries defined for HTTP.
 
-When an application is using HTTP, all of the requirements of the HTTP protocol suite are in force
-(including but not limited to {{!I-D.ietf-httpbis-semantics}}, {{!I-D.ietf-httpbis-cache}}, {{!I-D.ietf-httpbis-messaging}}, and {{!RFC7540}}).
+Additionally, when a specification is using HTTP, all of the requirements of the HTTP protocol
+suite are in force (including but not limited to {{!I-D.ietf-httpbis-semantics}},
+{{!I-D.ietf-httpbis-cache}}, {{!I-D.ietf-httpbis-messaging}}, and {{!RFC7540}}).
 
-An application might not use HTTP according to this definition and still rely upon the
-HTTP specifications in some manner. For example, an application might wish to avoid re-specifying
-parts of the message format, but change others; or, it might want to use a different set of methods.
+Note that this document is intended to apply to applications, not generic extensions to HTTP, which follow the requirements in the relevant specification. Furthermore, it is intended for applications defined by IETF specifications, although other standards organisations are encouraged to adhere to its requirements.
 
-Such applications are referred to as "protocols based upon HTTP" in this document. These have more
-freedom to modify protocol operations, but are also likely to lose at least a portion of the
+
+## Non-HTTP Protocols
+
+A specification might not use HTTP according to this definition and still rely upon HTTP in some
+manner. For example, an application might wish to avoid re-specifying parts of the message format,
+but change others; or, it might want to use a different set of methods.
+
+Doing so brings more freedom to modify protocol operations, but loses at least a portion of the
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
 and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
 
-Protocols that are based upon HTTP MUST NOT reuse HTTP's URI schemes, transport ports, ALPN
-protocol IDs or IANA registries; rather, they are encouraged to establish their own.
+Such protocols MUST NOT reuse HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA
+registries; rather, they are encouraged to establish their own.
 
 
 # What's Important About HTTP {#overview}
