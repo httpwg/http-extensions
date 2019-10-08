@@ -77,8 +77,8 @@ and consumption by a limited set of clients. As a result, a body of practices an
 around defining HTTP-based APIs that favours these conditions.
 
 However, when such an application has multiple, separate implementations, is deployed on multiple
-uncoordinated servers, and is consumed by diverse clients -- as is often the case for standards
-efforts to define new HTTP APIs -- tools and practices intended for limited deployment can become
+uncoordinated servers, and is consumed by diverse clients -- as is often the case for HTTP APIs
+defined by standards efforts -- tools and practices intended for limited deployment can become
 unsuitable.
 
 This is largely because implementations (both client and server) will implement and evolve at
