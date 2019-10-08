@@ -130,15 +130,15 @@ Note that this document is intended to apply to applications, not generic extens
 
 ## Non-HTTP Protocols
 
-A specification might not use HTTP according to this definition and still rely upon HTTP in some
-manner. For example, an application might wish to avoid re-specifying parts of the message format,
-but change others; or, it might want to use a different set of methods.
+A specification might not use HTTP according to the criteria above and still define an application
+that relies upon HTTP in some manner. For example, an application might wish to avoid re-specifying
+parts of the message format, but change others; or, it might want to use a different set of methods.
 
 Doing so brings more freedom to modify protocol operations, but loses at least a portion of the
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
 and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
 
-Such protocols MUST NOT reuse HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA
+Such specifications MUST NOT reuse HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA
 registries; rather, they are encouraged to establish their own.
 
 
