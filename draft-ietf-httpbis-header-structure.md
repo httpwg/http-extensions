@@ -268,7 +268,7 @@ The ABNF for dictionaries in HTTP headers is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-name "=" member-value *parameter
+dict-member    = member-name "=" member-value
 member-name    = key
 member-value   = sh-item / inner-list
 ~~~
