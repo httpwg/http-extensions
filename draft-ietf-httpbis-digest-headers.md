@@ -527,57 +527,34 @@ requires complete representation metadata (see {{representation-digest}}).
 In responses,
 
 - if the representation describes the status of the request,
-  `Digest` MUST be computed on the enclosed representation;
+  `Digest` MUST be computed on the enclosed representation
+   (see {{post-referencing-action}} );
 
-- if the referenced resource target is different from the effective request URI
-  or the response does not reference the target resource
-  `Digest` MUST be computed on the referenced resource.
+- if there is a referenced resource
+  `Digest` MUST be computed on the selected representation of the referenced resource
+   even if that is different from the target resource.
+   That may or may not result in computing `Digest` on the enclosed representation.
 
 The latter case might be done accordingly to the HTTP semantics of the given method,
 for example using the `Content-Location` header field.
 
+Differently from `Content-Location`, which is representation metadata,
+the `Location` header field does not affect `Digest`.
+
 ## Digest and PATCH
 
-In a PATCH request, the representation metadata refers
+In PATCH requests
+the representation digest MUST be computed on the patch document.
+
+This is because the representation metadata refers
 to the patch document and not to the target resource (see Section 2 of {{?RFC5789}}).
 
-This makes `Digest` usage with PATCH very similar to the POST one,
-where the resource's own semantic is partly implied by the method and by the patch document.
+In PATCH responses
+the representation digest MUST be computed on
+the selected representation of the patched resource.
 
-The following example shows a PATCH request:
-
-- using an appropriate content-type defined in {{?RFC7396}};
-- with the representation digest of the enclosed payload.
-
-The response contains the representation digest
-of the patched resource together with the complete
-resource representation.
-
-Request:
-
-~~~
-PATCH /books/123 HTTP/1.1
-Content-Type: application/merge-patch+json
-Accept: application/json
-Accept-Encoding: identity
-Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
-
-{"title": "New Title"}
-~~~
-
-Response:
-
-~~~
-HTTP/1.1 200 OK
-Content-Type: application/json
-Digest: id-sha-256=BZlF2v0IzjuxN01RQ97EUXriaNNLhtI8Chx8Eq+XYSc=
-
-{"id": "123", "title": "New Title"}
-~~~
-
-Note that a `202 No Content` response without a payload body but with the same `Digest` header
-field value would have been legitimate too.
-
+`Digest` usage with PATCH is thus very similar to the POST one,
+but with the resource's own semantic partly implied by the method and by the patch document.
 
 # Deprecate Negotiation of Content-MD5
 
@@ -814,17 +791,15 @@ Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qO
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
 
-## Digest with POST Referencing a Resource Different from the Request URI
+## POST Response does not Reference the Request URI {#post-not-request-uri}
 
-As described in {{acting-on-resources}}, the request representation digest is computed
-on the enclosed representation.
+Request `Digest` value is computed on the enclosed representation (see {{acting-on-resources}}). 
 
-The response does not reference the target resource
-so the `Digest` is computed on the referenced resource.
+The representation enclosed in the response
+refers to the resource identified by `Content-Location`
+(see [RFC7231] Section 3.1.4.2 and Section 3.1.4.1 point 4).
 
-In the example, the payload is a representation of the resource identified by `Content-Location`
-(see [RFC7231] Section 3.1.4.2 and Section 3.1.4.1 point 4),
-but other cases might apply.
+`Digest` is thus computed on the enclosed representation.
 
 Request:
 
@@ -850,14 +825,17 @@ Content-Location: /books/123
 {"id": "123", "title": "New Title"}
 ~~~
 
+Note that a `204 No Content` response without a payload body 
+but with the same `Digest` field-value would have been legitimate too.
 
-## Digest with POST
+## POST Response Describes the Request Status {#post-referencing-action}
 
-As described in {{acting-on-resources}}, the request representation digest is computed
-on the enclosed representation.
+Request `Digest` value is computed on the enclosed representation (see {{acting-on-resources}}). 
 
-The representation in the response describes the status of the request,
-and is computed on the enclosed representation.
+The representation enclosed in the response describes the status of the request,
+so `Digest` is computed on that enclosed representation.
+
+Response `Digest` has no explicit relation with the resource referenced by `Location`.
 
 Request:
 
@@ -867,6 +845,7 @@ Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
 Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
+Location: /books/123
 
 {"title": "New Title"}
 ~~~
@@ -877,11 +856,50 @@ Response
 ~~~
 HTTP/1.1 201 Created
 Content-Type: application/json
-Digest: id-sha-256=R8PhjDKAFrO9NhE3HmepgjE6mHPdtUg5+/0EFhtHuX4=
+Digest: id-sha-256=0o/WKwSfnmIoSlop2LV/ISaBDth05IeW27zzNMUh5l8=
 Location: /books/123
 
-{"status": "created", "id": "123", "ts": 1569327729}
+{"status": "created", "id": "123", "ts": 1569327729, "instance": "/books/123"}
 ~~~
+
+## Digest with PATCH
+
+This case is analogous to a POST request where
+the target resource reflects the effective request URI.
+
+The PATCH request uses
+the `application/merge-patch+json` media type defined in {{?RFC7396}}.
+
+`Digest` is calculated on the enclosed payload,
+which corresponds to the patch document.
+
+The response `Digest` is computed
+on the complete representation of the patched resource.
+
+Request:
+
+~~~
+PATCH /books/123 HTTP/1.1
+Content-Type: application/merge-patch+json
+Accept: application/json
+Accept-Encoding: identity
+Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
+
+{"title": "New Title"}
+~~~
+
+Response:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/json
+Digest: id-sha-256=BZlF2v0IzjuxN01RQ97EUXriaNNLhtI8Chx8Eq+XYSc=
+
+{"id": "123", "title": "New Title"}
+~~~
+
+Note that a `204 No Content` response without a payload body 
+but with the same `Digest` field-value would have been legitimate too.
 
 # Examples of Want-Digest Solicited Digest
 
