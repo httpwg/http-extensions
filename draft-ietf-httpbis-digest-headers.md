@@ -204,9 +204,16 @@ This document uses the Augmented BNF defined in [RFC5234] and updated
 by [RFC7405] along with the "#rule" extension defined in Section 7 of
 [RFC7230].
 
-The definitions "representation", "selected representation", "representation data",
-"representation metadata" and "payload body" in this document are to be
+The definitions
+"representation", "selected representation",
+"representation data", "representation metadata",
+and "payload body"
+in this document are to be
 interpreted as described in [RFC7230] and [RFC7231].
+
+The definition "validator"
+in this document is to be
+interpreted as described in Section 7.2 of [RFC7231].
 
 
 # Resource representation and representation-data {#resource-representation}
@@ -473,7 +480,7 @@ The Digest header field provides a digest of the representation data.
 
 The resource is specified by
 the effective request URI
-and any cache-validator contained in the message.
+and any `validator` contained in the message.
 
 For example, in a response to a HEAD request, the digest is calculated using  the
 representation data that would have been enclosed in the payload body
