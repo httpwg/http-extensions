@@ -216,10 +216,10 @@ should decouple the checksum calculation:
 
 - from the payload body - which may be altered by mechanism like Range Requests [RFC7233] or the method (eg. HEAD);
 
-- and from the message body - which depends on `Transfer-Encoding` and whatever tranformations
+- and from the message body - which depends on `Transfer-Encoding` and whatever transformations
 the intermediaries may apply.
 
-The following examples show how representation metadata, payload tranformations and method
+The following examples show how representation metadata, payload transformations and method
 impacts on the message and payload body.
 
 Here is a gzip-compressed json object
@@ -471,8 +471,9 @@ The Digest header field provides a digest of the representation data.
 - partially-contained in the message body,
 - or not at all contained in the message body.
 
-The resource is specified by the effective
-Request-URI and any cache-validator contained in the message.
+The resource is specified by
+the effective request URI
+and any cache-validator contained in the message.
 
 For example, in a response to a HEAD request, the digest is calculated using  the
 representation data that would have been enclosed in the payload body
