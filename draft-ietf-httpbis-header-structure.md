@@ -305,7 +305,7 @@ bare-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
 ~~~
 
 
-## Integers {#integer}
+### Integers {#integer}
 
 Integers have a range of −999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ({{IEEE754}}).
 
@@ -324,7 +324,7 @@ Example-IntegerHeader: 42
 Note that commas in integers are used in this section's prose only for readability; they are not valid in the wire format.
 
 
-## Floats {#float}
+### Floats {#float}
 
 Floats are decimal numbers with an integer and a fractional component. The fractional component has at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
 
@@ -348,7 +348,7 @@ Example-FloatHeader: 4.5
 ~~~
 
 
-## Strings {#string}
+### Strings {#string}
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
@@ -376,7 +376,7 @@ When it is necessary for a field value to convey non-ASCII string content, a byt
 Parsers MUST support strings with at least 1024 characters.
 
 
-## Tokens {#token}
+### Tokens {#token}
 
 Tokens are short textual words; their abstract model is identical to their expression in the HTTP header serialisation.
 
@@ -394,7 +394,7 @@ Note that a Structured Header token is not the same as the "token" ABNF rule def
 {{?RFC7230}}.
 
 
-## Byte Sequences {#binary}
+### Byte Sequences {#binary}
 
 Byte sequences can be conveyed in Structured Headers.
 
@@ -414,7 +414,7 @@ Example-BinaryHdr: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
 Parsers MUST support byte sequences with at least 16384 octets after decoding.
 
 
-## Booleans {#boolean}
+### Booleans {#boolean}
 
 Boolean values can be conveyed in Structured Headers.
 
