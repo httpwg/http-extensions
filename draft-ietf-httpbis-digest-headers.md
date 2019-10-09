@@ -846,6 +846,21 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
+## Update "CRC32C" Digest Algorithm {#iana-CRC32C}
+
+This memo updates the "CRC32c" digest algorithm in the [HTTP Digest
+Algorithm
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+registry:
+
+* Digest Algorithm: CRC32c
+* Description: The CRC32c algorithm is a 32-bit cyclic redundancy check.
+  It achieves a better hamming distance (for better error-detection performance) than many other 32-bit CRC functions.
+  Other places it is used include iSCSI and SCTP.
+  The 32-bit output is encoded in hexadecimal (using between 1 and 8 ASCII characters from 0-9, A-F, and a-f; leading 0's are allowed).
+  For example, CRC32c=0a72a4df and crc32c=A72A4DF are both valid checksums for the 3-byte message "dog".
+* Reference: {{!RFC4960}} appendix B, this document.
+* Status: standard.
 
 ## Obsolete "SHA" Digest Algorithm {#iana-SHA}
 
@@ -902,7 +917,7 @@ and its description states that this algoritm MUST NOT be used.
 The status of "SHA" has been updated to "obsoleted",
 and its description states that this algorithm is NOT RECOMMENDED.
 
-The status for all other algorithms have been updated to "standard".
+The status for "CRC32C" has been updated to "standard".
 
 The "ID-SHA-256" and "ID-SHA-512" algorithms have been added to
 the registry.
@@ -1044,3 +1059,4 @@ _RFC Editor: Please remove this section before publication._
 * Reference [RFC6234] and [RFC3174] instead of FIPS-1
 * Deprecate MD5
 * Obsolete ADLER-32 but don't forbid it
+* Update CRC32C value in IANA table
