@@ -945,6 +945,7 @@ _RFC Editor: Please remove this section before publication._
 * Define "structured header name" and "structured header value" terms (#908).
 * Corrected text about valid characters in strings (#931).
 * Removed most instances of the word "textual", as it was redundant (#915).
+* Allowed parameters on Items and Inner Lists (#907).
 
 ## Since draft-ietf-httpbis-header-structure-12
 
