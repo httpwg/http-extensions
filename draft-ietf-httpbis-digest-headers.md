@@ -18,6 +18,7 @@ author:
     name: Roberto Polli
     org: Team Digitale, Italian Government
     email: robipolli@gmail.com
+    country: Italy
  -
     ins: L. Pardue
     name: Lucas Pardue
@@ -27,7 +28,9 @@ author:
 normative:
   RFC1321:
   RFC3174:
+  RFC1950:
   RFC3230:
+  RFC3309:
   RFC2119:
   RFC5789:
   RFC5843:
@@ -763,6 +766,12 @@ However, these rely on collision-resistance for their security proofs [CMU-83606
 The MD5 and SHA-1 algorithms are vulnerable to collisions attacks,
 so MD5 MUST NOT be used and SHA-1 is NOT RECOMMENDED.
 
+## Other deprecated algorithms
+
+The ADLER32 algorithm defined in [RFC1950] has been deprecated
+by [RFC3309] because under certain conditions it provides
+weak detection of errors and is now NOT RECOMMENDED.
+
 ## Digest for end-to-end integrity
 
 `Digest` alone does not provide end-to-end integrity
@@ -837,6 +846,21 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
+## Update "CRC32C" Digest Algorithm {#iana-CRC32C}
+
+This memo updates the "CRC32c" digest algorithm in the [HTTP Digest
+Algorithm
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+registry:
+
+* Digest Algorithm: CRC32c
+* Description: The CRC32c algorithm is a 32-bit cyclic redundancy check.
+  It achieves a better hamming distance (for better error-detection performance) than many other 32-bit CRC functions.
+  Other places it is used include iSCSI and SCTP.
+  The 32-bit output is encoded in hexadecimal (using between 1 and 8 ASCII characters from 0-9, A-F, and a-f; leading 0's are allowed).
+  For example, CRC32c=0a72a4df and crc32c=A72A4DF are both valid checksums for the 3-byte message "dog".
+* Reference: {{!RFC4960}} appendix B, this document.
+* Status: standard.
 
 ## Obsolete "SHA" Digest Algorithm {#iana-SHA}
 
@@ -848,6 +872,20 @@ registry:
 * Digest Algorithm: SHA
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
+
+## Obsolete "ADLER32" Digest Algorithm {#iana-adler-32}
+
+This memo updates the "ADLER32" digest algorithm in the [HTTP Digest
+Algorithm
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+registry:
+
+* Digest Algorithm: ADLER32
+* Description: The ADLER32 algorithm is a checksum specified in [RFC1950] "ZLIB Compressed Data Format".
+  The 32-bit output is encoded in hexadecimal (using between 1 and 8 ASCII characters from 0-9, A-F, and a-f; leading 0's are allowed).
+  For example, ADLER32=03da0195 and ADLER32=3DA0195 are both valid checksums for the 4-byte message "Wiki".
+  This algorithm is obsoleted and SHOULD NOT be used.
+* Status: obsoleted
 
 ## The "ID-SHA-256" Digest Algorithm {#iana-ID-SHA-256}
 
@@ -879,7 +917,7 @@ and its description states that this algoritm MUST NOT be used.
 The status of "SHA" has been updated to "obsoleted",
 and its description states that this algorithm is NOT RECOMMENDED.
 
-The status for all other algorithms have been updated to "standard".
+The status for "CRC32C" has been updated to "standard".
 
 The "ID-SHA-256" and "ID-SHA-512" algorithms have been added to
 the registry.
@@ -970,6 +1008,44 @@ The original idea of refreshing this document arose from an interesting
 discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
 the MICE content coding.
 
+
+# Code samples
+{:numbered="false"}
+
+_RFC Editor: Please remove this section before publication._
+
+How can I generate and validate the Digest values shown in the examples
+throughout this document?
+
+The following python3 code can be used to generate digests for json objects
+using SHA algorithms for a range of encodings.
+Note that these are formatted as base64.
+This function could be adapted to other algorithms
+and should take into account their specific formatting rules.
+
+~~~
+import base64, json, hashlib, brotli
+
+
+def digest(item, encoding=lambda x: x, algorithm=hashlib.sha256):
+    json_bytes = json.dumps(item).encode()
+    content_encoded = encoding(json_bytes)
+    checksum_bytes = algorithm(content_encoded).digest()
+    return base64.encodebytes(checksum_bytes).strip()
+
+
+item = {"hello": "world"}
+
+print("Identity encoding, sha256", digest(item))
+# Out: Identity encoding, sha256 4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+
+print("Brotli encoding, sha256", digest(item, encoding=brotli.compress))
+# Out: Brotli encoding, sha256 4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+
+print("Identity encoding, sha512", digest(item, algorithm=hashlib.sha512))
+# Out: Identity encoding, sha512 b'WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==\n'
+~~~
+
 # Changes
 {:numbered="false"}
 
@@ -982,4 +1058,5 @@ _RFC Editor: Please remove this section before publication._
 * Add id-sha-* algorithm examples
 * Reference [RFC6234] and [RFC3174] instead of FIPS-1
 * Deprecate MD5
-
+* Obsolete ADLER-32 but don't forbid it
+* Update CRC32C value in IANA table

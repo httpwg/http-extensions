@@ -26,7 +26,7 @@ author:
     uri: https://www.mnot.net/
 
 informative:
-  HTML5:
+  HTML:
     target: https://html.spec.whatwg.org
     title: HTML - Living Standard
     author:
@@ -43,8 +43,9 @@ informative:
 --- abstract
 
 HTTP is often used as a substrate for other application protocols (a.k.a. HTTP-based APIs). This
-document specifies best practices for such protocols' use of HTTP when they are defined for diverse
-implementation and broad deployment (e.g., in standards efforts).
+document specifies best practices for writing specifications that use HTTP to define new
+application protocols, especially when they are defined for diverse implementation and broad
+deployment (e.g., in standards efforts).
 
 
 --- note_Note_to_Readers_
@@ -72,13 +73,13 @@ done for a variety of reasons, including:
 * its ability to traverse firewalls.
 
 These protocols are often ad hoc; they are intended for only deployment by one or a few servers,
-and consumption by a limited set of clients. Perhaps because of the factors cited above, a body of
-practices and tools has arisen around defining HTTP-based APIs that favours these conditions.
+and consumption by a limited set of clients. As a result, a body of practices and tools has arisen
+around defining HTTP-based APIs that favours these conditions.
 
-However, when such an application has multiple, separate implementations of the server component,
-is deployed on multiple uncoordinated servers, and is consumed by diverse clients -- as is often
-the case for standards efforts to define new HTTP APIs -- tools and practices intended for limited
-deployment can become unsuitable.
+However, when such an application has multiple, separate implementations, is deployed on multiple
+uncoordinated servers, and is consumed by diverse clients -- as is often the case for HTTP APIs
+defined by standards efforts -- tools and practices intended for limited deployment can become
+unsuitable.
 
 This is largely because implementations (both client and server) will implement and evolve at
 different paces. As a result, such an HTTP-based API will need to more carefully consider how
@@ -93,10 +94,9 @@ More generally, application protocols using HTTP face a number of design decisio
 * How does it coexist with other uses of HTTP -- especially Web browsing?
 * How can interoperability problems and "protocol dead ends" be avoided?
 
-This document contains best current practices regarding the use of HTTP by applications other than
-Web browsing. {{used}} defines what applications it applies to; {{overview}} surveys the properties
-of HTTP that are important to preserve, and {{bp}} conveys best practices for those applications
-that do use HTTP.
+This document contains best current practices for the specification of such applications. {{used}}
+defines when it applies; {{overview}} surveys the properties of HTTP that are
+important to preserve, and {{bp}} conveys best practices for the specifying them.
 
 It is written primarily to guide IETF efforts to define application protocols using HTTP for
 deployment on the Internet, but might be applicable in other situations. Note that the requirements
@@ -114,55 +114,44 @@ shown here.
 # Is HTTP Being Used? {#used}
 
 Different applications have different goals when using HTTP. The requirements in this document
-apply when any of the following conditions are true:
+apply when a specification defines an application that:
 
-* the transport port in use is 80 or 443,
-* the URI scheme "http" or "https" is used,
-* the ALPN protocol ID {{!RFC7301}} generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
-* the IANA registries defined for HTTP are updated or modified.
+* uses the transport port 80 or 443, or
+* uses the URI scheme "http" or "https", or
+* uses an ALPN protocol ID {{!RFC7301}} that generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
+* updates or modifies the IANA registries defined for HTTP.
 
-When an application is using HTTP, all of the requirements of the HTTP protocol suite are in force
-(including but not limited to {{!I-D.ietf-httpbis-semantics}}, {{!I-D.ietf-httpbis-cache}}, {{!I-D.ietf-httpbis-messaging}}, and {{!RFC7540}}).
+Additionally, when a specification is using HTTP, all of the requirements of the HTTP protocol
+suite are in force (including but not limited to {{!I-D.ietf-httpbis-semantics}},
+{{!I-D.ietf-httpbis-cache}}, {{!I-D.ietf-httpbis-messaging}}, and {{!RFC7540}}).
 
-An application might not use HTTP according to this definition and still rely upon the
-HTTP specifications in some manner. For example, an application might wish to avoid re-specifying
+Note that this document is intended to apply to applications, not generic extensions to HTTP, which follow the requirements in the relevant specification. Furthermore, it is intended for applications defined by IETF specifications, although other standards organisations are encouraged to adhere to its requirements.
+
+
+## Non-HTTP Protocols
+
+A specification might not use HTTP according to the criteria above and still define an application
+that relies upon HTTP in some manner. For example, an application might wish to avoid re-specifying
 parts of the message format, but change others; or, it might want to use a different set of methods.
 
-Such applications are referred to as "protocols based upon HTTP" in this document. These have more
-freedom to modify protocol operations, but are also likely to lose at least a portion of the
+Doing so brings more freedom to modify protocol operations, but loses at least a portion of the
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
 and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
 
-Protocols that are based upon HTTP MUST NOT reuse HTTP's URI schemes, transport ports, ALPN
-protocol IDs or IANA registries; rather, they are encouraged to establish their own.
+Such specifications MUST NOT reuse HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA
+registries; rather, they are encouraged to establish their own.
 
 
 # What's Important About HTTP {#overview}
 
-Applications using HTTP are defined and deployed in many ways; sometimes they are brought to the
-IETF for standardisation. What might be workable for deployment in a limited fashion isn't
-appropriate for standardisation and the corresponding broader deployment.
-
-This section examines the facets of the protocol that are important to preserve in these situations.
+This section examines the facets of the protocol that are important to consider when using HTTP to define an application protocol.
 
 
 ## Generic Semantics
 
-When writing a specification, it's often tempting to specify exactly how HTTP is to be implemented,
-supported and used.
-
-However, this can easily lead to an unintended profile of HTTP's behaviour. For example, it's
-common to see specifications with language like this:
-
-    A `POST` request MUST result in a `201 Created` response.
-
-This forms an expectation in the client that the response will always be `201 Created`, when in
-fact there are a number of reasons why the status code might differ in a real deployment. If the
-client does not anticipate this, the application's deployment is brittle.
-
 Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined
 by HTTP are potentially applicable to every resource, not specific to a particular context.
-Application-specific semantics are best expressed in the payload; oten in the body, but also in
+Application-specific semantics are best expressed in the payload; often in the body, but also in
 header fields.
 
 This generic/application-specific split allows a HTTP message to be handled by software (e.g., HTTP
@@ -175,7 +164,20 @@ generic protocol elements such as methods, status codes or existing header field
 should focus their specifications on protocol elements that are specific to that application;
 namely their HTTP resources.
 
-See {{resource}} for details.
+For example, when writing a specification, it's often tempting to specify exactly how HTTP is to be
+implemented, supported and used.
+
+However, this can easily lead to an unintended profile of HTTP's behaviour. For example, it's
+common to see specifications with language like this:
+
+    A `POST` request MUST result in a `201 Created` response.
+
+This forms an expectation in the client that the response will always be `201 Created`, when in
+fact there are a number of reasons why the status code might differ in a real deployment; for
+example, there might be a proxy that requires authentication, or a server-side error, or a
+redirection. If the client does not anticipate this, the application's deployment is brittle.
+
+See {{resource}} for more details.
 
 
 ## Links
@@ -228,10 +230,10 @@ appropriate design tradeoffs are highly specific to a given situation. However, 
 practices in {{bp}} is a good starting point.
 
 
-# Best Practices for Using HTTP {#bp}
+# Best Practices for Specifying the Use of HTTP {#bp}
 
-This section contains best practices regarding the use of HTTP by applications, including practices
-for specific HTTP protocol elements.
+This section contains best practices for specifying the use of HTTP by applications, including
+practices for specific HTTP protocol elements.
 
 
 ## Specifying the Use of HTTP
@@ -273,14 +275,13 @@ Server: Bar/2.2
 ~~~
 
 
-## Defining HTTP Resources {#resource}
+## Specifying Server Behaviour {#resource}
 
-Applications that use HTTP should focus on defining the following application-specific protocol
-elements:
+The most effective way to specify an application's server-side HTTP behaviours is in terms of the following protocol elements:
 
-* media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
+* Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
 * HTTP header fields, as per {{headers}}, and
-* the behaviour of resources, as identified by link relations {{!RFC8288}}.
+* The behaviour of resources, as identified by link relations {{!RFC8288}}.
 
 By composing these protocol elements, an application can define a set of resources, identified by
 link relations, that implement specified behaviours, including:
@@ -309,23 +310,21 @@ Applications can also specify the use of URI Templates {{?RFC6570}} to allow cli
 URLs based upon runtime data.
 
 
-## Specifying Client Behaviours {#clients}
+## Specifying Client Behaviour {#clients}
 
-Some behaviours (e.g., automatic redirect handling) and extensions (e.g., Cookies) are not required
-by HTTP, but nevertheless have become very common, possibly because they are supported by Web
-browsers. If their use is not explicitly specified by applications using HTTP, there may be
-confusion and interoperability problems. This section recommends default handling for these
-mechanisms.
+In general, applications using HTTP ought to align their expectations for client behaviour as
+closely as possible with that of Web browsers, to avoid interoperability issues when they are used.
+
+One way to do this is to define it in terms of {{FETCH}}, since that is the abstraction that
+browsers use for HTTP.
+
+Some client behaviours (e.g., automatic redirect handling) and extensions (e.g., Cookies) are not
+required by HTTP, but nevertheless have become very common. If their use is not explicitly
+specified by applications using HTTP, there may be confusion and interoperability problems. In particular:
 
 * Redirect handling - Applications need to specify how redirects are expected to be handled; see {{redirects}}.
 * Cookies - Applications using HTTP should explicitly reference the Cookie specification {{?I-D.ietf-httpbis-rfc6265bis}} if they are required.
 * Certificates - Applications using HTTP should specify that TLS certificates are to be checked according to {{!RFC2818}} when HTTPS is used.
-
-In general, applications using HTTP ought to align their usage as closely as possible with Web browsers, to avoid interoperability issues when they are used. See {{browser}}.
-
-If an application using HTTP has browser compatibility as a goal, client interaction ought to be
-defined in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
-enforces many of these best practices.
 
 Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported
 by clients. For example, requiring that clients support responses with a certain content-coding
@@ -335,42 +334,41 @@ interoperate with the application. Applications can encourage the implementation
 though.
 
 
-## HTTP URLs
+## Specifying URLs
 
-In HTTP, URLs are opaque identifiers under the control of the server. As outlined in {{!RFC7320}},
-standards cannot usurp this space, since it might conflict with existing resources, and constrain
-implementation and deployment.
+In HTTP, the server resources that clients interact with are identified with URLs {{!RFC3986}}. As {{!RFC7320}} explains, parts of the URL are designed to be under the control of the owner (also known as the "authority") of that server, to give them the flexibility in deployment.
 
-In other words, applications that use HTTP shouldn't associate application semantics with specific
-URL paths on arbitrary servers. Doing so inappropriately conflates the identity of the resource
-(its URL) with the capabilities that resource supports, bringing about many of the same
-interoperability problems that {{?RFC4367}} warns of.
+This means that in most cases, specifications for applications that use HTTP won't contain its URLs; while it is common practice for a specification of a single-deployment API to specify the path prefix "/app/v1" (for example), doing so in an IETF specification is inappropriate.
 
-For example, specifying that a "GET to the URL /foo retrieves a bar document" is bad practice.
-Likewise, specifying "The widget API is at the path /bar" violates {{!RFC7320}}.
-
-Instead, applications are encouraged to ensure that URLs are discovered at runtime, allowing
-HTTP-based services to describe their own capabilities. One way to do this is to use typed links
-{{?RFC8288}} to convey the URLs that are in use, as well as the semantics of the resources that
-they identify. See {{resource}} for details.
+Therefore, the specification writer needs some mechanism to allow clients to discovery an application's URLs. Additionally, they need to specify what URL scheme(s) the application should be used with, and whether to use a dedicated port, or reuse HTTP's port(s).
 
 
-### Initial URL Discovery
+### Discovering an Application's URLs
 
 Generally, a client will begin interacting with a given application server by requesting an initial
 document that contains information about that particular deployment, potentially including links to
-other relevant resources.
+other relevant resources. Doing so assures that the deployment is as flexible as possible (potentially spanning multiple servers), allows evolution, and also gives the application the opportunity to tailor the 'discovery document' to the client.
 
-Applications are encouraged to allow an arbitrary URL to be used as that entry point.
-For example, rather than specifying "the initial document is at "/foo/v1", they should allow a
-deployment to use any URL as the entry point for the application.
+There are a few common patterns for discovering that initial URL.
 
-In cases where doing so is impractical (e.g., it is not possible to convey a whole URL, but only a
-hostname) applications can request a well-known URI {{?I-D.nottingham-rfc5785bis}} as an entry
-point.
+The most straightforward mechanism for URL discovery is to configure the client with (or otherwise convey to it) a full URL. This might be done in a configuration document, in DNS or mDNS, or through another discovery mechanism.
+
+However, if the client only knows the server's hostname and the identity of the application, there needs to be some way to derive the initial URL from that information.
+
+Applications MUST NOT define a fixed prefix for its URL paths; for reasons explained in {{!RFC7320}}, this is bad practice.
+
+Instead, a specification for such an application can use one of the following strategies:
+
+* Register a Well-Known URI {{!I-D.nottingham-rfc5785bis}} as an entry point for that application. This provides a fixed path on every potential server that will not collide with other applications.
+
+* Enable the server authority to convey a URL Template {{?RFC6570}} or similar mechanism for generating a URL for an entry point. For example, this might be done in a DNS RR, a configuration document, or other artefact.
+
+Once the discovery document is located, it can be fetched, cached for later reuse (if allowed by its metadata), and used to locate other resources that are relevant to the application, using full URIs or URL Templates.
+
+In some cases, an application may not wish to use such a discovery document; for example, when communication is very brief, or when the latency concerns of doing so precludes the use of a discovery document. These situations can be addressed by placing all of the application's resources under a well-known location.
 
 
-### URI Schemes {#scheme}
+### Considering URI Schemes {#scheme}
 
 Applications that use HTTP will typically employ the "http" and/or "https" URI schemes. "https" is
 RECOMMENDED to provide authentication, integrity and confidentiality, as well as mitigate pervasive
@@ -379,7 +377,7 @@ monitoring attacks {{?RFC7258}}.
 However, application-specific schemes can also be defined. When defining an URI scheme for an
 application using HTTP, there are a number of tradeoffs and caveats to keep in mind:
 
-* Unmodified Web browsers will not support the new scheme. While it is possible to register new URI schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML5}}, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
+* Unmodified Web browsers will not support the new scheme. While it is possible to register new URI schemes with Web browsers (e.g. registerProtocolHandler() in {{HTML}}, as well as several proprietary approaches), support for these mechanisms is not shared by all browsers, and their capabilities vary.
 
 * Existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
 
@@ -416,7 +414,7 @@ otherwise interfere with it). Privacy implications should be documented in Secur
 See {{?RFC7605}} for further guidance.
 
 
-## HTTP Methods
+## Using HTTP Methods
 
 Applications that use HTTP MUST confine themselves to using registered HTTP methods such as GET,
 POST, PUT, DELETE, and PATCH.
@@ -486,7 +484,7 @@ Instead of OPTIONS, one of these alternative approaches might be more appropriat
 * For metadata about a specific resource, create a separate resource and link to it using a Link response header or a link serialised into the representation's body. See {{?RFC8288}}. Note that the Link header is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
 
 
-## HTTP Status Codes
+## Using HTTP Status Codes
 
 HTTP status codes convey semantics both for the benefit of generic HTTP components -- such as
 caches, intermediaries, and clients -- and applications themselves. However, applications can
@@ -578,7 +576,7 @@ this behaviour cannot be relied upon, since a generic client (like a browser) wi
 such requirements.
 
 
-## HTTP Header Fields {#headers}
+## Specifying HTTP Header Fields {#headers}
 
 Applications often define new HTTP header fields. Typically, using HTTP header fields is appropriate
 in a few different situations:
@@ -629,7 +627,7 @@ possible to identify them unambiguously and negotiate for their use. See {{!RFC6
 information.
 
 
-## HTTP Caching {#caching}
+## Leveraging HTTP Caching {#caching}
 
 HTTP caching {{?I-D.ietf-httpbis-cache}} is one of the primary benefits of using HTTP for
 applications; it provides scalability, reduces latency and improves reliability. Furthermore, HTTP
@@ -690,7 +688,7 @@ latency for large responses; see {{?I-D.ietf-httpbis-semantics}}.
 ### Caching and Application Semantics
 
 When an application has a need to express a lifetime that's separate from the freshness lifetime,
-this should be expressed separately, either in the response's body or in a separate header field.
+this should be conveyed separately, either in the response's body or in a separate header field.
 When this happens, the relationship between HTTP caching and that lifetime need to be carefully
 considered, since the response will be used as long as it is considered fresh.
 
@@ -727,7 +725,7 @@ can be stored for 60 seconds by both private and shared caches, can be revalidat
 If-None-Match, and varies on the Accept-Encoding request header field.
 
 
-## Application State {#state}
+## Handling Application State {#state}
 
 Applications can use stateful cookies {{?I-D.ietf-httpbis-rfc6265bis}} to identify a client and/or
 store client-specific data to contextualise requests.
@@ -783,7 +781,7 @@ include:
 
 * Using an application-specific media type in the Content-Type header, and requiring clients to fail if it is not used.
 * Using X-Content-Type-Options: nosniff {{FETCH}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser.
-* Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML5}}), thereby mitigating Cross-Site Scripting attacks.
+* Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML}}), thereby mitigating Cross-Site Scripting attacks.
 * Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header.
 * Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?I-D.ietf-httpbis-rfc6265bis}}.
 * Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the path of the communication, they can use this capability to recover that information.
@@ -810,7 +808,7 @@ terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP; it
 these best practices.
 
 
-## Application Boundaries {#other-apps}
+## Maintaining Application Boundaries {#other-apps}
 
 Because the origin {{!RFC6454}} is how many HTTP capabilities are scoped, applications also need to
 consider how deployments might interact with other applications (including Web browsing) on the
@@ -838,7 +836,7 @@ another, to avoid leaking private information. As a result, applications that wi
 cross-origin data to browsers will need to implement the CORS protocol; see {{FETCH}}.
 
 
-## Server Push {#server-push}
+## Using Server Push {#server-push}
 
 HTTP/2 adds the ability for servers to "push" request/response pairs to clients in {{?RFC7540}},
 Section 8.2. While server push seems like a natural fit for many common application semantics
@@ -864,7 +862,7 @@ Applications using server push directly need to enforce the requirements regardi
 {{?RFC7540}}, Section 8.2, to avoid cross-origin push attacks.
 
 
-## Versioning and Evolution {#versioning}
+## Allowing Versioning and Evolution {#versioning}
 
 It's often necessary to introduce new features into application protocols, and change existing ones.
 
