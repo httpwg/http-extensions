@@ -28,7 +28,9 @@ author:
 normative:
   RFC1321:
   RFC3174:
+  RFC1950:
   RFC3230:
+  RFC3309:
   RFC2119:
   RFC5789:
   RFC5843:
@@ -764,6 +766,12 @@ However, these rely on collision-resistance for their security proofs [CMU-83606
 The MD5 and SHA-1 algorithms are vulnerable to collisions attacks,
 so MD5 MUST NOT be used and SHA-1 is NOT RECOMMENDED.
 
+## Other deprecated algorithms
+
+The ADLER32 algorithm defined in [RFC1950] has been deprecated
+by [RFC3309] because under certain conditions it provides
+weak detection of errors and is now NOT RECOMMENDED.
+
 ## Digest for end-to-end integrity
 
 `Digest` alone does not provide end-to-end integrity
@@ -849,6 +857,20 @@ registry:
 * Digest Algorithm: SHA
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
+
+## Obsolete "ADLER32" Digest Algorithm {#iana-adler-32}
+
+This memo updates the "ADLER32" digest algorithm in the [HTTP Digest
+Algorithm
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+registry:
+
+* Digest Algorithm: ADLER32
+* Description: The ADLER32 algorithm is a checksum specified in [RFC1950] "ZLIB Compressed Data Format".
+  The 32-bit output is encoded in hexadecimal (using between 1 and 8 ASCII characters from 0-9, A-F, and a-f; leading 0's are allowed).
+  For example, ADLER32=03da0195 and ADLER32=3DA0195 are both valid checksums for the 4-byte message "Wiki".
+  This algorithm is obsoleted and SHOULD NOT be used.
+* Status: obsoleted
 
 ## The "ID-SHA-256" Digest Algorithm {#iana-ID-SHA-256}
 
@@ -1021,4 +1043,4 @@ _RFC Editor: Please remove this section before publication._
 * Add id-sha-* algorithm examples
 * Reference [RFC6234] and [RFC3174] instead of FIPS-1
 * Deprecate MD5
-
+* Obsolete ADLER-32 but don't forbid it
