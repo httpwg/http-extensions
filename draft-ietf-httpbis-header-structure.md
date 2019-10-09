@@ -639,7 +639,7 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in a H
 
 When a receiving implementation parses HTTP header fields that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an array of bytes input_bytes that represents the chosen header's field-value (which is an empty string if that header is not present), and header_type (one of "dictionary", "list", or "item"), return the parsed header value.
+Given an array of bytes input_bytes that represents the chosen header's field-value (which is empty if that header is not present), and header_type (one of "dictionary", "list", or "item"), return the parsed header value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading OWS from input_string.
@@ -665,27 +665,25 @@ Note that this requirement does not apply to an implementation that is not parsi
 
 ### Parsing a List from Text {#parse-list}
 
-Given an ASCII string as input_string, return an array of (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an array of (item_or_inner_list, parameters) tuples. input_string is modified to remove the parsed value.
 
 1. Let members be an empty array.
 2. While input_string is not empty:
-   1. Let member be the result of running Parsing an Item or Inner List from Text ({{parse-item-or-list}}) with input_string.
-   2. Append member to members.
-   3. Discard any leading OWS from input_string.
-   4. If input_string is empty, return members.
-   5. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   6. Discard any leading OWS from input_string.
-   7. If input_string is empty, there is a trailing comma; fail parsing.
+   1. Append the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string to members.
+   2. Discard any leading OWS from input_string.
+   3. If input_string is empty, return members.
+   4. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   5. Discard any leading OWS from input_string.
+   6. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return members (which is empty).
 
 
 #### Parsing an Item or Inner List {#parse-item-or-list}
 
-Given an ASCII string as input_string, return either the tuple (item_or_list, parameters), where item_or_list can be either a single bare item, or an array of (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return the tuple (item_or_inner_list, parameters), where item_or_inner_list can be either a single bare item, or an array of (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is "(", let member be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
-2. Else, let member be the result of running Parsing an Item ({{parse-item}}) with input_string.
-3. Return member. 
+1. If the first character of input_string is "(", return the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
+2. Return the result of running Parsing an Item ({{parse-item}}) with input_string.
 
 
 #### Parsing an Inner List {#parse-innerlist}
@@ -708,14 +706,14 @@ Given an ASCII string as input_string, return the tuple (inner_list, parameters)
 
 ### Parsing a Dictionary from Text {#parse-dictionary}
 
-Given an ASCII string as input_string, return an ordered map whose values are (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an ordered map whose values are (item_or_inner_list, parameters) tuples. input_string is modified to remove the parsed value.
 
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parsing a Key from Text ({{parse-key}}) with input_string.
    2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let member be the result of running Parsing an Item or Inner List from Text ({{parse-item-or-list}}) with input_string.
+   4. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
    6. Add name this_key with value member to dictionary.
    7. Discard any leading OWS from input_string.
    8. If input_string is empty, return dictionary.
@@ -747,6 +745,8 @@ Given an ASCII string as input_string, return a bare item. input_string is modif
 
 
 #### Parsing Parameters from Text {#parse-param}
+
+Given an ASCII string as input_string, return an ordered map whose values are bare items. input_string is modified to remove the parsed value.
 
 1. Let parameters be an empty, ordered map.
 2. While input_string is not empty:
