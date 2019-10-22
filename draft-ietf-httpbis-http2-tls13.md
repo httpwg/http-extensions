@@ -32,8 +32,8 @@ informative:
 
 --- abstract
 
-This document updates HTTP/2 to prohibit TLS 1.3 post-handshake authentication,
-as an analog to existing TLS 1.2 renegotiation restriction.
+This document updates RFC 7540 by forbidding TLS 1.3 post-handshake
+authentication, as an analog to the existing TLS 1.2 renegotiation restriction.
 
 --- note_Note_to_Readers
 
@@ -61,10 +61,10 @@ which is incompatible with the mechanism above. Clients cannot correlate the
 certificate request with the HTTP request which triggered it. Thus, Section
 9.2.1 of {{RFC7540}} forbids renegotiation.
 
-TLS 1.3 {{RFC8446}} updates TLS 1.2 to remove renegotiation in favor of
-separate post-handshake authentication and key update mechanisms. The former
-shares the same problems with multiplexed protocols, but the prohibition in
-HTTP/2 only applies to TLS 1.2 renegotiation.
+TLS 1.3 {{RFC8446}} updates TLS 1.2 to remove renegotiation in favor of separate
+post-handshake authentication and key update mechanisms. The former shares the
+same problems with multiplexed protocols, but the prohibition in {{RFC7540}}
+only applies to TLS 1.2 renegotiation.
 
 This document updates HTTP/2 to similarly forbid TLS 1.3 post-handshake
 authentication.
@@ -81,8 +81,8 @@ when, and only when, they appear in all capitals, as shown here.
 # Post-Handshake Authentication in HTTP/2
 
 HTTP/2 servers MUST NOT send post-handshake TLS 1.3 CertificateRequest messages.
-HTTP/2 clients MUST treat TLS 1.3 post-handshake authentication as a connection
-error (see Section 5.4.1 of {{RFC7540}}) of type PROTOCOL\_ERROR.
+HTTP/2 clients MUST treat such messages as connection errors (see Section 5.4.1
+of {{RFC7540}}) of type PROTOCOL\_ERROR.
 
 {{RFC7540}} permitted renegotiation before the HTTP/2 connection preface to
 provide confidentiality of the client certificate. TLS 1.3 encrypts the client
@@ -112,7 +112,7 @@ when early data is enabled, these interactions are defined in {{RFC8470}} and
 allowed for in the design of HTTP/2.
 
 Unless the use of a new type of TLS message depends on an interaction with the
-application layer protocol, that TLS message can be sent after the handshake
+application-layer protocol, that TLS message can be sent after the handshake
 completes.
 
 

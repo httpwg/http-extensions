@@ -212,7 +212,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Name: connnection_limit_reached
 * Description: The intermediary is configured to limit the number of connections it has to the next hop, and that limit has been passed.
 * Extra Parameters: None.
-* Recommended HTTP status code:
+* Recommended HTTP status code: 503
 
 ## HTTP Response Status
 
@@ -369,7 +369,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 * Name: proxy_internal_error
 * Description: The intermediary encountered an internal error unrelated to the origin.
 * Extra Parameters:
-  - details: a sh-string containing details about the error condition.
+  - error: a sh-string containing details about the error condition.
 * Recommended HTTP status code: 500
 
 ## Proxy Loop Detected
