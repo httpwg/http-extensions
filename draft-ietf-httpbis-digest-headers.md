@@ -437,8 +437,8 @@ The following headers are defined
 ## Want-Digest {#want-digest-header}
 
 The Want-Digest message header field indicates the sender's desire to
-receive a representation digest on messages associated with the Request-
-URI and representation metadata.
+receive a representation digest on messages associated with
+the request URI and representation metadata.
 
 ~~~
    Want-Digest = "Want-Digest" ":" OWS 1#want-digest-value
