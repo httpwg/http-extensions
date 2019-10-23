@@ -246,7 +246,7 @@ parameter     = OWS ";" OWS param-name [ "=" param-value ]
 param-name    = key
 key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
 lcalpha       = %x61-7A ; a-z
-param-value   = sh-item
+param-value   = bare-item
 ~~~
 
 In HTTP headers, parameters are separated from their item or inner-list and each other by semicolons. For example:
