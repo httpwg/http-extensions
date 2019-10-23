@@ -155,7 +155,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 
 * Name: destination_unavailable
 * Description: The intermediary considers the next hop to be unavailable; e.g., recent attempts to communicate with it may have failed, or a health check may indicate that it is down.
-* Extra Parameters:
+* Extra Parameters: None.
 * Recommended HTTP status code: 503
 
 ## Destination IP Prohibited
