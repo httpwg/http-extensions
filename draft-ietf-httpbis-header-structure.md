@@ -466,7 +466,7 @@ Given an ordered dictionary as input_parameters (each member having a param-name
    2. Append the result of applying Serializing a Key ({{ser-key}}) with param-name to output.
    4. If param-value is not null:
       1. Append "=" to output.
-      2. Append the result of applying Serializing a bare Item ({{ser-bare-tem}}) with param-value to output.
+      2. Append the result of applying Serializing a bare Item ({{ser-bare-item}}) with param-value to output.
 2. Return output.
 
 
