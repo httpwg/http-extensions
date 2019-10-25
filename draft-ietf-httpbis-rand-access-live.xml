@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE rfc [
-<!ENTITY RFC2119 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC5234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.5234.xml">
-<!ENTITY RFC7230 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7230.xml">
-<!ENTITY RFC7233 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7233.xml">
-<!ENTITY RFC7234 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.7234.xml">
-<!ENTITY RFC8216 SYSTEM "http://www.rfc-editor.org/refs/bibxml/reference.RFC.8216.xml">
+<!ENTITY RFC2119 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC5234 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.5234.xml">
+<!ENTITY RFC7230 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.7230.xml">
+<!ENTITY RFC7233 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.7233.xml">
+<!ENTITY RFC7234 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.7234.xml">
+<!ENTITY RFC8216 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.8216.xml">
 
 <!-- Fudge for XMLmind which doesn't have this built in -->
 <!ENTITY nbsp    "&#160;">
