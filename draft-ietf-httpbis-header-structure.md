@@ -188,7 +188,7 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Lists {#list}
 
-Lists are arrays of zero or more members, each of which can be an item ({{item}}) or an inner list (an array of zero or more items).
+Lists are arrays of zero or more members, each of which can be an item ({{item}}) or an inner list ({{inner-list}}), both of which can be parameterised ({{param}}).
 
 The ABNF for lists is:
 
@@ -209,9 +209,16 @@ In HTTP headers, each member is separated by a comma and optional whitespace. Fo
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
-When a list-member is an inner-list, it can also have associated parameters -- an ordered map of key-value pairs where the keys are short, textual strings and the values are bare items ({{item}}). There can be zero or more parameters on an inner-list, and their keys are required to be unique within that scope.
+In HTTP headers, an empty list is denoted by not serialising the header at all.
 
-In HTTP headers, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of lists of strings could look like:
+Parsers MUST support lists containing at least 1024 members. Header specifications can constrain the types and cardinality of individual list values as they require.
+
+
+### Inner Lists {#inner-list}
+
+An inner list is an array of zero or more items ({{item}}). Both the individual items and the inner-list itself can be parameterised ({{param}}).
+
+In HTTP headers, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of inner-lists of strings could look like:
 
 ~~~ example
 Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
@@ -219,22 +226,25 @@ Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 
 Note that the last member in this example is an empty inner list.
 
+Parsers MUST support inner-lists containing at least 256 members. Header specifications can constrain the types and cardinality of individual inner-list members as they require.
+
+
+### Parameters {#param}
+
+Parameters are an ordered map of key-values pairs that are associated with an item ({{item}}) or inner-list ({{inner-list}}). The keys are required to be unique within the scope of a map of parameters, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
+
 In HTTP headers, an inner-list's parameters are separated from the inner-list and each other by semicolons. For example:
 
 ~~~ example
-Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi jkl);q="9";r=w
+Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
 ~~~
 
-In HTTP headers, an empty list is denoted by not serialising the header at all.
-
-Parsers MUST support lists containing at least 1024 members, support members with at least 256 parameters, support inner-lists containing at least 256 members, and support parameter keys with at least 64 characters.
-
-Header specifications can constrain the types of individual list values (including that of individual inner-list members and parameters) if necessary.
+Parsers MUST support lists containing at least 1024 members, support members with at least 256 parameters, support inner-lists containing at least 256 members, and support parameter keys with at least 64 characters. Header specifications can constrain the types and cardinality of individual parameter names and values as they require.
 
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised. There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
+Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
 
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
@@ -274,9 +284,7 @@ Parsers MUST support dictionaries containing at least 1024 name/value pairs, and
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
-
-An item can also have associated parameters -- an ordered map of key-value pairs where the keys are short, textual strings and the values are bare items (i.e., parameter values cannot themselves have parameters). There can be zero or more parameters on a member, and their keys are required to be unique within that scope.
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated parameters ({{param}}).
 
 The ABNF for items in HTTP headers is:
 
