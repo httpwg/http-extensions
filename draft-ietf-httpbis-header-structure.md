@@ -459,9 +459,9 @@ This section defines how to serialize and parse Structured Headers in header fie
 Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP header value.
 
 1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not serialize the field at all (i.e., omit both the field-name and field-value).
-2. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
-3. Else if the structure is a list, let output_string be the result of Serializing a List ({{ser-list}}).
-4. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
+2. If the structure is a dictionary, let output_string be the result of running Serializing a Dictionary ({{ser-dictionary}}) with the structure.
+3. Else if the structure is a list, let output_string be the result of running Serializing a List ({{ser-list}}) with the structure.
+4. Else if the structure is an item, let output_string be the result of running Serializing an Item ({{ser-item}}) with the structure.
 5. Else, fail serialisation.
 6. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
 
@@ -473,8 +473,8 @@ Given an array of (member-value, parameters) tuples as input_list, return an ASC
 
 1. Let output be an empty string.
 2. For each (member-value, parameters) of input_list:
-   1. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
-   2. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
+   1. If member-value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
+   2. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
    3. If more member-values remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
@@ -482,14 +482,14 @@ Given an array of (member-value, parameters) tuples as input_list, return an ASC
 
 #### Serialising an Inner List {#ser-innerlist}
 
-Given an array of (member-value, parameters) tuples as inner_list and parameters as list_parameters, return an ASCII string suitable for use in a HTTP header value.
+Given an array of (member-value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be the string "(".
 2. For each (member-value, parameters) of inner_list:
-   1. Append the result of applying Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
+   1. Append the result of running Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
    2. If more values remain in inner_list, append a single WS to output.
 3. Append ")" to output.
-4. Append the result of applying Serializing Parameters {{ser-params}} with list_parameters to output.
+4. Append the result of running Serializing Parameters {{ser-params}} with list_parameters to output.
 5. Return output.
 
 #### Serializing Parameters {#ser-params}
@@ -499,10 +499,10 @@ Given an ordered dictionary as input_parameters (each member having a param-name
 0. Let output be an empty string.
 1. For each parameter-name with a value of param-value in input_parameters:
    1. Append ";" to output.
-   2. Append the result of applying Serializing a Key ({{ser-key}}) with param-name to output.
+   2. Append the result of running Serializing a Key ({{ser-key}}) with param-name to output.
    4. If param-value is not null:
       1. Append "=" to output.
-      2. Append the result of applying Serializing a bare Item ({{ser-bare-item}}) with param-value to output.
+      2. Append the result of running Serializing a bare Item ({{ser-bare-item}}) with param-value to output.
 2. Return output.
 
 
@@ -522,10 +522,10 @@ Given an ordered dictionary as input_dictionary (each member having a member-nam
 
 1. Let output be an empty string.
 2. For each member-name with a value of (member-value, parameters) in input_dictionary:
-   1. Append the result of applying Serializing a Key ({{ser-key}}) with member's member-name to output.
+   1. Append the result of running Serializing a Key ({{ser-key}}) with member's member-name to output.
    2. Append "=" to output.
-   3. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
-   4. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
+   3. If member-value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
+   4. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
    5. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
@@ -537,8 +537,8 @@ Given an ordered dictionary as input_dictionary (each member having a member-nam
 Given an item bare_item and parameters item_parameters as input, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
-2. Append the result of applying Serializing a Bare Item {{ser-bare-item}} with bare_item to output.
-3. Append the result of applying Serializing Parameters {{ser-params}} with item_parameters to output.
+2. Append the result of running Serializing a Bare Item {{ser-bare-item}} with bare_item to output.
+3. Append the result of running Serializing Parameters {{ser-params}} with item_parameters to output.
 4. Return output.
 
 
@@ -546,12 +546,12 @@ Given an item bare_item and parameters item_parameters as input, return an ASCII
 
 Given an item as input_item, return an ASCII string suitable for use in a HTTP header value.
 
-1. If input_item is an integer, return the result of applying Serializing an Integer ({{ser-integer}}) to input_item.
-2. If input_item is a float, return the result of applying Serializing a Float ({{ser-float}}) to input_item.
-3. If input_item is a string, return the result of applying Serializing a String ({{ser-string}}) to input_item.
-4. If input_item is a token, return the result of Serializing a Token ({{ser-token}}) to input_item.
-5. If input_item is a Boolean, return the result of applying Serializing a Boolean ({{ser-boolean}}) to input_item.
-6. If input_item is a byte sequence, return the result of applying Serializing a Byte Sequence ({{ser-binary}}) to input_item.
+1. If input_item is an integer, return the result of running Serializing an Integer ({{ser-integer}}) with input_item.
+2. If input_item is a float, return the result of running Serializing a Float ({{ser-float}}) with input_item.
+3. If input_item is a string, return the result of running Serializing a String ({{ser-string}}) with input_item.
+4. If input_item is a token, return the result of running Serializing a Token ({{ser-token}}) with input_item.
+5. If input_item is a Boolean, return the result of running Serializing a Boolean ({{ser-boolean}}) with input_item.
+6. If input_item is a byte sequence, return the result of running Serializing a Byte Sequence ({{ser-binary}}) with input_item.
 7. Otherwise, fail serialisation.
 
 
@@ -643,9 +643,9 @@ Given an array of bytes input_bytes that represents the chosen header's field-va
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading OWS from input_string.
-2. If header_type is "list", let output be the result of Parsing a List from Text ({{parse-list}}).
-3. If header_type is "dictionary", let output be the result of Parsing a Dictionary from Text ({{parse-dictionary}}).
-4. If header_type is "item", let output be the result of Parsing an Item from Text ({{parse-item}}).
+2. If header_type is "list", let output be the result of running Parsing a List ({{parse-list}}) with input_string.
+3. If header_type is "dictionary", let output be the result of running Parsing a Dictionary ({{parse-dictionary}}) with input_string.
+4. If header_type is "item", let output be the result of running Parsing an Item ({{parse-item}}) with input_string.
 5. Discard any leading OWS from input_string.
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
@@ -663,7 +663,7 @@ If parsing fails -- including when calling another algorithm -- the entire heade
 Note that this requirement does not apply to an implementation that is not parsing the header field; for example, an intermediary is not required to strip a failing header field from a message before forwarding it.
 
 
-### Parsing a List from Text {#parse-list}
+### Parsing a List {#parse-list}
 
 Given an ASCII string as input_string, return an array of (item_or_inner_list, parameters) tuples. input_string is modified to remove the parsed value.
 
@@ -696,21 +696,21 @@ Given an ASCII string as input_string, return the tuple (inner_list, parameters)
    1. Discard any leading OWS from input_string.
    2. If the first character of input_string is ")":
       1. Consume the first character of input_string.
-      2. Let parameters be the result of running Parsing Parameters from Text ({{parse-param}}) with input_string.
+      2. Let parameters be the result of running Parsing Parameters ({{parse-param}}) with input_string.
       2. Return the tuple (inner_list, parameters).
-   3. Let item be the result of running Parsing an Item from Text ({{parse-item}}) with input_string.
+   3. Let item be the result of running Parsing an Item ({{parse-item}}) with input_string.
    4. Append item to inner_list.
    5. If the first character of input_string is not SP or ")", fail parsing.
 4. The end of the inner list was not found; fail parsing.
 
 
-### Parsing a Dictionary from Text {#parse-dictionary}
+### Parsing a Dictionary {#parse-dictionary}
 
 Given an ASCII string as input_string, return an ordered map whose values are (item_or_inner_list, parameters) tuples. input_string is modified to remove the parsed value.
 
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
-   1. Let this_key be the result of running Parsing a Key from Text ({{parse-key}}) with input_string.
+   1. Let this_key be the result of running Parsing a Key ({{parse-key}}) with input_string.
    2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
    3. Consume the first character of input_string; if it is not "=", fail parsing.
    4. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
@@ -723,28 +723,27 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
 3. No structured data has been found; return dictionary (which is empty).
 
 
-### Parsing an Item from Text {#parse-item}
+### Parsing an Item {#parse-item}
 
 Given an ASCII string as input_string, return a (bare_item, parameters) tuple. input_string is modified to remove the parsed value.
 
-1. Let bare_item be the result of running Parsing a Bare Item from Text ({{parse-bare-item}}) with input_string.
-2. Let parameters be the result of running Parsing Parameters from Text ({{parse-param}}) with input_string.
+1. Let bare_item be the result of running Parsing a Bare Item ({{parse-bare-item}}) with input_string.
+2. Let parameters be the result of running Parsing Parameters ({{parse-param}}) with input_string.
 3. Return the tuple (bare_item, parameters).
 
 
-#### Parsing a Bare Item from Text {#parse-bare-item}
+#### Parsing a Bare Item {#parse-bare-item}
 
 Given an ASCII string as input_string, return a bare item. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
-2. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
-3. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
-4. If the first character of input_string is "?", process input_string as a Boolean ({{parse-boolean}}) and return the result.
-5. If the first character of input_string is an ALPHA, process input_string as a token ({{parse-token}}) and return the result.
+1. If the first character of input_string is a "-" or a DIGIT, return the result of running Parsing a Number ({{parse-number}}) with input_string.
+2. If the first character of input_string is a DQUOTE, return the result of running Parsing a String ({{parse-string}}) with input_string.
+3. If the first character of input_string is "\*", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
+4. If the first character of input_string is "?", return the result of running Parsing a Boolean ({{parse-boolean}}) with input_string.
+5. If the first character of input_string is an ALPHA, return the result of running Parsing a Token ({{parse-token}}) with input_string.
 6. Otherwise, the item type is unrecognized; fail parsing.
 
-
-#### Parsing Parameters from Text {#parse-param}
+#### Parsing Parameters {#parse-param}
 
 Given an ASCII string as input_string, return an ordered map whose values are bare items. input_string is modified to remove the parsed value.
 
@@ -753,12 +752,12 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
    1. If the first character of input_string is not ";", exit the loop.
    2. Consume a ";" character from the beginning of input_string.
    3. Discard any leading OWS from input_string.
-   4. let param_name be the result of Parsing a key from Text ({{parse-key}}) from input_string.
+   4. let param_name be the result of running Parsing a Key ({{parse-key}}) with input_string.
    5. If param_name is already present in parameters, there is a duplicate; fail parsing.
    6. Let param_value be a null value.
    7. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
-      2. Let param_value be the result of Parsing a Bare Item from Text ({{parse-bare-item}}) from input_string.
+      2. Let param_value be the result of running Parsing a Bare Item ({{parse-bare-item}}) with input_string.
    8. Append key param_name with value param_value to parameters.
 3. Return parameters.
 
