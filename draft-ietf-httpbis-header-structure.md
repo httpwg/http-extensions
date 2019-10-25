@@ -458,7 +458,7 @@ This section defines how to serialize and parse Structured Headers in header fie
 
 Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP header value.
 
-1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not send the serialize field at all (i.e., omit both the field-name and field-value).
+1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not serialize the field at all (i.e., omit both the field-name and field-value).
 2. If the structure is a dictionary, let output_string be the result of Serializing a Dictionary ({{ser-dictionary}}).
 3. Else if the structure is a list, let output_string be the result of Serializing a List ({{ser-list}}).
 4. Else if the structure is an item, let output_string be the result of Serializing an Item ({{ser-item}}).
