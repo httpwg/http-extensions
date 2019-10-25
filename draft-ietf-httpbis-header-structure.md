@@ -188,21 +188,13 @@ This section defines the abstract value types that can be composed into Structur
 
 ## Lists {#list}
 
-Lists are arrays of zero or more members, each of which can be an item ({{item}}) or an inner list (an array of zero or more items).
+Lists are arrays of zero or more members, each of which can be an item ({{item}}) or an inner list ({{inner-list}}), both of which can be parameterised ({{param}}).
 
-Each member of the top-level list can also have associated parameters -- an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters on a member, and their keys are required to be unique within that scope.
-
-The ABNF for lists is:
+The ABNF for lists in HTTP headers is:
 
 ~~~ abnf
 sh-list       = list-member *( OWS "," OWS list-member )
-list-member   = ( sh-item / inner-list ) *parameter
-inner-list    = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")"
-parameter     = OWS ";" OWS param-name [ "=" param-value ]
-param-name    = key
-key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
-lcalpha       = %x61-7A ; a-z
-param-value   = sh-item
+list-member   = sh-item / inner-list
 ~~~
 
 In HTTP headers, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
@@ -211,7 +203,22 @@ In HTTP headers, each member is separated by a comma and optional whitespace. Fo
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
-In HTTP headers, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of lists of strings could look like:
+In HTTP headers, an empty list is denoted by not serialising the header at all.
+
+Parsers MUST support lists containing at least 1024 members. Header specifications can constrain the types and cardinality of individual list values as they require.
+
+
+### Inner Lists {#inner-list}
+
+An inner list is an array of zero or more items ({{item}}). Both the individual items and the inner-list itself can be parameterised ({{param}}).
+
+The ABNF for inner-lists in HTTP headers is:
+
+~~~ abnf
+inner-list    = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")" *parameter
+~~~
+
+In HTTP headers, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of inner-lists of strings could look like:
 
 ~~~ example
 Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
@@ -219,24 +226,41 @@ Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 
 Note that the last member in this example is an empty inner list.
 
-In HTTP headers, members' parameters are separated from the member and each other by semicolons. For example:
+A header field whose value is defined as a list of inner-lists with parameters at both levels could look like:
 
 ~~~ example
-Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi jkl);q="9";r=w
+Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar", "baz");lvl=1
 ~~~
 
-In HTTP headers, an empty list is denoted by not serialising the header at all.
+Parsers MUST support inner-lists containing at least 256 members. Header specifications can constrain the types and cardinality of individual inner-list members as they require.
 
-Parsers MUST support lists containing at least 1024 members, support members with at least 256 parameters, support inner-lists containing at least 256 members, and support parameter keys with at least 64 characters.
 
-Header specifications can constrain the types of individual list values (including that of individual inner-list members and parameters) if necessary.
+### Parameters {#param}
+
+Parameters are an ordered map of key-values pairs that are associated with an item ({{item}}) or inner-list ({{inner-list}}). The keys are required to be unique within the scope of a map of parameters, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
+
+The ABNF for parameters in HTTP headers is:
+
+~~~ abnf
+parameter     = ";" OWS param-name [ "=" param-value ]
+param-name    = key
+key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
+lcalpha       = %x61-7A ; a-z
+param-value   = bare-item
+~~~
+
+In HTTP headers, parameters are separated from their item or inner-list and each other by semicolons. For example:
+
+~~~ example
+Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
+~~~
+
+Parsers MUST support at least 256 parameters on an item or inner-list, and support parameter keys with at least 64 characters. Header specifications can constrain the types and cardinality of individual parameter names and values as they require.
 
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items. There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
-
-Each member of the dictionary can also have associated parameters -- an ordered map of key-value pairs where the keys are short, textual strings and the values are items ({{item}}). There can be zero or more parameters on a member, and their keys are required to be unique within that scope.
+Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
 
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
@@ -244,7 +268,7 @@ The ABNF for dictionaries in HTTP headers is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-name "=" member-value *parameter
+dict-member    = member-name "=" member-value
 member-name    = key
 member-value   = sh-item / inner-list
 ~~~
@@ -276,17 +300,30 @@ Parsers MUST support dictionaries containing at least 1024 name/value pairs, and
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}).
+An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated parameters ({{param}}).
 
 The ABNF for items in HTTP headers is:
 
 ~~~ abnf
-sh-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
-          / sh-boolean
+sh-item   = bare-item *parameter
+bare-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
+            / sh-boolean
+~~~
+
+For example, a header field that is defined to be an Item that is an integer might look like:
+
+~~~ exmample
+Example-IntItemHeader: 5
+~~~
+
+or
+
+~~~ example
+Example-IntItemHeader: 5; foo=bar
 ~~~
 
 
-## Integers {#integer}
+### Integers {#integer}
 
 Integers have a range of −999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ({{IEEE754}}).
 
@@ -305,7 +342,7 @@ Example-IntegerHeader: 42
 Note that commas in integers are used in this section's prose only for readability; they are not valid in the wire format.
 
 
-## Floats {#float}
+### Floats {#float}
 
 Floats are decimal numbers with an integer and a fractional component. The fractional component has at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
 
@@ -329,7 +366,7 @@ Example-FloatHeader: 4.5
 ~~~
 
 
-## Strings {#string}
+### Strings {#string}
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
@@ -357,7 +394,7 @@ When it is necessary for a field value to convey non-ASCII string content, a byt
 Parsers MUST support strings with at least 1024 characters.
 
 
-## Tokens {#token}
+### Tokens {#token}
 
 Tokens are short textual words; their abstract model is identical to their expression in the HTTP header serialisation.
 
@@ -375,7 +412,7 @@ Note that a Structured Header token is not the same as the "token" ABNF rule def
 {{?RFC7230}}.
 
 
-## Byte Sequences {#binary}
+### Byte Sequences {#binary}
 
 Byte sequences can be conveyed in Structured Headers.
 
@@ -395,7 +432,7 @@ Example-BinaryHdr: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
 Parsers MUST support byte sequences with at least 16384 octets after decoding.
 
 
-## Booleans {#boolean}
+### Booleans {#boolean}
 
 Boolean values can be conveyed in Structured Headers.
 
@@ -432,28 +469,28 @@ Given a structure defined in this specification, return an ASCII string suitable
 
 ### Serializing a List {#ser-list}
 
-Given a list of (member-value, parameters) as input_list, return an ASCII string suitable for use in a HTTP header value.
+Given an array of (member-value, parameters) tuples as input_list, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
 2. For each (member-value, parameters) of input_list:
-   1. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with member-value to output.
-   2. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
-   3. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
-   4. If more member-values remain in input_plist:
+   1. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
+   2. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
+   3. If more member-values remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
 
 #### Serialising an Inner List {#ser-innerlist}
 
-Given an array as inner_list, return an ASCII string suitable for use in a HTTP header value.
+Given an array of (member-value, parameters) tuples as inner_list and parameters as list_parameters, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be the string "(".
-2. For each member-value of inner_list:
-   1. Append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
-   2. If more member-values remain in inner_list, append a single WS to output.
+2. For each (member-value, parameters) of inner_list:
+   1. Append the result of applying Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
+   2. If more values remain in inner_list, append a single WS to output.
 3. Append ")" to output.
-4. Return output.
+4. Append the result of applying Serializing Parameters {{ser-params}} with list_parameters to output.
+5. Return output.
 
 #### Serializing Parameters {#ser-params}
 
@@ -465,7 +502,7 @@ Given an ordered dictionary as input_parameters (each member having a param-name
    2. Append the result of applying Serializing a Key ({{ser-key}}) with param-name to output.
    4. If param-value is not null:
       1. Append "=" to output.
-      2. Append the result of applying Serializing an Item ({{ser-item}}) with param-value to output.
+      2. Append the result of applying Serializing a bare Item ({{ser-bare-item}}) with param-value to output.
 2. Return output.
 
 
@@ -487,16 +524,25 @@ Given an ordered dictionary as input_dictionary (each member having a member-nam
 2. For each member-name with a value of (member-value, parameters) in input_dictionary:
    1. Append the result of applying Serializing a Key ({{ser-key}}) with member's member-name to output.
    2. Append "=" to output.
-   3. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with member-value to output.
-   4. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with member-value to output.
-   5. Append the result of Serializing Parameters {{ser-params}} with parameters to output.
-   8. If more members remain in input_dictionary:
+   3. If member-value is an array, append the result of applying Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
+   4. Otherwise, append the result of applying Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
+   5. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
 
 
 ### Serializing an Item {#ser-item}
+
+Given an item bare_item and parameters item_parameters as input, return an ASCII string suitable for use in a HTTP header value.
+
+1. Let output be an empty string.
+2. Append the result of applying Serializing a Bare Item {{ser-bare-item}} with bare_item to output.
+3. Append the result of applying Serializing Parameters {{ser-params}} with item_parameters to output.
+4. Return output.
+
+
+#### Serialising a Bare Item {#ser-bare-item}
 
 Given an item as input_item, return an ASCII string suitable for use in a HTTP header value.
 
@@ -593,7 +639,7 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in a H
 
 When a receiving implementation parses HTTP header fields that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an array of bytes input_bytes that represents the chosen header's field-value (which is an empty string if that header is not present), and header_type (one of "dictionary", "list", or "item"), return the parsed header value.
+Given an array of bytes input_bytes that represents the chosen header's field-value (which is empty if that header is not present), and header_type (one of "dictionary", "list", or "item"), return the parsed header value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading OWS from input_string.
@@ -617,47 +663,32 @@ If parsing fails -- including when calling another algorithm -- the entire heade
 Note that this requirement does not apply to an implementation that is not parsing the header field; for example, an intermediary is not required to strip a failing header field from a message before forwarding it.
 
 
-
 ### Parsing a List from Text {#parse-list}
 
-Given an ASCII string as input_string, return an array of (member, parameters). input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an array of (item_or_inner_list, parameters) tuples. input_string is modified to remove the parsed value.
 
 1. Let members be an empty array.
 2. While input_string is not empty:
-   1. Let member be the result of running Parsing a Parameterized Member from Text ({{parse-param}}) with input_string.
-   2. Append member to members.
-   3. Discard any leading OWS from input_string.
-   4. If input_string is empty, return members.
-   5. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   6. Discard any leading OWS from input_string.
-   7. If input_string is empty, there is a trailing comma; fail parsing.
+   1. Append the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string to members.
+   2. Discard any leading OWS from input_string.
+   3. If input_string is empty, return members.
+   4. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   5. Discard any leading OWS from input_string.
+   6. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return members (which is empty).
 
 
-#### Parsing a Parameterized Member from Text {#parse-param}
+#### Parsing an Item or Inner List {#parse-item-or-list}
 
-Given an ASCII string as input_string, return a member (either a list of items, or a single item) with an ordered map of parameters. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return the tuple (item_or_inner_list, parameters), where item_or_inner_list can be either a single bare item, or an array of (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is "(", let member be the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
-2. Else, let member be the result of running Parsing an Item ({{parse-item}}) with input_string.
-3. Let parameters be an empty, ordered map.
-4. While input_string is not empty:
-   1. Discard any leading OWS from input_string.
-   2. If the first character of input_string is not ";", exit the loop.
-   3. Consume a ";" character from the beginning of input_string.
-   4. Discard any leading OWS from input_string.
-   5. let param_name be the result of Parsing a key from Text ({{parse-key}}) from input_string.
-   6. If param_name is already present in parameters, there is a duplicate; fail parsing.
-   7. Let param_value be a null value.
-   8. If the first character of input_string is "=":
-      1. Consume the "=" character at the beginning of input_string.
-      2. Let param_value be the result of Parsing an Item from Text ({{parse-item}}) from input_string.
-   9. Append key param_name with value param_value to parameters.
-5. Return the tuple (member, parameters).
+1. If the first character of input_string is "(", return the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
+2. Return the result of running Parsing an Item ({{parse-item}}) with input_string.
+
 
 #### Parsing an Inner List {#parse-innerlist}
 
-Given an ASCII string as input_string, return an array of items. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return the tuple (inner_list, parameters), where inner_list is an array of (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
 
 1. Consume the first character of input_string; if it is not "(", fail parsing.
 2. Let inner_list be an empty array.
@@ -665,11 +696,71 @@ Given an ASCII string as input_string, return an array of items. input_string is
    1. Discard any leading OWS from input_string.
    2. If the first character of input_string is ")":
       1. Consume the first character of input_string.
-      2. Return inner_list.
+      2. Let parameters be the result of running Parsing Parameters from Text ({{parse-param}}) with input_string.
+      2. Return the tuple (inner_list, parameters).
    3. Let item be the result of running Parsing an Item from Text ({{parse-item}}) with input_string.
    4. Append item to inner_list.
    5. If the first character of input_string is not SP or ")", fail parsing.
 4. The end of the inner list was not found; fail parsing.
+
+
+### Parsing a Dictionary from Text {#parse-dictionary}
+
+Given an ASCII string as input_string, return an ordered map whose values are (item_or_inner_list, parameters) tuples. input_string is modified to remove the parsed value.
+
+1. Let dictionary be an empty, ordered map.
+2. While input_string is not empty:
+   1. Let this_key be the result of running Parsing a Key from Text ({{parse-key}}) with input_string.
+   2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
+   3. Consume the first character of input_string; if it is not "=", fail parsing.
+   4. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
+   6. Add name this_key with value member to dictionary.
+   7. Discard any leading OWS from input_string.
+   8. If input_string is empty, return dictionary.
+   9. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   0. Discard any leading OWS from input_string.
+   1. If input_string is empty, there is a trailing comma; fail parsing.
+3. No structured data has been found; return dictionary (which is empty).
+
+
+### Parsing an Item from Text {#parse-item}
+
+Given an ASCII string as input_string, return a (bare_item, parameters) tuple. input_string is modified to remove the parsed value.
+
+1. Let bare_item be the result of running Parsing a Bare Item from Text ({{parse-bare-item}}) with input_string.
+2. Let parameters be the result of running Parsing Parameters from Text ({{parse-param}}) with input_string.
+3. Return the tuple (bare_item, parameters).
+
+
+#### Parsing a Bare Item from Text {#parse-bare-item}
+
+Given an ASCII string as input_string, return a bare item. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
+2. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
+3. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
+4. If the first character of input_string is "?", process input_string as a Boolean ({{parse-boolean}}) and return the result.
+5. If the first character of input_string is an ALPHA, process input_string as a token ({{parse-token}}) and return the result.
+6. Otherwise, the item type is unrecognized; fail parsing.
+
+
+#### Parsing Parameters from Text {#parse-param}
+
+Given an ASCII string as input_string, return an ordered map whose values are bare items. input_string is modified to remove the parsed value.
+
+1. Let parameters be an empty, ordered map.
+2. While input_string is not empty:
+   1. If the first character of input_string is not ";", exit the loop.
+   2. Consume a ";" character from the beginning of input_string.
+   3. Discard any leading OWS from input_string.
+   4. let param_name be the result of Parsing a key from Text ({{parse-key}}) from input_string.
+   5. If param_name is already present in parameters, there is a duplicate; fail parsing.
+   6. Let param_value be a null value.
+   7. If the first character of input_string is "=":
+      1. Consume the "=" character at the beginning of input_string.
+      2. Let param_value be the result of Parsing a Bare Item from Text ({{parse-bare-item}}) from input_string.
+   8. Append key param_name with value param_value to parameters.
+3. Return parameters.
 
 #### Parsing a Key from Text {#parse-key}
 
@@ -682,37 +773,6 @@ Given an ASCII string as input_string, return a key. input_string is modified to
    2. Let char be the result of removing the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
-
-
-### Parsing a Dictionary from Text {#parse-dictionary}
-
-Given an ASCII string as input_string, return an ordered map of (key, item). input_string is modified to remove the parsed value.
-
-1. Let dictionary be an empty, ordered map.
-2. While input_string is not empty:
-   1. Let this_key be the result of running Parsing a Key from Text ({{parse-key}}) with input_string.
-   2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
-   3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let member be the result of running Parsing a Parameterized Member from Text ({{parse-param}}) with input_string.
-   6. Add name this_key with value member to dictionary.
-   7. Discard any leading OWS from input_string.
-   8. If input_string is empty, return dictionary.
-   9. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   0. Discard any leading OWS from input_string.
-   1. If input_string is empty, there is a trailing comma; fail parsing.
-3. No structured data has been found; return dictionary (which is empty).
-
-
-### Parsing an Item from Text {#parse-item}
-
-Given an ASCII string as input_string, return an item. input_string is modified to remove the parsed value.
-
-1. If the first character of input_string is a "-" or a DIGIT, process input_string as a number ({{parse-number}}) and return the result.
-2. If the first character of input_string is a DQUOTE, process input_string as a string ({{parse-string}}) and return the result.
-3. If the first character of input_string is "\*", process input_string as a byte sequence ({{parse-binary}}) and return the result.
-4. If the first character of input_string is "?", process input_string as a Boolean ({{parse-boolean}}) and return the result.
-5. If the first character of input_string is an ALPHA, process input_string as a token ({{parse-token}}) and return the result.
-6. Otherwise, the item type is unrecognized; fail parsing.
 
 
 ### Parsing a Number from Text {#parse-number}
@@ -884,6 +944,7 @@ _RFC Editor: Please remove this section before publication._
 * Define "structured header name" and "structured header value" terms (#908).
 * Corrected text about valid characters in strings (#931).
 * Removed most instances of the word "textual", as it was redundant (#915).
+* Allowed parameters on Items and Inner Lists (#907).
 
 ## Since draft-ietf-httpbis-header-structure-12
 
