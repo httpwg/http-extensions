@@ -242,7 +242,7 @@ Parameters are an ordered map of key-values pairs that are associated with an it
 The ABNF for parameters in HTTP headers is:
 
 ~~~ abnf
-parameter     = OWS ";" OWS param-name [ "=" param-value ]
+parameter     = ";" OWS param-name [ "=" param-value ]
 param-name    = key
 key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
 lcalpha       = %x61-7A ; a-z
@@ -750,17 +750,16 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
 
 1. Let parameters be an empty, ordered map.
 2. While input_string is not empty:
-   1. Discard any leading OWS from input_string.
-   2. If the first character of input_string is not ";", exit the loop.
-   3. Consume a ";" character from the beginning of input_string.
-   4. Discard any leading OWS from input_string.
-   5. let param_name be the result of Parsing a key from Text ({{parse-key}}) from input_string.
-   6. If param_name is already present in parameters, there is a duplicate; fail parsing.
-   7. Let param_value be a null value.
-   8. If the first character of input_string is "=":
+   1. If the first character of input_string is not ";", exit the loop.
+   2. Consume a ";" character from the beginning of input_string.
+   3. Discard any leading OWS from input_string.
+   4. let param_name be the result of Parsing a key from Text ({{parse-key}}) from input_string.
+   5. If param_name is already present in parameters, there is a duplicate; fail parsing.
+   6. Let param_value be a null value.
+   7. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of Parsing a Bare Item from Text ({{parse-bare-item}}) from input_string.
-   9. Append key param_name with value param_value to parameters.
+   8. Append key param_name with value param_value to parameters.
 3. Return parameters.
 
 #### Parsing a Key from Text {#parse-key}
