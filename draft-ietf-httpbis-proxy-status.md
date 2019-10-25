@@ -147,7 +147,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 ## Destination Not Found
 
 * Name: destination_not_found
-* Description: The intermediary cannot determine the appropriate destination to use for this request; for example, it may not be configured. Note that this error is specific to gateways, which typically require specific configuration to identify the "backend" server; forward proxies use in-band information to identify the origin server.
+* Description: The intermediary cannot determine the appropriate next hop to use for this request; for example, it may not be configured. Note that this error is specific to gateways, which typically require specific configuration to identify the "backend" server; forward proxies use in-band information to identify the origin server.
 * Extra Parameters: None.
 * Recommended HTTP status code: 500
 
@@ -168,7 +168,7 @@ This section lists the Proxy Status Types defined by this document. See {{regist
 ## Destination IP Unroutable
 
 * Name: destination_ip_unroutable
-* Description: The intermediary cannot find a route to the destination IP address.
+* Description: The intermediary cannot find a route to the next hop IP address.
 * Extra Parameters: None.
 * Recommended HTTP status code: 502
 
