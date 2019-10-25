@@ -293,7 +293,7 @@ Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid=?1
 
 As with lists, an empty dictionary is represented in HTTP headers by omitting the entire header field.
 
-Typically, a header field specification will define the semantics using individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
+Typically, a header field specification will define the semantics of dictionaries using individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
 
 Parsers MUST support dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters.
 
