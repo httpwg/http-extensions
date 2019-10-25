@@ -190,17 +190,11 @@ This section defines the abstract value types that can be composed into Structur
 
 Lists are arrays of zero or more members, each of which can be an item ({{item}}) or an inner list ({{inner-list}}), both of which can be parameterised ({{param}}).
 
-The ABNF for lists is:
+The ABNF for lists in HTTP headers is:
 
 ~~~ abnf
 sh-list       = list-member *( OWS "," OWS list-member )
 list-member   = sh-item / inner-list
-inner-list    = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")" *parameter
-parameter     = OWS ";" OWS param-name [ "=" param-value ]
-param-name    = key
-key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
-lcalpha       = %x61-7A ; a-z
-param-value   = sh-item
 ~~~
 
 In HTTP headers, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
@@ -218,6 +212,12 @@ Parsers MUST support lists containing at least 1024 members. Header specificatio
 
 An inner list is an array of zero or more items ({{item}}). Both the individual items and the inner-list itself can be parameterised ({{param}}).
 
+The ABNF for inner-lists in HTTP headers is:
+
+~~~ abnf
+inner-list    = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")" *parameter
+~~~
+
 In HTTP headers, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of inner-lists of strings could look like:
 
 ~~~ example
@@ -233,13 +233,23 @@ Parsers MUST support inner-lists containing at least 256 members. Header specifi
 
 Parameters are an ordered map of key-values pairs that are associated with an item ({{item}}) or inner-list ({{inner-list}}). The keys are required to be unique within the scope of a map of parameters, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
 
-In HTTP headers, an inner-list's parameters are separated from the inner-list and each other by semicolons. For example:
+The ABNF for parameters in HTTP headers is:
+
+~~~ abnf
+parameter     = OWS ";" OWS param-name [ "=" param-value ]
+param-name    = key
+key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
+lcalpha       = %x61-7A ; a-z
+param-value   = sh-item
+~~~
+
+In HTTP headers, parameters are separated from their item or inner-list and each other by semicolons. For example:
 
 ~~~ example
 Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
 ~~~
 
-Parsers MUST support lists containing at least 1024 members, support members with at least 256 parameters, support inner-lists containing at least 256 members, and support parameter keys with at least 64 characters. Header specifications can constrain the types and cardinality of individual parameter names and values as they require.
+Parsers MUST support at least 256 parameters on an item or inner-list, and support parameter keys with at least 64 characters. Header specifications can constrain the types and cardinality of individual parameter names and values as they require.
 
 
 ## Dictionaries {#dictionary}
