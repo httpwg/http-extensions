@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE rfc [
-<!ENTITY RFC2119 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC5234 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.5234.xml">
-<!ENTITY RFC7230 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.7230.xml">
-<!ENTITY RFC7233 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.7233.xml">
-<!ENTITY RFC7234 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.7234.xml">
-<!ENTITY RFC8216 SYSTEM "https://www.rfc-editor.org/refs/bibxml/reference.RFC.8216.xml">
-
 <!-- Fudge for XMLmind which doesn't have this built in -->
 <!ENTITY nbsp    "&#160;">
 ]>
@@ -502,25 +495,143 @@ Content-Range: bytes 1020000-1254567/*
 <back>
     <!-- References split to informative and normative -->
     <references title="Normative References">
-        &RFC2119;
-        &RFC7230;
-        &RFC7233;
-        &RFC7234;
+    	<reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119">
+    		<front>
+    			<title>
+          Key words for use in RFCs to Indicate Requirement Levels
+          </title>
+    			<author initials="S." surname="Bradner" fullname="S. Bradner">
+    				<organization/>
+    			</author>
+    			<date year="1997" month="March"/>
+    			<abstract>
+    				<t>
+          In many standards track documents several words are used to signify the requirements in the specification. These words are often capitalized. This document defines these words as they should be interpreted in IETF documents. This document specifies an Internet Best Current Practices for the Internet Community, and requests discussion and suggestions for improvements.
+          </t>
+    			</abstract>
+    		</front>
+    		<seriesInfo name="BCP" value="14"/>
+    		<seriesInfo name="RFC" value="2119"/>
+    		<seriesInfo name="DOI" value="10.17487/RFC2119"/>
+    	</reference>
+    	<reference anchor="RFC7230" target="https://www.rfc-editor.org/info/rfc7230">
+    		<front>
+    			<title>
+          Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing
+          </title>
+    			<author initials="R." surname="Fielding" fullname="R. Fielding" role="editor">
+    				<organization/>
+    			</author>
+    			<author initials="J." surname="Reschke" fullname="J. Reschke" role="editor">
+    				<organization/>
+    			</author>
+    			<date year="2014" month="June"/>
+    			<abstract>
+    				<t>
+          The Hypertext Transfer Protocol (HTTP) is a stateless application-level protocol for distributed, collaborative, hypertext information systems. This document provides an overview of HTTP architecture and its associated terminology, defines the "http" and "https" Uniform Resource Identifier (URI) schemes, defines the HTTP/1.1 message syntax and parsing requirements, and describes related security concerns for implementations.
+          </t>
+    			</abstract>
+    		</front>
+    		<seriesInfo name="RFC" value="7230"/>
+    		<seriesInfo name="DOI" value="10.17487/RFC7230"/>
+    	</reference>
+    	<reference anchor="RFC7233" target="https://www.rfc-editor.org/info/rfc7233">
+    		<front>
+    			<title>
+          Hypertext Transfer Protocol (HTTP/1.1): Range Requests
+          </title>
+    			<author initials="R." surname="Fielding" fullname="R. Fielding" role="editor">
+    				<organization/>
+    			</author>
+    			<author initials="Y." surname="Lafon" fullname="Y. Lafon" role="editor">
+    				<organization/>
+    			</author>
+    			<author initials="J." surname="Reschke" fullname="J. Reschke" role="editor">
+    				<organization/>
+    			</author>
+    			<date year="2014" month="June"/>
+    			<abstract>
+    				<t>
+          The Hypertext Transfer Protocol (HTTP) is a stateless application- level protocol for distributed, collaborative, hypertext information systems. This document defines range requests and the rules for constructing and combining responses to those requests.
+          </t>
+    			</abstract>
+    		</front>
+    		<seriesInfo name="RFC" value="7233"/>
+    		<seriesInfo name="DOI" value="10.17487/RFC7233"/>
+    	</reference>
+    	<reference anchor="RFC7234" target="https://www.rfc-editor.org/info/rfc7234">
+    		<front>
+    			<title>Hypertext Transfer Protocol (HTTP/1.1): Caching</title>
+    			<author initials="R." surname="Fielding" fullname="R. Fielding" role="editor">
+    				<organization/>
+    			</author>
+    			<author initials="M." surname="Nottingham" fullname="M. Nottingham" role="editor">
+    				<organization/>
+    			</author>
+    			<author initials="J." surname="Reschke" fullname="J. Reschke" role="editor">
+    				<organization/>
+    			</author>
+    			<date year="2014" month="June"/>
+    			<abstract>
+    				<t>
+          The Hypertext Transfer Protocol (HTTP) is a stateless \%application- level protocol for distributed, collaborative, hypertext information systems. This document defines HTTP caches and the associated header fields that control cache behavior or indicate cacheable response messages.
+          </t>
+    			</abstract>
+    		</front>
+    		<seriesInfo name="RFC" value="7234"/>
+    		<seriesInfo name="DOI" value="10.17487/RFC7234"/>
+    	</reference>
     </references>
 
     <references title="Informative References">
-        &RFC5234;
-        &RFC8216;
-        <reference anchor="DASH" target="http://standards.iso.org/ittf/PubliclyAvailableStandards/c065274_ISO_IEC_23009-1_2014.zip">
-          <front>
-            <title>Information technology -- Dynamic adaptive streaming over HTTP (DASH) -- Part 1: Media presentation description and segment formats
-            </title>
-            <author><organization>ISO</organization></author>
-            <date month="May" year="2014" />
-          </front>
-          <seriesInfo name="ISO/IEC" value="23009-1:2014" />
-        </reference>
-    </references>
+    	<reference anchor="RFC5234" target="https://www.rfc-editor.org/info/rfc5234">
+    		<front>
+    			<title>Augmented BNF for Syntax Specifications: ABNF</title>
+    			<author initials="D." surname="Crocker" fullname="D. Crocker" role="editor">
+    				<organization/>
+    			</author>
+    			<author initials="P." surname="Overell" fullname="P. Overell">
+    				<organization/>
+    			</author>
+    			<date year="2008" month="January"/>
+    			<abstract>
+    				<t>
+    Internet technical specifications often need to define a formal syntax. Over the years, a modified version of Backus-Naur Form (BNF), called Augmented BNF (ABNF), has been popular among many Internet specifications. The current specification documents ABNF. It balances compactness and simplicity with reasonable representational power. The differences between standard BNF and ABNF involve naming rules, repetition, alternatives, order-independence, and value ranges. This specification also supplies additional rule definitions and encoding for a core lexical analyzer of the type common to several Internet specifications. [STANDARDS-TRACK]
+    </t>
+    			</abstract>
+    		</front>
+    		<seriesInfo name="STD" value="68"/>
+    		<seriesInfo name="RFC" value="5234"/>
+    		<seriesInfo name="DOI" value="10.17487/RFC5234"/>
+    	</reference>
+    	<reference anchor="RFC8216" target="https://www.rfc-editor.org/info/rfc8216">
+    		<front>
+    			<title>HTTP Live Streaming</title>
+    			<author initials="R." surname="Pantos" fullname="R. Pantos" role="editor">
+    				<organization/>
+    			</author>
+    			<author initials="W." surname="May" fullname="W. May">
+    				<organization/>
+    			</author>
+    			<date year="2017" month="August"/>
+    			<abstract>
+    				<t>
+    This document describes a protocol for transferring unbounded streams of multimedia data. It specifies the data format of the files and the actions to be taken by the server (sender) and the clients (receivers) of the streams. It describes version 7 of this protocol.
+    </t>
+    			</abstract>
+    		</front>
+    		<seriesInfo name="RFC" value="8216"/>
+    		<seriesInfo name="DOI" value="10.17487/RFC8216"/>
+    	</reference>
+      <reference anchor="DASH" target="http://standards.iso.org/ittf/PubliclyAvailableStandards/c065274_ISO_IEC_23009-1_2014.zip">
+        <front>
+          <title>Information technology -- Dynamic adaptive streaming over HTTP (DASH) -- Part 1: Media presentation description and segment formats
+          </title>
+          <author><organization>ISO</organization></author>
+          <date month="May" year="2014" />
+        </front>
+        <seriesInfo name="ISO/IEC" value="23009-1:2014" />
+      </reference>    </references>
 
     <section anchor="Acknowledgements" title="Acknowledgements" numbered="false">
         <t>
