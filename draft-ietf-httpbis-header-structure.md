@@ -215,7 +215,7 @@ An inner list is an array of zero or more items ({{item}}). Both the individual 
 The ABNF for inner-lists in HTTP headers is:
 
 ~~~ abnf
-inner-list    = "(" OWS [ sh-item *( SP sh-item ) OWS ] ")" *parameter
+inner-list    = "(" OWS [ sh-item *( SP OWS sh-item ) OWS ] ")" *parameter
 ~~~
 
 In HTTP headers, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of inner-lists of strings could look like:
