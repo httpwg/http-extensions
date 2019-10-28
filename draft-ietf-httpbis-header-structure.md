@@ -181,9 +181,17 @@ For example:
 ~~~
 
 
-# Structured Header Data Types {#types}
+# Structured Data Types {#types}
 
 This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP headers.
+
+In summary:
+
+* There are three top-level types that a HTTP header can be defined as; Lists, Dictionaries, and Items.
+
+* Lists and Dictionaries are containers; their members can be Items or Inner Lists (which are themselves lists of items).
+
+* Both Items and Inner Lists can be parameterised with key/value pairs.
 
 
 ## Lists {#list}
