@@ -7,5 +7,5 @@
     "group_email": "ietf-http-wg@w3.org",
     "group_type": "wg",
     "report_to": ["group_email"],
-    "report_exclude_labels": ["editorial"]
+    "activity_exclude_labels": ["editorial"]
 }
