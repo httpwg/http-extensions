@@ -127,19 +127,29 @@ For serialisation to header fields, the ABNF illustrates the range of acceptable
 
 # Defining New Structured Headers {#specify}
 
-To define a HTTP header as a structured header, its specification needs to:
+To specify a HTTP header as a structured header, its authors needs to:
 
 * Reference this specification. Recipients and generators of the header need to know that the requirements of this document are in effect.
 
-* Specify the header field's allowed syntax for values, in terms of the types described in {{types}}, along with their associated semantics. Syntax definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for use outside it.
+* Specify the type of the header field itself; either Dictionary ({{dictionary}}), List ({{list}}), or Item ({{item}}).
 
-* Specify any additional constraints upon the syntax of the structures used, as well as the consequences when those constraints are violated. When Structured Headers parsing fails, the header is ignored (see {{text-parse}}); in most situations, header-specific constraints should do likewise.
+* Define the semantics of those structures.
+
+* Specify any additional constraints upon the structures used, as well as the consequences when those constraints are violated.
+
+Typically, this means that a header definition will specify the top-level type -- Dictionary, List or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q".
+
+When Structured Headers parsing fails, the header is ignored (see {{text-parse}}); in most situations, violating header-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the header requires different error handling, this should be explicitly specified.
+
+However, both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, header specifications are discouraged from defining the presence of an unrecognised parameter as an error condition.
+
+Conversely, inner lists are only valid when a header definition explicitly allows them.
 
 Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and floats, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, header field definitions can only use Structured Headers for the entire header field value, not a portion thereof.
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
 
-Specifications can refer to a Structured Header's field-name as a "structured header name" and its field-value as a "structured header value" as necessary.
+Specifications can refer to a Structured Header's field-name as a "structured header name" and its field-value as a "structured header value" as necessary. Header definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for their use.
 
 For example, a fictitious Foo-Example header field might be specified as:
 
@@ -149,35 +159,29 @@ For example, a fictitious Foo-Example header field might be specified as:
 The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
 
-Foo-Example is a Structured Header [RFCxxxx]. Its value MUST be a
-dictionary (Section Y.Y of [RFCxxxx]). Its ABNF is:
+Foo-Example is a Item Structured Header [RFCxxxx]. Its value MUST be
+an Integer (Section Y.Y of [RFCxxxx]). Its ABNF is:
 
-  Foo-Example = sh-dictionary
+  Foo-Example = sh-integer
 
-The dictionary MUST contain:
+Its value indicates the amount of Foo in the message, and MUST
+be between 0 and 10, inclusive; other values MUST cause
+the entire header to be ignored.
 
-* Exactly one member whose name is "foo", and whose value is an
-  integer (Section Y.Y of [RFCxxxx]), indicating the number of foos
-  in the message.
-* Exactly one member whose name is "barUrl", and whose value is a
-  list of strings (Section Y.Y of [RFCxxxx]), conveying the Bar URLs
+The following parameters are defined:
+* A parameter whose name is "fooUrl", and whose value is a string
+  (Section Y.Y of [RFCxxxx]), conveying the Foo URLs
   for the message. See below for processing requirements.
 
-If the structured header value does not contain both, it MUST be
-ignored.
-
-"foo" MUST be between 0 and 10, inclusive; other values MUST cause
-the header to be ignored.
-
-"barUrl" contains one or more URI-references (Section 4.1 of
-[RFC3986], Section 4.1). If barURL is not a valid URI-reference,
-it MUST be ignored. If barURL is a relative reference (Section 4.2
-of [RFC3986]), it MUST be resolved (Section 5 of [RFC3986]) before
-being used.
+"fooUrl" contains a URI-reference (Section 4.1 of
+[RFC3986], Section 4.1). If its value is not a valid URI-reference,
+that URL MUST be ignored. If its value is a relative reference
+(Section 4.2 of [RFC3986]), it MUST be resolved (Section 5 of
+[RFC3986]) before being used.
 
 For example:
 
-  Foo-Example: foo=2, barUrl=("https://bar.example.com/")
+  Foo-Example: 2; fooUrl="https://foo.example.com/"
 ~~~
 
 
