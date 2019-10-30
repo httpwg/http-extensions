@@ -61,8 +61,8 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 # Introduction
 
 HTTP {{!I-D.ietf-httpbis-semantics}} is often used as a substrate for applications other than Web
-browsing; this is sometimes referred to as creating "HTTP-based APIs", or just "HTTP APIs". This is
-done for a variety of reasons, including:
+browsing; this is sometimes referred to as creating "HTTP-based APIs", "REST APIs" or just "HTTP
+APIs". This is done for a variety of reasons, including:
 
 * familiarity by implementers, specifiers, administrators, developers and users,
 * availability of a variety of client, server and proxy implementations,
