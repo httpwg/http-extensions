@@ -126,19 +126,17 @@ Additionally, it uses the "field-name" rule from {{!RFC7230}}, "type", "subtype"
 
 The Variants HTTP response header field indicates what representations are available for a given resource at the time that the response is produced, by enumerating the request header fields that it varies on, along with a representation of the values that are available for each.
 
-Variants is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a Dictionary (Section 3.2 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
+Variants is a Structured Header Dictionary (Section 3.2 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
 ~~~ abnf
 Variants        = sh-dict
 ~~~
 
-Its member-names are tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}), each representing the field-names of a request header that is part of the secondary cache key. The member-values are a list of strings (Section 3.6 of {{!I-D.ietf-httpbis-header-structure}}) or tokens that convey representations of potential values for that header field, hereafter referred to as "available-values".
+Each member-name represents the field-name of a request header that is part of the secondary cache key; each member-value is an inner-list of strings or tokens that convey representations of potential values for that header field, hereafter referred to as "available-values".
 
 If Structured Header parsing fails or a member's value does have the structure outlined above, the client MUST treat the representation as having no Variants header field.
 
-Note that a available-value that is a token is interpreted as a string containing the same characters, and vice versa.
-
-Field-names in the member-names MUST match the field-name production (Section 3.2 of {{!RFC7230}}). Clients receiving an invalid field-name MUST NOT match it to any content negotiating mechanism.
+Note that an available-value that is a token is interpreted as a string containing the same characters, and vice versa.
 
 So, given this example header field:
 
@@ -197,17 +195,17 @@ In practice, implementation of Vary varies considerably. As a result, cache effi
 
 The Variant-Key HTTP response header field identifies one or more sets of available-values that identify the secondary cache key(s) that the response it occurs within are associated with.
 
-Variant-Key is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be a list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are lists of strings (Section 3.6 of {{!I-D.ietf-httpbis-header-structure}}) or tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
+Variant-Key is a Structured Header List (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are inner-lists of strings or tokens. Its ABNF is:
 
 ~~~ abnf
 Variant-Key      = sh-list
 ~~~
 
-Each member MUST be a list, and MUST itself have the same number of members as there are members of the representation's Variants header field. If not, the client MUST treat the representation as having no Variant-Key header field.
+Each member MUST be an inner-list, and MUST itself have the same number of members as there are members of the representation's Variants header field. If not, the client MUST treat the representation as having no Variant-Key header field.
 
 Each member identifies a list of available-values corresponding to the header field-names in the Variants header field, thereby identifying a secondary cache key that can be used with this response. These available-values do not need to explicitly appear in the Variants header field; they can be interpreted by the algorithm specific to processing that field. For example, Accept-Encoding defines an implicit "identity" available-value ({{content-encoding}}).
 
-Each inner-list member is treated as identifying an available-value for the corresponding variant-axis' field-name. Any list-member that is a token (Section 3.9 of {{!I-D.ietf-httpbis-header-structure}}) is interpreted as a string containing the same characters.
+Each inner-list member is treated as identifying an available-value for the corresponding variant-axis' field-name. Any list-member that is a token is interpreted as a string containing the same characters.
 
 For example:
 
@@ -239,11 +237,11 @@ is treated as if the Variant-Key header were completely absent, which will tend 
 Note that in
 
 ~~~ example
-Variant-Key: (gzip fr)
+Variant-Key: (gzip  fr)
 Variant-Key: ("gzip " fr)
 ~~~
 
-The whitespace after "gzip" in the first header field value is excluded by the token parsing algorithm, but the whitespace in the second header field value is included by the string parsing algorithm. This will likely cause the second header field value to fail to match client requests.
+The whitespace after "gzip" in the first header field value is excluded by the parsing algorithm, but the whitespace in the second header field value is included by the string parsing algorithm. This will likely cause the second header field value to fail to match client requests.
 
 *RFC EDITOR: Please remove the next paragraph before publication.*
 
