@@ -132,7 +132,7 @@ Note that this document is intended to apply to applications, not generic extens
 
 A specification might not use HTTP according to the criteria above and still define an application
 that relies upon HTTP in some manner. For example, an application might wish to avoid re-specifying
-parts of the message format, but change others; or, it might want to use a different set of methods.
+parts of the message format, but change other aspects of the protocol's operation; or, it might want to use a different set of methods.
 
 Doing so brings more freedom to modify protocol operations, but loses at least a portion of the
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
