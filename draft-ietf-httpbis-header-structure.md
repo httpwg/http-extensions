@@ -414,12 +414,12 @@ Tokens are short textual words; their abstract model is identical to their expre
 The ABNF for tokens in HTTP headers is:
 
 ~~~ abnf
-sh-token = ALPHA *tchar
+sh-token = ALPHA *( tchar / ":" / "/" )
 ~~~
 
 Parsers MUST support tokens with at least 512 characters.
 
-Note that a Structured Header token allows the same characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exception that the first character is required to be ALPHA.
+Note that a Structured Header token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be ALPHA, and ":" and "/" are also allowed.
 
 
 ### Byte Sequences {#binary}
@@ -954,7 +954,7 @@ _RFC Editor: Please remove this section before publication._
 * Corrected text about valid characters in strings (#931).
 * Removed most instances of the word "textual", as it was redundant (#915).
 * Allowed parameters on Items and Inner Lists (#907).
-* Expand the range of characters in token to match HTTP token (excepting the first character) (#961).
+* Expand the range of characters in token (#961).
 
 ## Since draft-ietf-httpbis-header-structure-12
 
