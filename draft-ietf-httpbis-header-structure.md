@@ -118,7 +118,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the OWS rule from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the OWS and tchar rules from {{!RFC7230}}.
 
 When parsing from HTTP header fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
 
@@ -414,15 +414,12 @@ Tokens are short textual words; their abstract model is identical to their expre
 The ABNF for tokens in HTTP headers is:
 
 ~~~ abnf
-sh-token = ALPHA
-           *( ALPHA / DIGIT / "_" / "-" / "." / ":" / "%"
-              / "*" / "/" )
+sh-token = ALPHA *tchar
 ~~~
 
 Parsers MUST support tokens with at least 512 characters.
 
-Note that a Structured Header token is not the same as the "token" ABNF rule defined in
-{{?RFC7230}}.
+Note that a Structured Header token allows the same characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exception that the first character is required to be ALPHA.
 
 
 ### Byte Sequences {#binary}
@@ -614,7 +611,7 @@ Given a string as input_string, return an ASCII string suitable for use in a HTT
 
 Given a token as input_token, return an ASCII string suitable for use in a HTTP header value.
 
-0. If input_token is not a sequence of characters, or contains characters not in ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/", fail serialisation.
+0. If input_token is not a sequence of characters, or contains characters not allowed by the tchar ABNF rule, fail serialisation.
 1. Let output be an empty string.
 2. Append input_token to output.
 3. Return output.
@@ -843,7 +840,7 @@ Given an ASCII string as input_string, return a token. input_string is modified 
 1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
-   1. If the first character of input_string is not one of ALPHA, DIGIT, "\_", "-", ".", ":", "%", "\*" or "/", return output_string.
+   1. If the first character of input_string is not allowed by the tchar ABNF rule, return output_string.
    2. Let char be the result of consuming the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
@@ -957,6 +954,7 @@ _RFC Editor: Please remove this section before publication._
 * Corrected text about valid characters in strings (#931).
 * Removed most instances of the word "textual", as it was redundant (#915).
 * Allowed parameters on Items and Inner Lists (#907).
+* Expand the range of characters in token to match HTTP token (excepting the first character) (#961).
 
 ## Since draft-ietf-httpbis-header-structure-12
 
