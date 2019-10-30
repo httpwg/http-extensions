@@ -643,15 +643,17 @@ A simple example is allowing a page designed for users that aren't logged in (de
 ~~~ example
 Variants: Cookie=(logged_in)
 Variant-Key: (0)
+Vary: Cookie
 ~~~
 
-Here, a cache that implements Variants will only use this response to satisfy requests with `Cookie: logged_in=0`.
+Here, a cache that implements Variants will only use this response to satisfy requests with `Cookie: logged_in=0`. Caches that don't implement Variants will vary the response on all Cookie headers.
 
 Or, consider this example:
 
 ~~~ example
 Variants: Cookie=(user_priority)
 Variant-Key: (silver), ("bronze")
+Vary: Cookie
 ~~~
 
 Here, the `user_priority` cookie-name allows requests from "gold" users to be separated from "silver" and "bronze" ones; this response is only served to the latter two.
@@ -661,6 +663,7 @@ It is possible to target a response to a single user; for example:
 ~~~ example
 Variants: Cookie=(user_id)
 Variant-Key: (some_person)
+Vary: Cookie
 ~~~
 
 Here, only the "some_person" `user_id` will have this response served to them again.
@@ -670,6 +673,7 @@ Note that if more than one cookie-name serves as a cache key, they'll need to be
 ~~~ example
 Variants: Cookie=(user_priority), Cookie=(user_region)
 Variant-Key: (gold europe)
+Vary: Cookie
 ~~~
 
 
