@@ -138,7 +138,7 @@ Doing so brings more freedom to modify protocol operations, but loses at least a
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
 and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
 
-Such specifications MUST NOT reuse HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA
+Such specifications MUST NOT use HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA
 registries; rather, they are encouraged to establish their own.
 
 
