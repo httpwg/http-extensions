@@ -329,7 +329,7 @@ For example, a header field that is defined to be an Item that is an integer mig
 Example-IntItemHeader: 5
 ~~~
 
-or
+or with parameters:
 
 ~~~ example
 Example-IntItemHeader: 5; foo=bar
@@ -398,7 +398,7 @@ In HTTP headers, strings are delimited with double quotes, using a backslash ("\
 Example-StringHeader: "hello world"
 ~~~
 
-Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\\" can be escaped; other sequences MUST cause parsing to fail.
+Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\\" can be escaped; other characters after "\\" MUST cause parsing to fail.
 
 Unicode is not directly supported in strings, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
 
