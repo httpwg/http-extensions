@@ -111,18 +111,22 @@ The source code and issues list for this draft can be found at
 
 # Introduction
 
-Integrity protection for HTTP content is multi layered and
-is usually achieved across the protocol stack:
-TCP checksums and TLS [RFC2818] record to name but some.
+The core specification of HTTP does not define a means to protect the integrity
+of resources. When HTTP messages are transferred between endpoints, the protocol
+might choose to make use of features of the lower layer in order to provide some
+integrity protection; for instance TCP checksums or TLS records [RFC2818].
+However, there are cases where relying on this alone is insufficient. An
+HTTP-level integrity mechanism that operates independent of transfer can be used
+to detect programming errors and/or corruption of data at rest, be used across
+multiple hops in order to provide end-to-end integrity guarantees, aid fault
+diagnosis across hops and system boundaries, and can be used to validate
+integrity when reconstructing a resource fetched using different HTTP
+connections.
 
-The HTTP protocol does not provide means to protect the various
-message parts. Besides, it might be desirable to add additional guarantees
-to the ones provided by the transport layer (eg. HTTPS). This may be in order to:
-
-- detect programming errors and corruption of stored data;
-- address the need for the representation-data to remain unmodified throughout multiple hops;
-- implement signature mechanisms that cover the desired parts of an HTTP exchange;
-- provide additional protection against failures or attack (see [SRI]).
+This document defines a mechanism that acts on HTTP representation-data. It can
+be combined with other mechanisms that protect representation-metadata, such as
+digital signatures, in order to protect the desired parts of an HTTP exchange in
+whole or in part.
 
 ## Brief history of integrity header fields
 
@@ -130,7 +134,7 @@ The Content-MD5 header field was originally introduced to provide integrity,
 but HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
 
   > The Content-MD5 header field has been removed because it was
-  >  inconsistently implemented with respect to partial responses.
+  > inconsistently implemented with respect to partial responses.
 
 [RFC3230] provided a more flexible solution introducing the concept of "instance",
 and the header fields `Digest` and `Want-Digest`.
@@ -219,11 +223,11 @@ interpreted as described in Section 7.2 of [RFC7231].
 # Resource representation and representation-data {#resource-representation}
 
 To avoid inconsistencies, an integrity mechanism for HTTP messages
-should decouple the checksum calculation:
+should decouple the checksum calculation from:
 
-- from the payload body - which may be altered by mechanism like Range Requests [RFC7233] or the method (eg. HEAD);
+- the payload body - which may be altered by mechanism like Range Requests [RFC7233] or the method (eg. HEAD);
 
-- and from the message body - which depends on `Transfer-Encoding` and whatever transformations
+- and the message body - which depends on `Transfer-Encoding` and whatever transformations
 the intermediaries may apply.
 
 The following examples show how representation metadata, payload transformations and method
@@ -417,7 +421,7 @@ specific digest-algorithm.
 ### digest-algorithm encoding examples
 
 The `sha-256` digest-algorithm uses base64 encoding.
-Note that digest-algoritm values are case insensitive.
+Note that digest-algorithm values are case insensitive.
 
 
 ~~~
@@ -482,7 +486,7 @@ The resource is specified by
 the effective request URI
 and any `validator` contained in the message.
 
-For example, in a response to a HEAD request, the digest is calculated using  the
+For example, in a response to a HEAD request, the digest is calculated using the
 representation data that would have been enclosed in the payload body
 if the same request had been a GET.
 
@@ -516,11 +520,11 @@ it has been obsoleted by [RFC7231]
 
 # Broken cryptographic algorithms
 
-The MD5 algorithm MUST NOT be used as it's now vulnerable
-to collision attacks [CMU-836068].
+The MD5 algorithm MUST NOT be used as it has been found vulnerable to collision
+attacks [CMU-836068].
 
-The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
-to collision attacks [IACR-2019-459].
+The SHA algorithm is NOT RECOMMENDED as it has been found vulnerable to
+collision attacks [IACR-2019-459].
 
 # Examples
 
@@ -708,7 +712,8 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ###  A client requests an unsupported Digest, the server MAY reply with an unsupported digest
 
-The client requests a sha digest only. The server is currently free to reply with a Digest containing an unsupported algorithm
+The client requests a sha digest only. The server is currently free to reply
+with a Digest containing an unsupported algorithm.
 
 Request:
 
@@ -749,8 +754,6 @@ Want-Digest: sha-256, sha-512
 
 ~~~
 
-...
-
 
 # Security Considerations
 
@@ -760,25 +763,24 @@ This document specifies a data integrity mechanism that protects HTTP
 `representation data`, but not HTTP `representation metadata` header fields,
 from certain kinds of accidental corruption.
 
-While it is not intended as general protection
-against malicious tampering with HTTP messages,
-this goal can be achieved using `Digest` together
-with a transport-layer security mechanism and digital signatures.
+`Digest` is not intended as general protection against malicious tampering with
+HTTP messages, this can be achieved by combining it with other approaches such
+as transport-layer security or digital signatures.
 
 ## Broken cryptographic algorithms
 
-Cryptogrphic alorithms are intended to provide a proof of integrity
+Cryptographic algorithms are intended to provide a proof of integrity
 suited towards cryptographic constructions such as signatures.
 
 However, these rely on collision-resistance for their security proofs [CMU-836068].
 The MD5 and SHA-1 algorithms are vulnerable to collisions attacks,
-so MD5 MUST NOT be used and SHA-1 is NOT RECOMMENDED.
+so MD5 MUST NOT be used and SHA-1 is NOT RECOMMENDED for use with `Digest`.
 
 ## Other deprecated algorithms
 
 The ADLER32 algorithm defined in [RFC1950] has been deprecated
 by [RFC3309] because under certain conditions it provides
-weak detection of errors and is now NOT RECOMMENDED.
+weak detection of errors and is now NOT RECOMMENDED  for use with `Digest`.
 
 ## Digest for end-to-end integrity
 
@@ -799,13 +801,19 @@ Even a simple mechanism for end-to-end validation is thus valuable.
 
 ## Usage in signatures
 
-Digital signatures are widely used together with checksums to provide
-the certain identification of the origin of a message [NIST800-32].
+Digital signatures are widely used together with checksums to provide the
+certain identification of the origin of a message [NIST800-32]. Such signatures
+can protect one or more header fields and there are additional considerations
+when `Digest` is included in this set.
 
-It's important to note that, being the `Digest` header field an hash of a resource representation,
-signing only the `Digest` header field, without all the `representation metatada` (eg.
-the values of `Content-Type` and `Content-Encoding`) may expose the communication
-to tampering.
+Since the `Digest` header field is a hash of a resource representation, it
+explicitly depends on the `representation metadata` (eg. the values of
+`Content-Type`, `Content-Encoding` etc). A signature that protects `Digest` but
+not other `representation metadata` may expose the communication to tampering.
+For example, an actor could manipulate the `Content-Type` field-value and cause
+a digest validation failure at the recipient, preventing the application from
+accessing the representation. Such an attack consumes the resources of both
+endpoints.
 
 `Digest` SHOULD always be used over a connection which provides
 integrity at transport layer that protects HTTP header fields.
@@ -920,7 +928,7 @@ registry:
 ## Changes compared to RFC5843
 
 The status of "MD5" has been updated to "deprecated",
-and its description states that this algoritm MUST NOT be used.
+and its description states that this algorithm MUST NOT be used.
 
 The status of "SHA" has been updated to "obsoleted",
 and its description states that this algorithm is NOT RECOMMENDED.
