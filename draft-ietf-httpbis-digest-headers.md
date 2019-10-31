@@ -268,7 +268,7 @@ Response:
 HTTP/1.1 206 Partial Content
 Content-Encoding: gzip
 Content-Type: application/json
-Content-Range: bytes=1-7
+Content-Range: bytes 1-7/18
 
 iwgAla3RXA==
 ~~~
