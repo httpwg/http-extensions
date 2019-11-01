@@ -955,6 +955,7 @@ _RFC Editor: Please remove this section before publication._
 * Removed most instances of the word "textual", as it was redundant (#915).
 * Allowed parameters on Items and Inner Lists (#907).
 * Expand the range of characters in token (#961).
+* Disallow OWS before ";" delimiter in parameters (#961).
 
 ## Since draft-ietf-httpbis-header-structure-12
 
