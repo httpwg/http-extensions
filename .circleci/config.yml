@@ -27,6 +27,16 @@ jobs:
             - v1-cache-references-{{ epoch }}
             - v1-cache-references-
 
+      # Workaround for https://discuss.circleci.com/t/22437 (works for public repos only)
+      - run:
+          name: Checkout Workaround
+          command: |
+            if [ -n "$CIRCLE_TAG" ] && [ -d .git ]; then
+              git fetch -f $(echo "$CIRCLE_REPOSITORY_URL" | \
+                             sed -e 's,/^git.github.com:,https://github.com/,') \
+                        "refs/tags/$CIRCLE_TAG:refs/tags/$CIRCLE_TAG"
+            fi
+
       - checkout
 
       # Build txt and html versions of drafts
