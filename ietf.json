@@ -1,11 +1,12 @@
 {
     "group": "httpbis",
-    "primary": true,
+    "group_info": {
+        "chairs": ["mnot", "tfpauly"],
+        "email": "ietf-http-wg@w3.org",
+        "type": "wg",
+        "activity_exclude_labels": ["editorial"]
+    },
     "repo_type": "specs",
     "revisions_tagged": true,
-    "group_chairs": ["mnot", "tfpauly"],
-    "group_email": "ietf-http-wg@w3.org",
-    "group_type": "wg",
-    "report_to": "group_email",
-    "report_exclude_labels": ["editorial"]
+    "activity_summary_to": ["group_email"]
 }

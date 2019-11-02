@@ -61,8 +61,8 @@ for this draft can be found at <https://github.com/httpwg/http-extensions/labels
 # Introduction
 
 HTTP {{!I-D.ietf-httpbis-semantics}} is often used as a substrate for applications other than Web
-browsing; this is sometimes referred to as creating "HTTP-based APIs", or just "HTTP APIs". This is
-done for a variety of reasons, including:
+browsing; this is sometimes referred to as creating "HTTP-based APIs", "REST APIs" or just "HTTP
+APIs". This is done for a variety of reasons, including:
 
 * familiarity by implementers, specifiers, administrators, developers and users,
 * availability of a variety of client, server and proxy implementations,
@@ -132,13 +132,13 @@ Note that this document is intended to apply to applications, not generic extens
 
 A specification might not use HTTP according to the criteria above and still define an application
 that relies upon HTTP in some manner. For example, an application might wish to avoid re-specifying
-parts of the message format, but change others; or, it might want to use a different set of methods.
+parts of the message format, but change other aspects of the protocol's operation; or, it might want to use a different set of methods.
 
 Doing so brings more freedom to modify protocol operations, but loses at least a portion of the
 benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes,
 and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
 
-Such specifications MUST NOT reuse HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA
+Such specifications MUST NOT use HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA
 registries; rather, they are encouraged to establish their own.
 
 
