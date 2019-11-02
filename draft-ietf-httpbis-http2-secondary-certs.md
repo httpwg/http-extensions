@@ -964,6 +964,10 @@ this document.
 > **RFC Editor's Note:**  Please remove this section prior to publication of a
 > final version of this document.
 
+## Since draft-ietf-httpbis-http2-secondary-certs-04:
+
+Editorial updates only.
+
 ## Since draft-ietf-httpbis-http2-secondary-certs-03:
 
 - `CERTIFICATE_REQUEST` frames contain the Request-ID, which MUST be checked
