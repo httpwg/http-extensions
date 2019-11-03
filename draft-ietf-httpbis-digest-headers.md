@@ -490,7 +490,8 @@ representation data that would have been enclosed in the payload body
 if the same request had been a GET.
 
 Digest can be used in requests too.
-Returned value depends on the representation metadata header fields.
+
+The `Digest` value depends on the representation metadata.
 
 A Digest header field MAY contain multiple representation-data-digest values.
 This could be useful for responses expected to reside in caches
@@ -702,9 +703,18 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 "hello"
 ~~~
 
+
 ## Client and Server Provide Full Representation Data
 
-Digest can be used in requests too. Returned value depends on the representation metadata header fields.
+The request contains a `Digest` header
+calculated on the enclosed representation.
+
+It also includes an `Accept-Encoding: br` header field
+that advertises the client supports brotli encoding.
+
+The response includes a `Content-Encoding: br` that indicates
+the selected representation is brotli encoded.
+The `Digest` field-value is therefore different compared to the request.
 
 Request:
 
