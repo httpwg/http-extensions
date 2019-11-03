@@ -1294,8 +1294,10 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-digest-headers-00
 
 * Align title with document name
-* Add id-sha-* algorithm examples
+* Add id-sha-* algorithm examples #880
 * Reference [RFC6234] and [RFC3174] instead of FIPS-1
 * Deprecate MD5
-* Obsolete ADLER-32 but don't forbid it
-* Update CRC32C value in IANA table
+* Obsolete ADLER-32 but don't forbid it #828
+* Update CRC32C value in IANA table #828
+* Use when acting on resources (POST, PATCH) #853
+* Added Relationship with SRI, draft Use Cases #868, #971
