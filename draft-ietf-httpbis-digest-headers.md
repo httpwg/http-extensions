@@ -111,21 +111,24 @@ The source code and issues list for this draft can be found at
 # Introduction
 
 The core specification of HTTP does not define a means to protect the integrity
-of resources. When HTTP messages are transferred between endpoints, the protocol
-might choose to make use of features of the lower layer in order to provide some
-integrity protection; for instance TCP checksums or TLS records [RFC2818].
-However, there are cases where relying on this alone is insufficient. An
-HTTP-level integrity mechanism that operates independent of transfer can be used
-to detect programming errors and/or corruption of data at rest, be used across
-multiple hops in order to provide end-to-end integrity guarantees, aid fault
-diagnosis across hops and system boundaries, and can be used to validate
-integrity when reconstructing a resource fetched using different HTTP
-connections.
+of resources.
+When HTTP messages are transferred between endpoints,
+the protocol might choose to make use of features of the lower layer in order to provide some
+integrity protection;
+for instance TCP checksums or TLS records [RFC2818].
 
-This document defines a mechanism that acts on HTTP representation-data. It can
-be combined with other mechanisms that protect representation-metadata, such as
-digital signatures, in order to protect the desired parts of an HTTP exchange in
-whole or in part.
+However, there are cases where relying on this alone is insufficient.
+An HTTP-level integrity mechanism that operates independent of transfer can be used
+to detect programming errors and/or corruption of data at rest,
+be used across multiple hops in order to provide end-to-end integrity guarantees,
+aid fault diagnosis across hops and system boundaries,
+and can be used to validate integrity when reconstructing a resource
+fetched using different HTTP connections.
+
+This document defines a mechanism that acts on HTTP representation-data.
+It can be combined with other mechanisms that protect representation-metadata,
+such as digital signatures, in order to protect the desired parts of an HTTP exchange
+in whole or in part.
 
 ## A Brief History of Integrity Header Fields
 
