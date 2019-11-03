@@ -242,7 +242,7 @@ Note that the last member in this example is an empty inner list.
 A header field whose value is defined as a list of inner-lists with parameters at both levels could look like:
 
 ~~~ example
-Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar", "baz");lvl=1
+Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
 ~~~
 
 Parsers MUST support inner-lists containing at least 256 members. Header specifications can constrain the types and cardinality of individual inner-list members as they require.
