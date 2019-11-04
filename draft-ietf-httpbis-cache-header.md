@@ -123,7 +123,7 @@ It can have one of the following values:
 ## The res-fresh parameter
 
 "res-fresh" indicates the response's remaining freshness lifetime (as per
-{{I-D.ietf-httpbis-cache}}, Section 4.2.1), as an integer number of seconds. This does not include freshness assigned by the cache (see "cache-fresh"). May be negative, to indicate staleness.
+{{!I-D.ietf-httpbis-cache}}, Section 4.2.1), as an integer number of seconds. This does not include freshness assigned by the cache (see "cache-fresh"). May be negative, to indicate staleness.
 
 ## The cache-fresh parameter
 
