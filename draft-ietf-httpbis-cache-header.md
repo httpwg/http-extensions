@@ -99,6 +99,7 @@ key           = sh-string
 "fwd" indicates why the request went forward. If it is not present, the value defaults to "none".
 
 It can have one of the following values:
+
 * none - The request did not go forward; i.e., it was a hit, and was served from the cache.
 * bypass - The cache was configured to not handle this request
 * uri-miss - The cache did not contain any responses that matched the request URI
@@ -112,6 +113,7 @@ It can have one of the following values:
 "fwd-res" indicates what the result of the forward request was. It is only valid when fwd is "res-stale" or "req-stale", and defaults to "full" if not present when fwd is one of those values.
 
 It can have one of the following values:
+
 * full - indicates that the response was a complete response (any status code except 304 Not Modified and 206 Partial Response)
 * partial - indicates that the response was a 206 Partial Response
 * notmod - indicates that the response was a 304 Not Modified
