@@ -863,7 +863,7 @@ which certificates would be acceptable.
 
 ## Denial of Service
 
-Failure to provide a certificate on a stream after receiving
+Failure to provide a certificate for a stream after receiving
 `CERTIFICATE_NEEDED` blocks processing, and SHOULD be subject to standard
 timeouts used to guard against unresponsive peers.
 
@@ -899,17 +899,6 @@ during the processing of a request, potentially multiple times, as
 `USE_CERTIFICATE` frames are received. A server that uses certificate
 authentication needs to be prepared to reevaluate the authorization state of a
 request as the set of certificates changes.
-
-Client implementations need to carefully consider the impact of setting the
-`AUTOMATIC_USE` flag. This flag is a performance optimization, permitting the
-client to avoid a round-trip on each request where the server checks for
-certificate authentication. However, once this flag has been sent, the client
-has zero knowledge about whether the server will use the referenced cert for any
-future request, or even for an existing request which has not yet completed.
-Clients MUST NOT set this flag on any certificate which is not appropriate for
-currently-in-flight requests, and MUST NOT make any future requests on the same
-connection which they are not willing to have associated with the provided
-certificate.
 
 # IANA Considerations {#iana}
 
@@ -974,6 +963,10 @@ this document.
 
 > **RFC Editor's Note:**  Please remove this section prior to publication of a
 > final version of this document.
+
+## Since draft-ietf-httpbis-http2-secondary-certs-04:
+
+Editorial updates only.
 
 ## Since draft-ietf-httpbis-http2-secondary-certs-03:
 

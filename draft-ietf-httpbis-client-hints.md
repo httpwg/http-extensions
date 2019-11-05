@@ -23,6 +23,12 @@ author:
     organization: Google
     email: ilya@igvita.com
     uri: https://www.igvita.com/
+ -
+    ins: Y. Weiss
+    name: Yoav Weiss
+    organization: Google
+    email: yoav@yoav.ws
+    uri: https://blog.yoav.ws/
 
 normative:
   RFC5234:
@@ -70,7 +76,7 @@ informative:
 
 HTTP defines proactive content negotiation to allow servers to select the appropriate response for a given request, based upon the user agent's characteristics, as expressed in request headers. In practice, clients are often unwilling to send those request headers, because it is not clear whether they will be used, and sending them impacts both performance and privacy.
 
-This document defines two response headers, Accept-CH and Accept-CH-Lifetime, that servers can use to advertise their use of request headers for proactive content negotiation, along with a set of guidelines for the creation of such headers, colloquially known as "Client Hints."
+This document defines an Accept-CH response header that servers can use to advertise their use of request headers for proactive content negotiation, along with a set of guidelines for the creation of such headers, colloquially known as "Client Hints."
 
 
 --- note_Note_to_Readers
@@ -86,28 +92,23 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 # Introduction
 
-There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences.
+There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences. Applications that want to allow the server to optimize content delivery and user experience based on such capabilities have, historically, had to rely on passive identification (e.g., by matching User-Agent (Section 5.5.3 of {{RFC7231}}) header field against an established database of client signatures), used HTTP cookies and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
 
-One way to infer some of these capabilities is through User-Agent (Section 5.5.3 of {{RFC7231}}) header field detection against an established database of client signatures. However, this technique requires acquiring such a database, integrating it into the serving path, and keeping it up to date. However, even once this infrastructure is deployed, user agent sniffing has numerous limitations:
+Such techniques are expensive to setup and maintain, are not portable across both applications and servers, and make it hard to reason for both client and server about which data is required and is in use during the negotiation:
 
-  - User agent detection cannot reliably identify all static variables
-  - User agent detection cannot infer any dynamic client preferences
-  - User agent detection requires an external device database
-  - User agent detection is not cache friendly
-
-A popular alternative strategy is to use HTTP cookies ({{RFC6265}}) to communicate some information about the user agent. However, this approach is also not cache friendly, bound by same origin policy, and often imposes additional client-side latency by requiring JavaScript execution to create and manage HTTP cookies.
+  - User agent detection cannot reliably identify all static variables, cannot infer dynamic client preferences, requires external device database, is not cache friendly, and is reliant on a passive fingerprinting surface.
+  - Cookie based approaches are not portable across applications and servers, impose additional client-side latency by requiring JavaScript execution, and are not cache friendly.
+  - URL parameters, similar to cookie based approaches, suffer from lack of portability, and are hard to deploy due to a requirement to encode content negotiation data inside of the URL of each resource.
 
 Proactive content negotiation (Section 3.4.1 of {{RFC7231}}) offers an alternative approach; user agents use specified, well-defined request headers to advertise their capabilities and characteristics, so that servers can select (or formulate) an appropriate response.
 
 However, proactive content negotiation requires clients to send these request headers prolifically. This causes performance concerns (because it creates "bloat" in requests), as well as privacy issues; passively providing such information allows servers to silently fingerprint the user agent.
 
-This document defines a new response header, Accept-CH, that allows an origin server to explicitly ask that clients send these headers in requests, for a period of time bounded by the Accept-CH-Lifetime response header. It also defines guidelines for content negotiation mechanisms that use it, colloquially referred to as Client Hints.
+This document defines a new response header, Accept-CH, that allows an origin server to explicitly ask that clients send these headers in requests. It also defines guidelines for content negotiation mechanisms that use it, colloquially referred to as Client Hints.
 
 Client Hints mitigate the performance concerns by assuring that clients will only send the request headers when they're actually going to be used, and the privacy concerns of passive fingerprinting by requiring explicit opt-in and disclosure of required headers by the server through the use of the Accept-CH response header.
 
 This document defines the Client Hints infrastructure, a framework that enables servers to opt-in to specific proactive content negotiation features, which will enable them to adapt their content accordingly. However, it does not define any specific features that will use that infrastructure. Those features will be defined in their respective specifications.
-
-This document does not supersede or replace the User-Agent header field. Existing device detection mechanisms can continue to use both mechanisms if necessary. By advertising user agent capabilities within a request header field, Client Hints allow for cache friendly and proactive content negotiation.
 
 ## Notational Conventions
 
@@ -143,10 +144,9 @@ The Accept-CH response header field or the equivalent HTML meta element with htt
 
 Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be an sh-list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
-Servers can advertise support for Client Hints using the Accept-CH header field or an equivalent HTML meta element with http-equiv attribute ({{HTML5}}).
 
 ~~~ abnf7230
-  Accept-CH = #field-name
+  Accept-CH = sh-list
 ~~~
 
 For example:
@@ -155,32 +155,17 @@ For example:
   Accept-CH: Sec-CH-Example, Sec-CH-Example-2
 ~~~
 
-When a client receives an HTTP response advertising support for Client Hints, it should process it as origin ({{RFC6454}}) opt-in to receive Client Hint header fields advertised in the field-value. The opt-in MUST be delivered over a secure transport.
+When a client receives an HTTP response advertising support for provided list of Clients Hints, it SHOULD process it as origin ({{RFC6454}}) opt-in to receive Client Hint header fields advertised in the field-value, for subsequent same-origin requests.
 
-For example, based on Accept-CH example above, a user agent could append the Sec-CH-Example and Sec-CH-Example-2 header fields to all same-origin resource requests initiated by the page constructed from the response.
-
-
-### The Accept-CH-Lifetime Header Field {#accept-ch-lifetime}
-
-Servers can ask the client to remember the set of Client Hints that the server supports for a specified period of time, to enable delivery of Client Hints on subsequent requests to the server's origin ({{RFC6454}}).
-
-~~~ abnf7230
-  Accept-CH-Lifetime = #delta-seconds
-~~~
-
-When a client receives an HTTP response that contains Accept-CH-Lifetime header field, the field-value indicates that the Accept-CH preference SHOULD be persisted and bound to the origin, and be considered stale after response's age ({{RFC7234}}, section 4.2) is greater than the specified number of seconds.
-The preference MUST be delivered over a secure transport, and MUST NOT be persisted for an origin that isn't HTTPS.
+  - The opt-in MUST be delivered over a secure transport.
+  - The opt-in SHOULD be persisted and bound to the origin to enable delivery of Client Hints on subsequent requests to the server's origin, and MUST NOT be persisted for an origin that isn't HTTPS.
 
 ~~~ example
   Accept-CH: Sec-CH-Example, Sec-CH-Example-2
   Accept-CH: Sec-CH-Example-3
-  Accept-CH-Lifetime: 86400
 ~~~
 
-For example, based on the Accept-CH and Accept-CH-Lifetime example above, which is received in response to a user agent navigating to "https://example.com", and delivered over a secure transport: a user agent SHOULD persist an Accept-CH preference bound to "https://example.com" for up to 86400 seconds (1 day), and use it for user agent navigations to "https://example.com" and any same-origin resource requests initiated by the page constructed from the navigation's response. This preference SHOULD NOT extend to resource requests initiated to "https://example.com" from other origins.
-
-If Accept-CH-Lifetime occurs in a message more than once, the last value overrides all previous occurrences.
-
+For example, based on the Accept-CH example above, which is received in response to a user agent navigating to "https://example.com", and delivered over a secure transport: a user agent SHOULD persist an Accept-CH preference bound to "https://example.com" and use it for user agent navigations to "https://example.com" and any same-origin resource requests initiated by the page constructed from the navigation's response. This preference SHOULD NOT extend to resource requests initiated to "https://example.com" from other origins.
 
 ### Interaction with Caches
 
@@ -228,7 +213,7 @@ By convention, request headers that are client hints are encouraged to use a CH-
 
 # IANA Considerations
 
-This document defines the "Accept-CH" and "Accept-CH-Lifetime" HTTP response fields, and registers them in the Permanent Message Header Fields registry.
+This document defines the "Accept-CH" HTTP response field, and registers it in the Permanent Message Header Fields registry.
 
 ## Accept-CH {#iana-accept-ch}
 - Header field name: Accept-CH
@@ -238,33 +223,12 @@ This document defines the "Accept-CH" and "Accept-CH-Lifetime" HTTP response fie
 - Specification document(s): {{accept-ch}} of this document
 - Related information: for Client Hints
 
-## Accept-CH-Lifetime {#iana-accept-ch-lifetime}
-- Header field name: Accept-CH-Lifetime
-- Applicable protocol: HTTP
-- Status: standard
-- Author/Change controller: IETF
-- Specification document(s): {{accept-ch-lifetime}} of this document
-- Related information: for Client Hints
-
-
 --- back
 
-# Interaction with Key Response Header Field
+# Interaction with Variants Response Header Field
 
-Client Hints may be combined with Key response header field ({{KEY}}) to enable fine-grained control of the cache key for improved cache efficiency. For example, the server can return the following set of instructions:
-
-~~~ example
-  Key: Sec-CH-Example;partition=1.5:2.5:4.0
-~~~
-
-Above example indicates that the cache key needs to include the value of the Sec-CH-Example header field with three segments: less than 1.5, 1.5 to less than 2.5, and 4.0 or greater.
-
-~~~ example
-  Key: Width;Sec-CH-Example=320
-~~~
-
-Above example indicates that the cache key needs to include the value of the Sec-CH-Example header field and be partitioned into groups of 320: 0-320, 320-640, and so on.
-
+Client Hints may be combined with Variants response header field {{?VARIANTS=I-D.ietf-httpbis-variants}} to enable fine-grained control of the cache key for improved cache efficiency.
+Features that define Client Hints will need to specify the related variants algorithms as described in Section 6 of {{?VARIANTS}}.
 
 # Changes
 
@@ -302,7 +266,9 @@ Above example indicates that the cache key needs to include the value of the Sec
 
 ## Since -07
 * Removed specific features to be defined in other specifications
+* Removed Accept-CH-Lifetime based on feedback at IETF 105
+
 
 # Acknowledgements
 {:numbered="false"}
-Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Yoav Weiss, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.
+Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Yoav Weiss, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, Martin Thomson, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.
