@@ -221,9 +221,9 @@ Deployment of new request headers requires several considerations:
   - Potential conflicts due to existing use of field name
   - Properties of the data communicated in field value
 
-Specifications and features relying on Client Hints are advised to prefix request header names with a "Sec-" prefix. User agents, such as web browsers, ensure such prefixed headers can only be emitted by the browser, and application content, such as scripts, are forbidden from emitting such headers {{FETCH}}. This provides assurance that, when transmitted by user agents, the type, format and value of data communicated in such request headers are enforced by the user agent.
+Specifications and features relying on Client Hints are advised to carfully consider prefixing request header names with a "Sec-" prefix. User agents, such as web browsers, ensure such prefixed headers can only be emitted by the browser, and application content, such as scripts, are forbidden from emitting such headers {{FETCH}}. This provides assurance that, when transmitted by user agents, the type, format and value of data communicated in such request headers are enforced by the user agent.
 
-By convention, request headers that are client hints use a CH- prefix, to make them easier to identify as using this framework; for example, Sec-CH-Foo. Doing so makes them easier to identify programmatically (e.g., for stripping unrecognised hints from requests by privacy filters).
+By convention, request headers that are client hints are encouraged to use a CH- prefix, to make them easier to identify as using this framework; for example, Sec-CH-Foo. Doing so makes them easier to identify programmatically (e.g., for stripping unrecognised hints from requests by privacy filters).
 
 
 # IANA Considerations
