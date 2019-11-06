@@ -179,10 +179,13 @@ Above example indicates that the cache key needs to include the Sec-CH-Example a
 
 The request header fields defined in this document, and those that extend it, expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
-Features relying on this document to define Client Hints headers SHOULD take into account the following aspects of the information exposed: 
+The underlying assumption is that exposing information about the user as a request header is equivalent to the capability of that request's origin to access that information by other means and transmit it to itself.
+
+Therefore, features relying on this document to define Client Hint headers MUST NOT provide new information that is otherwise not available to the application via other means, such as existing request headers, HTML, CSS, or JavaScript.
+
+Such features SHOULD take into account the following aspects of the information exposed: 
 
   - Entropy
-    - The feature SHOULD NOT provide new information that is otherwise not available to the application via other means, such as existing request headers, HTML, CSS, or JavaScript.
     - Exposing highly granular data may help identify users across multiple requests to different origins. Reducing the set of field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users.
   - Sensitivity
     - The feature SHOULD NOT expose user sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g. a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
