@@ -1,7 +1,7 @@
 ---
 title: HTTP Client Hints
 abbrev:
-docname: draft-ietf-httpbis-client-hints-07
+docname: draft-ietf-httpbis-client-hints-08
 date: {DATE}
 category: exp
 
@@ -221,12 +221,16 @@ Features that define Client Hints will need to specify the related variants algo
 
 ## Since -06
 * Issue 524: Save-Data is now defined by NetInfo spec, dropping
+* PR 775: Removed specific features to be defined in other specifications
 
 ## Since -07
-* Removed specific features to be defined in other specifications
-* Removed Accept-CH-Lifetime based on feedback at IETF 105
+* Issue 761: Clarified that the defined headers are response headers.
+* Issue 730: Replaced Key reference with Variants. 
+* Issue 700: Replaced ABNF with structured headers.
+* PR 878: Removed Accept-CH-Lifetime based on feedback at IETF 105
+
 
 
 # Acknowledgements
 {:numbered="false"}
-Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Yoav Weiss, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, Martin Thomson, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.
+Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, Martin Thomson, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.
