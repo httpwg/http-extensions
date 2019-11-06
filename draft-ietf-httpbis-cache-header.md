@@ -199,8 +199,8 @@ Cache-Status: ExampleCache; fwd=uri-miss;
 Going through two layers of caching, both of which were hits, and the second collapsed with other requests:
 
 ~~~example
-Cache-Status: "CDN Company Here"; res-fresh=545,
-              OriginCache; cache-fresh=1100; collapse-hit=?1
+Cache-Status: OriginCache; cache-fresh=1100; collapse-hit=?1,
+              "CDN Company Here"; res-fresh=545,
 ~~~
 
 
