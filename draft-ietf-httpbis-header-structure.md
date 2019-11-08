@@ -118,7 +118,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the OWS and tchar rules from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, uses the VCHAR, SP, HTAB, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the OWS, RWS and tchar rules from {{!RFC7230}}.
 
 When parsing from HTTP header fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
 
@@ -227,7 +227,7 @@ An inner list is an array of zero or more items ({{item}}). Both the individual 
 The ABNF for inner-lists in HTTP headers is:
 
 ~~~ abnf
-inner-list    = "(" OWS [ sh-item *( SP OWS sh-item ) OWS ] ")"
+inner-list    = "(" OWS [ sh-item *( RWS sh-item ) OWS ] ")"
                 *parameter
 ~~~
 
@@ -710,7 +710,7 @@ Given an ASCII string as input_string, return the tuple (inner_list, parameters)
       2. Return the tuple (inner_list, parameters).
    3. Let item be the result of running Parsing an Item ({{parse-item}}) with input_string.
    4. Append item to inner_list.
-   5. If the first character of input_string is not SP or ")", fail parsing.
+   5. If the first character of input_string is not SP, HTAB or ")", fail parsing.
 4. The end of the inner list was not found; fail parsing.
 
 
