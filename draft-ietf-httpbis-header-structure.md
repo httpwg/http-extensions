@@ -771,7 +771,7 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
    8. Append key param_name with value param_value to parameters.
 3. Return parameters.
 
-#### Parsing a Key from Text {#parse-key}
+#### Parsing a Key {#parse-key}
 
 Given an ASCII string as input_string, return a key. input_string is modified to remove the parsed value.
 
@@ -784,7 +784,7 @@ Given an ASCII string as input_string, return a key. input_string is modified to
 4. Return output_string.
 
 
-### Parsing a Number from Text {#parse-number}
+### Parsing a Number {#parse-number}
 
 Given an ASCII string as input_string, return a number. input_string is modified to remove the parsed value.
 
@@ -813,7 +813,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), 
 0. Return output_number.
 
 
-### Parsing a String from Text {#parse-string}
+### Parsing a String {#parse-string}
 
 Given an ASCII string as input_string, return an unquoted string. input_string is modified to remove the parsed value.
 
@@ -833,7 +833,7 @@ Given an ASCII string as input_string, return an unquoted string. input_string i
 5. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
 
-### Parsing a Token from Text {#parse-token}
+### Parsing a Token {#parse-token}
 
 Given an ASCII string as input_string, return a token. input_string is modified to remove the parsed value.
 
@@ -846,7 +846,7 @@ Given an ASCII string as input_string, return a token. input_string is modified 
 4. Return output_string.
 
 
-### Parsing a Byte Sequence from Text {#parse-binary}
+### Parsing a Byte Sequence {#parse-binary}
 
 Given an ASCII string as input_string, return a byte sequence. input_string is modified to remove the parsed value.
 
@@ -866,7 +866,7 @@ Because some implementations of base64 do not allow rejection of encoded data th
 This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
 
-### Parsing a Boolean from Text {#parse-boolean}
+### Parsing a Boolean {#parse-boolean}
 
 Given an ASCII string as input_string, return a Boolean. input_string is modified to remove the parsed value.
 
