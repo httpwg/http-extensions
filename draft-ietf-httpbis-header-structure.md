@@ -18,7 +18,7 @@ pi:
   compact: yes
   comments: yes
   inline: yes
-  tocdepth: 2
+  tocdepth: 3
 
 
 author:
