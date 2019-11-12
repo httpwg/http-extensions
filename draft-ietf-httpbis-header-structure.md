@@ -805,7 +805,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), 
    6. If type is "float" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
    1. Parse input_number as an integer and let output_number be the product of the result and sign.
-   2. If output_number is outside the range defined in {{integer}}, fail parsing.
+   2. If output_number is outside the range −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
    2. If the number of characters after "." in input_number is greater than six, fail parsing.
