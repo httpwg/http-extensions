@@ -479,24 +479,24 @@ Given a structure defined in this specification, return an ASCII string suitable
 
 ### Serializing a List {#ser-list}
 
-Given an array of (member-value, parameters) tuples as input_list, return an ASCII string suitable for use in a HTTP header value.
+Given an array of (member_value, parameters) tuples as input_list, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
-2. For each (member-value, parameters) of input_list:
-   1. If member-value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
-   2. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
-   3. If more member-values remain in input_list:
+2. For each (member_value, parameters) of input_list:
+   1. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
+   2. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
+   3. If more member_values remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
 
 #### Serialising an Inner List {#ser-innerlist}
 
-Given an array of (member-value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in a HTTP header value.
+Given an array of (member_value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be the string "(".
-2. For each (member-value, parameters) of inner_list:
-   1. Append the result of running Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
+2. For each (member_value, parameters) of inner_list:
+   1. Append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
    2. If more values remain in inner_list, append a single WS to output.
 3. Append ")" to output.
 4. Append the result of running Serializing Parameters {{ser-params}} with list_parameters to output.
@@ -504,15 +504,15 @@ Given an array of (member-value, parameters) tuples as inner_list, and parameter
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered dictionary as input_parameters (each member having a param-name and a param-value), return an ASCII string suitable for use in a HTTP header value.
+Given an ordered dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP header value.
 
 0. Let output be an empty string.
-1. For each parameter-name with a value of param-value in input_parameters:
+1. For each parameter-name with a value of param_value in input_parameters:
    1. Append ";" to output.
-   2. Append the result of running Serializing a Key ({{ser-key}}) with param-name to output.
-   4. If param-value is not null:
+   2. Append the result of running Serializing a Key ({{ser-key}}) with param_name to output.
+   4. If param_value is not null:
       1. Append "=" to output.
-      2. Append the result of running Serializing a bare Item ({{ser-bare-item}}) with param-value to output.
+      2. Append the result of running Serializing a bare Item ({{ser-bare-item}}) with param_value to output.
 2. Return output.
 
 
@@ -528,14 +528,14 @@ Given a key as input_key, return an ASCII string suitable for use in a HTTP head
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given an ordered dictionary as input_dictionary (each member having a member-name and a tuple value of (member-value, parameters)), return an ASCII string suitable for use in a HTTP header value.
+Given an ordered dictionary as input_dictionary (each member having a member_name and a tuple value of (member_value, parameters)), return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
-2. For each member-name with a value of (member-value, parameters) in input_dictionary:
-   1. Append the result of running Serializing a Key ({{ser-key}}) with member's member-name to output.
+2. For each member_name with a value of (member_value, parameters) in input_dictionary:
+   1. Append the result of running Serializing a Key ({{ser-key}}) with member's member_name to output.
    2. Append "=" to output.
-   3. If member-value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
-   4. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
+   3. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
+   4. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
    5. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
