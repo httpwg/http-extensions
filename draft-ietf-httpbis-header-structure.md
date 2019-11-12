@@ -588,8 +588,10 @@ Given a float as input_float, return an ASCII string suitable for use in a HTTP 
 6. Let digits_avail be 15 minus integer_digits.
 7. Let fractional_digits_avail be the minimum of digits_avail and 6.
 8. Append "." to output.
-9. Append at most fractional_digits_avail digits of input_float's fractional component represented in base 10 to output (using only decimal digits, and truncating any remaining digits); if it is zero, append "0".
-0. Return output.
+9. If input_float's fractional component is 0, append "0" to output.
+0. Else if input_float's fractional component has fractional_digits_avail or less digits, append input_float's fractional component represented in base 10 to output.
+1. Else append fractional_digits_avail digits of input_float's fractional component represented in base 10 to output, rounding to the nearest value, or to the even value if it is equidistant.
+2. Return output.
 
 
 ### Serializing a String {#ser-string}
@@ -950,6 +952,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-14
 
 * Editorial improvements.
+* Round the fractional component of floats, rather than truncating it (#982).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
