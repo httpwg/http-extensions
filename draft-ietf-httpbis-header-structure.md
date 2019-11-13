@@ -181,7 +181,7 @@ that URL MUST be ignored. If its value is a relative reference
 
 For example:
 
-  Foo-Example: 2; fooUrl="https://foo.example.com/"
+  Foo-Example: 2; foourl="https://foo.example.com/"
 ~~~
 
 
@@ -925,7 +925,7 @@ Example-Description: foo; url="https://example.net"; context=123,
                      bar; url="https://example.org"; context=456
 ~~~
 
-Since the description contains an array of key/value pairs, we use a List to represent them, with the token for each item in the array used to identify it in the "descriptions" member of the Example-Thing header.
+Since the description contains an array of key/value pairs, we use a List to represent them, with the token for each item in the array used to identify it in the "descriptions" member of the Example-Thing dictionary header.
 
 When specifying more than one header, it's important to remember to describe what a processor's behaviour should be when one of the headers is missing.
 
