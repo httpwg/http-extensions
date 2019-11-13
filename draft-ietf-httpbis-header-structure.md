@@ -611,7 +611,7 @@ Given a string as input_string, return an ASCII string suitable for use in a HTT
 
 Given a token as input_token, return an ASCII string suitable for use in a HTTP header value.
 
-0. If input_token is not a sequence of characters, or contains characters not allowed by the tchar ABNF rule, fail serialisation.
+0. If input_token is not a sequence of characters, or contains a character not in tchar, ":" or "/", fail serialisation.
 1. Let output be an empty string.
 2. Append input_token to output.
 3. Return output.
@@ -840,7 +840,7 @@ Given an ASCII string as input_string, return a token. input_string is modified 
 1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
-   1. If the first character of input_string is not allowed by the tchar ABNF rule, return output_string.
+   1. If the first character of input_string is not in tchar, ":" or "/", return output_string.
    2. Let char be the result of consuming the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
