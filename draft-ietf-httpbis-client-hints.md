@@ -173,6 +173,8 @@ Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persis
 While HTTP header compression schemes reduce the cost of adding HTTP header fields, sending Client Hints to the server incurs an increase in request byte size.
 Servers SHOULD take that into account when opting in to receive Client Hints, and SHOULD NOT opt-in to receive hints unless they are to be used for content adaptation purposes.
 
+Due to request byte size increase, features relying on this document to define Client Hints MAY consider restricting sending those hints to certain request destinations, where they are more likely to be useful. 
+
 # IANA Considerations
 
 This document defines the "Accept-CH" HTTP response field, and registers it in the Permanent Message Header Fields registry.
