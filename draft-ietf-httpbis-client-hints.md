@@ -176,7 +176,7 @@ Implementers ought to consider both user and server controlled mechanisms and po
 
 Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, or similar, are cleared.
 
-# Other Considerations
+# Cost of Sending Hints
 
 While HTTP header compression schemes reduce the cost of adding HTTP header fields, sending Client Hints to the server incurs an increase in request byte size.
 Servers SHOULD take that into account when opting in to receive Client Hints, and SHOULD NOT opt-in to receive hints unless they are to be used for content adaptation purposes.
