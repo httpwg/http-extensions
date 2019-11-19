@@ -37,6 +37,14 @@ normative:
   RFC7234:
   RFC6454:
   HTML5: W3C.REC-html5-20141028
+  FETCH:
+    target: https://fetch.spec.whatwg.org/
+    title: Fetch
+    author:
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
 
 informative:
   RFC6265:
@@ -168,6 +176,12 @@ Implementers ought to consider both user and server controlled mechanisms and po
 
 Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, or similar, are cleared.
 
+# Cost of Sending Hints
+
+While HTTP header compression schemes reduce the cost of adding HTTP header fields, sending Client Hints to the server incurs an increase in request byte size.
+Servers SHOULD take that into account when opting in to receive Client Hints, and SHOULD NOT opt-in to receive hints unless they are to be used for content adaptation purposes.
+
+Due to request byte size increase, features relying on this document to define Client Hints MAY consider restricting sending those hints to certain request destinations {{FETCH}}, where they are more likely to be useful. 
 
 # IANA Considerations
 
@@ -229,6 +243,8 @@ Features that define Client Hints will need to specify the related variants algo
 * Issue 700: Replaced ABNF with structured headers.
 * PR 878: Removed Accept-CH-Lifetime based on feedback at IETF 105
 
+## Since -08
+* PR 985: Describe the bytesize cost of hints.
 
 
 # Acknowledgements
