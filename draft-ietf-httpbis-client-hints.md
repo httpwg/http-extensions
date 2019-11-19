@@ -243,6 +243,8 @@ Features that define Client Hints will need to specify the related variants algo
 * Issue 700: Replaced ABNF with structured headers.
 * PR 878: Removed Accept-CH-Lifetime based on feedback at IETF 105
 
+## Since -08
+* PR 985: Describe the bytesize cost of hints.
 
 
 # Acknowledgements
