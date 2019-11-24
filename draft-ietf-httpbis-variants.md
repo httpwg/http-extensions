@@ -134,7 +134,7 @@ Variants        = sh-dict
 
 Each member-name represents the field-name of a request header that is part of the secondary cache key; each member-value is an inner-list of strings or tokens that convey representations of potential values for that header field, hereafter referred to as "available-values".
 
-If Structured Header parsing fails or a member's value does have the structure outlined above, the client MUST treat the representation as having no Variants header field.
+If Structured Header parsing fails or a member's value does not have the structure outlined above, the client MUST treat the representation as having no Variants header field.
 
 Note that an available-value that is a token is interpreted as a string containing the same characters, and vice versa.
 
