@@ -97,7 +97,7 @@ Content-Type: text/html
 Content-Language: en
 Vary: Accept-Language
 Variants: accept-language=(de en jp)
-Variant-Key: en
+Variant-Key: (en)
 Transfer-Encoding: chunked
 
 [English content]
