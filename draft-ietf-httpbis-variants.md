@@ -96,7 +96,7 @@ HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Language: en
 Vary: Accept-Language
-Variants: Accept-Language;de;en;jp
+Variants: accept-language=(de en jp)
 Variant-Key: en
 Transfer-Encoding: chunked
 
@@ -141,7 +141,7 @@ Note that an available-value that is a token is interpreted as a string containi
 So, given this example header field:
 
 ~~~ example
-Variants: Accept-Encoding=(gzip)
+Variants: accept-encoding=(gzip)
 ~~~
 
 a recipient can infer that the only content-coding available for that resource is "gzip" (along with the "identity" non-encoding; see {{content-encoding}}).
@@ -157,14 +157,14 @@ a recipient can infer that no content-codings (beyond identity) are supported. N
 A more complex example:
 
 ~~~ example
-Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variants: accept-encoding=(gzip br), accept-language=(en fr)
 ~~~
 
 Here, recipients can infer that two content-codings in addition to "identity" are available, as well as two content languages. Note that, as with all Structured Header dictionaries, they might occur in the same header field or separately, like this:
 
 ~~~ example
-Variants: Accept-Encoding=(gzip brotli)
-Variants: Accept-Language=(en fr)
+Variants: accept-encoding=(gzip brotli)
+Variants: accept-language=(en fr)
 ~~~
 
 The ordering of available-values is significant, as it might be used by the header's algorithm for selecting a response (in this example, the first language is the default; see {{content-language}}).
@@ -210,7 +210,7 @@ Each inner-list member is treated as identifying an available-value for the corr
 For example:
 
 ~~~ example
-Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variants: accept-encoding=(gzip br), accept-language=(en fr)
 Variant-Key: (gzip fr)
 ~~~
 
@@ -219,7 +219,7 @@ This header pair indicates that the representation has a "gzip" content-coding a
 If the response can be used to satisfy more than one request, they can be listed in additional members.  For example:
 
 ~~~ example
-Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variants: accept-encoding=(gzip br), accept-language=(en fr)
 Variant-Key: (gzip fr), ("identity" fr)
 ~~~
 
@@ -228,7 +228,7 @@ indicates that this response can be used for requests whose Accept-Encoding algo
 When more than one Variant-Key value is in a response, the first one present MUST correspond to the request that caused that response to be generated. For example:
 
 ~~~ example
-Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variants: accept-encoding=(gzip br), accept-language=(en fr)
 Variant-Key: (gzip fr), (identity fr), (br fr oops)
 ~~~
 
@@ -312,7 +312,7 @@ Note that implementation of the Vary header field varies in practice, and the al
 For example, if the selected variants-header was:
 
 ~~~ example
-Variants: Accept-Language=(en fr de), Accept-Encoding=(gzip br)
+Variants: accept-language=(en fr de), accept-encoding=(gzip br)
 ~~~
 
 and the request contained the headers:
@@ -355,7 +355,7 @@ it could be used to satisfy the first preference. If not, responses correspondin
 If the selected variants-header was:
 
 ~~~ example
-Variants: Accept-Language=(en fr de)
+Variants: accept-language=(en fr de)
 ~~~
 
 And a request comes in with the following headers:
@@ -386,7 +386,7 @@ Then the cache needs to forward the request to the origin server, since Variants
 If the selected variants-header was:
 
 ~~~ example
-Variants: Accept-Language=(en fr de)
+Variants: accept-language=(en fr de)
 ~~~
 
 And a request comes in with the following headers:
@@ -437,7 +437,7 @@ HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
 Cache-Control: max-age=3600
-Variants: Accept-Language=(en de)
+Variants: accept-language=(en de)
 Variant-Key: (en)
 Vary: Accept-Language
 Transfer-Encoding: chunked
@@ -470,8 +470,8 @@ HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
 Content-Encoding: br
-Variants: Accept-Language=(en jp de)
-Variants: Accept-Encoding=(br gzip)
+Variants: accept-language=(en jp de)
+Variants: accept-encoding=(br gzip)
 Variant-Key: (en br)
 Vary: Accept-Language, Accept-Encoding
 Transfer-Encoding: chunked
@@ -499,7 +499,7 @@ HTTP/1.1 200 OK
 Content-Type: image/gif
 Content-Language: en
 Content-Encoding: br
-Variants: Accept-Encoding=(br gzip)
+Variants: accept-encoding=(br gzip)
 Variant-Key: (br)
 Vary: Accept-Language, Accept-Encoding
 Transfer-Encoding: chunked
@@ -641,7 +641,7 @@ To perform content negotiation for Cookie given a request-value and available-va
 A simple example is allowing a page designed for users that aren't logged in (denoted by the `logged_in` cookie-name) to be cached:
 
 ~~~ example
-Variants: Cookie=(logged_in)
+Variants: cookie=(logged_in)
 Variant-Key: (0)
 Vary: Cookie
 ~~~
@@ -651,7 +651,7 @@ Here, a cache that implements Variants will only use this response to satisfy re
 Or, consider this example:
 
 ~~~ example
-Variants: Cookie=(user_priority)
+Variants: cookie=(user_priority)
 Variant-Key: (silver), ("bronze")
 Vary: Cookie
 ~~~
@@ -661,7 +661,7 @@ Here, the `user_priority` cookie-name allows requests from "gold" users to be se
 It is possible to target a response to a single user; for example:
 
 ~~~ example
-Variants: Cookie=(user_id)
+Variants: cookie=(user_id)
 Variant-Key: (some_person)
 Vary: Cookie
 ~~~
@@ -671,7 +671,7 @@ Here, only the "some_person" `user_id` will have this response served to them ag
 Note that if more than one cookie-name serves as a cache key, they'll need to be listed in separate Variants members, like this:
 
 ~~~ example
-Variants: Cookie=(user_priority), Cookie=(user_region)
+Variants: cookie=(user_priority), cookie=(user_region)
 Variant-Key: (gold europe)
 Vary: Cookie
 ~~~
