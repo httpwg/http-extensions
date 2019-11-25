@@ -233,6 +233,8 @@ the intermediaries may apply.
 
 The following examples show how representation metadata, payload transformations and method
 impacts on the message and payload body.
+When the payload body contains non-printable characters (eg. when it is compressed)
+it is shown as base64 encoded.
 
 Here is a gzip-compressed json object
 
@@ -740,6 +742,8 @@ Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
 
+The above payload body contains non-printable characters and it is shown as base64 encoded.
+
 
 ## Client Provides Full Representation Data, Server Provides No Representation Data
 
@@ -802,6 +806,8 @@ Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=, id-sha-256=X48E9qO
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
+
+The above payload body contains non-printable characters and it is shown as base64 encoded.
 
 ## POST Response does not Reference the Request URI {#post-not-request-uri}
 
