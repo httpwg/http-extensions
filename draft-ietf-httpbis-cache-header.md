@@ -110,7 +110,7 @@ It can have one of the following values:
 
 ## The fwd-res parameter
 
-"fwd-res" indicates what the result of the forward request was. It is only valid when fwd is "res-stale" or "req-stale", and defaults to "full" if not present when fwd is one of those values.
+"fwd-res" indicates what the result of the forward request was. It is only meaningful when fwd is "res-stale" or "req-stale", and defaults to "full" if not present when fwd is one of those values.
 
 It can have one of the following values:
 
@@ -120,7 +120,7 @@ It can have one of the following values:
 
 ## The fwd-stored parameter
 
-"fwd-stored" indicates whether the cache stored the response; a true value indicates that it did. Only valid when fwd is not "none".
+"fwd-stored" indicates whether the cache stored the response; a true value indicates that it did. Only meaningful when fwd is not "none".
 
 ## The res-fresh parameter
 
