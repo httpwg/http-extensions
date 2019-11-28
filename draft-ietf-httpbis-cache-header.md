@@ -125,11 +125,11 @@ It can have one of the following values:
 ## The res-fresh parameter
 
 "res-fresh" indicates the response's remaining freshness lifetime (as per
-{{!I-D.ietf-httpbis-cache}}, Section 4.2.1), as an integer number of seconds. This does not include freshness assigned by the cache (see "cache-fresh"). May be negative, to indicate staleness.
+{{!I-D.ietf-httpbis-cache}}, Section 4.2.1), as an integer number of seconds, measured when the response is sent by the cache. This does not include freshness assigned by the cache (see "cache-fresh"). May be negative, to indicate staleness.
 
 ## The cache-fresh parameter
 
-"cache-fresh" indicates the response's remaining freshness lifetime as calculated by the cache, as an integer number of seconds. This includes freshness assigned by the cache; e.g., through heuristics, local configuration, or other factors. May be negative, to indicate staleness.
+"cache-fresh" indicates the response's remaining freshness lifetime as calculated by the cache, as an integer number of seconds, measured when the response is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics, local configuration, or other factors. May be negative, to indicate staleness.
 
 If both cache-fresh and res-fresh appear as parameters on the same value, it implies that the cache freshness overrode the response freshness.
 
