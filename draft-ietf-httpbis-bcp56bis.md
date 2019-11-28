@@ -351,17 +351,15 @@ other relevant resources. Doing so assures that the deployment is as flexible as
 
 There are a few common patterns for discovering that initial URL.
 
-The most straightforward mechanism for URL discovery is to configure the client with (or otherwise convey to it) a full URL. This might be done in a configuration document, in DNS or mDNS, or through another discovery mechanism.
+The most straightforward mechanism for URL discovery is to configure the client with (or otherwise convey to it) a full URL. This might be done in a configuration document, or through another discovery mechanism.
 
 However, if the client only knows the server's hostname and the identity of the application, there needs to be some way to derive the initial URL from that information.
 
-Applications MUST NOT define a fixed prefix for its URL paths; for reasons explained in {{!RFC7320}}, this is bad practice.
-
-Instead, a specification for such an application can use one of the following strategies:
+An application cannot define a fixed prefix for its URL paths; see {{!I-D.nottingham-rfc7320bis}}. Instead, a specification for such an application can use one of the following strategies:
 
 * Register a Well-Known URI {{!I-D.nottingham-rfc5785bis}} as an entry point for that application. This provides a fixed path on every potential server that will not collide with other applications.
 
-* Enable the server authority to convey a URL Template {{?RFC6570}} or similar mechanism for generating a URL for an entry point. For example, this might be done in a DNS RR, a configuration document, or other artefact.
+* Enable the server authority to convey a URL Template {{?RFC6570}} or similar mechanism for generating a URL for an entry point. For example, this might be done in a configuration document or other artefact.
 
 Once the discovery document is located, it can be fetched, cached for later reuse (if allowed by its metadata), and used to locate other resources that are relevant to the application, using full URIs or URL Templates.
 
