@@ -292,11 +292,13 @@ In HTTP headers, members are separated by a comma with optional whitespace, whil
 Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
 ~~~
 
-Members whose value is Boolean true omit their value when serialised, unless it has parameters. For example, here both "b" and "c" are true, but "c"'s value is serialised because it has parameters:
+Members whose value is Boolean true MUST omit that value when serialised, unless it has parameters. For example, here both "b" and "c" are true, but "c"'s value is serialised because it has parameters:
 
 ~~~ example
 Example-DictHeader: a=?0, b, c=?1; foo=bar
 ~~~
+
+Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in dictionary values.
 
 A dictionary with a member whose value is an inner-list of tokens:
 
