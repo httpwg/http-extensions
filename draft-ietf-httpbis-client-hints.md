@@ -279,6 +279,7 @@ Features that define Client Hints will need to specify the related variants algo
 
 ## Since -08
 * PR 985: Describe the bytesize cost of hints.
+* PR 776: Add Sec- and CH- prefix considerations.
 
 
 # Acknowledgements
