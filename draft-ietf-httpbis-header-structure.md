@@ -273,7 +273,7 @@ Parsers MUST support at least 256 parameters on an item or inner-list, and suppo
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
+Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values can be items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
 
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
@@ -281,7 +281,7 @@ The ABNF for dictionaries in HTTP headers is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-name "=" member-value
+dict-member    = member-name [ "=" member-value ]
 member-name    = key
 member-value   = sh-item / inner-list
 ~~~
@@ -291,6 +291,14 @@ In HTTP headers, members are separated by a comma with optional whitespace, whil
 ~~~ example
 Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
 ~~~
+
+Members whose value is Boolean true MUST omit that value when serialised, unless it has parameters. For example, here both "b" and "c" are true, but "c"'s value is serialised because it has parameters:
+
+~~~ example
+Example-DictHeader: a=?0, b, c=?1; foo=bar
+~~~
+
+Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in dictionary values.
 
 A dictionary with a member whose value is an inner-list of tokens:
 
@@ -533,10 +541,11 @@ Given an ordered dictionary as input_dictionary (each member having a member_nam
 1. Let output be an empty string.
 2. For each member_name with a value of (member_value, parameters) in input_dictionary:
    1. Append the result of running Serializing a Key ({{ser-key}}) with member's member_name to output.
-   2. Append "=" to output.
-   3. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
-   4. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
-   5. If more members remain in input_dictionary:
+   3. If member_value is not Boolean true or parameters is not empty:
+      1. Append "=" to output.
+      2. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
+      3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
+   4. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -724,14 +733,19 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
 2. While input_string is not empty:
    1. Let this_key be the result of running Parsing a Key ({{parse-key}}) with input_string.
    2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
-   3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
-   6. Add name this_key with value member to dictionary.
-   7. Discard any leading OWS from input_string.
-   8. If input_string is empty, return dictionary.
-   9. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   0. Discard any leading OWS from input_string.
-   1. If input_string is empty, there is a trailing comma; fail parsing.
+   3. If the first character of input_string is "=":
+      1. Consume the first character of input_string.
+      2. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
+   4. Otherwise:
+      1. Let value be Boolean true.
+      2. Let parameters be an empty, ordered map.
+      3. Let member be the tuple (value, parameters).
+   5. Add name this_key with value member to dictionary.
+   6. Discard any leading OWS from input_string.
+   7. If input_string is empty, return dictionary.
+   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   9. Discard any leading OWS from input_string.
+   0. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
 
@@ -953,6 +967,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Editorial improvements.
 * Round the fractional component of floats, rather than truncating it (#982).
+* Allow empty dictionary values (#992).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
