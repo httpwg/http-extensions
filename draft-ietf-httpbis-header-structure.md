@@ -289,7 +289,7 @@ member-value   = sh-item / inner-list
 In HTTP headers, members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
 
 ~~~ example
-Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
+Example-DictHeader: en="Applepie", da=:w4ZibGV0w6ZydGU=:
 ~~~
 
 A dictionary with a member whose value is an inner-list of tokens:
@@ -429,14 +429,14 @@ Byte sequences can be conveyed in Structured Headers.
 The ABNF for a byte sequence in HTTP headers is:
 
 ~~~ abnf
-sh-binary = "*" *(base64) "*"
+sh-binary = ":" *(base64) ":"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-In HTTP headers, a byte sequence is delimited with asterisks and encoded using base64 ({{!RFC4648}}, Section 4). For example:
+In HTTP headers, a byte sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
-Example-BinaryHdr: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
+Example-BinaryHdr: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
 ~~~
 
 Parsers MUST support byte sequences with at least 16384 octets after decoding.
@@ -625,9 +625,9 @@ Given a byte sequence as input_bytes, return an ASCII string suitable for use in
 
 0. If input_bytes is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
-2. Append "\*" to output.
+2. Append ":" to output.
 3. Append the result of base64-encoding input_bytes as per {{!RFC4648}}, Section 4, taking account of the requirements below.
-4. Append "\*" to output.
+4. Append ":" to output.
 5. Return output.
 
 The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2.
@@ -750,7 +750,7 @@ Given an ASCII string as input_string, return a bare item. input_string is modif
 
 1. If the first character of input_string is a "-" or a DIGIT, return the result of running Parsing a Number ({{parse-number}}) with input_string.
 2. If the first character of input_string is a DQUOTE, return the result of running Parsing a String ({{parse-string}}) with input_string.
-3. If the first character of input_string is "\*", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
+3. If the first character of input_string is ":", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
 4. If the first character of input_string is "?", return the result of running Parsing a Boolean ({{parse-boolean}}) with input_string.
 5. If the first character of input_string is an ALPHA, return the result of running Parsing a Token ({{parse-token}}) with input_string.
 6. Otherwise, the item type is unrecognized; fail parsing.
@@ -852,11 +852,11 @@ Given an ASCII string as input_string, return a token. input_string is modified 
 
 Given an ASCII string as input_string, return a byte sequence. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not "\*", fail parsing.
+1. If the first character of input_string is not ":", fail parsing.
 2. Discard the first character of input_string.
-3. If there is not a "\*" character before the end of input_string, fail parsing.
-4. Let b64_content be the result of consuming content of input_string up to but not including the first instance of the character "\*".
-5. Consume the "\*" character at the beginning of input_string.
+3. If there is not a ":" character before the end of input_string, fail parsing.
+4. Let b64_content be the result of consuming content of input_string up to but not including the first instance of the character ":".
+5. Consume the ":" character at the beginning of input_string.
 6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
 7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behaviour below).
 8. Return binary_content.
@@ -953,6 +953,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Editorial improvements.
 * Round the fractional component of floats, rather than truncating it (#982).
+* Change byte sequence delimiters from "\*" to ":" (#991).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
