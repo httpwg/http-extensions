@@ -56,14 +56,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Abcp56bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-bcp56bis/)
 
 
-### HTTP Random Access And Live Content
-
-*Sent to IESG*
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-rand-access-live.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-rand-access-live.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-rand-access-live) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Arand-access-live) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-rand-access-live/)
-
 ### Secondary Certificates
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-secondary-certs.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-secondary-certs.txt))

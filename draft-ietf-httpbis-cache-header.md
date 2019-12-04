@@ -110,7 +110,7 @@ It can have one of the following values:
 
 ## The fwd-res parameter
 
-"fwd-res" indicates what the result of the forward request was. It is only valid when fwd is "res-stale" or "req-stale", and defaults to "full" if not present when fwd is one of those values.
+"fwd-res" indicates what the result of the forward request was. It is only meaningful when fwd is "res-stale" or "req-stale", and defaults to "full" if not present when fwd is one of those values.
 
 It can have one of the following values:
 
@@ -120,16 +120,16 @@ It can have one of the following values:
 
 ## The fwd-stored parameter
 
-"fwd-stored" indicates whether the cache stored the response; a true value indicates that it did. Only valid when fwd is not "none".
+"fwd-stored" indicates whether the cache stored the response; a true value indicates that it did. Only meaningful when fwd is not "none".
 
 ## The res-fresh parameter
 
 "res-fresh" indicates the response's remaining freshness lifetime (as per
-{{!I-D.ietf-httpbis-cache}}, Section 4.2.1), as an integer number of seconds. This does not include freshness assigned by the cache (see "cache-fresh"). May be negative, to indicate staleness.
+{{!I-D.ietf-httpbis-cache}}, Section 4.2.1), as an integer number of seconds, measured when the response is sent by the cache. This does not include freshness assigned by the cache (see "cache-fresh"). May be negative, to indicate staleness.
 
 ## The cache-fresh parameter
 
-"cache-fresh" indicates the response's remaining freshness lifetime as calculated by the cache, as an integer number of seconds. This includes freshness assigned by the cache; e.g., through heuristics, local configuration, or other factors. May be negative, to indicate staleness.
+"cache-fresh" indicates the response's remaining freshness lifetime as calculated by the cache, as an integer number of seconds, measured when the response is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics, local configuration, or other factors. May be negative, to indicate staleness.
 
 If both cache-fresh and res-fresh appear as parameters on the same value, it implies that the cache freshness overrode the response freshness.
 
@@ -199,8 +199,8 @@ Cache-Status: ExampleCache; fwd=uri-miss;
 Going through two layers of caching, both of which were hits, and the second collapsed with other requests:
 
 ~~~example
-Cache-Status: "CDN Company Here"; res-fresh=545,
-              OriginCache; cache-fresh=1100; collapse-hit=?1
+Cache-Status: OriginCache; cache-fresh=1100; collapse-hit=?1,
+              "CDN Company Here"; res-fresh=545,
 ~~~
 
 

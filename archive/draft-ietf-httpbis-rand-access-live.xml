@@ -68,7 +68,7 @@
                 <city>Portland</city>
                 <region>OR</region>
                 <code>97229</code>
-                <country>US</country>
+                <country>United States of America</country>
             </postal>
         <email>pratt@acm.org</email>
         </address>
@@ -84,7 +84,7 @@
                 <city>Louisville</city>
                 <region>CO</region>
                 <code>80027</code>
-                <country>US</country>
+                <country>United States of America</country>
             </postal>
             <email>d.thakore@cablelabs.com</email>
         </address>
@@ -98,13 +98,13 @@
         <postal>
           <city>Atlanta</city>
           <region>GA</region>
-          <country>US</country>
+          <country>United States of America</country>
         </postal>
         <email>barbara.stark@att.com</email>
       </address>
     </author>
 
-    <date year="2019" month="March"/>
+    <date/>
 
     <!-- Meta-data Declarations -->
 
@@ -128,11 +128,11 @@
 
     <abstract>
         <t>
-            To accommodate byte range requests for content that has
+            To accommodate byte-range requests for content that has
             data appended over time, this document defines semantics
-            that allow a HTTP client and server to perform byte-range
+            that allow an HTTP client and a server to perform byte-range
       GET and HEAD requests that start at an arbitrary byte offset
-      within the representation and ends at an indeterminate offset.
+      within the representation and end at an indeterminate offset.
         </t>
     </abstract>
 
@@ -157,16 +157,16 @@
 
     <section anchor="introduction" title="Introduction">
         <t>
-      Some Hypertext Transfer Protocol (HTTP) clients use byte-range requests (Range requests using the "bytes" Range Unit) to transfer select portions of large representations (<xref target="RFC7233"/>). And in some cases large representations require content to be continuously or periodically appended - such as representations consisting of live audio or video sources, blockchain databases, and log files. Clients cannot access the appended/live content using a Range request with the bytes range unit using the currently defined byte-range semantics without accepting performance or behavior sacrifices which are not acceptable for many applications.
+      Some Hypertext Transfer Protocol (HTTP) clients use byte-range requests (range requests using the "bytes" range unit) to transfer select portions of large representations <xref target="RFC7233"/>. In some cases, large representations require content to be continuously or periodically appended, such as representations consisting of live audio or video sources, blockchain databases, and log files. Clients cannot access the appended/live content using a range request with the "bytes" range unit using the currently defined byte-range semantics without accepting performance or behavior sacrifices that are not acceptable for many applications.
         </t>
         <t>
 			For instance, HTTP clients have the ability to access appended content on an indeterminate-length resource by transferring the entire representation from the beginning and continuing to read the appended content as it's made available. Obviously, this is highly inefficient for cases where the representation is large and only the most recently appended content is needed by the client.
 		</t>
     	<t>
-			Alternatively, clients can also access appended content by sending periodic open-ended bytes Range requests using the last-known end byte position as the range start. Performing low-frequency periodic bytes Range requests in this fashion (polling) introduces latency since the client will necessarily be somewhat behind the aggregated content - mimicking the behavior (and latency) of segmented content representations such as "HTTP Live Streaming" (HLS, <xref target="RFC8216"/>) or "Dynamic Adaptive Streaming over HTTP" (MPEG-DASH, <xref target="DASH"/>). And while performing these Range requests at higher frequency can reduce this latency, it also incurs more processing overhead and HTTP exchanges as many of the requests will return no content - since content is usually aggregated in groups of bytes (e.g. a video frame, audio sample, block, or log entry).
+			Alternatively, clients can access appended content by sending periodic, open-ended byte-range requests using the last known end byte position as the range start. Performing low-frequency periodic byte-range requests in this fashion (polling) introduces latency since the client will necessarily be somewhat behind in transferring the aggregated content, effectively resulting in the same kind of latency issues with the segmented content transfer mechanisms in "HTTP Live Streaming" (HLS) <xref target="RFC8216"/> and "Dynamic Adaptive Streaming over HTTP" <xref target="MPEG-DASH"/>. While performing these range requests at higher frequency can reduce this latency, it also incurs more processing overhead and HTTP exchanges as many of the requests will return no content, since content is usually aggregated in groups of bytes (e.g., a video frame, audio sample, block, or log entry).
         </t>
         <t>
-            This document describes a usage model for range requests which enables
+            This document describes a usage model for range requests that enables
             efficient retrieval of representations that are appended to over time
             by using large values and associated semantics for communicating
             range end positions. This model allows representations to be
@@ -175,28 +175,19 @@
             support this technique.
         </t>
 
-        <section title="Requirements Language">
-            <t>The key words &quot;MUST&quot;, &quot;MUST NOT&quot;,
-            &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
-            &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;,
-            &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be
-            interpreted as described in <xref target="RFC2119">RFC 2119</xref>.
-            </t>
-        </section>
-
         <section title="Notational Conventions">
-            <t>This document cites productions in Augmented Backus-Naur Form (ABNF) productions
+            <t>This document cites Augmented Backus-Naur Form (ABNF) productions
             from <xref target="RFC7233"/>, using the notation defined in <xref target="RFC5234"/>.
             </t>
         </section>
     </section>
 
-    <section anchor="definition" title="Performing Range requests on Random-Access Aggregating (&quot;live&quot;) Content">
+    <section anchor="definition" title="Performing Range Requests on Random-Access Aggregating (Live) Content">
         <t>
             This document recommends a two-step process for accessing resources
-            that have indeterminate length representations.
+            that have indeterminate-length representations.
         </t><t>
-            Two steps are necessary because of limitations with the Range request
+            Two steps are necessary because of limitations with the range request
             header fields and the Content-Range response header fields. A server cannot
             know from a range request that a client wishes to receive a response
             that does not have a definite end. More critically, the header fields
@@ -205,7 +196,7 @@
         </t><t>
             A client first learns that the resource has a representation of
             indeterminate length by requesting a range of the resource. The server
-            responds with the range that is available, but indicates that the
+            responds with the range that is available but indicates that the
             length of the representation is unknown using the existing
             Content-Range syntax. See <xref target="establishing-range" />
             for details and examples.
@@ -213,7 +204,7 @@
             Once the client knows the resource has indeterminate length, it can
             request a range with a very large end position from the resource. The
             client chooses an explicit end value larger than can be transferred in
-            the foreseeable term. A server which supports range requests of
+            the foreseeable term. A server that supports range requests of
             indeterminate length signals its understanding of the client's
             indeterminate range request by indicating that the range it is
             providing has a range end that exactly matches the client's requested
@@ -223,7 +214,7 @@
 
       <section anchor="establishing-range" title="Establishing the Randomly Accessible Byte Range">
       <t>
-        Establishing if a representation is continuously aggregating ("live") and determining the randomly-accessible byte range can both be determined using the existing definition for an open-ended byte-range request. Specifically, <xref x:sec="2.1" x:fmt="of" target="RFC7233"/> defines a byte-range request of the form:
+        Determining if a representation is continuously aggregating ("live") and determining the randomly accessible byte range can both be performed using the existing definition for an open-ended byte-range request. Specifically, <xref x:sec="2.1" x:fmt="of" target="RFC7233"/> defines a byte-range request of the form:
       </t>
 <figure><artwork type="abnf">
    byte-range-spec = first-byte-pos "-" [ last-byte-pos ]
@@ -234,7 +225,7 @@
       representation length) may respond with a 206 status code (Partial Content) with a Content-Range
       header field indicating the currently satisfiable byte range. For example:
       </t>
-<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;request&#34;">
 HEAD /resource HTTP/1.1
 Host: example.com
 Range: bytes=0-
@@ -243,23 +234,23 @@ Range: bytes=0-
       <t>
       returns a response of the form:
       </t>
-<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;response&#34;">
 HTTP/1.1 206 Partial Content
 Content-Range: bytes 0-1234567/*
 </artwork></figure>
       <t>
-      from the server indicating that (1) the complete representation length is unknown (via the "*" in place of the complete-length field) and (2) that only bytes 0-1234567 were accessible at the time the request was processed by the server. The client can infer from this response that bytes 0-1234567 of the representation can be requested and returned in a timely fashion (the bytes are immediately available).
+      from the server indicating that (1) the complete representation length is unknown (via the "*" in place of the complete-length field) and (2) only bytes 0-1234567 were accessible at the time the request was processed by the server. The client can infer from this response that bytes 0-1234567 of the representation can be requested and transfer can be performed immediately.
       </t>
     </section>
-    <section anchor="live-range-requests" title="Byte-Range Requests Beyond the Randomly Accessible Byte Range">
+    <section anchor="live-range-requests" title="Byte-Range Requests beyond the Randomly Accessible Byte Range">
       <t>
-        Once a client has determined that a representation has an indeterminate length and established the byte range that can be accessed, it may want to perform a request with a start position within the randomly-accessible content range and an end position at an indefinite "live" point - a point where the byte-range GET request is fulfilled on-demand as the content is aggregated.
+        Once a client has determined that a representation has an indeterminate length and established the byte range that can be accessed, it may want to perform a request with a start position within the randomly accessible content range and an end position at an indefinite/live point -- a point where the byte-range GET request is fulfilled on-demand as the content is aggregated.
       </t>
       <t>
-        For example, for a large video asset, a client may wish to start a content transfer from the video "key" frame immediately before the point of aggregation and continue the content transfer indefinitely as content is aggregated - in order to support low-latency startup of a live video stream.
+        For example, for a large video asset, a client may wish to start a content transfer from the video "key" frame immediately before the point of aggregation and continue the content transfer indefinitely as content is aggregated, in order to support low-latency startup of a live video stream.
       </t>
       <t>
-        Unlike a byte-range Range request, a byte-range Content-Range response header field cannot be "open ended", per <xref x:sec="4.2" x:fmt="of" target="RFC7233"/>:
+        Unlike a byte-range request header field, a byte-content-range response header field cannot be "open-ended", per <xref x:sec="4.2" x:fmt="of" target="RFC7233"/>:
       </t>
 <figure><artwork type="abnf">
    byte-content-range  = bytes-unit SP
@@ -272,27 +263,27 @@ Content-Range: bytes 0-1234567/*
    complete-length     = 1*DIGIT
 </artwork></figure>
       <t>
-        Specifically, last-byte-pos is required in byte-range. So in order to preserve interoperability with existing HTTP clients, servers, proxies, and caches, this document proposes a mechanism for a client to indicate support for handling an indeterminate-length byte-range response, and a mechanism for a server to indicate if/when it's providing an  indeterminate-length response.
+        Specifically, last-byte-pos is required in byte-range. So, in order to preserve interoperability with existing HTTP clients, servers, proxies, and caches, this document proposes a mechanism for a client to indicate support for handling an indeterminate-length byte-range response and a mechanism for a server to indicate if/when it's providing an indeterminate-length response.
       </t>
       <t>
         A client can indicate support for handling indeterminate-length byte-range responses by providing a very large value for the last-byte-pos in the byte-range request. For example, a client can perform a byte-range GET request of the form:
       </t>
-<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;request&#34;">
 GET /resource HTTP/1.1
 Host: example.com
 Range: bytes=1230000-999999999999
 
 </artwork></figure>
       <t>
-        where the last-byte-pos in the Request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above, and much larger than the expected maximum size of the representation. See <xref target="Security" /> for range value considerations.
+        where the last-byte-pos in the request is much larger than the last-byte-pos returned in response to an open-ended byte-range HEAD request, as described above, and much larger than the expected maximum size of the representation. See <xref target="Security" /> for range value considerations.
       </t>
       <t>
-        In response, a server may indicate that it is supplying a continuously aggregating ("live") response by supplying the client request's last-byte-pos in the Content-Range response header field.
+        In response, a server may indicate that it is supplying a continuously aggregating/live response by supplying the client request's last-byte-pos in the Content-Range response header field.
       </t>
       <t>
         For example:
       </t>
-<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;request&#34;">
 GET /resource HTTP/1.1
 Host: example.com
 Range: bytes=1230000-999999999999
@@ -301,61 +292,61 @@ Range: bytes=1230000-999999999999
       <t>
         returns
       </t>
-<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;response&#34;">
 HTTP/1.1 206 Partial Content
 Content-Range: bytes 1230000-999999999999/*
 </artwork></figure>
       <t>
-        from the server to indicate that the response will start at byte 1230000 and continues indefinitely to include all aggregated content, as it becomes available.
+        from the server to indicate that the response will start at byte 1230000 and continue indefinitely to include all aggregated content, as it becomes available.
       </t>
       <t>
-        A server that doesn't support or supply a continuously aggregating ("live") response will supply the currently satisfiable byte range, as it would with an open-ended byte request.
+        A server that doesn't support or supply a continuously aggregating/live response will supply the currently satisfiable byte range, as it would with an open-ended byte request.
       </t>
       <t>
         For example:
       </t>
-<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;request&#34;">
 GET /resource HTTP/1.1
 Host: example.com
 Range: bytes=1230000-999999999999
 
 </artwork></figure>
       <t>
-        will return
+        returns
       </t>
-<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;response&#34;">
 HTTP/1.1 206 Partial Content
 Content-Range: bytes 1230000-1234567/*
 </artwork></figure>
       <t>
-        from the server to indicate that the response will start at byte 1230000 and end at byte 1234567 and will not include any aggregated content. This is the response expected from a typical HTTP server - one that doesn't support byte-range requests on aggregating content.
+        from the server to indicate that the response will start at byte 1230000, end at byte 1234567, and not include any aggregated content. This is the response expected from a typical HTTP server -- one that doesn't support byte-range requests on aggregating content.
       </t>
       <t>
-        A client that doesn't receive a response indicating it is continuously aggregating must use other means to access aggregated content (e.g. periodic byte-range polling).
+        A client that doesn't receive a response indicating it is continuously aggregating must use other means to access aggregated content (e.g., periodic byte-range polling).
           </t>
       <t>
-        A server that does return a continuously aggregating ("live") response should return data using chunked transfer coding and not provide a Content-Length header field. A 0-length chunk indicates the end of the transfer, per <xref x:sec="4.1" x:fmt="of" target="RFC7230"/>.
+        A server that does return a continuously aggregating/live response should return data using chunked transfer coding and not provide a Content-Length header field. A 0-length chunk indicates the end of the transfer, per <xref x:sec="4.1" x:fmt="of" target="RFC7230"/>.
           </t>
     </section>
   </section>
     <section anchor="other-applications" title="Other Applications of Random-Access Aggregating Content">
-      <section anchor="starting-at-live" title="Requests Starting at the Aggregation (&quot;Live&quot;) Point">
+      <section anchor="starting-at-live" title="Requests Starting at the Aggregation/Live Point">
       <t>
-          A client that wishes to only receive newly-aggregated portions of a
-          resource (i.e., start at the "live" point), can use a HEAD request to
+          A client that wishes to only receive newly aggregated portions of a
+          resource (i.e., start at the live point) can use a HEAD request to
           learn what range the server has currently available and initiate an
           indeterminate-length transfer. For example:
       </t>
-<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;request&#34;">
 HEAD /resource HTTP/1.1
 Host: example.com
 Range: bytes=0-
 
 </artwork></figure>
         <t>
-            With the Content-Range response header field indicating the range (or ranges) available. For example:
+            with the Content-Range response header field indicating the range (or ranges) available. For example:
         </t>
-<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;response&#34;">
 206 Partial Content
 Content-Range: bytes 0-1234567/*
 </artwork></figure>
@@ -364,28 +355,31 @@ Content-Range: bytes 0-1234567/*
             value (using a very large value for the end of a range) and receive
             only new content.
         </t>
-<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+        <t>
+            For example:
+        </t>
+<figure><artwork type="message/http; msgtype=&#34;request&#34;">
 GET /resource HTTP/1.1
 Host: example.com
 Range: bytes=1234567-999999999999
 
 </artwork></figure>
         <t>
-          with a server returning a Content-Range response indicating that an indeterminate-length response body will be provided
+          with a server returning a Content-Range response indicating that an indeterminate-length response body will be provided:
         </t>
-<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;response&#34;">
 206 Partial Content
 Content-Range: bytes 1234567-999999999999/*
 </artwork></figure>
       </section>
-      <section anchor="shift-buffers" title="Shift Buffer Representations">
+      <section anchor="shift-buffers" title="Shift-Buffer Representations">
       <t>
-        Some representations lend themselves to front-end content removal in addition to aggregation. While still supporting random access, representations of this type have a portion at the beginning (the "0" end) of the randomly-accessible region that become inaccessible over time. Examples of this kind of representation would be an audio-video time-shift buffer or a rolling log file.
+        Some representations lend themselves to front-end content removal in addition to aggregation. While still supporting random access, representations of this type have a portion at the beginning (the "0" end) of the randomly accessible region that becomes inaccessible over time. Examples of this kind of representation would be an audio-video time-shift buffer or a rolling log file.
       </t>
       <t>
-        For example a Range request containing:
+        For example, a range request containing:
       </t>
-<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;request&#34;">
 HEAD /resource HTTP/1.1
 Host: example.com
 Range: bytes=0-
@@ -394,29 +388,29 @@ Range: bytes=0-
       <t>
         returns
       </t>
-<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;response&#34;">
 206 Partial Content
 Content-Range: bytes 1000000-1234567/*
 </artwork></figure>
       <t>
         indicating that the first 1000000 bytes were not accessible at the time the HEAD request was processed. Subsequent HEAD requests could return:
       </t>
-<figure><artwork type="example" x:indent-with="    ">
+<figure><artwork type="example">
 Content-Range: bytes 1000000-1234567/*
 </artwork></figure>
-<figure><artwork type="example" x:indent-with="    ">
+<figure><artwork type="example">
 Content-Range: bytes 1010000-1244567/*
 </artwork></figure>
-<figure><artwork type="example" x:indent-with="    ">
+<figure><artwork type="example">
 Content-Range: bytes 1020000-1254567/*
 </artwork></figure>
       <t>
         Note though that the difference between the first-byte-pos and last-byte-pos need not be constant.
       </t>
       <t>
-        The client could then follow-up with a GET Range request containing
+        The client could then follow up with a GET range request containing:
       </t>
-<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;request&#34;">
 GET /resource HTTP/1.1
 Host: example.com
 Range: bytes=1020000-999999999999
@@ -425,68 +419,66 @@ Range: bytes=1020000-999999999999
       <t>
         with the server returning
       </t>
-<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;response&#34;">
 206 Partial Content
 Content-Range: bytes 1020000-999999999999/*
 </artwork></figure>
       <t>
-        with the response body returning bytes 1020000-1254567 immediately and aggregated ("live") data being returned as the content is aggregated.
+        with the response body returning bytes 1020000-1254567 immediately and aggregated/live data being returned as the content is aggregated.
       </t>
       <t>
-        A server that doesn't support or supply a continuously aggregating ("live") response will supply the currently satisfiable byte range, as it would with an open-ended byte request.
-      </t>
-      <t>
+        A server that doesn't support or supply a continuously aggregating/live response will supply the currently satisfiable byte range, as it would with an open-ended byte request.
         For example:
       </t>
-<figure><artwork type="message/http; msgtype=&#34;request&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;request&#34;">
 GET /resource HTTP/1.1
 Host: example.com
 Range: bytes=0-999999999999
 
 </artwork></figure>
       <t>
-        will return
+        returns
       </t>
-<figure><artwork type="message/http; msgtype=&#34;response&#34;" x:indent-with="    ">
+<figure><artwork type="message/http; msgtype=&#34;response&#34;">
 HTTP/1.1 206 Partial Content
 Content-Range: bytes 1020000-1254567/*
 </artwork></figure>
       <t>
-        from the server to indicate that the response will start at byte 1020000, end at byte 1254567, and will not include any aggregated content. This is the response expected from a typical HTTP server - one that doesn't support byte-range requests on aggregating content.
+        from the server to indicate that the response will start at byte 1020000, end at byte 1254567, and not include any aggregated content. This is the response expected from a typical HTTP server -- one that doesn't support byte-range requests on aggregating content.
       </t>
       <t>
-          Note that responses to GET requests against shift-buffer representations using Range
+          Note that responses to GET requests performed on shift-buffer representations using Range headers
           can be cached by intermediaries, since the Content-Range response header indicates
-          which portion of the representation is being returned in the response body. However
+          which portion of the representation is being returned in the response body. However,
           GET requests without a Range header cannot be cached since the first byte of the response
-          body can vary from request to request. To ensure Range-less GET requests against
+          body can vary from request to request. To ensure GET requests without Range headers on
           shift-buffer representations are not cached, servers hosting a shift-buffer
-          representation should either not return a 200-level response (e.g. sending a
+          representation should either not return a 200-level response (e.g., send a
           300-level redirect response with a URI that represents the current start of the
-          shift-buffer) or indicate the response is non-cacheable. See HTTP Caching
-          (<xref target="RFC7234"/>) for details on HTTP cache control.
+          shift buffer) or indicate the response is non-cacheable. See
+          <xref target="RFC7234"/> for details on HTTP cache control.
       </t>
       </section>
     </section>
 
 <!-- Possibly a 'Contributors' section ... -->
 
-    <section anchor="RecommendedVLV" title="Recommendations for Very Large Values">
+    <section anchor="RecommendedVLV" title="Recommendations for Byte-Range Request last-byte-pos Values">
         <t>
-            While it would be ideal to define a single numerical Very Large Value, there's no single value that would work for all applications and platforms. e.g. JavaScript numbers cannot represent all integer values above 2^^53, so a JavaScript application may want to use 2^^53-1 for a Very Large Value. This value, however, would not be sufficient for all applications, such as continuously-streaming high-bitrate streams. So the value 2^^53-1 (9007199254740991) is recommended as a Very Large Value unless an application has a good justification to use a smaller or larger value. e.g. If it's always known that the resource won't exceed a value smaller than the recommended Very Large Value for an application, a smaller value can be used. And if it's likely that an application will utilize resources larger than the recommended Very Large Value - such as a continuously aggregating high-bitrate media stream - a larger value should be used.
+            While it would be ideal to define a single large last-byte-pos value for byte-range requests, there's no single value that would work for all applications and platforms. For example, JavaScript numbers cannot represent all integer values above 2^^53, so a JavaScript application may want to use 2^^53-1 for last-byte-pos. This value, however, would not be sufficient for all applications, such as long-duration high-bitrate streams. So 2^^53-1 (9007199254740991) is recommended as a last-byte-pos unless an application has a good justification to use a smaller or larger value. For example, if it is always known that the resource won't exceed a value smaller than the recommended last-byte-pos for an application, a smaller value can be used. If it's likely that an application will utilize resources larger than the recommended last-byte-pos (such as a continuously aggregating high-bitrate media stream), a larger value should be used.
         </t>
         <t>
-            Note that, in accordance with the semantics defined above, servers that support random-access live content will need to return the last-byte-pos provided in the Range request in some cases - even if the last-byte-pos cannot be represented as a numerical value internally by the server. As is the case with any live/continuously aggregating resource, the server should terminate the content transfer when the end of the resource is reached - whether the end is due to termination of the content source or the content length exceeds the server's maximum representation length.
+            Note that, in accordance with the semantics defined above, servers that support random-access live content will need to return the last-byte-pos provided in the byte-range request in some cases -- even if the last-byte-pos cannot be represented as a numerical value internally by the server. As is the case with any continuously aggregating/live resource, the server should terminate the content transfer when the end of the resource is reached -- whether the end is due to termination of the content source or the content length exceeds the server's maximum representation length.
         </t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>This document has no actions for IANA.</t>
+      <t>This document has no IANA actions.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
         <t>
-            As described above, servers need to be prepared to receive last-byte-pos values in Range requests that are numerically larger than the server implementation supports - and return these values in Content-Range response header fields. Servers should check the last-byte-pos value before converting and storing them into numeric form to ensure the value doesn't cause an overflow or index incorrect data. The simplest way to satisfy the live-range semantics defined in this document without potential overflow issues is to store the last-byte-pos as a string value and return it in the byte-range Content-Range response header's last-byte-pos field.
+            As described above, servers need to be prepared to receive last-byte-pos values in range requests that are numerically larger than the server implementation supports and return these values in Content-Range response header fields. Servers should check the last-byte-pos value before converting and storing them into numeric form to ensure the value doesn't cause an overflow or index incorrect data. The simplest way to satisfy the live-range semantics defined in this document without potential overflow issues is to store the last-byte-pos as a string value and return it in the byte-range Content-Range response header's last-byte-pos field.
         </t>
     </section>
 </middle>
@@ -495,24 +487,25 @@ Content-Range: bytes 1020000-1254567/*
 <back>
     <!-- References split to informative and normative -->
     <references title="Normative References">
-    	<reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119">
+    	<reference anchor="RFC5234" target="https://www.rfc-editor.org/info/rfc5234">
     		<front>
-    			<title>
-          Key words for use in RFCs to Indicate Requirement Levels
-          </title>
-    			<author initials="S." surname="Bradner" fullname="S. Bradner">
+    			<title>Augmented BNF for Syntax Specifications: ABNF</title>
+    			<author initials="D." surname="Crocker" fullname="D. Crocker" role="editor">
     				<organization/>
     			</author>
-    			<date year="1997" month="March"/>
+    			<author initials="P." surname="Overell" fullname="P. Overell">
+    				<organization/>
+    			</author>
+    			<date year="2008" month="January"/>
     			<abstract>
     				<t>
-          In many standards track documents several words are used to signify the requirements in the specification. These words are often capitalized. This document defines these words as they should be interpreted in IETF documents. This document specifies an Internet Best Current Practices for the Internet Community, and requests discussion and suggestions for improvements.
-          </t>
+    Internet technical specifications often need to define a formal syntax. Over the years, a modified version of Backus-Naur Form (BNF), called Augmented BNF (ABNF), has been popular among many Internet specifications. The current specification documents ABNF. It balances compactness and simplicity with reasonable representational power. The differences between standard BNF and ABNF involve naming rules, repetition, alternatives, order-independence, and value ranges. This specification also supplies additional rule definitions and encoding for a core lexical analyzer of the type common to several Internet specifications. [STANDARDS-TRACK]
+    </t>
     			</abstract>
     		</front>
-    		<seriesInfo name="BCP" value="14"/>
-    		<seriesInfo name="RFC" value="2119"/>
-    		<seriesInfo name="DOI" value="10.17487/RFC2119"/>
+    		<seriesInfo name="STD" value="68"/>
+    		<seriesInfo name="RFC" value="5234"/>
+    		<seriesInfo name="DOI" value="10.17487/RFC5234"/>
     	</reference>
     	<reference anchor="RFC7230" target="https://www.rfc-editor.org/info/rfc7230">
     		<front>
@@ -584,26 +577,6 @@ Content-Range: bytes 1020000-1254567/*
     </references>
 
     <references title="Informative References">
-    	<reference anchor="RFC5234" target="https://www.rfc-editor.org/info/rfc5234">
-    		<front>
-    			<title>Augmented BNF for Syntax Specifications: ABNF</title>
-    			<author initials="D." surname="Crocker" fullname="D. Crocker" role="editor">
-    				<organization/>
-    			</author>
-    			<author initials="P." surname="Overell" fullname="P. Overell">
-    				<organization/>
-    			</author>
-    			<date year="2008" month="January"/>
-    			<abstract>
-    				<t>
-    Internet technical specifications often need to define a formal syntax. Over the years, a modified version of Backus-Naur Form (BNF), called Augmented BNF (ABNF), has been popular among many Internet specifications. The current specification documents ABNF. It balances compactness and simplicity with reasonable representational power. The differences between standard BNF and ABNF involve naming rules, repetition, alternatives, order-independence, and value ranges. This specification also supplies additional rule definitions and encoding for a core lexical analyzer of the type common to several Internet specifications. [STANDARDS-TRACK]
-    </t>
-    			</abstract>
-    		</front>
-    		<seriesInfo name="STD" value="68"/>
-    		<seriesInfo name="RFC" value="5234"/>
-    		<seriesInfo name="DOI" value="10.17487/RFC5234"/>
-    	</reference>
     	<reference anchor="RFC8216" target="https://www.rfc-editor.org/info/rfc8216">
     		<front>
     			<title>HTTP Live Streaming</title>
@@ -623,19 +596,20 @@ Content-Range: bytes 1020000-1254567/*
     		<seriesInfo name="RFC" value="8216"/>
     		<seriesInfo name="DOI" value="10.17487/RFC8216"/>
     	</reference>
-      <reference anchor="DASH" target="http://standards.iso.org/ittf/PubliclyAvailableStandards/c065274_ISO_IEC_23009-1_2014.zip">
+      <reference anchor="MPEG-DASH" target="https://www.iso.org/standard/75485.html">
         <front>
           <title>Information technology -- Dynamic adaptive streaming over HTTP (DASH) -- Part 1: Media presentation description and segment formats
           </title>
           <author><organization>ISO</organization></author>
-          <date month="May" year="2014" />
+          <date month="August" year="2019" />
         </front>
-        <seriesInfo name="ISO/IEC" value="23009-1:2014" />
+        <seriesInfo name="ISO/IEC" value="23009-1" />
       </reference>    </references>
 
     <section anchor="Acknowledgements" title="Acknowledgements" numbered="false">
         <t>
-      Mark Nottingham, Patrick McManus, Julian Reschke, Remy Lebeau, Rodger Combs, Thorsten Lohmar, Martin Thompson, Adrien de Croy, K. Morgan, Roy T. Fielding, Jeremy Poulter.
+      The authors would like to thank 
+      Mark Nottingham, Patrick McManus, Julian Reschke, Remy Lebeau, Rodger Combs, Thorsten Lohmar, Martin Thompson, Adrien de Croy, K. Morgan, Roy T. Fielding, and Jeremy Poulter.
         </t>
     </section>
 

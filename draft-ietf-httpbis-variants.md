@@ -134,7 +134,7 @@ Variants        = sh-dict
 
 Each member-name represents the field-name of a request header that is part of the secondary cache key; each member-value is an inner-list of strings or tokens that convey representations of potential values for that header field, hereafter referred to as "available-values".
 
-If Structured Header parsing fails or a member's value does have the structure outlined above, the client MUST treat the representation as having no Variants header field.
+If Structured Header parsing fails or a member's value does not have the structure outlined above, the client MUST treat the representation as having no Variants header field.
 
 Note that an available-value that is a token is interpreted as a string containing the same characters, and vice versa.
 
@@ -513,7 +513,7 @@ Here, the cache will need to calculate a secondary cache key as per {{!RFC7234}}
 
 To be usable with Variants, proactive content negotiation mechanisms need to be specified to take advantage of it. Specifically, they:
 
-* MUST define a request header field that advertises the clients preferences or capabilities, whose field-name SHOULD begin with "Accept-".
+* MUST define a request header field that advertises the clients preferences or capabilities. Often, its field-name will begin with "Accept-", but this is not required.
 * MUST define the syntax of an available-value that will occur in Variants and Variant-Key.
 * MUST define an algorithm for selecting a result. It MUST return a list of available-values that are suitable for the request, in order of preference, given the value of the request header nominated above (or null if the request header is absent) and an available-values list from the Variants header. If the result is an empty list, it implies that the cache cannot satisfy the request.
 

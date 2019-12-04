@@ -1,7 +1,7 @@
 ---
 title: HTTP Client Hints
 abbrev:
-docname: draft-ietf-httpbis-client-hints-07
+docname: draft-ietf-httpbis-client-hints-08
 date: {DATE}
 category: exp
 
@@ -199,6 +199,12 @@ Implementers ought to consider both user and server controlled mechanisms and po
 
 Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, or similar, are cleared.
 
+# Cost of Sending Hints
+
+While HTTP header compression schemes reduce the cost of adding HTTP header fields, sending Client Hints to the server incurs an increase in request byte size.
+Servers SHOULD take that into account when opting in to receive Client Hints, and SHOULD NOT opt-in to receive hints unless they are to be used for content adaptation purposes.
+
+Due to request byte size increase, features relying on this document to define Client Hints MAY consider restricting sending those hints to certain request destinations {{FETCH}}, where they are more likely to be useful. 
 
 ## Deployment and Security Risks
 Deployment of new request headers requires several considerations:
@@ -263,12 +269,18 @@ Features that define Client Hints will need to specify the related variants algo
 
 ## Since -06
 * Issue 524: Save-Data is now defined by NetInfo spec, dropping
+* PR 775: Removed specific features to be defined in other specifications
 
 ## Since -07
-* Removed specific features to be defined in other specifications
-* Removed Accept-CH-Lifetime based on feedback at IETF 105
+* Issue 761: Clarified that the defined headers are response headers.
+* Issue 730: Replaced Key reference with Variants. 
+* Issue 700: Replaced ABNF with structured headers.
+* PR 878: Removed Accept-CH-Lifetime based on feedback at IETF 105
+
+## Since -08
+* PR 985: Describe the bytesize cost of hints.
 
 
 # Acknowledgements
 {:numbered="false"}
-Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Yoav Weiss, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, Martin Thomson, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.
+Thanks to Mark Nottingham, Julian Reschke, Chris Bentzel, Ben Greenstein, Tarun Bansal, Roy Fielding, Vasiliy Faronov, Ted Hardie, Jonas Sicking, Martin Thomson, and numerous other members of the IETF HTTP Working Group for invaluable help and feedback.

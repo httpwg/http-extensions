@@ -18,7 +18,7 @@ pi:
   compact: yes
   comments: yes
   inline: yes
-  tocdepth: 2
+  tocdepth: 3
 
 
 author:
@@ -181,7 +181,7 @@ that URL MUST be ignored. If its value is a relative reference
 
 For example:
 
-  Foo-Example: 2; fooUrl="https://foo.example.com/"
+  Foo-Example: 2; foourl="https://foo.example.com/"
 ~~~
 
 
@@ -273,7 +273,7 @@ Parsers MUST support at least 256 parameters on an item or inner-list, and suppo
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are required to be unique within the scope of the dictionary they occur within.
+Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are required to be unique in the scope of the dictionary they occur within.
 
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
@@ -281,7 +281,7 @@ The ABNF for dictionaries in HTTP headers is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-name "=" member-value
+dict-member    = member-name [ "=" member-value ]
 member-name    = key
 member-value   = sh-item / inner-list
 ~~~
@@ -291,6 +291,14 @@ In HTTP headers, members are separated by a comma with optional whitespace, whil
 ~~~ example
 Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
 ~~~
+
+Members whose value is Boolean true MUST omit that value when serialised, unless it has parameters. For example, here both "b" and "c" are true, but "c"'s value is serialised because it has parameters:
+
+~~~ example
+Example-DictHeader: a=?0, b, c=?1; foo=bar
+~~~
+
+Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in dictionary values.
 
 A dictionary with a member whose value is an inner-list of tokens:
 
@@ -468,10 +476,10 @@ This section defines how to serialize and parse Structured Headers in header fie
 
 Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP header value.
 
-1. If the structure is a dictionary or list and its value is empty (i.e., it has no members), do not serialize the field at all (i.e., omit both the field-name and field-value).
-2. If the structure is a dictionary, let output_string be the result of running Serializing a Dictionary ({{ser-dictionary}}) with the structure.
-3. Else if the structure is a list, let output_string be the result of running Serializing a List ({{ser-list}}) with the structure.
-4. Else if the structure is an item, let output_string be the result of running Serializing an Item ({{ser-item}}) with the structure.
+1. If the structure is a Dictionary or List and its value is empty (i.e., it has no members), do not serialize the field at all (i.e., omit both the field-name and field-value).
+2. If the structure is a Dictionary, let output_string be the result of running Serializing a Dictionary ({{ser-dictionary}}) with the structure.
+3. Else if the structure is a List, let output_string be the result of running Serializing a List ({{ser-list}}) with the structure.
+4. Else if the structure is an Item, let output_string be the result of running Serializing an Item ({{ser-item}}) with the structure.
 5. Else, fail serialisation.
 6. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
 
@@ -479,24 +487,24 @@ Given a structure defined in this specification, return an ASCII string suitable
 
 ### Serializing a List {#ser-list}
 
-Given an array of (member-value, parameters) tuples as input_list, return an ASCII string suitable for use in a HTTP header value.
+Given an array of (member_value, parameters) tuples as input_list, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
-2. For each (member-value, parameters) of input_list:
-   1. If member-value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
-   2. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
-   3. If more member-values remain in input_list:
+2. For each (member_value, parameters) of input_list:
+   1. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
+   2. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
+   3. If more member_values remain in input_list:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
 
 #### Serialising an Inner List {#ser-innerlist}
 
-Given an array of (member-value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in a HTTP header value.
+Given an array of (member_value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be the string "(".
-2. For each (member-value, parameters) of inner_list:
-   1. Append the result of running Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
+2. For each (member_value, parameters) of inner_list:
+   1. Append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
    2. If more values remain in inner_list, append a single WS to output.
 3. Append ")" to output.
 4. Append the result of running Serializing Parameters {{ser-params}} with list_parameters to output.
@@ -504,15 +512,15 @@ Given an array of (member-value, parameters) tuples as inner_list, and parameter
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered dictionary as input_parameters (each member having a param-name and a param-value), return an ASCII string suitable for use in a HTTP header value.
+Given an ordered dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP header value.
 
 0. Let output be an empty string.
-1. For each parameter-name with a value of param-value in input_parameters:
+1. For each parameter-name with a value of param_value in input_parameters:
    1. Append ";" to output.
-   2. Append the result of running Serializing a Key ({{ser-key}}) with param-name to output.
-   4. If param-value is not null:
+   2. Append the result of running Serializing a Key ({{ser-key}}) with param_name to output.
+   4. If param_value is not null:
       1. Append "=" to output.
-      2. Append the result of running Serializing a bare Item ({{ser-bare-item}}) with param-value to output.
+      2. Append the result of running Serializing a bare Item ({{ser-bare-item}}) with param_value to output.
 2. Return output.
 
 
@@ -528,15 +536,16 @@ Given a key as input_key, return an ASCII string suitable for use in a HTTP head
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given an ordered dictionary as input_dictionary (each member having a member-name and a tuple value of (member-value, parameters)), return an ASCII string suitable for use in a HTTP header value.
+Given an ordered dictionary as input_dictionary (each member having a member_name and a tuple value of (member_value, parameters)), return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
-2. For each member-name with a value of (member-value, parameters) in input_dictionary:
-   1. Append the result of running Serializing a Key ({{ser-key}}) with member's member-name to output.
-   2. Append "=" to output.
-   3. If member-value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member-value, parameters) to output.
-   4. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member-value, parameters) to output.
-   5. If more members remain in input_dictionary:
+2. For each member_name with a value of (member_value, parameters) in input_dictionary:
+   1. Append the result of running Serializing a Key ({{ser-key}}) with member's member_name to output.
+3. If member_value is not Boolean true or parameters is not empty:
+   1. Append "=" to output.
+      2. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
+      3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
+4. If more members remain in input_dictionary:
       1. Append a COMMA to output.
       2. Append a single WS to output.
 3. Return output.
@@ -588,8 +597,10 @@ Given a float as input_float, return an ASCII string suitable for use in a HTTP 
 6. Let digits_avail be 15 minus integer_digits.
 7. Let fractional_digits_avail be the minimum of digits_avail and 6.
 8. Append "." to output.
-9. Append at most fractional_digits_avail digits of input_float's fractional component represented in base 10 to output (using only decimal digits, and truncating any remaining digits); if it is zero, append "0".
-0. Return output.
+9. If input_float's fractional component is 0, append "0" to output.
+0. Else if input_float's fractional component has fractional_digits_avail or less digits, append input_float's fractional component represented in base 10 to output.
+1. Else append fractional_digits_avail digits of input_float's fractional component represented in base 10 to output, rounding to the nearest value, or to the even value if it is equidistant.
+2. Return output.
 
 
 ### Serializing a String {#ser-string}
@@ -611,7 +622,7 @@ Given a string as input_string, return an ASCII string suitable for use in a HTT
 
 Given a token as input_token, return an ASCII string suitable for use in a HTTP header value.
 
-0. If input_token is not a sequence of characters, or contains characters not allowed by the tchar ABNF rule, fail serialisation.
+0. If input_token is not a sequence of characters, or contains a character not in tchar, ":" or "/", fail serialisation.
 1. Let output be an empty string.
 2. Append input_token to output.
 3. Return output.
@@ -722,14 +733,19 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
 2. While input_string is not empty:
    1. Let this_key be the result of running Parsing a Key ({{parse-key}}) with input_string.
    2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
-   3. Consume the first character of input_string; if it is not "=", fail parsing.
-   4. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
-   6. Add name this_key with value member to dictionary.
-   7. Discard any leading OWS from input_string.
-   8. If input_string is empty, return dictionary.
-   9. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   0. Discard any leading OWS from input_string.
-   1. If input_string is empty, there is a trailing comma; fail parsing.
+   3. If the first character of input_string is "=":
+       1. Consume the first character of input_string.
+       2. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
+   4. Otherwise:
+      1. Let value be Boolean true.
+      2. Let parameters be an empty, ordered map.
+      3. Let member be the tuple (value, parameters).
+   5. Add name this_key with value member to dictionary.
+   6. Discard any leading OWS from input_string.
+   7. If input_string is empty, return dictionary.
+   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   9. Discard any leading OWS from input_string.
+   0. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
 
@@ -771,7 +787,7 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
    8. Append key param_name with value param_value to parameters.
 3. Return parameters.
 
-#### Parsing a Key from Text {#parse-key}
+#### Parsing a Key {#parse-key}
 
 Given an ASCII string as input_string, return a key. input_string is modified to remove the parsed value.
 
@@ -784,7 +800,7 @@ Given an ASCII string as input_string, return a key. input_string is modified to
 4. Return output_string.
 
 
-### Parsing a Number from Text {#parse-number}
+### Parsing a Number {#parse-number}
 
 Given an ASCII string as input_string, return a number. input_string is modified to remove the parsed value.
 
@@ -805,7 +821,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), 
    6. If type is "float" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
    1. Parse input_number as an integer and let output_number be the product of the result and sign.
-   2. If output_number is outside the range defined in {{integer}}, fail parsing.
+   2. If output_number is outside the range −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
    2. If the number of characters after "." in input_number is greater than six, fail parsing.
@@ -813,7 +829,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), 
 0. Return output_number.
 
 
-### Parsing a String from Text {#parse-string}
+### Parsing a String {#parse-string}
 
 Given an ASCII string as input_string, return an unquoted string. input_string is modified to remove the parsed value.
 
@@ -833,20 +849,20 @@ Given an ASCII string as input_string, return an unquoted string. input_string i
 5. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
 
-### Parsing a Token from Text {#parse-token}
+### Parsing a Token {#parse-token}
 
 Given an ASCII string as input_string, return a token. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not ALPHA, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
-   1. If the first character of input_string is not allowed by the tchar ABNF rule, return output_string.
+   1. If the first character of input_string is not in tchar, ":" or "/", return output_string.
    2. Let char be the result of consuming the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
 
 
-### Parsing a Byte Sequence from Text {#parse-binary}
+### Parsing a Byte Sequence {#parse-binary}
 
 Given an ASCII string as input_string, return a byte sequence. input_string is modified to remove the parsed value.
 
@@ -866,7 +882,7 @@ Because some implementations of base64 do not allow rejection of encoded data th
 This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
 
-### Parsing a Boolean from Text {#parse-boolean}
+### Parsing a Boolean {#parse-boolean}
 
 Given an ASCII string as input_string, return a Boolean. input_string is modified to remove the parsed value.
 
@@ -925,7 +941,7 @@ Example-Description: foo; url="https://example.net"; context=123,
                      bar; url="https://example.org"; context=456
 ~~~
 
-Since the description contains an array of key/value pairs, we use a List to represent them, with the token for each item in the array used to identify it in the "descriptions" member of the Example-Thing header.
+Since the description contains an array of key/value pairs, we use a List to represent them, with the token for each item in the array used to identify it in the "descriptions" member of the Example-Thing dictionary header.
 
 When specifying more than one header, it's important to remember to describe what a processor's behaviour should be when one of the headers is missing.
 
@@ -946,6 +962,12 @@ Likewise, implementations should note that it's important to preserve the distin
 
 _RFC Editor: Please remove this section before publication._
 
+
+## Since draft-ietf-httpbis-header-structure-14
+
+* Editorial improvements.
+* Round the fractional component of floats, rather than truncating it (#982).
+* Allow empty dictionary values (#992).
 
 ## Since draft-ietf-httpbis-header-structure-13
 
