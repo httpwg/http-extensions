@@ -268,6 +268,14 @@ In HTTP headers, parameters are separated from their item or inner-list and each
 Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
 ~~~
 
+Parameters whose value is Boolean true MUST omit that value when serialised. For example:
+
+~~~ example
+Example-IntHeader: 1; a; b=?0
+~~~
+
+Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in parameters.
+
 Parsers MUST support at least 256 parameters on an item or inner-list, and support parameter keys with at least 64 characters. Header specifications can constrain the types and cardinality of individual parameter names and values as they require.
 
 
@@ -518,7 +526,7 @@ Given an ordered dictionary as input_parameters (each member having a param_name
 1. For each parameter-name with a value of param_value in input_parameters:
    1. Append ";" to output.
    2. Append the result of running Serializing a Key ({{ser-key}}) with param_name to output.
-   4. If param_value is not null:
+   4. If param_value is not Boolean true:
       1. Append "=" to output.
       2. Append the result of running Serializing a bare Item ({{ser-bare-item}}) with param_value to output.
 2. Return output.
@@ -780,7 +788,7 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
    3. Discard any leading OWS from input_string.
    4. let param_name be the result of running Parsing a Key ({{parse-key}}) with input_string.
    5. If param_name is already present in parameters, there is a duplicate; fail parsing.
-   6. Let param_value be a null value.
+   6. Let param_value be Boolean true.
    7. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of running Parsing a Bare Item ({{parse-bare-item}}) with input_string.
@@ -968,6 +976,7 @@ _RFC Editor: Please remove this section before publication._
 * Editorial improvements.
 * Round the fractional component of floats, rather than truncating it (#982).
 * Allow empty dictionary values (#992).
+* Change value of omitted parameter value to True (#995).
 
 ## Since draft-ietf-httpbis-header-structure-13
 
