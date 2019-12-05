@@ -495,7 +495,7 @@ Given an array of (member_value, parameters) tuples as input_list, return an ASC
    2. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
    3. If more member_values remain in input_list:
       1. Append a COMMA to output.
-      2. Append a single WS to output.
+      2. Append a single SP to output.
 3. Return output.
 
 #### Serialising an Inner List {#ser-innerlist}
@@ -505,7 +505,7 @@ Given an array of (member_value, parameters) tuples as inner_list, and parameter
 1. Let output be the string "(".
 2. For each (member_value, parameters) of inner_list:
    1. Append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
-   2. If more values remain in inner_list, append a single WS to output.
+   2. If more values remain in inner_list, append a single SP to output.
 3. Append ")" to output.
 4. Append the result of running Serializing Parameters {{ser-params}} with list_parameters to output.
 5. Return output.
@@ -547,7 +547,7 @@ Given an ordered dictionary as input_dictionary (each member having a member_nam
       3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
 4. If more members remain in input_dictionary:
       1. Append a COMMA to output.
-      2. Append a single WS to output.
+      2. Append a single SP to output.
 3. Return output.
 
 
