@@ -118,7 +118,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the OWS and tchar rules from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar rule from {{!RFC7230}}.
 
 When parsing from HTTP header fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
 
@@ -205,7 +205,7 @@ Lists are arrays of zero or more members, each of which can be an item ({{item}}
 The ABNF for lists in HTTP headers is:
 
 ~~~ abnf
-sh-list       = list-member *( OWS "," OWS list-member )
+sh-list       = list-member *( *SP "," *SP list-member )
 list-member   = sh-item / inner-list
 ~~~
 
@@ -227,7 +227,7 @@ An inner list is an array of zero or more items ({{item}}). Both the individual 
 The ABNF for inner-lists in HTTP headers is:
 
 ~~~ abnf
-inner-list    = "(" OWS [ sh-item *( SP OWS sh-item ) OWS ] ")"
+inner-list    = "(" *SP [ sh-item *( 1*SP sh-item ) *SP ] ")"
                 *parameter
 ~~~
 
@@ -255,7 +255,7 @@ Parameters are an ordered map of key-values pairs that are associated with an it
 The ABNF for parameters in HTTP headers is:
 
 ~~~ abnf
-parameter     = ";" OWS param-name [ "=" param-value ]
+parameter     = ";" *SP param-name [ "=" param-value ]
 param-name    = key
 key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
 lcalpha       = %x61-7A ; a-z
@@ -280,7 +280,7 @@ Implementations MUST provide access to dictionaries both by index and by name. S
 The ABNF for dictionaries in HTTP headers is:
 
 ~~~ abnf
-sh-dictionary  = dict-member *( OWS "," OWS dict-member )
+sh-dictionary  = dict-member *( *SP "," *SP dict-member )
 dict-member    = member-name [ "=" member-value ]
 member-name    = key
 member-value   = sh-item / inner-list
@@ -663,11 +663,11 @@ When a receiving implementation parses HTTP header fields that are known to be S
 Given an array of bytes input_bytes that represents the chosen header's field-value (which is empty if that header is not present), and header_type (one of "dictionary", "list", or "item"), return the parsed header value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
-1. Discard any leading OWS from input_string.
+1. Discard any leading SP characters from input_string.
 2. If header_type is "list", let output be the result of running Parsing a List ({{parse-list}}) with input_string.
 3. If header_type is "dictionary", let output be the result of running Parsing a Dictionary ({{parse-dictionary}}) with input_string.
 4. If header_type is "item", let output be the result of running Parsing an Item ({{parse-item}}) with input_string.
-5. Discard any leading OWS from input_string.
+5. Discard any leading SP characters from input_string.
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
@@ -691,10 +691,10 @@ Given an ASCII string as input_string, return an array of (item_or_inner_list, p
 1. Let members be an empty array.
 2. While input_string is not empty:
    1. Append the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string to members.
-   2. Discard any leading OWS from input_string.
+   2. Discard any leading SP characters from input_string.
    3. If input_string is empty, return members.
    4. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   5. Discard any leading OWS from input_string.
+   5. Discard any leading SP characters from input_string.
    6. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return members (which is empty).
 
@@ -714,7 +714,7 @@ Given an ASCII string as input_string, return the tuple (inner_list, parameters)
 1. Consume the first character of input_string; if it is not "(", fail parsing.
 2. Let inner_list be an empty array.
 3. While input_string is not empty:
-   1. Discard any leading OWS from input_string.
+   1. Discard any leading SP characters from input_string.
    2. If the first character of input_string is ")":
       1. Consume the first character of input_string.
       2. Let parameters be the result of running Parsing Parameters ({{parse-param}}) with input_string.
@@ -741,10 +741,10 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
       2. Let parameters be an empty, ordered map.
       3. Let member be the tuple (value, parameters).
    5. Add name this_key with value member to dictionary.
-   6. Discard any leading OWS from input_string.
+   6. Discard any leading SP characters from input_string.
    7. If input_string is empty, return dictionary.
    8. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   9. Discard any leading OWS from input_string.
+   9. Discard any leading SP characters from input_string.
    0. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
@@ -777,7 +777,7 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
 2. While input_string is not empty:
    1. If the first character of input_string is not ";", exit the loop.
    2. Consume a ";" character from the beginning of input_string.
-   3. Discard any leading OWS from input_string.
+   3. Discard any leading SP characters from input_string.
    4. let param_name be the result of running Parsing a Key ({{parse-key}}) with input_string.
    5. If param_name is already present in parameters, there is a duplicate; fail parsing.
    6. Let param_value be a null value.
@@ -968,6 +968,7 @@ _RFC Editor: Please remove this section before publication._
 * Editorial improvements.
 * Round the fractional component of floats, rather than truncating it (#982).
 * Allow empty dictionary values (#992).
+* Disallow HTAB, replace OWS with spaces.
 
 ## Since draft-ietf-httpbis-header-structure-13
 
