@@ -189,7 +189,20 @@ Above example indicates that the cache key needs to include the Sec-CH-Example a
 ## Information Exposure
 Request header fields used in features relying on this document expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
-Transmitted Client Hints header fields SHOULD NOT provide new information that is otherwise not available to the application via other means, such as using HTML, CSS, or JavaScript. Further, sending highly granular data, such as image and viewport width may help identify users across multiple requests. Reducing the set of field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users. However, such precautions can still be insufficient for some types of data, especially data that can change over time.
+The underlying assumption is that exposing information about the user as a request header is equivalent to the capability of that request's origin to access that information by other means and transmit it to itself.
+
+Therefore, features relying on this document to define Client Hint headers MUST NOT provide new information that is otherwise not available to the application via other means, such as existing request headers, HTML, CSS, or JavaScript.
+
+Such features SHOULD take into account the following aspects of the information exposed: 
+
+  - Entropy
+    - Exposing highly granular data may help identify users across multiple requests to different origins. Reducing the set of field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users.
+  - Sensitivity
+    - The feature SHOULD NOT expose user sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g. a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
+  - Change over time
+    - The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g. through JavaScript callbacks).
+
+Different features will be positioned in different points in the space between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agents SHOULD consider the value provided by a particular feature vs these considerations, and MAY have different policies regarding that tradeoff on a per-feature basis.
 
 Implementers ought to consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
@@ -197,7 +210,7 @@ Implementers ought to consider both user and server controlled mechanisms and po
   - Implementers MAY provide user choice mechanisms so that users may balance privacy concerns with bandwidth limitations. However, implementers should also be aware that explaining the privacy implications of passive fingerprinting to users may be challenging.
   - Implementations specific to certain use cases or threat models MAY avoid transmitting some or all of Client Hints header fields. For example, avoid transmission of header fields that can carry higher risks of linkability.
 
-Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, or similar, are cleared.
+Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, cookies, or similar, are cleared.
 
 # Cost of Sending Hints
 
@@ -205,6 +218,7 @@ While HTTP header compression schemes reduce the cost of adding HTTP header fiel
 Servers SHOULD take that into account when opting in to receive Client Hints, and SHOULD NOT opt-in to receive hints unless they are to be used for content adaptation purposes.
 
 Due to request byte size increase, features relying on this document to define Client Hints MAY consider restricting sending those hints to certain request destinations {{FETCH}}, where they are more likely to be useful. 
+
 
 ## Deployment and Security Risks
 Deployment of new request headers requires several considerations:
@@ -215,6 +229,13 @@ Deployment of new request headers requires several considerations:
 Specifications and features relying on Client Hints are advised to carfully consider prefixing request header names with a "Sec-" prefix. User agents, such as web browsers, ensure such prefixed headers can only be emitted by the browser, and application content, such as scripts, are forbidden from emitting such headers {{FETCH}}. This provides assurance that, when transmitted by user agents, the type, format and value of data communicated in such request headers are enforced by the user agent.
 
 By convention, request headers that are client hints are encouraged to use a CH- prefix, to make them easier to identify as using this framework; for example, Sec-CH-Foo. Doing so makes them easier to identify programmatically (e.g., for stripping unrecognised hints from requests by privacy filters).
+
+
+## Abuse Detection
+A user agent that tracks access to active fingerprinting information SHOULD consider emission of Client Hints headers similarly to the way it would consider access to the equivalent API.
+
+Research into abuse of Client Hints might look at how HTTP responses that contain Client Hints differ from those with different values, and from those without. This might be used to reveal which Client Hints are in use, allowing researchers to further analyze that use.
+
 
 
 # IANA Considerations
@@ -280,6 +301,7 @@ Features that define Client Hints will need to specify the related variants algo
 ## Since -08
 * PR 985: Describe the bytesize cost of hints.
 * PR 776: Add Sec- and CH- prefix considerations.
+* PR 1001: Clear CH persistence when cookies are cleared.
 
 
 # Acknowledgements
