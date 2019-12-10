@@ -927,8 +927,12 @@ In error responses, the representation-data does not necessarily refer to
 the target resource.
 Instead it refers to the representation of the error.
 
-In the following example, the `Digest` of the response
-is computed on the enclosed representation.
+In the following example a client attempts to patch
+the resource located at /books/123.
+However, the resource does not exist and the server generates a 404 response
+with a body that describes the error in accordance with {{?RFC7807}}.
+
+The digest of the response is computed on this enclosed representation.
 
 Request:
 
