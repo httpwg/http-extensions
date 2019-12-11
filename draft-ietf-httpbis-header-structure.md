@@ -145,7 +145,7 @@ However, both Items and Inner Lists allow parameters as an extensibility mechani
 
 Conversely, inner lists are only valid when a header definition explicitly allows them.
 
-Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and floats, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, header field definitions can only use Structured Headers for the entire header field value, not a portion thereof.
+Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and decimals, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, header field definitions can only use Structured Headers for the entire header field value, not a portion thereof.
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
 
@@ -359,13 +359,13 @@ Parsers MUST support dictionaries containing at least 1024 name/value pairs, and
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), float ({{float}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated parameters ({{param}}).
+An item is can be a integer ({{integer}}), decimal ({{decimal}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated parameters ({{param}}).
 
 The ABNF for items in HTTP headers is:
 
 ~~~ abnf
 sh-item   = bare-item *parameter
-bare-item = sh-integer / sh-float / sh-string / sh-token / sh-binary
+bare-item = sh-integer / sh-decimal / sh-string / sh-token / sh-binary
             / sh-boolean
 ~~~
 
@@ -401,27 +401,22 @@ Example-IntegerHeader: 42
 Note that commas in integers are used in this section's prose only for readability; they are not valid in the wire format.
 
 
-### Floats {#float}
+### Decimals {#decimal}
 
-Floats are decimal numbers with an integer and a fractional component. The fractional component has at most six digits of precision. Additionally, like integers, it can have no more than fifteen digits in total, which in some cases further constrains its precision.
+Decimals are numbers with an integer and a fractional component. The Integer component has at most 12 digits; the fractional component has at most three digits.
 
 
-The ABNF for floats in HTTP headers is:
+The ABNF for decimals in HTTP headers is:
 
 
 ~~~ abnf
-sh-float    = ["-"] (1*9DIGIT "." 1*6DIGIT /
-                      10DIGIT "." 1*5DIGIT /
-                      11DIGIT "." 1*4DIGIT /
-                      12DIGIT "." 1*3DIGIT /
-                      13DIGIT "." 1*2DIGIT /
-                      14DIGIT "." 1DIGIT )
+sh-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
 ~~~
 
-For example, a header whose value is defined as a float could look like:
+For example, a header whose value is defined as a decimal could look like:
 
 ~~~ example
-Example-FloatHeader: 4.5
+Example-DecimalHeader: 4.5
 ~~~
 
 
@@ -604,7 +599,7 @@ Given an item bare_item and parameters item_parameters as input, return an ASCII
 Given an item as input_item, return an ASCII string suitable for use in a HTTP header value.
 
 1. If input_item is an integer, return the result of running Serializing an Integer ({{ser-integer}}) with input_item.
-2. If input_item is a float, return the result of running Serializing a Float ({{ser-float}}) with input_item.
+2. If input_item is a decimal, return the result of running Serializing a Decimal ({{ser-decimal}}) with input_item.
 3. If input_item is a string, return the result of running Serializing a String ({{ser-string}}) with input_item.
 4. If input_item is a token, return the result of running Serializing a Token ({{ser-token}}) with input_item.
 5. If input_item is a Boolean, return the result of running Serializing a Boolean ({{ser-boolean}}) with input_item.
@@ -623,22 +618,19 @@ Given an integer as input_integer, return an ASCII string suitable for use in a 
 4. Return output.
 
 
-### Serializing a Float {#ser-float}
+### Serializing a Decimal {#ser-decimal}
 
-Given a float as input_float, return an ASCII string suitable for use in a HTTP header value.
+Given a decimal_number as input_decimal, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
-2. If input_float is less than (but not equal to) 0, append "-" to output.
-3. Append input_float's integer component represented in base 10 (using only decimal digits) to output; if it is zero, append "0".
-4. Let integer_digits be the number of characters appended in the previous step.
-5. If integer_digits is greater than 14, fail serialisation.
-6. Let digits_avail be 15 minus integer_digits.
-7. Let fractional_digits_avail be the minimum of digits_avail and 6.
-8. Append "." to output.
-9. If input_float's fractional component is 0, append "0" to output.
-0. Else if input_float's fractional component has fractional_digits_avail or less digits, append input_float's fractional component represented in base 10 to output.
-1. Else append fractional_digits_avail digits of input_float's fractional component represented in base 10 to output, rounding to the nearest value, or to the even value if it is equidistant.
-2. Return output.
+2. If input_decimal is less than (but not equal to) 0, append "-" to output.
+3. Append input_decimal's integer component represented in base 10 (using only decimal digits) to output; if it is zero, append "0".
+4. If the number of characters appended in the previous step is greater than 12, fail serialisation.
+5. Append "." to output.
+6. If input_decimal's fractional component is zero, append "0" to output.
+7. Else if input_decimal's fractional component has up to three digits, append them represented in base 10 (using only decimal digits) to output.
+8. Otherwise, append the first three digits of input_decimal's fractional component (represented in base 10, using only decimal digits) to output, rounding the final digit to the nearest value, or to the even value if it is equidistant.
+9. Return output.
 
 
 ### Serializing a String {#ser-string}
@@ -715,7 +707,7 @@ For Lists and Dictionaries, this has the effect of correctly concatenating all i
 
 Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser.
 
-Tokens, Integers, Floats and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
+Tokens, Integers, Decimals and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
 
 If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be ignored (i.e., treated as if the header field were not present in the message). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
 
@@ -842,7 +834,7 @@ Given an ASCII string as input_string, return a key. input_string is modified to
 
 Given an ASCII string as input_string, return a number. input_string is modified to remove the parsed value.
 
-NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), and returns the corresponding structure.
+NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}}), and returns the corresponding structure.
 
 1. Let type be "integer".
 2. Let sign be 1.
@@ -853,17 +845,17 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Floats ({{float}}), 
 7. While input_string is not empty:
    1. Let char be the result of consuming the first character of input_string.
    2. If char is a DIGIT, append it to input_number.
-   3. Else, if type is "integer" and char is ".", append char to input_number and set type to "float".
+   3. Else, if type is "integer" and char is ".", append char to input_number and set type to "decimal".
    4. Otherwise, prepend char to input_string, and exit the loop.
    5. If type is "integer" and input_number contains more than 15 characters, fail parsing.
-   6. If type is "float" and input_number contains more than 16 characters, fail parsing.
+   6. If type is "decimal" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
    1. Parse input_number as an integer and let output_number be the product of the result and sign.
    2. If output_number is outside the range −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
-   2. If the number of characters after "." in input_number is greater than six, fail parsing.
-   2. Parse input_number as a float and let output_number be the product of the result and sign.
+   2. If the number of characters after "." in input_number is greater than three, fail parsing.
+   2. Parse input_number as a decimal number and let output_number be the product of the result and sign.
 0. Return output_number.
 
 
@@ -1004,13 +996,14 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-14
 
 * Editorial improvements.
-* Round the fractional component of floats, rather than truncating it (#982).
 * Allow empty dictionary values (#992).
 * Change value of omitted parameter value to True (#995).
 * Explain more about splitting dictionaries and lists across header instances (#997).
 * Disallow HTAB, replace OWS with spaces (#998).
 * Change byte sequence delimiters from "\*" to ":" (#991).
 * Allow tokens to start with "\*" (#991).
+* Change Floats to fixed-precision Decimals (#982).
+* Round the fractional component of decimal, rather than truncating it (#982).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
