@@ -802,9 +802,9 @@ Given an ASCII string as input_string, return a bare item. input_string is modif
 
 1. If the first character of input_string is a "-" or a DIGIT, return the result of running Parsing a Number ({{parse-number}}) with input_string.
 2. If the first character of input_string is a DQUOTE, return the result of running Parsing a String ({{parse-string}}) with input_string.
-3. If the first character of input_string is "\*", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
+3. If the first character of input_string is ":", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
 4. If the first character of input_string is "?", return the result of running Parsing a Boolean ({{parse-boolean}}) with input_string.
-5. If the first character of input_string is an ALPHA, return the result of running Parsing a Token ({{parse-token}}) with input_string.
+5. If the first character of input_string is an ALPHA or "\*", return the result of running Parsing a Token ({{parse-token}}) with input_string.
 6. Otherwise, the item type is unrecognized; fail parsing.
 
 #### Parsing Parameters {#parse-param}
