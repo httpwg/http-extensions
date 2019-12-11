@@ -297,7 +297,7 @@ member-value   = sh-item / inner-list
 In HTTP headers, members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
 
 ~~~ example
-Example-DictHeader: en="Applepie", da=*w4ZibGV0w6ZydGU=*
+Example-DictHeader: en="Applepie", da=:w4ZibGV0w6ZydGU=:
 ~~~
 
 Members whose value is Boolean true MUST omit that value when serialised, unless it has parameters. For example, here both "b" and "c" are true, but "c"'s value is serialised because it has parameters:
@@ -430,12 +430,12 @@ Tokens are short textual words; their abstract model is identical to their expre
 The ABNF for tokens in HTTP headers is:
 
 ~~~ abnf
-sh-token = ALPHA *( tchar / ":" / "/" )
+sh-token = ( ALPHA / "\*" ) *( tchar / ":" / "/" )
 ~~~
 
 Parsers MUST support tokens with at least 512 characters.
 
-Note that a Structured Header token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be ALPHA, and ":" and "/" are also allowed.
+Note that a Structured Header token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
 
 
 ### Byte Sequences {#binary}
@@ -445,14 +445,14 @@ Byte sequences can be conveyed in Structured Headers.
 The ABNF for a byte sequence in HTTP headers is:
 
 ~~~ abnf
-sh-binary = "*" *(base64) "*"
+sh-binary = ":" *(base64) ":"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-In HTTP headers, a byte sequence is delimited with asterisks and encoded using base64 ({{!RFC4648}}, Section 4). For example:
+In HTTP headers, a byte sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
-Example-BinaryHdr: *cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==*
+Example-BinaryHdr: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
 ~~~
 
 Parsers MUST support byte sequences with at least 16384 octets after decoding.
@@ -630,7 +630,7 @@ Given a string as input_string, return an ASCII string suitable for use in a HTT
 
 Given a token as input_token, return an ASCII string suitable for use in a HTTP header value.
 
-0. If input_token is not a sequence of characters, or contains a character not in tchar, ":" or "/", fail serialisation.
+0. If input_token is not a sequence of characters, the first character is not ALPHA or "\*", or the remaining contain a character not in tchar, ":" or "/", fail serialisation.
 1. Let output be an empty string.
 2. Append input_token to output.
 3. Return output.
@@ -642,9 +642,9 @@ Given a byte sequence as input_bytes, return an ASCII string suitable for use in
 
 0. If input_bytes is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
-2. Append "\*" to output.
+2. Append ":" to output.
 3. Append the result of base64-encoding input_bytes as per {{!RFC4648}}, Section 4, taking account of the requirements below.
-4. Append "\*" to output.
+4. Append ":" to output.
 5. Return output.
 
 The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2.
@@ -861,7 +861,7 @@ Given an ASCII string as input_string, return an unquoted string. input_string i
 
 Given an ASCII string as input_string, return a token. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not ALPHA, fail parsing.
+1. If the first character of input_string is not ALPHA or "\*", fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. If the first character of input_string is not in tchar, ":" or "/", return output_string.
@@ -874,11 +874,11 @@ Given an ASCII string as input_string, return a token. input_string is modified 
 
 Given an ASCII string as input_string, return a byte sequence. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not "\*", fail parsing.
+1. If the first character of input_string is not ":", fail parsing.
 2. Discard the first character of input_string.
-3. If there is not a "\*" character before the end of input_string, fail parsing.
-4. Let b64_content be the result of consuming content of input_string up to but not including the first instance of the character "\*".
-5. Consume the "\*" character at the beginning of input_string.
+3. If there is not a ":" character before the end of input_string, fail parsing.
+4. Let b64_content be the result of consuming content of input_string up to but not including the first instance of the character ":".
+5. Consume the ":" character at the beginning of input_string.
 6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
 7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behaviour below).
 8. Return binary_content.
@@ -977,6 +977,8 @@ _RFC Editor: Please remove this section before publication._
 * Round the fractional component of floats, rather than truncating it (#982).
 * Allow empty dictionary values (#992).
 * Change value of omitted parameter value to True (#995).
+* Change byte sequence delimiters from "\*" to ":" (#991).
+* Allow tokens to start with "\*" (#991).
 
 ## Since draft-ietf-httpbis-header-structure-13
 
