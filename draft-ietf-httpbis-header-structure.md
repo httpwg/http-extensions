@@ -217,6 +217,21 @@ Example-StrListHeader: "foo", "bar", "It was the best of times."
 
 In HTTP headers, an empty list is denoted by not serialising the header at all.
 
+Note that lists can have their members split across multiple instances inside a block of fields; for example, the following are equivalent:
+
+~~~ example
+Example-Hdr: foo, bar
+~~~
+
+and
+
+~~~ example
+Example-Hdr: foo
+Example-Hdr: bar
+~~~
+
+However, members of a list cannot be safely split between instances; see {{text-parse}} for details.
+
 Parsers MUST support lists containing at least 1024 members. Header specifications can constrain the types and cardinality of individual list values as they require.
 
 
@@ -323,6 +338,21 @@ Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid=?1
 As with lists, an empty dictionary is represented in HTTP headers by omitting the entire header field.
 
 Typically, a header field specification will define the semantics of dictionaries by specifying the allowed type(s) for individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
+
+Note that dictionaries can have their members split across multiple instances inside a block of fields; for example, the following are equivalent:
+
+~~~ example
+Example-Hdr: foo=1, bar=2
+~~~
+
+and
+
+~~~ example
+Example-Hdr: foo=1
+Example-Hdr: bar=2
+~~~
+
+However, members of a dictionary cannot be safely split between instances; see {{text-parse}} for details.
 
 Parsers MUST support dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters.
 
@@ -977,6 +1007,7 @@ _RFC Editor: Please remove this section before publication._
 * Round the fractional component of floats, rather than truncating it (#982).
 * Allow empty dictionary values (#992).
 * Change value of omitted parameter value to True (#995).
+* Explain more about splitting dictionaries and lists across header instances (#997).
 
 ## Since draft-ietf-httpbis-header-structure-13
 
