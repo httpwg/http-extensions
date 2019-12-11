@@ -414,12 +414,12 @@ Tokens are short textual words; their abstract model is identical to their expre
 The ABNF for tokens in HTTP headers is:
 
 ~~~ abnf
-sh-token = ALPHA *( tchar / ":" / "/" )
+sh-token = ( ALPHA / "\*" ) *( tchar / ":" / "/" )
 ~~~
 
 Parsers MUST support tokens with at least 512 characters.
 
-Note that a Structured Header token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be ALPHA, and ":" and "/" are also allowed.
+Note that a Structured Header token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
 
 
 ### Byte Sequences {#binary}
@@ -613,7 +613,7 @@ Given a string as input_string, return an ASCII string suitable for use in a HTT
 
 Given a token as input_token, return an ASCII string suitable for use in a HTTP header value.
 
-0. If input_token is not a sequence of characters, or contains a character not in tchar, ":" or "/", fail serialisation.
+0. If input_token is not a sequence of characters, begins with a character other than ALPHA or "\*", or contains a character not in tchar, ":" or "/", fail serialisation.
 1. Let output be an empty string.
 2. Append input_token to output.
 3. Return output.
@@ -839,7 +839,7 @@ Given an ASCII string as input_string, return an unquoted string. input_string i
 
 Given an ASCII string as input_string, return a token. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not ALPHA, fail parsing.
+1. If the first character of input_string is not ALPHA or "\*", fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. If the first character of input_string is not in tchar, ":" or "/", return output_string.
@@ -954,6 +954,7 @@ _RFC Editor: Please remove this section before publication._
 * Editorial improvements.
 * Round the fractional component of floats, rather than truncating it (#982).
 * Change byte sequence delimiters from "\*" to ":" (#991).
+* Allow tokens to start with "\*" (#991).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
