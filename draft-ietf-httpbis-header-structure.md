@@ -845,7 +845,9 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}
 7. While input_string is not empty:
    1. Let char be the result of consuming the first character of input_string.
    2. If char is a DIGIT, append it to input_number.
-   3. Else, if type is "integer" and char is ".", append char to input_number and set type to "decimal".
+   3. Else, if type is "integer" and char is ".":
+      1. If input_number contains more than 12 characters, fail parsing.
+      2. Otherwise, append char to input_number and set type to "decimal".
    4. Otherwise, prepend char to input_string, and exit the loop.
    5. If type is "integer" and input_number contains more than 15 characters, fail parsing.
    6. If type is "decimal" and input_number contains more than 16 characters, fail parsing.
