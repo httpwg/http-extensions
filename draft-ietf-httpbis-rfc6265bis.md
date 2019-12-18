@@ -351,12 +351,9 @@ header to the origin server. The Cookie header contains cookies the user agent
 received in previous Set-Cookie headers. The origin server is free to ignore
 the Cookie header or use its contents for an application-defined purpose.
 
-Origin servers MAY send a Set-Cookie response header with any response. User
-agents MAY ignore Set-Cookie headers contained in responses with 100-level
-status codes but MUST process Set-Cookie headers contained in other responses
-(including responses with 400- and 500-level status codes). An origin server
-can include multiple Set-Cookie header fields in a single response. The
-presence of a Cookie or a Set-Cookie header field does not preclude HTTP
+Origin servers MAY send a Set-Cookie response header with any response. An
+origin server can include multiple Set-Cookie header fields in a single response.
+The presence of a Cookie or a Set-Cookie header field does not preclude HTTP
 caches from storing and reusing a response.
 
 Origin servers SHOULD NOT fold multiple Set-Cookie header fields into a single
@@ -364,6 +361,9 @@ header field. The usual mechanism for folding HTTP headers fields (i.e., as
 defined in Section 3.2.2 of {{RFC7230}}) might change the semantics of the Set-Cookie header
 field because the %x2C (",") character is used by Set-Cookie in a way that
 conflicts with such folding.
+
+User agents MAY ignore Set-Cookie headers based on response status codes or
+the user agent's cookie policy (see {{ignoring-cookies}}).
 
 ## Examples
 
@@ -777,10 +777,20 @@ detail that a user agent implementing these requirements precisely can
 interoperate with existing servers (even those that do not conform to the
 well-behaved profile described in {{sane-profile}}).
 
-A user agent could enforce more restrictions than those specified herein (e.g.,
-for the sake of improved security); however, experiments have shown that such
-strictness reduces the likelihood that a user agent will be able to interoperate
-with existing servers.
+## Ignoring Set-Cookie Headers {#ignoring-cookies}
+
+User agents MAY ignore Set-Cookie headers contained in responses with 100-level
+status codes or based on its cookie policy.
+
+A cookie policy governs which domains or parties, as in first and third parties
+(see {{third-party-cookies}}), for which the user agent will allow cookie access.
+The policy can also define limits on cookie size, cookie expiry, and the number
+of cookies per domain or in total. The goal of a restrictive cookie policy is
+often to improve security or privacy. User agents often allow users to change
+the cookie policy (see {{user-controls}}).
+
+All other Set-Cookie headers, including those in responses with 400- and 500-level
+status codes, MUST be processed. 
 
 ## Subcomponent Algorithms
 
@@ -1071,9 +1081,8 @@ Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
 ## The Set-Cookie Header {#set-cookie}
 
 When a user agent receives a Set-Cookie header field in an HTTP response, the
-user agent MAY ignore the Set-Cookie header field in its entirety. For
-example, the user agent might wish to block responses to "third-party" requests
-from setting cookies (see {{third-party-cookies}}).
+user agent MAY ignore the Set-Cookie header field in its entirety
+(see {{ignoring-cookies}}).
 
 If the user agent does not ignore the Set-Cookie header field in its entirety,
 the user agent MUST parse the field-value of the Set-Cookie header field as a
@@ -1312,10 +1321,8 @@ When the user agent "receives a cookie" from a request-uri with name
 cookie-name, value cookie-value, and attributes cookie-attribute-list, the
 user agent MUST process the cookie as follows:
 
-1.  A user agent MAY ignore a received cookie in its entirety. For example, the
-    user agent might wish to block receiving cookies from "third-party"
-    responses or the user agent might not wish to store cookies that exceed some
-    size.
+1.  A user agent MAY ignore a received cookie in its entirety. See
+    {{ignoring-cookies}}.
 
 2.  Create a new cookie with name cookie-name, value cookie-value. Set the
     creation-time and the last-access-time to the current date and time.
@@ -1708,7 +1715,7 @@ privacy goals if servers attempt to work around their restrictions to track
 users. In particular, two collaborating servers can often track users without
 using cookies at all by injecting identifying information into dynamic URLs.
 
-## User Controls
+## User Controls {#user-controls}
 
 User agents SHOULD provide users with a mechanism for managing the cookies
 stored in the cookie store. For example, a user agent might let users delete
@@ -1721,13 +1728,16 @@ cookies are disabled, the user agent MUST NOT include a Cookie header in
 outbound HTTP requests and the user agent MUST NOT process Set-Cookie headers
 in inbound HTTP responses.
 
-Some user agents provide users the option of preventing persistent storage of
+User agents MAY offer a way to change the cookie policy (see
+{{ignoring-cookies}}).
+
+User agents MAY provide users the option of preventing persistent storage of
 cookies across sessions. When configured thusly, user agents MUST treat all
 received cookies as if the persistent-flag were set to false. Some popular
 user agents expose this functionality via "private browsing" mode
 {{Aggarwal2010}}.
 
-Some user agents provide users with the ability to approve individual writes to
+User agents MAY provide users with the ability to approve individual writes to
 the cookie store. In many common usage scenarios, these controls generate a
 large number of prompts. However, some privacy-conscious users find these
 controls useful nonetheless.
