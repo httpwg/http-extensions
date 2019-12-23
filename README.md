@@ -9,12 +9,18 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.org/) 
 See also the [official document listing](https://datatracker.ietf.org/wg/httpbis/documents/), which is authoritative.
 
 
+### Extensible Prioritization Scheme for HTTP
+
+* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-priority) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Apriority) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-priority/)
+
+
 ### Digest Headers
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-digest-headers.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-digest-headers.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-digest-headers) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Adigest-headers) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-digest-headers/)
-
 
 
 ### Using TLS 1.3 with HTTP/2
