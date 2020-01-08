@@ -265,7 +265,7 @@ Parsers MUST support inner-lists containing at least 256 members. Header specifi
 
 ### Parameters {#param}
 
-Parameters are an ordered map of key-values pairs that are associated with an item ({{item}}) or inner-list ({{inner-list}}). The keys are required to be unique within the scope of a map of parameters, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
+Parameters are an ordered map of key-values pairs that are associated with an item ({{item}}) or inner-list ({{inner-list}}). The keys are unique within the scope of a map of parameters, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
 
 The ABNF for parameters in HTTP headers is:
 
@@ -296,7 +296,7 @@ Parsers MUST support at least 256 parameters on an item or inner-list, and suppo
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are required to be unique in the scope of the dictionary they occur within.
+Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are unique in the scope of the dictionary they occur within.
 
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
