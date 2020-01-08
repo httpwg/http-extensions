@@ -762,20 +762,19 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parsing a Key ({{parse-key}}) with input_string.
-   2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
-   3. If the first character of input_string is "=":
+   2. If the first character of input_string is "=":
        1. Consume the first character of input_string.
        2. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
-   4. Otherwise:
+   3. Otherwise:
       1. Let value be Boolean true.
       2. Let parameters be an empty, ordered map.
       3. Let member be the tuple (value, parameters).
-   5. Add name this_key with value member to dictionary.
-   6. Discard any leading SP characters from input_string.
-   7. If input_string is empty, return dictionary.
-   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   9. Discard any leading SP characters from input_string.
-   0. If input_string is empty, there is a trailing comma; fail parsing.
+   4. Add name this_key with value member to dictionary. If dictionary already contains a name this_key (comparing character-for-character), overwrite its value.
+   5. Discard any leading SP characters from input_string.
+   6. If input_string is empty, return dictionary.
+   7. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   8. Discard any leading SP characters from input_string.
+   9. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
 
@@ -1006,6 +1005,7 @@ _RFC Editor: Please remove this section before publication._
 * Allow tokens to start with "\*" (#991).
 * Change Floats to fixed-precision Decimals (#982).
 * Round the fractional component of decimal, rather than truncating it (#982).
+* Handle duplicate dictionary values by overwriting, rather than failing (#997).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
