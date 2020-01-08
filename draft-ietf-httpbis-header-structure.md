@@ -808,12 +808,11 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
    2. Consume a ";" character from the beginning of input_string.
    3. Discard any leading SP characters from input_string.
    4. let param_name be the result of running Parsing a Key ({{parse-key}}) with input_string.
-   5. If param_name is already present in parameters, there is a duplicate; fail parsing.
-   6. Let param_value be Boolean true.
-   7. If the first character of input_string is "=":
+   5. Let param_value be Boolean true.
+   6. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of running Parsing a Bare Item ({{parse-bare-item}}) with input_string.
-   8. Append key param_name with value param_value to parameters.
+   7. Append key param_name with value param_value to parameters. If parameters already contains a name param_name (comparing character-for-character), overwrite its value.
 3. Return parameters.
 
 #### Parsing a Key {#parse-key}
@@ -1005,7 +1004,7 @@ _RFC Editor: Please remove this section before publication._
 * Allow tokens to start with "\*" (#991).
 * Change Floats to fixed-precision Decimals (#982).
 * Round the fractional component of decimal, rather than truncating it (#982).
-* Handle duplicate dictionary values by overwriting, rather than failing (#997).
+* Handle duplicate dictionary and parameter keys by overwriting their values, rather than failing (#997).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
