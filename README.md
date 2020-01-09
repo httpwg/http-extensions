@@ -13,7 +13,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-priority) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Apriority) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-priority/)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Apriorities) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-priority/)
 
 
 ### Digest Headers
