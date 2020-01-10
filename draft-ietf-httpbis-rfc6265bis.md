@@ -1102,19 +1102,20 @@ parse a set-cookie-string:
         the set-cookie-string, and the unparsed-attributes is the empty
         string.
 
-2.  If the name-value-pair string lacks a %x3D ("=") character, ignore the
-    set-cookie-string entirely.
+2.  If the name-value-pair string lacks a %x3D ("=") character, then the name
+    string is empty, and the value string is the value of name-value-pair.
 
-3.  The (possibly empty) name string consists of the characters up to, but not
+    Otherwise, the name string consists of the characters up to, but not
     including, the first %x3D ("=") character, and the (possibly empty) value
     string consists of the characters after the first %x3D ("=") character.
 
-4.  Remove any leading or trailing WSP characters from the name string and the
+3.  Remove any leading or trailing WSP characters from the name string and the
     value string.
 
-5.  If the name string is empty, ignore the set-cookie-string entirely.
+4.  If both the name string and the value string are empty, ignore the
+    set-cookie-string entirely.
 
-6.  The cookie-name is the name string, and the cookie-value is the value string.
+5.  The cookie-name is the name string, and the cookie-value is the value string.
 
 The user agent MUST use an algorithm equivalent to the following algorithm to
 parse the unparsed-attributes:
@@ -2093,6 +2094,13 @@ Specification document:
 
 *  Allow `SameSite` cookies to be set for all top-level navigations.
    <https://github.com/httpwg/http-extensions/issues/594>
+
+*  Treat `Set-Cookie: token` as creating the cookie `("", "token")`:
+   <https://github.com/httpwg/http-extensions/issues/159>
+
+*  Reject cookies with neither name nor value (e.g. `Set-Cookie: =` and
+   `Set-Cookie:`:  <https://github.com/httpwg/http-extensions/issues/159>
+
 
 # Acknowledgements
 {:numbered="false"}
