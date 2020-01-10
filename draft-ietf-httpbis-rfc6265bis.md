@@ -326,13 +326,13 @@ in Section 4.2.1 of {{RFC7231}}.
 
 The term "public suffix" is defined in a note in Section 5.3 of {{RFC6265}} as
 "a domain that is controlled by a public registry", and are also known as
-"effective top-level domains" (eTLDs). For example, `example.com`'s public
+"effective top-level domains" (eTLDs). For example, `site.example`'s public
 suffix is `com`. User agents SHOULD use an up-to-date public suffix list,
 such as the one maintained by Mozilla at {{PSL}}.
 
 An origin's "registered domain" is the origin's host's public suffix plus the
-label to its left. That is, for `https://www.example.com`, the public suffix is
-`com`, and the registered domain is `example.com`. This concept is defined more
+label to its left. That is, for `https://www.site.example`, the public suffix is
+`example`, and the registered domain is `site.example`. This concept is defined more
 rigorously in {{PSL}}, and is also known as "effective top-level domain plus one"
 (eTLD+1).
 
@@ -385,12 +385,12 @@ Cookie: SID=31d4d96e407aad42
 
 The server can alter the default scope of the cookie using the Path and
 Domain attributes. For example, the server can instruct the user agent to
-return the cookie to every path and every subdomain of example.com.
+return the cookie to every path and every subdomain of site.example.
 
 ~~~
 == Server -> User Agent ==
 
-Set-Cookie: SID=31d4d96e407aad42; Path=/; Domain=example.com
+Set-Cookie: SID=31d4d96e407aad42; Path=/; Domain=site.example
 
 == User Agent -> Server ==
 
@@ -408,7 +408,7 @@ additional security protections for the more sensitive session identifier (see
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42; Path=/; Secure; HttpOnly
-Set-Cookie: lang=en-US; Path=/; Domain=example.com
+Set-Cookie: lang=en-US; Path=/; Domain=site.example
 
 == User Agent -> Server ==
 
@@ -590,9 +590,9 @@ user agent).
 #### The Domain Attribute
 
 The Domain attribute specifies those hosts to which the cookie will be sent.
-For example, if the value of the Domain attribute is "example.com", the user
+For example, if the value of the Domain attribute is "site.example", the user
 agent will include the cookie in the Cookie header when making HTTP requests to
-example.com, www.example.com, and www.corp.example.com. (Note that a
+site.example, www.site.example, and www.corp.site.example. (Note that a
 leading %x2E ("."), if present, is ignored even though that character is not
 permitted, but a trailing %x2E ("."), if present, will cause the user agent to
 ignore the attribute.)  If the server omits the Domain attribute, the user
@@ -600,16 +600,16 @@ agent will return the cookie only to the origin server.
 
 WARNING: Some existing user agents treat an absent Domain attribute as if the
 Domain attribute were present and contained the current host name. For
-example, if example.com returns a Set-Cookie header without a Domain
+example, if site.example returns a Set-Cookie header without a Domain
 attribute, these user agents will erroneously send the cookie to
-www.example.com as well.
+www.site.example as well.
 
 The user agent will reject cookies unless the Domain attribute specifies a
 scope for the cookie that would include the origin server. For example, the
-user agent will accept a cookie with a Domain attribute of "example.com" or
-of "foo.example.com" from foo.example.com, but the user agent will not accept
-a cookie with a Domain attribute of "bar.example.com" or of
-"baz.foo.example.com".
+user agent will accept a cookie with a Domain attribute of "site.example" or
+of "foo.site.example" from foo.site.example, but the user agent will not accept
+a cookie with a Domain attribute of "bar.site.example" or of
+"baz.foo.site.example".
 
 NOTE: For security reasons, many user agents are configured to reject Domain
 attributes that correspond to "public suffixes". For example, some user
@@ -660,8 +660,8 @@ cookie can have both the HttpOnly and the Secure attribute.
 The "SameSite" attribute limits the scope of the cookie such that it will only
 be attached to requests if those requests are same-site, as defined by the
 algorithm in {{same-site-requests}}. For example, requests for
-`https://example.com/sekrit-image` will attach same-site cookies if and only if
-initiated from a context whose "site for cookies" is "example.com".
+`https://site.example/sekrit-image` will attach same-site cookies if and only if
+initiated from a context whose "site for cookies" is "site.example".
 
 If the "SameSite" attribute's value is "Strict", the cookie will only be sent
 along with "same-site" requests. If the value is "Lax", the cookie will be sent
@@ -692,13 +692,13 @@ For example, the following `Set-Cookie` header would be rejected by a conformant
 user agent, as it does not have a `Secure` attribute.
 
 ~~~
-Set-Cookie: __Secure-SID=12345; Domain=example.com
+Set-Cookie: __Secure-SID=12345; Domain=site.example
 ~~~
 
 Whereas the following `Set-Cookie` header would be accepted:
 
 ~~~
-Set-Cookie: __Secure-SID=12345; Domain=example.com; Secure
+Set-Cookie: __Secure-SID=12345; Domain=site.example; Secure
 ~~~
 
 #### The "__Host-" Prefix
@@ -723,13 +723,13 @@ For example, the following cookies would always be rejected:
 ~~~
 Set-Cookie: __Host-SID=12345
 Set-Cookie: __Host-SID=12345; Secure
-Set-Cookie: __Host-SID=12345; Domain=example.com
-Set-Cookie: __Host-SID=12345; Domain=example.com; Path=/
-Set-Cookie: __Host-SID=12345; Secure; Domain=example.com; Path=/
+Set-Cookie: __Host-SID=12345; Domain=site.example
+Set-Cookie: __Host-SID=12345; Domain=site.example; Path=/
+Set-Cookie: __Host-SID=12345; Secure; Domain=site.example; Path=/
 ~~~
 
 While the would be accepted if set from a secure origin (e.g.
-"https://example.com/"), and rejected otherwise:
+"https://site.example/"), and rejected otherwise:
 
 ~~~
 Set-Cookie: __Host-SID=12345; Secure; Path=/
@@ -1370,7 +1370,7 @@ user agent MUST process the cookie as follows:
 
     NOTE: A "public suffix" is a domain that is controlled by a public registry,
     such as "com", "co.uk", and "pvt.k12.wy.us". This step is essential for
-    preventing attacker.com from disrupting the integrity of example.com by
+    preventing attacker.com from disrupting the integrity of site.example by
     setting a cookie with a Domain attribute of "com". Unfortunately, the set
     of public suffixes (also known as "registry controlled domains") changes
     over time. If feasible, user agents SHOULD use an up-to-date public suffix
@@ -1875,35 +1875,35 @@ to access cookies stored for another path.
 ## Weak Integrity {#weak-integrity}
 
 Cookies do not provide integrity guarantees for sibling domains (and their
-subdomains). For example, consider foo.example.com and bar.example.com. The
-foo.example.com server can set a cookie with a Domain attribute of
-"example.com" (possibly overwriting an existing "example.com" cookie set by
-bar.example.com), and the user agent will include that cookie in HTTP requests
-to bar.example.com. In the worst case, bar.example.com will be unable to
-distinguish this cookie from a cookie it set itself. The foo.example.com
+subdomains). For example, consider foo.site.example and bar.site.example. The
+foo.site.example server can set a cookie with a Domain attribute of
+"site.example" (possibly overwriting an existing "site.example" cookie set by
+bar.site.example), and the user agent will include that cookie in HTTP requests
+to bar.site.example. In the worst case, bar.site.example will be unable to
+distinguish this cookie from a cookie it set itself. The foo.site.example
 server might be able to leverage this ability to mount an attack against
-bar.example.com.
+bar.site.example.
 
 Even though the Set-Cookie header supports the Path attribute, the Path
 attribute does not provide any integrity protection because the user agent
 will accept an arbitrary Path attribute in a Set-Cookie header. For
-example, an HTTP response to a request for http://example.com/foo/bar can set
+example, an HTTP response to a request for http://site.example/foo/bar can set
 a cookie with a Path attribute of "/qux". Consequently, servers SHOULD NOT
 both run mutually distrusting services on different paths of the same host and
 use cookies to store security-sensitive information.
 
 An active network attacker can also inject cookies into the Cookie header
-sent to https://example.com/ by impersonating a response from
-http://example.com/ and injecting a Set-Cookie header. The HTTPS server
-at example.com will be unable to distinguish these cookies from cookies that
+sent to https://site.example/ by impersonating a response from
+http://site.example/ and injecting a Set-Cookie header. The HTTPS server
+at site.example will be unable to distinguish these cookies from cookies that
 it set itself in an HTTPS response. An active network attacker might be able
-to leverage this ability to mount an attack against example.com even if
-example.com uses HTTPS exclusively.
+to leverage this ability to mount an attack against site.example even if
+site.example uses HTTPS exclusively.
 
 Servers can partially mitigate these attacks by encrypting and signing the
 contents of their cookies. However, using cryptography does not mitigate the
 issue completely because an attacker can replay a cookie he or she received from
-the authentic example.com server in the user's session, with unpredictable
+the authentic site.example server in the user's session, with unpredictable
 results.
 
 Finally, an attacker might be able to force the user agent to delete cookies by
@@ -1943,9 +1943,9 @@ developers carefully ensure that their cookie-based session management systems
 deal reasonably well with top-level navigations.
 
 Consider the scenario in which a user reads their email at MegaCorp Inc's
-webmail provider `https://example.com/`. They might expect that clicking on an
-emailed link to `https://projects.com/secret/project` would show them the secret
-project that they're authorized to see, but if `projects.com` has marked their
+webmail provider `https://site.example/`. They might expect that clicking on an
+emailed link to `https://projects.example/secret/project` would show them the secret
+project that they're authorized to see, but if `projects.example` has marked their
 session cookies as `SameSite`, then this cross-site navigation won't send them
 along with the request. `projects.com` will render a 404 error to avoid leaking
 secret information, and the user will be quite confused.
