@@ -13,16 +13,17 @@ stand_alone: yes #_
 
 author:
 -
-  ins: A. Barth
-  name: Adam Barth
-  organization: Google, Inc
-  uri: https://www.adambarth.com/
--
   ins: M. West
   name: Mike West
+  role: editor
   organization: Google, Inc
   email: mkwst@google.com
   uri: https://mikewest.org/
+-
+  ins: J. Wilander
+  name: John Wilander
+  organization: Apple, Inc
+  email: wilander@apple.com
 
 normative:
   RFC1034:
@@ -2104,6 +2105,7 @@ Specification document:
 
 # Acknowledgements
 {:numbered="false"}
-This document is a minor update of RFC 6265, adding small features, and
-aligning the specification with the reality of today's deployments. Here,
-we're standing upon the shoulders of giants.
+RFC 6265 was written by Adam Barth. This document is a minor update of
+RFC 6265, adding small features, and aligning the specification with the
+reality of today’s deployments. Here, we’re standing upon the shoulders
+of a giant since the majority of the text is still Adam’s.
