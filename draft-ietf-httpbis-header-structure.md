@@ -265,7 +265,7 @@ Parsers MUST support inner-lists containing at least 256 members. Header specifi
 
 ### Parameters {#param}
 
-Parameters are an ordered map of key-values pairs that are associated with an item ({{item}}) or inner-list ({{inner-list}}). The keys are required to be unique within the scope of a map of parameters, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
+Parameters are an ordered map of key-values pairs that are associated with an item ({{item}}) or inner-list ({{inner-list}}). The keys are unique within the scope of a map of parameters, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
 
 The ABNF for parameters in HTTP headers is:
 
@@ -296,7 +296,7 @@ Parsers MUST support at least 256 parameters on an item or inner-list, and suppo
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are required to be unique in the scope of the dictionary they occur within.
+Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are unique in the scope of the dictionary they occur within.
 
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
@@ -762,20 +762,19 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
 1. Let dictionary be an empty, ordered map.
 2. While input_string is not empty:
    1. Let this_key be the result of running Parsing a Key ({{parse-key}}) with input_string.
-   2. If dictionary already contains the name this_key, there is a duplicate; fail parsing.
-   3. If the first character of input_string is "=":
+   2. If the first character of input_string is "=":
        1. Consume the first character of input_string.
        2. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
-   4. Otherwise:
+   3. Otherwise:
       1. Let value be Boolean true.
       2. Let parameters be an empty, ordered map.
       3. Let member be the tuple (value, parameters).
-   5. Add name this_key with value member to dictionary.
-   6. Discard any leading SP characters from input_string.
-   7. If input_string is empty, return dictionary.
-   8. Consume the first character of input_string; if it is not COMMA, fail parsing.
-   9. Discard any leading SP characters from input_string.
-   0. If input_string is empty, there is a trailing comma; fail parsing.
+   4. Add name this_key with value member to dictionary. If dictionary already contains a name this_key (comparing character-for-character), overwrite its value.
+   5. Discard any leading SP characters from input_string.
+   6. If input_string is empty, return dictionary.
+   7. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   8. Discard any leading SP characters from input_string.
+   9. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
 
@@ -809,12 +808,11 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
    2. Consume a ";" character from the beginning of input_string.
    3. Discard any leading SP characters from input_string.
    4. let param_name be the result of running Parsing a Key ({{parse-key}}) with input_string.
-   5. If param_name is already present in parameters, there is a duplicate; fail parsing.
-   6. Let param_value be Boolean true.
-   7. If the first character of input_string is "=":
+   5. Let param_value be Boolean true.
+   6. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of running Parsing a Bare Item ({{parse-bare-item}}) with input_string.
-   8. Append key param_name with value param_value to parameters.
+   7. Append key param_name with value param_value to parameters. If parameters already contains a name param_name (comparing character-for-character), overwrite its value.
 3. Return parameters.
 
 #### Parsing a Key {#parse-key}
@@ -1006,6 +1004,7 @@ _RFC Editor: Please remove this section before publication._
 * Allow tokens to start with "\*" (#991).
 * Change Floats to fixed-precision Decimals (#982).
 * Round the fractional component of decimal, rather than truncating it (#982).
+* Handle duplicate dictionary and parameter keys by overwriting their values, rather than failing (#997).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
