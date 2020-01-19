@@ -921,6 +921,41 @@ Digest: id-sha-256=BZlF2v0IzjuxN01RQ97EUXriaNNLhtI8Chx8Eq+XYSc=
 Note that a `204 No Content` response without a payload body 
 but with the same `Digest` field-value would have been legitimate too.
 
+## Error responses
+
+In error responses, the representation-data does not necessarily refer to
+the target resource.
+Instead it refers to the representation of the error.
+
+In the following example a client attempts to patch
+the resource located at /books/123.
+However, the resource does not exist and the server generates a 404 response
+with a body that describes the error in accordance with {{?RFC7807}}.
+
+The digest of the response is computed on this enclosed representation.
+
+Request:
+
+~~~
+PATCH /books/123 HTTP/1.1
+Content-Type: application/merge-patch+json
+Accept: application/json
+Accept-Encoding: identity
+Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
+
+{"title": "New Title"}
+~~~
+
+Response:
+
+~~~
+HTTP/1.1 404 Not Found
+Content-Type: application/problem+json
+Digest: sha-256=UJSojgEzqUe4UoHzmNl5d2xkmrW3BOdmvsvWu1uFeu0=
+
+{"title": "Not Found", "detail": "Cannot PATCH a non-existent resource", "status": 404}
+~~~
+
 # Examples of Want-Digest Solicited Digest
 
 The following examples demonstrate interactions where a client solicits a
