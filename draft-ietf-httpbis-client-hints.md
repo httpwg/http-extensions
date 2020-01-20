@@ -36,7 +36,30 @@ normative:
   RFC7231:
   RFC7234:
   RFC6454:
-  HTML5: W3C.REC-html5-20141028
+  HTML:
+    target: https://html.spec.whatwg.org/
+    title: HTML
+    author:
+    -
+      ins: I. Hickson
+      name: Ian Hickson
+      organization: Google, Inc.
+    -
+      ins: S. Pieters
+      name: Simon Pieters
+      organization: Bocoup
+    -
+      ins: A. van Kesteren
+      name: Anne van Kesteren
+      organization: Mozilla
+    -
+      ins: P. Jägenstedt
+      name: Philip Jägenstedt
+      organization: Google, Inc.
+    -
+      ins: D. Denicola
+      name: Domenic Denicola
+      organization: Google, Inc.
   FETCH:
     target: https://fetch.spec.whatwg.org/
     title: Fetch
@@ -48,7 +71,6 @@ normative:
 
 informative:
   RFC6265:
-  KEY: I-D.ietf-httpbis-key
 
 --- abstract
 
@@ -118,7 +140,7 @@ Servers can advertise support for Client Hints using the mechnisms described bel
 
 ## The Accept-CH Response Header Field {#accept-ch}
 
-The Accept-CH response header field or the equivalent HTML meta element with http-equiv attribute ({{HTML5}}) indicate server support for particular hints indicated in its value.
+The Accept-CH response header field or the equivalent HTML meta element with http-equiv attribute ({{HTML}}) indicate server support for particular hints indicated in its value.
 
 Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be an sh-list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.7 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
@@ -164,7 +186,8 @@ Above example indicates that the cache key needs to include the Sec-CH-Example a
 
 # Security Considerations
 
-The request header fields defined in this document, and those that extend it, expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
+## Information Exposure
+Request header fields used in features relying on this document expose information about the user's environment to enable proactive content negotiation. Such information may reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
 The underlying assumption is that exposing information about the user as a request header is equivalent to the capability of that request's origin to access that information by other means and transmit it to itself.
 
@@ -196,10 +219,24 @@ Servers SHOULD take that into account when opting in to receive Client Hints, an
 
 Due to request byte size increase, features relying on this document to define Client Hints MAY consider restricting sending those hints to certain request destinations {{FETCH}}, where they are more likely to be useful. 
 
+
+## Deployment and Security Risks
+Deployment of new request headers requires several considerations:
+
+  - Potential conflicts due to existing use of field name
+  - Properties of the data communicated in field value
+
+Authors of new Client Hints are advised to carefully consider whether they should be able to be added by client-side content (e.g., scripts), or whether they should be exclusively set by the user agent. In the latter case, the Sec- prefix on the header field name has the effect of preventing scripts and other application content from setting them in user agents. 
+Using the "Sec-" prefix signals to servers that the user agent - and not application content - generated the values. See {{FETCH}} for more information.
+
+By convention, request headers that are client hints are encouraged to use a CH- prefix, to make them easier to identify as using this framework; for example, CH-Foo or, with a "Sec-" prefix, Sec-CH-Foo. Doing so makes them easier to identify programmatically (e.g., for stripping unrecognised hints from requests by privacy filters).
+
+
 ## Abuse Detection
 A user agent that tracks access to active fingerprinting information SHOULD consider emission of Client Hints headers similarly to the way it would consider access to the equivalent API.
 
 Research into abuse of Client Hints might look at how HTTP responses that contain Client Hints differ from those with different values, and from those without. This might be used to reveal which Client Hints are in use, allowing researchers to further analyze that use.
+
 
 
 # IANA Considerations
@@ -264,6 +301,7 @@ Features that define Client Hints will need to specify the related variants algo
 
 ## Since -08
 * PR 985: Describe the bytesize cost of hints.
+* PR 776: Add Sec- and CH- prefix considerations.
 * PR 1001: Clear CH persistence when cookies are cleared.
 
 
