@@ -22,6 +22,7 @@ author:
 -
   ins: J. Wilander
   name: John Wilander
+  role: editor
   organization: Apple, Inc
   email: wilander@apple.com
 
