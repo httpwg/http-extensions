@@ -671,6 +671,11 @@ with same-site and cross-site requests. If the "SameSite" attribute's value is
 something other than these three known keywords, the attribute's value will be
 treated as "None".
 
+The "SameSite" attribute affects cookie creation as well as delivery. Cookies
+which assert "SameSite=Lax" or "SameSite=Strict" cannot be set in responses to
+cross-site subresource requests, or cross-site nested navigations. They can be
+set along with any top-level navigation, cross-site or otherwise.
+
 ### Cookie Name Prefixes
 
 {{weak-confidentiality}} and {{weak-integrity}} of this document spell out some of the drawbacks of cookies'
