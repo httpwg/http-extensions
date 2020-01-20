@@ -1446,9 +1446,10 @@ user agent MUST process the cookie as follows:
     not for a path of '/login' or '/login/en'.
 
 13. If the cookie-attribute-list contains an attribute with an
-    attribute-name of "SameSite", set the cookie's same-site-flag to
-    attribute-value (i.e. either "Strict", "Lax", or "None"). Otherwise, set the
-    cookie's same-site-flag to "None".
+    attribute-name of "SameSite", set the cookie's same-site-flag to the
+    attribute-value of the last attribute in the cookie-attribute-list with an
+    attribute-name of "SameSite" (i.e. either "Strict", "Lax", or "None").
+    Otherwise, set the cookie's same-site-flag to "None".
 
 14. If the cookie's `same-site-flag` is not "None":
 
@@ -2106,6 +2107,8 @@ Specification document:
 *  Reject cookies with neither name nor value (e.g. `Set-Cookie: =` and
    `Set-Cookie:`:  <https://github.com/httpwg/http-extensions/issues/159>
 
+*  Clarified behavior of multiple `SameSite` attributes in a cookie string:
+   <https://github.com/httpwg/http-extensions/issues/901>
 
 # Acknowledgements
 {:numbered="false"}
