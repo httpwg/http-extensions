@@ -329,7 +329,7 @@ in Section 4.2.1 of {{RFC7231}}.
 The term "public suffix" is defined in a note in Section 5.3 of {{RFC6265}} as
 "a domain that is controlled by a public registry", and are also known as
 "effective top-level domains" (eTLDs). For example, `site.example`'s public
-suffix is `com`. User agents SHOULD use an up-to-date public suffix list,
+suffix is `example`. User agents SHOULD use an up-to-date public suffix list,
 such as the one maintained by Mozilla at {{PSL}}.
 
 An origin's "registered domain" is the origin's host's public suffix plus the
@@ -1378,8 +1378,8 @@ user agent MUST process the cookie as follows:
 
     NOTE: A "public suffix" is a domain that is controlled by a public registry,
     such as "com", "co.uk", and "pvt.k12.wy.us". This step is essential for
-    preventing attacker.com from disrupting the integrity of site.example by
-    setting a cookie with a Domain attribute of "com". Unfortunately, the set
+    preventing `attacker.example` from disrupting the integrity of `site.example`
+    by setting a cookie with a Domain attribute of "example". Unfortunately, the set
     of public suffixes (also known as "registry controlled domains") changes
     over time. If feasible, user agents SHOULD use an up-to-date public suffix
     list, such as the one maintained by the Mozilla project at
@@ -1956,7 +1956,7 @@ webmail provider `https://site.example/`. They might expect that clicking on an
 emailed link to `https://projects.example/secret/project` would show them the secret
 project that they're authorized to see, but if `projects.example` has marked their
 session cookies as `SameSite`, then this cross-site navigation won't send them
-along with the request. `projects.com` will render a 404 error to avoid leaking
+along with the request. `projects.example` will render a 404 error to avoid leaking
 secret information, and the user will be quite confused.
 
 Developers can avoid this confusion by adopting a session management system that
