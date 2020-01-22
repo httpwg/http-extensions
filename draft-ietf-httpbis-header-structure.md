@@ -272,7 +272,7 @@ The ABNF for parameters in HTTP headers is:
 ~~~ abnf
 parameter     = ";" *SP param-name [ "=" param-value ]
 param-name    = key
-key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "*" )
+key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
@@ -561,7 +561,7 @@ Given an ordered dictionary as input_parameters (each member having a param_name
 
 Given a key as input_key, return an ASCII string suitable for use in a HTTP header value.
 
-0. If input_key is not a sequence of characters, or contains characters not in lcalpha, DIGIT, "\*", "\_", or "-", fail serialisation.
+0. If input_key is not a sequence of characters, or contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
 1. Let output be an empty string.
 2. Append input_key to output.
 3. Return output.
@@ -822,7 +822,7 @@ Given an ASCII string as input_string, return a key. input_string is modified to
 1. If the first character of input_string is not lcalpha, fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
-   1. If the first character of input_string is not one of lcalpha, DIGIT, "\*", "\_", or "-", return output_string.
+   1. If the first character of input_string is not one of lcalpha, DIGIT, "\_", "-", ".", or "\*", return output_string.
    2. Let char be the result of removing the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
@@ -1005,6 +1005,7 @@ _RFC Editor: Please remove this section before publication._
 * Change Floats to fixed-precision Decimals (#982).
 * Round the fractional component of decimal, rather than truncating it (#982).
 * Handle duplicate dictionary and parameter keys by overwriting their values, rather than failing (#997).
+* Allow "." in key (#1027).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
