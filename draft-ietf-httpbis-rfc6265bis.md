@@ -326,11 +326,10 @@ same" matching algorithm for origins are defined in {{RFC6454}}.
 "Safe" HTTP methods include `GET`, `HEAD`, `OPTIONS`, and `TRACE`, as defined
 in Section 4.2.1 of {{RFC7231}}.
 
-The term "public suffix" is defined in a note in Section 5.3 of {{RFC6265}} as
-"a domain that is controlled by a public registry", and are also known as
-"effective top-level domains" (eTLDs). For example, `site.example`'s public
+A "public suffix" is a domain that is controlled by a public registry, such as
+"com", "co.uk", and "pvt.k12.wy.us". For example, `site.example`'s public
 suffix is `example`. User agents SHOULD use an up-to-date public suffix list,
-such as the one maintained by Mozilla at {{PSL}}.
+such as the one maintained at {{PSL}}.
 
 An origin's "registered domain" is the origin's host's public suffix plus the
 label to its left. That is, for `https://www.site.example`, the public suffix is
@@ -1376,14 +1375,8 @@ user agent MUST process the cookie as follows:
 
         1.  Ignore the cookie entirely and abort these steps.
 
-    NOTE: A "public suffix" is a domain that is controlled by a public registry,
-    such as "com", "co.uk", and "pvt.k12.wy.us". This step is essential for
-    preventing `attacker.example` from disrupting the integrity of `site.example`
-    by setting a cookie with a Domain attribute of "example". Unfortunately, the set
-    of public suffixes (also known as "registry controlled domains") changes
-    over time. If feasible, user agents SHOULD use an up-to-date public suffix
-    list, such as the one maintained by the Mozilla project at
-    <http://publicsuffix.org/>.
+    NOTE: This step prevents `attacker.example` from disrupting the integrity of
+    `site.example` by setting a cookie with a Domain attribute of "example".
 
 6.  If the domain-attribute is non-empty:
 
