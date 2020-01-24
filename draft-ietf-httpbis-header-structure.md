@@ -137,13 +137,13 @@ To specify a HTTP header as a structured header, its authors needs to:
 
 * Specify any additional constraints upon the structures used, as well as the consequences when those constraints are violated.
 
-Typically, this means that a header definition will specify the top-level type -- Dictionary, List or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q".
+Typically, this means that a header definition will specify the top-level type -- Dictionary, List or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, inner lists are only valid when a header definition explicitly allows them.
 
 When Structured Headers parsing fails, the header is ignored (see {{text-parse}}); in most situations, violating header-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the header requires different error handling, this should be explicitly specified.
 
-However, both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, header specifications are discouraged from defining the presence of an unrecognised parameter as an error condition.
+However, both items and inner lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, header specifications are discouraged from defining the presence of an unrecognised parameter as an error condition.
 
-Conversely, inner lists are only valid when a header definition explicitly allows them.
+To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a header definition can specify that "grease" parameters be added by senders. For example, a specification could stipulate that all parameters beginning with the letter 'q' are reserved for this use.
 
 Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and decimals, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, header field definitions can only use Structured Headers for the entire header field value, not a portion thereof.
 
@@ -1008,6 +1008,7 @@ _RFC Editor: Please remove this section before publication._
 * Handle duplicate dictionary and parameter keys by overwriting their values, rather than failing (#997).
 * Allow "." in key (#1027).
 * Check first character of key in serialisation (#1037).
+* Talk about greasing headers (#1015).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
