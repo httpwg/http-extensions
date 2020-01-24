@@ -562,9 +562,10 @@ Given an ordered dictionary as input_parameters (each member having a param_name
 Given a key as input_key, return an ASCII string suitable for use in a HTTP header value.
 
 0. If input_key is not a sequence of characters, or contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
-1. Let output be an empty string.
-2. Append input_key to output.
-3. Return output.
+1. If the first character of input_key is not lcalpha, fail parsing.
+2. Let output be an empty string.
+3. Append input_key to output.
+4. Return output.
 
 
 ### Serializing a Dictionary {#ser-dictionary}
@@ -1006,6 +1007,7 @@ _RFC Editor: Please remove this section before publication._
 * Round the fractional component of decimal, rather than truncating it (#982).
 * Handle duplicate dictionary and parameter keys by overwriting their values, rather than failing (#997).
 * Allow "." in key (#1027).
+* Check first character of key in serialisation (#1037).
 
 
 ## Since draft-ietf-httpbis-header-structure-13
