@@ -326,16 +326,12 @@ same" matching algorithm for origins are defined in {{RFC6454}}.
 "Safe" HTTP methods include `GET`, `HEAD`, `OPTIONS`, and `TRACE`, as defined
 in Section 4.2.1 of {{RFC7231}}.
 
-A "public suffix" is a domain that is controlled by a public registry, such as
-"com", "co.uk", and "pvt.k12.wy.us". For example, `site.example`'s public
-suffix is `example`. User agents SHOULD use an up-to-date public suffix list,
-such as the one maintained at {{PSL}}.
-
-An origin's "registered domain" is the origin's host's public suffix plus the
-label to its left. That is, for `https://www.site.example`, the public suffix is
-`example`, and the registered domain is `site.example`. This concept is defined more
-rigorously in {{PSL}}, and is also known as "effective top-level domain plus one"
-(eTLD+1).
+A domain's "public suffix" is the portion of a domain that is controlled by a
+public registry, such as "com", "co.uk", and "pvt.k12.wy.us" {{PSL}}. A domain's
+"registerable domain" is the domain's public suffix plus the label to its left.
+That is, for `https://www.site.example`, the public suffix is `example`, and the
+registrable domain is `site.example`. This concept is defined more rigorously in
+{{PSL}}, which specifies a formal algorithm to obtain both.
 
 The term "request", as well as a request's "client", "current url", "method",
 and "target browsing context", are defined in {{FETCH}}.
@@ -948,7 +944,7 @@ following conditions holds:
 
 ## "Same-site" and "cross-site" Requests  {#same-site-requests}
 
-A request is "same-site" if its target's URI's origin's registered domain
+A request is "same-site" if its target's URI's origin's registrable domain
 is an exact match for the request's client's "site for cookies", or if the
 request has no client. The request is otherwise "cross-site".
 
@@ -963,7 +959,7 @@ For a given request ("request"), the following algorithm returns `same-site` or
 2.  Let `site` be `request`'s client's "site for cookies" (as defined in the
     following sections).
 
-3.  Let `target` be the registered domain of `request`'s current url.
+3.  Let `target` be the registrable domain of `request`'s current url.
 
 4.  If `site` is an exact match for `target`, return `same-site`.
 
@@ -977,7 +973,7 @@ client's type, as described in the following subsections:
 The URI displayed in a user agent's address bar is the only security context
 directly exposed to users, and therefore the only signal users can reasonably
 rely upon to determine whether or not they trust a particular website. The
-registered domain of that URI's origin represents the context in which a user
+registrable domain of that URI's origin represents the context in which a user
 most likely believes themselves to be interacting. We'll label this domain the
 "top-level site".
 
@@ -989,11 +985,11 @@ the origins of each of a document's ancestor browsing contexts' active documents
 in order to account for the "multiple-nested scenarios" described in Section 4
 of {{RFC7034}}. A document's "site for cookies" is the top-level site if and
 only if the document and each of its ancestor documents' origins have the same
-registered domain as the top-level site. Otherwise its "site for cookies" is
+registrable domain as the top-level site. Otherwise its "site for cookies" is
 the empty string.
 
 Given a Document (`document`), the following algorithm returns its "site for
-cookies" (either a registered domain, or the empty string):
+cookies" (either a registrable domain, or the empty string):
 
 1.  Let `top-document` be the active document in `document`'s browsing context's
     top-level browsing context.
@@ -1010,10 +1006,10 @@ cookies" (either a registered domain, or the empty string):
     1.  Let `origin` be the origin of `item`'s URI if `item`'s sandboxed origin
         browsing context flag is set, and `item`'s origin otherwise.
 
-    2.  If `origin`'s host's registered domain is not an exact match for
-        `top-origin`'s host's registered domain, return the empty string.
+    2.  If `origin`'s host's registrable domain is not an exact match for
+        `top-origin`'s host's registrable domain, return the empty string.
 
-5.  Return `top-origin`'s host's registered domain.
+5.  Return `top-origin`'s host's registrable domain.
 
 ### Worker-based requests {#worker-requests}
 
@@ -1039,9 +1035,9 @@ worker's "site for cookies" will be the empty string in cases where the values
 diverge, and the shared value in cases where the values agree.
 
 Given a WorkerGlobalScope (`worker`), the following algorithm returns its "site
-for cookies" (either a registered domain, or the empty string):
+for cookies" (either a registrable domain, or the empty string):
 
-1.  Let `site` be `worker`'s origin's host's registered domain.
+1.  Let `site` be `worker`'s origin's host's registrable domain.
 
 2.  For each `document` in `worker`'s Documents:
 
@@ -1066,13 +1062,13 @@ request, and its "site for cookies" will be those defined in
 
 Requests which are initiated by the Service Worker itself (via a direct call to
 `fetch()`, for instance), on the other hand, will have a client which is a
-ServiceWorkerGlobalScope. Its "site for cookies" will be the registered domain
+ServiceWorkerGlobalScope. Its "site for cookies" will be the registrable domain
 of the Service Worker's URI.
 
 Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
-"site for cookies" (either a registered domain, or the empty string):
+"site for cookies" (either a registrable domain, or the empty string):
 
-1.  Return `worker`'s origin's host's registered domain.
+1.  Return `worker`'s origin's host's registrable domain.
 
 ## The Set-Cookie Header {#set-cookie}
 
@@ -1450,7 +1446,7 @@ user agent MUST process the cookie as follows:
 
     1.  If the cookie was received from a "non-HTTP" API, and the API was called
         from a context whose "site for cookies" is not an exact match for
-        request-uri's host's registered domain, then abort these steps and
+        request-uri's host's registrable domain, then abort these steps and
         ignore the newly created cookie entirely.
 
     2.  If the cookie was received from a "same-site" request (as defined in
