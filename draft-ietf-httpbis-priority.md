@@ -83,6 +83,8 @@ Example HTTP requests and responses use the HTTP/2-style formatting from
 This document uses the variable-length integer encoding from
 {{!I-D.ietf-quic-transport}}.
 
+The terms "user agent" and "origin server" in this document
+are to be interpreted as described in {{?RFC7230}}. 
 
 # Motivation for Replacing HTTP/2 Priorities {#motivation}
 
@@ -592,9 +594,9 @@ Contrary to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
 the Priority header field is defined as end-to-end.
 
 The rationale is that the Priority header field transmits how each response
-affects the client's processing of those responses, rather than how relatively
-urgent each response is to others.  The way a client processes a response is a
-property associated to that client generating that request.  Not that of an
+affects the user agent's processing of those responses, rather than how relatively
+urgent each response is to others.  The way a user agent processes a response is a
+property associated to that user agent generating that request.  Not that of an
 intermediary.  Therefore, it is an end-to-end property.  How these end-to-end
 properties carried by the Priority header field affect the prioritization
 between the responses that share a connection is a hop-by-hop issue.
@@ -624,12 +626,12 @@ ordinary web browsing, at minimal complexity.
 However, that does not mean that the prioritization scheme would forever be
 stuck to the eight levels.  The design provides extensibility.  If deemed
 necessary, it would be possible to subdivide any of the eight urgency levels
-that are currently defined.  Or, a graphical user-agent could send a `visible`
+that are currently defined.  Or, a graphical user agent could send a `visible`
 parameter to indicate if the resource being requested is within the viewport.
 
-A server can combine the hints provided in the Priority header field with other
-information in order to improve the prioritization of responses.  For example, a
-server that receives requests for a font {{?RFC8081}} and images with the same
+An origin server can combine the hints provided in the Priority header field with other
+information in order to improve the prioritization of responses.  For example, an
+origin server that receives requests for a font {{?RFC8081}} and images with the same
 urgency might give higher precedence to the font, so that a visual client can
 render textual information at an early moment.
 
