@@ -52,12 +52,12 @@ by the retrieval of a CSS file that the document refers to.  In contrast, inline
 images do not block rendering and get drawn incrementally as the chunks of the
 images arrive.
 
-To provide meaningful representation of a document at the earliest moment, it is
+To provide meaningful presentation of a document at the earliest moment, it is
 important for an HTTP server to prioritize the HTTP responses, or the chunks of
 those HTTP responses, that it sends.
 
 HTTP/2 ({{?RFC7540}}) provides such a prioritization scheme. A client sends a
-series of PRIORITY frames to communicate to the server a “priority tree”; this
+series of PRIORITY frames to communicate to the server a "priority tree"; this
 represents the client's preferred ordering and weighted distribution of the
 bandwidth among the HTTP responses. However, the design and implementation of
 this scheme has been observed to have shortcomings, explained in {{motivation}}.
@@ -471,9 +471,9 @@ PRIORITY_UPDATE on wrong stream, a PRIORITY_UPDATE with an invalid ID, etc.
 It is not always the case that the client has the best understanding of how the
 HTTP responses deserve to be prioritized. For example, use of an HTML document
 might depend heavily on one of the inline images. Existence of such
-dependencies is typically best known to the server.
+dependencies is typically best known to the origin server.
 
-By using the "Priority" response header, a server can override the
+By using the "Priority" response header, an origin server can override the
 prioritization hints provided by the client. When used, the parameters found
 in the response header field overrides those specified by the client.
 
@@ -487,7 +487,7 @@ For example, when the client sends an HTTP request with
 priority = u=4, i=?1
 ~~~
 
-and the origin responds with
+and the origin server responds with
 
 ~~~ example
 :status = 200
@@ -498,7 +498,7 @@ priority = u=2
 the intermediary's understanding of the urgency is promoted from `4` to `2`,
 because the server-provided value overrides the value provided by the client.
 The incremental value continues to be `1`, the value specified by the client,
-as the server did not specify the incremental(`i`) parameter.
+as the origin server did not specify the incremental(`i`) parameter.
 
 
 # Security Considerations
@@ -524,21 +524,21 @@ one HTTP/2 or HTTP/3 connection going to the backend server, requests that
 originate from one client might have higher precedence than those coming from
 others.
 
-It is sometimes beneficial for the server running behind an intermediary to obey
+It is sometimes beneficial for the origin server running behind an intermediary to obey
 to the value of the Priority header field. As an example, a resource-constrained
 server might defer the transmission of software update files that would have the
 background urgency being associated. However, in the worst case, the asymmetry
 between the precedence declared by multiple clients might cause responses going
 to one end client to be delayed totally after those going to another.
 
-In order to mitigate this fairness problem, when a server responds to a request
-that is known to have come through an intermediary, the server SHOULD prioritize
+In order to mitigate this fairness problem, when an origin server responds to a request
+that is known to have come through an intermediary, the origin server SHOULD prioritize
 the response as if it was assigned the priority of  `u=1, i=?1`
 (i.e. round-robin) regardless of the value of the Priority header field being
-transmitted, unless the server knows the intermediary is not
+transmitted, unless the origin server knows the intermediary is not
 coalescing requests from multiple clients.
 
-A server can determine if a request came from an intermediary through
+An origin server can determine if a request came from an intermediary through
 configuration, or by consulting if that request contains one of the following
 header fields:
 
@@ -576,7 +576,7 @@ over others, knowing that doing so introduces a certain amount of unfairness
 between the connections and therefore between the requests served on those
 connections.
 
-For example, a server might use a scavenging congestion controller on
+For example, an origin server might use a scavenging congestion controller on
 connections that only convey background priority responses such as software
 update images. Doing so improves responsiveness of other connections at the cost
 of delaying the delivery of updates.
