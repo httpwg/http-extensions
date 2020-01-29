@@ -2101,6 +2101,13 @@ Specification document:
 *  Clarified behavior of multiple `SameSite` attributes in a cookie string:
    <https://github.com/httpwg/http-extensions/issues/901>
 
+## draft-ietf-httpbis-rfc6265bis-05
+
+*  Typos and editorial fixes:
+   <https://github.com/httpwg/http-extensions/pull/1035>,
+   <https://github.com/httpwg/http-extensions/pull/1038>,
+   <https://github.com/httpwg/http-extensions/pull/1040>.
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is a minor update of
