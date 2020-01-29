@@ -328,7 +328,7 @@ in Section 4.2.1 of {{RFC7231}}.
 
 A domain's "public suffix" is the portion of a domain that is controlled by a
 public registry, such as "com", "co.uk", and "pvt.k12.wy.us" {{PSL}}. A domain's
-"registerable domain" is the domain's public suffix plus the label to its left.
+"registrable domain" is the domain's public suffix plus the label to its left.
 That is, for `https://www.site.example`, the public suffix is `example`, and the
 registrable domain is `site.example`. This concept is defined more rigorously in
 {{PSL}}, which specifies a formal algorithm to obtain both.
