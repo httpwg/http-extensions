@@ -1526,7 +1526,7 @@ agent MUST evict cookies in the following priority order:
 4.  All cookies.
 
 If two cookies have the same removal priority, the user agent MUST evict the
-cookie with the earliest last-access date first.
+cookie with the earliest last-access-time first.
 
 When "the current session is over" (as defined by the user agent), the user
 agent MUST remove from the cookie store all cookies with the persistent-flag
