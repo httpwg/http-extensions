@@ -359,7 +359,7 @@ Parsers MUST support dictionaries containing at least 1024 name/value pairs, and
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), decimal ({{decimal}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated parameters ({{param}}).
+An item can be a integer ({{integer}}), decimal ({{decimal}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated parameters ({{param}}).
 
 The ABNF for items in HTTP headers is:
 
