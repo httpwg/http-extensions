@@ -1294,7 +1294,7 @@ rely on unsafe HTTP methods (like `POST`), but does not offer a robust defense
 against CSRF as a general category of attack:
 
 1. Attackers can still pop up new windows or trigger top-level navigations in
-   order to create a "same-site" request (as described in section 5.2.1), which
+   order to create a "same-site" request (as described in {{document-requests}}), which
    is only a speedbump along the road to exploitation.
 
 2. Features like `<link rel='prerender'>` {{prerendering}} can be exploited
