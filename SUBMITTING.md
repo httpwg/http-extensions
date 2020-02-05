@@ -35,4 +35,4 @@ When you're ready to submit a new version of a draft:
 
 4. Add "Since draft-ietf-httpbis-<name>-...-NN" subsection to "Changes" (if tracking them).
 
-
+Note: This process requires that the email address used to author the tag in step 3 matches an active IETF account. To that it, it might be necessary to configure the email address used for commits to this repository via `git config --local user.email mail@huzzah.example`.
