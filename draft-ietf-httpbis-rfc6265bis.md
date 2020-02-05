@@ -1294,8 +1294,8 @@ rely on unsafe HTTP methods (like `POST`), but does not offer a robust defense
 against CSRF as a general category of attack:
 
 1. Attackers can still pop up new windows or trigger top-level navigations in
-   order to create a "same-site" request (as described in section 2.1), which is
-   only a speedbump along the road to exploitation.
+   order to create a "same-site" request (as described in section 5.2.1), which
+   is only a speedbump along the road to exploitation.
 
 2. Features like `<link rel='prerender'>` {{prerendering}} can be exploited
    to create "same-site" requests without the risk of user detection.
@@ -2106,7 +2106,8 @@ Specification document:
 *  Typos and editorial fixes:
    <https://github.com/httpwg/http-extensions/pull/1035>,
    <https://github.com/httpwg/http-extensions/pull/1038>,
-   <https://github.com/httpwg/http-extensions/pull/1040>.
+   <https://github.com/httpwg/http-extensions/pull/1040>,
+   <https://github.com/httpwg/http-extensions/pull/1047>.
 
 # Acknowledgements
 {:numbered="false"}
