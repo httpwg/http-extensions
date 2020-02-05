@@ -185,9 +185,8 @@ In both cases, the set of priority parameters is encoded as a Structured Headers
 Dictionary ({{!STRUCTURED-HEADERS}}).
 
 This document defines the urgency(`u`) and incremental(`i`) parameters. When
-used, these parameters MUST be accompanied by values. When receiving an HTTP
-request that does not carry these priority parameters, a server SHOULD act as if
-the default values were specified.
+receiving an HTTP request that does not carry these priority parameters, a
+server SHOULD act as if the default values were specified.
 
 Unknown parameters, parameters with out-of-range values or values of unexpected
 types MUST be ignored.
