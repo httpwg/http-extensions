@@ -409,7 +409,7 @@ might depend heavily on one of the inline images. Existence of such
 dependencies is typically best known to the server.
 
 An origin can use the Priority response header field to indicate its view on how
-an HTTP response should be proioritized. When forwarding an HTTP response with
+an HTTP response should be prioritized. When forwarding an HTTP response with
 the Priority response header field, an intermediary can use the parameters being
 found in that response instead of those found in the request.
 
