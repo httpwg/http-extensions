@@ -527,7 +527,7 @@ Given an array of (member_value, parameters) tuples as input_list, return an ASC
    1. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
    2. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
    3. If more member_values remain in input_list:
-      1. Append a COMMA to output.
+      1. Append "," to output.
       2. Append a single SP to output.
 3. Return output.
 
@@ -580,7 +580,7 @@ Given an ordered dictionary as input_dictionary (each member having a member_nam
       2. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
       3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
 4. If more members remain in input_dictionary:
-      1. Append a COMMA to output.
+      1. Append "," to output.
       2. Append a single SP to output.
 3. Return output.
 
@@ -724,7 +724,7 @@ Given an ASCII string as input_string, return an array of (item_or_inner_list, p
    1. Append the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string to members.
    2. Discard any leading SP characters from input_string.
    3. If input_string is empty, return members.
-   4. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   4. Consume the first character of input_string; if it is not ",", fail parsing.
    5. Discard any leading SP characters from input_string.
    6. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return members (which is empty).
@@ -773,7 +773,7 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
    4. Add name this_key with value member to dictionary. If dictionary already contains a name this_key (comparing character-for-character), overwrite its value.
    5. Discard any leading SP characters from input_string.
    6. If input_string is empty, return dictionary.
-   7. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   7. Consume the first character of input_string; if it is not ",", fail parsing.
    8. Discard any leading SP characters from input_string.
    9. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
