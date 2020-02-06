@@ -215,7 +215,7 @@ priority = u=2
 
 A client that fetches a document that likely consists of multiple HTTP resources
 (e.g., HTML) SHOULD assign the default urgency level to the main resource.  This
-convention provides the servers the capability of refining the urgency using
+convention allows servers to refine the urgency using
 knowledge specific to the web-site (see {{merging}}).
 
 The lowest urgency level (7) is reserved for background tasks such as delivery
