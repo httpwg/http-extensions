@@ -548,7 +548,7 @@ Given an array of (member_value, parameters) tuples as inner_list, and parameter
 Given an ordered dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP header value.
 
 0. Let output be an empty string.
-1. For each parameter-name with a value of param_value in input_parameters:
+1. For each param_name with a value of param_value in input_parameters:
    1. Append ";" to output.
    2. Append the result of running Serializing a Key ({{ser-key}}) with param_name to output.
    4. If param_value is not Boolean true:
@@ -587,7 +587,7 @@ Given an ordered dictionary as input_dictionary (each member having a member_nam
 
 ### Serializing an Item {#ser-item}
 
-Given an item bare_item and parameters item_parameters as input, return an ASCII string suitable for use in a HTTP header value.
+Given an item as bare_item and parameters item_parameters as input, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
 2. Append the result of running Serializing a Bare Item {{ser-bare-item}} with bare_item to output.
@@ -824,7 +824,7 @@ Given an ASCII string as input_string, return a key. input_string is modified to
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. If the first character of input_string is not one of lcalpha, DIGIT, "\_", "-", ".", or "\*", return output_string.
-   2. Let char be the result of removing the first character of input_string.
+   2. Let char be the result of consuming the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
 
