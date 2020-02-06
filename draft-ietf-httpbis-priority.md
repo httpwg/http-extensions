@@ -436,7 +436,7 @@ content-type = image/png
 priority = u=2
 ~~~
 
-the intermediary might alter its understanding of the urgency from `4` to `2`,
+the intermediary might alter its understanding of the urgency from `5` to `2`,
 because the server-provided value overrides the value provided by the client.
 The incremental value continues to be `1`, the value specified by the client,
 as the server did not specify the incremental(`i`) parameter.
