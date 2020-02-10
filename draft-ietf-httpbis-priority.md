@@ -186,7 +186,10 @@ Dictionary ({{!STRUCTURED-HEADERS}}).
 
 This document defines the urgency(`u`) and incremental(`i`) parameters. When
 receiving an HTTP request that does not carry these priority parameters, a
-server SHOULD act as if the default values were specified.
+server SHOULD act as if their default values were specified. Note that handling
+of omitted parameters is different when processing an HTTP response; see
+{{merging}}.
+
 
 Unknown parameters, parameters with out-of-range values or values of unexpected
 types MUST be ignored.
