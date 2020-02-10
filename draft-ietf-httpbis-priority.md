@@ -196,21 +196,21 @@ types MUST be ignored.
 The urgency parameter (`u`) takes an integer between 0 and 7, in descending
 order of priority.
 
-The value is encoded as an sh-integer. The default value is 3.
+The value is encoded as an sh-integer. The default value is 1.
 
 This parameter indicates the sender's recommendation, based on the expectation
 that the server would transmit HTTP responses in the order of their urgency
 values if possible. The smaller the value, the higher the precedence.
 
 The following example shows a request for a CSS file with the urgency set to
-`2`:
+`0`:
 
 ~~~ example
 :method = GET
 :scheme = https
 :authority = example.net
 :path = /style.css
-priority = u=2
+priority = u=0
 ~~~
 
 A client that fetches a document that likely consists of multiple HTTP resources
@@ -433,10 +433,10 @@ and the origin responds with
 ~~~ example
 :status = 200
 content-type = image/png
-priority = u=2
+priority = u=1
 ~~~
 
-the intermediary might alter its understanding of the urgency from `5` to `2`,
+the intermediary might alter its understanding of the urgency from `5` to `1`,
 because the server-provided value overrides the value provided by the client.
 The incremental value continues to be `1`, the value specified by the client,
 as the server did not specify the incremental(`i`) parameter.
