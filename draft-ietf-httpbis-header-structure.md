@@ -704,7 +704,7 @@ Given an array of bytes input_bytes that represents the chosen header's field-va
 
 When generating input_bytes, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
 
-For Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
+For Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual members of the top-level data structure are not split across multiple header instances.
 
 Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser.
 
