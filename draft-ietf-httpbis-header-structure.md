@@ -64,7 +64,7 @@ informative:
 
 --- abstract
 
-This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header fields. It is intended for use by specifications of new HTTP header fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
+This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields. It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
 
 
 --- note_Note_to_Readers
@@ -83,21 +83,21 @@ Implementations are tracked at <https://github.com/httpwg/wiki/wiki/Structured-H
 
 # Introduction
 
-Specifying the syntax of new HTTP header fields is an onerous task; even with the guidance in Section 8.3.1 of {{?RFC7231}}, there are many decisions -- and pitfalls -- for a prospective HTTP header field author.
+Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in Section 8.3.1 of {{?RFC7231}}, there are many decisions -- and pitfalls -- for a prospective HTTP field author.
 
-Once a header field is defined, bespoke parsers and serializers often need to be written, because each header has slightly different handling of what looks like common syntax.
+Once a field is defined, bespoke parsers and serializers often need to be written, because each field value has slightly different handling of what looks like common syntax.
 
-This document introduces a set of common data structures for use in definitions of new HTTP header field values to address these problems. In particular, it defines a generic, abstract model for header field values, along with a concrete serialisation for expressing that model in HTTP {{?RFC7230}} header fields.
+This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialisation for expressing that model in HTTP {{?RFC7230}} header and trailer fields.
 
-HTTP headers that are defined as "Structured Headers" use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition by specification writers and handling by implementations.
+HTTP headers and trailers that are defined as "Structured Headers" (or "Structured Trailers", respectively) use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition by specification writers and handling by implementations.
 
-Additionally, future versions of HTTP can define alternative serialisations of the abstract model of these structures, allowing headers that use it to be transmitted more efficiently without being redefined.
+Additionally, future versions of HTTP can define alternative serialisations of the abstract model of these structures, allowing fields that use it to be transmitted more efficiently without being redefined.
 
-Note that it is not a goal of this document to redefine the syntax of existing HTTP headers; the mechanisms described herein are only intended to be used with headers that explicitly opt into them.
+Note that it is not a goal of this document to redefine the syntax of existing HTTP fields; the mechanisms described herein are only intended to be used with those that explicitly opt into them.
 
 {{specify}} describes how to specify a Structured Header.
 
-{{types}} defines a number of abstract data types that can be used in Structured Headers. Those abstract types can be serialized into and parsed from HTTP headers using the algorithms described in {{text}}.
+{{types}} defines a number of abstract data types that can be used in Structured Headers. Those abstract types can be serialized into and parsed from HTTP field values using the algorithms described in {{text}}.
 
 
 ## Intentionally Strict Processing {#strict}
@@ -108,7 +108,7 @@ It is designed to encourage faithful implementation and therefore good interoper
 
 In other words, strict processing is an intentional feature of this specification; it allows non-conformant input to be discovered and corrected by the producer early, and avoids both interoperability and security issues that might otherwise result.
 
-Note that as a result of this strictness, if a header field is appended to by multiple parties (e.g., intermediaries, or different components in the sender), an error in one party's value is likely to cause the entire header field to fail parsing.
+Note that as a result of this strictness, if a field is appended to by multiple parties (e.g., intermediaries, or different components in the sender), an error in one party's value is likely to cause the entire field value to fail parsing.
 
 
 ## Notational Conventions
@@ -120,36 +120,36 @@ shown here.
 
 This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar rule from {{!RFC7230}}.
 
-When parsing from HTTP header fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
+When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
 
-For serialisation to header fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behaviour so long as the output still matches the ABNF.
+For serialisation to HTTP fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behaviour so long as the output still matches the ABNF.
 
 
 # Defining New Structured Headers {#specify}
 
-To specify a HTTP header as a structured header, its authors needs to:
+To specify a HTTP field as a Structured Header (or Structured Trailer), its authors needs to:
 
-* Reference this specification. Recipients and generators of the header need to know that the requirements of this document are in effect.
+* Reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
 
-* Specify the type of the header field itself; either Dictionary ({{dictionary}}), List ({{list}}), or Item ({{item}}).
+* Specify the type of the field value; either Dictionary ({{dictionary}}), List ({{list}}), or Item ({{item}}).
 
 * Define the semantics of those structures.
 
 * Specify any additional constraints upon the structures used, as well as the consequences when those constraints are violated.
 
-Typically, this means that a header definition will specify the top-level type -- Dictionary, List or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, inner lists are only valid when a header definition explicitly allows them.
+Typically, this means that a field definition will specify the top-level type -- Dictionary, List or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, inner lists are only valid when a field definition explicitly allows them.
 
-When Structured Headers parsing fails, the header is ignored (see {{text-parse}}); in most situations, violating header-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the header requires different error handling, this should be explicitly specified.
+When Structured Headers parsing fails, the field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the field requires different error handling, this should be explicitly specified.
 
-However, both items and inner lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, header specifications are discouraged from defining the presence of an unrecognised parameter as an error condition.
+However, both items and inner lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, field specifications are discouraged from defining the presence of an unrecognised parameter as an error condition.
 
-To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a header definition can specify that "grease" parameters be added by senders. For example, a specification could stipulate that all parameters beginning with the letter 'q' are reserved for this use.
+To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a field definition can specify that "grease" parameters be added by senders. For example, a specification could stipulate that all parameters beginning with the letter 'q' are reserved for this use.
 
-Note that a header field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and decimals, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, header field definitions can only use Structured Headers for the entire header field value, not a portion thereof.
+Note that a field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and decimals, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, field definitions can only use Structured Headers for the entire field value, not a portion thereof.
 
-This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but header authors should be aware that HTTP implementations do impose various limits on the size of individual header fields, the total number of fields, and/or the size of the entire header block.
+This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
 
-Specifications can refer to a Structured Header's field-name as a "structured header name" and its field-value as a "structured header value" as necessary. Header definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for their use.
+Specifications can refer to a Structured Header's field name as a "structured header name" and its field value as a "structured header value" as necessary. Field definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for their use.
 
 For example, a fictitious Foo-Example header field might be specified as:
 
@@ -187,11 +187,11 @@ For example:
 
 # Structured Data Types {#types}
 
-This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP headers.
+This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP field values.
 
 In summary:
 
-* There are three top-level types that a HTTP header can be defined as; Lists, Dictionaries, and Items.
+* There are three top-level types that a HTTP header or trailer field can be defined as; Lists, Dictionaries, and Items.
 
 * Lists and Dictionaries are containers; their members can be Items or Inner Lists (which are themselves lists of items).
 
@@ -202,22 +202,22 @@ In summary:
 
 Lists are arrays of zero or more members, each of which can be an item ({{item}}) or an inner list ({{inner-list}}), both of which can be parameterised ({{param}}).
 
-The ABNF for lists in HTTP headers is:
+The ABNF for lists in HTTP fields is:
 
 ~~~ abnf
 sh-list       = list-member *( *SP "," *SP list-member )
 list-member   = sh-item / inner-list
 ~~~
 
-In HTTP headers, each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
+Each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
 
 ~~~ example
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
-In HTTP headers, an empty list is denoted by not serialising the header at all.
+An empty list is denoted by not serialising the header at all.
 
-Note that lists can have their members split across multiple instances inside a block of fields; for example, the following are equivalent:
+Note that lists can have their members split across multiple lines inside a header or trailer section, as per Section 3.2.2 of {{?RFC7230}}; for example, the following are equivalent:
 
 ~~~ example
 Example-Hdr: foo, bar
@@ -230,23 +230,23 @@ Example-Hdr: foo
 Example-Hdr: bar
 ~~~
 
-However, members of a list cannot be safely split between instances; see {{text-parse}} for details.
+However, individual members of a list cannot be safely split between across lines; see {{text-parse}} for details.
 
-Parsers MUST support lists containing at least 1024 members. Header specifications can constrain the types and cardinality of individual list values as they require.
+Parsers MUST support lists containing at least 1024 members. Field specifications can constrain the types and cardinality of individual list values as they require.
 
 
 ### Inner Lists {#inner-list}
 
 An inner list is an array of zero or more items ({{item}}). Both the individual items and the inner-list itself can be parameterised ({{param}}).
 
-The ABNF for inner-lists in HTTP headers is:
+The ABNF for inner-lists is:
 
 ~~~ abnf
 inner-list    = "(" *SP [ sh-item *( 1*SP sh-item ) *SP ] ")"
                 *parameter
 ~~~
 
-In HTTP headers, inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of inner-lists of strings could look like:
+Inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of inner-lists of strings could look like:
 
 ~~~ example
 Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
@@ -260,14 +260,14 @@ A header field whose value is defined as a list of inner-lists with parameters a
 Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
 ~~~
 
-Parsers MUST support inner-lists containing at least 256 members. Header specifications can constrain the types and cardinality of individual inner-list members as they require.
+Parsers MUST support inner-lists containing at least 256 members. Field specifications can constrain the types and cardinality of individual inner-list members as they require.
 
 
 ### Parameters {#param}
 
 Parameters are an ordered map of key-values pairs that are associated with an item ({{item}}) or inner-list ({{inner-list}}). The keys are unique within the scope of a map of parameters, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
 
-The ABNF for parameters in HTTP headers is:
+The ABNF for parameters is:
 
 ~~~ abnf
 parameter     = ";" *SP param-name [ "=" param-value ]
@@ -277,7 +277,7 @@ lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
 
-In HTTP headers, parameters are separated from their item or inner-list and each other by semicolons. For example:
+Parameters are separated from their item or inner-list and each other by semicolons. For example:
 
 ~~~ example
 Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
@@ -291,7 +291,7 @@ Example-IntHeader: 1; a; b=?0
 
 Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in parameters.
 
-Parsers MUST support at least 256 parameters on an item or inner-list, and support parameter keys with at least 64 characters. Header specifications can constrain the types and cardinality of individual parameter names and values as they require.
+Parsers MUST support at least 256 parameters on an item or inner-list, and support parameter keys with at least 64 characters. Field specifications can constrain the types and cardinality of individual parameter names and values as they require.
 
 
 ## Dictionaries {#dictionary}
@@ -300,7 +300,7 @@ Dictionaries are ordered maps of name-value pairs, where the names are short, te
 
 Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
-The ABNF for dictionaries in HTTP headers is:
+The ABNF for dictionaries is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( *SP "," *SP dict-member )
@@ -309,7 +309,7 @@ member-name    = key
 member-value   = sh-item / inner-list
 ~~~
 
-In HTTP headers, members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
+Members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
 
 ~~~ example
 Example-DictHeader: en="Applepie", da=:w4ZibGV0w6ZydGU=:
@@ -335,11 +335,11 @@ A dictionary with a mix of singular and list values, some with parameters:
 Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid=?1
 ~~~
 
-As with lists, an empty dictionary is represented in HTTP headers by omitting the entire header field.
+As with lists, an empty dictionary is represented by omitting the entire header field.
 
-Typically, a header field specification will define the semantics of dictionaries by specifying the allowed type(s) for individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the header field's specification specifically disallows them.
+Typically, a field specification will define the semantics of dictionaries by specifying the allowed type(s) for individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the field's specification specifically disallows them.
 
-Note that dictionaries can have their members split across multiple instances inside a block of fields; for example, the following are equivalent:
+Note that dictionaries can have their members split across multiple lines inside a header or trailer section; for example, the following are equivalent:
 
 ~~~ example
 Example-Hdr: foo=1, bar=2
@@ -352,16 +352,16 @@ Example-Hdr: foo=1
 Example-Hdr: bar=2
 ~~~
 
-However, members of a dictionary cannot be safely split between instances; see {{text-parse}} for details.
+However, individual members of a dictionary cannot be safely split between lines; see {{text-parse}} for details.
 
 Parsers MUST support dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters.
 
 
 ## Items {#item}
 
-An item is can be a integer ({{integer}}), decimal ({{decimal}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated parameters ({{param}}).
+An item can be a integer ({{integer}}), decimal ({{decimal}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated parameters ({{param}}).
 
-The ABNF for items in HTTP headers is:
+The ABNF for items is:
 
 ~~~ abnf
 sh-item   = bare-item *parameter
@@ -386,7 +386,7 @@ Example-IntItemHeader: 5; foo=bar
 
 Integers have a range of −999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ({{IEEE754}}).
 
-The ABNF for integers in HTTP headers is:
+The ABNF for integers is:
 
 ~~~ abnf
 sh-integer = ["-"] 1*15DIGIT
@@ -406,7 +406,7 @@ Note that commas in integers are used in this section's prose only for readabili
 Decimals are numbers with an integer and a fractional component. The Integer component has at most 12 digits; the fractional component has at most three digits.
 
 
-The ABNF for decimals in HTTP headers is:
+The ABNF for decimals is:
 
 
 ~~~ abnf
@@ -424,7 +424,7 @@ Example-DecimalHeader: 4.5
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
-The ABNF for strings in HTTP headers is:
+The ABNF for strings is:
 
 ~~~ abnf
 sh-string = DQUOTE *(chr) DQUOTE
@@ -433,7 +433,7 @@ unescaped = %x20-21 / %x23-5B / %x5D-7E
 escaped   = "\" ( DQUOTE / "\" )
 ~~~
 
-In HTTP headers, strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
+Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
 ~~~ example
 Example-StringHeader: "hello world"
@@ -441,18 +441,18 @@ Example-StringHeader: "hello world"
 
 Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\\" can be escaped; other characters after "\\" MUST cause parsing to fail.
 
-Unicode is not directly supported in strings, because it causes a number of interoperability issues, and -- with few exceptions -- header values do not require it.
+Unicode is not directly supported in strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
 
 When it is necessary for a field value to convey non-ASCII content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably {{UTF-8}}).
 
-Parsers MUST support strings with at least 1024 characters.
+Parsers MUST support strings (after any decoding) with at least 1024 characters.
 
 
 ### Tokens {#token}
 
-Tokens are short textual words; their abstract model is identical to their expression in the HTTP header serialisation.
+Tokens are short textual words; their abstract model is identical to their expression in the HTTP field value serialisation.
 
-The ABNF for tokens in HTTP headers is:
+The ABNF for tokens is:
 
 ~~~ abnf
 sh-token = ( ALPHA / "\*" ) *( tchar / ":" / "/" )
@@ -467,14 +467,14 @@ Note that a Structured Header token allows the characters as the "token" ABNF ru
 
 Byte sequences can be conveyed in Structured Headers.
 
-The ABNF for a byte sequence in HTTP headers is:
+The ABNF for a byte sequence is:
 
 ~~~ abnf
 sh-binary = ":" *(base64) ":"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-In HTTP headers, a byte sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
+A byte sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
 Example-BinaryHdr: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
@@ -487,27 +487,27 @@ Parsers MUST support byte sequences with at least 16384 octets after decoding.
 
 Boolean values can be conveyed in Structured Headers.
 
-The ABNF for a Boolean in HTTP headers is:
+The ABNF for a Boolean is:
 
 ~~~ abnf
 sh-boolean = "?" boolean
 boolean    = "0" / "1"
 ~~~
 
-In HTTP headers, a boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
+A boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ example
 Example-BoolHdr: ?1
 ~~~
 
 
-# Working With Structured Headers in HTTP Headers {#text}
+# Working With Structured Headers in HTTP {#text}
 
-This section defines how to serialize and parse Structured Headers in header fields, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
+This section defines how to serialize and parse Structured Headers in field values, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
 
 ## Serializing Structured Headers {#text-serialize}
 
-Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP header value.
+Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP field value.
 
 1. If the structure is a Dictionary or List and its value is empty (i.e., it has no members), do not serialize the field at all (i.e., omit both the field-name and field-value).
 2. If the structure is a Dictionary, let output_string be the result of running Serializing a Dictionary ({{ser-dictionary}}) with the structure.
@@ -520,20 +520,20 @@ Given a structure defined in this specification, return an ASCII string suitable
 
 ### Serializing a List {#ser-list}
 
-Given an array of (member_value, parameters) tuples as input_list, return an ASCII string suitable for use in a HTTP header value.
+Given an array of (member_value, parameters) tuples as input_list, return an ASCII string suitable for use in a HTTP field value.
 
 1. Let output be an empty string.
 2. For each (member_value, parameters) of input_list:
    1. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
    2. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
    3. If more member_values remain in input_list:
-      1. Append a COMMA to output.
+      1. Append "," to output.
       2. Append a single SP to output.
 3. Return output.
 
 #### Serialising an Inner List {#ser-innerlist}
 
-Given an array of (member_value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in a HTTP header value.
+Given an array of (member_value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in a HTTP field value.
 
 1. Let output be the string "(".
 2. For each (member_value, parameters) of inner_list:
@@ -545,7 +545,7 @@ Given an array of (member_value, parameters) tuples as inner_list, and parameter
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP header value.
+Given an ordered dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP field value.
 
 0. Let output be an empty string.
 1. For each parameter-name with a value of param_value in input_parameters:
@@ -559,7 +559,7 @@ Given an ordered dictionary as input_parameters (each member having a param_name
 
 #### Serializing a Key {#ser-key}
 
-Given a key as input_key, return an ASCII string suitable for use in a HTTP header value.
+Given a key as input_key, return an ASCII string suitable for use in a HTTP field value.
 
 0. If input_key is not a sequence of characters, or contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
 1. If the first character of input_key is not lcalpha, fail parsing.
@@ -570,7 +570,7 @@ Given a key as input_key, return an ASCII string suitable for use in a HTTP head
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given an ordered dictionary as input_dictionary (each member having a member_name and a tuple value of (member_value, parameters)), return an ASCII string suitable for use in a HTTP header value.
+Given an ordered dictionary as input_dictionary (each member having a member_name and a tuple value of (member_value, parameters)), return an ASCII string suitable for use in a HTTP field value.
 
 1. Let output be an empty string.
 2. For each member_name with a value of (member_value, parameters) in input_dictionary:
@@ -580,14 +580,14 @@ Given an ordered dictionary as input_dictionary (each member having a member_nam
       2. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
       3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
 4. If more members remain in input_dictionary:
-      1. Append a COMMA to output.
+      1. Append "," to output.
       2. Append a single SP to output.
 3. Return output.
 
 
 ### Serializing an Item {#ser-item}
 
-Given an item bare_item and parameters item_parameters as input, return an ASCII string suitable for use in a HTTP header value.
+Given an item bare_item and parameters item_parameters as input, return an ASCII string suitable for use in a HTTP field value.
 
 1. Let output be an empty string.
 2. Append the result of running Serializing a Bare Item {{ser-bare-item}} with bare_item to output.
@@ -597,7 +597,7 @@ Given an item bare_item and parameters item_parameters as input, return an ASCII
 
 #### Serialising a Bare Item {#ser-bare-item}
 
-Given an item as input_item, return an ASCII string suitable for use in a HTTP header value.
+Given an item as input_item, return an ASCII string suitable for use in a HTTP field value.
 
 1. If input_item is an integer, return the result of running Serializing an Integer ({{ser-integer}}) with input_item.
 2. If input_item is a decimal, return the result of running Serializing a Decimal ({{ser-decimal}}) with input_item.
@@ -610,7 +610,7 @@ Given an item as input_item, return an ASCII string suitable for use in a HTTP h
 
 ### Serializing an Integer {#ser-integer}
 
-Given an integer as input_integer, return an ASCII string suitable for use in a HTTP header value.
+Given an integer as input_integer, return an ASCII string suitable for use in a HTTP field value.
 
 0. If input_integer is not an integer in the range of −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialisation.
 1. Let output be an empty string.
@@ -621,7 +621,7 @@ Given an integer as input_integer, return an ASCII string suitable for use in a 
 
 ### Serializing a Decimal {#ser-decimal}
 
-Given a decimal number as input_decimal, return an ASCII string suitable for use in a HTTP header value.
+Given a decimal number as input_decimal, return an ASCII string suitable for use in a HTTP field value.
 
 1. If input_decimal is not a decimal number, fail serialisation.
 2. If input_decimal has more than three significant digits to the right of the decimal point, round it to three decimal places, rounding the final digit to the nearest value, or to the even value if it is equidistant.
@@ -637,7 +637,7 @@ Given a decimal number as input_decimal, return an ASCII string suitable for use
 
 ### Serializing a String {#ser-string}
 
-Given a string as input_string, return an ASCII string suitable for use in a HTTP header value.
+Given a string as input_string, return an ASCII string suitable for use in a HTTP field value.
 
 0. If input_string is not a sequence of characters, or contains characters in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail serialisation.
 1. Let output be an empty string.
@@ -652,7 +652,7 @@ Given a string as input_string, return an ASCII string suitable for use in a HTT
 
 ### Serializing a Token {#ser-token}
 
-Given a token as input_token, return an ASCII string suitable for use in a HTTP header value.
+Given a token as input_token, return an ASCII string suitable for use in a HTTP field value.
 
 0. If input_token is not a sequence of characters, the first character is not ALPHA or "\*", or the remaining contain a character not in tchar, ":" or "/", fail serialisation.
 1. Let output be an empty string.
@@ -662,7 +662,7 @@ Given a token as input_token, return an ASCII string suitable for use in a HTTP 
 
 ### Serializing a Byte Sequence {#ser-binary}
 
-Given a byte sequence as input_bytes, return an ASCII string suitable for use in a HTTP header value.
+Given a byte sequence as input_bytes, return an ASCII string suitable for use in a HTTP field value.
 
 0. If input_bytes is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
@@ -678,7 +678,7 @@ Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Se
 
 ### Serializing a Boolean {#ser-boolean}
 
-Given a Boolean as input_boolean, return an ASCII string suitable for use in a HTTP header value.
+Given a Boolean as input_boolean, return an ASCII string suitable for use in a HTTP field value.
 
 0. If input_boolean is not a boolean, fail serialisation.
 1. Let output be an empty string.
@@ -688,32 +688,32 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in a H
 5. Return output.
 
 
-## Parsing Header Fields into Structured Headers {#text-parse}
+## Parsing Fields into Structured Headers {#text-parse}
 
-When a receiving implementation parses HTTP header fields that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
+When a receiving implementation parses HTTP fields that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an array of bytes input_bytes that represents the chosen header's field-value (which is empty if that header is not present), and header_type (one of "dictionary", "list", or "item"), return the parsed header value.
+Given an array of bytes input_bytes that represents the chosen field's field-value (which is empty if that field is not present), and field_type (one of "dictionary", "list", or "item"), return the parsed header value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading SP characters from input_string.
-2. If header_type is "list", let output be the result of running Parsing a List ({{parse-list}}) with input_string.
-3. If header_type is "dictionary", let output be the result of running Parsing a Dictionary ({{parse-dictionary}}) with input_string.
-4. If header_type is "item", let output be the result of running Parsing an Item ({{parse-item}}) with input_string.
+2. If field_type is "list", let output be the result of running Parsing a List ({{parse-list}}) with input_string.
+3. If field_type is "dictionary", let output be the result of running Parsing a Dictionary ({{parse-dictionary}}) with input_string.
+4. If field_type is "item", let output be the result of running Parsing an Item ({{parse-item}}) with input_string.
 5. Discard any leading SP characters from input_string.
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
-When generating input_bytes, parsers MUST combine all instances of the target header field into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the header is processed correctly.
+When generating input_bytes, parsers MUST combine all lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the entire field value is processed correctly.
 
-For Lists and Dictionaries, this has the effect of correctly concatenating all instances of the header field, as long as individual individual members of the top-level data structure are not split across multiple header instances.
+For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances.
 
-Strings split across multiple header instances will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser.
+Strings split across multiple field lines will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser.
 
-Tokens, Integers, Decimals and Byte Sequences cannot be split across multiple headers because the inserted commas will cause parsing to fail.
+Tokens, Integers, Decimals and Byte Sequences cannot be split across multiple field lines because the inserted commas will cause parsing to fail.
 
-If parsing fails -- including when calling another algorithm -- the entire header field's value MUST be ignored (i.e., treated as if the header field were not present in the message). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
+If parsing fails -- including when calling another algorithm -- the entire field value MUST be ignored (i.e., treated as if the field were not present in the section). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
 
-Note that this requirement does not apply to an implementation that is not parsing the header field; for example, an intermediary is not required to strip a failing header field from a message before forwarding it.
+Note that this requirement does not apply to an implementation that is not parsing the field; for example, an intermediary is not required to strip a failing header field from a message before forwarding it.
 
 
 ### Parsing a List {#parse-list}
@@ -725,7 +725,7 @@ Given an ASCII string as input_string, return an array of (item_or_inner_list, p
    1. Append the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string to members.
    2. Discard any leading SP characters from input_string.
    3. If input_string is empty, return members.
-   4. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   4. Consume the first character of input_string; if it is not ",", fail parsing.
    5. Discard any leading SP characters from input_string.
    6. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return members (which is empty).
@@ -774,7 +774,7 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
    4. Add name this_key with value member to dictionary. If dictionary already contains a name this_key (comparing character-for-character), overwrite its value.
    5. Discard any leading SP characters from input_string.
    6. If input_string is empty, return dictionary.
-   7. Consume the first character of input_string; if it is not COMMA, fail parsing.
+   7. Consume the first character of input_string; if it is not ",", fail parsing.
    8. Discard any leading SP characters from input_string.
    9. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
@@ -931,9 +931,9 @@ This draft has no actions for IANA.
 
 # Security Considerations
 
-The size of most types defined by Structured Headers is not limited; as a result, extremely large header fields could be an attack vector (e.g., for resource consumption). Most HTTP implementations limit the sizes of individual header fields as well as the overall header block size to mitigate such attacks.
+The size of most types defined by Structured Headers is not limited; as a result, extremely large fields could be an attack vector (e.g., for resource consumption). Most HTTP implementations limit the sizes of individual fields as well as the overall header or trailer section size to mitigate such attacks.
 
-It is possible for parties with the ability to inject new HTTP header fields to change the meaning
+It is possible for parties with the ability to inject new HTTP fields to change the meaning
 of a Structured Header. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
 --- back
@@ -947,25 +947,25 @@ Many thanks to Matthew Kerwin for his detailed feedback and careful consideratio
 
 ## Why not JSON?
 
-Earlier proposals for structured headers were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields required senders and recipients to implement specific additional handling.
+Earlier proposals for Structured Headers were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields required senders and recipients to implement specific additional handling.
 
 For example, JSON has specification issues around large numbers and objects with duplicate members. Although advice for avoiding these issues is available (e.g., {{?RFC7493}}), it cannot be relied upon.
 
 Likewise, JSON strings are by default Unicode strings, which have a number of potential interoperability issues (e.g., in comparison). Although implementers can be advised to avoid non-ASCII content where unnecessary, this is difficult to enforce.
 
-Another example is JSON's ability to nest content to arbitrary depths. Since the resulting memory commitment might be unsuitable (e.g., in embedded and other limited server deployments), it's necessary to limit it in some fashion; however, existing JSON implementations have no such limits, and even if a limit is specified, it's likely that some header field definition will find a need to violate it.
+Another example is JSON's ability to nest content to arbitrary depths. Since the resulting memory commitment might be unsuitable (e.g., in embedded and other limited server deployments), it's necessary to limit it in some fashion; however, existing JSON implementations have no such limits, and even if a limit is specified, it's likely that some field definition will find a need to violate it.
 
-Because of JSON's broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability. In short, if it looks like JSON, people will be tempted to use a JSON parser / serialiser on header fields.
+Because of JSON's broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability. In short, if it looks like JSON, people will be tempted to use a JSON parser / serialiser on field values.
 
 Since a major goal for Structured Headers is to improve interoperability and simplify implementation, these concerns led to a format that requires a dedicated parser and serializer.
 
-Additionally, there were widely shared feelings that JSON doesn't "look right" in HTTP headers.
+Additionally, there were widely shared feelings that JSON doesn't "look right" in HTTP fields.
 
 ## Structured Headers don't "fit" my data.
 
-Structured headers intentionally limits the complexity of data structures, to assure that it can be processed in a performant manner with little overhead. This means that work is necessary to fit some data types into them.
+Structured Headers intentionally limits the complexity of data structures, to assure that it can be processed in a performant manner with little overhead. This means that work is necessary to fit some data types into them.
 
-Sometimes, this can be achieved by creating limited substructures in values, and/or using more than one header. For example, consider:
+Sometimes, this can be achieved by creating limited substructures in field values, and/or using more than one field. For example, consider:
 
 ~~~ example
 Example-Thing: name="Widget", cost=89.2, descriptions=(foo bar)
@@ -975,9 +975,9 @@ Example-Description: foo; url="https://example.net"; context=123,
 
 Since the description contains an array of key/value pairs, we use a List to represent them, with the token for each item in the array used to identify it in the "descriptions" member of the Example-Thing dictionary header.
 
-When specifying more than one header, it's important to remember to describe what a processor's behaviour should be when one of the headers is missing.
+When specifying more than one field, it's important to remember to describe what a processor's behaviour should be when one of the fields is missing.
 
-If you need to fit arbitrarily complex data into a header, Structured Headers is probably a poor fit for your use case.
+If you need to fit arbitrarily complex data into a field value, Structured Headers is probably a poor fit for your use case.
 
 # Implementation Notes
 
@@ -985,7 +985,7 @@ A generic implementation of this specification should expose the top-level parse
 
 For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-header-tests>.
 
-Implementers should note that dictionaries and parameters are order-preserving maps. Some headers may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
+Implementers should note that dictionaries and parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
 
 Likewise, implementations should note that it's important to preserve the distinction between tokens and strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper "token" object or use a parameter on functions to assure that these types remain separate.
 
@@ -993,6 +993,12 @@ Likewise, implementations should note that it's important to preserve the distin
 # Changes
 
 _RFC Editor: Please remove this section before publication._
+
+## Since draft-ietf-httpbis-header-structure-15
+
+* Editorial improvements.
+* Use HTTP field terminology more consistently, in line with recent changes to HTTP-core.
+* String length requirements apply to decoded strings (#1051).
 
 
 ## Since draft-ietf-httpbis-header-structure-14
