@@ -999,6 +999,7 @@ _RFC Editor: Please remove this section before publication._
 * Editorial improvements.
 * Use HTTP field terminology more consistently, in line with recent changes to HTTP-core.
 * String length requirements apply to decoded strings (#1051).
+* Correctly round decimals in serialisation (#1043).
 
 
 ## Since draft-ietf-httpbis-header-structure-14
