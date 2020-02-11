@@ -217,7 +217,7 @@ Example-StrListHeader: "foo", "bar", "It was the best of times."
 
 In HTTP headers, an empty list is denoted by not serialising the header at all.
 
-Note that lists can have their members split across multiple instances inside a block of fields; for example, the following are equivalent:
+Note that lists can have their members split across multiple instances inside a block of fields, as per Section 3.2.2 of {{?RFC7230}}; for example, the following are equivalent:
 
 ~~~ example
 Example-Hdr: foo, bar
