@@ -445,7 +445,7 @@ Unicode is not directly supported in strings, because it causes a number of inte
 
 When it is necessary for a field value to convey non-ASCII content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably {{UTF-8}}).
 
-Parsers MUST support strings with at least 1024 characters.
+Parsers MUST support strings (after any decoding) with at least 1024 characters.
 
 
 ### Tokens {#token}
@@ -997,6 +997,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Editorial improvements.
 * Use HTTP field terminology more consistently, in line with recent changes to HTTP-core.
+* String length requirements apply to decoded strings (#1051).
 
 
 ## Since draft-ietf-httpbis-header-structure-14
