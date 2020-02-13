@@ -44,6 +44,7 @@ normative:
     ann: See {{idna-migration}} for an explanation why the normative reference to an obsoleted specification is needed.
   RFC4790:
   RFC5234:
+  RFC5226:
   RFC5890:
   RFC6454:
   RFC7230:
@@ -454,7 +455,7 @@ Cookie and Set-Cookie headers.
 The Set-Cookie HTTP response header is used to send cookies from the server to
 the user agent.
 
-### Syntax
+### Syntax {#abnf-syntax}
 
 Informally, the Set-Cookie response header contains the header name
 "Set-Cookie" followed by a ":" and a cookie. Each cookie begins with a
@@ -561,14 +562,14 @@ to the origin server (and not, for example, to any subdomains), and it expires
 at the end of the current session (as defined by the user agent). User agents
 ignore unrecognized cookie attributes (but not the entire cookie).
 
-#### The Expires Attribute
+#### The Expires Attribute {#attribute-expires}
 
 The Expires attribute indicates the maximum lifetime of the cookie,
 represented as the date and time at which the cookie expires. The user agent is
 not required to retain the cookie until the specified date has passed. In fact,
 user agents often evict cookies due to memory pressure or privacy concerns.
 
-#### The Max-Age Attribute
+#### The Max-Age Attribute {#attribute-max-age}
 
 The Max-Age attribute indicates the maximum lifetime of the cookie,
 represented as the number of seconds until the cookie expires. The user agent is
@@ -584,7 +585,7 @@ cookie has neither the Max-Age nor the Expires attribute, the user agent
 will retain the cookie until "the current session is over" (as defined by the
 user agent).
 
-#### The Domain Attribute
+#### The Domain Attribute {#attribute-domain}
 
 The Domain attribute specifies those hosts to which the cookie will be sent.
 For example, if the value of the Domain attribute is "site.example", the user
@@ -613,7 +614,7 @@ attributes that correspond to "public suffixes". For example, some user
 agents will reject Domain attributes of "com" or "co.uk". (See {{storage-model}} for
 more information.)
 
-#### The Path Attribute
+#### The Path Attribute {#attribute-path}
 
 The scope of each cookie is limited to a set of paths, controlled by the
 Path attribute. If the server omits the Path attribute, the user agent will
@@ -629,7 +630,7 @@ Although seemingly useful for isolating cookies between different paths within
 a given host, the Path attribute cannot be relied upon for security (see
 {{security-considerations}}).
 
-#### The Secure Attribute {#sane-secure}
+#### The Secure Attribute {#attribute-secure}
 
 The Secure attribute limits the scope of the cookie to "secure" channels
 (where "secure" is defined by the user agent). When a cookie has the Secure
@@ -642,7 +643,7 @@ the Secure attribute protects only the cookie's confidentiality. An active
 network attacker can overwrite Secure cookies from an insecure channel,
 disrupting their integrity (see {{weak-integrity}} for more details).
 
-#### The HttpOnly Attribute
+#### The HttpOnly Attribute {#attribute-httponly}
 
 The HttpOnly attribute limits the scope of the cookie to HTTP requests. In
 particular, the attribute instructs the user agent to omit the cookie when
@@ -652,7 +653,7 @@ exposes cookies to scripts).
 Note that the HttpOnly attribute is independent of the Secure attribute: a
 cookie can have both the HttpOnly and the Secure attribute.
 
-#### The SameSite Attribute
+#### The SameSite Attribute {#attribute-samesite}
 
 The "SameSite" attribute limits the scope of the cookie such that it will only
 be attached to requests if those requests are same-site, as defined by the
@@ -1806,7 +1807,7 @@ agent to another or from replaying the cookie at a later time.
 In addition to encrypting and signing the contents of every cookie, servers that
 require a higher level of security SHOULD use the Cookie and Set-Cookie
 headers only over a secure channel. When using cookies over a secure channel,
-servers SHOULD set the Secure attribute (see {{sane-secure}}) for every
+servers SHOULD set the Secure attribute (see {{attribute-secure}}) for every
 cookie. If a server does not set the Secure attribute, the protection
 provided by the secure channel will be largely moot.
 
@@ -1982,10 +1983,10 @@ identification that servers could take advantage of.
 
 # IANA Considerations
 
-The permanent message header field registry (see {{RFC3864}}) needs to be
-updated with the following registrations.
-
 ## Cookie {#iana-cookie}
+
+The permanent message header field registry (see {{RFC3864}}) needs to be
+updated with the following registration:
 
 Header field name:
 : Cookie
@@ -2004,6 +2005,9 @@ Specification document:
 
 ## Set-Cookie {#iana-set-cookie}
 
+The permanent message header field registry (see {{RFC3864}}) needs to be
+updated with the following registration:
+
 Header field name:
 : Set-Cookie
 
@@ -2018,6 +2022,34 @@ Author/Change controller:
 
 Specification document:
 : this specification ({{set-cookie}})
+
+## Cookie Attribute Registry
+
+The "Cookie Attribute Registry" defines the set of attribute names used to
+control cookies' behavior. The registry is maintained at <https://example.com/>.
+
+### Procedure
+
+Each registered attribute name is associated with a description, and a
+reference detailing how the attribute is to be processed and stored.
+
+New registrations happen on a "Standards Action" basis (see Section 4.1 of
+[RFC5226]). The attribute to be registered MUST match the `extension-av`
+syntax defined in {{abnf-syntax}}.
+
+### Registration
+
+The "Cookie Attribute Registry" will be updated with the registrations below:
+
+| Name     | Reference                              |
+|----------:+---------------------------------------|
+| Domain   | {{attribute-domain}} of this document  |
+| Expires  | {{attribute-expires}} of this document |
+| HttpOnly | {{attribute-httponly} of this document |
+| Max-Age  | {{attribute-max-age} of this document  |
+| Path     | {{attribute-path} of this document     |
+| SameSite | {{attribute-samesite} of this document |
+| Secure   | {{attribute-secure} of this document   |
 
 --- back
 
