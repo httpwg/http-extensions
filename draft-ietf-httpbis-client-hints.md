@@ -1,7 +1,7 @@
 ---
 title: HTTP Client Hints
 abbrev:
-docname: draft-ietf-httpbis-client-hints-08
+docname: draft-ietf-httpbis-client-hints-09
 date: {DATE}
 category: exp
 
