@@ -989,6 +989,8 @@ Implementers should note that dictionaries and parameters are order-preserving m
 
 Likewise, implementations should note that it's important to preserve the distinction between tokens and strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper "token" object or use a parameter on functions to assure that these types remain separate.
 
+The serialisation algorithm is defined in a way that it is not strictly limited to the data types defined in {{types}} in every case. For example, Decimals are designed to take broader input and round to allowed values.
+
 
 # Changes
 
@@ -1000,6 +1002,7 @@ _RFC Editor: Please remove this section before publication._
 * Use HTTP field terminology more consistently, in line with recent changes to HTTP-core.
 * String length requirements apply to decoded strings (#1051).
 * Correctly round decimals in serialisation (#1043).
+* Clarify input to serialisation algorithm (#1055).
 
 
 ## Since draft-ietf-httpbis-header-structure-14
