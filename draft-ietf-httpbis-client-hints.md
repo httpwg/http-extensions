@@ -304,7 +304,7 @@ Features that define Client Hints will need to specify the related variants algo
 * PR 1001: Clear CH persistence when cookies are cleared.
 
 ## Since -09
-* Fix merge issues with "cost of sending hints"
+* PR 1064: Fix merge issues with "cost of sending hints".
 
 
 # Acknowledgements
