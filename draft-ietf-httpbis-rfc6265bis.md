@@ -2025,17 +2025,19 @@ Specification document:
 
 ## Cookie Attribute Registry
 
-The "Cookie Attribute Registry" defines the set of attribute names used to
-control cookies' behavior. The registry is maintained at <https://example.com/>.
+The "Cookie Attribute Registry" defines the name space of attribute used to
+control cookies' behavior. The registry is maintained at
+<https://www.iana.org/assignments/cookie-attribute-names>.
 
 ### Procedure
 
 Each registered attribute name is associated with a description, and a
 reference detailing how the attribute is to be processed and stored.
 
-New registrations happen on a "Standards Action" basis (see Section 4.1 of
-[RFC5226]). The attribute to be registered MUST match the `extension-av`
-syntax defined in {{abnf-syntax}}.
+New registrations happen on a "RFC Required" basis (see Section 4.7 of
+[RFC8126]). The attribute to be registered MUST match the `extension-av`
+syntax defined in {{abnf-syntax}}. Note that attribute names are generally
+defined in CamelCase, but technically accepted case-insensitively.
 
 ### Registration
 
