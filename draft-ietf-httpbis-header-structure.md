@@ -561,11 +561,12 @@ Given an ordered dictionary as input_parameters (each member having a param_name
 
 Given a key as input_key, return an ASCII string suitable for use in a HTTP field value.
 
-0. If input_key is not a sequence of characters, or contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
-1. If the first character of input_key is not lcalpha, fail parsing.
-2. Let output be an empty string.
-3. Append input_key to output.
-4. Return output.
+0. Convert input_key into a sequence of ASCII characters; if conversion fails, fail serialization.
+1. If input_key contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
+2. If the first character of input_key is not lcalpha, fail parsing.
+3. Let output be an empty string.
+4. Append input_key to output.
+5. Return output.
 
 
 ### Serializing a Dictionary {#ser-dictionary}
@@ -639,25 +640,27 @@ Given a decimal number as input_decimal, return an ASCII string suitable for use
 
 Given a string as input_string, return an ASCII string suitable for use in a HTTP field value.
 
-0. If input_string is not a sequence of characters, or contains characters in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail serialisation.
-1. Let output be an empty string.
-2. Append DQUOTE to output.
-3. For each character char in input_string:
+0. Convert input_string into a sequence of ASCII characters; if conversion fails, fail serialization.
+1. If input_string contains characters in the range %x00-1f or %x7f (i.e., not in VCHAR or SP), fail serialisation.
+2. Let output be an empty string.
+3. Append DQUOTE to output.
+4. For each character char in input_string:
    1. If char is "\\" or DQUOTE:
       1. Append "\\" to output.
    2. Append char to output.
-4. Append DQUOTE to output.
-5. Return output.
+5. Append DQUOTE to output.
+6. Return output.
 
 
 ### Serializing a Token {#ser-token}
 
 Given a token as input_token, return an ASCII string suitable for use in a HTTP field value.
 
-0. If input_token is not a sequence of characters, the first character is not ALPHA or "\*", or the remaining contain a character not in tchar, ":" or "/", fail serialisation.
-1. Let output be an empty string.
-2. Append input_token to output.
-3. Return output.
+0. Convert input_token into a sequence of ASCII characters; if conversion fails, fail serialization.
+1. If the first character of input_token is not ALPHA or "\*", or the remaining portion contains a character not in tchar, ":" or "/", fail serialisation.
+2. Let output be an empty string.
+3. Append input_token to output.
+4. Return output.
 
 
 ### Serializing a Byte Sequence {#ser-binary}
@@ -1002,7 +1005,7 @@ _RFC Editor: Please remove this section before publication._
 * Use HTTP field terminology more consistently, in line with recent changes to HTTP-core.
 * String length requirements apply to decoded strings (#1051).
 * Correctly round decimals in serialisation (#1043).
-* Clarify input to serialisation algorithm (#1055).
+* Clarify input to serialisation algorithms (#1055).
 
 
 ## Since draft-ietf-httpbis-header-structure-14
