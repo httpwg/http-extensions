@@ -865,6 +865,10 @@ full list of trusted Certificate Authorities in every request. Senders,
 particularly clients, SHOULD send only the extensions that narrowly specify
 which certificates would be acceptable.
 
+Servers can also learn information about clients using this mechanism. The
+hostnames a user agent finds interesting and retrieves certificates for might
+indicate origins the user has previously accessed.
+
 ## Denial of Service
 
 Failure to provide a certificate for a stream after receiving
