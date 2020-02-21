@@ -825,9 +825,13 @@ vulnerability in the TLS handshake.
 This mechanism could increase the impact of a key compromise. Rather than
 needing to subvert DNS or IP routing in order to use a compromised certificate,
 a malicious server now only needs a client to connect to *some* HTTPS site under
-its control in order to present the compromised certificate. As recommended in
-{{?RFC8336}}, clients opting not to consult DNS ought to employ some alternative
-means to increase confidence that the certificate is legitimate.
+its control in order to present the compromised certificate. Clients SHOULD
+consult DNS for hostnames presented in secondary certificates if they would have
+done so for the same hostname if it were present in the primary certificate.
+
+As recommended in {{?RFC8336}}, clients opting not to consult DNS ought to
+employ some alternative means to increase confidence that the certificate is
+legitimate.
 
 One such means is the Required Domain certificate extension defined in
 {extension}. Clients MUST require that server certificates presented via this
