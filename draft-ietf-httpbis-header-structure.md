@@ -371,7 +371,7 @@ bare-item = sh-integer / sh-decimal / sh-string / sh-token / sh-binary
 
 For example, a header field that is defined to be an Item that is an integer might look like:
 
-~~~ exmample
+~~~ example
 Example-IntItemHeader: 5
 ~~~
 
