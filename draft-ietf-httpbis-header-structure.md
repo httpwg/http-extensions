@@ -1144,3 +1144,5 @@ _RFC Editor: Please remove this section before publication._
 {:numbered="false"}
 
 Many thanks to Matthew Kerwin for his detailed feedback and careful consideration during the development of this specification.
+
+Thanks also to Ian Clelland, Roy Fielding, Anne van Kesteren, Kazuho Oku, Evert Pot, Julian Reschke, Martin Thomson, Mike West, and Jeffrey Yasskin for their contributions.
