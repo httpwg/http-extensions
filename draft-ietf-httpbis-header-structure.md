@@ -455,7 +455,7 @@ Tokens are short textual words; their abstract model is identical to their expre
 The ABNF for tokens is:
 
 ~~~ abnf
-sh-token = ( ALPHA / "\*" ) *( tchar / ":" / "/" )
+sh-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 ~~~
 
 Parsers MUST support tokens with at least 512 characters.
