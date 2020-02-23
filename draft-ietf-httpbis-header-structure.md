@@ -932,7 +932,7 @@ Given an ASCII string as input_string, return a Boolean. input_string is modifie
 
 # IANA Considerations
 
-This draft has no actions for IANA.
+This document has no actions for IANA.
 
 # Security Considerations
 
