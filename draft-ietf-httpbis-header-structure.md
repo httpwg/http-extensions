@@ -139,7 +139,7 @@ To specify a HTTP field as a Structured Header (or Structured Trailer), its auth
 
 * Specify any additional constraints upon the structures used, as well as the consequences when those constraints are violated.
 
-Typically, this means that a field definition will specify the top-level type -- Dictionary, List or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, inner lists are only valid when a field definition explicitly allows them.
+Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, inner lists are only valid when a field definition explicitly allows them.
 
 When Structured Headers parsing fails, the field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the field requires different error handling, this should be explicitly specified.
 
