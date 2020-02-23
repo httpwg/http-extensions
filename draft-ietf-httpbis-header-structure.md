@@ -145,7 +145,7 @@ When Structured Headers parsing fails, the field is ignored (see {{text-parse}})
 
 However, both items and inner lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, field specifications are discouraged from defining the presence of an unrecognised parameter as an error condition.
 
-To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a field definition can specify that "grease" parameters be added by senders. For example, a specification could stipulate that all parameters beginning with the letter 'q' are reserved for this use.
+To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a field definition can specify that "grease" parameters be added by senders. For example, a specification could stipulate that all parameters beginning with the letter "h" are reserved for this use.
 
 Note that a field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and decimals, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, field definitions can only use Structured Headers for the entire field value, not a portion thereof.
 
