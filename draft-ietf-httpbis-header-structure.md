@@ -542,7 +542,7 @@ Given an array of (member_value, parameters) tuples as inner_list, and parameter
    1. Append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
    2. If more values remain in inner_list, append a single SP to output.
 3. Append ")" to output.
-4. Append the result of running Serializing Parameters {{ser-params}} with list_parameters to output.
+4. Append the result of running Serializing Parameters ({{ser-params}}) with list_parameters to output.
 5. Return output.
 
 #### Serializing Parameters {#ser-params}
