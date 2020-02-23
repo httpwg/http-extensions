@@ -944,10 +944,6 @@ of a Structured Header. In some circumstances, this will cause parsing to fail, 
 
 --- back
 
-# Acknowledgements
-
-Many thanks to Matthew Kerwin for his detailed feedback and careful consideration during the development of this specification.
-
 
 # Frequently Asked Questions {#faq}
 
@@ -996,7 +992,6 @@ Implementers should note that dictionaries and parameters are order-preserving m
 Likewise, implementations should note that it's important to preserve the distinction between tokens and strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper "token" object or use a parameter on functions to assure that these types remain separate.
 
 The serialisation algorithm is defined in a way that it is not strictly limited to the data types defined in {{types}} in every case. For example, Decimals are designed to take broader input and round to allowed values.
-
 
 # Changes
 
@@ -1143,3 +1138,9 @@ _RFC Editor: Please remove this section before publication._
 * Added signed 64bit integer type.
 * Drop UTF8, and settle on BCP137 ::EmbeddedUnicodeChar for h1-unicode-string.
 * Change h1_blob delimiter to ":" since "'" is valid t_char
+
+
+# Acknowledgements
+{:numbered="false"}
+
+Many thanks to Matthew Kerwin for his detailed feedback and careful consideration during the development of this specification.
