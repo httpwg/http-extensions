@@ -245,7 +245,7 @@ The ABNF for inner-lists is:
 
 ~~~ abnf
 inner-list    = "(" *SP [ sh-item *( 1*SP sh-item ) *SP ] ")"
-                *parameter
+                parameters
 ~~~
 
 Inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of inner-lists of strings could look like:
@@ -272,14 +272,15 @@ Parameters are an ordered map of key-values pairs that are associated with an it
 The ABNF for parameters is:
 
 ~~~ abnf
-parameter     = ";" *SP param-name [ "=" param-value ]
+parameters    = *( ";" *SP parameter )
+parameter     = param-name [ "=" param-value ]
 param-name    = key
 key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
 
-Parameters are separated from their item or inner-list and each other by semicolons. For example:
+A parameter is separated from its item or inner-list and other parameters by a semicolon. For example:
 
 ~~~ example
 Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
@@ -366,7 +367,7 @@ An item can be a integer ({{integer}}), decimal ({{decimal}}), string ({{string}
 The ABNF for items is:
 
 ~~~ abnf
-sh-item   = bare-item *parameter
+sh-item   = bare-item parameters
 bare-item = sh-integer / sh-decimal / sh-string / sh-token / sh-binary
             / sh-boolean
 ~~~
