@@ -176,7 +176,7 @@ The following parameters are defined:
   for the message. See below for processing requirements.
 
 "fooUrl" contains a URI-reference (Section 4.1 of
-[RFC3986], Section 4.1). If its value is not a valid URI-reference,
+[RFC3986]). If its value is not a valid URI-reference,
 that URL MUST be ignored. If its value is a relative reference
 (Section 4.2 of [RFC3986]), it MUST be resolved (Section 5 of
 [RFC3986]) before being used.
