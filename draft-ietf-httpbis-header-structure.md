@@ -97,7 +97,9 @@ Note that it is not a goal of this document to redefine the syntax of existing H
 
 {{specify}} describes how to specify a Structured Header.
 
-{{types}} defines a number of abstract data types that can be used in Structured Headers. Those abstract types can be serialized into and parsed from HTTP field values using the algorithms described in {{text}}.
+{{types}} defines a number of abstract data types that can be used in Structured Headers.
+
+Those abstract types can be serialized into and parsed from HTTP field values using the algorithms described in {{text}}.
 
 
 ## Intentionally Strict Processing {#strict}
