@@ -319,7 +319,7 @@ Features that define Client Hints will need to specify the related variants algo
 * PR 1064: Fix merge issues with "cost of sending hints".
 
 ## Since -10
-* PR ????: LC feedback from Julian Reschke
+* PR 1072: LC feedback from Julian Reschke
 
 
 # Acknowledgements
