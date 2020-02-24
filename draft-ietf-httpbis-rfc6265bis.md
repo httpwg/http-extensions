@@ -2143,6 +2143,11 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
    <https://github.com/httpwg/http-extensions/pull/1040>,
    <https://github.com/httpwg/http-extensions/pull/1047>.
 
+## draft-ietf-httpbis-rfc6265bis-06
+
+*  Created a registry for cookie attribute names:
+   <https://github.com/httpwg/http-extensions/pull/1060>.
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is a minor update of
