@@ -1,7 +1,7 @@
 ---
 title: HTTP Client Hints
 abbrev:
-docname: draft-ietf-httpbis-client-hints-08
+docname: draft-ietf-httpbis-client-hints-10
 date: {DATE}
 category: exp
 
@@ -212,14 +212,6 @@ Implementers ought to consider both user and server controlled mechanisms and po
 
 Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, cookies, or similar, are cleared.
 
-# Cost of Sending Hints
-
-While HTTP header compression schemes reduce the cost of adding HTTP header fields, sending Client Hints to the server incurs an increase in request byte size.
-Servers SHOULD take that into account when opting in to receive Client Hints, and SHOULD NOT opt-in to receive hints unless they are to be used for content adaptation purposes.
-
-Due to request byte size increase, features relying on this document to define Client Hints MAY consider restricting sending those hints to certain request destinations {{FETCH}}, where they are more likely to be useful. 
-
-
 ## Deployment and Security Risks
 Deployment of new request headers requires several considerations:
 
@@ -237,6 +229,13 @@ A user agent that tracks access to active fingerprinting information SHOULD cons
 
 Research into abuse of Client Hints might look at how HTTP responses that contain Client Hints differ from those with different values, and from those without. This might be used to reveal which Client Hints are in use, allowing researchers to further analyze that use.
 
+
+# Cost of Sending Hints
+
+While HTTP header compression schemes reduce the cost of adding HTTP header fields, sending Client Hints to the server incurs an increase in request byte size.
+Servers SHOULD take that into account when opting in to receive Client Hints, and SHOULD NOT opt-in to receive hints unless they are to be used for content adaptation purposes.
+
+Due to request byte size increase, features relying on this document to define Client Hints MAY consider restricting sending those hints to certain request destinations {{FETCH}}, where they are more likely to be useful. 
 
 
 # IANA Considerations
@@ -303,6 +302,9 @@ Features that define Client Hints will need to specify the related variants algo
 * PR 985: Describe the bytesize cost of hints.
 * PR 776: Add Sec- and CH- prefix considerations.
 * PR 1001: Clear CH persistence when cookies are cleared.
+
+## Since -09
+* PR 1064: Fix merge issues with "cost of sending hints".
 
 
 # Acknowledgements

@@ -97,7 +97,9 @@ Note that it is not a goal of this document to redefine the syntax of existing H
 
 {{specify}} describes how to specify a Structured Header.
 
-{{types}} defines a number of abstract data types that can be used in Structured Headers. Those abstract types can be serialized into and parsed from HTTP field values using the algorithms described in {{text}}.
+{{types}} defines a number of abstract data types that can be used in Structured Headers.
+
+Those abstract types can be serialized into and parsed from HTTP field values using the algorithms described in {{text}}.
 
 
 ## Intentionally Strict Processing {#strict}
@@ -118,7 +120,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar rule from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialisation behaviours, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar rule from {{!RFC7230}}.
 
 When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviours are indistinguishable from specified behaviour. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
 
@@ -137,13 +139,13 @@ To specify a HTTP field as a Structured Header (or Structured Trailer), its auth
 
 * Specify any additional constraints upon the structures used, as well as the consequences when those constraints are violated.
 
-Typically, this means that a field definition will specify the top-level type -- Dictionary, List or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, inner lists are only valid when a field definition explicitly allows them.
+Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, inner lists are only valid when a field definition explicitly allows them.
 
 When Structured Headers parsing fails, the field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the field requires different error handling, this should be explicitly specified.
 
 However, both items and inner lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, field specifications are discouraged from defining the presence of an unrecognised parameter as an error condition.
 
-To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a field definition can specify that "grease" parameters be added by senders. For example, a specification could stipulate that all parameters beginning with the letter 'q' are reserved for this use.
+To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a field definition can specify that "grease" parameters be added by senders. For example, a specification could stipulate that all parameters beginning with the letter "h" are reserved for this use.
 
 Note that a field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and decimals, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, field definitions can only use Structured Headers for the entire field value, not a portion thereof.
 
@@ -174,7 +176,7 @@ The following parameters are defined:
   for the message. See below for processing requirements.
 
 "fooUrl" contains a URI-reference (Section 4.1 of
-[RFC3986], Section 4.1). If its value is not a valid URI-reference,
+[RFC3986]). If its value is not a valid URI-reference,
 that URL MUST be ignored. If its value is a relative reference
 (Section 4.2 of [RFC3986]), it MUST be resolved (Section 5 of
 [RFC3986]) before being used.
@@ -243,7 +245,7 @@ The ABNF for inner-lists is:
 
 ~~~ abnf
 inner-list    = "(" *SP [ sh-item *( 1*SP sh-item ) *SP ] ")"
-                *parameter
+                parameters
 ~~~
 
 Inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of inner-lists of strings could look like:
@@ -270,14 +272,15 @@ Parameters are an ordered map of key-values pairs that are associated with an it
 The ABNF for parameters is:
 
 ~~~ abnf
-parameter     = ";" *SP param-name [ "=" param-value ]
+parameters    = *( ";" *SP parameter )
+parameter     = param-name [ "=" param-value ]
 param-name    = key
 key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
 
-Parameters are separated from their item or inner-list and each other by semicolons. For example:
+A parameter is separated from its item or inner-list and other parameters by a semicolon. For example:
 
 ~~~ example
 Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
@@ -364,14 +367,14 @@ An item can be a integer ({{integer}}), decimal ({{decimal}}), string ({{string}
 The ABNF for items is:
 
 ~~~ abnf
-sh-item   = bare-item *parameter
+sh-item   = bare-item parameters
 bare-item = sh-integer / sh-decimal / sh-string / sh-token / sh-binary
             / sh-boolean
 ~~~
 
 For example, a header field that is defined to be an Item that is an integer might look like:
 
-~~~ exmample
+~~~ example
 Example-IntItemHeader: 5
 ~~~
 
@@ -455,7 +458,7 @@ Tokens are short textual words; their abstract model is identical to their expre
 The ABNF for tokens is:
 
 ~~~ abnf
-sh-token = ( ALPHA / "\*" ) *( tchar / ":" / "/" )
+sh-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 ~~~
 
 Parsers MUST support tokens with at least 512 characters.
@@ -510,8 +513,8 @@ This section defines how to serialize and parse Structured Headers in field valu
 Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP field value.
 
 1. If the structure is a Dictionary or List and its value is empty (i.e., it has no members), do not serialize the field at all (i.e., omit both the field-name and field-value).
-2. If the structure is a Dictionary, let output_string be the result of running Serializing a Dictionary ({{ser-dictionary}}) with the structure.
-3. Else if the structure is a List, let output_string be the result of running Serializing a List ({{ser-list}}) with the structure.
+3. If the structure is a List, let output_string be the result of running Serializing a List ({{ser-list}}) with the structure.
+2. Else if the structure is a Dictionary, let output_string be the result of running Serializing a Dictionary ({{ser-dictionary}}) with the structure.
 4. Else if the structure is an Item, let output_string be the result of running Serializing an Item ({{ser-item}}) with the structure.
 5. Else, fail serialisation.
 6. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
@@ -540,7 +543,7 @@ Given an array of (member_value, parameters) tuples as inner_list, and parameter
    1. Append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
    2. If more values remain in inner_list, append a single SP to output.
 3. Append ")" to output.
-4. Append the result of running Serializing Parameters {{ser-params}} with list_parameters to output.
+4. Append the result of running Serializing Parameters ({{ser-params}}) with list_parameters to output.
 5. Return output.
 
 #### Serializing Parameters {#ser-params}
@@ -561,11 +564,12 @@ Given an ordered dictionary as input_parameters (each member having a param_name
 
 Given a key as input_key, return an ASCII string suitable for use in a HTTP field value.
 
-0. If input_key is not a sequence of characters, or contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
-1. If the first character of input_key is not lcalpha, fail parsing.
-2. Let output be an empty string.
-3. Append input_key to output.
-4. Return output.
+0. Convert input_key into a sequence of ASCII characters; if conversion fails, fail serialization.
+1. If input_key contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
+2. If the first character of input_key is not lcalpha, fail parsing.
+3. Let output be an empty string.
+4. Append input_key to output.
+5. Return output.
 
 
 ### Serializing a Dictionary {#ser-dictionary}
@@ -639,25 +643,27 @@ Given a decimal number as input_decimal, return an ASCII string suitable for use
 
 Given a string as input_string, return an ASCII string suitable for use in a HTTP field value.
 
-0. If input_string is not a sequence of characters, or contains characters in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail serialisation.
-1. Let output be an empty string.
-2. Append DQUOTE to output.
-3. For each character char in input_string:
+0. Convert input_string into a sequence of ASCII characters; if conversion fails, fail serialization.
+1. If input_string contains characters in the range %x00-1f or %x7f (i.e., not in VCHAR or SP), fail serialisation.
+2. Let output be an empty string.
+3. Append DQUOTE to output.
+4. For each character char in input_string:
    1. If char is "\\" or DQUOTE:
       1. Append "\\" to output.
    2. Append char to output.
-4. Append DQUOTE to output.
-5. Return output.
+5. Append DQUOTE to output.
+6. Return output.
 
 
 ### Serializing a Token {#ser-token}
 
 Given a token as input_token, return an ASCII string suitable for use in a HTTP field value.
 
-0. If input_token is not a sequence of characters, the first character is not ALPHA or "\*", or the remaining contain a character not in tchar, ":" or "/", fail serialisation.
-1. Let output be an empty string.
-2. Append input_token to output.
-3. Return output.
+0. Convert input_token into a sequence of ASCII characters; if conversion fails, fail serialization.
+1. If the first character of input_token is not ALPHA or "\*", or the remaining portion contains a character not in tchar, ":" or "/", fail serialisation.
+2. Let output be an empty string.
+3. Append input_token to output.
+4. Return output.
 
 
 ### Serializing a Byte Sequence {#ser-binary}
@@ -927,7 +933,7 @@ Given an ASCII string as input_string, return a Boolean. input_string is modifie
 
 # IANA Considerations
 
-This draft has no actions for IANA.
+This document has no actions for IANA.
 
 # Security Considerations
 
@@ -937,10 +943,6 @@ It is possible for parties with the ability to inject new HTTP fields to change 
 of a Structured Header. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
 --- back
-
-# Acknowledgements
-
-Many thanks to Matthew Kerwin for his detailed feedback and careful consideration during the development of this specification.
 
 
 # Frequently Asked Questions {#faq}
@@ -981,7 +983,7 @@ If you need to fit arbitrarily complex data into a field value, Structured Heade
 
 # Implementation Notes
 
-A generic implementation of this specification should expose the top-level parse ({{text-parse}}) and serialize ({{text-serialize}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
+A generic implementation of this specification should expose the top-level serialize ({{text-serialize}}) and parse ({{text-parse}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
 For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-header-tests>.
 
@@ -989,6 +991,7 @@ Implementers should note that dictionaries and parameters are order-preserving m
 
 Likewise, implementations should note that it's important to preserve the distinction between tokens and strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper "token" object or use a parameter on functions to assure that these types remain separate.
 
+The serialisation algorithm is defined in a way that it is not strictly limited to the data types defined in {{types}} in every case. For example, Decimals are designed to take broader input and round to allowed values.
 
 # Changes
 
@@ -1000,6 +1003,7 @@ _RFC Editor: Please remove this section before publication._
 * Use HTTP field terminology more consistently, in line with recent changes to HTTP-core.
 * String length requirements apply to decoded strings (#1051).
 * Correctly round decimals in serialisation (#1043).
+* Clarify input to serialisation algorithms (#1055).
 
 
 ## Since draft-ietf-httpbis-header-structure-14
@@ -1134,3 +1138,11 @@ _RFC Editor: Please remove this section before publication._
 * Added signed 64bit integer type.
 * Drop UTF8, and settle on BCP137 ::EmbeddedUnicodeChar for h1-unicode-string.
 * Change h1_blob delimiter to ":" since "'" is valid t_char
+
+
+# Acknowledgements
+{:numbered="false"}
+
+Many thanks to Matthew Kerwin for his detailed feedback and careful consideration during the development of this specification.
+
+Thanks also to Ian Clelland, Roy Fielding, Anne van Kesteren, Kazuho Oku, Evert Pot, Julian Reschke, Martin Thomson, Mike West, and Jeffrey Yasskin for their contributions.

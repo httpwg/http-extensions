@@ -23,15 +23,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Adigest-headers) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-digest-headers/)
 
 
-### Using TLS 1.3 with HTTP/2
-
-*Sent to IESG*
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-tls13.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-tls13.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-tls13) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Ahttp2-tls13) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-tls13/)
-
-
 ### Proxy-Status
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-proxy-status.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-proxy-status.txt))
