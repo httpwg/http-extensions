@@ -406,7 +406,7 @@ Note that commas in Integers are used in this section's prose only for readabili
 
 ### Decimals {#decimal}
 
-Decimals are numbers with an integer and a fractional component. The Integer component has at most 12 digits; the fractional component has at most three digits.
+Decimals are numbers with an integer and a fractional component. The integer component has at most 12 digits; the fractional component has at most three digits.
 
 
 The ABNF for decimals is:
