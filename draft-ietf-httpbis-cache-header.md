@@ -2,7 +2,7 @@
 title: The Cache-Status HTTP Response Header
 abbrev: Cache-Status Header
 docname: draft-ietf-httpbis-cache-header-latest
-date: 2019
+date: {DATE}
 category: std
 
 ipr: trust200902
