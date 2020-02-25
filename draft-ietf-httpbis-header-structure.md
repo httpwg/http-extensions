@@ -171,13 +171,13 @@ be between 0 and 10, inclusive; other values MUST cause
 the entire header to be ignored.
 
 The following parameters are defined:
-* A parameter whose name is "fooUrl", and whose value is a string
-  (Section Y.Y of [RFCxxxx]), conveying the Foo URLs
+* A parameter whose name is "foourl", and whose value is a string
+  (Section Y.Y of [RFCxxxx]), conveying the Foo URL
   for the message. See below for processing requirements.
 
-"fooUrl" contains a URI-reference (Section 4.1 of
+"foourl" contains a URI-reference (Section 4.1 of
 [RFC3986]). If its value is not a valid URI-reference,
-that URL MUST be ignored. If its value is a relative reference
+it MUST be ignored. If its value is a relative reference
 (Section 4.2 of [RFC3986]), it MUST be resolved (Section 5 of
 [RFC3986]) before being used.
 
