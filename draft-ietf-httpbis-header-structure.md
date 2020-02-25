@@ -139,15 +139,15 @@ To specify a HTTP field as a Structured Header (or Structured Trailer), its auth
 
 * Specify any additional constraints upon the structures used, as well as the consequences when those constraints are violated.
 
-Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, inner lists are only valid when a field definition explicitly allows them.
+Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, Inner Lists are only valid when a field definition explicitly allows them.
 
 When Structured Headers parsing fails, the field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the field requires different error handling, this should be explicitly specified.
 
-However, both items and inner lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, field specifications are discouraged from defining the presence of an unrecognised parameter as an error condition.
+However, both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, field specifications are discouraged from defining the presence of an unrecognised Parameter as an error condition.
 
-To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a field definition can specify that "grease" parameters be added by senders. For example, a specification could stipulate that all parameters beginning with the letter "h" are reserved for this use.
+To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a field definition can specify that "grease" Parameters be added by senders. For example, a specification could stipulate that all Parameters beginning with the letter "h" are reserved for this use.
 
-Note that a field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of integers and decimals, the format of strings and tokens, the types allowed in a dictionary's values, or the number of items in a list). Likewise, field definitions can only use Structured Headers for the entire field value, not a portion thereof.
+Note that a field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List). Likewise, field definitions can only use Structured Headers for the entire field value, not a portion thereof.
 
 This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
 
@@ -171,7 +171,7 @@ be between 0 and 10, inclusive; other values MUST cause
 the entire header to be ignored.
 
 The following parameters are defined:
-* A parameter whose name is "foourl", and whose value is a string
+* A Parameter whose name is "foourl", and whose value is a String
   (Section Y.Y of [RFCxxxx]), conveying the Foo URL
   for the message. See below for processing requirements.
 
@@ -202,24 +202,24 @@ In summary:
 
 ## Lists {#list}
 
-Lists are arrays of zero or more members, each of which can be an item ({{item}}) or an inner list ({{inner-list}}), both of which can be parameterised ({{param}}).
+Lists are arrays of zero or more members, each of which can be an Item ({{item}}) or an Inner List ({{inner-list}}), both of which can be Parameterised ({{param}}).
 
-The ABNF for lists in HTTP fields is:
+The ABNF for Lists in HTTP fields is:
 
 ~~~ abnf
 sh-list       = list-member *( *SP "," *SP list-member )
 list-member   = sh-item / inner-list
 ~~~
 
-Each member is separated by a comma and optional whitespace. For example, a header field whose value is defined as a list of strings could look like:
+Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Strings could look like:
 
 ~~~ example
 Example-StrListHeader: "foo", "bar", "It was the best of times."
 ~~~
 
-An empty list is denoted by not serialising the header at all.
+An empty List is denoted by not serialising the field at all.
 
-Note that lists can have their members split across multiple lines inside a header or trailer section, as per Section 3.2.2 of {{?RFC7230}}; for example, the following are equivalent:
+Note that Lists can have their members split across multiple lines inside a header or trailer section, as per Section 3.2.2 of {{?RFC7230}}; for example, the following are equivalent:
 
 ~~~ example
 Example-Hdr: foo, bar
@@ -232,44 +232,44 @@ Example-Hdr: foo
 Example-Hdr: bar
 ~~~
 
-However, individual members of a list cannot be safely split between across lines; see {{text-parse}} for details.
+However, individual members of a List cannot be safely split between across lines; see {{text-parse}} for details.
 
-Parsers MUST support lists containing at least 1024 members. Field specifications can constrain the types and cardinality of individual list values as they require.
+Parsers MUST support Lists containing at least 1024 members. Field specifications can constrain the types and cardinality of individual List values as they require.
 
 
 ### Inner Lists {#inner-list}
 
-An inner list is an array of zero or more items ({{item}}). Both the individual items and the inner-list itself can be parameterised ({{param}}).
+An Inner List is an array of zero or more Items ({{item}}). Both the individual Items and the Inner List itself can be Parameterised ({{param}}).
 
-The ABNF for inner-lists is:
+The ABNF for Inner Lists is:
 
 ~~~ abnf
 inner-list    = "(" *SP [ sh-item *( 1*SP sh-item ) *SP ] ")"
                 parameters
 ~~~
 
-Inner lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A header field whose value is defined as a list of inner-lists of strings could look like:
+Inner Lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A field whose value is defined as a list of Inner Lists of Strings could look like:
 
 ~~~ example
 Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 ~~~
 
-Note that the last member in this example is an empty inner list.
+Note that the last member in this example is an empty Inner List.
 
-A header field whose value is defined as a list of inner-lists with parameters at both levels could look like:
+A header field whose value is defined as a list of Inner Lists with Parameters at both levels could look like:
 
 ~~~ example
 Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
 ~~~
 
-Parsers MUST support inner-lists containing at least 256 members. Field specifications can constrain the types and cardinality of individual inner-list members as they require.
+Parsers MUST support Inner Lists containing at least 256 members. Field specifications can constrain the types and cardinality of individual Inner List members as they require.
 
 
 ### Parameters {#param}
 
-Parameters are an ordered map of key-values pairs that are associated with an item ({{item}}) or inner-list ({{inner-list}}). The keys are unique within the scope of a map of parameters, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
+Parameters are an ordered map of key-values pairs that are associated with an Item ({{item}}) or Inner List ({{inner-list}}). The keys are unique within the scope the Parameters they occur within, and the values are bare items (i.e., they themselves cannot be parameterised; see {{item}}).
 
-The ABNF for parameters is:
+The ABNF for Parameters is:
 
 ~~~ abnf
 parameters    = *( ";" *SP parameter )
@@ -280,7 +280,7 @@ lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
 
-A parameter is separated from its item or inner-list and other parameters by a semicolon. For example:
+A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
 
 ~~~ example
 Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
@@ -292,18 +292,18 @@ Parameters whose value is Boolean true MUST omit that value when serialised. For
 Example-IntHeader: 1; a; b=?0
 ~~~
 
-Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in parameters.
+Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in a parameter.
 
-Parsers MUST support at least 256 parameters on an item or inner-list, and support parameter keys with at least 64 characters. Field specifications can constrain the types and cardinality of individual parameter names and values as they require.
+Parsers MUST support at least 256 parameters on an Item or Inner List, and support parameter keys with at least 64 characters. Field specifications can constrain the types and cardinality of individual parameter names and values as they require.
 
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be parameterised ({{param}}). There can be zero or more members, and their names are unique in the scope of the dictionary they occur within.
+Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be Parameterised ({{param}}). There can be zero or more members, and their names are unique in the scope of the Dictionary they occur within.
 
-Implementations MUST provide access to dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
+Implementations MUST provide access to Dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
-The ABNF for dictionaries is:
+The ABNF for Dictionaries is:
 
 ~~~ abnf
 sh-dictionary  = dict-member *( *SP "," *SP dict-member )
@@ -318,29 +318,29 @@ Members are separated by a comma with optional whitespace, while names and value
 Example-DictHeader: en="Applepie", da=:w4ZibGV0w6ZydGU=:
 ~~~
 
-Members whose value is Boolean true MUST omit that value when serialised, unless it has parameters. For example, here both "b" and "c" are true, but "c"'s value is serialised because it has parameters:
+Members whose value is Boolean true MUST omit that value when serialised, unless it has Parameters. For example, here both "b" and "c" are true, but "c"'s value is serialised because it has Parameters:
 
 ~~~ example
 Example-DictHeader: a=?0, b, c=?1; foo=bar
 ~~~
 
-Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in dictionary values.
+Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in Dictionary values.
 
-A dictionary with a member whose value is an inner-list of tokens:
+A Dictionary with a member whose value is an Inner List of tokens:
 
 ~~~ example
 Example-DictListHeader: rating=1.5, feelings=(joy sadness)
 ~~~
 
-A dictionary with a mix of singular and list values, some with parameters:
+A Dictionary with a mix of singular and list values, some with Parameters:
 
 ~~~ example
 Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
 ~~~
 
-As with lists, an empty dictionary is represented by omitting the entire header field.
+As with lists, an empty Dictionary is represented by omitting the entire field.
 
-Typically, a field specification will define the semantics of dictionaries by specifying the allowed type(s) for individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the field's specification specifically disallows them.
+Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the field's specification specifically disallows them.
 
 Note that dictionaries can have their members split across multiple lines inside a header or trailer section; for example, the following are equivalent:
 
@@ -355,16 +355,16 @@ Example-Hdr: foo=1
 Example-Hdr: bar=2
 ~~~
 
-However, individual members of a dictionary cannot be safely split between lines; see {{text-parse}} for details.
+However, individual members of a Dictionary cannot be safely split between lines; see {{text-parse}} for details.
 
-Parsers MUST support dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters.
+Parsers MUST support Dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters.
 
 
 ## Items {#item}
 
-An item can be a integer ({{integer}}), decimal ({{decimal}}), string ({{string}}), token ({{token}}), byte sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated parameters ({{param}}).
+An Item can be a Integer ({{integer}}), Decimal ({{decimal}}), String ({{string}}), Token ({{token}}), Byte Sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated Parameters ({{param}}).
 
-The ABNF for items is:
+The ABNF for Items is:
 
 ~~~ abnf
 sh-item   = bare-item parameters
@@ -372,13 +372,13 @@ bare-item = sh-integer / sh-decimal / sh-string / sh-token / sh-binary
             / sh-boolean
 ~~~
 
-For example, a header field that is defined to be an Item that is an integer might look like:
+For example, a header field that is defined to be an Item that is an Integer might look like:
 
 ~~~ example
 Example-IntItemHeader: 5
 ~~~
 
-or with parameters:
+or with Parameters:
 
 ~~~ example
 Example-IntItemHeader: 5; foo=bar
@@ -389,7 +389,7 @@ Example-IntItemHeader: 5; foo=bar
 
 Integers have a range of −999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ({{IEEE754}}).
 
-The ABNF for integers is:
+The ABNF for Integers is:
 
 ~~~ abnf
 sh-integer = ["-"] 1*15DIGIT
@@ -401,7 +401,7 @@ For example:
 Example-IntegerHeader: 42
 ~~~
 
-Note that commas in integers are used in this section's prose only for readability; they are not valid in the wire format.
+Note that commas in Integers are used in this section's prose only for readability; they are not valid in the wire format.
 
 
 ### Decimals {#decimal}
@@ -416,7 +416,7 @@ The ABNF for decimals is:
 sh-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
 ~~~
 
-For example, a header whose value is defined as a decimal could look like:
+For example, a header whose value is defined as a Decimal could look like:
 
 ~~~ example
 Example-DecimalHeader: 4.5
@@ -427,7 +427,7 @@ Example-DecimalHeader: 4.5
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
-The ABNF for strings is:
+The ABNF for Strings is:
 
 ~~~ abnf
 sh-string = DQUOTE *(chr) DQUOTE
@@ -442,48 +442,48 @@ Strings are delimited with double quotes, using a backslash ("\\") to escape dou
 Example-StringHeader: "hello world"
 ~~~
 
-Note that strings only use DQUOTE as a delimiter; single quotes do not delimit strings. Furthermore, only DQUOTE and "\\" can be escaped; other characters after "\\" MUST cause parsing to fail.
+Note that Strings only use DQUOTE as a delimiter; single quotes do not delimit Strings. Furthermore, only DQUOTE and "\\" can be escaped; other characters after "\\" MUST cause parsing to fail.
 
-Unicode is not directly supported in strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
+Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
 
-When it is necessary for a field value to convey non-ASCII content, a byte sequence ({{binary}}) SHOULD be specified, along with a character encoding (preferably {{UTF-8}}).
+When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably {{UTF-8}}).
 
-Parsers MUST support strings (after any decoding) with at least 1024 characters.
+Parsers MUST support Strings (after any decoding) with at least 1024 characters.
 
 
 ### Tokens {#token}
 
 Tokens are short textual words; their abstract model is identical to their expression in the HTTP field value serialisation.
 
-The ABNF for tokens is:
+The ABNF for Tokens is:
 
 ~~~ abnf
 sh-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 ~~~
 
-Parsers MUST support tokens with at least 512 characters.
+Parsers MUST support Tokens with at least 512 characters.
 
-Note that a Structured Header token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
+Note that a Structured Header Token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
 
 
 ### Byte Sequences {#binary}
 
-Byte sequences can be conveyed in Structured Headers.
+Byte Sequences can be conveyed in Structured Headers.
 
-The ABNF for a byte sequence is:
+The ABNF for a Byte Sequence is:
 
 ~~~ abnf
 sh-binary = ":" *(base64) ":"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-A byte sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
+A Byte Sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
 Example-BinaryHdr: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
 ~~~
 
-Parsers MUST support byte sequences with at least 16384 octets after decoding.
+Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
 
 
 ### Booleans {#boolean}
@@ -497,7 +497,7 @@ sh-boolean = "?" boolean
 boolean    = "0" / "1"
 ~~~
 
-A boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
+A Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ example
 Example-BoolHdr: ?1
@@ -518,7 +518,6 @@ Given a structure defined in this specification, return an ASCII string suitable
 4. Else if the structure is an Item, let output_string be the result of running Serializing an Item ({{ser-item}}) with the structure.
 5. Else, fail serialisation.
 6. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
-
 
 
 ### Serializing a List {#ser-list}
@@ -548,7 +547,7 @@ Given an array of (member_value, parameters) tuples as inner_list, and parameter
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP field value.
+Given an ordered Dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP field value.
 
 0. Let output be an empty string.
 1. For each parameter-name with a value of param_value in input_parameters:
@@ -574,7 +573,7 @@ Given a key as input_key, return an ASCII string suitable for use in a HTTP fiel
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given an ordered dictionary as input_dictionary (each member having a member_name and a tuple value of (member_value, parameters)), return an ASCII string suitable for use in a HTTP field value.
+Given an ordered Dictionary as input_dictionary (each member having a member_name and a tuple value of (member_value, parameters)), return an ASCII string suitable for use in a HTTP field value.
 
 1. Let output be an empty string.
 2. For each member_name with a value of (member_value, parameters) in input_dictionary:
@@ -591,7 +590,7 @@ Given an ordered dictionary as input_dictionary (each member having a member_nam
 
 ### Serializing an Item {#ser-item}
 
-Given an item bare_item and parameters item_parameters as input, return an ASCII string suitable for use in a HTTP field value.
+Given an Item bare_item and Parameters item_parameters as input, return an ASCII string suitable for use in a HTTP field value.
 
 1. Let output be an empty string.
 2. Append the result of running Serializing a Bare Item {{ser-bare-item}} with bare_item to output.
@@ -601,20 +600,20 @@ Given an item bare_item and parameters item_parameters as input, return an ASCII
 
 #### Serialising a Bare Item {#ser-bare-item}
 
-Given an item as input_item, return an ASCII string suitable for use in a HTTP field value.
+Given an Item as input_item, return an ASCII string suitable for use in a HTTP field value.
 
-1. If input_item is an integer, return the result of running Serializing an Integer ({{ser-integer}}) with input_item.
-2. If input_item is a decimal, return the result of running Serializing a Decimal ({{ser-decimal}}) with input_item.
-3. If input_item is a string, return the result of running Serializing a String ({{ser-string}}) with input_item.
-4. If input_item is a token, return the result of running Serializing a Token ({{ser-token}}) with input_item.
+1. If input_item is an Integer, return the result of running Serializing an Integer ({{ser-integer}}) with input_item.
+2. If input_item is a Decimal, return the result of running Serializing a Decimal ({{ser-decimal}}) with input_item.
+3. If input_item is a String, return the result of running Serializing a String ({{ser-string}}) with input_item.
+4. If input_item is a Token, return the result of running Serializing a Token ({{ser-token}}) with input_item.
 5. If input_item is a Boolean, return the result of running Serializing a Boolean ({{ser-boolean}}) with input_item.
-6. If input_item is a byte sequence, return the result of running Serializing a Byte Sequence ({{ser-binary}}) with input_item.
+6. If input_item is a Byte Sequence, return the result of running Serializing a Byte Sequence ({{ser-binary}}) with input_item.
 7. Otherwise, fail serialisation.
 
 
 ### Serializing an Integer {#ser-integer}
 
-Given an integer as input_integer, return an ASCII string suitable for use in a HTTP field value.
+Given an Integer as input_integer, return an ASCII string suitable for use in a HTTP field value.
 
 0. If input_integer is not an integer in the range of −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialisation.
 1. Let output be an empty string.
@@ -641,7 +640,7 @@ Given a decimal number as input_decimal, return an ASCII string suitable for use
 
 ### Serializing a String {#ser-string}
 
-Given a string as input_string, return an ASCII string suitable for use in a HTTP field value.
+Given a String as input_string, return an ASCII string suitable for use in a HTTP field value.
 
 0. Convert input_string into a sequence of ASCII characters; if conversion fails, fail serialization.
 1. If input_string contains characters in the range %x00-1f or %x7f (i.e., not in VCHAR or SP), fail serialisation.
@@ -657,7 +656,7 @@ Given a string as input_string, return an ASCII string suitable for use in a HTT
 
 ### Serializing a Token {#ser-token}
 
-Given a token as input_token, return an ASCII string suitable for use in a HTTP field value.
+Given a Token as input_token, return an ASCII string suitable for use in a HTTP field value.
 
 0. Convert input_token into a sequence of ASCII characters; if conversion fails, fail serialization.
 1. If the first character of input_token is not ALPHA or "\*", or the remaining portion contains a character not in tchar, ":" or "/", fail serialisation.
@@ -668,7 +667,7 @@ Given a token as input_token, return an ASCII string suitable for use in a HTTP 
 
 ### Serializing a Byte Sequence {#ser-binary}
 
-Given a byte sequence as input_bytes, return an ASCII string suitable for use in a HTTP field value.
+Given a Byte Sequence as input_bytes, return an ASCII string suitable for use in a HTTP field value.
 
 0. If input_bytes is not a sequence of bytes, fail serialisation.
 1. Let output be an empty string.
@@ -797,7 +796,7 @@ Given an ASCII string as input_string, return a (bare_item, parameters) tuple. i
 
 #### Parsing a Bare Item {#parse-bare-item}
 
-Given an ASCII string as input_string, return a bare item. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a bare Item. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is a "-" or a DIGIT, return the result of running Parsing a Number ({{parse-number}}) with input_string.
 2. If the first character of input_string is a DQUOTE, return the result of running Parsing a String ({{parse-string}}) with input_string.
@@ -808,7 +807,7 @@ Given an ASCII string as input_string, return a bare item. input_string is modif
 
 #### Parsing Parameters {#parse-param}
 
-Given an ASCII string as input_string, return an ordered map whose values are bare items. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an ordered map whose values are bare Items. input_string is modified to remove the parsed value.
 
 1. Let parameters be an empty, ordered map.
 2. While input_string is not empty:
@@ -869,7 +868,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}
 
 ### Parsing a String {#parse-string}
 
-Given an ASCII string as input_string, return an unquoted string. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an unquoted String. input_string is modified to remove the parsed value.
 
 1. Let output_string be an empty string.
 2. If the first character of input_string is not DQUOTE, fail parsing.
@@ -889,7 +888,7 @@ Given an ASCII string as input_string, return an unquoted string. input_string i
 
 ### Parsing a Token {#parse-token}
 
-Given an ASCII string as input_string, return a token. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a Token. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not ALPHA or "\*", fail parsing.
 2. Let output_string be an empty string.
@@ -902,7 +901,7 @@ Given an ASCII string as input_string, return a token. input_string is modified 
 
 ### Parsing a Byte Sequence {#parse-binary}
 
-Given an ASCII string as input_string, return a byte sequence. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a Byte Sequence. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is not ":", fail parsing.
 2. Discard the first character of input_string.
@@ -975,7 +974,7 @@ Example-Description: foo; url="https://example.net"; context=123,
                      bar; url="https://example.org"; context=456
 ~~~
 
-Since the description contains an array of key/value pairs, we use a List to represent them, with the token for each item in the array used to identify it in the "descriptions" member of the Example-Thing dictionary header.
+Since the description contains an array of key/value pairs, we use a List to represent them, with the token for each member of the array used to identify it in the "descriptions" member of the Example-Thing dictionary header.
 
 When specifying more than one field, it's important to remember to describe what a processor's behaviour should be when one of the fields is missing.
 
@@ -987,9 +986,9 @@ A generic implementation of this specification should expose the top-level seria
 
 For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-header-tests>.
 
-Implementers should note that dictionaries and parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
+Implementers should note that Dictionaries and Parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
 
-Likewise, implementations should note that it's important to preserve the distinction between tokens and strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper "token" object or use a parameter on functions to assure that these types remain separate.
+Likewise, implementations should note that it's important to preserve the distinction between Tokens and Strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper "token" object or use a parameter on functions to assure that these types remain separate.
 
 The serialisation algorithm is defined in a way that it is not strictly limited to the data types defined in {{types}} in every case. For example, Decimals are designed to take broader input and round to allowed values.
 
