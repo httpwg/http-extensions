@@ -133,7 +133,7 @@ To specify a HTTP field as a Structured Header (or Structured Trailer), its auth
 
 * Reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
 
-* Specify the type of the field value; either Dictionary ({{dictionary}}), List ({{list}}), or Item ({{item}}).
+* Specify the type of the field value; either List ({{list}}), Dictionary ({{dictionary}}), or Item ({{item}}).
 
 * Define the semantics of those structures.
 
