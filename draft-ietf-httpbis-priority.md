@@ -1,5 +1,6 @@
 ---
 title: Extensible Prioritization Scheme for HTTP
+abbrev: HTTP Priorities
 docname: draft-ietf-httpbis-priority-latest
 category: std
 
@@ -178,7 +179,7 @@ The Priority HTTP header field is an end-to-end way to transmit this set of
 parameters when a request or a response is issued. In order to reprioritize a
 request, HTTP-version-specific frames are used by clients to transmit the
 same information on a single hop.  If intermediaries want to specify
-prioritizaton on a multiplexed HTTP connection, it SHOULD use a
+prioritization on a multiplexed HTTP connection, it SHOULD use a
 PRIORITY_UPDATE frame and SHOULD NOT change the Priority header field.
 
 In both cases, the set of priority parameters is encoded as a Structured Headers
@@ -225,7 +226,7 @@ The lowest urgency level (7) is reserved for background tasks such as delivery
 of software updates. This urgency level SHOULD NOT be used for fetching
 responses that have impact on user interaction.
 
-## incremental
+## Incremental
 
 The incremental parameter (`i`) takes an sh-boolean as the value that indicates
 if an HTTP response can be processed incrementally, i.e. provide some
@@ -649,7 +650,7 @@ Roy Fielding presented the idea of using a header field for representing
 priorities in <http://tools.ietf.org/agenda/83/slides/slides-83-httpbis-5.pdf>.
 In <https://github.com/pmeenan/http3-prioritization-proposal>, Patrick Meenan
 advocates for representing the priorities using a tuple of urgency and
-concurrency. The ability to deprecate HTTP/2 priortization is based on
+concurrency. The ability to deprecate HTTP/2 prioritization is based on
 {{?I-D.lassey-priority-setting}}, authored by Brad Lassey and Lucas Pardue, with
 modifications based on feedback that was not incorporated into an update to that
 document.
@@ -673,7 +674,7 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 
 ## Since draft-kazuho-httpbis-priority-03
 
-* Changed numbering from [-1,6] to [0,7] (#78)
+* Changed numbering from `[-1,6]` to `[0,7]` (#78)
 * Replaced priority scheme negotiation with HTTP/2 priority deprecation (#100)
 * Shorten parameter names (#108)
 * Expand on considerations (#105, #107, #109, #110, #111, #113)
