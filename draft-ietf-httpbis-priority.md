@@ -423,7 +423,7 @@ disinterest in changing the client-provided value. This is different from the
 logic being defined for the request header field, in which omission of a
 priority parameter implies the use of their default values (see #parameters).
 
-A non-normative example, when the client sends an HTTP request with
+As a non-normative example, when the client sends an HTTP request with
 
 ~~~ example
 :method = GET
