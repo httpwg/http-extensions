@@ -246,14 +246,14 @@ order in which those requests were generated is considered to be the best
 strategy.
 
 The following example shows a request for a JPEG file with the urgency parameter
-set to `5` and the incremental parameter set to `1`.
+set to `5` and the incremental parameter set to `true`.
 
 ~~~ example
 :method = GET
 :scheme = https
 :authority = example.net
 :path = /image.jpg
-priority = u=5, i=?1
+priority = u=5, i
 ~~~
 
 ## Defining New Parameters
@@ -424,14 +424,15 @@ disinterest in changing the client-provided value. This is different from the
 logic being defined for the request header field, in which omission of a
 priority parameter implies the use of their default values (see #parameters).
 
-As a non-normative example, when the client sends an HTTP request with
+As a non-normative example, when the client sends an HTTP request with the
+urgency parameter set to `5` and the incremental parameter set to `true`
 
 ~~~ example
 :method = GET
 :scheme = https
 :authority = example.net
 :path = /menu.png
-priority = u=5, i=?1
+priority = u=5, i
 ~~~
 
 and the origin responds with
@@ -444,7 +445,7 @@ priority = u=1
 
 the intermediary might alter its understanding of the urgency from `5` to `1`,
 because it prefers the server-provided value over the client's. The incremental
-value continues to be `1`, the value specified by the client, as the server did
+value continues to be `true`, the value specified by the client, as the server did
 not specify the incremental(`i`) parameter.
 
 
@@ -480,7 +481,7 @@ to one end client to be delayed totally after those going to another.
 
 In order to mitigate this fairness problem, when a server responds to a request
 that is known to have come through an intermediary, the server SHOULD prioritize
-the response as if it was assigned the priority of  `u=1, i=?1`
+the response as if it was assigned the priority of  `u=1, i`
 (i.e. round-robin) regardless of the value of the Priority header field being
 transmitted, unless the server knows the intermediary is not
 coalescing requests from multiple clients.
