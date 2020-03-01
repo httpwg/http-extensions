@@ -676,7 +676,10 @@ Variant-Key: (gold europe)
 Vary: Cookie
 ~~~
 
+## Client Hints {#client-hints}
 
+Client Hints {{CLIENT-HINTS}} might be combined with Variants response header field to enable fine-grained control of the cache key for improved cache efficiency.
+Features that define Client Hints will need to specify the related variants algorithms as described in Section 6.
 
 # Acknowledgements
 {:numbered="false"}

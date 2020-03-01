@@ -262,13 +262,6 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 - Specification document(s): {{accept-ch}} of this document
 - Related information: for Client Hints
 
---- back
-
-# Interaction with Variants Response Header Field
-
-Client Hints might be combined with Variants response header field {{?VARIANTS=I-D.ietf-httpbis-variants}} to enable fine-grained control of the cache key for improved cache efficiency.
-Features that define Client Hints will need to specify the related variants algorithms as described in Section 6 of {{?VARIANTS}}.
-
 # Changes
 
 ## Since -00
