@@ -301,6 +301,33 @@ Content-Encoding: gzip
 
 ~~~
 
+Finally the semantics of an HTTP response may decouple
+the effective request URI
+from the enclosed representation.
+In the example response below, the `Content-Location` header field
+indicates that the enclosed representation
+refers to the resource available at `/authors/123`.
+
+Request:
+
+~~~
+POST /authors/ HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{"author": "Camilleri"}
+~~~
+
+Response:
+
+~~~
+HTTP/1.1 201 Created
+Content-Type: application/json
+Content-Location: /authors/123
+Location: /authors/123
+
+{"id": "123", "author": "Camilleri"}
+~~~
 
 # Digest Algorithm Values {#algorithms}
 
@@ -1073,7 +1100,14 @@ before handing off to say the HTML parser, video player etc.
 
 Even a simple mechanism for end-to-end validation is thus valuable.
 
-## Usage in Signatures
+## Digest and Content-Location in responses {#digest-and-content-location}
+
+When a state-changing method returns the `Content-Location` header field,
+the enclosed representation refers to the resource identified by its value
+and `Digest` is computed accordingly.
+
+
+## Usage in signatures {#usage-in-signatures}
 
 Digital signatures are widely used together with checksums to provide the
 certain identification of the origin of a message [NIST800-32]. Such signatures
@@ -1088,6 +1122,7 @@ For example, an actor could manipulate the `Content-Type` field-value and cause
 a digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
 endpoints.
+See also {{digest-and-content-location}}.
 
 `Digest` SHOULD always be used over a connection which provides
 integrity at transport layer that protects HTTP header fields.
@@ -1343,3 +1378,4 @@ _RFC Editor: Please remove this section before publication._
 * Update CRC32C value in IANA table #828
 * Use when acting on resources (POST, PATCH) #853
 * Added Relationship with SRI, draft Use Cases #868, #971
+* Warn about the implications of `Content-Location`
