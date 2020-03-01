@@ -1063,10 +1063,6 @@ When a state-changing method returns the `Content-Location` header field,
 the enclosed representation refers to the resource identified by its value
 and `Digest` is computed accordingly.
 
-It's important to note though that this claim cannot be trusted
-unless it can be verified by other means (see Section 3.1.4.1 and 3.1.4.2 of [RFC7231]).
-A malicious intermediary may add a `Content-Location` header field referencing an external resource
-thus asserting that the enclosed representation and its `Digest` refers to it.
 
 ## Usage in signatures {#usage-in-signatures}
 
@@ -1340,4 +1336,3 @@ _RFC Editor: Please remove this section before publication._
 * Use when acting on resources (POST, PATCH) #853
 * Added Relationship with SRI, draft Use Cases #868, #971
 * Warn about the implications of `Content-Location`
-
