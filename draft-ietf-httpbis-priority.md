@@ -169,7 +169,7 @@ The SETTINGS frame precedes any priority signal sent from a client in HTTP/2,
 so a server can determine if it should respect the HTTP/2 scheme before
 building state.
 
-# Priority Parameters
+# Priority Parameters {#parameters}
 
 The priority information is a sequence of key-value pairs, providing room for
 future extensions. Each key-value pair represents a priority parameter.
@@ -185,30 +185,25 @@ In both cases, the set of priority parameters is encoded as a Structured Headers
 Dictionary ({{!STRUCTURED-HEADERS}}).
 
 This document defines the urgency(`u`) and incremental(`i`) parameters. When
-used, these parameters MUST be accompanied by values. When any of the defined
-parameters are omitted, or if the Priority header field is not used, their
-default values SHOULD be applied.
+receiving an HTTP request that does not carry these priority parameters, a
+server SHOULD act as if their default values were specified. Note that handling
+of omitted parameters is different when processing an HTTP response; see
+{{merging}}.
+
 
 Unknown parameters, parameters with out-of-range values or values of unexpected
 types MUST be ignored.
 
-## urgency
+## Urgency
 
-The urgency(`u`) parameter takes an integer between 0 and 7, in descending order of
-priority, as shown below:
-
-| Urgency         | Definition                        |
-|----------------:|:----------------------------------|
-|               0 | prerequisite ({{prerequisite}})   |
-|               1 | default ({{default}})             |
-| between 2 and 6 | supplementary ({{supplementary}}) |
-|               7 | background ({{background}})       |
-{: #urgencies title="Urgencies"}
+The urgency parameter (`u`) takes an integer between 0 and 7, in descending
+order of priority.
 
 The value is encoded as an sh-integer. The default value is 1.
 
-A server SHOULD transmit HTTP responses in the order of their urgency values.
-The lower the value, the higher the precedence.
+This parameter indicates the sender's recommendation, based on the expectation
+that the server would transmit HTTP responses in the order of their urgency
+values if possible. The smaller the value, the higher the precedence.
 
 The following example shows a request for a CSS file with the urgency set to
 `0`:
@@ -221,100 +216,43 @@ The following example shows a request for a CSS file with the urgency set to
 priority = u=0
 ~~~
 
-The definition of the urgencies and their expected use-case are described below.
-Endpoints SHOULD respect the definition of the values when assigning urgencies.
+A client that fetches a document that likely consists of multiple HTTP resources
+(e.g., HTML) SHOULD assign the default urgency level to the main resource.  This
+convention allows servers to refine the urgency using
+knowledge specific to the web-site (see {{merging}}).
 
-### prerequisite
-
-The prerequisite urgency (value 0) indicates that the response prevents other
-responses with an urgency of prerequisite or default from being used until it
-is fully transmitted.
-
-For example, use of an external stylesheet can block a web browser from
-rendering the HTML. In such case, the stylesheet is given the prerequisite
-urgency.
-
-### default
-
-The default urgency (value 1) indicates a response that is to be used as it is
-delivered to the client, but one that does not block other responses from being
-used.
-
-For example, when a user using a web browser navigates to a new HTML document,
-the request for that HTML is given the default urgency.  When that HTML document
-uses a custom font, the request for that custom font SHOULD also be given the
-default urgency.  This is because the availability of the custom font is likely
-a precondition for the user to use that portion of the HTML document, which is
-to be rendered by that font.
-
-### supplementary
-
-The supplementary urgencies (values 2 to 6) indicate a response that is helpful
-to the client using a composition of responses, even though the response itself
-is not mandatory for using those responses.
-
-For example, inline images (i.e., images being fetched and displayed as part of
-the document) are visually important elements of an HTML document.  As such,
-users will typically not be prevented from using the document, at least to some
-degree, before any or all of these images are loaded. Display of those images
-are thus considered to be an improvement for visual clients rather than a
-prerequisite for all user agents.  Therefore, such images will be given the
-supplementary urgency.
-
-Values between 2 and 6 are used to represent this urgency, to provide
-flexibility to the endpoints for giving some responses more or less precedence
-than others that belong to the supplementary group. {{merging}} explains how
-these values might be used.
-
-Clients SHOULD NOT use values 2 and 6.  Servers MAY use these values to
-prioritize a response above or below other supplementary responses.
-
-Clients MAY use values 3 to indicate that a request is given relatively high
-priority, or 5 to indicate relatively low priority, within the supplementary
-urgency group.
-
-For example, an image certain to be visible at the top of the page, might be
-assigned a value of 3 instead of 4, as it will have a high visual impact for the
-user.  Conversely, an asynchronously loaded JavaScript file might be assigned an
-urgency value of 5, as it is less likely to have a visual impact.
-
-When none of the considerations above is applicable, the value of 3 SHOULD be
-used.
-
-### background
-
-The background urgency (value 7) is used for responses of which the delivery can
-be postponed without having an impact on using other responses.
-
-As an example, the download of a large file in a web browser would be assigned
-the background urgency so it would not impact further page loads on the same
-connection.
+The lowest urgency level (7) is reserved for background tasks such as delivery
+of software updates. This urgency level SHOULD NOT be used for fetching
+responses that have impact on user interaction.
 
 ## incremental
 
-The incremental(`i`) parameter takes an sh-boolean as the value that indicates if
-a response can be processed incrementally, i.e. provide some meaningful output
-as chunks of the response arrive.
+The incremental parameter (`i`) takes an sh-boolean as the value that indicates
+if an HTTP response can be processed incrementally, i.e. provide some
+meaningful output as chunks of the response arrive.
 
-The default value of the incremental parameter is `0`.
+The default value of the incremental parameter is false (`0`).
 
-A server SHOULD distribute the bandwidth of a connection between incremental
-responses that share the same urgency.
+A server might distribute the bandwidth of a connection between incremental
+responses that share the same urgency, hoping that providing those responses in
+parallel would be more helpful to the client than delivering the responses one
+by one.
 
-A server SHOULD transmit non-incremental responses one by one, preferably in the
-order the requests were generated.  Doing so maximizes the chance of the client
-making progress in using the composition of the HTTP responses at the earliest
-moment.
+There is no benefit in providing multiple responses with their incremental
+parameters set to false in parallel, as the client is not going to process those
+responses incrementally. Serving non-incremental responses one by one, in the
+order in which those requests were generated is considered to be the best
+strategy.
 
 The following example shows a request for a JPEG file with the urgency parameter
-set to `4` and the incremental parameter set to `1`.
+set to `5` and the incremental parameter set to `1`.
 
 ~~~ example
 :method = GET
 :scheme = https
 :authority = example.net
 :path = /image.jpg
-priority = u=4, i=?1
+priority = u=5, i=?1
 ~~~
 
 ## Defining New Parameters
@@ -473,18 +411,26 @@ HTTP responses deserve to be prioritized. For example, use of an HTML document
 might depend heavily on one of the inline images. Existence of such
 dependencies is typically best known to the server.
 
-By using the "Priority" response header, a server can override the
-prioritization hints provided by the client. When used, the parameters found
-in the response header field overrides those specified by the client.
+An origin can use the Priority response header field to indicate its view on how
+an HTTP response should be prioritized. An intermediary that forwards an HTTP
+response can use the parameters found in the Priority response header field, in
+combination with the client Priority request header field, as input to its
+prioritization process. No guidance is provided for merging priorities, this is
+left as an implementation decision.
 
-For example, when the client sends an HTTP request with
+Absence of a priority parameter in an HTTP response indicates the server's
+disinterest in changing the client-provided value. This is different from the
+logic being defined for the request header field, in which omission of a
+priority parameter implies the use of their default values (see #parameters).
+
+As a non-normative example, when the client sends an HTTP request with
 
 ~~~ example
 :method = GET
 :scheme = https
 :authority = example.net
 :path = /menu.png
-priority = u=4, i=?1
+priority = u=5, i=?1
 ~~~
 
 and the origin responds with
@@ -492,13 +438,13 @@ and the origin responds with
 ~~~ example
 :status = 200
 content-type = image/png
-priority = u=2
+priority = u=1
 ~~~
 
-the intermediary's understanding of the urgency is promoted from `4` to `2`,
-because the server-provided value overrides the value provided by the client.
-The incremental value continues to be `1`, the value specified by the client,
-as the server did not specify the incremental(`i`) parameter.
+the intermediary might alter its understanding of the urgency from `5` to `1`,
+because it prefers the server-provided value over the client's. The incremental
+value continues to be `1`, the value specified by the client, as the server did
+not specify the incremental(`i`) parameter.
 
 
 # Security Considerations

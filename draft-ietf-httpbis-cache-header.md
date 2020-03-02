@@ -1,8 +1,8 @@
 ---
-title: The Cache-Status HTTP Response Header
+title: The Cache-Status HTTP Response Header Field
 abbrev: Cache-Status Header
 docname: draft-ietf-httpbis-cache-header-latest
-date: 2019
+date: {DATE}
 category: std
 
 ipr: trust200902
@@ -63,7 +63,7 @@ shown here.
 
 This document uses ABNF as defined in {{!RFC5234}}, along with the "%s" extension for case sensitivity defined in {{!RFC7405}}.
 
-# The Cache-Status HTTP Response Header
+# The Cache-Status HTTP Response Header Field
 
 The Cache-Status HTTP response header indicates caches' handling of the request corresponding to the response it occurs within.
 
@@ -73,73 +73,64 @@ Its value is a List {{!I-D.ietf-httpbis-header-structure}}:
 Cache-Status   = sh-list
 ~~~
 
-Each member of the parameterised list represents a cache that has handled the request. The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the user agent (possibly including the user agent's cache itself, if it chooses to append a value).
+Each member of the list represents a cache that has handled the request. The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the client (possibly including the user agent's cache itself, if it chooses to append a value).
 
 Caches determine when it is appropriate to add the Cache-Status header field to a response. Some might decide to add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
 When adding a value to the Cache-Status header field, caches SHOULD preserve the existing contents of the header, to allow debugging of the entire chain of caches handling the request.
 
-The list members identify the cache that inserted the value, and MUST have a type of either sh-string or sh-token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), and IP address, or a generated string.
+Each list member identifies the cache that inserted that value, and MUST have a type of either sh-string or sh-token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), and IP address, or a generated string.
 
-Each member of the list can also have a number of parameters that describe that cache's handling of the request. While all of these parameters are OPTIONAL, caches are encouraged to provide as much information as possible.
+Each member of the list can also have parameters that describe that cache's handling of the request. While all of these parameters are OPTIONAL, caches are encouraged to provide as much information as possible.
+
+This specification defines these parameters:
 
 ~~~ abnf
-fwd           = sh-token
-fwd-res       = sh-token
-fwd-stored    = sh-boolean
-res-fresh     = sh-integer
-cache-fresh   = sh-integer
-collapse-hit  = sh-boolean
-collapse-wait = sh-integer
-key           = sh-string
+hit          = sh-boolean
+fwd          = sh-token
+fwd-status   = sh-integer
+ttl          = sh-integer
+stored       = sh-boolean
+collapsed    = sh-boolean
+key          = sh-string
 ~~~
+
+## The hit parameter
+
+"hit", when true, indicates that the request was satisfied by the cache; i.e., it did not go forward, and the response was obtained from the cache (possibly with modifications; e.g., if the request was conditional, a 304 Not Modified could be generated from cache).
+
+"hit" and "fwd" are exclusive; only one of them should appear on each list member.
 
 ## The fwd parameter
 
-"fwd" indicates why the request went forward. If it is not present, the value defaults to "none".
+"fwd" indicates why the request went forward.
 
 It can have one of the following values:
 
-* none - The request did not go forward; i.e., it was a hit, and was served from the cache.
-* bypass - The cache was configured to not handle this request
 * uri-miss - The cache did not contain any responses that matched the request URI
-* vary-miss - The cache contained a response that matched the request URI, but could not select a response based upon this request's headers.
+* vary-miss - The cache contained a response that matched the request URI, but could not select a response based upon this request's headers and stored Vary headers.
 * miss - The cache did not contain any responses that could be used to satisfy this request (to be used when an implementation cannot distinguish between uri-miss and vary-miss)
-* res-stale - The cache was able to select a response for the request, but it was stale
-* req-stale - The cache was able to select a fresh response for the request, but client request headers (e.g., Cache-Control request directives) did not allow its use
+* stale - The cache was able to select a response for the request, but it was stale
+* request - The cache was able to select a fresh response for the request, but client request headers (e.g., Cache-Control request directives) did not allow its use
+* bypass - The cache was configured to not handle this request
 
-## The fwd-res parameter
+## The fwd-status parameter
 
-"fwd-res" indicates what the result of the forward request was. It is only meaningful when fwd is "res-stale" or "req-stale", and defaults to "full" if not present when fwd is one of those values.
+"fwd-status" indicates what status code the next hop server returned in response to the request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
 
-It can have one of the following values:
+This parameter is useful to distinguish cases when the next hop server sends a 304 Not Modified response to a conditional request, or a 206 Partial Response due to a range request.
 
-* full - indicates that the response was a complete response (any status code except 304 Not Modified and 206 Partial Response)
-* partial - indicates that the response was a 206 Partial Response
-* notmod - indicates that the response was a 304 Not Modified
+## The ttl parameter
 
-## The fwd-stored parameter
+"ttl" indicates the response's remaining freshness lifetime as calculated by the cache, as an integer number of seconds, measured when the response is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics, local configuration, or other factors. May be negative, to indicate staleness.
 
-"fwd-stored" indicates whether the cache stored the response; a true value indicates that it did. Only meaningful when fwd is not "none".
+## The stored parameter
 
-## The res-fresh parameter
+"stored" indicates whether the cache stored the forward response; a true value indicates that it did. Only meaningful when fwd is present.
 
-"res-fresh" indicates the response's remaining freshness lifetime (as per
-{{!I-D.ietf-httpbis-cache}}, Section 4.2.1), as an integer number of seconds, measured when the response is sent by the cache. This does not include freshness assigned by the cache (see "cache-fresh"). May be negative, to indicate staleness.
+## The collapsed parameter
 
-## The cache-fresh parameter
-
-"cache-fresh" indicates the response's remaining freshness lifetime as calculated by the cache, as an integer number of seconds, measured when the response is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics, local configuration, or other factors. May be negative, to indicate staleness.
-
-If both cache-fresh and res-fresh appear as parameters on the same value, it implies that the cache freshness overrode the response freshness.
-
-## The collapse-hit parameter
-
-"collapse-hit" indicates whether this request was collapsed together with one or more other forward requests; if true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others.
-
-## The collapse-wait parameter
-
-"collapse-wait" indicates the amount of time that the cache held the request while waiting to see if it could be successfully collapsed, as an integer number of milliseconds.
+"collapsed" indicates whether this request was collapsed together with one or more other forward requests; if true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others. Only meaningful when fwd is present.
 
 ## The key parameter
 
@@ -150,25 +141,19 @@ If both cache-fresh and res-fresh appear as parameters on the same value, it imp
 The most minimal cache hit:
 
 ~~~ example
-Cache-Status: ExampleCache
+Cache-Status: ExampleCache; hit
 ~~~
 
 ... but a polite cache will give some more information, e.g.:
 
 ~~~ example
-Cache-Status: ExampleCache; res-fresh=376
-~~~
-
-A "negative" hit (i.e., the cache imposed its own freshness lifetime):
-
-~~~ example
-Cache-Status: ExampleCache; cache-fresh=415
+Cache-Status: ExampleCache; hit; ttl=376
 ~~~
 
 A stale hit just has negative freshness:
 
 ~~~ example
-Cache-Status: ExampleCache; res-fresh=-412
+Cache-Status: ExampleCache; hit; ttl=-412
 ~~~
 
 Whereas a complete miss is:
@@ -177,30 +162,29 @@ Whereas a complete miss is:
 Cache-Status: ExampleCache; fwd=uri-miss
 ~~~
 
-A miss that validated on the back-end server:
+A miss that successfully validated on the back-end server:
 
 ~~~ example
-Cache-Status: ExampleCache; fwd=res-stale; fwd-res=notmod
+Cache-Status: ExampleCache; fwd=stale; fwd-status=304
 ~~~
 
 A miss that was collapsed with another request:
 
 ~~~ example
-Cache-Status: ExampleCache; fwd=uri-miss; collapse-hit=?1
+Cache-Status: ExampleCache; fwd=uri-miss; collapsed
 ~~~
 
 A miss that the cache attempted to collapse, but couldn't:
 
 ~~~example
-Cache-Status: ExampleCache; fwd=uri-miss;
-              collapse-hit=?0; collapse-wait=240
+Cache-Status: ExampleCache; fwd=uri-miss; collapsed=?0
 ~~~
 
 Going through two layers of caching, both of which were hits, and the second collapsed with other requests:
 
 ~~~example
-Cache-Status: OriginCache; cache-fresh=1100; collapse-hit=?1,
-              "CDN Company Here"; res-fresh=545,
+Cache-Status: OriginCache; hit; ttl=1100; collapsed,
+              "CDN Company Here"; hit; ttl=545
 ~~~
 
 

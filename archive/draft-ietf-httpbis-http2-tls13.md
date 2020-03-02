@@ -50,23 +50,25 @@ code and issues list for this draft can be found at
 
 # Introduction
 
-TLS 1.2 {{RFC5246}} and earlier support renegotiation, a mechanism for changing
+TLS 1.2 {{RFC5246}} and earlier versions of TLS support renegotiation, a
+mechanism for changing
 parameters and keys partway through a connection. This was sometimes used to
 implement reactive client authentication in HTTP/1.1 {{RFC7230}}, where the
-server decides whether to request a client certificate based on the HTTP
+server decides whether or not to request a client certificate based on the HTTP
 request.
 
 HTTP/2 {{RFC7540}} multiplexes multiple HTTP requests over a single connection,
 which is incompatible with the mechanism above. Clients cannot correlate the
-certificate request with the HTTP request which triggered it. Thus, Section
+certificate request with the HTTP request that triggered it. Thus, Section
 9.2.1 of {{RFC7540}} forbids renegotiation.
 
-TLS 1.3 {{RFC8446}} updates TLS 1.2 to remove renegotiation in favor of separate
-post-handshake authentication and key update mechanisms. The former shares the
-same problems with multiplexed protocols, but the prohibition in {{RFC7540}}
-only applies to TLS 1.2 renegotiation.
+TLS 1.3 {{RFC8446}} removes renegotiation and replaces it with separate
+post-handshake authentication and key update mechanisms. Post-handshake
+authentication has the same problems with multiplexed protocols as TLS 1.2
+renegotiation, but the prohibition in {{RFC7540}}
+only applies to renegotiation.
 
-This document updates HTTP/2 to similarly forbid TLS 1.3 post-handshake
+This document updates HTTP/2 {{RFC7540}} to similarly forbid TLS 1.3 post-handshake
 authentication.
 
 
@@ -91,7 +93,8 @@ servers MUST NOT send post-handshake TLS 1.3 CertificateRequest messages before
 the connection preface.
 
 The above applies even if the client offered the `post_handshake_auth` TLS
-extension. This extension is advertised independently of the selected ALPN
+extension. This extension is advertised independently of the selected
+Application-Layer Protocol Negotiation (ALPN)
 protocol {{RFC7301}}, so it is not sufficient to resolve the conflict with
 HTTP/2. HTTP/2 clients that also offer other ALPN protocols, notably HTTP/1.1,
 in a TLS ClientHello MAY include the `post_handshake_auth` extension to support
@@ -101,7 +104,7 @@ those other protocols. This does not indicate support in HTTP/2.
 # Other Post-Handshake TLS Messages in HTTP/2
 
 {{RFC8446}} defines two other messages that are exchanged after the handshake is
-complete, KeyUpdate and NewSessionTicket.
+complete: KeyUpdate and NewSessionTicket.
 
 KeyUpdate messages only affect TLS itself and do not require any interaction
 with the application protocol. HTTP/2 implementations MUST support key updates
@@ -109,7 +112,7 @@ when TLS 1.3 is negotiated.
 
 NewSessionTicket messages are also permitted. Though these interact with HTTP
 when early data is enabled, these interactions are defined in {{RFC8470}} and
-allowed for in the design of HTTP/2.
+are allowed for in the design of HTTP/2.
 
 Unless the use of a new type of TLS message depends on an interaction with the
 application-layer protocol, that TLS message can be sent after the handshake
