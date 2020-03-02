@@ -1,5 +1,5 @@
 ---
-title: The Proxy-Status HTTP Header Field
+title: The Proxy-Status HTTP Response Header Field
 abbrev: Proxy-Status
 docname: draft-ietf-httpbis-proxy-status-latest
 date: {DATE}
