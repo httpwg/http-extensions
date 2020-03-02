@@ -587,7 +587,7 @@ Given an ordered dictionary as input_dictionary (each member having a member_nam
 
 ### Serializing an Item {#ser-item}
 
-Given an item as bare_item and parameters item_parameters as input, return an ASCII string suitable for use in a HTTP header value.
+Given an item as bare_item and parameters as item_parameters, return an ASCII string suitable for use in a HTTP header value.
 
 1. Let output be an empty string.
 2. Append the result of running Serializing a Bare Item {{ser-bare-item}} with bare_item to output.
