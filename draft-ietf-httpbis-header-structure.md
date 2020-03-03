@@ -275,7 +275,7 @@ The ABNF for Parameters is:
 parameters    = *( ";" *SP parameter )
 parameter     = param-name [ "=" param-value ]
 param-name    = key
-key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
+key           = ( lcalpha / "*" ) *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
