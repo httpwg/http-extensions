@@ -216,6 +216,158 @@ interpreted as described in [RFC7230] and [RFC7231].
 The definition "validator" in this document is to be interpreted as described in
 Section 7.2 of [RFC7231].
 
+# The Digest Header Field {#digest-header}
+
+The Digest header field can appear in requests or responses. It contains a
+digest value of HTTP `representation data`, together with an indication of the
+algorithm used to produce the value.
+
+~~~
+   Digest = "Digest" ":" OWS 1#representation-data-digest
+   representation-data-digest = digest-algorithm "="
+                                <encoded digest output>
+   digest-algorithm = token
+~~~
+
+The resource is specified by the effective request URI and any `validator`
+contained in the message. See {#post-not-request-uri} for an example of how
+digest relates to header fields such as `Content-Location` (see [RFC7231]
+Section 3.1.4.2).
+
+The `representation-data-digest` is computed using a single digest-algorithm
+over the entire selected `representation data` of the resource, and then encoded
+in a format specific to the algorithm. For example, the `sha-256`
+digest-algorithm uses base64 encoding 
+
+~~~
+   Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+~~~
+
+A list of digest-algorithm values registered with IANA is presented in
+{{algorithms}}.
+
+A Digest header field MAY contain multiple `representation-data-digest` values.
+This could, for example, be useful for responses expected to reside in caches
+shared by users with different browsers.
+
+A recipient MAY ignore any or all of the representation-data-digests in a Digest
+header field. This allows the recipient to chose which digest-algorithm(s) to
+use for validation instead of verifying every received
+representation-data-digest.
+
+A sender MAY send a representation-data-digest using a digest-algorithm without
+knowing whether the recipient supports the digest-algorithm, or even knowing
+that the recipient will ignore it.
+
+## Computing Digests of Representation Data {#computing}
+
+[RFC7231] defines `representation-data` as:
+
+~~~
+   representation-data := Content-Encoding( Content-Type( bits ) )
+~~~
+
+In practice, this means that computation of digests is dependent on the HTTP
+message and things that can change it, such as methods or metadata. For
+instance, a message's payload body can be affected by method, e.g. HEAD, or
+mechanisms like Range Requests RFC7233]). While the message body depends on
+`Transfer-Encoding` or other transformations that can be applied by an
+intermediary.
+
+The following examples show how representation metadata, payload transformations
+and method impacts the message and payload body, and in turn the effect on the
+digest. These are not exhaustive; additional discussion is presented in
+{{resource-representation}}, and a set of examples provided
+{{examples-unsolicited}} and {{examples-solicited}}.
+
+Consider a basic fetch of the json object `{"hello":"world"}, the client issues
+a GET request such as:
+
+~~~
+GET /items/123
+
+~~~
+
+The server responds with simple identity encoding and a SHA-256 digest:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: identity
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+
+{"hello": "world"}
+~~~
+
+Now consider the client makes a HEAD request for the same object:
+
+~~~
+HEAD /items/123
+
+~~~
+
+The server generates a response with the same SHA-256 digest but provides no
+payload body:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: identity
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+
+~~~
+
+However, a message that uses a different content encoding will produce a
+different SHA-256 digest. In this example, the client indicates support for
+brotli encoding:
+
+~~~
+GET /items/123
+Accept-Encoding: br
+
+~~~
+
+The server responds with a payload body that is compressed and therefore has a
+different digest. For the purposes of presentation a base64-encoded string is
+used to contain non-printable characters.
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: br
+Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+
+iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
+~~~
+
+# The Want-Digest Header Field {#want-digest-header}
+
+The Want-Digest message header field indicates the sender's desire to receive a
+representation digest on messages associated with the request URI and
+representation metadata.
+
+~~~
+   Want-Digest = "Want-Digest" ":" OWS 1#want-digest-value
+   want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
+   qvalue = ( "0"  [ "."  0*1DIGIT ] ) /
+            ( "1"  [ "."  0*1( "0" ) ] )
+~~~
+
+If a digest-algorithm is not accompanied by a qvalue, it is treated as if its
+associated qvalue were 1.0.
+
+The sender is willing to accept a digest-algorithm if and only if it is listed
+in a Want-Digest header field of a message, and its qvalue is non-zero.
+
+If multiple acceptable digest-algorithm values are given, the sender's preferred
+digest-algorithm is the one (or ones) with the highest qvalue.
+
+Two examples of its use are
+
+~~~
+   Want-Digest: sha-256
+   Want-Digest: SHA-512;q=0.3, sha-256;q=1, md5;q=0
+~~~
 
 # Resource Representation and Representation-Data {#resource-representation}
 
@@ -337,7 +489,12 @@ The BNF for "parameter" is as is used in [RFC7230]. All digest-algorithm values
 are case-insensitive.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
-digest-algorithm values.  The registry contains the following tokens.
+digest-algorithm values.  The registry contains the tokens listed below.
+
+Some algorithms, although registered, have since been proven to be vulnerable:
+the MD5 algorithm MUST NOT be used as it has been found vulnerable to collision
+attacks [CMU-836068], the SHA algorithm is NOT RECOMMENDED as it has been found
+vulnerable to collision attacks [IACR-2019-459].
 
 
   SHA-256:
@@ -417,125 +574,6 @@ If other digest-algorithm values are defined, the associated encoding MUST
 either be represented as a quoted string, or MUST NOT include ";" or "," in the
 character sets used for the encoding.
 
-## Representation Digest {#representation-digest}
-
-A representation digest is the value of the output of a digest algorithm,
-together with an indication of the algorithm used (and any parameters).
-
-~~~
-   representation-data-digest = digest-algorithm "="
-                                <encoded digest output>
-~~~
-
-As explained in {{resource-representation}} the digest is computed on the entire
-selected `representation data` of the resource defined in [RFC7231]:
-
-~~~
-   representation-data := Content-Encoding( Content-Type( bits ) )
-~~~
-
-
-The encoded digest output uses the encoding format defined for the specific
-digest-algorithm.
-
-### digest-algorithm Encoding Examples
-
-The `sha-256` digest-algorithm uses base64 encoding. Note that digest-algorithm
-values are case insensitive.
-
-
-~~~
-   sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-~~~
-
-The "UNIXsum" digest-algorithm uses ASCII string of decimal digits.
-
-~~~
-   UNIXsum=30637
-~~~
-
-# Header Field Specifications
-
-The following headers are defined
-
-## Want-Digest {#want-digest-header}
-
-The Want-Digest message header field indicates the sender's desire to receive a
-representation digest on messages associated with the request URI and
-representation metadata.
-
-~~~
-   Want-Digest = "Want-Digest" ":" OWS 1#want-digest-value
-   want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
-   qvalue = ( "0"  [ "."  0*1DIGIT ] ) /
-            ( "1"  [ "."  0*1( "0" ) ] )
-~~~
-
-If a digest-algorithm is not accompanied by a qvalue, it is treated as if its
-associated qvalue were 1.0.
-
-The sender is willing to accept a digest-algorithm if and only if it is listed
-in a Want-Digest header field of a message, and its qvalue is non-zero.
-
-If multiple acceptable digest-algorithm values are given, the sender's preferred
-digest-algorithm is the one (or ones) with the highest qvalue.
-
-Two examples of its use are
-
-~~~
-   Want-Digest: sha-256
-   Want-Digest: SHA-512;q=0.3, sha-256;q=1, md5;q=0
-~~~
-
-## Digest {#digest-header}
-
-The Digest header field provides a digest of the representation data.
-
-~~~
-   Digest = "Digest" ":" OWS 1#representation-data-digest
-~~~
-
-`Representation data` might be:
-
-- fully contained in the message body,
-- partially-contained in the message body,
-- or not at all contained in the message body.
-
-The resource is specified by the effective request URI and any `validator`
-contained in the message.
-
-For example, in a response to a HEAD request, the digest is calculated using the
-representation data that would have been enclosed in the payload body if the
-same request had been a GET.
-
-Digest can be used in requests too.
-
-The `Digest` value depends on the representation metadata.
-
-A Digest header field MAY contain multiple representation-data-digest values.
-This could be useful for responses expected to reside in caches shared by users
-with different browsers, for example.
-
-A recipient MAY ignore any or all of the representation-data-digests in a Digest
-header field. This allows the recipient to chose which digest-algorithm(s) to
-use for validation instead of verifying every received
-representation-data-digest.
-
-A sender MAY send a representation-data-digest using a digest-algorithm without
-knowing whether the recipient supports the digest-algorithm, or even knowing
-that the recipient will ignore it.
-
-Two examples of its use are
-
-~~~
-   Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                      AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
-
-   Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
-           id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-~~~
-
-
 # Use of Digest when acting on resources {#acting-on-resources}
 
 POST and PATCH requests may appear to convey partial representations but are
@@ -546,7 +584,7 @@ In these requests the representation digest MUST be computed on the
 representation-data of that action.
 
 This is the only possible choice because representation digest requires complete
-representation metadata (see {{representation-digest}}).
+representation metadata (see {{computing}}).
 
 In responses,
 
@@ -584,13 +622,6 @@ resource's own semantic partly implied by the method and by the patch document.
 This RFC deprecates the negotiation of Content-MD5 as it has been obsoleted by
 [RFC7231]
 
-# Broken Cryptographic Algorithms
-
-The MD5 algorithm MUST NOT be used as it has been found vulnerable to collision
-attacks [CMU-836068].
-
-The SHA algorithm is NOT RECOMMENDED as it has been found vulnerable to
-collision attacks [IACR-2019-459].
 
 # Relationship to Subresource Integrity (SRI)
 
@@ -614,7 +645,7 @@ only as trustworthy as the authority that provided it.
 
 The SRI `integrity` attribute contains a cryptographic hash algorithm and digest
 value which is similar to `representation-data-digest` (see
-{{representation-digest}}). The major differences are in serialization format.
+{{computing}}). The major differences are in serialization format.
 
 The SRI digest value is calculated over the identity encoding of the resource,
 not the selected representation (as specified for `representation-data-digest`
@@ -655,7 +686,7 @@ validates successfully while the other fails. This document specifies no
 requirements or guidance for user agents that experience such cases.
 
 
-# Examples of Unsolicited Digest
+# Examples of Unsolicited Digest {#examples-unsolicited}
 
 The following examples demonstrate interactions where a server responds with a
 `Digest` header field even though the client did not solicit one using
@@ -985,7 +1016,7 @@ Digest: sha-256=UJSojgEzqUe4UoHzmNl5d2xkmrW3BOdmvsvWu1uFeu0=
 }
 ~~~
 
-# Examples of Want-Digest Solicited Digest
+# Examples of Want-Digest Solicited Digest {#examples-solicited}
 
 The following examples demonstrate interactions where a client solicits a
 `Digest` using `Want-Digest`.
