@@ -565,7 +565,7 @@ Given a key as input_key, return an ASCII string suitable for use in a HTTP fiel
 
 0. Convert input_key into a sequence of ASCII characters; if conversion fails, fail serialization.
 1. If input_key contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
-2. If the first character of input_key is not lcalpha, fail parsing.
+2. If the first character of input_key is not lcalpha, fail serialisation.
 3. Let output be an empty string.
 4. Append input_key to output.
 5. Return output.
