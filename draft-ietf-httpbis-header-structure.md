@@ -550,7 +550,7 @@ Given an array of (member_value, parameters) tuples as inner_list, and parameter
 Given an ordered Dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP field value.
 
 0. Let output be an empty string.
-1. For each parameter-name with a value of param_value in input_parameters:
+1. For each param_name with a value of param_value in input_parameters:
    1. Append ";" to output.
    2. Append the result of running Serializing a Key ({{ser-key}}) with param_name to output.
    4. If param_value is not Boolean true:
@@ -565,7 +565,7 @@ Given a key as input_key, return an ASCII string suitable for use in a HTTP fiel
 
 0. Convert input_key into a sequence of ASCII characters; if conversion fails, fail serialization.
 1. If input_key contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
-2. If the first character of input_key is not lcalpha, fail parsing.
+2. If the first character of input_key is not lcalpha, fail serialisation.
 3. Let output be an empty string.
 4. Append input_key to output.
 5. Return output.
@@ -590,7 +590,7 @@ Given an ordered Dictionary as input_dictionary (each member having a member_nam
 
 ### Serializing an Item {#ser-item}
 
-Given an Item bare_item and Parameters item_parameters as input, return an ASCII string suitable for use in a HTTP field value.
+Given an Item as bare_item and Parameters as item_parameters, return an ASCII string suitable for use in a HTTP field value.
 
 1. Let output be an empty string.
 2. Append the result of running Serializing a Bare Item {{ser-bare-item}} with bare_item to output.
@@ -830,7 +830,7 @@ Given an ASCII string as input_string, return a key. input_string is modified to
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. If the first character of input_string is not one of lcalpha, DIGIT, "\_", "-", ".", or "\*", return output_string.
-   2. Let char be the result of removing the first character of input_string.
+   2. Let char be the result of consuming the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
 
