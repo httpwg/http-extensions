@@ -198,7 +198,8 @@ types MUST be ignored.
 ## Urgency
 
 The urgency parameter (`u`) takes an integer between 0 and 7, in descending
-order of priority.
+order of priority. This range provides sufficient granularity for prioritizing
+responses for ordinary web browsing, at minimal complexity.
 
 The value is encoded as an sh-integer. The default value is 1.
 
@@ -261,6 +262,15 @@ priority = u=5, i
 When attempting to extend priorities, care must be taken to ensure any use of
 existing parameters are either unchanged or modified in a way that is backwards
 compatible for peers that are unaware of the extended meaning.
+
+For example, if there is a need to provide more granularity than eight urgency
+levels, it would be possible to subdivide the range using an additional
+parameter. Implementations that do not recognize the parameter can safely
+continue to use the less granular eight levels.
+
+Alternatively, the urgency can be augmented. For example, a graphical user-agent
+could send a `visible` parameter to indicate if the resource being requested is
+within the viewport.
 
 # The Priority HTTP Header Field
 
@@ -408,9 +418,14 @@ PRIORITY_UPDATE on wrong stream, a PRIORITY_UPDATE with an invalid ID, etc.
 # Merging Client- and Server-Driven Parameters {#merging}
 
 It is not always the case that the client has the best understanding of how the
-HTTP responses deserve to be prioritized. For example, use of an HTML document
-might depend heavily on one of the inline images. Existence of such
-dependencies is typically best known to the server.
+HTTP responses deserve to be prioritized. The server might have additional
+information that can be combined with the client's indicated priority in order
+to improve the prioritization of the response. For example, use of an HTML
+document might depend heavily on one of the inline images; existence of such
+dependencies is typically best known to the server. Or, a server that receives
+requests for a font {{?RFC8081}} and images with the same urgency might give
+higher precedence to the font, so that a visual client can render textual
+information at an early moment.
 
 An origin can use the Priority response header field to indicate its view on how
 an HTTP response should be prioritized. An intermediary that forwards an HTTP
@@ -554,31 +569,6 @@ end-to-end rather than hop-by-hop.
 
 It should also be noted that the use of a header field carrying a textual value
 makes the prioritization scheme extensible; see the discussion below.
-
-## Why do Urgencies Have Meanings?
-
-One of the aims of this specification is to define a mechanism for merging
-client- and server-provided hints for prioritizing the responses.  For that to
-work, each urgency level needs to have a well-defined meaning.  As an example, a
-server can assign the highest precedence among the supplementary responses to an
-HTTP response carrying an icon, because the meaning of `u=2` is shared
-among the endpoints.
-
-This specification restricts itself to defining a minimum set of urgency levels
-in order to provide sufficient granularity for prioritizing responses for
-ordinary web browsing, at minimal complexity.
-
-However, that does not mean that the prioritization scheme would forever be
-stuck to the eight levels.  The design provides extensibility.  If deemed
-necessary, it would be possible to subdivide any of the eight urgency levels
-that are currently defined.  Or, a graphical user-agent could send a `visible`
-parameter to indicate if the resource being requested is within the viewport.
-
-A server can combine the hints provided in the Priority header field with other
-information in order to improve the prioritization of responses.  For example, a
-server that receives requests for a font {{?RFC8081}} and images with the same
-urgency might give higher precedence to the font, so that a visual client can
-render textual information at an early moment.
 
 # IANA Considerations
 
