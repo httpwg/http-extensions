@@ -277,7 +277,7 @@ The ABNF for Parameters is:
 parameters    = *( ";" *SP parameter )
 parameter     = param-name [ "=" param-value ]
 param-name    = key
-key           = lcalpha *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
+key           = ( lcalpha / "*" ) *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
@@ -567,7 +567,7 @@ Given a key as input_key, return an ASCII string suitable for use in a HTTP fiel
 
 0. Convert input_key into a sequence of ASCII characters; if conversion fails, fail serialization.
 1. If input_key contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialisation.
-2. If the first character of input_key is not lcalpha, fail serialisation.
+2. If the first character of input_key is not lcalpha or "\*", fail serialisation.
 3. Let output be an empty string.
 4. Append input_key to output.
 5. Return output.
@@ -830,7 +830,7 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
 
 Given an ASCII string as input_string, return a key. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is not lcalpha, fail parsing.
+1. If the first character of input_string is not lcalpha or "\*", fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
    1. If the first character of input_string is not one of lcalpha, DIGIT, "\_", "-", ".", or "\*", return output_string.
