@@ -320,13 +320,13 @@ Members are separated by a comma with optional whitespace, while names and value
 Example-DictHeader: en="Applepie", da=:w4ZibGV0w6ZydGU=:
 ~~~
 
-Members whose value is Boolean true MUST omit that value when serialised, unless it has Parameters. For example, here both "b" and "c" are true, but "c"'s value is serialised because it has Parameters:
+Members whose value is Boolean true MUST omit that value when serialised. For example, here both "b" and "c" are true:
 
 ~~~ example
-Example-DictHeader: a=?0, b, c=?1; foo=bar
+Example-DictHeader: a=?0, b, c; foo=bar
 ~~~
 
-Note that this requirement is only on serialisation; parsers are still required to correctly handle the true value when it appears in Dictionary values.
+Note that this requirement is only on serialisation; parsers are still required to correctly handle the true Boolean value when it appears in Dictionary values.
 
 A Dictionary with a member whose value is an Inner List of tokens:
 
@@ -580,14 +580,16 @@ Given an ordered Dictionary as input_dictionary (each member having a member_nam
 1. Let output be an empty string.
 2. For each member_name with a value of (member_value, parameters) in input_dictionary:
    1. Append the result of running Serializing a Key ({{ser-key}}) with member's member_name to output.
-3. If member_value is not Boolean true or parameters is not empty:
-   1. Append "=" to output.
-      2. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
-      3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
-4. If more members remain in input_dictionary:
+3. If member_value is Boolean true:
+    1. Append the result of running Serializing Parameters ({{ser-params}}) with parameters to output.
+4. Otherwise:
+    1. Append "=" to output.
+    2. If member_value is an array, append the result of running Serialising an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
+    3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
+5. If more members remain in input_dictionary:
       1. Append "," to output.
       2. Append a single SP to output.
-3. Return output.
+6. Return output.
 
 
 ### Serializing an Item {#ser-item}
@@ -776,7 +778,7 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
        2. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
    3. Otherwise:
       1. Let value be Boolean true.
-      2. Let parameters be an empty, ordered map.
+      2. Let parameters be the result of running Parsing Parameters {{parse-param}} with input_string.
       3. Let member be the tuple (value, parameters).
    4. Add name this_key with value member to dictionary. If dictionary already contains a name this_key (comparing character-for-character), overwrite its value.
    5. Discard any leading SP characters from input_string.
@@ -1005,6 +1007,7 @@ _RFC Editor: Please remove this section before publication._
 * String length requirements apply to decoded strings (#1051).
 * Correctly round decimals in serialisation (#1043).
 * Clarify input to serialisation algorithms (#1055).
+* Omitted True dictionary value can have parameters (#1083).
 
 
 ## Since draft-ietf-httpbis-header-structure-14
