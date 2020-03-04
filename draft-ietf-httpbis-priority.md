@@ -69,7 +69,7 @@ important for an HTTP server to prioritize the HTTP responses, or the chunks of
 those HTTP responses, that it sends.
 
 HTTP/2 ({{?RFC7540}}) provides such a prioritization scheme. A client sends a
-series of PRIORITY frames to communicate to the server a “priority tree”; this
+series of PRIORITY frames to communicate to the server a "priority tree"; this
 represents the client's preferred ordering and weighted distribution of the
 bandwidth among the HTTP responses. However, the design and implementation of
 this scheme has been observed to have shortcomings, explained in {{motivation}}.
