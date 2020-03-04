@@ -64,12 +64,12 @@ by the retrieval of a CSS file that the document refers to.  In contrast, inline
 images do not block rendering and get drawn incrementally as the chunks of the
 images arrive.
 
-To provide meaningful representation of a document at the earliest moment, it is
+To provide meaningful presentation of a document at the earliest moment, it is
 important for an HTTP server to prioritize the HTTP responses, or the chunks of
 those HTTP responses, that it sends.
 
 HTTP/2 ({{?RFC7540}}) provides such a prioritization scheme. A client sends a
-series of PRIORITY frames to communicate to the server a “priority tree”; this
+series of PRIORITY frames to communicate to the server a "priority tree"; this
 represents the client's preferred ordering and weighted distribution of the
 bandwidth among the HTTP responses. However, the design and implementation of
 this scheme has been observed to have shortcomings, explained in {{motivation}}.
@@ -279,7 +279,7 @@ levels, it would be possible to subdivide the range using an additional
 parameter. Implementations that do not recognize the parameter can safely
 continue to use the less granular eight levels.
 
-Alternatively, the urgency can be augmented. For example, a graphical user-agent
+Alternatively, the urgency can be augmented. For example, a graphical user agent
 could send a `visible` parameter to indicate if the resource being requested is
 within the viewport.
 
