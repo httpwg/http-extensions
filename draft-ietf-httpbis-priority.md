@@ -670,6 +670,10 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 
 ## Since draft-kazuho-httpbis-priority-04
 
+* Remove semantics of Urgency levels (#1023, #1026)
+* Reduce guidance about how intermediary implements merging priority signals (#1026)
+* Remove mention of CDN-Loop (#1062)
+* Editorial changes
 * Make changes due to WG adoption
 * Removed outdated Consideration (#118)
 
