@@ -490,7 +490,6 @@ A server can determine if a request came from an intermediary through
 configuration, or by consulting if that request contains one of the following
 header fields:
 
-* CDN-Loop ({{?RFC8586}})
 * Forwarded, X-Forwarded-For ({{?RFC7239}})
 * Via ({{?RFC7230}}, Section 5.7.1)
 
