@@ -1,5 +1,6 @@
 ---
 title: Extensible Prioritization Scheme for HTTP
+abbrev: HTTP Priorities
 docname: draft-ietf-httpbis-priority-latest
 category: std
 
@@ -178,7 +179,7 @@ The Priority HTTP header field is an end-to-end way to transmit this set of
 parameters when a request or a response is issued. In order to reprioritize a
 request, HTTP-version-specific frames are used by clients to transmit the
 same information on a single hop.  If intermediaries want to specify
-prioritizaton on a multiplexed HTTP connection, it SHOULD use a
+prioritization on a multiplexed HTTP connection, it SHOULD use a
 PRIORITY_UPDATE frame and SHOULD NOT change the Priority header field.
 
 In both cases, the set of priority parameters is encoded as a Structured Headers
@@ -225,7 +226,7 @@ The lowest urgency level (7) is reserved for background tasks such as delivery
 of software updates. This urgency level SHOULD NOT be used for fetching
 responses that have impact on user interaction.
 
-## incremental
+## Incremental
 
 The incremental parameter (`i`) takes an sh-boolean as the value that indicates
 if an HTTP response can be processed incrementally, i.e. provide some
@@ -245,14 +246,14 @@ order in which those requests were generated is considered to be the best
 strategy.
 
 The following example shows a request for a JPEG file with the urgency parameter
-set to `5` and the incremental parameter set to `1`.
+set to `5` and the incremental parameter set to `true`.
 
 ~~~ example
 :method = GET
 :scheme = https
 :authority = example.net
 :path = /image.jpg
-priority = u=5, i=?1
+priority = u=5, i
 ~~~
 
 ## Defining New Parameters
@@ -421,16 +422,17 @@ left as an implementation decision.
 Absence of a priority parameter in an HTTP response indicates the server's
 disinterest in changing the client-provided value. This is different from the
 logic being defined for the request header field, in which omission of a
-priority parameter implies the use of their default values (see #parameters).
+priority parameter implies the use of their default values (see {{parameters}}).
 
-As a non-normative example, when the client sends an HTTP request with
+As a non-normative example, when the client sends an HTTP request with the
+urgency parameter set to `5` and the incremental parameter set to `true`
 
 ~~~ example
 :method = GET
 :scheme = https
 :authority = example.net
 :path = /menu.png
-priority = u=5, i=?1
+priority = u=5, i
 ~~~
 
 and the origin responds with
@@ -443,7 +445,7 @@ priority = u=1
 
 the intermediary might alter its understanding of the urgency from `5` to `1`,
 because it prefers the server-provided value over the client's. The incremental
-value continues to be `1`, the value specified by the client, as the server did
+value continues to be `true`, the value specified by the client, as the server did
 not specify the incremental(`i`) parameter.
 
 
@@ -479,7 +481,7 @@ to one end client to be delayed totally after those going to another.
 
 In order to mitigate this fairness problem, when a server responds to a request
 that is known to have come through an intermediary, the server SHOULD prioritize
-the response as if it was assigned the priority of  `u=1, i=?1`
+the response as if it was assigned the priority of  `u=1, i`
 (i.e. round-robin) regardless of the value of the Priority header field being
 transmitted, unless the server knows the intermediary is not
 coalescing requests from multiple clients.
@@ -649,7 +651,7 @@ Roy Fielding presented the idea of using a header field for representing
 priorities in <http://tools.ietf.org/agenda/83/slides/slides-83-httpbis-5.pdf>.
 In <https://github.com/pmeenan/http3-prioritization-proposal>, Patrick Meenan
 advocates for representing the priorities using a tuple of urgency and
-concurrency. The ability to deprecate HTTP/2 priortization is based on
+concurrency. The ability to deprecate HTTP/2 prioritization is based on
 {{?I-D.lassey-priority-setting}}, authored by Brad Lassey and Lucas Pardue, with
 modifications based on feedback that was not incorporated into an update to that
 document.
@@ -673,7 +675,7 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 
 ## Since draft-kazuho-httpbis-priority-03
 
-* Changed numbering from [-1,6] to [0,7] (#78)
+* Changed numbering from `[-1,6]` to `[0,7]` (#78)
 * Replaced priority scheme negotiation with HTTP/2 priority deprecation (#100)
 * Shorten parameter names (#108)
 * Expand on considerations (#105, #107, #109, #110, #111, #113)
