@@ -279,7 +279,7 @@ levels, it would be possible to subdivide the range using an additional
 parameter. Implementations that do not recognize the parameter can safely
 continue to use the less granular eight levels.
 
-Alternatively, the urgency can be augmented. For example, a graphical user-agent
+Alternatively, the urgency can be augmented. For example, a graphical user agent
 could send a `visible` parameter to indicate if the resource being requested is
 within the viewport.
 
