@@ -1008,6 +1008,7 @@ _RFC Editor: Please remove this section before publication._
 * Correctly round decimals in serialisation (#1043).
 * Clarify input to serialisation algorithms (#1055).
 * Omitted True dictionary value can have parameters (#1083).
+* Keys can now start with '*' (#1068).
 
 
 ## Since draft-ietf-httpbis-header-structure-14
