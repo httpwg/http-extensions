@@ -1,5 +1,5 @@
 ---
-title: Structured Headers for HTTP
+title: Structured Field Values for HTTP
 docname: draft-ietf-httpbis-header-structure-latest
 date: {DATE}
 category: std
@@ -64,7 +64,7 @@ informative:
 
 --- abstract
 
-This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields. It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
+This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", or "Structured Headers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
 
 
 --- note_Note_to_Readers
@@ -89,15 +89,15 @@ Once a field is defined, bespoke parsers and serializers often need to be writte
 
 This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialisation for expressing that model in HTTP {{?RFC7230}} header and trailer fields.
 
-HTTP headers and trailers that are defined as "Structured Headers" (or "Structured Trailers", respectively) use the types defined in this specification to define their syntax and basic handling rules, thereby simplifying both their definition by specification writers and handling by implementations.
+A HTTP header or trailer field that is defined as a "Structured Header" (or "Structured Trailer", respectively; if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
 
 Additionally, future versions of HTTP can define alternative serialisations of the abstract model of these structures, allowing fields that use it to be transmitted more efficiently without being redefined.
 
 Note that it is not a goal of this document to redefine the syntax of existing HTTP fields; the mechanisms described herein are only intended to be used with those that explicitly opt into them.
 
-{{specify}} describes how to specify a Structured Header.
+{{specify}} describes how to specify a Structured Field.
 
-{{types}} defines a number of abstract data types that can be used in Structured Headers.
+{{types}} defines a number of abstract data types that can be used in Structured Fields.
 
 Those abstract types can be serialized into and parsed from HTTP field values using the algorithms described in {{text}}.
 
@@ -127,11 +127,13 @@ When parsing from HTTP fields, implementations MUST follow the algorithms, but M
 For serialisation to HTTP fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behaviour so long as the output still matches the ABNF.
 
 
-# Defining New Structured Headers {#specify}
+# Defining New Structured Fields {#specify}
 
-To specify a HTTP field as a Structured Header (or Structured Trailer), its authors needs to:
+To specify a HTTP field as a Structured Field, its authors needs to:
 
 * Reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
+
+* Identify whether the field is a Structured Header (i.e., it can only be used in the header section - the common case), a Structured Field (only in the trailer section), or a Structured Field (both).
 
 * Specify the type of the field value; either List ({{list}}), Dictionary ({{dictionary}}), or Item ({{item}}).
 
@@ -141,17 +143,17 @@ To specify a HTTP field as a Structured Header (or Structured Trailer), its auth
 
 Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, Inner Lists are only valid when a field definition explicitly allows them.
 
-When Structured Headers parsing fails, the field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the field requires different error handling, this should be explicitly specified.
+When parsing fails, the field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the field requires different error handling, this should be explicitly specified.
 
 However, both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, field specifications are discouraged from defining the presence of an unrecognised Parameter as an error condition.
 
-To help assure that this extensibility is available in the future, and to encourage consumers to use a fully capable Structured Headers parser, a field definition can specify that "grease" Parameters be added by senders. For example, a specification could stipulate that all Parameters beginning with the letter "h" are reserved for this use.
+To help assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" Parameters be added by senders. For example, a specification could stipulate that all Parameters beginning with the letter "h" are reserved for this use.
 
-Note that a field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List). Likewise, field definitions can only use Structured Headers for the entire field value, not a portion thereof.
+Note that a field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List). Likewise, field definitions can only use this specification for the entire field value, not a portion thereof.
 
-This specification defines minimums for the length or number of various structures supported by Structured Headers implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
+This specification defines minimums for the length or number of various structures supported by implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
 
-Specifications can refer to a Structured Header's field name as a "structured header name" and its field value as a "structured header value" as necessary. Field definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for their use.
+Specifications can refer to a field name as a "structured header name", "structured trailer name" or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value" or "structured field value" as necessary. Field definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for their use.
 
 For example, a fictitious Foo-Example header field might be specified as:
 
@@ -189,7 +191,7 @@ For example:
 
 # Structured Data Types {#types}
 
-This section defines the abstract value types that can be composed into Structured Headers. The ABNF provided represents the on-wire format in HTTP field values.
+This section defines the abstract value types that can be composed into Structured Fields. The ABNF provided represents the on-wire format in HTTP field values.
 
 In summary:
 
@@ -463,12 +465,12 @@ sh-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 
 Parsers MUST support Tokens with at least 512 characters.
 
-Note that a Structured Header Token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
+Note that Token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
 
 
 ### Byte Sequences {#binary}
 
-Byte Sequences can be conveyed in Structured Headers.
+Byte Sequences can be conveyed in Structured Fields.
 
 The ABNF for a Byte Sequence is:
 
@@ -488,7 +490,7 @@ Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
 
 ### Booleans {#boolean}
 
-Boolean values can be conveyed in Structured Headers.
+Boolean values can be conveyed in Structured Fields.
 
 The ABNF for a Boolean is:
 
@@ -504,11 +506,11 @@ Example-BoolHdr: ?1
 ~~~
 
 
-# Working With Structured Headers in HTTP {#text}
+# Working With Structured Fields in HTTP {#text}
 
-This section defines how to serialize and parse Structured Headers in field values, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
+This section defines how to serialize and parse Structured Fields in field values, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
 
-## Serializing Structured Headers {#text-serialize}
+## Serializing Structured Fields {#text-serialize}
 
 Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP field value.
 
@@ -693,9 +695,9 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in a H
 5. Return output.
 
 
-## Parsing Fields into Structured Headers {#text-parse}
+## Parsing Structured Fields {#text-parse}
 
-When a receiving implementation parses HTTP fields that are known to be Structured Headers, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
+When a receiving implementation parses HTTP fields that are known to be Structured Fields, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
 Given an array of bytes input_bytes that represents the chosen field's field-value (which is empty if that field is not present), and field_type (one of "dictionary", "list", or "item"), return the parsed header value.
 
@@ -936,10 +938,10 @@ This document has no actions for IANA.
 
 # Security Considerations
 
-The size of most types defined by Structured Headers is not limited; as a result, extremely large fields could be an attack vector (e.g., for resource consumption). Most HTTP implementations limit the sizes of individual fields as well as the overall header or trailer section size to mitigate such attacks.
+The size of most types defined by Structured Fields is not limited; as a result, extremely large fields could be an attack vector (e.g., for resource consumption). Most HTTP implementations limit the sizes of individual fields as well as the overall header or trailer section size to mitigate such attacks.
 
 It is possible for parties with the ability to inject new HTTP fields to change the meaning
-of a Structured Header. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
+of a Structured Field. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
 --- back
 
@@ -948,7 +950,7 @@ of a Structured Header. In some circumstances, this will cause parsing to fail, 
 
 ## Why not JSON?
 
-Earlier proposals for Structured Headers were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields required senders and recipients to implement specific additional handling.
+Earlier proposals for Structured Fields were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields required senders and recipients to implement specific additional handling.
 
 For example, JSON has specification issues around large numbers and objects with duplicate members. Although advice for avoiding these issues is available (e.g., {{?RFC7493}}), it cannot be relied upon.
 
@@ -958,13 +960,13 @@ Another example is JSON's ability to nest content to arbitrary depths. Since the
 
 Because of JSON's broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability. In short, if it looks like JSON, people will be tempted to use a JSON parser / serialiser on field values.
 
-Since a major goal for Structured Headers is to improve interoperability and simplify implementation, these concerns led to a format that requires a dedicated parser and serializer.
+Since a major goal for Structured Fields is to improve interoperability and simplify implementation, these concerns led to a format that requires a dedicated parser and serializer.
 
 Additionally, there were widely shared feelings that JSON doesn't "look right" in HTTP fields.
 
-## Structured Headers don't "fit" my data.
+## Structured Fields don't "fit" my data.
 
-Structured Headers intentionally limits the complexity of data structures, to assure that it can be processed in a performant manner with little overhead. This means that work is necessary to fit some data types into them.
+Structured Fields intentionally limits the complexity of data structures, to assure that it can be processed in a performant manner with little overhead. This means that work is necessary to fit some data types into them.
 
 Sometimes, this can be achieved by creating limited substructures in field values, and/or using more than one field. For example, consider:
 
@@ -978,7 +980,7 @@ Since the description contains an array of key/value pairs, we use a List to rep
 
 When specifying more than one field, it's important to remember to describe what a processor's behaviour should be when one of the fields is missing.
 
-If you need to fit arbitrarily complex data into a field value, Structured Headers is probably a poor fit for your use case.
+If you need to fit arbitrarily complex data into a field value, Structured Fields is probably a poor fit for your use case.
 
 # Implementation Notes
 
