@@ -64,7 +64,7 @@ by the retrieval of a CSS file that the document refers to.  In contrast, inline
 images do not block rendering and get drawn incrementally as the chunks of the
 images arrive.
 
-To provide meaningful representation of a document at the earliest moment, it is
+To provide meaningful presentation of a document at the earliest moment, it is
 important for an HTTP server to prioritize the HTTP responses, or the chunks of
 those HTTP responses, that it sends.
 
