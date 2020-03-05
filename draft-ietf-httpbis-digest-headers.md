@@ -337,8 +337,13 @@ The BNF for "parameter" is as is used in [RFC7230]. All digest-algorithm values
 are case-insensitive.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
-digest-algorithm values.  The registry contains the following tokens.
+digest-algorithm values.
+The registry contains the tokens listed below.
 
+Some algorithms, although registered, have since been found vulnerable:
+the MD5 algorithm MUST NOT be used due to collision attacks [CMU-836068]
+and the SHA algorithm is NOT RECOMMENDED due
+to collision attacks [IACR-2019-459].
 
   SHA-256:
   :  
@@ -407,7 +412,7 @@ To allow sender and recipient to provide a checksum which is independent from
 
 
   ID-SHA-256:
-  :
+  :  
     * Description: The sha-256 digest of the representation-data of the resource when no
       content coding is applied (eg. `Content-Encoding: identity`)
     * Reference: [RFC6234], [RFC4648], this document.
@@ -580,14 +585,6 @@ resource's own semantic partly implied by the method and by the patch document.
 
 This RFC deprecates the negotiation of Content-MD5 as it has been obsoleted by
 [RFC7231]
-
-# Broken Cryptographic Algorithms
-
-The MD5 algorithm MUST NOT be used as it has been found vulnerable to collision
-attacks [CMU-836068].
-
-The SHA algorithm is NOT RECOMMENDED as it has been found vulnerable to
-collision attacks [IACR-2019-459].
 
 # Relationship to Subresource Integrity (SRI)
 
