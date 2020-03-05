@@ -147,7 +147,7 @@ When parsing fails, the field is ignored (see {{text-parse}}); in most situation
 
 However, both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, field specifications are discouraged from defining the presence of an unrecognized Parameter as an error condition.
 
-To help assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" Parameters be added by senders. For example, a specification could stipulate that all Parameters beginning with the letter "h" are reserved for this use.
+To help assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" Parameters be added by senders. For example, a specification could stipulate that all Parameters beginning with the letter "h" are reserved for this use, and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
 
 Note that a field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List). Likewise, field definitions can only use this specification for the entire field value, not a portion thereof.
 
