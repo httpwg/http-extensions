@@ -67,6 +67,8 @@ normative:
       ins: A. van Kesteren
       name: Anne van Kesteren
       organization: Mozilla
+informative:
+  RFC6265:
   UA-CH:
     target: https://wicg.github.io/ua-client-hints/
     title: User Agent Client Hints
@@ -80,8 +82,6 @@ normative:
       name: Yoav Weiss
       organization: Google
 
-informative:
-  RFC6265:
 
 --- abstract
 
@@ -103,9 +103,9 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 # Introduction
 
-There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences. Applications that want to allow the server to optimize content delivery and user experience based on such capabilities have, historically, had to rely on passive identification (e.g., by matching User-Agent (Section 5.5.3 of {{RFC7231}}) header field against an established database of client signatures), used HTTP cookies {{RFC6265}} and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
+There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences. Historically, applications that wanted to allow the server to optimize content delivery and user experience based on such capabilities had to rely on passive identification (e.g., by matching User-Agent (Section 5.5.3 of {{RFC7231}}) header field against an established database of client signatures), used HTTP cookies {{RFC6265}} and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
 
-Such techniques are expensive to setup and maintain, are not portable across both applications and servers, and make it hard to reason for both client and server about which data is required and is in use during the negotiation:
+Such techniques are expensive to setup and maintain, and are not portable across both applications and servers. They also make it hard for both client and server to reason about which data is required and is in use during the negotiation:
 
   - User agent detection cannot reliably identify all static variables, cannot infer dynamic client preferences, requires external device database, is not cache friendly, and is reliant on a passive fingerprinting surface.
   - Cookie based approaches are not portable across applications and servers, impose additional client-side latency by requiring JavaScript execution, and are not cache friendly.
@@ -117,9 +117,9 @@ However, traditional proactive content negotiation techniques often mean that cl
 
 This document defines a new response header, Accept-CH, that allows an origin server to explicitly ask that clients send these headers in requests. It also defines guidelines for content negotiation mechanisms that use it, colloquially referred to as Client Hints.
 
-Client Hints mitigate the performance concerns by assuring that clients will only send the request headers when they're actually going to be used, and the privacy concerns of passive fingerprinting by requiring explicit opt-in and disclosure of required headers by the server through the use of the Accept-CH response header.
+Client Hints mitigate performance concerns by assuring that clients will only send the request headers when they're actually going to be used, and privacy concerns of passive fingerprinting by requiring explicit opt-in and disclosure of required headers by the server through the use of the Accept-CH response header.
 
-This document defines the Client Hints infrastructure, a framework that enables servers to opt-in to specific proactive content negotiation features, which will enable them to adapt their content accordingly. However, it does not define any specific features that will use that infrastructure. Those features will be defined in their respective specifications.
+This document defines Client Hints, a framework that enables servers to opt-in to specific proactive content negotiation features, adapting their content accordingly. However, it does not define any specific features that will use that infrastructure. Those features will be defined in their respective specifications.
 
 One example of such a feature is the User Agent Client Hints feature {{UA-CH}}.
 
@@ -135,7 +135,8 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 ## Sending Client Hints
 
-Clients control which Client Hints are sent in requests, based on their default settings, user configuration, and server preferences. The client and server can use an opt-in mechanism outlined below to negotiate which header fields need to be sent to allow for efficient content adaption, and optionally use additional mechanisms to negotiate delegation policies that control access of third parties to same header fields.
+Clients choose what Client Hints to send in a request based on their default settings, user configuration, and server preferences expressed in `Accept-CH`.
+The client and server can use an opt-in mechanism outlined below to negotiate which header fields need to be sent to allow for efficient content adaption, and optionally use additional mechanisms to negotiate delegation policies that control access of third parties to same header fields.
 
 Implementers SHOULD be aware of the passive fingerprinting implications when implementing support for Client Hints, and follow the considerations outlined in the <xref target="security-considerations">Security Considerations</xref> section of this document.
 
@@ -144,7 +145,7 @@ Implementers SHOULD be aware of the passive fingerprinting implications when imp
 
 When presented with a request that contains one or more client hint header fields, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
-Further, depending on the hint used, the server can generate additional response header fields to convey related values to aid client processing.
+Furthermore, the server can generate additional response header fields (as specified by the hint or hints in use) that convey related values to aid client processing.
 
 # Advertising Server Support
 
@@ -152,7 +153,7 @@ Servers can advertise support for Client Hints using the mechanism described bel
 
 ## The Accept-CH Response Header Field {#accept-ch}
 
-The Accept-CH response header field or the equivalent HTML meta element with http-equiv attribute (Section 4.2.5.3 of {{HTML}}) indicate server support for particular hints indicated in its value.
+The Accept-CH response header field indicates server support for the hints indicated in its value.
 
 Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be an sh-list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.3.4 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
@@ -167,21 +168,20 @@ For example:
   Accept-CH: Sec-CH-Example, Sec-CH-Example-2
 ~~~
 
-When a client receives an HTTP response advertising support for provided list of Clients Hints, it SHOULD process it as origin ({{!RFC6454}}) opt-in to receive Client Hint header fields advertised in the field-value, for subsequent same-origin requests.
+When a client receives an HTTP response containing `Accept-CH`, it indicates that the origin opts-in to receive the indicated request header fields for subsequent same-origin requests. The opt-in MUST be ignored if delivered over non-secure transport or for an origin with a scheme different from HTTPS. It SHOULD be persisted and bound to the origin to enable delivery of Client Hints on subsequent requests to the server's origin.
 
-  - The opt-in MUST be delivered over a secure transport.
-  - The opt-in SHOULD be persisted and bound to the origin to enable delivery of Client Hints on subsequent requests to the server's origin, and MUST NOT be persisted for an origin that isn't HTTPS.
+For example:
 
 ~~~ example
   Accept-CH: Sec-CH-Example, Sec-CH-Example-2
   Accept-CH: Sec-CH-Example-3
 ~~~
 
-For example, based on the Accept-CH example above, which is received in response to a user agent navigating to "https://example.com", and delivered over a secure transport: a user agent will have to persist an Accept-CH preference bound to "https://example.com" and use it for user agent navigations to "https://example.com" and any same-origin resource requests initiated by the page constructed from the navigation's response. This preference will not extend to resource requests initiated to "https://example.com" from other origins.
+Based on the Accept-CH example above, which is received in response to a user agent navigating to "https://example.com", and delivered over a secure transport: a user agent will have to persist an Accept-CH preference bound to "https://example.com" and use it for user agent navigations to "https://example.com" and any same-origin resource requests initiated by the page constructed from the navigation's response. This preference will not extend to resource requests initiated to "https://example.com" from other origins.
 
 ## Interaction with Caches
 
-When selecting an optimized response based on one or more Client Hints, and if the resource is cacheable, the server needs to generate a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
+When selecting a response based on one or more Client Hints, and if the resource is cacheable, the server needs to generate a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 ~~~ example
   Vary: Sec-CH-Example
