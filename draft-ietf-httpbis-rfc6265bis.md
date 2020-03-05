@@ -44,7 +44,6 @@ normative:
     ann: See {{idna-migration}} for an explanation why the normative reference to an obsoleted specification is needed.
   RFC4790:
   RFC5234:
-  RFC5226:
   RFC5890:
   RFC6454:
   RFC7230:
