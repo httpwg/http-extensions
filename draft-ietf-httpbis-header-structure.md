@@ -424,6 +424,8 @@ For example, a header whose value is defined as a Decimal could look like:
 Example-DecimalHeader: 4.5
 ~~~
 
+Note that the serialisation algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the header definition to occur before serialisation.
+
 
 ### Strings {#string}
 
