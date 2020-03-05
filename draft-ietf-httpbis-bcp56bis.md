@@ -164,11 +164,9 @@ generic protocol elements such as methods, status codes or existing header field
 should focus their specifications on protocol elements that are specific to that application;
 namely their HTTP resources.
 
-For example, when writing a specification, it's often tempting to specify exactly how HTTP is to be
-implemented, supported and used.
-
-However, this can easily lead to an unintended profile of HTTP's behaviour. For example, it's
-common to see specifications with language like this:
+When writing a specification, it's often tempting to specify exactly how HTTP is to be
+implemented, supported and used. However, this can easily lead to an unintended profile of HTTP's
+behaviour. For example, it's common to see specifications with language like this:
 
     A `POST` request MUST result in a `201 Created` response.
 
