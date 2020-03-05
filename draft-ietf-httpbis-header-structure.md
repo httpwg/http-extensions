@@ -89,7 +89,7 @@ Once a field is defined, bespoke parsers and serializers often need to be writte
 
 This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{?RFC7230}} header and trailer fields.
 
-A HTTP header or trailer field that is defined as a "Structured Header" (or "Structured Trailer", respectively; if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
+A HTTP field that is defined as a "Structured Header" (or "Structured Trailer", respectively; if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
 
 Additionally, future versions of HTTP can define alternative serializations of the abstract model of these structures, allowing fields that use it to be transmitted more efficiently without being redefined.
 
@@ -195,7 +195,7 @@ This section defines the abstract value types that can be composed into Structur
 
 In summary:
 
-* There are three top-level types that a HTTP header or trailer field can be defined as; Lists, Dictionaries, and Items.
+* There are three top-level types that a HTTP field can be defined as; Lists, Dictionaries, and Items.
 
 * Lists and Dictionaries are containers; their members can be Items or Inner Lists (which are themselves lists of items).
 
