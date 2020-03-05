@@ -277,7 +277,8 @@ The ABNF for Parameters is:
 parameters    = *( ";" *SP parameter )
 parameter     = param-name [ "=" param-value ]
 param-name    = key
-key           = ( lcalpha / "*" ) *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
+key           = ( lcalpha / "*" )
+                *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
@@ -370,8 +371,8 @@ The ABNF for Items is:
 
 ~~~ abnf
 sh-item   = bare-item parameters
-bare-item = sh-integer / sh-decimal / sh-string / sh-token / sh-binary
-            / sh-boolean
+bare-item = sh-integer / sh-decimal / sh-string / sh-token
+            / sh-binary / sh-boolean
 ~~~
 
 For example, a header field that is defined to be an Item that is an Integer might look like:
