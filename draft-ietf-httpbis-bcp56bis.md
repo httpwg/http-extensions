@@ -86,7 +86,7 @@ different paces. As a result, such an HTTP-based API will need to more carefully
 extensibility of the service will be handled and how different deployment requirements will be
 accommodated.
 
-More generally, application protocols using HTTP face a number of design decisions, including:
+More generally, an application protocol using HTTP faces a number of design decisions, including:
 
 * Should it define a new URI scheme? Use new ports?
 * Should it use standard HTTP methods and status codes, or define new ones?
