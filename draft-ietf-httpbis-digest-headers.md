@@ -454,11 +454,8 @@ The "UNIXsum" digest-algorithm uses ASCII string of decimal digits.
    UNIXsum=30637
 ~~~
 
-# Header Field Specifications
 
-The following headers are defined
-
-## Want-Digest {#want-digest-header}
+# The Want-Digest Header Field {#want-digest-header}
 
 The Want-Digest message header field indicates the sender's desire to receive a
 representation digest on messages associated with the request URI and
@@ -487,7 +484,7 @@ Two examples of its use are
    Want-Digest: SHA-512;q=0.3, sha-256;q=1, md5;q=0
 ~~~
 
-## Digest {#digest-header}
+# The Digest Header Field {#digest-header}
 
 The Digest header field provides a digest of the representation data.
 
