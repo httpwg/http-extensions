@@ -121,7 +121,7 @@ Client Hints mitigate performance concerns by assuring that clients will only se
 
 This document defines Client Hints, a framework that enables servers to opt-in to specific proactive content negotiation features, adapting their content accordingly. However, it does not define any specific features that will use that infrastructure. Those features will be defined in their respective specifications.
 
-One example of such a feature is the User Agent Client Hints feature {{!UA-CH}}.
+One example of such a feature is the User Agent Client Hints feature {{UA-CH}}.
 
 ## Notational Conventions
 
