@@ -48,6 +48,7 @@ normative:
   RFC6454:
   RFC7230:
   RFC7231:
+  RFC8126:
   USASCII:
     title: "Coded Character Set -- 7-bit American Standard Code for Information Interchange"
     seriesinfo:
@@ -2034,7 +2035,7 @@ Each registered attribute name is associated with a description, and a
 reference detailing how the attribute is to be processed and stored.
 
 New registrations happen on a "RFC Required" basis (see Section 4.7 of
-[RFC8126]). The attribute to be registered MUST match the `extension-av`
+{{RFC8126}}). The attribute to be registered MUST match the `extension-av`
 syntax defined in {{abnf-syntax}}. Note that attribute names are generally
 defined in CamelCase, but technically accepted case-insensitively.
 
