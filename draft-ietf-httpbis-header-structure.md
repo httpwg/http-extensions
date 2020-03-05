@@ -804,7 +804,7 @@ Given an ASCII string as input_string, return a (bare_item, parameters) tuple. i
 
 Given an ASCII string as input_string, return a bare Item. input_string is modified to remove the parsed value.
 
-1. If the first character of input_string is a "-" or a DIGIT, return the result of running Parsing a Number ({{parse-number}}) with input_string.
+1. If the first character of input_string is a "-" or a DIGIT, return the result of running Parsing an Integer or Decimal ({{parse-number}}) with input_string.
 2. If the first character of input_string is a DQUOTE, return the result of running Parsing a String ({{parse-string}}) with input_string.
 3. If the first character of input_string is ":", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
 4. If the first character of input_string is "?", return the result of running Parsing a Boolean ({{parse-boolean}}) with input_string.
@@ -841,9 +841,9 @@ Given an ASCII string as input_string, return a key. input_string is modified to
 4. Return output_string.
 
 
-### Parsing a Number {#parse-number}
+### Parsing an Integer or Decimal {#parse-number}
 
-Given an ASCII string as input_string, return a number. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return an Integer or Decimal. input_string is modified to remove the parsed value.
 
 NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}}), and returns the corresponding structure.
 
