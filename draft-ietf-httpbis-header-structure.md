@@ -277,7 +277,8 @@ The ABNF for Parameters is:
 parameters    = *( ";" *SP parameter )
 parameter     = param-name [ "=" param-value ]
 param-name    = key
-key           = ( lcalpha / "*" ) *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
+key           = ( lcalpha / "*" )
+                *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
@@ -370,8 +371,8 @@ The ABNF for Items is:
 
 ~~~ abnf
 sh-item   = bare-item parameters
-bare-item = sh-integer / sh-decimal / sh-string / sh-token / sh-binary
-            / sh-boolean
+bare-item = sh-integer / sh-decimal / sh-string / sh-token
+            / sh-binary / sh-boolean
 ~~~
 
 For example, a header field that is defined to be an Item that is an Integer might look like:
@@ -389,7 +390,7 @@ Example-IntItemHeader: 5; foo=bar
 
 ### Integers {#integer}
 
-Integers have a range of −999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ({{IEEE754}}).
+Integers have a range of âˆ’999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ({{IEEE754}}).
 
 The ABNF for Integers is:
 
@@ -621,7 +622,7 @@ Given an Item as input_item, return an ASCII string suitable for use in a HTTP f
 
 Given an Integer as input_integer, return an ASCII string suitable for use in a HTTP field value.
 
-0. If input_integer is not an integer in the range of −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialization.
+0. If input_integer is not an integer in the range of âˆ’999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialization.
 1. Let output be an empty string.
 2. If input_integer is less than (but not equal to) 0, append "-" to output.
 3. Append input_integer's numeric value represented in base 10 using only decimal digits to output.
@@ -864,7 +865,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}
    6. If type is "decimal" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
    1. Parse input_number as an integer and let output_number be the product of the result and sign.
-   2. If output_number is outside the range −999,999,999,999,999 to 999,999,999,999,999 inclusive, fail parsing.
+   2. If output_number is outside the range âˆ’999,999,999,999,999 to 999,999,999,999,999 inclusive, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
    2. If the number of characters after "." in input_number is greater than three, fail parsing.
