@@ -324,104 +324,6 @@ Location: /authors/123
 {"id": "123", "author": "Camilleri"}
 ~~~
 
-# Digest Algorithm Values {#algorithms}
-
-Digest algorithm values are used to indicate a specific digest computation.  For
-some algorithms, one or more parameters may be supplied.
-
-~~~
-   digest-algorithm = token
-~~~
-
-The BNF for "parameter" is as is used in [RFC7230]. All digest-algorithm values
-are case-insensitive.
-
-The Internet Assigned Numbers Authority (IANA) acts as a registry for
-digest-algorithm values.
-The registry contains the tokens listed below.
-
-Some algorithms, although registered, have since been found vulnerable:
-the MD5 algorithm MUST NOT be used due to collision attacks [CMU-836068]
-and the SHA algorithm is NOT RECOMMENDED due
-to collision attacks [IACR-2019-459].
-
-  SHA-256:
-  :  
-    * Description: The SHA-256 algorithm [RFC6234].  The output of
-      this algorithm is encoded using the base64 encoding [RFC4648].
-    * Reference: [RFC6234], [RFC4648], this document.
-    * Status: standard
-
-  SHA-512:
-  :  
-    * Description: The SHA-512 algorithm [RFC6234].  The output of
-      this algorithm is encoded using the base64 encoding [RFC4648].
-    * Reference: [RFC6234], [RFC4648], this document.
-    * Status: standard
-
-  MD5:
-  :  
-    * Description: The MD5 algorithm, as specified in [RFC1321].
-      The output of this algorithm is encoded using the
-      base64 encoding  [RFC4648].
-      The MD5 algorithm MUST NOT be used as it's now vulnerable
-      to collision attacks [CMU-836068].
-    * Reference: [RFC1321], [RFC4648], this document.
-    * Status: deprecated
-
-  SHA:
-  :  
-    * Description:  The SHA-1 algorithm [RFC3174].  The output of this
-      algorithm is encoded using the base64 encoding  [RFC4648].
-      The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
-      to collision attacks [IACR-2019-459].
-    * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
-    * Status: obsoleted
-
-  UNIXsum:
-  :  
-    * Description: The algorithm computed by the UNIX "sum" command,
-      as defined by the Single UNIX Specification,
-      Version 2 [UNIX].  The output of this algorithm is an
-      ASCII decimal-digit string representing the 16-bit
-      checksum, which is the first word of the output of
-      the UNIX "sum" command.
-    * Reference: [UNIX], this document.
-    * Status: standard
-
-  UNIXcksum:
-  :  
-    * Description: The algorithm computed by the UNIX "cksum" command,
-      as defined by the Single UNIX Specification,
-      Version 2 [UNIX].  The output of this algorithm is an
-      ASCII digit string representing the 32-bit CRC,
-      which is the first word of the output of the UNIX
-      "cksum" command.
-    * Reference: [UNIX], this document.
-    * Status: standard
-
-To allow sender and recipient to provide a checksum which is independent from
-`Content-Encoding`, the following additional algorithms are defined:
-
-  ID-SHA-512:
-  :  
-    * Description: The sha-512 digest of the representation-data of the resource when no
-    content coding is applied (eg. `Content-Encoding: identity`)
-    * Reference: [RFC6234], [RFC4648], this document.
-    * Status: standard
-
-
-  ID-SHA-256:
-  :  
-    * Description: The sha-256 digest of the representation-data of the resource when no
-      content coding is applied (eg. `Content-Encoding: identity`)
-    * Reference: [RFC6234], [RFC4648], this document.
-    * Status: standard
-
-If other digest-algorithm values are defined, the associated encoding MUST
-either be represented as a quoted string, or MUST NOT include ";" or "," in the
-character sets used for the encoding.
-
 ## Representation Digest {#representation-digest}
 
 A representation digest is the value of the output of a digest algorithm,
@@ -536,6 +438,104 @@ Two examples of its use are
    Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
            id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
+
+# Digest Algorithm Values {#algorithms}
+
+Digest algorithm values are used to indicate a specific digest computation.  For
+some algorithms, one or more parameters may be supplied.
+
+~~~
+   digest-algorithm = token
+~~~
+
+The BNF for "parameter" is as is used in [RFC7230]. All digest-algorithm values
+are case-insensitive.
+
+The Internet Assigned Numbers Authority (IANA) acts as a registry for
+digest-algorithm values.
+The registry contains the tokens listed below.
+
+Some algorithms, although registered, have since been found vulnerable:
+the MD5 algorithm MUST NOT be used due to collision attacks [CMU-836068]
+and the SHA algorithm is NOT RECOMMENDED due
+to collision attacks [IACR-2019-459].
+
+  SHA-256:
+  :  
+    * Description: The SHA-256 algorithm [RFC6234].  The output of
+      this algorithm is encoded using the base64 encoding [RFC4648].
+    * Reference: [RFC6234], [RFC4648], this document.
+    * Status: standard
+
+  SHA-512:
+  :  
+    * Description: The SHA-512 algorithm [RFC6234].  The output of
+      this algorithm is encoded using the base64 encoding [RFC4648].
+    * Reference: [RFC6234], [RFC4648], this document.
+    * Status: standard
+
+  MD5:
+  :  
+    * Description: The MD5 algorithm, as specified in [RFC1321].
+      The output of this algorithm is encoded using the
+      base64 encoding  [RFC4648].
+      The MD5 algorithm MUST NOT be used as it's now vulnerable
+      to collision attacks [CMU-836068].
+    * Reference: [RFC1321], [RFC4648], this document.
+    * Status: deprecated
+
+  SHA:
+  :  
+    * Description:  The SHA-1 algorithm [RFC3174].  The output of this
+      algorithm is encoded using the base64 encoding  [RFC4648].
+      The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
+      to collision attacks [IACR-2019-459].
+    * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
+    * Status: obsoleted
+
+  UNIXsum:
+  :  
+    * Description: The algorithm computed by the UNIX "sum" command,
+      as defined by the Single UNIX Specification,
+      Version 2 [UNIX].  The output of this algorithm is an
+      ASCII decimal-digit string representing the 16-bit
+      checksum, which is the first word of the output of
+      the UNIX "sum" command.
+    * Reference: [UNIX], this document.
+    * Status: standard
+
+  UNIXcksum:
+  :  
+    * Description: The algorithm computed by the UNIX "cksum" command,
+      as defined by the Single UNIX Specification,
+      Version 2 [UNIX].  The output of this algorithm is an
+      ASCII digit string representing the 32-bit CRC,
+      which is the first word of the output of the UNIX
+      "cksum" command.
+    * Reference: [UNIX], this document.
+    * Status: standard
+
+To allow sender and recipient to provide a checksum which is independent from
+`Content-Encoding`, the following additional algorithms are defined:
+
+  ID-SHA-512:
+  :  
+    * Description: The sha-512 digest of the representation-data of the resource when no
+    content coding is applied (eg. `Content-Encoding: identity`)
+    * Reference: [RFC6234], [RFC4648], this document.
+    * Status: standard
+
+
+  ID-SHA-256:
+  :  
+    * Description: The sha-256 digest of the representation-data of the resource when no
+      content coding is applied (eg. `Content-Encoding: identity`)
+    * Reference: [RFC6234], [RFC4648], this document.
+    * Status: standard
+
+If other digest-algorithm values are defined, the associated encoding MUST
+either be represented as a quoted string, or MUST NOT include ";" or "," in the
+character sets used for the encoding.
 
 
 # Use of Digest when acting on resources {#acting-on-resources}
