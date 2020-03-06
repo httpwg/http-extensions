@@ -163,7 +163,7 @@ such as the scheme defined in this specification. The
 SETTINGS_DEPRECATE_HTTP2_PRIORITIES setting described below enables endpoints to
 understand their peer's intention. The value of the parameter MUST
 be 0 or 1. Any value other than 0 or 1 MUST be treated as a connection error
-(see {{!RFC7540}}; Section 5.4.1) of type PROTOCOL_ERROR.
+(see {{!RFC7540}}, Section 5.4.1) of type PROTOCOL_ERROR.
 
 Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
 When the peer receives the first SETTINGS frame, it learns the sender has
