@@ -216,10 +216,10 @@ interpreted as described in [RFC7230] and [RFC7231].
 The definition "validator" in this document is to be interpreted as described in
 Section 7.2 of [RFC7231].
 
-# The Digest Header Field {#digest-header}
+# Representation Digest {#representation-digest}
 
-To avoid inconsistencies, an integrity mechanism for HTTP messages should
-decouple the checksum calculation from:
+The representation digest is an integrity mechanism for HTTP resources that
+decouples the checksum calculation from:
 
 - the payload body - which may be altered by mechanism like Range Requests
   [RFC7233] or the method (eg. HEAD);
@@ -227,8 +227,40 @@ decouple the checksum calculation from:
 - and the message body - which depends on `Transfer-Encoding` and whatever
   transformations the intermediaries may apply.
 
+and takes into account that `representation data` defined in  [RFC7231] as
+
+~~~
+   representation-data := Content-Encoding( Content-Type( bits ) )
+~~~
+
+can be:
+
+- fully contained in the message body,
+- partially-contained in the message body,
+- or not at all contained in the message body.
+
 {{resource-representation}} contains many examples
 showing the HTTP semantics impact on the message and payload body.
+
+A representation digest consists of
+the value of a checksum computed on the entire selected `representation data` of a resource
+together with an indication of the algorithm used (and any parameters)
+
+~~~ abnf
+   representation-data-digest = digest-algorithm "="
+                                <encoded digest output>
+~~~
+
+The checksum is computed using one of the `digest-algorithms` listed in {{algorithms}}
+and then encoded in a format specific to the `digest-algorithm`.
+
+The example below shows the  `sha-256` digest-algorithm which uses base64 encoding.
+
+~~~ example
+   sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+~~~
+
+# The Digest Header Field {#digest-header}
 
 The Digest header field provides a digest of the representation data.
 
@@ -236,11 +268,6 @@ The Digest header field provides a digest of the representation data.
    Digest = "Digest" ":" OWS 1#representation-data-digest
 ~~~
 
-`Representation data` might be:
-
-- fully contained in the message body,
-- partially-contained in the message body,
-- or not at all contained in the message body.
 
 The resource is specified by the effective request URI and any `validator`
 contained in the message.
@@ -276,31 +303,6 @@ Two examples of its use are
            id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
 
-## Computing Digests of Representation Data {#representation-digest}
-
-A representation digest is the value of the output of a digest algorithm,
-together with an indication of the algorithm used (and any parameters).
-
-~~~
-   representation-data-digest = digest-algorithm "="
-                                <encoded digest output>
-~~~
-
-As explained in {{resource-representation}} the digest is computed on the entire
-selected `representation data` of the resource defined in [RFC7231]:
-
-~~~
-   representation-data := Content-Encoding( Content-Type( bits ) )
-~~~
-
-The encoded digest output uses the encoding format defined for the specific
-digest-algorithm.
-
-The example below shows the  `sha-256` digest-algorithm which uses base64 encoding.
-
-~~~
-   sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-~~~
 
 # The Want-Digest Header Field {#want-digest-header}
 
