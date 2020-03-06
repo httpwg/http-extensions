@@ -649,7 +649,7 @@ validates successfully while the other fails. This document specifies no
 requirements or guidance for user agents that experience such cases.
 
 
-# Examples of Unsolicited Digest
+# Examples of Unsolicited Digest {#examples-unsolicited}
 
 The following examples demonstrate interactions where a server responds with a
 `Digest` header field even though the client did not solicit one using
@@ -979,7 +979,7 @@ Digest: sha-256=UJSojgEzqUe4UoHzmNl5d2xkmrW3BOdmvsvWu1uFeu0=
 }
 ~~~
 
-# Examples of Want-Digest Solicited Digest
+# Examples of Want-Digest Solicited Digest {#examples-solicited}
 
 The following examples demonstrate interactions where a client solicits a
 `Digest` using `Want-Digest`.
