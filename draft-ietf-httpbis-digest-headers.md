@@ -324,32 +324,6 @@ Location: /authors/123
 {"id": "123", "author": "Camilleri"}
 ~~~
 
-## Computing Digests of Representation Data {#representation-digest}
-
-A representation digest is the value of the output of a digest algorithm,
-together with an indication of the algorithm used (and any parameters).
-
-~~~
-   representation-data-digest = digest-algorithm "="
-                                <encoded digest output>
-~~~
-
-As explained in {{resource-representation}} the digest is computed on the entire
-selected `representation data` of the resource defined in [RFC7231]:
-
-~~~
-   representation-data := Content-Encoding( Content-Type( bits ) )
-~~~
-
-The encoded digest output uses the encoding format defined for the specific
-digest-algorithm.
-
-The example below shows the  `sha-256` digest-algorithm which uses base64 encoding.
-
-~~~
-   sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-~~~
-
 # The Digest Header Field {#digest-header}
 
 The Digest header field provides a digest of the representation data.
@@ -396,6 +370,32 @@ Two examples of its use are
 
    Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
            id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+~~~
+
+## Computing Digests of Representation Data {#representation-digest}
+
+A representation digest is the value of the output of a digest algorithm,
+together with an indication of the algorithm used (and any parameters).
+
+~~~
+   representation-data-digest = digest-algorithm "="
+                                <encoded digest output>
+~~~
+
+As explained in {{resource-representation}} the digest is computed on the entire
+selected `representation data` of the resource defined in [RFC7231]:
+
+~~~
+   representation-data := Content-Encoding( Content-Type( bits ) )
+~~~
+
+The encoded digest output uses the encoding format defined for the specific
+digest-algorithm.
+
+The example below shows the  `sha-256` digest-algorithm which uses base64 encoding.
+
+~~~
+   sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
 
 # The Want-Digest Header Field {#want-digest-header}
