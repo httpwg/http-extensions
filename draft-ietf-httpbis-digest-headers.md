@@ -228,6 +228,12 @@ decouple the checksum calculation from:
 - and the message body - which depends on `Transfer-Encoding` and whatever
   transformations the intermediaries may apply.
 
+This is because in HTTP `representation data` might be:
+
+- fully contained in the message body,
+- partially-contained in the message body,
+- or not at all contained in the message body.
+
 The following examples show how representation metadata, payload transformations
 and method impacts on the message and payload body. When the payload body
 contains non-printable characters (eg. when it is compressed) it is shown as
@@ -326,28 +332,31 @@ Location: /authors/123
 
 # The Digest Header Field {#digest-header}
 
-The Digest header field provides a digest of the representation data.
+The Digest header field conveys integrity information based on the `representation data`
+and consists of one or more representation-data-digest.
 
 ~~~
    Digest = "Digest" ":" OWS 1#representation-data-digest
+   representation-data-digest = digest-algorithm "="
+                                <encoded digest output>
 ~~~
-
-`Representation data` might be:
-
-- fully contained in the message body,
-- partially-contained in the message body,
-- or not at all contained in the message body.
 
 The resource is specified by the effective request URI and any `validator`
 contained in the message.
+See {{post-not-request-uri}} for an example of how Digest relates to
+header fields such as Content-Location (see [RFC7231], Section 3.1.4.2).
 
-For example, in a response to a HEAD request, the digest is calculated using the
-representation data that would have been enclosed in the payload body if the
-same request had been a GET.
+The representation digest has the following syntax
 
-Digest can be used in requests too.
+~~~
+   representation-data-digest = digest-algorithm "="
+                                <encoded digest output>
+~~~
 
-The `Digest` value depends on the representation metadata.
+and is computed using one of the digest algorithms defined in {{algorithms}},
+together with an indication of the algorithm used (and any parameters).
+
+Digest can appear in both requests and responses.
 
 A Digest header field MAY contain multiple representation-data-digest values.
 This could be useful for responses expected to reside in caches shared by users
@@ -374,20 +383,24 @@ Two examples of its use are
 
 ## Computing Digests of Representation Data {#representation-digest}
 
-A representation digest is the value of the output of a digest algorithm,
-together with an indication of the algorithm used (and any parameters).
-
-~~~
-   representation-data-digest = digest-algorithm "="
-                                <encoded digest output>
-~~~
-
-As explained in {{resource-representation}} the digest is computed on the entire
-selected `representation data` of the resource defined in [RFC7231]:
+Digest is computed on the entire
+selected `representation data` defined in [RFC7231]:
 
 ~~~
    representation-data := Content-Encoding( Content-Type( bits ) )
 ~~~
+
+This decouples the checksum calculation from:
+
+- the payload body - which may be altered by mechanism like Range Requests
+  [RFC7233] or the method (eg. HEAD);
+
+- and the message body - which depends on `Transfer-Encoding` and whatever
+  transformations the intermediaries may apply.
+
+For example, in a response to a HEAD request, the digest is calculated using the
+representation data that would have been enclosed in the payload body if the
+same request had been a GET.
 
 The encoded digest output uses the encoding format defined for the specific
 digest-algorithm.
