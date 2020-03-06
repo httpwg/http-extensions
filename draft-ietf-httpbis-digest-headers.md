@@ -216,8 +216,7 @@ interpreted as described in [RFC7230] and [RFC7231].
 The definition "validator" in this document is to be interpreted as described in
 Section 7.2 of [RFC7231].
 
-
-# Resource Representation and Representation-Data {#resource-representation}
+# Representation Digest {#representation-digest}
 
 To avoid inconsistencies, an integrity mechanism for HTTP messages should
 decouple the checksum calculation from:
@@ -228,105 +227,8 @@ decouple the checksum calculation from:
 - and the message body - which depends on `Transfer-Encoding` and whatever
   transformations the intermediaries may apply.
 
-The following examples show how representation metadata, payload transformations
-and method impacts on the message and payload body. When the payload body
-contains non-printable characters (eg. when it is compressed) it is shown as
-base64-encoded string.
-
-Here is a gzip-compressed json object
-
-Request:
-
-~~~
-PUT /entries/1234 HTTP/1.1
-Content-Type: application/json
-Content-Encoding: gzip
-
-H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
-~~~
-
-Now the same payload body conveys a malformed json object.
-
-Request:
-
-~~~
-PUT /entries/1234 HTTP/1.1
-Content-Type: application/json
-
-H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
-~~~
-
-A Range-Request alters the payload body, conveying a partial representation.
-
-Request:
-
-~~~
-GET /entries/1234 HTTP/1.1
-Range: bytes=1-7
-
-~~~
-
-Response:
-
-~~~
-HTTP/1.1 206 Partial Content
-Content-Encoding: gzip
-Content-Type: application/json
-Content-Range: bytes 1-7/18
-
-iwgAla3RXA==
-~~~
-
-
-Now the method too alters the payload body.
-
-Request:
-
-~~~
-HEAD /entries/1234 HTTP/1.1
-Accept: application/json
-Accept-Encoding: gzip
-
-~~~
-
-Response:
-
-~~~
-HTTP/1.1 200 OK
-Content-Type: application/json
-Content-Encoding: gzip
-
-~~~
-
-Finally the semantics of an HTTP response may decouple the effective request URI
-from the enclosed representation. In the example response below, the
-`Content-Location` header field indicates that the enclosed representation
-refers to the resource available at `/authors/123`.
-
-Request:
-
-~~~
-POST /authors/ HTTP/1.1
-Accept: application/json
-Content-Type: application/json
-
-{"author": "Camilleri"}
-~~~
-
-Response:
-
-~~~
-HTTP/1.1 201 Created
-Content-Type: application/json
-Content-Location: /authors/123
-Location: /authors/123
-
-{"id": "123", "author": "Camilleri"}
-~~~
-
-## Computing Digests of Representation Data {#representation-digest}
-
-A representation digest is the value of the output of a digest algorithm,
+We thus introduce the concept of representation digest
+that is the value of the output of a digest-algorithm defined in {{algorithms}},
 together with an indication of the algorithm used (and any parameters).
 
 ~~~
@@ -334,7 +236,7 @@ together with an indication of the algorithm used (and any parameters).
                                 <encoded digest output>
 ~~~
 
-As explained in {{resource-representation}} the digest is computed on the entire
+The digest is computed on the entire
 selected `representation data` of the resource defined in [RFC7231]:
 
 ~~~
@@ -1261,6 +1163,103 @@ Specification document(s):  {{digest-header}} of this document
 
 --- back
 
+# Resource Representation and Representation-Data {#resource-representation}
+
+The following examples show how representation metadata, payload transformations
+and method impacts on the message and payload body. When the payload body
+contains non-printable characters (eg. when it is compressed) it is shown as
+base64-encoded string.
+
+Here is a gzip-compressed json object
+
+Request:
+
+~~~
+PUT /entries/1234 HTTP/1.1
+Content-Type: application/json
+Content-Encoding: gzip
+
+H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
+~~~
+
+Now the same payload body conveys a malformed json object.
+
+Request:
+
+~~~
+PUT /entries/1234 HTTP/1.1
+Content-Type: application/json
+
+H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
+~~~
+
+A Range-Request alters the payload body, conveying a partial representation.
+
+Request:
+
+~~~
+GET /entries/1234 HTTP/1.1
+Range: bytes=1-7
+
+~~~
+
+Response:
+
+~~~
+HTTP/1.1 206 Partial Content
+Content-Encoding: gzip
+Content-Type: application/json
+Content-Range: bytes 1-7/18
+
+iwgAla3RXA==
+~~~
+
+
+Now the method too alters the payload body.
+
+Request:
+
+~~~
+HEAD /entries/1234 HTTP/1.1
+Accept: application/json
+Accept-Encoding: gzip
+
+~~~
+
+Response:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Encoding: gzip
+
+~~~
+
+Finally the semantics of an HTTP response may decouple the effective request URI
+from the enclosed representation. In the example response below, the
+`Content-Location` header field indicates that the enclosed representation
+refers to the resource available at `/authors/123`.
+
+Request:
+
+~~~
+POST /authors/ HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{"author": "Camilleri"}
+~~~
+
+Response:
+
+~~~
+HTTP/1.1 201 Created
+Content-Type: application/json
+Content-Location: /authors/123
+Location: /authors/123
+
+{"id": "123", "author": "Camilleri"}
+~~~
 
 # FAQ
 
