@@ -362,35 +362,6 @@ The "UNIXsum" digest-algorithm uses ASCII string of decimal digits.
 ~~~
 
 
-# The Want-Digest Header Field {#want-digest-header}
-
-The Want-Digest message header field indicates the sender's desire to receive a
-representation digest on messages associated with the request URI and
-representation metadata.
-
-~~~
-   Want-Digest = "Want-Digest" ":" OWS 1#want-digest-value
-   want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
-   qvalue = ( "0"  [ "."  0*1DIGIT ] ) /
-            ( "1"  [ "."  0*1( "0" ) ] )
-~~~
-
-If a digest-algorithm is not accompanied by a qvalue, it is treated as if its
-associated qvalue were 1.0.
-
-The sender is willing to accept a digest-algorithm if and only if it is listed
-in a Want-Digest header field of a message, and its qvalue is non-zero.
-
-If multiple acceptable digest-algorithm values are given, the sender's preferred
-digest-algorithm is the one (or ones) with the highest qvalue.
-
-Two examples of its use are
-
-~~~
-   Want-Digest: sha-256
-   Want-Digest: SHA-512;q=0.3, sha-256;q=1, md5;q=0
-~~~
-
 # The Digest Header Field {#digest-header}
 
 The Digest header field provides a digest of the representation data.
@@ -437,6 +408,35 @@ Two examples of its use are
 
    Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
            id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+~~~
+
+# The Want-Digest Header Field {#want-digest-header}
+
+The Want-Digest message header field indicates the sender's desire to receive a
+representation digest on messages associated with the request URI and
+representation metadata.
+
+~~~
+   Want-Digest = "Want-Digest" ":" OWS 1#want-digest-value
+   want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
+   qvalue = ( "0"  [ "."  0*1DIGIT ] ) /
+            ( "1"  [ "."  0*1( "0" ) ] )
+~~~
+
+If a digest-algorithm is not accompanied by a qvalue, it is treated as if its
+associated qvalue were 1.0.
+
+The sender is willing to accept a digest-algorithm if and only if it is listed
+in a Want-Digest header field of a message, and its qvalue is non-zero.
+
+If multiple acceptable digest-algorithm values are given, the sender's preferred
+digest-algorithm is the one (or ones) with the highest qvalue.
+
+Two examples of its use are
+
+~~~
+   Want-Digest: sha-256
+   Want-Digest: SHA-512;q=0.3, sha-256;q=1, md5;q=0
 ~~~
 
 # Digest Algorithm Values {#algorithms}
