@@ -371,7 +371,7 @@ are within the scope of the cookie. For example, the server can send the user
 agent a "session identifier" named SID with the value 31d4d96e407aad42. The
 user agent then returns the session identifier in subsequent requests.
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42
@@ -385,7 +385,7 @@ The server can alter the default scope of the cookie using the Path and
 Domain attributes. For example, the server can instruct the user agent to
 return the cookie to every path and every subdomain of site.example.
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42; Path=/; Domain=site.example
@@ -402,7 +402,7 @@ that the server uses the Secure and HttpOnly attributes to provide
 additional security protections for the more sensitive session identifier (see
 {{sane-set-cookie-semantics}}).
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42; Path=/; Secure; HttpOnly
@@ -420,7 +420,7 @@ expiration date in the Expires attribute. Note that the user agent might
 delete the cookie before the expiration date if the user agent's cookie store
 exceeds its quota or if the user manually deletes the server's cookie.
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
@@ -435,7 +435,7 @@ expiration date in the past. The server will be successful in removing the
 cookie only if the Path and the Domain attribute in the Set-Cookie header
 match the values used when the cookie was created.
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: lang=; Expires=Sun, 06 Nov 1994 08:49:37 GMT
@@ -694,13 +694,13 @@ If a cookie's name begins with a case-sensitive match for the string
 For example, the following `Set-Cookie` header would be rejected by a conformant
 user agent, as it does not have a `Secure` attribute.
 
-~~~
+~~~ example
 Set-Cookie: __Secure-SID=12345; Domain=site.example
 ~~~
 
 Whereas the following `Set-Cookie` header would be accepted:
 
-~~~
+~~~ example
 Set-Cookie: __Secure-SID=12345; Domain=site.example; Secure
 ~~~
 
@@ -723,7 +723,7 @@ to ignore.
 
 For example, the following cookies would always be rejected:
 
-~~~
+~~~ example
 Set-Cookie: __Host-SID=12345
 Set-Cookie: __Host-SID=12345; Secure
 Set-Cookie: __Host-SID=12345; Domain=site.example
@@ -734,7 +734,7 @@ Set-Cookie: __Host-SID=12345; Secure; Domain=site.example; Path=/
 While the would be accepted if set from a secure origin (e.g.
 "https://site.example/"), and rejected otherwise:
 
-~~~
+~~~ example
 Set-Cookie: __Host-SID=12345; Secure; Path=/
 ~~~
 
