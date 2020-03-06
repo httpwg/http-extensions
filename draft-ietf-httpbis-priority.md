@@ -5,7 +5,7 @@ docname: draft-ietf-httpbis-priority-latest
 category: std
 
 ipr: trust200902
-area: Transport
+area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
 
