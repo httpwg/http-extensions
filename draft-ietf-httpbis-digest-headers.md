@@ -227,7 +227,7 @@ that can be fully or partially contained in the message body, or not contained a
    representation-data := Content-Encoding( Content-Type( bits ) )
 ~~~
 
-It is prudent to consider the effect of the HTTP semantics on the messages;
+This takes into account the effect of the HTTP semantics on the messages;
 for example the payload body can be affected by Range Requests or methods such as HEAD,
 while the message body is dependent on transfer codings and other transformations:
 {{resource-representation}} contains several examples to help illustrate those effects.
