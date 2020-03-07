@@ -352,23 +352,22 @@ the MD5 algorithm MUST NOT be used due to collision attacks [CMU-836068]
 and the SHA algorithm is NOT RECOMMENDED due
 to collision attacks [IACR-2019-459].
 
-  SHA-256:
-  :  
-    * Description: The SHA-256 algorithm [RFC6234].  The output of
+
+  {: vspace="0"}
+  SHA-256
+  : * Description: The SHA-256 algorithm [RFC6234].  The output of
       this algorithm is encoded using the base64 encoding [RFC4648].
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
-  SHA-512:
-  :  
-    * Description: The SHA-512 algorithm [RFC6234].  The output of
+  SHA-512
+  : * Description: The SHA-512 algorithm [RFC6234].  The output of
       this algorithm is encoded using the base64 encoding [RFC4648].
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
-  MD5:
-  :  
-    * Description: The MD5 algorithm, as specified in [RFC1321].
+  MD5
+  : * Description: The MD5 algorithm, as specified in [RFC1321].
       The output of this algorithm is encoded using the
       base64 encoding  [RFC4648].
       The MD5 algorithm MUST NOT be used as it's now vulnerable
@@ -376,18 +375,16 @@ to collision attacks [IACR-2019-459].
     * Reference: [RFC1321], [RFC4648], this document.
     * Status: deprecated
 
-  SHA:
-  :  
-    * Description:  The SHA-1 algorithm [RFC3174].  The output of this
+  SHA
+  : * Description:  The SHA-1 algorithm [RFC3174].  The output of this
       algorithm is encoded using the base64 encoding  [RFC4648].
       The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
       to collision attacks [IACR-2019-459].
     * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
     * Status: obsoleted
 
-  UNIXsum:
-  :  
-    * Description: The algorithm computed by the UNIX "sum" command,
+  UNIXsum
+  : * Description: The algorithm computed by the UNIX "sum" command,
       as defined by the Single UNIX Specification,
       Version 2 [UNIX].  The output of this algorithm is an
       ASCII decimal-digit string representing the 16-bit
@@ -396,9 +393,8 @@ to collision attacks [IACR-2019-459].
     * Reference: [UNIX], this document.
     * Status: standard
 
-  UNIXcksum:
-  :  
-    * Description: The algorithm computed by the UNIX "cksum" command,
+  UNIXcksum
+  : * Description: The algorithm computed by the UNIX "cksum" command,
       as defined by the Single UNIX Specification,
       Version 2 [UNIX].  The output of this algorithm is an
       ASCII digit string representing the 32-bit CRC,
@@ -410,17 +406,15 @@ to collision attacks [IACR-2019-459].
 To allow sender and recipient to provide a checksum which is independent from
 `Content-Encoding`, the following additional algorithms are defined:
 
-  ID-SHA-512:
-  :  
-    * Description: The sha-512 digest of the representation-data of the resource when no
+  {: vspace="0"}
+  ID-SHA-512
+  : * Description: The sha-512 digest of the representation-data of the resource when no
     content coding is applied (eg. `Content-Encoding: identity`)
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
-
-  ID-SHA-256:
-  :  
-    * Description: The sha-256 digest of the representation-data of the resource when no
+  ID-SHA-256
+  : * Description: The sha-256 digest of the representation-data of the resource when no
       content coding is applied (eg. `Content-Encoding: identity`)
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
