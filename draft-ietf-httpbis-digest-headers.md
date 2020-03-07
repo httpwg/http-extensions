@@ -218,29 +218,19 @@ Section 7.2 of [RFC7231].
 
 # Representation Digest {#representation-digest}
 
-The representation digest is an integrity mechanism for HTTP resources that
-decouples the checksum calculation from:
-
-- the payload body - which may be altered by mechanism like Range Requests
-  [RFC7233] or the method (eg. HEAD);
-
-- and the message body - which depends on `Transfer-Encoding` and whatever
-  transformations the intermediaries may apply.
-
-and takes into account that `representation data` defined in  [RFC7231] as
+The representation digest is an integrity mechanism for HTTP resources
+which uses a checksum  that is calculated independently of the payload body and message body.
+It is calculated using the representation data (see [RFC7231]),
+that can be fully or partially contained in the message body, or not contained at all:
 
 ~~~
    representation-data := Content-Encoding( Content-Type( bits ) )
 ~~~
 
-can be:
-
-- fully contained in the message body,
-- partially-contained in the message body,
-- or not at all contained in the message body.
-
-{{resource-representation}} contains many examples
-showing the HTTP semantics impact on the message and payload body.
+It is prudent to consider the effect of the HTTP semantics on the messages;
+for example the payload body can be affected by Range Requests or methods such as HEAD,
+while the message body is dependent on transfer codings and other transformations:
+{{resource-representation}} contains several examples to help illustrate those effects.
 
 A representation digest consists of
 the value of a checksum computed on the entire selected `representation data` of a resource
