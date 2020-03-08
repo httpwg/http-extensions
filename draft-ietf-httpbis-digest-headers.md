@@ -252,23 +252,22 @@ The example below shows the  `sha-256` digest-algorithm which uses base64 encodi
 
 # The Digest Header Field {#digest-header}
 
-The Digest header field provides a digest of the representation data.
+The Digest header field contains a list of one or more representation digest values
+as defined in {{representation-digest}}.
+It can be used in both request and response.
 
-~~~
+~~~ abnf
    Digest = "Digest" ":" OWS 1#representation-data-digest
 ~~~
-
 
 The resource is specified by the effective request URI and any `validator`
 contained in the message.
 
-For example, in a response to a HEAD request, the digest is calculated using the
-representation data that would have been enclosed in the payload body if the
-same request had been a GET.
-
-Digest can be used in requests too.
-
-The `Digest` value depends on the representation metadata.
+See {{post-not-request-uri}} for an example of how digest relates
+to header fields such as Content-Location (see [RFC7231] Section 3.1.4.2)
+while a comprehensive set of examples showing the impacts of
+representation metadata, payload transformations and HTTP methods on digest
+is provided in {{examples-solicited}} and {{examples-unsolicited}}.
 
 A Digest header field MAY contain multiple representation-data-digest values.
 This could be useful for responses expected to reside in caches shared by users
@@ -285,7 +284,7 @@ that the recipient will ignore it.
 
 Two examples of its use are
 
-~~~
+~~~ example
    Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
                       AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 
