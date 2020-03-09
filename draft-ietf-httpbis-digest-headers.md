@@ -220,7 +220,7 @@ Section 7.2 of [RFC7231].
 
 The representation digest is an integrity mechanism for HTTP resources
 which uses a checksum  that is calculated independently of the payload body and message body.
-It is calculated using the representation data (see [RFC7231]),
+It uses the representation data (see [RFC7231]),
 that can be fully or partially contained in the message body, or not contained at all:
 
 ~~~
@@ -242,7 +242,7 @@ together with an indication of the algorithm used (and any parameters)
 ~~~
 
 The checksum is computed using one of the `digest-algorithms` listed in {{algorithms}}
-and then encoded in a format specific to the `digest-algorithm`.
+and then encoded in the associated format.
 
 The example below shows the  `sha-256` digest-algorithm which uses base64 encoding.
 
@@ -263,18 +263,18 @@ It can be used in both request and response.
 The resource is specified by the effective request URI and any `validator`
 contained in the message.
 
-See {{post-not-request-uri}} for an example of how digest relates
-to header fields such as Content-Location (see [RFC7231] Section 3.1.4.2)
-while a comprehensive set of examples showing the impacts of
+The relationship between Content-Location (see [RFC7231] Section 3.1.4.2)
+and Digest is demonstrated in {{post-not-request-uri}}.
+A comprehensive set of examples showing the impacts of
 representation metadata, payload transformations and HTTP methods on digest
-is provided in {{examples-solicited}} and {{examples-unsolicited}}.
+is provided in {{examples-unsolicited}} and {{examples-solicited}}.
 
 A Digest header field MAY contain multiple representation-data-digest values.
 This could be useful for responses expected to reside in caches shared by users
 with different browsers, for example.
 
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
-header field. This allows the recipient to chose which digest-algorithm(s) to
+header field. This allows the recipient to choose which digest-algorithm(s) to
 use for validation instead of verifying every received
 representation-data-digest.
 
@@ -325,7 +325,7 @@ Two examples of its use are
 # Digest Algorithm Values {#algorithms}
 
 Digest algorithm values are used to indicate a specific digest computation.  For
-some algorithms, one or more parameters may be supplied.
+some algorithms, one or more parameters can be supplied.
 
 ~~~
    digest-algorithm = token
@@ -417,13 +417,12 @@ character sets used for the encoding.
 
 # Use of Digest when acting on resources {#acting-on-resources}
 
-POST and PATCH requests may appear to convey partial representations but are
+POST and PATCH requests can appear to convey partial representations but are
 semantically acting on resources. The enclosed representation, including its
 metadata refers to that action.
 
 In these requests the representation digest MUST be computed on the
 representation-data of that action.
-
 This is the only possible choice because representation digest requires complete
 representation metadata (see {{representation-digest}}).
 
@@ -436,20 +435,17 @@ In responses,
 - if there is a referenced resource
   `Digest` MUST be computed on the selected representation of the referenced resource
    even if that is different from the target resource.
-   That may or may not result in computing `Digest` on the enclosed representation.
+   That might or might not result in computing `Digest` on the enclosed representation.
 
-The latter case might be done accordingly to the HTTP semantics of the given
+The latter case might be done according to the HTTP semantics of the given
 method, for example using the `Content-Location` header field.
-
-Differently from `Content-Location`, which is representation metadata, the
-`Location` header field does not affect `Digest`.
+In contrast, the `Location` header field does not affect `Digest` because
+it is not representation metadata.
 
 ## Digest and PATCH
 
-In PATCH requests the representation digest MUST be computed on the patch
-document.
-
-This is because the representation metadata refers to the patch document and not
+In PATCH requests the representation digest MUST be computed on the patch document
+because the representation metadata refers to the patch document and not
 to the target resource (see Section 2 of {{?RFC5789}}).
 
 In PATCH responses the representation digest MUST be computed on the selected
@@ -461,7 +457,7 @@ resource's own semantic partly implied by the method and by the patch document.
 # Deprecate Negotiation of Content-MD5
 
 This RFC deprecates the negotiation of Content-MD5 as it has been obsoleted by
-[RFC7231]
+[RFC7231].
 
 # Relationship to Subresource Integrity (SRI)
 
@@ -472,7 +468,7 @@ generation, signalling and validation.
 
 SRI allows a first-party authority to declare an integrity assertion on a
 resource served by a first or third party authority. This is done via the
-`integrity` attribute that can added to `script` or `link` HTML elements.
+`integrity` attribute that can be added to `script` or `link` HTML elements.
 Therefore, the integrity assertion is always made out-of-band to the resource
 fetch. In contrast, the `Digest` header field is supplied in-band alongside the
 selected representation, meaning that an authority can only declare an integrity
@@ -511,15 +507,15 @@ appear on requests.
 
 ## Supporting Both SRI and Representation Digest
 
-The SRI and Representation Digest mechanism are different and complementary but
-one is not capable of replacing the other because they have have different
+The SRI and Representation Digest mechanisms are different and complementary but
+one is not capable of replacing the other because they have different
 threat, security and implementation properties.
 
 A user agent that supports both mechanisms is expected to apply the rules
 specified for each but since the two mechanisms are independent, the ordering is
 not important. However, a user agent supporting both could benefit from
-performing representation digest validation first because the it does not
-require a conversion to into identity encoding.
+performing representation digest validation first because it does not always
+require a conversion into identity encoding.
 
 There is a chance that a user agent supporting both mechanisms may find one
 validates successfully while the other fails. This document specifies no
@@ -992,14 +988,14 @@ when `Digest` is included in this set.
 Since the `Digest` header field is a hash of a resource representation, it
 explicitly depends on the `representation metadata` (eg. the values of
 `Content-Type`, `Content-Encoding` etc). A signature that protects `Digest` but
-not other `representation metadata` may expose the communication to tampering.
+not other `representation metadata` can expose the communication to tampering.
 For example, an actor could manipulate the `Content-Type` field-value and cause
 a digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
 endpoints. See also {{digest-and-content-location}}.
 
 `Digest` SHOULD always be used over a connection which provides integrity at
-transport layer that protects HTTP header fields.
+the transport layer that protects HTTP header fields.
 
 A `Digest` header field using NOT RECOMMENDED digest-algorithms SHOULD NOT be
 used in signatures.
@@ -1222,7 +1218,7 @@ Content-Encoding: gzip
 
 ~~~
 
-Finally the semantics of an HTTP response may decouple the effective request URI
+Finally the semantics of an HTTP response might decouple the effective request URI
 from the enclosed representation. In the example response below, the
 `Content-Location` header field indicates that the enclosed representation
 refers to the resource available at `/authors/123`.
