@@ -969,23 +969,6 @@ Since a major goal for Structured Fields is to improve interoperability and simp
 
 Additionally, there were widely shared feelings that JSON doesn't "look right" in HTTP fields.
 
-## Structured Fields don't "fit" my data.
-
-Structured Fields intentionally limits the complexity of data structures, to assure that it can be processed in a performant manner with little overhead. This means that work is necessary to fit some data types into them.
-
-Sometimes, this can be achieved by creating limited substructures in field values, and/or using more than one field. For example, consider:
-
-~~~ example
-Example-Thing: name="Widget", cost=89.2, descriptions=(foo bar)
-Example-Description: foo; url="https://example.net"; context=123,
-                     bar; url="https://example.org"; context=456
-~~~
-
-Since the description contains an array of key/value pairs, we use a List to represent them, with the token for each member of the array used to identify it in the "descriptions" member of the Example-Thing dictionary header.
-
-When specifying more than one field, it's important to remember to describe what a processor's behavior should be when one of the fields is missing.
-
-If you need to fit arbitrarily complex data into a field value, Structured Fields is probably a poor fit for your use case.
 
 # Implementation Notes
 
