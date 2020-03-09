@@ -1360,3 +1360,10 @@ _RFC Editor: Please remove this section before publication._
 * Use when acting on resources (POST, PATCH) #853
 * Added Relationship with SRI, draft Use Cases #868, #971
 * Warn about the implications of `Content-Location`
+
+## Since draft-ietf-httpbis-digest-headers-01
+
+* Digest of error responses is computed on the error representation-data #1004
+* Effect of HTTP semantics on payload and message body moved to appendix #1122
+* Editorial refactoring, moving headers sections up. #1109-#1112, #1116,
+  #1117, #1122-#1124
