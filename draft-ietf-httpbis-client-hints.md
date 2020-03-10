@@ -34,31 +34,6 @@ normative:
   RFC5234:
   RFC7231:
   RFC7234:
-  RFC6454:
-  HTML:
-    target: https://html.spec.whatwg.org/
-    title: HTML
-    author:
-    -
-      ins: I. Hickson
-      name: Ian Hickson
-      organization: Google, Inc.
-    -
-      ins: S. Pieters
-      name: Simon Pieters
-      organization: Bocoup
-    -
-      ins: A. van Kesteren
-      name: Anne van Kesteren
-      organization: Mozilla
-    -
-      ins: P. Jägenstedt
-      name: Philip Jägenstedt
-      organization: Google, Inc.
-    -
-      ins: D. Denicola
-      name: Domenic Denicola
-      organization: Google, Inc.
   FETCH:
     target: https://fetch.spec.whatwg.org/
     title: Fetch
