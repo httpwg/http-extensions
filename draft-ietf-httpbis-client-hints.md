@@ -313,6 +313,7 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 
 ## Since -10
 * PR 1072: LC feedback from Julian Reschke.
+* PR 1080: Improve list style.
 * PR 1082: Remove section mentioning Variants.
 * PR 1097: Editorial feedback from mnot. 
 
