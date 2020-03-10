@@ -143,13 +143,17 @@ To specify a HTTP field as a Structured Field, its authors needs to:
 
 Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, Inner Lists are only valid when a field definition explicitly allows them.
 
-When parsing fails, the field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, it will by default be ignored. If the field requires different error handling, this should be explicitly specified.
+When parsing fails, the entire field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different error handling, this should be explicitly specified.
 
-However, both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. As a result, field specifications are discouraged from defining the presence of an unrecognized Parameter as an error condition.
+Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized Parameter as an error condition.
 
-To help assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" Parameters be added by senders. For example, a specification could stipulate that all Parameters beginning with the letter "h" are reserved for this use, and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
+To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" Parameters be added by senders. A specification could stipulate that all Parameters that fit a set pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
 
-Note that a field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List). Likewise, field definitions can only use this specification for the entire field value, not a portion thereof.
+Specifications that use Dictionaries can allow for forward compatibility by only defining type and semantics for specific dictionary keys. Such a specification should identify the type corresponding to each key and require that the presence, value, and type associated with unknown keys be ignored. A later specification can set specific constraints on types and semantics for any keys that it defines.
+
+An extension to a field specification can require that an entire field be ignored by a recipient that understands the extension if constraints on the value of keys or parameters it defines are not met.
+
+A field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List). Likewise, field definitions can only use this specification for the entire field value, not a portion thereof.
 
 This specification defines minimums for the length or number of various structures supported by implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
 
@@ -170,18 +174,18 @@ an Integer (Section Y.Y of [RFCxxxx]). Its ABNF is:
 
 Its value indicates the amount of Foo in the message, and MUST
 be between 0 and 10, inclusive; other values MUST cause
-the entire header to be ignored.
+the entire header field to be ignored.
 
 The following parameters are defined:
 * A Parameter whose name is "foourl", and whose value is a String
   (Section Y.Y of [RFCxxxx]), conveying the Foo URL
   for the message. See below for processing requirements.
 
-"foourl" contains a URI-reference (Section 4.1 of
-[RFC3986]). If its value is not a valid URI-reference,
-it MUST be ignored. If its value is a relative reference
-(Section 4.2 of [RFC3986]), it MUST be resolved (Section 5 of
-[RFC3986]) before being used.
+"foourl" contains a URI-reference (Section 4.1 of [RFC3986]). If
+its value is not a valid URI-reference, the entire header field
+MUST be ignored. If its value is a relative reference (Section 4.2
+of [RFC3986]), it MUST be resolved (Section 5 of [RFC3986]) before
+being used.
 
 For example:
 
