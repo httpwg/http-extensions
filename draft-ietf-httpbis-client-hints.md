@@ -234,6 +234,8 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 - Specification document(s): {{accept-ch}} of this document
 - Related information: for Client Hints
 
+--- back
+
 # Changes
 
 ## Since -00
