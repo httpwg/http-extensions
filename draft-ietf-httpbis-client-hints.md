@@ -289,6 +289,7 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 * PR 1082: Remove section mentioning Variants.
 * PR 1097: Editorial feedback from mnot. 
 * PR 1131: Remove unused references.
+* PR 1132: Remove nested list.
 
 
 # Acknowledgements
