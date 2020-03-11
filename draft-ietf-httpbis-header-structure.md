@@ -151,7 +151,7 @@ To further assure that this extensibility is available in the future, and to enc
 
 Specifications that use Dictionaries can also allow for forward compatibility by requiring that the presence of -- as well as value and type associated with -- unknown members be ignored. Later specifications can then add additional members, specifying constraints on them as appropriate.
 
-An extension to a field specification can require that an entire field be ignored by a recipient that understands the extension if constraints on the value of keys or parameters it defines are not met.
+An extension to a structured field can then require that an entire field value be ignored by a recipient that understands the extension if constraints on the value it defines are not met.
 
 A field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List). Likewise, field definitions can only use this specification for the entire field value, not a portion thereof.
 
