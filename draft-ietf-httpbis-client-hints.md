@@ -182,15 +182,9 @@ Therefore, features relying on this document to define Client Hint headers MUST 
 
 Such features SHOULD take into account the following aspects of the information exposed: 
 
-> {: vspace="0"}
-> Entropy:
-> : Exposing highly granular data can be used to help identify users across multiple requests to different origins. Reducing the set of header field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users.
->
-> Sensitivity:
-> : The feature SHOULD NOT expose user sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g. a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
->
-> Change over time:
-> : The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g. through JavaScript callbacks).
+* Entropy - Exposing highly granular data can be used to help identify users across multiple requests to different origins. Reducing the set of header field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users.
+* Sensitivity -  The feature SHOULD NOT expose user sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g. a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
+* Change over time - The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g. through JavaScript callbacks).
 
 Different features will be positioned in different points in the space between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agents SHOULD consider the value provided by a particular feature vs these considerations, and MAY have different policies regarding that tradeoff on a per-feature basis.
 
@@ -295,6 +289,7 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 * PR 1082: Remove section mentioning Variants.
 * PR 1097: Editorial feedback from mnot. 
 * PR 1131: Remove unused references.
+* PR 1132: Remove nested list.
 
 
 # Acknowledgements
