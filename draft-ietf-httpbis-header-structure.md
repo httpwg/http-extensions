@@ -149,7 +149,7 @@ Both Items and Inner Lists allow parameters as an extensibility mechanism; this 
 
 To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" Parameters be added by senders. A specification could stipulate that all Parameters that fit a defined pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
 
-Specifications that use Dictionaries can allow for forward compatibility by only defining type and semantics for specific dictionary keys. Such a specification should identify the type corresponding to each key and require that the presence, value, and type associated with unknown keys be ignored. A later specification can set specific constraints on types and semantics for any keys that it defines.
+Specifications that use Dictionaries can also allow for forward compatibility by requiring that the presence of -- as well as value and type associated with -- unknown members be ignored. Later specifications can then add additional members, specifying constraints on them as appropriate.
 
 An extension to a field specification can require that an entire field be ignored by a recipient that understands the extension if constraints on the value of keys or parameters it defines are not met.
 
