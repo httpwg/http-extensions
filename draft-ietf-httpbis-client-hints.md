@@ -293,6 +293,9 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 * PR 1131: Remove unused references.
 * PR 1132: Remove nested list.
 
+## Since -11
+* PR 1134: Re-insert back section.
+
 
 # Acknowledgements
 {:numbered="false"}
