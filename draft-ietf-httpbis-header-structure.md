@@ -147,7 +147,7 @@ When parsing fails, the entire field is ignored (see {{text-parse}}); in most si
 
 Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized Parameter as an error condition.
 
-To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" Parameters be added by senders. A specification could stipulate that all Parameters that fit a set pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
+To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" Parameters be added by senders. A specification could stipulate that all Parameters that fit a defined pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
 
 Specifications that use Dictionaries can allow for forward compatibility by only defining type and semantics for specific dictionary keys. Such a specification should identify the type corresponding to each key and require that the presence, value, and type associated with unknown keys be ignored. A later specification can set specific constraints on types and semantics for any keys that it defines.
 
