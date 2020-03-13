@@ -251,7 +251,7 @@ The example below shows the  `sha-256` digest-algorithm which uses base64 encodi
    sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
 
-# The Digest Field {#digest-field}
+# The Digest Field {#digest}
 
 The Digest field contains a list of one or more representation digest values as
 defined in {{representation-digest}}. It can be used in both request and
@@ -293,7 +293,7 @@ Two examples of its use are
 ~~~
 
 
-# The Want-Digest Field {#want-digest-field}
+# The Want-Digest Field {#want-digest}
 
 The Want-Digest field indicates the sender's desire to receive a representation
 digest on messages associated with the request URI and representation metadata.
@@ -1122,7 +1122,7 @@ Field name:  `Want-Digest`
 
 Status:  permanent
 
-Specification document(s):  {{want-digest-field}} of this document
+Specification document(s):  {{want-digest}} of this document
 
 ## Digest Header Field Registration
 
@@ -1133,7 +1133,7 @@ Field name:  `Digest`
 
 Status:  permanent
 
-Specification document(s):  {{digest-field}} of this document
+Specification document(s):  {{digest}} of this document
 
 --- back
 
