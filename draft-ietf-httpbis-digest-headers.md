@@ -146,7 +146,7 @@ The concept of `selected representation` defined in Section 6 of
 current HTTP semantics. This document updates the `Digest` and `Want-Digest`
 field definitions to align with [I-D.ietf-httpbis-semantics] concepts.
 
-Basing `Digest` on selected representation makes it more straightforward to
+Basing `Digest` on the selected representation makes it more straightforward to
 apply it to use-cases where the transferred data does require some sort of
 manipulation to be considered a representation, or conveys a partial
 representation of a resource eg. Range Requests (see Section 8.3 of
