@@ -33,7 +33,7 @@ informative:
 
 --- abstract
 
-This document defines the Proxy-Status HTTP header field to convey the details of intermediary handling of responses, including generated errors.
+This document defines the Proxy-Status HTTP field to convey the details of intermediary handling of responses, including generated errors.
 
 
 --- note_Note_to_Readers
@@ -62,7 +62,7 @@ HTTP accommodates these types of errors with a few status codes; for example, 50
 
 Additionally, intermediaries sometimes want to convey additional information about their handling of a response, even if they did not generate it.
 
-To enable these uses, {{header}} defines a new HTTP response header field to allow intermediaries to convey details of their handling of a response, and {{types}} defines a set of Proxy Error Types for use when a proxy generates the response. {{register}} explains how to define new Proxy Error Types.
+To enable these uses, {{header}} defines a new HTTP response field to allow intermediaries to convey details of their handling of a response, and {{types}} defines a set of Proxy Error Types for use when a proxy generates the response. {{register}} explains how to define new Proxy Error Types.
 
 
 ## Notational Conventions
@@ -72,16 +72,16 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This specification uses Structured Headers {{!I-D.ietf-httpbis-header-structure}} to specify syntax. The terms sh-param-list, sh-item, sh-string, sh-token and sh-integer refer to the structured types defined therein.
+This specification uses Structured Headers {{!I-D.ietf-httpbis-header-structure}} to specify syntax. The terms sh-list, sh-item, sh-string, sh-token and sh-integer refer to the structured types defined therein.
 
 Note that in this specification, "proxy" is used to indicate both forward and reverse proxies, otherwise known as gateways. "Next hop" indicates the connection in the direction leading to the origin server for the request.
 
 
-# The Proxy-Status HTTP Header Field {#header}
+# The Proxy-Status HTTP Field {#header}
 
-The Proxy-Status HTTP response header field allows an intermediary to convey additional information about its handling of a response and its associated request.
+The Proxy-Status HTTP response field allows an intermediary to convey additional information about its handling of a response and its associated request.
 
-It is a Structured Headers {{!I-D.ietf-httpbis-header-structure}} List of parameterised Tokens:
+It is a Structured Headers {{!I-D.ietf-httpbis-header-structure}} List of Tokens:
 
 ~~~ abnf
 Cache-Status   = sh-list
@@ -99,9 +99,9 @@ indicates that this response was handled first by FooAccelerator and then Exampl
 
 Parameters on each member convey additional information about that intermediary's handling of the response; see {{params}} for defined parameters.
 
-Intermediaries determine when it is appropriate to add the Proxy-Status header field to a response. Some might decide to add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
+Intermediaries determine when it is appropriate to add the Proxy-Status field to a response. Some might decide to add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
-When adding a value to the Proxy-Status header field, intermediaries SHOULD preserve the existing contents of the header, to allow debugging of the entire chain of intermediaries handling the request.
+When adding a value to the Proxy-Status field, intermediaries SHOULD preserve the existing contents of the field, to allow debugging of the entire chain of intermediaries handling the request.
 
 The list members identify the intermediary that inserted the value, and MUST have a type of either sh-string or sh-token. Depending on the deployment, this might be a product or service name (e.g., ExampleProxy or "Example CDN"), a hostname ("proxy-3.example.com"), and IP address, or a generated string.
 
@@ -109,9 +109,9 @@ Each member of the list can also have a number of parameters that describe that 
 
 Proxy-Status MAY be sent in HTTP trailers, but -- as with all trailers -- it might be silently discarded along the path to the user agent, so this SHOULD NOT be done unless it is not possible to send it in headers. For example, if an intermediary is streaming a response and the upstream connection suddenly terminates, Proxy-Status can be appended to the trailers of the outgoing message (since the headers have already been sent).
 
-Note that there are various security considerations for intermediaries using the Proxy-Status header field; see {{security}}.
+Note that there are various security considerations for intermediaries using the Proxy-Status field; see {{security}}.
 
-Origin servers MUST NOT generate the Proxy-Status header field.
+Origin servers MUST NOT generate the Proxy-Status field.
 
 
 ## Proxy-Status Parameters {#params}
@@ -461,7 +461,7 @@ Upon publication, please create the HTTP Proxy Error Types registry at <https://
 
 One of the primary security concerns when using Proxy-Status is leaking information that might aid an attacker. For example, information about the intermediary's configuration and back-end topology can be exposed.
 
-As a result, care needs to be taken when deciding to generate a Proxy-Status header. Note that intermediaries are not required to generate a Proxy-Status header field in any response, and can conditionally generate them based upon request attributes (e.g., authentication tokens, IP address).
+As a result, care needs to be taken when deciding to generate a Proxy-Status field. Note that intermediaries are not required to generate a Proxy-Status field in any response, and can conditionally generate them based upon request attributes (e.g., authentication tokens, IP address).
 
 Likewise, generation of all parameters is optional.
 
