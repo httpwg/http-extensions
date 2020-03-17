@@ -97,15 +97,13 @@ Proxy-Status: FooProxy, ExampleCDN
 
 indicates that this response was handled first by FooAccelerator and then ExampleCDN.
 
-Parameters on each member convey additional information about that intermediary's handling of the response; see {{params}} for defined parameters.
-
 Intermediaries determine when it is appropriate to add the Proxy-Status field to a response. Some might decide to add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
-
-When adding a value to the Proxy-Status field, intermediaries SHOULD preserve the existing contents of the field, to allow debugging of the entire chain of intermediaries handling the request.
 
 The list members identify the intermediary that inserted the value, and MUST have a type of either sh-string or sh-token. Depending on the deployment, this might be a product or service name (e.g., ExampleProxy or "Example CDN"), a hostname ("proxy-3.example.com"), and IP address, or a generated string.
 
-Each member of the list can also have a number of parameters that describe that intermediary's handling of the request. While all of these parameters are OPTIONAL, intermediaries are encouraged to provide as much information as possible.
+Parameters on each member convey additional information about that intermediary's handling of the response; see {{params}} for defined parameters. While all of these parameters are OPTIONAL, intermediaries are encouraged to provide as much information as possible.
+
+When adding a value to the Proxy-Status field, intermediaries SHOULD preserve the existing contents of the field, to allow debugging of the entire chain of intermediaries handling the request.
 
 Proxy-Status MAY be sent in HTTP trailers, but -- as with all trailers -- it might be silently discarded along the path to the user agent, so this SHOULD NOT be done unless it is not possible to send it in headers. For example, if an intermediary is streaming a response and the upstream connection suddenly terminates, Proxy-Status can be appended to the trailers of the outgoing message (since the headers have already been sent).
 
