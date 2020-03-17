@@ -62,7 +62,7 @@ HTTP accommodates these types of errors with a few status codes; for example, 50
 
 Additionally, intermediaries sometimes want to convey additional information about their handling of a response, even if they did not generate it.
 
-To enable these uses, {{header}} defines a new HTTP response field to allow intermediaries to convey details of their handling of a response, and {{error-types}} defines a set of Proxy Error Types for use when a proxy generates the response. {{register-error}} explains how to define new Proxy Error Types.
+To enable these uses, {{header}} defines a new HTTP response field to allow intermediaries to convey details of their handling of a response, {{params}} enumerates the kind of information taht can be conveyed, and {{error-types}} defines a set of error types for use when a proxy generates the response.
 
 
 ## Notational Conventions
