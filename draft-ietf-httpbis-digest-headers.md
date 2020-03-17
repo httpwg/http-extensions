@@ -25,6 +25,7 @@ author:
     email: lucaspardue.24.7@gmail.com
 
 normative:
+  I-D.ietf-httpbis-semantics:
   RFC1321:
   RFC3174:
   RFC1950:
@@ -35,9 +36,6 @@ normative:
   RFC4648:
   RFC5234:
   RFC6234:
-  RFC7230:
-  RFC7231:
-  RFC7233:
   RFC7405:
   RFC8174:
   UNIX:
@@ -71,6 +69,7 @@ normative:
 
 informative:
   RFC2818:
+  RFC7231:
   RFC7396:
   SRI:
     title: "Subresource Integrity"
@@ -86,13 +85,13 @@ informative:
 
 --- abstract
 
-This document defines the Digest and Want-Digest header fields for HTTP, thus
-allowing client and server to negotiate an integrity checksum of the exchanged
-resource representation data.
+This document defines the HTTP Digest and Want-Digest fields, thus allowing
+client and server to negotiate an integrity checksum of the exchanged resource
+representation data.
 
 This document obsoletes RFC 3230. It replaces the term "instance" with
-"representation", which makes it consistent  with the HTTP Semantic and Context
-defined in RFC 7231.
+"representation", which makes it consistent with the HTTP Semantic and Context
+defined in draft-ietf-httpbis-semantics.
 
 
 --- note_Note_to_Readers
@@ -129,7 +128,7 @@ be combined with other mechanisms that protect representation-metadata, such as
 digital signatures, in order to protect the desired parts of an HTTP exchange in
 whole or in part.
 
-## A Brief History of Integrity Header Fields {#history}
+## A Brief History of HTTP Integrity Fields {#history}
 
 The Content-MD5 header field was originally introduced to provide integrity, but
 HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
@@ -138,19 +137,20 @@ HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
   > inconsistently implemented with respect to partial responses.
 
 [RFC3230] provided a more flexible solution introducing the concept of
-"instance", and the header fields `Digest` and `Want-Digest`.
+"instance", and the fields `Digest` and `Want-Digest`.
 
 ## This Proposal
 
-The concept of `selected representation` defined in [RFC7231] made [RFC3230]
-definitions inconsistent with the current standard. A refresh was then required.
+The concept of `selected representation` defined in Section 6 of
+[I-D.ietf-httpbis-semantics] makes [RFC3230] definitions inconsistent with
+current HTTP semantics. This document updates the `Digest` and `Want-Digest`
+field definitions to align with [I-D.ietf-httpbis-semantics] concepts.
 
-This document updates the `Digest` and `Want-Digest` header field definitions to
-align with [RFC7231] concepts.
-
-This approach can be easily adapted to use-cases where the transferred data does
-require some sort of manipulation to be considered a representation or conveys a
-partial representation of a resource (eg. Range Requests [RFC7233]).
+Basing `Digest` on the selected representation makes it straightforward to
+apply it to use-cases where the transferred data does require some sort of
+manipulation to be considered a representation, or conveys a partial
+representation of a resource eg. Range Requests (see Section 8.3 of
+[I-D.ietf-httpbis-semantics]).
 
 Changes are semantically compatible with existing implementations and better
 cover both the request and response cases.
@@ -159,9 +159,9 @@ The value of `Digest` is calculated on selected representation, which is tied to
 the value contained in any `Content-Encoding` or `Content-Type` header fields.
 Therefore, a given resource may have multiple different digest values.
 
-To allow both parties to exchange a Digest of a representation with [no content
-codings](https://tools.ietf.org/html/rfc7231#section-3.1.2.1) two more
-algorithms are added (`ID-SHA-256` and `ID-SHA-512`).
+To allow both parties to exchange a Digest of a representation with no content
+codings (see Section 6.1.2 of [I-D.ietf-httpbis-semantics]) two more algorithms
+are added (`ID-SHA-256` and `ID-SHA-512`).
 
 ## Goals
 
@@ -176,15 +176,15 @@ The goals of this proposal are:
 
 The goals do not include:
 
-  HTTP Message integrity:
+  HTTP message integrity:
   : The digest mechanism described here does not cover the full HTTP message
     nor its semantic, as representation metadata are not included in the
     checksum.
 
-  Header field integrity:
+  HTTP field integrity:
   : The digest mechanisms described here cover only representation and selected
     representation data, and do not protect the integrity of associated
-    representation metadata or other message header fields.
+    representation metadata or other message fields.
 
   Authentication:
   : The digest mechanisms described here are not meant to support authentication
@@ -207,20 +207,21 @@ document are to be interpreted as described in BCP 14 ([RFC2119] and [RFC8174])
 when, and only when, they appear in all capitals, as shown here.
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
-[RFC7405] along with the "#rule" extension defined in Section 7 of [RFC7230].
+[RFC7405] along with the "#rule" extension defined in Section 4 of
+[I-D.ietf-httpbis-semantics].
 
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "payload body" in this document are to be
-interpreted as described in [RFC7230] and [RFC7231].
+interpreted as described in [I-D.ietf-httpbis-semantics].
 
 The definition "validator" in this document is to be interpreted as described in
-Section 7.2 of [RFC7231].
+Section 10.2 of [I-D.ietf-httpbis-semantics].
 
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
 which uses a checksum  that is calculated independently of the payload body and message body.
-It uses the representation data (see [RFC7231]),
+It uses the representation data (see Section 6.1 of [I-D.ietf-httpbis-semantics]),
 that can be fully or partially contained in the message body, or not contained at all:
 
 ~~~
@@ -250,11 +251,11 @@ The example below shows the  `sha-256` digest-algorithm which uses base64 encodi
    sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
 
-# The Digest Header Field {#digest-header}
+# The Digest Field {#digest}
 
-The Digest header field contains a list of one or more representation digest values
-as defined in {{representation-digest}}.
-It can be used in both request and response.
+The Digest field contains a list of one or more representation digest values as
+defined in {{representation-digest}}. It can be used in both request and
+response.
 
 ~~~ abnf
    Digest = "Digest" ":" OWS 1#representation-data-digest
@@ -263,20 +264,19 @@ It can be used in both request and response.
 The resource is specified by the effective request URI and any `validator`
 contained in the message.
 
-The relationship between Content-Location (see [RFC7231] Section 3.1.4.2)
-and Digest is demonstrated in {{post-not-request-uri}}.
-A comprehensive set of examples showing the impacts of
-representation metadata, payload transformations and HTTP methods on digest
-is provided in {{examples-unsolicited}} and {{examples-solicited}}.
+The relationship between Content-Location (see Section 6.2.5 of
+[I-D.ietf-httpbis-semantics]) and Digest is demonstrated in
+{{post-not-request-uri}}. A comprehensive set of examples showing the impacts of
+representation metadata, payload transformations and HTTP methods on Digest is
+provided in {{examples-unsolicited}} and {{examples-solicited}}.
 
-A Digest header field MAY contain multiple representation-data-digest values.
-This could be useful for responses expected to reside in caches shared by users
-with different browsers, for example.
+A Digest field MAY contain multiple representation-data-digest values. This
+could be useful for responses expected to reside in caches shared by users with
+different browsers, for example.
 
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
-header field. This allows the recipient to choose which digest-algorithm(s) to
-use for validation instead of verifying every received
-representation-data-digest.
+field. This allows the recipient to choose which digest-algorithm(s) to use for
+validation instead of verifying every received representation-data-digest.
 
 A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
@@ -293,11 +293,10 @@ Two examples of its use are
 ~~~
 
 
-# The Want-Digest Header Field {#want-digest-header}
+# The Want-Digest Field {#want-digest}
 
-The Want-Digest message header field indicates the sender's desire to receive a
-representation digest on messages associated with the request URI and
-representation metadata.
+The Want-Digest field indicates the sender's desire to receive a representation
+digest on messages associated with the request URI and representation metadata.
 
 ~~~
    Want-Digest = "Want-Digest" ":" OWS 1#want-digest-value
@@ -310,7 +309,7 @@ If a digest-algorithm is not accompanied by a qvalue, it is treated as if its
 associated qvalue were 1.0.
 
 The sender is willing to accept a digest-algorithm if and only if it is listed
-in a Want-Digest header field of a message, and its qvalue is non-zero.
+in a Want-Digest field of a message, and its qvalue is non-zero.
 
 If multiple acceptable digest-algorithm values are given, the sender's preferred
 digest-algorithm is the one (or ones) with the highest qvalue.
@@ -331,8 +330,8 @@ some algorithms, one or more parameters can be supplied.
    digest-algorithm = token
 ~~~
 
-The BNF for "parameter" is as is used in [RFC7230]. All digest-algorithm values
-are case-insensitive.
+The BNF for "parameter" is defined in Section 4.4.1.4 of
+[I-D.ietf-httpbis-semantics]. All digest-algorithm values are case-insensitive.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
 digest-algorithm values.
@@ -470,7 +469,7 @@ SRI allows a first-party authority to declare an integrity assertion on a
 resource served by a first or third party authority. This is done via the
 `integrity` attribute that can be added to `script` or `link` HTML elements.
 Therefore, the integrity assertion is always made out-of-band to the resource
-fetch. In contrast, the `Digest` header field is supplied in-band alongside the
+fetch. In contrast, the `Digest` field is supplied in-band alongside the
 selected representation, meaning that an authority can only declare an integrity
 assertion for itself. Methods to improve the security properties of
 representation digests are presented in {{security-considerations}}. This
@@ -502,7 +501,7 @@ and validation of digests. In contrast, the requirements in this document are
 weaker.
 
 SRI defines no method for a client to declare an integrity assertion on
-resources it transfers to a server. In contrast, the `Digest` header field can
+resources it transfers to a server. In contrast, the `Digest` field can
 appear on requests.
 
 ## Supporting Both SRI and Representation Digest
@@ -525,7 +524,7 @@ requirements or guidance for user agents that experience such cases.
 # Examples of Unsolicited Digest {#examples-unsolicited}
 
 The following examples demonstrate interactions where a server responds with a
-`Digest` header field even though the client did not solicit one using
+`Digest` field even though the client did not solicit one using
 `Want-Digest`.
 
 
@@ -596,7 +595,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ## Client and Server Provide Full Representation Data
 
-The request contains a `Digest` header calculated on the enclosed
+The request contains a `Digest` field calculated on the enclosed
 representation.
 
 It also includes an `Accept-Encoding: br` header field that advertises the
@@ -932,8 +931,8 @@ Want-Digest: sha-256, sha-512
 ## Digest Does Not Protect the Full HTTP Message
 
 This document specifies a data integrity mechanism that protects HTTP
-`representation data`, but not HTTP `representation metadata` header fields,
-from certain kinds of accidental corruption.
+`representation data`, but not HTTP `representation metadata` fields, from
+certain kinds of accidental corruption.
 
 `Digest` is not intended as general protection against malicious tampering with
 HTTP messages, this can be achieved by combining it with other approaches such
@@ -982,23 +981,23 @@ enclosed representation refers to the resource identified by its value and
 
 Digital signatures are widely used together with checksums to provide the
 certain identification of the origin of a message [NIST800-32]. Such signatures
-can protect one or more header fields and there are additional considerations
-when `Digest` is included in this set.
+can protect one or more HTTP fields and there are additional considerations when
+`Digest` is included in this set.
 
-Since the `Digest` header field is a hash of a resource representation, it
-explicitly depends on the `representation metadata` (eg. the values of
-`Content-Type`, `Content-Encoding` etc). A signature that protects `Digest` but
-not other `representation metadata` can expose the communication to tampering.
-For example, an actor could manipulate the `Content-Type` field-value and cause
-a digest validation failure at the recipient, preventing the application from
+Since the `Digest` field is a hash of a resource representation, it explicitly
+depends on the `representation metadata` (eg. the values of `Content-Type`,
+`Content-Encoding` etc). A signature that protects `Digest` but not other
+`representation metadata` can expose the communication to tampering. For
+example, an actor could manipulate the `Content-Type` field-value and cause a
+digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
 endpoints. See also {{digest-and-content-location}}.
 
 `Digest` SHOULD always be used over a connection which provides integrity at
-the transport layer that protects HTTP header fields.
+the transport layer that protects HTTP fields.
 
-A `Digest` header field using NOT RECOMMENDED digest-algorithms SHOULD NOT be
-used in signatures.
+A `Digest` field using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in
+signatures.
 
 ## Message Truncation
 
@@ -1114,35 +1113,27 @@ The status for "CRC32C" has been updated to "standard".
 
 The "ID-SHA-256" and "ID-SHA-512" algorithms have been added to the registry.
 
-## Want-Digest Header Field Registration
+## Want-Digest Field Registration
 
-This section registers the `Want-Digest` header field in the "Permanent Message
-Header Field Names" registry ({{!RFC3864}}).
+This section registers the `Want-Digest` field in the "Hypertext Transfer
+Protocol (HTTP) Field Name Registry" [I-D.ietf-httpbis-semantics].
 
-Header field name:  `Want-Digest`
+Field name:  `Want-Digest`
 
-Applicable protocol:  http
+Status:  permanent
 
-Status:  standard
-
-Author/Change controller:  IETF
-
-Specification document(s):  {{want-digest-header}} of this document
+Specification document(s):  {{want-digest}} of this document
 
 ## Digest Header Field Registration
 
-This section registers the `Digest` header field in the "Permanent Message
-Header Field Names" registry ({{!RFC3864}}).
+This section registers the `Digest` field in the "Hypertext Transfer Protocol
+(HTTP) Field Name Registry" [I-D.ietf-httpbis-semantics].
 
-Header field name:  `Digest`
+Field name:  `Digest`
 
-Applicable protocol:  http
+Status:  permanent
 
-Status:  standard
-
-Author/Change controller:  IETF
-
-Specification document(s):  {{digest-header}} of this document
+Specification document(s):  {{digest}} of this document
 
 --- back
 
