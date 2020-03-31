@@ -283,17 +283,6 @@ Appendix B.1: ALPHA (letters), CR (carriage return), CRLF (CR LF), CTLs
 CHAR (any {{USASCII}} character), VCHAR (any visible {{USASCII}} character),
 and WSP (whitespace).
 
-The OWS (optional whitespace) rule is used where zero or more linear
-whitespace characters MAY appear:
-
-~~~ abnf
-OWS            = *( [ obs-fold ] WSP )
-                 ; "optional" whitespace
-obs-fold       = CRLF
-~~~
-
-OWS SHOULD either not be produced or be produced as a single SP character.
-
 ## Terminology
 
 The terms "user agent", "client", "server", "proxy", and "origin server" have
@@ -466,14 +455,13 @@ grammar:
 ~~~ abnf
 set-cookie-header = "Set-Cookie:" SP set-cookie-string
 set-cookie-string = cookie-pair *( ";" SP cookie-av )
-cookie-pair       = cookie-name "=" cookie-value
-cookie-name       = token
+cookie-pair       = cookie-name *[WSP] "=" *[WSP] cookie-value
+cookie-name       = 1*cookie-octet
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
 cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                       ; US-ASCII characters excluding CTLs,
                       ; whitespace DQUOTE, comma, semicolon,
                       ; and backslash
-token             = <token, defined in [RFC7230], Section 3.2.6>
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
@@ -748,7 +736,7 @@ conforms to the requirements in {{ua-requirements}}), the user agent will send a
 header that conforms to the following grammar:
 
 ~~~ abnf
-cookie-header = "Cookie:" OWS cookie-string OWS
+cookie-header = "Cookie:" SP cookie-string
 cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
 
@@ -2147,6 +2135,11 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 *  Created a registry for cookie attribute names:
    <https://github.com/httpwg/http-extensions/pull/1060>.
+
+*  Tweaks to ABNF for `cookie-pair` and the `Cookie` header
+   production: <https://github.com/httpwg/http-extensions/issues/1074>,
+   <https://github.com/httpwg/http-extensions/issues/1119>.
+
 
 # Acknowledgements
 {:numbered="false"}
