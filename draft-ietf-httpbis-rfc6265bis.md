@@ -1608,10 +1608,12 @@ compute the cookie-string from a cookie store and a request-uri:
 4.  Serialize the cookie-list into a cookie-string by processing each cookie
     in the cookie-list in order:
 
-    1.  Output the cookie's name, the %x3D ("=") character, and the cookie's
-        value.
+    1.  If the cookies' name is not empty, output the cookie's name followed by
+        the %x3D ("=") character.
 
-    2.  If there is an unprocessed cookie in the cookie-list, output the
+    2.  If the cookies' value is not empty, output the cookie's value.
+
+    3.  If there is an unprocessed cookie in the cookie-list, output the
         characters %x3B and %x20 ("; ").
 
 NOTE: Despite its name, the cookie-string is actually a sequence of octets, not
@@ -2147,6 +2149,9 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 *  Created a registry for cookie attribute names:
    <https://github.com/httpwg/http-extensions/pull/1060>.
+
+*  Fixed serialization for nameless/valueless cookies:
+   <https://github.com/httpwg/http-extensions/pull/1143>.
 
 # Acknowledgements
 {:numbered="false"}
