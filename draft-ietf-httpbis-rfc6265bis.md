@@ -1415,7 +1415,7 @@ user agent MUST process the cookie as follows:
 11. If the cookie was received from a "non-HTTP" API and the cookie's
     http-only-flag is true, abort these steps and ignore the cookie entirely.
 
-12. If the cookie's secure-only-flag is not set, and the scheme component of
+12. If the cookie's secure-only-flag is false, and the scheme component of
     request-uri does not denote a "secure" protocol, then abort these steps and
     ignore the cookie entirely if the cookie store contains one or more cookies
     that meet all of the following criteria:
@@ -1518,7 +1518,7 @@ agent MUST evict cookies in the following priority order:
 
 1.  Expired cookies.
 
-2.  Cookies whose secure-only-flag is not set, and which share a domain field
+2.  Cookies whose secure-only-flag is false, and which share a domain field
     with more than a predetermined number of other cookies.
 
 3.  Cookies that share a domain field with more than a predetermined number of
@@ -2149,6 +2149,8 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 *  Created a registry for cookie attribute names:
    <https://github.com/httpwg/http-extensions/pull/1060>.
+
+*  Editorial fixes: <https://github.com/httpwg/http-extensions/issues/1059>.
 
 *  Fixed serialization for nameless/valueless cookies:
    <https://github.com/httpwg/http-extensions/pull/1143>.
