@@ -283,7 +283,8 @@ Appendix B.1: ALPHA (letters), CR (carriage return), CRLF (CR LF), CTLs
 CHAR (any {{USASCII}} character), VCHAR (any visible {{USASCII}} character),
 and WSP (whitespace).
 
-The OWS (optional whitespace) rule is defined in Section 3.2.3 of {{RFC7230}}.
+The OWS (optional whitespace) and BWS (bad whitespace) rules are defined in
+Section 3.2.3 of {{RFC7230}}.
 
 ## Terminology
 
@@ -455,9 +456,9 @@ SHOULD NOT send Set-Cookie headers that fail to conform to the following
 grammar:
 
 ~~~ abnf
-set-cookie-header = "Set-Cookie:" OWS set-cookie-string
-set-cookie-string = cookie-pair *( OWS ";" OWS cookie-av )
-cookie-pair       = cookie-name OWS "=" OWS cookie-value
+set-cookie-header = "Set-Cookie:" SP BWS set-cookie-string
+set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
+cookie-pair       = cookie-name BWS "=" BWS cookie-value
 cookie-name       = 1*cookie-octet
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
 cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
@@ -468,24 +469,24 @@ cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
                     samesite-av / extension-av
-expires-av        = "Expires" OWS "=" OWS sane-cookie-date
+expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [RFC7231], Section 7.1.1.1>
-max-age-av        = "Max-Age" OWS "=" OWS non-zero-digit *DIGIT
+max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
                       ; In practice, both expires-av and max-age-av
                       ; are limited to dates representable by the
                       ; user agent.
 non-zero-digit    = %x31-39
                       ; digits 1 through 9
-domain-av         = "Domain" OWS "=" OWS domain-value
+domain-av         = "Domain" BWS "=" BWS domain-value
 domain-value      = <subdomain>
                       ; defined in [RFC1034], Section 3.5, as
                       ; enhanced by [RFC1123], Section 2.1
-path-av           = "Path" OWS "=" OWS path-value
+path-av           = "Path" BWS "=" BWS path-value
 path-value        = *av-octet
 secure-av         = "Secure"
 httponly-av       = "HttpOnly"
-samesite-av       = "SameSite" OWS "=" OWS samesite-value
+samesite-av       = "SameSite" BWS "=" BWS samesite-value
 samesite-value    = "Strict" / "Lax" / "None"
 extension-av      = *av-octet
 av-octet          = %x20-3A / %x3C-7E
