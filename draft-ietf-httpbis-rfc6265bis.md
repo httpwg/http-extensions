@@ -283,16 +283,8 @@ Appendix B.1: ALPHA (letters), CR (carriage return), CRLF (CR LF), CTLs
 CHAR (any {{USASCII}} character), VCHAR (any visible {{USASCII}} character),
 and WSP (whitespace).
 
-The OWS (optional whitespace) rule is used where zero or more linear
-whitespace characters MAY appear:
-
-~~~ abnf
-OWS            = *( [ obs-fold ] WSP )
-                 ; "optional" whitespace
-obs-fold       = CRLF
-~~~
-
-OWS SHOULD either not be produced or be produced as a single SP character.
+The OWS (optional whitespace) and BWS (bad whitespace) rules are defined in
+Section 3.2.3 of {{RFC7230}}.
 
 ## Terminology
 
@@ -464,38 +456,37 @@ SHOULD NOT send Set-Cookie headers that fail to conform to the following
 grammar:
 
 ~~~ abnf
-set-cookie-header = "Set-Cookie:" SP set-cookie-string
-set-cookie-string = cookie-pair *( ";" SP cookie-av )
-cookie-pair       = cookie-name "=" cookie-value
-cookie-name       = token
+set-cookie-header = "Set-Cookie:" SP BWS set-cookie-string
+set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
+cookie-pair       = cookie-name BWS "=" BWS cookie-value
+cookie-name       = 1*cookie-octet
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
 cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                       ; US-ASCII characters excluding CTLs,
                       ; whitespace DQUOTE, comma, semicolon,
                       ; and backslash
-token             = <token, defined in [RFC7230], Section 3.2.6>
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
                     samesite-av / extension-av
-expires-av        = "Expires=" sane-cookie-date
+expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [RFC7231], Section 7.1.1.1>
-max-age-av        = "Max-Age=" non-zero-digit *DIGIT
+max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
                       ; In practice, both expires-av and max-age-av
                       ; are limited to dates representable by the
                       ; user agent.
 non-zero-digit    = %x31-39
                       ; digits 1 through 9
-domain-av         = "Domain=" domain-value
+domain-av         = "Domain" BWS "=" BWS domain-value
 domain-value      = <subdomain>
                       ; defined in [RFC1034], Section 3.5, as
                       ; enhanced by [RFC1123], Section 2.1
-path-av           = "Path=" path-value
+path-av           = "Path" BWS "=" BWS path-value
 path-value        = *av-octet
 secure-av         = "Secure"
 httponly-av       = "HttpOnly"
-samesite-av       = "SameSite=" samesite-value
+samesite-av       = "SameSite" BWS "=" BWS samesite-value
 samesite-value    = "Strict" / "Lax" / "None"
 extension-av      = *av-octet
 av-octet          = %x20-3A / %x3C-7E
@@ -748,7 +739,7 @@ conforms to the requirements in {{ua-requirements}}), the user agent will send a
 header that conforms to the following grammar:
 
 ~~~ abnf
-cookie-header = "Cookie:" OWS cookie-string OWS
+cookie-header = "Cookie:" SP cookie-string
 cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
 
@@ -2147,13 +2138,18 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 ## draft-ietf-httpbis-rfc6265bis-06
 
+*  Editorial fixes: <https://github.com/httpwg/http-extensions/issues/1059>.
+
 *  Created a registry for cookie attribute names:
    <https://github.com/httpwg/http-extensions/pull/1060>.
 
-*  Editorial fixes: <https://github.com/httpwg/http-extensions/issues/1059>.
+*  Tweaks to ABNF for `cookie-pair` and the `Cookie` header
+   production: <https://github.com/httpwg/http-extensions/issues/1074>,
+   <https://github.com/httpwg/http-extensions/issues/1119>.
 
 *  Fixed serialization for nameless/valueless cookies:
    <https://github.com/httpwg/http-extensions/pull/1143>.
+
 
 # Acknowledgements
 {:numbered="false"}
