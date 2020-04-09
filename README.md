@@ -80,6 +80,8 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Client Hints
 
+*Sent to IESG*
+
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-hints.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-hints.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
