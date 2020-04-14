@@ -750,6 +750,9 @@ steps to validate the token it contains:
 - Use the `validate` API to confirm the validity of the authenticator with
   regard to the generated request (if any).
 
+If the authenticator cannot be validated, this SHOULD be treated as a connection
+error of type `CERTIFICATE_UNREADABLE`.
+
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.  Clients MUST NOT accept any
 end-entity certificate from an exported authenticator which does not contain
@@ -776,6 +779,9 @@ CERTIFICATE_OVERUSED (0xERROR-TBD1):
 CERTIFICATE_WITHOUT_CONSENT (0xERROR-TBD2):
 : A CERTIFICATE_NEEDED frame was received by a peer which did not indicate
   support for this extension.
+
+CERTIFICATE_UNREADABLE (0xERROR-TBD3):
+: An exported authenticator could not be validated.
 
 ## Invalid Certificates
 
@@ -963,6 +969,7 @@ this document.
 | --------------------------- | -------------- | ------------------------- |
 | CERTIFICATE_OVERUSED        | 0xERROR-TBD1   | {{errors}}                |
 | CERTIFICATE_WITHOUT_CONSENT | 0xERROR-TBD2   | {{errors}}                |
+| CERTIFICATE_UNREADABLE      | 0xERROR-TBD3   | {{errors}}                |
 | -------------------------   | -------------- | ------------------------- |
 
 --- back
