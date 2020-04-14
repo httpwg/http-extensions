@@ -352,6 +352,11 @@ origins which it is prepared to service on the current connection, but MAY use
 the ORIGIN frame {{?RFC8336}} to indicate that not all covered origins will be
 served.
 
+Certificates supplied by clients MUST NOT be considered by servers when
+processing a request unless the client explicitly authorizes their use. Clients
+MAY send `USE_CERTIFICATE` frame with the `UNSOLICITED` flag set to indicate
+that an available certificate should be considered on a new request.
+
 ~~~ drawing
 Client                                      Server
    <------------------ (stream 0) CERTIFICATE --
