@@ -282,6 +282,10 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
 
+Digest can be used in trailers. When using incremental digest-algorithms
+this allows the sender and the receiver to dynamically compute the digest value
+while streaming the content.
+
 Two examples of its use are
 
 ~~~ example
@@ -998,6 +1002,16 @@ the transport layer that protects HTTP fields.
 
 A `Digest` field using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in
 signatures.
+
+## Usage in trailers
+
+When used in trailers, the receiver gets the digest value after the payload body
+and may thus be tempted to process the data before validating the digest value.
+Instead, data should be always processed after checking that Digest has the expected value.
+
+Not every digest-algorithm is suitable for trailers, as they may require to pre-process
+the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
+
 
 ## Message Truncation
 
