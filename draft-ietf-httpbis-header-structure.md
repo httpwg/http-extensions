@@ -989,6 +989,15 @@ The serialization algorithm is defined in a way that it is not strictly limited 
 
 _RFC Editor: Please remove this section before publication._
 
+## Since draft-ietf-httpbis-header-structure-17
+
+* Editorial improvements.
+
+## Since draft-ietf-httpbis-header-structure-16
+
+* Editorial improvements.
+* Discussion on forwards compatibility.
+
 ## Since draft-ietf-httpbis-header-structure-15
 
 * Editorial improvements.
