@@ -55,8 +55,8 @@ normative:
       org: Carnagie Mellon University, Software Engineering Institute
     date: 2008-12-31
     target: https://www.kb.cert.org/vuls/id/836068/
-  IACR-2019-459:
-    title: From Collisions to Chosen-Prefix Collisions Application to Full SHA-1
+  IACR-2020-014:
+    title: SHA-1 is a Shambles
     author:
       -
          ins: G. Leurent
@@ -64,8 +64,8 @@ normative:
       -
          ins: T. Peyrin
          org: Nanyang Technological University, Singapore; Temasek Laboratories, Singapore
-    date: 2019-05-06
-    target: https://eprint.iacr.org/2019/459.pdf
+    date: 2020-01-05
+    target: https://eprint.iacr.org/2020/014.pdf
 
 informative:
   RFC2818:
@@ -339,8 +339,8 @@ The registry contains the tokens listed below.
 
 Some algorithms, although registered, have since been found vulnerable:
 the MD5 algorithm MUST NOT be used due to collision attacks [CMU-836068]
-and the SHA algorithm is NOT RECOMMENDED due
-to collision attacks [IACR-2019-459].
+and the SHA algorithm MUST NOT be used due
+to collision attacks [IACR-2020-014].
 
 
   {: vspace="0"}
@@ -368,10 +368,10 @@ to collision attacks [IACR-2019-459].
   SHA
   : * Description:  The SHA-1 algorithm [RFC3174].  The output of this
       algorithm is encoded using the base64 encoding  [RFC4648].
-      The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
-      to collision attacks [IACR-2019-459].
+      The SHA algorithm MUST NOT be used as it's now vulnerable
+      to collision attacks [IACR-2020-014].
     * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
-    * Status: obsoleted
+    * Status: deprecated
 
   UNIXsum
   : * Description: The algorithm computed by the UNIX "sum" command,
@@ -945,7 +945,7 @@ towards cryptographic constructions such as signatures.
 
 However, these rely on collision-resistance for their security proofs
 [CMU-836068]. The MD5 and SHA-1 algorithms are vulnerable to collisions attacks,
-so MD5 MUST NOT be used and SHA-1 is NOT RECOMMENDED for use with `Digest`.
+so they MUST NOT be used with `Digest`.
 
 ## Other Deprecated Algorithms
 
