@@ -64,7 +64,7 @@ informative:
 
 --- abstract
 
-This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", or "Structured Headers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
+This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", "Structured Headers", or "Structured Trailers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
 
 
 --- note_Note_to_Readers
@@ -130,7 +130,7 @@ To specify a HTTP field as a Structured Field, its authors needs to:
 
 * Reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
 
-* Identify whether the field is a Structured Header (i.e., it can only be used in the header section - the common case), a Structured Field (only in the trailer section), or a Structured Field (both).
+* Identify whether the field is a Structured Header (i.e., it can only be used in the header section - the common case), a Structured Trailer (only in the trailer section), or a Structured Field (both).
 
 * Specify the type of the field value; either List ({{list}}), Dictionary ({{dictionary}}), or Item ({{item}}).
 
