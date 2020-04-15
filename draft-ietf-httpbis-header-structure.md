@@ -89,9 +89,9 @@ Once a field is defined, bespoke parsers and serializers often need to be writte
 
 This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{?RFC7230}} header and trailer fields.
 
-A HTTP field that is defined as a "Structured Header" (or "Structured Trailer", respectively; if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
+A HTTP field that is defined as a "Structured Header" or "Structured Trailer" (if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
 
-Additionally, future versions of HTTP can define alternative serializations of the abstract model of these structures, allowing fields that use it to be transmitted more efficiently without being redefined.
+Additionally, future versions of HTTP can define alternative serializations of the abstract model of these structures, allowing fields that use that model to be transmitted more efficiently without being redefined.
 
 Note that it is not a goal of this document to redefine the syntax of existing HTTP fields; the mechanisms described herein are only intended to be used with those that explicitly opt into them.
 
@@ -159,6 +159,7 @@ Specifications can refer to a field name as a "structured header name", "structu
 For example, a fictitious Foo-Example header field might be specified as:
 
 ~~~ example
+--8<--
 42. Foo-Example Header
 
 The Foo-Example HTTP header field conveys information about how
@@ -187,6 +188,7 @@ being used.
 For example:
 
   Foo-Example: 2; foourl="https://foo.example.com/"
+-->8--
 ~~~
 
 
@@ -196,9 +198,9 @@ This section defines the abstract value types that can be composed into Structur
 
 In summary:
 
-* There are three top-level types that a HTTP field can be defined as; Lists, Dictionaries, and Items.
+* There are three top-level types that a HTTP field can be defined as: Lists, Dictionaries, and Items.
 
-* Lists and Dictionaries are containers; their members can be Items or Inner Lists (which are themselves lists of items).
+* Lists and Dictionaries are containers; their members can be Items or Inner Lists (which are themselves arrays of Items).
 
 * Both Items and Inner Lists can be parameterized with key/value pairs.
 
@@ -251,7 +253,7 @@ inner-list    = "(" *SP [ sh-item *( 1*SP sh-item ) *SP ] ")"
                 parameters
 ~~~
 
-Inner Lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A field whose value is defined as a list of Inner Lists of Strings could look like:
+Inner Lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
 ~~~ example
 Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
@@ -259,7 +261,7 @@ Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 
 Note that the last member in this example is an empty Inner List.
 
-A header field whose value is defined as a list of Inner Lists with Parameters at both levels could look like:
+A header field whose value is defined as a List of Inner Lists with Parameters at both levels could look like:
 
 ~~~ example
 Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
@@ -469,7 +471,7 @@ sh-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 
 Parsers MUST support Tokens with at least 512 characters.
 
-Note that Token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
+Note that Token allows the same characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
 
 
 ### Byte Sequences {#binary}
