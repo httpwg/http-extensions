@@ -1354,3 +1354,7 @@ _RFC Editor: Please remove this section before publication._
 * Effect of HTTP semantics on payload and message body moved to appendix #1122
 * Editorial refactoring, moving headers sections up. #1109-#1112, #1116,
   #1117, #1122-#1124
+
+## Since draft-ietf-httpbis-digest-headers-02
+
+* Deprecate SHA-1 #1154
