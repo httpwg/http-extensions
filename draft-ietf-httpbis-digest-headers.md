@@ -554,13 +554,17 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ## Server Returns No Representation Data
 
+Requests without a payload body can still send a Digest field
+applying the digest algorithm to an empty representation.
+
 As there is no content coding applied, the `sha-256` and the `id-sha-256`
-digest-values are the same.
+digest-values in the response are the same.
 
 Request:
 
 ~~~
-HEAD /items/123
+HEAD /items/123 HTTP/1.1
+Digest: sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 
 ~~~
 
@@ -1035,6 +1039,9 @@ the transport layer that protects HTTP fields.
 
 A `Digest` field using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in
 signatures.
+
+Using signatures to protect the Digest of an empty representation
+allows receiving endpoints to detect if an eventual payload has been stripped or added.
 
 ## Usage in trailers
 
