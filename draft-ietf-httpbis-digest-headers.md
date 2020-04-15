@@ -214,7 +214,7 @@ The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "payload body" in this document are to be
 interpreted as described in [I-D.ietf-httpbis-semantics].
 
-The definition "validator" in this document is to be interpreted as described in
+The definition "validator fields" in this document is to be interpreted as described in
 Section 10.2 of [I-D.ietf-httpbis-semantics].
 
 # Representation Digest {#representation-digest}
@@ -261,7 +261,7 @@ response.
    Digest = "Digest" ":" OWS 1#representation-data-digest
 ~~~
 
-The resource is specified by the effective request URI and any `validator`
+The resource is specified by the effective request URI and any `validator field`
 contained in the message.
 
 The relationship between Content-Location (see Section 6.2.5 of
