@@ -1,7 +1,7 @@
 ---
 title: HTTP Client Hints
 abbrev:
-docname: draft-ietf-httpbis-client-hints-latest
+docname: draft-ietf-httpbis-client-hints-12
 date: {DATE}
 category: exp
 
@@ -78,13 +78,13 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 # Introduction
 
-There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences. Historically, applications that wanted to allow the server to optimize content delivery and user experience based on such capabilities had to rely on passive identification (e.g., by matching User-Agent (Section 5.5.3 of {{RFC7231}}) header field against an established database of client signatures), used HTTP cookies {{RFC6265}} and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
+There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences. Historically, applications that wanted to allow the server to optimize content delivery and user experience based on such capabilities had to rely on passive identification (e.g., by matching the User-Agent header field (Section 5.5.3 of {{RFC7231}}) against an established database of client signatures), use HTTP cookies {{RFC6265}} and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
 
-Such techniques are expensive to setup and maintain, and are not portable across both applications and servers. They also make it hard for both client and server to reason about which data is required and is in use during the negotiation:
+Such techniques are expensive to setup and maintain, and are not portable across both applications and servers. They also make it hard for both client and server to understand which data is required and is in use during the negotiation:
 
   - User agent detection cannot reliably identify all static variables, cannot infer dynamic client preferences, requires external device database, is not cache friendly, and is reliant on a passive fingerprinting surface.
-  - Cookie based approaches are not portable across applications and servers, impose additional client-side latency by requiring JavaScript execution, and are not cache friendly.
-  - URL parameters, similar to cookie based approaches, suffer from lack of portability, and are hard to deploy due to a requirement to encode content negotiation data inside of the URL of each resource.
+  - Cookie-based approaches are not portable across applications and servers, impose additional client-side latency by requiring JavaScript execution, and are not cache friendly.
+  - URL parameters, similar to cookie-based approaches, suffer from lack of portability, and are hard to deploy due to a requirement to encode content negotiation data inside of the URL of each resource.
 
 Proactive content negotiation (Section 3.4.1 of {{RFC7231}}) offers an alternative approach; user agents use specified, well-defined request headers to advertise their capabilities and characteristics, so that servers can select (or formulate) an appropriate response.
 
@@ -143,16 +143,14 @@ For example:
   Accept-CH: Sec-CH-Example, Sec-CH-Example-2
 ~~~
 
-When a client receives an HTTP response containing `Accept-CH`, it indicates that the origin opts-in to receive the indicated request header fields for subsequent same-origin requests. The opt-in MUST be ignored if delivered over non-secure transport or for an origin with a scheme different from HTTPS. It SHOULD be persisted and bound to the origin to enable delivery of Client Hints on subsequent requests to the server's origin.
+When a client receives an HTTP response containing `Accept-CH`, that indicates that the origin opts-in to receive the indicated request header fields for subsequent same-origin requests.
+The opt-in MUST be ignored if delivered over non-secure transport (using a scheme different from HTTPS).
+It SHOULD be persisted and bound to the origin to enable delivery of Client Hints on subsequent requests to the server's origin.
 
-For example:
-
-~~~ example
-  Accept-CH: Sec-CH-Example, Sec-CH-Example-2
-  Accept-CH: Sec-CH-Example-3
-~~~
-
-Based on the Accept-CH example above, which is received in response to a user agent navigating to "https://example.com", and delivered over a secure transport: a user agent will have to persist an Accept-CH preference bound to "https://example.com" and use it for user agent navigations to "https://example.com" and any same-origin resource requests initiated by the page constructed from the navigation's response. This preference will not extend to resource requests initiated to "https://example.com" from other origins.
+Based on the Accept-CH example above, which is received in response to a user agent navigating to "https://example.com", and delivered over a secure transport, a user agent will have to persist an Accept-CH preference bound to "https://example.com".
+It will then use it for user agent navigations to e.g. "https://example.com/foobar.html", but not to e.g. "https://foobar.example.com/".
+It will similarly use the preference for any same-origin resource requests (e.g. to "https://example.com/image.jpg") initiated by the page constructed from the navigation's response, but not to cross-origin resource requests (e.g. "https://thirdparty.com/resource.js").
+This preference will not extend to resource requests initiated to "https://example.com" from other origins (e.g. from navigations to "https://other-example.com/").
 
 ## Interaction with Caches
 
@@ -183,15 +181,15 @@ Therefore, features relying on this document to define Client Hint headers MUST 
 Such features SHOULD take into account the following aspects of the information exposed: 
 
 * Entropy - Exposing highly granular data can be used to help identify users across multiple requests to different origins. Reducing the set of header field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users.
-* Sensitivity -  The feature SHOULD NOT expose user sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g. a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
+* Sensitivity -  The feature SHOULD NOT expose user-sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g. a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
 * Change over time - The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g. through JavaScript callbacks).
 
 Different features will be positioned in different points in the space between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agents SHOULD consider the value provided by a particular feature vs these considerations, and MAY have different policies regarding that tradeoff on a per-feature basis.
 
-Implementers ought to consider both user and server controlled mechanisms and policies to control which Client Hints header fields are advertised:
+Implementers ought to consider both user- and server- controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
   - Implementers SHOULD restrict delivery of some or all Client Hints header fields to the opt-in origin only, unless the opt-in origin has explicitly delegated permission to another origin to request Client Hints header fields.
-  - Implementers MAY provide user choice mechanisms so that users can balance privacy concerns with bandwidth limitations. However, implementers SHOULD also be aware that explaining the privacy implications of passive fingerprinting to users can be challenging.
+  - Implementers considering providing user choice mechanisms that allow users to balance privacy concerns against bandwidth limitations need to also consider that explaining to users the privacy implications involved, such as the risks of passive fingerprinting, is challenging and likely impractical.
   - Implementations specific to certain use cases or threat models MAY avoid transmitting some or all of Client Hints header fields. For example, avoid transmission of header fields that can carry higher risks of linkability.
 
 Implementers SHOULD support Client Hints opt-in mechanisms and MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, cookies, or similar, are cleared.
