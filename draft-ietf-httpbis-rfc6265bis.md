@@ -461,7 +461,7 @@ set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
 cookie-pair       = cookie-name BWS "=" BWS cookie-value
 cookie-name       = 1*cookie-octet
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
-cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
+cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E / %x80-FF
                       ; US-ASCII characters excluding CTLs,
                       ; whitespace DQUOTE, comma, semicolon,
                       ; and backslash
@@ -1970,9 +1970,8 @@ general privacy concerns outlined in Section 7.1 of {{RFC6265}}. The "SameSite"
 attribute is set by the server, and serves to mitigate the risk of certain kinds
 of attacks that the server is worried about. The user is not involved in this
 decision. Moreover, a number of side-channels exist which could allow a server
-to link distinct requests even in the absence of cookies. Connection and/or
-socket pooling, Token Binding, and Channel ID all offer explicit methods of
-identification that servers could take advantage of.
+to link distinct requests even in the absence of cookies (for example, connection
+and/or socket pooling between same-site and cross-site requests).
 
 # IANA Considerations
 
@@ -2138,7 +2137,8 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 ## draft-ietf-httpbis-rfc6265bis-06
 
-*  Editorial fixes: <https://github.com/httpwg/http-extensions/issues/1059>.
+*  Editorial fixes: <https://github.com/httpwg/http-extensions/issues/1059>,
+   <https://github.com/httpwg/http-extensions/issues/1158>.
 
 *  Created a registry for cookie attribute names:
    <https://github.com/httpwg/http-extensions/pull/1060>.
@@ -2149,7 +2149,6 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 *  Fixed serialization for nameless/valueless cookies:
    <https://github.com/httpwg/http-extensions/pull/1143>.
-
 
 # Acknowledgements
 {:numbered="false"}
