@@ -101,9 +101,6 @@ normative:
     -
       ins: J. Archibald
       name: Jake Archibald
-  PSL:
-    target: https://publicsuffix.org/list/
-    title: "Public Suffix List"
 
 informative:
   RFC2818:
@@ -187,6 +184,9 @@ informative:
   I-D.ietf-httpbis-cookie-alone:
   I-D.ietf-httpbis-cookie-prefixes:
   I-D.ietf-httpbis-cookie-same-site:
+  PSL:
+    target: https://publicsuffix.org/list/
+    title: "Public Suffix List"
 
 --- abstract
 
@@ -320,11 +320,12 @@ same" matching algorithm for origins are defined in {{RFC6454}}.
 in Section 4.2.1 of {{RFC7231}}.
 
 A domain's "public suffix" is the portion of a domain that is controlled by a
-public registry, such as "com", "co.uk", and "pvt.k12.wy.us" {{PSL}}. A domain's
+public registry, such as "com", "co.uk", and "pvt.k12.wy.us". A domain's
 "registrable domain" is the domain's public suffix plus the label to its left.
 That is, for `https://www.site.example`, the public suffix is `example`, and the
-registrable domain is `site.example`. This concept is defined more rigorously in
-{{PSL}}, which specifies a formal algorithm to obtain both.
+registrable domain is `site.example`. Whenever possible, user agents SHOULD
+use an up-to-date public suffix list, such as the one maintained by the Mozilla
+project at {{PSL}}.
 
 The term "request", as well as a request's "client", "current url", "method",
 and "target browsing context", are defined in {{FETCH}}.
@@ -2149,6 +2150,10 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 *  Fixed serialization for nameless/valueless cookies:
    <https://github.com/httpwg/http-extensions/pull/1143>.
+
+*  Converted a normative reference to Mozilla's Public Suffix List {{PSL}} into
+   an informative reference:
+   <https://github.com/httpwg/http-extensions/issues/1159>.
 
 # Acknowledgements
 {:numbered="false"}
