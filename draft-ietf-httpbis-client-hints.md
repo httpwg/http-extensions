@@ -174,7 +174,10 @@ Above example indicates that the cache key needs to include the Sec-CH-Example a
 ## Information Exposure
 Request header fields used in features relying on this document expose information about the user's environment to enable proactive content negotiation. Such information might reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
-The underlying assumption is that exposing information about the user as a request header is equivalent to the capability of that request's origin to access that information by other means and transmit it to itself.
+The underlying assumption is that exposing information about the user as a request header is equivalent (from a security perspective) to exposing this information by other means. (for example, if the request's origin can access that information using JavsScript APIs, and transmit it to its servers)
+
+Because Client Hints is an explicit opt-in mechanism, that means that servers that want access to information about the user's environment need to actively ask for it, enabling user agents and privacy researchers to keep track of which origins collect that data, and potentially act upon it.
+The header-based opt-in means that we can remove passive fingerprinting vectors, such as the User-Agent string (enabling active access to that information through [User-Agent Client Hints](https://wicg.github.io/ua-client-hints/#http-ua-hints)), or otherwise expose information already available through script (e.g. the [Save-Data Client Hint](https://wicg.github.io/savedata/#save-data-request-header-field)), without increasing the passive fingerprinting surface.
 
 Therefore, features relying on this document to define Client Hint headers MUST NOT provide new information that is otherwise not available to the application via other means, such as existing request headers, HTML, CSS, or JavaScript.
 
