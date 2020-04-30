@@ -309,6 +309,49 @@ properties of an HTTP request it receives, the server is expected to control the
 cacheability or the applicability of the cached response, by using header fields
 that control the caching behavior (e.g., Cache-Control, Vary).
 
+# Signalling Initial Priority in Frames
+
+Endpoints might prefer to signal the initial priority of a response using a
+frame rather than a header field. To permit that, the INITITIAL_PRIORITY frame
+is defined. It can be sent before the HTTP request or response message is sent
+on a stream and carries the same representation as that of the Priority header
+field value.
+
+Having two format to carry the priority signal brings the dilemma of choice.
+Sender can use either signal and sending both is not prohibited.An endpoint that
+receives both signals can process them in any way it chooses but MUST NOT treat
+this as error. Endpoints are advised that sending conflicting initial priority
+signals may lead to sub-optimal prioritization effects.
+
+## HTTP/2 INITIAL_PRIORITY Frame
+
+TBD: it is unclear if HTTP/2 deployment ecosystem would actually support this
+
+## HTTP/3 INITIAL_PRIORITY Frame
+
+The HTTP/3 INITIAL_PRIORITY frame (type=0xF) is used to signal the initial
+priority of a request or push stream, in ASCII text using the same
+representation as that of the Priority header field value.
+
+The INITIAL_PRIORITY frame MUST be sent on a request or push stream. Receiving
+an INITIAL_PRIORITY frame on a stream of any other type MUST be treated as a
+connection error of type H3_FRAME_UNEXPECTED.
+
+A single INITIAL_PRIORITY frame MAY be sent before the request or response
+message begins, and MUST NOT be sent subsequently; see Section 4.1 of
+{{!I-D.ietf-quic-http}}. If an endpoint receives an INITIAL_PRIORITY frame
+during or after a message, the endpoint MUST respond with a connection error of
+type H3_FRAME_UNEXPECTED.
+
+~~~ drawing
+HTTP/3 INITIAL_PRIORITY Frame {
+  Type (i) = 0xF,
+  Length (i),
+  Priority Field Value (..),
+}
+~~~
+{: #fig-h3-initial-priority-frame title="HTTP/3 INITIAL_PRIORITY Frame"}
+
 # Reprioritization
 
 After a client sends a request, it may be beneficial to change the priority of
@@ -631,6 +674,15 @@ This specification registers the following entry in the HTTP/2 Frame Type
 registry established by {{?RFC7540}}:
 
 Frame Type:
+: TBD_RESERVED_INITIAL_PRIORITY
+
+Code:
+: 0xF
+
+Specification:
+: This document
+
+Frame Type:
 : PRIORITY_UPDATE
 
 Code:
@@ -641,6 +693,15 @@ Specification:
 
 This specification registers the following entries in the HTTP/3 Frame Type
 registry established by {{!I-D.ietf-quic-http}}:
+
+Frame Type:
+: INITIAL_PRIORITY
+
+Code:
+: 0xF
+
+Specification:
+: This document
 
 Frame Type:
 : PRIORITY_UPDATE
