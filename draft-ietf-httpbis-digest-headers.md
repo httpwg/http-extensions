@@ -1294,7 +1294,7 @@ Location: /authors/123
 
    While
    [mid-stream trailers](https://github.com/httpwg/http-core/issues/313#issuecomment-584389706)
-   are interesting, being this specification a rewrite of [RFC3230] we do not
+   are interesting, since this specification is a rewrite of [RFC3230] we do not
    think we should face that. As a first thought, future works on digest-algorithms
    may consider mid-stream trailers though.
 
