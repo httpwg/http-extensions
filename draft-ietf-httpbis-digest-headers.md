@@ -1295,8 +1295,10 @@ Location: /authors/123
    While
    [mid-stream trailers](https://github.com/httpwg/http-core/issues/313#issuecomment-584389706)
    are interesting, since this specification is a rewrite of [RFC3230] we do not
-   think we should face that. As a first thought, future works on digest-algorithms
-   may consider mid-stream trailers though.
+   think we should face that. As a first thought, nothing in this document 
+   precludes future work that would find a use for mid-stream trailers, for 
+   example an incremental digest-algorithm. A document defining such a
+   digest-algorithm is best positioned to describe how it is used.
 
 # Acknowledgements
 {:numbered="false"}
