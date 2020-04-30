@@ -1290,6 +1290,14 @@ Location: /authors/123
    to send a checksum of a resource representation with no content codings
    applied.
 
+8. What about mid-stream trailers?
+
+   While
+   [mid-stream trailers](https://github.com/httpwg/http-core/issues/313#issuecomment-584389706)
+   are interesting, being this specification a rewrite of [RFC3230] we do not
+   think we should face that. As a first thought, future works on digest-algorithms
+   may consider mid-stream trailers though.
+
 # Acknowledgements
 {:numbered="false"}
 The vast majority of this document is inherited from [RFC3230], so thanks
