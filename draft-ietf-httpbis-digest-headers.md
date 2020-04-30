@@ -25,6 +25,7 @@ author:
     email: lucaspardue.24.7@gmail.com
 
 normative:
+  I-D.ietf-httpbis-semantics:
   RFC1321:
   RFC3174:
   RFC1950:
@@ -141,15 +142,15 @@ HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
 ## This Proposal
 
 The concept of `selected representation` defined in Section 6 of
-{{!SEMANTICS=I-D.ietf-httpbis-semantics}} makes [RFC3230] definitions inconsistent with
+[I-D.ietf-httpbis-semantics] makes [RFC3230] definitions inconsistent with
 current HTTP semantics. This document updates the `Digest` and `Want-Digest`
-field definitions to align with {{SEMANTICS}} concepts.
+field definitions to align with [I-D.ietf-httpbis-semantics] concepts.
 
 Basing `Digest` on the selected representation makes it straightforward to
 apply it to use-cases where the transferred data does require some sort of
 manipulation to be considered a representation, or conveys a partial
 representation of a resource eg. Range Requests (see Section 8.3 of
-{{SEMANTICS}}).
+[I-D.ietf-httpbis-semantics]).
 
 Changes are semantically compatible with existing implementations and better
 cover both the request and response cases.
@@ -159,7 +160,7 @@ the value contained in any `Content-Encoding` or `Content-Type` header fields.
 Therefore, a given resource may have multiple different digest values.
 
 To allow both parties to exchange a Digest of a representation with no content
-codings (see Section 6.1.2 of {{SEMANTICS}}) two more algorithms
+codings (see Section 6.1.2 of [I-D.ietf-httpbis-semantics]) two more algorithms
 are added (`ID-SHA-256` and `ID-SHA-512`).
 
 ## Goals
@@ -207,20 +208,20 @@ when, and only when, they appear in all capitals, as shown here.
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405] along with the "#rule" extension defined in Section 4 of
-{{SEMANTICS}}.
+[I-D.ietf-httpbis-semantics].
 
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "payload body" in this document are to be
-interpreted as described in {{SEMANTICS}}.
+interpreted as described in [I-D.ietf-httpbis-semantics].
 
 The definition "validator fields" in this document is to be interpreted as described in
-Section 10.2 of {{SEMANTICS}}.
+Section 10.2 of [I-D.ietf-httpbis-semantics].
 
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
 which uses a checksum  that is calculated independently of the payload body and message body.
-It uses the representation data (see Section 6.1 of {{SEMANTICS}}),
+It uses the representation data (see Section 6.1 of [I-D.ietf-httpbis-semantics]),
 that can be fully or partially contained in the message body, or not contained at all:
 
 ~~~
@@ -264,7 +265,7 @@ The resource is specified by the effective request URI and any `validator field`
 contained in the message.
 
 The relationship between Content-Location (see Section 6.2.5 of
-{{SEMANTICS}}) and Digest is demonstrated in
+[I-D.ietf-httpbis-semantics]) and Digest is demonstrated in
 {{post-not-request-uri}}. A comprehensive set of examples showing the impacts of
 representation metadata, payload transformations and HTTP methods on Digest is
 provided in {{examples-unsolicited}} and {{examples-solicited}}.
@@ -281,7 +282,7 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
 
-Digest can be used in trailers. When using incremental digest-algorithms
+Digest can be sent in a trailer section. When using incremental digest-algorithms
 this allows the sender and the receiver to dynamically compute the digest value
 while streaming the content.
 
@@ -334,7 +335,7 @@ some algorithms, one or more parameters can be supplied.
 ~~~
 
 The BNF for "parameter" is defined in Section 4.4.1.4 of
-{{SEMANTICS}}. All digest-algorithm values are case-insensitive.
+[I-D.ietf-httpbis-semantics]. All digest-algorithm values are case-insensitive.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
 digest-algorithm values.
@@ -1039,7 +1040,7 @@ signatures.
 
 When used in trailers, the receiver gets the digest value after the payload body
 and may thus be tempted to process the data before validating the digest value.
-Instead, data should be always processed after checking that Digest has the expected value.
+Instead, data should only be processed after validating the Digest.
 
 If received in trailers, Digest MUST NOT be discarded;
 instead it MAY be merged in the header section (See Section 7.1.2 of {{!MESSAGING=I-D.ietf-httpbis
@@ -1166,7 +1167,7 @@ The "ID-SHA-256" and "ID-SHA-512" algorithms have been added to the registry.
 ## Want-Digest Field Registration
 
 This section registers the `Want-Digest` field in the "Hypertext Transfer
-Protocol (HTTP) Field Name Registry" {{SEMANTICS}}.
+Protocol (HTTP) Field Name Registry" [I-D.ietf-httpbis-semantics].
 
 Field name:  `Want-Digest`
 
@@ -1177,7 +1178,7 @@ Specification document(s):  {{want-digest}} of this document
 ## Digest Header Field Registration
 
 This section registers the `Digest` field in the "Hypertext Transfer Protocol
-(HTTP) Field Name Registry" {{SEMANTICS}}.
+(HTTP) Field Name Registry" [I-D.ietf-httpbis-semantics].
 
 Field name:  `Digest`
 
