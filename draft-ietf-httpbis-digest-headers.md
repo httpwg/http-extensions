@@ -282,6 +282,10 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
 
+Digest can be sent in a trailer section. When using incremental digest-algorithms
+this allows the sender and the receiver to dynamically compute the digest value
+while streaming the content.
+
 Two examples of its use are
 
 ~~~ example
@@ -528,7 +532,7 @@ The following examples demonstrate interactions where a server responds with a
 `Want-Digest`.
 
 
-## Server Returns Full Representation Data
+## Server Returns Full Representation Data {#example-full-representation}
 
 Request:
 
@@ -851,6 +855,39 @@ Digest: sha-256=UJSojgEzqUe4UoHzmNl5d2xkmrW3BOdmvsvWu1uFeu0=
 }
 ~~~
 
+## Use with trailers and transfer-coding
+
+An origin server sends Digest in the HTTP trailer, so it can calculate digest-value
+while streaming content and thus mitigate resource consumption.
+The field value is the same as in {{example-full-representation}}
+
+Request:
+
+~~~
+GET /items/123
+
+~~~
+
+Response:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Trailer: Digest
+
+8\r\n
+{"hello"\r\n
+8
+: "world\r\n
+2\r\n
+"}\r\n
+0\r\n
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+
+~~~
+
+
 # Examples of Want-Digest Solicited Digest {#examples-solicited}
 
 The following examples demonstrate interactions where a client solicits a
@@ -998,6 +1035,20 @@ the transport layer that protects HTTP fields.
 
 A `Digest` field using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in
 signatures.
+
+## Usage in trailers
+
+When used in trailers, the receiver gets the digest value after the payload body
+and may thus be tempted to process the data before validating the digest value.
+Instead, data should only be processed after validating the Digest.
+
+If received in trailers, Digest MUST NOT be discarded;
+instead it MAY be merged in the header section (See Section 7.1.2 of {{!MESSAGING=I-D.ietf-httpbis
+-messaging}}).
+
+Not every digest-algorithm is suitable for trailers, as they may require to pre-process
+the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
+
 
 ## Message Truncation
 
