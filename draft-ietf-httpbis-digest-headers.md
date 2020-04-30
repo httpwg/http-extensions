@@ -1007,7 +1007,7 @@ signatures.
 
 When used in trailers, the receiver gets the digest value after the payload body
 and may thus be tempted to process the data before validating the digest value.
-Instead, data should be always processed after checking that Digest has the expected value.
+Instead, data should only be processed after validating the Digest.
 
 Not every digest-algorithm is suitable for trailers, as they may require to pre-process
 the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
