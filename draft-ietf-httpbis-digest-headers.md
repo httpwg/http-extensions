@@ -282,7 +282,7 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
 
-Digest can be used in trailers. When using incremental digest-algorithms
+Digest can be sent in a trailer section. When using incremental digest-algorithms
 this allows the sender and the receiver to dynamically compute the digest value
 while streaming the content.
 
