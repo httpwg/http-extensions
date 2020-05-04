@@ -309,6 +309,29 @@ properties of an HTTP request it receives, the server is expected to control the
 cacheability or the applicability of the cached response, by using header fields
 that control the caching behavior (e.g., Cache-Control, Vary).
 
+# Signalling Initial Priority in Frames
+
+Endpoints might prefer to signal the initial priority of a response using a
+frame rather than a header field. This document specifies a new PRIORITY_UPDATE
+frame for HTTP/2 ({{!RFC7540}}) and HTTP/3 ({{!I-D.ietf-quic-http}}). It carries
+priority parameters and references the target of the prioritization based on a
+version-specific identifier; in HTTP/2 this is the Stream ID, in HTTP/3 this is
+either the Stream ID or Push ID.
+
+In HTTP/2 the frame is sent on stream zero and in HTTP/3 it is sent on the client
+control stream ({{!I-D.ietf-quic-http}}, Section 6.2.1). This allows the
+PRIORITY_UPDATE to be sent before the stream it references is created, and
+avoids having to extend the protocol semantics to support continued updates
+during the stream lifetime; see {{reprioritization}}.
+
+Unlike the header field, the PRIORITY_UPDATE frame is a hop-by-hop signal.
+
+Having two format to carry the initial priority signal brings the dilemma of
+choice. A sender can use either signal and sending both is not prohibited. An
+endpoint that receives both signals can process them in any way it chooses but
+MUST NOT treat this as error. Endpoints are advised that sending conflicting
+initial priority signals may lead to sub-optimal prioritization effects.
+
 # Reprioritization
 
 After a client sends a request, it may be beneficial to change the priority of
@@ -324,24 +347,14 @@ transitions to a state that prevents the client from sending additional
 frames on the stream. Therefore, a client cannot reprioritize a response by
 using the Priority header field.  Modifying this behavior would require a
 semantic change to the protocol, but this is avoided by restricting the
-stream on which a PRIORITY_UPDATE frame can be sent. In HTTP/2 the frame
-is on stream zero and in HTTP/3 it is sent on the client control stream
-({{!I-D.ietf-quic-http}}, Section 6.2.1).
-
-This document specifies a new PRIORITY_UPDATE frame type for HTTP/2
-({{!RFC7540}}) and HTTP/3 ({{!I-D.ietf-quic-http}}) which enables
-reprioritization. It carries updated priority parameters and references the
-target of the reprioritization based on a version-specific identifier; in
-HTTP/2 this is the Stream ID, in HTTP/3 this is either the Stream ID or Push ID.
-
-Unlike the header field, the reprioritization frame is a hop-by-hop signal.
+stream on which a PRIORITY_UPDATE frame can be sent.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
-The HTTP/2 PRIORITY_UPDATE frame (type=0xF)  is used by clients for
-reprioritization. It carries the stream ID of the response that is being
-reprioritized, and the updated priority in ASCII text, using the same
-representation as that of the Priority header field value.
+The HTTP/2 PRIORITY_UPDATE frame (type=0xF) is used by clients to signal the
+initial priority of a response, or to reprioritize a response or push stream. It
+carries the stream ID of the response and the priority in ASCII text, using the
+same representation as that of the Priority header field value.
 
 The Stream Identifier field ({{!RFC7540}}, Section 4.1) in the PRIORITY_UPDATE
 frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE frame with a field
@@ -375,21 +388,32 @@ Stream ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Headers.
 
-The HTTP/2 PRIORITY_UPDATE frame MUST NOT be sent prior to opening the
-stream.  If a PRIORITY_UPDATE is received prior to the stream being opened,
-it MAY be treated as a connection error of type PROTOCOL_ERROR.
+The PRIORITY_UPDATE frame MAY be sent before the stream that it references has
+been created. The Stream ID MUST be within the stream limit. If a server
+receives a PRIORITY_UPDATE for a Stream ID that is beyond the stream limits,
+this MUST be treated as a connection error of type PROTOCOL_ERROR.
+PRIORITY_UPDATE frames received before the request or response has started
+SHOULD be buffered until the stream is opened and applied immediately after the
+request message has been processed. Holding PRIORITY_UPDATES consumes extra
+state on the peer, although the size of the state is bounded by stream limits.
+There is no bound on the number of PRIORITY_UPDATEs that can be sent, so an
+endpoint SHOULD store only the most recently received frame.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
 
+If a client receives a PRIORITY_UPDATE frame, it MUST respond with a connection
+error of type PROTOCOL_ERROR.
+
 ## HTTP/3 PRIORITY_UPDATE Frame {#h3-update-frame}
 
-The HTTP/3 PRIORITY_UPDATE frame (type=0x10 or 0x11) is used by clients for
-reprioritization. It carries the identifer of the element that is being
-reprioritized, and the updated priority in ASCII text, using the same
-representation as that of the Priority header field value. PRIORITY_UPDATE with
-a frame type of 0x10 is used to reprioritize request streams, PRIORITY_UPDATE
-with a frame time of 0x11 is used to reprioritize push streams.
+The HTTP/3 PRIORITY_UPDATE frame (type=0xF or 0x10) is used by clients to
+signal the initial priority of a response, or to reprioritize a response or push
+stream. It carries the identifer of the element that is being prioritized, and
+the updated priority in ASCII text, using the same representation as that of the
+Priority header field value. PRIORITY_UPDATE with a frame type of 0xF is used
+for request streams, PRIORITY_UPDATE with a frame time of 0x11 is used for push
+streams.
 
 The PRIORITY_UPDATE frame MUST be sent on the client control stream
 ({{!I-D.ietf-quic-http}}, Section 6.2.1). Receiving a PRIORITY_UPDATE frame on a
@@ -398,7 +422,7 @@ error of type H3_FRAME_UNEXPECTED.
 
 ~~~ drawing
 HTTP/3 PRIORITY_UPDATE Frame {
-  Type (i) = 0x10..0x11,
+  Type (i) = 0xF..0x10,
   Length (i),
   Prioritized Element ID (i),
   Priority Field Value (..),
@@ -414,28 +438,27 @@ Prioritized Element ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Headers.
 
-The HTTP/3 PRIORITY_UPDATE frame MUST NOT be sent with an invalid identifier,
-including before the request stream has been opened or before a promised
-request has been received.  If a server receives a PRIORITY_UPDATE specifying
-a push ID that has not been promised, it SHOULD be treated as a connection
-error of type H3_ID_ERROR.
+The PRIORITY_UPDATE frame MAY be sent before the request stream that it
+references has been created. The Stream ID MUST be within the client-initiated
+bidirectional stream limit. If a server receives a PRIORITY_UPDATE for a Stream
+ID that is beyond the stream limits, this MUST be treated as a connection error
+of type H3_ID_ERROR. PRIORITY_UPDATE frames received before the request or
+response has started SHOULD be buffered until the stream is opened and applied
+immediately after the request message has been processed. Holding
+PRIORITY_UPDATES consumes extra state on the peer, although the size of the
+state is bounded by bidirectional stream limits. There is no bound on the number
+of PRIORITY_UPDATEs that can be sent, so an endpoint SHOULD store only the most
+recently received frame.
 
-Because the HTTP/3 PRIORITY_UPDATE frame is sent on the control stream and there
-are no ordering guarantees between streams, a client that reprioritizes a
-request before receiving the response data might cause the server to receive a
-PRIORITY_UPDATE for an unknown request. If the request stream ID is within the
-client-initiated bidirectional stream limits, the PRIORITY_UPDATE frame SHOULD
-be buffered until the stream is opened and applied immediately after the request
-message has been processed. Holding PRIORITY_UPDATES consumes extra state on the
-peer, although the size of the state is bounded by bidirectional stream limits.
-There is no bound on the number of PRIORITY_UPDATES that can be sent, so an
-endpoint SHOULD store only the most recently received frame.
+If a server receives a PRIORITY_UPDATE specifying a Push ID that has not been
+promised, it SHOULD be treated as a connection error of type H3_ID_ERROR.
 
 If a server receives a PRIORITY_UPDATE for a Stream ID that is not a request
 stream, this MUST be treated as a connection error of type H3_ID_ERROR.
 
-If a server receives a PRIORITY_UPDATE for a Stream ID that is beyond the stream
-limits, this MUST be treated as a connection error of type H3_ID_ERROR.
+If a client receives a PRIORITY_UPDATE frame, it MUST respond with a connection
+error of type H3_FRAME_UNEXPECTED.
+
 
 # Merging Client- and Server-Driven Parameters {#merging}
 
@@ -637,7 +660,7 @@ Frame Type:
 : PRIORITY_UPDATE
 
 Code:
-: 0x10
+: 0xF
 
 Specification:
 : This document
@@ -649,7 +672,7 @@ Frame Type:
 : PRIORITY_UPDATE
 
 Code:
-: 0x10 and 0x11
+: 0xF and 0x10
 
 Specification:
 : This document
