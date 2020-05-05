@@ -592,16 +592,16 @@ Given an ordered Dictionary as input_dictionary (each member having a member_nam
 1. Let output be an empty string.
 2. For each member_name with a value of (member_value, parameters) in input_dictionary:
    1. Append the result of running Serializing a Key ({{ser-key}}) with member's member_name to output.
-3. If member_value is Boolean true:
-    1. Append the result of running Serializing Parameters ({{ser-params}}) with parameters to output.
-4. Otherwise:
-    1. Append "=" to output.
-    2. If member_value is an array, append the result of running Serializing an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
-    3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
-5. If more members remain in input_dictionary:
-      1. Append "," to output.
-      2. Append a single SP to output.
-6. Return output.
+   2. If member_value is Boolean true:
+       1. Append the result of running Serializing Parameters ({{ser-params}}) with parameters to output.
+   3. Otherwise:
+       1. Append "=" to output.
+       2. If member_value is an array, append the result of running Serializing an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
+       3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
+   4. If more members remain in input_dictionary:
+         1. Append "," to output.
+         2. Append a single SP to output.
+3. Return output.
 
 
 ### Serializing an Item {#ser-item}
@@ -997,6 +997,7 @@ _RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-18
 
+* Fix indentation in Dictionary serialisation (#1164).
 * Add example for Token; tweak example field names (#1147).
 * Editorial improvements.
 
