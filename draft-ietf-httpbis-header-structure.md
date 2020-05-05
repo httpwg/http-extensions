@@ -469,6 +469,12 @@ The ABNF for Tokens is:
 sh-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 ~~~
 
+For example:
+
+~~~ example
+Example-Token: foo123/456
+~~~
+
 Parsers MUST support Tokens with at least 512 characters.
 
 Note that Token allows the same characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
