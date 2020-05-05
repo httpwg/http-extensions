@@ -997,7 +997,7 @@ _RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-18
 
-_tbd_
+* Add example for Token; tweak example field names (#1147).
 
 ## Since draft-ietf-httpbis-header-structure-17
 
