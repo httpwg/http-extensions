@@ -326,7 +326,7 @@ during the stream lifetime; see {{reprioritization}}.
 
 Unlike the header field, the PRIORITY_UPDATE frame is a hop-by-hop signal.
 
-Having two format to carry the initial priority signal brings the dilemma of
+Having two mechanisms to carry the initial priority signal brings the dilemma of
 choice. A sender can use either signal and sending both is not prohibited. An
 endpoint that receives both signals can process them in any way it chooses but
 MUST NOT treat this as error. Endpoints are advised that sending conflicting
@@ -358,8 +358,7 @@ same representation as that of the Priority header field value.
 
 The Stream Identifier field ({{!RFC7540}}, Section 4.1) in the PRIORITY_UPDATE
 frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE frame with a field
-of any other value MUST be treated as a connection error of type
-PROTOCOL_ERROR.
+of any other value MUST be treated as a connection error of type PROTOCOL_ERROR.
 
 ~~~ drawing
 HTTP/2 PRIORITY_UPDATE Frame {
