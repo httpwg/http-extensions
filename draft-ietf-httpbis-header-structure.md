@@ -991,7 +991,7 @@ _RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-18
 
-_tbd_
+* Fix indentation in Dictionary serialisation (#1164).
 
 ## Since draft-ietf-httpbis-header-structure-17
 
