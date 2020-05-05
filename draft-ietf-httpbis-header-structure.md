@@ -219,7 +219,7 @@ list-member   = sh-item / inner-list
 Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Strings could look like:
 
 ~~~ example
-Example-StrListHeader: "foo", "bar", "It was the best of times."
+Example-StrList: "foo", "bar", "It was the best of times."
 ~~~
 
 An empty List is denoted by not serializing the field at all.
@@ -256,7 +256,7 @@ inner-list    = "(" *SP [ sh-item *( 1*SP sh-item ) *SP ] ")"
 Inner Lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
 ~~~ example
-Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
+Example-StrListList: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 ~~~
 
 Note that the last member in this example is an empty Inner List.
@@ -289,13 +289,13 @@ param-value   = bare-item
 A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
 
 ~~~ example
-Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
+Example-ParamList: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
 ~~~
 
 Parameters whose value is Boolean true MUST omit that value when serialized. For example:
 
 ~~~ example
-Example-IntHeader: 1; a; b=?0
+Example-Int: 1; a; b=?0
 ~~~
 
 Note that this requirement is only on serialization; parsers are still required to correctly handle the true value when it appears in a parameter.
@@ -321,13 +321,13 @@ member-value   = sh-item / inner-list
 Members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
 
 ~~~ example
-Example-DictHeader: en="Applepie", da=:w4ZibGV0w6ZydGU=:
+Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
 ~~~
 
 Members whose value is Boolean true MUST omit that value when serialized. For example, here both "b" and "c" are true:
 
 ~~~ example
-Example-DictHeader: a=?0, b, c; foo=bar
+Example-Dict: a=?0, b, c; foo=bar
 ~~~
 
 Note that this requirement is only on serialization; parsers are still required to correctly handle the true Boolean value when it appears in Dictionary values.
@@ -335,7 +335,7 @@ Note that this requirement is only on serialization; parsers are still required 
 A Dictionary with a member whose value is an Inner List of tokens:
 
 ~~~ example
-Example-DictListHeader: rating=1.5, feelings=(joy sadness)
+Example-DictList: rating=1.5, feelings=(joy sadness)
 ~~~
 
 A Dictionary with a mix of singular and list values, some with Parameters:
@@ -387,7 +387,7 @@ Example-IntItemHeader: 5
 or with Parameters:
 
 ~~~ example
-Example-IntItemHeader: 5; foo=bar
+Example-IntItem: 5; foo=bar
 ~~~
 
 
@@ -404,7 +404,7 @@ sh-integer = ["-"] 1*15DIGIT
 For example:
 
 ~~~ example
-Example-IntegerHeader: 42
+Example-Integer: 42
 ~~~
 
 Note that commas in Integers are used in this section's prose only for readability; they are not valid in the wire format.
@@ -425,7 +425,7 @@ sh-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
 For example, a header whose value is defined as a Decimal could look like:
 
 ~~~ example
-Example-DecimalHeader: 4.5
+Example-Decimal: 4.5
 ~~~
 
 Note that the serialisation algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the header definition to occur before serialisation.
@@ -447,7 +447,7 @@ escaped   = "\" ( DQUOTE / "\" )
 Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
 ~~~ example
-Example-StringHeader: "hello world"
+Example-String: "hello world"
 ~~~
 
 Note that Strings only use DQUOTE as a delimiter; single quotes do not delimit Strings. Furthermore, only DQUOTE and "\\" can be escaped; other characters after "\\" MUST cause parsing to fail.
@@ -469,6 +469,12 @@ The ABNF for Tokens is:
 sh-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 ~~~
 
+For example:
+
+~~~ example
+Example-Token: foo123/456
+~~~
+
 Parsers MUST support Tokens with at least 512 characters.
 
 Note that Token allows the same characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
@@ -488,7 +494,7 @@ base64    = ALPHA / DIGIT / "+" / "/" / "="
 A Byte Sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
-Example-BinaryHdr: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
+Example-Binary: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
 ~~~
 
 Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
@@ -508,7 +514,7 @@ boolean    = "0" / "1"
 A Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ example
-Example-BoolHdr: ?1
+Example-Bool: ?1
 ~~~
 
 
@@ -992,6 +998,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-18
 
 * Fix indentation in Dictionary serialisation (#1164).
+* Add example for Token; tweak example field names (#1147).
 
 ## Since draft-ietf-httpbis-header-structure-17
 
