@@ -119,7 +119,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This document uses algorithms to specify parsing and serialization behaviors, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar rule from {{!RFC7230}}.
 
-When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviors are indistinguishable from specified behavior. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
+When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviors are indistinguishable from specified behavior. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
 For serialization to HTTP fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output still matches the ABNF.
 
@@ -128,7 +128,7 @@ For serialization to HTTP fields, the ABNF illustrates the range of acceptable w
 
 To specify a HTTP field as a Structured Field, its authors needs to:
 
-* Reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
+* Normatively reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
 
 * Identify whether the field is a Structured Header (i.e., it can only be used in the header section - the common case), a Structured Trailer (only in the trailer section), or a Structured Field (both).
 
@@ -292,7 +292,7 @@ A parameter is separated from its Item or Inner List and other parameters by a s
 Example-ParamList: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
 ~~~
 
-Parameters whose value is Boolean true MUST omit that value when serialized. For example:
+Parameters whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example:
 
 ~~~ example
 Example-Int: 1; a; b=?0
@@ -324,7 +324,7 @@ Members are separated by a comma with optional whitespace, while names and value
 Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
 ~~~
 
-Members whose value is Boolean true MUST omit that value when serialized. For example, here both "b" and "c" are true:
+Members whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example, here both "b" and "c" are true:
 
 ~~~ example
 Example-Dict: a=?0, b, c; foo=bar
@@ -998,6 +998,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-header-structure-18
 
 * Add example for Token; tweak example field names (#1147).
+* Editorial improvements.
 
 ## Since draft-ietf-httpbis-header-structure-17
 
