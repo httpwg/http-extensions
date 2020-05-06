@@ -343,11 +343,12 @@ browser would send a reprioritization frame with the priority field value
 set to `u=0`.
 
 In HTTP/2 and HTTP/3, after a request message is sent on a stream, the stream
-transitions to a state that prevents the client from sending additional
-frames on the stream. Therefore, a client cannot reprioritize a response by
-using the Priority header field.  Modifying this behavior would require a
-semantic change to the protocol, but this is avoided by restricting the
-stream on which a PRIORITY_UPDATE frame can be sent.
+transitions to a state that prevents the client from sending additional frames
+on the stream. Therefore, a client cannot reprioritize a response by sending
+additional metadata (e.g., trailer fields) or a PRIORITY_UPDATE frame on the
+request stream. We avoid interoperability failure by restricting PRIORITY_UPDATE
+frames to stream zero or the control stream, with each such frame explicitly
+identifying the response to which the new priority applies.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
