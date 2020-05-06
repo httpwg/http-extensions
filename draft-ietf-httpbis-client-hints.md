@@ -90,13 +90,15 @@ Proactive content negotiation (Section 3.4.1 of {{RFC7231}}) offers an alternati
 
 However, traditional proactive content negotiation techniques often mean that clients send these request headers prolifically. This causes performance concerns (because it creates "bloat" in requests), as well as privacy issues; passively providing such information allows servers to silently fingerprint the user.
 
-This document defines a new response header, Accept-CH, that allows an origin server to explicitly ask that clients send these headers in requests. It also defines guidelines for content negotiation mechanisms that use it, colloquially referred to as Client Hints.
+This document defines Client Hints, a framework that enables servers to opt-in to specific proactive content negotiation features, adapting their content accordingly, as well as guidelines for content negotiation mechanisms that use the framework.
+This document also defines a new response header, Accept-CH, that allows an origin server to explicitly ask that clients send these headers in requests.
 
 Client Hints mitigate performance concerns by assuring that clients will only send the request headers when they're actually going to be used, and privacy concerns of passive fingerprinting by requiring explicit opt-in and disclosure of required headers by the server through the use of the Accept-CH response header.
 
-This document defines Client Hints, a framework that enables servers to opt-in to specific proactive content negotiation features, adapting their content accordingly. However, it does not define any specific features that will use that infrastructure. Those features will be defined in their respective specifications.
+The document does not define specific usages of Client Hints. Such usages need to be defined in their respective specifications.
 
-One example of such a feature is the User Agent Client Hints feature {{UA-CH}}.
+One example of such usage is the User Agent Client Hints [UA-CH].
+
 
 ## Notational Conventions
 
