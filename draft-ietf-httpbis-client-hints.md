@@ -121,7 +121,7 @@ Implementers SHOULD be aware of the passive fingerprinting implications when imp
 
 When presented with a request that contains one or more client hint header fields, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
-Server MUST ignore hints they do not understand or support.
+Servers MUST ignore hints they do not understand nor support.
 
 Furthermore, the server can generate additional response header fields (as specified by the hint or hints in use) that convey related values to aid client processing.
 
@@ -132,7 +132,7 @@ Servers can advertise support for Client Hints using the mechanism described bel
 ## The Accept-CH Response Header Field {#accept-ch}
 
 The Accept-CH response header field indicates server support for the hints indicated in its value.
-Servers which wish to receive client information through Client Hints SHOULD add Accept-CH response header to their responses as early as possible.
+Servers wishing to receive client information through Client Hints SHOULD add Accept-CH response header to their responses as early as possible.
 
 Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be an sh-list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.3.4 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
