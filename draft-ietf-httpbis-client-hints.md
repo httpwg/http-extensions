@@ -56,6 +56,14 @@ informative:
       ins: Y. Weiss
       name: Yoav Weiss
       organization: Google
+  CLIENT-HINTS-INFRASTRUCTURE:
+    target: https://wicg.github.io/client-hints-infrastructure/
+    title: Client Hints Infrastructure
+    author:
+    -
+      ins: Y. Weiss
+      name: Yoav Weiss
+      organization: Google
 
 
 --- abstract
@@ -114,7 +122,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 
 Clients choose what Client Hints to send in a request based on their default settings, user configuration, and server preferences expressed in `Accept-CH`.
 The client and server can use an opt-in mechanism outlined below to negotiate which header fields need to be sent to allow for efficient content adaption, and optionally use additional mechanisms to negotiate delegation policies that control access of third parties to same header fields.
-Without such an opt-in, clients SHOULD NOT send high-entropy hints, but MAY send low-entropy ones.
+Without such an opt-in, clients SHOULD NOT send high-entropy hints, but MAY send low-entropy ones [CLIENT-HINTS-INFRASTRUCTURE].
 
 Implementers SHOULD be aware of the passive fingerprinting implications when implementing support for Client Hints, and follow the considerations outlined in the <xref target="security-considerations">Security Considerations</xref> section of this document.
 
@@ -123,7 +131,7 @@ Implementers SHOULD be aware of the passive fingerprinting implications when imp
 
 When presented with a request that contains one or more client hint header fields, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
-Servers MUST ignore hints they do not understand nor support.
+Servers MUST ignore hints they do not understand nor support. There is no mechanism for servers to indicate clients that hints were ignored. 
 
 Furthermore, the server can generate additional response header fields (as specified by the hint or hints in use) that convey related values to aid client processing.
 
@@ -237,7 +245,7 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 ## Accept-CH {#iana-accept-ch}
 - Header field name: Accept-CH
 - Applicable protocol: HTTP
-- Status: standard
+- Status: experimental
 - Author/Change controller: IETF
 - Specification document(s): {{accept-ch}} of this document
 - Related information: for Client Hints
@@ -303,6 +311,12 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 
 ## Since -11
 * PR 1134: Re-insert back section.
+
+## Since -12
+* PR 1160: AD review.
+
+## Since -13
+* PR 1171: Genart review.
 
 
 # Acknowledgements
