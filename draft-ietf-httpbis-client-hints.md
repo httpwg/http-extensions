@@ -88,7 +88,7 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences. Historically, applications that wanted to allow the server to optimize content delivery and user experience based on such capabilities had to rely on passive identification (e.g., by matching the User-Agent header field (Section 5.5.3 of {{RFC7231}}) against an established database of client signatures), use HTTP cookies {{RFC6265}} and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
 
-Such techniques are expensive to setup and maintain, and are not portable across both applications and servers. They also make it hard for both client and server to understand which data is required and is in use during the negotiation:
+Such techniques are expensive to set up and maintain, and are not portable across both applications and servers. They also make it hard for both client and server to understand which data are required and is in use during the negotiation:
 
   - User agent detection cannot reliably identify all static variables, cannot infer dynamic client preferences, requires external device database, is not cache friendly, and is reliant on a passive fingerprinting surface.
   - Cookie-based approaches are not portable across applications and servers, impose additional client-side latency by requiring JavaScript execution, and are not cache friendly.
@@ -121,7 +121,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP c
 ## Sending Client Hints
 
 Clients choose what Client Hints to send in a request based on their default settings, user configuration, and server preferences expressed in `Accept-CH`.
-The client and server can use an opt-in mechanism outlined below to negotiate which header fields need to be sent to allow for efficient content adaption, and optionally use additional mechanisms to negotiate delegation policies that control access of third parties to same header fields.
+The client and server can use an opt-in mechanism outlined below to negotiate which header fields need to be sent to allow for efficient content adaption, and optionally use additional mechanisms to negotiate delegation policies that control access of third parties to those same header fields.
 Without such an opt-in, clients SHOULD NOT send high-entropy hints, but MAY send low-entropy ones [CLIENT-HINTS-INFRASTRUCTURE].
 
 Implementers SHOULD be aware of the passive fingerprinting implications when implementing support for Client Hints, and follow the considerations outlined in the <xref target="security-considerations">Security Considerations</xref> section of this document.
@@ -129,7 +129,7 @@ Implementers SHOULD be aware of the passive fingerprinting implications when imp
 
 ## Server Processing of Client Hints
 
-When presented with a request that contains one or more client hint header fields, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
+When presented with a request that contains one or more Client Hint header fields, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 Servers MUST ignore hints they do not understand nor support. There is no mechanism for servers to indicate clients that hints were ignored. 
 
@@ -189,7 +189,7 @@ Above example indicates that the cache key needs to include the Sec-CH-Example a
 ## Information Exposure
 Request header fields used in features relying on this document expose information about the user's environment to enable proactive content negotiation. Such information might reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
-The underlying assumption is that exposing information about the user as a request header is equivalent (from a security perspective) to exposing this information by other means. (for example, if the request's origin can access that information using JavsScript APIs, and transmit it to its servers)
+The underlying assumption is that exposing information about the user as a request header is equivalent (from a security perspective) to exposing this information by other means. (For example, if the request's origin can access that information using JavsScript APIs, and transmit it to its servers).
 
 Because Client Hints is an explicit opt-in mechanism, that means that servers that want access to information about the user's environment need to actively ask for it, enabling clients and privacy researchers to keep track of which origins collect that data, and potentially act upon it.
 The header-based opt-in means that we can remove passive fingerprinting vectors, such as the User-Agent string (enabling active access to that information through [User-Agent Client Hints](https://wicg.github.io/ua-client-hints/#http-ua-hints)), or otherwise expose information already available through script (e.g. the [Save-Data Client Hint](https://wicg.github.io/savedata/#save-data-request-header-field)), without increasing the passive fingerprinting surface.
