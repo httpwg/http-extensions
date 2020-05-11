@@ -68,7 +68,7 @@ informative:
 
 --- abstract
 
-HTTP defines proactive content negotiation to allow servers to select the appropriate response for a given request, based upon the client's characteristics, as expressed in request headers. In practice, clients are often unwilling to send those request headers, because it is not clear whether they will be used, and sending them impacts both performance and privacy.
+HTTP defines proactive content negotiation to allow servers to select the appropriate response for a given request, based upon the user agent's characteristics, as expressed in request headers. In practice, user agents are often unwilling to send those request headers, because it is not clear whether they will be used, and sending them impacts both performance and privacy.
 
 This document defines an Accept-CH response header that servers can use to advertise their use of request headers for proactive content negotiation, along with a set of guidelines for the creation of such headers, colloquially known as "Client Hints."
 
@@ -86,26 +86,26 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 # Introduction
 
-There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and client preferences. Historically, applications that wanted to allow the server to optimize content delivery and user experience based on such capabilities had to rely on passive identification (e.g., by matching the User-Agent header field (Section 5.5.3 of {{RFC7231}}) against an established database of client signatures), use HTTP cookies {{RFC6265}} and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
+There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and user agent preferences. Historically, applications that wanted to allow the server to optimize content delivery and user experience based on such capabilities had to rely on passive identification (e.g., by matching the User-Agent header field (Section 5.5.3 of {{RFC7231}}) against an established database of user agent signatures), use HTTP cookies {{RFC6265}} and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
 
-Such techniques are expensive to set up and maintain, and are not portable across both applications and servers. They also make it hard for both client and server to understand which data are required and is in use during the negotiation:
+Such techniques are expensive to set up and maintain, and are not portable across both applications and servers. They also make it hard for both user agent and server to understand which data are required and is in use during the negotiation:
 
-  - User agent detection cannot reliably identify all static variables, cannot infer dynamic client preferences, requires external device database, is not cache friendly, and is reliant on a passive fingerprinting surface.
+  - User agent detection cannot reliably identify all static variables, cannot infer dynamic user agent preferences, requires external device database, is not cache friendly, and is reliant on a passive fingerprinting surface.
   - Cookie-based approaches are not portable across applications and servers, impose additional client-side latency by requiring JavaScript execution, and are not cache friendly.
   - URL parameters, similar to cookie-based approaches, suffer from lack of portability, and are hard to deploy due to a requirement to encode content negotiation data inside of the URL of each resource.
 
-Proactive content negotiation (Section 3.4.1 of {{RFC7231}}) offers an alternative approach; client use specified, well-defined request headers to advertise their capabilities and characteristics, so that servers can select (or formulate) an appropriate response.
+Proactive content negotiation (Section 3.4.1 of {{RFC7231}}) offers an alternative approach; user agents use specified, well-defined request headers to advertise their capabilities and characteristics, so that servers can select (or formulate) an appropriate response.
 
-However, traditional proactive content negotiation techniques often mean that clients send these request headers prolifically. This causes performance concerns (because it creates "bloat" in requests), as well as privacy issues; passively providing such information allows servers to silently fingerprint the user.
+However, traditional proactive content negotiation techniques often mean that user agents send these request headers prolifically. This causes performance concerns (because it creates "bloat" in requests), as well as privacy issues; passively providing such information allows servers to silently fingerprint the user.
 
 This document defines Client Hints, a framework that enables servers to opt-in to specific proactive content negotiation features, adapting their content accordingly, as well as guidelines for content negotiation mechanisms that use the framework.
-This document also defines a new response header, Accept-CH, that allows an origin server to explicitly ask that clients send these headers in requests.
+This document also defines a new response header, Accept-CH, that allows an origin server to explicitly ask that user agents send these headers in requests.
 
-Client Hints mitigate performance concerns by assuring that clients will only send the request headers when they're actually going to be used, and privacy concerns of passive fingerprinting by requiring explicit opt-in and disclosure of required headers by the server through the use of the Accept-CH response header.
+Client Hints mitigate performance concerns by assuring that user agents will only send the request headers when they're actually going to be used, and privacy concerns of passive fingerprinting by requiring explicit opt-in and disclosure of required headers by the server through the use of the Accept-CH response header.
 
 The document does not define specific usages of Client Hints. Such usages need to be defined in their respective specifications.
 
-One example of such usage is the User Agent Client Hints [UA-CH].
+One example of such usage is the User Agent Client Hints {{UA-CH}}.
 
 
 ## Notational Conventions
@@ -116,13 +116,13 @@ This document uses the Augmented Backus-Naur Form (ABNF) notation of {{RFC5234}}
 
 # Client Hint Request Header Fields
 
-A Client Hint request header field is a HTTP header field that is used by HTTP clients to indicate data that can be used by the server to select an appropriate response. Each one conveys client preferences that the server can use to adapt and optimize the response.
+A Client Hint request header field is a HTTP header field that is used by HTTP user agents to indicate data that can be used by the server to select an appropriate response. Each one conveys user agent preferences that the server can use to adapt and optimize the response.
 
 ## Sending Client Hints
 
-Clients choose what Client Hints to send in a request based on their default settings, user configuration, and server preferences expressed in `Accept-CH`.
-The client and server can use an opt-in mechanism outlined below to negotiate which header fields need to be sent to allow for efficient content adaption, and optionally use additional mechanisms to negotiate delegation policies that control access of third parties to those same header fields.
-Without such an opt-in, clients SHOULD NOT send high-entropy hints, but MAY send low-entropy ones [CLIENT-HINTS-INFRASTRUCTURE].
+User agents choose what Client Hints to send in a request based on their default settings, user configuration, and server preferences expressed in `Accept-CH`.
+The user agent and server can use an opt-in mechanism outlined below to negotiate which header fields need to be sent to allow for efficient content adaption, and optionally use additional mechanisms to negotiate delegation policies that control access of third parties to those same header fields.
+Without such an opt-in, user agents SHOULD NOT send high-entropy hints, but MAY send low-entropy ones {{CLIENT-HINTS-INFRASTRUCTURE}}.
 
 Implementers SHOULD be aware of the passive fingerprinting implications when implementing support for Client Hints, and follow the considerations outlined in the <xref target="security-considerations">Security Considerations</xref> section of this document.
 
@@ -131,7 +131,7 @@ Implementers SHOULD be aware of the passive fingerprinting implications when imp
 
 When presented with a request that contains one or more Client Hint header fields, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
-Servers MUST ignore hints they do not understand nor support. There is no mechanism for servers to indicate clients that hints were ignored. 
+Servers MUST ignore hints they do not understand nor support. There is no mechanism for servers to indicate user agents that hints were ignored. 
 
 Furthermore, the server can generate additional response header fields (as specified by the hint or hints in use) that convey related values to aid client processing.
 
@@ -142,7 +142,7 @@ Servers can advertise support for Client Hints using the mechanism described bel
 ## The Accept-CH Response Header Field {#accept-ch}
 
 The Accept-CH response header field indicates server support for the hints indicated in its value.
-Servers wishing to receive client information through Client Hints SHOULD add Accept-CH response header to their responses as early as possible.
+Servers wishing to receive user agent information through Client Hints SHOULD add Accept-CH response header to their responses as early as possible.
 
 Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its value MUST be an sh-list (Section 3.1 of {{!I-D.ietf-httpbis-header-structure}}) whose members are tokens (Section 3.3.4 of {{!I-D.ietf-httpbis-header-structure}}). Its ABNF is:
 
@@ -157,12 +157,12 @@ For example:
   Accept-CH: Sec-CH-Example, Sec-CH-Example-2
 ~~~
 
-When a client receives an HTTP response containing `Accept-CH`, that indicates that the origin opts-in to receive the indicated request header fields for subsequent same-origin requests.
+When a user agent receives an HTTP response containing `Accept-CH`, that indicates that the origin opts-in to receive the indicated request header fields for subsequent same-origin requests.
 The opt-in MUST be ignored if delivered over non-secure transport (using a scheme different from HTTPS).
-It SHOULD be persisted and bound to the origin to enable delivery of Client Hints on subsequent requests to the server's origin, for the duration of the user's session (as defined by the client).
+It SHOULD be persisted and bound to the origin to enable delivery of Client Hints on subsequent requests to the server's origin, for the duration of the user's session (as defined by the user agent).
 An opt-in overrides previous persisted opt-in values and SHOULD be persisted in its stead.
 
-Based on the Accept-CH example above, which is received in response to a client navigating to "https://example.com", and delivered over a secure transport, a client will have to persist an Accept-CH preference bound to "https://example.com".
+Based on the Accept-CH example above, which is received in response to a user agent navigating to "https://example.com", and delivered over a secure transport, a user agent will have to persist an Accept-CH preference bound to "https://example.com".
 It will then use it for navigations to e.g. "https://example.com/foobar.html", but not to e.g. "https://foobar.example.com/".
 It will similarly use the preference for any same-origin resource requests (e.g. to "https://example.com/image.jpg") initiated by the page constructed from the navigation's response, but not to cross-origin resource requests (e.g. "https://thirdparty.com/resource.js").
 This preference will not extend to resource requests initiated to "https://example.com" from other origins (e.g. from navigations to "https://other-example.com/").
@@ -202,7 +202,7 @@ Such features SHOULD take into account the following aspects of the information 
 * Sensitivity -  The feature SHOULD NOT expose user-sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g. a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
 * Change over time - The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g. through JavaScript callbacks).
 
-Different features will be positioned in different points in the space between low-entropy, non-sensitive and static information (e.g. client information), and high-entropy, sensitive and dynamic information (e.g. geolocation). Clients SHOULD consider the value provided by a particular feature vs these considerations, and MAY have different policies regarding that tradeoff on a per-feature basis.
+Different features will be positioned in different points in the space between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agents SHOULD consider the value provided by a particular feature vs these considerations, and MAY have different policies regarding that tradeoff on a per-feature basis.
 
 Implementers ought to consider both user- and server- controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
@@ -218,14 +218,14 @@ Deployment of new request headers requires several considerations:
   - Potential conflicts due to existing use of header field name
   - Properties of the data communicated in header field value
 
-Authors of new Client Hints are advised to carefully consider whether they need to be able to be added by client-side content (e.g., scripts), or whether they need to be exclusively set by the client. In the latter case, the Sec- prefix on the header field name has the effect of preventing scripts and other application content from setting them in clients. 
-Using the "Sec-" prefix signals to servers that the client - and not application content - generated the values. See {{FETCH}} for more information.
+Authors of new Client Hints are advised to carefully consider whether they need to be able to be added by client-side content (e.g., scripts), or whether they need to be exclusively set by the user agent. In the latter case, the Sec- prefix on the header field name has the effect of preventing scripts and other application content from setting them in user agents. 
+Using the "Sec-" prefix signals to servers that the user agent - and not application content - generated the values. See {{FETCH}} for more information.
 
-By convention, request headers that are client hints are encouraged to use a CH- prefix, to make them easier to identify as using this framework; for example, CH-Foo or, with a "Sec-" prefix, Sec-CH-Foo. Doing so makes them easier to identify programmatically (e.g., for stripping unrecognised hints from requests by privacy filters).
+By convention, request headers that are Client Hints are encouraged to use a CH- prefix, to make them easier to identify as using this framework; for example, CH-Foo or, with a "Sec-" prefix, Sec-CH-Foo. Doing so makes them easier to identify programmatically (e.g., for stripping unrecognised hints from requests by privacy filters).
 
 
 ## Abuse Detection
-A client that tracks access to active fingerprinting information SHOULD consider emission of Client Hints headers similarly to the way it would consider access to the equivalent API.
+A user agent that tracks access to active fingerprinting information SHOULD consider emission of Client Hints headers similarly to the way it would consider access to the equivalent API.
 
 Research into abuse of Client Hints might look at how HTTP responses that contain Client Hints differ from those with different values, and from those without. This might be used to reveal which Client Hints are in use, allowing researchers to further analyze that use.
 
