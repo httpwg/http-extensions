@@ -124,7 +124,7 @@ User agents choose what Client Hints to send in a request based on their default
 The user agent and server can use an opt-in mechanism outlined below to negotiate which header fields need to be sent to allow for efficient content adaption, and optionally use additional mechanisms to negotiate delegation policies that control access of third parties to those same header fields.
 Without such an opt-in, user agents SHOULD NOT send high-entropy hints, but MAY send low-entropy ones {{CLIENT-HINTS-INFRASTRUCTURE}}.
 
-Implementers SHOULD be aware of the passive fingerprinting implications when implementing support for Client Hints, and follow the considerations outlined in the <xref target="security-considerations">Security Considerations</xref> section of this document.
+Implementers need to be aware of the passive fingerprinting implications when implementing support for Client Hints, and follow the considerations outlined in the <xref target="security-considerations">Security Considerations</xref> section of this document.
 
 
 ## Server Processing of Client Hints
@@ -196,13 +196,13 @@ The header-based opt-in means that we can remove passive fingerprinting vectors,
 
 Therefore, features relying on this document to define Client Hint headers MUST NOT provide new information that is otherwise not available to the application via other means, such as existing request headers, HTML, CSS, or JavaScript.
 
-Such features SHOULD take into account the following aspects of the information exposed: 
+Such features need to take into account the following aspects of the information exposed: 
 
 * Entropy - Exposing highly granular data can be used to help identify users across multiple requests to different origins. Reducing the set of header field values that can be expressed, or restricting them to an enumerated range where the advertised value is close but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users.
 * Sensitivity -  The feature SHOULD NOT expose user-sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g. a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
 * Change over time - The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g. through JavaScript callbacks).
 
-Different features will be positioned in different points in the space between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agents SHOULD consider the value provided by a particular feature vs these considerations, and MAY have different policies regarding that tradeoff on a per-feature basis.
+Different features will be positioned in different points in the space between low-entropy, non-sensitive and static information (e.g. user agent information), and high-entropy, sensitive and dynamic information (e.g. geolocation). User agents need to consider the value provided by a particular feature vs these considerations, and MAY have different policies regarding that tradeoff on a per-feature basis.
 
 Implementers ought to consider both user- and server- controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
