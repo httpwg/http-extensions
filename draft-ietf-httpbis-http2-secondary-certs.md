@@ -428,9 +428,9 @@ Client                                      Server
 {: #ex-http2-server-requested title="Client-requested certificate"}
 
 If a client receives a `PUSH_PROMISE` referencing an origin for which it has not
-yet received the server's certificate, this is a stream error (see section 8.2
-of [RFC7540]).  To avoid this, servers MUST supply the associated certificates
-before pushing resources from a different origin.
+yet received the server's certificate, this is a stream error on the push
+stream; see section 8.2 of [RFC7540].  To avoid this, servers MUST supply the
+associated certificates before pushing resources from a different origin.
 
 ### Requiring Additional Client Certificates
 
