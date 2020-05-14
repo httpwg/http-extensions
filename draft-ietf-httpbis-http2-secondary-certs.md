@@ -787,9 +787,9 @@ CERTIFICATE_UNREADABLE (0xERROR-TBD3):
 
 Unacceptable certificates (expired, revoked, or insufficient to satisfy the
 request) are not treated as stream or connection errors.  This is typically not
-an indication of a protocol failure.  Servers SHOULD process requests without
-the certificate, likely resulting in a "4XX"-series status code in the response.
-Clients SHOULD establish a new connection in an attempt to reach an
+an indication of a protocol failure.  Servers SHOULD process requests with the
+indicated certificate, likely resulting in a "4XX"-series status code in the
+response. Clients SHOULD establish a new connection in an attempt to reach an
 authoritative server.
 
 # Required Domain Certificate Extension {#extension}
