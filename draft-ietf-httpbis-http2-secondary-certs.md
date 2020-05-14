@@ -418,9 +418,13 @@ If the server does not have the desired certificate, it MUST send an Empty
 Authenticator, as described in Section 5 of
 [I-D.ietf-tls-exported-authenticator], in a `CERTIFICATE` frame in response to
 the request, followed by a `USE_CERTIFICATE` frame for stream zero which
-references the Empty Authenticator.  In this case, or if the server has not
-advertised support for HTTP-layer certificates, the client MUST NOT send any
-requests for resources in that origin on the current connection.
+references the Empty Authenticator.
+
+If a server has not advertised support for HTTP-layer certificates, fails to
+provide a requested certificate, or provides a certificate which is unacceptable
+to the client, the client MUST NOT send any requests for resources in that
+origin on the current connection.  The client MAY open a new connection in an
+effort to reach an authoritative server.
 
 ~~~ drawing
 Client                                      Server
@@ -435,9 +439,9 @@ Client                                      Server
 {: #ex-http2-server-requested title="Client-requested certificate"}
 
 If a client receives a `PUSH_PROMISE` referencing an origin for which it has not
-yet received the server's certificate, this is a fatal connection error (see
-section 8.2 of [RFC7540]).  To avoid this, servers MUST supply the associated
-certificates before pushing resources from a different origin.
+yet received the server's certificate, this is a stream error (see section 8.2
+of [RFC7540]).  To avoid this, servers MUST supply the associated certificates
+before pushing resources from a different origin.
 
 ### Requiring Additional Client Certificates
 
@@ -464,10 +468,13 @@ If the client does not have the desired certificate, it instead sends an Empty
 Authenticator, as described in Section 5 of
 [I-D.ietf-tls-exported-authenticator], in a `CERTIFICATE` frame in response to
 the request, followed by a `USE_CERTIFICATE` frame which references the Empty
-Authenticator.  In this case, or if the client has not advertised support for
-HTTP-layer certificates, the server processes the request based solely on the
-certificate provided during the TLS handshake, if any.  This might result in an
-error response via HTTP, such as a status code 403 (Not Authorized).
+Authenticator.
+
+If the client has not advertised support for HTTP-layer certificates, fails to
+provide a requested certificate, or provides a certificate the server is unable
+to verify, the server processes the request based solely on the certificate
+provided during the TLS handshake, if any.  This might result in an error
+response via HTTP, such as a status code 403 (Not Authorized).
 
 # Certificates Frames for HTTP/2 {#certs-http2}
 
@@ -548,7 +555,9 @@ a stream error of type `PROTOCOL_ERROR`.
 
 The `CERTIFICATE_NEEDED` frame MUST NOT be sent to a client which has not
 advertised the `SETTINGS_HTTP_CLIENT_CERT_AUTH`, or to a server which has not
-advertised the `SETTINGS_HTTP_SERVER_CERT_AUTH` setting.
+advertised the `SETTINGS_HTTP_SERVER_CERT_AUTH` setting.  An endpoint which
+receives a `CERTIFICATE_NEEDED` frame but did not advertise support MAY treat
+this as a connection error of type `CERTIFICATE_WITHOUT_CONSENT`.
 
 The `CERTIFICATE_NEEDED` frame MUST NOT reference a stream in the "half-closed
 (local)" or "closed" states [RFC7540]. A client that receives a
@@ -759,6 +768,9 @@ steps to validate the token it contains:
 - Use the `validate` API to confirm the validity of the authenticator with
   regard to the generated request (if any).
 
+If the authenticator cannot be validated, this SHOULD be treated as a connection
+error of type `CERTIFICATE_UNREADABLE`.
+
 Once the authenticator is accepted, the endpoint can perform any other checks
 for the acceptability of the certificate itself.  Clients MUST NOT accept any
 end-entity certificate from an exported authenticator which does not contain
@@ -768,37 +780,35 @@ the Required Domain extension; see {{extension}} and {{impersonation}}.
 
 Because this draft permits certificates to be exchanged at the HTTP framing
 layer instead of the TLS layer, several certificate-related errors which are
-defined at the TLS layer might now occur at the HTTP framing layer. In this
-section, those errors are restated and added to the HTTP/2 error code registry.
+defined at the TLS layer might now occur at the HTTP framing layer.
 
-BAD_CERTIFICATE (0xERROR-TBD1):
-: A certificate was corrupt, contained signatures that did not verify
-  correctly, etc.
+There are two classes of errors which might be encountered, and they are handled
+differently.
 
-UNSUPPORTED_CERTIFICATE (0xERROR-TBD2):
-: A certificate was of an unsupported type or did not contain required
-  extensions
+## Misbehavior
 
-CERTIFICATE_REVOKED (0xERROR-TBD3):
-: A certificate was revoked by its signer
+This category of errors could indicate a peer failing to follow restrictions in
+this document, or might indicate that the connection is not fully secure.  These
+errors are fatal to stream or connection, as appropriate.
 
-CERTIFICATE_EXPIRED (0xERROR-TBD4):
-: A certificate has expired or is not currently valid
-
-CERTIFICATE_GENERAL (0xERROR-TBD5):
-: Any other certificate-related error
-
-CERTIFICATE_OVERUSED (0xERROR-TBD6):
+CERTIFICATE_OVERUSED (0xERROR-TBD1):
 : More certificates were used on a request than were requested
 
-As described in [RFC7540], implementations MAY choose to treat a stream error as
-a connection error at any time. Of particular note, a stream error cannot occur
-on stream 0, which means that implementations cannot send non-session errors in
-response to `CERTIFICATE_REQUEST`, and `CERTIFICATE` frames. Implementations
-which do not wish to terminate the connection MAY either send relevant errors on
-any stream which references the failing certificate in question or process the
-requests as unauthenticated and provide error information at the HTTP semantic
-layer.
+CERTIFICATE_WITHOUT_CONSENT (0xERROR-TBD2):
+: A CERTIFICATE_NEEDED frame was received by a peer which did not indicate
+  support for this extension.
+
+CERTIFICATE_UNREADABLE (0xERROR-TBD3):
+: An exported authenticator could not be validated.
+
+## Invalid Certificates
+
+Unacceptable certificates (expired, revoked, or insufficient to satisfy the
+request) are not treated as stream or connection errors.  This is typically not
+an indication of a protocol failure.  Servers SHOULD process requests with the
+indicated certificate, likely resulting in a "4XX"-series status code in the
+response. Clients SHOULD establish a new connection in an attempt to reach an
+authoritative server.
 
 # Required Domain Certificate Extension {#extension}
 
@@ -967,16 +977,13 @@ Six new error codes are registered in the "HTTP/2 Error Code" registry
 established in [RFC7540]. The entries in the following table are registered by
 this document.
 
-| ------------------------- | -------------- | ------------------------- |
-| Name                      | Code           | Specification             |
-| ------------------------- | -------------- | ------------------------- |
-| BAD_CERTIFICATE           | 0xERROR-TBD1   | {{errors}}                |
-| UNSUPPORTED_CERTIFICATE   | 0xERROR-TBD2   | {{errors}}                |
-| CERTIFICATE_REVOKED       | 0xERROR-TBD3   | {{errors}}                |
-| CERTIFICATE_EXPIRED       | 0xERROR-TBD4   | {{errors}}                |
-| CERTIFICATE_GENERAL       | 0xERROR-TBD5   | {{errors}}                |
-| CERTIFICATE_OVERUSED      | 0xERROR-TBD6   | {{errors}}                |
-| ------------------------- | -------------- | ------------------------- |
+| --------------------------- | -------------- | ------------------------- |
+| Name                        | Code           | Specification             |
+| --------------------------- | -------------- | ------------------------- |
+| CERTIFICATE_OVERUSED        | 0xERROR-TBD1   | {{errors}}                |
+| CERTIFICATE_WITHOUT_CONSENT | 0xERROR-TBD2   | {{errors}}                |
+| CERTIFICATE_UNREADABLE      | 0xERROR-TBD3   | {{errors}}                |
+| -------------------------   | -------------- | ------------------------- |
 
 --- back
 
