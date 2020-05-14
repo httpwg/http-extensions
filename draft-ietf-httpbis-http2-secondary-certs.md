@@ -305,19 +305,24 @@ proactively or are in response to a `CERTIFICATE_NEEDED` frame.
 ## Indicating Support for HTTP-Layer Certificate Authentication {#setting}
 
 Clients and servers that will accept requests for HTTP-layer certificate
-authentication indicate this using the HTTP/2 `SETTINGS_HTTP_CERT_AUTH`
-(0xSETTING-TBD) setting.
+authentication indicate this using the HTTP/2 `SETTINGS_HTTP_CLIENT_CERT_AUTH`
+(0xSETTING-TBD1) and `SETTINGS_HTTP_SERVER_CERT_AUTH` (0xSETTING-TBD2) settings.
 
-The initial value for the `SETTINGS_HTTP_CERT_AUTH` setting is 0, indicating
-that the peer does not support HTTP-layer certificate authentication. If a peer
-does support HTTP-layer certificate authentication, the value is non-zero.
+The initial value for both settings is 0, indicating that the peer does not
+support HTTP-layer certificate authentication. If a peer does support HTTP-layer
+certificate authentication, one or both of the values is non-zero.
+`SETTINGS_HTTP_CLIENT_CERT_AUTH` indicates that servers can use certificates for
+client authentication, while `SETTINGS_HTTP_SERVER_CERT_AUTH` indicates that
+servers are able to offer additional certificates to demonstrate control over
+other origin hostnames.
 
 In order to ensure that the TLS connection is direct to the server, rather than
 via a TLS-terminating proxy, each side will separately compute and confirm the
-value of this setting.  The setting is derived from a TLS exporter (see Section
-7.5 of [RFC8446] and {{?RFC5705}} for more details on exporters). Clients MUST
-NOT use an early exporter during their 0-RTT flight, but MUST send an updated
-SETTINGS frame using a regular exporter after the TLS handshake completes.
+value of these settings.  The setting values are derived from a TLS exporter
+(see Section 7.5 of [RFC8446] and {{?RFC5705}} for more details on exporters).
+Clients MUST NOT use an early exporter during their 0-RTT flight, but MUST send
+an updated SETTINGS frame using a regular exporter after the TLS handshake
+completes.
 
 The exporter is constructed with the following input:
 
@@ -325,26 +330,37 @@ The exporter is constructed with the following input:
   - "EXPORTER HTTP CERTIFICATE client" for clients
   - "EXPORTER HTTP CERTIFICATE server" for servers
 - Context:  Empty
-- Length:  Four bytes
+- Length:  Eight bytes
 
-The resulting exporter is converted to a setting value as:
+The value of the exporter is split into two four-byte values.  The first four
+bytes are used for the `SETTINGS_HTTP_CLIENT_CERT_AUTH` value, while the
+following four bytes are used for the `SETTINGS_HTTP_SERVER_CERT_AUTH` value.
+
+Each is converted to a setting value as:
 
 ~~~
-(Exporter & 0x3fffffff) | 0x80000000
+Exporter fragment | 0x80000000
 ~~~
 
 That is, the most significant bit will always be set, regardless of the value of
-the exporter. Each endpoint will compute the expected value from their peer.  If
+the exporter. Each endpoint will compute the expected values from their peer. If
 the setting is not received, or if the value received is not the expected value,
-the frames defined in this document SHOULD NOT be sent.
+the frames defined in this document SHOULD NOT be sent in the indicated
+direction.
 
 ## Making Certificates or Requests Available {#cert-available}
 
-When both peers have advertised support for HTTP-layer certificates as in
-{{setting}}, either party can supply additional certificates into the connection
-at any time. This means that clients or servers which predict a certificate will
-be required could supply the certificate before being asked. These
-certificates are available for reference by future `USE_CERTIFICATE` frames.
+When both peers have advertised support for HTTP-layer certificates in a given
+direction as in {{setting}}, the indicated endpoint can supply additional
+certificates into the connection at any time.  That is, if both endpoints have
+sent `SETTINGS_HTTP_SERVER_CERT_AUTH` and validated the value received from the
+peer, the server may send certificates.  If both endpoints have sent
+`SETTINGS_HTTP_CLIENT_CERT_AUTH` and validated the value received from the peer,
+the client may send certificates.
+
+Implementations which predict a certificate will be required could supply the
+certificate before being asked. These certificates are available for reference
+by future `USE_CERTIFICATE` frames.
 
 Certificates supplied by servers can be considered by clients without further
 action by the server. A server SHOULD NOT send certificates which do not cover
@@ -373,8 +389,8 @@ Client                                      Server
 ~~~
 {: #ex-http2-client-proactive title="Proactive client authentication"}
 
-Likewise, either party can supply a `CERTIFICATE_REQUEST` that outlines
-parameters of a certificate they might request in the future.  Upon receipt of a
+Likewise, a party can supply a `CERTIFICATE_REQUEST` that outlines parameters of
+a certificate they might request in the future.  Upon receipt of a
 `CERTIFICATE_REQUEST`, endpoints SHOULD provide a corresponding certificate in
 anticipation of a request shortly being blocked. Clients MAY wait for a
 `CERTIFICATE_NEEDED` frame to assist in associating the certificate request with
@@ -392,11 +408,11 @@ the connection.
 
 If the TLS certificate does not contain the new origin, but the server has
 claimed support for that origin (with an ORIGIN frame, see {{?RFC8336}}) and
-advertised support for HTTP-layer certificates (see {{setting}}), the client MAY
-send a `CERTIFICATE_REQUEST` frame describing the desired origin.  The client
-then sends a `CERTIFICATE_NEEDED` frame for stream zero referencing the request,
-indicating that the connection cannot be used for that origin until the
-certificate is provided.
+advertised support for HTTP-layer server certificates (see {{setting}}), the
+client MAY send a `CERTIFICATE_REQUEST` frame describing the desired origin.
+The client then sends a `CERTIFICATE_NEEDED` frame for stream zero referencing
+the request, indicating that the connection cannot be used for that origin until
+the certificate is provided.
 
 If the server does not have the desired certificate, it MUST send an Empty
 Authenticator, as described in Section 5 of
@@ -530,8 +546,9 @@ Clients MUST only send multiple `CERTIFICATE_NEEDED` frames for stream zero.
 Multiple `CERTIFICATE_NEEDED` frames on any other stream MUST be considered
 a stream error of type `PROTOCOL_ERROR`.
 
-The `CERTIFICATE_NEEDED` frame MUST NOT be sent to a peer which has not
-advertised support for HTTP-layer certificate authentication.
+The `CERTIFICATE_NEEDED` frame MUST NOT be sent to a client which has not
+advertised the `SETTINGS_HTTP_CLIENT_CERT_AUTH`, or to a server which has not
+advertised the `SETTINGS_HTTP_SERVER_CERT_AUTH` setting.
 
 The `CERTIFICATE_NEEDED` frame MUST NOT reference a stream in the "half-closed
 (local)" or "closed" states [RFC7540]. A client that receives a
@@ -582,7 +599,7 @@ which certificate should be used when processing a new request.  When such an
 unsolicited indication refers to a request that has not yet been received,
 servers SHOULD cache the indication briefly in anticipation of the request.
 
-Receipt of more than one unsolicited `USE_CERTIFICATE` frames or an unsolicited
+Receipt of more than one unsolicited `USE_CERTIFICATE` frame or an unsolicited
 `USE_CERTIFICATE` frame which is not the first in reference to a given stream
 MUST be treated as a stream error of type `CERTIFICATE_OVERUSED`.
 
@@ -610,8 +627,9 @@ authenticator request message from the TLS layer that specifies a desired
 certificate.  This describes the certificate the sender wishes to have
 presented.
 
-The `CERTIFICATE_REQUEST` frame SHOULD NOT be sent to a peer which has not
-advertised support for HTTP-layer certificate authentication.
+The `CERTIFICATE_REQUEST` frame SHOULD NOT be sent to a client which has not
+advertised the `SETTINGS_HTTP_CLIENT_CERT_AUTH`, or to a server which has not
+advertised the `SETTINGS_HTTP_SERVER_CERT_AUTH` setting.
 
 The `CERTIFICATE_REQUEST` frame MUST be sent on stream zero.  A
 `CERTIFICATE_REQUEST` frame received on any other stream MUST be rejected with a
@@ -912,26 +930,21 @@ request as the set of certificates changes.
 
 This draft adds entries in three registries.
 
-The HTTP/2 `SETTINGS_HTTP_CERT_AUTH` setting is registered in {{iana-setting}}.
-Four frame types are registered in {{iana-frame}}.  Six error codes are
-registered in {{iana-errors}}.
+The feature negotiation settings is registered in {{iana-setting}}. Four frame
+types are registered in {{iana-frame}}.  Six error codes are registered in
+{{iana-errors}}.
 
-## HTTP/2 SETTINGS_HTTP_CERT_AUTH Setting {#iana-setting}
+## HTTP/2 Settings {#iana-setting}
 
-The SETTINGS_HTTP_CERT_AUTH setting is registered in the "HTTP/2 Settings"
-registry established in [RFC7540].
+The SETTINGS_HTTP_CLIENT_CERT_AUTH and SETTINGS_HTTP_SERVER_CERT_AUTH settings
+are registered in the "HTTP/2 Settings" registry established in [RFC7540].
 
-Name:
-: SETTINGS_HTTP_CERT_AUTH
-
-Code:
-: 0xSETTING-TBD
-
-Initial Value:
-: 0
-
-Specification:
-: This document.
+| --------------------- | -------------- | -------------- | ------------- |
+| Name                  | Code           | Initial Value  | Specification |
+| --------------------- | -------------- | -------------- | ------------- |
+| HTTP_CLIENT_CERT_AUTH | 0xSETTING-TBD1 | 0              | {{setting}}   |
+| HTTP_SERVER_CERT_AUTH | 0xSETTING-TBD2 | 0              | {{setting}}   |
+| --------------------- | -------------- | -------------- | ------------- |
 
 ## New HTTP/2 Frames {#iana-frame}
 
@@ -939,14 +952,14 @@ Four new frame types are registered in the "HTTP/2 Frame Types" registry
 established in [RFC7540]. The entries in the following table are registered by
 this document.
 
-|---------------------|--------------|-------------------------|
-| Frame Type          | Code         | Specification           |
-|---------------------|--------------|-------------------------|
-| CERTIFICATE_NEEDED  | 0xFRAME-TBD1 | {{http-cert-needed}}    |
-| CERTIFICATE_REQUEST | 0xFRAME-TBD2 | {{http-cert-request}}   |
-| CERTIFICATE         | 0xFRAME-TBD3 | {{http-cert}}           |
-| USE_CERTIFICATE     | 0xFRAME-TBD4 | {{http-use-certificate}}|
-|---------------------|--------------|-------------------------|
+| --------------------- | -------------- | ------------------------- |
+| Frame Type            | Code           | Specification             |
+| --------------------- | -------------- | ------------------------- |
+| CERTIFICATE_NEEDED    | 0xFRAME-TBD1   | {{http-cert-needed}}      |
+| CERTIFICATE_REQUEST   | 0xFRAME-TBD2   | {{http-cert-request}}     |
+| CERTIFICATE           | 0xFRAME-TBD3   | {{http-cert}}             |
+| USE_CERTIFICATE       | 0xFRAME-TBD4   | {{http-use-certificate}}  |
+| --------------------- | -------------- | ------------------------- |
 
 ## New HTTP/2 Error Codes {#iana-errors}
 
@@ -954,16 +967,16 @@ Six new error codes are registered in the "HTTP/2 Error Code" registry
 established in [RFC7540]. The entries in the following table are registered by
 this document.
 
-|-------------------------|--------------|-------------------------|
-| Name                    | Code         | Specification           |
-|-------------------------|--------------|-------------------------|
-| BAD_CERTIFICATE         | 0xERROR-TBD1 | {{errors}}              |
-| UNSUPPORTED_CERTIFICATE | 0xERROR-TBD2 | {{errors}}              |
-| CERTIFICATE_REVOKED     | 0xERROR-TBD3 | {{errors}}              |
-| CERTIFICATE_EXPIRED     | 0xERROR-TBD4 | {{errors}}              |
-| CERTIFICATE_GENERAL     | 0xERROR-TBD5 | {{errors}}              |
-| CERTIFICATE_OVERUSED    | 0xERROR-TBD6 | {{errors}}              |
-|-------------------------|--------------|-------------------------|
+| ------------------------- | -------------- | ------------------------- |
+| Name                      | Code           | Specification             |
+| ------------------------- | -------------- | ------------------------- |
+| BAD_CERTIFICATE           | 0xERROR-TBD1   | {{errors}}                |
+| UNSUPPORTED_CERTIFICATE   | 0xERROR-TBD2   | {{errors}}                |
+| CERTIFICATE_REVOKED       | 0xERROR-TBD3   | {{errors}}                |
+| CERTIFICATE_EXPIRED       | 0xERROR-TBD4   | {{errors}}                |
+| CERTIFICATE_GENERAL       | 0xERROR-TBD5   | {{errors}}                |
+| CERTIFICATE_OVERUSED      | 0xERROR-TBD6   | {{errors}}                |
+| ------------------------- | -------------- | ------------------------- |
 
 --- back
 
