@@ -368,6 +368,11 @@ origins which it is prepared to service on the current connection, but MAY use
 the ORIGIN frame {{?RFC8336}} to indicate that not all covered origins will be
 served.
 
+Certificates supplied by clients MUST NOT be considered by servers when
+processing a request unless the client explicitly authorizes their use. Clients
+MAY send `USE_CERTIFICATE` frame with the `UNSOLICITED` flag set to indicate
+that an available certificate should be considered on a new request.
+
 ~~~ drawing
 Client                                      Server
    <------------------ (stream 0) CERTIFICATE --
@@ -439,9 +444,9 @@ Client                                      Server
 {: #ex-http2-server-requested title="Client-requested certificate"}
 
 If a client receives a `PUSH_PROMISE` referencing an origin for which it has not
-yet received the server's certificate, this is a stream error (see section 8.2
-of [RFC7540]).  To avoid this, servers MUST supply the associated certificates
-before pushing resources from a different origin.
+yet received the server's certificate, this is a stream error on the push
+stream; see section 8.2 of [RFC7540].  To avoid this, servers MUST supply the
+associated certificates before pushing resources from a different origin.
 
 ### Requiring Additional Client Certificates
 
