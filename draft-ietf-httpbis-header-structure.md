@@ -64,7 +64,7 @@ informative:
 
 --- abstract
 
-This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", or "Structured Headers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
+This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", "Structured Headers", or "Structured Trailers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
 
 
 --- note_Note_to_Readers
@@ -89,9 +89,9 @@ Once a field is defined, bespoke parsers and serializers often need to be writte
 
 This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{?RFC7230}} header and trailer fields.
 
-A HTTP field that is defined as a "Structured Header" (or "Structured Trailer", respectively; if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
+A HTTP field that is defined as a "Structured Header" or "Structured Trailer" (if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
 
-Additionally, future versions of HTTP can define alternative serializations of the abstract model of these structures, allowing fields that use it to be transmitted more efficiently without being redefined.
+Additionally, future versions of HTTP can define alternative serializations of the abstract model of these structures, allowing fields that use that model to be transmitted more efficiently without being redefined.
 
 Note that it is not a goal of this document to redefine the syntax of existing HTTP fields; the mechanisms described herein are only intended to be used with those that explicitly opt into them.
 
@@ -119,7 +119,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This document uses algorithms to specify parsing and serialization behaviors, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar rule from {{!RFC7230}}.
 
-When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviors are indistinguishable from specified behavior. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence. In some places, the algorithms are "greedy" with whitespace, but this should not affect conformance.
+When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviors are indistinguishable from specified behavior. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
 For serialization to HTTP fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output still matches the ABNF.
 
@@ -128,9 +128,9 @@ For serialization to HTTP fields, the ABNF illustrates the range of acceptable w
 
 To specify a HTTP field as a Structured Field, its authors needs to:
 
-* Reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
+* Normatively reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
 
-* Identify whether the field is a Structured Header (i.e., it can only be used in the header section - the common case), a Structured Field (only in the trailer section), or a Structured Field (both).
+* Identify whether the field is a Structured Header (i.e., it can only be used in the header section - the common case), a Structured Trailer (only in the trailer section), or a Structured Field (both).
 
 * Specify the type of the field value; either List ({{list}}), Dictionary ({{dictionary}}), or Item ({{item}}).
 
@@ -159,6 +159,7 @@ Specifications can refer to a field name as a "structured header name", "structu
 For example, a fictitious Foo-Example header field might be specified as:
 
 ~~~ example
+--8<--
 42. Foo-Example Header
 
 The Foo-Example HTTP header field conveys information about how
@@ -187,6 +188,7 @@ being used.
 For example:
 
   Foo-Example: 2; foourl="https://foo.example.com/"
+-->8--
 ~~~
 
 
@@ -196,9 +198,9 @@ This section defines the abstract value types that can be composed into Structur
 
 In summary:
 
-* There are three top-level types that a HTTP field can be defined as; Lists, Dictionaries, and Items.
+* There are three top-level types that a HTTP field can be defined as: Lists, Dictionaries, and Items.
 
-* Lists and Dictionaries are containers; their members can be Items or Inner Lists (which are themselves lists of items).
+* Lists and Dictionaries are containers; their members can be Items or Inner Lists (which are themselves arrays of Items).
 
 * Both Items and Inner Lists can be parameterized with key/value pairs.
 
@@ -217,7 +219,7 @@ list-member   = sh-item / inner-list
 Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Strings could look like:
 
 ~~~ example
-Example-StrListHeader: "foo", "bar", "It was the best of times."
+Example-StrList: "foo", "bar", "It was the best of times."
 ~~~
 
 An empty List is denoted by not serializing the field at all.
@@ -251,15 +253,15 @@ inner-list    = "(" *SP [ sh-item *( 1*SP sh-item ) *SP ] ")"
                 parameters
 ~~~
 
-Inner Lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A field whose value is defined as a list of Inner Lists of Strings could look like:
+Inner Lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
 ~~~ example
-Example-StrListListHeader: ("foo" "bar"), ("baz"), ("bat" "one"), ()
+Example-StrListList: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 ~~~
 
 Note that the last member in this example is an empty Inner List.
 
-A header field whose value is defined as a list of Inner Lists with Parameters at both levels could look like:
+A header field whose value is defined as a List of Inner Lists with Parameters at both levels could look like:
 
 ~~~ example
 Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
@@ -287,13 +289,13 @@ param-value   = bare-item
 A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
 
 ~~~ example
-Example-ParamListHeader: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
+Example-ParamList: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
 ~~~
 
-Parameters whose value is Boolean true MUST omit that value when serialized. For example:
+Parameters whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example:
 
 ~~~ example
-Example-IntHeader: 1; a; b=?0
+Example-Int: 1; a; b=?0
 ~~~
 
 Note that this requirement is only on serialization; parsers are still required to correctly handle the true value when it appears in a parameter.
@@ -319,13 +321,13 @@ member-value   = sh-item / inner-list
 Members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
 
 ~~~ example
-Example-DictHeader: en="Applepie", da=:w4ZibGV0w6ZydGU=:
+Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
 ~~~
 
-Members whose value is Boolean true MUST omit that value when serialized. For example, here both "b" and "c" are true:
+Members whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example, here both "b" and "c" are true:
 
 ~~~ example
-Example-DictHeader: a=?0, b, c; foo=bar
+Example-Dict: a=?0, b, c; foo=bar
 ~~~
 
 Note that this requirement is only on serialization; parsers are still required to correctly handle the true Boolean value when it appears in Dictionary values.
@@ -333,7 +335,7 @@ Note that this requirement is only on serialization; parsers are still required 
 A Dictionary with a member whose value is an Inner List of tokens:
 
 ~~~ example
-Example-DictListHeader: rating=1.5, feelings=(joy sadness)
+Example-DictList: rating=1.5, feelings=(joy sadness)
 ~~~
 
 A Dictionary with a mix of singular and list values, some with Parameters:
@@ -385,7 +387,7 @@ Example-IntItemHeader: 5
 or with Parameters:
 
 ~~~ example
-Example-IntItemHeader: 5; foo=bar
+Example-IntItem: 5; foo=bar
 ~~~
 
 
@@ -402,7 +404,7 @@ sh-integer = ["-"] 1*15DIGIT
 For example:
 
 ~~~ example
-Example-IntegerHeader: 42
+Example-Integer: 42
 ~~~
 
 Note that commas in Integers are used in this section's prose only for readability; they are not valid in the wire format.
@@ -423,7 +425,7 @@ sh-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
 For example, a header whose value is defined as a Decimal could look like:
 
 ~~~ example
-Example-DecimalHeader: 4.5
+Example-Decimal: 4.5
 ~~~
 
 Note that the serialisation algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the header definition to occur before serialisation.
@@ -445,7 +447,7 @@ escaped   = "\" ( DQUOTE / "\" )
 Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
 ~~~ example
-Example-StringHeader: "hello world"
+Example-String: "hello world"
 ~~~
 
 Note that Strings only use DQUOTE as a delimiter; single quotes do not delimit Strings. Furthermore, only DQUOTE and "\\" can be escaped; other characters after "\\" MUST cause parsing to fail.
@@ -467,9 +469,15 @@ The ABNF for Tokens is:
 sh-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 ~~~
 
+For example:
+
+~~~ example
+Example-Token: foo123/456
+~~~
+
 Parsers MUST support Tokens with at least 512 characters.
 
-Note that Token allows the characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
+Note that Token allows the same characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
 
 
 ### Byte Sequences {#binary}
@@ -486,7 +494,7 @@ base64    = ALPHA / DIGIT / "+" / "/" / "="
 A Byte Sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
 
 ~~~ example
-Example-BinaryHdr: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
+Example-Binary: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
 ~~~
 
 Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
@@ -506,7 +514,7 @@ boolean    = "0" / "1"
 A Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ example
-Example-BoolHdr: ?1
+Example-Bool: ?1
 ~~~
 
 
@@ -584,16 +592,16 @@ Given an ordered Dictionary as input_dictionary (each member having a member_nam
 1. Let output be an empty string.
 2. For each member_name with a value of (member_value, parameters) in input_dictionary:
    1. Append the result of running Serializing a Key ({{ser-key}}) with member's member_name to output.
-3. If member_value is Boolean true:
-    1. Append the result of running Serializing Parameters ({{ser-params}}) with parameters to output.
-4. Otherwise:
-    1. Append "=" to output.
-    2. If member_value is an array, append the result of running Serializing an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
-    3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
-5. If more members remain in input_dictionary:
-      1. Append "," to output.
-      2. Append a single SP to output.
-6. Return output.
+   2. If member_value is Boolean true:
+       1. Append the result of running Serializing Parameters ({{ser-params}}) with parameters to output.
+   3. Otherwise:
+       1. Append "=" to output.
+       2. If member_value is an array, append the result of running Serializing an Inner List ({{ser-innerlist}}) with (member_value, parameters) to output.
+       3. Otherwise, append the result of running Serializing an Item ({{ser-item}}) with (member_value, parameters) to output.
+   4. If more members remain in input_dictionary:
+         1. Append "," to output.
+         2. Append a single SP to output.
+3. Return output.
 
 
 ### Serializing an Item {#ser-item}
@@ -986,6 +994,21 @@ The serialization algorithm is defined in a way that it is not strictly limited 
 # Changes
 
 _RFC Editor: Please remove this section before publication._
+
+## Since draft-ietf-httpbis-header-structure-18
+
+* Fix indentation in Dictionary serialisation (#1164).
+* Add example for Token; tweak example field names (#1147).
+* Editorial improvements.
+
+## Since draft-ietf-httpbis-header-structure-17
+
+* Editorial improvements.
+
+## Since draft-ietf-httpbis-header-structure-16
+
+* Editorial improvements.
+* Discussion on forwards compatibility.
 
 ## Since draft-ietf-httpbis-header-structure-15
 

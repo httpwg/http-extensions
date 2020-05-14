@@ -101,9 +101,6 @@ normative:
     -
       ins: J. Archibald
       name: Jake Archibald
-  PSL:
-    target: https://publicsuffix.org/list/
-    title: "Public Suffix List"
 
 informative:
   RFC2818:
@@ -187,6 +184,9 @@ informative:
   I-D.ietf-httpbis-cookie-alone:
   I-D.ietf-httpbis-cookie-prefixes:
   I-D.ietf-httpbis-cookie-same-site:
+  PSL:
+    target: https://publicsuffix.org/list/
+    title: "Public Suffix List"
 
 --- abstract
 
@@ -320,11 +320,12 @@ same" matching algorithm for origins are defined in {{RFC6454}}.
 in Section 4.2.1 of {{RFC7231}}.
 
 A domain's "public suffix" is the portion of a domain that is controlled by a
-public registry, such as "com", "co.uk", and "pvt.k12.wy.us" {{PSL}}. A domain's
+public registry, such as "com", "co.uk", and "pvt.k12.wy.us". A domain's
 "registrable domain" is the domain's public suffix plus the label to its left.
 That is, for `https://www.site.example`, the public suffix is `example`, and the
-registrable domain is `site.example`. This concept is defined more rigorously in
-{{PSL}}, which specifies a formal algorithm to obtain both.
+registrable domain is `site.example`. Whenever possible, user agents SHOULD
+use an up-to-date public suffix list, such as the one maintained by the Mozilla
+project at {{PSL}}.
 
 The term "request", as well as a request's "client", "current url", "method",
 and "target browsing context", are defined in {{FETCH}}.
@@ -461,8 +462,9 @@ set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
 cookie-pair       = cookie-name BWS "=" BWS cookie-value
 cookie-name       = 1*cookie-octet
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
-cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
-                      ; US-ASCII characters excluding CTLs,
+cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E 
+                    / %x80-FF
+                      ; octets excluding CTLs,
                       ; whitespace DQUOTE, comma, semicolon,
                       ; and backslash
 
@@ -1970,9 +1972,8 @@ general privacy concerns outlined in Section 7.1 of {{RFC6265}}. The "SameSite"
 attribute is set by the server, and serves to mitigate the risk of certain kinds
 of attacks that the server is worried about. The user is not involved in this
 decision. Moreover, a number of side-channels exist which could allow a server
-to link distinct requests even in the absence of cookies. Connection and/or
-socket pooling, Token Binding, and Channel ID all offer explicit methods of
-identification that servers could take advantage of.
+to link distinct requests even in the absence of cookies (for example, connection
+and/or socket pooling between same-site and cross-site requests).
 
 # IANA Considerations
 
@@ -2138,7 +2139,8 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 ## draft-ietf-httpbis-rfc6265bis-06
 
-*  Editorial fixes: <https://github.com/httpwg/http-extensions/issues/1059>.
+*  Editorial fixes: <https://github.com/httpwg/http-extensions/issues/1059>,
+   <https://github.com/httpwg/http-extensions/issues/1158>.
 
 *  Created a registry for cookie attribute names:
    <https://github.com/httpwg/http-extensions/pull/1060>.
@@ -2150,6 +2152,9 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 *  Fixed serialization for nameless/valueless cookies:
    <https://github.com/httpwg/http-extensions/pull/1143>.
 
+*  Converted a normative reference to Mozilla's Public Suffix List {{PSL}} into
+   an informative reference:
+   <https://github.com/httpwg/http-extensions/issues/1159>.
 
 # Acknowledgements
 {:numbered="false"}

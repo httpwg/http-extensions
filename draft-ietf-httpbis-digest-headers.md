@@ -25,7 +25,6 @@ author:
     email: lucaspardue.24.7@gmail.com
 
 normative:
-  I-D.ietf-httpbis-semantics:
   RFC1321:
   RFC3174:
   RFC1950:
@@ -55,8 +54,8 @@ normative:
       org: Carnagie Mellon University, Software Engineering Institute
     date: 2008-12-31
     target: https://www.kb.cert.org/vuls/id/836068/
-  IACR-2019-459:
-    title: From Collisions to Chosen-Prefix Collisions Application to Full SHA-1
+  IACR-2020-014:
+    title: SHA-1 is a Shambles
     author:
       -
          ins: G. Leurent
@@ -64,8 +63,8 @@ normative:
       -
          ins: T. Peyrin
          org: Nanyang Technological University, Singapore; Temasek Laboratories, Singapore
-    date: 2019-05-06
-    target: https://eprint.iacr.org/2019/459.pdf
+    date: 2020-01-05
+    target: https://eprint.iacr.org/2020/014.pdf
 
 informative:
   RFC2818:
@@ -142,15 +141,15 @@ HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
 ## This Proposal
 
 The concept of `selected representation` defined in Section 6 of
-[I-D.ietf-httpbis-semantics] makes [RFC3230] definitions inconsistent with
+{{!SEMANTICS=I-D.ietf-httpbis-semantics}} makes [RFC3230] definitions inconsistent with
 current HTTP semantics. This document updates the `Digest` and `Want-Digest`
-field definitions to align with [I-D.ietf-httpbis-semantics] concepts.
+field definitions to align with {{SEMANTICS}} concepts.
 
 Basing `Digest` on the selected representation makes it straightforward to
 apply it to use-cases where the transferred data does require some sort of
 manipulation to be considered a representation, or conveys a partial
 representation of a resource eg. Range Requests (see Section 8.3 of
-[I-D.ietf-httpbis-semantics]).
+{{SEMANTICS}}).
 
 Changes are semantically compatible with existing implementations and better
 cover both the request and response cases.
@@ -160,7 +159,7 @@ the value contained in any `Content-Encoding` or `Content-Type` header fields.
 Therefore, a given resource may have multiple different digest values.
 
 To allow both parties to exchange a Digest of a representation with no content
-codings (see Section 6.1.2 of [I-D.ietf-httpbis-semantics]) two more algorithms
+codings (see Section 6.1.2 of {{SEMANTICS}}) two more algorithms
 are added (`ID-SHA-256` and `ID-SHA-512`).
 
 ## Goals
@@ -208,20 +207,20 @@ when, and only when, they appear in all capitals, as shown here.
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405] along with the "#rule" extension defined in Section 4 of
-[I-D.ietf-httpbis-semantics].
+{{SEMANTICS}}.
 
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "payload body" in this document are to be
-interpreted as described in [I-D.ietf-httpbis-semantics].
+interpreted as described in {{SEMANTICS}}.
 
-The definition "validator" in this document is to be interpreted as described in
-Section 10.2 of [I-D.ietf-httpbis-semantics].
+The definition "validator fields" in this document is to be interpreted as described in
+Section 10.2 of {{SEMANTICS}}.
 
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
 which uses a checksum  that is calculated independently of the payload body and message body.
-It uses the representation data (see Section 6.1 of [I-D.ietf-httpbis-semantics]),
+It uses the representation data (see Section 6.1 of {{SEMANTICS}}),
 that can be fully or partially contained in the message body, or not contained at all:
 
 ~~~
@@ -261,11 +260,11 @@ response.
    Digest = "Digest" ":" OWS 1#representation-data-digest
 ~~~
 
-The resource is specified by the effective request URI and any `validator`
+The resource is specified by the effective request URI and any `validator field`
 contained in the message.
 
 The relationship between Content-Location (see Section 6.2.5 of
-[I-D.ietf-httpbis-semantics]) and Digest is demonstrated in
+{{SEMANTICS}}) and Digest is demonstrated in
 {{post-not-request-uri}}. A comprehensive set of examples showing the impacts of
 representation metadata, payload transformations and HTTP methods on Digest is
 provided in {{examples-unsolicited}} and {{examples-solicited}}.
@@ -281,6 +280,10 @@ validation instead of verifying every received representation-data-digest.
 A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
+
+Digest can be sent in a trailer section. When using incremental digest-algorithms
+this allows the sender and the receiver to dynamically compute the digest value
+while streaming the content.
 
 Two examples of its use are
 
@@ -331,7 +334,7 @@ some algorithms, one or more parameters can be supplied.
 ~~~
 
 The BNF for "parameter" is defined in Section 4.4.1.4 of
-[I-D.ietf-httpbis-semantics]. All digest-algorithm values are case-insensitive.
+{{SEMANTICS}}. All digest-algorithm values are case-insensitive.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
 digest-algorithm values.
@@ -339,8 +342,8 @@ The registry contains the tokens listed below.
 
 Some algorithms, although registered, have since been found vulnerable:
 the MD5 algorithm MUST NOT be used due to collision attacks [CMU-836068]
-and the SHA algorithm is NOT RECOMMENDED due
-to collision attacks [IACR-2019-459].
+and the SHA algorithm MUST NOT be used due
+to collision attacks [IACR-2020-014].
 
 
   {: vspace="0"}
@@ -368,10 +371,10 @@ to collision attacks [IACR-2019-459].
   SHA
   : * Description:  The SHA-1 algorithm [RFC3174].  The output of this
       algorithm is encoded using the base64 encoding  [RFC4648].
-      The SHA algorithm is NOT RECOMMENDED as it's now vulnerable
-      to collision attacks [IACR-2019-459].
+      The SHA algorithm MUST NOT be used as it's now vulnerable
+      to collision attacks [IACR-2020-014].
     * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
-    * Status: obsoleted
+    * Status: deprecated
 
   UNIXsum
   : * Description: The algorithm computed by the UNIX "sum" command,
@@ -528,7 +531,7 @@ The following examples demonstrate interactions where a server responds with a
 `Want-Digest`.
 
 
-## Server Returns Full Representation Data
+## Server Returns Full Representation Data {#example-full-representation}
 
 Request:
 
@@ -550,13 +553,17 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ## Server Returns No Representation Data
 
+Requests without a payload body can still send a Digest field
+applying the digest algorithm to an empty representation.
+
 As there is no content coding applied, the `sha-256` and the `id-sha-256`
-digest-values are the same.
+digest-values in the response are the same.
 
 Request:
 
 ~~~
-HEAD /items/123
+HEAD /items/123 HTTP/1.1
+Digest: sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 
 ~~~
 
@@ -703,7 +710,7 @@ Request `Digest` value is computed on the enclosed representation (see
 {{acting-on-resources}}).
 
 The representation enclosed in the response refers to the resource identified by
-`Content-Location` (see [RFC7231] Section 3.1.4.2 and Section 3.1.4.1 point 4).
+`Content-Location` (see {{SEMANTICS}} Section 6.3.2).
 
 `Digest` is thus computed on the enclosed representation.
 
@@ -851,6 +858,39 @@ Digest: sha-256=UJSojgEzqUe4UoHzmNl5d2xkmrW3BOdmvsvWu1uFeu0=
 }
 ~~~
 
+## Use with trailers and transfer-coding
+
+An origin server sends Digest in the HTTP trailer, so it can calculate digest-value
+while streaming content and thus mitigate resource consumption.
+The field value is the same as in {{example-full-representation}}
+
+Request:
+
+~~~
+GET /items/123
+
+~~~
+
+Response:
+
+~~~
+HTTP/1.1 200 OK
+Content-Type: application/json
+Transfer-Encoding: chunked
+Trailer: Digest
+
+8\r\n
+{"hello"\r\n
+8
+: "world\r\n
+2\r\n
+"}\r\n
+0\r\n
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+
+~~~
+
+
 # Examples of Want-Digest Solicited Digest {#examples-solicited}
 
 The following examples demonstrate interactions where a client solicits a
@@ -945,7 +985,7 @@ towards cryptographic constructions such as signatures.
 
 However, these rely on collision-resistance for their security proofs
 [CMU-836068]. The MD5 and SHA-1 algorithms are vulnerable to collisions attacks,
-so MD5 MUST NOT be used and SHA-1 is NOT RECOMMENDED for use with `Digest`.
+so they MUST NOT be used with `Digest`.
 
 ## Other Deprecated Algorithms
 
@@ -998,6 +1038,23 @@ the transport layer that protects HTTP fields.
 
 A `Digest` field using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in
 signatures.
+
+Using signatures to protect the Digest of an empty representation
+allows receiving endpoints to detect if an eventual payload has been stripped or added.
+
+## Usage in trailers
+
+When used in trailers, the receiver gets the digest value after the payload body
+and may thus be tempted to process the data before validating the digest value.
+Instead, data should only be processed after validating the Digest.
+
+If received in trailers, Digest MUST NOT be discarded;
+instead it MAY be merged in the header section (See Section 7.1.2 of {{!MESSAGING=I-D.ietf-httpbis
+-messaging}}).
+
+Not every digest-algorithm is suitable for trailers, as they may require to pre-process
+the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
+
 
 ## Message Truncation
 
@@ -1116,7 +1173,7 @@ The "ID-SHA-256" and "ID-SHA-512" algorithms have been added to the registry.
 ## Want-Digest Field Registration
 
 This section registers the `Want-Digest` field in the "Hypertext Transfer
-Protocol (HTTP) Field Name Registry" [I-D.ietf-httpbis-semantics].
+Protocol (HTTP) Field Name Registry" {{SEMANTICS}}.
 
 Field name:  `Want-Digest`
 
@@ -1127,7 +1184,7 @@ Specification document(s):  {{want-digest}} of this document
 ## Digest Header Field Registration
 
 This section registers the `Digest` field in the "Hypertext Transfer Protocol
-(HTTP) Field Name Registry" [I-D.ietf-httpbis-semantics].
+(HTTP) Field Name Registry" {{SEMANTICS}}.
 
 Field name:  `Digest`
 
@@ -1144,7 +1201,20 @@ and method impacts on the message and payload body. When the payload body
 contains non-printable characters (eg. when it is compressed) it is shown as
 base64-encoded string.
 
+A request with a json object without any content coding
+￼
+Request:
+￼
+~~~
+PUT /entries/1234 HTTP/1.1
+Content-Type: application/json
+Content-Encoding: identity
+
+{"hello": "world"}
+~~~
+￼
 Here is a gzip-compressed json object
+using a content coding
 
 Request:
 
@@ -1277,6 +1347,16 @@ Location: /authors/123
    to send a checksum of a resource representation with no content codings
    applied.
 
+8. What about mid-stream trailers?
+
+   While
+   [mid-stream trailers](https://github.com/httpwg/http-core/issues/313#issuecomment-584389706)
+   are interesting, since this specification is a rewrite of [RFC3230] we do not
+   think we should face that. As a first thought, nothing in this document 
+   precludes future work that would find a use for mid-stream trailers, for 
+   example an incremental digest-algorithm. A document defining such a
+   digest-algorithm is best positioned to describe how it is used.
+
 # Acknowledgements
 {:numbered="false"}
 The vast majority of this document is inherited from [RFC3230], so thanks
@@ -1354,3 +1434,7 @@ _RFC Editor: Please remove this section before publication._
 * Effect of HTTP semantics on payload and message body moved to appendix #1122
 * Editorial refactoring, moving headers sections up. #1109-#1112, #1116,
   #1117, #1122-#1124
+
+## Since draft-ietf-httpbis-digest-headers-02
+
+* Deprecate SHA-1 #1154
