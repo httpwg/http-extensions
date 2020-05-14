@@ -339,7 +339,7 @@ following four bytes are used for the `SETTINGS_HTTP_SERVER_CERT_AUTH` value.
 Each is converted to a setting value as:
 
 ~~~
-(Exporter fragment & 0x3fffffff) | 0x80000000
+Exporter fragment | 0x80000000
 ~~~
 
 That is, the most significant bit will always be set, regardless of the value of
