@@ -407,13 +407,13 @@ error of type PROTOCOL_ERROR.
 
 ## HTTP/3 PRIORITY_UPDATE Frame {#h3-update-frame}
 
-The HTTP/3 PRIORITY_UPDATE frame (type=0xF or 0x10) is used by clients to
-signal the initial priority of a response, or to reprioritize a response or push
-stream. It carries the identifer of the element that is being prioritized, and
-the updated priority in ASCII text, using the same representation as that of the
-Priority header field value. PRIORITY_UPDATE with a frame type of 0xF is used
-for request streams, PRIORITY_UPDATE with a frame time of 0x11 is used for push
-streams.
+The HTTP/3 PRIORITY_UPDATE frame (type=0x1CCB8BBF1F0700 or 0x1CCB8BBF1F0701) is
+used by clients to signal the initial priority of a response, or to reprioritize
+a response or push stream. It carries the identifer of the element that is being
+prioritized, and the updated priority in ASCII text, using the same
+representation as that of the Priority header field value. PRIORITY_UPDATE with
+a frame type of 0x1CCB8BBF1F0700 is used for request streams, PRIORITY_UPDATE
+with a frame time of 0x1CCB8BBF1F0701 is used for push streams.
 
 The PRIORITY_UPDATE frame MUST be sent on the client control stream
 ({{!I-D.ietf-quic-http}}, Section 6.2.1). Receiving a PRIORITY_UPDATE frame on a
@@ -422,7 +422,7 @@ error of type H3_FRAME_UNEXPECTED.
 
 ~~~ drawing
 HTTP/3 PRIORITY_UPDATE Frame {
-  Type (i) = 0xF..0x10,
+  Type (i) = 0x0x1CCB8BBF1F0700..0x0x1CCB8BBF1F071,
   Length (i),
   Prioritized Element ID (i),
   Priority Field Value (..),
