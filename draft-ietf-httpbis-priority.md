@@ -101,6 +101,9 @@ Example HTTP requests and responses use the HTTP/2-style formatting from
 This document uses the variable-length integer encoding from
 {{!I-D.ietf-quic-transport}}.
 
+The term control stream is used to describe the HTTP/2 stream with identifier
+0x0, and HTTP/3 control stream; see {{!I-D.ietf-quic-http}}, Section 6.2.1.
+
 
 # Motivation for Replacing HTTP/2 Priorities {#motivation}
 
@@ -317,8 +320,7 @@ references the target of the prioritization based on a version-specific
 identifier; in HTTP/2 this is the Stream ID, in HTTP/3 this is either the Stream
 ID or Push ID.
 
-In HTTP/2 the frame is sent on stream zero and in HTTP/3 it is sent on the client
-control stream ({{!I-D.ietf-quic-http}}, Section 6.2.1). This allows the
+PRIORITY_UPDATE can be sent by clients on the control stream. This allows the
 PRIORITY_UPDATE to be sent before the stream it references is created, and
 avoids having to extend the protocol semantics to support continued updates
 during the stream lifetime; see {{reprioritization}}.
@@ -345,8 +347,8 @@ transitions to a state that prevents the client from sending additional frames
 on the stream. Therefore, a client cannot reprioritize a response by sending
 additional metadata (e.g., trailer fields) or a PRIORITY_UPDATE frame on the
 request stream. We avoid interoperability failure by restricting PRIORITY_UPDATE
-frames to stream zero or the control stream, with each such frame explicitly
-identifying the response to which the new priority applies.
+frames to the control stream, with each such frame explicitly identifying the
+response to which the new priority applies.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
