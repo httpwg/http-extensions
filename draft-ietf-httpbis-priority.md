@@ -311,12 +311,11 @@ that control the caching behavior (e.g., Cache-Control, Vary).
 
 # Signalling Initial Priority in Frames
 
-Endpoints might prefer to signal the initial priority of a response using a
-frame rather than a header field. This document specifies a new PRIORITY_UPDATE
-frame for HTTP/2 ({{!RFC7540}}) and HTTP/3 ({{!I-D.ietf-quic-http}}). It carries
-priority parameters and references the target of the prioritization based on a
-version-specific identifier; in HTTP/2 this is the Stream ID, in HTTP/3 this is
-either the Stream ID or Push ID.
+This document specifies a new PRIORITY_UPDATE frame for HTTP/2 ({{!RFC7540}})
+and HTTP/3 ({{!I-D.ietf-quic-http}}). It carries priority parameters and
+references the target of the prioritization based on a version-specific
+identifier; in HTTP/2 this is the Stream ID, in HTTP/3 this is either the Stream
+ID or Push ID.
 
 In HTTP/2 the frame is sent on stream zero and in HTTP/3 it is sent on the client
 control stream ({{!I-D.ietf-quic-http}}, Section 6.2.1). This allows the
@@ -324,13 +323,12 @@ PRIORITY_UPDATE to be sent before the stream it references is created, and
 avoids having to extend the protocol semantics to support continued updates
 during the stream lifetime; see {{reprioritization}}.
 
-Unlike the header field, the PRIORITY_UPDATE frame is a hop-by-hop signal.
-
-Having two mechanisms to carry the initial priority signal brings the dilemma of
-choice. A sender can use either signal and sending both is not prohibited. An
+Unlike the Priority header field, the PRIORITY_UPDATE frame is a hop-by-hop
+signal. Clients that do not want to expose an end-to-end signal MAY omit the
+header field but send the PRIORITY_UPDATE frame at an early moment assuming that
+it will reach the server as early as the request message it applies to. An
 endpoint that receives both signals can process them in any way it chooses but
-MUST NOT treat this as error. Endpoints are advised that sending conflicting
-initial priority signals may lead to sub-optimal prioritization effects.
+MUST NOT treat this as error.
 
 # Reprioritization
 
