@@ -292,7 +292,7 @@ A parameter is separated from its Item or Inner List and other parameters by a s
 Example-ParamList: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
 ~~~
 
-Parameters whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example:
+Parameters whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example, the "a" parameter here is true, while the "b" parameter is false:
 
 ~~~ example
 Example-Int: 1; a; b=?0
@@ -520,7 +520,7 @@ Example-Bool: ?1
 
 # Working With Structured Fields in HTTP {#text}
 
-This section defines how to serialize and parse Structured Fields in field values, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before HPACK {{?RFC7541}} is applied).
+This section defines how to serialize and parse Structured Fields in field values, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before compression with HPACK {{?RFC7541}}).
 
 ## Serializing Structured Fields {#text-serialize}
 
@@ -734,7 +734,7 @@ Tokens, Integers, Decimals and Byte Sequences cannot be split across multiple fi
 
 If parsing fails -- including when calling another algorithm -- the entire field value MUST be ignored (i.e., treated as if the field were not present in the section). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
 
-Note that this requirement does not apply to an implementation that is not parsing the field; for example, an intermediary is not required to strip a failing header field from a message before forwarding it.
+Note that this requirement does not apply to an implementation that is not parsing the field; for example, an intermediary is not required to strip a failing field from a message before forwarding it.
 
 
 ### Parsing a List {#parse-list}
@@ -991,6 +991,8 @@ Likewise, implementations should note that it's important to preserve the distin
 
 The serialization algorithm is defined in a way that it is not strictly limited to the data types defined in {{types}} in every case. For example, Decimals are designed to take broader input and round to allowed values.
 
+Implementations are allowed to limit the allowed size of different structures, subject to the minimums defined for each type. When a structure exceeds an implementation limit, that structure fails parsing or serialisation.
+
 # Changes
 
 _RFC Editor: Please remove this section before publication._
@@ -1000,6 +1002,7 @@ _RFC Editor: Please remove this section before publication._
 * Fix indentation in Dictionary serialisation (#1164).
 * Add example for Token; tweak example field names (#1147).
 * Editorial improvements.
+* Note that exceeding implementation limits implies failure.
 
 ## Since draft-ietf-httpbis-header-structure-17
 
