@@ -732,6 +732,13 @@ Strings split across multiple field lines will have unpredictable results, becau
 
 Tokens, Integers, Decimals and Byte Sequences cannot be split across multiple field lines because the inserted commas will cause parsing to fail.
 
+Parsers MAY fail when processing a field value spread across multiple field lines, when one of those lines does not parse as that field. For example, a parsing handling an Example-String field that's defined as a sf-string is allowed to fail when processing this field section:
+
+~~~ example
+Example-String: "foo
+Example-String: bar"
+~~~
+
 If parsing fails -- including when calling another algorithm -- the entire field value MUST be ignored (i.e., treated as if the field were not present in the section). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
 
 Note that this requirement does not apply to an implementation that is not parsing the field; for example, an intermediary is not required to strip a failing field from a message before forwarding it.
@@ -1005,6 +1012,7 @@ _RFC Editor: Please remove this section before publication._
 * Editorial improvements.
 * Note that exceeding implementation limits implies failure.
 * Talk about specifying order of Dictionary members and Parameters, not cardinality.
+* Allow (but don't require) parsers to fail when a single field line isn't valid.
 
 ## Since draft-ietf-httpbis-header-structure-17
 
