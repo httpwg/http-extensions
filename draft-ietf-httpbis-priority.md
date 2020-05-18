@@ -220,7 +220,7 @@ The urgency parameter (`u`) takes an integer between 0 and 7, in descending
 order of priority. This range provides sufficient granularity for prioritizing
 responses for ordinary web browsing, at minimal complexity.
 
-The value is encoded as an sh-integer. The default value is 1.
+The value is encoded as an sh-integer. The default value is 3.
 
 This parameter indicates the sender's recommendation, based on the expectation
 that the server would transmit HTTP responses in the order of their urgency
