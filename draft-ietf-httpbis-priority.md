@@ -328,9 +328,9 @@ during the stream lifetime; see {{reprioritization}}.
 Unlike the Priority header field, the PRIORITY_UPDATE frame is a hop-by-hop
 signal. Clients that do not want to expose an end-to-end signal MAY omit the
 header field but send the PRIORITY_UPDATE frame at an early moment assuming that
-it will reach the server as early as the request message it applies to. An
-endpoint that receives both signals can process them in any way it chooses but
-MUST NOT treat this as error.
+it will reach the server as early as the request message it applies to. The
+signal carries by a PRIORITY_UPDATE frame overrides that carried by the header,
+even when the frame was received before the request headers.
 
 # Reprioritization
 
