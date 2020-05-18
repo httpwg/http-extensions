@@ -364,7 +364,7 @@ of any other value MUST be treated as a connection error of type PROTOCOL_ERROR.
 ~~~ drawing
 HTTP/2 PRIORITY_UPDATE Frame {
   Length (24),
-  Type (8) = 0x10,
+  Type (8) = 0xF,
   Flags (8),
   Reserved (1),
   Stream Identifier (31),
