@@ -724,7 +724,7 @@ Given an array of bytes input_bytes that represents the chosen field's field-val
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
-When generating input_bytes, parsers MUST combine all lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the entire field value is processed correctly.
+When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the entire field value is processed correctly.
 
 For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances.
 
