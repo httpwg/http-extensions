@@ -154,7 +154,7 @@ A field definition cannot relax the requirements of this specification because d
 
 This specification defines minimums for the length or number of various structures supported by implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
 
-Specifications can refer to a field name as a "structured header name", "structured trailer name" or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value" or "structured field value" as necessary. Field definitions are encouraged to use the ABNF rules beginning with "sh-" defined in this specification; other rules in this specification are not intended for their use.
+Specifications can refer to a field name as a "structured header name", "structured trailer name" or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value" or "structured field value" as necessary. Field definitions are encouraged to use the ABNF rules beginning with "sf-" defined in this specification; other rules in this specification are not intended for their use.
 
 For example, a fictitious Foo-Example header field might be specified as:
 
@@ -168,7 +168,7 @@ much Foo the message has.
 Foo-Example is a Item Structured Header [RFCxxxx]. Its value MUST be
 an Integer (Section Y.Y of [RFCxxxx]). Its ABNF is:
 
-  Foo-Example = sh-integer
+  Foo-Example = sf-integer
 
 Its value indicates the amount of Foo in the message, and MUST
 be between 0 and 10, inclusive; other values MUST cause
@@ -212,8 +212,8 @@ Lists are arrays of zero or more members, each of which can be an Item ({{item}}
 The ABNF for Lists in HTTP fields is:
 
 ~~~ abnf
-sh-list       = list-member *( *SP "," *SP list-member )
-list-member   = sh-item / inner-list
+sf-list       = list-member *( *SP "," *SP list-member )
+list-member   = sf-item / inner-list
 ~~~
 
 Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Strings could look like:
@@ -249,7 +249,7 @@ An Inner List is an array of zero or more Items ({{item}}). Both the individual 
 The ABNF for Inner Lists is:
 
 ~~~ abnf
-inner-list    = "(" *SP [ sh-item *( 1*SP sh-item ) *SP ] ")"
+inner-list    = "(" *SP [ sf-item *( 1*SP sf-item ) *SP ] ")"
                 parameters
 ~~~
 
@@ -312,10 +312,10 @@ Implementations MUST provide access to Dictionaries both by index and by name. S
 The ABNF for Dictionaries is:
 
 ~~~ abnf
-sh-dictionary  = dict-member *( *SP "," *SP dict-member )
+sf-dictionary  = dict-member *( *SP "," *SP dict-member )
 dict-member    = member-name [ "=" member-value ]
 member-name    = key
-member-value   = sh-item / inner-list
+member-value   = sf-item / inner-list
 ~~~
 
 Members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
@@ -373,9 +373,9 @@ An Item can be a Integer ({{integer}}), Decimal ({{decimal}}), String ({{string}
 The ABNF for Items is:
 
 ~~~ abnf
-sh-item   = bare-item parameters
-bare-item = sh-integer / sh-decimal / sh-string / sh-token
-            / sh-binary / sh-boolean
+sf-item   = bare-item parameters
+bare-item = sf-integer / sf-decimal / sf-string / sf-token
+            / sf-binary / sf-boolean
 ~~~
 
 For example, a header field that is defined to be an Item that is an Integer might look like:
@@ -398,7 +398,7 @@ Integers have a range of -999,999,999,999,999 to 999,999,999,999,999 inclusive (
 The ABNF for Integers is:
 
 ~~~ abnf
-sh-integer = ["-"] 1*15DIGIT
+sf-integer = ["-"] 1*15DIGIT
 ~~~
 
 For example:
@@ -419,7 +419,7 @@ The ABNF for decimals is:
 
 
 ~~~ abnf
-sh-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
+sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
 ~~~
 
 For example, a header whose value is defined as a Decimal could look like:
@@ -438,7 +438,7 @@ Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the rang
 The ABNF for Strings is:
 
 ~~~ abnf
-sh-string = DQUOTE *(chr) DQUOTE
+sf-string = DQUOTE *(chr) DQUOTE
 chr       = unescaped / escaped
 unescaped = %x20-21 / %x23-5B / %x5D-7E
 escaped   = "\" ( DQUOTE / "\" )
@@ -466,7 +466,7 @@ Tokens are short textual words; their abstract model is identical to their expre
 The ABNF for Tokens is:
 
 ~~~ abnf
-sh-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
+sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 ~~~
 
 For example:
@@ -487,7 +487,7 @@ Byte Sequences can be conveyed in Structured Fields.
 The ABNF for a Byte Sequence is:
 
 ~~~ abnf
-sh-binary = ":" *(base64) ":"
+sf-binary = ":" *(base64) ":"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
@@ -507,7 +507,7 @@ Boolean values can be conveyed in Structured Fields.
 The ABNF for a Boolean is:
 
 ~~~ abnf
-sh-boolean = "?" boolean
+sf-boolean = "?" boolean
 boolean    = "0" / "1"
 ~~~
 
@@ -999,6 +999,7 @@ _RFC Editor: Please remove this section before publication._
 
 ## Since draft-ietf-httpbis-header-structure-18
 
+* Use "sf-" prefix for ABNF, not "sh-".
 * Fix indentation in Dictionary serialisation (#1164).
 * Add example for Token; tweak example field names (#1147).
 * Editorial improvements.
