@@ -300,7 +300,7 @@ Example-Int: 1; a; b=?0
 
 Note that this requirement is only on serialization; parsers are still required to correctly handle the true value when it appears in a parameter.
 
-Parsers MUST support at least 256 parameters on an Item or Inner List, and support parameter keys with at least 64 characters. Field specifications can constrain the types and cardinality of individual parameter names and values as they require.
+Parsers MUST support at least 256 parameters on an Item or Inner List, and support parameter keys with at least 64 characters. Field specifications can constrain the order of individual Parameters, as well as their values' types as required.
 
 
 ## Dictionaries {#dictionary}
@@ -363,7 +363,7 @@ Example-Hdr: bar=2
 
 However, individual members of a Dictionary cannot be safely split between lines; see {{text-parse}} for details.
 
-Parsers MUST support Dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters.
+Parsers MUST support Dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters. Field specifications can constrain the order of individual Dictionary members, as well as their values' types as required.
 
 
 ## Items {#item}
@@ -1003,6 +1003,7 @@ _RFC Editor: Please remove this section before publication._
 * Add example for Token; tweak example field names (#1147).
 * Editorial improvements.
 * Note that exceeding implementation limits implies failure.
+* Talk about specifying order of Dictionary members and Parameters, not cardinality.
 
 ## Since draft-ietf-httpbis-header-structure-17
 
