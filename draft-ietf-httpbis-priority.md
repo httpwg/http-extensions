@@ -422,7 +422,7 @@ error of type H3_FRAME_UNEXPECTED.
 
 ~~~ drawing
 HTTP/3 PRIORITY_UPDATE Frame {
-  Type (i) = 0x0x1CCB8BBF1F0700..0x0x1CCB8BBF1F071,
+  Type (i) = 0x1CCB8BBF1F0700..0x1CCB8BBF1F071,
   Length (i),
   Prioritized Element ID (i),
   Priority Field Value (..),
