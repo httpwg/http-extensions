@@ -119,7 +119,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This document uses algorithms to specify parsing and serialization behaviors, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar rule from {{!RFC7230}}.
 
-When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so as the behaviors are indistinguishable from specified behavior. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
+When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so long as the behaviors are indistinguishable from specified behavior. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
 For serialization to HTTP fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output still matches the ABNF.
 
@@ -134,11 +134,11 @@ To specify a HTTP field as a Structured Field, its authors needs to:
 
 * Specify the type of the field value; either List ({{list}}), Dictionary ({{dictionary}}), or Item ({{item}}).
 
-* Define the semantics of those structures.
+* Define the semantics of the field value.
 
-* Specify any additional constraints upon the structures used, as well as the consequences when those constraints are violated.
+* Specify any additional constraints upon the field value, as well as the consequences when those constraints are violated.
 
-Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, Inner Lists are only valid when a field definition explicitly allows them.
+Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
 
 When parsing fails, the entire field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different error handling, this should be explicitly specified.
 
@@ -194,7 +194,7 @@ For example:
 
 # Structured Data Types {#types}
 
-This section defines the abstract value types that can be composed into Structured Fields. The ABNF provided represents the on-wire format in HTTP field values.
+This section defines the abstract types for Structured Fields. The ABNF provided represents the on-wire format in HTTP field values.
 
 In summary:
 
@@ -253,7 +253,7 @@ inner-list    = "(" *SP [ sf-item *( 1*SP sf-item ) *SP ] ")"
                 parameters
 ~~~
 
-Inner Lists are denoted by surrounding parenthesis, and have their values delimited by a single space. A field whose value is defined as a List of Inner Lists of Strings could look like:
+Inner Lists are denoted by surrounding parenthesis, and have their values delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
 ~~~ example
 Example-StrListList: ("foo" "bar"), ("baz"), ("bat" "one"), ()
@@ -272,7 +272,7 @@ Parsers MUST support Inner Lists containing at least 256 members. Field specific
 
 ### Parameters {#param}
 
-Parameters are an ordered map of key-values pairs that are associated with an Item ({{item}}) or Inner List ({{inner-list}}). The keys are unique within the scope the Parameters they occur within, and the values are bare items (i.e., they themselves cannot be parameterized; see {{item}}).
+Parameters are an ordered map of key-value pairs that are associated with an Item ({{item}}) or Inner List ({{inner-list}}). The keys are unique within the scope the Parameters they occur within, and the values are bare items (i.e., they themselves cannot be parameterized; see {{item}}).
 
 The ABNF for Parameters is:
 
@@ -324,6 +324,8 @@ Members are separated by a comma with optional whitespace, while names and value
 Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
 ~~~
 
+Note that in this example, the final "=" is due to the inclusion of a Byte Sequence; see {{binary}}.
+
 Members whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example, here both "b" and "c" are true:
 
 ~~~ example
@@ -346,7 +348,7 @@ Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
 
 As with lists, an empty Dictionary is represented by omitting the entire field.
 
-Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual member names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the field's specification specifically disallows them.
+Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the field's specification specifically disallows them.
 
 Note that dictionaries can have their members split across multiple lines inside a header or trailer section; for example, the following are equivalent:
 
@@ -438,7 +440,7 @@ Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the rang
 The ABNF for Strings is:
 
 ~~~ abnf
-sf-string = DQUOTE *(chr) DQUOTE
+sf-string = DQUOTE *chr DQUOTE
 chr       = unescaped / escaped
 unescaped = %x20-21 / %x23-5B / %x5D-7E
 escaped   = "\" ( DQUOTE / "\" )
@@ -520,7 +522,7 @@ Example-Bool: ?1
 
 # Working With Structured Fields in HTTP {#text}
 
-This section defines how to serialize and parse Structured Fields in field values, and protocols compatible with them (e.g., in HTTP/2 {{?RFC7540}} before compression with HPACK {{?RFC7541}}).
+This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{?RFC7540}} before compression with HPACK {{?RFC7541}}).
 
 ## Serializing Structured Fields {#text-serialize}
 
@@ -660,14 +662,13 @@ Given a String as input_string, return an ASCII string suitable for use in a HTT
 
 0. Convert input_string into a sequence of ASCII characters; if conversion fails, fail serialization.
 1. If input_string contains characters in the range %x00-1f or %x7f (i.e., not in VCHAR or SP), fail serialization.
-2. Let output be an empty string.
-3. Append DQUOTE to output.
-4. For each character char in input_string:
+2. Let output be the string DQUOTE.
+3. For each character char in input_string:
    1. If char is "\\" or DQUOTE:
       1. Append "\\" to output.
    2. Append char to output.
-5. Append DQUOTE to output.
-6. Return output.
+4. Append DQUOTE to output.
+5. Return output.
 
 
 ### Serializing a Token {#ser-token}
@@ -935,9 +936,9 @@ Given an ASCII string as input_string, return a Byte Sequence. input_string is m
 7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below).
 8. Return binary_content.
 
-Because some implementations of base64 do not allow reject of encoded data that is not properly "=" padded (see {{!RFC4648}}, Section 3.2), parsers SHOULD NOT fail when it is not present, unless they cannot be configured to do so.
+Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{!RFC4648}}, Section 3.2), parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
 
-Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{!RFC4648}}, Section 3.5), parsers SHOULD NOT fail when it is present, unless they cannot be configured to do so.
+Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{!RFC4648}}, Section 3.5), parsers SHOULD NOT fail when non-zero pad bits are present, unless they cannot be configured to do so.
 
 This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
 
