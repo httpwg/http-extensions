@@ -409,6 +409,8 @@ For example:
 Example-Integer: 42
 ~~~
 
+Integers larger than 15 digits can be supported in a variety of ways; for example, by using a String ({{string}}), Byte Sequence ({{binary}}), or a parameter on an Integer that acts as a scaling factor.
+
 Note that commas in Integers are used in this section's prose only for readability; they are not valid in the wire format.
 
 
