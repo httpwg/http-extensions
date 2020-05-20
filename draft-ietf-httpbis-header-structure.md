@@ -121,7 +121,7 @@ This document uses algorithms to specify parsing and serialization behaviors, an
 
 When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so long as the behaviors are indistinguishable from specified behavior. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
-For serialization to HTTP fields, the ABNF illustrates the range of acceptable wire representations with as much fidelity as possible, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output still matches the ABNF.
+For serialization to HTTP fields, the ABNF illustrates their expected wire representations, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm.
 
 
 # Defining New Structured Fields {#specify}
@@ -138,7 +138,7 @@ To specify a HTTP field as a Structured Field, its authors needs to:
 
 * Specify any additional constraints upon the field value, as well as the consequences when those constraints are violated.
 
-Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q". Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
+Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q", or strings in lowercase. Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
 
 When parsing fails, the entire field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different error handling, this should be explicitly specified.
 
@@ -222,7 +222,7 @@ Each member is separated by a comma and optional whitespace. For example, a fiel
 Example-StrList: "foo", "bar", "It was the best of times."
 ~~~
 
-An empty List is denoted by not serializing the field at all.
+An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
 
 Note that Lists can have their members split across multiple lines inside a header or trailer section, as per Section 3.2.2 of {{?RFC7230}}; for example, the following are equivalent:
 
@@ -346,7 +346,7 @@ A Dictionary with a mix of singular and list values, some with Parameters:
 Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
 ~~~
 
-As with lists, an empty Dictionary is represented by omitting the entire field.
+As with lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
 
 Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the field's specification specifically disallows them.
 
@@ -731,7 +731,7 @@ When generating input_bytes, parsers MUST combine all field lines in the same se
 
 For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances.
 
-Strings split across multiple field lines will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser.
+Strings split across multiple field lines will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser, even when they are both under the control of the same party.
 
 Tokens, Integers, Decimals and Byte Sequences cannot be split across multiple field lines because the inserted commas will cause parsing to fail.
 
@@ -810,6 +810,7 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
    9. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
+Note that this algorithm has the effect of discarding any duplicate Dictionary members after the first one.
 
 ### Parsing an Item {#parse-item}
 
@@ -847,6 +848,8 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
       2. Let param_value be the result of running Parsing a Bare Item ({{parse-bare-item}}) with input_string.
    7. Append key param_name with value param_value to parameters. If parameters already contains a name param_name (comparing character-for-character), overwrite its value.
 3. Return parameters.
+
+Note that this algorithm has the effect of discarding any duplicate Parameter members after the first one.
 
 #### Parsing a Key {#parse-key}
 
