@@ -812,7 +812,7 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
    9. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
-Note that this algorithm has the effect of discarding any duplicate Dictionary members after the first one.
+Note that when duplicate Dictionary keys are encountered, this has the effect of ignoring all but the last instance.
 
 ### Parsing an Item {#parse-item}
 
@@ -851,7 +851,7 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
    7. Append key param_name with value param_value to parameters. If parameters already contains a name param_name (comparing character-for-character), overwrite its value.
 3. Return parameters.
 
-Note that this algorithm has the effect of discarding any duplicate Parameter members after the first one.
+Note that when duplicate Parameter keys are encountered, this has the effect of ignoring all but the last instance.
 
 #### Parsing a Key {#parse-key}
 
