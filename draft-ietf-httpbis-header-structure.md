@@ -119,7 +119,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This document uses algorithms to specify parsing and serialization behaviors, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar rule from {{!RFC7230}}.
 
-When parsing from HTTP fields, implementations MUST follow the algorithms, but MAY vary in implementation so long as the behaviors are indistinguishable from specified behavior. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
+When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
 For serialization to HTTP fields, the ABNF illustrates their expected wire representations, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm.
 
@@ -286,7 +286,7 @@ lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
 
-A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
+Parameters are ordered as serialized. A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
 
 ~~~ example
 Example-ParamList: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
@@ -305,7 +305,7 @@ Parsers MUST support at least 256 parameters on an Item or Inner List, and suppo
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short, textual strings and the values are items ({{item}}) or arrays of items, both of which can be Parameterized ({{param}}). There can be zero or more members, and their names are unique in the scope of the Dictionary they occur within.
+Dictionaries are ordered maps of name-value pairs, where the names are short textual strings and the values are items ({{item}}) or arrays of items, both of which can be Parameterized ({{param}}). There can be zero or more members, and their names are unique in the scope of the Dictionary they occur within.
 
 Implementations MUST provide access to Dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
@@ -318,7 +318,7 @@ member-name    = key
 member-value   = sf-item / inner-list
 ~~~
 
-Members are separated by a comma with optional whitespace, while names and values are separated by "=" (without whitespace). For example:
+Members are ordered as serialized, and separated by a comma with optional whitespace. Names and values are separated by "=" (without whitespace). For example:
 
 ~~~ example
 Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
@@ -520,6 +520,8 @@ A Boolean is indicated with a leading "?" character followed by a "1" for a true
 ~~~ example
 Example-Bool: ?1
 ~~~
+
+Note that in Dictionary ({{dictionary}}) and Parameter ({{param}}) values, Boolean true is indicated by omitting the value.
 
 
 # Working With Structured Fields in HTTP {#text}
