@@ -305,7 +305,7 @@ Parsers MUST support at least 256 parameters on an Item or Inner List, and suppo
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short textual strings and the values are items ({{item}}) or arrays of items, both of which can be Parameterized ({{param}}). There can be zero or more members, and their names are unique in the scope of the Dictionary they occur within.
+Dictionaries are ordered maps of name-value pairs, where the names are short textual strings and the values are Items ({{item}}) or arrays of Items, both of which can be Parameterized ({{param}}). There can be zero or more members, and their names are unique in the scope of the Dictionary they occur within.
 
 Implementations MUST provide access to Dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
 
@@ -334,13 +334,13 @@ Example-Dict: a=?0, b, c; foo=bar
 
 Note that this requirement is only on serialization; parsers are still required to correctly handle the true Boolean value when it appears in Dictionary values.
 
-A Dictionary with a member whose value is an Inner List of tokens:
+A Dictionary with a member whose value is an Inner List of Tokens:
 
 ~~~ example
 Example-DictList: rating=1.5, feelings=(joy sadness)
 ~~~
 
-A Dictionary with a mix of singular and list values, some with Parameters:
+A Dictionary with a mix of Items and Inner Lists, some with Parameters:
 
 ~~~ example
 Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
@@ -350,7 +350,7 @@ As with lists, an empty Dictionary is represented by omitting the entire field. 
 
 Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the field's specification specifically disallows them.
 
-Note that dictionaries can have their members split across multiple lines inside a header or trailer section; for example, the following are equivalent:
+Note that Dictionaries can have their members split across multiple lines inside a header or trailer section; for example, the following are equivalent:
 
 ~~~ example
 Example-Hdr: foo=1, bar=2
