@@ -93,7 +93,7 @@ A HTTP field that is defined as a "Structured Header" or "Structured Trailer" (i
 
 Additionally, future versions of HTTP can define alternative serializations of the abstract model of these structures, allowing fields that use that model to be transmitted more efficiently without being redefined.
 
-Note that it is not a goal of this document to redefine the syntax of existing HTTP fields; the mechanisms described herein are only intended to be used with those that explicitly opt into them.
+Note that it is not a goal of this document to redefine the syntax of existing HTTP fields; the mechanisms described herein are only intended to be used with fields that explicitly opt into them.
 
 {{specify}} describes how to specify a Structured Field.
 
