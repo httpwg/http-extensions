@@ -367,7 +367,7 @@ HTTP/2 PRIORITY_UPDATE Frame {
   Type (8) = 0xF,
   Flags (8),
   Reserved (1),
-  Stream Identifier (31),
+  Stream Identifier (31) = 0,
   R (1),
   Prioritized Stream ID (31),
   Priority Field Value (..),
