@@ -411,6 +411,8 @@ Example-Integer: 42
 
 Integers larger than 15 digits can be supported in a variety of ways; for example, by using a String ({{string}}), Byte Sequence ({{binary}}), or a parameter on an Integer that acts as a scaling factor.
 
+While it is possible to serialise Integers with leading zeros (e.g., "0002", "-01") and signed zero ("-0"), these distinctions may not be preserved by implementations.
+
 Note that commas in Integers are used in this section's prose only for readability; they are not valid in the wire format.
 
 
@@ -431,6 +433,8 @@ For example, a header whose value is defined as a Decimal could look like:
 ~~~ example
 Example-Decimal: 4.5
 ~~~
+
+While it is possible to serialise Decimals with leading zeros (e.g., "0002.5", "-01.334"), trailing zeros (e.g., "5.230", "-0.40"), and signed zero (e.g., "-0.0"), these distinctions may not be preserved by implementations.
 
 Note that the serialisation algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the header definition to occur before serialisation.
 
@@ -1021,6 +1025,7 @@ _RFC Editor: Please remove this section before publication._
 * Note that exceeding implementation limits implies failure.
 * Talk about specifying order of Dictionary members and Parameters, not cardinality.
 * Allow (but don't require) parsers to fail when a single field line isn't valid.
+* Note that some aspects of Integers and Decimals are not necessarily preserved.
 
 ## Since draft-ietf-httpbis-header-structure-17
 
