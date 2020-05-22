@@ -391,7 +391,7 @@ Priority Field Value:
 The PRIORITY_UPDATE frame MAY be sent before the stream that it references has
 been created. The Stream ID MUST be within the stream limit. If a server
 receives a PRIORITY_UPDATE for a Stream ID that is beyond the stream limits,
-this MUST be treated as a connection error of type PROTOCOL_ERROR.
+this SHOULD be treated as a connection error of type PROTOCOL_ERROR.
 PRIORITY_UPDATE frames received before the request or response has started
 SHOULD be buffered until the stream is opened and applied immediately after the
 request message has been processed. Holding PRIORITY_UPDATES consumes extra
@@ -441,7 +441,7 @@ Priority Field Value:
 The PRIORITY_UPDATE frame MAY be sent before the request stream that it
 references has been created. The Stream ID MUST be within the client-initiated
 bidirectional stream limit. If a server receives a PRIORITY_UPDATE for a Stream
-ID that is beyond the stream limits, this MUST be treated as a connection error
+ID that is beyond the stream limits, this SHOULD be treated as a connection error
 of type H3_ID_ERROR. PRIORITY_UPDATE frames received before the request or
 response has started SHOULD be buffered until the stream is opened and applied
 immediately after the request message has been processed. Holding
