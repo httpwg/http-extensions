@@ -352,7 +352,7 @@ response to which the new priority applies.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
-The HTTP/2 PRIORITY_UPDATE frame (type=0xF) is used by clients to signal the
+The HTTP/2 PRIORITY_UPDATE frame (type=0x10) is used by clients to signal the
 initial priority of a response, or to reprioritize a response or push stream. It
 carries the stream ID of the response and the priority in ASCII text, using the
 same representation as that of the Priority header field value.
@@ -364,7 +364,7 @@ of any other value MUST be treated as a connection error of type PROTOCOL_ERROR.
 ~~~ drawing
 HTTP/2 PRIORITY_UPDATE Frame {
   Length (24),
-  Type (8) = 0xF,
+  Type (8) = 0x10,
   Flags (8),
   Reserved (1),
   Stream Identifier (31) = 0,
@@ -660,7 +660,7 @@ Frame Type:
 : PRIORITY_UPDATE
 
 Code:
-: 0xF
+: 0x10
 
 Specification:
 : This document
@@ -672,7 +672,7 @@ Frame Type:
 : PRIORITY_UPDATE
 
 Code:
-: 0xF and 0x10
+: 0x10 and 0x11
 
 Specification:
 : This document
