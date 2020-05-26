@@ -2037,15 +2037,15 @@ defined in CamelCase, but technically accepted case-insensitively.
 
 The "Cookie Attribute Registry" will be updated with the registrations below:
 
-| Name     | Reference                              |
-|----------:+---------------------------------------|
-| Domain   | {{attribute-domain}} of this document  |
-| Expires  | {{attribute-expires}} of this document |
-| HttpOnly | {{attribute-httponly} of this document |
-| Max-Age  | {{attribute-max-age} of this document  |
-| Path     | {{attribute-path} of this document     |
-| SameSite | {{attribute-samesite} of this document |
-| Secure   | {{attribute-secure} of this document   |
+| Name     | Reference                               |
+|----------:+----------------------------------------|
+| Domain   | {{attribute-domain}} of this document   |
+| Expires  | {{attribute-expires}} of this document  |
+| HttpOnly | {{attribute-httponly}} of this document |
+| Max-Age  | {{attribute-max-age}} of this document  |
+| Path     | {{attribute-path}} of this document     |
+| SameSite | {{attribute-samesite}} of this document |
+| Secure   | {{attribute-secure}} of this document   |
 
 --- back
 
