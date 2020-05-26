@@ -1201,10 +1201,10 @@ and method impacts on the message and payload body. When the payload body
 contains non-printable characters (eg. when it is compressed) it is shown as
 base64-encoded string.
 
-A request with a json object without any content coding
-￼
+A request with a json object without any content coding.
+
 Request:
-￼
+
 ~~~
 PUT /entries/1234 HTTP/1.1
 Content-Type: application/json
@@ -1212,9 +1212,9 @@ Content-Encoding: identity
 
 {"hello": "world"}
 ~~~
-￼
+
 Here is a gzip-compressed json object
-using a content coding
+using a content coding.
 
 Request:
 
