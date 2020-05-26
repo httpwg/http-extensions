@@ -764,7 +764,7 @@ Given an ASCII string as input_string, return an array of (item_or_inner_list, p
    3. If input_string is empty, return members.
    4. Consume the first character of input_string; if it is not ",", fail parsing.
    5. Discard any leading SP characters from input_string.
-   6. If input_string is empty, there is a trailing comma; fail parsing.
+   6. If input_string is empty, it means there was a trailing comma; fail parsing.
 3. No structured data has been found; return members (which is empty).
 
 
