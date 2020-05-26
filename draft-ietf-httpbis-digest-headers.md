@@ -710,7 +710,7 @@ Request `Digest` value is computed on the enclosed representation (see
 {{acting-on-resources}}).
 
 The representation enclosed in the response refers to the resource identified by
-`Content-Location` (see {{SEMANTICS}} Section 6.3.2).
+`Content-Location` (see {{SEMANTICS}}, Section 6.3.2).
 
 `Digest` is thus computed on the enclosed representation.
 
