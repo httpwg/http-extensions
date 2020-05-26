@@ -1055,6 +1055,12 @@ instead it MAY be merged in the header section (See Section 7.1.2 of {{!MESSAGIN
 Not every digest-algorithm is suitable for trailers, as they may require to pre-process
 the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
 
+## Usage with encryption
+
+Digest may expose information details of encrypted payload when the checksum
+is computen on the unecrypted data.
+An example of that is the use of the `id-sha-256` digest algorithm
+in conjuction with the encrypted content-coding {{?RFC8188}}.
 
 ## Message Truncation
 
@@ -1438,3 +1444,4 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-digest-headers-02
 
 * Deprecate SHA-1 #1154
+* Avoid id-* with encrypted content.
