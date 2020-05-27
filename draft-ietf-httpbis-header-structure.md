@@ -813,7 +813,7 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
    6. If input_string is empty, return dictionary.
    7. Consume the first character of input_string; if it is not ",", fail parsing.
    8. Discard any leading SP characters from input_string.
-   9. If input_string is empty, there is a trailing comma; fail parsing.
+   9. If input_string is empty, it means there was a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
 Note that when duplicate Dictionary keys are encountered, this has the effect of ignoring all but the last instance.
