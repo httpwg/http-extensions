@@ -312,26 +312,6 @@ properties of an HTTP request it receives, the server is expected to control the
 cacheability or the applicability of the cached response, by using header fields
 that control the caching behavior (e.g., Cache-Control, Vary).
 
-# Signalling Initial Priority in Frames
-
-This document specifies a new PRIORITY_UPDATE frame for HTTP/2 ({{!RFC7540}})
-and HTTP/3 ({{!I-D.ietf-quic-http}}). It carries priority parameters and
-references the target of the prioritization based on a version-specific
-identifier; in HTTP/2 this is the Stream ID, in HTTP/3 this is either the Stream
-ID or Push ID.
-
-PRIORITY_UPDATE can be sent by clients on the control stream. This allows the
-PRIORITY_UPDATE to be sent before the stream it references is created, and
-avoids having to extend the protocol semantics to support continued updates
-during the stream lifetime; see {{reprioritization}}.
-
-Unlike the Priority header field, the PRIORITY_UPDATE frame is a hop-by-hop
-signal. Clients that do not want to expose an end-to-end signal MAY omit the
-header field but send the PRIORITY_UPDATE frame at an early moment assuming that
-it will reach the server as early as the request message it applies to. The
-signal carries by a PRIORITY_UPDATE frame overrides that carried by the header,
-even when the frame was received before the request headers.
-
 # Reprioritization
 
 After a client sends a request, it may be beneficial to change the priority of
@@ -342,13 +322,28 @@ references the new JavaScript file, while the prefetch is in progress, the
 browser would send a reprioritization frame with the priority field value
 set to `u=0`.
 
-In HTTP/2 and HTTP/3, after a request message is sent on a stream, the stream
-transitions to a state that prevents the client from sending additional frames
-on the stream. Therefore, a client cannot reprioritize a response by sending
-additional metadata (e.g., trailer fields) or a PRIORITY_UPDATE frame on the
-request stream. We avoid interoperability failure by restricting PRIORITY_UPDATE
-frames to the control stream, with each such frame explicitly identifying the
-response to which the new priority applies.
+This document specifies a new PRIORITY_UPDATE frame for HTTP/2 ({{!RFC7540}})
+and HTTP/3 ({{!I-D.ietf-quic-http}}). It carries priority parameters and
+references the target of the prioritization based on a version-specific
+identifier; in HTTP/2 this is the Stream ID, in HTTP/3 this is either the Stream
+ID or Push ID. Unlike the Priority header field, the PRIORITY_UPDATE frame is a
+hop-by-hop signal.
+
+PRIORITY_UPDATE frames are sent by clients on the control stream, and therefore
+can be sent even after the send-side of the request stream is being closed. This
+also allows the PRIORITY_UPDATE frame to be sent as early as the stream it
+references is created. Depending on the transmission logic of the endpoints and
+on the network condition in case of HTTP/3, servers might receive a
+PRIORITY_UPDATE frame that references a request stream that is yet to be opened.
+Furthermore, clients might omit the priority request header, using
+PRIORITY_UPDATE frames to indicate both the initial priority and the updated
+priority.
+
+When a server receives a PRIORITY_UPDATE frame referring to a client-initiated
+request that is yet to be opened, the server buffers the priorities being
+carried by the received frame and applies them once the request is being opened.
+The signal carried by a PRIORITY_UPDATE frame overrides that carried by the
+header, even when the frame was received before the request headers.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
