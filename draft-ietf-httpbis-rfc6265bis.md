@@ -724,7 +724,7 @@ Set-Cookie: __Host-SID=12345; Domain=site.example; Path=/
 Set-Cookie: __Host-SID=12345; Secure; Domain=site.example; Path=/
 ~~~
 
-While the would be accepted if set from a secure origin (e.g.
+While the following would be accepted if set from a secure origin (e.g.
 "https://site.example/"), and rejected otherwise:
 
 ~~~ example
