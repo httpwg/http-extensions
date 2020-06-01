@@ -209,6 +209,9 @@ This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405] along with the "#rule" extension defined in Section 4 of
 {{SEMANTICS}}.
 
+The definition "parameter" in this document is to be interpreted as described in
+Section 4.4.1.4 of {{SEMANTICS}}.
+
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "payload body" in this document are to be
 interpreted as described in {{SEMANTICS}}.
@@ -234,11 +237,11 @@ while the message body is dependent on transfer codings and other transformation
 
 A representation digest consists of
 the value of a checksum computed on the entire selected `representation data` of a resource
-together with an indication of the algorithm used (and any parameters)
+together with an indication of the algorithm used and any "parameters".
 
 ~~~ abnf
    representation-data-digest = digest-algorithm "="
-                                <encoded digest output>
+                                <encoded digest output> *( OWS ";" OWS parameter )
 ~~~
 
 The checksum is computed using one of the `digest-algorithms` listed in {{algorithms}}
@@ -248,6 +251,13 @@ The example below shows the  `sha-256` digest-algorithm which uses base64 encodi
 
 ~~~ example
    sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+~~~
+
+This second example shows an hypotetical `bikeshed` digest algorithm using
+two parameters: `bs` and `offset`.
+
+~~~ example
+    bikeshed=8E9q0okq; bs=8; offset=2
 ~~~
 
 # The Digest Field {#digest}
@@ -327,14 +337,14 @@ Two examples of its use are
 # Digest Algorithm Values {#algorithms}
 
 Digest algorithm values are used to indicate a specific digest computation.  For
-some algorithms, one or more parameters can be supplied.
+some algorithms, one or more parameters can be supplied
+using the "parameter" notation as specified in the representation-data-digest.
 
 ~~~
    digest-algorithm = token
 ~~~
 
-The BNF for "parameter" is defined in Section 4.4.1.4 of
-{{SEMANTICS}}. All digest-algorithm values are case-insensitive.
+All digest-algorithm values are case-insensitive.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
 digest-algorithm values.
