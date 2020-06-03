@@ -286,7 +286,7 @@ lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
 
-Parameters are ordered as serialized. A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
+Note that Parameters are ordered as serialized, and Parameter keys cannot contain uppercase letters. A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
 
 ~~~ example
 Example-ParamList: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
@@ -318,7 +318,7 @@ member-name    = key
 member-value   = sf-item / inner-list
 ~~~
 
-Members are ordered as serialized, and separated by a comma with optional whitespace. Names and values are separated by "=" (without whitespace). For example:
+Members are ordered as serialized, and separated by a comma with optional whitespace. Member names cannot contain uppercase characters. Names and values are separated by "=" (without whitespace). For example:
 
 ~~~ example
 Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
