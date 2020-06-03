@@ -117,7 +117,7 @@ Note that as a result of this strictness, if a field is appended to by multiple 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document uses algorithms to specify parsing and serialization behaviors, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar rule from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialization behaviors, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
 
 When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
@@ -212,7 +212,7 @@ Lists are arrays of zero or more members, each of which can be an Item ({{item}}
 The ABNF for Lists in HTTP fields is:
 
 ~~~ abnf
-sf-list       = list-member *( *SP "," *SP list-member )
+sf-list       = list-member *( OWS "," OWS list-member )
 list-member   = sf-item / inner-list
 ~~~
 
@@ -312,7 +312,7 @@ Implementations MUST provide access to Dictionaries both by index and by name. S
 The ABNF for Dictionaries is:
 
 ~~~ abnf
-sf-dictionary  = dict-member *( *SP "," *SP dict-member )
+sf-dictionary  = dict-member *( OWS "," OWS dict-member )
 dict-member    = member-name [ "=" member-value ]
 member-name    = key
 member-value   = sf-item / inner-list
@@ -725,11 +725,11 @@ When a receiving implementation parses HTTP fields that are known to be Structur
 Given an array of bytes input_bytes that represents the chosen field's field-value (which is empty if that field is not present), and field_type (one of "dictionary", "list", or "item"), return the parsed header value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
-1. Discard any leading SP characters from input_string.
+1. Discard any leading OWS characters from input_string.
 2. If field_type is "list", let output be the result of running Parsing a List ({{parse-list}}) with input_string.
 3. If field_type is "dictionary", let output be the result of running Parsing a Dictionary ({{parse-dictionary}}) with input_string.
 4. If field_type is "item", let output be the result of running Parsing an Item ({{parse-item}}) with input_string.
-5. Discard any leading SP characters from input_string.
+5. Discard any leading OWS characters from input_string.
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
@@ -760,10 +760,10 @@ Given an ASCII string as input_string, return an array of (item_or_inner_list, p
 1. Let members be an empty array.
 2. While input_string is not empty:
    1. Append the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string to members.
-   2. Discard any leading SP characters from input_string.
+   2. Discard any leading OWS characters from input_string.
    3. If input_string is empty, return members.
    4. Consume the first character of input_string; if it is not ",", fail parsing.
-   5. Discard any leading SP characters from input_string.
+   5. Discard any leading OWS characters from input_string.
    6. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return members (which is empty).
 
@@ -809,10 +809,10 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
       2. Let parameters be the result of running Parsing Parameters {{parse-param}} with input_string.
       3. Let member be the tuple (value, parameters).
    4. Add name this_key with value member to dictionary. If dictionary already contains a name this_key (comparing character-for-character), overwrite its value.
-   5. Discard any leading SP characters from input_string.
+   5. Discard any leading OWS characters from input_string.
    6. If input_string is empty, return dictionary.
    7. Consume the first character of input_string; if it is not ",", fail parsing.
-   8. Discard any leading SP characters from input_string.
+   8. Discard any leading OWS characters from input_string.
    9. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
@@ -1002,7 +1002,7 @@ Additionally, there were widely shared feelings that JSON doesn't "look right" i
 
 A generic implementation of this specification should expose the top-level serialize ({{text-serialize}}) and parse ({{text-parse}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
-For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-field-tests>.
+For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-header-tests>.
 
 Implementers should note that Dictionaries and Parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
 
@@ -1026,6 +1026,7 @@ _RFC Editor: Please remove this section before publication._
 * Talk about specifying order of Dictionary members and Parameters, not cardinality.
 * Allow (but don't require) parsers to fail when a single field line isn't valid.
 * Note that some aspects of Integers and Decimals are not necessarily preserved.
+* Allow Lists and Dictionaries to be delimited by OWS, rather than *SP, to make parsing more robust.
 
 ## Since draft-ietf-httpbis-header-structure-17
 
