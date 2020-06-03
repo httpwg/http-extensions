@@ -75,7 +75,7 @@ Discussion of this draft takes place on the HTTP working group mailing list (iet
 
 Working Group information can be found at <https://httpwg.github.io/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/header-structure>.
 
-Tests for implementations are collected at <https://github.com/httpwg/structured-header-tests>.
+Tests for implementations are collected at <https://github.com/httpwg/structured-field-tests>.
 
 Implementations are tracked at <https://github.com/httpwg/wiki/wiki/Structured-Headers>.
 
@@ -1002,7 +1002,7 @@ Additionally, there were widely shared feelings that JSON doesn't "look right" i
 
 A generic implementation of this specification should expose the top-level serialize ({{text-serialize}}) and parse ({{text-parse}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
-For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-header-tests>.
+For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-field-tests>.
 
 Implementers should note that Dictionaries and Parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
 
