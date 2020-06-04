@@ -725,11 +725,11 @@ When a receiving implementation parses HTTP fields that are known to be Structur
 Given an array of bytes input_bytes that represents the chosen field's field-value (which is empty if that field is not present), and field_type (one of "dictionary", "list", or "item"), return the parsed header value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
-1. Discard any leading OWS characters from input_string.
+1. Discard any leading SP characters from input_string.
 2. If field_type is "list", let output be the result of running Parsing a List ({{parse-list}}) with input_string.
 3. If field_type is "dictionary", let output be the result of running Parsing a Dictionary ({{parse-dictionary}}) with input_string.
 4. If field_type is "item", let output be the result of running Parsing an Item ({{parse-item}}) with input_string.
-5. Discard any leading OWS characters from input_string.
+5. Discard any leading SP characters from input_string.
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
