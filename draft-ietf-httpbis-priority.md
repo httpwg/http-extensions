@@ -565,9 +565,7 @@ of delaying the delivery of updates.
 Also, a client MAY use the priority values for making local scheduling choices
 for the requests it initiates.
 
-# Considerations
-
-## Why use an End-to-End Header Field?
+# Why use an End-to-End Header Field?
 
 Contrary to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
 the Priority header field is defined as end-to-end.
