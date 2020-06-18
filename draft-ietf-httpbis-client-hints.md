@@ -123,7 +123,7 @@ A Client Hint request header field is a HTTP header field that is used by HTTP u
 
 User agents choose what Client Hints to send in a request based on their default settings, user configuration, and server preferences expressed in `Accept-CH`.
 The user agent and server can use an opt-in mechanism outlined below to negotiate which header fields need to be sent to allow for efficient content adaption, and optionally use additional mechanisms (e.g., as outlined in {{CLIENT-HINTS-INFRASTRUCTURE}}) to negotiate delegation policies that control access of third parties to those same header fields.
-Without such an opt-in, user agents SHOULD NOT send hints that are not listed in the low-entropy hint table at {{CLIENT-HINTS-INFRASTRUCTURE}}.
+User agents SHOULD require an opt-in to send any hints that are not listed in the low-entropy hint table at {{CLIENT-HINTS-INFRASTRUCTURE}}.
 
 Implementers need to be aware of the fingerprinting implications when implementing support for Client Hints, and follow the considerations outlined in the <xref target="security-considerations">Security Considerations</xref> section of this document.
 
@@ -207,7 +207,7 @@ Such features need to take into account the following aspects of the information
 * Sensitivity -  The feature SHOULD NOT expose user-sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g., a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
 * Change over time - The feature SHOULD NOT expose user information that changes over time, unless the state change itself is also exposed (e.g., through JavaScript callbacks).
 
-Different features will be positioned in different points in the space between low-entropy, non-sensitive and static information (e.g., user agent information), and high-entropy, sensitive and dynamic information (e.g., geolocation). User agents need to consider the value provided by a particular feature vs these considerations, and may wish to have different policies regarding that tradeoff on a per-feature basis.
+Different features will be positioned in different points in the space between low-entropy, non-sensitive and static information (e.g., user agent information), and high-entropy, sensitive and dynamic information (e.g., geolocation). User agents need to consider the value provided by a particular feature vs these considerations, and may wish to have different policies regarding that tradeoff on a per-feature or other fine-grained basis.
 
 Implementers ought to consider both user- and server- controlled mechanisms and policies to control which Client Hints header fields are advertised:
 
@@ -325,6 +325,8 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 ## Since -13
 * PR 1171: Genart review.
 
+## Since -14
+* PR 1220: AD review.
 
 # Acknowledgements
 {:numbered="false"}
