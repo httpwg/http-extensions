@@ -87,7 +87,7 @@ code and issues list for this draft can be found at <https://github.com/httpwg/h
 
 # Introduction
 
-There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and user agent preferences. Historically, applications that wanted the server to optimize content delivery and user experience based on such capabilities had to rely on passive identification (e.g., by matching the User-Agent header field (Section 5.5.3 of {{RFC7231}}) against an established database of user-agent signatures), use HTTP cookies {{RFC6265}} and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
+There are thousands of different devices accessing the web, each with different device capabilities and preference information. These device capabilities include hardware and software characteristics, as well as dynamic user and user agent preferences. Historically, applications that wanted the server to optimize content delivery and user experience based on such capabilities had to rely on passive identification (e.g., by matching the User-Agent header field (Section 5.5.3 of {{RFC7231}}) against an established database of user agent signatures), use HTTP cookies {{RFC6265}} and URL parameters, or use some combination of these and similar mechanisms to enable ad hoc content negotiation.
 
 Such techniques are expensive to set up and maintain, and are not portable across both applications and servers. They also make it hard for both user agent and server to understand which data are required and is in use during the negotiation:
 
@@ -170,7 +170,7 @@ This preference will not extend to resource requests initiated to "https://site.
 
 ## Interaction with Caches
 
-When selecting a response based on one or more Client Hints, and if the resource is cacheable, the server SHOULD generate a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
+When selecting a response based on one or more Client Hints, and if the resource is cacheable, the server needs to generate a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
 ~~~ example
   Vary: Sec-CH-Example
