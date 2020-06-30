@@ -402,13 +402,13 @@ To allow sender and recipient to provide a checksum which is independent from
   {: vspace="0"}
   ID-SHA-512
   : * Description: The sha-512 digest of the representation-data of the resource when no
-    content coding is applied (eg. `Content-Encoding: identity`)
+    content coding is applied
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
   ID-SHA-256
   : * Description: The sha-256 digest of the representation-data of the resource when no
-      content coding is applied (eg. `Content-Encoding: identity`)
+      content coding is applied
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
@@ -545,7 +545,6 @@ Response:
 ~~~
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Encoding: identity
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 {"hello": "world"}
@@ -572,7 +571,6 @@ Response:
 ~~~
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Encoding: identity
 Digest: id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ~~~
@@ -592,7 +590,6 @@ Response:
 ~~~
 HTTP/1.1 206 Partial Content
 Content-Type: application/json
-Content-Encoding: identity
 Content-Range: bytes 1-7/18
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
@@ -620,7 +617,6 @@ Request:
 ~~~
 PUT /items/123
 Content-Type: application/json
-Content-Encoding: identity
 Accept-Encoding: br
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
@@ -650,7 +646,6 @@ Request:
 ~~~
 PUT /items/123
 Content-Type: application/json
-Content-Encoding: identity
 Content-Length: 18
 Accept-Encoding: br
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -684,7 +679,6 @@ Request:
 ~~~
 PUT /items/123 HTTP/1.1
 Content-Type: application/json
-Content-Encoding: identity
 Accept-Encoding: br
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
@@ -914,7 +908,6 @@ Response:
 ~~~
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Encoding: identity
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 {"hello": "world"}
@@ -938,7 +931,6 @@ Response:
 ~~~
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Encoding: identity
 Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
                    +AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 
@@ -1214,7 +1206,6 @@ Request:
 ~~~
 PUT /entries/1234 HTTP/1.1
 Content-Type: application/json
-Content-Encoding: identity
 
 {"hello": "world"}
 ~~~
