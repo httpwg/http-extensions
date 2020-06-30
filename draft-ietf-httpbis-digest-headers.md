@@ -253,7 +253,7 @@ The example below shows the  `sha-256` digest-algorithm which uses base64 encodi
    sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
 
-This second example shows an hypotetical `bikeshed` digest algorithm using
+This second example shows a hypothetical `bikeshed` digest algorithm using
 two parameters: `bs` and `offset`.
 
 ~~~ example
