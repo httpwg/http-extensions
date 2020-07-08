@@ -590,7 +590,37 @@ makes the prioritization scheme extensible; see the discussion below.
 
 # Security Considerations
 
-TBD
+[CVE-2019-9513] aka "Resource Loop", is a DoS attack based on manipulation of
+the HTTP/2 priority tree. Extensible priorities does not use stream
+dependencies, which mitigates this vulnerability.
+
+TBD: depending on the outcome of reprioritization discussions, following
+paragraphs may change or be removed.
+
+{{RFC7540}}, Section 5.3.4 describes a scenario where closure of streams in the
+priority tree could cause suboptimal prioritization. To avoid this, {{RFC7540}}
+states that "an endpoint SHOULD retain stream prioritization state for a period
+after streams become closed". Retaining state for streams no longer counted
+towards stream concurrency consumes server resources. Furthermore, {{RFC7540}}
+identifies that reprioritization of a closed stream could affect dependents; it
+recommends updating the priority tree if sufficient state is stored, which will
+also consume server resources. To limit this commitment, it is stated that "The
+amount of prioritization state that is retained MAY be limited" and "If a limit
+is applied, endpoints SHOULD maintain state for at least as many streams as
+allowed by their setting for SETTINGS_MAX_CONCURRENT_STREAMS.". Extensible
+priorities does not use stream dependencies, which minimizes most of the
+resource concerns related to this scenario.
+
+{{RFC7540}}, Section 5.3.4 also presents considerations about the state required
+to store priority information about streams in an "idle" state. This state can
+be limited by adopting the guidance about concurrency limits described above.
+Extensible priorities is subject to a similar consideration because
+PRIORITY_UPDATE frames may arrive before the request that they reference. A
+server could retain the information in order to apply the most up-to-date signal
+to the request. However, HTTP/3 implementations might have practical barriers to
+determining reasonable stream concurrency limits depending on the information
+that is available to them from the QUIC transport layer. TODO: so what can we
+suggest?
 
 # IANA Considerations
 
