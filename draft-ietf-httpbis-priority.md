@@ -483,9 +483,13 @@ value continues to be `true`, the value specified by the client, as the server d
 not specify the incremental(`i`) parameter.
 
 
-# Security Considerations
+# Client Scheduling
 
-## Fairness {#fairness}
+A client MAY use priority values to make local scheduling choices about the
+requests it initiates.
+
+
+# Fairness {#fairness}
 
 As a general guideline, a server SHOULD NOT use priority information for making
 schedule decisions across multiple connections, unless it knows that those
@@ -499,7 +503,7 @@ TODO: Discuss if we should add a signal that mitigates this issue. For example,
 we might add a SETTINGS parameter that indicates the next hop that the
 connection is NOT coalesced (see https://github.com/kazuho/draft-kazuho-httpbis-priority/issues/99).
 
-### Coalescing Intermediaries
+## Coalescing Intermediaries
 
 When an intermediary coalesces HTTP requests coming from multiple clients into
 one HTTP/2 or HTTP/3 connection going to the backend server, requests that
@@ -536,7 +540,7 @@ reflecting the urgencies expressed in the requests, so that less urgent
 responses would receive less bandwidth in case the bottleneck exists between the
 server and the intermediary.
 
-### HTTP/1.x Back Ends
+## HTTP/1.x Back Ends
 
 It is common for CDN infrastructure to support different HTTP versions on the
 front end and back end. For instance, the client-facing edge might support
@@ -550,7 +554,7 @@ priority information where that information can be scoped to individual end
 clients. Authentication and other session information might provide this
 linkability.
 
-### Intentional Introduction of Unfairness
+## Intentional Introduction of Unfairness
 
 It is sometimes beneficial to deprioritize the transmission of one connection
 over others, knowing that doing so introduces a certain amount of unfairness
@@ -561,9 +565,6 @@ For example, a server might use a scavenging congestion controller on
 connections that only convey background priority responses such as software
 update images. Doing so improves responsiveness of other connections at the cost
 of delaying the delivery of updates.
-
-Also, a client MAY use the priority values for making local scheduling choices
-for the requests it initiates.
 
 # Why use an End-to-End Header Field?
 
@@ -586,6 +587,10 @@ end-to-end rather than hop-by-hop.
 
 It should also be noted that the use of a header field carrying a textual value
 makes the prioritization scheme extensible; see the discussion below.
+
+# Security Considerations
+
+TBD
 
 # IANA Considerations
 
