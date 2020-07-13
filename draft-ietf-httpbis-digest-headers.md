@@ -140,7 +140,7 @@ HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
 
 ## This Proposal
 
-The concept of `selected representation` defined in Section 6 of
+The concept of `selected representation` defined in Section 7 of
 {{!SEMANTICS=I-D.ietf-httpbis-semantics}} makes [RFC3230] definitions inconsistent with
 current HTTP semantics. This document updates the `Digest` and `Want-Digest`
 field definitions to align with {{SEMANTICS}} concepts.
@@ -148,7 +148,7 @@ field definitions to align with {{SEMANTICS}} concepts.
 Basing `Digest` on the selected representation makes it straightforward to
 apply it to use-cases where the transferred data does require some sort of
 manipulation to be considered a representation, or conveys a partial
-representation of a resource eg. Range Requests (see Section 8.3 of
+representation of a resource eg. Range Requests (see Section 9.3 of
 {{SEMANTICS}}).
 
 Changes are semantically compatible with existing implementations and better
@@ -159,7 +159,7 @@ the value contained in any `Content-Encoding` or `Content-Type` header fields.
 Therefore, a given resource may have multiple different digest values.
 
 To allow both parties to exchange a Digest of a representation with no content
-codings (see Section 6.1.2 of {{SEMANTICS}}) two more algorithms
+codings (see Section 7.1.2 of {{SEMANTICS}}) two more algorithms
 are added (`ID-SHA-256` and `ID-SHA-512`).
 
 ## Goals
@@ -206,7 +206,7 @@ document are to be interpreted as described in BCP 14 ([RFC2119] and [RFC8174])
 when, and only when, they appear in all capitals, as shown here.
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
-[RFC7405] along with the "#rule" extension defined in Section 4 of
+[RFC7405] along with the "#rule" extension defined in Section 5 of
 {{SEMANTICS}}.
 
 The definitions "representation", "selected representation", "representation
@@ -214,13 +214,13 @@ data", "representation metadata", and "payload body" in this document are to be
 interpreted as described in {{SEMANTICS}}.
 
 The definition "validator fields" in this document is to be interpreted as described in
-Section 10.2 of {{SEMANTICS}}.
+Section 11.2 of {{SEMANTICS}}.
 
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
 which uses a checksum  that is calculated independently of the payload body and message body.
-It uses the representation data (see Section 6.1 of {{SEMANTICS}}),
+It uses the representation data (see Section 7.1 of {{SEMANTICS}}),
 that can be fully or partially contained in the message body, or not contained at all:
 
 ~~~
@@ -263,7 +263,7 @@ response.
 The resource is specified by the effective request URI and any `validator field`
 contained in the message.
 
-The relationship between Content-Location (see Section 6.2.5 of
+The relationship between Content-Location (see Section 7.2.5 of
 {{SEMANTICS}}) and Digest is demonstrated in
 {{post-not-request-uri}}. A comprehensive set of examples showing the impacts of
 representation metadata, payload transformations and HTTP methods on Digest is
@@ -333,7 +333,7 @@ some algorithms, one or more parameters can be supplied.
    digest-algorithm = token
 ~~~
 
-The BNF for "parameter" is defined in Section 4.4.1.4 of
+The BNF for "parameter" is defined in Section 5.4.1.4 of
 {{SEMANTICS}}. All digest-algorithm values are case-insensitive.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
@@ -704,7 +704,7 @@ Request `Digest` value is computed on the enclosed representation (see
 {{acting-on-resources}}).
 
 The representation enclosed in the response refers to the resource identified by
-`Content-Location` (see {{SEMANTICS}}, Section 6.3.2).
+`Content-Location` (see {{SEMANTICS}}, Section 7.3.2).
 
 `Digest` is thus computed on the enclosed representation.
 
