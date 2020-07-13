@@ -616,11 +616,11 @@ to store priority information about streams in an "idle" state. This state can
 be limited by adopting the guidance about concurrency limits described above.
 Extensible priorities is subject to a similar consideration because
 PRIORITY_UPDATE frames may arrive before the request that they reference. A
-server could retain the information in order to apply the most up-to-date signal
-to the request. However, HTTP/3 implementations might have practical barriers to
-determining reasonable stream concurrency limits depending on the information
-that is available to them from the QUIC transport layer. TODO: so what can we
-suggest?
+server is required to store the information in order to apply the most
+up-to-date signal to the request. However, HTTP/3 implementations might have
+practical barriers to determining reasonable stream concurrency limits depending
+on the information that is available to them from the QUIC transport layer.
+TODO: so what can we suggest?
 
 # IANA Considerations
 
