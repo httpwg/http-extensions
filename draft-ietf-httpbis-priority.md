@@ -709,6 +709,12 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 
 # Change Log
 
+## Since draft-ietf-httpbis-priority-00
+
+* Move text around (#1217, #1218)
+* Editorial change to the default urgency. The value is 3, which was always the
+  intent of previous changes. 
+
 ## Since draft-kazuho-httpbis-priority-04
 
 * Minimize semantics of Urgency levels (#1023, #1026)
