@@ -32,7 +32,7 @@ informative:
 
 --- abstract
 
-To aid debugging, HTTP caches often append headers to a response detailing how they handled the request. This specification codifies that practice and updates it for HTTP's current caching model.
+To aid debugging, HTTP caches often append header fields to a response explaining how they handled the request. This specification codifies that practice and updates it to align with HTTP's current caching model.
 
 
 --- note_Note_to_Readers
