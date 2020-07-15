@@ -71,42 +71,42 @@ The Cache-Status HTTP response header indicates caches' handling of the request 
 Its value is a List {{!I-D.ietf-httpbis-header-structure}}:
 
 ~~~ abnf
-Cache-Status   = sh-list
+Cache-Status   = sf-list
 ~~~
 
 Each member of the list represents a cache that has handled the request. The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the client (possibly including the user agent's cache itself, if it chooses to append a value).
 
 Caches determine when it is appropriate to add the Cache-Status header field to a response. Some might decide to add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
-When adding a value to the Cache-Status header field, caches SHOULD preserve the existing contents of the header, to allow debugging of the entire chain of caches handling the request.
+When adding a value to the Cache-Status header field, caches SHOULD preserve the existing contents of the header field, to allow debugging of the entire chain of caches handling the request.
 
-Each list member identifies the cache that inserted that value, and MUST have a type of either sh-string or sh-token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), and IP address, or a generated string.
+Each list member identifies the cache that inserted that value, and MUST be a String or Token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), and IP address, or a generated string.
 
 Each member of the list can also have parameters that describe that cache's handling of the request. While all of these parameters are OPTIONAL, caches are encouraged to provide as much information as possible.
 
 This specification defines these parameters:
 
 ~~~ abnf
-hit          = sh-boolean
-fwd          = sh-token
-fwd-status   = sh-integer
-ttl          = sh-integer
-stored       = sh-boolean
-collapsed    = sh-boolean
-key          = sh-string
+hit          = sf-boolean
+fwd          = sf-token
+fwd-status   = sf-integer
+ttl          = sf-integer
+stored       = sf-boolean
+collapsed    = sf-boolean
+key          = sf-string
 ~~~
 
 ## The hit parameter
 
-"hit", when true, indicates that the request was satisfied by the cache; i.e., it did not go forward, and the response was obtained from the cache (possibly with modifications; e.g., if the request was conditional, a 304 Not Modified could be generated from cache).
+"hit", when true, indicates that the request was satisfied by the cache; i.e., it did not go forward and the response was obtained from the cache. A response that originally was produced by the origin but was modified by the cache (for example, a 304 or 206 status code) is still considered a hit.
 
 "hit" and "fwd" are exclusive; only one of them should appear on each list member.
 
 ## The fwd parameter
 
-"fwd" indicates why the request went forward.
+"fwd" indicates that the request went forward towards the origin, and why.
 
-It can have one of the following values:
+The following values are defined to explain why the request went forward:
 
 * uri-miss - The cache did not contain any responses that matched the request URI
 * vary-miss - The cache contained a response that matched the request URI, but could not select a response based upon this request's headers and stored Vary headers.
@@ -127,7 +127,7 @@ This parameter is useful to distinguish cases when the next hop server sends a 3
 
 ## The stored parameter
 
-"stored" indicates whether the cache stored the forward response; a true value indicates that it did. Only meaningful when fwd is present.
+"stored" indicates whether the cache stored the response; a true value indicates that it did. Only meaningful when fwd is present.
 
 ## The collapsed parameter
 
@@ -193,11 +193,11 @@ Cache-Status: OriginCache; hit; ttl=1100; collapsed,
 
 Information about a cache's content can be used to infer the activity of those using it. Generally, access to sensitive information in a cache is limited to those who are authorised to access that information (using a variety of techniques), so this does not represent an attack vector in the general sense.
 
-However, if the Cache-Status header is exposed to parties who are not authorised to obtain the response it occurs within, it could expose information about that data.
+However, if the Cache-Status header field is exposed to parties who are not authorised to obtain the response it occurs within, it could expose information about that data.
 
-For example, if an attacker were able to obtain the Cache-Status header from a response containing sensitive information and access were limited to one person (or limited set of people), they could determine whether that information had been accessed before. This is similar to the information exposed by various timing attacks, but is arguably more reliable, since the cache is directly reporting its state.
+For example, if an attacker were able to obtain the Cache-Status header field from a response containing sensitive information and access were limited to one person (or limited set of people), they could determine whether that information had been accessed before. This is similar to the information exposed by various timing attacks, but is arguably more reliable, since the cache is directly reporting its state.
 
-Mitigations include use of encryption (e.g., TLS {{?RFC8446}})) to protect the response, and careful controls over access to response headers (as are present in the Web platform). When in doubt, the Cache-Status header field can be omitted.
+Mitigations include use of encryption (e.g., TLS {{?RFC8446}})) to protect the response, and careful controls over access to response header fields (as are present in the Web platform). When in doubt, the Cache-Status header field can be omitted.
 
 
 --- back
