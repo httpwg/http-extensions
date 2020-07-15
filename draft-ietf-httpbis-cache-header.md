@@ -50,9 +50,7 @@ code and issues list for this draft can be found at
 
 # Introduction
 
-To aid debugging, HTTP caches often append headers to a response detailing how they handled the request.
-
-Unfortunately, the semantics of these headers are often unclear, and both the semantics and syntax used vary greatly between implementations.
+To aid debugging, HTTP caches often append header fields to a response explaining how they handled the request. Unfortunately, the semantics of these headers are often unclear, and both the semantics and syntax used vary greatly between implementations.
 
 This specification defines a single, new HTTP response header field, "Cache-Status" for this purpose.
 
