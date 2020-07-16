@@ -133,7 +133,9 @@ Proxy-Status: cdn.example.org; origin=backend.example.org
 
 ### fwd-protocol
 
-The `fwd-protocol` parameter's value is a sf-token indicating the ALPN protocol identifier {{!RFC7301}} used by the intermediary to connect to the next hop. This is only applicable when that connection was actually established.
+The `fwd-protocol` parameter's value indicates the ALPN protocol identifier {{!RFC7301}} used by the intermediary to connect to the next hop. This is only applicable when that connection was actually established.
+
+The value MUST be either a sf-token or sf-binary. If the protocol identifier is able to be expressed as a sf-token using UTF-8 encoding, that form MUST be used.
 
 For example:
 
