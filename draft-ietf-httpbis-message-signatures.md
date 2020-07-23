@@ -324,7 +324,12 @@ The following sections describe each of these steps in detail.
 
 4. The signer sets the signature's Expiration Time property to the time at which the signature is to expire, or to undefined if the signature will not expire.
 
-5. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.  Each identifier MUST be one of those defined in Section 2.  This list MUST NOT be empty, as this would result in creating a signature over the empty string.  If the signature's Algorithm name does not start with rsa, hmac, or ecdsa, signers SHOULD include (created) and (request-target) in the list.  If the signature's Algorithm starts with rsa, hmac, or ecdsa, signers SHOULD include date and (request-target) in the list.  Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
+5. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
+   * Each identifier MUST be one of those defined in Section 2.
+   * This list MUST NOT be empty, as this would result in creating a signature over the empty string.
+   * If the signature's Algorithm name does not start with rsa, hmac, or ecdsa, signers SHOULD include (created) and (request-target) in the list.
+   * If the signature's Algorithm starts with rsa, hmac, or ecdsa, signers SHOULD include date and (request-target) in the list.
+   * Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
 
 
 For example, given the following HTTP message:
