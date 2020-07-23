@@ -332,7 +332,7 @@ For example, given the following HTTP message:
 ~~~
 GET /foo HTTP/1.1
 Host: example.org
-Date: Tue, 07 Jun 2014 20:51:35 GMT
+Date: Sat, 07 Jun 2014 20:51:35 GMT
 X-Example: Example header
         with some whitespace.
 X-EmptyHeader:
@@ -346,8 +346,8 @@ The following table presents a non-normative example of metadata values that a s
 |--- |--- |
 |Algorithm|`rsa-256`|
 |Covered Content|`(request-target)`, `(created)`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`|
-|Creation Time|Equal to the value specified in the `Date` header field.|
-|Expiration Time|Equal to the Creation Time plus five minutes.|
+|Creation Time|`1402174295`|
+|Expiration Time|`1402174595`|
 |Verification Key Material|The public key provided in  and identified by the `keyId` value "test-key-b".|
 {: title="Non-normative example metadata values" #example-metadata}
 
