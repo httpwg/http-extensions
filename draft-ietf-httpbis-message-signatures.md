@@ -166,7 +166,7 @@ The following sections define content identifiers, their associated content, and
 
 ## HTTP Header Fields
 
-An HTTP header field value is identified by its header field name.  While HTTP header field names are case-insensitive, implementations SHOULD use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers.
+An HTTP header field is identified by its header field name.  While HTTP header field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers.
 
 An HTTP header field value is canonicalized as follows:
 
@@ -1060,6 +1060,7 @@ Jeffrey Yasskin
 
 - draft-ietf-httpbis-message-signatures
   - -01
+     * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
      * Relaxed guidance on processing Creation Time and Expiration Time to only require verifiers to examine them and test against the verifier's requirements.
      * Minor editorial corrections and readability improvements.
 
