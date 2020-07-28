@@ -2156,6 +2156,9 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
    an informative reference:
    <https://github.com/httpwg/http-extensions/issues/1159>.
 
+*  Moved instruction to ignore cookies with empty cookie-name and cookie-value
+   from section 5.3 to 5.4.
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is a minor update of
