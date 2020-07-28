@@ -2160,7 +2160,8 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 *  Moved instruction to ignore cookies with empty cookie-name and cookie-value
    from {{set-cookie}} to {{storage-model}} to ensure that they apply to cookies
-   created without parsing a cookie string.
+   created without parsing a cookie string:
+   <https://github.com/httpwg/http-extensions/issues/1234>.
 
 # Acknowledgements
 {:numbered="false"}
