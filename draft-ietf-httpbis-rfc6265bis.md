@@ -1108,10 +1108,7 @@ parse a set-cookie-string:
 3.  Remove any leading or trailing WSP characters from the name string and the
     value string.
 
-4.  If both the name string and the value string are empty, ignore the
-    set-cookie-string entirely.
-
-5.  The cookie-name is the name string, and the cookie-value is the value string.
+4.  The cookie-name is the name string, and the cookie-value is the value string.
 
 The user agent MUST use an algorithm equivalent to the following algorithm to
 parse the unparsed-attributes:
@@ -1314,10 +1311,13 @@ user agent MUST process the cookie as follows:
     responses or the user agent might not wish to store cookies that exceed some
     size.
 
-2.  Create a new cookie with name cookie-name, value cookie-value. Set the
+2. If cookie-name is empty and cookie-value is empty, abort these steps and
+   ignore the cookie entirely.
+
+3.  Create a new cookie with name cookie-name, value cookie-value. Set the
     creation-time and the last-access-time to the current date and time.
 
-3.  If the cookie-attribute-list contains an attribute with an attribute-name
+4.  If the cookie-attribute-list contains an attribute with an attribute-name
     of "Max-Age":
 
     1.  Set the cookie's persistent-flag to true.
@@ -1342,7 +1342,7 @@ user agent MUST process the cookie as follows:
 
     2.  Set the cookie's expiry-time to the latest representable date.
 
-4.  If the cookie-attribute-list contains an attribute with an
+5.  If the cookie-attribute-list contains an attribute with an
     attribute-name of "Domain":
 
     1.  Let the domain-attribute be the attribute-value of the last
@@ -1353,7 +1353,7 @@ user agent MUST process the cookie as follows:
 
     1.  Let the domain-attribute be the empty string.
 
-5.  If the user agent is configured to reject "public suffixes" and the
+6.  If the user agent is configured to reject "public suffixes" and the
     domain-attribute is a public suffix:
 
     1.  If the domain-attribute is identical to the canonicalized
@@ -1368,7 +1368,7 @@ user agent MUST process the cookie as follows:
     NOTE: This step prevents `attacker.example` from disrupting the integrity of
     `site.example` by setting a cookie with a Domain attribute of "example".
 
-6.  If the domain-attribute is non-empty:
+7.  If the domain-attribute is non-empty:
 
     1.  If the canonicalized request-host does not domain-match the
         domain-attribute:
@@ -1387,28 +1387,28 @@ user agent MUST process the cookie as follows:
 
     2.  Set the cookie's domain to the canonicalized request-host.
 
-7.  If the cookie-attribute-list contains an attribute with an
+8.  If the cookie-attribute-list contains an attribute with an
     attribute-name of "Path", set the cookie's path to attribute-value of
     the last attribute in the cookie-attribute-list with an attribute-name
     of "Path". Otherwise, set the cookie's path to the default-path of the
     request-uri.
 
-8.  If the cookie-attribute-list contains an attribute with an
+9.  If the cookie-attribute-list contains an attribute with an
     attribute-name of "Secure", set the cookie's secure-only-flag to true.
     Otherwise, set the cookie's secure-only-flag to false.
 
-9.  If the scheme component of the request-uri does not denote a "secure"
+10.  If the scheme component of the request-uri does not denote a "secure"
     protocol (as defined by the user agent), and the cookie's secure-only-flag
     is true, then abort these steps and ignore the cookie entirely.
 
-10. If the cookie-attribute-list contains an attribute with an
+11. If the cookie-attribute-list contains an attribute with an
     attribute-name of "HttpOnly", set the cookie's http-only-flag to true.
     Otherwise, set the cookie's http-only-flag to false.
 
-11. If the cookie was received from a "non-HTTP" API and the cookie's
+12. If the cookie was received from a "non-HTTP" API and the cookie's
     http-only-flag is true, abort these steps and ignore the cookie entirely.
 
-12. If the cookie's secure-only-flag is false, and the scheme component of
+13. If the cookie's secure-only-flag is false, and the scheme component of
     request-uri does not denote a "secure" protocol, then abort these steps and
     ignore the cookie entirely if the cookie store contains one or more cookies
     that meet all of the following criteria:
@@ -1430,13 +1430,13 @@ user agent MUST process the cookie as follows:
     non-secure cookie named 'a' could be set for a path of '/' or '/foo', but
     not for a path of '/login' or '/login/en'.
 
-13. If the cookie-attribute-list contains an attribute with an
+14. If the cookie-attribute-list contains an attribute with an
     attribute-name of "SameSite", set the cookie's same-site-flag to the
     attribute-value of the last attribute in the cookie-attribute-list with an
     attribute-name of "SameSite" (i.e. either "Strict", "Lax", or "None").
     Otherwise, set the cookie's same-site-flag to "None".
 
-14. If the cookie's `same-site-flag` is not "None":
+15. If the cookie's `same-site-flag` is not "None":
 
     1.  If the cookie was received from a "non-HTTP" API, and the API was called
         from a context whose "site for cookies" is not an exact match for
@@ -1459,11 +1459,11 @@ user agent MUST process the cookie as follows:
 
     4.  Abort these steps and ignore the newly created cookie entirely.
 
-15. If the cookie-name begins with a case-sensitive match for the string
+16. If the cookie-name begins with a case-sensitive match for the string
     "__Secure-", abort these steps and ignore the cookie entirely unless the
     cookie's secure-only-flag is true.
 
-16. If the cookie-name begins with a case-sensitive match for the string
+17. If the cookie-name begins with a case-sensitive match for the string
     "__Host-", abort these steps and ignore the cookie entirely unless the
     cookie meets all the following criteria:
 
@@ -1474,7 +1474,7 @@ user agent MUST process the cookie as follows:
     3.  The cookie-attribute-list contains an attribute with an attribute-name
         of "Path", and the cookie's path is `/`.
 
-17. If the cookie store contains a cookie with the same name, domain,
+18. If the cookie store contains a cookie with the same name, domain,
     host-only-flag, and path as the newly-created cookie:
 
     1.  Let old-cookie be the existing cookie with the same name, domain,
@@ -1491,7 +1491,7 @@ user agent MUST process the cookie as follows:
 
     4.  Remove the old-cookie from the cookie store.
 
-18. Insert the newly-created cookie into the cookie store.
+19. Insert the newly-created cookie into the cookie store.
 
 A cookie is "expired" if the cookie has an expiry date in the past.
 
@@ -2155,6 +2155,13 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 *  Converted a normative reference to Mozilla's Public Suffix List {{PSL}} into
    an informative reference:
    <https://github.com/httpwg/http-extensions/issues/1159>.
+
+## draft-ietf-httpbis-rfc6265bis-07
+
+*  Moved instruction to ignore cookies with empty cookie-name and cookie-value
+   from {{set-cookie}} to {{storage-model}} to ensure that they apply to cookies
+   created without parsing a cookie string:
+   <https://github.com/httpwg/http-extensions/issues/1234>.
 
 # Acknowledgements
 {:numbered="false"}
