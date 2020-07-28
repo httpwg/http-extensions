@@ -2159,7 +2159,8 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 ## draft-ietf-httpbis-rfc6265bis-07
 
 *  Moved instruction to ignore cookies with empty cookie-name and cookie-value
-   from section 5.3 to 5.4.
+   from {{set-cookie}} to {{storage-model}} to ensure that they apply to cookies
+   created without parsing a cookie string.
 
 # Acknowledgements
 {:numbered="false"}
