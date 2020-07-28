@@ -2156,6 +2156,8 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
    an informative reference:
    <https://github.com/httpwg/http-extensions/issues/1159>.
 
+## draft-ietf-httpbis-rfc6265bis-07
+
 *  Moved instruction to ignore cookies with empty cookie-name and cookie-value
    from section 5.3 to 5.4.
 
