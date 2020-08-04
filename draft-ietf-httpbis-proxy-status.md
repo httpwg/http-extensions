@@ -361,7 +361,6 @@ This section lists the Proxy Error Types defined by this document. See {{registe
 
 Details of the error should be conveyed in the details parameter.
 
-
 ### TLS Error Received
 
 * Name: tls_error_received
