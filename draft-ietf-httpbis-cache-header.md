@@ -64,7 +64,7 @@ shown here.
 
 This document uses ABNF as defined in {{!RFC5234}}, along with the "%s" extension for case sensitivity defined in {{!RFC7405}}.
 
-# The Cache-Status HTTP Response Header Field
+# The Cache-Status HTTP Response Header Field {#field}
 
 The Cache-Status HTTP response header indicates caches' handling of the request corresponding to the response it occurs within.
 
@@ -150,7 +150,7 @@ Cache-Status: ExampleCache; hit; details=MEMORY
 
 The semantics of a detail parameter are always specific to the cache that sent it; even if a member of details from another cache shares the same name, it might not mean the same thing.
 
-This parameter is intentionally limited. If an implementation needs to convey additional information, they are encouraged to register extension parameters or define another header field.
+This parameter is intentionally limited. If an implementation needs to convey additional information, they are encouraged to register extension parameters (see {{register}}) or define another header field.
 
 
 # Examples
@@ -203,6 +203,32 @@ Going through two layers of caching, both of which were hits, and the second col
 Cache-Status: OriginCache; hit; ttl=1100; collapsed,
               "CDN Company Here"; hit; ttl=545
 ~~~
+
+
+# Defining New Proxy-Status Parameters {#register}
+
+New Cache-Status Parameters can be defined by registering them in the HTTP Cache-Status Parameters registry.
+
+Registration requests are reviewed and approved by a Designated Expert, as per {{!RFC8126}}, Section 4.5. A specification document is appreciated, but not required.
+
+The Expert(s) should consider the following factors when evaluating requests:
+
+* Community feedback
+* If the value is sufficiently well-defined
+* Generic parameters are preferred over vendor-specific, application-specific or deployment-specific values. If a generic value cannot be agreed upon in the community, the parameter's name should be correspondingly specific (e.g., with a prefix that identifies the vendor, application or deployment).
+
+Registration requests should use the following template:
+
+* Name: \[a name for the Cache-Status Parameter that matches key\]
+* Description: \[a description of the parameter semantics and value\]
+* Reference: \[to a specification defining this parameter\]
+
+See the registry at <https://iana.org/assignments/http-cache-status> for details on where to send registration requests.
+
+
+# IANA Considerations
+
+Upon publication, please create the HTTP Cache-Status Parameters registry at <https://iana.org/assignments/http-cache-statuses> and populate it with the types defined in {{field}}; see {{register}} for its associated procedures.
 
 
 # Security Considerations
