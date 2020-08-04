@@ -191,12 +191,12 @@ The Expert(s) should consider the following factors when evaluating requests:
 
 * Community feedback
 * If the value is sufficiently well-defined
-* If the value is generic; vendor-specific, application-specific and deployment-specific values are discouraged
+* Generic parameters are preferred over vendor-specific, application-specific or deployment-specific values. If a generic value cannot be agreed upon in the community, the parameter's name should be correspondingly specific (e.g., with a prefix that identifies the vendor, application or deployment).
 
 Registration requests should use the following template:
 
 * Name: \[a name for the Proxy-Status Parameter that matches key\]
-* Description: \[a description of the
+* Description: \[a description of the parameter semantics and value\]
 * Reference: \[to a specification defining this parameter\]
 
 See the registry at <https://iana.org/assignments/http-proxy-status> for details on where to send registration requests.
@@ -473,7 +473,8 @@ The Expert(s) should consider the following factors when evaluating requests:
 
 * Community feedback
 * If the value is sufficiently well-defined
-* If the value is generic; vendor-specific, application-specific and deployment-specific values are discouraged
+* Generic types are preferred over vendor-specific, application-specific or deployment-specific values. If a generic value cannot be agreed upon in the community, the types's name should be correspondingly specific (e.g., with a prefix that identifies the vendor, application or deployment).
+
 
 Registration requests should use the following template:
 
