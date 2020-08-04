@@ -94,6 +94,7 @@ ttl          = sf-integer
 stored       = sf-boolean
 collapsed    = sf-boolean
 key          = sf-string
+detail       = sf-token / sf-string
 ~~~
 
 ## The hit parameter
@@ -136,6 +137,21 @@ This parameter is useful to distinguish cases when the next hop server sends a 3
 ## The key parameter
 
 "key" conveys a representation of the cache key used for the response. Note that this may be implementation-specific.
+
+## The detail parameter
+
+"detail" allows implementations to convey additional information not captured in other parameters; for example, implementation-specific states, or other caching-related metrics.
+
+For example:
+
+~~~ example
+Cache-Status: ExampleCache; hit; details=MEMORY
+~~~
+
+The semantics of a detail parameter are always specific to the cache that sent it; even if a member of details from another cache shares the same name, it might not mean the same thing.
+
+This parameter is intentionally limited. If an implementation needs to convey additional information, they are encouraged to register extension parameters or define another header field.
+
 
 # Examples
 
