@@ -4,7 +4,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.org/) 
 
 **Be aware that all contributions to our work fall under the "NOTE WELL" terms therein.**
 
-[![Build Status](https://circleci.com/gh/httpwg/http-extensions/tree/master.svg?style=svg)](https://circleci.com/gh/httpwg/http-extensions/tree/master)
+![Editors' copies](https://github.com/httpwg/http-extensions/workflows/Update%20Editor's%20Copy/badge.svg)
 
 See also the [official document listing](https://datatracker.ietf.org/wg/httpbis/documents/), which is authoritative.
 
