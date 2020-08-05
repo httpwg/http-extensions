@@ -145,7 +145,7 @@ This parameter is useful to distinguish cases when the next hop server sends a 3
 For example:
 
 ~~~ example
-Cache-Status: ExampleCache; hit; details=MEMORY
+Cache-Status: ExampleCache; hit; detail=MEMORY
 ~~~
 
 The semantics of a detail parameter are always specific to the cache that sent it; even if a member of details from another cache shares the same name, it might not mean the same thing.
