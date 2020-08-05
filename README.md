@@ -6,7 +6,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.org/) 
 
 ![Editors' copies](https://github.com/httpwg/http-extensions/workflows/Update%20Editor's%20Copy/badge.svg)
 
-See also the [official document listing](https://datatracker.ietf.org/wg/httpbis/documents/), which is authoritative.
+See also the [official document listing](https://datatracker.ietf.org/wg/httpbis/documents/) and the [detailed repo list](https://httpwg.org/http-extensions/) (which contains drafts and diffs for each branch).
 
 ### Signing HTTP Messages
 
