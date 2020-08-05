@@ -10,7 +10,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Signing HTTP Messages
 
-<!-- * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-message-signatures.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-message-signatures.txt)) -->
+* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-message-signatures.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-message-signatures.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-message-signatures) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Asignatures) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-message-signatures/)
 
