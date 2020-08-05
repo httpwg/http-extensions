@@ -229,7 +229,7 @@ See the registry at <https://iana.org/assignments/http-cache-status> for details
 
 # IANA Considerations
 
-Upon publication, please create the HTTP Cache-Status Parameters registry at <https://iana.org/assignments/http-cache-statuses> and populate it with the types defined in {{field}}; see {{register}} for its associated procedures.
+Upon publication, please create the HTTP Cache-Status Parameters registry at <https://iana.org/assignments/http-cache-status> and populate it with the types defined in {{field}}; see {{register}} for its associated procedures.
 
 
 # Security Considerations
