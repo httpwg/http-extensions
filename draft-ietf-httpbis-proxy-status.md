@@ -352,14 +352,19 @@ This section lists the Proxy Error Types defined by this document. See {{registe
 * Extra Parameters: None.
 * Recommended HTTP status code: 504
 
-### TLS Error
+### TLS Protocol Error
 
-* Name: tls_error
-* Description: The intermediary encountered a TLS error when communicating with the next hop.
+* Name: tls_protocol_error
+* Description: The intermediary encountered a TLS error when communicating with the next hop, either during handshake or afterwards.
 * Extra Parameters: None.
 * Recommended HTTP status code: 502
 
-Details of the error should be conveyed in the details parameter.
+### TLS Certificate Error
+
+* Name: tls_certificate_error
+* Description: The intermediary encountered an error when verifying the certificate presented by the next hop.
+* Extra Parameters: None.
+* Recommended HTTP status code: 502
 
 ### TLS Error Received
 
