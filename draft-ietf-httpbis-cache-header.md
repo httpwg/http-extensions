@@ -29,6 +29,14 @@ normative:
   RFC2119:
 
 informative:
+  ENTANGLE:
+    target: https://i.blackhat.com/USA-20/Wednesday/us-20-Kettle-Web-Cache-Entanglement-Novel-Pathways-To-Poisoning-wp.pdf
+    title: Web Cache Entanglement: Novel Pathways to Poisoning
+    author:
+    -
+      ins: J. Kettle
+      name: James Kettle
+      organization: PortSwigger
 
 
 --- abstract
@@ -234,13 +242,14 @@ Upon publication, please create the HTTP Cache-Status Parameters registry at <ht
 
 # Security Considerations
 
-Information about a cache's content can be used to infer the activity of those using it. Generally, access to sensitive information in a cache is limited to those who are authorised to access that information (using a variety of techniques), so this does not represent an attack vector in the general sense.
+Attackers can use the information in Cache-Status to probe the behaviour of the cache (and other components), and infer the activity of those using the cache. The Cache-Status header field may not create these risks on its own, but can assist attackers in exploiting them.
 
-However, if the Cache-Status header field is exposed to parties who are not authorised to obtain the response it occurs within, it could expose information about that data.
+For example, knowing if a cache has stored a response can help an attacker execute a timing
+attack on sensitive data. Exposing the cache key can help an attacker understand modifications to the cache key, which may assist cache poisoning attacks. See {{ENTANGLE}} for details.
 
-For example, if an attacker were able to obtain the Cache-Status header field from a response containing sensitive information and access were limited to one person (or limited set of people), they could determine whether that information had been accessed before. This is similar to the information exposed by various timing attacks, but is arguably more reliable, since the cache is directly reporting its state.
+The underlying risks can be mitigated with a variety of techniques (e.g., use of encryption and authentication; avoiding the inclusion of attacker-controlled data in the cache key), depending on their exact nature.
 
-Mitigations include use of encryption (e.g., TLS {{?RFC8446}})) to protect the response, and careful controls over access to response header fields (as are present in the Web platform). When in doubt, the Cache-Status header field can be omitted.
+To avoid assisting such attacks, the Cache-Status header field can be omitted, only sent when the client is authorized to receive it, or only send sensitive information (e.g., the key parameter) when the client is authorized.
 
 
 --- back
