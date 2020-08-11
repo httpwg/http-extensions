@@ -353,56 +353,24 @@ This section lists the Proxy Error Types defined by this document. See {{registe
 * Extra Parameters: None.
 * Recommended HTTP status code: 504
 
-### TLS Handshake Error
+### TLS Protocol Error
 
-* Name: tls_handshake_error
-* Description: The intermediary encountered an error during TLS handshake with the next hop.
-* Extra Parameters:
-  - alert_message: a sf-token containing the applicable description string from the TLS Alerts registry.
-* Recommended HTTP status code: 502
-
-### TLS Untrusted Peer Certificate
-
-* Name: tls_untrusted_peer_certificate
-* Description: The intermediary received an untrusted peer certificate during TLS handshake with the next hop.
+* Name: tls_protocol_error
+* Description: The intermediary encountered a TLS error when communicating with the next hop, either during handshake or afterwards.
 * Extra Parameters: None.
 * Recommended HTTP status code: 502
 
-### TLS Expired Peer Certificate
+### TLS Certificate Error
 
-* Name: tls_expired_peer_certificate
-* Description: The intermediary received an expired peer certificate during TLS handshake with the next hop.
+* Name: tls_certificate_error
+* Description: The intermediary encountered an error when verifying the certificate presented by the next hop.
 * Extra Parameters: None.
 * Recommended HTTP status code: 502
 
-### TLS Unexpected Peer Certificate
+### TLS Alert Received
 
-* Name: tls_unexpected_peer_certificate
-* Description: The intermediary received an unexpected peer certificate (e.g., SPKI doesn't match) during the TLS handshake with the next hop.
-* Extra Parameters:
-  - identity: a sf-string containing a comma-separated list of Subject Alternative Names from the certificate received from the next hop.
-  - sha256: a sf-string containing the hex-encoded SHA-256 of the certificate received from the next hop.
-  - spki: a sf-string containing the base64-encoded SHA-256 of the Subject Public Key Info (SPKI) from the certificate received from the next hop.
-* Recommended HTTP status code: 502
-
-### TLS Missing Proxy Certificate
-
-* Name: tls_missing_proxy_certificate
-* Description: The next hop requested a client certificate from the intermediary during TLS handshake, but it wasn't configured with one.
-* Extra Parameters: None.
-* Recommended HTTP status code: 500
-
-### TLS Rejected Proxy Certificate
-
-* Name: tls_rejected_proxy_certificate
-* Description: The next hop rejected the client certificate provided by the intermediary during TLS handshake.
-* Extra Parameters: None.
-* Recommended HTTP status code: 500
-
-### TLS Error
-
-* Name: tls_error
-* Description: The intermediary encountered a TLS error when communicating with the next hop.
+* Name: tls_alert_received
+* Description: The intermediary received a TLS alert from the next hop.
 * Extra Parameters:
   - alert_message: a sf-token containing the applicable description string from the TLS Alerts registry.
 * Recommended HTTP status code: 502
