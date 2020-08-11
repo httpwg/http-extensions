@@ -66,7 +66,7 @@ HTTP accommodates these types of errors with a few status codes; for example, 50
 
 Additionally, intermediaries sometimes want to convey additional information about their handling of a response, even if they did not generate it.
 
-To enable these uses, {{header}} defines a new HTTP response field to allow intermediaries to convey details of their handling of a response, {{params}} enumerates the kind of information taht can be conveyed, and {{error-types}} defines a set of error types for use when a proxy generates the response.
+To enable these uses, {{header}} defines a new HTTP response field to allow intermediaries to convey details of their handling of a response, {{params}} enumerates the kind of information that can be conveyed, and {{error-types}} defines a set of error types for use when a proxy generates the response.
 
 
 ## Notational Conventions
@@ -88,7 +88,7 @@ The Proxy-Status HTTP response field allows an intermediary to convey additional
 It is a List {{!I-D.ietf-httpbis-header-structure}}:
 
 ~~~ abnf
-Cache-Status   = sf-list
+Proxy-Status   = sf-list
 ~~~
 
 Each member of the list represents an intermediary that has handled the response. The first member of the list represents the intermediary closest to the origin server, and the last member of the list represents the intermediary closest to the user agent.
@@ -99,7 +99,7 @@ For example:
 Proxy-Status: FooProxy, ExampleCDN
 ~~~
 
-indicates that this response was handled first by FooAccelerator and then ExampleCDN.
+indicates that this response was handled first by FooProxy and then ExampleCDN.
 
 Intermediaries determine when it is appropriate to add the Proxy-Status field to a response. Some might decide to add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
