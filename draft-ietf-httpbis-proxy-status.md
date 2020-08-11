@@ -366,9 +366,9 @@ This section lists the Proxy Error Types defined by this document. See {{registe
 * Extra Parameters: None.
 * Recommended HTTP status code: 502
 
-### TLS Error Received
+### TLS Alert Received
 
-* Name: tls_error_received
+* Name: tls_alert_received
 * Description: The intermediary received a TLS alert from the next hop.
 * Extra Parameters:
   - alert_message: a sf-token containing the applicable description string from the TLS Alerts registry.
