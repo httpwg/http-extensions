@@ -215,7 +215,7 @@ Implementers ought to consider both user- and server- controlled mechanisms and 
   - Implementers considering providing user choice mechanisms that allow users to balance privacy concerns against bandwidth limitations need to also consider that explaining to users the privacy implications involved, such as the risks of passive fingerprinting, may be  challenging or even impractical.
   - Implementations specific to certain use cases or threat models MAY avoid transmitting some or all of Client Hints header fields. For example, avoid transmission of header fields that can carry higher risks of linkability.
 
-User agents MUST clear persisted opt-in preferences when any one of site data, browsing history, browsing cache, cookies, or similar, are cleared.
+User agents MUST clear persisted opt-in preferences when other data stored, accessed, or other-wise keyed by origin (e.g browsing cache, cookies, browsing history in some instances, etc.) are cleared, or in other instances where it is clear that the user is taking action to ensure that the origin is not aware of previous interactions.
 
 ## Deployment and Security Risks
 Deployment of new request headers requires several considerations:
