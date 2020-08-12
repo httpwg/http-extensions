@@ -120,28 +120,26 @@ Origin servers MUST NOT generate the Proxy-Status field.
 
 This section lists parameters that can be used on the members of Proxy-Status.
 
-### origin
+### next-hop
 
-The `origin` parameter's value is a sf-string or sf-token that identifies the origin server selected (and used, if contacted) for this response. Its contents might be a hostname, IP address, or alias.
-
-This is most useful for gateways (also known as "reverse proxies"), since they are often configured to use an origin server other than that which appears in the URL, and sometimes they use several origins to serve a given site.
+The `next-hop` parameter's value is a sf-string or sf-token that identifies the intermediary or origin server selected (and used, if contacted) for this response. Its contents might be a hostname, IP address, or alias.
 
 For example:
 
 ~~~ example
-Proxy-Status: cdn.example.org; origin=backend.example.org
+Proxy-Status: cdn.example.org; next-hop=backend.example.org
 ~~~
 
-### fwd-protocol
+### next-protocol
 
-The `fwd-protocol` parameter's value indicates the ALPN protocol identifier {{!RFC7301}} used by the intermediary to connect to the next hop. This is only applicable when that connection was actually established.
+The `next-protocol` parameter's value indicates the ALPN protocol identifier {{!RFC7301}} used by the intermediary to connect to the next hop. This is only applicable when that connection was actually established.
 
 The value MUST be either a sf-token or sf-binary. If the protocol identifier is able to be expressed as a sf-token using UTF-8 encoding, that form MUST be used.
 
 For example:
 
 ~~~ example
-Proxy-Status: "proxy.example.org"; fwd-protocol=h2
+Proxy-Status: "proxy.example.org"; next-protocol=h2
 ~~~
 
 ### error
