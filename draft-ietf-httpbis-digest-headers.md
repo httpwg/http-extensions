@@ -1352,6 +1352,17 @@ Location: /authors/123
    example an incremental digest-algorithm. A document defining such a
    digest-algorithm is best positioned to describe how it is used.
 
+9. Why don't we say that in requests, Digest is always computed on the payload body?
+
+   This [discussion is not trivial](https://github.com/httpwg/http-extensions/pull/923)
+   because while in both POST and PATCH the representation-digest is computed on the payload body,
+   this is because of the semantics of those methods. For example, an hypothetical method where
+   the request body contains a partial representation would behave differently, and Digest should
+   be computed on the complete representation data. An example of such an hypothetical use case
+   would be a resumable upload mechanism implemented with PUT + Content-Range like
+   [this one](https://cloud.google.com/storage/docs/performing-resumable-uploads#resume-upload).
+
+
 # Acknowledgements
 {:numbered="false"}
 The vast majority of this document is inherited from [RFC3230], so thanks
