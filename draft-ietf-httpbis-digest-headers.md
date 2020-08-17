@@ -219,9 +219,10 @@ Section 11.2 of {{SEMANTICS}}.
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
-which uses a checksum  that is calculated independently of the payload body and message body.
+which uses a checksum  that is calculated independently of the payload body
+(see Section 7.3.3 of {{SEMANTICS}}).
 It uses the representation data (see Section 7.1 of {{SEMANTICS}}),
-that can be fully or partially contained in the message body, or not contained at all:
+that can be fully or partially contained in the payload body, or not contained at all:
 
 ~~~
    representation-data := Content-Encoding( Content-Type( bits ) )
@@ -229,7 +230,9 @@ that can be fully or partially contained in the message body, or not contained a
 
 This takes into account the effect of the HTTP semantics on the messages;
 for example the payload body can be affected by Range Requests or methods such as HEAD,
-while the message body is dependent on transfer codings and other transformations:
+while the way the payload body is transferred "on the wire" is dependent on other
+transformations (eg. transfer codings for HTTP/1.1 see 6.1 of
+{{?HTTP11=I-D.ietf-httpbis-messaging}}):
 {{resource-representation}} contains several examples to help illustrate those effects.
 
 A representation digest consists of
@@ -1041,8 +1044,7 @@ and may thus be tempted to process the data before validating the digest value.
 Instead, data should only be processed after validating the Digest.
 
 If received in trailers, Digest MUST NOT be discarded;
-instead it MAY be merged in the header section (See Section 7.1.2 of {{!MESSAGING=I-D.ietf-httpbis
--messaging}}).
+instead it MAY be merged in the header section (See Section 5.6.2 of {{SEMANTICS}}).
 
 Not every digest-algorithm is suitable for trailers, as they may require to pre-process
 the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
@@ -1349,8 +1351,8 @@ Location: /authors/123
    While
    [mid-stream trailers](https://github.com/httpwg/http-core/issues/313#issuecomment-584389706)
    are interesting, since this specification is a rewrite of [RFC3230] we do not
-   think we should face that. As a first thought, nothing in this document 
-   precludes future work that would find a use for mid-stream trailers, for 
+   think we should face that. As a first thought, nothing in this document
+   precludes future work that would find a use for mid-stream trailers, for
    example an incremental digest-algorithm. A document defining such a
    digest-algorithm is best positioned to describe how it is used.
 
@@ -1436,3 +1438,4 @@ _RFC Editor: Please remove this section before publication._
 
 * Deprecate SHA-1 #1154
 * Avoid id-* with encrypted content.
+* Digest is independent from MESSAGING and HTTP/1.1 is not normative #1215
