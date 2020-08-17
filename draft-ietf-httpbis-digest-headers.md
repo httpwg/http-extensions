@@ -1052,13 +1052,9 @@ the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
 ## Usage with encryption
 
 Digest may expose information details of encrypted payload when the checksum
-is computen on the unecrypted data.
+is computed on the unecrypted data.
 An example of that is the use of the `id-sha-256` digest algorithm
 in conjuction with the encrypted content-coding {{?RFC8188}}.
-
-## Message Truncation
-
-...
 
 ## Algorithm Agility
 
@@ -1437,5 +1433,8 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-digest-headers-02
 
 * Deprecate SHA-1 #1154
-* Avoid id-* with encrypted content.
+* Avoid id-* with encrypted content
 * Digest is independent from MESSAGING and HTTP/1.1 is not normative #1215
+* Identity is not a valid field value for content-encoding #1223
+* Mention trailers #1157
+* Reference httpbis-semantics #1156
