@@ -282,8 +282,8 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
 
-Digest MAY be cached and the freshness information of the resource eventually conveyed by validator
- header fields or other cache headers apply to its value too.
+Digest MAY be cached and the freshness information of the resource, eventually conveyed by validator
+ header fields or other cache headers, apply to its value too.
 
 Digest can be sent in a trailer section. When using incremental digest-algorithms
 this allows the sender and the receiver to dynamically compute the digest value
