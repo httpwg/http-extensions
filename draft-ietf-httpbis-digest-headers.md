@@ -459,7 +459,7 @@ representation of the patched resource.
 `Digest` usage with PATCH is thus very similar to the POST one, but with the
 resource's own semantic partly implied by the method and by the patch document.
 
-# Deprecate Negotiation of Content-MD5
+# Deprecate Negotiation of Content-MD5 {#deprecate-contentMD5}
 
 This RFC deprecates the negotiation of Content-MD5 as it has been obsoleted by
 [RFC7231].
@@ -1331,7 +1331,8 @@ Location: /authors/123
 
 6. What changes in `Want-Digest`?
 
-   We allow to use the `Want-Digest` in responses to advertise the supported
+   The contentMD5 token defined in Section 5 of [RFC3230] is deprecated by {{deprecate-contentMD5}}.
+   We added examples on using `Want-Digest` in responses to advertise the supported
    digest-algorithms and the inability to accept requests with unsupported
    digest-algorithms.
 
