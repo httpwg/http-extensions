@@ -237,7 +237,7 @@ transformations (eg. transfer codings for HTTP/1.1 see 6.1 of
 
 A representation digest consists of
 the value of a checksum computed on the entire selected `representation data`
-(see Section 7 of {{SEMANTICS}}) of a resource identified as per (see Section 7.3.2 of {{SEMANTICS}})
+(see Section 7 of {{SEMANTICS}}) of a resource identified according to Section 7.3.2 of {{SEMANTICS}}
 together with an indication of the algorithm used (and any parameters)
 
 ~~~ abnf
@@ -281,9 +281,6 @@ validation instead of verifying every received representation-data-digest.
 A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
-
-Digest MAY be cached and the freshness information of the resource, eventually conveyed by validator
- header fields or other cache headers, apply to its value too.
 
 Digest can be sent in a trailer section. When using incremental digest-algorithms
 this allows the sender and the receiver to dynamically compute the digest value
