@@ -1332,7 +1332,10 @@ Location: /authors/123
 6. What changes in `Want-Digest`?
 
    The contentMD5 token defined in Section 5 of [RFC3230] is deprecated by {{deprecate-contentMD5}}.
-   We added examples on using `Want-Digest` in responses to advertise the supported
+
+   To clarify that `Digest` and `Want-`Digest can be used in both requests and responses
+   - [RFC3230] carefully uses `sender` and `receiver` in their definition -
+   we added examples on using `Want-Digest` in responses to advertise the supported
    digest-algorithms and the inability to accept requests with unsupported
    digest-algorithms.
 
