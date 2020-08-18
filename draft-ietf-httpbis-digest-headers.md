@@ -324,7 +324,7 @@ Two examples of its use are
 
 ~~~
    Want-Digest: sha-256
-   Want-Digest: SHA-512;q=0.3, sha-256;q=1, md5;q=0
+   Want-Digest: SHA-512;q=0.3, sha-256;q=1, unixsum;q=0
 ~~~
 
 # Digest Algorithm Values {#algorithms}
