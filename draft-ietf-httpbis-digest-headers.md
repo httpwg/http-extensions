@@ -324,7 +324,7 @@ Two examples of its use are
 
 ~~~
    Want-Digest: sha-256
-   Want-Digest: SHA-512;q=0.3, sha-256;q=1, md5;q=0
+   Want-Digest: SHA-512;q=0.3, sha-256;q=1, unixsum;q=0
 ~~~
 
 # Digest Algorithm Values {#algorithms}
@@ -459,10 +459,11 @@ representation of the patched resource.
 `Digest` usage with PATCH is thus very similar to the POST one, but with the
 resource's own semantic partly implied by the method and by the patch document.
 
-# Deprecate Negotiation of Content-MD5
+# Deprecate Negotiation of Content-MD5 {#deprecate-contentMD5}
 
 This RFC deprecates the negotiation of Content-MD5 as it has been obsoleted by
 [RFC7231].
+The `contentMD5` token defined in Section 5 of [RFC3230] MUST NOT be used as a digest-algorithm.
 
 # Relationship to Subresource Integrity (SRI)
 
@@ -1133,6 +1134,19 @@ registry:
   SHOULD NOT be used.
 * Status: obsoleted
 
+## Obsolete "contentMD5" token in Digest Algorithm {#iana-contentMD5}
+
+This memo adds the "contentMD5" token in the [HTTP Digest Algorithm
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+registry:
+
+* Digest Algorithm: contentMD5
+* Description: Section 5 of [RFC3230] defined the "contentMD5" token to be used only in Want-Digest.
+  This token is obsoleted and MUST NOT be used.
+* Reference: {{iana-contentMD5}} of this document, Section 5 of [RFC3230].
+* Status: obsoleted
+
+
 ## The "ID-SHA-256" Digest Algorithm {#iana-ID-SHA-256}
 
 This memo registers the "ID-SHA-256" digest algorithm in the [HTTP Digest
@@ -1332,7 +1346,11 @@ Location: /authors/123
 
 6. What changes in `Want-Digest`?
 
-   We allow to use the `Want-Digest` in responses to advertise the supported
+   The contentMD5 token defined in Section 5 of [RFC3230] is deprecated by {{deprecate-contentMD5}}.
+
+   To clarify that `Digest` and `Want-Digest` can be used in both requests and responses
+   - [RFC3230] carefully uses `sender` and `receiver` in their definition -
+   we added examples on using `Want-Digest` in responses to advertise the supported
    digest-algorithms and the inability to accept requests with unsupported
    digest-algorithms.
 
@@ -1439,3 +1457,4 @@ _RFC Editor: Please remove this section before publication._
 * Identity is not a valid field value for content-encoding #1223
 * Mention trailers #1157
 * Reference httpbis-semantics #1156
+* Add contentMD5 as an obsoleted digest-algorithm #1249
