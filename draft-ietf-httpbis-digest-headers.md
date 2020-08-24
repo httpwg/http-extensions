@@ -855,11 +855,12 @@ Digest: sha-256=UJSojgEzqUe4UoHzmNl5d2xkmrW3BOdmvsvWu1uFeu0=
 }
 ~~~
 
-## Use with trailers and transfer-coding
+## Use with trailers and transfer coding
 
 An origin server sends Digest in the HTTP trailer, so it can calculate digest-value
 while streaming content and thus mitigate resource consumption.
-The field value is the same as in {{example-full-representation}}
+The field value is the same as in {{example-full-representation}} because Digest is designed to
+ be independent from the use of one or more transfer codings (see {{representation-digest}}).
 
 Request:
 
