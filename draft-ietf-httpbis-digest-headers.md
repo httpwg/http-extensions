@@ -1136,7 +1136,7 @@ registry:
 
 ## Obsolete "contentMD5" token in Digest Algorithm {#iana-contentMD5}
 
-This memo adds the "contentMD" token in the [HTTP Digest Algorithm
+This memo adds the "contentMD5" token in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
