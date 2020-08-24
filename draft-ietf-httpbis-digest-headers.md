@@ -463,6 +463,7 @@ resource's own semantic partly implied by the method and by the patch document.
 
 This RFC deprecates the negotiation of Content-MD5 as it has been obsoleted by
 [RFC7231].
+The `contentMD5` token defined in Section 5 of [RFC3230] MUST NOT be used as a digest-algorithm.
 
 # Relationship to Subresource Integrity (SRI)
 
