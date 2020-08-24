@@ -1133,6 +1133,19 @@ registry:
   SHOULD NOT be used.
 * Status: obsoleted
 
+## Obsolete "contentMD5" token in Digest Algorithm {#iana-contentMD5}
+
+This memo adds the "contentMD" token in the [HTTP Digest Algorithm
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+registry:
+
+* Digest Algorithm: contentMD5
+* Description: Section 5 of [RFC3230] defined the "contentMD5" token to be used only in Want-Digest.
+  This token is obsoleted and MUST NOT be used.
+* Reference: {{iana-contentMD5}} of this document, Section 5 of [RFC3230].
+* Status: obsoleted
+
+
 ## The "ID-SHA-256" Digest Algorithm {#iana-ID-SHA-256}
 
 This memo registers the "ID-SHA-256" digest algorithm in the [HTTP Digest
@@ -1443,3 +1456,4 @@ _RFC Editor: Please remove this section before publication._
 * Identity is not a valid field value for content-encoding #1223
 * Mention trailers #1157
 * Reference httpbis-semantics #1156
+* Add contentMD5 as an obsoleted digest-algorithm #1249
