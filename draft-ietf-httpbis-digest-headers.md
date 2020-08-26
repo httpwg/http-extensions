@@ -236,7 +236,8 @@ transformations (eg. transfer codings for HTTP/1.1 see 6.1 of
 {{resource-representation}} contains several examples to help illustrate those effects.
 
 A representation digest consists of
-the value of a checksum computed on the entire selected `representation data` of a resource
+the value of a checksum computed on the entire selected `representation data`
+(see Section 7 of {{SEMANTICS}}) of a resource identified according to Section 7.3.2 of {{SEMANTICS}}
 together with an indication of the algorithm used (and any parameters)
 
 ~~~ abnf
@@ -262,9 +263,6 @@ response.
 ~~~ abnf
    Digest = "Digest" ":" OWS 1#representation-data-digest
 ~~~
-
-The resource is specified by the effective request URI and any `validator field`
-contained in the message.
 
 The relationship between Content-Location (see Section 7.2.5 of
 {{SEMANTICS}}) and Digest is demonstrated in
