@@ -1052,7 +1052,7 @@ the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
 ## Usage with encryption
 
 Digest may expose information details of encrypted payload when the checksum
-is computed on the unecrypted data.
+is computed on the unencrypted data.
 An example of that is the use of the `id-sha-256` digest algorithm
 in conjuction with the encrypted content-coding {{?RFC8188}}.
 
