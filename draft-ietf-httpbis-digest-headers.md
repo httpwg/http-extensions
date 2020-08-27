@@ -341,7 +341,6 @@ The Internet Assigned Numbers Authority (IANA) acts as a registry for
 digest-algorithm values.
 The registry contains the tokens listed below.
 
-<<<<<<< HEAD
 Some digest-algorithms, although registered, rely on vulnerable algorithms:
 the "md5" digest-algorithm MUST NOT be used due to collision attacks [CMU-836068]
 and the "sha" digest-algorithm MUST NOT be used due
@@ -365,7 +364,7 @@ to collision attacks [IACR-2020-014].
   : * Description: The MD5 algorithm, as specified in [RFC1321].
       The output of this algorithm is encoded using the
       base64 encoding  [RFC4648].
-      The "md5" algorithm MUST NOT be used as it's now vulnerable
+      This digest-algorithm MUST NOT be used as it's now vulnerable
       to collision attacks [CMU-836068].
     * Reference: [RFC1321], [RFC4648], this document.
     * Status: deprecated
@@ -373,7 +372,7 @@ to collision attacks [IACR-2020-014].
   sha
   : * Description:  The SHA-1 algorithm [RFC3174].  The output of this
       algorithm is encoded using the base64 encoding  [RFC4648].
-      The "sha" algorithm MUST NOT be used as it's now vulnerable
+      This digest-algorithm MUST NOT be used as it's now vulnerable
       to collision attacks [IACR-2020-014].
     * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
     * Status: deprecated
@@ -399,7 +398,7 @@ to collision attacks [IACR-2020-014].
     * Status: standard
 
 To allow sender and recipient to provide a checksum which is independent from
-`Content-Encoding`, the following additional algorithms are defined:
+`Content-Encoding`, the following additional digest-algorithms are defined:
 
   {: vspace="0"}
   id-sha-512
@@ -1091,9 +1090,9 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Update "UNIXsum" and "UNIXcksum" Digest Algorithm {#iana-unixsum-unixcksum}
+## Update "UNIXsum" Digest Algorithm {#iana-unixsum}
 
-This memo updates the "UNIXsum" and "UNIXcksum" digest algorithms in the [HTTP Digest Algorithm
+This memo updates the "UNIXsum" digest algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
@@ -1101,6 +1100,15 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
+## Update "UNIXcksum" Digest Algorithm {#iana-unixcksum}
+
+This memo updates the "UNIXcksum" digest algorithm in the [HTTP Digest Algorithm
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+registry:
+
+* Digest Algorithm: As specified in {{algorithms}}.
+* Description: As specified in {{algorithms}}.
+* Status: As specified in {{algorithms}}.
 
 ## Update "CRC32c" Digest Algorithm {#iana-crc32c}
 
