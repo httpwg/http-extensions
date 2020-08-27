@@ -213,6 +213,9 @@ The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "payload body" in this document are to be
 interpreted as described in {{SEMANTICS}}.
 
+Algorithm names respect the casing used in their definition document (eg. SHA-1, CRC32c)
+whereas digest-algorithm tokens are quoted (eg. "sha", "crc32c").
+
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
