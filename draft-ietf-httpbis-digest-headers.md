@@ -213,9 +213,6 @@ The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "payload body" in this document are to be
 interpreted as described in {{SEMANTICS}}.
 
-The definition "validator fields" in this document is to be interpreted as described in
-Section 11.2 of {{SEMANTICS}}.
-
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
