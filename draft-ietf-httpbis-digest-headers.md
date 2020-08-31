@@ -159,7 +159,7 @@ the value contained in any `Content-Encoding` or `Content-Type` header fields.
 Therefore, a given resource may have multiple different digest values.
 
 To allow both parties to exchange a Digest of a representation with no content
-codings (see Section 7.1.2 of {{SEMANTICS}}) two more algorithms
+codings (see Section 7.1.2 of {{SEMANTICS}}) two more digest-algorithms
 are added ("id-sha-256" and "id-sha-512").
 
 ## Goals
@@ -169,7 +169,7 @@ The goals of this proposal are:
    1. Digest coverage for either the resource's `representation data` or
       `selected representation data` communicated via HTTP.
 
-   2. Support for multiple digest algorithms.
+   2. Support for multiple digest-algorithms.
 
    3. Negotiation of the use of digests.
 
@@ -242,7 +242,7 @@ together with an indication of the algorithm used (and any parameters)
                                 <encoded digest output>
 ~~~
 
-The checksum is computed using one of the `digest-algorithms` listed in {{algorithms}}
+The checksum is computed using one of the digest-algorithms listed in {{algorithms}}
 and then encoded in the associated format.
 
 The example below shows the  "sha-256" digest-algorithm which uses base64 encoding.
@@ -324,8 +324,8 @@ Two examples of its use are
 
 # Digest Algorithm Values {#algorithms}
 
-Digest algorithm values are used to indicate a specific digest computation.  For
-some algorithms, one or more parameters can be supplied.
+Digest-algorithm values are used to indicate a specific digest computation.  For
+some digest-algorithms, one or more parameters can be supplied.
 
 ~~~
    digest-algorithm = token
@@ -338,9 +338,9 @@ The Internet Assigned Numbers Authority (IANA) acts as a registry for
 digest-algorithm values.
 The registry contains the tokens listed below.
 
-Some algorithms, although registered, have since been found vulnerable:
-the "MD5" algorithm MUST NOT be used due to collision attacks [CMU-836068]
-and the "SHA" algorithm MUST NOT be used due
+Some digest-algorithms, although registered, rely on vulnerable algorithms:
+the "MD5" digest-algorithm MUST NOT be used due to collision attacks [CMU-836068]
+and the "SHA" digest-algorithm MUST NOT be used due
 to collision attacks [IACR-2020-014].
 
 
@@ -552,7 +552,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ## Server Returns No Representation Data
 
 Requests without a payload body can still send a `Digest` field
-applying the digest algorithm to an empty representation.
+applying the digest-algorithm to an empty representation.
 
 As there is no content coding applied, the "sha-256" and the "id-sha-256"
 digest-values in the response are the same.
@@ -1079,7 +1079,7 @@ registry. The allowed values for the "Status" fields are described below.
 
 ## Deprecate "MD5" Digest Algorithm {#iana-MD5}
 
-This memo updates the "MD5" digest algorithm in the [HTTP Digest Algorithm
+This memo updates the "MD5" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
@@ -1089,7 +1089,7 @@ registry:
 
 ## Update "CRC32c" Digest Algorithm {#iana-CRC32C}
 
-This memo updates the "CRC32c" digest algorithm in the [HTTP Digest Algorithm
+This memo updates the "CRC32c" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
@@ -1106,7 +1106,7 @@ registry:
 
 ## Obsolete "SHA" Digest Algorithm {#iana-SHA}
 
-This memo updates the "SHA" digest algorithm in the [HTTP Digest Algorithm
+This memo updates the "SHA" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
@@ -1116,7 +1116,7 @@ registry:
 
 ## Obsolete "ADLER32" Digest Algorithm {#iana-adler-32}
 
-This memo updates the "ADLER32" digest algorithm in the [HTTP Digest Algorithm
+This memo updates the "ADLER32" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
