@@ -160,7 +160,7 @@ Therefore, a given resource may have multiple different digest values.
 
 To allow both parties to exchange a Digest of a representation with no content
 codings (see Section 7.1.2 of {{SEMANTICS}}) two more algorithms
-are added (`ID-SHA-256` and `ID-SHA-512`).
+are added ("ID-SHA-256" and "ID-SHA-512").
 
 ## Goals
 
@@ -245,7 +245,7 @@ together with an indication of the algorithm used (and any parameters)
 The checksum is computed using one of the `digest-algorithms` listed in {{algorithms}}
 and then encoded in the associated format.
 
-The example below shows the  `sha-256` digest-algorithm which uses base64 encoding.
+The example below shows the  "sha-256" digest-algorithm which uses base64 encoding.
 
 ~~~ example
    sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -554,7 +554,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Requests without a payload body can still send a Digest field
 applying the digest algorithm to an empty representation.
 
-As there is no content coding applied, the `sha-256` and the `id-sha-256`
+As there is no content coding applied, the "sha-256" and the "id-sha-256"
 digest-values in the response are the same.
 
 Request:
@@ -1050,7 +1050,7 @@ the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
 
 Digest may expose information details of encrypted payload when the checksum
 is computed on the unencrypted data.
-An example of that is the use of the `id-sha-256` digest algorithm
+An example of that is the use of the "id-sha-256" digest algorithm
 in conjuction with the encrypted content-coding {{?RFC8188}}.
 
 ## Algorithm Agility
