@@ -335,7 +335,8 @@ some digest-algorithms, one or more parameters can be supplied.
 ~~~
 
 The BNF for "parameter" is defined in Section 5.4.1.4 of
-{{SEMANTICS}}. All digest-algorithm values are case-insensitive but SHOULD be used in lowercase.
+{{SEMANTICS}}. All digest-algorithm values are case-insensitive
+but the lower case is preferred.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
 digest-algorithm values.
@@ -1382,7 +1383,7 @@ Location: /authors/123
    to send a checksum of a resource representation with no content codings
    applied.
    To simplify a future transition to Structured Fields {{?I-D.ietf-httpbis-header-structure}}
-   we introduced that digest-algorithms, though case-insensitive, SHOULD be expressed in lowercase.
+   we suggest to use lowercase for digest-algorithms.
 
 8. What about mid-stream trailers?
 
