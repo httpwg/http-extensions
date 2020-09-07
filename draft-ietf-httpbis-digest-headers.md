@@ -980,7 +980,7 @@ Cryptographic algorithms are intended to provide a proof of integrity suited
 towards cryptographic constructions such as signatures.
 
 However, these rely on collision-resistance for their security proofs
-[CMU-836068]. The "MD5" and "SHA-1" digest algorithms are vulnerable to collisions attacks,
+[CMU-836068]. The "md5" and "sha" digest-algorithms are vulnerable to collisions attacks,
 so they MUST NOT be used with `Digest`.
 
 ## Other Deprecated Algorithms
@@ -998,7 +998,7 @@ multiple hops, as it just covers the `representation data` and not the
 Besides, it allows to protect `representation data` from buggy manipulation,
 buggy compression, etc.
 
-Moreover identity digest algorithms (eg. "id-sha-256" and "id-sha-512") allow
+Moreover identity digest-algorithms (eg. "id-sha-256" and "id-sha-512") allow
 piecing together a resource from different sources (e.g. different servers that
 perhaps apply different content codings) enabling the user-agent to detect that
 the application-layer tasks completed properly, before handing off to say the
@@ -1054,7 +1054,7 @@ the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
 
 `Digest` may expose information details of encrypted payload when the checksum
 is computed on the unencrypted data.
-An example of that is the use of the "id-sha-256" digest algorithm
+An example of that is the use of the "id-sha-256" digest-algorithm
 in conjuction with the encrypted content-coding {{?RFC8188}}.
 
 ## Algorithm Agility
@@ -1093,7 +1093,7 @@ registry:
 
 ## Update "UNIXsum" Digest Algorithm {#iana-unixsum}
 
-This memo updates the "UNIXsum" digest algorithm in the [HTTP Digest Algorithm
+This memo updates the "UNIXsum" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
@@ -1103,7 +1103,7 @@ registry:
 
 ## Update "UNIXcksum" Digest Algorithm {#iana-unixcksum}
 
-This memo updates the "UNIXcksum" digest algorithm in the [HTTP Digest Algorithm
+This memo updates the "UNIXcksum" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
@@ -1168,7 +1168,7 @@ registry:
 
 ## The "id-sha-256" Digest Algorithm {#iana-id-sha-256}
 
-This memo registers the "id-sha-256" digest algorithm in the [HTTP Digest
+This memo registers the "id-sha-256" digest-algorithm in the [HTTP Digest
 Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
@@ -1179,7 +1179,7 @@ registry:
 
 ## The "id-sha-512" Digest Algorithm {#iana-id-sha-512}
 
-This memo registers the "id-sha-512" digest algorithm in the [HTTP Digest
+This memo registers the "id-sha-512" digest-algorithm in the [HTTP Digest
 Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
