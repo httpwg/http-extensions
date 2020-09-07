@@ -357,18 +357,15 @@ frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE frame with a field
 of any other value MUST be treated as a connection error of type PROTOCOL_ERROR.
 
 ~~~ drawing
-HTTP/2 PRIORITY_UPDATE Frame {
-  Length (24),
-  Type (8) = 0x10,
-  Flags (8),
-  Reserved (1),
-  Stream Identifier (31) = 0,
-  R (1),
-  Prioritized Stream ID (31),
-  Priority Field Value (..),
-}
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +---------------------------------------------------------------+
+ |R|                        Stream ID (31)                       |
+ +---------------------------------------------------------------+
+ |                   Priority Field Value (*)                  ...
+ +---------------------------------------------------------------+
 ~~~
-{: #fig-h2-reprioritization-frame title="HTTP/2 PRIORITY_UPDATE Frame"}
+{: #fig-h2-reprioritization-frame title="HTTP/2 PRIORITY_UPDATE Frame Payload"}
 
 The PRIORITY_UPDATE frame payload has the following fields:
 
