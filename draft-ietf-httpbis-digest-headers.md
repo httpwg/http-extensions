@@ -160,7 +160,7 @@ Therefore, a given resource may have multiple different digest values.
 
 To allow both parties to exchange a Digest of a representation with no content
 codings (see Section 7.1.2 of {{SEMANTICS}}) two more algorithms
-are added ("ID-SHA-256" and "ID-SHA-512").
+are added ("id-sha-256" and "id-sha-512").
 
 ## Goals
 
@@ -253,7 +253,7 @@ The example below shows the  "sha-256" digest-algorithm which uses base64 encodi
 
 # The Digest Field {#digest}
 
-The Digest field contains a list of one or more representation digest values as
+The `Digest` field contains a list of one or more representation digest values as
 defined in {{representation-digest}}. It can be used in both request and
 response.
 
@@ -261,13 +261,13 @@ response.
    Digest = "Digest" ":" OWS 1#representation-data-digest
 ~~~
 
-The relationship between Content-Location (see Section 7.2.5 of
-{{SEMANTICS}}) and Digest is demonstrated in
+The relationship between `Content-Location` (see Section 7.2.5 of
+{{SEMANTICS}}) and `Digest` is demonstrated in
 {{post-not-request-uri}}. A comprehensive set of examples showing the impacts of
 representation metadata, payload transformations and HTTP methods on Digest is
 provided in {{examples-unsolicited}} and {{examples-solicited}}.
 
-A Digest field MAY contain multiple representation-data-digest values. This
+A `Digest` field MAY contain multiple representation-data-digest values. This
 could be useful for responses expected to reside in caches shared by users with
 different browsers, for example.
 
@@ -279,7 +279,7 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
 
-Digest can be sent in a trailer section. When using incremental digest-algorithms
+`Digest` can be sent in a trailer section. When using incremental digest-algorithms
 this allows the sender and the receiver to dynamically compute the digest value
 while streaming the content.
 
@@ -296,7 +296,7 @@ Two examples of its use are
 
 # The Want-Digest Field {#want-digest}
 
-The Want-Digest field indicates the sender's desire to receive a representation
+The `Want-Digest` field indicates the sender's desire to receive a representation
 digest on messages associated with the request URI and representation metadata.
 
 ~~~
@@ -306,14 +306,14 @@ digest on messages associated with the request URI and representation metadata.
             ( "1"  [ "."  0*1( "0" ) ] )
 ~~~
 
-If a digest-algorithm is not accompanied by a qvalue, it is treated as if its
-associated qvalue were 1.0.
+If a digest-algorithm is not accompanied by a "qvalue", it is treated as if its
+associated "qvalue" were 1.0.
 
 The sender is willing to accept a digest-algorithm if and only if it is listed
-in a Want-Digest field of a message, and its qvalue is non-zero.
+in a `Want-Digest` field of a message, and its "qvalue" is non-zero.
 
 If multiple acceptable digest-algorithm values are given, the sender's preferred
-digest-algorithm is the one (or ones) with the highest qvalue.
+digest-algorithm is the one (or ones) with the highest "qvalue".
 
 Two examples of its use are
 
@@ -339,8 +339,8 @@ digest-algorithm values.
 The registry contains the tokens listed below.
 
 Some algorithms, although registered, have since been found vulnerable:
-the MD5 algorithm MUST NOT be used due to collision attacks [CMU-836068]
-and the SHA algorithm MUST NOT be used due
+the "MD5" algorithm MUST NOT be used due to collision attacks [CMU-836068]
+and the "SHA" algorithm MUST NOT be used due
 to collision attacks [IACR-2020-014].
 
 
@@ -398,13 +398,13 @@ To allow sender and recipient to provide a checksum which is independent from
 `Content-Encoding`, the following additional algorithms are defined:
 
   {: vspace="0"}
-  ID-SHA-512
+  id-sha-512
   : * Description: The sha-512 digest of the representation-data of the resource when no
     content coding is applied
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
-  ID-SHA-256
+  id-sha-256
   : * Description: The sha-256 digest of the representation-data of the resource when no
       content coding is applied
     * Reference: [RFC6234], [RFC4648], this document.
@@ -551,7 +551,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ## Server Returns No Representation Data
 
-Requests without a payload body can still send a Digest field
+Requests without a payload body can still send a `Digest` field
 applying the digest algorithm to an empty representation.
 
 As there is no content coding applied, the "sha-256" and the "id-sha-256"
@@ -853,9 +853,9 @@ Digest: sha-256=UJSojgEzqUe4UoHzmNl5d2xkmrW3BOdmvsvWu1uFeu0=
 
 ## Use with trailers and transfer coding
 
-An origin server sends Digest in the HTTP trailer, so it can calculate digest-value
+An origin server sends `Digest` in the HTTP trailer, so it can calculate digest-value
 while streaming content and thus mitigate resource consumption.
-The field value is the same as in {{example-full-representation}} because Digest is designed to
+The field value is the same as in {{example-full-representation}} because `Digest` is designed to
  be independent from the use of one or more transfer codings (see {{representation-digest}}).
 
 Request:
@@ -892,8 +892,8 @@ The following examples demonstrate interactions where a client solicits a
 
 ## Server Selects Client's Least Preferred Algorithm
 
-The client requests a digest, preferring sha. The server is free to reply with
-sha-256 anyway.
+The client requests a digest, preferring "sha". The server is free to reply with
+"sha-256" anyway.
 
 Request:
 
@@ -976,7 +976,7 @@ Cryptographic algorithms are intended to provide a proof of integrity suited
 towards cryptographic constructions such as signatures.
 
 However, these rely on collision-resistance for their security proofs
-[CMU-836068]. The MD5 and SHA-1 algorithms are vulnerable to collisions attacks,
+[CMU-836068]. The "MD5" and "SHA-1" digest algorithms are vulnerable to collisions attacks,
 so they MUST NOT be used with `Digest`.
 
 ## Other Deprecated Algorithms
@@ -994,7 +994,7 @@ multiple hops, as it just covers the `representation data` and not the
 Besides, it allows to protect `representation data` from buggy manipulation,
 buggy compression, etc.
 
-Moreover identity digest algorithms (eg. ID-SHA-256 and ID-SHA-512) allow
+Moreover identity digest algorithms (eg. "id-sha-256" and "id-sha-512") allow
 piecing together a resource from different sources (e.g. different servers that
 perhaps apply different content codings) enabling the user-agent to detect that
 the application-layer tasks completed properly, before handing off to say the
@@ -1031,7 +1031,7 @@ the transport layer that protects HTTP fields.
 A `Digest` field using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in
 signatures.
 
-Using signatures to protect the Digest of an empty representation
+Using signatures to protect the `Digest` of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
 
 ## Usage in trailers
@@ -1040,7 +1040,7 @@ When used in trailers, the receiver gets the digest value after the payload body
 and may thus be tempted to process the data before validating the digest value.
 Instead, data should only be processed after validating the Digest.
 
-If received in trailers, Digest MUST NOT be discarded;
+If received in trailers, `Digest` MUST NOT be discarded;
 instead it MAY be merged in the header section (See Section 5.6.2 of {{SEMANTICS}}).
 
 Not every digest-algorithm is suitable for trailers, as they may require to pre-process
@@ -1048,7 +1048,7 @@ the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
 
 ## Usage with encryption
 
-Digest may expose information details of encrypted payload when the checksum
+`Digest` may expose information details of encrypted payload when the checksum
 is computed on the unencrypted data.
 An example of that is the use of the "id-sha-256" digest algorithm
 in conjuction with the encrypted content-coding {{?RFC8188}}.
@@ -1087,7 +1087,7 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Update "CRC32C" Digest Algorithm {#iana-CRC32C}
+## Update "CRC32c" Digest Algorithm {#iana-CRC32C}
 
 This memo updates the "CRC32c" digest algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
@@ -1142,25 +1142,25 @@ registry:
 * Status: obsoleted
 
 
-## The "ID-SHA-256" Digest Algorithm {#iana-ID-SHA-256}
+## The "id-sha-256" Digest Algorithm {#iana-id-sha-256}
 
-This memo registers the "ID-SHA-256" digest algorithm in the [HTTP Digest
+This memo registers the "id-sha-256" digest algorithm in the [HTTP Digest
 Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
-* Digest Algorithm: ID-SHA-256
+* Digest Algorithm: id-sha-256
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## The "ID-SHA-512" Digest Algorithm {#iana-ID-SHA-512}
+## The "id-sha-512" Digest Algorithm {#iana-id-sha-512}
 
-This memo registers the "ID-SHA-512" digest algorithm in the [HTTP Digest
+This memo registers the "id-sha-512" digest algorithm in the [HTTP Digest
 Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
-* Digest Algorithm: ID-SHA-512
+* Digest Algorithm: id-sha-512
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
@@ -1172,9 +1172,9 @@ that this algorithm MUST NOT be used.
 The status of "SHA" has been updated to "obsoleted", and its description states
 that this algorithm is NOT RECOMMENDED.
 
-The status for "CRC32C" has been updated to "standard".
+The status for "CRC32c" has been updated to "standard".
 
-The "ID-SHA-256" and "ID-SHA-512" algorithms have been added to the registry.
+The "id-sha-256" and "id-sha-512" algorithms have been added to the registry.
 
 ## Want-Digest Field Registration
 
@@ -1352,7 +1352,7 @@ Location: /authors/123
 7. Does this spec changes supported algorithms?
 
    This RFC updates [RFC5843] which is still delegated for all algorithms
-   updates, and adds two more algorithms: ID-SHA-256 and ID-SHA-512 which allows
+   updates, and adds two more algorithms: "id-sha-256" and "id-sha-512" which allows
    to send a checksum of a resource representation with no content codings
    applied.
 
@@ -1380,7 +1380,7 @@ the MICE content coding.
 
 _RFC Editor: Please remove this section before publication._
 
-How can I generate and validate the Digest values shown in the examples
+How can I generate and validate the `Digest` values shown in the examples
 throughout this document?
 
 The following python3 code can be used to generate digests for json objects
