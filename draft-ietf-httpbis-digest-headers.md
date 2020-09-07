@@ -213,6 +213,9 @@ The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "payload body" in this document are to be
 interpreted as described in {{SEMANTICS}}.
 
+Algorithm names respect the casing used in their definition document (eg. SHA-1, CRC32c)
+whereas digest-algorithm tokens are quoted (eg. "sha", "crc32c").
+
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
@@ -319,7 +322,7 @@ Two examples of its use are
 
 ~~~
    Want-Digest: sha-256
-   Want-Digest: SHA-512;q=0.3, sha-256;q=1, unixsum;q=0
+   Want-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
 ~~~
 
 # Digest Algorithm Values {#algorithms}
@@ -332,49 +335,50 @@ some digest-algorithms, one or more parameters can be supplied.
 ~~~
 
 The BNF for "parameter" is defined in Section 5.4.1.4 of
-{{SEMANTICS}}. All digest-algorithm values are case-insensitive.
+{{SEMANTICS}}. All digest-algorithm values are case-insensitive
+but the lower case is preferred.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
 digest-algorithm values.
 The registry contains the tokens listed below.
 
 Some digest-algorithms, although registered, rely on vulnerable algorithms:
-the "MD5" digest-algorithm MUST NOT be used due to collision attacks [CMU-836068]
-and the "SHA" digest-algorithm MUST NOT be used due
+the "md5" digest-algorithm MUST NOT be used due to collision attacks [CMU-836068]
+and the "sha" digest-algorithm MUST NOT be used due
 to collision attacks [IACR-2020-014].
 
 
   {: vspace="0"}
-  SHA-256
+  sha-256
   : * Description: The SHA-256 algorithm [RFC6234].  The output of
       this algorithm is encoded using the base64 encoding [RFC4648].
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
-  SHA-512
+  sha-512
   : * Description: The SHA-512 algorithm [RFC6234].  The output of
       this algorithm is encoded using the base64 encoding [RFC4648].
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
-  MD5
+  md5
   : * Description: The MD5 algorithm, as specified in [RFC1321].
       The output of this algorithm is encoded using the
       base64 encoding  [RFC4648].
-      The MD5 algorithm MUST NOT be used as it's now vulnerable
+      This digest-algorithm MUST NOT be used as it's now vulnerable
       to collision attacks [CMU-836068].
     * Reference: [RFC1321], [RFC4648], this document.
     * Status: deprecated
 
-  SHA
+  sha
   : * Description:  The SHA-1 algorithm [RFC3174].  The output of this
       algorithm is encoded using the base64 encoding  [RFC4648].
-      The SHA algorithm MUST NOT be used as it's now vulnerable
+      This digest-algorithm MUST NOT be used as it's now vulnerable
       to collision attacks [IACR-2020-014].
     * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
     * Status: deprecated
 
-  UNIXsum
+  unixsum
   : * Description: The algorithm computed by the UNIX "sum" command,
       as defined by the Single UNIX Specification,
       Version 2 [UNIX].  The output of this algorithm is an
@@ -384,7 +388,7 @@ to collision attacks [IACR-2020-014].
     * Reference: [UNIX], this document.
     * Status: standard
 
-  UNIXcksum
+  unixcksum
   : * Description: The algorithm computed by the UNIX "cksum" command,
       as defined by the Single UNIX Specification,
       Version 2 [UNIX].  The output of this algorithm is an
@@ -395,7 +399,7 @@ to collision attacks [IACR-2020-014].
     * Status: standard
 
 To allow sender and recipient to provide a checksum which is independent from
-`Content-Encoding`, the following additional algorithms are defined:
+`Content-Encoding`, the following additional digest-algorithms are defined:
 
   {: vspace="0"}
   id-sha-512
@@ -1077,40 +1081,60 @@ registry. The allowed values for the "Status" fields are described below.
       and status of the primary document in which the algorithm
       is defined.
 
-## Deprecate "MD5" Digest Algorithm {#iana-MD5}
+## Deprecate "MD5" Digest Algorithm {#iana-md5}
 
 This memo updates the "MD5" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
-* Digest Algorithm: MD5
+* Digest Algorithm: md5
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Update "CRC32c" Digest Algorithm {#iana-CRC32C}
+## Update "UNIXsum" Digest Algorithm {#iana-unixsum}
+
+This memo updates the "UNIXsum" digest algorithm in the [HTTP Digest Algorithm
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+registry:
+
+* Digest Algorithm: As specified in {{algorithms}}.
+* Description: As specified in {{algorithms}}.
+* Status: As specified in {{algorithms}}.
+
+## Update "UNIXcksum" Digest Algorithm {#iana-unixcksum}
+
+This memo updates the "UNIXcksum" digest algorithm in the [HTTP Digest Algorithm
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+registry:
+
+* Digest Algorithm: As specified in {{algorithms}}.
+* Description: As specified in {{algorithms}}.
+* Status: As specified in {{algorithms}}.
+
+## Update "CRC32c" Digest Algorithm {#iana-crc32c}
 
 This memo updates the "CRC32c" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
-* Digest Algorithm: CRC32c
+* Digest Algorithm: crc32c
 * Description: The CRC32c algorithm is a 32-bit cyclic redundancy check. It
   achieves a better hamming distance (for better error-detection performance)
   than many other 32-bit CRC functions. Other places it is used include iSCSI
   and SCTP. The 32-bit output is encoded in hexadecimal (using between 1 and 8
   ASCII characters from 0-9, A-F, and a-f; leading 0's are allowed). For
-  example, CRC32c=0a72a4df and crc32c=A72A4DF are both valid checksums for the
+  example, crc32c=0a72a4df and crc32c=A72A4DF are both valid checksums for the
   3-byte message "dog".
 * Reference: {{!RFC4960}} appendix B, this document.
 * Status: standard.
 
-## Obsolete "SHA" Digest Algorithm {#iana-SHA}
+## Obsolete "SHA" Digest Algorithm {#iana-sha}
 
 This memo updates the "SHA" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
-* Digest Algorithm: SHA
+* Digest Algorithm: sha
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
@@ -1120,11 +1144,11 @@ This memo updates the "ADLER32" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
-* Digest Algorithm: ADLER32
+* Digest Algorithm: adler32
 * Description: The ADLER32 algorithm is a checksum specified in [RFC1950] "ZLIB
   Compressed Data Format". The 32-bit output is encoded in hexadecimal (using
   between 1 and 8 ASCII characters from 0-9, A-F, and a-f; leading 0's are
-  allowed). For example, ADLER32=03da0195 and ADLER32=3DA0195 are both valid
+  allowed). For example, adler32=03da0195 and adler32=3DA0195 are both valid
   checksums for the 4-byte message "Wiki". This algorithm is obsoleted and
   SHOULD NOT be used.
 * Status: obsoleted
@@ -1166,13 +1190,16 @@ registry:
 
 ## Changes compared to RFC5843
 
+The digest-algorithm values for "MD5", "SHA", "SHA-256", "SHA-512", "UNIXcksum", "UNIXsum",
+"ADLER32" and "CRC32c" have been updated to lowercase.
+
 The status of "MD5" has been updated to "deprecated", and its description states
 that this algorithm MUST NOT be used.
 
 The status of "SHA" has been updated to "deprecated", and its description states
 that this algorithm MUST NOT be used.
 
-The status for "CRC32c" has been updated to "standard".
+The status for "CRC2c", "UNIXsum" and "UNIXcksum" has been updated to "standard".
 
 The "id-sha-256" and "id-sha-512" algorithms have been added to the registry.
 
@@ -1355,6 +1382,8 @@ Location: /authors/123
    updates, and adds two more algorithms: "id-sha-256" and "id-sha-512" which allows
    to send a checksum of a resource representation with no content codings
    applied.
+   To simplify a future transition to Structured Fields {{?I-D.ietf-httpbis-header-structure}}
+   we suggest to use lowercase for digest-algorithms.
 
 8. What about mid-stream trailers?
 
@@ -1453,3 +1482,4 @@ _RFC Editor: Please remove this section before publication._
 * Mention trailers #1157
 * Reference httpbis-semantics #1156
 * Add contentMD5 as an obsoleted digest-algorithm #1249
+* Use lowercase digest-algorithms names in the doc and in the digest-algorithm IANA table.
