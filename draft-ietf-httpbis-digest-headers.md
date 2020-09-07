@@ -1169,8 +1169,8 @@ registry:
 The status of "MD5" has been updated to "deprecated", and its description states
 that this algorithm MUST NOT be used.
 
-The status of "SHA" has been updated to "obsoleted", and its description states
-that this algorithm is NOT RECOMMENDED.
+The status of "SHA" has been updated to "deprecated", and its description states
+that this algorithm MUST NOT be used.
 
 The status for "CRC32c" has been updated to "standard".
 
