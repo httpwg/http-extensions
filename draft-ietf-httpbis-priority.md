@@ -430,29 +430,30 @@ Prioritized Element ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Headers.
 
-The request-stream variant of PRIORITY_UPDATE (type=0x10) MUST reference a
-request stream. If a server receives a PRIORITY_UPDATE (type=0x10)for a Stream
-ID that is not a request stream, this MUST be treated as a connection error of
-type H3_ID_ERROR. PRIORITY_UPDATE (type=0x10) MAY be sent before the request
-stream that it references has been created. The Stream ID MUST be within the
-client-initiated bidirectional stream limit. If a server receives a
-PRIORITY_UPDATE (type=0x10) with a Stream ID that is beyond the stream limits,
-this SHOULD be treated as a connection error of type H3_ID_ERROR.
+The request-stream variant of PRIORITY_UPDATE (type=0x1CCB8BBF1F0700) MUST
+reference a request stream. If a server receives a PRIORITY_UPDATE
+(type=0x1CCB8BBF1F0700) for a Stream ID that is not a request stream, this MUST
+be treated as a connection error of type H3_ID_ERROR. PRIORITY_UPDATE
+(type=0x1CCB8BBF1F0700) MAY be sent before the request stream that it references
+has been created. The Stream ID MUST be within the client-initiated
+bidirectional stream limit. If a server receives a PRIORITY_UPDATE
+(type=0x1CCB8BBF1F0700) with a Stream ID that is beyond the stream limits, this
+SHOULD be treated as a connection error of type H3_ID_ERROR.
 
-Request-stream variant PRIORITY_UPDATEs (type=0x10) received before the request
-or response has started SHOULD be buffered until the stream is opened and
-applied immediately after the request message has been processed. Holding
-PRIORITY_UPDATEs consumes extra state on the peer, although the size of the
-state is bounded by bidirectional stream limits. There is no bound on the number
-of PRIORITY_UPDATEs that can be sent, so an endpoint SHOULD store only the most
-recently received frame.
+Request-stream variant PRIORITY_UPDATEs (type=0x1CCB8BBF1F0700) received before
+the request or response has started SHOULD be buffered until the stream is
+opened and applied immediately after the request message has been processed.
+Holding PRIORITY_UPDATEs consumes extra state on the peer, although the size of
+the state is bounded by bidirectional stream limits. There is no bound on the
+number of PRIORITY_UPDATEs that can be sent, so an endpoint SHOULD store only
+the most recently received frame.
 
-The push-stream variant PRIORITY_UPDATE (type=0x11) MUST reference a promised
-push stream. If a server receives a PRIORITY_UPDATE (type=0x11) with Push ID
-that is beyond the push limit or has not been promised, this MUST be treated as
-a connection error of type H3_ID_ERROR.
+The push-stream variant PRIORITY_UPDATE (type=0x1CCB8BBF1F0701) MUST reference a
+promised push stream. If a server receives a PRIORITY_UPDATE
+(type=0x1CCB8BBF1F0701) with Push ID that is beyond the push limit or has not
+been promised, this MUST be treated as a connection error of type H3_ID_ERROR.
 
-PRIORITY_UPDATEs of either type are only send by a client. If a client receives
+PRIORITY_UPDATEs of either type are only sent by a client. If a client receives
 a PRIORITY_UPDATE frame, this MUST be treated as a connection error of type
 H3_FRAME_UNEXPECTED.
 
@@ -669,7 +670,7 @@ Frame Type:
 : PRIORITY_UPDATE
 
 Code:
-: 0x10 and 0x11
+: 0x1CCB8BBF1F0700 and 0x1CCB8BBF1F0701
 
 Specification:
 : This document
