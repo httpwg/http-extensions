@@ -391,8 +391,8 @@ state on the peer, although the size of the state is bounded by stream limits.
 There is no bound on the number of PRIORITY_UPDATEs that can be sent, so an
 endpoint SHOULD store only the most recently received frame.
 
-If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
-recipient MUST respond with a connection error of type PROTOCOL_ERROR.
+If a PRIORITY_UPDATE frame is received with a Stream ID of 0x0, the recipient
+MUST respond with a connection error of type PROTOCOL_ERROR.
 
 If a client receives a PRIORITY_UPDATE frame, it MUST respond with a connection
 error of type PROTOCOL_ERROR.
