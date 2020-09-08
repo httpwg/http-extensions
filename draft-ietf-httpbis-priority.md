@@ -325,17 +325,17 @@ set to `u=0`.
 This document specifies a new PRIORITY_UPDATE frame for HTTP/2 ({{!RFC7540}})
 and HTTP/3 ({{!I-D.ietf-quic-http}}). It carries priority parameters and
 references the target of the prioritization based on a version-specific
-identifier; in HTTP/2 this is the Stream ID, in HTTP/3 this is either the Stream
-ID or Push ID. Unlike the Priority header field, the PRIORITY_UPDATE frame is a
-hop-by-hop signal.
+identifier. In HTTP/2, this identifier is the Stream ID; in HTTP/3, the
+identifier is either the Stream ID or Push ID. Unlike the Priority header field,
+the PRIORITY_UPDATE frame is a hop-by-hop signal.
 
 PRIORITY_UPDATE frames are sent by clients on the control stream, and therefore
 can be sent even after the send-side of the request stream is being closed. This
-also allows the PRIORITY_UPDATE frame to be sent as early as the stream it
+also allows the PRIORITY_UPDATE frame to be sent as soon as the stream it
 references is created. Depending on the transmission logic of the endpoints and
 on the network condition in case of HTTP/3, servers might receive a
 PRIORITY_UPDATE frame that references a request stream that is yet to be opened.
-Furthermore, clients might omit the priority request header field, using
+Furthermore, clients might omit the Priority request header field, using
 PRIORITY_UPDATE frames to indicate both the initial priority and the updated
 priority.
 
@@ -343,14 +343,15 @@ When a server receives a PRIORITY_UPDATE frame referring to a client-initiated
 request that is yet to be opened, the server buffers the priorities being
 carried by the received frame and applies them once the request is being opened.
 The signal carried by a PRIORITY_UPDATE frame overrides that carried by the
-header field, even when the frame was received before the request headers.
+Priority header field, even when the frame was received before the request
+headers.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
 The HTTP/2 PRIORITY_UPDATE frame (type=0x10) is used by clients to signal the
 initial priority of a response, or to reprioritize a response or push stream. It
 carries the stream ID of the response and the priority in ASCII text, using the
-same representation as that of the Priority header field value.
+same representation as the Priority header field value.
 
 The Stream Identifier field ({{!RFC7540}}, Section 4.1) in the PRIORITY_UPDATE
 frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE frame with a field
@@ -404,8 +405,8 @@ signal the initial priority of a response, or to reprioritize a response or push
 stream. It carries the identifer of the element that is being prioritized, and
 the updated priority in ASCII text, using the same representation as that of the
 Priority header field value. PRIORITY_UPDATE with a frame type of 0xF0700 is
-used for request streams, PRIORITY_UPDATE with a frame time of 0xF0701 is used
-for push streams.
+used for request streams, while PRIORITY_UPDATE with a frame type of 0xF0701 is
+used for push streams.
 
 The PRIORITY_UPDATE frame MUST be sent on the client control stream
 ({{!I-D.ietf-quic-http}}, Section 6.2.1). Receiving a PRIORITY_UPDATE frame on a
@@ -448,11 +449,11 @@ number of PRIORITY_UPDATE frames that can be sent, so an endpoint SHOULD store
 only the most recently received frame.
 
 The push-stream variant PRIORITY_UPDATE (type=0xF0701) MUST reference a promised
-push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with Push ID
-that is beyond the push limit or has not been promised, this MUST be treated as
-a connection error of type H3_ID_ERROR.
+push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with a Push ID
+that is greater than the maximum Push ID or which has not yet been promised, this
+MUST be treated as a connection error of type H3_ID_ERROR.
 
-PRIORITY_UPDATE frames of either type are only sent by a client. If a client
+PRIORITY_UPDATE frames of either type are only sent by clients. If a client
 receives a PRIORITY_UPDATE frame, this MUST be treated as a connection error of
 type H3_FRAME_UNEXPECTED.
 
