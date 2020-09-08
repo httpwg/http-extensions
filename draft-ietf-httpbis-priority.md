@@ -330,7 +330,7 @@ identifier is either the Stream ID or Push ID. Unlike the Priority header field,
 the PRIORITY_UPDATE frame is a hop-by-hop signal.
 
 PRIORITY_UPDATE frames are sent by clients on the control stream, and therefore
-can be sent even after the send-side of the request stream is being closed. This
+can be sent even after the sending part of the request stream is being closed. This
 also allows the PRIORITY_UPDATE frame to be sent as soon as the stream it
 references is created. Depending on the transmission logic of the endpoints and
 on the network condition in case of HTTP/3, servers might receive a
@@ -340,7 +340,7 @@ PRIORITY_UPDATE frames to indicate both the initial priority and the updated
 priority.
 
 When a server receives a PRIORITY_UPDATE frame referring to a client-initiated
-request that is yet to be opened, the server buffers the priorities being
+request that has not yet been opened, the server buffers the priorities
 carried by the received frame and applies them once the request is being opened.
 The signal carried by a PRIORITY_UPDATE frame overrides that carried by the
 Priority header field, even when the frame was received before the request
