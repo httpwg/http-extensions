@@ -361,7 +361,7 @@ of any other value MUST be treated as a connection error of type PROTOCOL_ERROR.
   0                   1                   2                   3
   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
  +---------------------------------------------------------------+
- |R|                        Stream ID (31)                       |
+ |R|                Prioritized Stream ID (31)                   |
  +---------------------------------------------------------------+
  |                   Priority Field Value (*)                  ...
  +---------------------------------------------------------------+
@@ -374,7 +374,7 @@ R:
 : A reserved 1-bit field. The semantics of this bit are undefined, and the bit
   MUST remain unset (0x0) when sending and MUST be ignored when receiving.
 
-Stream ID:
+Prioritized Stream ID:
 : A 31-bit stream identifier for the stream that is the target of the priority
   update.
 
@@ -382,18 +382,19 @@ Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Headers.
 
 The PRIORITY_UPDATE frame MAY be sent before the stream that it references has
-been created. The Stream ID MUST be within the stream limit. If a server
-receives a PRIORITY_UPDATE for a Stream ID that is beyond the stream limits,
-this SHOULD be treated as a connection error of type PROTOCOL_ERROR.
-PRIORITY_UPDATE frames received before the request or response has started
-SHOULD be buffered until the stream is opened and applied immediately after the
-request message has been processed. Holding PRIORITY_UPDATE frames consumes
-extra state on the peer, although the size of the state is bounded by stream
-limits. There is no bound on the number of PRIORITY_UPDATE frames that can be
-sent, so an endpoint SHOULD store only the most recently received frame.
+been created. The Prioritized Stream ID MUST be within the stream limit. If a
+server receives a PRIORITY_UPDATE with a Prioritized Stream ID that is beyond
+the stream limits, this SHOULD be treated as a connection error of type
+PROTOCOL_ERROR. PRIORITY_UPDATE frames received before the request or response
+has started SHOULD be buffered until the stream is opened and applied
+immediately after the request message has been processed. Holding
+PRIORITY_UPDATE frames consumes extra state on the peer, although the size of
+the state is bounded by stream limits. There is no bound on the number of
+PRIORITY_UPDATE frames that can be sent, so an endpoint SHOULD store only the
+most recently received frame.
 
-If a PRIORITY_UPDATE frame is received with a Stream ID of 0x0, the recipient
-MUST respond with a connection error of type PROTOCOL_ERROR.
+If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
+recipient MUST respond with a connection error of type PROTOCOL_ERROR.
 
 If a client receives a PRIORITY_UPDATE frame, it MUST respond with a connection
 error of type PROTOCOL_ERROR.
