@@ -340,11 +340,10 @@ PRIORITY_UPDATE frames to indicate both the initial priority and the updated
 priority.
 
 When a server receives a PRIORITY_UPDATE frame referring to a client-initiated
-request that has not yet been opened, the server buffers the priorities
-carried by the received frame and applies them once the request is being opened.
-The signal carried by a PRIORITY_UPDATE frame overrides that carried by the
-Priority header field, even when the frame was received before the request
-headers.
+request that has not yet been opened, the server buffers the priorities carried
+by the received frame and applies them once the request has been processed. The
+signal carried by a PRIORITY_UPDATE frame overrides that carried by the Priority
+header field, even when the frame was received before the request headers.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
