@@ -709,11 +709,17 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 
 # Change Log
 
+## Since draft-ietf-httpbis-priority-01
+
+* PRIORITY_UPDATE frame changes (#1096, #1079, #1167, #1262, #1267, #1271)
+* Add section to describe server scheduling considerations (#1215, #1232, #1266)
+* Remove specific instructions related to intermediary fairness (#1022, #1264)
+
 ## Since draft-ietf-httpbis-priority-00
 
 * Move text around (#1217, #1218)
 * Editorial change to the default urgency. The value is 3, which was always the
-  intent of previous changes. 
+  intent of previous changes.
 
 ## Since draft-kazuho-httpbis-priority-04
 
