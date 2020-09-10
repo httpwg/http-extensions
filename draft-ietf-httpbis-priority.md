@@ -335,7 +335,7 @@ identifier is either the Stream ID or Push ID. Unlike the Priority header field,
 the PRIORITY_UPDATE frame is a hop-by-hop signal.
 
 PRIORITY_UPDATE frames are sent by clients on the control stream, allowing them
-to be sent independent from the the prioritization target lifecycle. This means
+to be sent independent from the stream that carries the response. This means
 they can be used to signal the initial priority of a response instead of the
 Priority header; or to reprioritize a response or a push stream.
 
