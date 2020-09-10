@@ -336,8 +336,8 @@ the PRIORITY_UPDATE frame is a hop-by-hop signal.
 
 PRIORITY_UPDATE frames are sent by clients on the control stream, allowing them
 to be sent independent from the stream that carries the response. This means
-they can be used to signal the initial priority of a response instead of the
-Priority header; or to reprioritize a response or a push stream.
+they can be used to reprioritize a response or a push stream; or signal the
+initial priority of a response instead of the Priority header.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
 is open. Furthermore, HTTP/3 offers no guaranteed ordering across streams, which
@@ -349,9 +349,9 @@ considered as the most up-to-date information that overrides any other signal.
 Servers SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply
 it once the referenced stream is opened. Holding PRIORITY_UPDATE frames for each
 stream requires server resources, which can can be bound by local implementation
-policy. (TODO: add more text about bounds). Although there is no limit to the
-number PRIORITY_UPDATES that can be sent, storing only the most recently
-received frame limits resource commitment.
+policy. (TODO: consider resolving #1261, and adding more text about bounds).
+Although there is no limit to the number PRIORITY_UPDATES that can be sent,
+storing only the most recently received frame limits resource commitment.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
