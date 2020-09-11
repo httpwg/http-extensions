@@ -312,15 +312,20 @@ properties of an HTTP request it receives, the server is expected to control the
 cacheability or the applicability of the cached response, by using header fields
 that control the caching behavior (e.g., Cache-Control, Vary).
 
+
 # Reprioritization
 
 After a client sends a request, it may be beneficial to change the priority of
-the response. As an example, a web browser might issue a prefetch request for
-a JavaScript file with the urgency parameter of the Priority request header
-field set to `u=7` (background). Then, when the user navigates to a page which
+the response. As an example, a web browser might issue a prefetch request for a
+JavaScript file with the urgency parameter of the Priority request header field
+set to `u=7` (background). Then, when the user navigates to a page which
 references the new JavaScript file, while the prefetch is in progress, the
-browser would send a reprioritization frame with the priority field value
-set to `u=0`.
+browser would send a reprioritization signal with the priority field value set
+to `u=0`. The PRIORITY_UPDATE frame ({{frame}}) can be used for such
+reprioritization.
+
+
+# The PRIORITY_UPDATE Frame {#frame}
 
 This document specifies a new PRIORITY_UPDATE frame for HTTP/2 ({{!RFC7540}})
 and HTTP/3 ({{!I-D.ietf-quic-http}}). It carries priority parameters and
@@ -329,21 +334,24 @@ identifier. In HTTP/2, this identifier is the Stream ID; in HTTP/3, the
 identifier is either the Stream ID or Push ID. Unlike the Priority header field,
 the PRIORITY_UPDATE frame is a hop-by-hop signal.
 
-PRIORITY_UPDATE frames are sent by clients on the control stream, and therefore
-can be sent even after the sending part of the request stream is being closed. This
-also allows the PRIORITY_UPDATE frame to be sent as soon as the stream it
-references is created. Depending on the transmission logic of the endpoints and
-on the network condition in case of HTTP/3, servers might receive a
-PRIORITY_UPDATE frame that references a request stream that is yet to be opened.
-Furthermore, clients might omit the Priority request header field, using
-PRIORITY_UPDATE frames to indicate both the initial priority and the updated
-priority.
+PRIORITY_UPDATE frames are sent by clients on the control stream, allowing them
+to be sent independent from the stream that carries the response. This means
+they can be used to reprioritize a response or a push stream; or signal the
+initial priority of a response instead of the Priority header.
 
-When a server receives a PRIORITY_UPDATE frame referring to a client-initiated
-request that has not yet been opened, the server buffers the priorities carried
-by the received frame and applies them once the request has been processed. The
-signal carried by a PRIORITY_UPDATE frame overrides that carried by the Priority
-header field, even when the frame was received before the request headers.
+A client MAY send a PRIORITY_UPDATE frame before the stream that it references
+is open. Furthermore, HTTP/3 offers no guaranteed ordering across streams, which
+could cause the frame to be received earlier than intended. Either case leads to
+a race condition where a server receives a PRIORITY_UPDATE frame that references
+a request stream that is yet to be opened. To solve this condition, for the
+purposes of scheduling, the most recently received PRIORITY_UPDATE frame can be
+considered as the most up-to-date information that overrides any other signal.
+Servers SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply
+it once the referenced stream is opened. Holding PRIORITY_UPDATE frames for each
+stream requires server resources, which can can be bound by local implementation
+policy. (TODO: consider resolving #1261, and adding more text about bounds).
+Although there is no limit to the number PRIORITY_UPDATES that can be sent,
+storing only the most recently received frame limits resource commitment.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
@@ -380,17 +388,10 @@ Prioritized Stream ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Headers.
 
-The PRIORITY_UPDATE frame MAY be sent before the stream that it references has
-been created. The Prioritized Stream ID MUST be within the stream limit. If a
+The Prioritized Stream ID MUST be within the stream limit. If a
 server receives a PRIORITY_UPDATE with a Prioritized Stream ID that is beyond
 the stream limits, this SHOULD be treated as a connection error of type
-PROTOCOL_ERROR. PRIORITY_UPDATE frames received before the request or response
-has started SHOULD be buffered until the stream is opened and applied
-immediately after the request message has been processed. Holding
-PRIORITY_UPDATE frames consumes extra state on the peer, although the size of
-the state is bounded by stream limits. There is no bound on the number of
-PRIORITY_UPDATE frames that can be sent, so an endpoint SHOULD store only the
-most recently received frame.
+PROTOCOL_ERROR.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
@@ -434,19 +435,10 @@ Priority Field Value:
 The request-stream variant of PRIORITY_UPDATE (type=0xF0700) MUST reference a
 request stream. If a server receives a PRIORITY_UPDATE (type=0xF0700) for a
 Stream ID that is not a request stream, this MUST be treated as a connection
-error of type H3_ID_ERROR. PRIORITY_UPDATE (type=0xF0700) MAY be sent before the
-request stream that it references has been created. The Stream ID MUST be within
-the client-initiated bidirectional stream limit. If a server receives a
-PRIORITY_UPDATE (type=0xF0700) with a Stream ID that is beyond the stream
-limits, this SHOULD be treated as a connection error of type H3_ID_ERROR.
-
-Request-stream variant PRIORITY_UPDATE frames (type=0xF0700) received before the
-request or response has started SHOULD be buffered until the stream is opened
-and applied immediately after the request message has been processed. Holding
-PRIORITY_UPDATE frames consumes extra state on the peer, although the size of
-the state is bounded by bidirectional stream limits. There is no bound on the
-number of PRIORITY_UPDATE frames that can be sent, so an endpoint SHOULD store
-only the most recently received frame.
+error of type H3_ID_ERROR. The Stream ID MUST be within the client-initiated
+bidirectional stream limit. If a server receives a PRIORITY_UPDATE
+(type=0xF0700) with a Stream ID that is beyond the stream limits, this SHOULD be
+treated as a connection error of type H3_ID_ERROR.
 
 The push-stream variant PRIORITY_UPDATE (type=0xF0701) MUST reference a promised
 push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with a Push ID
@@ -737,7 +729,7 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 
 * Move text around (#1217, #1218)
 * Editorial change to the default urgency. The value is 3, which was always the
-  intent of previous changes. 
+  intent of previous changes.
 
 ## Since draft-kazuho-httpbis-priority-04
 
