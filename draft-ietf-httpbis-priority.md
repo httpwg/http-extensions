@@ -158,7 +158,7 @@ multiple experiments from independent research have shown that simpler schemes
 can reach at least equivalent performance characteristics compared to the more
 complex HTTP/2 setups seen in practice, at least for the web use case.
 
-## Disabling HTTP/2 Priorities
+## Disabling HTTP/2 Priorities {#disabling}
 
 The problems and insights set out above are motivation for allowing endpoints to
 opt out of using the HTTP/2 priority scheme, in favor of using an alternative
@@ -501,8 +501,54 @@ not specify the incremental(`i`) parameter.
 
 # Client Scheduling
 
-A client MAY use priority values to make local scheduling choices about the
-requests it initiates.
+A client MAY use priority values to make local processing or scheduling choices
+about the requests it initiates.
+
+
+# Server Scheduling
+
+Priority signals are input to a prioritization process. They do not guarantee
+any particular processing or transmission order for one response relative to any
+other response. An endpoint cannot force a peer to process concurrent request in
+a particular order using priority. Expressing priority is therefore only a
+suggestion.
+
+A server can use Priority signals along with other inputs to make scheduling
+decisions. No guidance is provided about how this can or should be done. Factors
+such as implementation choices or deployment environment also play a role. Any
+given connection is likely to have many dynamic permutations. For these reasons,
+there is no unilateral perfect scheduler and this document only provides some
+basic recommendations for implementations. 
+
+Clients can expect servers will make prioritization decisions, including
+ignoring all signals. And they should expect that decisions might be based on
+metadata or information beyond the scope of extensible priorities. 
+
+It is RECOMMENDED that, when possible, servers respect urgency values. Sending
+higher urgency responses before lower urgency responses.
+
+It is RECOMMENDED that, when possible, servers respect incremental values.
+Sending non-incremental responses of the same urgency one-by-one, and sending
+incremental responses of the same urgency in round-robin manner.
+
+It is RECOMMENDED that a server considers request generation order as an input
+to prioritization. This can be determined from the Stream ID. A server that
+receives concurrent requests at the same urgency level might serve the responses
+one-by-one but it needs to pick an order. Serving the lowest Stream ID in a
+given urgency level can align well with clients usage of HTTP; such as user
+agents that load document trees where ordering is important.
+
+For non-incremental resources the total download time (time to first byte - time
+to last byte) is important. For incremental resources chunk download times are
+important, especially the first. A server that receives a mix of incremental and
+non-incremental at the same urgency is challenged to schedule two competing
+factors. An unbalanced scheduler might prefer one type over another, leading to
+sub-optimal loading and in the worst case starvation of one type. Servers are
+RECOMMENDED to avoid starvation but no specific method of doing so is prescribed.
+
+
+An HTTP/2 server that sends SETTINGS_DEPRECATE_HTTP2_PRIORITIES ({{disabling}})
+SHOULD NOT act on HTTP/2 priority signals.
 
 
 # Fairness {#fairness}
