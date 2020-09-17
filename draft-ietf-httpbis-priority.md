@@ -92,8 +92,8 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in {{!RFC2119}}.
 
-The terms sh-token and sh-boolean are imported from
-{{!STRUCTURED-HEADERS=I-D.ietf-httpbis-header-structure}}.
+The terms sf-token and sf-boolean are imported from
+{{!STRUCTURED-FIELDS=I-D.ietf-httpbis-header-structure}}.
 
 Example HTTP requests and responses use the HTTP/2-style formatting from
 {{?RFC7540}}.
@@ -204,8 +204,8 @@ single hop.  If intermediaries want to specify prioritization on a multiplexed
 HTTP connection, they SHOULD use a PRIORITY_UPDATE frame and SHOULD NOT change
 the Priority header field.
 
-In both cases, the set of priority parameters is encoded as a Structured Headers
-Dictionary ({{!STRUCTURED-HEADERS}}).
+In both cases, the set of priority parameters is encoded as a Structured Fields
+Dictionary ({{!STRUCTURED-FIELDS}}).
 
 This document defines the urgency(`u`) and incremental(`i`) parameters. When
 receiving an HTTP request that does not carry these priority parameters, a
@@ -223,7 +223,7 @@ The urgency parameter (`u`) takes an integer between 0 and 7, in descending
 order of priority. This range provides sufficient granularity for prioritizing
 responses for ordinary web browsing, at minimal complexity.
 
-The value is encoded as an sh-integer. The default value is 3.
+The value is encoded as an sf-integer. The default value is 3.
 
 This parameter indicates the sender's recommendation, based on the expectation
 that the server would transmit HTTP responses in the order of their urgency
@@ -251,7 +251,7 @@ responses that have impact on user interaction.
 
 ## Incremental
 
-The incremental parameter (`i`) takes an sh-boolean as the value that indicates
+The incremental parameter (`i`) takes an sf-boolean as the value that indicates
 if an HTTP response can be processed incrementally, i.e. provide some
 meaningful output as chunks of the response arrive.
 
@@ -378,7 +378,7 @@ Prioritized Stream ID:
   update.
 
 Priority Field Value:
-: The priority update value in ASCII text, encoded using Structured Headers.
+: The priority update value in ASCII text, encoded using Structured Fields.
 
 The PRIORITY_UPDATE frame MAY be sent before the stream that it references has
 been created. The Prioritized Stream ID MUST be within the stream limit. If a
@@ -429,7 +429,7 @@ Prioritized Element ID:
 : The stream ID or push ID that is the target of the priority update.
 
 Priority Field Value:
-: The priority update value in ASCII text, encoded using Structured Headers.
+: The priority update value in ASCII text, encoded using Structured Fields.
 
 The request-stream variant of PRIORITY_UPDATE (type=0xF0700) MUST reference a
 request stream. If a server receives a PRIORITY_UPDATE (type=0xF0700) for a
