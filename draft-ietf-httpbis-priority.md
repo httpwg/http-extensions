@@ -541,12 +541,19 @@ background urgency being associated. However, in the worst case, the asymmetry
 between the precedence declared by multiple clients might cause responses going
 to one end client to be delayed totally after those going to another.
 
-In order to mitigate this fairness problem, when a server responds to a request
-that is known to have come through an intermediary, the server SHOULD prioritize
-the response as if it was assigned the priority of  `u=1, i`
-(i.e. round-robin) regardless of the value of the Priority header field being
-transmitted, unless the server knows the intermediary is not
-coalescing requests from multiple clients.
+In order to mitigate this fairness problem, a server could use knowledge about
+the intermediary as another signal in its prioritization decisions. For
+instance, if a server knows the intermediary is coalescing requests, then
+it could prioritize responses using a fixed urgency level with incremental
+loading. Treating all requests from an intermediary in this way would result in
+round-robin scheduling. This works well when the network bottleneck exists
+between the intermediary and the end client, as the intermediary buffers
+responses and forwards the chunks based on the prioritization scheme it
+implements. A more sophisticated server could prioritize responses with a
+dynamic urgency that more closely reflects request urgency, in order to have
+weighted round-robin scheduling. This would result in less urgent responses
+receiving less bandwidth in case the bottleneck exists between the server and
+the intermediary.
 
 A server can determine if a request came from an intermediary through
 configuration, or by consulting if that request contains one of the following
@@ -554,15 +561,6 @@ header fields:
 
 * Forwarded, X-Forwarded-For ({{?RFC7239}})
 * Via ({{?RFC7230}}, Section 5.7.1)
-
-Responding to requests coming through an intermediary in a round-robin manner
-works well when the network bottleneck exists between the intermediary and the
-end client, as the intermediary would be buffering the responses and then be
-forwarding the chunks of those buffered responses based on the prioritization
-scheme it implements. A sophisticated server MAY use a weighted round-robin
-reflecting the urgencies expressed in the requests, so that less urgent
-responses would receive less bandwidth in case the bottleneck exists between the
-server and the intermediary.
 
 ## HTTP/1.x Back Ends
 
