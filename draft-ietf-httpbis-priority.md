@@ -513,7 +513,7 @@ other response. An endpoint cannot force a peer to process concurrent request in
 a particular order using priority. Expressing priority is therefore only a
 suggestion.
 
-A server can use Priority signals along with other inputs to make scheduling
+A server can use priority signals along with other inputs to make scheduling
 decisions. No guidance is provided about how this can or should be done. Factors
 such as implementation choices or deployment environment also play a role. Any
 given connection is likely to have many dynamic permutations. For these reasons,
