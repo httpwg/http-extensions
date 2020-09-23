@@ -546,7 +546,6 @@ factors. An unbalanced scheduler might prefer one type over another, leading to
 sub-optimal loading and in the worst case starvation of one type. Servers are
 RECOMMENDED to avoid starvation but no specific method of doing so is prescribed.
 
-
 An HTTP/2 server that sends SETTINGS_DEPRECATE_HTTP2_PRIORITIES ({{disabling}})
 SHOULD NOT act on HTTP/2 priority signals.
 
