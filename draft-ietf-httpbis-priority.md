@@ -125,8 +125,8 @@ in a unique way, which makes it difficult for servers to understand their intent
 and act or intervene accordingly.
 
 Many HTTP/2 server implementations do not include support for the priority
-scheme, some favoring instead bespoke server-driven schemes based on heuristics
-and other hints, like the content type of resources and the request generation
+scheme. Some instead favor custom server-driven schemes based on heuristics or
+other hints, such as resource content type or request generation
 order. For example, a server, with knowledge of the document structure, might
 want to prioritize the delivery of images that are critical to user experience
 above other images, but below the CSS files. Since client trees vary, it is
