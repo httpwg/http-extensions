@@ -536,13 +536,27 @@ based on the Stream ID, which corresponds to the order in which clients make
 requests, ensures that clients can use request ordering to influence response
 order.
 
-For non-incremental resources the total download time (time to first byte - time
-to last byte) is important. For incremental resources chunk download times are
-important, especially the first. A server that receives a mix of incremental and
-non-incremental at the same urgency is challenged to schedule two competing
-factors. An unbalanced scheduler might prefer one type over another, leading to
-sub-optimal loading and in the worst case starvation of one type. Servers are
-RECOMMENDED to avoid starvation but no specific method of doing so is prescribed.
+The incremental parameter ({{incremental}}) indicates how a client processes
+response bytes as they arrive. Non-incremental resources are only used when all
+of the response payload has been received. Incremental resources are used as
+parts, or chunks, of the response payload are received. Therefore, the timing of
+response data reception at the client, such as the time to early bytes or the
+time to receive the entire payload, plays an important role in perceived
+performance. Timings depend on resource size but this scheme provides no
+explicit guidance about how a server should use size as an input to
+prioritization. Instead, the follow examples demonstrate how a server that
+strictly abides the scheduling guidance based on urgency and request generation
+order could find that early requests prevent serving of later requests.
+
+1. At the same urgency level, a non-incremental request for a large resource
+   followed by an incremental request for a small resource.
+2. At the same urgency level, an incremental request of indeterminate length
+   followed by a non-incremental large resource.
+
+It is RECOMMENDED that servers avoid such starvation where possible. The method
+to do so is an implementation decision. For example, a server might
+pre-emptively send responses of a particular incremental type based on other
+information such as content size.
 
 An HTTP/2 server implementing the Extensible Priorities scheme instead of the
 HTTP/2 priority sends SETTINGS_DEPRECATE_HTTP2_PRIORITIES; see {{disabling}}. It
