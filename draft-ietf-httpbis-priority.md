@@ -520,9 +520,8 @@ given connection is likely to have many dynamic permutations. For these reasons,
 there is no unilateral perfect scheduler and this document only provides some
 basic recommendations for implementations. 
 
-Clients can expect servers will make prioritization decisions, including
-ignoring all signals. And they should expect that decisions might be based on
-metadata or information beyond the scope of extensible priorities. 
+Clients cannot depend on particular treatment based on priority signals. Servers
+can use other information to prioritize responses.
 
 It is RECOMMENDED that, when possible, servers respect urgency values. Sending
 higher urgency responses before lower urgency responses.
@@ -532,11 +531,10 @@ Sending non-incremental responses of the same urgency one-by-one, and sending
 incremental responses of the same urgency in round-robin manner.
 
 It is RECOMMENDED that a server considers request generation order as an input
-to prioritization. This can be determined from the Stream ID. A server that
-receives concurrent requests at the same urgency level might serve the responses
-one-by-one but it needs to pick an order. Serving the lowest Stream ID in a
-given urgency level can align well with clients usage of HTTP; such as user
-agents that load document trees where ordering is important.
+to prioritization. Prioritizing concurrent requests at the same urgency level
+based on the Stream ID, which corresponds to the order in which clients make
+requests, ensures that clients can use request ordering to influence response
+order.
 
 For non-incremental resources the total download time (time to first byte - time
 to last byte) is important. For incremental resources chunk download times are
