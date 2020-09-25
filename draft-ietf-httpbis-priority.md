@@ -544,7 +544,7 @@ response data reception at the client, such as the time to early bytes or the
 time to receive the entire payload, plays an important role in perceived
 performance. Timings depend on resource size but this scheme provides no
 explicit guidance about how a server should use size as an input to
-prioritization. Instead, the follow examples demonstrate how a server that
+prioritization. Instead, the following examples demonstrate how a server that
 strictly abides the scheduling guidance based on urgency and request generation
 order could find that early requests prevent serving of later requests.
 
