@@ -523,7 +523,7 @@ basic recommendations for implementations.
 Clients cannot depend on particular treatment based on priority signals. Servers
 can use other information to prioritize responses.
 
-It is RECOMMENDED that, when possible, servers respect urgency values. Sending
+It is RECOMMENDED that, when possible, servers respect urgency values, sending
 higher urgency responses before lower urgency responses.
 
 It is RECOMMENDED that, when possible, servers respect incremental values.
