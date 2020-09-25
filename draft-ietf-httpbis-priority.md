@@ -543,17 +543,11 @@ to one user agent to be delayed totally after those going to another.
 
 In order to mitigate this fairness problem, a server could use knowledge about
 the intermediary as another signal in its prioritization decisions. For
-instance, if a server knows the intermediary is coalescing requests, then
-it could prioritize responses using a fixed urgency level with incremental
-loading. Treating all requests from an intermediary in this way would result in
-round-robin scheduling. This can work if the constrained resource is network
-capacity between the intermediary and the user agent, as the intermediary
-buffers responses and forwards the chunks based on the prioritization scheme it
-implements. A more sophisticated server could prioritize responses with a
-dynamic urgency that more closely reflects request urgency, in order to have
-weighted round-robin scheduling. This would result in less urgent responses
-receiving less bandwidth in case the bottleneck exists between the server and
-the intermediary.
+instance, if a server knows the intermediary is coalescing requests, then it
+could serve the responses in round-robin manner. This can work if the
+constrained resource is network capacity between the intermediary and the user
+agent, as the intermediary buffers responses and forwards the chunks based on
+the prioritization scheme it implements.
 
 A server can determine if a request came from an intermediary through
 configuration, or by consulting if that request contains one of the following
