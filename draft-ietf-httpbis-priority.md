@@ -312,8 +312,8 @@ properties of an HTTP request it receives, the server is expected to control the
 cacheability or the applicability of the cached response, by using header fields
 that control the caching behavior (e.g., Cache-Control, Vary).
 
-An endpoint that fails to parse the Priority header SHOULD use default parameter
-values.
+An endpoint that fails to parse the Priority header field SHOULD use default
+parameter values.
 
 
 # Reprioritization
@@ -340,7 +340,7 @@ the PRIORITY_UPDATE frame is a hop-by-hop signal.
 PRIORITY_UPDATE frames are sent by clients on the control stream, allowing them
 to be sent independent from the stream that carries the response. This means
 they can be used to reprioritize a response or a push stream; or signal the
-initial priority of a response instead of the Priority header.
+initial priority of a response instead of the Priority header field.
 
 A PRIORITY_UPDATE frame communicates a complete set of all parameters in the
 Priority Field Value field. Omitting a parameter is a signal to use the
