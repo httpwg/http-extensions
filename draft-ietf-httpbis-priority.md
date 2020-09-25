@@ -345,7 +345,7 @@ initial priority of a response instead of the Priority header field.
 A PRIORITY_UPDATE frame communicates a complete set of all parameters in the
 Priority Field Value field. Omitting a parameter is a signal to use the
 parameter's default value. Failure to parse the Priority Field Value MUST be
-treat as a connection error of type FRAME_ENCODING_ERROR.
+treated as a connection error of type FRAME_ENCODING_ERROR.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
 is open. Furthermore, HTTP/3 offers no guaranteed ordering across streams, which
