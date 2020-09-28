@@ -558,7 +558,7 @@ to do so is an implementation decision. For example, a server might
 pre-emptively send responses of a particular incremental type based on other
 information such as content size.
 
-HTTP/2 endpoints can advertise that they using the Extensible Priorities scheme
+HTTP/2 endpoints can advertise that they are using the Extensible Priorities scheme
 instead of the HTTP/2 priority scheme by sending
 SETTINGS_DEPRECATE_HTTP2_PRIORITIES; see {{disabling}}. A server that sends or
 receives this setting SHOULD NOT act on priority signals belonging to the HTTP/2
