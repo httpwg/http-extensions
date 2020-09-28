@@ -187,9 +187,14 @@ continue sending the Priority header field ({{header-field}}), as it is an
 end-to-end signal that might be useful to nodes behind the server that the
 client is directly connected to.
 
-The SETTINGS frame precedes any priority signal sent from a client in HTTP/2,
-so a server can determine if it should respect the HTTP/2 scheme before
-building state.
+The SETTINGS frame precedes any priority signal sent from a client in HTTP/2, so
+a server can determine if it should respect the HTTP/2 scheme before building
+state. A server that receives SETTINGS_DEPRECATE_HTTP2_PRIORITIES MUST ignore
+HTTP/2 priority signals.
+
+Where both endpoints disable HTTP/2 priorities, the client is expected to send
+this scheme's priority signal. Handling of omitted signals is described in
+{{parameters}}.
 
 # Priority Parameters {#parameters}
 
@@ -212,7 +217,6 @@ receiving an HTTP request that does not carry these priority parameters, a
 server SHOULD act as if their default values were specified. Note that handling
 of omitted parameters is different when processing an HTTP response; see
 {{merging}}.
-
 
 Unknown parameters, parameters with out-of-range values or values of unexpected
 types MUST be ignored.
@@ -558,12 +562,6 @@ to do so is an implementation decision. For example, a server might
 pre-emptively send responses of a particular incremental type based on other
 information such as content size.
 
-HTTP/2 endpoints can advertise that they are using the Extensible Priorities scheme
-instead of the HTTP/2 priority scheme by sending
-SETTINGS_DEPRECATE_HTTP2_PRIORITIES; see {{disabling}}. A server that sends or
-receives this setting SHOULD NOT act on priority signals belonging to the HTTP/2
-scheme. The absence of a client Extensible Priority signal SHOULD be treated
-as though default urgency and incremental parameters were sent.
 
 
 # Fairness {#fairness}
