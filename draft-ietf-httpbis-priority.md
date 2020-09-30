@@ -158,7 +158,7 @@ multiple experiments from independent research have shown that simpler schemes
 can reach at least equivalent performance characteristics compared to the more
 complex HTTP/2 setups seen in practice, at least for the web use case.
 
-## Disabling HTTP/2 Priorities
+## Disabling HTTP/2 Priorities {#disabling}
 
 The problems and insights set out above are motivation for allowing endpoints to
 opt out of using the HTTP/2 priority scheme, in favor of using an alternative
@@ -187,9 +187,14 @@ continue sending the Priority header field ({{header-field}}), as it is an
 end-to-end signal that might be useful to nodes behind the server that the
 client is directly connected to.
 
-The SETTINGS frame precedes any priority signal sent from a client in HTTP/2,
-so a server can determine if it should respect the HTTP/2 scheme before
-building state.
+The SETTINGS frame precedes any priority signal sent from a client in HTTP/2, so
+a server can determine if it should respect the HTTP/2 scheme before building
+state. A server that receives SETTINGS_DEPRECATE_HTTP2_PRIORITIES MUST ignore
+HTTP/2 priority signals.
+
+Where both endpoints disable HTTP/2 priorities, the client is expected to send
+this scheme's priority signal. Handling of omitted signals is described in
+{{parameters}}.
 
 # Priority Parameters {#parameters}
 
@@ -212,7 +217,6 @@ receiving an HTTP request that does not carry these priority parameters, a
 server SHOULD act as if their default values were specified. Note that handling
 of omitted parameters is different when processing an HTTP response; see
 {{merging}}.
-
 
 Unknown parameters, parameters with out-of-range values or values of unexpected
 types MUST be ignored.
@@ -509,8 +513,60 @@ not specify the incremental(`i`) parameter.
 
 # Client Scheduling
 
-A client MAY use priority values to make local scheduling choices about the
-requests it initiates.
+A client MAY use priority values to make local processing or scheduling choices
+about the requests it initiates.
+
+
+# Server Scheduling
+
+Priority signals are input to a prioritization process. They do not guarantee
+any particular processing or transmission order for one response relative to any
+other response. An endpoint cannot force a peer to process concurrent request in
+a particular order using priority. Expressing priority is therefore only a
+suggestion.
+
+A server can use priority signals along with other inputs to make scheduling
+decisions. No guidance is provided about how this can or should be done. Factors
+such as implementation choices or deployment environment also play a role. Any
+given connection is likely to have many dynamic permutations. For these reasons,
+there is no unilateral perfect scheduler and this document only provides some
+basic recommendations for implementations. 
+
+Clients cannot depend on particular treatment based on priority signals. Servers
+can use other information to prioritize responses.
+
+It is RECOMMENDED that, when possible, servers respect the urgency parameter
+({{urgency}}), sending higher urgency responses before lower urgency responses.
+
+It is RECOMMENDED that, when possible, servers respect the incremental
+parameter ({{incremental}}). Non-incremental responses of the same urgency
+SHOULD be served one-by-one based on the Stream ID, which corresponds to the
+order in which clients make requests. Doing so ensures that clients can use
+request ordering to influence response order. Incremental responses of the same
+urgency SHOULD be served in round-robin manner.
+
+The incremental parameter indicates how a client processes response bytes as
+they arrive. Non-incremental resources are only used when all of the response
+payload has been received. Incremental resources are used as parts, or chunks,
+of the response payload are received. Therefore, the timing of response data
+reception at the client, such as the time to early bytes or the time to receive
+the entire payload, plays an important role in perceived performance. Timings
+depend on resource size but this scheme provides no explicit guidance about how
+a server should use size as an input to prioritization. Instead, the following
+examples demonstrate how a server that strictly abides the scheduling guidance
+based on urgency and request generation order could find that early requests
+prevent serving of later requests.
+
+1. At the same urgency level, a non-incremental request for a large resource
+   followed by an incremental request for a small resource.
+2. At the same urgency level, an incremental request of indeterminate length
+   followed by a non-incremental large resource.
+
+It is RECOMMENDED that servers avoid such starvation where possible. The method
+to do so is an implementation decision. For example, a server might
+pre-emptively send responses of a particular incremental type based on other
+information such as content size.
+
 
 
 # Fairness {#fairness}
