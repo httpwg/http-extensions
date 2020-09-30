@@ -532,7 +532,7 @@ It is RECOMMENDED that, when possible, servers respect the urgency parameter
 
 It is RECOMMENDED that, when possible, servers respect the incremental
 parameter ({{incremental}}). Non-incremental responses of the same urgency
-SHOULD be served one-by-one based on the Stream ID, that corersponds to the
+SHOULD be served one-by-one based on the Stream ID, which corresponds to the
 order in which clients make requests. Doing so ensures that clients can use
 request ordering to influence response order. Incremental responses of the same
 urgency SHOULD be served in round-robin manner.
