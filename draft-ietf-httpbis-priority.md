@@ -286,8 +286,8 @@ priority = u=5, i
 ## Defining New Parameters
 
 When attempting to extend priorities, care must be taken to ensure any use of
-existing parameters are either unchanged or modified in a way that is backwards
-compatible for peers that are unaware of the extended meaning.
+existing parameters leaves them either unchanged or modified in a way that is
+backwards compatible for peers that are unaware of the extended meaning.
 
 For example, if there is a need to provide more granularity than eight urgency
 levels, it would be possible to subdivide the range using an additional
