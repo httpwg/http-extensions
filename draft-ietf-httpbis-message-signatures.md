@@ -400,8 +400,7 @@ In order to verify a signature, a verifier MUST:
 
 3. Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.
 
-
-A signature with a Creation Time that is in the future or an Expiration Time that is in the past MUST NOT be processed.  
+The verifier MUST examine the signature's Creation Time and Expiration Time and evaluate whether they meet the verifier's requirements.  These requirements may vary depending on the use case.  When comparing Creation Time and/or Expiration Time to a timestamp obtained from another source (e.g., testing that the Expiration Time is later than the local time at the verifier), the verifier MAY allow for some variability due to clock skew between the two timestamp sources (e.g., the signer and the verifier).  The verifier MAY impose its own maximum age limits, and reject signatures that are too old (i.e., have a Creation Time too far in the past) regardless of whether the signer gave the signatures an Expiration Time.
 
 The verifier MUST ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature MUST NOT be processed.
 
