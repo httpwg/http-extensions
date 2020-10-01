@@ -166,7 +166,7 @@ The following sections define content identifiers, their associated content, and
 
 ## HTTP Header Fields
 
-An HTTP header field value is identified by its header field name.  While HTTP header field names are case-insensitive, implementations SHOULD use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers.
+An HTTP header field is identified by its header field name.  While HTTP header field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers.
 
 An HTTP header field value is canonicalized as follows:
 
@@ -324,7 +324,12 @@ The following sections describe each of these steps in detail.
 
 4. The signer sets the signature's Expiration Time property to the time at which the signature is to expire, or to undefined if the signature will not expire.
 
-5. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.  Each identifier MUST be one of those defined in Section 2.  This list MUST NOT be empty, as this would result in creating a signature over the empty string.  If the signature's Algorithm name does not start with rsa, hmac, or ecdsa, signers SHOULD include (created) and (request-target) in the list.  If the signature's Algorithm starts with rsa, hmac, or ecdsa, signers SHOULD include date and (request-target) in the list.  Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
+5. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
+   * Each identifier MUST be one of those defined in Section 2.
+   * This list MUST NOT be empty, as this would result in creating a signature over the empty string.
+   * If the signature's Algorithm name does not start with rsa, hmac, or ecdsa, signers SHOULD include (created) and (request-target) in the list.
+   * If the signature's Algorithm starts with rsa, hmac, or ecdsa, signers SHOULD include date and (request-target) in the list.
+   * Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
 
 
 For example, given the following HTTP message:
@@ -332,7 +337,7 @@ For example, given the following HTTP message:
 ~~~
 GET /foo HTTP/1.1
 Host: example.org
-Date: Tue, 07 Jun 2014 20:51:35 GMT
+Date: Sat, 07 Jun 2014 20:51:35 GMT
 X-Example: Example header
         with some whitespace.
 X-EmptyHeader:
@@ -346,8 +351,8 @@ The following table presents a non-normative example of metadata values that a s
 |--- |--- |
 |Algorithm|`rsa-256`|
 |Covered Content|`(request-target)`, `(created)`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`|
-|Creation Time|Equal to the value specified in the `Date` header field.|
-|Expiration Time|Equal to the Creation Time plus five minutes.|
+|Creation Time|`1402174295`|
+|Expiration Time|`1402174595`|
 |Verification Key Material|The public key provided in  and identified by the `keyId` value "test-key-b".|
 {: title="Non-normative example metadata values" #example-metadata}
 
@@ -1054,6 +1059,11 @@ Jeffrey Yasskin
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - -01
+     * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
+     * Relaxed guidance on processing Creation Time and Expiration Time to only require verifiers to examine them and test against the verifier's requirements.
+     * Minor editorial corrections and readability improvements.
+
   - -00
      * Initialized from draft-richanna-http-message-signatures-00, following adoption by the working group.
      
@@ -1073,4 +1083,3 @@ Jeffrey Yasskin
      * Added IANA HTTP Signature Parameter registry.
      * Added additional normative and informative references.
      * Added Topics for Working Group Discussion section, to be removed prior to publication as an RFC.
-
