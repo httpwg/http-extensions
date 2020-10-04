@@ -148,7 +148,7 @@ field definitions to align with {{SEMANTICS}} concepts.
 Basing `Digest` on the selected representation makes it straightforward to
 apply it to use-cases where the transferred data does require some sort of
 manipulation to be considered a representation, or conveys a partial
-representation of a resource eg. Range Requests (see Section 9.3 of
+representation of a resource eg. Range Requests (see Section 13.2 of
 {{SEMANTICS}}).
 
 Changes are semantically compatible with existing implementations and better
@@ -159,7 +159,7 @@ the value contained in any `Content-Encoding` or `Content-Type` header fields.
 Therefore, a given resource may have multiple different digest values.
 
 To allow both parties to exchange a Digest of a representation with no content
-codings (see Section 7.1.2 of {{SEMANTICS}}) two more digest-algorithms
+codings (see Section 7.5.1 of {{SEMANTICS}}) two more digest-algorithms
 are added ("id-sha-256" and "id-sha-512").
 
 ## Goals
@@ -206,7 +206,7 @@ document are to be interpreted as described in BCP 14 ([RFC2119] and [RFC8174])
 when, and only when, they appear in all capitals, as shown here.
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
-[RFC7405] along with the "#rule" extension defined in Section 5 of
+[RFC7405] along with the "#rule" extension defined in Section 5.7.1 of
 {{SEMANTICS}}.
 
 The definitions "representation", "selected representation", "representation
@@ -220,8 +220,8 @@ whereas digest-algorithm tokens are quoted (eg. "sha", "crc32c").
 
 The representation digest is an integrity mechanism for HTTP resources
 which uses a checksum  that is calculated independently of the payload body
-(see Section 7.3.3 of {{SEMANTICS}}).
-It uses the representation data (see Section 7.1 of {{SEMANTICS}}),
+(see Section 5.5.4 of {{SEMANTICS}}).
+It uses the representation data (see Section 7.2 of {{SEMANTICS}}),
 that can be fully or partially contained in the payload body, or not contained at all:
 
 ~~~
@@ -237,7 +237,7 @@ transformations (eg. transfer codings for HTTP/1.1 see 6.1 of
 
 A representation digest consists of
 the value of a checksum computed on the entire selected `representation data`
-(see Section 7 of {{SEMANTICS}}) of a resource identified according to Section 7.3.2 of {{SEMANTICS}}
+(see Section 7 of {{SEMANTICS}}) of a resource identified according to Section 5.5.2 of {{SEMANTICS}}
 together with an indication of the algorithm used (and any parameters)
 
 ~~~ abnf
@@ -264,7 +264,7 @@ response.
    Digest = "Digest" ":" OWS 1#representation-data-digest
 ~~~
 
-The relationship between `Content-Location` (see Section 7.2.5 of
+The relationship between `Content-Location` (see Section 7.8 of
 {{SEMANTICS}}) and `Digest` is demonstrated in
 {{post-not-request-uri}}. A comprehensive set of examples showing the impacts of
 representation metadata, payload transformations and HTTP methods on Digest is
@@ -334,7 +334,7 @@ some digest-algorithms, one or more parameters can be supplied.
    digest-algorithm = token
 ~~~
 
-The BNF for "parameter" is defined in Section 5.4.1.4 of
+The BNF for "parameter" is defined in Section 5.7.6 of
 {{SEMANTICS}}. All digest-algorithm values are case-insensitive
 but the lower case is preferred.
 
@@ -707,7 +707,7 @@ Request `Digest` value is computed on the enclosed representation (see
 {{acting-on-resources}}).
 
 The representation enclosed in the response refers to the resource identified by
-`Content-Location` (see {{SEMANTICS}}, Section 7.3.2).
+`Content-Location` (see {{SEMANTICS}}, Section 5.5.2).
 
 `Digest` is thus computed on the enclosed representation.
 
