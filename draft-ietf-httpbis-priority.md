@@ -212,7 +212,7 @@ the Priority header field.
 In both cases, the set of priority parameters is encoded as a Structured Fields
 Dictionary ({{!STRUCTURED-FIELDS}}).
 
-This document defines the urgency(`u`) and incremental(`i`) parameters. When
+This document defines the urgency(`u`), incremental(`i`) and applied ('ap') parameters. When
 receiving an HTTP request that does not carry these priority parameters, a
 server SHOULD act as if their default values were specified. Note that handling
 of omitted parameters is different when processing an HTTP response; see
@@ -281,6 +281,25 @@ set to `5` and the incremental parameter set to `true`.
 :authority = example.net
 :path = /image.jpg
 priority = u=5, i
+~~~
+
+## Applied
+
+The applied parameter (“ap") takes an sf-boolean as the value that indicates
+that a server or an intermediary recognized a Priority HTTP Header Field in the
+request. A value of true (`1`) indicates that the requested priority was applied
+to the response. A value of false (`0`). indicates that the requested priority was
+not (or could not be) applied to the response.
+
+The default value of the applied parameter is false (`0`).
+
+The applied parameter MUST NOT appear in a request.
+
+The following example shows a response header that indicates that a
+priority request was applied to the response scheduling.
+
+~~~ example
+ priority = u=5, i, ap
 ~~~
 
 ## Defining New Parameters
@@ -503,7 +522,7 @@ and the origin responds with
 ~~~ example
 :status = 200
 content-type = image/png
-priority = u=1
+priority = u=1, ap
 ~~~
 
 the intermediary might alter its understanding of the urgency from `5` to `1`,
@@ -531,7 +550,7 @@ decisions. No guidance is provided about how this can or should be done. Factors
 such as implementation choices or deployment environment also play a role. Any
 given connection is likely to have many dynamic permutations. For these reasons,
 there is no unilateral perfect scheduler and this document only provides some
-basic recommendations for implementations. 
+basic recommendations for implementations.
 
 Clients cannot depend on particular treatment based on priority signals. Servers
 can use other information to prioritize responses.
@@ -568,6 +587,22 @@ to do so is an implementation decision. For example, a server might
 pre-emptively send responses of a particular incremental type based on other
 information such as content size.
 
+A server or intermediary that recognizes a Priority HTTP Header Field in a
+request and which successfully applies that priority to its scheduling MUST
+ensure that the response contains a Priority HTTP Header Field
+with the same parameters and an applied parameter with a value of true.
+
+A server that recognizes a Priority HTTP Header Field in a request and which
+cannot or does not apply that priority to its scheduling, or which applies a
+different priority to its scheduling, MUST ensure that the response contains
+a Priority HTTP Header Field with an applied parameter with a value of false.
+
+An intermediary that recognizes a Priority HTTP Header Field in a request and
+which cannot or does not apply that priority to its scheduling, or which applies
+a different priority to its scheduling, MUST ensure that the response contains
+a Priority HTTP Header Field with an applied parameter with a value of false,
+unless the Priority HTTP Header Field of the response already contains an
+applied parameter and the intermediary did not apply additional prioritization.
 
 
 # Fairness {#fairness}
