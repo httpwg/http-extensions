@@ -466,9 +466,18 @@ The `contentMD5` token defined in Section 5 of [RFC3230] MUST NOT be used as a d
 
 # Obsolete Digest Header Field Parameters {#obsolete-parameters}
 
-This RFC obsoletes the usage of parameters with `Digest` introduced in
+This document obsoletes the usage of parameters with `Digest` introduced in
 Section 4.1.1 and 4.2 of [RFC3230] because this feature has not been widely deployed
 and complicates field-value processing.
+
+Field parameters provided a common way to attach additional information
+to a representation-data-digest,
+but if they are used as an input to validate the checksum, an attacker could alter them to steer
+the validation behavior.
+
+A digest-algorithm can still be parameterized defining its own way to encode parameters into the
+representation-data-digest in such a way as to mitigate security risks related to its computation.
+
 
 # Relationship to Subresource Integrity (SRI)
 
@@ -1065,13 +1074,7 @@ in conjuction with the encrypted content-coding {{?RFC8188}}.
 
 ## Algorithm Agility
 
-Algorithm agility is achieved establishing the IANA Digest Algorithm Values registry,
-and adding it the "Status" field making it possible to deprecate and obsolete insecure algorithms.
-
-The now obsoleted [RFC3230] allowed passing parameters to digest-algorithms:
-if those parameters are used to verify the checksum, there will be enough space for bad or insecure
-implementations. If a digest-algorithm want to support parameters, it can encode them into the
-representation-data-digest.
+...
 
 # IANA Considerations
 
