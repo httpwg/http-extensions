@@ -271,7 +271,9 @@ representation metadata, payload transformations and HTTP methods on Digest is
 provided in {{examples-unsolicited}} and {{examples-solicited}}.
 
 A `Digest` field MAY contain multiple representation-data-digest values. This
-could be useful for responses expected to reside in caches shared by users with
+could be useful
+to transition from weak algorithms or
+for responses expected to reside in caches shared by users with
 different browsers, for example.
 
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
@@ -1059,7 +1061,16 @@ in conjuction with the encrypted content-coding {{?RFC8188}}.
 
 ## Algorithm Agility
 
-...
+Algorithm agility is achieved establishing the IANA Digest Algorithm Values registry,
+and adding it the "Status" field making it possible to deprecate and obsolete insecure algorithms.
+
+Transition from weak algorithms can be achieved
+negotiating the most suitable digest-algorithm using `Want-Digest` (see {{want-digest}})
+or sending multiple representation-data-digest, thus allowing the receiver to select the best
+possible digest-algorithm.
+Even in this case, it is good practice to avoid sending non-necessary
+representation-data-digest values because the receiver could either ignore them (see {{digest}})
+or uselessly consume resources to evaluate all of them.
 
 # IANA Considerations
 
