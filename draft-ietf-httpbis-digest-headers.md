@@ -270,11 +270,14 @@ The relationship between `Content-Location` (see Section 7.8 of
 representation metadata, payload transformations and HTTP methods on Digest is
 provided in {{examples-unsolicited}} and {{examples-solicited}}.
 
-A `Digest` field MAY contain multiple representation-data-digest values. This
-could be useful
-to transition from weak algorithms or
+A `Digest` field MAY contain multiple representation-data-digest values.
+For example, a server may provide representation-data-digest values using different algorithms,
+allowing it to support a population of clients with different evolving capabilities;
+this is particularly useful in support of transitioning away
+from weaker algorithms should the need arise (see {{algorithm-agility}}).
+Another use case for sending multiple checksums is
 for responses expected to reside in caches shared by users with
-different browsers, for example.
+different browsers.
 
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
 field. This allows the recipient to choose which digest-algorithm(s) to use for
@@ -1061,20 +1064,32 @@ in conjuction with the encrypted content-coding {{?RFC8188}}.
 
 ## Algorithm Agility
 
-Algorithm agility is achieved establishing the IANA Digest Algorithm Values registry,
-and adding it the "Status" field making it possible to deprecate and obsolete insecure algorithms.
+The security properties of digest-algorithms are not fixed.
+Algorithm agility is achieved establishing the IANA Digest Algorithm Values
+registry (see {{iana-digest-algorithm-registry}}) and Section 2.1 of {{?RFC7696}}).
 
-Transition from weak algorithms can be achieved
-negotiating the most suitable digest-algorithm using `Want-Digest` (see {{want-digest}})
-or sending multiple representation-data-digest, thus allowing the receiver to select the best
-possible digest-algorithm.
-Even in this case, it is good practice to avoid sending non-necessary
-representation-data-digest values because the receiver could either ignore them (see {{digest}})
-or uselessly consume resources to evaluate all of them.
+To help endpoints make secure algorithm choices,
+this document adds to the IANA Digest Algorithm Values registry
+a new "Status" field containing the most-recent appraisal of the digest-algorithm according
+to the algorithm used to compute the checksum based on the type and status of the primary document
+in which the checksum algorithm is defined.
+
+The entries associated to a checksum algorithm which becomes insecure or otherwise undesirable
+can be marked as "deprecated",
+while the ones associated to a standardized algorithm without known problems can be marked
+as "standard".
+
+An endpoint might have a preference for algorithms,
+such as preferring "standard" algorithms over "deprecated" ones.
+Transition from weak algorithms is supported
+by negotiation of digest-algorithm using `Want-Digest` (see {{want-digest}})
+or by sending multiple representation-data-digest values for the receiver to choose.
+Endpoints are advised that sending multiple values consumes resources,
+which may be wasted if the receiver ignores them (see {{digest}})."
 
 # IANA Considerations
 
-## Establish the HTTP Digest Algorithm Values
+## Establish the HTTP Digest Algorithm Values {#iana-digest-algorithm-registry}
 
 This memo sets this spec to be the establishing document for the [HTTP Digest
 Algorithm
