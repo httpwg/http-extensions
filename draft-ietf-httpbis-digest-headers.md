@@ -1059,7 +1059,7 @@ in conjunction with the encrypted content-coding {{?RFC8188}}.
 
 The representation-data-digest of an encrypted payload can change between different messages
 depending on the encryption algorithm used; in those cases its value could not be used to provide
-a proof of integrity "at rest" unless the whole (eg. encoded) payload body is persisted.
+a proof of integrity "at rest" unless the whole (e.g. encoded) payload body is persisted.
 
 ## Algorithm Agility
 
