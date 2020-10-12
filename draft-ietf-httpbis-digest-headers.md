@@ -1085,7 +1085,7 @@ Transition from weak algorithms is supported
 by negotiation of digest-algorithm using `Want-Digest` (see {{want-digest}})
 or by sending multiple representation-data-digest values for the receiver to choose.
 Endpoints are advised that sending multiple values consumes resources,
-which may be wasted if the receiver ignores them (see {{digest}})."
+which may be wasted if the receiver ignores them (see {{digest}}).
 
 # IANA Considerations
 
