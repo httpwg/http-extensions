@@ -1075,7 +1075,7 @@ to the algorithm used to compute the checksum based on the type and status of th
 in which the checksum algorithm is defined.
 
 The entries associated to a checksum algorithm which becomes insecure or otherwise undesirable
-can be marked as "deprecated",
+are marked as "deprecated",
 while the ones associated to a standardized algorithm without known problems can be marked
 as "standard".
 
