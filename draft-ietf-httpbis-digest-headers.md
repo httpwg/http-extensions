@@ -1070,9 +1070,7 @@ digest-algorithm from the IANA Digest Algorithm Values registy in {{iana-digest-
 
 To help endpoints understand weaker algorithms from stonger ones,
 this document adds to the IANA Digest Algorithm Values registry
-a new "Status" field containing the most-recent appraisal of the digest-algorithm according
-to the algorithm used to compute the checksum based on the type and status of the primary document
-in which the checksum algorithm is defined.
+a new "Status" field containing the most-recent appraisal of the digest-algorithm.
 
 The entries associated to a checksum algorithm which becomes insecure or otherwise undesirable
 are marked as "deprecated",
