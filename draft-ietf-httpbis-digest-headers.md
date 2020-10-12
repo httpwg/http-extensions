@@ -1068,7 +1068,7 @@ The security properties of digest-algorithms are not fixed.
 Algorithm agility is achieved establishing the IANA Digest Algorithm Values
 registry (see {{iana-digest-algorithm-registry}}) and Section 2.1 of {{?RFC7696}}).
 
-To help endpoints make secure algorithm choices,
+To help endpoints understand weaker algorithms from stonger ones,
 this document adds to the IANA Digest Algorithm Values registry
 a new "Status" field containing the most-recent appraisal of the digest-algorithm according
 to the algorithm used to compute the checksum based on the type and status of the primary document
