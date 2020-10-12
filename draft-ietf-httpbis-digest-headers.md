@@ -1083,7 +1083,7 @@ An endpoint might have a preference for algorithms,
 such as preferring "standard" algorithms over "deprecated" ones.
 Transition from weak algorithms is supported
 by negotiation of digest-algorithm using `Want-Digest` (see {{want-digest}})
-or by sending multiple representation-data-digest values for the receiver to choose.
+or by sending multiple representation-data-digest values from which the receiver chooses.
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{digest}}).
 
