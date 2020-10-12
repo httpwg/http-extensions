@@ -270,9 +270,11 @@ The relationship between `Content-Location` (see Section 7.8 of
 representation metadata, payload transformations and HTTP methods on Digest is
 provided in {{examples-unsolicited}} and {{examples-solicited}}.
 
-A `Digest` field MAY contain multiple representation-data-digest values. This
-could be useful for responses expected to reside in caches shared by users with
-different browsers, for example.
+A `Digest` field MAY contain multiple representation-data-digest values.
+For example, a server may provide representation-data-digest values using different algorithms,
+allowing it to support a population of clients with different evolving capabilities;
+this is particularly useful in support of transitioning away
+from weaker algorithms should the need arise (see {{algorithm-agility}}).
 
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
 field. This allows the recipient to choose which digest-algorithm(s) to use for
@@ -1063,27 +1065,44 @@ a proof of integrity "at rest" unless the whole (e.g. encoded) payload body is p
 
 ## Algorithm Agility
 
-...
+The security properties of digest-algorithms are not fixed.
+Algorithm Agility (see {{?RFC7696}}) is achieved by providing implementations flexibility
+in their choice of digest-algorithm from the IANA Digest Algorithm Values registry in
+{{iana-digest-algorithm-registry}}.
+
+To help endpoints understand weaker algorithms from stronger ones,
+this document adds to the IANA Digest Algorithm Values registry
+a new "Status" field containing the most-recent appraisal of the digest-algorithm;
+the allowed values are specified in {{iana-digest-algorithm-status}}.
+
+An endpoint might have a preference for algorithms,
+such as preferring "standard" algorithms over "deprecated" ones.
+Transition from weak algorithms is supported
+by negotiation of digest-algorithm using `Want-Digest` (see {{want-digest}})
+or by sending multiple representation-data-digest values from which the receiver chooses.
+Endpoints are advised that sending multiple values consumes resources,
+which may be wasted if the receiver ignores them (see {{digest}}).
 
 # IANA Considerations
 
-## Establish the HTTP Digest Algorithm Values
+## Establish the HTTP Digest Algorithm Values {#iana-digest-algorithm-registry}
 
 This memo sets this spec to be the establishing document for the [HTTP Digest
 Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 
-## The "status" Field in the HTTP Digest Algorithm Values
+## The "status" Field in the HTTP Digest Algorithm Values {#iana-digest-algorithm-status}
 
 This memo adds the field "Status" to the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry. The allowed values for the "Status" fields are described below.
 
+  {: vspace="0"}
    Status
-   :  Specify "standard", "experimental", "historic",
-      "obsoleted", or "deprecated" according to the type
-      and status of the primary document in which the algorithm
-      is defined.
+   :  * "standard" for standardized algorithms without known problems;
+      * "experimental", "obsoleted" or some other appropriate value - e.g. according to the type
+      and status of the primary document in which the algorithm is defined;
+      * "deprecated" when the algorithm is insecure or otherwise undesirable.
 
 ## Deprecate "MD5" Digest Algorithm {#iana-md5}
 
