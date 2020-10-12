@@ -275,9 +275,6 @@ For example, a server may provide representation-data-digest values using differ
 allowing it to support a population of clients with different evolving capabilities;
 this is particularly useful in support of transitioning away
 from weaker algorithms should the need arise (see {{algorithm-agility}}).
-Another use case for sending multiple checksums is
-for responses expected to reside in caches shared by users with
-different browsers.
 
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
 field. This allows the recipient to choose which digest-algorithm(s) to use for
