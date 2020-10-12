@@ -1076,7 +1076,7 @@ in which the checksum algorithm is defined.
 
 The entries associated to a checksum algorithm which becomes insecure or otherwise undesirable
 are marked as "deprecated",
-while the ones associated to a standardized algorithm without known problems can be marked
+while the ones associated to a standardized algorithm without known problems are marked
 as "standard".
 
 An endpoint might have a preference for algorithms,
