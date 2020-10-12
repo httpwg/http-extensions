@@ -1065,8 +1065,8 @@ in conjuction with the encrypted content-coding {{?RFC8188}}.
 ## Algorithm Agility
 
 The security properties of digest-algorithms are not fixed.
-Algorithm agility is achieved establishing the IANA Digest Algorithm Values
-registry (see {{iana-digest-algorithm-registry}}) and Section 2.1 of {{?RFC7696}}).
+Algorithm Agility (see {{?RFC7696}}) is achieved by providing implementations flexibility in their choice of
+digest-algorithm from the IANA Digest Algorithm Values registy in {{iana-digest-algorithm-registry}}.
 
 To help endpoints understand weaker algorithms from stonger ones,
 this document adds to the IANA Digest Algorithm Values registry
