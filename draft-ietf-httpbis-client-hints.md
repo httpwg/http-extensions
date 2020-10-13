@@ -14,6 +14,7 @@ keyword: conneg
 keyword: Content Negotiation
 
 stand_alone: yes
+smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, subcompact, comments, inline]
 
 author:
@@ -132,7 +133,7 @@ Implementers need to be aware of the fingerprinting implications when implementi
 
 When presented with a request that contains one or more Client Hint header fields, servers can optimize the response based upon the information in them. When doing so, and if the resource is cacheable, the server MUST also generate a Vary response header field (Section 7.1.4 of {{RFC7231}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
-Servers MUST ignore hints they do not understand nor support. There is no mechanism for servers to indicate to user agents that hints were ignored. 
+Servers MUST ignore hints they do not understand nor support. There is no mechanism for servers to indicate to user agents that hints were ignored.
 
 Furthermore, the server can generate additional response header fields (as specified by the hint or hints in use) that convey related values to aid client processing.
 
@@ -190,7 +191,7 @@ The above example indicates that the cache key needs to include the Sec-CH-Examp
 ## Information Exposure
 
 Request header fields used in features relying on this document expose information about the user's environment to enable privacy-preserving proactive content negotiation, and avoid exposing passive fingerprinting vectors.
-However, implementers need to bear in mind that in the worst case, uncontrolled and unmonitored active fingerprinting is not better than passive fingerprinting. In order to provide user privacy benefits, user agents need to apply further policies that prevent abuse of the information exposed by features using Client Hints. 
+However, implementers need to bear in mind that in the worst case, uncontrolled and unmonitored active fingerprinting is not better than passive fingerprinting. In order to provide user privacy benefits, user agents need to apply further policies that prevent abuse of the information exposed by features using Client Hints.
 
 The information exposed by features might reveal new information about the user and implementers ought to consider the following considerations, recommendations, and best practices.
 
@@ -201,7 +202,7 @@ The header-based opt-in means that removal of passive fingerprinting vectors is 
 
 Therefore, features relying on this document to define Client Hint headers MUST NOT provide new information that is otherwise not made available to the application by the user agent, such as existing request headers, HTML, CSS, or JavaScript.
 
-Such features need to take into account the following aspects of the information exposed: 
+Such features need to take into account the following aspects of the information exposed:
 
 * Entropy - Exposing highly granular data can be used to help identify users across multiple requests to different origins. Reducing the set of header field values that can be expressed, or restricting them to an enumerated range where the advertised value is close to but is not an exact representation of the current value, can improve privacy and reduce risk of linkability by ensuring that the same value is sent by multiple users.
 * Sensitivity -  The feature SHOULD NOT expose user-sensitive information. To that end, information available to the application, but gated behind specific user actions (e.g., a permission prompt or user activation) SHOULD NOT be exposed as a Client Hint.
@@ -223,7 +224,7 @@ Deployment of new request headers requires several considerations:
   - Potential conflicts due to existing use of header field name
   - Properties of the data communicated in header field value
 
-Authors of new Client Hints are advised to carefully consider whether they need to be able to be added by client-side content (e.g., scripts), or whether they need to be exclusively set by the user agent. In the latter case, the Sec- prefix on the header field name has the effect of preventing scripts and other application content from setting them in user agents. 
+Authors of new Client Hints are advised to carefully consider whether they need to be able to be added by client-side content (e.g., scripts), or whether they need to be exclusively set by the user agent. In the latter case, the Sec- prefix on the header field name has the effect of preventing scripts and other application content from setting them in user agents.
 Using the "Sec-" prefix signals to servers that the user agent - and not application content - generated the values. See {{FETCH}} for more information.
 
 By convention, request headers that are Client Hints are encouraged to use a CH- prefix, to make them easier to identify as using this framework; for example, CH-Foo or, with a "Sec-" prefix, Sec-CH-Foo. Doing so makes them easier to identify programmatically (e.g., for stripping unrecognised hints from requests by privacy filters).
@@ -241,7 +242,7 @@ Research into abuse of Client Hints might look at how HTTP responses to requests
 Sending Client Hints to the server incurs an increase in request byte size. Some of this increase can be mitigated by HTTP header compression schemes, but each new hint sent will still lead to some increased bandwidth usage.
 Servers SHOULD take that into account when opting in to receive Client Hints, and SHOULD NOT opt-in to receive hints unless they are to be used for content adaptation purposes.
 
-Due to request byte size increase, features relying on this document to define Client Hints MAY consider restricting sending those hints to certain request destinations {{FETCH}}, where they are more likely to be useful. 
+Due to request byte size increase, features relying on this document to define Client Hints MAY consider restricting sending those hints to certain request destinations {{FETCH}}, where they are more likely to be useful.
 
 
 # IANA Considerations
@@ -297,7 +298,7 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 
 ## Since -07
 * Issue 761: Clarified that the defined headers are response headers.
-* Issue 730: Replaced Key reference with Variants. 
+* Issue 730: Replaced Key reference with Variants.
 * Issue 700: Replaced ABNF with structured headers.
 * PR 878: Removed Accept-CH-Lifetime based on feedback at IETF 105
 
@@ -313,7 +314,7 @@ This document defines the "Accept-CH" HTTP response header field, and registers 
 * PR 1072: LC feedback from Julian Reschke.
 * PR 1080: Improve list style.
 * PR 1082: Remove section mentioning Variants.
-* PR 1097: Editorial feedback from mnot. 
+* PR 1097: Editorial feedback from mnot.
 * PR 1131: Remove unused references.
 * PR 1132: Remove nested list.
 
