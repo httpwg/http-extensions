@@ -1,5 +1,4 @@
 LIBDIR := lib
-USE_XSLT := true
 DISABLE_RIBBON := true
 GHPAGES_EXTRA = $(foreach ext,.html .txt,$(addsuffix $(ext),$(foreach draft,$(drafts),$(shell echo $(draft) | sed -e 's/draft-ietf-httpbis-//'))))
 
