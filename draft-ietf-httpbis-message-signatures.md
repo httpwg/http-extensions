@@ -1062,7 +1062,7 @@ Jeffrey Yasskin
 - draft-ietf-httpbis-message-signatures
   - -01
      * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
-     * Relaxed guidance on processing Creation Time and Expiration Time to only require verifiers to examine them and test against the verifier's requirements.
+     * Added real example values for Creation Time and Expiration Time.
      * Minor editorial corrections and readability improvements.
 
   - -00
