@@ -12,6 +12,7 @@ keyword: digital-signatures
 keyword: PKI
 
 stand_alone: yes
+smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline, docmapping]
 
 author:

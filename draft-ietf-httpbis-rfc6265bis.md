@@ -10,6 +10,7 @@ area: Applications and Real-Time
 workgroup: HTTP
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 stand_alone: yes #_
+smart_quotes: no
 
 author:
 -
@@ -462,7 +463,7 @@ set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
 cookie-pair       = cookie-name BWS "=" BWS cookie-value
 cookie-name       = 1*cookie-octet
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
-cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E 
+cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
                     / %x80-FF
                       ; octets excluding CTLs,
                       ; whitespace DQUOTE, comma, semicolon,

@@ -10,6 +10,7 @@ workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes
+smart_quotes: no
 pi: [toc, docindent, sortrefs, symrefs, strict, compact, comments, inline]
 
 author:
@@ -531,7 +532,7 @@ decisions. No guidance is provided about how this can or should be done. Factors
 such as implementation choices or deployment environment also play a role. Any
 given connection is likely to have many dynamic permutations. For these reasons,
 there is no unilateral perfect scheduler and this document only provides some
-basic recommendations for implementations. 
+basic recommendations for implementations.
 
 Clients cannot depend on particular treatment based on priority signals. Servers
 can use other information to prioritize responses.

@@ -15,6 +15,7 @@ keyword: protocol
 keyword: HTTP API
 
 stand_alone: yes
+smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
 author:

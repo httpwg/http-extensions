@@ -9,6 +9,7 @@ workgroup: HTTP
 keyword: Internet-Draft
 
 stand_alone: yes
+smart_quotes: no
 pi:
   toc: yes
   tocindent: yes
