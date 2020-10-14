@@ -1254,15 +1254,18 @@ attribute-name of HttpOnly and an empty attribute-value.
 If the attribute-name case-insensitively matches the string "SameSite", the
 user agent MUST process the cookie-av as follows:
 
-1.  Let `enforcement` be "None".
+1.  Let `enforcement` be "Default".
 
-2.  If cookie-av's attribute-value is a case-insensitive match for "Strict",
+2.  If cookie-av's attribute-value is a case-insensitive match for "None",
+    set `enforcement` to "None".
+
+3.  If cookie-av's attribute-value is a case-insensitive match for "Strict",
     set `enforcement` to "Strict".
 
-3.  If cookie-av's attribute-value is a case-insensitive match for "Lax", set
+4.  If cookie-av's attribute-value is a case-insensitive match for "Lax", set
     `enforcement` to "Lax".
 
-4.  Append an attribute to the cookie-attribute-list with an attribute-name
+5.  Append an attribute to the cookie-attribute-list with an attribute-name
     of "SameSite" and an attribute-value of `enforcement`.
 
 Note: This algorithm maps the "None" value, as well as any unknown value, to
@@ -1432,10 +1435,10 @@ user agent MUST process the cookie as follows:
     not for a path of '/login' or '/login/en'.
 
 14. If the cookie-attribute-list contains an attribute with an
-    attribute-name of "SameSite", set the cookie's same-site-flag to the
-    attribute-value of the last attribute in the cookie-attribute-list with an
-    attribute-name of "SameSite" (i.e. either "Strict", "Lax", or "None").
-    Otherwise, set the cookie's same-site-flag to "None".
+    attribute-name of "SameSite", and an attribute-value of "Strict", "Lax", or
+    "None", set the cookie's same-site-flag to the attribute-value of the last
+    attribute in the cookie-attribute-list with an attribute-name of "SameSite".
+    Otherwise, set the cookie's same-site-flag to "Default".
 
 15. If the cookie's `same-site-flag` is not "None":
 
@@ -1577,7 +1580,7 @@ compute the cookie-string from a cookie store and a request-uri:
        cross-site (as defined in {{same-site-requests}}) then exclude the
        cookie unless all of the following statements hold:
 
-        1.  The same-site-flag is "Lax"
+        1.  The same-site-flag is "Lax" or "Default".
 
         2.  The HTTP request's method is "safe".
 
