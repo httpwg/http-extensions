@@ -1463,11 +1463,14 @@ user agent MUST process the cookie as follows:
 
     4.  Abort these steps and ignore the newly created cookie entirely.
 
-16. If the cookie-name begins with a case-sensitive match for the string
+16. If the cookie's "same-site-flag" is "None", abort these steps and ignore the
+    cookie entirely unless the cookie's secure-only-flag is true.
+
+17. If the cookie-name begins with a case-sensitive match for the string
     "__Secure-", abort these steps and ignore the cookie entirely unless the
     cookie's secure-only-flag is true.
 
-17. If the cookie-name begins with a case-sensitive match for the string
+18. If the cookie-name begins with a case-sensitive match for the string
     "__Host-", abort these steps and ignore the cookie entirely unless the
     cookie meets all the following criteria:
 
@@ -1478,7 +1481,7 @@ user agent MUST process the cookie as follows:
     3.  The cookie-attribute-list contains an attribute with an attribute-name
         of "Path", and the cookie's path is `/`.
 
-18. If the cookie store contains a cookie with the same name, domain,
+19. If the cookie store contains a cookie with the same name, domain,
     host-only-flag, and path as the newly-created cookie:
 
     1.  Let old-cookie be the existing cookie with the same name, domain,
@@ -1495,7 +1498,7 @@ user agent MUST process the cookie as follows:
 
     4.  Remove the old-cookie from the cookie store.
 
-19. Insert the newly-created cookie into the cookie store.
+20. Insert the newly-created cookie into the cookie store.
 
 A cookie is "expired" if the cookie has an expiry date in the past.
 
