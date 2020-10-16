@@ -1152,7 +1152,7 @@ registry:
 * Reference: {{!RFC4960}} appendix B, this document.
 * Status: standard.
 
-## Obsolete "SHA" Digest Algorithm {#iana-sha}
+## Deprecate "SHA" Digest Algorithm {#iana-sha}
 
 This memo updates the "SHA" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
