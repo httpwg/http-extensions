@@ -278,7 +278,6 @@ A recipient MAY ignore any or all of the representation-data-digests in a Digest
 field. This allows the recipient to choose which digest-algorithm(s) to use for
 validation instead of verifying every received representation-data-digest.
 
-A recipient MUST ignore a representation-data-digest containing parameters.
 
 A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
