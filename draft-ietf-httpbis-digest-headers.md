@@ -1479,7 +1479,6 @@ _RFC Editor: Please remove this section before publication._
 
 
 ## Since draft-ietf-httpbis-digest-headers-00
-{:numbered="false"}
 
 * Align title with document name
 * Add id-sha-* algorithm examples #880
@@ -1492,7 +1491,6 @@ _RFC Editor: Please remove this section before publication._
 * Warn about the implications of `Content-Location`
 
 ## Since draft-ietf-httpbis-digest-headers-01
-{:numbered="false"}
 
 * Digest of error responses is computed on the error representation-data #1004
 * Effect of HTTP semantics on payload and message body moved to appendix #1122
@@ -1500,7 +1498,6 @@ _RFC Editor: Please remove this section before publication._
   #1117, #1122-#1124
 
 ## Since draft-ietf-httpbis-digest-headers-02
-{:numbered="false"}
 
 * Deprecate SHA-1 #1154
 * Avoid id-* with encrypted content
