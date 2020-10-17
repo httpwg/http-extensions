@@ -117,7 +117,7 @@ integrity protection; for instance TCP checksums or TLS records [RFC2818].
 
 However, there are cases where relying on this alone is insufficient. An
 HTTP-level integrity mechanism that operates independent of transfer can be used
-to detect programming errors and/or corruption of data at rest, be used across
+to detect programming errors and/or corruption of data in flight or at rest, be used across
 multiple hops in order to provide end-to-end integrity guarantees, aid fault
 diagnosis across hops and system boundaries, and can be used to validate
 integrity when reconstructing a resource fetched using different HTTP
@@ -1013,7 +1013,7 @@ multiple hops, as it just covers the `representation data` and not the
 `representation metadata`.
 
 Besides, it allows to protect `representation data` from buggy manipulation,
-buggy compression, etc.
+ etc.
 
 Moreover identity digest-algorithms (eg. "id-sha-256" and "id-sha-512") allow
 piecing together a resource from different sources (e.g. different servers that
