@@ -230,7 +230,7 @@ that can be fully or partially contained in the payload body, or not contained a
 ~~~
 
 This takes into account the effect of the HTTP semantics on the messages;
-for example the payload body can be affected by Range Requests or methods such as HEAD,
+for example, the payload body can be affected by Range Requests or methods such as HEAD,
 while the way the payload body is transferred "on the wire" is dependent on other
 transformations (eg. transfer codings for HTTP/1.1 see 6.1 of
 {{?HTTP11=I-D.ietf-httpbis-messaging}}):
@@ -258,8 +258,8 @@ The example below shows the  "sha-256" digest-algorithm which uses base64 encodi
 # The Digest Field {#digest}
 
 The `Digest` field contains a list of one or more representation digest values as
-defined in {{representation-digest}}. It can be used in both request and
-response.
+defined in {{representation-digest}}. It can be used in both requests and
+responses.
 
 ~~~ abnf
    Digest = 1#representation-data-digest
@@ -417,7 +417,7 @@ To allow sender and recipient to provide a checksum which is independent from
     * Status: standard
 
 If other digest-algorithm values are defined, the associated encoding MUST
-either be represented as a quoted string, or MUST NOT include ";" or "," in the
+either be represented as a quoted string or MUST NOT include ";" or "," in the
 character sets used for the encoding.
 
 
@@ -425,7 +425,7 @@ character sets used for the encoding.
 
 POST and PATCH requests can appear to convey partial representations but are
 semantically acting on resources. The enclosed representation, including its
-metadata refers to that action.
+metadata, refers to that action.
 
 In these requests the representation digest MUST be computed on the
 representation-data of that action.
@@ -838,7 +838,7 @@ Note that a `204 No Content` response without a payload body but with the same
 ## Error responses
 
 In error responses, the representation-data does not necessarily refer to the
-target resource. Instead it refers to the representation of the error.
+target resource. Instead, it refers to the representation of the error.
 
 In the following example a client attempts to patch the resource located at
 /books/123. However, the resource does not exist and the server generates a 404
@@ -1015,7 +1015,7 @@ multiple hops, as it just covers the `representation data` and not the
 Besides, it allows to protect `representation data` from buggy manipulation,
 buggy compression, etc.
 
-Moreover identity digest-algorithms (eg. "id-sha-256" and "id-sha-512") allow
+Moreover, identity digest-algorithms (eg. "id-sha-256" and "id-sha-512") allow
 piecing together a resource from different sources (e.g. different servers that
 perhaps apply different content codings) enabling the user-agent to detect that
 the application-layer tasks completed properly, before handing off to say the
@@ -1046,7 +1046,7 @@ digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
 endpoints. See also {{digest-and-content-location}}.
 
-`Digest` SHOULD always be used over a connection which provides integrity at
+`Digest` SHOULD always be used over a connection that provides integrity at
 the transport layer that protects HTTP fields.
 
 A `Digest` field using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in
@@ -1062,7 +1062,7 @@ and may thus be tempted to process the data before validating the digest value.
 Instead, data should only be processed after validating the Digest.
 
 If received in trailers, `Digest` MUST NOT be discarded;
-instead it MAY be merged in the header section (See Section 5.6.2 of {{SEMANTICS}}).
+instead, it MAY be merged in the header section (See Section 5.6.2 of {{SEMANTICS}}).
 
 Not every digest-algorithm is suitable for trailers, as they may require to pre-process
 the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
@@ -1272,7 +1272,7 @@ and method impacts on the message and payload body. When the payload body
 contains non-printable characters (eg. when it is compressed) it is shown as
 base64-encoded string.
 
-A request with a json object without any content coding.
+A request with a JSON object without any content coding.
 
 Request:
 
@@ -1283,7 +1283,7 @@ Content-Type: application/json
 {"hello": "world"}
 ~~~
 
-Here is a gzip-compressed json object
+Here is a gzip-compressed JSON object
 using a content coding.
 
 Request:
@@ -1296,7 +1296,7 @@ Content-Encoding: gzip
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 
-Now the same payload body conveys a malformed json object.
+Now the same payload body conveys a malformed JSON object.
 
 Request:
 
@@ -1450,7 +1450,7 @@ _RFC Editor: Please remove this section before publication._
 How can I generate and validate the `Digest` values shown in the examples
 throughout this document?
 
-The following python3 code can be used to generate digests for json objects
+The following python3 code can be used to generate digests for JSON objects
 using SHA algorithms for a range of encodings. Note that these are formatted as
 base64. This function could be adapted to other algorithms and should take into
 account their specific formatting rules.
