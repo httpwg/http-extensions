@@ -262,7 +262,7 @@ defined in {{representation-digest}}. It can be used in both request and
 response.
 
 ~~~ abnf
-   Digest = "Digest" ":" OWS 1#representation-data-digest
+   Digest = 1#representation-data-digest
 ~~~
 
 The relationship between `Content-Location` (see Section 7.8 of
@@ -307,7 +307,7 @@ The `Want-Digest` field indicates the sender's desire to receive a representatio
 digest on messages associated with the request URI and representation metadata.
 
 ~~~
-   Want-Digest = "Want-Digest" ":" OWS 1#want-digest-value
+   Want-Digest = 1#want-digest-value
    want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
    qvalue = ( "0"  [ "."  0*1DIGIT ] ) /
             ( "1"  [ "."  0*1( "0" ) ] )
