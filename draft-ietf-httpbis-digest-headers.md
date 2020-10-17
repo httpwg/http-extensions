@@ -239,7 +239,7 @@ transformations (eg. transfer codings for HTTP/1.1 see 6.1 of
 A representation digest consists of
 the value of a checksum computed on the entire selected `representation data`
 (see Section 7 of {{SEMANTICS}}) of a resource identified according to Section 5.5.2 of {{SEMANTICS}}
-together with an indication of the algorithm used (and any parameters)
+together with an indication of the algorithm used
 
 ~~~ abnf
    representation-data-digest = digest-algorithm "="
@@ -280,6 +280,7 @@ from weaker algorithms should the need arise (see {{algorithm-agility}}).
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
 field. This allows the recipient to choose which digest-algorithm(s) to use for
 validation instead of verifying every received representation-data-digest.
+
 
 A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
@@ -330,15 +331,13 @@ Two examples of its use are
 
 # Digest Algorithm Values {#algorithms}
 
-Digest-algorithm values are used to indicate a specific digest computation.  For
-some digest-algorithms, one or more parameters can be supplied.
+Digest-algorithm values are used to indicate a specific digest computation.
 
 ~~~
    digest-algorithm = token
 ~~~
 
-The BNF for "parameter" is defined in Section 5.7.6 of
-{{SEMANTICS}}. All digest-algorithm values are case-insensitive
+All digest-algorithm values are case-insensitive
 but the lower case is preferred.
 
 The Internet Assigned Numbers Authority (IANA) acts as a registry for
@@ -466,6 +465,21 @@ resource's own semantic partly implied by the method and by the patch document.
 This RFC deprecates the negotiation of Content-MD5 as it has been obsoleted by
 [RFC7231].
 The `contentMD5` token defined in Section 5 of [RFC3230] MUST NOT be used as a digest-algorithm.
+
+# Obsolete Digest Header Field Parameters {#obsolete-parameters}
+
+This document obsoletes the usage of parameters with `Digest` introduced in
+Section 4.1.1 and 4.2 of [RFC3230] because this feature has not been widely deployed
+and complicates field-value processing.
+
+Field parameters provided a common way to attach additional information
+to a representation-data-digest,
+but if they are used as an input to validate the checksum, an attacker could alter them to steer
+the validation behavior.
+
+A digest-algorithm can still be parameterized defining its own way to encode parameters into the
+representation-data-digest in such a way as to mitigate security risks related to its computation.
+
 
 # Relationship to Subresource Integrity (SRI)
 
@@ -1510,3 +1524,4 @@ _RFC Editor: Please remove this section before publication._
 * Reference httpbis-semantics #1156
 * Add contentMD5 as an obsoleted digest-algorithm #1249
 * Use lowercase digest-algorithms names in the doc and in the digest-algorithm IANA table.
+* Obsolete parameters #850
