@@ -1491,6 +1491,33 @@ vX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==\n'
 
 _RFC Editor: Please remove this section before publication._
 
+## Since draft-ietf-httpbis-digest-headers-03
+{:numbered="false"}
+
+* Reference semantics-12
+* Detail encryption quirks
+* Details on Algorithm agility #1250
+* Obsolete parameters #850
+
+## Since draft-ietf-httpbis-digest-headers-02
+{:numbered="false"}
+
+* Deprecate SHA-1 #1154
+* Avoid id-* with encrypted content
+* Digest is independent from MESSAGING and HTTP/1.1 is not normative #1215
+* Identity is not a valid field value for content-encoding #1223
+* Mention trailers #1157
+* Reference httpbis-semantics #1156
+* Add contentMD5 as an obsoleted digest-algorithm #1249
+* Use lowercase digest-algorithms names in the doc and in the digest-algorithm IANA table.
+
+## Since draft-ietf-httpbis-digest-headers-01
+{:numbered="false"}
+
+* Digest of error responses is computed on the error representation-data #1004
+* Effect of HTTP semantics on payload and message body moved to appendix #1122
+* Editorial refactoring, moving headers sections up. #1109-#1112, #1116,
+  #1117, #1122-#1124
 
 ## Since draft-ietf-httpbis-digest-headers-00
 {:numbered="false"}
@@ -1505,23 +1532,3 @@ _RFC Editor: Please remove this section before publication._
 * Added Relationship with SRI, draft Use Cases #868, #971
 * Warn about the implications of `Content-Location`
 
-## Since draft-ietf-httpbis-digest-headers-01
-{:numbered="false"}
-
-* Digest of error responses is computed on the error representation-data #1004
-* Effect of HTTP semantics on payload and message body moved to appendix #1122
-* Editorial refactoring, moving headers sections up. #1109-#1112, #1116,
-  #1117, #1122-#1124
-
-## Since draft-ietf-httpbis-digest-headers-02
-{:numbered="false"}
-
-* Deprecate SHA-1 #1154
-* Avoid id-* with encrypted content
-* Digest is independent from MESSAGING and HTTP/1.1 is not normative #1215
-* Identity is not a valid field value for content-encoding #1223
-* Mention trailers #1157
-* Reference httpbis-semantics #1156
-* Add contentMD5 as an obsoleted digest-algorithm #1249
-* Use lowercase digest-algorithms names in the doc and in the digest-algorithm IANA table.
-* Obsolete parameters #850
