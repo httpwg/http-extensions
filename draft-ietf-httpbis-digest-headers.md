@@ -1013,7 +1013,7 @@ multiple hops, as it just covers the `representation data` and not the
 `representation metadata`.
 
 Besides, it allows to protect `representation data` from buggy manipulation,
- etc.
+undesired "transforming proxies" (see Section 6.5 of {{SEMANTICS}}), etc.
 
 Moreover identity digest-algorithms (eg. "id-sha-256" and "id-sha-512") allow
 piecing together a resource from different sources (e.g. different servers that
