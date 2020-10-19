@@ -331,8 +331,8 @@ The following sections describe each of these steps in detail.
 5. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
    * Each identifier MUST be one of those defined in Section 2.
    * This list MUST NOT be empty, as this would result in creating a signature over the empty string.
-   * If the signature's Algorithm name does not start with rsa, hmac, or ecdsa, signers SHOULD include *created and *request-target in the list.
-   * If the signature's Algorithm starts with rsa, hmac, or ecdsa, signers SHOULD include date and *request-target in the list.
+   * If the signature's Algorithm name does not start with rsa, hmac, or ecdsa, signers SHOULD include `*created` and `*request-target` in the list.
+   * If the signature's Algorithm starts with rsa, hmac, or ecdsa, signers SHOULD include `date` and `*request-target` in the list.
    * Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
 
 
@@ -430,18 +430,16 @@ Application-specific requirements are expected and encouraged.  When an applicat
 Applications MUST enforce the requirements defined in this document.  Regardless of use case, applications MUST NOT accept signatures that do not conform to these requirements.
 
 # Including a Message Signature in a Message
-Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` header fields, both defined within this specification. Through these header fields, an HTTP Message MAY have zero or more message signatures
-
-## Signature Identifiers
-Each message signature within an HTTP message is assigned a signature identifier that is unique within the HTTP message, and can be used to identify a particular signature within the context of the HTTP message. Signature identifiers are used as Dictionary member names within Structured Fields, and therefore MUST conform to the requirements for Dictionary member names defined in Section 3.2 of {{StucturedFields}}.
-
-## The 'Signature' HTTP Header
-The `Signature` HTTP header field is a Dictionary Structured Header {{StucturedFields}} containing zero or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier, and its value is a Byte Sequence containing the corresponding message signature's signature value.
+Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP header fields, both defined within this specification. The `Signature` HTTP header field contains signature values, while the `Signature-Input` HTTP header field identifies the Covered Content and metadata that describe how each signature was generated.
 
 ## The 'Signature-Input' HTTP Header
-The `Signature-Input` HTTP header field is a Dictionary Structured Header {{StucturedFields}} containing the metadata for zero or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier, and its value is the message signature's Covered Content, expressed as a List of Tokens. Parameters of member values contain additional message signature metadata, as detailed below.
+The `Signature-Input` HTTP header field is a Dictionary Structured Header {{StucturedFields}} containing the metadata for zero or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the message signature's Covered Content, expressed as a List of Tokens. Further signature metadata is expressed in parameters on the member value, as described below.
+
+### Content Identifier Parameters {#content-id-params}
+
 
 ### Metadata Parameters {#params}
+The parameters on each `Signature-Input` member value contain metadata about the signature. Each parameter name MUST be a parameter name registered in the IANA HTTP Signatures Metadata Parameters Registry defined in {{param-registry}} of this document. This document defines the following parameters, and registers them as the initial contents of the registry:
 
 alg
 : 
@@ -453,15 +451,18 @@ created
 
 expires
 : 
-: OPTIONAL. The `expires` parameter is a Decimal containing the signature's Expiration Time, expressed as the canonicalized value of the `(expires)` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
+: OPTIONAL. The `expires` parameter is a Decimal containing the signature's Expiration Time, expressed as the canonicalized value of the `*expires` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
 
 keyId
 : 
 : REQUIRED. The `keyId` parameter is a String whose value can be used by a verifier to identify and/or obtain the signature's Verification Key Material. Further format and semantics of this value are out of scope for this document.
 
-## Example
+## The 'Signature' HTTP Header
+The `Signature` HTTP header field is a Dictionary Structured Header {{StucturedFields}} containing zero or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
 
-The following is a non-normative example `Signature` and `Signature-Input` header field representing the signature in {{example-sig-value}}:
+## Examples
+
+The following is a non-normative example of `Signature-Input` and `Signature` HTTP header fields representing the signature in {{example-sig-value}}:
 
 ~~~
 Signature-Input: sig1=(*request-target *created host date
@@ -475,6 +476,7 @@ Signature: sig1=:T1l3tWH2cSP31nfuvc3nVaHQ6IAu9YLEXg2pCeEOJETXnlWbgKtB
     EA05Tb38ahq/gwDQ1bagd9rGnCHtAg==:
 ~~~
 
+Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to easily include multiple signatures within the same HTTP message. The following is a non-normative example of `Signature-Input` and `Signature` HTTP header fields representing two signatures: the signature in {{example-sig-value}}, and a second signature
 # IANA Considerations {#iana}
 
 ## HTTP Signature Algorithms Registry {#hsa-registry}
@@ -570,25 +572,23 @@ Description
 : 
 : ECDSA using curve P-256 DSS {{FIPS186-4}} and SHA-256 [RFC6234]
 
-## HTTP Signature Parameters Registry {#param-registry}
+## HTTP Signature Metadata Parameters Registry {#param-registry}
 
-This document defines the Signature header field, whose value contains a list of named parameters.  IANA is asked to create and maintain a new registry titled "HTTP Signature Parameters" to record and maintain the set of named parameters defined for use within the Signature header field.  Initial values for this registry are given in {{iana-param-contents}}.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-param-template}}.
+This document defines the `Signature-Input` Structured Header, whose member values may have parameters containing metadata about a message signature. IANA is asked to create and maintain a new registry titled "HTTP Signature Metadata Parameters" to record and maintain the set of parameters defined for use with member values in the `Signature-Input` Structured Header. Initial values for this registry are given in {{iana-param-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-param-template}}.
 
 ### Registration Template {#iana-param-template}
 
 ### Initial Contents {#iana-param-contents}
 
-The table below contains the initial contents of the HTTP Signature Parameters Registry.  Each row in the table represents a distinct entry in the registry.
+The table below contains the initial contents of the HTTP Signature Metadata Parameters Registry.  Each row in the table represents a distinct entry in the registry.
 
 |Name|Status|Reference(s)|
 |--- |--- |--- |
 |`alg`|Active | {{params}} of this document|
 |`created`|Active   | {{params}} of this document|
 |`expires`|Active   | {{params}} of this document|
-|`headers`|Active   | {{params}} of this document|
 |`keyId`|Active     | {{params}} of this document|
-|`signature`|Active | {{params}} of this document|
-{: title="Initial contents of the HTTP Signature Parameters Registry." }
+{: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
 # Security Considerations {#security}
 
