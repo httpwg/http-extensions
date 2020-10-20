@@ -55,7 +55,7 @@ normative:
         target: https://pubs.opengroup.org/onlinepubs/9699919799/
         title: The Open Group Base Specifications Issue 7, 2018 edition
         date: 2018
-    StucturedFields:
+    StructuredFields:
         target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-header-structure
         title: Structured Field Vaues for HTTP
         date: 2020
@@ -168,16 +168,15 @@ Some content within HTTP messages may undergo transformations that change the bi
 
 The following sections define content identifiers, their associated content, and their canonicalization rules.
 
-## HTTP Header Fields
+## Header Fields
 
-An HTTP header field is identified by its header field name.  While HTTP header field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers.
+A header field is identified by its field name.  While header field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers. 
 
-An HTTP header field value is canonicalized as follows:
+A header field value is canonicalized as follows:
 
 1. Create an ordered list of the field values of each instance of the header field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list.
 3. Concatenate the list items together, with a comma "," and space " " between each item. The resulting string is the canonicalized value.
-
 
 ### Canonicalization Examples
 
@@ -206,6 +205,52 @@ The following table shows example canonicalized values for header fields, given 
 |`x-obs-fold-header`|Obsolete line folding.|
 |`x-ows-header`|Leading and trailing whitespace.|
 {: title="Non-normative examples of header field canonicalization."}
+
+## Dictionary Structured Field Members
+
+An individual member in the value of a Dictionary Structured Field is identified by the lowercased field name, followed by a semicolon `":"`, followed by the member name. An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{StructuredFields}} on a Dictionary containing only that member.
+
+### Canonicalization Examples
+
+This section contains non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is assumed to be a Dictionary:
+
+~~~
+X-Dictionary:  a=1, b=2;x=1;y=2, c=(a b c)
+~~~
+
+The following table shows example canonicalized values for different content identifiers, given that field:
+
+|Content Identifier|Canonicalized Value|
+|--- |--- |
+|`x-dictionary:a`|1|
+|`x-dictionary:b`|2;x=1;y=2|
+|`x-dictionary:c`|(a b c)|
+{: title="Non-normative examples of Dictionary member canonicalization."}
+
+
+## List Prefixes
+
+A prefix of a List Structured Field consisting of the first N members in the field's value (where N is an integer greater than 0 and less than or equal to the number of members in the List) is identified by the lowercased field name, followed by a semicolon `":"`, followed by N expressed as an Integer String. A list prefix is canonicalized by applying the serialization algorithm described in Section 4.1.1 of {{StructuredFields}} on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
+
+### Canonicalization Examples
+
+This section contains non-normative examples of canonicalized values for list prefixes given the following example header fields, whose values are assumed to be Dictionaries:
+
+~~~
+X-List-A: (a b c d e f)
+X-List-B: ()
+~~~
+
+The following table shows example canonicalized values for different content identifiers, given those fields:
+
+|Content Identifier|Canonicalized Value|
+|--- |--- |
+|`x-list-a:0`|()|
+|`x-list-a:1`|(a)|
+|`x-list-a:3`|(a b c)|
+|`x-list-a:6`|(a b c d e f)|
+|`x-list-b:0`|()|
+{: title="Non-normative examples of list prefix canonicalization."}
 
 
 ## Signature Creation Time
@@ -345,6 +390,8 @@ Date: Sat, 07 Jun 2014 20:51:35 GMT
 X-Example: Example header
         with some whitespace.
 X-EmptyHeader:
+X-Dictionary: a=1, b=2
+X-List: (a b c d)
 Cache-Control: max-age=60
 Cache-Control: must-revalidate
 ~~~
@@ -354,7 +401,7 @@ The following table presents a non-normative example of metadata values that a s
 |Property|Value|
 |--- |--- |
 |Algorithm|`rsa-256`|
-|Covered Content|`*request-target`, `*created`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`|
+|Covered Content|`*request-target`, `*created`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`, `x-dictionary:b`, `x-dictionary:a`, `x-list:3`|
 |Creation Time|`1402174295`|
 |Expiration Time|`1402174595`|
 |Verification Key Material|The public key provided in  and identified by the `keyId` value "test-key-b".|
@@ -371,6 +418,10 @@ If Covered Content contains `*expires` and the signature does not have an Expira
 
 If Covered Content contains an identifier for a header field that is not present or malformed in the message, the implementation MUST produce an error.
 
+If Covered Content contains an identifier for a Dictionary member that references a header field that is not present, is malformed in the message, or is not a Dictionary Structured Field, the implementation MUST produce an error. If the header field value does not contain the specified member, the implementation MUST produce an error.
+
+If Covered Content contains an identifier for a List Prefix that references a header field that is not present, is malformed in the message, or is not a List Structured Field, the implementation MUST produce an error. If the header field value contains fewer than the specified number of members, the implementation MUST produce an error.
+
 For the non-normative example Signature metadata in {{example-metadata}}, the corresponding Signature Input is:
 
 ~~~
@@ -381,6 +432,9 @@ date: Tue, 07 Jun 2014 20:51:35 GMT
 cache-control: max-age=60, must-revalidate
 x-emptyheader:
 x-example: Example header with some whitespace.
+x-dictionary: b=2
+x-dictionary: a=1
+x-list: (a b c)
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
 
@@ -433,10 +487,7 @@ Applications MUST enforce the requirements defined in this document.  Regardless
 Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP header fields, both defined within this specification. The `Signature` HTTP header field contains signature values, while the `Signature-Input` HTTP header field identifies the Covered Content and metadata that describe how each signature was generated.
 
 ## The 'Signature-Input' HTTP Header
-The `Signature-Input` HTTP header field is a Dictionary Structured Header {{StucturedFields}} containing the metadata for zero or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the message signature's Covered Content, expressed as a List of Tokens. Further signature metadata is expressed in parameters on the member value, as described below.
-
-### Content Identifier Parameters {#content-id-params}
-
+The `Signature-Input` HTTP header field is a Dictionary Structured Header {{StructuredFields}} containing the metadata for zero or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the message signature's Covered Content, expressed as a List of Tokens. Further signature metadata is expressed in parameters on the member value, as described below.
 
 ### Metadata Parameters {#params}
 The parameters on each `Signature-Input` member value contain metadata about the signature. Each parameter name MUST be a parameter name registered in the IANA HTTP Signatures Metadata Parameters Registry defined in {{param-registry}} of this document. This document defines the following parameters, and registers them as the initial contents of the registry:
@@ -458,7 +509,7 @@ keyId
 : REQUIRED. The `keyId` parameter is a String whose value can be used by a verifier to identify and/or obtain the signature's Verification Key Material. Further format and semantics of this value are out of scope for this document.
 
 ## The 'Signature' HTTP Header
-The `Signature` HTTP header field is a Dictionary Structured Header {{StucturedFields}} containing zero or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
+The `Signature` HTTP header field is a Dictionary Structured Header {{StructuredFields}} containing zero or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
 
 ## Examples
 
@@ -476,7 +527,16 @@ Signature: sig1=:T1l3tWH2cSP31nfuvc3nVaHQ6IAu9YLEXg2pCeEOJETXnlWbgKtB
     EA05Tb38ahq/gwDQ1bagd9rGnCHtAg==:
 ~~~
 
-Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to easily include multiple signatures within the same HTTP message. The following is a non-normative example of `Signature-Input` and `Signature` HTTP header fields representing two signatures: the signature in {{example-sig-value}}, and a second signature
+Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to easily include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same content with different keys and/or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in header fields when forwarding the request to a service host, and may also include a signature over those fields and the client's signature. The following is a non-normative example of header fields a reverse proxy might add to a forwarded request that contains the signature in the above example:
+
+~~~
+X-Forwarded-For: 192.0.2.123
+Signature-Input: reverse_proxy_sig=(*created host date signature:sig1
+        x-forwarded-for); keyId="test-key-b"; alg=rsa-sha256;
+        created=1402170695; expires=1402170695.25
+Signature: reverse_proxy_sig=:...:
+~~~
+
 # IANA Considerations {#iana}
 
 ## HTTP Signature Algorithms Registry {#hsa-registry}
