@@ -281,7 +281,6 @@ A recipient MAY ignore any or all of the representation-data-digests in a Digest
 field. This allows the recipient to choose which digest-algorithm(s) to use for
 validation instead of verifying every received representation-data-digest.
 
-An intermediary MUST NOT alter the value of a received `Digest` field.
 
 A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
@@ -1532,4 +1531,3 @@ _RFC Editor: Please remove this section before publication._
 * Use when acting on resources (POST, PATCH) #853
 * Added Relationship with SRI, draft Use Cases #868, #971
 * Warn about the implications of `Content-Location`
-
