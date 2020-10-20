@@ -1119,6 +1119,12 @@ Jeffrey Yasskin
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - Since -01
+     * Replaced unstructured `Signature` header with `Signature-Input` and `Signature` Dictionary Structured Header Fields.
+     * Defined content identifiers for individual Dictionary members, e.g., `x-dictionary-field:member-name`.
+     * Defined content identifiers for first N members of a List, e.g., `x-list-field:4`.
+     * Fixed up examples.
+
   - -01
      * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
      * Added real example values for Creation Time and Expiration Time.
