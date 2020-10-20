@@ -216,7 +216,7 @@ An individual member in the value of a Dictionary Structured Field is identified
 This section contains non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is assumed to be a Dictionary:
 
 ~~~
-X-Dictionary:  a=1, b=2;x=1;y=2, c=(a b c)
+X-Dictionary:  a=1, b=2;x=1;y=2, c=(a, b, c)
 ~~~
 
 The following table shows example canonicalized values for different content identifiers, given that field:
@@ -225,7 +225,7 @@ The following table shows example canonicalized values for different content ide
 |--- |--- |
 |`x-dictionary:a`|1|
 |`x-dictionary:b`|2;x=1;y=2|
-|`x-dictionary:c`|(a b c)|
+|`x-dictionary:c`|(a, b, c)|
 {: title="Non-normative examples of Dictionary member canonicalization."}
 
 
@@ -238,7 +238,7 @@ A prefix of a List Structured Field consisting of the first N members in the fie
 This section contains non-normative examples of canonicalized values for list prefixes given the following example header fields, whose values are assumed to be Dictionaries:
 
 ~~~
-X-List-A: (a b c d e f)
+X-List-A: (a, b, c, d, e, f)
 X-List-B: ()
 ~~~
 
@@ -248,8 +248,8 @@ The following table shows example canonicalized values for different content ide
 |--- |--- |
 |`x-list-a:0`|()|
 |`x-list-a:1`|(a)|
-|`x-list-a:3`|(a b c)|
-|`x-list-a:6`|(a b c d e f)|
+|`x-list-a:3`|(a, b, c)|
+|`x-list-a:6`|(a, b, c, d, e, f)|
 |`x-list-b:0`|()|
 {: title="Non-normative examples of list prefix canonicalization."}
 
@@ -392,7 +392,7 @@ X-Example: Example header
         with some whitespace.
 X-EmptyHeader:
 X-Dictionary: a=1, b=2
-X-List: (a b c d)
+X-List: (a, b, c, d)
 Cache-Control: max-age=60
 Cache-Control: must-revalidate
 ~~~
@@ -401,11 +401,11 @@ The following table presents a non-normative example of metadata values that a s
 
 |Property|Value|
 |--- |--- |
-|Algorithm|`rsa-256`|
+|Algorithm|`hs2019`|
 |Covered Content|`*request-target`, `*created`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`, `x-dictionary:b`, `x-dictionary:a`, `x-list:3`|
 |Creation Time|`1402174295`|
 |Expiration Time|`1402174595`|
-|Verification Key Material|The public key provided in  and identified by the `keyId` value "test-key-b".|
+|Verification Key Material|The public key provided in {{example-key-rsa-test}} and identified by the `keyId` value "test-key-a".|
 {: title="Non-normative example metadata values" #example-metadata}
 
 
@@ -435,7 +435,7 @@ x-emptyheader:
 x-example: Example header with some whitespace.
 x-dictionary: b=2
 x-dictionary: a=1
-x-list: (a b c)
+x-list: (a, b, c)
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
 
@@ -446,11 +446,11 @@ The signer signs the Signature Input using the signing algorithm described by th
 For the non-normative example Signature metadata in {{choose-metadata}} and Signature Input in {{example-sig-input}}, the corresponding signature value is:
 
 ~~~
-T1l3tWH2cSP31nfuvc3nVaHQ6IAu9YLEXg2pCeEOJETXnlWbgKtBTaXV6LNQWtf4O42V2
-DZwDZbmVZ8xW3TFW80RrfrY0+fyjD4OLN7/zV6L6d2v7uBpuWZ8QzKuHYFaRNVXgFBXN3
-VJnsIOUjv20pqZMKO3phLCKX2/zQzJLCBQvF/5UKtnJiMp1ACNhG8LF0Q0FPWfe86YZBB
-xqrQr5WfjMu0LOO52ZAxi9KTWSlceJ2U361gDb7S5Deub8MaDrjUEpluphQeo8xyvHBoN
-Xsqeax/WaHyRYOgaW6krxEGVaBQAfA2czYZhEA05Tb38ahq/gwDQ1bagd9rGnCHtAg==
+K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUeZx/Kdrq32DrfakQ6b
+PsvB9aqZqognNT6be4olHROIkeV879RrsrObury8L9SCEibeoHyqU/yCjphSmEdd7WD+z
+rchK57quskKwRefy2iEC5S2uAH0EPyOZKWlvbKmKu5q4CaB8X/I5/+HLZLGvDiezqi6/7
+p2Gngf5hwZ0lSdy39vyNMaaAT0tKo6nuVw0S1MVg1Q7MpWYZs0soHjttq0uLIA3DIbQfL
+iIvK6/l0BdWTU7+2uQj7lBkQAsFZHoA96ZZgFquQrXRlmYOh+Hx5D9fJkXcXe5tmAg==
 ~~~
 {: title="Non-normative example signature value" #example-sig-value}
 
@@ -517,25 +517,30 @@ The `Signature` HTTP header field is a Dictionary Structured Header {{Structured
 The following is a non-normative example of `Signature-Input` and `Signature` HTTP header fields representing the signature in {{example-sig-value}}:
 
 ~~~
-Signature-Input: sig1=(*request-target *created host date
-        cache-control x-empty-header x-example); keyId="test-key-b";
-        alg=rsa-sha256; created=1402170695; expires=1402170995
-Signature: sig1=:T1l3tWH2cSP31nfuvc3nVaHQ6IAu9YLEXg2pCeEOJETXnlWbgKtB
-    TaXV6LNQWtf4O42V2DZwDZbmVZ8xW3TFW80RrfrY0+fyjD4OLN7/zV6L6d2v7uBpu
-    WZ8QzKuHYFaRNVXgFBXN3VJnsIOUjv20pqZMKO3phLCKX2/zQzJLCBQvF/5UKtnJi
-    Mp1ACNhG8LF0Q0FPWfe86YZBBxqrQr5WfjMu0LOO52ZAxi9KTWSlceJ2U361gDb7S
-    5Deub8MaDrjUEpluphQeo8xyvHBoNXsqeax/WaHyRYOgaW6krxEGVaBQAfA2czYZh
-    EA05Tb38ahq/gwDQ1bagd9rGnCHtAg==:
+Signature-Input: sig1=(*request-target, *created, host, date,
+    cache-control, x-empty-header, x-example); keyId="test-key-a";
+    alg=hs2019; created=1402170695; expires=1402170995
+Signature: sig1=:K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUe
+    Zx/Kdrq32DrfakQ6bPsvB9aqZqognNT6be4olHROIkeV879RrsrObury8L9SCEibe
+    oHyqU/yCjphSmEdd7WD+zrchK57quskKwRefy2iEC5S2uAH0EPyOZKWlvbKmKu5q4
+    CaB8X/I5/+HLZLGvDiezqi6/7p2Gngf5hwZ0lSdy39vyNMaaAT0tKo6nuVw0S1MVg
+    1Q7MpWYZs0soHjttq0uLIA3DIbQfLiIvK6/l0BdWTU7+2uQj7lBkQAsFZHoA96ZZg
+    FquQrXRlmYOh+Hx5D9fJkXcXe5tmAg==:
 ~~~
 
 Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to easily include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same content with different keys and/or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in header fields when forwarding the request to a service host, and may also include a signature over those fields and the client's signature. The following is a non-normative example of header fields a reverse proxy might add to a forwarded request that contains the signature in the above example:
 
 ~~~
 X-Forwarded-For: 192.0.2.123
-Signature-Input: reverse_proxy_sig=(*created host date signature:sig1
-        x-forwarded-for); keyId="test-key-b"; alg=rsa-sha256;
-        created=1402170695; expires=1402170695.25
-Signature: reverse_proxy_sig=:...:
+Signature-Input: reverse_proxy_sig=(*created, host, date,
+    signature:sig1, x-forwarded-for); keyId="test-key-a";
+    alg=hs2019; created=1402170695; expires=1402170695.25
+Signature: reverse_proxy_sig=:ON3HsnvuoTlX41xfcGWaOEVo1M3bJDRBOp0Pc/O
+    jAOWKQn0VMY0SvMMWXS7xG+xYVa152rRVAo6nMV7FS3rv0rR5MzXL8FCQ2A35DCEN
+    LOhEgj/S1IstEAEFsKmE9Bs7McBsCtJwQ3hMqdtFenkDffSoHOZOInkTYGafkoy78
+    l1VZvmb3Y4yf7McJwAvk2R3gwKRWiiRCw448Nt7JTWzhvEwbh7bN2swc/v3NJbg/w
+    JYyYVbelZx4IywuZnYFxgPl/qvqbAjeEVvaLKLgSMr11y+uzxCHoMnDUnTYhMrmOT
+    4O8lBLfRFOcoJPKBdoKg9U0a96U2mUug1bFOozEVYFg==:
 ~~~
 
 # IANA Considerations {#iana}
@@ -716,7 +721,7 @@ The table below maps example `keyId` values to associated algorithms and/or keys
 |keyId|Algorithm|Verification Key|
 |--- |--- |---|
 |`test-key-a`|`hs2019`, using RSASSA-PSS [RFC8017] and SHA-512 [RFC6234]|The public key specified in {{example-key-rsa-test}}|
-|`test-key-b`|`rsa-256`|The public key specified in {{example-key-rsa-test}}|
+|`test-key-b`|`rsa-sha256`|The public key specified in {{example-key-rsa-test}}|
 
 ## Test Cases
 
@@ -742,7 +747,7 @@ This presents metadata for a Signature using `hs2019`, over minimum recommended 
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`, using RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]|
-|Covered Content|`*created *request-target`|
+|Covered Content|`*created, *request-target`|
 |Creation Time|8:51:35 PM GMT, June 7th, 2014|
 |Expiration Time|Undefined|
 |Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
@@ -757,24 +762,24 @@ The Signature Input is:
 The signature value is:
 
 ~~~
-e3y37nxAoeuXw2KbaIxE2d9jpE7Z9okgizg6QbD2Z7fUVUvog+ZTKKLRBnhNglVIY6fAa
-YlHwx7ZAXXdBVF8gjWBPL6U9zRrB4PFzjoLSxHaqsvS0ZK9FRxpenptgukaVQ1aeva3PE
-1aD6zZ93df2lFIFXGDefYCQ+M/SrDGQOFvaVykEkte5mO6zQZ/HpokjMKvilfSMJS+vbv
-C1GJItQpjs636Db+7zB2W1BurkGxtQdCLDXuIDg4S8pPSDihkch/dUzL2BpML3PXGKVXw
-HOUkVG6Q2ge07IYdzya6N1fIVA9eKI1Y47HT35QliVAxZgE0EZLo8mxq19ReIVvuFg==
+QaVaWYfF2da6tG66Xtd0GrVFChJ0fOWUe/C6kaYESPiYYwnMH9egOgyKqgLLY9NQJFk7b
+QY834sHEUwjS5ByEBaO3QNwIvqEY1qAAU/2MX14tc9Yn7ELBnaaNHaHkV3xVO9KIuLT7V
+6e4OUuGb1axfbXpMgPEql6CEFrn6K95CLuuKP5/gOEcBtmJp5L58gN4VvZrk2OVA6U971
+YiEDNuDa4CwMcQMvcGssbc/L3OULTUffD/1VcPtdGImP2uvVQntpT8b2lBeBpfh8MuaV2
+vtzidyBYFtAUoYhRWO8+ntqA1q2OK4LMjM2XgDScSVWvGdVd459A0wI9lRlnPap3zg==
 ~~~
 
 A possible `Signature-Input` and `Signature` header containing this signature is:
 
 ~~~
-Signature-Input: sig1=(*created *request-target); keyId="test-key-a";
-    created=1402170695
-Signature: sig1=:e3y37nxAoeuXw2KbaIxE2d9jpE7Z9okgizg6QbD2Z7fUVUvog+ZT
-    KKLRBnhNglVIY6fAaYlHwx7ZAXXdBVF8gjWBPL6U9zRrB4PFzjoLSxHaqsvS0ZK9F
-    RxpenptgukaVQ1aeva3PE1aD6zZ93df2lFIFXGDefYCQ+M/SrDGQOFvaVykEkte5m
-    O6zQZ/HpokjMKvilfSMJS+vbvC1GJItQpjs636Db+7zB2W1BurkGxtQdCLDXuIDg4
-    S8pPSDihkch/dUzL2BpML3PXGKVXwHOUkVG6Q2ge07IYdzya6N1fIVA9eKI1Y47HT
-    35QliVAxZgE0EZLo8mxq19ReIVvuFg==:
+Signature-Input: sig1=(*created, *request-target);
+    keyId="test-key-a"; created=1402170695
+Signature: sig1=:QaVaWYfF2da6tG66Xtd0GrVFChJ0fOWUe/C6kaYESPiYYwnMH9eg
+    OgyKqgLLY9NQJFk7bQY834sHEUwjS5ByEBaO3QNwIvqEY1qAAU/2MX14tc9Yn7ELB
+    naaNHaHkV3xVO9KIuLT7V6e4OUuGb1axfbXpMgPEql6CEFrn6K95CLuuKP5/gOEcB
+    tmJp5L58gN4VvZrk2OVA6U971YiEDNuDa4CwMcQMvcGssbc/L3OULTUffD/1VcPtd
+    GImP2uvVQntpT8b2lBeBpfh8MuaV2vtzidyBYFtAUoYhRWO8+ntqA1q2OK4LMjM2X
+    gDScSVWvGdVd459A0wI9lRlnPap3zg==:
 ~~~
 
 #### hs2019 signature covering all header fields
@@ -804,25 +809,25 @@ content-length: 18
 The signature value is:
 
 ~~~
-KXUj1H3ZOhv3Nk4xlRLTn4bOMlMOmFiud3VXrMa9MaLCxnVmrqOX5BulRvB65YW/wQp0o
-T/nNQpXgOYeY8ovmHlpkRyz5buNDqoOpRsCpLGxsIJ9cX8XVsM9jy+Q1+RIlD9wfWoPHh
-qhoXt35ZkasuIDPF/AETuObs9QydlsqONwbK+TdQguDK/8Va1Pocl6wK1uLwqcXlxhPEb
-55EmdYB9pddDyHTADING7K4qMwof2mC3t8Pb0yoLZoZX5a4Or4FrCCKK/9BHAhq/RsVk0
-dTENMbTB4i7cHvKQu+o9xuYWuxyvBa0Z6NdOb0di70cdrSDEsL5Gz7LBY5J2N9KdGg==
+B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8jkHNjoudtqw3GngGY
+3n0mmwjdfn1eA6nAjgeHwl0WXced5tONcCPNzLswqPOiobGeA5y4WE8iBveel30OKYVel
+0lZ1OnXOmN5TIEIIPo9LrE+LzZis6A0HA1FRMtKgKGhT3N965pkqfhKbq/V48kpJKT8+c
+Zs0TOn4HFMG+OIy6c9ofSBrXD68yxP6QYTz6xH0GMWawLyPLYR52j3I05fK1ylAb6K0ox
+PxzQ5nwrLD+mUVPZ9rDs1En6fmOX9xfkZTblG/5D+s1fHHs9dDXCOVkT5dLS8DjdIA==
 ~~~
 
 A possible `Signature-Input` and `Signature` header containing this signature is:
 
 ~~~
-Signature-Input: sig1=(*request-target *created host date
-        content-type digest content-length); keyId="test-key-a";
+Signature-Input: sig1=(*request-target, *created, host, date,
+        content-type, digest, content-length); keyId="test-key-a";
     alg=hs2019; created=1402170695 
-Signature: sig1=:KXUj1H3ZOhv3Nk4xlRLTn4bOMlMOmFiud3VXrMa9MaLCxnVmrqOX
-    5BulRvB65YW/wQp0oT/nNQpXgOYeY8ovmHlpkRyz5buNDqoOpRsCpLGxsIJ9cX8XV
-    sM9jy+Q1+RIlD9wfWoPHhqhoXt35ZkasuIDPF/AETuObs9QydlsqONwbK+TdQguDK
-    /8Va1Pocl6wK1uLwqcXlxhPEb55EmdYB9pddDyHTADING7K4qMwof2mC3t8Pb0yoL
-    ZoZX5a4Or4FrCCKK/9BHAhq/RsVk0dTENMbTB4i7cHvKQu+o9xuYWuxyvBa0Z6NdO
-    b0di70cdrSDEsL5Gz7LBY5J2N9KdGg==:
+Signature: sig1=:B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8
+    jkHNjoudtqw3GngGY3n0mmwjdfn1eA6nAjgeHwl0WXced5tONcCPNzLswqPOiobGe
+    A5y4WE8iBveel30OKYVel0lZ1OnXOmN5TIEIIPo9LrE+LzZis6A0HA1FRMtKgKGhT
+    3N965pkqfhKbq/V48kpJKT8+cZs0TOn4HFMG+OIy6c9ofSBrXD68yxP6QYTz6xH0G
+    MWawLyPLYR52j3I05fK1ylAb6K0oxPxzQ5nwrLD+mUVPZ9rDs1En6fmOX9xfkZTbl
+    G/5D+s1fHHs9dDXCOVkT5dLS8DjdIA==:
 ~~~
 
 ### Signature Verification
@@ -833,12 +838,12 @@ This presents a `Signature-Input` and `Signature` header containing only the min
 
 ~~~
 Signature-Input: sig1=(); keyId="test-key-a"; created=1402170695
-Signature: sig1=:V3SijFpJOvDUT8t1/EnYli/4TbF2AGqwBGiGUGrgClCkiOAIlOxx
-    Y72Mr13DccFkYzg3gX1jIOpKXzH70C5bru4b71SBG+ShiJLu34gHCG33iw44NLGUv
-    T5+F+LCKbbHberyk8eyYsZ+TLwtZAYKafxfNOWQXF4o3QaWslDMm8Tcgrd8onM45a
-    yFyR4nXRlcGad4PISYGz8PmO4Y+K8RYOyDkgsmRxKtftFQUYG41anyElccNLfEfLB
-    KsyV6kxr36U1Q7FdUopLv8kqluQySrWD6kesvFxNvbEOi+1uZqTuFlK8ZldITQiqt
-    NYaabRjQFZio63gma2y+UAaTGLdM9A==:
+Signature: sig1=:cxieW5ZKV9R9A70+Ua1A/1FCvVayuE6Z77wDGNVFSiluSzR9TYFV
+    vwUjeU6CTYUdbOByGMCee5q1eWWUOM8BIH04Si6VndEHjQVdHqshAtNJk2Quzs6WC
+    2DkV0vysOhBSvFZuLZvtCmXRQfYGTGhZqGwq/AAmFbt5WNLQtDrEe0ErveEKBfaz+
+    IJ35zhaj+dun71YZ82b/CRfO6fSSt8VXeJuvdqUuVPWqjgJD4n9mgZpZFGBaDdPiw
+    pfbVZHzcHrumFJeFHWXH64a+c5GN+TWlP8NPg2zFdEc/joMymBiRelq236WGm5VvV
+    9a22RW2/yLmaU/uwf9v40yGR/I1NRA==:
 ~~~
 
 The corresponding signature metadata derived from this header field is:
@@ -864,12 +869,12 @@ This presents a `Signature-Input` and `Signature` header containing only the min
 ~~~
 Signature-Input: sig1=(); alg=hs2019; keyId="test-key-a";
     created=1402170695
-Signature: sig1=:V3SijFpJOvDUT8t1/EnYli/4TbF2AGqwBGiGUGrgClCkiOAIlOxx
-    Y72Mr13DccFkYzg3gX1jIOpKXzH70C5bru4b71SBG+ShiJLu34gHCG33iw44NLGUv
-    T5+F+LCKbbHberyk8eyYsZ+TLwtZAYKafxfNOWQXF4o3QaWslDMm8Tcgrd8onM45a
-    yFyR4nXRlcGad4PISYGz8PmO4Y+K8RYOyDkgsmRxKtftFQUYG41anyElccNLfEfLB
-    KsyV6kxr36U1Q7FdUopLv8kqluQySrWD6kesvFxNvbEOi+1uZqTuFlK8ZldITQiqt
-    NYaabRjQFZio63gma2y+UAaTGLdM9A==:
+Signature: sig1=:cxieW5ZKV9R9A70+Ua1A/1FCvVayuE6Z77wDGNVFSiluSzR9TYFV
+    vwUjeU6CTYUdbOByGMCee5q1eWWUOM8BIH04Si6VndEHjQVdHqshAtNJk2Quzs6WC
+    2DkV0vysOhBSvFZuLZvtCmXRQfYGTGhZqGwq/AAmFbt5WNLQtDrEe0ErveEKBfaz+
+    IJ35zhaj+dun71YZ82b/CRfO6fSSt8VXeJuvdqUuVPWqjgJD4n9mgZpZFGBaDdPiw
+    pfbVZHzcHrumFJeFHWXH64a+c5GN+TWlP8NPg2zFdEc/joMymBiRelq236WGm5VvV
+    9a22RW2/yLmaU/uwf9v40yGR/I1NRA==:
 ~~~
 
 The corresponding signature metadata derived from this header field is:
@@ -888,12 +893,12 @@ The corresponding Signature Input is:
 *created: 1402170695
 ~~~
 
-#### Minimal Signature Header using rsa-256
+#### Minimal Signature Header using rsa-sha256
 
-This presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-256` algorithm:
+This presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-sha256` algorithm:
 
 ~~~
-Signature: sig1=(date); alg=rsa-256; keyId="test-key-b"
+Signature: sig1=(date); alg=rsa-sha256; keyId="test-key-b"
 Signature: sig1=:HtXycCl97RBVkZi66ADKnC9c5eSSlb57GnQ4KFqNZplOpNfxqk62
     JzZ484jXgLvoOTRaKfR4hwyxlcyb+BWkVasApQovBSdit9Ml/YmN2IvJDPncrlhPD
     VDv36Z9/DiSO+RNHD7iLXugdXo1+MGRimW1RmYdenl/ITeb7rjfLZ4b9VNnLFtVWw
@@ -906,7 +911,7 @@ The corresponding signature metadata derived from this header field is:
 
 |Property|Value|
 |--- |--- |
-|Algorithm|`rsa-256`|
+|Algorithm|`rsa-sha256`|
 |Covered Content|`date`|
 |Creation Time|Undefined|
 |Expiration Time|Undefined|
