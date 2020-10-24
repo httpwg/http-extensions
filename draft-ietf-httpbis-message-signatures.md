@@ -123,7 +123,7 @@ Based on the definition of HTTP and the requirements described above, we can ide
 
 - Combination of header fields with the same field name.
 - Reordering of header fields with different names.
-- Conversion between HTTP/1.x and HTTP/2, or vice-versa.
+- Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive content such as header field names, request URI scheme, or host.
 - Addition or removal of leading or trailing whitespace to a header field value.
 - Addition or removal of `obs-folds`.
