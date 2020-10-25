@@ -207,53 +207,6 @@ The following table shows example canonicalized values for header fields, given 
 |`x-ows-header`|Leading and trailing whitespace.|
 {: title="Non-normative examples of header field canonicalization."}
 
-## Dictionary Structured Field Members
-
-An individual member in the value of a Dictionary Structured Field is identified by the lowercased field name, followed by a semicolon `":"`, followed by the member name. An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{StructuredFields}} on a Dictionary containing only that member.
-
-### Canonicalization Examples
-
-This section contains non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is assumed to be a Dictionary:
-
-~~~
-X-Dictionary:  a=1, b=2;x=1;y=2, c=(a, b, c)
-~~~
-
-The following table shows example canonicalized values for different content identifiers, given that field:
-
-|Content Identifier|Canonicalized Value|
-|--- |--- |
-|`x-dictionary:a`|1|
-|`x-dictionary:b`|2;x=1;y=2|
-|`x-dictionary:c`|(a, b, c)|
-{: title="Non-normative examples of Dictionary member canonicalization."}
-
-
-## List Prefixes
-
-A prefix of a List Structured Field consisting of the first N members in the field's value (where N is an integer greater than 0 and less than or equal to the number of members in the List) is identified by the lowercased field name, followed by a semicolon `":"`, followed by N expressed as an Integer String. A list prefix is canonicalized by applying the serialization algorithm described in Section 4.1.1 of {{StructuredFields}} on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
-
-### Canonicalization Examples
-
-This section contains non-normative examples of canonicalized values for list prefixes given the following example header fields, whose values are assumed to be Dictionaries:
-
-~~~
-X-List-A: (a, b, c, d, e, f)
-X-List-B: ()
-~~~
-
-The following table shows example canonicalized values for different content identifiers, given those fields:
-
-|Content Identifier|Canonicalized Value|
-|--- |--- |
-|`x-list-a:0`|()|
-|`x-list-a:1`|(a)|
-|`x-list-a:3`|(a, b, c)|
-|`x-list-a:6`|(a, b, c, d, e, f)|
-|`x-list-b:0`|()|
-{: title="Non-normative examples of list prefix canonicalization."}
-
-
 ## Signature Creation Time
 
 The signature's Creation Time ({{signature-metadata}}) is identified by the `*created` identifier.
