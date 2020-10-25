@@ -142,14 +142,6 @@ For brevity, the term "signature" on its own is used in this document to refer t
 
 In addition to those listed above, this document uses the following terms:
 
-Decimal String
-: 
-: An Integer String optionally concatenated with a period "." followed by a second Integer String, representing a positive real number expressed in base 10.  The first Integer String represents the integral portion of the number, while the optional second Integer String represents the fractional portion of the number.  (( Editor's note: There's got to be a definition for this that we can reference. ))
-
-Integer String
-: 
-: A US-ASCII string of one or more digits "0-9", representing a positive integer in base 10. (( Editor's note: There's got to be a definition for this that we can reference. ))
-
 Signer
 : 
 : The entity that is generating or has generated an HTTP Message Signature.
@@ -258,7 +250,8 @@ The following table shows example canonicalized values for different content ide
 
 The signature's Creation Time ({{signature-metadata}}) is identified by the `*created` identifier.
 
-Its canonicalized value is an Integer String containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+Its canonicalized value is the `sf-integer` value of the `created` parameter (see {{params}})
+containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
 
 > The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as [RFC3339].
 
@@ -266,7 +259,8 @@ Its canonicalized value is an Integer String containing the signature's Creation
 
 The signature's Expiration Time ({{signature-metadata}}) is identified by the `*expires` identifier.
 
-Its canonicalized value is a Decimal String containing the signature's Expiration Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+Its canonicalized value is the `sf-decimal` value of the `expires` parameter (see {{params}})
+containing the signature's Expiration Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
 
 ## Target Endpoint
 
@@ -499,11 +493,13 @@ alg
 
 created
 : 
-: RECOMMENDED. The `created` parameter is a Decimal containing the signature's Creation Time, expressed as the canonicalized value of the `*created` content identifier, as defined in Section 2.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the Date HTTP Header such as when operating in certain web browser environments.
+: RECOMMENDED. The `created` parameter is an `sf-integer` containing the signature's Creation Time,
+  expressed as the canonicalized value of the `*created` content identifier, as defined in Section 2.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the Date HTTP Header such as when operating in certain web browser environments.
 
 expires
 : 
-: OPTIONAL. The `expires` parameter is a Decimal containing the signature's Expiration Time, expressed as the canonicalized value of the `*expires` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
+: OPTIONAL. The `expires` parameter is a `sf-decimal` containing the signature's Expiration Time,
+  expressed as the canonicalized value of the `*expires` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
 
 keyId
 : 
