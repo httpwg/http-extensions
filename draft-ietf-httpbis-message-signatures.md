@@ -209,7 +209,7 @@ The following table shows example canonicalized values for header fields, given 
 
 ## Dictionary Structured Field Members
 
-An individual member in the value of a Dictionary Structured Field is identified by the lowercased field name, followed by a semicolon `":"`, followed by the member name. An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{StructuredFields}} on a Dictionary containing only that member.
+An individual member in the value of a Dictionary Structured Field is identified by the lowercased  field name, followed by a semicolon `":"`, followed by the member name. An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{StructuredFields}} on a Dictionary containing only that member.
 
 ### Canonicalization Examples
 
@@ -465,7 +465,7 @@ In order to verify a signature, a verifier MUST:
 3. Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.
 
 
-A signature with a Creation Time that is in the future or an Expiration Time that is in the past MUST NOT be processed.  
+A signature with a Creation Time that is in the future or an Expiration Time that is in the past MUST NOT be processed.
 
 The verifier MUST ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature MUST NOT be processed.
 
@@ -821,7 +821,7 @@ A possible `Signature-Input` and `Signature` header containing this signature is
 ~~~
 Signature-Input: sig1=(*request-target, *created, host, date,
         content-type, digest, content-length); keyId="test-key-a";
-    alg=hs2019; created=1402170695 
+    alg=hs2019; created=1402170695
 Signature: sig1=:B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8
     jkHNjoudtqw3GngGY3n0mmwjdfn1eA6nAjgeHwl0WXced5tONcCPNzLswqPOiobGe
     A5y4WE8iBveel30OKYVel0lZ1OnXOmN5TIEIIPo9LrE+LzZis6A0HA1FRMtKgKGhT
@@ -938,7 +938,7 @@ The current draft encourages determining the Algorithm metadata property from th
 
 Punting algorithm identification into `keyId` hurts interoperability, since we aren't defining the syntax or semantics of `keyId`.  It actually goes against that claim, as we are dictating that the signing algorithm must be specified by `keyId` or derivable from it.  It also renders the algorithm registry essentially useless.  Instead of this approach, we can protect against manipulation of the Signature header field by adding support for (and possibly mandating) including Signature metadata within the Signature Input.
 
-### Lack of definition of keyId hurts interoperability 
+### Lack of definition of keyId hurts interoperability
 
 The current text leaves the format and semantics of `keyId` completely up to the implementation.  This is primarily due to the fact that most implementers of Cavage have extensive investment in key distribution and management, and just need to plug an identifier into the header.  We should support those cases, but we also need to provide guidance for the developer that doesn't have that and just wants to know how to identify a key.  It may be enough to punt this to profiling specs, but this needs to be explored more.
 
@@ -959,7 +959,7 @@ The initial entries in this document reflect those in Cavage.  The ones that are
 
 See: [issue #26](https://github.com/w3c-dvcg/http-signatures/issues/26)
 
-The canonicalization rules for `*request-target` do not perform handle minor, semantically meaningless differences in percent-encoding, such that verification could fail if an intermediary normalizes the effective request URI prior to forwarding the message.  
+The canonicalization rules for `*request-target` do not perform handle minor, semantically meaningless differences in percent-encoding, such that verification could fail if an intermediary normalizes the effective request URI prior to forwarding the message.
 
 At a minimum, they should be case and percent-encoding normalized as described in sections 6.2.2.1 and 6.2.2.2 of {{?RFC3986}}.
 
@@ -1132,7 +1132,7 @@ Jeffrey Yasskin
 
   - -00
      * Initialized from draft-richanna-http-message-signatures-00, following adoption by the working group.
-     
+
 - draft-richanna-http-message-signatures
   - -00
      * Converted to xml2rfc v3 and reformatted to comply with RFC style guides.
