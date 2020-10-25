@@ -377,8 +377,8 @@ The following sections describe each of these steps in detail.
 5. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
    * Each identifier MUST be one of those defined in Section 2.
    * This list MUST NOT be empty, as this would result in creating a signature over the empty string.
-   * If the signature's Algorithm name does not start with rsa, hmac, or ecdsa, signers SHOULD include `*created` and `*request-target` in the list.
-   * If the signature's Algorithm starts with rsa, hmac, or ecdsa, signers SHOULD include `date` and `*request-target` in the list.
+   * Signers SHOULD include `*created` and `*request-target` in the list.
+   * Signers SHOULD include `date` and `*request-target` in the list.
    * Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
 
 
@@ -412,10 +412,6 @@ The following table presents a non-normative example of metadata values that a s
 ### Create the Signature Input {#canonicalization}
 
 The Signature Input is a US-ASCII string containing the content that will be signed.  To create it, the signer concatenates together entries for each identifier in the signature's Covered Content in the order it occurs in the list, with each entry separated by a newline `"\n"`.  An identifier's entry is a US-ASCII string consisting of the lowercased identifier followed with a colon `":"`, a space `" "`, and the identifier's canonicalized value (described below).
-
-If Covered Content contains `*created` and the signature's Creation Time is undefined or the signature's Algorithm name starts with `rsa`, `hmac`, or `ecdsa` an implementation MUST produce an error.
-
-If Covered Content contains `*expires` and the signature does not have an Expiration Time or the signature's Algorithm name starts with `rsa`, `hmac`, or `ecdsa` an implementation MUST produce an error.
 
 If Covered Content contains an identifier for a header field that is not present or malformed in the message, the implementation MUST produce an error.
 
