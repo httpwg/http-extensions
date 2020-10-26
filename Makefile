@@ -1,5 +1,6 @@
 LIBDIR := lib
 DISABLE_RIBBON := true
+INDEX_FORMAT := md
 GHPAGES_EXTRA = $(foreach ext,.html .txt,$(addsuffix $(ext),$(foreach draft,$(drafts),$(shell echo $(draft) | sed -e 's/draft-ietf-httpbis-//'))))
 
 include $(LIBDIR)/main.mk
