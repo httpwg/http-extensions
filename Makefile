@@ -21,6 +21,9 @@ clean::
 
 sf-rfc-validate ?= sf-rfc-validate.py
 .PHONY: sf-lint
-sf-lint: $(drafts_xml)
-	$(sf-rfc-validate) $^
+sf-lint: $(drafts_xml) sf-lint-install
+	$(sf-rfc-validate) $(filter-out sf-lint-install,$^)
 
+.PHONY: sf-lint-install
+sf-lint-install:
+	@hash sf-rfc-validate 2>/dev/null || pip3 install sf-rfc-validate
