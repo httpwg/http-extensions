@@ -19,6 +19,8 @@ $(GHPAGES_EXTRA):
 clean::
 	-rm -f $(GHPAGES_EXTRA)
 
+sf-rfc-validate ?= sf-rfc-validate.py
 .PHONY: sf-lint
 sf-lint: $(drafts_xml)
-	sf-rfc-validate.py $^
+	$(sf-rfc-validate) $^
+
