@@ -96,7 +96,7 @@ Each member of the list represents an intermediary that has handled the response
 
 For example:
 
-~~~ example
+~~~ http-sf-list
 Proxy-Status: FooProxy, ExampleCDN
 ~~~
 
@@ -127,7 +127,7 @@ The `next-hop` parameter's value is a sf-string or sf-token that identifies the 
 
 For example:
 
-~~~ example
+~~~ http-sf-list
 Proxy-Status: cdn.example.org; next-hop=backend.example.org
 ~~~
 
@@ -139,7 +139,7 @@ The value MUST be either a sf-token or sf-binary. If the protocol identifier is 
 
 For example:
 
-~~~ example
+~~~ http-sf-list
 Proxy-Status: "proxy.example.org"; next-protocol=h2
 ~~~
 
@@ -177,7 +177,7 @@ The `details` parameter's value is a sf-string containing additional information
 
 For example:
 
-~~~ example
+~~~ http-sf-list
 Proxy-Status: ExampleProxy; error="http_protocol_error";
               details="Malformed response header - space before colon"
 ~~~
