@@ -18,3 +18,7 @@ $(GHPAGES_EXTRA):
 
 clean::
 	-rm -f $(GHPAGES_EXTRA)
+
+.PHONY: sf-lint
+sf-lint: $(drafts_xml)
+	sf-rfc-validate.py $^
