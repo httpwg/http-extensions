@@ -4,7 +4,7 @@ Anyone can contribute to HTTP; you don't have to join the Working Group, because
 
 Before doing so, it's a good idea to familiarize yourself with our current issues list,
 [charter](https://datatracker.ietf.org/wg/httpbis/about/), and [working group home
-page](https://httpwg.github.io/). If you're new to this, you may also want to read the [Tao of the
+page](https://httpwg.org/). If you're new to this, you may also want to read the [Tao of the
 IETF](https://www.ietf.org/tao.html).
 
 **Be aware that all contributions fall under the "NOTE WELL" terms outlined below.**
