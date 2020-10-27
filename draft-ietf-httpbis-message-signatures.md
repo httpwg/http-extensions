@@ -183,7 +183,7 @@ An HTTP header field value is canonicalized as follows:
 
 This section contains non-normative examples of canonicalized values for header fields, given the following example HTTP message:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Server: www.example.com
 Date: Tue, 07 Jun 2014 20:51:35 GMT
@@ -215,7 +215,7 @@ An individual member in the value of a Dictionary Structured Field is identified
 
 This section contains non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is assumed to be a Dictionary:
 
-~~~
+~~~ http-message
 X-Dictionary:  a=1, b=2;x=1;y=2, c=(a, b, c)
 ~~~
 
@@ -237,7 +237,7 @@ A prefix of a List Structured Field consisting of the first N members in the fie
 
 This section contains non-normative examples of canonicalized values for list prefixes given the following example header fields, whose values are assumed to be Dictionaries:
 
-~~~
+~~~ http-message
 X-List-A: (a, b, c, d, e, f)
 X-List-B: ()
 ~~~
@@ -384,7 +384,7 @@ The following sections describe each of these steps in detail.
 
 For example, given the following HTTP message:
 
-~~~
+~~~ http-message
 GET /foo HTTP/1.1
 Host: example.org
 Date: Sat, 07 Jun 2014 20:51:35 GMT
@@ -516,7 +516,7 @@ The `Signature` HTTP header field is a Dictionary Structured Header {{Structured
 
 The following is a non-normative example of `Signature-Input` and `Signature` HTTP header fields representing the signature in {{example-sig-value}}:
 
-~~~
+~~~ http-message
 Signature-Input: sig1=(*request-target, *created, host, date,
     cache-control, x-empty-header, x-example); keyId="test-key-a";
     alg=hs2019; created=1402170695; expires=1402170995
@@ -530,7 +530,7 @@ Signature: sig1=:K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUe
 
 Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to easily include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same content with different keys and/or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in header fields when forwarding the request to a service host, and may also include a signature over those fields and the client's signature. The following is a non-normative example of header fields a reverse proxy might add to a forwarded request that contains the signature in the above example:
 
-~~~
+~~~ http-message
 X-Forwarded-For: 192.0.2.123
 Signature-Input: reverse_proxy_sig=(*created, host, date,
     signature:sig1, x-forwarded-for); keyId="test-key-a";
@@ -727,7 +727,7 @@ The table below maps example `keyId` values to associated algorithms and/or keys
 
 This section provides non-normative examples that may be used as test cases to validate implementation correctness.  These examples are based on the following HTTP message:
 
-~~~
+~~~ http-message
 POST /foo?param=value&pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 07 Jun 2014 20:51:35 GMT
@@ -771,7 +771,7 @@ vtzidyBYFtAUoYhRWO8+ntqA1q2OK4LMjM2XgDScSVWvGdVd459A0wI9lRlnPap3zg==
 
 A possible `Signature-Input` and `Signature` header containing this signature is:
 
-~~~
+~~~ http-message
 Signature-Input: sig1=(*created, *request-target);
     keyId="test-key-a"; created=1402170695
 Signature: sig1=:QaVaWYfF2da6tG66Xtd0GrVFChJ0fOWUe/C6kaYESPiYYwnMH9eg
@@ -818,7 +818,7 @@ PxzQ5nwrLD+mUVPZ9rDs1En6fmOX9xfkZTblG/5D+s1fHHs9dDXCOVkT5dLS8DjdIA==
 
 A possible `Signature-Input` and `Signature` header containing this signature is:
 
-~~~
+~~~ http-message
 Signature-Input: sig1=(*request-target, *created, host, date,
         content-type, digest, content-length); keyId="test-key-a";
     alg=hs2019; created=1402170695
@@ -836,7 +836,7 @@ Signature: sig1=:B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8
 
 This presents a `Signature-Input` and `Signature` header containing only the minimal required parameters:
 
-~~~
+~~~ http-message
 Signature-Input: sig1=(); keyId="test-key-a"; created=1402170695
 Signature: sig1=:cxieW5ZKV9R9A70+Ua1A/1FCvVayuE6Z77wDGNVFSiluSzR9TYFV
     vwUjeU6CTYUdbOByGMCee5q1eWWUOM8BIH04Si6VndEHjQVdHqshAtNJk2Quzs6WC
@@ -866,7 +866,7 @@ The corresponding Signature Input is:
 
 This presents a `Signature-Input` and `Signature` header containing only the minimal required and recommended parameters:
 
-~~~
+~~~ http-message
 Signature-Input: sig1=(); alg=hs2019; keyId="test-key-a";
     created=1402170695
 Signature: sig1=:cxieW5ZKV9R9A70+Ua1A/1FCvVayuE6Z77wDGNVFSiluSzR9TYFV
@@ -897,7 +897,7 @@ The corresponding Signature Input is:
 
 This presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-sha256` algorithm:
 
-~~~
+~~~ http-message
 Signature: sig1=(date); alg=rsa-sha256; keyId="test-key-b"
 Signature: sig1=:HtXycCl97RBVkZi66ADKnC9c5eSSlb57GnQ4KFqNZplOpNfxqk62
     JzZ484jXgLvoOTRaKfR4hwyxlcyb+BWkVasApQovBSdit9Ml/YmN2IvJDPncrlhPD

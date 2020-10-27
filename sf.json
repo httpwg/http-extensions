@@ -2,5 +2,11 @@
     "cache-status": "list",
     "proxy-status": "list",
     "variant-key": "list",
-    "variants": "dict"
+    "variants": "dict",
+    "signature": "dict",
+    "signature-input": "dict",
+    "x-dictionary": "dict",
+    "x-list": "list",
+    "x-list-a": "list",
+    "x-list-b": "list"
 }
