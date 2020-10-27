@@ -20,11 +20,11 @@ $(GHPAGES_EXTRA):
 clean::
 	-rm -f $(GHPAGES_EXTRA)
 
-sf-rfc-validate ?= sf-rfc-validate.py
-.PHONY: sf-lint
-sf-lint: $(drafts_xml) sf-lint-install
-	$(sf-rfc-validate) $(filter-out sf-lint-install,$^)
+rfc-http-validate ?= rfc-http-validate.py
+.PHONY: http-lint
+http-lint: $(drafts_xml) http-lint-install
+	$(rfc-http-validate) -m sf.json $(filter-out http-lint-install,$^)
 
-.PHONY: sf-lint-install
-sf-lint-install:
-	@hash sf-rfc-validate 2>/dev/null || pip3 install sf-rfc-validate
+.PHONY: http-lint-install
+http-lint-install:
+	@hash rfc-http-validate 2>/dev/null || pip3 install rfc-http-validate

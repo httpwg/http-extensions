@@ -154,7 +154,7 @@ This parameter is useful to distinguish cases when the next hop server sends a 3
 
 For example:
 
-~~~ http-sf-list
+~~~ http-message
 Cache-Status: ExampleCache; hit; detail=MEMORY
 ~~~
 
@@ -167,49 +167,49 @@ This parameter is intentionally limited. If an implementation needs to convey ad
 
 The most minimal cache hit:
 
-~~~ http-sf-list
+~~~ http-message
 Cache-Status: ExampleCache; hit
 ~~~
 
 ... but a polite cache will give some more information, e.g.:
 
-~~~ http-sf-list
+~~~ http-message
 Cache-Status: ExampleCache; hit; ttl=376
 ~~~
 
 A stale hit just has negative freshness:
 
-~~~ http-sf-list
+~~~ http-message
 Cache-Status: ExampleCache; hit; ttl=-412
 ~~~
 
 Whereas a complete miss is:
 
-~~~ http-sf-list
+~~~ http-message
 Cache-Status: ExampleCache; fwd=uri-miss
 ~~~
 
 A miss that successfully validated on the back-end server:
 
-~~~ http-sf-list
+~~~ http-message
 Cache-Status: ExampleCache; fwd=stale; fwd-status=304
 ~~~
 
 A miss that was collapsed with another request:
 
-~~~ http-sf-list
+~~~ http-message
 Cache-Status: ExampleCache; fwd=uri-miss; collapsed
 ~~~
 
 A miss that the cache attempted to collapse, but couldn't:
 
-~~~ http-sf-list
+~~~ http-message
 Cache-Status: ExampleCache; fwd=uri-miss; collapsed=?0
 ~~~
 
 Going through two layers of caching, both of which were hits, and the second collapsed with other requests:
 
-~~~ http-sf-list
+~~~ http-message
 Cache-Status: OriginCache; hit; ttl=1100; collapsed,
               "CDN Company Here"; hit; ttl=545
 ~~~
