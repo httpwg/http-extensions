@@ -289,35 +289,35 @@ The following table contains non-normative example HTTP messages and their canon
     </thead>
     <tbody>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 POST /?param=value HTTP/1.1
 Host: www.example.com</sourcecode></td>
             <td><tt>post /?param=value</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 POST /a/b HTTP/1.1
 Host: www.example.com</sourcecode></td>
             <td><tt>post /a/b</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 GET http://www.example.com/a/ HTTP/1.1</sourcecode></td>
             <td><tt>get /a/</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 GET http://www.example.com HTTP/1.1</sourcecode></td>
             <td><tt>get /</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 CONNECT server.example.com:80 HTTP/1.1
 Host: server.example.com</sourcecode></td>
             <td><tt>connect /</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 OPTIONS * HTTP/1.1
 Host: server.example.com</sourcecode></td>
             <td><tt>options *</tt></td>
