@@ -556,7 +556,7 @@ The following examples demonstrate interactions where a server responds with a
 Request:
 
 ~~~ http-message
-GET /items/123
+GET /items/123 HTTP/1.1
 
 ~~~
 
@@ -600,7 +600,7 @@ Digest: id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Request:
 
 ~~~ http-message
-GET /items/123
+GET /items/123 HTTP/1.1
 Range: bytes=1-7
 
 ~~~
@@ -635,7 +635,7 @@ non-printable characters.
 Request:
 
 ~~~ http-message
-PUT /items/123
+PUT /items/123 HTTP/1.1
 Content-Type: application/json
 Accept-Encoding: br
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -664,7 +664,7 @@ value depends on the representation metadata header fields, including
 Request:
 
 ~~~ http-message
-PUT /items/123
+PUT /items/123 HTTP/1.1
 Content-Type: application/json
 Content-Length: 18
 Accept-Encoding: br
@@ -882,7 +882,7 @@ The field value is the same as in {{example-full-representation}} because `Diges
 Request:
 
 ~~~ http-message
-GET /items/123
+GET /items/123 HTTP/1.1
 
 ~~~
 
@@ -942,7 +942,7 @@ with a Digest containing an unsupported algorithm.
 Request:
 
 ~~~ http-message
-GET /items/123
+GET /items/123 HTTP/1.1
 Want-Digest: sha;q=1
 
 ~~~
@@ -965,7 +965,7 @@ The client requests a sha Digest, the server advises for sha-256 and sha-512
 Request:
 
 ~~~ http-message
-GET /items/123
+GET /items/123 HTTP/1.1
 Want-Digest: sha;q=1
 
 ~~~
