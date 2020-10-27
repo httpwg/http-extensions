@@ -405,7 +405,7 @@ The following table presents a non-normative example of metadata values that a s
 |Covered Content|`*request-target`, `*created`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`, `x-dictionary:b`, `x-dictionary:a`, `x-list:3`|
 |Creation Time|`1402174295`|
 |Expiration Time|`1402174595`|
-|Verification Key Material|The public key provided in {{example-key-rsa-test}} and identified by the `keyId` value "test-key-a".|
+|Verification Key Material|The public key provided in {{example-key-rsa-test}} and identified by the `keyid` value "test-key-a".|
 {: title="Non-normative example metadata values" #example-metadata}
 
 
@@ -495,7 +495,7 @@ The parameters on each `Signature-Input` member value contain metadata about the
 
 alg
 :
-: RECOMMENDED. The `alg` parameter is a Token containing the name of the signature's Algorithm, as registered in the HTTP Signature Algorithms Registry defined by this document. Verifiers MUST determine the signature's Algorithm from the `keyId` parameter rather than from `alg`. If `alg` is provided and differs from or is incompatible with the algorithm or key material identified by `keyId` (for example, `alg` has a value of `rsa-sha256` but `keyId` identifies an EdDSA key), then implementations MUST produce an error.
+: RECOMMENDED. The `alg` parameter is a Token containing the name of the signature's Algorithm, as registered in the HTTP Signature Algorithms Registry defined by this document. Verifiers MUST determine the signature's Algorithm from the `keyid` parameter rather than from `alg`. If `alg` is provided and differs from or is incompatible with the algorithm or key material identified by `keyid` (for example, `alg` has a value of `rsa-sha256` but `keyid` identifies an EdDSA key), then implementations MUST produce an error.
 
 created
 :
@@ -505,9 +505,9 @@ expires
 :
 : OPTIONAL. The `expires` parameter is a Decimal containing the signature's Expiration Time, expressed as the canonicalized value of the `*expires` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
 
-keyId
+keyid
 :
-: REQUIRED. The `keyId` parameter is a String whose value can be used by a verifier to identify and/or obtain the signature's Verification Key Material. Further format and semantics of this value are out of scope for this document.
+: REQUIRED. The `keyid` parameter is a String whose value can be used by a verifier to identify and/or obtain the signature's Verification Key Material. Further format and semantics of this value are out of scope for this document.
 
 ## The 'Signature' HTTP Header
 The `Signature` HTTP header field is a Dictionary Structured Header {{StructuredFields}} containing zero or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
@@ -518,7 +518,7 @@ The following is a non-normative example of `Signature-Input` and `Signature` HT
 
 ~~~ http-message
 Signature-Input: sig1=(*request-target *created host date
-    cache-control x-empty-header x-example); keyId="test-key-a";
+    cache-control x-empty-header x-example); keyid="test-key-a";
     alg=hs2019; created=1402170695; expires=1402170995
 Signature: sig1=:K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUe
     Zx/Kdrq32DrfakQ6bPsvB9aqZqognNT6be4olHROIkeV879RrsrObury8L9SCEibe
@@ -533,7 +533,7 @@ Since `Signature-Input` and `Signature` are both defined as Dictionary Structure
 ~~~ http-message
 X-Forwarded-For: 192.0.2.123
 Signature-Input: reverse_proxy_sig=(*created host date
-    signature:sig1 x-forwarded-for); keyId="test-key-a";
+    signature:sig1 x-forwarded-for); keyid="test-key-a";
     alg=hs2019; created=1402170695; expires=1402170695.25
 Signature: reverse_proxy_sig=:ON3HsnvuoTlX41xfcGWaOEVo1M3bJDRBOp0Pc/O
     jAOWKQn0VMY0SvMMWXS7xG+xYVa152rRVAo6nMV7FS3rv0rR5MzXL8FCQ2A35DCEN
@@ -579,7 +579,7 @@ Status
 
 Description
 :
-: Derived from metadata associated with keyId. Recommend support for:
+: Derived from metadata associated with keyid. Recommend support for:
 :    - RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]
 :    - HMAC [RFC2104] using SHA-512 [RFC6234]
 :    - ECDSA using curve P-256 DSS {{FIPS186-4}} and SHA-512 [RFC6234]
@@ -653,7 +653,7 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 |`alg`|Active | {{params}} of this document|
 |`created`|Active   | {{params}} of this document|
 |`expires`|Active   | {{params}} of this document|
-|`keyId`|Active     | {{params}} of this document|
+|`keyid`|Active     | {{params}} of this document|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
 # Security Considerations {#security}
@@ -714,11 +714,11 @@ EQeNC8fHGg4UXU8mhHnSBt3EA10qQJfRDs15M38eG2cYwB1PZpDHScDnDA0=
 -----END RSA PRIVATE KEY-----
 ~~~
 
-## Example keyId Values
+## Example keyid Values
 
-The table below maps example `keyId` values to associated algorithms and/or keys.  These are example mappings that are valid only within the context of examples in examples within this and future documents that reference this section.  Unless otherwise specified, within the context of examples it should be assumed that the signer and verifier understand these `keyId` mappings.  These `keyId` values are not reserved, and deployments are free to use them, with these associations or others.
+The table below maps example `keyid` values to associated algorithms and/or keys.  These are example mappings that are valid only within the context of examples in examples within this and future documents that reference this section.  Unless otherwise specified, within the context of examples it should be assumed that the signer and verifier understand these `keyid` mappings.  These `keyid` values are not reserved, and deployments are free to use them, with these associations or others.
 
-|keyId|Algorithm|Verification Key|
+|keyid|Algorithm|Verification Key|
 |--- |--- |---|
 |`test-key-a`|`hs2019`, using RSASSA-PSS [RFC8017] and SHA-512 [RFC6234]|The public key specified in {{example-key-rsa-test}}|
 |`test-key-b`|`rsa-sha256`|The public key specified in {{example-key-rsa-test}}|
@@ -773,7 +773,7 @@ A possible `Signature-Input` and `Signature` header containing this signature is
 
 ~~~ http-message
 Signature-Input: sig1=(*created *request-target);
-    keyId="test-key-a"; created=1402170695
+    keyid="test-key-a"; created=1402170695
 Signature: sig1=:QaVaWYfF2da6tG66Xtd0GrVFChJ0fOWUe/C6kaYESPiYYwnMH9eg
     OgyKqgLLY9NQJFk7bQY834sHEUwjS5ByEBaO3QNwIvqEY1qAAU/2MX14tc9Yn7ELB
     naaNHaHkV3xVO9KIuLT7V6e4OUuGb1axfbXpMgPEql6CEFrn6K95CLuuKP5/gOEcB
@@ -820,7 +820,7 @@ A possible `Signature-Input` and `Signature` header containing this signature is
 
 ~~~ http-message
 Signature-Input: sig1=(*request-target *created host date
-        content-type digest content-length); keyId="test-key-a";
+        content-type digest content-length); keyid="test-key-a";
     alg=hs2019; created=1402170695
 Signature: sig1=:B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8
     jkHNjoudtqw3GngGY3n0mmwjdfn1eA6nAjgeHwl0WXced5tONcCPNzLswqPOiobGe
@@ -837,7 +837,7 @@ Signature: sig1=:B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8
 This presents a `Signature-Input` and `Signature` header containing only the minimal required parameters:
 
 ~~~ http-message
-Signature-Input: sig1=(); keyId="test-key-a"; created=1402170695
+Signature-Input: sig1=(); keyid="test-key-a"; created=1402170695
 Signature: sig1=:cxieW5ZKV9R9A70+Ua1A/1FCvVayuE6Z77wDGNVFSiluSzR9TYFV
     vwUjeU6CTYUdbOByGMCee5q1eWWUOM8BIH04Si6VndEHjQVdHqshAtNJk2Quzs6WC
     2DkV0vysOhBSvFZuLZvtCmXRQfYGTGhZqGwq/AAmFbt5WNLQtDrEe0ErveEKBfaz+
@@ -867,7 +867,7 @@ The corresponding Signature Input is:
 This presents a `Signature-Input` and `Signature` header containing only the minimal required and recommended parameters:
 
 ~~~ http-message
-Signature-Input: sig1=(); alg=hs2019; keyId="test-key-a";
+Signature-Input: sig1=(); alg=hs2019; keyid="test-key-a";
     created=1402170695
 Signature: sig1=:cxieW5ZKV9R9A70+Ua1A/1FCvVayuE6Z77wDGNVFSiluSzR9TYFV
     vwUjeU6CTYUdbOByGMCee5q1eWWUOM8BIH04Si6VndEHjQVdHqshAtNJk2Quzs6WC
@@ -898,7 +898,7 @@ The corresponding Signature Input is:
 This presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-sha256` algorithm:
 
 ~~~ http-message
-Signature: sig1=(date); alg=rsa-sha256; keyId="test-key-b"
+Signature: sig1=(date); alg=rsa-sha256; keyid="test-key-b"
 Signature: sig1=:HtXycCl97RBVkZi66ADKnC9c5eSSlb57GnQ4KFqNZplOpNfxqk62
     JzZ484jXgLvoOTRaKfR4hwyxlcyb+BWkVasApQovBSdit9Ml/YmN2IvJDPncrlhPD
     VDv36Z9/DiSO+RNHD7iLXugdXo1+MGRimW1RmYdenl/ITeb7rjfLZ4b9VNnLFtVWw
@@ -934,13 +934,13 @@ The goal of this draft document is to provide a starting point at feature parity
 
 ### Confusing guidance on algorithm and key identification {#issue-alg-keyid}
 
-The current draft encourages determining the Algorithm metadata property from the `keyId` field, both in the guidance for the use of `algorithm` and `keyId`, and the definition for the `hs2019` algorithm and deprecation of the other algorithms in the registry.  The current state arose from concern that a malicious party could change the value of the `algorithm` parameter, potentially tricking the verifier into accepting a signature that would not have been verified under the actual parameter.
+The current draft encourages determining the Algorithm metadata property from the `keyid` field, both in the guidance for the use of `algorithm` and `keyid`, and the definition for the `hs2019` algorithm and deprecation of the other algorithms in the registry.  The current state arose from concern that a malicious party could change the value of the `algorithm` parameter, potentially tricking the verifier into accepting a signature that would not have been verified under the actual parameter.
 
-Punting algorithm identification into `keyId` hurts interoperability, since we aren't defining the syntax or semantics of `keyId`.  It actually goes against that claim, as we are dictating that the signing algorithm must be specified by `keyId` or derivable from it.  It also renders the algorithm registry essentially useless.  Instead of this approach, we can protect against manipulation of the Signature header field by adding support for (and possibly mandating) including Signature metadata within the Signature Input.
+Punting algorithm identification into `keyid` hurts interoperability, since we aren't defining the syntax or semantics of `keyid`.  It actually goes against that claim, as we are dictating that the signing algorithm must be specified by `keyid` or derivable from it.  It also renders the algorithm registry essentially useless.  Instead of this approach, we can protect against manipulation of the Signature header field by adding support for (and possibly mandating) including Signature metadata within the Signature Input.
 
-### Lack of definition of keyId hurts interoperability
+### Lack of definition of keyid hurts interoperability
 
-The current text leaves the format and semantics of `keyId` completely up to the implementation.  This is primarily due to the fact that most implementers of Cavage have extensive investment in key distribution and management, and just need to plug an identifier into the header.  We should support those cases, but we also need to provide guidance for the developer that doesn't have that and just wants to know how to identify a key.  It may be enough to punt this to profiling specs, but this needs to be explored more.
+The current text leaves the format and semantics of `keyid` completely up to the implementation.  This is primarily due to the fact that most implementers of Cavage have extensive investment in key distribution and management, and just need to plug an identifier into the header.  We should support those cases, but we also need to provide guidance for the developer that doesn't have that and just wants to know how to identify a key.  It may be enough to punt this to profiling specs, but this needs to be explored more.
 
 ### Algorithm Registry duplicates work of JWA
 
@@ -985,15 +985,15 @@ The Algorithm should be part of the Signature Input, to protect against maliciou
 
 ### Verification key identifier is not signed
 
-The Verification key identifier (e.g., the value used for the `keyId` parameter) should be part of the Signature Input, to protect against malicious changes.
+The Verification key identifier (e.g., the value used for the `keyid` parameter) should be part of the Signature Input, to protect against malicious changes.
 
 ### Max values, precision for Integer String and Decimal String not defined
 
 The definitions for Integer String and Decimal String do not specify a maximum value.  The definition for Decimal String (used to provide sub-second precision for Expiration Time) does not define minimum or maximum precision requirements.  It should set a sane requirement here (e.g., MUST support up to 3 decimal places and no more).
 
-### keyId parameter value could break list syntax
+### keyid parameter value could break list syntax
 
-The `keyId` parameter value needs to be constrained so as to not break list syntax (e.g., by containing a comma).
+The `keyid` parameter value needs to be constrained so as to not break list syntax (e.g., by containing a comma).
 
 ### Creation Time and Expiration Time do not allow for clock skew
 
@@ -1039,7 +1039,7 @@ It should be possible to independently include the following content and metadat
 
 - The signature's Algorithm
 - The signature's Covered Content
-- The value used for the `keyId` parameter
+- The value used for the `keyid` parameter
 - Request method
 - Individual components of the effective request URI: scheme, authority, path, query
 - Status code
