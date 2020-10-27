@@ -216,7 +216,7 @@ An individual member in the value of a Dictionary Structured Field is identified
 This section contains non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is assumed to be a Dictionary:
 
 ~~~ http-message
-X-Dictionary:  a=1, b=2;x=1;y=2, c=(a, b, c)
+X-Dictionary:  a=1, b=2;x=1;y=2, c=(a b c)
 ~~~
 
 The following table shows example canonicalized values for different content identifiers, given that field:
@@ -238,7 +238,7 @@ A prefix of a List Structured Field consisting of the first N members in the fie
 This section contains non-normative examples of canonicalized values for list prefixes given the following example header fields, whose values are assumed to be Dictionaries:
 
 ~~~ http-message
-X-List-A: (a, b, c, d, e, f)
+X-List-A: (a b c d e f)
 X-List-B: ()
 ~~~
 
@@ -392,7 +392,7 @@ X-Example: Example header
         with some whitespace.
 X-EmptyHeader:
 X-Dictionary: a=1, b=2
-X-List: (a, b, c, d)
+X-List: (a b c d)
 Cache-Control: max-age=60
 Cache-Control: must-revalidate
 ~~~
@@ -517,8 +517,8 @@ The `Signature` HTTP header field is a Dictionary Structured Header {{Structured
 The following is a non-normative example of `Signature-Input` and `Signature` HTTP header fields representing the signature in {{example-sig-value}}:
 
 ~~~ http-message
-Signature-Input: sig1=(*request-target, *created, host, date,
-    cache-control, x-empty-header, x-example); keyId="test-key-a";
+Signature-Input: sig1=(*request-target *created host date
+    cache-control x-empty-header x-example); keyId="test-key-a";
     alg=hs2019; created=1402170695; expires=1402170995
 Signature: sig1=:K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUe
     Zx/Kdrq32DrfakQ6bPsvB9aqZqognNT6be4olHROIkeV879RrsrObury8L9SCEibe
@@ -532,8 +532,8 @@ Since `Signature-Input` and `Signature` are both defined as Dictionary Structure
 
 ~~~ http-message
 X-Forwarded-For: 192.0.2.123
-Signature-Input: reverse_proxy_sig=(*created, host, date,
-    signature:sig1, x-forwarded-for); keyId="test-key-a";
+Signature-Input: reverse_proxy_sig=(*created host date
+    signature:sig1 x-forwarded-for); keyId="test-key-a";
     alg=hs2019; created=1402170695; expires=1402170695.25
 Signature: reverse_proxy_sig=:ON3HsnvuoTlX41xfcGWaOEVo1M3bJDRBOp0Pc/O
     jAOWKQn0VMY0SvMMWXS7xG+xYVa152rRVAo6nMV7FS3rv0rR5MzXL8FCQ2A35DCEN
@@ -772,7 +772,7 @@ vtzidyBYFtAUoYhRWO8+ntqA1q2OK4LMjM2XgDScSVWvGdVd459A0wI9lRlnPap3zg==
 A possible `Signature-Input` and `Signature` header containing this signature is:
 
 ~~~ http-message
-Signature-Input: sig1=(*created, *request-target);
+Signature-Input: sig1=(*created *request-target);
     keyId="test-key-a"; created=1402170695
 Signature: sig1=:QaVaWYfF2da6tG66Xtd0GrVFChJ0fOWUe/C6kaYESPiYYwnMH9eg
     OgyKqgLLY9NQJFk7bQY834sHEUwjS5ByEBaO3QNwIvqEY1qAAU/2MX14tc9Yn7ELB
@@ -819,8 +819,8 @@ PxzQ5nwrLD+mUVPZ9rDs1En6fmOX9xfkZTblG/5D+s1fHHs9dDXCOVkT5dLS8DjdIA==
 A possible `Signature-Input` and `Signature` header containing this signature is:
 
 ~~~ http-message
-Signature-Input: sig1=(*request-target, *created, host, date,
-        content-type, digest, content-length); keyId="test-key-a";
+Signature-Input: sig1=(*request-target *created host date
+        content-type digest content-length); keyId="test-key-a";
     alg=hs2019; created=1402170695
 Signature: sig1=:B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8
     jkHNjoudtqw3GngGY3n0mmwjdfn1eA6nAjgeHwl0WXced5tONcCPNzLswqPOiobGe
