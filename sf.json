@@ -1,4 +1,6 @@
 {
     "cache-status": "list",
-    "proxy-status": "list"
+    "proxy-status": "list",
+    "variant-key": "list",
+    "variants": "dict"
 }
