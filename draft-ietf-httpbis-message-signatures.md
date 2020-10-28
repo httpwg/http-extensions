@@ -142,20 +142,17 @@ For brevity, the term "signature" on its own is used in this document to refer t
 
 In addition to those listed above, this document uses the following terms:
 
-Decimal String
-:
+{: vspace="0"}
+Decimal String:
 : An Integer String optionally concatenated with a period "." followed by a second Integer String, representing a positive real number expressed in base 10.  The first Integer String represents the integral portion of the number, while the optional second Integer String represents the fractional portion of the number.  (( Editor's note: There's got to be a definition for this that we can reference. ))
 
-Integer String
-:
+Integer String:
 : A US-ASCII string of one or more digits "0-9", representing a positive integer in base 10. (( Editor's note: There's got to be a definition for this that we can reference. ))
 
-Signer
-:
+Signer:
 : The entity that is generating or has generated an HTTP Message Signature.
 
-Verifier
-:
+Verifier:
 : An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.
 
 This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [RFC7230], and senders MUST NOT generate messages that include it.
@@ -333,24 +330,20 @@ An HTTP Message Signature is a signature over a string generated from a subset o
 
 HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification.  The following metadata properties are defined:
 
-Algorithm
-:
+{: vspace="0"}
+Algorithm:
 : An HTTP Signature Algorithm defined in the HTTP Signature Algorithms Registry defined in this document. It describes the signing and verification algorithms for the signature.
 
-Creation Time
-:
+Creation Time:
 : A timestamp representing the point in time that the signature was generated. Sub-second precision is not supported. A signature's Creation Time MAY be undefined, indicating that it is unknown.
 
-Covered Content
-:
+Covered Content:
 : An ordered list of content identifiers (Section 2) that indicates the metadata and message content that is covered by the signature. The order of identifiers in this list affects signature generation and verification, and therefore MUST be preserved.
 
-Expiration Time
-:
+Expiration Time:
 : A timestamp representing the point in time at which the signature expires. An expired signature always fails verification. A signature's Expiration Time MAY be undefined, indicating that the signature does not expire.
 
-Verification Key Material
-:
+Verification Key Material:
 : The key material required to verify the signature.
 
 
@@ -493,20 +486,17 @@ The `Signature-Input` HTTP header field is a Dictionary Structured Header {{Stru
 ### Metadata Parameters {#params}
 The parameters on each `Signature-Input` member value contain metadata about the signature. Each parameter name MUST be a parameter name registered in the IANA HTTP Signatures Metadata Parameters Registry defined in {{param-registry}} of this document. This document defines the following parameters, and registers them as the initial contents of the registry:
 
-alg
-:
+{: vspace="0"}
+alg:
 : RECOMMENDED. The `alg` parameter is a Token containing the name of the signature's Algorithm, as registered in the HTTP Signature Algorithms Registry defined by this document. Verifiers MUST determine the signature's Algorithm from the `keyid` parameter rather than from `alg`. If `alg` is provided and differs from or is incompatible with the algorithm or key material identified by `keyid` (for example, `alg` has a value of `rsa-sha256` but `keyid` identifies an EdDSA key), then implementations MUST produce an error.
 
-created
-:
+created:
 : RECOMMENDED. The `created` parameter is a Decimal containing the signature's Creation Time, expressed as the canonicalized value of the `*created` content identifier, as defined in Section 2.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the Date HTTP Header such as when operating in certain web browser environments.
 
-expires
-:
+expires:
 : OPTIONAL. The `expires` parameter is a Decimal containing the signature's Expiration Time, expressed as the canonicalized value of the `*expires` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
 
-keyid
-:
+keyid:
 : REQUIRED. The `keyid` parameter is a String whose value can be used by a verifier to identify and/or obtain the signature's Verification Key Material. Further format and semantics of this value are out of scope for this document.
 
 ## The 'Signature' HTTP Header
@@ -551,16 +541,14 @@ This document defines HTTP Signature Algorithms, for which IANA is asked to crea
 
 ### Registration Template {#iana-hsa-template}
 
-Algorithm Name
-:
+{: vspace="0"}
+Algorithm Name:
 : An identifier for the HTTP Signature Algorithm. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The identifier MUST be unique within the context of the registry.
 
-Status
-:
+Status:
 : A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
-Description
-:
+Description:
 : A description of the algorithm used to sign the signing string when generating an HTTP Message Signature, or instructions on how to determine that algorithm.  When the description specifies an algorithm, it MUST include a reference to the document or documents that define the algorithm.
 
 ### Initial Contents {#iana-hsa-contents}
@@ -569,16 +557,14 @@ Description
 
 #### hs2019
 
-Algorithm Name
-:
+{: vspace="0"}
+Algorithm Name:
 : `hs2019`
 
-Status
-:
+Status:
 : active
 
-Description
-:
+Description:
 : Derived from metadata associated with keyid. Recommend support for:
 :    - RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]
 :    - HMAC [RFC2104] using SHA-512 [RFC6234]
@@ -587,21 +573,21 @@ Description
 
 
 #### rsa-sha1
-Algorithm Name
-:
+
+{: vspace="0"}
+Algorithm Name:
 : `rsa-sha1`
 
-Status
-:
+Status:
 : Deprecated; SHA-1 not secure.
 
-Description
-:
+Description:
 : RSASSA-PKCS1-v1_5 [RFC8017] using SHA-1 [RFC6234]
 
 #### rsa-sha256
-Algorithm Name
-:
+
+{: vspace="0"}
+Algorithm Name:
 : `rsa-sha256`
 
 Status
@@ -613,29 +599,27 @@ Description
 : RSASSA-PKCS1-v1_5 [RFC8017] using SHA-256 [RFC6234]
 
 #### hmac-sha256
-Algorithm Name
-:
+
+{: vspace="0"}
+Algorithm Name:
 : `hmac-sha256`
 
-Status
-:
+Status:
 : Deprecated; specifying signature algorithm enables attack vector.
 
-Description
-:
+Description:
 : HMAC [RFC2104] using SHA-256 [RFC6234]
 
 #### ecdsa-sha256
-Algorithm Name
-:
+
+{: vspace="0"}
+Algorithm Name:
 : `ecdsa-sha256`
 
-Status
-:
+Status:
 : Deprecated; specifying signature algorithm enables attack vector.
 
-Description
-:
+Description:
 : ECDSA using curve P-256 DSS {{FIPS186-4}} and SHA-256 [RFC6234]
 
 ## HTTP Signature Metadata Parameters Registry {#param-registry}
