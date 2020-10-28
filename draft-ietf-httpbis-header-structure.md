@@ -501,7 +501,7 @@ The ABNF for a Byte Sequence is:
 
 ~~~ abnf
 sf-binary = ":" *(base64) ":"
-base64    = ALPHA / DIGIT / "+" / "/" / "="
+base64    = ALPHA / DIGIT / "+" / "/" / "=" / SP
 ~~~
 
 A Byte Sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
@@ -949,6 +949,7 @@ Given an ASCII string as input_string, return a Byte Sequence. input_string is m
 3. If there is not a ":" character before the end of input_string, fail parsing.
 4. Let b64_content be the result of consuming content of input_string up to but not including the first instance of the character ":".
 5. Consume the ":" character at the beginning of input_string.
+6. Remove all SP from input_string.
 6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
 7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below).
 8. Return binary_content.
