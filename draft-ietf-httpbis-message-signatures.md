@@ -590,12 +590,10 @@ Description:
 Algorithm Name:
 : `rsa-sha256`
 
-Status
-:
+Status:
 : Deprecated; specifying signature algorithm enables attack vector.
 
-Description
-:
+Description:
 : RSASSA-PKCS1-v1_5 [RFC8017] using SHA-256 [RFC6234]
 
 #### hmac-sha256
