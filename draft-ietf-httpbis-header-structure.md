@@ -54,6 +54,18 @@ informative:
       DOI:  10.1109/IEEESTD.2019.8766229
       ISBN: 978-1-5044-5924-2
 
+  STD63:
+    title: UTF-8, a transformation format of ISO 10646
+    author:
+    - ins: F. Yergeau
+      name: F. Yergeau
+    date: 2003-11
+    seriesinfo:
+      STD: 63
+      RFC: 3629
+      DOI: 10.17487/RFC3629
+    target: http://www.rfc-editor.org/info/std63
+
 
 --- abstract
 
@@ -455,7 +467,7 @@ Note that Strings only use DQUOTE as a delimiter; single quotes do not delimit S
 
 Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
 
-When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably {{?RFC3629}}).
+When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably {{STD63}}).
 
 Parsers MUST support Strings (after any decoding) with at least 1024 characters.
 
