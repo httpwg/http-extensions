@@ -761,7 +761,7 @@ Applications that use this media type:
 
 Additional information:
 
-: 
+: <!-- -->
 
 : Deprecated alias names for this type: n/a
 
