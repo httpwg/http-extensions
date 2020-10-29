@@ -224,7 +224,7 @@ list-member   = sf-item / inner-list
 Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Strings could look like:
 
 ~~~ http-message
-Example-StrList: "foo", "bar", "It was the best of times."
+Example-List: "foo", "bar", "It was the best of times."
 ~~~
 
 An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
@@ -232,14 +232,14 @@ An empty List is denoted by not serializing the field at all. This implies that 
 Note that Lists can have their members split across multiple lines inside a header or trailer section, as per {{?RFC7230}}{: section="3.2.2"}; for example, the following are equivalent:
 
 ~~~ http-message
-Example-Hdr: foo, bar
+Example-List: foo, bar
 ~~~
 
 and
 
 ~~~ http-message
-Example-Hdr: foo
-Example-Hdr: bar
+Example-List: foo
+Example-List: bar
 ~~~
 
 However, individual members of a List cannot be safely split between lines; see {{text-parse}} for details.
@@ -261,7 +261,7 @@ inner-list    = "(" *SP [ sf-item *( 1*SP sf-item ) *SP ] ")"
 Inner Lists are denoted by surrounding parenthesis, and their values are delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
 ~~~ http-message
-Example-StrListList: ("foo" "bar"), ("baz"), ("bat" "one"), ()
+Example-List: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 ~~~
 
 Note that the last member in this example is an empty Inner List.
@@ -269,7 +269,7 @@ Note that the last member in this example is an empty Inner List.
 A header field whose value is defined as a List of Inner Lists with Parameters at both levels could look like:
 
 ~~~ http-message
-Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
+Example-List: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
 ~~~
 
 Parsers MUST support Inner Lists containing at least 256 members. Field specifications can constrain the types and cardinality of individual Inner List members as they require.
@@ -294,13 +294,13 @@ param-value   = bare-item
 Note that parameters are ordered as serialized, and parameter keys cannot contain uppercase letters. A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
 
 ~~~ http-message
-Example-ParamList: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
+Example-List: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
 ~~~
 
 Parameters whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example, the "a" parameter here is true, while the "b" parameter is false:
 
 ~~~ http-message
-Example-Int: 1; a; b=?0
+Example-Integer: 1; a; b=?0
 ~~~
 
 Note that this requirement is only on serialization; parsers are still required to correctly handle the true value when it appears in a parameter.
@@ -342,13 +342,13 @@ Note that this requirement is only on serialization; parsers are still required 
 A Dictionary with a member whose value is an Inner List of Tokens:
 
 ~~~ http-message
-Example-DictList: rating=1.5, feelings=(joy sadness)
+Example-Dict: rating=1.5, feelings=(joy sadness)
 ~~~
 
 A Dictionary with a mix of Items and Inner Lists, some with parameters:
 
 ~~~ http-message
-Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
+Example-Dict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
 ~~~
 
 As with Lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
@@ -358,14 +358,14 @@ Typically, a field specification will define the semantics of Dictionaries by sp
 Note that Dictionaries can have their members split across multiple lines inside a header or trailer section; for example, the following are equivalent:
 
 ~~~ http-message
-Example-Hdr: foo=1, bar=2
+Example-Dict: foo=1, bar=2
 ~~~
 
 and
 
 ~~~ http-message
-Example-Hdr: foo=1
-Example-Hdr: bar=2
+Example-Dict: foo=1
+Example-Dict: bar=2
 ~~~
 
 However, individual members of a Dictionary cannot be safely split between lines; see {{text-parse}} for details.
@@ -388,13 +388,13 @@ bare-item = sf-integer / sf-decimal / sf-string / sf-token
 For example, a header field that is defined to be an Item that is an Integer might look like:
 
 ~~~ http-message
-Example-IntItemHeader: 5
+Example-Integer: 5
 ~~~
 
 or with parameters:
 
 ~~~ http-message
-Example-IntItem: 5; foo=bar
+Example-Integer: 5; foo=bar
 ~~~
 
 
@@ -507,7 +507,7 @@ base64    = ALPHA / DIGIT / "+" / "/" / "="
 A Byte Sequence is delimited with colons and encoded using base64 ({{!RFC4648}}{: section="4"}). For example:
 
 ~~~ http-message
-Example-Binary: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
+Example-ByteSequence: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
 ~~~
 
 Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
@@ -527,7 +527,7 @@ boolean    = "0" / "1"
 A Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ http-message
-Example-Bool: ?1
+Example-Boolean: ?1
 ~~~
 
 Note that in Dictionary ({{dictionary}}) and Parameter ({{param}}) values, Boolean true is indicated by omitting the value.
