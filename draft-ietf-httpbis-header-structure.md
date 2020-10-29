@@ -139,7 +139,7 @@ Both Items and Inner Lists allow parameters as an extensibility mechanism; this 
 
 To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" parameters be added by senders. A specification could stipulate that all parameters that fit a defined pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
 
-Specifications that use Dictionaries can also allow for forward compatibility by requiring that the presence of -- as well as value and type associated with -- unknown members be ignored. Later specifications can then add additional members, specifying constraints on them as appropriate.
+Specifications that use Dictionaries can also allow for forward compatibility by requiring that the presence of -- as well as value and type associated with -- unknown members be ignored. Subsequent specifications can then add additional members, specifying constraints on them as appropriate.
 
 An extension to a Structured Field can then require that an entire field value be ignored by a recipient that understands the extension if constraints on the value it defines are not met.
 
@@ -163,7 +163,7 @@ an Integer (Section Y.Y of [RFCxxxx]). Its ABNF is:
 
   Foo-Example = sf-integer
 
-Its value indicates the amount of Foo in the message, and MUST
+Its value indicates the amount of Foo in the message, and it MUST
 be between 0 and 10, inclusive; other values MUST cause
 the entire header field to be ignored.
 
@@ -311,7 +311,7 @@ member-name    = key
 member-value   = sf-item / inner-list
 ~~~
 
-Members are ordered as serialized, and separated by a comma with optional whitespace. Member names cannot contain uppercase characters. Names and values are separated by "=" (without whitespace). For example:
+Members are ordered as serialized and separated by a comma with optional whitespace. Member names cannot contain uppercase characters. Names and values are separated by "=" (without whitespace). For example:
 
 ~~~ http-message
 Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
@@ -910,7 +910,7 @@ Given an ASCII string as input_string, return an unquoted String. input_string i
       3. If next_char is not DQUOTE or "\\", fail parsing.
       4. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
-   4. Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail parsing.
+   4. Else, if char is in the range %x00-1f or %x7f (i.e., it is not in VCHAR or SP), fail parsing.
    5. Else, append char to output_string.
 5. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
@@ -961,7 +961,7 @@ Given an ASCII string as input_string, return a Boolean. input_string is modifie
 
 # IANA Considerations
 
-This document has no actions for IANA.
+This document has no IANA actions.
 
 # Security Considerations
 
