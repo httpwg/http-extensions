@@ -927,7 +927,7 @@ date: Tue, 07 Jun 2014 20:51:35 GMT
 
 *RFC EDITOR: please remove this section before publication*
 
-The goal of this draft document is to provide a starting point at feature parity and compatible with the cavage-12 draft. The draft has known issues that will need to be addressed during development, and in the spirit of keeping compatibility, these issues have been enumerated but not addressed in this version. Topics are not listed in any particular order.
+The draft has known issues that will need to be addressed during development, and in the spirit of keeping compatibility, these issues have been enumerated but not addressed in this version. Topics are not listed in any particular order.
 
 ## Issues
 
