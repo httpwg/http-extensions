@@ -80,7 +80,7 @@ This document describes a mechanism for creating, encoding, and verifying digita
 
 *RFC EDITOR: please remove this section before publication*
 
-This draft was originally largely based on draft-cavage-http-signatures-12, but has since diverged. [The community of that I-D](https://github.com/w3c-dvcg/http-signatures/issues?page=2&q=is%3Aissue+is%3Aopen) and the authors have identified several issues with the current text, many of which are noted within the text.  Additionally, the authors have identified a number of new features that are required in order to support additional use cases.  
+This work was originally based on draft-cavage-http-signatures-12, but has since diverged from it, to reflect discussion since adoption by the HTTP Working Group. In particular, it addresses issues that have been identified, and adds features to support new use cases. It is a work-in-progress and not yet suitable for deployment.
 
 --- middle
 
