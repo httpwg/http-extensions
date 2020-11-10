@@ -26,7 +26,7 @@ author:
     region: WA
     code: 98108-1226
     country: United States of America
-
+    role: editor
 
   - ins: J. Richer
     name: Justin Richer
@@ -80,8 +80,7 @@ This document describes a mechanism for creating, encoding, and verifying digita
 
 *RFC EDITOR: please remove this section before publication*
 
-This draft is based on draft-cavage-http-signatures-12.  [The community](https://github.com/w3c-dvcg/http-signatures/issues?page=2&q=is%3Aissue+is%3Aopen) and the authors have identified several issues with the current text.  Additionally, the authors have identified a number of features that are required in order to support additional use cases.  In order to preserve continuity with the effort that has been put into draft-cavage-http-signatures-12, this draft maintains normative compatibility with it, and thus does not address these issues or include these features, as doing so requires making backwards-incompatible changes to normative requirements.  While such changes are inevitable, the editor recommends that they be driven by working group discussion following adoption of the draft (see {{wg-discuss}}).  The editor requests that the working group recognize the intent of this initial draft and this recommendation when considering adoption of this draft.
-
+This work was originally based on draft-cavage-http-signatures-12, but has since diverged from it, to reflect discussion since adoption by the HTTP Working Group. In particular, it addresses issues that have been identified, and adds features to support new use cases. It is a work-in-progress and not yet suitable for deployment.
 
 --- middle
 
@@ -928,7 +927,7 @@ date: Tue, 07 Jun 2014 20:51:35 GMT
 
 *RFC EDITOR: please remove this section before publication*
 
-The goal of this draft document is to provide a starting point at feature parity and compatible with the cavage-12 draft. The draft has known issues that will need to be addressed during development, and in the spirit of keeping compatibility, these issues have been enumerated but not addressed in this version. The editor recommends the working group discuss the issues and features described in this section after adoption of the document by the working group.  Topics are not listed in any particular order.
+The draft has known issues that will need to be addressed during development, and these issues have been enumerated but not addressed in this version. Topics are not listed in any particular order.
 
 ## Issues
 
@@ -1124,6 +1123,7 @@ Jeffrey Yasskin
      * Defined content identifiers for individual Dictionary members, e.g., `x-dictionary-field:member-name`.
      * Defined content identifiers for first N members of a List, e.g., `x-list-field:4`.
      * Fixed up examples.
+     * Updated introduction now that it's adopted.
 
   - -01
      * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
