@@ -47,7 +47,6 @@ author:
 
 normative:
     RFC2104:
-    RFC7230:
     FIPS186-4:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
@@ -86,7 +85,8 @@ This work was originally based on draft-cavage-http-signatures-12, but has since
 
 # Introduction {#intro}
 
-Message integrity and authenticity are important security properties that are critical to the secure operation of many {{!HTTP=RFC7230}} applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
+Message integrity and authenticity are important security properties that are critical to the secure operation of many HTTP applications.
+Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
 
 This document defines a mechanism for providing end-to-end integrity and authenticity for content within an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only that content within the message that is meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
 
@@ -109,12 +109,12 @@ HTTP applications may be running in environments that do not provide complete ac
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:
 
-- Re-ordering of header fields with different header field names ({{HTTP}}, Section 3.2.2).
-- Combination of header fields with the same field name ({{HTTP}}, Section 3.2.2).
-- Removal of header fields listed in the `Connection` header field ({{HTTP}}, Section 6.1).
-- Addition of header fields that indicate control options ({{HTTP}}, Section 6.1).
-- Addition or removal of a transfer coding ({{HTTP}}, Section 5.7.2).
-- Addition of header fields such as `Via` ({{HTTP}}, Section 5.7.1) and `Forwarded` ([RFC7239], Section 4).
+- Re-ordering of header fields with different header field names ({{MESSAGING}}, Section 3.2.2).
+- Combination of header fields with the same field name ({{MESSAGING}}, Section 3.2.2).
+- Removal of header fields listed in the `Connection` header field ({{MESSAGING}}, Section 6.1).
+- Addition of header fields that indicate control options ({{MESSAGING}}, Section 6.1).
+- Addition or removal of a transfer coding ({{MESSAGING}}, Section 5.7.2).
+- Addition of header fields such as `Via` ({{MESSAGING}}, Section 5.7.1) and `Forwarded` ([RFC7239], Section 4).
 
 ## Safe Transformations
 
@@ -126,7 +126,9 @@ Based on the definition of HTTP and the requirements described above, we can ide
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive content such as header field names, request URI scheme, or host.
 - Addition or removal of leading or trailing whitespace to a header field value.
 - Addition or removal of `obs-folds`.
-- Changes to the `request-target` and `Host` header field that when applied together do not result in a change to the message's effective request URI, as defined in Section 5.5 of {{!HTTP}}.
+- Changes to the `request-target` and `Host` header field that when applied together do not
+  result in a change to the message's effective request URI, as defined in Section 5.5 of
+  {{MESSAGING}}.
 
 Additionally, all changes to content not covered by the signature are considered safe.
 
@@ -135,7 +137,12 @@ Additionally, all changes to content not covered by the signature are considered
 
 {::boilerplate bcp14}
 
-The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", `absolute-form`, `absolute-path`, "effective request URI", "gateway", "header field", "intermediary", `request-target`, "sender", and "recipient" are used as defined in [RFC7230].
+The terms "HTTP message", "HTTP request", "HTTP response",
+`absolute-form`, `absolute-path`, "effective request URI",
+"gateway", "header field", "intermediary", `request-target`,
+"sender", and "recipient" are used as defined in {{!MESSAGING=RFC7230}}.
+
+The term "method" is to be interpreted as defined in Section 4 of {{!SEMANTICS=RFC7231}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs.  Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string.  The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
@@ -157,7 +164,7 @@ Verifier
 : 
 : An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.
 
-This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [RFC7230], and senders MUST NOT generate messages that include it.
+This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [MESSAGING], and senders MUST NOT generate messages that include it.
 
 
 # Identifying and Canonicalizing Content {#content-identifiers}
