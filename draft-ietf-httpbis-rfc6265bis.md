@@ -938,7 +938,7 @@ following conditions holds:
 
 ## "Same-site" and "cross-site" Requests  {#same-site-requests}
 
-Two origins, A and B, are considered same-site if the following algorithm 
+Two origins, A and B, are considered same-site if the following algorithm
 returns true:
 
 1.  If A and B are both scheme/host/port triples:
@@ -947,10 +947,10 @@ returns true:
 
     2.  Let hostA be A's host, and hostB be B's host.
 
-    3.  If hostA equals hostB and hostA's registrable domain is null, return 
+    3.  If hostA equals hostB and hostA's registrable domain is null, return
         true.
 
-    4.  If hostA's registrable domain equals hostB's registrable domain and is 
+    4.  If hostA's registrable domain equals hostB's registrable domain and is
         non-null, return true.
 
 2.  If A and B are both the same globally unique identifier, return true.
@@ -959,9 +959,9 @@ returns true:
 
 Note: The port component of the origins is not considered.
 
-A request is "same-site" if its target's URI's origin
-is same-site with the request's client's "site for cookies", or if the
-request has no client. The request is otherwise "cross-site".
+A request is "same-site" if its target's URI's origin is same-site with the
+request's client's "site for cookies" (which is an origin), or if the request
+has no client. The request is otherwise "cross-site".
 
 The request's client's "site for cookies" is calculated depending upon its
 client's type, as described in the following subsections:
@@ -981,10 +981,10 @@ document's "site for cookies" is top-level site's origin.
 For documents which are displayed in nested browsing contexts, we need to audit
 the origins of each of a document's ancestor browsing contexts' active documents
 in order to account for the "multiple-nested scenarios" described in Section 4
-of {{RFC7034}}. A document's "site for cookies" is the top-level site's origin 
-if and only if the document and each of its ancestor documents' origins have the
-same origin as the top-level site. Otherwise its "site for cookies" is an origin
-set to a globally unique identifier.
+of {{RFC7034}}. A document's "site for cookies" is the top-level site's origin
+if and only if the top-level site's origin is same-site with the document's
+origin, and with each of the document's ancestor documents' origins. Otherwise
+its "site for cookies" is an origin set to a globally unique identifier.
 
 Given a Document (`document`), the following algorithm returns its "site for
 cookies":
@@ -1004,8 +1004,8 @@ cookies":
     1.  Let `origin` be the origin of `item`'s URI if `item`'s sandboxed origin
         browsing context flag is set, and `item`'s origin otherwise.
 
-    2.  If `origin` is not same-site to `top-origin`, return an origin set to a 
-        globally unique identifier.
+    2.  If `origin` is not same-site with `top-origin`, return an origin set to
+        a globally unique identifier.
 
 5.  Return `top-origin`.
 
@@ -1028,10 +1028,10 @@ one document. Requests generated from a dedicated worker (via `importScripts`,
 document's "site for cookies".
 
 Shared workers may be bound to multiple documents at once. As it is quite
-possible for those documents to have distinct "site for cookie" values, the
-worker's "site for cookies" will be an origin set to a globally unique 
-identifier in cases where the values diverge, and the shared origin in cases 
-where the values agree.
+possible for those documents to have distinct "site for cookies" values, the
+worker's "site for cookies" will be an origin set to a globally unique
+identifier in cases where the values are not all same-site with the worker's
+origin, and the worker's origin in cases where the values agree.
 
 Given a WorkerGlobalScope (`worker`), the following algorithm returns its "site
 for cookies":
@@ -1043,7 +1043,7 @@ for cookies":
     1.  Let `document-site` be `document`'s "site for cookies" (as defined
         in {{document-requests}}).
 
-    2.  If `document-site` is cross-site with `site`, return an origin
+    2.  If `document-site` is not same-site with `site`, return an origin
         set to a globally unique identifier.
 
 3.  Return `site`.
@@ -1061,7 +1061,7 @@ request, and its "site for cookies" will be those defined in
 
 Requests which are initiated by the Service Worker itself (via a direct call to
 `fetch()`, for instance), on the other hand, will have a client which is a
-ServiceWorkerGlobalScope. Its "site for cookies" will be the Service Worker's 
+ServiceWorkerGlobalScope. Its "site for cookies" will be the Service Worker's
 URI's origin.
 
 Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
@@ -1450,7 +1450,7 @@ user agent MUST process the cookie as follows:
 15. If the cookie's `same-site-flag` is not "None":
 
     1.  If the cookie was received from a "non-HTTP" API, and the API was called
-        from a context whose "site for cookies" is not same-site, then abort 
+        from a context whose "site for cookies" is not same-site, then abort
         these steps and ignore the newly created cookie entirely.
 
     2.  If the cookie was received from a "same-site" request (as defined in
