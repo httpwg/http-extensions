@@ -126,7 +126,7 @@ This document uses algorithms to specify parsing and serialization behaviors and
 
 When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
-For serialization to HTTP fields, the ABNF illustrates their expected wire representations, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm.
+For serialization to HTTP fields, the ABNF illustrates their expected wire representations, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm described in {{text-parse}}.
 
 
 # Defining New Structured Fields {#specify}
@@ -171,7 +171,7 @@ The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
 
 Foo-Example is an Item Structured Header [RFCxxxx]. Its value MUST be
-an Integer (Section Y.Y of [RFCxxxx]). Its ABNF is:
+an Integer (Section 3.3.1 of [RFC8941]). Its ABNF is:
 
   Foo-Example = sf-integer
 
@@ -181,7 +181,7 @@ the entire header field to be ignored.
 
 The following parameter is defined:
 * A parameter whose name is "foourl", and whose value is a String
-  (Section Y.Y of [RFCxxxx]), conveying the Foo URL
+  (Section 3.3.3 of [RFC8941]), conveying the Foo URL
   for the message. See below for processing requirements.
 
 "foourl" contains a URI-reference (Section 4.1 of [RFC3986]). If
@@ -467,7 +467,7 @@ Note that Strings only use DQUOTE as a delimiter; single quotes do not delimit S
 
 Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
 
-When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably {{STD63}}).
+When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably UTF-8 {{STD63}}).
 
 Parsers MUST support Strings (after any decoding) with at least 1024 characters.
 
@@ -851,7 +851,7 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
 1. Let parameters be an empty, ordered map.
 2. While input_string is not empty:
    1. If the first character of input_string is not ";", exit the loop.
-   2. Consume a ";" character from the beginning of input_string.
+   2. Consume the ";" character from the beginning of input_string.
    3. Discard any leading SP characters from input_string.
    4. Let param_name be the result of running Parsing a Key ({{parse-key}}) with input_string.
    5. Let param_value be Boolean true.
@@ -899,7 +899,6 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}
    6. If type is "decimal" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
    1. Parse input_number as an integer and let output_number be the product of the result and sign.
-   2. If output_number is outside the range -999,999,999,999,999 to 999,999,999,999,999 inclusive, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
    2. If the number of characters after "." in input_number is greater than three, fail parsing.
@@ -950,7 +949,7 @@ Given an ASCII string as input_string, return a Byte Sequence. input_string is m
 4. Let b64_content be the result of consuming content of input_string up to but not including the first instance of the character ":".
 5. Consume the ":" character at the beginning of input_string.
 6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/", and "=", fail parsing.
-7. Let binary_content be the result of base64-decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below).
+7. Let binary_content be the result of base64-decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below). If base64 decoding fails, parsing fails.
 8. Return binary_content.
 
 Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{!RFC4648}}{: section="3.2"}, parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
