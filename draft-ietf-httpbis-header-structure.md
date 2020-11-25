@@ -170,7 +170,7 @@ For example, a fictitious Foo-Example header field might be specified as:
 The Foo-Example HTTP header field conveys information about how
 much Foo the message has.
 
-Foo-Example is an Item Structured Header [RFCxxxx]. Its value MUST be
+Foo-Example is an Item Structured Header [RFC8941]. Its value MUST be
 an Integer (Section 3.3.1 of [RFC8941]). Its ABNF is:
 
   Foo-Example = sf-integer
