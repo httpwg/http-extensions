@@ -2174,6 +2174,9 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
    "SameSite=Lax":
    <https://github.com/httpwg/http-extensions/pull/1325>.
 
+*  Require a Secure attribute for "SameSite=None":
+   <https://github.com/httpwg/http-extensions/pull/1323>.
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is a minor update of
