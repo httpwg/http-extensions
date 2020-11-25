@@ -661,7 +661,7 @@ with same-site requests, and with "cross-site" top-level navigations, as
 described in {{strict-lax}}. If the value is "None", the cookie will be sent
 with same-site and cross-site requests. If the "SameSite" attribute's value is
 something other than these three known keywords, the attribute's value will be
-treated as "None".
+subject to a default enforcement mode that is equivalent to "Lax".
 
 The "SameSite" attribute affects cookie creation as well as delivery. Cookies
 which assert "SameSite=Lax" or "SameSite=Strict" cannot be set in responses to
@@ -2166,6 +2166,10 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
    from {{set-cookie}} to {{storage-model}} to ensure that they apply to cookies
    created without parsing a cookie string:
    <https://github.com/httpwg/http-extensions/issues/1234>.
+
+*  Add a default enforcement value to the `same-site-flag`, equivalent to
+   "SameSite=Lax":
+   <https://github.com/httpwg/http-extensions/pull/1325>.
 
 # Acknowledgements
 {:numbered="false"}
