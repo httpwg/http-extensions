@@ -674,7 +674,7 @@ Given a decimal number as input_decimal, return an ASCII string suitable for use
 Given a String as input_string, return an ASCII string suitable for use in an HTTP field value.
 
 0. Convert input_string into a sequence of ASCII characters; if conversion fails, fail serialization.
-1. If input_string contains characters in the range %x00-1f or %x7f (i.e., not in VCHAR or SP), fail serialization.
+1. If input_string contains characters in the range %x00-1f or %x7f-ff (i.e., not in VCHAR or SP), fail serialization.
 2. Let output be the string DQUOTE.
 3. For each character char in input_string:
    1. If char is "\\" or DQUOTE:
@@ -921,7 +921,7 @@ Given an ASCII string as input_string, return an unquoted String. input_string i
       3. If next_char is not DQUOTE or "\\", fail parsing.
       4. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
-   4. Else, if char is in the range %x00-1f or %x7f (i.e., it is not in VCHAR or SP), fail parsing.
+   4. Else, if char is in the range %x00-1f or %x7f-ff (i.e., it is not in VCHAR or SP), fail parsing.
    5. Else, append char to output_string.
 5. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
