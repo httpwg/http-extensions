@@ -814,12 +814,13 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
       1. Let value be Boolean true.
       2. Let parameters be the result of running Parsing Parameters ({{parse-param}}) with input_string.
       3. Let member be the tuple (value, parameters).
-   4. Add name this_key with value member to dictionary. If dictionary already contains a name this_key (comparing character for character), overwrite its value.
-   5. Discard any leading OWS characters from input_string.
-   6. If input_string is empty, return dictionary.
-   7. Consume the first character of input_string; if it is not ",", fail parsing.
-   8. Discard any leading OWS characters from input_string.
-   9. If input_string is empty, there is a trailing comma; fail parsing.
+   4. If dictionary already contains a name this_key (comparing character for character), overwrite its value with member.
+   5. Otherwise, append name this_key with value member to dictionary.
+   6. Discard any leading OWS characters from input_string.
+   7. If input_string is empty, return dictionary.
+   8. Consume the first character of input_string; if it is not ",", fail parsing.
+   9. Discard any leading OWS characters from input_string.
+   0. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
 Note that when duplicate Dictionary keys are encountered, all but the last instance are ignored.
@@ -858,7 +859,8 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
    6. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of running Parsing a Bare Item ({{parse-bare-item}}) with input_string.
-   7. Append key param_name with value param_value to parameters. If parameters already contains a name param_name (comparing character for character), overwrite its value.
+   7. If parameters already contains a name param_name (comparing character for character), overwrite its value with param_value.
+   8. Otherwise, append key param_name with value param_value to parameters.
 3. Return parameters.
 
 Note that when duplicate parameter keys are encountered, all but the last instance are ignored.
