@@ -55,10 +55,6 @@ normative:
         target: https://pubs.opengroup.org/onlinepubs/9699919799/
         title: The Open Group Base Specifications Issue 7, 2018 edition
         date: 2018
-    StructuredFields:
-        target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-header-structure
-        title: Structured Field Vaues for HTTP
-        date: 2020
 
 informative:
     RFC3339:
@@ -164,6 +160,8 @@ Verifier
 : 
 : An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.
 
+The term "Unix time" is defined by {{POSIX.1}} [section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
+
 This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [MESSAGING], and senders MUST NOT generate messages that include it.
 
 
@@ -215,7 +213,7 @@ The following table shows example canonicalized values for header fields, given 
 
 ## Dictionary Structured Field Members
 
-An individual member in the value of a Dictionary Structured Field is identified by the lowercased  field name, followed by a semicolon `":"`, followed by the member name. An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{StructuredFields}} on a Dictionary containing only that member.
+An individual member in the value of a Dictionary Structured Field is identified by the lowercased field name, followed by a semicolon `":"`, followed by the member name. An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{!StructuredFields=I-D.ietf-httpbis-header-structure}} on a Dictionary containing only that member.
 
 ### Canonicalization Examples
 
@@ -264,7 +262,7 @@ The following table shows example canonicalized values for different content ide
 
 The signature's Creation Time ({{signature-metadata}}) is identified by the `*created` identifier.
 
-Its canonicalized value is an Integer String containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+Its canonicalized value is an Integer String containing the signature's Creation Time expressed in "Unix time".
 
 > The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as [RFC3339].
 
@@ -272,7 +270,7 @@ Its canonicalized value is an Integer String containing the signature's Creation
 
 The signature's Expiration Time ({{signature-metadata}}) is identified by the `*expires` identifier.
 
-Its canonicalized value is a Decimal String containing the signature's Expiration Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+Its canonicalized value is a Decimal String containing the signature's Expiration Time expressed in "Unix time".
 
 ## Target Endpoint
 
