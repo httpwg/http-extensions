@@ -26,7 +26,7 @@ author:
     region: WA
     code: 98108-1226
     country: United States of America
-
+    role: editor
 
   - ins: J. Richer
     name: Justin Richer
@@ -47,7 +47,6 @@ author:
 
 normative:
     RFC2104:
-    RFC7230:
     FIPS186-4:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
@@ -76,14 +75,14 @@ This document describes a mechanism for creating, encoding, and verifying digita
 
 *RFC EDITOR: please remove this section before publication*
 
-This draft is based on draft-cavage-http-signatures-12.  [The community](https://github.com/w3c-dvcg/http-signatures/issues?page=2&q=is%3Aissue+is%3Aopen) and the authors have identified several issues with the current text.  Additionally, the authors have identified a number of features that are required in order to support additional use cases.  In order to preserve continuity with the effort that has been put into draft-cavage-http-signatures-12, this draft maintains normative compatibility with it, and thus does not address these issues or include these features, as doing so requires making backwards-incompatible changes to normative requirements.  While such changes are inevitable, the editor recommends that they be driven by working group discussion following adoption of the draft (see {{wg-discuss}}).  The editor requests that the working group recognize the intent of this initial draft and this recommendation when considering adoption of this draft.
-
+This work was originally based on draft-cavage-http-signatures-12, but has since diverged from it, to reflect discussion since adoption by the HTTP Working Group. In particular, it addresses issues that have been identified, and adds features to support new use cases. It is a work-in-progress and not yet suitable for deployment.
 
 --- middle
 
 # Introduction {#intro}
 
-Message integrity and authenticity are important security properties that are critical to the secure operation of many {{!HTTP=RFC7230}} applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
+Message integrity and authenticity are important security properties that are critical to the secure operation of many HTTP applications.
+Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
 
 This document defines a mechanism for providing end-to-end integrity and authenticity for content within an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only that content within the message that is meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
 
@@ -106,12 +105,12 @@ HTTP applications may be running in environments that do not provide complete ac
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:
 
-- Re-ordering of header fields with different header field names ({{HTTP}}, Section 3.2.2).
-- Combination of header fields with the same field name ({{HTTP}}, Section 3.2.2).
-- Removal of header fields listed in the `Connection` header field ({{HTTP}}, Section 6.1).
-- Addition of header fields that indicate control options ({{HTTP}}, Section 6.1).
-- Addition or removal of a transfer coding ({{HTTP}}, Section 5.7.2).
-- Addition of header fields such as `Via` ({{HTTP}}, Section 5.7.1) and `Forwarded` ([RFC7239], Section 4).
+- Re-ordering of header fields with different header field names ({{MESSAGING}}, Section 3.2.2).
+- Combination of header fields with the same field name ({{MESSAGING}}, Section 3.2.2).
+- Removal of header fields listed in the `Connection` header field ({{MESSAGING}}, Section 6.1).
+- Addition of header fields that indicate control options ({{MESSAGING}}, Section 6.1).
+- Addition or removal of a transfer coding ({{MESSAGING}}, Section 5.7.2).
+- Addition of header fields such as `Via` ({{MESSAGING}}, Section 5.7.1) and `Forwarded` ([RFC7239], Section 4).
 
 ## Safe Transformations
 
@@ -119,11 +118,13 @@ Based on the definition of HTTP and the requirements described above, we can ide
 
 - Combination of header fields with the same field name.
 - Reordering of header fields with different names.
-- Conversion between HTTP/1.x and HTTP/2, or vice-versa.
+- Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive content such as header field names, request URI scheme, or host.
 - Addition or removal of leading or trailing whitespace to a header field value.
 - Addition or removal of `obs-folds`.
-- Changes to the `request-target` and `Host` header field that when applied together do not result in a change to the message's effective request URI, as defined in Section 5.5 of {{!HTTP}}.
+- Changes to the `request-target` and `Host` header field that when applied together do not
+  result in a change to the message's effective request URI, as defined in Section 5.5 of
+  {{MESSAGING}}.
 
 Additionally, all changes to content not covered by the signature are considered safe.
 
@@ -132,7 +133,12 @@ Additionally, all changes to content not covered by the signature are considered
 
 {::boilerplate bcp14}
 
-The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", `absolute-form`, `absolute-path`, "effective request URI", "gateway", "header field", "intermediary", `request-target`, "sender", and "recipient" are used as defined in [RFC7230].
+The terms "HTTP message", "HTTP request", "HTTP response",
+`absolute-form`, `absolute-path`, "effective request URI",
+"gateway", "header field", "intermediary", `request-target`,
+"sender", and "recipient" are used as defined in {{!MESSAGING=RFC7230}}.
+
+The term "method" is to be interpreted as defined in Section 4 of {{!SEMANTICS=RFC7231}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs.  Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string.  The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
@@ -156,8 +162,7 @@ Verifier
 
 The term "Unix time" is defined by {{POSIX.1}} [section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
-
-This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [RFC7230], and senders MUST NOT generate messages that include it.
+This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [MESSAGING], and senders MUST NOT generate messages that include it.
 
 
 # Identifying and Canonicalizing Content {#content-identifiers}
@@ -464,7 +469,7 @@ In order to verify a signature, a verifier MUST:
 3. Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.
 
 
-A signature with a Creation Time that is in the future or an Expiration Time that is in the past MUST NOT be processed.  
+A signature with a Creation Time that is in the future or an Expiration Time that is in the past MUST NOT be processed.
 
 The verifier MUST ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature MUST NOT be processed.
 
@@ -820,7 +825,7 @@ A possible `Signature-Input` and `Signature` header containing this signature is
 ~~~
 Signature-Input: sig1=(*request-target, *created, host, date,
         content-type, digest, content-length); keyId="test-key-a";
-    alg=hs2019; created=1402170695 
+    alg=hs2019; created=1402170695
 Signature: sig1=:B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8
     jkHNjoudtqw3GngGY3n0mmwjdfn1eA6nAjgeHwl0WXced5tONcCPNzLswqPOiobGe
     A5y4WE8iBveel30OKYVel0lZ1OnXOmN5TIEIIPo9LrE+LzZis6A0HA1FRMtKgKGhT
@@ -927,7 +932,7 @@ date: Tue, 07 Jun 2014 20:51:35 GMT
 
 *RFC EDITOR: please remove this section before publication*
 
-The goal of this draft document is to provide a starting point at feature parity and compatible with the cavage-12 draft. The draft has known issues that will need to be addressed during development, and in the spirit of keeping compatibility, these issues have been enumerated but not addressed in this version. The editor recommends the working group discuss the issues and features described in this section after adoption of the document by the working group.  Topics are not listed in any particular order.
+The draft has known issues that will need to be addressed during development, and these issues have been enumerated but not addressed in this version. Topics are not listed in any particular order.
 
 ## Issues
 
@@ -937,7 +942,7 @@ The current draft encourages determining the Algorithm metadata property from th
 
 Punting algorithm identification into `keyId` hurts interoperability, since we aren't defining the syntax or semantics of `keyId`.  It actually goes against that claim, as we are dictating that the signing algorithm must be specified by `keyId` or derivable from it.  It also renders the algorithm registry essentially useless.  Instead of this approach, we can protect against manipulation of the Signature header field by adding support for (and possibly mandating) including Signature metadata within the Signature Input.
 
-### Lack of definition of keyId hurts interoperability 
+### Lack of definition of keyId hurts interoperability
 
 The current text leaves the format and semantics of `keyId` completely up to the implementation.  This is primarily due to the fact that most implementers of Cavage have extensive investment in key distribution and management, and just need to plug an identifier into the header.  We should support those cases, but we also need to provide guidance for the developer that doesn't have that and just wants to know how to identify a key.  It may be enough to punt this to profiling specs, but this needs to be explored more.
 
@@ -958,7 +963,7 @@ The initial entries in this document reflect those in Cavage.  The ones that are
 
 See: [issue #26](https://github.com/w3c-dvcg/http-signatures/issues/26)
 
-The canonicalization rules for `*request-target` do not perform handle minor, semantically meaningless differences in percent-encoding, such that verification could fail if an intermediary normalizes the effective request URI prior to forwarding the message.  
+The canonicalization rules for `*request-target` do not perform handle minor, semantically meaningless differences in percent-encoding, such that verification could fail if an intermediary normalizes the effective request URI prior to forwarding the message.
 
 At a minimum, they should be case and percent-encoding normalized as described in sections 6.2.2.1 and 6.2.2.2 of {{?RFC3986}}.
 
@@ -1123,6 +1128,7 @@ Jeffrey Yasskin
      * Defined content identifiers for individual Dictionary members, e.g., `x-dictionary-field:member-name`.
      * Defined content identifiers for first N members of a List, e.g., `x-list-field:4`.
      * Fixed up examples.
+     * Updated introduction now that it's adopted.
 
   - -01
      * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
@@ -1131,7 +1137,7 @@ Jeffrey Yasskin
 
   - -00
      * Initialized from draft-richanna-http-message-signatures-00, following adoption by the working group.
-     
+
 - draft-richanna-http-message-signatures
   - -00
      * Converted to xml2rfc v3 and reformatted to comply with RFC style guides.

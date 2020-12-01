@@ -1,6 +1,7 @@
 LIBDIR := lib
 DISABLE_RIBBON := true
-GHPAGES_EXTRA = $(foreach ext,.html .txt,$(addsuffix $(ext),$(foreach draft,$(drafts),$(shell echo $(draft) | sed -e 's/draft-ietf-httpbis-//'))))
+INDEX_FORMAT := md
+
 
 include $(LIBDIR)/main.mk
 
@@ -18,3 +19,12 @@ $(GHPAGES_EXTRA):
 
 clean::
 	-rm -f $(GHPAGES_EXTRA)
+
+rfc-http-validate ?= rfc-http-validate.py
+.PHONY: http-lint
+http-lint: $(drafts_xml) http-lint-install
+	$(rfc-http-validate) -m sf.json $(filter-out http-lint-install,$^)
+
+.PHONY: http-lint-install
+http-lint-install:
+	@hash rfc-http-validate 2>/dev/null || pip3 install rfc-http-validate

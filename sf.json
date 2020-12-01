@@ -1,0 +1,15 @@
+{
+    "cache-status": "list",
+    "proxy-status": "list",
+    "variant-key": "list",
+    "variants": "dict",
+    "accept-ch": "list",
+    "example-list": "list",
+    "example-dict": "dict",
+    "example-integer": "item",
+    "example-decimal": "item",
+    "example-string": "item",
+    "example-token": "item",
+    "example-bytesequence": "item",
+    "example-boolean": "item"
+}
