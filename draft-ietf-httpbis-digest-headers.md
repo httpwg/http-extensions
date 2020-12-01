@@ -1055,6 +1055,10 @@ signatures.
 Using signatures to protect the `Digest` of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
 
+Any mangling of `Digest`, including de-duplication of representation-data-digest values
+or combining different field values (see 5.3.1 of {{SEMANTICS}})
+might affect signature validation.
+
 ## Usage in trailers
 
 When used in trailers, the receiver gets the digest value after the payload body
