@@ -1098,6 +1098,49 @@ or by sending multiple representation-data-digest values from which the receiver
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{digest}}).
 
+### Duplicate digest-algorithm in field value
+
+As the receiver is free to ignore any representation-data-digest value (see {{digest}}),
+this is especially true when `Digest` contains duplicate digest-algorithms.
+The semantic of the digest-algorithm could impact on the decision, though.
+
+For example, the receiver of the following field
+
+~~~ example
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=,
+        sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+~~~
+
+could consider it suspicious and ignore it, use only one of its values, or both of them.
+
+
+When defining a digest-algorithm that requires to support multiple values
+its encoding could be defined accordingly
+to simplify the work of the receiver.
+
+An hypothetical digest-algorithm based on a parameter could have multiple values
+as illustrated in the following example showing two checksums of the same representation-data.
+
+~~~ example
+representation-data: '{"hello": "world"}'
+shake-128/5: <\x1c?W\xda
+shake-128/10: <\x1c?W\xda\xafA8_\xd6
+~~~
+
+This digest-algorithm could define its encoding accordingly,
+for example concatenating the shake-128 length and the checksum,
+
+~~~ example
+shake-128/5: 5/<\x1c?W\xda
+shake-128/10: 10/<\x1c?W\xda\xafA8_\xd6
+~~~
+
+and then encoding it using the `sf-list` notation defined in {{?I-D.ietf-httpbis-header-structure}}.
+
+~~~ example
+Digest: shake-128=(:NS88HD9X2g==: :MTAvPBw/V9qvQThf1g==:)
+~~~
+
 # IANA Considerations
 
 ## Establish the HTTP Digest Algorithm Values {#iana-digest-algorithm-registry}
