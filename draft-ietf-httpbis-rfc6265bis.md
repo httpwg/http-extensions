@@ -1278,9 +1278,10 @@ drop-in mechanism that mitigates the risk of CSRF attacks, developers may set
 the `SameSite` attribute in a "Lax" enforcement mode that carves out an
 exception which sends same-site cookies along with cross-site requests if and
 only if they are top-level navigations which use a "safe" (in the {{RFC7231}}
-sense) HTTP method. (Note that a request's method is updated on redirects, such
-that "safe"ness is determined based on the method of the most recent redirect
-hop.)
+sense) HTTP method. (Note that a request's method may be changed from POST
+to GET for some redirects (see sections 6.4.2 and 6.4.3 of {{RFC7231}}); in these
+cases, a request's "safe"ness is determined based on the method of the current
+redirect hop.)
 
 Lax enforcement provides reasonable defense in depth against CSRF attacks that
 rely on unsafe HTTP methods (like `POST`), but does not offer a robust defense
