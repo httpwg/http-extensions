@@ -250,8 +250,7 @@ The following table shows example canonicalized values for different content ide
 
 The signature's Creation Time ({{signature-metadata}}) is identified by the `*created` identifier.
 
-Its canonicalized value is the `sf-integer` value of the `created` parameter (see {{params}})
-containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+Its canonicalized value is an `sf-integer` containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
 
 > The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as [RFC3339].
 
@@ -259,8 +258,7 @@ containing the signature's Creation Time expressed as the number of seconds sinc
 
 The signature's Expiration Time ({{signature-metadata}}) is identified by the `*expires` identifier.
 
-Its canonicalized value is the `sf-decimal` value of the `expires` parameter (see {{params}})
-containing the signature's Expiration Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+Its canonicalized value is an `sf-decimal` containing the signature's Expiration Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
 
 ## Target Endpoint
 
