@@ -52,8 +52,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Building Protocols with HTTP (BCP56bis)
 
-*WGLC concluded*
-
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-bcp56bis.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-bcp56bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-bcp56bis) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Abcp56bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-bcp56bis/)
@@ -97,4 +95,5 @@ This will incorporate the following drafts:
 * [Cookie Prefixes](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes) ✅
 * [Same-Site Cookies](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site) ✅
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
+* [Cookie Incrementalism](https://tools.ietf.org/html/draft-west-cookie-incrementalism)
 

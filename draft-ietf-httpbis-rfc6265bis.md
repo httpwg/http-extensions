@@ -238,8 +238,7 @@ servers and developers of cookie-consuming user agents.
 To maximize interoperability with user agents, servers SHOULD limit themselves
 to the well-behaved profile defined in {{sane-profile}} when generating cookies.
 
-User agents MUST implement the more liberal processing rules defined in Section
-5, in order to maximize interoperability with existing servers that do not
+User agents MUST implement the more liberal processing rules defined in {{ua-requirements}}, in order to maximize interoperability with existing servers that do not
 conform to the well-behaved profile defined in {{sane-profile}}.
 
 This document specifies the syntax and semantics of these headers as they are
@@ -2157,7 +2156,8 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
    <https://github.com/httpwg/http-extensions/issues/1119>.
 
 *  Fixed serialization for nameless/valueless cookies:
-   <https://github.com/httpwg/http-extensions/pull/1143>.
+   <https://github
+   .com/httpwg/http-extensions/pull/1143>.
 
 *  Converted a normative reference to Mozilla's Public Suffix List {{PSL}} into
    an informative reference:
@@ -2176,6 +2176,7 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 *  Require a Secure attribute for "SameSite=None":
    <https://github.com/httpwg/http-extensions/pull/1323>.
+
 
 # Acknowledgements
 {:numbered="false"}
