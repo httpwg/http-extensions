@@ -2156,8 +2156,7 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
    <https://github.com/httpwg/http-extensions/issues/1119>.
 
 *  Fixed serialization for nameless/valueless cookies:
-   <https://github
-   .com/httpwg/http-extensions/pull/1143>.
+   <https://github.com/httpwg/http-extensions/pull/1143>.
 
 *  Converted a normative reference to Mozilla's Public Suffix List {{PSL}} into
    an informative reference:
