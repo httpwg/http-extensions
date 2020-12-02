@@ -1100,11 +1100,7 @@ which may be wasted if the receiver ignores them (see {{digest}}).
 
 ### Duplicate digest-algorithm in field value
 
-As the receiver is free to ignore any representation-data-digest value (see {{digest}}),
-this is especially true when `Digest` contains duplicate digest-algorithms.
-The semantic of the digest-algorithm could impact on the decision, though.
-
-For example, the receiver of the following field
+An endpoint might receive multiple representation-data-digest values (see {{digest}}) that use the same digest-algorithm with different or identical digest-values. For example:
 
 ~~~ example
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=,
