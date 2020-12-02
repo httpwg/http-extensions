@@ -95,4 +95,5 @@ This will incorporate the following drafts:
 * [Cookie Prefixes](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes) ✅
 * [Same-Site Cookies](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site) ✅
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
+* [Cookie Incrementalism](https://tools.ietf.org/html/draft-west-cookie-incrementalism)
 
