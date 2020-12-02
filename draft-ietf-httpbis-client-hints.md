@@ -155,8 +155,8 @@ Accept-CH is a Structured Header {{!I-D.ietf-httpbis-header-structure}}. Its val
 
 For example:
 
-~~~ example
-  Accept-CH: Sec-CH-Example, Sec-CH-Example-2
+~~~ http-message
+Accept-CH: Sec-CH-Example, Sec-CH-Example-2
 ~~~
 
 When a user agent receives an HTTP response containing `Accept-CH`, that indicates that the origin opts-in to receive the indicated request header fields for subsequent same-origin requests.
@@ -173,14 +173,14 @@ This preference will not extend to resource requests initiated to "https://site.
 
 When selecting a response based on one or more Client Hints, and if the resource is cacheable, the server needs to generate a Vary response header field ({{RFC7234}}) to indicate which hints can affect the selected response and whether the selected response is appropriate for a later request.
 
-~~~ example
-  Vary: Sec-CH-Example
+~~~ http-message
+Vary: Sec-CH-Example
 ~~~
 
 The above example indicates that the cache key needs to include the Sec-CH-Example header field.
 
-~~~ example
-  Vary: Sec-CH-Example, Sec-CH-Example-2
+~~~ http-message
+Vary: Sec-CH-Example, Sec-CH-Example-2
 ~~~
 
 The above example indicates that the cache key needs to include the Sec-CH-Example and Sec-CH-Example-2 header fields.

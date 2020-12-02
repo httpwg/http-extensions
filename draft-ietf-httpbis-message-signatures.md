@@ -26,7 +26,7 @@ author:
     region: WA
     code: 98108-1226
     country: United States of America
-
+    role: editor
 
   - ins: J. Richer
     name: Justin Richer
@@ -47,7 +47,6 @@ author:
 
 normative:
     RFC2104:
-    RFC7230:
     FIPS186-4:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
@@ -56,10 +55,6 @@ normative:
         target: https://pubs.opengroup.org/onlinepubs/9699919799/
         title: The Open Group Base Specifications Issue 7, 2018 edition
         date: 2018
-    StructuredFields:
-        target: https://datatracker.ietf.org/doc/draft-ietf-httpbis-header-structure
-        title: Structured Field Vaues for HTTP
-        date: 2020
 
 informative:
     RFC3339:
@@ -80,14 +75,14 @@ This document describes a mechanism for creating, encoding, and verifying digita
 
 *RFC EDITOR: please remove this section before publication*
 
-This draft is based on draft-cavage-http-signatures-12.  [The community](https://github.com/w3c-dvcg/http-signatures/issues?page=2&q=is%3Aissue+is%3Aopen) and the authors have identified several issues with the current text.  Additionally, the authors have identified a number of features that are required in order to support additional use cases.  In order to preserve continuity with the effort that has been put into draft-cavage-http-signatures-12, this draft maintains normative compatibility with it, and thus does not address these issues or include these features, as doing so requires making backwards-incompatible changes to normative requirements.  While such changes are inevitable, the editor recommends that they be driven by working group discussion following adoption of the draft (see {{wg-discuss}}).  The editor requests that the working group recognize the intent of this initial draft and this recommendation when considering adoption of this draft.
-
+This work was originally based on draft-cavage-http-signatures-12, but has since diverged from it, to reflect discussion since adoption by the HTTP Working Group. In particular, it addresses issues that have been identified, and adds features to support new use cases. It is a work-in-progress and not yet suitable for deployment.
 
 --- middle
 
 # Introduction {#intro}
 
-Message integrity and authenticity are important security properties that are critical to the secure operation of many {{!HTTP=RFC7230}} applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
+Message integrity and authenticity are important security properties that are critical to the secure operation of many HTTP applications.
+Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
 
 This document defines a mechanism for providing end-to-end integrity and authenticity for content within an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only that content within the message that is meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
 
@@ -110,12 +105,12 @@ HTTP applications may be running in environments that do not provide complete ac
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:
 
-- Re-ordering of header fields with different header field names ({{HTTP}}, Section 3.2.2).
-- Combination of header fields with the same field name ({{HTTP}}, Section 3.2.2).
-- Removal of header fields listed in the `Connection` header field ({{HTTP}}, Section 6.1).
-- Addition of header fields that indicate control options ({{HTTP}}, Section 6.1).
-- Addition or removal of a transfer coding ({{HTTP}}, Section 5.7.2).
-- Addition of header fields such as `Via` ({{HTTP}}, Section 5.7.1) and `Forwarded` ([RFC7239], Section 4).
+- Re-ordering of header fields with different header field names ({{MESSAGING}}, Section 3.2.2).
+- Combination of header fields with the same field name ({{MESSAGING}}, Section 3.2.2).
+- Removal of header fields listed in the `Connection` header field ({{MESSAGING}}, Section 6.1).
+- Addition of header fields that indicate control options ({{MESSAGING}}, Section 6.1).
+- Addition or removal of a transfer coding ({{MESSAGING}}, Section 5.7.2).
+- Addition of header fields such as `Via` ({{MESSAGING}}, Section 5.7.1) and `Forwarded` ([RFC7239], Section 4).
 
 ## Safe Transformations
 
@@ -123,11 +118,13 @@ Based on the definition of HTTP and the requirements described above, we can ide
 
 - Combination of header fields with the same field name.
 - Reordering of header fields with different names.
-- Conversion between HTTP/1.x and HTTP/2, or vice-versa.
+- Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive content such as header field names, request URI scheme, or host.
 - Addition or removal of leading or trailing whitespace to a header field value.
 - Addition or removal of `obs-folds`.
-- Changes to the `request-target` and `Host` header field that when applied together do not result in a change to the message's effective request URI, as defined in Section 5.5 of {{!HTTP}}.
+- Changes to the `request-target` and `Host` header field that when applied together do not
+  result in a change to the message's effective request URI, as defined in Section 5.5 of
+  {{MESSAGING}}.
 
 Additionally, all changes to content not covered by the signature are considered safe.
 
@@ -136,7 +133,12 @@ Additionally, all changes to content not covered by the signature are considered
 
 {::boilerplate bcp14}
 
-The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", `absolute-form`, `absolute-path`, "effective request URI", "gateway", "header field", "intermediary", `request-target`, "sender", and "recipient" are used as defined in [RFC7230].
+The terms "HTTP message", "HTTP request", "HTTP response",
+`absolute-form`, `absolute-path`, "effective request URI",
+"gateway", "header field", "intermediary", `request-target`,
+"sender", and "recipient" are used as defined in {{!MESSAGING=RFC7230}}.
+
+The term "method" is to be interpreted as defined in Section 4 of {{!SEMANTICS=RFC7231}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs.  Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string.  The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
@@ -155,7 +157,9 @@ Signer:
 Verifier:
 : An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.
 
-This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [RFC7230], and senders MUST NOT generate messages that include it.
+The term "Unix time" is defined by {{POSIX.1}} [section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
+
+This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [MESSAGING], and senders MUST NOT generate messages that include it.
 
 Additionally, some examples use '\\' line wrapping for long values that contain no whitespace, as per {{!RFC8792}}.
 
@@ -207,7 +211,7 @@ The following table shows example canonicalized values for header fields, given 
 
 ## Dictionary Structured Field Members
 
-An individual member in the value of a Dictionary Structured Field is identified by the lowercased field name, followed by a semicolon `":"`, followed by the member name. An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{StructuredFields}} on a Dictionary containing only that member.
+An individual member in the value of a Dictionary Structured Field is identified by the lowercased field name, followed by a semicolon `":"`, followed by the member name. An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{!StructuredFields=I-D.ietf-httpbis-header-structure}} on a Dictionary containing only that member.
 
 ### Canonicalization Examples
 
@@ -256,7 +260,7 @@ The following table shows example canonicalized values for different content ide
 
 The signature's Creation Time ({{signature-metadata}}) is identified by the `*created` identifier.
 
-Its canonicalized value is an Integer String containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+Its canonicalized value is an Integer String containing the signature's Creation Time expressed in "Unix time".
 
 > The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as [RFC3339].
 
@@ -264,7 +268,7 @@ Its canonicalized value is an Integer String containing the signature's Creation
 
 The signature's Expiration Time ({{signature-metadata}}) is identified by the `*expires` identifier.
 
-Its canonicalized value is a Decimal String containing the signature's Expiration Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+Its canonicalized value is a Decimal String containing the signature's Expiration Time expressed in "Unix time".
 
 ## Target Endpoint
 
@@ -925,7 +929,7 @@ date: Tue, 07 Jun 2014 20:51:35 GMT
 
 *RFC EDITOR: please remove this section before publication*
 
-The goal of this draft document is to provide a starting point at feature parity and compatible with the cavage-12 draft. The draft has known issues that will need to be addressed during development, and in the spirit of keeping compatibility, these issues have been enumerated but not addressed in this version. The editor recommends the working group discuss the issues and features described in this section after adoption of the document by the working group.  Topics are not listed in any particular order.
+The draft has known issues that will need to be addressed during development, and these issues have been enumerated but not addressed in this version. Topics are not listed in any particular order.
 
 ## Issues
 
@@ -1121,6 +1125,7 @@ Jeffrey Yasskin
      * Defined content identifiers for individual Dictionary members, e.g., `x-dictionary-field:member-name`.
      * Defined content identifiers for first N members of a List, e.g., `x-list-field:4`.
      * Fixed up examples.
+     * Updated introduction now that it's adopted.
 
   - -01
      * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
