@@ -66,13 +66,13 @@ Even when the headers' semantics are understood, a cache does not know enough ab
 
 For example, if a cache has stored the following request/response pair:
 
-~~~ example
+~~~ http-message
 GET /foo HTTP/1.1
 Host: www.example.com
 Accept-Language: en;q=0.5, fr;q=1.0
 
 ~~~
-~~~ example
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Language: en
@@ -90,18 +90,18 @@ Its companion Variant-Key response header field ({{variant-key}}) indicates the 
 
 When this specification is in use, the example above might become:
 
-~~~ example
+~~~ http-message
 GET /foo HTTP/1.1
 Host: www.example.com
 Accept-Language: en;q=0.5, fr;q=1.0
 
 ~~~
-~~~ example
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: text/html
 Content-Language: en
 Vary: Accept-Language
-Variants: Accept-Language;de;en;jp
+Variants: accept-language;de;en;jp
 Variant-Key: en
 Transfer-Encoding: chunked
 
@@ -145,15 +145,15 @@ Note that an available-value that is a token is interpreted as a string containi
 
 So, given this example header field:
 
-~~~ example
-Variants: Accept-Encoding=(gzip)
+~~~ http-message
+Variants: accept-encoding=(gzip)
 ~~~
 
 a recipient can infer that the only content-coding available for that resource is "gzip" (along with the "identity" non-encoding; see {{content-encoding}}).
 
 Given:
 
-~~~ example
+~~~ http-message
 Variants: accept-encoding=()
 ~~~
 
@@ -161,15 +161,15 @@ a recipient can infer that no content-codings (beyond identity) are supported. N
 
 A more complex example:
 
-~~~ example
-Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+~~~ http-message
+Variants: accept-encoding=(gzip br), accept-language=(en fr)
 ~~~
 
 Here, recipients can infer that two content-codings in addition to "identity" are available, as well as two content languages. Note that, as with all Structured Header dictionaries, they might occur in the same header field or separately, like this:
 
-~~~ example
-Variants: Accept-Encoding=(gzip brotli)
-Variants: Accept-Language=(en fr)
+~~~ http-message
+Variants: accept-encoding=(gzip brotli)
+Variants: accept-language=(en fr)
 ~~~
 
 The ordering of available-values is significant, as it might be used by the header's algorithm for selecting a response (in this example, the first language is the default; see {{content-language}}).
@@ -215,7 +215,7 @@ Each inner-list member is treated as identifying an available-value for the corr
 For example:
 
 ~~~ example
-Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variants: accept-encoding=(gzip br), accept-language=(en fr)
 Variant-Key: (gzip fr)
 ~~~
 
@@ -224,7 +224,7 @@ This header pair indicates that the representation has a "gzip" content-coding a
 If the response can be used to satisfy more than one request, they can be listed in additional members.  For example:
 
 ~~~ example
-Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variants: accept-encoding=(gzip br), accept-language=(en fr)
 Variant-Key: (gzip fr), ("identity" fr)
 ~~~
 
@@ -233,7 +233,7 @@ indicates that this response can be used for requests whose Accept-Encoding algo
 When more than one Variant-Key value is in a response, the first one present MUST correspond to the request that caused that response to be generated. For example:
 
 ~~~ example
-Variants: Accept-Encoding=(gzip br), Accept-Language=(en fr)
+Variants: accept-encoding=(gzip br), accept-language=(en fr)
 Variant-Key: (gzip fr), (identity fr), (br fr oops)
 ~~~
 

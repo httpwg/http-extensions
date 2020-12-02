@@ -292,12 +292,12 @@ while streaming the content.
 
 Two examples of its use are
 
-~~~ example
-   Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                      AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
+~~~ http-message
+Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
+                   AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 
-   Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
-           id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
+        id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
 
 
@@ -324,9 +324,9 @@ digest-algorithm is the one (or ones) with the highest "qvalue".
 
 Two examples of its use are
 
-~~~
-   Want-Digest: sha-256
-   Want-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
+~~~ http-message
+Want-Digest: sha-256
+Want-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
 ~~~
 
 # Digest Algorithm Values {#algorithms}
@@ -555,14 +555,14 @@ The following examples demonstrate interactions where a server responds with a
 
 Request:
 
-~~~
-GET /items/123
+~~~ http-message
+GET /items/123 HTTP/1.1
 
 ~~~
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -580,7 +580,7 @@ digest-values in the response are the same.
 
 Request:
 
-~~~
+~~~ http-message
 HEAD /items/123 HTTP/1.1
 Digest: sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 
@@ -588,7 +588,7 @@ Digest: sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
 Digest: id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -599,15 +599,15 @@ Digest: id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 Request:
 
-~~~
-GET /items/123
+~~~ http-message
+GET /items/123 HTTP/1.1
 Range: bytes=1-7
 
 ~~~
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 206 Partial Content
 Content-Type: application/json
 Content-Range: bytes 1-7/18
@@ -634,8 +634,8 @@ non-printable characters.
 
 Request:
 
-~~~
-PUT /items/123
+~~~ http-message
+PUT /items/123 HTTP/1.1
 Content-Type: application/json
 Accept-Encoding: br
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -645,7 +645,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 Response:
 
-~~~
+~~~ http-message
 Content-Type: application/json
 Content-Encoding: br
 Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
@@ -663,8 +663,8 @@ value depends on the representation metadata header fields, including
 
 Request:
 
-~~~
-PUT /items/123
+~~~ http-message
+PUT /items/123 HTTP/1.1
 Content-Type: application/json
 Content-Length: 18
 Accept-Encoding: br
@@ -675,7 +675,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 204 No Content
 Content-Type: application/json
 Content-Encoding: br
@@ -696,7 +696,7 @@ base64-encoded string.
 
 Request:
 
-~~~
+~~~ http-message
 PUT /items/123 HTTP/1.1
 Content-Type: application/json
 Accept-Encoding: br
@@ -707,7 +707,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Encoding: br
@@ -730,7 +730,7 @@ The representation enclosed in the response refers to the resource identified by
 
 Request:
 
-~~~
+~~~ http-message
 POST /books HTTP/1.1
 Content-Type: application/json
 Accept: application/json
@@ -743,7 +743,7 @@ Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
 
 Response
 
-~~~
+~~~ http-message
 HTTP/1.1 201 Created
 Content-Type: application/json
 Digest: id-sha-256=BZlF2v0IzjuxN01RQ97EUXriaNNLhtI8Chx8Eq+XYSc=
@@ -768,7 +768,7 @@ Response `Digest` has no explicit relation with the resource referenced by
 
 Request:
 
-~~~
+~~~ http-message
 POST /books HTTP/1.1
 Content-Type: application/json
 Accept: application/json
@@ -782,7 +782,7 @@ Location: /books/123
 
 Response
 
-~~~
+~~~ http-message
 HTTP/1.1 201 Created
 Content-Type: application/json
 Digest: id-sha-256=0o/WKwSfnmIoSlop2LV/ISaBDth05IeW27zzNMUh5l8=
@@ -812,7 +812,7 @@ resource.
 
 Request:
 
-~~~
+~~~ http-message
 PATCH /books/123 HTTP/1.1
 Content-Type: application/merge-patch+json
 Accept: application/json
@@ -824,7 +824,7 @@ Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
 Digest: id-sha-256=BZlF2v0IzjuxN01RQ97EUXriaNNLhtI8Chx8Eq+XYSc=
@@ -848,7 +848,7 @@ The digest of the response is computed on this enclosed representation.
 
 Request:
 
-~~~
+~~~ http-message
 PATCH /books/123 HTTP/1.1
 Content-Type: application/merge-patch+json
 Accept: application/json
@@ -860,7 +860,7 @@ Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 404 Not Found
 Content-Type: application/problem+json
 Digest: sha-256=UJSojgEzqUe4UoHzmNl5d2xkmrW3BOdmvsvWu1uFeu0=
@@ -881,14 +881,14 @@ The field value is the same as in {{example-full-representation}} because `Diges
 
 Request:
 
-~~~
-GET /items/123
+~~~ http-message
+GET /items/123 HTTP/1.1
 
 ~~~
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -918,7 +918,7 @@ The client requests a digest, preferring "sha". The server is free to reply with
 
 Request:
 
-~~~
+~~~ http-message
 GET /items/123 HTTP/1.1
 Want-Digest: sha-256;q=0.3, sha;q=1
 
@@ -926,7 +926,7 @@ Want-Digest: sha-256;q=0.3, sha;q=1
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -941,15 +941,15 @@ with a Digest containing an unsupported algorithm.
 
 Request:
 
-~~~
-GET /items/123
+~~~ http-message
+GET /items/123 HTTP/1.1
 Want-Digest: sha;q=1
 
 ~~~
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
 Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
@@ -964,15 +964,15 @@ The client requests a sha Digest, the server advises for sha-256 and sha-512
 
 Request:
 
-~~~
-GET /items/123
+~~~ http-message
+GET /items/123 HTTP/1.1
 Want-Digest: sha;q=1
 
 ~~~
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 400 Bad Request
 Want-Digest: sha-256, sha-512
 
@@ -1276,7 +1276,7 @@ A request with a JSON object without any content coding.
 
 Request:
 
-~~~
+~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Content-Type: application/json
 
@@ -1288,7 +1288,7 @@ using a content coding.
 
 Request:
 
-~~~
+~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Content-Type: application/json
 Content-Encoding: gzip
@@ -1300,7 +1300,7 @@ Now the same payload body conveys a malformed JSON object.
 
 Request:
 
-~~~
+~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Content-Type: application/json
 
@@ -1311,7 +1311,7 @@ A Range-Request alters the payload body, conveying a partial representation.
 
 Request:
 
-~~~
+~~~ http-message
 GET /entries/1234 HTTP/1.1
 Range: bytes=1-7
 
@@ -1319,7 +1319,7 @@ Range: bytes=1-7
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 206 Partial Content
 Content-Encoding: gzip
 Content-Type: application/json
@@ -1333,7 +1333,7 @@ Now the method too alters the payload body.
 
 Request:
 
-~~~
+~~~ http-message
 HEAD /entries/1234 HTTP/1.1
 Accept: application/json
 Accept-Encoding: gzip
@@ -1342,7 +1342,7 @@ Accept-Encoding: gzip
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Encoding: gzip
@@ -1356,7 +1356,7 @@ refers to the resource available at `/authors/123`.
 
 Request:
 
-~~~
+~~~ http-message
 POST /authors/ HTTP/1.1
 Accept: application/json
 Content-Type: application/json
@@ -1366,7 +1366,7 @@ Content-Type: application/json
 
 Response:
 
-~~~
+~~~ http-message
 HTTP/1.1 201 Created
 Content-Type: application/json
 Content-Location: /authors/123
