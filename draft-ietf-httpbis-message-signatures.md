@@ -189,7 +189,7 @@ This section contains non-normative examples of canonicalized values for header 
 HTTP/1.1 200 OK
 Server: www.example.com
 Date: Tue, 07 Jun 2014 20:51:35 GMT
-X-OWS-Header:   Leading and trailing whitespace.
+X-OWS-Header:   Leading and trailing whitespace.    
 X-Obs-Fold-Header: Obsolete
     line folding.
 X-Empty-Header:
