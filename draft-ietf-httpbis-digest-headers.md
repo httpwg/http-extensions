@@ -1107,9 +1107,10 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=,
         sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 ~~~
 
-could consider it suspicious and ignore it, use only one of its values, or both of them.
-
-
+A receiver is permitted to ignore any representation-data-digest value,
+so validation of duplicates is left as an implementation decision.
+Endpoints might select all, some or none of the values for checksum comparison and,
+based on the intersection of those results, conditionally pass or fail digest validation.
 # IANA Considerations
 
 ## Establish the HTTP Digest Algorithm Values {#iana-digest-algorithm-registry}
