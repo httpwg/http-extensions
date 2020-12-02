@@ -145,12 +145,6 @@ For brevity, the term "signature" on its own is used in this document to refer t
 In addition to those listed above, this document uses the following terms:
 
 {: vspace="0"}
-Decimal String:
-: An Integer String optionally concatenated with a period "." followed by a second Integer String, representing a positive real number expressed in base 10.  The first Integer String represents the integral portion of the number, while the optional second Integer String represents the fractional portion of the number.  (( Editor's note: There's got to be a definition for this that we can reference. ))
-
-Integer String:
-: A US-ASCII string of one or more digits "0-9", representing a positive integer in base 10. (( Editor's note: There's got to be a definition for this that we can reference. ))
-
 Signer:
 : The entity that is generating or has generated an HTTP Message Signature.
 
@@ -260,7 +254,7 @@ The following table shows example canonicalized values for different content ide
 
 The signature's Creation Time ({{signature-metadata}}) is identified by the `*created` identifier.
 
-Its canonicalized value is an Integer String containing the signature's Creation Time expressed in "Unix time".
+Its canonicalized value is an `sf-integer` containing the signature's Creation Time expressed in "Unix time".
 
 > The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as [RFC3339].
 
@@ -268,7 +262,7 @@ Its canonicalized value is an Integer String containing the signature's Creation
 
 The signature's Expiration Time ({{signature-metadata}}) is identified by the `*expires` identifier.
 
-Its canonicalized value is a Decimal String containing the signature's Expiration Time expressed in "Unix time".
+Its canonicalized value is an `sf-decimal` containing the signature's Expiration Time expressed in "Unix time".
 
 ## Target Endpoint
 
@@ -496,10 +490,10 @@ alg:
 : RECOMMENDED. The `alg` parameter is a Token containing the name of the signature's Algorithm, as registered in the HTTP Signature Algorithms Registry defined by this document. Verifiers MUST determine the signature's Algorithm from the `keyid` parameter rather than from `alg`. If `alg` is provided and differs from or is incompatible with the algorithm or key material identified by `keyid` (for example, `alg` has a value of `rsa-sha256` but `keyid` identifies an EdDSA key), then implementations MUST produce an error.
 
 created:
-: RECOMMENDED. The `created` parameter is a Decimal containing the signature's Creation Time, expressed as the canonicalized value of the `*created` content identifier, as defined in Section 2.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the Date HTTP Header such as when operating in certain web browser environments.
+: RECOMMENDED. The `created` parameter is an `sf-integer` containing the signature's Creation Time, expressed as the canonicalized value of the `*created` content identifier, as defined in Section 2.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the Date HTTP Header such as when operating in certain web browser environments.
 
 expires:
-: OPTIONAL. The `expires` parameter is a Decimal containing the signature's Expiration Time, expressed as the canonicalized value of the `*expires` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
+: OPTIONAL. The `expires` parameter is a `sf-decimal` containing the signature's Expiration Time, expressed as the canonicalized value of the `*expires` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
 
 keyid:
 : REQUIRED. The `keyid` parameter is a String whose value can be used by a verifier to identify and/or obtain the signature's Verification Key Material. Further format and semantics of this value are out of scope for this document.
