@@ -452,7 +452,7 @@ it is not representation metadata.
 
 In PATCH requests the representation digest MUST be computed on the patch document
 because the representation metadata refers to the patch document and not
-to the target resource (see Section 2 of {{?RFC5789}}).
+to the target resource (see Section 2 of {{?PATCH=RFC5789}}).
 
 In PATCH responses the representation digest MUST be computed on the selected
 representation of the patched resource.
