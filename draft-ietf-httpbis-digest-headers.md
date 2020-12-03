@@ -1111,6 +1111,7 @@ A receiver is permitted to ignore any representation-data-digest value,
 so validation of duplicates is left as an implementation decision.
 Endpoints might select all, some or none of the values for checksum comparison and,
 based on the intersection of those results, conditionally pass or fail digest validation.
+
 # IANA Considerations
 
 ## Establish the HTTP Digest Algorithm Values {#iana-digest-algorithm-registry}
