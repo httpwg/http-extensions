@@ -1102,6 +1102,20 @@ or by sending multiple representation-data-digest values from which the receiver
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{digest}}).
 
+### Duplicate digest-algorithm in field value
+
+An endpoint might receive multiple representation-data-digest values (see {{digest}}) that use the same digest-algorithm with different or identical digest-values. For example:
+
+~~~ example
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=,
+        sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
+~~~
+
+A receiver is permitted to ignore any representation-data-digest value,
+so validation of duplicates is left as an implementation decision.
+Endpoints might select all, some or none of the values for checksum comparison and,
+based on the intersection of those results, conditionally pass or fail digest validation.
+
 # IANA Considerations
 
 ## Establish the HTTP Digest Algorithm Values {#iana-digest-algorithm-registry}
