@@ -652,7 +652,8 @@ The "SameSite" attribute limits the scope of the cookie such that it will only
 be attached to requests if those requests are same-site, as defined by the
 algorithm in {{same-site-requests}}. For example, requests for
 `https://site.example/sekrit-image` will attach same-site cookies if and only if
-initiated from a context whose "site for cookies" is "site.example".
+initiated from a context whose "site for cookies" is an origin with a scheme and
+registered domain of "https" and "site.example" respectively.
 
 If the "SameSite" attribute's value is "Strict", the cookie will only be sent
 along with "same-site" requests. If the value is "Lax", the cookie will be sent
