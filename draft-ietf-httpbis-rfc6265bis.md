@@ -941,7 +941,9 @@ following conditions holds:
 Two origins, A and B, are considered same-site if the following algorithm
 returns true:
 
-1.  If A and B are both scheme/host/port triples:
+1.  If A and B are both the same globally unique identifier, return true.
+
+2.  If A and B are both scheme/host/port triples:
 
     1.  If A's scheme does not equal B's scheme, return false.
 
@@ -952,8 +954,6 @@ returns true:
 
     4.  If hostA's registrable domain equals hostB's registrable domain and is
         non-null, return true.
-
-2.  If A and B are both the same globally unique identifier, return true.
 
 3.  Return false.
 
@@ -971,20 +971,20 @@ client's type, as described in the following subsections:
 The URI displayed in a user agent's address bar is the only security context
 directly exposed to users, and therefore the only signal users can reasonably
 rely upon to determine whether or not they trust a particular website. The
-registrable domain of that URI's origin represents the context in which a user
-most likely believes themselves to be interacting. We'll label this domain the
-"top-level site".
+origin of that URI represents the context in which a user most likely believes
+themselves to be interacting. We'll define this origin, the top-level browsing
+context's active document's origin, as the "top-level origin".
 
 For a document displayed in a top-level browsing context, we can stop here: the
-document's "site for cookies" is top-level site's origin.
+document's "site for cookies" is the top-level origin.
 
 For documents which are displayed in nested browsing contexts, we need to audit
 the origins of each of a document's ancestor browsing contexts' active documents
 in order to account for the "multiple-nested scenarios" described in Section 4
-of {{RFC7034}}. A document's "site for cookies" is the top-level site's origin
-if and only if the top-level site's origin is same-site with the document's
-origin, and with each of the document's ancestor documents' origins. Otherwise
-its "site for cookies" is an origin set to a globally unique identifier.
+of {{RFC7034}}. A document's "site for cookies" is the top-level origin if and
+only if the top-level origin is same-site with the document's origin, and with
+each of the document's ancestor documents' origins. Otherwise its "site for
+cookies" is an origin set to a globally unique identifier.
 
 Given a Document (`document`), the following algorithm returns its "site for
 cookies":
@@ -1450,8 +1450,10 @@ user agent MUST process the cookie as follows:
 15. If the cookie's `same-site-flag` is not "None":
 
     1.  If the cookie was received from a "non-HTTP" API, and the API was called
-        from a context whose "site for cookies" is not same-site, then abort
-        these steps and ignore the newly created cookie entirely.
+        from a browsing context's active document whose "site for cookies" is
+        not same-site with the top-level browsing context's active document's
+        "site for cookies", then abort these steps and ignore the newly created
+        cookie entirely.
 
     2.  If the cookie was received from a "same-site" request (as defined in
         {{same-site-requests}}), skip the remaining substeps and continue
@@ -2182,6 +2184,9 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 *  Require a Secure attribute for "SameSite=None":
    <https://github.com/httpwg/http-extensions/pull/1323>.
+
+* Consider scheme when running the same-site algorithm:
+   <https://github.com/httpwg/http-extensions/pull/1324>.
 
 
 # Acknowledgements
