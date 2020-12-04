@@ -1451,9 +1451,8 @@ user agent MUST process the cookie as follows:
 
     1.  If the cookie was received from a "non-HTTP" API, and the API was called
         from a browsing context's active document whose "site for cookies" is
-        not same-site with the top-level browsing context's active document's
-        "site for cookies", then abort these steps and ignore the newly created
-        cookie entirely.
+        not same-site with the top-level origin, then abort these steps and
+        ignore the newly created cookie entirely.
 
     2.  If the cookie was received from a "same-site" request (as defined in
         {{same-site-requests}}), skip the remaining substeps and continue
