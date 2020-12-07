@@ -652,7 +652,8 @@ The "SameSite" attribute limits the scope of the cookie such that it will only
 be attached to requests if those requests are same-site, as defined by the
 algorithm in {{same-site-requests}}. For example, requests for
 `https://site.example/sekrit-image` will attach same-site cookies if and only if
-initiated from a context whose "site for cookies" is "site.example".
+initiated from a context whose "site for cookies" is an origin with a scheme and
+registered domain of "https" and "site.example" respectively.
 
 If the "SameSite" attribute's value is "Strict", the cookie will only be sent
 along with "same-site" requests. If the value is "Lax", the cookie will be sent
@@ -938,26 +939,30 @@ following conditions holds:
 
 ## "Same-site" and "cross-site" Requests  {#same-site-requests}
 
-A request is "same-site" if its target's URI's origin's registrable domain
-is an exact match for the request's client's "site for cookies", or if the
-request has no client. The request is otherwise "cross-site".
+Two origins, A and B, are considered same-site if the following algorithm
+returns true:
 
-For a given request ("request"), the following algorithm returns `same-site` or
-`cross-site`:
+1.  If A and B are both the same globally unique identifier, return true.
 
-1.  If `request`'s client is `null`, return `same-site`.
+2.  If A and B are both scheme/host/port triples:
 
-    Note that this is the case for navigation triggered by the user directly
-    (e.g. by typing directly into a user agent's address bar).
+    1.  If A's scheme does not equal B's scheme, return false.
 
-2.  Let `site` be `request`'s client's "site for cookies" (as defined in the
-    following sections).
+    2.  Let hostA be A's host, and hostB be B's host.
 
-3.  Let `target` be the registrable domain of `request`'s current url.
+    3.  If hostA equals hostB and hostA's registrable domain is null, return
+        true.
 
-4.  If `site` is an exact match for `target`, return `same-site`.
+    4.  If hostA's registrable domain equals hostB's registrable domain and is
+        non-null, return true.
 
-5.  Return `cross-site`.
+3.  Return false.
+
+Note: The port component of the origins is not considered.
+
+A request is "same-site" if its target's URI's origin is same-site with the
+request's client's "site for cookies" (which is an origin), or if the request
+has no client. The request is otherwise "cross-site".
 
 The request's client's "site for cookies" is calculated depending upon its
 client's type, as described in the following subsections:
@@ -967,23 +972,23 @@ client's type, as described in the following subsections:
 The URI displayed in a user agent's address bar is the only security context
 directly exposed to users, and therefore the only signal users can reasonably
 rely upon to determine whether or not they trust a particular website. The
-registrable domain of that URI's origin represents the context in which a user
-most likely believes themselves to be interacting. We'll label this domain the
-"top-level site".
+origin of that URI represents the context in which a user most likely believes
+themselves to be interacting. We'll define this origin, the top-level browsing
+context's active document's origin, as the "top-level origin".
 
 For a document displayed in a top-level browsing context, we can stop here: the
-document's "site for cookies" is the top-level site.
+document's "site for cookies" is the top-level origin.
 
 For documents which are displayed in nested browsing contexts, we need to audit
 the origins of each of a document's ancestor browsing contexts' active documents
 in order to account for the "multiple-nested scenarios" described in Section 4
-of {{RFC7034}}. A document's "site for cookies" is the top-level site if and
-only if the document and each of its ancestor documents' origins have the same
-registrable domain as the top-level site. Otherwise its "site for cookies" is
-the empty string.
+of {{RFC7034}}. A document's "site for cookies" is the top-level origin if and
+only if the top-level origin is same-site with the document's origin, and with
+each of the document's ancestor documents' origins. Otherwise its "site for
+cookies" is an origin set to a globally unique identifier.
 
 Given a Document (`document`), the following algorithm returns its "site for
-cookies" (either a registrable domain, or the empty string):
+cookies":
 
 1.  Let `top-document` be the active document in `document`'s browsing context's
     top-level browsing context.
@@ -1000,10 +1005,10 @@ cookies" (either a registrable domain, or the empty string):
     1.  Let `origin` be the origin of `item`'s URI if `item`'s sandboxed origin
         browsing context flag is set, and `item`'s origin otherwise.
 
-    2.  If `origin`'s host's registrable domain is not an exact match for
-        `top-origin`'s host's registrable domain, return the empty string.
+    2.  If `origin` is not same-site with `top-origin`, return an origin set to
+        a globally unique identifier.
 
-5.  Return `top-origin`'s host's registrable domain.
+5.  Return `top-origin`.
 
 ### Worker-based requests {#worker-requests}
 
@@ -1024,22 +1029,23 @@ one document. Requests generated from a dedicated worker (via `importScripts`,
 document's "site for cookies".
 
 Shared workers may be bound to multiple documents at once. As it is quite
-possible for those documents to have distinct "site for cookie" values, the
-worker's "site for cookies" will be the empty string in cases where the values
-diverge, and the shared value in cases where the values agree.
+possible for those documents to have distinct "site for cookies" values, the
+worker's "site for cookies" will be an origin set to a globally unique
+identifier in cases where the values are not all same-site with the worker's
+origin, and the worker's origin in cases where the values agree.
 
 Given a WorkerGlobalScope (`worker`), the following algorithm returns its "site
-for cookies" (either a registrable domain, or the empty string):
+for cookies":
 
-1.  Let `site` be `worker`'s origin's host's registrable domain.
+1.  Let `site` be `worker`'s origin.
 
 2.  For each `document` in `worker`'s Documents:
 
     1.  Let `document-site` be `document`'s "site for cookies" (as defined
         in {{document-requests}}).
 
-    2.  If `document-site` is not an exact match for `site`, return the empty
-        string.
+    2.  If `document-site` is not same-site with `site`, return an origin
+        set to a globally unique identifier.
 
 3.  Return `site`.
 
@@ -1056,13 +1062,13 @@ request, and its "site for cookies" will be those defined in
 
 Requests which are initiated by the Service Worker itself (via a direct call to
 `fetch()`, for instance), on the other hand, will have a client which is a
-ServiceWorkerGlobalScope. Its "site for cookies" will be the registrable domain
-of the Service Worker's URI.
+ServiceWorkerGlobalScope. Its "site for cookies" will be the Service Worker's
+URI's origin.
 
 Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
-"site for cookies" (either a registrable domain, or the empty string):
+"site for cookies":
 
-1.  Return `worker`'s origin's host's registrable domain.
+1.  Return `worker`'s origin.
 
 ## The Set-Cookie Header {#set-cookie}
 
@@ -1445,8 +1451,8 @@ user agent MUST process the cookie as follows:
 15. If the cookie's `same-site-flag` is not "None":
 
     1.  If the cookie was received from a "non-HTTP" API, and the API was called
-        from a context whose "site for cookies" is not an exact match for
-        request-uri's host's registrable domain, then abort these steps and
+        from a browsing context's active document whose "site for cookies" is
+        not same-site with the top-level origin, then abort these steps and
         ignore the newly created cookie entirely.
 
     2.  If the cookie was received from a "same-site" request (as defined in
@@ -2178,6 +2184,9 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 *  Require a Secure attribute for "SameSite=None":
    <https://github.com/httpwg/http-extensions/pull/1323>.
+
+* Consider scheme when running the same-site algorithm:
+   <https://github.com/httpwg/http-extensions/pull/1324>.
 
 
 # Acknowledgements
