@@ -229,7 +229,7 @@ Example-List: "foo", "bar", "It was the best of times."
 
 An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
 
-Note that Lists can have their members split across multiple lines inside a header or trailer section, as per {{?RFC7230}}{: section="3.2.2"}; for example, the following are equivalent:
+Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{?RFC7230}}{: section="3.2.2"}; for example, the following are equivalent:
 
 ~~~ http-message
 Example-List: foo, bar
@@ -278,6 +278,8 @@ Parsers MUST support Inner Lists containing at least 256 members. Field specific
 ### Parameters {#param}
 
 Parameters are an ordered map of key-value pairs that are associated with an Item ({{item}}) or Inner List ({{inner-list}}). The keys are unique within the scope of the Parameters they occur within, and the values are bare items (i.e., they themselves cannot be parameterized; see {{item}}).
+
+Implementations MUST provide access to Parameters both by index and by key. Specifications MAY use either means of accessing them.
 
 The ABNF for Parameters is:
 
@@ -355,7 +357,7 @@ As with Lists, an empty Dictionary is represented by omitting the entire field. 
 
 Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their keys, as well as whether their presence is required or optional. Recipients MUST ignore members whose keys that are undefined or unknown, unless the field's specification specifically disallows them.
 
-Note that Dictionaries can have their members split across multiple lines inside a header or trailer section; for example, the following are equivalent:
+Note that Dictionaries can have their members split across multiple lines of the same header or trailer section; for example, the following are equivalent:
 
 ~~~ http-message
 Example-Dict: foo=1, bar=2
