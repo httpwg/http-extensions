@@ -1273,10 +1273,6 @@ user agent MUST process the cookie-av as follows:
 5.  Append an attribute to the cookie-attribute-list with an attribute-name
     of "SameSite" and an attribute-value of `enforcement`.
 
-Note: This algorithm maps the "None" value, as well as any unknown value, to
-the "None" behavior, which is helpful for backwards compatibility when
-introducing new variants.
-
 #### "Strict" and "Lax" enforcement {#strict-lax}
 
 Same-site cookies in "Strict" enforcement mode will not be sent along with
