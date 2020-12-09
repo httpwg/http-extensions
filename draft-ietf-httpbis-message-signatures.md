@@ -378,7 +378,6 @@ The following sections describe each of these steps in detail.
    * Each identifier MUST be one of those defined in Section 2.
    * This list MUST NOT be empty, as this would result in creating a signature over the empty string.
    * Signers SHOULD include `*created` and `*request-target` in the list.
-   * Signers SHOULD include `date` and `*request-target` in the list.
    * Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
 
 
