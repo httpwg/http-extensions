@@ -141,7 +141,7 @@ HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
 
 ## This Proposal
 
-The concept of `selected representation` defined in Section 7 of
+The concept of `selected representation` defined in Section 8 of
 {{!SEMANTICS=I-D.ietf-httpbis-semantics}} makes [RFC3230] definitions inconsistent with
 current HTTP semantics. This document updates the `Digest` and `Want-Digest`
 field definitions to align with {{SEMANTICS}} concepts.
@@ -149,7 +149,7 @@ field definitions to align with {{SEMANTICS}} concepts.
 Basing `Digest` on the selected representation makes it straightforward to
 apply it to use-cases where the transferred data does require some sort of
 manipulation to be considered a representation, or conveys a partial
-representation of a resource eg. Range Requests (see Section 13.2 of
+representation of a resource eg. Range Requests (see Section 14.2 of
 {{SEMANTICS}}).
 
 Changes are semantically compatible with existing implementations and better
@@ -160,7 +160,7 @@ the value contained in any `Content-Encoding` or `Content-Type` header fields.
 Therefore, a given resource may have multiple different digest values.
 
 To allow both parties to exchange a Digest of a representation with no content
-codings (see Section 7.5.1 of {{SEMANTICS}}) two more digest-algorithms
+codings (see Section 8.5.1 of {{SEMANTICS}}) two more digest-algorithms
 are added ("id-sha-256" and "id-sha-512").
 
 ## Goals
@@ -207,11 +207,11 @@ document are to be interpreted as described in BCP 14 ([RFC2119] and [RFC8174])
 when, and only when, they appear in all capitals, as shown here.
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
-[RFC7405] along with the "#rule" extension defined in Section 5.7.1 of
+[RFC7405] along with the "#rule" extension defined in Section 5.6.1 of
 {{SEMANTICS}}.
 
 The definitions "representation", "selected representation", "representation
-data", "representation metadata", and "payload body" in this document are to be
+data", "representation metadata", and "payload data" in this document are to be
 interpreted as described in {{SEMANTICS}}.
 
 Algorithm names respect the casing used in their definition document (eg. SHA-1, CRC32c)
@@ -220,25 +220,25 @@ whereas digest-algorithm tokens are quoted (eg. "sha", "crc32c").
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
-which uses a checksum  that is calculated independently of the payload body
-(see Section 5.5.4 of {{SEMANTICS}}).
-It uses the representation data (see Section 7.2 of {{SEMANTICS}}),
-that can be fully or partially contained in the payload body, or not contained at all:
+which uses a checksum  that is calculated independently of the payload data
+(see Section 6.4 of {{SEMANTICS}}).
+It uses the representation data (see Section 8.2 of {{SEMANTICS}}),
+that can be fully or partially contained in the payload data, or not contained at all:
 
 ~~~
    representation-data := Content-Encoding( Content-Type( bits ) )
 ~~~
 
 This takes into account the effect of the HTTP semantics on the messages;
-for example, the payload body can be affected by Range Requests or methods such as HEAD,
-while the way the payload body is transferred "on the wire" is dependent on other
+for example, the payload data can be affected by Range Requests or methods such as HEAD,
+while the way the payload data is transferred "on the wire" is dependent on other
 transformations (eg. transfer codings for HTTP/1.1 see 6.1 of
 {{?HTTP11=I-D.ietf-httpbis-messaging}}):
 {{resource-representation}} contains several examples to help illustrate those effects.
 
 A representation digest consists of
 the value of a checksum computed on the entire selected `representation data`
-(see Section 7 of {{SEMANTICS}}) of a resource identified according to Section 5.5.2 of {{SEMANTICS}}
+(see Section 8 of {{SEMANTICS}}) of a resource identified according to Section 6.4.2 of {{SEMANTICS}}
 together with an indication of the algorithm used
 
 ~~~ abnf
@@ -265,7 +265,7 @@ responses.
    Digest = 1#representation-data-digest
 ~~~
 
-The relationship between `Content-Location` (see Section 7.8 of
+The relationship between `Content-Location` (see Section 8.8 of
 {{SEMANTICS}}) and `Digest` is demonstrated in
 {{post-not-request-uri}}. A comprehensive set of examples showing the impacts of
 representation metadata, payload transformations and HTTP methods on Digest is
@@ -572,7 +572,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ## Server Returns No Representation Data
 
-Requests without a payload body can still send a `Digest` field
+Requests without payload data can still send a `Digest` field
 applying the digest-algorithm to an empty representation.
 
 As there is no content coding applied, the "sha-256" and the "id-sha-256"
@@ -658,7 +658,7 @@ iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 
 Request `Digest` value is calculated on the enclosed payload. Response `Digest`
 value depends on the representation metadata header fields, including
-`Content-Encoding: br` even when the response does not contain a payload body.
+`Content-Encoding: br` even when the response does not contain payload data.
 
 
 Request:
@@ -724,7 +724,7 @@ Request `Digest` value is computed on the enclosed representation (see
 {{acting-on-resources}}).
 
 The representation enclosed in the response refers to the resource identified by
-`Content-Location` (see {{SEMANTICS}}, Section 5.5.2).
+`Content-Location` (see {{SEMANTICS}}, Section 6.4.2).
 
 `Digest` is thus computed on the enclosed representation.
 
@@ -752,7 +752,7 @@ Content-Location: /books/123
 {"id": "123", "title": "New Title"}
 ~~~
 
-Note that a `204 No Content` response without a payload body but with the same
+Note that a `204 No Content` response without payload data but with the same
 `Digest` field-value would have been legitimate too.
 
 ## POST Response Describes the Request Status {#post-referencing-action}
@@ -832,7 +832,7 @@ Digest: id-sha-256=BZlF2v0IzjuxN01RQ97EUXriaNNLhtI8Chx8Eq+XYSc=
 {"id": "123", "title": "New Title"}
 ~~~
 
-Note that a `204 No Content` response without a payload body but with the same
+Note that a `204 No Content` response without payload data but with the same
 `Digest` field-value would have been legitimate too.
 
 ## Error responses
@@ -1013,7 +1013,7 @@ multiple hops, as it just covers the `representation data` and not the
 `representation metadata`.
 
 Besides, it allows to protect `representation data` from buggy manipulation,
-undesired "transforming proxies" (see Section 6.5 of {{SEMANTICS}}), etc.
+undesired "transforming proxies" (see Section 7.7 of {{SEMANTICS}}), etc.
 
 Moreover, identity digest-algorithms (eg. "id-sha-256" and "id-sha-512") allow
 piecing together a resource from different sources (e.g. different servers that
@@ -1061,12 +1061,12 @@ might affect signature validation.
 
 ## Usage in trailers
 
-When used in trailers, the receiver gets the digest value after the payload body
+When used in trailers, the receiver gets the digest value after the payload data
 and may thus be tempted to process the data before validating the digest value.
 Instead, data should only be processed after validating the Digest.
 
 If received in trailers, `Digest` MUST NOT be discarded;
-instead, it MAY be merged in the header section (See Section 5.6.2 of {{SEMANTICS}}).
+instead, it MAY be merged in the header section (See Section 6.5.1 of {{SEMANTICS}}).
 
 Not every digest-algorithm is suitable for trailers, as they may require to pre-process
 the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
@@ -1080,7 +1080,7 @@ in conjunction with the encrypted content-coding {{?RFC8188}}.
 
 The representation-data-digest of an encrypted payload can change between different messages
 depending on the encryption algorithm used; in those cases its value could not be used to provide
-a proof of integrity "at rest" unless the whole (e.g. encoded) payload body is persisted.
+a proof of integrity "at rest" unless the whole (e.g. encoded) payload data is persisted.
 
 ## Algorithm Agility
 
@@ -1286,7 +1286,7 @@ Specification document(s):  {{digest}} of this document
 # Resource Representation and Representation-Data {#resource-representation}
 
 The following examples show how representation metadata, payload transformations
-and method impacts on the message and payload body. When the payload body
+and method impacts on the message and payload data. When the payload data
 contains non-printable characters (eg. when it is compressed) it is shown as
 base64-encoded string.
 
@@ -1314,7 +1314,7 @@ Content-Encoding: gzip
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 
-Now the same payload body conveys a malformed JSON object.
+Now the same payload data conveys a malformed JSON object.
 
 Request:
 
@@ -1325,7 +1325,7 @@ Content-Type: application/json
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 
-A Range-Request alters the payload body, conveying a partial representation.
+A Range-Request alters the payload data, conveying a partial representation.
 
 Request:
 
@@ -1347,7 +1347,7 @@ iwgAla3RXA==
 ~~~
 
 
-Now the method too alters the payload body.
+Now the method too alters the payload data.
 
 Request:
 
