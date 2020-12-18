@@ -364,7 +364,7 @@ Servers SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply
 it once the referenced stream is opened. Holding PRIORITY_UPDATE frames for each
 stream requires server resources, which can can be bound by local implementation
 policy. (TODO: consider resolving #1261, and adding more text about bounds).
-Although there is no limit to the number PRIORITY_UPDATES that can be sent,
+Although there is no limit to the number of PRIORITY_UPDATES that can be sent,
 storing only the most recently received frame limits resource commitment.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
@@ -402,10 +402,13 @@ Prioritized Stream ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Fields.
 
-The Prioritized Stream ID MUST be within the stream limit. If a
-server receives a PRIORITY_UPDATE with a Prioritized Stream ID that is beyond
-the stream limits, this SHOULD be treated as a connection error of type
-PROTOCOL_ERROR.
+The Prioritized Stream ID SHOULD be a value within the stream concurrency
+window. A server SHOULD NOT treat a Prioritized Stream ID beyond this window as
+an error because it can buffer PRIORITY_UPDATE frames; see {{frame}}. However,
+servers can limit the amount of buffering beyond the limit imposed by the
+concurrency window. Therefore, sending PRIORITY_UPDATE frames for streams too
+far beyond the limit could result in them being in ignored and the application
+of default priority when the stream is eventually opened.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
