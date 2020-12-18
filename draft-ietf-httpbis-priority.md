@@ -569,6 +569,16 @@ to do so is an implementation decision. For example, a server might
 pre-emptively send responses of a particular incremental type based on other
 information such as content size.
 
+A server that pushes a response has the responsibility to correctly prioritize
+it against other concurrent responses. Pushing at too high a priority might
+cause client-requested resources to be blocked. A pushed request has no explicit
+client-signalled initial priority but a server can still apply the merging
+guidance given in {{merging}}. In the absence of a server priority signal,
+applying defaults to pushed responses might result in suboptimal prioritization.
+There is no general guidance for deciding a priority in this situation; a server
+can take into account other factors such as the priority of the request that
+triggered the push, the priority of other responses, the type of resource being
+pushed, etc.
 
 
 # Fairness {#fairness}
