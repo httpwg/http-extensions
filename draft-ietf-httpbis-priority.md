@@ -402,13 +402,14 @@ Prioritized Stream ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Fields.
 
-The Prioritized Stream ID SHOULD be a value within the stream concurrency
-window. A server SHOULD NOT treat a Prioritized Stream ID beyond this window as
-an error because it can buffer PRIORITY_UPDATE frames; see {{frame}}. However,
-servers can limit the amount of buffering beyond the limit imposed by the
-concurrency window. Therefore, sending PRIORITY_UPDATE frames for streams too
-far beyond the limit could result in them being in ignored and the application
-of default priority when the stream is eventually opened.
+The Prioritized Stream ID SHOULD be a value within the limit of concurrent
+active streams, which is determined by the SETTINGS_MAX_CONCURRENT_STREAMS
+paramater and streams in the "open" or "half-closed" state; see Section 5.1.2 of
+{{RFC7540}}. A server SHOULD NOT treat a Prioritized Stream ID beyond this limit
+as an error because it can buffer PRIORITY_UPDATE frames; see {{frame}}.
+However, since servers can restrict the amount of buffering, PRIORITY_UPDATE
+frames for streams too far beyond the limit could be ignored, resulting in
+default priority values being used when the stream is eventually opened.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
