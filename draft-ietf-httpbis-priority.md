@@ -570,15 +570,18 @@ pre-emptively send responses of a particular incremental type based on other
 information such as content size.
 
 A server that pushes a response has the responsibility to correctly prioritize
-it against other concurrent responses. Pushing at too high a priority might
-cause client-requested resources to be blocked. A pushed request has no explicit
-client-signalled initial priority but a server can still apply the merging
-guidance given in {{merging}}. In the absence of a server priority signal,
-applying defaults to pushed responses might result in suboptimal prioritization.
-There is no general guidance for deciding a priority in this situation; a server
-can take into account other factors such as the priority of the request that
-triggered the push, the priority of other responses, the type of resource being
-pushed, etc.
+it against other active concurrent responses. Pushing at too high a priority
+might cause client-requested resources to be blocked. Pushing at too low a
+priority could delay the response, negating intended goals or pushing.
+
+A pushed request has no explicit client-signalled initial priority but a server
+can still apply the merging guidance given in {{merging}}. In the absence of a
+server priority signal, applying default parameter values to pushed responses
+might result in suboptimal prioritization. There is no general guidance for
+deciding a priority in this situation; a server can take into account other
+factors such as the type or size of resource being pushed, the priority of the
+request that triggered the push, the count of active concurrent responses, the
+priority of other active concurrent responses, etc.
 
 
 # Fairness {#fairness}
