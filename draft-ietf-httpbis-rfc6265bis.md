@@ -328,7 +328,7 @@ use an up-to-date public suffix list, such as the one maintained by the Mozilla
 project at {{PSL}}.
 
 The term "request", as well as a request's "client", "current url", "method",
-and "target browsing context", are defined in {{FETCH}}.
+"target browsing context", and "url list", are defined in {{FETCH}}.
 
 # Overview
 
@@ -939,30 +939,17 @@ following conditions holds:
 
 ## "Same-site" and "cross-site" Requests  {#same-site-requests}
 
-Two origins, A and B, are considered same-site if the following algorithm
-returns true:
+Two origins are same-site if they satisfy the same-site criteria defined in
+{{FETCH}}. A request is "same-site" if the following criteria are true:
 
-1.  If A and B are both the same globally unique identifier, return true.
+1.  The request is not the result of a cross-site redirect. That is,
+    the origin of every url in the request's url list is same-site with the
+    request's current url's origin.
 
-2.  If A and B are both scheme/host/port triples:
+2.  The target's URI's origin is same-site with the request's client's "site
+    for cookies" (which is an origin), or if the request has no client.
 
-    1.  If A's scheme does not equal B's scheme, return false.
-
-    2.  Let hostA be A's host, and hostB be B's host.
-
-    3.  If hostA equals hostB and hostA's registrable domain is null, return
-        true.
-
-    4.  If hostA's registrable domain equals hostB's registrable domain and is
-        non-null, return true.
-
-3.  Return false.
-
-Note: The port component of the origins is not considered.
-
-A request is "same-site" if its target's URI's origin is same-site with the
-request's client's "site for cookies" (which is an origin), or if the request
-has no client. The request is otherwise "cross-site".
+The request is otherwise "cross-site".
 
 The request's client's "site for cookies" is calculated depending upon its
 client's type, as described in the following subsections:
