@@ -939,8 +939,8 @@ following conditions holds:
 
 ## "Same-site" and "cross-site" Requests  {#same-site-requests}
 
-Two origins are same-site if they satisfy the same-site criteria defined in
-{{FETCH}}. A request is "same-site" if the following criteria are true:
+Two origins are same-site if they satisfy the "same site" criteria defined in
+{{HTML}}. A request is "same-site" if the following criteria are true:
 
 1.  The request is not the result of a cross-site redirect. That is,
     the origin of every url in the request's url list is same-site with the
