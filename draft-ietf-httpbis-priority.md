@@ -404,7 +404,7 @@ Priority Field Value:
 
 The Prioritized Stream ID SHOULD be a value within the limit of concurrent
 active streams, which is determined by the SETTINGS_MAX_CONCURRENT_STREAMS
-paramater and streams in the "open" or "half-closed" state; see Section 5.1.2 of
+parameter and streams in the "open" or "half-closed" state; see Section 5.1.2 of
 {{RFC7540}}. A server SHOULD NOT treat a Prioritized Stream ID beyond this limit
 as an error because it can buffer PRIORITY_UPDATE frames; see {{frame}}.
 However, since servers can restrict the amount of buffering, PRIORITY_UPDATE
