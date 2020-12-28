@@ -746,10 +746,13 @@ Response
 ~~~ http-message
 HTTP/1.1 201 Created
 Content-Type: application/json
-Digest: id-sha-256=BZlF2v0IzjuxN01RQ97EUXriaNNLhtI8Chx8Eq+XYSc=
 Content-Location: /books/123
+Digest: id-sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
 
-{"id": "123", "title": "New Title"}
+{
+  "id": "123",
+  "title": "New Title"
+}
 ~~~
 
 Note that a `204 No Content` response without payload data but with the same
@@ -785,7 +788,7 @@ Response
 ~~~ http-message
 HTTP/1.1 201 Created
 Content-Type: application/json
-Digest: id-sha-256=0o/WKwSfnmIoSlop2LV/ISaBDth05IeW27zzNMUh5l8=
+Digest: id-sha-256=2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=
 Location: /books/123
 
 {
@@ -827,9 +830,12 @@ Response:
 ~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
-Digest: id-sha-256=BZlF2v0IzjuxN01RQ97EUXriaNNLhtI8Chx8Eq+XYSc=
+Digest: id-sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
 
-{"id": "123", "title": "New Title"}
+{
+  "id": "123",
+  "title": "New Title"
+}
 ~~~
 
 Note that a `204 No Content` response without payload data but with the same
@@ -863,7 +869,7 @@ Response:
 ~~~ http-message
 HTTP/1.1 404 Not Found
 Content-Type: application/problem+json
-Digest: sha-256=UJSojgEzqUe4UoHzmNl5d2xkmrW3BOdmvsvWu1uFeu0=
+Digest: sha-256=KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=
 
 {
   "title": "Not Found",
@@ -1473,15 +1479,31 @@ using SHA algorithms for a range of encodings. Note that these are formatted as
 base64. This function could be adapted to other algorithms and should take into
 account their specific formatting rules.
 
+While the JSON objects in the examples are consistently formatted
+using the compact notation (no indentation) for single-key entries
+and 2-space indentation for multi-key entries,
+`Digest` is media-type agnostic and does not provide canonicalization
+algorithms for specific formats.
+
 ~~~
-import base64, json, hashlib, brotli
+import base64, json, hashlib, brotli, logging
+log = logging.getLogger()
+
+def encode_item(item, encoding=lambda x: x):
+    indent = 2 if isinstance(item, dict) and len(item) > 1 else None
+    json_bytes = json.dumps(item, indent=indent).encode()
+    return encoding(json_bytes)
+
+
+def digest_bytes(bytes_, algorithm=hashlib.sha256):
+    checksum_bytes = algorithm(bytes_).digest()
+    log.warning("Log bytes: \n[%r]", bytes_)
+    return base64.encodebytes(checksum_bytes).strip()
 
 
 def digest(item, encoding=lambda x: x, algorithm=hashlib.sha256):
-    json_bytes = json.dumps(item).encode()
-    content_encoded = encoding(json_bytes)
-    checksum_bytes = algorithm(content_encoded).digest()
-    return base64.encodebytes(checksum_bytes).strip()
+    content_encoded = encode_item(item, encoding)
+    return digest_bytes(content_encoded, algorithm)
 
 
 item = {"hello": "world"}
@@ -1494,14 +1516,13 @@ print("Identity | sha256 |", digest(item))
 print("Encoding | digest-algorithm | digest-value")
 print("Brotli | sha256 |", digest(item, encoding=brotli.compress))
 # Encoding | digest-algorithm | digest-value
-# Brotli , sha256 4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
-
+# Brotli | sha256 | 4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 
 print("Encoding | digest-algorithm | digest-value")
 print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512))
 # Encoding | digest-algorithm | digest-value
-# Identity | sha512 | b'WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2s
-vX+TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==\n'
+# Identity | sha512 | b'WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm'
+#                      '+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew=='
 ~~~
 
 # Changes
