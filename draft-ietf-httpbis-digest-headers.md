@@ -233,7 +233,7 @@ that can be fully or partially contained in the payload data, or not contained a
 This takes into account the effect of the HTTP semantics on the messages;
 for example, the payload data can be affected by Range Requests or methods such as HEAD,
 while the way the payload data is transferred "on the wire" is dependent on other
-transformations (eg. transfer codings for HTTP/1.1 see 6.1 of
+transformations (eg. transfer codings for HTTP/1.1 - see Section 6.1 of
 {{?HTTP11=I-D.ietf-httpbis-messaging}}):
 {{resource-representation}} contains several examples to help illustrate those effects.
 
