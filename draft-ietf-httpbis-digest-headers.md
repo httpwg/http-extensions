@@ -508,7 +508,7 @@ value which is similar to `representation-data-digest` (see
 
 The SRI digest value is calculated over the identity encoding of the resource,
 not the selected representation (as specified for `representation-data-digest`
-in this document). Section 3.4.5 of [SRI] describes the benefit of the identity
+in this document). Section 3.5 of [SRI] describes the benefit of the identity
 approach - the SRI `integrity` attribute can contain multiple algorithm-value
 pairs where each applies to a different identity encoded payload. This allows
 for protection of distinct resources sharing a URL. However, this is a contrast
