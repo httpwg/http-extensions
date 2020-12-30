@@ -550,6 +550,15 @@ The following examples demonstrate interactions where a server responds with a
 `Digest` field even though the client did not solicit one using
 `Want-Digest`.
 
+Some examples include JSON objects in the payload data.
+For presentation purposes, objects that fit completely within the line-length limits
+are presented on a single line using compact notation with no leading space.
+Objects that would exceed line-length limits are presented across multiple lines
+(one line per key-value pair) with 2 spaced of leading indentation.
+
+`Digest` is media-type agnostic
+and does not provide canonicalization algorithms for specific formats.
+Examples of `Digest` are calculated inclusive of any space.
 
 ## Server Returns Full Representation Data {#example-full-representation}
 
@@ -916,6 +925,16 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 The following examples demonstrate interactions where a client solicits a
 `Digest` using `Want-Digest`.
+
+Some examples include JSON objects in the payload data.
+For presentation purposes, objects that fit completely within the line-length limits
+are presented on a single line using compact notation with no leading space.
+Objects that would exceed line-length limits are presented across multiple lines
+(one line per key-value pair) with 2 spaced of leading indentation.
+
+`Digest` is media-type agnostic
+and does not provide canonicalization algorithms for specific formats.
+Examples of `Digest` are calculated inclusive of any space.
 
 ## Server Selects Client's Least Preferred Algorithm
 
@@ -1478,12 +1497,6 @@ The following python3 code can be used to generate digests for JSON objects
 using SHA algorithms for a range of encodings. Note that these are formatted as
 base64. This function could be adapted to other algorithms and should take into
 account their specific formatting rules.
-
-While the JSON objects in the examples are consistently formatted
-using the compact notation (no indentation) for single-key entries
-and 2-space indentation for multi-key entries,
-`Digest` is media-type agnostic and does not provide canonicalization
-algorithms for specific formats.
 
 ~~~
 import base64, json, hashlib, brotli, logging
