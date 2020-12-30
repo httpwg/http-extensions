@@ -558,6 +558,7 @@ Request:
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
+Host: foo.example
 
 ~~~
 
@@ -583,6 +584,7 @@ Request:
 
 ~~~ http-message
 HEAD /items/123 HTTP/1.1
+Host: foo.example
 Digest: sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 
 ~~~
@@ -602,6 +604,7 @@ Request:
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
+Host: foo.example
 Range: bytes=1-7
 
 ~~~
@@ -637,6 +640,7 @@ Request:
 
 ~~~ http-message
 PUT /items/123 HTTP/1.1
+Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -666,6 +670,7 @@ Request:
 
 ~~~ http-message
 PUT /items/123 HTTP/1.1
+Host: foo.example
 Content-Type: application/json
 Content-Length: 18
 Accept-Encoding: br
@@ -699,6 +704,7 @@ Request:
 
 ~~~ http-message
 PUT /items/123 HTTP/1.1
+Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
@@ -733,6 +739,7 @@ Request:
 
 ~~~ http-message
 POST /books HTTP/1.1
+Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
@@ -771,6 +778,7 @@ Request:
 
 ~~~ http-message
 POST /books HTTP/1.1
+Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
@@ -815,6 +823,7 @@ Request:
 
 ~~~ http-message
 PATCH /books/123 HTTP/1.1
+Host: foo.example
 Content-Type: application/merge-patch+json
 Accept: application/json
 Accept-Encoding: identity
@@ -851,6 +860,7 @@ Request:
 
 ~~~ http-message
 PATCH /books/123 HTTP/1.1
+Host: foo.example
 Content-Type: application/merge-patch+json
 Accept: application/json
 Accept-Encoding: identity
@@ -884,6 +894,7 @@ Request:
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
+Host: foo.example
 
 ~~~
 
@@ -921,6 +932,7 @@ Request:
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
+Host: foo.example
 Want-Digest: sha-256;q=0.3, sha;q=1
 
 ~~~
@@ -944,6 +956,7 @@ Request:
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
+Host: foo.example
 Want-Digest: sha;q=1
 
 ~~~
@@ -967,6 +980,7 @@ Request:
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
+Host: foo.example
 Want-Digest: sha;q=1
 
 ~~~
@@ -1297,6 +1311,7 @@ Request:
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
+Host: foo.example
 Content-Type: application/json
 
 {"hello": "world"}
@@ -1309,6 +1324,7 @@ Request:
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
+Host: foo.example
 Content-Type: application/json
 Content-Encoding: gzip
 
@@ -1321,6 +1337,7 @@ Request:
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
+Host: foo.example
 Content-Type: application/json
 
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
@@ -1332,6 +1349,7 @@ Request:
 
 ~~~ http-message
 GET /entries/1234 HTTP/1.1
+Host: foo.example
 Range: bytes=1-7
 
 ~~~
@@ -1354,6 +1372,7 @@ Request:
 
 ~~~ http-message
 HEAD /entries/1234 HTTP/1.1
+Host: foo.example
 Accept: application/json
 Accept-Encoding: gzip
 
@@ -1377,6 +1396,7 @@ Request:
 
 ~~~ http-message
 POST /authors/ HTTP/1.1
+Host: foo.example
 Accept: application/json
 Content-Type: application/json
 
