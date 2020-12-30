@@ -633,7 +633,8 @@ The response includes a `Content-Encoding: br` that indicates the selected
 representation is brotli encoded. The `Digest` field-value is therefore
 different compared to the request.
 
-The response body is displayed as a base64-encoded string because it contains
+The response body enclose a representation of the resource
+and is displayed as a base64-encoded string because it contains
 non-printable characters.
 
 Request:
@@ -651,7 +652,9 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Response:
 
 ~~~ http-message
+HTTP/1.1 200 Ok
 Content-Type: application/json
+Content-Location: /items/123
 Content-Encoding: br
 Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 
