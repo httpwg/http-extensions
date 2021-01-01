@@ -1048,6 +1048,11 @@ Even a simple mechanism for end-to-end `representation data` integrity is valuab
 because user-agent can validate that resource retrieval succeeded before handing off to a
 HTML parser, video player etc. for parsing.
 
+Identity digest-algorithms (e.g. "id-sha-256" and "id-sha-512") are particularly useful
+for end-to-end integrity because they allow piecing together a resource from different sources
+with different HTTP messaging characteristics. For example, different servers that
+apply different content codings.
+
 Note that using `Digest` alone does not provide end-to-end integrity of HTTP messages over
 multiple hops, since metadata could be manipulated at any stage. Methods to protect
 metadata are discussed in {{usage-in-signatures}}.
