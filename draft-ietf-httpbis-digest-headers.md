@@ -1020,7 +1020,7 @@ certain kinds of accidental corruption.
 HTTP messages, this can be achieved by combining it with other approaches such
 as transport-layer security or digital signatures.
 
-## Broken Cryptographic Algorithms
+## Broken Cryptographic Algorithms {#broken-algorithms}
 
 Cryptographic algorithms are intended to provide a proof of integrity suited
 towards cryptographic constructions such as signatures.
@@ -1029,7 +1029,7 @@ However, these rely on collision-resistance for their security proofs
 [CMU-836068]. The "md5" and "sha" digest-algorithms are vulnerable to collisions attacks,
 so they MUST NOT be used with `Digest`.
 
-## Other Deprecated Algorithms
+## Other Deprecated Algorithms {#deprecated-algorithms}
 
 The ADLER32 algorithm defined in [RFC1950] has been deprecated by [RFC3309]
 because under certain conditions it provides weak detection of errors and is now
