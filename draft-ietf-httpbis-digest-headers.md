@@ -156,10 +156,10 @@ representation of a resource eg. Range Requests (see Section 14.2 of
 This document replaces [RFC3230] to better align with {{SEMANTICS}} and to
 provide more detailed description of `Digest` usage in request and response
 cases. Changes are intended to be semantically compatible with existing
-implementations but note that negotiation of Content-MD5 is deprecated
+implementations but note that negotiation of `Content-MD5` is deprecated
 {{deprecate-contentMD5}}, `Digest` field parameters are obsoleted
 {{obsolete-parameters}}, "md5" and "sha" digest-algorithms are obsoleted
-{{broken-algorithms}} and the ADLER32 algorithm is deprecated
+{{broken-algorithms}} and the "adler32" algorithm is deprecated
 {{deprecated-algorithms}}.
 
 The value of `Digest` is calculated on selected representation, which is tied to
