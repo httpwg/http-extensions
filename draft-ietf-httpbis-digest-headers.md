@@ -1060,14 +1060,14 @@ Note that using `Digest` alone does not provide end-to-end integrity of HTTP mes
 multiple hops, since metadata could be manipulated at any stage. Methods to protect
 metadata are discussed in {{usage-in-signatures}}.
 
-## Digest and Content-Location in responses {#digest-and-content-location}
+## Digest and Content-Location in Responses {#digest-and-content-location}
 
 When a state-changing method returns the `Content-Location` header field, the
 enclosed representation refers to the resource identified by its value and
 `Digest` is computed accordingly.
 
 
-## Usage in signatures {#usage-in-signatures}
+## Usage in Signatures {#usage-in-signatures}
 
 Digital signatures are widely used together with checksums to provide the
 certain identification of the origin of a message [NIST800-32]. Such signatures
@@ -1096,23 +1096,23 @@ Any mangling of `Digest`, including de-duplication of representation-data-digest
 or combining different field values (see Section 5.2 of {{SEMANTICS}})
 might affect signature validation.
 
-## Usage in trailers
+## Usage in Trailer Fields
 
-When used in trailers, the receiver gets the digest value after the payload data
+When `Digest` is used in trailer fields, the receiver gets the digest value after the payload data
 and may thus be tempted to process the data before validating the digest value.
-Instead, data should only be processed after validating the Digest.
+It is prefereable that data is only be processed after validating the Digest.
 
 If received in trailers, `Digest` MUST NOT be discarded;
 instead, it MAY be merged in the header section (See Section 6.5.1 of {{SEMANTICS}}).
 
-Not every digest-algorithm is suitable for trailers, as they may require to pre-process
+Not every digest-algorithm is suitable for use in the trailer section, some may require to pre-process
 the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
 
-## Usage with encryption
+## Usage with Encryption
 
-`Digest` may expose information details of encrypted payload when the checksum
+`Digest` may expose details of encrypted payload when the checksum
 is computed on the unencrypted data.
-An example of that is the use of the "id-sha-256" digest-algorithm
+For example, the use of the "id-sha-256" digest-algorithm
 in conjunction with the encrypted content-coding {{?RFC8188}}.
 
 The representation-data-digest of an encrypted payload can change between different messages
@@ -1122,8 +1122,8 @@ a proof of integrity "at rest" unless the whole (e.g. encoded) payload data is p
 ## Algorithm Agility
 
 The security properties of digest-algorithms are not fixed.
-Algorithm Agility (see {{?RFC7696}}) is achieved by providing implementations flexibility
-in their choice of digest-algorithm from the IANA Digest Algorithm Values registry in
+Algorithm Agility (see {{?RFC7696}}) is achieved by providing implementations with flexibility
+choose digest-algorithms from the IANA Digest Algorithm Values registry in
 {{iana-digest-algorithm-registry}}.
 
 To help endpoints understand weaker algorithms from stronger ones,
@@ -1155,13 +1155,13 @@ based on the intersection of those results, conditionally pass or fail digest va
 
 # IANA Considerations
 
-## Establish the HTTP Digest Algorithm Values {#iana-digest-algorithm-registry}
+## Establish the HTTP Digest Algorithm Values Registry {#iana-digest-algorithm-registry}
 
-This memo sets this spec to be the establishing document for the [HTTP Digest
+This memo sets this specification to be the establishing document for the [HTTP Digest
 Algorithm
-Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
+Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml) registry.
 
-## The "status" Field in the HTTP Digest Algorithm Values {#iana-digest-algorithm-status}
+## The "status" Field in the HTTP Digest Algorithm Values Registry {#iana-digest-algorithm-status}
 
 This memo adds the field "Status" to the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
@@ -1281,7 +1281,7 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Changes compared to RFC5843
+## Changes Compared to RFC5843
 
 The digest-algorithm values for "MD5", "SHA", "SHA-256", "SHA-512", "UNIXcksum", "UNIXsum",
 "ADLER32" and "CRC32c" have been updated to lowercase.
@@ -1307,7 +1307,7 @@ Status:  permanent
 
 Specification document(s):  {{want-digest}} of this document
 
-## Digest Header Field Registration
+## Digest Field Registration
 
 This section registers the `Digest` field in the "Hypertext Transfer Protocol
 (HTTP) Field Name Registry" {{SEMANTICS}}.
@@ -1435,12 +1435,12 @@ Location: /authors/123
 
 1. Why remove all references to content-md5?
 
-   Those were unnecessary to understanding and using this spec.
+   Those were unnecessary to understanding and using this specification.
 
 2. Why remove references to instance manipulation?
 
-   Those were unnecessary for correctly using and applying the spec. An example
-   with Range Request is more than enough. This doc uses the term "partial
+   Those were unnecessary for correctly using and applying the specification. An example
+   with Range Request is more than enough. This document uses the term "partial
    representation" which should group all those cases.
 
 3. How to use `Digest` with `PATCH` method?
@@ -1449,14 +1449,14 @@ Location: /authors/123
 
 4. Why remove references to delta-encoding?
 
-   Unnecessary for a correct implementation of this spec. The revised spec can
+   Unnecessary for a correct implementation of this specification. The revised specification can
    be nicely adapted to "delta encoding", but all the references here to delta
    encoding don't add anything to this RFC. Another job would be to refresh
    delta encoding.
 
 5. Why remove references to Digest Authentication?
 
-   This RFC seems to me completely unrelated to Digest Authentication but for
+   This specification seems to me completely unrelated to Digest Authentication but for
    the word "Digest".
 
 6. What changes in `Want-Digest`?
@@ -1469,19 +1469,19 @@ Location: /authors/123
    digest-algorithms and the inability to accept requests with unsupported
    digest-algorithms.
 
-7. Does this spec changes supported algorithms?
+7. Does this specification change supported algorithms?
 
-   This RFC updates [RFC5843] which is still delegated for all algorithms
+   Yes. This RFC updates [RFC5843] which is still delegated for all algorithms
    updates, and adds two more algorithms: "id-sha-256" and "id-sha-512" which allows
    to send a checksum of a resource representation with no content codings
    applied.
    To simplify a future transition to Structured Fields {{?I-D.ietf-httpbis-header-structure}}
    we suggest to use lowercase for digest-algorithms.
 
-8. What about mid-stream trailers?
+8. What about mid-stream trailer fields?
 
    While
-   [mid-stream trailers](https://github.com/httpwg/http-core/issues/313#issuecomment-584389706)
+   [mid-stream trailer fields](https://github.com/httpwg/http-core/issues/313#issuecomment-584389706)
    are interesting, since this specification is a rewrite of [RFC3230] we do not
    think we should face that. As a first thought, nothing in this document
    precludes future work that would find a use for mid-stream trailers, for
