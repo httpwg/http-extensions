@@ -633,7 +633,7 @@ The response includes a `Content-Encoding: br` that indicates the selected
 representation is brotli encoded. The `Digest` field-value is therefore
 different compared to the request.
 
-The response body is displayed as a base64-encoded string because it contains```
+The response body is displayed as a base64-encoded string because it contains
 non-printable characters.
 
 Request:
