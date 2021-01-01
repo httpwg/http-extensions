@@ -582,11 +582,11 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ## Server Returns No Representation Data
 
-Requests without payload data can still send a `Digest` field-value
+Requests without payload data can still send a `Digest` field
 applying the digest-algorithm to an empty representation.
 
 The response `Digest` field-value is calculated over the JSON object
-`{"hello": "world"}`, which is not shown because there is no representation
+`{"hello": "world"}`, which is not shown because there is no payload
 data.
 
 In this example there is no content coding applied, so the "sha-256" and the "id-sha-256"
