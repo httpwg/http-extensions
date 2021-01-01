@@ -1105,7 +1105,7 @@ It is prefereable that data is only be processed after validating the Digest.
 If received in trailers, `Digest` MUST NOT be discarded;
 instead, it MAY be merged in the header section (See Section 6.5.1 of {{SEMANTICS}}).
 
-Not every digest-algorithm is suitable for use in trailer fields, some may require to pre-process
+Not every digest-algorithm is suitable for use in the trailer section, some may require to pre-process
 the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
 
 ## Usage with Encryption
