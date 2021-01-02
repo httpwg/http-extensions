@@ -775,6 +775,7 @@ Response:
 HTTP/1.1 201 Created
 Content-Type: application/json
 Content-Location: /books/123
+Location: /books/123
 Digest: id-sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
 
 {
