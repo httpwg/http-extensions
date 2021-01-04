@@ -569,19 +569,23 @@ to do so is an implementation decision. For example, a server might
 pre-emptively send responses of a particular incremental type based on other
 information such as content size.
 
-A server that pushes a response has the responsibility to correctly prioritize
-it against other active concurrent responses. Pushing at too high a priority
-might cause client-requested resources to be blocked. Pushing at too low a
-priority could delay the response, negating intended goals of pushing.
+Optimal scheduling of server push is difficult, especially when pushed resources
+contend with active concurrent requests. Servers can consider many factors when
+scheduling, such as the type or size of resource being pushed, the priority of
+the request that triggered the push, the count of active concurrent responses,
+the priority of other active concurrent responses, etc. There is no general
+guidance on the best way to apply these. A server that is too simple could
+easily push at too high a priority and block client requests, or push at too low
+a priority and delay the response, negating intended goals of server push.
 
-A pushed request has no explicit client-signalled initial priority but a server
-can still apply the merging guidance given in {{merging}}. In the absence of a
-server priority signal, applying default parameter values to pushed responses
-might result in suboptimal prioritization. There is no general guidance for
-deciding a priority in this situation; a server can take into account other
-factors such as the type or size of resource being pushed, the priority of the
-request that triggered the push, the count of active concurrent responses, the
-priority of other active concurrent responses, etc.
+Priority signals are a factor for server push scheduling. The concept of
+parameter value defaults applies slightly differently because there is no
+explicit client-signalled initial priority. A server can apply priority signals
+provided in an origin response; see the merging guidance given in {{merging}}.
+In the absence of origin signals, applying default parameter values could be
+suboptimal. How ever a server decides to schedule a pushed response, it can
+signal the intended priority to the client by including the Priority field in
+a PUSH_PROMISE or HEADERS frame.
 
 
 # Fairness {#fairness}
