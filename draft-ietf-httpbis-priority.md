@@ -402,22 +402,24 @@ Prioritized Stream ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Fields.
 
-When the PRIORITY_UPDATE frame applies to a request stream, a client SHOULD
+When the PRIORITY_UPDATE frame applies to a request stream, clients SHOULD
 provide a Prioritized Stream ID that refers to a stream in the "open",
-"half-closed (local)", or "idle" state. The server can discard frames where the
-Prioritized Stream ID refers to a stream in the "half-closed (local)" or "closed"
-state can be discarded upon receipt. The number of streams which have been
-prioritized but remain in the "idle" state plus the number of active streams
-(those in the "open" or either "half-closed" state; see section 5.1.2 of RFC 7540)
-MUST NOT exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. A
-server that receives such a PRIORITY_UPDATE MUST respond with a connection error
-of type PROTOCOL_ERROR.
+"half-closed (local)", or "idle" state. Servers can discard frames where the
+Prioritized Stream ID refers to a stream in the "half-closed (local)" or
+"closed" state. The number of streams which have been prioritized but remain in
+the "idle" state plus the number of active streams (those in the "open" or
+either "half-closed" state; see section 5.1.2 of {{RFC7540}}) MUST NOT exceed
+the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. Servers that receive
+such a PRIORITY_UPDATE MUST respond with a connection error of type
+PROTOCOL_ERROR.
 
-When the PRIORITY_UPDATE frame applies to a push stream, a client SHOULD provide
+When the PRIORITY_UPDATE frame applies to a push stream, clients SHOULD provide
 a Prioritized Stream ID that refers to a stream in the "reserved (remote)" or
-"half-closed (local)" state. Frames where the Prioritized Stream ID
-refers to a stream in the "half-closed (remote)" or "closed" state can be
-discarded by the server upon receipt.
+"half-closed (local)" state. Servers can discard frames where the Prioritized
+Stream ID refers to a stream in the "half-closed (remote)" or "closed" state.
+Client MUST NOT provide a Prioritized Stream ID that refers to a stream in the
+"idle" state. Servers that receive such a PRIORITY_UPDATE MUST respond with a
+connection error of type PROTOCOL_ERROR.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
