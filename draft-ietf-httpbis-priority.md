@@ -402,14 +402,27 @@ Prioritized Stream ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Fields.
 
-The Prioritized Stream ID SHOULD be a value within the limit of concurrent
-active streams, which is determined by the SETTINGS_MAX_CONCURRENT_STREAMS
-parameter and streams in the "open" or "half-closed" state; see Section 5.1.2 of
-{{RFC7540}}. A server SHOULD NOT treat a Prioritized Stream ID beyond this limit
-as an error because it can buffer PRIORITY_UPDATE frames; see {{frame}}.
-However, since servers can restrict the amount of buffering, PRIORITY_UPDATE
-frames for streams too far beyond the limit could be ignored, resulting in
-default priority values being used when the stream is eventually opened.
+When the PRIORITY_UPDATE frame applies to a request stream, a client SHOULD
+provide a Prioritized Stream ID that refers to a stream in the "open",
+"half-closed (local)", or "idle" state. Frames where the Prioritized Stream ID
+refers to a stream in the "half-closed (remote)" or "closed" state can be
+discarded by the server upon receipt. The number of streams which have been
+prioritized but remain in the "idle" state plus the number of active streams
+(those in the "open" or "half-closed" states; see section 5.1.2 of RFC 7540)
+MUST NOT exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. A
+server that receives such a PRIORITY_UPDATE MUST respond with a connection error
+of type PROTOCOL_ERROR.
+
+When the PRIORITY_UPDATE frame applies to a push stream, a client SHOULD provide
+a Prioritized Stream ID that refers to a stream in the "reserved (remote)",
+"half-closed (local)", or "idle" state. Frames where the Prioritized Stream ID
+refers to a stream in the "half-closed (remote)" or "closed" state can be
+discarded by the server upon receipt. The number of streams which have been
+prioritized but remain in the "idle" state plus the number of active streams
+(those in the "reserved" or "half-closed" states; see section 5.1.2 of RFC 7540)
+MUST NOT exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. A
+server that receives such a PRIORITY_UPDATE MUST respond with a connection error
+of type PROTOCOL_ERROR.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
