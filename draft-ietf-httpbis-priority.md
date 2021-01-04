@@ -572,7 +572,7 @@ information such as content size.
 A server that pushes a response has the responsibility to correctly prioritize
 it against other active concurrent responses. Pushing at too high a priority
 might cause client-requested resources to be blocked. Pushing at too low a
-priority could delay the response, negating intended goals or pushing.
+priority could delay the response, negating intended goals of pushing.
 
 A pushed request has no explicit client-signalled initial priority but a server
 can still apply the merging guidance given in {{merging}}. In the absence of a
