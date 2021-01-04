@@ -404,25 +404,20 @@ Priority Field Value:
 
 When the PRIORITY_UPDATE frame applies to a request stream, a client SHOULD
 provide a Prioritized Stream ID that refers to a stream in the "open",
-"half-closed (local)", or "idle" state. Frames where the Prioritized Stream ID
-refers to a stream in the "half-closed (remote)" or "closed" state can be
-discarded by the server upon receipt. The number of streams which have been
+"half-closed (local)", or "idle" state. The server can discard frames where the
+Prioritized Stream ID refers to a stream in the "half-closed (local)" or "closed"
+state can be discarded upon receipt. The number of streams which have been
 prioritized but remain in the "idle" state plus the number of active streams
-(those in the "open" or "half-closed" states; see section 5.1.2 of RFC 7540)
+(those in the "open" or either "half-closed" state; see section 5.1.2 of RFC 7540)
 MUST NOT exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. A
 server that receives such a PRIORITY_UPDATE MUST respond with a connection error
 of type PROTOCOL_ERROR.
 
 When the PRIORITY_UPDATE frame applies to a push stream, a client SHOULD provide
-a Prioritized Stream ID that refers to a stream in the "reserved (remote)",
-"half-closed (local)", or "idle" state. Frames where the Prioritized Stream ID
+a Prioritized Stream ID that refers to a stream in the "reserved (remote)" or
+"half-closed (local)" state. Frames where the Prioritized Stream ID
 refers to a stream in the "half-closed (remote)" or "closed" state can be
-discarded by the server upon receipt. The number of streams which have been
-prioritized but remain in the "idle" state plus the number of active streams
-(those in the "reserved" or "half-closed" states; see section 5.1.2 of RFC 7540)
-MUST NOT exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. A
-server that receives such a PRIORITY_UPDATE MUST respond with a connection error
-of type PROTOCOL_ERROR.
+discarded by the server upon receipt.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
