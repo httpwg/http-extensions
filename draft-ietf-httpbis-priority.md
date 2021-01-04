@@ -354,15 +354,16 @@ treated as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in
 HTTP/3 the error is of type H3_FRAME_ERROR.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
-is open. Furthermore, HTTP/3 offers no guaranteed ordering across streams, which
-could cause the frame to be received earlier than intended. Either case leads to
-a race condition where a server receives a PRIORITY_UPDATE frame that references
-a request stream that is yet to be opened. To solve this condition, for the
-purposes of scheduling, the most recently received PRIORITY_UPDATE frame can be
-considered as the most up-to-date information that overrides any other signal.
-Servers SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply
-it once the referenced stream is opened. Holding PRIORITY_UPDATE frames for each
-stream requires server resources, which can can be bound by local implementation
+is open (except for HTTP/2 push streams; see {{h2-update-frame}}. Furthermore,
+HTTP/3 offers no guaranteed ordering across streams, which could cause the frame
+to be received earlier than intended. Either case leads to a race condition
+where a server receives a PRIORITY_UPDATE frame that references a request stream
+that is yet to be opened. To solve this condition, for the purposes of
+scheduling, the most recently received PRIORITY_UPDATE frame can be considered
+as the most up-to-date information that overrides any other signal. Servers
+SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply it once
+the referenced stream is opened. Holding PRIORITY_UPDATE frames for each stream
+requires server resources, which can can be bound by local implementation
 policy. (TODO: consider resolving #1261, and adding more text about bounds).
 Although there is no limit to the number of PRIORITY_UPDATES that can be sent,
 storing only the most recently received frame limits resource commitment.
