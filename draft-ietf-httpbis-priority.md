@@ -581,10 +581,6 @@ conveyed over a non-coalesced HTTP connection (e.g., HTTP/1.1) might go unused.
 The remainder of this section discusses scenarios where unfairness is
 problematic and presents possible mitigations, or where unfairness is desirable.
 
-TODO: Discuss if we should add a signal that mitigates this issue. For example,
-we might add a SETTINGS parameter that indicates the next hop that the
-connection is NOT coalesced (see https://github.com/kazuho/draft-kazuho-httpbis-priority/issues/99).
-
 ## Coalescing Intermediaries
 
 When an intermediary coalesces HTTP requests coming from multiple clients into
