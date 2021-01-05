@@ -354,18 +354,18 @@ treated as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in
 HTTP/3 the error is of type H3_FRAME_ERROR.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
-is open. Furthermore, HTTP/3 offers no guaranteed ordering across streams, which
-could cause the frame to be received earlier than intended. Either case leads to
-a race condition where a server receives a PRIORITY_UPDATE frame that references
-a request stream that is yet to be opened. To solve this condition, for the
-purposes of scheduling, the most recently received PRIORITY_UPDATE frame can be
-considered as the most up-to-date information that overrides any other signal.
-Servers SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply
-it once the referenced stream is opened. Holding PRIORITY_UPDATE frames for each
-stream requires server resources, which can can be bound by local implementation
-policy. (TODO: consider resolving #1261, and adding more text about bounds).
-Although there is no limit to the number PRIORITY_UPDATES that can be sent,
-storing only the most recently received frame limits resource commitment.
+is open (except for HTTP/2 push streams; see {{h2-update-frame}}). Furthermore,
+HTTP/3 offers no guaranteed ordering across streams, which could cause the frame
+to be received earlier than intended. Either case leads to a race condition
+where a server receives a PRIORITY_UPDATE frame that references a request stream
+that is yet to be opened. To solve this condition, for the purposes of
+scheduling, the most recently received PRIORITY_UPDATE frame can be considered
+as the most up-to-date information that overrides any other signal. Servers
+SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply it once
+the referenced stream is opened. Holding PRIORITY_UPDATE frames for each stream
+requires server resources, which can can be bound by local implementation
+policy. Although there is no limit to the number of PRIORITY_UPDATES that can be
+sent, storing only the most recently received frame limits resource commitment.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
@@ -402,10 +402,24 @@ Prioritized Stream ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Fields.
 
-The Prioritized Stream ID MUST be within the stream limit. If a
-server receives a PRIORITY_UPDATE with a Prioritized Stream ID that is beyond
-the stream limits, this SHOULD be treated as a connection error of type
+When the PRIORITY_UPDATE frame applies to a request stream, clients SHOULD
+provide a Prioritized Stream ID that refers to a stream in the "open",
+"half-closed (local)", or "idle" state. Servers can discard frames where the
+Prioritized Stream ID refers to a stream in the "half-closed (local)" or
+"closed" state. The number of streams which have been prioritized but remain in
+the "idle" state plus the number of active streams (those in the "open" or
+either "half-closed" state; see section 5.1.2 of {{RFC7540}}) MUST NOT exceed
+the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. Servers that receive
+such a PRIORITY_UPDATE MUST respond with a connection error of type
 PROTOCOL_ERROR.
+
+When the PRIORITY_UPDATE frame applies to a push stream, clients SHOULD provide
+a Prioritized Stream ID that refers to a stream in the "reserved (remote)" or
+"half-closed (local)" state. Servers can discard frames where the Prioritized
+Stream ID refers to a stream in the "closed" state.
+Clients MUST NOT provide a Prioritized Stream ID that refers to a push stream in the
+"idle" state. Servers that receive a PRIORITY_UPDATE for a push stream in the "idle" state MUST
+respond with a connection error of type PROTOCOL_ERROR.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
