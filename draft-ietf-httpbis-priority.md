@@ -354,7 +354,7 @@ treated as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in
 HTTP/3 the error is of type H3_FRAME_ERROR.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
-is open (except for HTTP/2 push streams; see {{h2-update-frame}}. Furthermore,
+is open (except for HTTP/2 push streams; see {{h2-update-frame}}). Furthermore,
 HTTP/3 offers no guaranteed ordering across streams, which could cause the frame
 to be received earlier than intended. Either case leads to a race condition
 where a server receives a PRIORITY_UPDATE frame that references a request stream
@@ -417,9 +417,9 @@ When the PRIORITY_UPDATE frame applies to a push stream, clients SHOULD provide
 a Prioritized Stream ID that refers to a stream in the "reserved (remote)" or
 "half-closed (local)" state. Servers can discard frames where the Prioritized
 Stream ID refers to a stream in the "half-closed (remote)" or "closed" state.
-Client MUST NOT provide a Prioritized Stream ID that refers to a stream in the
-"idle" state. Servers that receive such a PRIORITY_UPDATE MUST respond with a
-connection error of type PROTOCOL_ERROR.
+Clients MUST NOT provide a Prioritized Stream ID that refers to a stream in the
+"idle" state. Servers that receive a PRIORITY_UPDATE for a stream in the "idle" state MUST
+respond with a connection error of type PROTOCOL_ERROR.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
