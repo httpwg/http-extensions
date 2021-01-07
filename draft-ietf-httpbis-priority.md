@@ -302,6 +302,11 @@ Alternatively, the urgency can be augmented. For example, a graphical user agent
 could send a `visible` parameter to indicate if the resource being requested is
 within the viewport.
 
+Generic parameters are preferred over vendor-specific, application-specific or
+deployment-specific values. If a generic value cannot be agreed upon in the
+community, the parameter's name should be correspondingly specific (e.g., with
+a prefix that identifies the vendor, application or deployment).
+
 ### Registration
 
 New Priority parameters can be defined by registering them in the HTTP Priority
