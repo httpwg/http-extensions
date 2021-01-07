@@ -284,7 +284,7 @@ set to `5` and the incremental parameter set to `true`.
 priority = u=5, i
 ~~~
 
-## Defining New Parameters
+## Defining New Parameters {#new-parameters}
 
 When attempting to extend priorities, care must be taken to ensure any use of
 existing parameters leaves them either unchanged or modified in a way that is
@@ -298,6 +298,30 @@ continue to use the less granular eight levels.
 Alternatively, the urgency can be augmented. For example, a graphical user agent
 could send a `visible` parameter to indicate if the resource being requested is
 within the viewport.
+
+### Registration
+
+New Priority parameters can be defined by registering them in the HTTP Priority
+Parameters Registry.
+
+Registration requests are reviewed and approved by a Designated Expert, as per
+{{!RFC8126}}, Section 4.5. A specification document is appreciated, but not
+required.
+
+The Expert(s) should consider the following factors when evaluating requests:
+
+* Community feedback
+* If the parameters are sufficiently well-defined and adhere to the guidance
+  provided in {{new-parameters}}.
+
+Registration requests should use the following template:
+
+* Name: \[a name for the Priority Parameter that matches key\]
+* Description: \[a description of the parameter semantics and value\]
+* Reference: \[to a specification defining this parameter\]
+
+See the registry at <https://iana.org/assignments/http-priority> for details on
+where to send registration requests.
 
 # The Priority HTTP Header Field {#header-field}
 
@@ -784,6 +808,10 @@ Code:
 
 Specification:
 : This document
+
+Upon publication, please create the HTTP Priority Parameters registry at
+<https://iana.org/assignments/http-priority> and populate it with the types
+defined in {{parameters}}; see {{register}} for its associated procedures.
 
 --- back
 
