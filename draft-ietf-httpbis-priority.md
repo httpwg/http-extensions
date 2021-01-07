@@ -286,9 +286,12 @@ priority = u=5, i
 
 ## Defining New Parameters {#new-parameters}
 
-When attempting to extend priorities, care must be taken to ensure any use of
-existing parameters leaves them either unchanged or modified in a way that is
-backwards compatible for peers that are unaware of the extended meaning.
+When attempting to define new parameters, care must be taken so that they do not
+adversely interfere with prioritization performed by existing endpoints or
+intermediaries that do not understand the newly defined parameter. Since unknown
+parameters are ignored, new parameters should not change the interpretation of
+or modify the predefined parameters in a way that is not backwards compatible or
+fallback safe.
 
 For example, if there is a need to provide more granularity than eight urgency
 levels, it would be possible to subdivide the range using an additional
