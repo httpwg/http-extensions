@@ -1559,7 +1559,7 @@ item = {"hello": "world"}
 print("Encoding | digest-algorithm | digest-value")
 print("Identity | sha256 |", digest(item))
 # Encoding | digest-algorithm | digest-value
-# Identity | sha256 | 4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+# Identity | sha256 | X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 print("Encoding | digest-algorithm | digest-value")
 print("Brotli | sha256 |", digest(item, encoding=brotli.compress))
