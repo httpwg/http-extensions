@@ -213,11 +213,11 @@ the Priority header field.
 In both cases, the set of priority parameters is encoded as a Structured Fields
 Dictionary ({{!STRUCTURED-FIELDS}}).
 
-This document defines the urgency(`u`) and incremental(`i`) parameters. When
-receiving an HTTP request that does not carry these priority parameters, a
-server SHOULD act as if their default values were specified. Note that handling
-of omitted parameters is different when processing an HTTP response; see
-{{merging}}.
+This document defines the urgency(`u`) and incremental(`i`) parameters, which
+are mandatory to implement. When receiving an HTTP request that does not carry
+these priority parameters, a server SHOULD act as if their default values were
+specified. Note that handling of omitted parameters is different when processing
+an HTTP response; see {{merging}}.
 
 Unknown parameters, parameters with out-of-range values or values of unexpected
 types MUST be ignored.
@@ -284,11 +284,44 @@ set to `5` and the incremental parameter set to `true`.
 priority = u=5, i
 ~~~
 
-## Defining New Parameters
+## Defining New Parameters {#register}
 
-When attempting to extend priorities, care must be taken to ensure any use of
-existing parameters leaves them either unchanged or modified in a way that is
-backwards compatible for peers that are unaware of the extended meaning.
+New Priority parameters can be defined by registering them in the HTTP Priority
+Parameters registry.
+
+Registration requests are reviewed and approved by a Designated Expert, as per
+{{!RFC8126}}, Section 4.5. A specification document is appreciated, but not
+required.
+
+The Expert(s) should consider the following factors when evaluating requests:
+
+* Community feedback
+* If the value is sufficiently well-defined
+* Generic parameters are preferred over vendor-specific, application-specific or
+  deployment-specific values. If a generic value cannot be agreed upon in the
+  community, the parameter's name should be correspondingly specific (e.g., with
+  a prefix that identifies the vendor, application or deployment).
+
+Registration requests should use the following template:
+
+* Name: \[a name for the Priority Parameter that matches key\]
+* Description: \[a description of the parameter semantics and value\]
+* Reference: \[to a specification defining this parameter\]
+
+See the registry at <https://iana.org/assignments/http-priority> for details on
+where to send registration requests.
+
+### Guidance for Defining New Parameters
+
+Since unknown parameters are ignored, there is no parameter extension
+negotiation mechanism, and the absence of signals for the mandatory urgency and
+incremental parameters has special meaning care needs to be taken when designing
+new extension parameters. A peer that does not implement an extension parameter
+is unaware of its meaning, resulting in the application of the design and
+constraints of defined parameters that it does support. Urgency and incremental
+are mandatory to implement parameters, so new parameters should not change their
+interpretation or modify them in a way that is not backwards compatible or
+fallback safe.
 
 For example, if there is a need to provide more granularity than eight urgency
 levels, it would be possible to subdivide the range using an additional
@@ -784,6 +817,10 @@ Code:
 
 Specification:
 : This document
+
+Upon publication, please create the HTTP Priority Parameters registry at
+<https://iana.org/assignments/http-priority> and populate it with the types
+defined in {{parameters}}; see {{register}} for its associated procedures.
 
 --- back
 
