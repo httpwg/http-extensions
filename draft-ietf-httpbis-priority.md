@@ -307,7 +307,7 @@ deployment-specific values. If a generic value cannot be agreed upon in the
 community, the parameter's name should be correspondingly specific (e.g., with
 a prefix that identifies the vendor, application or deployment).
 
-### Registration
+### Registration {#register}
 
 New Priority parameters can be defined by registering them in the HTTP Priority
 Parameters Registry.
