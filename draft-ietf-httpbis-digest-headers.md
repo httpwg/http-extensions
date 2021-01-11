@@ -391,8 +391,11 @@ to collision attacks [IACR-2020-014].
       ASCII decimal-digit string representing the 16-bit
       checksum, which is the first word of the output of
       the UNIX "sum" command.
+      This digest-algorithm MUST NOT be used as
+      it does not provide more protection than the current integrity mechanisms
+      such as TLS.
     * Reference: [UNIX], this document.
-    * Status: standard
+    * Status: deprecated
 
   unixcksum
   : * Description: The algorithm computed by the UNIX "cksum" command,
@@ -401,8 +404,11 @@ to collision attacks [IACR-2020-014].
       ASCII digit string representing the 32-bit CRC,
       which is the first word of the output of the UNIX
       "cksum" command.
+      This digest-algorithm MUST NOT be used as
+      it does not provide more protection than the current integrity mechanisms
+      such as TLS.
     * Reference: [UNIX], this document.
-    * Status: standard
+    * Status: deprecated
 
 To allow sender and recipient to provide a checksum which is independent from
 `Content-Encoding`, the following additional digest-algorithms are defined:
@@ -1203,7 +1209,7 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Update "UNIXsum" Digest Algorithm {#iana-unixsum}
+## Deprecate "UNIXsum" Digest Algorithm {#iana-unixsum}
 
 This memo updates the "UNIXsum" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
@@ -1213,7 +1219,7 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Update "UNIXcksum" Digest Algorithm {#iana-unixcksum}
+## Deprecate "UNIXcksum" Digest Algorithm {#iana-unixcksum}
 
 This memo updates the "UNIXcksum" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
@@ -1311,7 +1317,10 @@ that this algorithm MUST NOT be used.
 The status of "SHA" has been updated to "deprecated", and its description states
 that this algorithm MUST NOT be used.
 
-The status for "CRC2c", "UNIXsum" and "UNIXcksum" has been updated to "standard".
+The status for "CRC2c" has been updated to "standard".
+
+The status for "UNIXsum" and "UNIXcksum" has been updated to "deprecated", and their description
+states that those algorithm MUST NOT be used.
 
 The "id-sha-256" and "id-sha-512" algorithms have been added to the registry.
 
