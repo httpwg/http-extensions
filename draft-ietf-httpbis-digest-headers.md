@@ -673,6 +673,7 @@ HTTP/1.1 200 Ok
 Content-Type: application/json
 Content-Location: /items/123
 Content-Encoding: br
+Content-Length: 22
 Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
@@ -740,6 +741,7 @@ Response:
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Encoding: br
+Content-Location: /items/123
 Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
         id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
