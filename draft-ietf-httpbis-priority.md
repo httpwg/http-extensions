@@ -847,6 +847,11 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 # Change Log
 
 ## Since draft-ietf-httpbis-priority-01
+* Describe considerations for server push prioritisation (#1056, #1345)
+* Define HTTP/2 PRIORITY_UPDATE ID limits in HTTP/2 terms (#1261, #1344)
+* Add a Parameters registry (#1371)
+
+## Since draft-ietf-httpbis-priority-01
 
 * PRIORITY_UPDATE frame changes (#1096, #1079, #1167, #1262, #1267, #1271)
 * Add section to describe server scheduling considerations (#1215, #1232, #1266)
