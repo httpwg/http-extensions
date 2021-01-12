@@ -1214,7 +1214,7 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Deprecate "UNIXsum" Digest Algorithm {#iana-unixsum}
+## Obsolete "UNIXsum" Digest Algorithm {#iana-unixsum}
 
 This memo updates the "UNIXsum" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
