@@ -158,9 +158,10 @@ provide more detailed description of `Digest` usage in request and response
 cases. Changes are intended to be semantically compatible with existing
 implementations but note that negotiation of `Content-MD5` is deprecated
 {{deprecate-contentMD5}}, `Digest` field parameters are obsoleted
-{{obsolete-parameters}}, "md5" and "sha" digest-algorithms are obsoleted
-{{broken-algorithms}} and the "adler32" algorithm is deprecated
-{{deprecated-algorithms}}.
+{{obsolete-parameters}}, "md5" and "sha" digest-algorithms are deprecated
+{{broken-algorithms}},
+the "adler32" algorithm is deprecated {{deprecated-algorithms}},
+and the "unixsum", "unixcksum" and "crc32c" are obsoleted.
 
 The value of `Digest` is calculated on selected representation, which is tied to
 the value contained in any `Content-Encoding` or `Content-Type` header fields.
@@ -392,10 +393,10 @@ to collision attacks [IACR-2020-014].
       checksum, which is the first word of the output of
       the UNIX "sum" command.
       This digest-algorithm MUST NOT be used as
-      it does not provide more protection than the current integrity mechanisms
+      it does not provide more protection than current integrity mechanisms
       such as TLS.
     * Reference: [UNIX], this document.
-    * Status: deprecated
+    * Status: obsoleted
 
   unixcksum
   : * Description: The algorithm computed by the UNIX "cksum" command,
@@ -405,10 +406,10 @@ to collision attacks [IACR-2020-014].
       which is the first word of the output of the UNIX
       "cksum" command.
       This digest-algorithm MUST NOT be used as
-      it does not provide more protection than the current integrity mechanisms
+      it does not provide more protection than current integrity mechanisms
       such as TLS.
     * Reference: [UNIX], this document.
-    * Status: deprecated
+    * Status: obsoleted
 
 To allow sender and recipient to provide a checksum which is independent from
 `Content-Encoding`, the following additional digest-algorithms are defined:
@@ -1060,11 +1061,15 @@ However, these rely on collision-resistance for their security proofs
 [CMU-836068]. The "md5" and "sha" digest-algorithms are vulnerable to collisions attacks,
 so they MUST NOT be used with `Digest`.
 
-## Other Deprecated Algorithms {#deprecated-algorithms}
+## Other Deprecated or Obsoleted Algorithms {#deprecated-algorithms}
 
 The ADLER32 algorithm defined in [RFC1950] has been deprecated by [RFC3309]
 because, under certain conditions, it provides weak detection of errors. It is now
 NOT RECOMMENDED for use with `Digest`.
+
+The "crc32c", "unixsum" and "unixcksum" digest-algorithms are now obsoleted
+because they do not provide more protection than current integrity mechanisms
+such as TLS.
 
 ## Digest for End-to-End Integrity
 
@@ -1219,7 +1224,7 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Deprecate "UNIXcksum" Digest Algorithm {#iana-unixcksum}
+## Obsolete "UNIXcksum" Digest Algorithm {#iana-unixcksum}
 
 This memo updates the "UNIXcksum" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
@@ -1229,7 +1234,7 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Update "CRC32c" Digest Algorithm {#iana-crc32c}
+## Obsolete "CRC32c" Digest Algorithm {#iana-crc32c}
 
 This memo updates the "CRC32c" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
@@ -1243,8 +1248,11 @@ registry:
   ASCII characters from 0-9, A-F, and a-f; leading 0's are allowed). For
   example, crc32c=0a72a4df and crc32c=A72A4DF are both valid checksums for the
   3-byte message "dog".
+  This digest-algorithm MUST NOT be used as
+  it does not provide more protection than current integrity mechanisms
+  such as TLS.
 * Reference: {{!RFC4960}} appendix B, this document.
-* Status: standard.
+* Status: obsoleted
 
 ## Deprecate "SHA" Digest Algorithm {#iana-sha}
 
@@ -1256,7 +1264,7 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
-## Obsolete "ADLER32" Digest Algorithm {#iana-adler-32}
+## Deprecate "ADLER32" Digest Algorithm {#iana-adler-32}
 
 This memo updates the "ADLER32" digest-algorithm in the [HTTP Digest Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
@@ -1267,9 +1275,9 @@ registry:
   Compressed Data Format". The 32-bit output is encoded in hexadecimal (using
   between 1 and 8 ASCII characters from 0-9, A-F, and a-f; leading 0's are
   allowed). For example, adler32=03da0195 and adler32=3DA0195 are both valid
-  checksums for the 4-byte message "Wiki". This algorithm is obsoleted and
-  SHOULD NOT be used.
-* Status: obsoleted
+  checksums for the 4-byte message "Wiki".
+  This algorithm is deprecated and MUST NOT be used.
+* Status: deprecated
 
 ## Obsolete "contentMD5" token in Digest Algorithm {#iana-contentMD5}
 
@@ -1317,10 +1325,12 @@ that this algorithm MUST NOT be used.
 The status of "SHA" has been updated to "deprecated", and its description states
 that this algorithm MUST NOT be used.
 
-The status for "CRC2c" has been updated to "standard".
+The status for "ADLER32" has been updated to "deprecated", and its description states
+that this algorithm MUST NOT be used
 
-The status for "UNIXsum" and "UNIXcksum" has been updated to "deprecated", and their description
-states that those algorithm MUST NOT be used.
+The status for the "CRC2c", "UNIXsum" and "UNIXcksum"
+has been updated to "obsoleted", and their description
+states that those algorithms MUST NOT be used.
 
 The "id-sha-256" and "id-sha-512" algorithms have been added to the registry.
 
@@ -1588,6 +1598,11 @@ print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512))
 {:numbered="false"}
 
 _RFC Editor: Please remove this section before publication._
+
+## Since draft-ietf-httpbis-digest-headers-04
+{:numbered="false"}
+
+* Deprecate unixsum and unixcksum #1377
 
 ## Since draft-ietf-httpbis-digest-headers-03
 {:numbered="false"}
