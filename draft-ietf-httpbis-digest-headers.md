@@ -1602,7 +1602,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-digest-headers-04
 {:numbered="false"}
 
-* Deprecate unixsum and unixcksum #1377
+* Obsolete crc32c, unixsum and unixcksum #1377
 
 ## Since draft-ietf-httpbis-digest-headers-03
 {:numbered="false"}
