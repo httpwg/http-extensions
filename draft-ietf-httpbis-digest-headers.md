@@ -142,7 +142,7 @@ HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
 
 ## This Proposal
 
-The concept of `selected representation` defined in Section 8 of
+The concept of `selected representation` defined in Section 3.2 of
 {{!SEMANTICS=I-D.ietf-httpbis-semantics}} makes [RFC3230] definitions inconsistent with
 current HTTP semantics. This document updates the `Digest` and `Want-Digest`
 field definitions to align with {{SEMANTICS}} concepts.
@@ -167,7 +167,7 @@ the value contained in any `Content-Encoding` or `Content-Type` header fields.
 Therefore, a given resource may have multiple different digest values.
 
 To allow both parties to exchange a Digest of a representation with no content
-codings (see Section 8.5.1 of {{SEMANTICS}}) two more digest-algorithms
+codings (see Section 8.4.1 of {{SEMANTICS}}) two more digest-algorithms
 are added ("id-sha-256" and "id-sha-512").
 
 ## Goals
@@ -226,7 +226,7 @@ whereas digest-algorithm tokens are quoted (eg. "sha", "crc32c").
 The representation digest is an integrity mechanism for HTTP resources
 which uses a checksum  that is calculated independently of the payload data
 (see Section 6.4 of {{SEMANTICS}}).
-It uses the representation data (see Section 8.2 of {{SEMANTICS}}),
+It uses the representation data (see Section 8.1 of {{SEMANTICS}}),
 that can be fully or partially contained in the payload data, or not contained at all:
 
 ~~~
@@ -242,7 +242,7 @@ several examples are provided in {{resource-representation}}.
 
 A representation digest consists of
 the value of a checksum computed on the entire selected `representation data`
-(see Section 8 of {{SEMANTICS}}) of a resource identified according to Section 6.4.2 of {{SEMANTICS}}
+(see Section 8.1 of {{SEMANTICS}}) of a resource identified according to Section 6.4.2 of {{SEMANTICS}}
 together with an indication of the algorithm used:
 
 ~~~ abnf
@@ -276,7 +276,7 @@ Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
                    AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 ~~~
 
-The relationship between `Content-Location` (see Section 8.8 of
+The relationship between `Content-Location` (see Section 8.7 of
 {{SEMANTICS}}) and `Digest` is demonstrated in
 {{post-not-request-uri}}. A comprehensive set of examples showing the impacts of
 representation metadata, payload transformations and HTTP methods on Digest is
