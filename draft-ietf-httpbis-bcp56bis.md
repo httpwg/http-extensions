@@ -143,7 +143,7 @@ See {{resource}} for more details.
 
 Another common practice is assuming that the HTTP server's name space (or a portion thereof) is exclusively for the use of a single application. This effectively overlays special, application-specific semantics onto that space, precludes other applications from using it.
 
-As explained in {{!RFC7320}}, such "squatting" on a part of the URL space by a standard usurps the server's authority over its own resources, can cause deployment issues, and is therefore bad practice in standards.
+As explained in {{!RFC8820}}, such "squatting" on a part of the URL space by a standard usurps the server's authority over its own resources, can cause deployment issues, and is therefore bad practice in standards.
 
 Instead of statically defining URI components like paths, it is RECOMMENDED that applications using HTTP define links in payloads, to allow flexibility in deployment.
 
@@ -258,7 +258,7 @@ Applications using HTTP MUST NOT require HTTP features that are usually negotiat
 
 ## Specifying URLs
 
-In HTTP, the server resources that clients interact with are identified with URLs {{!RFC3986}}. As {{!RFC7320}} explains, parts of the URL are designed to be under the control of the owner (also known as the "authority") of that server, to give them the flexibility in deployment.
+In HTTP, the server resources that clients interact with are identified with URLs {{!RFC3986}}. As {{!RFC8820}} explains, parts of the URL are designed to be under the control of the owner (also known as the "authority") of that server, to give them the flexibility in deployment.
 
 This means that in most cases, specifications for applications that use HTTP won't contain its URLs; while it is common practice for a specification of a single-deployment API to specify the path prefix "/app/v1" (for example), doing so in an IETF specification is inappropriate.
 
@@ -275,9 +275,9 @@ The most straightforward mechanism for URL discovery is to configure the client 
 
 However, if the client only knows the server's hostname and the identity of the application, there needs to be some way to derive the initial URL from that information.
 
-An application cannot define a fixed prefix for its URL paths; see {{!I-D.nottingham-rfc7320bis}}. Instead, a specification for such an application can use one of the following strategies:
+An application cannot define a fixed prefix for its URL paths; see {{!RFC8820}}. Instead, a specification for such an application can use one of the following strategies:
 
-* Register a Well-Known URI {{!I-D.nottingham-rfc5785bis}} as an entry point for that application. This provides a fixed path on every potential server that will not collide with other applications.
+* Register a Well-Known URI {{!RFC8615}} as an entry point for that application. This provides a fixed path on every potential server that will not collide with other applications.
 
 * Enable the server authority to convey a URL Template {{?RFC6570}} or similar mechanism for generating a URL for an entry point. For example, this might be done in a configuration document or other artefact.
 
@@ -361,7 +361,7 @@ However, OPTIONS does have significant limitations:
 
 Instead of OPTIONS, one of these alternative approaches might be more appropriate:
 
-* For server-wide metadata, create a well-known URI {{?I-D.nottingham-rfc5785bis}}, or using an already existing one if it's appropriate (e.g., HostMeta {{?RFC6415}}).
+* For server-wide metadata, create a well-known URI {{?RFC8615}}, or using an already existing one if it's appropriate (e.g., HostMeta {{?RFC6415}}).
 * For metadata about a specific resource, create a separate resource and link to it using a Link response header or a link serialised into the representation's body. See {{?RFC8288}}. Note that the Link header is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
 
 
@@ -565,7 +565,7 @@ Because the origin {{!RFC6454}} is how many HTTP capabilities are scoped, applic
 
 For example, if Cookies {{?I-D.ietf-httpbis-rfc6265bis}} are used to carry application state, they will be sent with all requests to the origin by default, unless scoped by path, and the application might receive cookies from other applications on the origin. This can lead to security issues, as well as collision in cookie names.
 
-One solution to these issues is to require a dedicated hostname for the application, so that it has a unique origin. However, it is often desirable to allow multiple applications to be deployed on a single hostname; doing so provides the most deployment flexibility and enables them to be "mixed" together (See {{?RFC7320}} for details). Therefore, applications using HTTP should strive to allow multiple applications on an origin.
+One solution to these issues is to require a dedicated hostname for the application, so that it has a unique origin. However, it is often desirable to allow multiple applications to be deployed on a single hostname; doing so provides the most deployment flexibility and enables them to be "mixed" together (See {{?RFC8820}} for details). Therefore, applications using HTTP should strive to allow multiple applications on an origin.
 
 To enable this, when specifying the use of Cookies, HTTP authentication realms {{?I-D.ietf-httpbis-semantics}}, or other origin-wide HTTP mechanisms, applications using HTTP should not mandate the use of a particular name, but instead let deployments configure them. Consideration should be given to scoping them to part of the origin, using their specified mechanisms for doing so.
 
