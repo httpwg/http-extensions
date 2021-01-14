@@ -28,6 +28,7 @@ author:
 normative:
   RFC2119:
   RFC8126:
+  I-D.ietf-httpbis-header-structure:
 
 informative:
   ENTANGLE:
@@ -72,13 +73,13 @@ This document uses ABNF as defined in {{!RFC5234}}, along with the "%s" extensio
 
 The Cache-Status HTTP response header indicates caches' handling of the request corresponding to the response it occurs within.
 
-Its value is a List {{!I-D.ietf-httpbis-header-structure}}:
+Its value is a List {{I-D.ietf-httpbis-header-structure, Section 3.1}}:
 
 ~~~ abnf
 Cache-Status   = sf-list
 ~~~
 
-Each member of the list represents a cache that has handled the request. The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the client (possibly including the user agent's cache itself, if it appends a value).
+Each member of the list represents a cache that has handled the request. The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the user (possibly including the user agent's cache itself, if it appends a value).
 
 Caches determine when it is appropriate to add the Cache-Status header field to a response. Some might add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
