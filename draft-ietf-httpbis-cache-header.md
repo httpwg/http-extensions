@@ -57,7 +57,7 @@ Working Group information can be found at <https://httpwg.org/>; source code and
 
 # Introduction
 
-To aid debugging, HTTP caches often append header fields to a response explaining how they handled the request. Unfortunately, the semantics of these headers are often unclear, and both the semantics and syntax used vary greatly between implementations.
+To aid debugging, HTTP caches often append header fields to a response explaining how they handled the request. Unfortunately, the semantics of these headers are often unclear, and both the semantics and syntax used vary between implementations.
 
 This specification defines a single, new HTTP response header field, "Cache-Status" for this purpose.
 
@@ -78,15 +78,15 @@ Its value is a List {{!I-D.ietf-httpbis-header-structure}}:
 Cache-Status   = sf-list
 ~~~
 
-Each member of the list represents a cache that has handled the request. The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the client (possibly including the user agent's cache itself, if it chooses to append a value).
+Each member of the list represents a cache that has handled the request. The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the client (possibly including the user agent's cache itself, if it appends a value).
 
 Caches determine when it is appropriate to add the Cache-Status header field to a response. Some might add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
 When adding a value to the Cache-Status header field, caches SHOULD preserve the existing contents of the header field, to allow debugging of the entire chain of caches handling the request.
 
-Each list member identifies the cache that inserted that value, and MUST be a String or Token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), and IP address, or a generated string.
+Each list member identifies the cache that inserted that value and MUST be a String or Token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), and IP address, or a generated string.
 
-Each member of the list can also have parameters that describe that cache's handling of the request. While all of these parameters are OPTIONAL, caches are encouraged to provide as much information as possible.
+Each member of the list can also have parameters that describe that cache's handling of the request. While these parameters are OPTIONAL, caches are encouraged to provide as much information as possible.
 
 This specification defines these parameters:
 
@@ -219,7 +219,7 @@ The Expert(s) should consider the following factors when evaluating requests:
 
 * Community feedback
 * If the value is sufficiently well-defined
-* Generic parameters are preferred over vendor-specific, application-specific or deployment-specific values. If a generic value cannot be agreed upon in the community, the parameter's name should be correspondingly specific (e.g., with a prefix that identifies the vendor, application or deployment).
+* Generic parameters are preferred over vendor-specific, application-specific, or deployment-specific values. If a generic value cannot be agreed upon in the community, the parameter's name should be correspondingly specific (e.g., with a prefix that identifies the vendor, application or deployment).
 
 Registration requests should use the following template:
 
