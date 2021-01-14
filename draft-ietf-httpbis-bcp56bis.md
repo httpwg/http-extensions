@@ -253,7 +253,7 @@ Some client behaviours (e.g., automatic redirect handling) and extensions (e.g.,
 * Cookies - Applications using HTTP should explicitly reference the Cookie specification {{?I-D.ietf-httpbis-rfc6265bis}} if they are required.
 * Certificates - Applications using HTTP should specify that TLS certificates are to be checked according to {{I-D.ietf-httpbis-semantics, Section 4.3.4}} when HTTPS is used.
 
-Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported by clients. For example, requiring that clients support responses with a certain content-coding ({{I-D.ietf-httpbis-semantics, Section 6.2.2}}) instead of negotiating for it ({{I-D.ietf-httpbis-semantics, Section 8.4.4}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
+Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported by clients. For example, requiring that clients support responses with a certain content-coding ({{I-D.ietf-httpbis-semantics, Section 8.4.1}}) instead of negotiating for it ({{I-D.ietf-httpbis-semantics, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
 
 
 ## Specifying URLs
@@ -343,9 +343,9 @@ While this is not an issue for short queries, it can become one for larger query
 
 In these cases, an application using HTTP might consider using POST to express queries in the request's content; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought consider allowing both methods.
 
-Applications should not change their state or have other side effects that might be significant to the client, since implementations can and do retry HTTP GET requests that fail. Note that this does not include logging and similar functions; see {{I-D.ietf-httpbis-semantics, Section 7.2.1}}.
+Applications should not change their state or have other side effects that might be significant to the client, since implementations can and do retry HTTP GET requests that fail. Note that this does not include logging and similar functions; see {{I-D.ietf-httpbis-semantics, Section 9.2.1}}.
 
-Finally, note that while HTTP allows GET requests to have content syntactically, this is done only to allow parsers to be generic; as per {{I-D.ietf-httpbis-semantics, Section 7.3.1}}, content on a GET has no meaning, and will be either ignored or rejected by generic HTTP software.
+Finally, note that while HTTP allows GET requests to have content syntactically, this is done only to allow parsers to be generic; as per {{I-D.ietf-httpbis-semantics, Section 9.3.1}}, content on a GET has no meaning, and will be either ignored or rejected by generic HTTP software.
 
 
 ### OPTIONS
@@ -388,7 +388,7 @@ When authors believe that a new status code is required, they are encouraged to 
 
 ### Redirection {#redirects}
 
-The 3xx series of status codes specified in {{I-D.ietf-httpbis-semantics, Section 9.4}} direct the user agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and 308, all of which use the Location response header field to indicate where the client should send the request to.
+The 3xx series of status codes specified in {{I-D.ietf-httpbis-semantics, Section 15.4}} direct the user agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and 308, all of which use the Location response header field to indicate where the client should send the request to.
 
 There are two ways that this group of status codes differ:
 
@@ -419,7 +419,7 @@ When the conditions above are not met, it is usually better to convey applicatio
 
 New header fields MUST be registered, as per {{!I-D.ietf-httpbis-semantics}}.
 
-See {{I-D.ietf-httpbis-semantics, Section 4.1.3}} for guidelines to consider when minting new header fields. {{?I-D.ietf-httpbis-header-structure}} provides a common structure for new header fields, and avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
+See {{I-D.ietf-httpbis-semantics, Section 16.3.2}} for guidelines to consider when minting new header fields. {{?I-D.ietf-httpbis-header-structure}} provides a common structure for new header fields, and avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
 
 It is RECOMMENDED that header field names be short (even when HTTP/2 field compression is in effect, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a "-".
 
@@ -449,7 +449,7 @@ Even when an application using HTTP isn't designed to take advantage of caching,
 
 Assigning even a short freshness lifetime ({{I-D.ietf-httpbis-cache, Section 4.2}}) -- e.g., 5 seconds -- allows a response to be reused to satisfy multiple clients, and/or a single client making the same request repeatedly. In general, if it is safe to reuse something, consider assigning a freshness lifetime.
 
-The most common method for specifying freshness is the max-age response directive ({{I-D.ietf-httpbis-cache, Section 5.2.2.8}}). The Expires header field ({{I-D.ietf-httpbis-cache, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support Cache-Control, and specifying freshness as a delta is usually more convenient and less error-prone.
+The most common method for specifying freshness is the max-age response directive ({{I-D.ietf-httpbis-cache, Section 5.2.2.9}}). The Expires header field ({{I-D.ietf-httpbis-cache, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support Cache-Control, and specifying freshness as a delta is usually more convenient and less error-prone.
 
 In some situations, responses without explicit cache freshness directives will be stored and served using a heuristic freshness lifetime; see {{I-D.ietf-httpbis-cache, Section 4.2.2}}. As the heuristic is not under control of the application, it is generally preferable to set an explicit freshness lifetime, or make the response explicitly uncacheable.
 
@@ -485,7 +485,7 @@ One way to address this is to explicitly specify that all responses be fresh upo
 
 ### Varying Content Based Upon the Request
 
-If an application uses a request header field to change the response's headers or content, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in {{I-D.ietf-httpbis-cache, Section 5.2.2.3}}) or send the Vary response header field ({{I-D.ietf-httpbis-semantics, Section 10.1.4}}) on all responses from that resource (including the "default" response).
+If an application uses a request header field to change the response's headers or content, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in {{I-D.ietf-httpbis-cache, Section 5.2.2.3}}) or send the Vary response header field ({{I-D.ietf-httpbis-semantics, Section 12.5.5}}) on all responses from that resource (including the "default" response).
 
 For example, this response:
 
