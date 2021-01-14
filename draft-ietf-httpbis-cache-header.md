@@ -71,7 +71,7 @@ This document uses ABNF as defined in {{!RFC5234}}, along with the "%s" extensio
 
 # The Cache-Status HTTP Response Header Field {#field}
 
-The Cache-Status HTTP response header indicates caches' handling of the request corresponding to the response it occurs within.
+The Cache-Status HTTP response header field indicates caches' handling of the request corresponding to the response it occurs within.
 
 Its value is a List {{I-D.ietf-httpbis-header-structure, Section 3.1}}:
 
@@ -81,15 +81,15 @@ Cache-Status   = sf-list
 
 Each member of the list represents a cache that has handled the request. The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the user (possibly including the user agent's cache itself, if it appends a value).
 
-Caches determine when it is appropriate to add the Cache-Status header field to a response. Some might add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
+Caches determine when it is appropriate to add the Cache-Status header field to a response. Some might add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header field that activates a debugging mode.
 
-When adding a value to the Cache-Status header field, caches SHOULD preserve the existing contents of the header field, to allow debugging of the entire chain of caches handling the request.
+When adding a value to the Cache-Status header field, caches SHOULD preserve the existing field value, to allow debugging of the entire chain of caches handling the request.
 
-Each list member identifies the cache that inserted that value and MUST be a String or Token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), and IP address, or a generated string.
+Each list member identifies the cache that inserted it and MUST be a String or Token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), an IP address, or a generated string.
 
-Each member of the list can also have parameters that describe that cache's handling of the request. While these parameters are OPTIONAL, caches are encouraged to provide as much information as possible.
+Each member of the list can have parameters that describe that cache's handling of the request. While these parameters are OPTIONAL, caches are encouraged to provide as much information as possible.
 
-This specification defines these parameters:
+This specification defines the following parameters:
 
 ~~~ abnf
 hit          = sf-boolean
@@ -104,7 +104,7 @@ detail       = sf-token / sf-string
 
 ## The hit parameter
 
-"hit", when true, indicates that the request was satisfied by the cache; i.e., it did not go forward, and the response was obtained from the cache. A response that originally was produced by the origin but was modified by the cache (for example, a 304 or 206 status code) is still considered a hit.
+"hit", when true, indicates that the request was satisfied by the cache; i.e., it was not forwarded, and the response was obtained from the cache. A response that was originally produced by the origin but was modified by the cache (for example, a 304 or 206 status code) is still considered a hit, as long as it did not go forward (e.g., for validation).
 
 "hit" and "fwd" are exclusive; only one of them should appear on each list member.
 
@@ -112,14 +112,17 @@ detail       = sf-token / sf-string
 
 "fwd" indicates that the request went forward towards the origin, and why.
 
-The following values are defined to explain why the request went forward:
+The following parameter values are defined to explain why the request went forward, from most specific to least:
 
+* bypass - The cache was configured to not handle this request
+* method - The request method's semantics require the request to be forwarded
+* request - The cache was able to select a fresh response for the request, but the request's semantics (e.g., Cache-Control request directives) did not allow its use
+* stale - The cache was able to select a response for the request, but it was stale
 * uri-miss - The cache did not contain any responses that matched the request URI
 * vary-miss - The cache contained a response that matched the request URI, but could not select a response based upon this request's headers and stored Vary headers.
 * miss - The cache did not contain any responses that could be used to satisfy this request (to be used when an implementation cannot distinguish between uri-miss and vary-miss)
-* stale - The cache was able to select a response for the request, but it was stale
-* request - The cache was able to select a fresh response for the request, but client request headers (e.g., Cache-Control request directives) did not allow its use
-* bypass - The cache was configured to not handle this request
+
+The most specific reason that the cache is aware of SHOULD be used.
 
 ## The fwd-status parameter
 
@@ -129,7 +132,7 @@ This parameter is useful to distinguish cases when the next hop server sends a 3
 
 ## The ttl parameter
 
-"ttl" indicates the response's remaining freshness lifetime as calculated by the cache, as an integer number of seconds, measured when the response is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics, local configuration, or other factors. May be negative, to indicate staleness.
+"ttl" indicates the response's remaining freshness lifetime as calculated by the cache, as an integer number of seconds, measured when the response header section is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics, local configuration, or other factors. May be negative, to indicate staleness.
 
 ## The stored parameter
 
@@ -155,7 +158,7 @@ Cache-Status: ExampleCache; hit; detail=MEMORY
 
 The semantics of a detail parameter are always specific to the cache that sent it; even if a member of details from another cache shares the same name, it might not mean the same thing.
 
-This parameter is intentionally limited. If an implementation needs to convey additional information, they are encouraged to register extension parameters (see {{register}}) or define another header field.
+This parameter is intentionally limited. If an implementation's developer or operator needs to convey additional information in an interoperable fashion, they are encouraged to register extension parameters (see {{register}}) or define another header field.
 
 
 # Examples
