@@ -50,6 +50,8 @@ HTTP is often used as a substrate for other application protocols (a.k.a. HTTP-b
 
 --- note_Note_to_Readers_
 
+*RFC EDITOR: please remove this section before publication*
+
 Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
 Working Group information can be found at <http://httpwg.github.io/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/bcp56bis>.
