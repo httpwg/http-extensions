@@ -59,7 +59,7 @@ Working Group information can be found at <https://httpwg.org/>; source code and
 
 To aid debugging, HTTP caches often append header fields to a response explaining how they handled the request. Unfortunately, the semantics of these headers are often unclear, and both the semantics and syntax used vary between implementations.
 
-This specification defines a single, new HTTP response header field, "Cache-Status" for this purpose.
+This specification defines a new HTTP response header field, "Cache-Status" for this purpose.
 
 
 ## Notational Conventions
