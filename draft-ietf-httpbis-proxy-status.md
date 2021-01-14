@@ -11,14 +11,12 @@ keyword: Internet-Draft
 stand_alone: yes
 smart_quotes: no
 github-issue-label: proxy-status
-pi: [toc, sortrefs, symrefs]
 
 author:
  -
     ins: M. Nottingham
     name: Mark Nottingham
     organization: Fastly
-    street: made in
     city: Prahran
     region: VIC
     country: Australia
@@ -38,7 +36,7 @@ informative:
 
 --- abstract
 
-This document defines the Proxy-Status HTTP field to convey the details of intermediary handling of responses, including generated errors.
+This document defines the Proxy-Status HTTP field to convey the details of intermediary response handling, including generated errors.
 
 
 --- note_Note_to_Readers
@@ -77,7 +75,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
 shown here.
 
-This specification uses Structured Headers {{!I-D.ietf-httpbis-header-structure}} to specify syntax. The terms sf-list, sf-item, sf-string, sf-token, sf-integer and key refer to the structured types defined therein.
+This specification uses Structured Fields {{!I-D.ietf-httpbis-header-structure}} to specify syntax and parsing. The terms sf-list, sf-item, sf-string, sf-token, sf-integer and key refer to the structured types defined therein.
 
 Note that in this specification, "proxy" is used to indicate both forward and reverse proxies, otherwise known as gateways. "Next hop" indicates the connection in the direction leading to the origin server for the request.
 
@@ -86,7 +84,7 @@ Note that in this specification, "proxy" is used to indicate both forward and re
 
 The Proxy-Status HTTP response field allows an intermediary to convey additional information about its handling of a response and its associated request.
 
-It is a List {{!I-D.ietf-httpbis-header-structure}}:
+It is a List {{I-D.ietf-httpbis-header-structure, Section 3.1}}:
 
 ~~~ abnf
 Proxy-Status   = sf-list
@@ -102,28 +100,26 @@ Proxy-Status: FooProxy, ExampleCDN
 
 indicates that this response was handled first by FooProxy and then ExampleCDN.
 
-Intermediaries determine when it is appropriate to add the Proxy-Status field to a response. Some might decide to add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
+Intermediaries determine when it is appropriate to add the Proxy-Status field to a response. Some might decide to append to it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
-The list members identify the intermediary that inserted the value, and MUST have a type of either sf-string or sf-token. Depending on the deployment, this might be a product or service name (e.g., ExampleProxy or "Example CDN"), a hostname ("proxy-3.example.com"), and IP address, or a generated string.
+Each member of the list identifes the intermediary that inserted the value, and MUST have a type of either sf-string or sf-token. Depending on the deployment, this might be a product or service name (e.g., ExampleProxy or "Example CDN"), a hostname ("proxy-3.example.com"), an IP address, or a generated string.
 
-Parameters on each member convey additional information about that intermediary's handling of the response; see {{params}} for defined parameters. While all of these parameters are OPTIONAL, intermediaries are encouraged to provide as much information as possible.
+Parameters on each member convey additional information about that intermediary's handling of the response and its associated request; see {{params}} for defined parameters. While all of these parameters are OPTIONAL, intermediaries are encouraged to provide as much information as possible (but see {{security}} for security considerations in doing so).
 
-When adding a value to the Proxy-Status field, intermediaries SHOULD preserve the existing contents of the field, to allow debugging of the entire chain of intermediaries handling the request.
+When adding a value to the Proxy-Status field, intermediaries SHOULD preserve the existing members of the field, to allow debugging of the entire chain of intermediaries handling the request.
 
 Proxy-Status MAY be sent in HTTP trailers, but -- as with all trailers -- it might be silently discarded along the path to the user agent, so this SHOULD NOT be done unless it is not possible to send it in headers. For example, if an intermediary is streaming a response and the upstream connection suddenly terminates, Proxy-Status can be appended to the trailers of the outgoing message (since the headers have already been sent).
-
-Note that there are various security considerations for intermediaries using the Proxy-Status field; see {{security}}.
 
 Origin servers MUST NOT generate the Proxy-Status field.
 
 
 ## Proxy-Status Parameters {#params}
 
-This section lists parameters that can be used on the members of Proxy-Status.
+This section lists parameters that can be used on the members of the Proxy-Status field.
 
 ### next-hop
 
-The `next-hop` parameter's value is a sf-string or sf-token that identifies the intermediary or origin server selected (and used, if contacted) for this response. Its contents might be a hostname, IP address, or alias.
+The `next-hop` parameter's value is a sf-string or sf-token that identifies the intermediary or origin server selected (and used, if contacted) for this response. It might be a hostname, IP address, or alias.
 
 For example:
 
