@@ -74,7 +74,7 @@ These protocols are often ad hoc; they are intended for only deployment by one o
 
 However, when such an application has multiple, separate implementations, is deployed on multiple uncoordinated servers, and is consumed by diverse clients -- as is often the case for HTTP APIs defined by standards efforts -- tools and practices intended for limited deployment can become unsuitable.
 
-This is largely because implementations (both client and server) will implement and evolve at different paces. As a result, such an HTTP-based API will need to more carefully consider how extensibility of the service will be handled and how different deployment requirements will be accommodated.
+This is largely because implementations (both client and server) will implement and evolve at different paces. As a result, the designers of such an HTTP-based API will need to more carefully consider how extensibility of the service will be handled and how different deployment requirements will be accommodated.
 
 More generally, an application protocol using HTTP faces a number of design decisions, including:
 
@@ -119,12 +119,12 @@ Such specifications MUST NOT use HTTP's URI schemes, transport ports, ALPN proto
 
 # What's Important About HTTP {#overview}
 
-This section examines the facets of the protocol that are important to consider when using HTTP to define an application protocol.
+This section examines the characteristics of the HTTP protocol that are important to consider when using HTTP to define an application protocol.
 
 
 ## Generic Semantics
 
-Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined by HTTP are potentially applicable to every resource, not specific to a particular context. Application-specific semantics are best expressed in the payload; often in the body, but also in header fields.
+Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined by HTTP are potentially applicable to every resource, not specific to a particular context. Application-specific semantics are best expressed in message content and in header fields, not status codes or methods -- although the latter do have generic semantics that relate to application state.
 
 This generic/application-specific split allows a HTTP message to be handled by software (e.g., HTTP servers, intermediaries, client implementations, and caches) without understanding the specific application. It also allows people to leverage their knowledge of HTTP semantics without special-casing them for a particular application.
 
@@ -145,7 +145,7 @@ Another common practice is assuming that the HTTP server's name space (or a port
 
 As explained in {{!RFC8820}}, such "squatting" on a part of the URL space by a standard usurps the server's authority over its own resources, can cause deployment issues, and is therefore bad practice in standards.
 
-Instead of statically defining URI components like paths, it is RECOMMENDED that applications using HTTP define links in payloads, to allow flexibility in deployment.
+Instead of statically defining URI components like paths, it is RECOMMENDED that applications using HTTP define and use links, to allow flexibility in deployment.
 
 Using runtime links in this fashion has a number of other benefits -- especially when an application is to have multiple implementations and/or deployments (as is often the case for those that are standardised).
 
@@ -189,7 +189,7 @@ However, if an application's deployment would benefit from the use of a particul
 
 Applications using HTTP MUST NOT specify a maximum version, to preserve the protocol's ability to evolve.
 
-When specifying examples of protocol interactions, applications should document both the request and response messages, with full headers, preferably in HTTP/1.1 format. For example:
+When specifying examples of protocol interactions, applications should document both the request and response messages, with complete header sections, preferably in HTTP/1.1 format. For example:
 
 ~~~ http-message
 GET /thing HTTP/1.1
@@ -219,8 +219,8 @@ The most effective way to specify an application's server-side HTTP behaviours i
 By composing these protocol elements, an application can define a set of resources, identified by link relations, that implement specified behaviours, including:
 
 * retrieval of their state using GET, in one or more formats identified by media type;
-* resource creation or update using POST or PUT, with an appropriately identified request body format;
-* data processing using POST and identified request and response body format(s); and
+* resource creation or update using POST or PUT, with an appropriately identified request content format;
+* data processing using POST and identified request and response content format(s); and
 * Resource deletion using DELETE.
 
 For example, an application might specify:
@@ -251,7 +251,7 @@ Some client behaviours (e.g., automatic redirect handling) and extensions (e.g.,
 
 * Redirect handling - Applications need to specify how redirects are expected to be handled; see {{redirects}}.
 * Cookies - Applications using HTTP should explicitly reference the Cookie specification {{?I-D.ietf-httpbis-rfc6265bis}} if they are required.
-* Certificates - Applications using HTTP should specify that TLS certificates are to be checked according to {{!RFC2818}} when HTTPS is used.
+* Certificates - Applications using HTTP should specify that TLS certificates are to be checked according to {{I-D.ietf-httpbis-semantics, Section 4.3.4}} when HTTPS is used.
 
 Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported by clients. For example, requiring that clients support responses with a certain content-coding ({{I-D.ietf-httpbis-semantics, Section 6.2.2}}) instead of negotiating for it ({{I-D.ietf-httpbis-semantics, Section 8.4.4}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
 
@@ -296,7 +296,7 @@ However, application-specific schemes can also be defined. When defining an URI 
 
 * Existing non-browser clients, intermediaries, servers and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request; a cache might refuse to store the response, and a proxy might fail to forward the request.
 
-* Because URLs occur in HTTP artefacts commonly, often being generated automatically (e.g., in the `Location` response header), it can be difficult to assure that the new scheme is used consistently.
+* Because URLs occur in HTTP artefacts commonly, often being generated automatically (e.g., in the `Location` response header field), it can be difficult to assure that the new scheme is used consistently.
 
 * The resources identified by the new scheme will still be available using "http" and/or "https" URLs. Those URLs can "leak" into use, which can present security and operability issues. For example, using a new scheme to assure that requests don't get sent to a "normal" Web site is likely to fail.
 
@@ -341,11 +341,11 @@ In some cases, however, GET might be unwieldy for expressing queries, because of
 
 While this is not an issue for short queries, it can become one for larger query terms, or ones which need to sustain a high rate of requests. Additionally, some HTTP implementations limit the size of URLs they support -- although modern HTTP software has much more generous limits than previously (typically, considerably more than 8000 octets, as required by {{!I-D.ietf-httpbis-semantics}}.
 
-In these cases, an application using HTTP might consider using POST to express queries in the request body; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought consider allowing both methods.
+In these cases, an application using HTTP might consider using POST to express queries in the request's content; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought consider allowing both methods.
 
 Applications should not change their state or have other side effects that might be significant to the client, since implementations can and do retry HTTP GET requests that fail. Note that this does not include logging and similar functions; see {{I-D.ietf-httpbis-semantics, Section 7.2.1}}.
 
-Finally, note that while HTTP allows GET requests to have a body syntactically, this is done only to allow parsers to be generic; as per {{I-D.ietf-httpbis-semantics, Section 7.3.1}}, a body on a GET has no meaning, and will be either ignored or rejected by generic HTTP software.
+Finally, note that while HTTP allows GET requests to have content syntactically, this is done only to allow parsers to be generic; as per {{I-D.ietf-httpbis-semantics, Section 7.3.1}}, content on a GET has no meaning, and will be either ignored or rejected by generic HTTP software.
 
 
 ### OPTIONS
@@ -362,7 +362,7 @@ However, OPTIONS does have significant limitations:
 Instead of OPTIONS, one of these alternative approaches might be more appropriate:
 
 * For server-wide metadata, create a well-known URI {{?RFC8615}}, or using an already existing one if it's appropriate (e.g., HostMeta {{?RFC6415}}).
-* For metadata about a specific resource, create a separate resource and link to it using a Link response header or a link serialised into the representation's body. See {{?RFC8288}}. Note that the Link header is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
+* For metadata about a specific resource, create a separate resource and link to it using a Link response header field or a link serialised into the response's content. See {{?RFC8288}}. Note that the Link header field is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
 
 
 ## Using HTTP Status Codes
@@ -375,7 +375,7 @@ Furthermore, mapping application errors to individual HTTP status codes one-to-o
 
 Instead, applications using HTTP should define their errors to use the most applicable status code, making generous use of the general status codes (200, 400 and 500) when in doubt. Importantly, they should not specify a one-to-one relationship between status codes and application errors, thereby avoiding the exhaustion issue outlined above.
 
-To distinguish between multiple error conditions that are mapped to the same status code, and to avoid the misattribution issue outlined above, applications using HTTP should convey finer-grained error information in the response's message body and/or header fields. {{?RFC7807}} provides one way to do so.
+To distinguish between multiple error conditions that are mapped to the same status code, and to avoid the misattribution issue outlined above, applications using HTTP should convey finer-grained error information in the response's message content and/or header fields. {{?RFC7807}} provides one way to do so.
 
 Because the set of registered HTTP status codes can expand, applications using HTTP should explicitly point out that clients ought to be able to handle all applicable status codes gracefully (i.e., falling back to the generic `n00` semantics of a given status code; e.g., `499` can be safely handled as `400` by clients that don't recognise it). This is preferable to creating a "laundry list" of potential status codes, since such a list won't be complete in the foreseeable future.
 
@@ -405,29 +405,29 @@ This table summarises their relationships:
 As noted in {{?I-D.ietf-httpbis-semantics}}, a user agent is allowed to automatically follow a 3xx redirect that has a Location response header field, even if they don't understand the semantics of the specific status code. However, they aren't required to do so; therefore, if an application using HTTP desires redirects to be automatically followed, it needs to explicitly specify the circumstances when this is required.
 
 Applications using HTTP are encouraged to specify that 301 and 302 responses change the subsequent request method from POST (but no other method) to GET, to be compatible with browsers.
-Generally, when a redirected request is made, its header fields are copied from the original request's. However, they can be modified by various mechanisms; e.g., sent Authorization ({{?I-D.ietf-httpbis-semantics}}) and Cookie ({{?I-D.ietf-httpbis-rfc6265bis}}) headers will change if the origin (and sometimes path) of the request changes. An application using HTTP should specify if any request headers that it defines need to be modified or removed upon a redirect; however, this behaviour cannot be relied upon, since a generic client (like a browser) will be unaware of such requirements.
+Generally, when a redirected request is made, its header fields are copied from the original request's. However, they can be modified by various mechanisms; e.g., sent Authorization ({{?I-D.ietf-httpbis-semantics}}) and Cookie ({{?I-D.ietf-httpbis-rfc6265bis}}) header fields will change if the origin (and sometimes path) of the request changes. An application using HTTP should specify if any request header fields that it defines need to be modified or removed upon a redirect; however, this behaviour cannot be relied upon, since a generic client (like a browser) will be unaware of such requirements.
 
 ## Specifying HTTP Header Fields {#headers}
 
 Applications often define new HTTP header fields. Typically, using HTTP header fields is appropriate in a few different situations:
 
-* Their content is useful to intermediaries (who often wish to avoid parsing the body), and/or
-* Their content is useful to generic HTTP software (e.g., clients, servers), and/or
-* It is not possible to include their content in the message body (usually because a format does not allow it).
+* The field is useful to intermediaries (who often wish to avoid parsing message content), and/or
+* The field is useful to generic HTTP software (e.g., clients, servers), and/or
+* It is not possible to include their values in the message content (usually because a format does not allow it).
 
-When the conditions above are not met, it is usually better to convey application-specific information in other places; e.g., the message body or the URL query string.
+When the conditions above are not met, it is usually better to convey application-specific information in other places; e.g., the message content or the URL query string.
 
 New header fields MUST be registered, as per {{!I-D.ietf-httpbis-semantics}}.
 
 See {{I-D.ietf-httpbis-semantics, Section 4.1.3}} for guidelines to consider when minting new header fields. {{?I-D.ietf-httpbis-header-structure}} provides a common structure for new header fields, and avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
 
-It is RECOMMENDED that header field names be short (even when HTTP/2 header compression is in effect, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a "-".
+It is RECOMMENDED that header field names be short (even when HTTP/2 field compression is in effect, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a "-".
 
-For example, if the "example" application needs to create three headers, they might be called "example-foo", "example-bar" and "example-baz". Note that the primary motivation here is to avoid consuming more generic header names, not to reserve a portion of the namespace for the application; see {{!RFC6648}} for related considerations.
+For example, if the "example" application needs to create three headers, they might be called "example-foo", "example-bar" and "example-baz". Note that the primary motivation here is to avoid consuming more generic field names, not to reserve a portion of the namespace for the application; see {{!RFC6648}} for related considerations.
 
-The semantics of existing HTTP header fields MUST NOT be re-defined without updating their registration or defining an extension to them (if allowed). For example, an application using HTTP cannot specify that the `Location` header has a special meaning in a certain context.
+The semantics of existing HTTP header fields MUST NOT be re-defined without updating their registration or defining an extension to them (if allowed). For example, an application using HTTP cannot specify that the `Location` header field has a special meaning in a certain context.
 
-See {{caching}} for the interaction between headers and HTTP caching; in particular, request headers that are used to "select" a response have impact there, and need to be carefully considered.
+See {{caching}} for the interaction between headers and HTTP caching; in particular, request header fields that are used to "select" a response have impact there, and need to be carefully considered.
 
 See {{state}} for considerations regarding header fields that carry application state (e.g., Cookie).
 
@@ -449,7 +449,7 @@ Even when an application using HTTP isn't designed to take advantage of caching,
 
 Assigning even a short freshness lifetime ({{I-D.ietf-httpbis-cache, Section 4.2}}) -- e.g., 5 seconds -- allows a response to be reused to satisfy multiple clients, and/or a single client making the same request repeatedly. In general, if it is safe to reuse something, consider assigning a freshness lifetime.
 
-The most common method for specifying freshness is the max-age response directive ({{I-D.ietf-httpbis-cache, Section 5.2.2.8}}). The Expires header ({{I-D.ietf-httpbis-cache, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support Cache-Control, and specifying freshness as a delta is usually more convenient and less error-prone.
+The most common method for specifying freshness is the max-age response directive ({{I-D.ietf-httpbis-cache, Section 5.2.2.8}}). The Expires header field ({{I-D.ietf-httpbis-cache, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support Cache-Control, and specifying freshness as a delta is usually more convenient and less error-prone.
 
 In some situations, responses without explicit cache freshness directives will be stored and served using a heuristic freshness lifetime; see {{I-D.ietf-httpbis-cache, Section 4.2.2}}. As the heuristic is not under control of the application, it is generally preferable to set an explicit freshness lifetime, or make the response explicitly uncacheable.
 
@@ -476,7 +476,7 @@ Stale responses can be refreshed by assigning a validator, saving both transfer 
 
 ### Caching and Application Semantics
 
-When an application has a need to express a lifetime that's separate from the freshness lifetime, this should be conveyed separately, either in the response's body or in a separate header field. When this happens, the relationship between HTTP caching and that lifetime need to be carefully considered, since the response will be used as long as it is considered fresh.
+When an application has a need to express a lifetime that's separate from the freshness lifetime, this should be conveyed separately, either in the response's content or in a separate header field. When this happens, the relationship between HTTP caching and that lifetime need to be carefully considered, since the response will be used as long as it is considered fresh.
 
 In particular, application authors need to consider how responses that are not freshly obtained from the origin server should be handled; if they have a concept like a validity period, this will need to be calculated considering the age of the response (see {{I-D.ietf-httpbis-cache, Section 4.2.3}}).
 
@@ -485,7 +485,7 @@ One way to address this is to explicitly specify that all responses be fresh upo
 
 ### Varying Content Based Upon the Request
 
-If an application uses a request header field to change the response's headers or body, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in {{I-D.ietf-httpbis-cache, Section 5.2.2.3}}) or send the Vary response header ({{I-D.ietf-httpbis-semantics, Section 10.1.4}}) on all responses from that resource (including the "default" response).
+If an application uses a request header field to change the response's headers or content, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in {{I-D.ietf-httpbis-cache, Section 5.2.2.3}}) or send the Vary response header field ({{I-D.ietf-httpbis-semantics, Section 10.1.4}}) on all responses from that resource (including the "default" response).
 
 For example, this response:
 
@@ -534,10 +534,10 @@ This is only a small sample of the kinds of issues that applications using HTTP 
 
 A complete enumeration of such practices is out of scope for this document, but some considerations include:
 
-* Using an application-specific media type in the Content-Type header, and requiring clients to fail if it is not used.
+* Using an application-specific media type in the Content-Type header field, and requiring clients to fail if it is not used.
 * Using X-Content-Type-Options: nosniff {{FETCH}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser.
 * Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML}}), thereby mitigating Cross-Site Scripting attacks.
-* Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header.
+* Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header field.
 * Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?I-D.ietf-httpbis-rfc6265bis}}.
 * Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the path of the communication, they can use this capability to recover that information.
 
@@ -601,7 +601,7 @@ In HTTP, backwards-incompatible changes are possible using a number of mechanism
 
 * Using a distinct link relation type {{!RFC8288}} to identify a URL for a resource that implements the new functionality.
 * Using a distinct media type {{!RFC6838}} to identify formats that enable the new functionality.
-* Using a distinct HTTP header field to implement new functionality outside the message body.
+* Using a distinct HTTP header field to implement new functionality outside the message content.
 
 
 # IANA Considerations
@@ -631,7 +631,7 @@ This includes session information, tracking the client through fingerprinting, a
 
 Session information includes things like the IP address of the client, TLS session tickets, Cookies, ETags stored in the client's cache, and other stateful mechanisms. Applications are advised to avoid using session mechanisms unless they are unavoidable or necessary for operation, in which case these risks needs to be documented. When they are used, implementations should be encouraged to allow clearing such state.
 
-Fingerprinting uses unique aspects of a client's messages and behaviours to connect disparate requests and connections. For example, the User-Agent request header conveys specific information about the implementation; the Accept-Language request header conveys the users' preferred language. In combination, a number of these markers can be used to uniquely identify a client, impacting its control over its data. As a result, applications are advised to specify that clients should only emit the information they need to function in requests.
+Fingerprinting uses unique aspects of a client's messages and behaviours to connect disparate requests and connections. For example, the User-Agent request header field conveys specific information about the implementation; the Accept-Language request header field conveys the users' preferred language. In combination, a number of these markers can be used to uniquely identify a client, impacting its control over its data. As a result, applications are advised to specify that clients should only emit the information they need to function in requests.
 
 Finally, if an application exposes the ability to run mobile code, great care needs to be taken, since any ability to observe its environment can be used as an opportunity to both fingerprint the client and to obtain and manipulate private data (including session information). For example, access to high-resolution timers (even indirectly) can be used to profile the underlying hardware, creating a unique identifier for the system. Applications are advised to avoid allowing the use of mobile code where possible; when it cannot be avoided, the resulting system's security properties need be carefully scrutinised.
 
