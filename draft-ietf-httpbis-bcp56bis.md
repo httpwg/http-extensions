@@ -16,14 +16,12 @@ keyword: HTTP API
 
 stand_alone: yes
 smart_quotes: no
-pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
 author:
  -
     ins: M. Nottingham
     name: Mark Nottingham
     organization:
-    street: made in
     city: Prahran
     region: VIC
     country: Australia
