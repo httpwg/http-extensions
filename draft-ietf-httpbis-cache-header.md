@@ -28,6 +28,7 @@ author:
 
 normative:
   RFC2119:
+  RFC8126:
 
 informative:
   ENTANGLE:
@@ -219,7 +220,7 @@ Cache-Status: OriginCache; hit; ttl=1100; collapsed,
 
 New Cache-Status Parameters can be defined by registering them in the HTTP Cache-Status Parameters registry.
 
-Registration requests are reviewed and approved by a Designated Expert, as per {{!RFC8126}}, Section 4.5. A specification document is appreciated, but not required.
+Registration requests are reviewed and approved by a Designated Expert, as per {{RFC8126, Section 4.5}}. A specification document is appreciated, but not required.
 
 The Expert(s) should consider the following factors when evaluating requests:
 
