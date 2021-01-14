@@ -8,11 +8,14 @@ category: std
 ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
-keyword: Internet-Draft
+keyword:
+- http
+- cache
+- debugging
+- x-cache
 
 stand_alone: yes
 smart_quotes: no
-pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
 author:
  -
