@@ -50,12 +50,9 @@ To aid debugging, HTTP caches often append header fields to a response explainin
 
 *RFC EDITOR: please remove this section before publication*
 
-Discussion of this draft takes place on the HTTP working group mailing list
-(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
+Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <https://httpwg.org/>; source
-code and issues list for this draft can be found at
-<https://github.com/httpwg/http-extensions/labels/cache-header>.
+Working Group information can be found at <https://httpwg.org/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/cache-header>.
 
 --- middle
 
@@ -68,10 +65,7 @@ This specification defines a single, new HTTP response header field, "Cache-Stat
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
-"RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as
-described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
-shown here.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
 This document uses ABNF as defined in {{!RFC5234}}, along with the "%s" extension for case sensitivity defined in {{!RFC7405}}.
 
@@ -246,8 +240,7 @@ Upon publication, please create the HTTP Cache-Status Parameters registry at <ht
 
 Attackers can use the information in Cache-Status to probe the behaviour of the cache (and other components), and infer the activity of those using the cache. The Cache-Status header field may not create these risks on its own, but can assist attackers in exploiting them.
 
-For example, knowing if a cache has stored a response can help an attacker execute a timing
-attack on sensitive data. Exposing the cache key can help an attacker understand modifications to the cache key, which may assist cache poisoning attacks. See {{ENTANGLE}} for details.
+For example, knowing if a cache has stored a response can help an attacker execute a timing attack on sensitive data. Exposing the cache key can help an attacker understand modifications to the cache key, which may assist cache poisoning attacks. See {{ENTANGLE}} for details.
 
 The underlying risks can be mitigated with a variety of techniques (e.g., use of encryption and authentication; avoiding the inclusion of attacker-controlled data in the cache key), depending on their exact nature.
 
