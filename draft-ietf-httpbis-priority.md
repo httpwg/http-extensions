@@ -284,11 +284,14 @@ set to `5` and the incremental parameter set to `true`.
 priority = u=5, i
 ~~~
 
-## Defining New Parameters
+## Defining New Parameters {#new-parameters}
 
-When attempting to extend priorities, care must be taken to ensure any use of
-existing parameters leaves them either unchanged or modified in a way that is
-backwards compatible for peers that are unaware of the extended meaning.
+When attempting to define new parameters, care must be taken so that they do not
+adversely interfere with prioritization performed by existing endpoints or
+intermediaries that do not understand the newly defined parameter. Since unknown
+parameters are ignored, new parameters should not change the interpretation of
+or modify the predefined parameters in a way that is not backwards compatible or
+fallback safe.
 
 For example, if there is a need to provide more granularity than eight urgency
 levels, it would be possible to subdivide the range using an additional
@@ -298,6 +301,35 @@ continue to use the less granular eight levels.
 Alternatively, the urgency can be augmented. For example, a graphical user agent
 could send a `visible` parameter to indicate if the resource being requested is
 within the viewport.
+
+Generic parameters are preferred over vendor-specific, application-specific or
+deployment-specific values. If a generic value cannot be agreed upon in the
+community, the parameter's name should be correspondingly specific (e.g., with
+a prefix that identifies the vendor, application or deployment).
+
+### Registration {#register}
+
+New Priority parameters can be defined by registering them in the HTTP Priority
+Parameters Registry.
+
+Registration requests are reviewed and approved by a Designated Expert, as per
+{{!RFC8126}}, Section 4.5. A specification document is appreciated, but not
+required.
+
+The Expert(s) should consider the following factors when evaluating requests:
+
+* Community feedback
+* If the parameters are sufficiently well-defined and adhere to the guidance
+  provided in {{new-parameters}}.
+
+Registration requests should use the following template:
+
+* Name: \[a name for the Priority Parameter that matches key\]
+* Description: \[a description of the parameter semantics and value\]
+* Reference: \[to a specification defining this parameter\]
+
+See the registry at <https://iana.org/assignments/http-priority> for details on
+where to send registration requests.
 
 # The Priority HTTP Header Field {#header-field}
 
@@ -354,18 +386,18 @@ treated as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in
 HTTP/3 the error is of type H3_FRAME_ERROR.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
-is open. Furthermore, HTTP/3 offers no guaranteed ordering across streams, which
-could cause the frame to be received earlier than intended. Either case leads to
-a race condition where a server receives a PRIORITY_UPDATE frame that references
-a request stream that is yet to be opened. To solve this condition, for the
-purposes of scheduling, the most recently received PRIORITY_UPDATE frame can be
-considered as the most up-to-date information that overrides any other signal.
-Servers SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply
-it once the referenced stream is opened. Holding PRIORITY_UPDATE frames for each
-stream requires server resources, which can can be bound by local implementation
-policy. (TODO: consider resolving #1261, and adding more text about bounds).
-Although there is no limit to the number PRIORITY_UPDATES that can be sent,
-storing only the most recently received frame limits resource commitment.
+is open (except for HTTP/2 push streams; see {{h2-update-frame}}). Furthermore,
+HTTP/3 offers no guaranteed ordering across streams, which could cause the frame
+to be received earlier than intended. Either case leads to a race condition
+where a server receives a PRIORITY_UPDATE frame that references a request stream
+that is yet to be opened. To solve this condition, for the purposes of
+scheduling, the most recently received PRIORITY_UPDATE frame can be considered
+as the most up-to-date information that overrides any other signal. Servers
+SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply it once
+the referenced stream is opened. Holding PRIORITY_UPDATE frames for each stream
+requires server resources, which can can be bound by local implementation
+policy. Although there is no limit to the number of PRIORITY_UPDATES that can be
+sent, storing only the most recently received frame limits resource commitment.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
@@ -402,10 +434,24 @@ Prioritized Stream ID:
 Priority Field Value:
 : The priority update value in ASCII text, encoded using Structured Fields.
 
-The Prioritized Stream ID MUST be within the stream limit. If a
-server receives a PRIORITY_UPDATE with a Prioritized Stream ID that is beyond
-the stream limits, this SHOULD be treated as a connection error of type
+When the PRIORITY_UPDATE frame applies to a request stream, clients SHOULD
+provide a Prioritized Stream ID that refers to a stream in the "open",
+"half-closed (local)", or "idle" state. Servers can discard frames where the
+Prioritized Stream ID refers to a stream in the "half-closed (local)" or
+"closed" state. The number of streams which have been prioritized but remain in
+the "idle" state plus the number of active streams (those in the "open" or
+either "half-closed" state; see section 5.1.2 of {{RFC7540}}) MUST NOT exceed
+the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. Servers that receive
+such a PRIORITY_UPDATE MUST respond with a connection error of type
 PROTOCOL_ERROR.
+
+When the PRIORITY_UPDATE frame applies to a push stream, clients SHOULD provide
+a Prioritized Stream ID that refers to a stream in the "reserved (remote)" or
+"half-closed (local)" state. Servers can discard frames where the Prioritized
+Stream ID refers to a stream in the "closed" state.
+Clients MUST NOT provide a Prioritized Stream ID that refers to a push stream in the
+"idle" state. Servers that receive a PRIORITY_UPDATE for a push stream in the "idle" state MUST
+respond with a connection error of type PROTOCOL_ERROR.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
@@ -569,6 +615,23 @@ to do so is an implementation decision. For example, a server might
 pre-emptively send responses of a particular incremental type based on other
 information such as content size.
 
+Optimal scheduling of server push is difficult, especially when pushed resources
+contend with active concurrent requests. Servers can consider many factors when
+scheduling, such as the type or size of resource being pushed, the priority of
+the request that triggered the push, the count of active concurrent responses,
+the priority of other active concurrent responses, etc. There is no general
+guidance on the best way to apply these. A server that is too simple could
+easily push at too high a priority and block client requests, or push at too low
+a priority and delay the response, negating intended goals of server push.
+
+Priority signals are a factor for server push scheduling. The concept of
+parameter value defaults applies slightly differently because there is no
+explicit client-signalled initial priority. A server can apply priority signals
+provided in an origin response; see the merging guidance given in {{merging}}.
+In the absence of origin signals, applying default parameter values could be
+suboptimal. How ever a server decides to schedule a pushed response, it can
+signal the intended priority to the client by including the Priority field in
+a PUSH_PROMISE or HEADERS frame.
 
 
 # Fairness {#fairness}
@@ -580,10 +643,6 @@ conveyed over a non-coalesced HTTP connection (e.g., HTTP/1.1) might go unused.
 
 The remainder of this section discusses scenarios where unfairness is
 problematic and presents possible mitigations, or where unfairness is desirable.
-
-TODO: Discuss if we should add a signal that mitigates this issue. For example,
-we might add a SETTINGS parameter that indicates the next hop that the
-connection is NOT coalesced (see https://github.com/kazuho/draft-kazuho-httpbis-priority/issues/99).
 
 ## Coalescing Intermediaries
 
@@ -758,6 +817,10 @@ Code:
 Specification:
 : This document
 
+Upon publication, please create the HTTP Priority Parameters registry at
+<https://iana.org/assignments/http-priority> and populate it with the types
+defined in {{parameters}}; see {{register}} for its associated procedures.
+
 --- back
 
 # Acknowledgements
@@ -782,6 +845,11 @@ Andrew Galloni, Craig Taylor, Ian Swett, Kazuho Oku, Lucas Pardue, Matthew Cox,
 Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 
 # Change Log
+
+## Since draft-ietf-httpbis-priority-01
+* Describe considerations for server push prioritisation (#1056, #1345)
+* Define HTTP/2 PRIORITY_UPDATE ID limits in HTTP/2 terms (#1261, #1344)
+* Add a Parameters registry (#1371)
 
 ## Since draft-ietf-httpbis-priority-01
 
