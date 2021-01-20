@@ -224,10 +224,10 @@ sf-list       = list-member *( OWS "," OWS list-member )
 list-member   = sf-item / inner-list
 ~~~
 
-Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Strings could look like:
+Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
 
 ~~~ http-message
-Example-List: "foo", "bar", "It was the best of times."
+Example-List: sugar, tea, rum
 ~~~
 
 An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
@@ -235,14 +235,14 @@ An empty List is denoted by not serializing the field at all. This implies that 
 Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{?RFC7230}}{: section="3.2.2"}; for example, the following are equivalent:
 
 ~~~ http-message
-Example-List: foo, bar
+Example-List: sugar, tea, rum
 ~~~
 
 and
 
 ~~~ http-message
-Example-List: foo
-Example-List: bar
+Example-List: sugar, tea
+Example-List: rum
 ~~~
 
 However, individual members of a List cannot be safely split between lines; see {{text-parse}} for details.
