@@ -1,6 +1,6 @@
 ---
 title: Contributing to HTTP
-description: How to particpate in the HTTP Working Group
+description: How to participate in the HTTP Working Group
 ---
 
 Anyone can contribute to HTTP; you don't have to join the Working Group, because there is no "membership" -- anyone who participates in the work, as outlined below, is part of the HTTP Working Group.
