@@ -119,12 +119,12 @@ The following parameter values are defined to explain why the request went forwa
 
 * bypass - The cache was configured to not handle this request
 * method - The request method's semantics require the request to be forwarded
-* request - The cache was able to select a fresh response for the request, but the request's semantics (e.g., Cache-Control request directives) did not allow its use
-* stale - The cache was able to select a response for the request, but it was stale
-* partial - The cache was able to select a partial response for the request, but it did not contain all of the requested ranges (or the request was for the complete response)
 * uri-miss - The cache did not contain any responses that matched the request URI
 * vary-miss - The cache contained a response that matched the request URI, but could not select a response based upon this request's headers and stored Vary headers.
 * miss - The cache did not contain any responses that could be used to satisfy this request (to be used when an implementation cannot distinguish between uri-miss and vary-miss)
+* request - The cache was able to select a fresh response for the request, but the request's semantics (e.g., Cache-Control request directives) did not allow its use
+* stale - The cache was able to select a response for the request, but it was stale
+* partial - The cache was able to select a partial response for the request, but it did not contain all of the requested ranges (or the request was for the complete response)
 
 The most specific reason that the cache is aware of SHOULD be used.
 
