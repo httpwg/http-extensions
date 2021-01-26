@@ -89,6 +89,13 @@ normative:
       ins: D. Denicola
       name: Domenic Denicola
       organization: Google, Inc.
+  SAMESITE:
+    target: https://html.spec.whatwg.org/#same-site
+    title: HTML - Living Standard
+    date: 2021-01-26
+    author:
+    -
+      org: WHATWG
   SERVICE-WORKERS:
     target: http://www.w3.org/TR/service-workers/
     title: Service Workers
@@ -940,7 +947,7 @@ following conditions holds:
 ## "Same-site" and "cross-site" Requests  {#same-site-requests}
 
 Two origins are same-site if they satisfy the "same site" criteria defined in
-{{HTML}}. A request is "same-site" if the following criteria are true:
+{{SAMESITE}}. A request is "same-site" if the following criteria are true:
 
 1.  The request is not the result of a cross-site redirect. That is,
     the origin of every url in the request's url list is same-site with the
