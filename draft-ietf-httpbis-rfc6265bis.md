@@ -68,7 +68,6 @@ normative:
   HTML:
     target: https://html.spec.whatwg.org/
     title: HTML
-    date: 2021-01-25
     author:
     -
       ins: I. Hickson
