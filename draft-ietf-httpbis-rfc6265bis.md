@@ -961,7 +961,7 @@ returns true:
 Note: The port component of the origins is not considered.
 
 A request is "same-site" if its target's URI's origin is same-site with the
-request's client's "site for cookies" (which is an origin), or if the request
+request's client's "site for cookies" (which is an origin) or if the request
 has no client, except for requests issued due to certain reloads, which have
 special handling (as described below). A request that is not "same-site" is
 instead "cross-site".
