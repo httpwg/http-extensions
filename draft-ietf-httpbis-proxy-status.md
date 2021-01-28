@@ -30,6 +30,8 @@ author:
 
 normative:
   RFC2119:
+  RFC8126:
+  RFC8499:
 
 informative:
 
@@ -187,7 +189,7 @@ Proxy-Status: ExampleProxy; error="http_protocol_error";
 
 New Proxy-Status Parameters can be defined by registering them in the HTTP Proxy-Status Parameters registry.
 
-Registration requests are reviewed and approved by a Designated Expert, as per {{!RFC8126}}, Section 4.5. A specification document is appreciated, but not required.
+Registration requests are reviewed and approved by a Designated Expert, as per {{RFC8126, Section 4.5}}. A specification document is appreciated, but not required.
 
 The Expert(s) should consider the following factors when evaluating requests:
 
@@ -220,7 +222,7 @@ This section lists the Proxy Error Types defined by this document. See {{registe
 * Name: dns_error
 * Description: The intermediary encountered a DNS error when trying to find an IP address for the next hop hostname.
 * Extra Parameters:
-  - rcode: A sf-string conveying the DNS RCODE that indicates the error type. See {{!RFC8499}}, Section 3.
+  - rcode: A sf-string conveying the DNS RCODE that indicates the error type. See {{RFC8499, Section 3}}.
 * Recommended HTTP status code: 502
 
 ### Destination Not Found
@@ -444,7 +446,7 @@ Note that additional information about the error can be recorded in the details 
 
 New Proxy Error Types can be defined by registering them in the HTTP Proxy Error Types registry.
 
-Registration requests are reviewed and approved by a Designated Expert, as per {{!RFC8126}}, Section 4.5. A specification document is appreciated, but not required.
+Registration requests are reviewed and approved by a Designated Expert, as per {{RFC8126, Section 4.5}}. A specification document is appreciated, but not required.
 
 The Expert(s) should consider the following factors when evaluating requests:
 
