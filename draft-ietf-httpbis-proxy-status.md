@@ -168,6 +168,19 @@ For example:
 Proxy-Status: "proxy.example.org"; next-protocol=h2
 ~~~
 
+## received-status
+
+The `received-status` parameter's value indicates the HTTP status code that the intermediary
+received from the next hop server.
+
+The value MUST be a sf-integer.
+
+For example:
+
+~~~ http-message
+Proxy-Status: ExampleProxy; received-status=200
+~~~
+
 ### details
 
 The `details` parameter's value is a sf-string containing additional information not captured anywhere else. This can include implementation-specific or deployment-specific information.
