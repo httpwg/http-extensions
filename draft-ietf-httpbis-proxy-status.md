@@ -95,7 +95,7 @@ indicates that this response was handled first by FooProxy and then ExampleCDN.
 
 Intermediaries determine when it is appropriate to add the Proxy-Status field to a response. Some might decide to append to it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
-Each member of the list identifes the intermediary that inserted the value, and MUST have a type of either sf-string or sf-token. Depending on the deployment, this might be a product or service name (e.g., ExampleProxy or "Example CDN"), a hostname ("proxy-3.example.com"), an IP address, or a generated string.
+Each member of the list identifies the intermediary that inserted the value, and MUST have a type of either sf-string or sf-token. Depending on the deployment, this might be a product or service name (e.g., ExampleProxy or "Example CDN"), a hostname ("proxy-3.example.com"), an IP address, or a generated string.
 
 Parameters on each member convey additional information about that intermediary's handling of the response and its associated request; see {{params}} for defined parameters. While all of these parameters are OPTIONAL, intermediaries are encouraged to provide as much information as possible (but see {{security}} for security considerations in doing so).
 
