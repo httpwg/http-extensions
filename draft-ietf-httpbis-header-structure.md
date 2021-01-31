@@ -775,7 +775,7 @@ Given an ASCII string as input_string, return an array of (item_or_inner_list, p
    3. If input_string is empty, return members.
    4. Consume the first character of input_string; if it is not ",", fail parsing.
    5. Discard any leading OWS characters from input_string.
-   6. If input_string is empty, there is a trailing comma; fail parsing.
+   6. If input_string is empty or the first character of input_string is ",", fail parsing.
 3. No structured data has been found; return members (which is empty).
 
 
@@ -825,7 +825,7 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
    7. If input_string is empty, return dictionary.
    8. Consume the first character of input_string; if it is not ",", fail parsing.
    9. Discard any leading OWS characters from input_string.
-   0. If input_string is empty, there is a trailing comma; fail parsing.
+   0. If input_string is empty or the first character of input_string is ",", fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
 Note that when duplicate Dictionary keys are encountered, all but the last instance are ignored.
