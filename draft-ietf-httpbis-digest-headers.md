@@ -1176,6 +1176,12 @@ so validation of duplicates is left as an implementation decision.
 Endpoints might select all, some or none of the values for checksum comparison and,
 based on the intersection of those results, conditionally pass or fail digest validation.
 
+## Resource exhaustion
+
+`Digest` validation consumes computational resources.
+In order to avoid resource exhaustion, implementations can restrict
+validation of the algorithm types, number of validations, or the size of content.
+
 # IANA Considerations
 
 ## Establish the HTTP Digest Algorithm Values Registry {#iana-digest-algorithm-registry}
