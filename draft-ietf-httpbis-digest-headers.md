@@ -3,6 +3,7 @@ title: Digest Headers
 abbrev:
 docname: draft-ietf-httpbis-digest-headers-latest
 category: std
+obsoletes: 3230
 
 ipr: trust200902
 area: Applications and Real-Time
