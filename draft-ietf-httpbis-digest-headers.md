@@ -4,6 +4,7 @@ abbrev:
 docname: draft-ietf-httpbis-digest-headers-latest
 category: std
 obsoletes: 3230
+updates: 5843
 
 ipr: trust200902
 area: Applications and Real-Time
@@ -28,18 +29,8 @@ author:
     email: lucaspardue.24.7@gmail.com
 
 normative:
-  RFC1321:
-  RFC3174:
-  RFC1950:
   RFC3230:
-  RFC3309:
-  RFC2119:
   RFC5843:
-  RFC4648:
-  RFC5234:
-  RFC6234:
-  RFC7405:
-  RFC8174:
   UNIX:
     title: The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98
     author:
@@ -72,7 +63,6 @@ normative:
 informative:
   RFC2818:
   RFC7231:
-  RFC7396:
   SRI:
     title: "Subresource Integrity"
     date: 2016-06-23
@@ -211,8 +201,8 @@ The goals do not include:
 ## Notational Conventions
 {::boilerplate bcp14}
 
-This document uses the Augmented BNF defined in [RFC5234] and updated by
-[RFC7405] along with the "#rule" extension defined in Section 5.6.1 of
+This document uses the Augmented BNF defined in {{!ABNF=RFC5234}} and updated by
+{{!ABNF2=RFC7405}} along with the "#rule" extension defined in Section 5.6.1 of
 {{SEMANTICS}}.
 
 The definitions "representation", "selected representation", "representation
@@ -360,32 +350,32 @@ See the references above for further information.
 
   {: vspace="0"}
   sha-256
-  : * Description: The SHA-256 algorithm [RFC6234].  The output of
-      this algorithm is encoded using the base64 encoding [RFC4648].
-    * Reference: [RFC6234], [RFC4648], this document.
+  : * Description: The SHA-256 algorithm {{!SHA2=RFC6234}}.  The output of
+      this algorithm is encoded using the base64 encoding {{!BASE64=RFC4648}}.
+    * Reference: {{SHA2}}, {{BASE64}}, this document.
     * Status: standard
 
   sha-512
-  : * Description: The SHA-512 algorithm [RFC6234].  The output of
-      this algorithm is encoded using the base64 encoding [RFC4648].
-    * Reference: [RFC6234], [RFC4648], this document.
+  : * Description: The SHA-512 algorithm {{SHA2}}.  The output of
+      this algorithm is encoded using the base64 encoding {{BASE64}}.
+    * Reference: {{SHA2}}, {{BASE64}}, this document.
     * Status: standard
 
   md5
-  : * Description: The MD5 algorithm, as specified in [RFC1321].
+  : * Description: The MD5 algorithm, as specified in {{!MD5=RFC1321}}.
       The output of this algorithm is encoded using the
-      base64 encoding  [RFC4648].
+      base64 encoding  {{BASE64}}.
       This digest-algorithm MUST NOT be used as it's now vulnerable
       to collision attacks. See {{NO-MD5}} and [CMU-836068].
-    * Reference: [RFC1321], [RFC4648], this document.
+    * Reference: {{MD5}}, {{BASE64}}, this document.
     * Status: deprecated
 
   sha
-  : * Description:  The SHA-1 algorithm [RFC3174].  The output of this
-      algorithm is encoded using the base64 encoding  [RFC4648].
+  : * Description:  The SHA-1 algorithm {{!SHA1=RFC3174}}.  The output of this
+      algorithm is encoded using the base64 encoding  {{BASE64}}.
       This digest-algorithm MUST NOT be used as it's now vulnerable
       to collision attacks. See {{NO-SHA1}} and [IACR-2020-014].
-    * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
+    * Reference: {{SHA1}}, {{SHA2}}, {{BASE64}}, this document.
     * Status: deprecated
 
   unixsum
@@ -415,13 +405,13 @@ To allow sender and recipient to provide a checksum which is independent from
   id-sha-512
   : * Description: The sha-512 digest of the representation-data of the resource when no
     content coding is applied
-    * Reference: [RFC6234], [RFC4648], this document.
+    * Reference: {{SHA2}}, {{BASE64}}, this document.
     * Status: standard
 
   id-sha-256
   : * Description: The sha-256 digest of the representation-data of the resource when no
       content coding is applied
-    * Reference: [RFC6234], [RFC4648], this document.
+    * Reference: {{SHA2}}, {{BASE64}}, this document.
     * Status: standard
 
 If other digest-algorithm values are defined, the associated encoding MUST
@@ -1060,7 +1050,7 @@ so they MUST NOT be used with `Digest`.
 
 ## Other Deprecated Algorithms {#deprecated-algorithms}
 
-The ADLER32 algorithm defined in [RFC1950] has been deprecated by [RFC3309]
+The ADLER32 algorithm defined in {{!ADLER=RFC1950}} has been deprecated by {{?SCTP=RFC3309}}
 because, under certain conditions, it provides weak detection of errors. It is now
 NOT RECOMMENDED for use with `Digest`.
 
@@ -1261,7 +1251,7 @@ Values](https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml)
 registry:
 
 * Digest Algorithm: adler32
-* Description: The ADLER32 algorithm is a checksum specified in [RFC1950] "ZLIB
+* Description: The ADLER32 algorithm is a checksum specified in {{ADLER}} "ZLIB
   Compressed Data Format". The 32-bit output is encoded in hexadecimal (using
   between 1 and 8 ASCII characters from 0-9, A-F, and a-f; leading 0's are
   allowed). For example, adler32=03da0195 and adler32=3DA0195 are both valid
@@ -1617,7 +1607,7 @@ _RFC Editor: Please remove this section before publication._
 
 * Align title with document name
 * Add id-sha-* algorithm examples #880
-* Reference [RFC6234] and [RFC3174] instead of FIPS-1
+* Reference {{SHA2}} and {{SHA1}} instead of FIPS-1
 * Deprecate MD5
 * Obsolete ADLER-32 but don't forbid it #828
 * Update CRC32C value in IANA table #828
