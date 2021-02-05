@@ -954,7 +954,8 @@ Two origins are same-site if they satisfy the "same site" criteria defined in
     request's current url's origin.
 
 2.  The target's URI's origin is same-site with the request's client's "site
-    for cookies" (which is an origin), or if the request has no client.
+    for cookies" (which is an origin), or if the request has no client or the
+    request's client is null.
 
 The request is otherwise "cross-site".
 
