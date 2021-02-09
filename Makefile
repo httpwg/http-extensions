@@ -1,6 +1,6 @@
 LIBDIR := lib
 DISABLE_RIBBON := true
-MD_INDEX := true
+INDEX_FORMAT := md
 
 
 include $(LIBDIR)/main.mk
