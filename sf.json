@@ -5,6 +5,7 @@
     "variants": "dict",
     "signature": "dict",
     "signature-input": "dict",
+    "priority": "dict",
     "x-dictionary": "dict",
     "x-list": "list",
     "x-list-a": "list",
