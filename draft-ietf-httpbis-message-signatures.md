@@ -71,12 +71,6 @@ informative:
 
 This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over content within an HTTP message.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.
 
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-This work was originally based on draft-cavage-http-signatures-12, but has since diverged from it, to reflect discussion since adoption by the HTTP Working Group. In particular, it addresses issues that have been identified, and adds features to support new use cases. It is a work-in-progress and not yet suitable for deployment.
-
 --- middle
 
 # Introduction {#intro}
@@ -919,160 +913,10 @@ The corresponding Signature Input is:
 date: Tue, 07 Jun 2014 20:51:35 GMT
 ~~~
 
-# Topics for Working Group Discussion {#wg-discuss}
-
-*RFC EDITOR: please remove this section before publication*
-
-The draft has known issues that will need to be addressed during development, and these issues have been enumerated but not addressed in this version. Topics are not listed in any particular order.
-
-## Issues
-
-### Confusing guidance on algorithm and key identification {#issue-alg-keyid}
-
-The current draft encourages determining the Algorithm metadata property from the `keyid` field, both in the guidance for the use of `algorithm` and `keyid`, and the definition for the `hs2019` algorithm and deprecation of the other algorithms in the registry.  The current state arose from concern that a malicious party could change the value of the `algorithm` parameter, potentially tricking the verifier into accepting a signature that would not have been verified under the actual parameter.
-
-Punting algorithm identification into `keyid` hurts interoperability, since we aren't defining the syntax or semantics of `keyid`.  It actually goes against that claim, as we are dictating that the signing algorithm must be specified by `keyid` or derivable from it.  It also renders the algorithm registry essentially useless.  Instead of this approach, we can protect against manipulation of the Signature header field by adding support for (and possibly mandating) including Signature metadata within the Signature Input.
-
-### Lack of definition of keyid hurts interoperability
-
-The current text leaves the format and semantics of `keyid` completely up to the implementation.  This is primarily due to the fact that most implementers of Cavage have extensive investment in key distribution and management, and just need to plug an identifier into the header.  We should support those cases, but we also need to provide guidance for the developer that doesn't have that and just wants to know how to identify a key.  It may be enough to punt this to profiling specs, but this needs to be explored more.
-
-### Algorithm Registry duplicates work of JWA
-
-{{?RFC7518}} already defines an IANA registry for cryptographic algorithms.  This wasn't used by Cavage out of concerns about complexity of JOSE, and issues with JWE and JWS being too flexible, leading to insecure combinations of options.  Using JWA's definitions does not need to mean we're using JOSE, however.
-We should look at if/how we can leverage JWA's work without introducing too many sharp edges for implementers.
-
-In any use of JWS algorithms, this spec would define a way to create the JWS Signing Input string to be applied to the algorithm.  It should be noted that this is incompatible with JWS itself, which requires the inclusion of a structured header in the signature input.
-
-A possible approach is to incorporate all elements of the JWA signature algorithm registry into this spec using a prefix or other marker, such as `jws-RS256` for the RSA 256 JSON Web Signature algorithm.
-
-### Algorithm Registry should not be initialized with deprecated entries
-
-The initial entries in this document reflect those in Cavage.  The ones that are marked deprecated were done so because of the issue explained in {{issue-alg-keyid}}, with the possible exception of `rsa-sha1`.  We should probably just remove that one.
-
-### No percent-encoding normalization of path/query
-
-See: [issue #26](https://github.com/w3c-dvcg/http-signatures/issues/26)
-
-The canonicalization rules for `*request-target` do not perform handle minor, semantically meaningless differences in percent-encoding, such that verification could fail if an intermediary normalizes the effective request URI prior to forwarding the message.
-
-At a minimum, they should be case and percent-encoding normalized as described in sections 6.2.2.1 and 6.2.2.2 of {{?RFC3986}}.
-
-### Misleading name for headers parameter
-
-The Covered Content list contains identifiers for more than just headers, so the `header` parameter name is no longer appropriate.  Some alternatives: "content", "signed-content", "covered-content".
-
-### Changes to whitespace in header field values break verification
-
-Some header field values contain RWS, OWS, and/or BWS.  Since the header field value canonicalization rules do not address whitespace, changes to it (e.g., removing OWS or BWS or replacing strings of RWS with a single space) can cause verification to fail.
-
-### Multiple Set-Cookie headers are not well supported
-
-The Set-Cookie header can occur multiple times but does not adhere to the list syntax, and thus is not well supported by the header field value concatenation rules.
-
-### Covered Content list is not signed
-
-The Covered Content list should be part of the Signature Input, to protect against malicious changes.
-
-### Algorithm is not signed
-
-The Algorithm should be part of the Signature Input, to protect against malicious changes.
-
-### Verification key identifier is not signed
-
-The Verification key identifier (e.g., the value used for the `keyid` parameter) should be part of the Signature Input, to protect against malicious changes.
-
-### Max values, precision for Integer String and Decimal String not defined
-
-The definitions for Integer String and Decimal String do not specify a maximum value.  The definition for Decimal String (used to provide sub-second precision for Expiration Time) does not define minimum or maximum precision requirements.  It should set a sane requirement here (e.g., MUST support up to 3 decimal places and no more).
-
-### keyid parameter value could break list syntax
-
-The `keyid` parameter value needs to be constrained so as to not break list syntax (e.g., by containing a comma).
-
-### Creation Time and Expiration Time do not allow for clock skew
-
-The processing instructions for Creation Time and Expiration Time imply that verifiers are not permitted to account for clock skew during signature verification.
-
-### Should require lowercased header field names as identifiers
-
-The current text allows mixed-case header field names when they are being used as content identifiers.  This is unnecessary, as header field names are case-insensitive, and creates opportunity for incompatibility.  Instead, content identifiers should always be lowercase.
-
-### Reconcile Date header and Creation Time
-
-The draft is missing guidance on if/how the Date header relates to signature Creation Time.  There are cases where they may be different, such as if a signature was pre-created.  Should Creation Time default to the value in the Date header if the `created` parameter is not specified?
-
-### Remove algorithm-specific rules for content identifiers
-
-The rules that restrict when the signer can or must include certain identifiers appear to be related to the pseudo-revving of the Cavage draft that happened when the `hs2019` algorithm was introduced.  We should drop these rules, as it can be expected that anyone implementing this draft will support all content identifiers.
-
-### Add guidance for signing compressed headers
-
-The draft should provide guidance on how to sign headers when {{?RFC7541}} is used.  This guidance might be as simple as "sign the uncompressed header field value."
-
-### Transformations to Via header field value break verification
-
-Intermediaries are permitted to strip comments from the `Via` header field value, and consolidate related sequences of entries.  The canonicalization rules do not account for these changes, and thus they cause signature verification to fail if the `Via` header is signed. At the very least, guidance on signing or not signing `Via` headers needs to be included.
-
-### Case changes to case-insensitive header field values break verification
-
-Some header field values are case-insensitive, in whole or in part. The canonicalization rules do not account for this, thus a case change to a covered header field value causes verification to fail.
-
-### Need more examples for Signature header
-
-Add more examples showing different cases e.g, where `created` or `expires` are not present.
-
-### Expiration not needed
-
-In many cases, putting the expiration of the signature into the hands of the signer opens up more options for failures than necessary.  Instead of the `expires`, any verifier can use the `created` field and an internal lifetime or offset to calculate expiration.  We should consider dropping the `expires` field.
-
-## Features
-
-### Define more content identifiers
-
-It should be possible to independently include the following content and metadata properties in Covered Content:
-
-- The signature's Algorithm
-- The signature's Covered Content
-- The value used for the `keyid` parameter
-- Request method
-- Individual components of the effective request URI: scheme, authority, path, query
-- Status code
-- Request body (currently supported via Digest header {{?RFC3230}}  )
-
-### Multiple signature support
-
-(( Editor's note: I believe this use case is theoretical.  Please let me know if this is a use case you have. ))
-
-There may be scenarios where attaching multiple signatures to a single message is useful:
-
-- A gateway attaches a signature over headers it adds (e.g., `Forwarded`) to messages already signed by the user agent.
-- A signer attaches two signatures signed by different keys, to be verified by different entities.
-
-This could be addressed by changing the Signature header syntax to accept a list of parameter sets for a single signature, e.g., by separating parameters with `";"` instead of `","`.  It may also be necessary to include a signature identifier parameter.
-
-### Support for incremental signing of header field value list items
-
-(( Editor's note: I believe this use case is theoretical.  Please let me know if this is a use case you have. ))
-
-Currently, signing a header field value is all-or-nothing: either the entire value is signed, or none of it is.  For header fields that use list syntax, it would be useful to be able to specify which items in the list are signed.
-
-A simple approach that allowed the signer to indicate the list size at signing time would allow a signer to sign header fields that are may be appended to by intermediaries as the message makes its way to the recipient.  Specifying list size in terms of number of items could introduce risks of list syntax is not strictly adhered to (e.g., a malicious party crafts a value that gets parsed by the application as 5 items, but by the verifier as 4).  Specifying list size in number of octets might address this, but more exploration is required.
-
-### Support expected authority changes
-
-In some cases, the authority of the effective request URI may be expected to change, for example from "public-service-name.example.com" to "service-host-1.public-service-name.example.com".  This is commonly the case for services that are hosted behind a load-balancing gateway, where the client sends requests to a publicly known domain name for the service, and these requests are transformed by the gateway into requests to specific hosts in the service fleet.
-
-One possible way to handle this would be to special-case the Host header field to allow verifier to substitute a known expected value, or a value provided in another header field (e.g., `Via`) when generating the Signature Input, provided that the verifier also recognizes the real value in the `Host` header.  Alternatively, this logic could apply to an `(audience)` content identifier.
-
-### Support for signing specific cookies
-
-A signer may only wish to sign one or a few cookies, for example if the website requires its authentication state cookie to be signed, but also sets other cookies (e.g., for analytics, ad tracking, etc.)
-
 # Acknowledgements {#acknowledgements}
 {:numbered="false"}
 
-This specification is based on the draft-cavage-http-signatures draft.  The editor would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.
+This specification was initially based on the draft-cavage-http-signatures internet draft.  The editor would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.
 
 The editor would also like to thank the following individuals for feedback on and implementations of the draft-cavage-http-signatures draft (in alphabetical order):
 Mark Adamcin,
@@ -1115,6 +959,8 @@ Jeffrey Yasskin
 
 - draft-ietf-httpbis-message-signatures
   - Since -01
+     * Removed editorial comments on document sources.
+     * Removed in-document issues list in favor of tracked issues.
      * Replaced unstructured `Signature` header with `Signature-Input` and `Signature` Dictionary Structured Header Fields.
      * Defined content identifiers for individual Dictionary members, e.g., `x-dictionary-field:member-name`.
      * Defined content identifiers for first N members of a List, e.g., `x-list-field:4`.
