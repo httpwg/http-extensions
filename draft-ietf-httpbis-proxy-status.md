@@ -138,7 +138,7 @@ When sending the error parameter, the most specific Proxy Error Type SHOULD be s
 
 Each Proxy Error Type has a Recommended HTTP Status Code. When generating a HTTP response containing `error`, its HTTP status code SHOULD be set to the Recommended HTTP Status Code. However, there may be circumstances (e.g., for backwards compatibility with previous behaviours, a status code has already been sent) when another status code might be used.
 
-Proxy Error Types can also define any number of extra parameters for use with that type. Their use, like all parameters, is optional.
+Proxy Error Types can also define any number of extra parameters for use with that type. Their use, like all parameters, is optional. As a result, if an extra parameter is used with a Proxy Error Type for which it is not defined, it will be ignored.
 
 
 ### next-hop
