@@ -163,7 +163,7 @@ For example:
 Proxy-Status: "proxy.example.org"; next-protocol=h2
 ~~~
 
-## received-status
+### received-status
 
 The `received-status` parameter's value indicates the HTTP status code that the intermediary received from the next hop server.
 
