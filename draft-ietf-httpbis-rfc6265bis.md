@@ -961,8 +961,18 @@ returns true:
 Note: The port component of the origins is not considered.
 
 A request is "same-site" if its target's URI's origin is same-site with the
-request's client's "site for cookies" (which is an origin), or if the request
-has no client. The request is otherwise "cross-site".
+request's client's "site for cookies" (which is an origin) or if the request
+has no client, except for requests issued due to certain reloads, which have
+special handling (as described below). A request that is not "same-site" is
+instead "cross-site".
+
+When a request is a reload navigation triggered through a user interface element
+(as defined by the user agent; e.g., a request triggered by the user clicking a
+refresh button on a toolbar), whether that request is same-site or cross-site
+should be evaluated based on the client of the request that originally navigated
+to the reloaded page, rather than the client of the request itself. For all
+other reload navigations, the determination should be made based on the client
+of the request itself, as usual.
 
 The request's client's "site for cookies" is calculated depending upon its
 client's type, as described in the following subsections:
@@ -1986,6 +1996,37 @@ decision. Moreover, a number of side-channels exist which could allow a server
 to link distinct requests even in the absence of cookies (for example, connection
 and/or socket pooling between same-site and cross-site requests).
 
+### Reload navigations
+
+Requests issued for reloads triggered through user interface elements (such as a
+refresh button on a toolbar) are same-site only if the reloaded document was
+originally navigated to via a same-site request. This differs from the handling
+of other reload navigations, which are always same-site if top-level, since the
+source browsing context's active document is precisely the document being
+reloaded.
+
+This special handling of reloads triggered through a user interface element
+avoids sending `SameSite` cookies on user-initiated reloads if they were
+withheld on the original navigation (i.e., if the initial navigation were
+cross-site). If the reload navigation were instead considered same-site, and
+sent all the initially withheld `SameSite` cookies, the security benefits of
+withholding the cookies in the first place would be nullified. This is
+especially important given that the absence of `SameSite` cookies withheld on a
+cross-site navigation request may lead to visible site breakage, prompting the
+user to trigger a reload.
+
+For example, suppose the user clicks on a link from `https://attacker.example/`
+to `https://victim.example/`. This is a cross-site request, so `SameSite=Strict`
+cookies are withheld. Suppose this causes `https://victim.example/` to appear
+broken, because the site only displays its sensitive content if a particular
+`SameSite` cookie is present in the request. The user, frustrated by the
+unexpectedly broken site, presses refresh on their browser's toolbar. To now
+consider the reload request same-site and send the initially withheld `SameSite`
+cookie would defeat the purpose of withholding it in the first place, as the
+reload navigation triggered through the user interface may replay the original
+(potentially malicious) request. Thus, the reload request should be considered
+cross-site, like the request that initially navigated to the page.
+
 # IANA Considerations
 
 ## Cookie {#iana-cookie}
@@ -2183,6 +2224,10 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 
 * Consider scheme when running the same-site algorithm:
    <https://github.com/httpwg/http-extensions/pull/1324>.
+
+* Define "same-site" for reload navigation requests, e.g. those triggered via
+  user interface elements:
+  <https://github.com/httpwg/http-extensions/pull/1384>
 
 
 # Acknowledgements
