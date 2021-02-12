@@ -66,24 +66,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aexpect-ct) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-expect-ct/)
 
 
-### Structured Headers
-
-*Sent to IESG*
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-header-structure) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aheader-structure) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-header-structure/)
-
-
-### Client Hints
-
-*Sent to IESG*
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-hints.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-hints.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
-
-
 ### RFC6265bis
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-rfc6265bis.txt))

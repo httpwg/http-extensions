@@ -27,7 +27,6 @@ author:
     ins: M. Nottingham
     name: Mark Nottingham
     organization: Fastly
-    street: made in
     city: Prahran
     region: VIC
     country: Australia
@@ -163,39 +162,43 @@ Specifications can refer to a field name as a "structured header name", "structu
 
 For example, a fictitious Foo-Example header field might be specified as:
 
-~~~ example
---8<--
-42. Foo-Example Header
+<blockquote>
+<t>42. Foo-Example Header</t>
 
-The Foo-Example HTTP header field conveys information about how
-much Foo the message has.
+<t>The Foo-Example HTTP header field conveys information about how
+much Foo the message has.</t>
 
-Foo-Example is an Item Structured Header [RFC8941]. Its value MUST be
-an Integer (Section 3.3.1 of [RFC8941]). Its ABNF is:
+<t>Foo-Example is an Item Structured Header [RFC8941]. Its value MUST be
+an Integer (Section 3.3.1 of [RFC8941]). Its ABNF is:</t>
 
+<artwork>
   Foo-Example = sf-integer
+</artwork>
 
-Its value indicates the amount of Foo in the message, and it MUST
+<t>Its value indicates the amount of Foo in the message, and it MUST
 be between 0 and 10, inclusive; other values MUST cause
-the entire header field to be ignored.
+the entire header field to be ignored.</t>
 
-The following parameter is defined:
-* A parameter whose key is "foourl", and whose value is a String
+<t>The following parameter is defined:</t>
+
+<ul>
+<li>A parameter whose key is "foourl", and whose value is a String
   (Section 3.3.3 of [RFC8941]), conveying the Foo URL
-  for the message. See below for processing requirements.
+  for the message. See below for processing requirements.</li>
+</ul>
 
-"foourl" contains a URI-reference (Section 4.1 of [RFC3986]). If
+<t>"foourl" contains a URI-reference (Section 4.1 of [RFC3986]). If
 its value is not a valid URI-reference, the entire header field
 MUST be ignored. If its value is a relative reference (Section 4.2
 of [RFC3986]), it MUST be resolved (Section 5 of [RFC3986]) before
-being used.
+being used.</t>
 
-For example:
+<t>For example:</t>
 
+<artwork>
   Foo-Example: 2; foourl="https://foo.example.com/"
--->8--
-~~~
-
+</artwork>
+</blockquote>
 
 # Structured Data Types {#types}
 
@@ -221,10 +224,10 @@ sf-list       = list-member *( OWS "," OWS list-member )
 list-member   = sf-item / inner-list
 ~~~
 
-Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Strings could look like:
+Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
 
 ~~~ http-message
-Example-List: "foo", "bar", "It was the best of times."
+Example-List: sugar, tea, rum
 ~~~
 
 An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
@@ -232,14 +235,14 @@ An empty List is denoted by not serializing the field at all. This implies that 
 Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{?RFC7230}}{: section="3.2.2"}; for example, the following are equivalent:
 
 ~~~ http-message
-Example-List: foo, bar
+Example-List: sugar, tea, rum
 ~~~
 
 and
 
 ~~~ http-message
-Example-List: foo
-Example-List: bar
+Example-List: sugar, tea
+Example-List: rum
 ~~~
 
 However, individual members of a List cannot be safely split between lines; see {{text-parse}} for details.
@@ -506,7 +509,7 @@ sf-binary = ":" *(base64) ":"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-A Byte Sequence is delimited with colons and encoded using base64 ({{!RFC4648}}{: section="4"}). For example:
+A Byte Sequence is delimited with colons and encoded using base64 ({{RFC4648, Section 4}}). For example:
 
 ~~~ http-message
 Example-ByteSequence: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
@@ -704,13 +707,13 @@ Given a Byte Sequence as input_bytes, return an ASCII string suitable for use in
 0. If input_bytes is not a sequence of bytes, fail serialization.
 1. Let output be an empty string.
 2. Append ":" to output.
-3. Append the result of base64-encoding input_bytes as per {{!RFC4648}}{: section="4"}, taking account of the requirements below.
+3. Append the result of base64-encoding input_bytes as per {{RFC4648, Section 4}}, taking account of the requirements below.
 4. Append ":" to output.
 5. Return output.
 
-The encoded data is required to be padded with "=", as per {{!RFC4648}}{: section="3.2"}.
+The encoded data is required to be padded with "=", as per {{RFC4648, Section 3.2}}.
 
-Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}{: section="3.5"}, unless it is not possible to do so due to implementation constraints.
+Likewise, encoded data SHOULD have pad bits set to zero, as per {{RFC4648, Section 3.5}}, unless it is not possible to do so due to implementation constraints.
 
 
 ### Serializing a Boolean {#ser-boolean}
@@ -740,7 +743,7 @@ Given an array of bytes as input_bytes that represent the chosen field's field-v
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
-When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{?RFC7230}}{: section="3.2.2"}; this assures that the entire field value is processed correctly.
+When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{RFC7230, Section 3.2.2}}; this assures that the entire field value is processed correctly.
 
 For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances. The parsing algorithms for both types allow tab characters, since these might
 be used to combine field lines by some implementations.
@@ -956,11 +959,11 @@ Given an ASCII string as input_string, return a Byte Sequence. input_string is m
 7. Let binary_content be the result of base64-decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below). If base64 decoding fails, parsing fails.
 8. Return binary_content.
 
-Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{!RFC4648}}{: section="3.2"}, parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
+Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{RFC4648, Section 3.2}}, parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
 
-Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{!RFC4648}}{: section="3.5"}), parsers SHOULD NOT fail when non-zero pad bits are present, unless they cannot be configured to do so.
+Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{RFC4648, Section 3.5}}), parsers SHOULD NOT fail when non-zero pad bits are present, unless they cannot be configured to do so.
 
-This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet and on line feeds in encoded data.
+This specification does not relax the requirements in {{RFC4648, Sections 3.1 and 3.3}}; therefore, parsers MUST fail on characters outside the base64 alphabet and on line feeds in encoded data.
 
 
 ### Parsing a Boolean {#parse-boolean}
