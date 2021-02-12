@@ -2217,9 +2217,14 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 * Consider scheme when running the same-site algorithm:
    <https://github.com/httpwg/http-extensions/pull/1324>.
 
+## draft-ietf-httpbis-rfc6265bis-08
+
 * Define "same-site" for reload navigation requests, e.g. those triggered via
   user interface elements:
   <https://github.com/httpwg/http-extensions/pull/1384>
+
+* Consider redirects when defining same-site:
+  <https://github.com/httpwg/http-extensions/pull/1348>
 
 
 # Acknowledgements
