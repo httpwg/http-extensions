@@ -252,7 +252,27 @@ The following table shows example canonicalized values for different content ide
 {: title="Non-normative examples of list prefix canonicalization."}
 
 
-## Signature Creation Time
+## Specialty Content Fields
+
+Content not found in an HTTP header can be included in the signature base string by defining a content identifier and the canonicalization method for its content.
+
+Specialty content identifiers MUST start with the asterisk `*` character. This specification defines the following specialty content identifiers:
+
+*created
+: The signature creation time. {{content-created}}
+
+*expires
+: The signature expiration time. {{content-expires}}
+
+*request-target
+: The target request endpoint. {{content-request-target}}
+
+*signature-params
+: The signature metadata parameters. {{content-signature-params}}
+
+Additional specialty content identifiers MAY be defined and registered in the HTTP Signatures Specialty Content Identifier Registry. {{content-registry}}
+
+### Signature Creation Time {#content-created}
 
 The signature's Creation Time ({{signature-metadata}}) is identified by the `*created` identifier.
 
@@ -260,13 +280,13 @@ Its canonicalized value is an `sf-integer` containing the signature's Creation T
 
 > The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as [RFC3339].
 
-## Signature Expiration Time
+### Signature Expiration Time {#content-expires}
 
 The signature's Expiration Time ({{signature-metadata}}) is identified by the `*expires` identifier.
 
 Its canonicalized value is an `sf-decimal` containing the signature's Expiration Time expressed in "Unix time".
 
-## Target Endpoint
+### Target Endpoint {#content-request-target}
 
 The request target endpoint, consisting of the request method and the path and query of the effective request URI, is identified by the `*request-target` identifier.
 
@@ -276,7 +296,7 @@ Its value is canonicalized as follows:
 2. Append a space " ".
 3. Append the path and query of the request target of the message, formatted according to the rules defined for the :path pseudo-header in {{!HTTP2=RFC7540}}, Section 8.1.2.3.  The resulting string is the canonicalized value.
 
-### Canonicalization Examples
+#### Canonicalization Examples
 
 The following table contains non-normative example HTTP messages and their canonicalized `*request-target` values.
 
@@ -322,6 +342,14 @@ Host: server.example.com</sourcecode></td>
         </tr>
     </tbody>
 </table>
+
+### Signature Parameters {#content-signature-params}
+
+The signature input ({{signature-metadata}}) is identified by the `*signature-params` identifier.
+
+Its canonicalized value is an the list of all signing metadata used to create the Signature-Input header value representing this signature. {{params}}
+
+\[\[ Editor's Note: Can we just re-use the structured headers serialization method here to get a consistent serialization? \]\]
 
 # HTTP Message Signatures {#message-signatures}
 
@@ -411,7 +439,9 @@ If Covered Content contains `*created` and the signature's Creation Time is unde
 
 If Covered Content contains `*expires` and the signature does not have an Expiration Time an implementation MUST produce an error.
 
-If Covered Content contains an identifier for a header field that is not present or malformed in the message, the implementation MUST produce an error.
+The Signature Input MUST include the signature metadata specialty field `*signature-params` as the last entry in the covered content. {{content-signature-params}}
+
+If Covered Content contains an identifier for a header field that is malformed or is not present in the message, the implementation MUST produce an error.
 
 If Covered Content contains an identifier for a Dictionary member that references a header field that is not present, is malformed in the message, or is not a Dictionary Structured Field, the implementation MUST produce an error. If the header field value does not contain the specified member, the implementation MUST produce an error.
 
@@ -430,6 +460,7 @@ x-example: Example header with some whitespace.
 x-dictionary: b=2
 x-dictionary: a=1
 x-list: (a, b, c)
+*signature-params: (*request-target *created host date cache-control x-empty-header x-example x-dictionary:a x-dictionary:b x-list); keyid="test-key-a"; alg=hs2019; created=1402170695; expires=1402170995
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
 
@@ -643,6 +674,25 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 |`keyid`|Active     | {{params}} of this document|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
+## HTTP Signature Specialty Content Identifiers Registry {#content-registry}
+
+This document defines a method for canonicalizing HTTP message content, including content that can be generated from the context of the HTTP message outside of the HTTP headers. This content is identified by a unique key.  IANA is asked to create and maintain a new registry typed "HTTP Signature Specialty Content Identifiers" to record and maintain the set of non-header content identifiers and their canonicalization method. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
+
+### Registration Template {#iana-content-template}
+
+### Initial Contents {#iana-content-contents}
+
+The table below contains the initial contents of the HTTP Signature Specialty Content Identifiers Registry.
+
+|Name|Status|Reference(s)|
+|--- |--- |--- |
+|`created`|Active   | {{content-created}} of this document|
+|`expires`|Active   | {{content-expires}} of this document|
+|`request-target`|Active   | {{content-request-target}} of this document|
+|`signature-params`|Active   | {{content-signature-params}} of this document|
+{: title="Initial contents of the HTTP Signature Specialty Content Identifiers Registry." }
+
+
 # Security Considerations {#security}
 
 (( TODO: need to dive deeper on this section; not sure how much of what's referenced below is actually applicable, or if it covers everything we need to worry about. ))
@@ -744,6 +794,7 @@ The Signature Input is:
 ~~~
 *created: 1402170695
 *request-target: post /foo?param=value&pet=dog
+*signature-params: (*created *request-target); keyid="test-key-a"; created=1402170695
 ~~~
 
 The signature value is:
@@ -793,6 +844,7 @@ date: Tue, 07 Jun 2014 20:51:35 GMT
 content-type: application/json
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 content-length: 18
+*signature-params: (*request-target *created host date content-type digest content-length); keyid="test-key-a"; alg=hs2019; created=1402170695
 ~~~
 
 The signature value is:
@@ -853,6 +905,7 @@ The corresponding Signature Input is:
 
 ~~~
 *created: 1402170695
+*signature-params: sig1=(); alg=hs2019; keyid="test-key-a"; created=1402170695
 ~~~
 
 #### Minimal Recommended Signature Header
@@ -886,6 +939,7 @@ The corresponding Signature Input is:
 
 ~~~
 *created: 1402170695
+*signature-params: sig1=(date); alg=rsa-sha256; keyid="test-key-b"
 ~~~
 
 #### Minimal Signature Header using rsa-sha256
@@ -919,12 +973,13 @@ The corresponding Signature Input is:
 
 ~~~
 date: Tue, 07 Jun 2014 20:51:35 GMT
+*signature-params: (date); alg=rsa-sha256; keyid="test-key-b"
 ~~~
 
 # Acknowledgements {#acknowledgements}
 {:numbered="false"}
 
-This specification was initially based on the draft-cavage-http-signatures internet draft.  The editor would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.
+This specification was initially based on the draft-cavage-http-signatures internet draft.  The editors would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.
 
 The editor would also like to thank the following individuals for feedback on and implementations of the draft-cavage-http-signatures draft (in alphabetical order):
 Mark Adamcin,
@@ -974,6 +1029,8 @@ Jeffrey Yasskin
      * Defined content identifiers for first N members of a List, e.g., `x-list-field:4`.
      * Fixed up examples.
      * Updated introduction now that it's adopted.
+     * Defined specialty content identifiers and a means to extend them.
+     * Required signature parameters to be included in signature.
 
   - -01
      * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
