@@ -377,7 +377,8 @@ The following sections describe each of these steps in detail.
 5. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
    * Each identifier MUST be one of those defined in Section 2.
    * This list MUST NOT be empty, as this would result in creating a signature over the empty string.
-   * Signers SHOULD include `*created` and `*request-target` in the list.
+   * Signers SHOULD include `*request-target` in the list.
+   * Signers SHOULD include a date stamp, such as the `date` header or the `*created` field in the list.
    * Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
 
 
