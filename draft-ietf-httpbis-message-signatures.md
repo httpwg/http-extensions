@@ -407,6 +407,10 @@ The following table presents a non-normative example of metadata values that a s
 
 The Signature Input is a US-ASCII string containing the content that will be signed.  To create it, the signer concatenates together entries for each identifier in the signature's Covered Content in the order it occurs in the list, with each entry separated by a newline `"\n"`.  An identifier's entry is a US-ASCII string consisting of the lowercased identifier followed with a colon `":"`, a space `" "`, and the identifier's canonicalized value (described below).
 
+If Covered Content contains `*created` and the signature's Creation Time is undefined an implementation MUST produce an error.
+
+If Covered Content contains `*expires` and the signature does not have an Expiration Time an implementation MUST produce an error.
+
 If Covered Content contains an identifier for a header field that is not present or malformed in the message, the implementation MUST produce an error.
 
 If Covered Content contains an identifier for a Dictionary member that references a header field that is not present, is malformed in the message, or is not a Dictionary Structured Field, the implementation MUST produce an error. If the header field value does not contain the specified member, the implementation MUST produce an error.
