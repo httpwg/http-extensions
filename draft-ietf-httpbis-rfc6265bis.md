@@ -89,6 +89,13 @@ normative:
       ins: D. Denicola
       name: Domenic Denicola
       organization: Google, Inc.
+  SAMESITE:
+    target: https://html.spec.whatwg.org/#same-site
+    title: HTML - Living Standard
+    date: 2021-01-26
+    author:
+    -
+      org: WHATWG
   SERVICE-WORKERS:
     target: http://www.w3.org/TR/service-workers/
     title: Service Workers
@@ -328,7 +335,7 @@ use an up-to-date public suffix list, such as the one maintained by the Mozilla
 project at {{PSL}}.
 
 The term "request", as well as a request's "client", "current url", "method",
-and "target browsing context", are defined in {{FETCH}}.
+"target browsing context", and "url list", are defined in {{FETCH}}.
 
 # Overview
 
@@ -939,40 +946,25 @@ following conditions holds:
 
 ## "Same-site" and "cross-site" Requests  {#same-site-requests}
 
-Two origins, A and B, are considered same-site if the following algorithm
-returns true:
+Two origins are same-site if they satisfy the "same site" criteria defined in
+{{SAMESITE}}. A request is "same-site" if the following criteria are true:
 
-1.  If A and B are both the same globally unique identifier, return true.
+1.  The request is not the result of a cross-site redirect. That is,
+    the origin of every url in the request's url list is same-site with the
+    request's current url's origin.
 
-2.  If A and B are both scheme/host/port triples:
+2.  The request is not the result of a reload navigation triggered through a
+    user interface element (as defined by the user agent; e.g., a request
+    triggered by the user clicking a refresh button on a toolbar).
 
-    1.  If A's scheme does not equal B's scheme, return false.
+3.  The request's current url's origin is same-site with the request's
+    client's "site for cookies" (which is an origin), or if the request has no
+    client or the request's client is null.
 
-    2.  Let hostA be A's host, and hostB be B's host.
-
-    3.  If hostA equals hostB and hostA's registrable domain is null, return
-        true.
-
-    4.  If hostA's registrable domain equals hostB's registrable domain and is
-        non-null, return true.
-
-3.  Return false.
-
-Note: The port component of the origins is not considered.
-
-A request is "same-site" if its target's URI's origin is same-site with the
-request's client's "site for cookies" (which is an origin) or if the request
-has no client, except for requests issued due to certain reloads, which have
-special handling (as described below). A request that is not "same-site" is
+Requests which are the result of a reload navigation triggered through a user
+interface element are same-site if the reloaded document was originally
+navigated to via a same-site request. A request that is not "same-site" is
 instead "cross-site".
-
-When a request is a reload navigation triggered through a user interface element
-(as defined by the user agent; e.g., a request triggered by the user clicking a
-refresh button on a toolbar), whether that request is same-site or cross-site
-should be evaluated based on the client of the request that originally navigated
-to the reloaded page, rather than the client of the request itself. For all
-other reload navigations, the determination should be made based on the client
-of the request itself, as usual.
 
 The request's client's "site for cookies" is calculated depending upon its
 client's type, as described in the following subsections:
@@ -2225,9 +2217,14 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 * Consider scheme when running the same-site algorithm:
    <https://github.com/httpwg/http-extensions/pull/1324>.
 
+## draft-ietf-httpbis-rfc6265bis-08
+
 * Define "same-site" for reload navigation requests, e.g. those triggered via
   user interface elements:
   <https://github.com/httpwg/http-extensions/pull/1384>
+
+* Consider redirects when defining same-site:
+  <https://github.com/httpwg/http-extensions/pull/1348>
 
 
 # Acknowledgements
