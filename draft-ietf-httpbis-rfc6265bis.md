@@ -2226,6 +2226,9 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 * Consider redirects when defining same-site:
   <https://github.com/httpwg/http-extensions/pull/1348>
 
+* Align on using HTML terminology for origins:
+  <https://github.com/httpwg/http-extensions/pull/1416>
+
 
 # Acknowledgements
 {:numbered="false"}
