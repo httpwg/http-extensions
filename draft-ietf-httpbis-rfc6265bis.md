@@ -312,10 +312,10 @@ only if they are equivalent under the i;ascii-casemap collation defined in
 The term string means a sequence of non-NUL octets.
 
 The terms "active document", "ancestor browsing context", "browsing context",
-"dedicated worker", "Document", "WorkerGlobalScope", "sandboxed origin browsing
-context flag", "parent browsing context", "shared worker", "the worker's
-Documents", "nested browsing context", "opaque origin", and "top-level browsing
-context" are defined in {{HTML}}.
+"dedicated worker", "Document", "nested browsing context", "opaque origin",
+"parent browsing context", "sandboxed origin browsing context flag", "shared
+worker", "the worker's Documents", "top-level browsing context", and
+"WorkerGlobalScope" are defined in {{HTML}}.
 
 "Service Workers" are defined in the Service Workers specification
 {{SERVICE-WORKERS}}.
