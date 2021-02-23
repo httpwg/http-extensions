@@ -314,8 +314,8 @@ The term string means a sequence of non-NUL octets.
 The terms "active document", "ancestor browsing context", "browsing context",
 "dedicated worker", "Document", "WorkerGlobalScope", "sandboxed origin browsing
 context flag", "parent browsing context", "shared worker", "the worker's
-Documents", "nested browsing context", and "top-level browsing context" are
-defined in {{HTML}}.
+Documents", "nested browsing context", "opaque origin", and "top-level browsing
+context" are defined in {{HTML}}.
 
 "Service Workers" are defined in the Service Workers specification
 {{SERVICE-WORKERS}}.
@@ -987,7 +987,7 @@ in order to account for the "multiple-nested scenarios" described in Section 4
 of {{RFC7034}}. A document's "site for cookies" is the top-level origin if and
 only if the top-level origin is same-site with the document's origin, and with
 each of the document's ancestor documents' origins. Otherwise its "site for
-cookies" is an origin set to a globally unique identifier.
+cookies" is an origin set to an opaque origin.
 
 Given a Document (`document`), the following algorithm returns its "site for
 cookies":
@@ -1008,7 +1008,7 @@ cookies":
         browsing context flag is set, and `item`'s origin otherwise.
 
     2.  If `origin` is not same-site with `top-origin`, return an origin set to
-        a globally unique identifier.
+        an opaque origin.
 
 5.  Return `top-origin`.
 
@@ -1032,9 +1032,9 @@ document's "site for cookies".
 
 Shared workers may be bound to multiple documents at once. As it is quite
 possible for those documents to have distinct "site for cookies" values, the
-worker's "site for cookies" will be an origin set to a globally unique
-identifier in cases where the values are not all same-site with the worker's
-origin, and the worker's origin in cases where the values agree.
+worker's "site for cookies" will be an origin set to an opaque origin in cases
+where the values are not all same-site with the worker's origin, and the
+worker's origin in cases where the values agree.
 
 Given a WorkerGlobalScope (`worker`), the following algorithm returns its "site
 for cookies":
@@ -1047,7 +1047,7 @@ for cookies":
         in {{document-requests}}).
 
     2.  If `document-site` is not same-site with `site`, return an origin
-        set to a globally unique identifier.
+        set to an opaque origin.
 
 3.  Return `site`.
 
