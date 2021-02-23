@@ -215,10 +215,10 @@ A miss that the cache attempted to collapse, but couldn't:
 Cache-Status: ExampleCache; fwd=uri-miss; collapsed=?0
 ~~~
 
-Going through two layers of caching, both of which were hits, and the second collapsed with other requests:
+Going through two separate layers of caching, where the cache closest to the origin responded to an earlier request with a stored response, and a second cache stored that response and later reused it to satisfy the current request:
 
 ~~~ http-message
-Cache-Status: OriginCache; hit; ttl=1100; collapsed,
+Cache-Status: OriginCache; hit; ttl=1100,
               "CDN Company Here"; hit; ttl=545
 ~~~
 
