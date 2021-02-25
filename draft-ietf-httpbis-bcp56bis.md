@@ -103,7 +103,7 @@ Different applications have different goals when using HTTP. The requirements in
 * uses an ALPN protocol ID {{!RFC7301}} that generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
 * updates or modifies the IANA registries defined for HTTP.
 
-Additionally, when a specification is using HTTP, all of the requirements of the HTTP protocol suite are in force (including but not limited to {{!I-D.ietf-httpbis-semantics}}, {{!I-D.ietf-httpbis-cache}}, {{!I-D.ietf-httpbis-messaging}}, and {{!RFC7540}}).
+Additionally, when a specification is using HTTP, all of the requirements of the HTTP protocol suite are in force (in particular, {{!I-D.ietf-httpbis-semantics}}, but also other specifications as appropriate).
 
 Note that this document is intended to apply to applications, not generic extensions to HTTP, which follow the requirements in the relevant specification. Furthermore, it is intended for applications defined by IETF specifications, although other standards organisations are encouraged to adhere to its requirements.
 
