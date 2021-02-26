@@ -74,7 +74,7 @@ These protocols are often ad hoc; they are intended for only deployment by one o
 
 However, when such an application has multiple, separate implementations, is deployed on multiple uncoordinated servers, and is consumed by diverse clients -- as is often the case for HTTP APIs defined by standards efforts -- tools and practices intended for limited deployment can become unsuitable.
 
-This is largely because implementations (both client and server) will implement and evolve at different paces. As a result, the designers of such an HTTP-based API will need to more carefully consider how extensibility of the service will be handled and how different deployment requirements will be accommodated.
+This is largely because implementations (both client and server) will implement and evolve at different paces, and because deployments will often have different features and versions available. As a result, the designers of such an HTTP-based API will need to more carefully consider how extensibility of the service will be handled and how different deployment requirements will be accommodated.
 
 More generally, an application protocol using HTTP faces a number of design decisions, including:
 
