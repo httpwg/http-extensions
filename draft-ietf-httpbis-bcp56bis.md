@@ -421,7 +421,7 @@ New header fields MUST be registered, as per {{!I-D.ietf-httpbis-semantics}}.
 
 See {{I-D.ietf-httpbis-semantics, Section 16.3.2}} for guidelines to consider when minting new header fields. {{?I-D.ietf-httpbis-header-structure}} provides a common structure for new header fields, and avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
 
-It is RECOMMENDED that header field names be short (even when HTTP/2 field compression is in effect, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a "-".
+It is RECOMMENDED that header field names be short (even when field compression is used, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a "-".
 
 For example, if the "example" application needs to create three headers, they might be called "example-foo", "example-bar" and "example-baz". Note that the primary motivation here is to avoid consuming more generic field names, not to reserve a portion of the namespace for the application; see {{!RFC6648}} for related considerations.
 
