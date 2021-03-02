@@ -369,7 +369,7 @@ Given the following signature parameters:
 The signature parameter value is defined as:
 
 ~~~
-"@signature-params": ("@request-target" "host" "date" "cache-control" "x-empty-header" "x-example" "x-dictionary";key=a "x-dictionary";key=b "x-list";prefix=3); keyid="test-key-a"; alg="hs2019"; created=1402170695; expires=1402170995
+"@signature-params": ("@request-target" "host" "date" "cache-control" "x-empty-header" "x-example" "x-dictionary";key=b "x-dictionary";key=a "x-list";prefix=3); keyid="test-key-a"; alg="hs2019"; created=1402170695; expires=1402170995
 ~~~
 
 # HTTP Message Signatures {#message-signatures}
