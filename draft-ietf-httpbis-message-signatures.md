@@ -517,9 +517,7 @@ iIvK6/l0BdWTU7+2uQj7lBkQAsFZHoA96ZZgFquQrXRlmYOh+Hx5D9fJkXcXe5tmAg==
 In order to verify a signature, a verifier MUST:
 
 1. Examine the signature's metadata to confirm that the signature meets the requirements described in this document, as well as any additional requirements defined by the application such as which header fields or other content are required to be covered by the signature.
-
-2. Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in {{create-sig-input}}.
-
+2. Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in {{create-sig-input}}. The value of the `@signature-params` input is the value of the signature input header field for this signature, not including the signature's label.
 3. Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.
 
 
@@ -813,7 +811,7 @@ This presents metadata for a Signature using `hs2019`, over minimum recommended 
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`, using RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]|
-|Covered Content|`*created, *request-target`|
+|Covered Content|`@request-target`|
 |Creation Time|8:51:35 PM GMT, June 7th, 2014|
 |Expiration Time|Undefined|
 |Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
@@ -821,9 +819,8 @@ This presents metadata for a Signature using `hs2019`, over minimum recommended 
 The Signature Input is:
 
 ~~~
-*created: 1402170695
-*request-target: post /foo?param=value&pet=dog
-*signature-params: (*created *request-target); keyid="test-key-a"; created=1402170695
+@request-target: post /foo?param=value&pet=dog
+@signature-params: ("@request-target"); keyid="test-key-a"; created=1402170695
 ~~~
 
 The signature value is:
@@ -841,7 +838,7 @@ A possible `Signature-Input` and `Signature` header containing this signature is
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=(*created *request-target);
+Signature-Input: sig1=("@request-target");
     keyid="test-key-a"; created=1402170695
 Signature: sig1=:QaVaWYfF2da6tG66Xtd0GrVFChJ0fOWUe/C6kaYESPiYYwnMH9eg\
     OgyKqgLLY9NQJFk7bQY834sHEUwjS5ByEBaO3QNwIvqEY1qAAU/2MX14tc9Yn7ELB\
@@ -858,7 +855,7 @@ This presents metadata for a Signature using `hs2019` that covers all header fie
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`, using RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]|
-|Covered Content|`*created, *request-target, host, date, content-type, digest, content-length`|
+|Covered Content|`@request-target`, `host`, `date`, `content-type`, `digest`, `content-length`|
 |Creation Time|8:51:35 PM GMT, June 7th, 2014|
 |Expiration Time|Undefined|
 |Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
@@ -866,14 +863,13 @@ This presents metadata for a Signature using `hs2019` that covers all header fie
 The Signature Input is:
 
 ~~~
-*created: 1402170695
-*request-target: post /foo?param=value&pet=dog
+@request-target: post /foo?param=value&pet=dog
 host: example.com
 date: Tue, 07 Jun 2014 20:51:35 GMT
 content-type: application/json
 digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 content-length: 18
-*signature-params: (*request-target *created host date content-type digest content-length); keyid="test-key-a"; alg=hs2019; created=1402170695
+@signature-params: ("@request-target" "host" "date" "content-type" "digest" "content-length"); keyid="test-key-a"; alg="hs2019"; created=1402170695
 ~~~
 
 The signature value is:
@@ -891,9 +887,9 @@ A possible `Signature-Input` and `Signature` header containing this signature is
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=(*request-target *created host date
-        content-type digest content-length); keyid="test-key-a";
-    alg=hs2019; created=1402170695
+Signature-Input: sig1=("@request-target" "host" "date"
+        "content-type" "digest" "content-length"); keyid="test-key-a";
+    alg="hs2019"; created=1402170695
 Signature: sig1=:B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8\
     jkHNjoudtqw3GngGY3n0mmwjdfn1eA6nAjgeHwl0WXced5tONcCPNzLswqPOiobGe\
     A5y4WE8iBveel30OKYVel0lZ1OnXOmN5TIEIIPo9LrE+LzZis6A0HA1FRMtKgKGhT\
@@ -925,7 +921,7 @@ The corresponding signature metadata derived from this header field is:
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`, using RSASSA-PSS  using SHA-256|
-|Covered Content|`*created`|
+|Covered Content|``|
 |Creation Time|8:51:35 PM GMT, June 7th, 2014|
 |Expiration Time|Undefined|
 |Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
@@ -933,8 +929,7 @@ The corresponding signature metadata derived from this header field is:
 The corresponding Signature Input is:
 
 ~~~
-*created: 1402170695
-*signature-params: sig1=(); alg=hs2019; keyid="test-key-a"; created=1402170695
+@signature-params: sig1=(); alg="hs2019"; keyid="test-key-a"; created=1402170695
 ~~~
 
 #### Minimal Recommended Signature Header
@@ -944,7 +939,7 @@ This presents a `Signature-Input` and `Signature` header containing only the min
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=(); alg=hs2019; keyid="test-key-a";
+Signature-Input: sig1=(); alg="hs2019"; keyid="test-key-a";
     created=1402170695
 Signature: sig1=:cxieW5ZKV9R9A70+Ua1A/1FCvVayuE6Z77wDGNVFSiluSzR9TYFV\
     vwUjeU6CTYUdbOByGMCee5q1eWWUOM8BIH04Si6VndEHjQVdHqshAtNJk2Quzs6WC\
@@ -959,7 +954,7 @@ The corresponding signature metadata derived from this header field is:
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`, using RSASSA-PSS  using SHA-512|
-|Covered Content|`*created`|
+|Covered Content|``|
 |Creation Time|8:51:35 PM GMT, June 7th, 2014|
 |Expiration Time|Undefined|
 |Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
@@ -967,8 +962,7 @@ The corresponding signature metadata derived from this header field is:
 The corresponding Signature Input is:
 
 ~~~
-*created: 1402170695
-*signature-params: sig1=(date); alg=rsa-sha256; keyid="test-key-b"
+@signature-params: sig1=(); alg="rsa-sha256"; keyid="test-key-b"
 ~~~
 
 #### Minimal Signature Header using rsa-sha256
@@ -978,7 +972,7 @@ This presents a minimal `Signature-Input` and `Signature` header for a signature
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature: sig1=(date); alg=rsa-sha256; keyid="test-key-b"
+Signature: sig1=("date"); alg=rsa-sha256; keyid="test-key-b"
 Signature: sig1=:HtXycCl97RBVkZi66ADKnC9c5eSSlb57GnQ4KFqNZplOpNfxqk62\
     JzZ484jXgLvoOTRaKfR4hwyxlcyb+BWkVasApQovBSdit9Ml/YmN2IvJDPncrlhPD\
     VDv36Z9/DiSO+RNHD7iLXugdXo1+MGRimW1RmYdenl/ITeb7rjfLZ4b9VNnLFtVWw\
@@ -1002,7 +996,7 @@ The corresponding Signature Input is:
 
 ~~~
 date: Tue, 07 Jun 2014 20:51:35 GMT
-*signature-params: (date); alg=rsa-sha256; keyid="test-key-b"
+@signature-params: ("date"); alg=rsa-sha256; keyid="test-key-b"
 ~~~
 
 # Acknowledgements {#acknowledgements}
