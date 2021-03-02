@@ -819,8 +819,8 @@ This presents metadata for a Signature using `hs2019`, over minimum recommended 
 The Signature Input is:
 
 ~~~
-@request-target: post /foo?param=value&pet=dog
-@signature-params: ("@request-target"); keyid="test-key-a"; created=1402170695
+"@request-target": post /foo?param=value&pet=dog
+"@signature-params": ("@request-target"); keyid="test-key-a"; created=1402170695
 ~~~
 
 The signature value is:
@@ -863,13 +863,13 @@ This presents metadata for a Signature using `hs2019` that covers all header fie
 The Signature Input is:
 
 ~~~
-@request-target: post /foo?param=value&pet=dog
-host: example.com
-date: Tue, 07 Jun 2014 20:51:35 GMT
-content-type: application/json
-digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-content-length: 18
-@signature-params: ("@request-target" "host" "date" "content-type" "digest" "content-length"); keyid="test-key-a"; alg="hs2019"; created=1402170695
+"@request-target": post /foo?param=value&pet=dog
+"host": example.com
+"date": Tue, 07 Jun 2014 20:51:35 GMT
+"content-type": application/json
+"digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+"content-length": 18
+"@signature-params": ("@request-target" "host" "date" "content-type" "digest" "content-length"); keyid="test-key-a"; alg="hs2019"; created=1402170695
 ~~~
 
 The signature value is:
@@ -929,7 +929,7 @@ The corresponding signature metadata derived from this header field is:
 The corresponding Signature Input is:
 
 ~~~
-@signature-params: sig1=(); alg="hs2019"; keyid="test-key-a"; created=1402170695
+"@signature-params": sig1=(); alg="hs2019"; keyid="test-key-a"; created=1402170695
 ~~~
 
 #### Minimal Recommended Signature Header
@@ -962,7 +962,7 @@ The corresponding signature metadata derived from this header field is:
 The corresponding Signature Input is:
 
 ~~~
-@signature-params: sig1=(); alg="rsa-sha256"; keyid="test-key-b"
+"@signature-params": sig1=(); alg="rsa-sha256"; keyid="test-key-b"
 ~~~
 
 #### Minimal Signature Header using rsa-sha256
@@ -995,8 +995,8 @@ The corresponding signature metadata derived from this header field is:
 The corresponding Signature Input is:
 
 ~~~
-date: Tue, 07 Jun 2014 20:51:35 GMT
-@signature-params: ("date"); alg=rsa-sha256; keyid="test-key-b"
+"date": Tue, 07 Jun 2014 20:51:35 GMT
+"@signature-params": ("date"); alg=rsa-sha256; keyid="test-key-b"
 ~~~
 
 # Acknowledgements {#acknowledgements}
