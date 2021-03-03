@@ -223,7 +223,7 @@ Cache-Status: OriginCache; hit; ttl=1100,
 ~~~
 
 
-# Defining New Proxy-Status Parameters {#register}
+# Defining New Cache-Status Parameters {#register}
 
 New Cache-Status Parameters can be defined by registering them in the HTTP Cache-Status Parameters registry.
 
