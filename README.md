@@ -4,9 +4,15 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.org/) 
 
 **Be aware that all contributions to our work fall under the "NOTE WELL" terms therein.**
 
-[![Build Status](https://circleci.com/gh/httpwg/http-extensions/tree/master.svg?style=svg)](https://circleci.com/gh/httpwg/http-extensions/tree/master)
+![Editors' copies](https://github.com/httpwg/http-extensions/workflows/Update%20Editor's%20Copy/badge.svg)
 
-See also the [official document listing](https://datatracker.ietf.org/wg/httpbis/documents/), which is authoritative.
+See also the [official document listing](https://datatracker.ietf.org/wg/httpbis/documents/) and the [detailed repo list](https://httpwg.org/http-extensions/) (which contains drafts and diffs for each branch).
+
+### Signing HTTP Messages
+
+* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-message-signatures.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-message-signatures.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-message-signatures) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Asignatures) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-message-signatures/)
 
 
 ### Extensible Prioritization Scheme for HTTP
@@ -21,15 +27,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-digest-headers.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-digest-headers.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-digest-headers) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Adigest-headers) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-digest-headers/)
-
-
-### Using TLS 1.3 with HTTP/2
-
-*Sent to IESG*
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-tls13.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-tls13.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-tls13) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Ahttp2-tls13) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-tls13/)
 
 
 ### Proxy-Status
@@ -55,18 +52,9 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Building Protocols with HTTP (BCP56bis)
 
-*WGLC concluded*
-
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-bcp56bis.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-bcp56bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-bcp56bis) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Abcp56bis) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-bcp56bis/)
-
-
-### Secondary Certificates
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-secondary-certs.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-http2-secondary-certs.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-http2-secondary-certs) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Asecondary-certs) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-http2-secondary-certs/)
 
 
 ### Expect-CT
@@ -76,20 +64,6 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-expect-ct.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-expect-ct.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-expect-ct) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aexpect-ct) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-expect-ct/)
-
-
-### Structured Headers
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-header-structure.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-header-structure) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aheader-structure) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-header-structure/)
-
-
-### Client Hints
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-hints.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-hints.txt))
-* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-hints) (less recent, more official)
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-hints) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-hints/)
 
 
 ### RFC6265bis
@@ -103,4 +77,5 @@ This will incorporate the following drafts:
 * [Cookie Prefixes](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-prefixes) ✅
 * [Same-Site Cookies](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site) ✅
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
+* [Cookie Incrementalism](https://tools.ietf.org/html/draft-west-cookie-incrementalism)
 

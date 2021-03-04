@@ -1,7 +1,8 @@
 LIBDIR := lib
-USE_XSLT := true
 DISABLE_RIBBON := true
-GHPAGES_EXTRA = $(foreach ext,.html .txt,$(addsuffix $(ext),$(foreach draft,$(drafts),$(shell echo $(draft) | sed -e 's/draft-ietf-httpbis-//'))))
+INDEX_FORMAT := md
+XML_RESOURCE_ORG_PREFIX := https://xml2rfc-tools-ietf-org.lucaspardue.com/public/rfc
+
 
 include $(LIBDIR)/main.mk
 
@@ -11,7 +12,7 @@ ifneq (,$(shell grep "path *= *$(LIBDIR)" .gitmodules 2>/dev/null))
 	git submodule update $(CLONE_ARGS) --init
 else
 	git clone -q --depth 10 $(CLONE_ARGS) \
-	    -b master https://github.com/martinthomson/i-d-template $(LIBDIR)
+	    -b main https://github.com/martinthomson/i-d-template $(LIBDIR)
 endif
 
 $(GHPAGES_EXTRA):
@@ -19,3 +20,12 @@ $(GHPAGES_EXTRA):
 
 clean::
 	-rm -f $(GHPAGES_EXTRA)
+
+rfc-http-validate ?= rfc-http-validate.py
+.PHONY: http-lint
+http-lint: $(drafts_xml) http-lint-install
+	$(rfc-http-validate) -m sf.json $(filter-out http-lint-install,$^)
+
+.PHONY: http-lint-install
+http-lint-install:
+	@hash rfc-http-validate 2>/dev/null || pip3 install rfc-http-validate

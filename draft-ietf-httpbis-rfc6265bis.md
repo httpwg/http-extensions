@@ -10,6 +10,7 @@ area: Applications and Real-Time
 workgroup: HTTP
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 stand_alone: yes #_
+smart_quotes: no
 
 author:
 -
@@ -48,6 +49,7 @@ normative:
   RFC6454:
   RFC7230:
   RFC7231:
+  RFC8126:
   USASCII:
     title: "Coded Character Set -- 7-bit American Standard Code for Information Interchange"
     seriesinfo:
@@ -87,6 +89,13 @@ normative:
       ins: D. Denicola
       name: Domenic Denicola
       organization: Google, Inc.
+  SAMESITE:
+    target: https://html.spec.whatwg.org/#same-site
+    title: HTML - Living Standard
+    date: 2021-01-26
+    author:
+    -
+      org: WHATWG
   SERVICE-WORKERS:
     target: http://www.w3.org/TR/service-workers/
     title: Service Workers
@@ -100,9 +109,6 @@ normative:
     -
       ins: J. Archibald
       name: Jake Archibald
-  PSL:
-    target: https://publicsuffix.org/list/
-    title: "Public Suffix List"
 
 informative:
   RFC2818:
@@ -186,6 +192,9 @@ informative:
   I-D.ietf-httpbis-cookie-alone:
   I-D.ietf-httpbis-cookie-prefixes:
   I-D.ietf-httpbis-cookie-same-site:
+  PSL:
+    target: https://publicsuffix.org/list/
+    title: "Public Suffix List"
 
 --- abstract
 
@@ -236,8 +245,7 @@ servers and developers of cookie-consuming user agents.
 To maximize interoperability with user agents, servers SHOULD limit themselves
 to the well-behaved profile defined in {{sane-profile}} when generating cookies.
 
-User agents MUST implement the more liberal processing rules defined in Section
-5, in order to maximize interoperability with existing servers that do not
+User agents MUST implement the more liberal processing rules defined in {{ua-requirements}}, in order to maximize interoperability with existing servers that do not
 conform to the well-behaved profile defined in {{sane-profile}}.
 
 This document specifies the syntax and semantics of these headers as they are
@@ -282,16 +290,8 @@ Appendix B.1: ALPHA (letters), CR (carriage return), CRLF (CR LF), CTLs
 CHAR (any {{USASCII}} character), VCHAR (any visible {{USASCII}} character),
 and WSP (whitespace).
 
-The OWS (optional whitespace) rule is used where zero or more linear
-whitespace characters MAY appear:
-
-~~~ abnf
-OWS            = *( [ obs-fold ] WSP )
-                 ; "optional" whitespace
-obs-fold       = CRLF
-~~~
-
-OWS SHOULD either not be produced or be produced as a single SP character.
+The OWS (optional whitespace) and BWS (bad whitespace) rules are defined in
+Section 3.2.3 of {{RFC7230}}.
 
 ## Terminology
 
@@ -327,14 +327,15 @@ same" matching algorithm for origins are defined in {{RFC6454}}.
 in Section 4.2.1 of {{RFC7231}}.
 
 A domain's "public suffix" is the portion of a domain that is controlled by a
-public registry, such as "com", "co.uk", and "pvt.k12.wy.us" {{PSL}}. A domain's
+public registry, such as "com", "co.uk", and "pvt.k12.wy.us". A domain's
 "registrable domain" is the domain's public suffix plus the label to its left.
 That is, for `https://www.site.example`, the public suffix is `example`, and the
-registrable domain is `site.example`. This concept is defined more rigorously in
-{{PSL}}, which specifies a formal algorithm to obtain both.
+registrable domain is `site.example`. Whenever possible, user agents SHOULD
+use an up-to-date public suffix list, such as the one maintained by the Mozilla
+project at {{PSL}}.
 
 The term "request", as well as a request's "client", "current url", "method",
-and "target browsing context", are defined in {{FETCH}}.
+"target browsing context", and "url list", are defined in {{FETCH}}.
 
 # Overview
 
@@ -370,7 +371,7 @@ are within the scope of the cookie. For example, the server can send the user
 agent a "session identifier" named SID with the value 31d4d96e407aad42. The
 user agent then returns the session identifier in subsequent requests.
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42
@@ -384,7 +385,7 @@ The server can alter the default scope of the cookie using the Path and
 Domain attributes. For example, the server can instruct the user agent to
 return the cookie to every path and every subdomain of site.example.
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42; Path=/; Domain=site.example
@@ -401,7 +402,7 @@ that the server uses the Secure and HttpOnly attributes to provide
 additional security protections for the more sensitive session identifier (see
 {{sane-set-cookie-semantics}}).
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: SID=31d4d96e407aad42; Path=/; Secure; HttpOnly
@@ -419,7 +420,7 @@ expiration date in the Expires attribute. Note that the user agent might
 delete the cookie before the expiration date if the user agent's cookie store
 exceeds its quota or if the user manually deletes the server's cookie.
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
@@ -434,7 +435,7 @@ expiration date in the past. The server will be successful in removing the
 cookie only if the Path and the Domain attribute in the Set-Cookie header
 match the values used when the cookie was created.
 
-~~~
+~~~ example
 == Server -> User Agent ==
 
 Set-Cookie: lang=; Expires=Sun, 06 Nov 1994 08:49:37 GMT
@@ -454,7 +455,7 @@ Cookie and Set-Cookie headers.
 The Set-Cookie HTTP response header is used to send cookies from the server to
 the user agent.
 
-### Syntax
+### Syntax {#abnf-syntax}
 
 Informally, the Set-Cookie response header contains the header name
 "Set-Cookie" followed by a ":" and a cookie. Each cookie begins with a
@@ -463,38 +464,38 @@ SHOULD NOT send Set-Cookie headers that fail to conform to the following
 grammar:
 
 ~~~ abnf
-set-cookie-header = "Set-Cookie:" SP set-cookie-string
-set-cookie-string = cookie-pair *( ";" SP cookie-av )
-cookie-pair       = cookie-name "=" cookie-value
-cookie-name       = token
+set-cookie-header = "Set-Cookie:" SP BWS set-cookie-string
+set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
+cookie-pair       = cookie-name BWS "=" BWS cookie-value
+cookie-name       = 1*cookie-octet
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
 cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
-                      ; US-ASCII characters excluding CTLs,
+                    / %x80-FF
+                      ; octets excluding CTLs,
                       ; whitespace DQUOTE, comma, semicolon,
                       ; and backslash
-token             = <token, defined in [RFC7230], Section 3.2.6>
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
                     samesite-av / extension-av
-expires-av        = "Expires=" sane-cookie-date
+expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [RFC7231], Section 7.1.1.1>
-max-age-av        = "Max-Age=" non-zero-digit *DIGIT
+max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
                       ; In practice, both expires-av and max-age-av
                       ; are limited to dates representable by the
                       ; user agent.
 non-zero-digit    = %x31-39
                       ; digits 1 through 9
-domain-av         = "Domain=" domain-value
+domain-av         = "Domain" BWS "=" BWS domain-value
 domain-value      = <subdomain>
                       ; defined in [RFC1034], Section 3.5, as
                       ; enhanced by [RFC1123], Section 2.1
-path-av           = "Path=" path-value
+path-av           = "Path" BWS "=" BWS path-value
 path-value        = *av-octet
 secure-av         = "Secure"
 httponly-av       = "HttpOnly"
-samesite-av       = "SameSite=" samesite-value
+samesite-av       = "SameSite" BWS "=" BWS samesite-value
 samesite-value    = "Strict" / "Lax" / "None"
 extension-av      = *av-octet
 av-octet          = %x20-3A / %x3C-7E
@@ -561,14 +562,14 @@ to the origin server (and not, for example, to any subdomains), and it expires
 at the end of the current session (as defined by the user agent). User agents
 ignore unrecognized cookie attributes (but not the entire cookie).
 
-#### The Expires Attribute
+#### The Expires Attribute {#attribute-expires}
 
 The Expires attribute indicates the maximum lifetime of the cookie,
 represented as the date and time at which the cookie expires. The user agent is
 not required to retain the cookie until the specified date has passed. In fact,
 user agents often evict cookies due to memory pressure or privacy concerns.
 
-#### The Max-Age Attribute
+#### The Max-Age Attribute {#attribute-max-age}
 
 The Max-Age attribute indicates the maximum lifetime of the cookie,
 represented as the number of seconds until the cookie expires. The user agent is
@@ -584,7 +585,7 @@ cookie has neither the Max-Age nor the Expires attribute, the user agent
 will retain the cookie until "the current session is over" (as defined by the
 user agent).
 
-#### The Domain Attribute
+#### The Domain Attribute {#attribute-domain}
 
 The Domain attribute specifies those hosts to which the cookie will be sent.
 For example, if the value of the Domain attribute is "site.example", the user
@@ -613,7 +614,7 @@ attributes that correspond to "public suffixes". For example, some user
 agents will reject Domain attributes of "com" or "co.uk". (See {{storage-model}} for
 more information.)
 
-#### The Path Attribute
+#### The Path Attribute {#attribute-path}
 
 The scope of each cookie is limited to a set of paths, controlled by the
 Path attribute. If the server omits the Path attribute, the user agent will
@@ -629,7 +630,7 @@ Although seemingly useful for isolating cookies between different paths within
 a given host, the Path attribute cannot be relied upon for security (see
 {{security-considerations}}).
 
-#### The Secure Attribute {#sane-secure}
+#### The Secure Attribute {#attribute-secure}
 
 The Secure attribute limits the scope of the cookie to "secure" channels
 (where "secure" is defined by the user agent). When a cookie has the Secure
@@ -642,7 +643,7 @@ the Secure attribute protects only the cookie's confidentiality. An active
 network attacker can overwrite Secure cookies from an insecure channel,
 disrupting their integrity (see {{weak-integrity}} for more details).
 
-#### The HttpOnly Attribute
+#### The HttpOnly Attribute {#attribute-httponly}
 
 The HttpOnly attribute limits the scope of the cookie to HTTP requests. In
 particular, the attribute instructs the user agent to omit the cookie when
@@ -652,13 +653,14 @@ exposes cookies to scripts).
 Note that the HttpOnly attribute is independent of the Secure attribute: a
 cookie can have both the HttpOnly and the Secure attribute.
 
-#### The SameSite Attribute
+#### The SameSite Attribute {#attribute-samesite}
 
 The "SameSite" attribute limits the scope of the cookie such that it will only
 be attached to requests if those requests are same-site, as defined by the
 algorithm in {{same-site-requests}}. For example, requests for
 `https://site.example/sekrit-image` will attach same-site cookies if and only if
-initiated from a context whose "site for cookies" is "site.example".
+initiated from a context whose "site for cookies" is an origin with a scheme and
+registered domain of "https" and "site.example" respectively.
 
 If the "SameSite" attribute's value is "Strict", the cookie will only be sent
 along with "same-site" requests. If the value is "Lax", the cookie will be sent
@@ -666,7 +668,7 @@ with same-site requests, and with "cross-site" top-level navigations, as
 described in {{strict-lax}}. If the value is "None", the cookie will be sent
 with same-site and cross-site requests. If the "SameSite" attribute's value is
 something other than these three known keywords, the attribute's value will be
-treated as "None".
+subject to a default enforcement mode that is equivalent to "Lax".
 
 The "SameSite" attribute affects cookie creation as well as delivery. Cookies
 which assert "SameSite=Lax" or "SameSite=Strict" cannot be set in responses to
@@ -693,13 +695,13 @@ If a cookie's name begins with a case-sensitive match for the string
 For example, the following `Set-Cookie` header would be rejected by a conformant
 user agent, as it does not have a `Secure` attribute.
 
-~~~
+~~~ example
 Set-Cookie: __Secure-SID=12345; Domain=site.example
 ~~~
 
 Whereas the following `Set-Cookie` header would be accepted:
 
-~~~
+~~~ example
 Set-Cookie: __Secure-SID=12345; Domain=site.example; Secure
 ~~~
 
@@ -722,7 +724,7 @@ to ignore.
 
 For example, the following cookies would always be rejected:
 
-~~~
+~~~ example
 Set-Cookie: __Host-SID=12345
 Set-Cookie: __Host-SID=12345; Secure
 Set-Cookie: __Host-SID=12345; Domain=site.example
@@ -730,10 +732,10 @@ Set-Cookie: __Host-SID=12345; Domain=site.example; Path=/
 Set-Cookie: __Host-SID=12345; Secure; Domain=site.example; Path=/
 ~~~
 
-While the would be accepted if set from a secure origin (e.g.
+While the following would be accepted if set from a secure origin (e.g.
 "https://site.example/"), and rejected otherwise:
 
-~~~
+~~~ example
 Set-Cookie: __Host-SID=12345; Secure; Path=/
 ~~~
 
@@ -747,7 +749,7 @@ conforms to the requirements in {{ua-requirements}}), the user agent will send a
 header that conforms to the following grammar:
 
 ~~~ abnf
-cookie-header = "Cookie:" OWS cookie-string OWS
+cookie-header = "Cookie:" SP cookie-string
 cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
 
@@ -944,26 +946,25 @@ following conditions holds:
 
 ## "Same-site" and "cross-site" Requests  {#same-site-requests}
 
-A request is "same-site" if its target's URI's origin's registrable domain
-is an exact match for the request's client's "site for cookies", or if the
-request has no client. The request is otherwise "cross-site".
+Two origins are same-site if they satisfy the "same site" criteria defined in
+{{SAMESITE}}. A request is "same-site" if the following criteria are true:
 
-For a given request ("request"), the following algorithm returns `same-site` or
-`cross-site`:
+1.  The request is not the result of a cross-site redirect. That is,
+    the origin of every url in the request's url list is same-site with the
+    request's current url's origin.
 
-1.  If `request`'s client is `null`, return `same-site`.
+2.  The request is not the result of a reload navigation triggered through a
+    user interface element (as defined by the user agent; e.g., a request
+    triggered by the user clicking a refresh button on a toolbar).
 
-    Note that this is the case for navigation triggered by the user directly
-    (e.g. by typing directly into a user agent's address bar).
+3.  The request's current url's origin is same-site with the request's
+    client's "site for cookies" (which is an origin), or if the request has no
+    client or the request's client is null.
 
-2.  Let `site` be `request`'s client's "site for cookies" (as defined in the
-    following sections).
-
-3.  Let `target` be the registrable domain of `request`'s current url.
-
-4.  If `site` is an exact match for `target`, return `same-site`.
-
-5.  Return `cross-site`.
+Requests which are the result of a reload navigation triggered through a user
+interface element are same-site if the reloaded document was originally
+navigated to via a same-site request. A request that is not "same-site" is
+instead "cross-site".
 
 The request's client's "site for cookies" is calculated depending upon its
 client's type, as described in the following subsections:
@@ -973,23 +974,23 @@ client's type, as described in the following subsections:
 The URI displayed in a user agent's address bar is the only security context
 directly exposed to users, and therefore the only signal users can reasonably
 rely upon to determine whether or not they trust a particular website. The
-registrable domain of that URI's origin represents the context in which a user
-most likely believes themselves to be interacting. We'll label this domain the
-"top-level site".
+origin of that URI represents the context in which a user most likely believes
+themselves to be interacting. We'll define this origin, the top-level browsing
+context's active document's origin, as the "top-level origin".
 
 For a document displayed in a top-level browsing context, we can stop here: the
-document's "site for cookies" is the top-level site.
+document's "site for cookies" is the top-level origin.
 
 For documents which are displayed in nested browsing contexts, we need to audit
 the origins of each of a document's ancestor browsing contexts' active documents
 in order to account for the "multiple-nested scenarios" described in Section 4
-of {{RFC7034}}. A document's "site for cookies" is the top-level site if and
-only if the document and each of its ancestor documents' origins have the same
-registrable domain as the top-level site. Otherwise its "site for cookies" is
-the empty string.
+of {{RFC7034}}. A document's "site for cookies" is the top-level origin if and
+only if the top-level origin is same-site with the document's origin, and with
+each of the document's ancestor documents' origins. Otherwise its "site for
+cookies" is an origin set to a globally unique identifier.
 
 Given a Document (`document`), the following algorithm returns its "site for
-cookies" (either a registrable domain, or the empty string):
+cookies":
 
 1.  Let `top-document` be the active document in `document`'s browsing context's
     top-level browsing context.
@@ -1006,10 +1007,10 @@ cookies" (either a registrable domain, or the empty string):
     1.  Let `origin` be the origin of `item`'s URI if `item`'s sandboxed origin
         browsing context flag is set, and `item`'s origin otherwise.
 
-    2.  If `origin`'s host's registrable domain is not an exact match for
-        `top-origin`'s host's registrable domain, return the empty string.
+    2.  If `origin` is not same-site with `top-origin`, return an origin set to
+        a globally unique identifier.
 
-5.  Return `top-origin`'s host's registrable domain.
+5.  Return `top-origin`.
 
 ### Worker-based requests {#worker-requests}
 
@@ -1030,22 +1031,23 @@ one document. Requests generated from a dedicated worker (via `importScripts`,
 document's "site for cookies".
 
 Shared workers may be bound to multiple documents at once. As it is quite
-possible for those documents to have distinct "site for cookie" values, the
-worker's "site for cookies" will be the empty string in cases where the values
-diverge, and the shared value in cases where the values agree.
+possible for those documents to have distinct "site for cookies" values, the
+worker's "site for cookies" will be an origin set to a globally unique
+identifier in cases where the values are not all same-site with the worker's
+origin, and the worker's origin in cases where the values agree.
 
 Given a WorkerGlobalScope (`worker`), the following algorithm returns its "site
-for cookies" (either a registrable domain, or the empty string):
+for cookies":
 
-1.  Let `site` be `worker`'s origin's host's registrable domain.
+1.  Let `site` be `worker`'s origin.
 
 2.  For each `document` in `worker`'s Documents:
 
     1.  Let `document-site` be `document`'s "site for cookies" (as defined
         in {{document-requests}}).
 
-    2.  If `document-site` is not an exact match for `site`, return the empty
-        string.
+    2.  If `document-site` is not same-site with `site`, return an origin
+        set to a globally unique identifier.
 
 3.  Return `site`.
 
@@ -1062,13 +1064,13 @@ request, and its "site for cookies" will be those defined in
 
 Requests which are initiated by the Service Worker itself (via a direct call to
 `fetch()`, for instance), on the other hand, will have a client which is a
-ServiceWorkerGlobalScope. Its "site for cookies" will be the registrable domain
-of the Service Worker's URI.
+ServiceWorkerGlobalScope. Its "site for cookies" will be the Service Worker's
+URI's origin.
 
 Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
-"site for cookies" (either a registrable domain, or the empty string):
+"site for cookies":
 
-1.  Return `worker`'s origin's host's registrable domain.
+1.  Return `worker`'s origin.
 
 ## The Set-Cookie Header {#set-cookie}
 
@@ -1114,10 +1116,7 @@ parse a set-cookie-string:
 3.  Remove any leading or trailing WSP characters from the name string and the
     value string.
 
-4.  If both the name string and the value string are empty, ignore the
-    set-cookie-string entirely.
-
-5.  The cookie-name is the name string, and the cookie-value is the value string.
+4.  The cookie-name is the name string, and the cookie-value is the value string.
 
 The user agent MUST use an algorithm equivalent to the following algorithm to
 parse the unparsed-attributes:
@@ -1262,20 +1261,19 @@ attribute-name of HttpOnly and an empty attribute-value.
 If the attribute-name case-insensitively matches the string "SameSite", the
 user agent MUST process the cookie-av as follows:
 
-1.  Let `enforcement` be "None".
+1.  Let `enforcement` be "Default".
 
-2.  If cookie-av's attribute-value is a case-insensitive match for "Strict",
+2.  If cookie-av's attribute-value is a case-insensitive match for "None",
+    set `enforcement` to "None".
+
+3.  If cookie-av's attribute-value is a case-insensitive match for "Strict",
     set `enforcement` to "Strict".
 
-3.  If cookie-av's attribute-value is a case-insensitive match for "Lax", set
+4.  If cookie-av's attribute-value is a case-insensitive match for "Lax", set
     `enforcement` to "Lax".
 
-4.  Append an attribute to the cookie-attribute-list with an attribute-name
+5.  Append an attribute to the cookie-attribute-list with an attribute-name
     of "SameSite" and an attribute-value of `enforcement`.
-
-Note: This algorithm maps the "None" value, as well as any unknown value, to
-the "None" behavior, which is helpful for backwards compatibility when
-introducing new variants.
 
 #### "Strict" and "Lax" enforcement {#strict-lax}
 
@@ -1287,14 +1285,17 @@ drop-in mechanism that mitigates the risk of CSRF attacks, developers may set
 the `SameSite` attribute in a "Lax" enforcement mode that carves out an
 exception which sends same-site cookies along with cross-site requests if and
 only if they are top-level navigations which use a "safe" (in the {{RFC7231}}
-sense) HTTP method.
+sense) HTTP method. (Note that a request's method may be changed from POST
+to GET for some redirects (see sections 6.4.2 and 6.4.3 of {{RFC7231}}); in these
+cases, a request's "safe"ness is determined based on the method of the current
+redirect hop.)
 
 Lax enforcement provides reasonable defense in depth against CSRF attacks that
 rely on unsafe HTTP methods (like `POST`), but does not offer a robust defense
 against CSRF as a general category of attack:
 
 1. Attackers can still pop up new windows or trigger top-level navigations in
-   order to create a "same-site" request (as described in section 5.2.1), which
+   order to create a "same-site" request (as described in {{document-requests}}), which
    is only a speedbump along the road to exploitation.
 
 2. Features like `<link rel='prerender'>` {{prerendering}} can be exploited
@@ -1320,10 +1321,13 @@ user agent MUST process the cookie as follows:
     responses or the user agent might not wish to store cookies that exceed some
     size.
 
-2.  Create a new cookie with name cookie-name, value cookie-value. Set the
+2. If cookie-name is empty and cookie-value is empty, abort these steps and
+   ignore the cookie entirely.
+
+3.  Create a new cookie with name cookie-name, value cookie-value. Set the
     creation-time and the last-access-time to the current date and time.
 
-3.  If the cookie-attribute-list contains an attribute with an attribute-name
+4.  If the cookie-attribute-list contains an attribute with an attribute-name
     of "Max-Age":
 
     1.  Set the cookie's persistent-flag to true.
@@ -1348,7 +1352,7 @@ user agent MUST process the cookie as follows:
 
     2.  Set the cookie's expiry-time to the latest representable date.
 
-4.  If the cookie-attribute-list contains an attribute with an
+5.  If the cookie-attribute-list contains an attribute with an
     attribute-name of "Domain":
 
     1.  Let the domain-attribute be the attribute-value of the last
@@ -1359,7 +1363,7 @@ user agent MUST process the cookie as follows:
 
     1.  Let the domain-attribute be the empty string.
 
-5.  If the user agent is configured to reject "public suffixes" and the
+6.  If the user agent is configured to reject "public suffixes" and the
     domain-attribute is a public suffix:
 
     1.  If the domain-attribute is identical to the canonicalized
@@ -1374,7 +1378,7 @@ user agent MUST process the cookie as follows:
     NOTE: This step prevents `attacker.example` from disrupting the integrity of
     `site.example` by setting a cookie with a Domain attribute of "example".
 
-6.  If the domain-attribute is non-empty:
+7.  If the domain-attribute is non-empty:
 
     1.  If the canonicalized request-host does not domain-match the
         domain-attribute:
@@ -1393,28 +1397,28 @@ user agent MUST process the cookie as follows:
 
     2.  Set the cookie's domain to the canonicalized request-host.
 
-7.  If the cookie-attribute-list contains an attribute with an
+8.  If the cookie-attribute-list contains an attribute with an
     attribute-name of "Path", set the cookie's path to attribute-value of
     the last attribute in the cookie-attribute-list with an attribute-name
     of "Path". Otherwise, set the cookie's path to the default-path of the
     request-uri.
 
-8.  If the cookie-attribute-list contains an attribute with an
+9.  If the cookie-attribute-list contains an attribute with an
     attribute-name of "Secure", set the cookie's secure-only-flag to true.
     Otherwise, set the cookie's secure-only-flag to false.
 
-9.  If the scheme component of the request-uri does not denote a "secure"
+10.  If the scheme component of the request-uri does not denote a "secure"
     protocol (as defined by the user agent), and the cookie's secure-only-flag
     is true, then abort these steps and ignore the cookie entirely.
 
-10. If the cookie-attribute-list contains an attribute with an
+11. If the cookie-attribute-list contains an attribute with an
     attribute-name of "HttpOnly", set the cookie's http-only-flag to true.
     Otherwise, set the cookie's http-only-flag to false.
 
-11. If the cookie was received from a "non-HTTP" API and the cookie's
+12. If the cookie was received from a "non-HTTP" API and the cookie's
     http-only-flag is true, abort these steps and ignore the cookie entirely.
 
-12. If the cookie's secure-only-flag is not set, and the scheme component of
+13. If the cookie's secure-only-flag is false, and the scheme component of
     request-uri does not denote a "secure" protocol, then abort these steps and
     ignore the cookie entirely if the cookie store contains one or more cookies
     that meet all of the following criteria:
@@ -1436,17 +1440,17 @@ user agent MUST process the cookie as follows:
     non-secure cookie named 'a' could be set for a path of '/' or '/foo', but
     not for a path of '/login' or '/login/en'.
 
-13. If the cookie-attribute-list contains an attribute with an
-    attribute-name of "SameSite", set the cookie's same-site-flag to the
-    attribute-value of the last attribute in the cookie-attribute-list with an
-    attribute-name of "SameSite" (i.e. either "Strict", "Lax", or "None").
-    Otherwise, set the cookie's same-site-flag to "None".
+14. If the cookie-attribute-list contains an attribute with an
+    attribute-name of "SameSite", and an attribute-value of "Strict", "Lax", or
+    "None", set the cookie's same-site-flag to the attribute-value of the last
+    attribute in the cookie-attribute-list with an attribute-name of "SameSite".
+    Otherwise, set the cookie's same-site-flag to "Default".
 
-14. If the cookie's `same-site-flag` is not "None":
+15. If the cookie's `same-site-flag` is not "None":
 
     1.  If the cookie was received from a "non-HTTP" API, and the API was called
-        from a context whose "site for cookies" is not an exact match for
-        request-uri's host's registrable domain, then abort these steps and
+        from a browsing context's active document whose "site for cookies" is
+        not same-site with the top-level origin, then abort these steps and
         ignore the newly created cookie entirely.
 
     2.  If the cookie was received from a "same-site" request (as defined in
@@ -1465,11 +1469,14 @@ user agent MUST process the cookie as follows:
 
     4.  Abort these steps and ignore the newly created cookie entirely.
 
-15. If the cookie-name begins with a case-sensitive match for the string
+16. If the cookie's "same-site-flag" is "None", abort these steps and ignore the
+    cookie entirely unless the cookie's secure-only-flag is true.
+
+17. If the cookie-name begins with a case-sensitive match for the string
     "__Secure-", abort these steps and ignore the cookie entirely unless the
     cookie's secure-only-flag is true.
 
-16. If the cookie-name begins with a case-sensitive match for the string
+18. If the cookie-name begins with a case-sensitive match for the string
     "__Host-", abort these steps and ignore the cookie entirely unless the
     cookie meets all the following criteria:
 
@@ -1480,7 +1487,7 @@ user agent MUST process the cookie as follows:
     3.  The cookie-attribute-list contains an attribute with an attribute-name
         of "Path", and the cookie's path is `/`.
 
-17. If the cookie store contains a cookie with the same name, domain,
+19. If the cookie store contains a cookie with the same name, domain,
     host-only-flag, and path as the newly-created cookie:
 
     1.  Let old-cookie be the existing cookie with the same name, domain,
@@ -1497,7 +1504,7 @@ user agent MUST process the cookie as follows:
 
     4.  Remove the old-cookie from the cookie store.
 
-18. Insert the newly-created cookie into the cookie store.
+20. Insert the newly-created cookie into the cookie store.
 
 A cookie is "expired" if the cookie has an expiry date in the past.
 
@@ -1517,7 +1524,7 @@ agent MUST evict cookies in the following priority order:
 
 1.  Expired cookies.
 
-2.  Cookies whose secure-only-flag is not set, and which share a domain field
+2.  Cookies whose secure-only-flag is false, and which share a domain field
     with more than a predetermined number of other cookies.
 
 3.  Cookies that share a domain field with more than a predetermined number of
@@ -1582,7 +1589,7 @@ compute the cookie-string from a cookie store and a request-uri:
        cross-site (as defined in {{same-site-requests}}) then exclude the
        cookie unless all of the following statements hold:
 
-        1.  The same-site-flag is "Lax"
+        1.  The same-site-flag is "Lax" or "Default".
 
         2.  The HTTP request's method is "safe".
 
@@ -1607,10 +1614,12 @@ compute the cookie-string from a cookie store and a request-uri:
 4.  Serialize the cookie-list into a cookie-string by processing each cookie
     in the cookie-list in order:
 
-    1.  Output the cookie's name, the %x3D ("=") character, and the cookie's
-        value.
+    1.  If the cookies' name is not empty, output the cookie's name followed by
+        the %x3D ("=") character.
 
-    2.  If there is an unprocessed cookie in the cookie-list, output the
+    2.  If the cookies' value is not empty, output the cookie's value.
+
+    3.  If there is an unprocessed cookie in the cookie-list, output the
         characters %x3B and %x20 ("; ").
 
 NOTE: Despite its name, the cookie-string is actually a sequence of octets, not
@@ -1806,7 +1815,7 @@ agent to another or from replaying the cookie at a later time.
 In addition to encrypting and signing the contents of every cookie, servers that
 require a higher level of security SHOULD use the Cookie and Set-Cookie
 headers only over a secure channel. When using cookies over a secure channel,
-servers SHOULD set the Secure attribute (see {{sane-secure}}) for every
+servers SHOULD set the Secure attribute (see {{attribute-secure}}) for every
 cookie. If a server does not set the Secure attribute, the protection
 provided by the secure channel will be largely moot.
 
@@ -1976,16 +1985,46 @@ general privacy concerns outlined in Section 7.1 of {{RFC6265}}. The "SameSite"
 attribute is set by the server, and serves to mitigate the risk of certain kinds
 of attacks that the server is worried about. The user is not involved in this
 decision. Moreover, a number of side-channels exist which could allow a server
-to link distinct requests even in the absence of cookies. Connection and/or
-socket pooling, Token Binding, and Channel ID all offer explicit methods of
-identification that servers could take advantage of.
+to link distinct requests even in the absence of cookies (for example, connection
+and/or socket pooling between same-site and cross-site requests).
+
+### Reload navigations
+
+Requests issued for reloads triggered through user interface elements (such as a
+refresh button on a toolbar) are same-site only if the reloaded document was
+originally navigated to via a same-site request. This differs from the handling
+of other reload navigations, which are always same-site if top-level, since the
+source browsing context's active document is precisely the document being
+reloaded.
+
+This special handling of reloads triggered through a user interface element
+avoids sending `SameSite` cookies on user-initiated reloads if they were
+withheld on the original navigation (i.e., if the initial navigation were
+cross-site). If the reload navigation were instead considered same-site, and
+sent all the initially withheld `SameSite` cookies, the security benefits of
+withholding the cookies in the first place would be nullified. This is
+especially important given that the absence of `SameSite` cookies withheld on a
+cross-site navigation request may lead to visible site breakage, prompting the
+user to trigger a reload.
+
+For example, suppose the user clicks on a link from `https://attacker.example/`
+to `https://victim.example/`. This is a cross-site request, so `SameSite=Strict`
+cookies are withheld. Suppose this causes `https://victim.example/` to appear
+broken, because the site only displays its sensitive content if a particular
+`SameSite` cookie is present in the request. The user, frustrated by the
+unexpectedly broken site, presses refresh on their browser's toolbar. To now
+consider the reload request same-site and send the initially withheld `SameSite`
+cookie would defeat the purpose of withholding it in the first place, as the
+reload navigation triggered through the user interface may replay the original
+(potentially malicious) request. Thus, the reload request should be considered
+cross-site, like the request that initially navigated to the page.
 
 # IANA Considerations
 
-The permanent message header field registry (see {{RFC3864}}) needs to be
-updated with the following registrations.
-
 ## Cookie {#iana-cookie}
+
+The permanent message header field registry (see {{RFC3864}}) needs to be
+updated with the following registration:
 
 Header field name:
 : Cookie
@@ -2004,6 +2043,9 @@ Specification document:
 
 ## Set-Cookie {#iana-set-cookie}
 
+The permanent message header field registry (see {{RFC3864}}) needs to be
+updated with the following registration:
+
 Header field name:
 : Set-Cookie
 
@@ -2018,6 +2060,36 @@ Author/Change controller:
 
 Specification document:
 : this specification ({{set-cookie}})
+
+## Cookie Attribute Registry
+
+The "Cookie Attribute Registry" defines the name space of attribute used to
+control cookies' behavior. The registry is maintained at
+<https://www.iana.org/assignments/cookie-attribute-names>.
+
+### Procedure
+
+Each registered attribute name is associated with a description, and a
+reference detailing how the attribute is to be processed and stored.
+
+New registrations happen on a "RFC Required" basis (see Section 4.7 of
+{{RFC8126}}). The attribute to be registered MUST match the `extension-av`
+syntax defined in {{abnf-syntax}}. Note that attribute names are generally
+defined in CamelCase, but technically accepted case-insensitively.
+
+### Registration
+
+The "Cookie Attribute Registry" will be updated with the registrations below:
+
+| Name     | Reference                               |
+|----------:+----------------------------------------|
+| Domain   | {{attribute-domain}} of this document   |
+| Expires  | {{attribute-expires}} of this document  |
+| HttpOnly | {{attribute-httponly}} of this document |
+| Max-Age  | {{attribute-max-age}} of this document  |
+| Path     | {{attribute-path}} of this document     |
+| SameSite | {{attribute-samesite}} of this document |
+| Secure   | {{attribute-secure}} of this document   |
 
 --- back
 
@@ -2108,6 +2180,52 @@ Specification document:
    <https://github.com/httpwg/http-extensions/pull/1038>,
    <https://github.com/httpwg/http-extensions/pull/1040>,
    <https://github.com/httpwg/http-extensions/pull/1047>.
+
+## draft-ietf-httpbis-rfc6265bis-06
+
+*  Editorial fixes: <https://github.com/httpwg/http-extensions/issues/1059>,
+   <https://github.com/httpwg/http-extensions/issues/1158>.
+
+*  Created a registry for cookie attribute names:
+   <https://github.com/httpwg/http-extensions/pull/1060>.
+
+*  Tweaks to ABNF for `cookie-pair` and the `Cookie` header
+   production: <https://github.com/httpwg/http-extensions/issues/1074>,
+   <https://github.com/httpwg/http-extensions/issues/1119>.
+
+*  Fixed serialization for nameless/valueless cookies:
+   <https://github.com/httpwg/http-extensions/pull/1143>.
+
+*  Converted a normative reference to Mozilla's Public Suffix List {{PSL}} into
+   an informative reference:
+   <https://github.com/httpwg/http-extensions/issues/1159>.
+
+## draft-ietf-httpbis-rfc6265bis-07
+
+*  Moved instruction to ignore cookies with empty cookie-name and cookie-value
+   from {{set-cookie}} to {{storage-model}} to ensure that they apply to cookies
+   created without parsing a cookie string:
+   <https://github.com/httpwg/http-extensions/issues/1234>.
+
+*  Add a default enforcement value to the `same-site-flag`, equivalent to
+   "SameSite=Lax":
+   <https://github.com/httpwg/http-extensions/pull/1325>.
+
+*  Require a Secure attribute for "SameSite=None":
+   <https://github.com/httpwg/http-extensions/pull/1323>.
+
+* Consider scheme when running the same-site algorithm:
+   <https://github.com/httpwg/http-extensions/pull/1324>.
+
+## draft-ietf-httpbis-rfc6265bis-08
+
+* Define "same-site" for reload navigation requests, e.g. those triggered via
+  user interface elements:
+  <https://github.com/httpwg/http-extensions/pull/1384>
+
+* Consider redirects when defining same-site:
+  <https://github.com/httpwg/http-extensions/pull/1348>
+
 
 # Acknowledgements
 {:numbered="false"}
