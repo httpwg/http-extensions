@@ -400,7 +400,7 @@ The signature metadata is serialized using the rules in {{!RFC8941}} section 4 a
 
 1. Let the output be an empty string.
 2. Serialize the content identifiers as an ordered `inner-list` according to {{!RFC8941}} section 4.1.1.1 and append this to the output.
-3. Append the signature metadata as parameters according to {{!RFC8941}} section 4.1.1.2 in the following order, skipping fields that are not available:
+3. Append the signature metadata as parameters according to {{!RFC8941}} section 4.1.1.2 in the any order, skipping fields that are not available:
    * `alg`: Algorithm as an `sf-string` value.
    * `keyid`: Verification Key Material as an `sf-string` value.
    * `created`: Creation Time as an `sf-integer` timestamp value.
@@ -551,6 +551,8 @@ Signature-Input: sig1=("@request-target" "host" "date"
     "cache-control" "x-empty-header" "x-example"); keyid="test-key-a";
     alg="hs2019"; created=1402170695; expires=1402170995
 ~~~
+
+To facilitate signature validation, the `Signature-Input` header MUST contain the same serialization value used in generating the signature input.
 
 ## The 'Signature' HTTP Header {#signature-header}
 The `Signature` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing zero or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
