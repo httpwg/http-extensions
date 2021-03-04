@@ -1098,14 +1098,27 @@ set-cookie-string (defined below).
 NOTE: The algorithm below is more permissive than the grammar in {{sane-set-cookie}}.
 For example, the algorithm strips leading and trailing whitespace from the
 cookie name and value (but maintains internal whitespace), whereas the grammar
-in {{sane-set-cookie}} forbids whitespace in these positions. User agents use this
-algorithm so as to interoperate with servers that do not follow the
-recommendations in {{sane-profile}}.
+in {{sane-set-cookie}} forbids whitespace in these positions. In addition, the
+algorithm below accommodates some characters that are not cookie-octets
+according to the grammar in {{sane-set-cookie}}. User agents use this algorithm
+so as to interoperate with servers that do not follow the recommendations in
+{{sane-profile}}.
+
+NOTE: As set-cookie-string may originate from a non-HTTP API, it is not
+guaranteed to be free of CTL characters, so this algorithm handles them
+explicitly.
 
 A user agent MUST use an algorithm equivalent to the following algorithm to
 parse a set-cookie-string:
 
-1.  If the set-cookie-string contains a %x3B (";") character:
+1.  If the set-cookie-string contains a %x0D (CR), %x0A (LF), or %x00 (NUL)
+    octet, then set the set-cookie-string equal to all the characters of
+    set-cookie-string up to, but not including, the first such octet.
+
+2.  If the set-cookie-string contains a %x00-1F / %x7F (CTL) character:
+    Abort these steps and ignore the set-cookie-string entirely.
+
+3.  If the set-cookie-string contains a %x3B (";") character:
 
     1.  The name-value-pair string consists of the characters up to, but not
         including, the first %x3B (";"), and the unparsed-attributes consist of
@@ -1118,17 +1131,17 @@ parse a set-cookie-string:
         the set-cookie-string, and the unparsed-attributes is the empty
         string.
 
-2.  If the name-value-pair string lacks a %x3D ("=") character, then the name
+4.  If the name-value-pair string lacks a %x3D ("=") character, then the name
     string is empty, and the value string is the value of name-value-pair.
 
     Otherwise, the name string consists of the characters up to, but not
     including, the first %x3D ("=") character, and the (possibly empty) value
     string consists of the characters after the first %x3D ("=") character.
 
-3.  Remove any leading or trailing WSP characters from the name string and the
+5.  Remove any leading or trailing WSP characters from the name string and the
     value string.
 
-4.  The cookie-name is the name string, and the cookie-value is the value string.
+6.  The cookie-name is the name string, and the cookie-value is the value string.
 
 The user agent MUST use an algorithm equivalent to the following algorithm to
 parse the unparsed-attributes:
