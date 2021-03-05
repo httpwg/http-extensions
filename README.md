@@ -78,4 +78,7 @@ This will incorporate the following drafts:
 * [Same-Site Cookies](https://tools.ietf.org/html/draft-ietf-httpbis-cookie-same-site) ✅
 * [EAT Cookies](https://tools.ietf.org/html/draft-thomson-http-omnomnom)
 * [Cookie Incrementalism](https://tools.ietf.org/html/draft-west-cookie-incrementalism)
+  *  ["Lax" by Default](https://tools.ietf.org/html/draft-west-cookie-incrementalism-01#section-3.1) ✅
+  *  [Requiring "Secure" for "SameSite=None"](https://tools.ietf.org/html/draft-west-cookie-incrementalism-01#section-3.2) ✅
+  *  [Schemeful Same-Site](https://tools.ietf.org/html/draft-west-cookie-incrementalism-01#section-3.3) ✅
 
