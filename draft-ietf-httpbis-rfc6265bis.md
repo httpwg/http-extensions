@@ -1952,18 +1952,17 @@ deal reasonably well with top-level navigations.
 Consider the scenario in which a user reads their email at MegaCorp Inc's
 webmail provider `https://site.example/`. They might expect that clicking on an
 emailed link to `https://projects.example/secret/project` would show them the secret
-project that they're authorized to see, but if `projects.example` has marked their
-session cookies as `SameSite`, then this cross-site navigation won't send them
-along with the request. `projects.example` will render a 404 error to avoid leaking
+project that they're authorized to see, but if `https://projects.example` has marked their
+session cookies as `SameSite=Strict`, then this cross-site navigation won't send them
+along with the request. `https://projects.example` will render a 404 error to avoid leaking
 secret information, and the user will be quite confused.
 
 Developers can avoid this confusion by adopting a session management system that
 relies on not one, but two cookies: one conceptually granting "read" access,
-another granting "write" access. The latter could be marked as `SameSite`, and
+another granting "write" access. The latter could be marked as `SameSite=Strict`, and
 its absence would prompt a reauthentication step before executing any
-non-idempotent action. The former could drop the `SameSite` attribute entirely,
-or choose the "Lax" version of enforcement, in order to allow users access to
-data via top-level navigation.
+non-idempotent action. The former could be marked as `SameSite=Lax`, or `SameSite=None`,
+in order to allow users access to data via top-level navigation.
 
 ### Mashups and Widgets
 
