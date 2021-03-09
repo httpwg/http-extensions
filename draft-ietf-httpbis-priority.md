@@ -94,7 +94,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 interpreted as described in {{!RFC2119}}.
 
 The terms sf-token and sf-boolean are imported from
-{{!STRUCTURED-FIELDS=I-D.ietf-httpbis-header-structure}}.
+{{!STRUCTURED-FIELDS=RFC8941}}.
 
 Example HTTP requests and responses use the HTTP/2-style formatting from
 {{?RFC7540}}.
