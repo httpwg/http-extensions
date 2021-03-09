@@ -1562,7 +1562,7 @@ is computed for the HTTP request as defined in {{same-site-requests}}.
 
 ### Non-HTTP APIs {#non-http}
 
-The user agent may implement "non-HTTP" APIs that can be used to access 
+The user agent may implement "non-HTTP" APIs that can be used to access
 stored cookies.
 
 A user agent MAY return an empty cookie-string in certain contexts, such as when
