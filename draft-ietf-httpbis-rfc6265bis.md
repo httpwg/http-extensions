@@ -1962,14 +1962,17 @@ Developers can avoid this confusion by adopting a session management system that
 relies on not one, but two cookies: one conceptually granting "read" access,
 another granting "write" access. The latter could be marked as `SameSite=Strict`,
 and its absence would prompt a reauthentication step before executing any
-non-idempotent action. The former could be marked as `SameSite=Lax`, or
-`SameSite=None`, in order to allow users access to data via top-level navigation.
+non-idempotent action. The former could be marked as `SameSite=Lax`, in
+order to allow users access to data via top-level navigation, or
+`SameSite=None`, to permit access in all contexts (including cross-site
+embedded contexts).
+
 
 ### Mashups and Widgets
 
 The `Lax` and `Strict` values for the `SameSite` attribute are inappropriate
 for some important use-cases. In particular, note that content intended for
-embedding in a cross-site contexts (social networking widgets or commenting
+embedding in cross-site contexts (social networking widgets or commenting
 services, for instance) will not have access to same-site cookies. Cookies
 which are required in these situations should be marked with `SameSite=None`
 to allow access in cross-site contexts.
