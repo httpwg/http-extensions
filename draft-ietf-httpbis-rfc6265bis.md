@@ -1951,32 +1951,35 @@ deal reasonably well with top-level navigations.
 
 Consider the scenario in which a user reads their email at MegaCorp Inc's
 webmail provider `https://site.example/`. They might expect that clicking on an
-emailed link to `https://projects.example/secret/project` would show them the secret
-project that they're authorized to see, but if `projects.example` has marked their
-session cookies as `SameSite`, then this cross-site navigation won't send them
-along with the request. `projects.example` will render a 404 error to avoid leaking
-secret information, and the user will be quite confused.
+emailed link to `https://projects.example/secret/project` would show them the
+secret project that they're authorized to see, but if `https://projects.example`
+has marked their session cookies as `SameSite=Strict`, then this cross-site
+navigation won't send them along with the request. `https://projects.example`
+will render a 404 error to avoid leaking secret information, and the user will
+be quite confused.
 
 Developers can avoid this confusion by adopting a session management system that
 relies on not one, but two cookies: one conceptually granting "read" access,
-another granting "write" access. The latter could be marked as `SameSite`, and
-its absence would prompt a reauthentication step before executing any
-non-idempotent action. The former could drop the `SameSite` attribute entirely,
-or choose the "Lax" version of enforcement, in order to allow users access to
-data via top-level navigation.
+another granting "write" access. The latter could be marked as `SameSite=Strict`,
+and its absence would prompt a reauthentication step before executing any
+non-idempotent action. The former could be marked as `SameSite=Lax`, in
+order to allow users access to data via top-level navigation, or
+`SameSite=None`, to permit access in all contexts (including cross-site
+embedded contexts).
+
 
 ### Mashups and Widgets
 
-The `SameSite` attribute is inappropriate for some important use-cases. In
-particular, note that content intended for embedding in a cross-site contexts
-(social networking widgets or commenting services, for instance) will not have
-access to same-site cookies. Cookies may be required for requests triggered in
-these cross-site contexts in order to provide seamless functionality that relies
-on a user's state.
+The `Lax` and `Strict` values for the `SameSite` attribute are inappropriate
+for some important use-cases. In particular, note that content intended for
+embedding in cross-site contexts (social networking widgets or commenting
+services, for instance) will not have access to same-site cookies. Cookies
+which are required in these situations should be marked with `SameSite=None`
+to allow access in cross-site contexts.
 
 Likewise, some forms of Single-Sign-On might require cookie-based authentication
 in a cross-site context; these mechanisms will not function as intended with
-same-site cookies.
+same-site cookies and will also require `SameSite=None`.
 
 ### Server-controlled
 
