@@ -1539,6 +1539,43 @@ set to false.
 
 ## Retrieval Model {#retrieval-model}
 
+This section defines how cookies are retrieved from a cookie store in the form of
+a cookie-string. A cookie-string may be used to build a Cookie header for an HTTP
+request, or may be returned from a "non-HTTP" API that provides access to cookies.
+
+### The Cookie Header {#cookie}
+
+The user agent includes stored cookies in the Cookie HTTP request header.
+
+When the user agent generates an HTTP request, the user agent MUST NOT attach
+more than one Cookie header field.
+
+A user agent MAY omit the Cookie header in its entirety.  For example, the
+user agent might wish to block sending cookies during "third-party" requests
+from setting cookies (see {{third-party-cookies}}).
+
+If the user agent does attach a Cookie header field to an HTTP request, the
+user agent MUST send the cookie-string as the value of the
+header field. The cookie-string is computed as defined in {{retrieval-algorithm}},
+whereby the retrieval-uri is defined as the request-uri and the same-site status
+is computed for the HTTP request as defined in {{same-site-requests}}.
+
+### Non-HTTP APIs {#non-http}
+
+The user agent may implement "non-HTTP" APIs that can be used to access 
+stored cookies.
+
+A user agent MAY return an empty cookie-string in certain contexts, such as when
+retrieval occurs within a third-party context (see {{third-party-cookies}}).
+
+If a user agent does return cookies for a given call to a "non-HTTP" API with an
+associated Document, then the user agent MUST compute the cookie-string following
+the algorithm defined in {{retrieval-algorithm}, whereby the retrieval-uri is the
+associated Document's URL. The retrieval is same-site if the Document's "site for
+cookies" is same-site with the top-level origin as defined in {{document-requests}}.
+
+### Retrieval Algorithm {#retrieval-algorithm}
+
 The user agent MUST use an algorithm equivalent to the following algorithm to
 compute the cookie-string from a cookie store, a retrieval-uri, and the retrieval's
 same-site status.
@@ -1612,30 +1649,7 @@ the user agent might wish to try using the UTF-8 character encoding {{RFC3629}}
 to decode the octet sequence. This decoding might fail, however, because not
 every sequence of octets is valid UTF-8.
 
-### The Cookie Header {#cookie}
 
-The user agent includes stored cookies in the Cookie HTTP request header.
-
-When the user agent generates an HTTP request, the user agent MUST NOT attach
-more than one Cookie header field.
-
-A user agent MAY omit the Cookie header in its entirety.  For example, the
-user agent might wish to block sending cookies during "third-party" requests
-from setting cookies (see {{third-party-cookies}}).
-
-If the user agent does attach a Cookie header field to an HTTP request, the
-user agent MUST send the cookie-string as the value of the
-header field. The cookie-string is computed as defined in {{retrieval-model}},
-whereby the retrieval-uri is defined as the request-uri and the same-site status
-is computed for the HTTP request as defined in {{same-site-requests}}.
-
-### Non-HTTP APIs {#non-http}
-
-When a cookie-string is retrieved by a "non-HTTP" API with an associated
-Document, the user agent MUST compute the cookie-string following the algorithm
-defined in {{retrieval-model}}, whereby the retrieval-uri is the associated
-Document's URL. The retrieval is same-site if the Document's "site for cookies"
-is same-site with the top-level origin as defined in {{document-requests}}.
 
 # Implementation Considerations
 
