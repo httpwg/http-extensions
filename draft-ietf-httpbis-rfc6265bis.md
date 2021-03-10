@@ -1576,9 +1576,8 @@ cookies" is same-site with the top-level origin as defined in {{document-request
 
 ### Retrieval Algorithm {#retrieval-algorithm}
 
-The user agent MUST use an algorithm equivalent to the following algorithm to
-compute the cookie-string from a cookie store, a retrieval-uri, and the retrieval's
-same-site status.
+Given a cookie store, a retrieval-uri, and the same-site status of the
+retrieval-uri, the following algorithm returns a cookie-string.
 
 1. Let cookie-list be the set of cookies from the cookie store that meets all
    of the following requirements:
@@ -1612,7 +1611,8 @@ same-site status.
      conditions are met:
 
      * The retrieval is for a Cookie header in the HTTP request associated with
-       the retrieval-uri The same-site-flag is "Lax" or "Default".
+       the retrieval-uri.
+     * The same-site-flag is "Lax" or "Default".
      * The HTTP request's method is "safe".
      * The HTTP request's target browsing context is a top-level browsing context.
 
