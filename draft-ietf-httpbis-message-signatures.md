@@ -361,7 +361,7 @@ Given the following signature parameters:
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`|
-|Covered Content|`@request-target`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`, `x-dictionary;key=b`, `x-dictionary;key=a`, `x-list;prefix=3`|
+|Covered Content|`@request-target`, `host`, `date`, `cache-control`, `x-emptyheader`, `x-example`, `x-dictionary;key=b`, `x-dictionary;key=a`, `x-list;prefix=3`|
 |Creation Time|`1402174295`|
 |Expiration Time|`1402174595`|
 |Verification Key Material|The public key provided in {{example-key-rsa-test}} and identified by the `keyid` value "test-key-a".|
@@ -463,7 +463,7 @@ The following table presents a non-normative example of metadata values that a s
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`|
-|Covered Content|`@request-target`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`, `x-dictionary;key=b`, `x-dictionary;key=a`, `x-list;prefix=3`|
+|Covered Content|`@request-target`, `host`, `date`, `cache-control`, `x-emptyheader`, `x-example`, `x-dictionary;key=b`, `x-dictionary;key=a`, `x-list;prefix=3`|
 |Creation Time|`1402174295`|
 |Expiration Time|`1402174595`|
 |Verification Key Material|The public key provided in {{example-key-rsa-test}} and identified by the `keyid` value "test-key-a".|
