@@ -2245,6 +2245,6 @@ The "Cookie Attribute Registry" will be updated with the registrations below:
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
-aligning the specification with the reality of today’s deployments. Here, we’re
-standing upon the shoulders of a giant since the majority of the text is still
-Adam’s.
+adding features and aligning the specification with the reality of today’s
+deployments. Here, we’re standing upon the shoulders of a giant since the
+majority of the text is still Adam’s.
