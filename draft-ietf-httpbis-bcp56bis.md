@@ -423,11 +423,11 @@ See {{I-D.ietf-httpbis-semantics, Section 16.3.2}} for guidelines to consider wh
 
 It is RECOMMENDED that header field names be short (even when field compression is used, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a "-".
 
-For example, if the "example" application needs to create three headers, they might be called "example-foo", "example-bar" and "example-baz". Note that the primary motivation here is to avoid consuming more generic field names, not to reserve a portion of the namespace for the application; see {{!RFC6648}} for related considerations.
+For example, if the "example" application needs to create three header fields, they might be called "example-foo", "example-bar" and "example-baz". Note that the primary motivation here is to avoid consuming more generic field names, not to reserve a portion of the namespace for the application; see {{!RFC6648}} for related considerations.
 
 The semantics of existing HTTP header fields MUST NOT be re-defined without updating their registration or defining an extension to them (if allowed). For example, an application using HTTP cannot specify that the `Location` header field has a special meaning in a certain context.
 
-See {{caching}} for the interaction between headers and HTTP caching; in particular, request header fields that are used to "select" a response have impact there, and need to be carefully considered.
+See {{caching}} for the interaction between header fields and HTTP caching; in particular, request header fields that are used to "select" a response have impact there, and need to be carefully considered.
 
 See {{state}} for considerations regarding header fields that carry application state (e.g., Cookie).
 
@@ -485,7 +485,7 @@ One way to address this is to explicitly specify that all responses be fresh upo
 
 ### Varying Content Based Upon the Request
 
-If an application uses a request header field to change the response's headers or content, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in {{I-D.ietf-httpbis-cache, Section 5.2.2.3}}) or send the Vary response header field ({{I-D.ietf-httpbis-semantics, Section 12.5.5}}) on all responses from that resource (including the "default" response).
+If an application uses a request header field to change the response's header fields or content, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in {{I-D.ietf-httpbis-cache, Section 5.2.2.3}}) or send the Vary response header field ({{I-D.ietf-httpbis-semantics, Section 12.5.5}}) on all responses from that resource (including the "default" response).
 
 For example, this response:
 
