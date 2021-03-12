@@ -876,7 +876,7 @@ found-year) are initially "not set".
     the minute-value, and the second-value, respectively. If no such date
     exists, abort these steps and fail to parse the cookie-date.
 
-7. Return the parsed-cookie-date as the result of this algorithm.
+7.  Return the parsed-cookie-date as the result of this algorithm.
 
 ### Canonicalized Host Names
 
