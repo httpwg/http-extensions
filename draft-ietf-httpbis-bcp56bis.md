@@ -451,11 +451,13 @@ Even when an application using HTTP isn't designed to take advantage of caching,
 
 Assigning even a short freshness lifetime ({{I-D.ietf-httpbis-cache, Section 4.2}}) -- e.g., 5 seconds -- allows a response to be reused to satisfy multiple clients, and/or a single client making the same request repeatedly. In general, if it is safe to reuse something, consider assigning a freshness lifetime.
 
-The most common method for specifying freshness is the max-age response directive ({{I-D.ietf-httpbis-cache, Section 5.2.2.9}}). The Expires header field ({{I-D.ietf-httpbis-cache, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support Cache-Control, and specifying freshness as a delta is usually more convenient and less error-prone.
+The most common method for specifying freshness is the max-age response directive ({{I-D.ietf-httpbis-cache, Section 5.2.2.1}}). The Expires header field ({{I-D.ietf-httpbis-cache, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support Cache-Control, and specifying freshness as a delta is usually more convenient and less error-prone.
+
+It is not necessary to add the public response directive ({{I-D.ietf-httpbis-cache, Section 5.2.2.9}}) to cache most responses; it is only necessary when it's desirable to store an authenticated response.
 
 In some situations, responses without explicit cache freshness directives will be stored and served using a heuristic freshness lifetime; see {{I-D.ietf-httpbis-cache, Section 4.2.2}}. As the heuristic is not under control of the application, it is generally preferable to set an explicit freshness lifetime, or make the response explicitly uncacheable.
 
-If caching of a response is not desired, the appropriate response directive is "Cache-Control: no-store". This only need be sent in situations where the response might be cached; see {{I-D.ietf-httpbis-cache, Section 3}}. Note that "Cache-Control: no-cache" allows a response to be stored, just not reused by a cache without validation; it does not prevent caching (despite its name).
+If caching of a response is not desired, the appropriate response directive is "Cache-Control: no-store". Other directives are not necessary, and no-store only need be sent in situations where the response might be cached; see {{I-D.ietf-httpbis-cache, Section 3}}. Note that "Cache-Control: no-cache" allows a response to be stored, just not reused by a cache without validation; it does not prevent caching (despite its name).
 
 For example, this response cannot be stored or reused by a cache:
 
