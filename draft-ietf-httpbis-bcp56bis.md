@@ -253,7 +253,7 @@ Some client behaviours (e.g., automatic redirect handling) and extensions (e.g.,
 * Cookies - Applications using HTTP should explicitly reference the Cookie specification {{?I-D.ietf-httpbis-rfc6265bis}} if they are required.
 * Certificates - Applications using HTTP should specify that TLS certificates are to be checked according to {{I-D.ietf-httpbis-semantics, Section 4.3.4}} when HTTPS is used.
 
-Applications using HTTP MUST NOT require HTTP features that are usually negotiated to be supported by clients. For example, requiring that clients support responses with a certain content-coding ({{I-D.ietf-httpbis-semantics, Section 8.4.1}}) instead of negotiating for it ({{I-D.ietf-httpbis-semantics, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
+Applications using HTTP should not statically require HTTP features that are usually negotiated to be supported by clients. For example, requiring that clients support responses with a certain content-coding ({{I-D.ietf-httpbis-semantics, Section 8.4.1}}) instead of negotiating for it ({{I-D.ietf-httpbis-semantics, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
 
 
 ## Specifying URLs
