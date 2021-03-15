@@ -57,7 +57,6 @@ normative:
         date: 2018
 
 informative:
-    RFC3339:
     RFC6234:
     RFC7239:
     RFC8017:
@@ -161,21 +160,41 @@ Additionally, some examples use '\\' line wrapping for long values that contain 
 
 # Identifying and Canonicalizing Content {#content-identifiers}
 
-In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for signature metadata and discrete pieces of message content that may be covered by an HTTP Message Signature.
+In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for data items covered by an HTTP Message Signature.
 
-Some content within HTTP messages may undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such innocuous transformations.  This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.
+Some content within HTTP messages can undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.
 
-The following sections define content identifiers, their associated content, and their canonicalization rules.
+Content identifiers are defined using production grammar defined by {{!RFC8941}} section 4.
+The content identifier is an `sf-string` value. The content identifier
+type MAY define parameters which are included using the `parameters` rule.
 
-## HTTP Header Fields
+~~~
+content-identifier = sf-string parameters
+~~~
 
-An HTTP header field is identified by its header field name.  While HTTP header field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers.
+Note that this means the value of the identifier itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`.
 
-An HTTP header field value is canonicalized as follows:
+The following sections define content identifier types, their parameters, their associated content, and their canonicalization rules.
+
+## HTTP Headers {#http-header}
+
+The content identifier for an HTTP header is the lowercased form of its header field name. While HTTP header field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers.
+
+Unless overridden by additional parameters and rules, the HTTP header field value MUST be canonicalized with the following steps:
 
 1. Create an ordered list of the field values of each instance of the header field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list.
-3. Concatenate the list items together, with a comma "," and space " " between each item. The resulting string is the canonicalized value.
+3. Concatenate the list items together, with a comma "," and space " " between each item. 
+
+The resulting string is the canonicalized value.
+
+### Canonicalized Structured HTTP Headers {#http-header-structured}
+
+If value of the the HTTP header in question is a structured field {{!RFC8941}}, the content identifier MAY include the `sf` parameter. If this
+parameter is included, the HTTP header value MUST be canonicalized using the rules specified in {{!RFC8941}} section 4. Note that this process
+will replace any optional whitespace with a single space.
+
+The resulting string is used as the field value input in {{http-header}}.
 
 ### Canonicalization Examples
 
@@ -197,17 +216,19 @@ The following table shows example canonicalized values for header fields, given 
 
 |Header Field|Canonicalized Value|
 |--- |--- |
-|`cache-control`|max-age=60, must-revalidate|
-|`date`|Tue, 07 Jun 2014 20:51:35 GMT|
-|`server`|www.example.com|
-|`x-empty-header`||
-|`x-obs-fold-header`|Obsolete line folding.|
-|`x-ows-header`|Leading and trailing whitespace.|
+|`"cache-control"`|max-age=60, must-revalidate|
+|`"date"`|Tue, 07 Jun 2014 20:51:35 GMT|
+|`"server"`|www.example.com|
+|`"x-empty-header"`||
+|`"x-obs-fold-header"`|Obsolete line folding.|
+|`"x-ows-header"`|Leading and trailing whitespace.|
 {: title="Non-normative examples of header field canonicalization."}
 
 ## Dictionary Structured Field Members
 
-An individual member in the value of a Dictionary Structured Field is identified by the lowercased field name, followed by a semicolon `":"`, followed by the member name. An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{!StructuredFields=I-D.ietf-httpbis-header-structure}} on a Dictionary containing only that member.
+An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` on the content identifier for the header. The value of this parameter is a the key being identified, without any parameters present on that key in the original dictionary.
+
+An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{!RFC8941}} on a Dictionary containing only that member.
 
 ### Canonicalization Examples
 
@@ -221,15 +242,17 @@ The following table shows example canonicalized values for different content ide
 
 |Content Identifier|Canonicalized Value|
 |--- |--- |
-|`x-dictionary:a`|1|
-|`x-dictionary:b`|2;x=1;y=2|
-|`x-dictionary:c`|(a, b, c)|
+|`"x-dictionary";key=a`|1|
+|`"x-dictionary";key=b`|2;x=1;y=2|
+|`"x-dictionary";key=c`|(a, b, c)|
 {: title="Non-normative examples of Dictionary member canonicalization."}
 
 
 ## List Prefixes
 
-A prefix of a List Structured Field consisting of the first N members in the field's value (where N is an integer greater than 0 and less than or equal to the number of members in the List) is identified by the lowercased field name, followed by a semicolon `":"`, followed by N expressed as an Integer String. A list prefix is canonicalized by applying the serialization algorithm described in Section 4.1.1 of {{StructuredFields}} on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
+A prefix of a List Structured Field consisting of the first N members in the field's value (where N is an integer greater than 0 and less than or equal to the number of members in the List) is identified by the parameter `prefix` with the value of N as an integer. 
+
+A list prefix value is canonicalized by applying the serialization algorithm described in Section 4.1.1 of {{!RFC8941}} on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
 
 ### Canonicalization Examples
 
@@ -244,31 +267,31 @@ The following table shows example canonicalized values for different content ide
 
 |Content Identifier|Canonicalized Value|
 |--- |--- |
-|`x-list-a:0`|()|
-|`x-list-a:1`|(a)|
-|`x-list-a:3`|(a, b, c)|
-|`x-list-a:6`|(a, b, c, d, e, f)|
-|`x-list-b:0`|()|
+|`"x-list-a";prefix=0`|()|
+|`"x-list-a";prefix=1`|(a)|
+|`"x-list-a";prefix=3`|(a, b, c)|
+|`"x-list-a";prefix=6`|(a, b, c, d, e, f)|
+|`"x-list-b";prefix=0`|()|
 {: title="Non-normative examples of list prefix canonicalization."}
 
 
-## Signature Creation Time
+## Specialty Content Fields
 
-The signature's Creation Time ({{signature-metadata}}) is identified by the `*created` identifier.
+Content not found in an HTTP header can be included in the signature base string by defining a content identifier and the canonicalization method for its content.
 
-Its canonicalized value is an `sf-integer` containing the signature's Creation Time expressed in "Unix time".
+To differentiate speciality content identifiers from HTTP headers, specialty content identifiers MUST start with the "at" `@` character. This specification defines the following specialty content identifiers:
 
-> The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as [RFC3339].
+@request-target
+: The target request endpoint. {{content-request-target}}
 
-## Signature Expiration Time
+@signature-params
+: The signature metadata parameters for this signature. {{content-signature-params}}
 
-The signature's Expiration Time ({{signature-metadata}}) is identified by the `*expires` identifier.
+Additional specialty content identifiers MAY be defined and registered in the HTTP Signatures Specialty Content Identifier Registry. {{content-registry}}
 
-Its canonicalized value is an `sf-decimal` containing the signature's Expiration Time expressed in "Unix time".
+### Request Target {#content-request-target}
 
-## Target Endpoint
-
-The request target endpoint, consisting of the request method and the path and query of the effective request URI, is identified by the `*request-target` identifier.
+The request target endpoint, consisting of the request method and the path and query of the effective request URI, is identified by the `@request-target` identifier.
 
 Its value is canonicalized as follows:
 
@@ -276,14 +299,14 @@ Its value is canonicalized as follows:
 2. Append a space " ".
 3. Append the path and query of the request target of the message, formatted according to the rules defined for the :path pseudo-header in {{!HTTP2=RFC7540}}, Section 8.1.2.3.  The resulting string is the canonicalized value.
 
-### Canonicalization Examples
+#### Canonicalization Examples
 
-The following table contains non-normative example HTTP messages and their canonicalized `*request-target` values.
+The following table contains non-normative example HTTP messages and their canonicalized `@request-target` values.
 
 <table>
-    <name>Non-normative examples of <tt>*request-target</tt> canonicalization.</name>
+    <name>Non-normative examples of <tt>@request-target</tt> canonicalization.</name>
     <thead>
-        <tr><th>HTTP Message</th><th>*request-target</th></tr>
+        <tr><th>HTTP Message</th><th>@request-target</th></tr>
     </thead>
     <tbody>
         <tr>
@@ -323,6 +346,32 @@ Host: server.example.com</sourcecode></td>
     </tbody>
 </table>
 
+### Signature Parameters {#content-signature-params}
+
+The signature parameters special content is identified by the `@signature-params` identifier.
+
+Its canonicalized value is the serialization of the signature parameters for this signature, including the covered content list with all associated parameters. {{signature-metadata}}
+
+Note that an HTTP message could contain multiple signatures, but only the signature parameters used for the current signature are included.
+
+#### Canonicalization Examples
+
+Given the following signature parameters:
+
+|Property|Value|
+|--- |--- |
+|Algorithm|`hs2019`|
+|Covered Content|`@request-target`, `host`, `date`, `cache-control`, `x-emptyheader`, `x-example`, `x-dictionary;key=b`, `x-dictionary;key=a`, `x-list;prefix=3`|
+|Creation Time|`1402174295`|
+|Expiration Time|`1402174595`|
+|Verification Key Material|The public key provided in {{example-key-rsa-test}} and identified by the `keyid` value "test-key-a".|
+
+The signature parameter value is defined as:
+
+~~~
+"@signature-params": ("@request-target" "host" "date" "cache-control" "x-empty-header" "x-example" "x-dictionary";key=b "x-dictionary";key=a "x-list";prefix=3); keyid="test-key-a"; alg="hs2019"; created=1402170695; expires=1402170995
+~~~
+
 # HTTP Message Signatures {#message-signatures}
 
 An HTTP Message Signature is a signature over a string generated from a subset of the content in an HTTP message and metadata about the signature itself.  When successfully verified against an HTTP message, it provides cryptographic proof that with respect to the subset of content that was signed, the message is semantically equivalent to the message for which the signature was generated.
@@ -333,19 +382,37 @@ HTTP Message Signatures have metadata properties that provide information regard
 
 {: vspace="0"}
 Algorithm:
-: An HTTP Signature Algorithm defined in the HTTP Signature Algorithms Registry defined in this document. It describes the signing and verification algorithms for the signature.
+: An HTTP Signature Algorithm defined in the HTTP Signature Algorithms Registry defined in this document, represented as a string. It describes the signing and verification algorithms for the signature.
 
 Creation Time:
-: A timestamp representing the point in time that the signature was generated. Sub-second precision is not supported. A signature's Creation Time MAY be undefined, indicating that it is unknown.
-
-Covered Content:
-: An ordered list of content identifiers (Section 2) that indicates the metadata and message content that is covered by the signature. The order of identifiers in this list affects signature generation and verification, and therefore MUST be preserved.
+: A timestamp representing the point in time that the signature was generated, represented as an integer. Sub-second precision is not supported. A signature's Creation Time MAY be undefined, indicating that it is unknown. `sf-integer`
 
 Expiration Time:
-: A timestamp representing the point in time at which the signature expires. An expired signature always fails verification. A signature's Expiration Time MAY be undefined, indicating that the signature does not expire.
+: A timestamp representing the point in time at which the signature expires, represented as an integer. An expired signature always fails verification. A signature's Expiration Time MAY be undefined, indicating that the signature does not expire.
 
 Verification Key Material:
 : The key material required to verify the signature.
+
+Covered Content:
+: An ordered list of content identifiers (Section 2) that indicates the metadata and message content that is covered by the signature. This list MUST NOT include the `@signature-params` content identifier.
+
+The signature metadata is serialized using the rules in {{!RFC8941}} section 4 as follows:
+
+1. Let the output be an empty string.
+2. Serialize the content identifiers as an ordered `inner-list` according to {{!RFC8941}} section 4.1.1.1 and append this to the output.
+3. Append the signature metadata as parameters according to {{!RFC8941}} section 4.1.1.2 in the any order, skipping fields that are not available:
+   * `alg`: Algorithm as an `sf-string` value.
+   * `keyid`: Verification Key Material as an `sf-string` value.
+   * `created`: Creation Time as an `sf-integer` timestamp value.
+   * `expires`: Expiration Time as an `sf-integer` timestamp value.
+   
+Note that the `inner-list` serialization is used instead of the `sf-list` serialization in order to facilitate this value's inclusion in the `Signature-Input` header's dictionary, as discussed in {{signature-input-header}}.
+
+The {{example-metadata}} values would be serialized as follows:
+
+~~~
+("@request-target" "host" "date" "cache-control" "x-empty-header" "x-example"); keyid="test-key-a"; alg="hs2019"; created=1402170695; expires=1402170995
+~~~
 
 
 ## Creating a Signature {#create}
@@ -353,7 +420,7 @@ Verification Key Material:
 In order to create a signature, a signer completes the following process:
 
 1. Choose key material and algorithm, and set metadata properties {{choose-metadata}}
-2. Create the Signature Input {{canonicalization}}
+2. Create the Signature Input {{create-sig-input}}
 3. Sign the Signature Input {{sign-sig-input}}
 
 The following sections describe each of these steps in detail.
@@ -371,10 +438,10 @@ The following sections describe each of these steps in detail.
 5. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
    * Each identifier MUST be one of those defined in Section 2.
    * This list MUST NOT be empty, as this would result in creating a signature over the empty string.
-   * Signers SHOULD include `*request-target` in the list.
-   * Signers SHOULD include a date stamp, such as the `date` header or the `*created` field in the list.
+   * Signers SHOULD include `@request-target` in the list.
+   * Signers SHOULD include a date stamp, such as the `date` header. Alternatively, the `created` signature metadata parameter can fulfil this role.
    * Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
-
+   * Note that the signature metadata is not included in the explicit list of covered content identifiers since its value is always covered.
 
 For example, given the following HTTP message:
 
@@ -396,40 +463,37 @@ The following table presents a non-normative example of metadata values that a s
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`|
-|Covered Content|`*request-target`, `*created`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`, `x-dictionary:b`, `x-dictionary:a`, `x-list:3`|
+|Covered Content|`@request-target`, `host`, `date`, `cache-control`, `x-emptyheader`, `x-example`, `x-dictionary;key=b`, `x-dictionary;key=a`, `x-list;prefix=3`|
 |Creation Time|`1402174295`|
 |Expiration Time|`1402174595`|
 |Verification Key Material|The public key provided in {{example-key-rsa-test}} and identified by the `keyid` value "test-key-a".|
 {: title="Non-normative example metadata values" #example-metadata}
 
+### Create the Signature Input {#create-sig-input}
 
-### Create the Signature Input {#canonicalization}
+The Signature Input is a US-ASCII string containing the content that will be signed.  To create it, the signer or verifier concatenates together entries for each identifier in the signature's Covered Content in the order it occurs in the list, with each entry separated by a newline `"\n"`.  An identifier's entry is a `sf-string` followed with a colon `":"`, a space `" "`, and the identifier's canonicalized value.
 
-The Signature Input is a US-ASCII string containing the content that will be signed.  To create it, the signer concatenates together entries for each identifier in the signature's Covered Content in the order it occurs in the list, with each entry separated by a newline `"\n"`.  An identifier's entry is a US-ASCII string consisting of the lowercased identifier followed with a colon `":"`, a space `" "`, and the identifier's canonicalized value (described below).
+The signer or verifier then includes the signature metadata specialty field `@signature-params` as the last entry in the covered content, separated by a newline `"\n"`. {{content-signature-params}}
 
-If Covered Content contains `*created` and the signature's Creation Time is undefined an implementation MUST produce an error.
+If Covered Content contains an identifier for a header field that is malformed or is not present in the message, the implementation MUST produce an error.
 
-If Covered Content contains `*expires` and the signature does not have an Expiration Time an implementation MUST produce an error.
+If Covered Content contains an identifier for a Dictionary member that references a header field using the `key` parameter that is not present, is malformed in the message, or is not a Dictionary Structured Field, the implementation MUST produce an error. If the header field value does not contain the specified member, the implementation MUST produce an error.
 
-If Covered Content contains an identifier for a header field that is not present or malformed in the message, the implementation MUST produce an error.
-
-If Covered Content contains an identifier for a Dictionary member that references a header field that is not present, is malformed in the message, or is not a Dictionary Structured Field, the implementation MUST produce an error. If the header field value does not contain the specified member, the implementation MUST produce an error.
-
-If Covered Content contains an identifier for a List Prefix that references a header field that is not present, is malformed in the message, or is not a List Structured Field, the implementation MUST produce an error. If the header field value contains fewer than the specified number of members, the implementation MUST produce an error.
+If Covered Content contains an identifier for a List Prefix that references a header field using the `prefix` parameter that is not present, is malformed in the message, or is not a List Structured Field, the implementation MUST produce an error. If the header field value contains fewer than the specified number of members, the implementation MUST produce an error.
 
 For the non-normative example Signature metadata in {{example-metadata}}, the corresponding Signature Input is:
 
 ~~~
-*request-target: get /foo
-*created: 1402170695
-host: example.org
-date: Tue, 07 Jun 2014 20:51:35 GMT
-cache-control: max-age=60, must-revalidate
-x-emptyheader:
-x-example: Example header with some whitespace.
-x-dictionary: b=2
-x-dictionary: a=1
-x-list: (a, b, c)
+"@request-target": get /foo
+"host": example.org
+"date": Tue, 07 Jun 2014 20:51:35 GMT
+"cache-control": max-age=60, must-revalidate
+"x-emptyheader":
+"x-example": Example header with some whitespace.
+"x-dictionary";key=b: 2
+"x-dictionary";key=a: 1
+"x-list";prefix=3: (a, b, c)
+"@signature-params": ("@request-target" "host" "date" "cache-control" "x-empty-header" "x-example" "x-dictionary";key=b "x-dictionary";key=b "x-list";prefix=3); keyid="test-key-a"; alg="hs2019"; created=1402170695; expires=1402170995
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
 
@@ -453,9 +517,7 @@ iIvK6/l0BdWTU7+2uQj7lBkQAsFZHoA96ZZgFquQrXRlmYOh+Hx5D9fJkXcXe5tmAg==
 In order to verify a signature, a verifier MUST:
 
 1. Examine the signature's metadata to confirm that the signature meets the requirements described in this document, as well as any additional requirements defined by the application such as which header fields or other content are required to be covered by the signature.
-
-2. Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in {{canonicalization}}.
-
+2. Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in {{create-sig-input}}. The value of the `@signature-params` input is the value of the signature input header field for this signature, not including the signature's label.
 3. Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.
 
 
@@ -481,27 +543,28 @@ Applications MUST enforce the requirements defined in this document.  Regardless
 # Including a Message Signature in a Message
 Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP header fields, both defined within this specification. The `Signature` HTTP header field contains signature values, while the `Signature-Input` HTTP header field identifies the Covered Content and metadata that describe how each signature was generated.
 
-## The 'Signature-Input' HTTP Header
-The `Signature-Input` HTTP header field is a Dictionary Structured Header {{StructuredFields}} containing the metadata for zero or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the message signature's Covered Content, expressed as a List of Tokens. Further signature metadata is expressed in parameters on the member value, as described below.
+## The 'Signature-Input' HTTP Header {#signature-input-header}
+The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for zero or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered content including all signature metadata parameters, described in {{signature-metadata}}.
 
-### Metadata Parameters {#params}
-The parameters on each `Signature-Input` member value contain metadata about the signature. Each parameter name MUST be a parameter name registered in the IANA HTTP Signatures Metadata Parameters Registry defined in {{param-registry}} of this document. This document defines the following parameters, and registers them as the initial contents of the registry:
+~~~
+Signature-Input: sig1=("@request-target" "host" "date"
+    "cache-control" "x-empty-header" "x-example"); keyid="test-key-a";
+    alg="hs2019"; created=1402170695; expires=1402170995
+~~~
 
-{: vspace="0"}
-alg:
-: RECOMMENDED. The `alg` parameter is a Token containing the name of the signature's Algorithm, as registered in the HTTP Signature Algorithms Registry defined by this document. Verifiers MUST determine the signature's Algorithm from the `keyid` parameter rather than from `alg`. If `alg` is provided and differs from or is incompatible with the algorithm or key material identified by `keyid` (for example, `alg` has a value of `rsa-sha256` but `keyid` identifies an EdDSA key), then implementations MUST produce an error.
+To facilitate signature validation, the `Signature-Input` header MUST contain the same serialization value used in generating the signature input.
 
-created:
-: RECOMMENDED. The `created` parameter is an `sf-integer` containing the signature's Creation Time, expressed as the canonicalized value of the `*created` content identifier, as defined in Section 2.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the Date HTTP Header such as when operating in certain web browser environments.
+## The 'Signature' HTTP Header {#signature-header}
+The `Signature` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing zero or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
 
-expires:
-: OPTIONAL. The `expires` parameter is a `sf-decimal` containing the signature's Expiration Time, expressed as the canonicalized value of the `*expires` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
-
-keyid:
-: REQUIRED. The `keyid` parameter is a String whose value can be used by a verifier to identify and/or obtain the signature's Verification Key Material. Further format and semantics of this value are out of scope for this document.
-
-## The 'Signature' HTTP Header
-The `Signature` HTTP header field is a Dictionary Structured Header {{StructuredFields}} containing zero or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
+~~~
+Signature: sig1=:K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUe\
+    Zx/Kdrq32DrfakQ6bPsvB9aqZqognNT6be4olHROIkeV879RrsrObury8L9SCEibe\
+    oHyqU/yCjphSmEdd7WD+zrchK57quskKwRefy2iEC5S2uAH0EPyOZKWlvbKmKu5q4\
+    CaB8X/I5/+HLZLGvDiezqi6/7p2Gngf5hwZ0lSdy39vyNMaaAT0tKo6nuVw0S1MVg\
+    1Q7MpWYZs0soHjttq0uLIA3DIbQfLiIvK6/l0BdWTU7+2uQj7lBkQAsFZHoA96ZZg\
+    FquQrXRlmYOh+Hx5D9fJkXcXe5tmAg==:
+~~~
 
 ## Examples
 
@@ -510,9 +573,9 @@ The following is a non-normative example of `Signature-Input` and `Signature` HT
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=(*request-target *created host date
-    cache-control x-empty-header x-example); keyid="test-key-a";
-    alg=hs2019; created=1402170695; expires=1402170995
+Signature-Input: sig1=("@request-target" "host" "date"
+    "cache-control" "x-empty-header" "x-example"); keyid="test-key-a";
+    alg="hs2019"; created=1402170695; expires=1402170995
 Signature: sig1=:K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUe\
     Zx/Kdrq32DrfakQ6bPsvB9aqZqognNT6be4olHROIkeV879RrsrObury8L9SCEibe\
     oHyqU/yCjphSmEdd7WD+zrchK57quskKwRefy2iEC5S2uAH0EPyOZKWlvbKmKu5q4\
@@ -527,9 +590,9 @@ Since `Signature-Input` and `Signature` are both defined as Dictionary Structure
 # NOTE: '\' line wrapping per RFC 8792
 
 X-Forwarded-For: 192.0.2.123
-Signature-Input: reverse_proxy_sig=(*created host date
-    signature:sig1 x-forwarded-for); keyid="test-key-a";
-    alg=hs2019; created=1402170695; expires=1402170695.25
+Signature-Input: reverse_proxy_sig=("host" "date"
+    "signature";key=sig1 "x-forwarded-for"); keyid="test-key-a";
+    alg="hs2019"; created=1402170695; expires=1402170695
 Signature: reverse_proxy_sig=:ON3HsnvuoTlX41xfcGWaOEVo1M3bJDRBOp0Pc/O\
     jAOWKQn0VMY0SvMMWXS7xG+xYVa152rRVAo6nMV7FS3rv0rR5MzXL8FCQ2A35DCEN\
     LOhEgj/S1IstEAEFsKmE9Bs7McBsCtJwQ3hMqdtFenkDffSoHOZOInkTYGafkoy78\
@@ -637,11 +700,27 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 
 |Name|Status|Reference(s)|
 |--- |--- |--- |
-|`alg`|Active | {{params}} of this document|
-|`created`|Active   | {{params}} of this document|
-|`expires`|Active   | {{params}} of this document|
-|`keyid`|Active     | {{params}} of this document|
+|`alg`|Active | {{signature-metadata}} of this document|
+|`created`|Active   | {{signature-metadata}} of this document|
+|`expires`|Active   | {{signature-metadata}} of this document|
+|`keyid`|Active     | {{signature-metadata}} of this document|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
+
+## HTTP Signature Specialty Content Identifiers Registry {#content-registry}
+
+This document defines a method for canonicalizing HTTP message content, including content that can be generated from the context of the HTTP message outside of the HTTP headers. This content is identified by a unique key.  IANA is asked to create and maintain a new registry typed "HTTP Signature Specialty Content Identifiers" to record and maintain the set of non-header content identifiers and their canonicalization method. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
+
+### Registration Template {#iana-content-template}
+
+### Initial Contents {#iana-content-contents}
+
+The table below contains the initial contents of the HTTP Signature Specialty Content Identifiers Registry.
+
+|Name|Status|Reference(s)|
+|--- |--- |--- |
+|`@request-target`|Active   | {{content-request-target}} of this document|
+|`@signature-params`|Active   | {{content-signature-params}} of this document|
+{: title="Initial contents of the HTTP Signature Specialty Content Identifiers Registry." }
 
 # Security Considerations {#security}
 
@@ -734,7 +813,7 @@ This presents metadata for a Signature using `hs2019`, over minimum recommended 
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`, using RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]|
-|Covered Content|`*created, *request-target`|
+|Covered Content|`@request-target`|
 |Creation Time|8:51:35 PM GMT, June 7th, 2014|
 |Expiration Time|Undefined|
 |Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
@@ -742,8 +821,8 @@ This presents metadata for a Signature using `hs2019`, over minimum recommended 
 The Signature Input is:
 
 ~~~
-*created: 1402170695
-*request-target: post /foo?param=value&pet=dog
+"@request-target": post /foo?param=value&pet=dog
+"@signature-params": ("@request-target"); keyid="test-key-a"; created=1402170695
 ~~~
 
 The signature value is:
@@ -761,7 +840,7 @@ A possible `Signature-Input` and `Signature` header containing this signature is
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=(*created *request-target);
+Signature-Input: sig1=("@request-target");
     keyid="test-key-a"; created=1402170695
 Signature: sig1=:QaVaWYfF2da6tG66Xtd0GrVFChJ0fOWUe/C6kaYESPiYYwnMH9eg\
     OgyKqgLLY9NQJFk7bQY834sHEUwjS5ByEBaO3QNwIvqEY1qAAU/2MX14tc9Yn7ELB\
@@ -778,7 +857,7 @@ This presents metadata for a Signature using `hs2019` that covers all header fie
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`, using RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]|
-|Covered Content|`*created, *request-target, host, date, content-type, digest, content-length`|
+|Covered Content|`@request-target`, `host`, `date`, `content-type`, `digest`, `content-length`|
 |Creation Time|8:51:35 PM GMT, June 7th, 2014|
 |Expiration Time|Undefined|
 |Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
@@ -786,13 +865,13 @@ This presents metadata for a Signature using `hs2019` that covers all header fie
 The Signature Input is:
 
 ~~~
-*created: 1402170695
-*request-target: post /foo?param=value&pet=dog
-host: example.com
-date: Tue, 07 Jun 2014 20:51:35 GMT
-content-type: application/json
-digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-content-length: 18
+"@request-target": post /foo?param=value&pet=dog
+"host": example.com
+"date": Tue, 07 Jun 2014 20:51:35 GMT
+"content-type": application/json
+"digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+"content-length": 18
+"@signature-params": ("@request-target" "host" "date" "content-type" "digest" "content-length"); keyid="test-key-a"; alg="hs2019"; created=1402170695
 ~~~
 
 The signature value is:
@@ -810,9 +889,9 @@ A possible `Signature-Input` and `Signature` header containing this signature is
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=(*request-target *created host date
-        content-type digest content-length); keyid="test-key-a";
-    alg=hs2019; created=1402170695
+Signature-Input: sig1=("@request-target" "host" "date"
+        "content-type" "digest" "content-length"); keyid="test-key-a";
+    alg="hs2019"; created=1402170695
 Signature: sig1=:B24UG4FaiE2kSXBNKV4DA91J+mElAhS3mncrgyteAye1GKMpmzt8\
     jkHNjoudtqw3GngGY3n0mmwjdfn1eA6nAjgeHwl0WXced5tONcCPNzLswqPOiobGe\
     A5y4WE8iBveel30OKYVel0lZ1OnXOmN5TIEIIPo9LrE+LzZis6A0HA1FRMtKgKGhT\
@@ -844,7 +923,7 @@ The corresponding signature metadata derived from this header field is:
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`, using RSASSA-PSS  using SHA-256|
-|Covered Content|`*created`|
+|Covered Content|``|
 |Creation Time|8:51:35 PM GMT, June 7th, 2014|
 |Expiration Time|Undefined|
 |Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
@@ -852,7 +931,7 @@ The corresponding signature metadata derived from this header field is:
 The corresponding Signature Input is:
 
 ~~~
-*created: 1402170695
+"@signature-params": sig1=(); alg="hs2019"; keyid="test-key-a"; created=1402170695
 ~~~
 
 #### Minimal Recommended Signature Header
@@ -862,7 +941,7 @@ This presents a `Signature-Input` and `Signature` header containing only the min
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=(); alg=hs2019; keyid="test-key-a";
+Signature-Input: sig1=(); alg="hs2019"; keyid="test-key-a";
     created=1402170695
 Signature: sig1=:cxieW5ZKV9R9A70+Ua1A/1FCvVayuE6Z77wDGNVFSiluSzR9TYFV\
     vwUjeU6CTYUdbOByGMCee5q1eWWUOM8BIH04Si6VndEHjQVdHqshAtNJk2Quzs6WC\
@@ -877,7 +956,7 @@ The corresponding signature metadata derived from this header field is:
 |Property|Value|
 |--- |--- |
 |Algorithm|`hs2019`, using RSASSA-PSS  using SHA-512|
-|Covered Content|`*created`|
+|Covered Content|``|
 |Creation Time|8:51:35 PM GMT, June 7th, 2014|
 |Expiration Time|Undefined|
 |Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
@@ -885,7 +964,7 @@ The corresponding signature metadata derived from this header field is:
 The corresponding Signature Input is:
 
 ~~~
-*created: 1402170695
+"@signature-params": sig1=(); alg="rsa-sha256"; keyid="test-key-b"
 ~~~
 
 #### Minimal Signature Header using rsa-sha256
@@ -895,7 +974,7 @@ This presents a minimal `Signature-Input` and `Signature` header for a signature
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature: sig1=(date); alg=rsa-sha256; keyid="test-key-b"
+Signature: sig1=("date"); alg=rsa-sha256; keyid="test-key-b"
 Signature: sig1=:HtXycCl97RBVkZi66ADKnC9c5eSSlb57GnQ4KFqNZplOpNfxqk62\
     JzZ484jXgLvoOTRaKfR4hwyxlcyb+BWkVasApQovBSdit9Ml/YmN2IvJDPncrlhPD\
     VDv36Z9/DiSO+RNHD7iLXugdXo1+MGRimW1RmYdenl/ITeb7rjfLZ4b9VNnLFtVWw\
@@ -918,13 +997,14 @@ The corresponding signature metadata derived from this header field is:
 The corresponding Signature Input is:
 
 ~~~
-date: Tue, 07 Jun 2014 20:51:35 GMT
+"date": Tue, 07 Jun 2014 20:51:35 GMT
+"@signature-params": ("date"); alg=rsa-sha256; keyid="test-key-b"
 ~~~
 
 # Acknowledgements {#acknowledgements}
 {:numbered="false"}
 
-This specification was initially based on the draft-cavage-http-signatures internet draft.  The editor would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.
+This specification was initially based on the draft-cavage-http-signatures internet draft.  The editors would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.
 
 The editor would also like to thank the following individuals for feedback on and implementations of the draft-cavage-http-signatures draft (in alphabetical order):
 Mark Adamcin,
@@ -974,6 +1054,8 @@ Jeffrey Yasskin
      * Defined content identifiers for first N members of a List, e.g., `x-list-field:4`.
      * Fixed up examples.
      * Updated introduction now that it's adopted.
+     * Defined specialty content identifiers and a means to extend them.
+     * Required signature parameters to be included in signature.
 
   - -01
      * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
