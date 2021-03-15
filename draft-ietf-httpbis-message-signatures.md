@@ -396,7 +396,7 @@ Algorithm:
 : An HTTP Signature Algorithm defined in the HTTP Signature Algorithms Registry defined in this document, represented as a string. It describes the signing and verification algorithms for the signature.
 
 Creation Time:
-: A timestamp representing the point in time that the signature was generated, represented as an integer. Sub-second precision is not supported. A signature's Creation Time MAY be undefined, indicating that it is unknown. `sf-integer`
+: A timestamp representing the point in time that the signature was generated, represented as an integer. Sub-second precision is not supported. A signature's Creation Time MAY be undefined, indicating that it is unknown.
 
 Expiration Time:
 : A timestamp representing the point in time at which the signature expires, represented as an integer. An expired signature always fails verification. A signature's Expiration Time MAY be undefined, indicating that the signature does not expire.
