@@ -1303,6 +1303,45 @@ When possible, developers should use a session management mechanism such as
 that described in {{top-level-navigations}} to mitigate the risk of CSRF more
 completely.
 
+#### "Lax-Allowing-Unsafe" enforcement {#lax-allowing-unsafe}
+
+As discussed in {{unsafe-top-level-requests}}, compatibility concerns may
+necessitate the use of a "Lax-allowing-unsafe" enforcement mode that allows
+cookies to be sent with a cross-site HTTP request if and only if it is a
+top-level request, regardless of request method. That is, the
+"Lax-allowing-unsafe" enforcement mode waives the requirement for the HTTP
+request's method to be "safe" in the `SameSite` enforcement step of the
+retrieval algorithm in {{retrieval-algorithm}}. (All cookies, regardless of
+`SameSite` enforcement mode, may be set for top-level navigations, regardless of
+HTTP request method, as specified in {{storage-model}}.)
+
+"Lax-allowing-unsafe" is not a distinct value of the `SameSite` attribute.
+Rather, user agents MAY apply "Lax-allowing-unsafe" enforcement only to cookies
+that did not explicitly specify a `SameSite` attribute (i.e., those whose
+same-site-flag was set to "Default" by default). If a user agent applies
+"Lax-allowing-unsafe" enforcement, the user agent SHOULD restrict
+"Lax-allowing-unsafe" enforcement to cookies whose age is less than a duration
+of the user agent’s choosing (2 minutes seems reasonable).
+
+If the user agent uses "Lax-allowing-unsafe" enforcement, it MUST apply the
+following modification to the retrieval algorithm defined in
+{{retrieval-algorithm}}:
+
+Replace the condition in the final bullet point of step 1 of the retrieval
+algorithm reading
+
+     * The HTTP request's method is "safe".
+
+with
+
+     * At least one of the following is true:
+
+       1.  The HTTP request's method is "safe".
+
+       2.  The cookie's same-site-flag is "Default" and the amount of time
+           elapsed since the cookie's creation-time is at most a duration of the
+           user agent's choosing.
+
 ## Storage Model {#storage-model}
 
 The user agent stores the following fields about each cookie: name, value,
@@ -2040,6 +2079,33 @@ cookie would defeat the purpose of withholding it in the first place, as the
 reload navigation triggered through the user interface may replay the original
 (potentially malicious) request. Thus, the reload request should be considered
 cross-site, like the request that initially navigated to the page.
+
+### Top-level requests with "unsafe" methods {#unsafe-top-level-requests}
+
+The "Lax" enforcement mode described in {{strict-lax}} allows a cookie to be
+sent with a cross-site HTTP request if and only if it is a top-level navigation
+with a "safe" HTTP method. Implementation experience shows that this is
+difficult to apply as the default behavior, as some sites may rely on cookies
+not explicitly specifying a `SameSite` attribute being included on top-level
+cross-site requests with "unsafe" HTTP methods (as was the case in a previous
+version of this specification).
+
+For example, a login flow may involve a cross-site top-level `POST` request to
+an endpoint which expects a cookie with login information. For such a cookie,
+"Lax" enforcement is not appropriate, as it would cause the cookie to be
+excluded due to the unsafe HTTP request method. On the other hand, "None"
+enforcement would allow the cookie to be sent with all cross-site requests,
+which may not be desirable due to the cookie's sensitive contents.
+
+The "Lax-allowing-unsafe" enforcement mode described in {{lax-allowing-unsafe}}
+retains some of the protections of "Lax" enforcement (as compared to "None")
+while still allowing cookies to be sent cross-site with unsafe top-level
+requests.
+
+As a more permissive variant of "Lax" mode, "Lax-allowing-unsafe" mode
+necessarily provides fewer protections against CSRF. Ultimately, the provision
+of such an enforcement mode should be seen as a temporary, transitional measure
+to ease adoption of "Lax" enforcement by default.
 
 # IANA Considerations
 
