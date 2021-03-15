@@ -1064,16 +1064,19 @@ Jeffrey Yasskin
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
-  - Since -01
+  - Since -02
+
+  - -02
      * Removed editorial comments on document sources.
      * Removed in-document issues list in favor of tracked issues.
      * Replaced unstructured `Signature` header with `Signature-Input` and `Signature` Dictionary Structured Header Fields.
-     * Defined content identifiers for individual Dictionary members, e.g., `x-dictionary-field:member-name`.
-     * Defined content identifiers for first N members of a List, e.g., `x-list-field:4`.
+     * Defined content identifiers for individual Dictionary members, e.g., `"x-dictionary-field";key=member-name`.
+     * Defined content identifiers for first N members of a List, e.g., `"x-list-field":prefix=4`.
      * Fixed up examples.
      * Updated introduction now that it's adopted.
      * Defined specialty content identifiers and a means to extend them.
      * Required signature parameters to be included in signature.
+     * Added guidance on backwards compatibility, detection, and use of signature methods.
 
   - -01
      * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
