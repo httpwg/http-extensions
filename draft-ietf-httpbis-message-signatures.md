@@ -158,6 +158,17 @@ This document contains non-normative examples of partial and complete HTTP messa
 
 Additionally, some examples use '\\' line wrapping for long values that contain no whitespace, as per {{!RFC8792}}.
 
+## Application of HTTP Message Signatures {#application}
+
+HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
+
+- The set of [content identifiers](#content-identifiers) that are expected and required. For example, an authorization protocol would mandate that the `Authorization` header be covered to protect the authorization credentials, as well as a `*created` field to allow replay detection.
+- A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` field of the `Signature-Input` header value and define rules for resolving a key from there.
+- A means of determining the signature algorithm used to verify the signature content is appropriate for the key material.
+- A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures; or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
+
+The details of this kind of profiling are the purview of the application and outside the scope of this specification.
+
 # Identifying and Canonicalizing Content {#content-identifiers}
 
 In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for data items covered by an HTTP Message Signature.
@@ -731,6 +742,13 @@ The table below contains the initial contents of the HTTP Signature Specialty Co
 There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in {{WP-HTTP-Sig-Audit}}.
 
 --- back
+
+# Detecting HTTP Message Signatures {#detection}
+
+There have been many attempts to create signed HTTP messages in the past, including other non-standard definitions of the `Signature` header used within this specification. It is recommended that developers wishing to support both this specification and other historial drafts do so carefully and deliberately, as incompatibilities between this specification and various versions of other drafts could lead to problems.
+
+It is recommended that implementers first detect and validate the `Signature-Input` header defined in this specification to detect that this standard is in use and not an alternative. If the `Signature-Input` header is present, all `Signature` headers can be parsed and interpreted in the context of this draft.
+
 # Examples
 
 ## Example Keys {#example-keys}
