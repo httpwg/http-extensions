@@ -17,7 +17,7 @@ author:
   ins: L. Chen
   name: Lily Chen
   role: editor
-  organization: Google, Inc
+  organization: Google LLC
   email: chlily@google.com
 -
   ins: S. Englehardt
@@ -29,7 +29,7 @@ author:
   ins: M. West
   name: Mike West
   role: editor
-  organization: Google, Inc
+  organization: Google LLC
   email: mkwst@google.com
   uri: https://mikewest.org/
 -
