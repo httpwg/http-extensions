@@ -290,7 +290,7 @@ The following table shows example canonicalized values for different content ide
 
 Content not found in an HTTP header can be included in the signature base string by defining a content identifier and the canonicalization method for its content.
 
-To differentiate speciality content identifiers from HTTP headers, specialty content identifiers MUST start with the "at" `@` character. This specification defines the following specialty content identifiers:
+To differentiate specialty content identifiers from HTTP headers, specialty content identifiers MUST start with the "at" `@` character. This specification defines the following specialty content identifiers:
 
 @request-target
 : The target request endpoint. {{content-request-target}}
