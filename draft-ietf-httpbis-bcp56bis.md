@@ -512,6 +512,17 @@ Applications can use stateful cookies {{?I-D.ietf-httpbis-rfc6265bis}} to identi
 
 When used, it is important to carefully specify the scoping and use of cookies; if the application exposes sensitive data or capabilities (e.g., by acting as an ambient authority), exploits are possible. Mitigations include using a request-specific token to assure the intent of the client.
 
+
+## Making Multiple Requests {#multiplex}
+
+Clients often need to send multiple requests to perform a task.
+
+In HTTP/1, parallel requests are most often supported by opening multiple connections. Application performance can be impacted when too many simultaneous connections are used, because connections' congestion control will not be coordinated. Furthermore, it can be difficult for applications to anticipate when and which connection to use to issue a given request, further impacting performance.
+
+HTTP/2 and HTTP/3 offer multiplexing to applications, removing the need to use multiple connections. However, application performance can still be significantly affected by how the server chooses to prioritize responses. Depending on the application, it might be best for the server to determine the priority of responses, or for the client to hint its priorities to the server (see, e.g., {{?I-D.ietf-httpbis-priority}}).
+
+In all versions of HTTP, requests are made independently -- you can't rely on the relative order of two requests to guarantee processing order. This is because they might be sent over a multiplexed protocol by an intermediary, sent to different origin servers, or the server might even perform processing in a different order. If two requests need strict ordering, the only reliable way to assure the outcome is to issue the second request when the response to the first has begun.
+
 Applications MUST NOT make assumptions about the relationship between separate requests on a single transport connection; doing so breaks many of the assumptions of HTTP as a stateless protocol, and will cause problems in interoperability, security, operability and evolution.
 
 
