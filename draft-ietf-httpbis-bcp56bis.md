@@ -204,7 +204,7 @@ Content-Type: application/things+json
 Content-Length: 500
 Server: Bar/2.2
 
-[payload here]
+[content here]
 ~~~
 
 
@@ -434,9 +434,9 @@ See {{caching}} for the interaction between header fields and HTTP caching; in p
 See {{state}} for considerations regarding header fields that carry application state (e.g., Cookie).
 
 
-## Defining Message Payloads {#payload}
+## Defining Message Content {#content}
 
-There are many potential formats for payloads; for example, JSON {{?RFC8259}}, XML {{?XML=W3C.REC-xml-20081126}}, and CBOR {{?RFC7049}}. Best practices for their use are out of scope for this document.
+There are many potential formats for message content; for example, JSON {{?RFC8259}}, XML {{?XML=W3C.REC-xml-20081126}}, and CBOR {{?RFC7049}}. Best practices for their use are out of scope for this document.
 
 Applications should register distinct media types for each format they define; this makes it possible to identify them unambiguously and negotiate for their use. See {{!RFC6838}} for more information.
 
