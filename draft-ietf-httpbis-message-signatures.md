@@ -58,9 +58,10 @@ normative:
 
 informative:
     RFC6234:
+    RFC7517:
+    RFC7518:
     RFC7239:
     RFC8017:
-    RFC8032:
     WP-HTTP-Sig-Audit:
         target: https://web-payments.org/specs/source/http-signatures-audit/
         title: Security Considerations for HTTP Signatures
@@ -604,30 +605,30 @@ Signatures are generated from and verified against the byte values of the signat
 
 ### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha256}
 
-To sign using this algorithm, the signer applies the `RSASSA-PSS-SIGN (K, M)` function {{!RFC8017}} with the signer's private signing key (`K`) and
-the signature input string (`M`) {{create-sig-input}}. The hash function used is SHA-512 {{!RFC6234}}. The resulting signed content (`S`) is
+To sign using this algorithm, the signer applies the `RSASSA-PSS-SIGN (K, M)` function {{RFC8017}} with the signer's private signing key (`K`) and
+the signature input string (`M`) {{create-sig-input}}. The hash function used is SHA-512 {{RFC6234}}. The resulting signed content (`S`) is
 Base64-encoded as described in {{sign-sig-input}}. The resulting encoded value is the HTTP message signature output.
 
-To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{!RFC8017}} using the public key material (`(n, e)`).
+To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key material (`(n, e)`).
 The verifier re-creates the signature input string defined in {{create-sig-input}} (`M`). The verifier decodes the HTTP message signature from Base64 as 
-described in {{verify}} to give the signature to be verified (`S`). The hash function used is SHA-512 {{!RFC6234}}. Applying the function gives the 
+described in {{verify}} to give the signature to be verified (`S`). The hash function used is SHA-512 {{RFC6234}}. Applying the function gives the 
 signature verification result.
 
 ### RSASSA-PKCS1-v1_5 using SHA-256 {#method-rsa-v1_5-sha256}
 
-To sign using this algorithm, the signer applies the `RSASSA-PKCS1-V1_5-SIGN (K, M)` function {{!RFC8017}} to signer's private signing key (`K`) and
-the signature input string (`M`) {{create-sig-input}}. The hash function used is SHA-256 {{!RFC6234}}. The resulting signed content (`S`) is
+To sign using this algorithm, the signer applies the `RSASSA-PKCS1-V1_5-SIGN (K, M)` function {{RFC8017}} to signer's private signing key (`K`) and
+the signature input string (`M`) {{create-sig-input}}. The hash function used is SHA-256 {{RFC6234}}. The resulting signed content (`S`) is
 Base64-encoded as described in {{sign-sig-input}}. The resulting encoded value is the HTTP message signature output.
 
-To verify using this algorithm, the verifier applies the `RSASSA-PKCS1-V1_5-VERIFY ((n, e), M, S)` function {{!RFC8017}} using the public key material (`(n, e)`).
+To verify using this algorithm, the verifier applies the `RSASSA-PKCS1-V1_5-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key material (`(n, e)`).
 The verifier re-creates the signature input string defined in {{create-sig-input}} (`M`). The verifier decodes the HTTP message signature from Base64 as 
-described in {{verify}} to give the signature to be verified (`S`). The hash function used is SHA-256 {{!RFC6234}}. Applying the function gives the 
+described in {{verify}} to give the signature to be verified (`S`). The hash function used is SHA-256 {{RFC6234}}. Applying the function gives the 
 signature verification result.
 
 ### HMAC using SHA-256 {#method-hmac-sha256}
 
-To sign and verify using this algorithm, the signer applies the `HMAC` function {{!RFC2104}} with the shared signing key (`K`) and
-the signature input string (`text`) {{create-sig-input}}. The hash function used is SHA-256 {{!RFC6234}}. For signing, the resulting signed content is
+To sign and verify using this algorithm, the signer applies the `HMAC` function {{RFC2104}} with the shared signing key (`K`) and
+the signature input string (`text`) {{create-sig-input}}. The hash function used is SHA-256 {{RFC6234}}. For signing, the resulting signed content is
 Base64-encoded as described in {{sign-sig-input}}. The resulting encoded value is the HTTP message signature output. For verification, 
 the verifier decodes the HTTP message signature from Base64 as described in {{verify}} to give the signature to be compared to the output of the
 HMAC function.
@@ -635,21 +636,21 @@ HMAC function.
 ### ECDSA using curve P-256 DSS and SHA-256 {#method-ecdsa-p256-sha256}
 
 To sign using this algorithm, the signer applies the `ECDSA` algorithm {{FIPS186-4}} using curve P-256 with signer's private signing key and
-the signature input string {{create-sig-input}}. The hash function used is SHA-256 {{!RFC6234}}. The resulting signed content is
+the signature input string {{create-sig-input}}. The hash function used is SHA-256 {{RFC6234}}. The resulting signed content is
 Base64-encoded as described in {{sign-sig-input}}. The resulting encoded value is the HTTP message signature output.
 
 To verify using this algorithm, the verifier applies the `ECDSA` algorithm {{FIPS186-4}} using the public key material.
 The verifier re-creates the signature input string defined in {{create-sig-input}}. The verifier decodes the HTTP message signature from Base64 as 
-described in {{verify}} to give the signature to be verified. The hash function used is SHA-256 {{!RFC6234}}. Applying the verification algorithm gives the 
+described in {{verify}} to give the signature to be verified. The hash function used is SHA-256 {{RFC6234}}. Applying the verification algorithm gives the 
 signature verification result.
 
 ### JSON Web Signature (JWS) algorithms {#method-jose}
 
-If the signing algorithm is a JOSE signing algorithm from the JSON Web Signature and Encryption Algorithms Registry established by {{!RFC7518}}, the 
+If the signing algorithm is a JOSE signing algorithm from the JSON Web Signature and Encryption Algorithms Registry established by {{RFC7518}}, the 
 JWS algorithm definition determines the signature and hashing algorithms to apply for both signing and verification. 
 
 For both signing and verification, the HTTP messages signature input string {{create-sig-input}} is used as the entire "JWS Signing Input". The JWS 
-Header defined in {{!RFC7517}} is not used, nor is the input string first encoded in Base64 before applying the algorithm.
+Header defined in {{RFC7517}} is not used, nor is the input string first encoded in Base64 before applying the algorithm.
 
 The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE Implementation Requirement of `Prohibited`.
 
@@ -755,7 +756,7 @@ Definition:
 : RSASSA-PSS using SHA-256
 
 Specification document(s):
-: \[\[This document\]\] {{#method-rsa-pss-sha256}}
+: \[\[This document\]\] {{method-rsa-pss-sha256}}
 
 #### rsa-v1_5-sha256
 
@@ -770,7 +771,7 @@ Description:
 : RSASSA-PKCS1-v1_5 using SHA-256
 
 Specification document(s):
-: \[\[This document\]\] {{#method-rsa-v1_5-sha256}}
+: \[\[This document\]\] {{method-rsa-v1_5-sha256}}
 
 #### hmac-sha256
 
@@ -785,7 +786,7 @@ Description:
 : HMAC using SHA-256
 
 Specification document(s):
-: \[\[This document\]\] {{#method-rsa-hmac-sha256}}
+: \[\[This document\]\] {{method-hmac-sha256}}
 
 
 #### ecdsa-p256-sha256
@@ -801,7 +802,7 @@ Description:
 : ECDSA using curve P-256 DSS and SHA-256
 
 Specification document(s):
-: \[\[This document\]\] {{#method-ecdsa-p256-sha256}}
+: \[\[This document\]\] {{method-ecdsa-p256-sha256}}
 
 ## HTTP Signature Metadata Parameters Registry {#param-registry}
 
@@ -908,7 +909,7 @@ The table below maps example `keyid` values to associated algorithms and/or keys
 
 |keyid|Algorithm|Verification Key|
 |--- |--- |---|
-|`test-key-a`|`rsa-pss-SHA256`, using RSASSA-PSS [RFC8017] and SHA-512 [RFC6234]|The public key specified in {{example-key-rsa-test}}|
+|`test-key-a`|`rsa-pss-SHA256`|The public key specified in {{example-key-rsa-test}}|
 |`test-key-b`|`rsa-v1_5-256`|The public key specified in {{example-key-rsa-test}}|
 
 ## Test Cases
@@ -930,12 +931,12 @@ Content-Length: 18
 
 #### Minimal Signature Header using rsa-pss-SHA256
 
-This presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-sha256` algorithm:
+This presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-pss-sha256` algorithm:
 
 ~~~ http-message
 # NOTE: '\' line wrapping per RFC 8792
 
-Signature: sig1=("date"); alg=rsa-sha256; keyid="test-key-b"
+Signature: sig1=("date"); alg="rsa-pss-sha256"; keyid="test-key-b"
 Signature: sig1=:HtXycCl97RBVkZi66ADKnC9c5eSSlb57GnQ4KFqNZplOpNfxqk62\
     JzZ484jXgLvoOTRaKfR4hwyxlcyb+BWkVasApQovBSdit9Ml/YmN2IvJDPncrlhPD\
     VDv36Z9/DiSO+RNHD7iLXugdXo1+MGRimW1RmYdenl/ITeb7rjfLZ4b9VNnLFtVWw\
