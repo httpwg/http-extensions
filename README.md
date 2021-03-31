@@ -36,7 +36,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aproxy-status) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-proxy-status/)
 
 
-### Cache Header
+### Cache-Status
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-cache-header.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-cache-header.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cache-header) (less recent, more official)
