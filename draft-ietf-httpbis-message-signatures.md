@@ -164,7 +164,7 @@ Additionally, some examples use '\\' line wrapping for long values that contain 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
 - The set of [content identifiers](#content-identifiers) that are expected and required. For example, an authorization protocol would mandate that the `Authorization` header be covered to protect the authorization credentials, as well as a `*created` field to allow replay detection.
-- A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` field of the `Signature-Input` parameter value and define rules for resolving a key from there.
+- A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the `Signature-Input` header value and define rules for resolving a key from there.
 - A means of determining the signature algorithm used to verify the signature content is appropriate for the key material.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures; or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
 
@@ -909,8 +909,8 @@ The table below maps example `keyid` values to associated algorithms and/or keys
 
 |keyid|Algorithm|Verification Key|
 |--- |--- |---|
-|`test-key-a`|`rsa-pss-SHA256`|The public key specified in {{example-key-rsa-test}}|
-|`test-key-b`|`rsa-v1_5-256`|The public key specified in {{example-key-rsa-test}}|
+|`test-key-a`|`rsa-pss-sha256`|The public key specified in {{example-key-rsa-test}}|
+|`test-key-b`|`rsa-v1_5-sha256`|The public key specified in {{example-key-rsa-test}}|
 
 ## Test Cases
 
@@ -929,7 +929,7 @@ Content-Length: 18
 
 ### Signature Verification
 
-#### Minimal Signature Header using rsa-pss-SHA256
+#### Minimal Signature Header using rsa-pss-sha256
 
 This presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-pss-sha256` algorithm:
 
@@ -949,7 +949,7 @@ The corresponding signature metadata derived from this header field is:
 
 |Property|Value|
 |--- |--- |
-|Algorithm|`rsa-pss-SHA256`|
+|Algorithm|`rsa-pss-sha256`|
 |Covered Content|`date`|
 |Creation Time|Undefined|
 |Expiration Time|Undefined|
@@ -960,7 +960,7 @@ The corresponding Signature Input is:
 
 ~~~
 "date": Tue, 07 Jun 2014 20:51:35 GMT
-"@signature-params": ("date"); alg="rsa-pss-SHA256"; keyid="test-key-b"
+"@signature-params": ("date"); alg="rsa-pss-sha256"; keyid="test-key-b"
 ~~~
 
 # Acknowledgements {#acknowledgements}
