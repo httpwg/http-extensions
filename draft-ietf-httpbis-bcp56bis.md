@@ -489,7 +489,7 @@ One way to address this is to explicitly specify that all responses be fresh upo
 
 ### Varying Content Based Upon the Request
 
-If an application uses a request header field to change the response's header fields or content, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in {{I-D.ietf-httpbis-cache, Section 5.2.2.3}}) or send the Vary response header field ({{I-D.ietf-httpbis-semantics, Section 12.5.5}}) on all responses from that resource (including the "default" response).
+If an application uses a request header field to change the response's header fields or content, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in {{I-D.ietf-httpbis-cache, Section 5.2.2.5}}) or send the Vary response header field ({{I-D.ietf-httpbis-semantics, Section 12.5.5}}) on all responses from that resource (including the "default" response).
 
 For example, this response:
 
