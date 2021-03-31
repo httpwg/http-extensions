@@ -59,7 +59,7 @@
       <t>
         Working Group information can be found at <eref target="https://httpwg.org/"/>;
         source code and issues list for this draft can be found at
-        <eref target="https://github.com/httpwg/http-core"/>.
+        <eref target="https://github.com/httpwg/http-extensions/labels/safe-method-w-body"/>.
       </t>
       <!--<t>
         The changes in this draft are summarized in <xref target="changes.since.14"/>.
