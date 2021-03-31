@@ -213,7 +213,7 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       SEARCH requests are both safe and idempotent with regards to the
       resource identified by the request URI. That is, SEARCH requests do not
-      alter the state of the targeted resource. However, while processing a 
+      alter the state of the targeted resource. However, while processing a
       search request, a server can be expected to allocate computing and memory
       resources or even create additional HTTP resources through which the
       response can be retrieved.
@@ -381,7 +381,7 @@ Dubois, Camille, camille.dubois@example.net
           <td>Yes</td>
           <td>Yes</td>
           <td><xref target="search"/></td>
-        </tr>        
+        </tr>
       </tbody>
     </table>
   </section>
