@@ -419,9 +419,9 @@ Applications often define new HTTP header fields. Typically, using HTTP header f
 
 When the conditions above are not met, it is usually better to convey application-specific information in other places; e.g., the message content or the URL query string.
 
-New header fields MUST be registered, as per {{!I-D.ietf-httpbis-semantics}}.
+New header fields MUST be registered, as per {{!Section 16.3 of I-D.ietf-httpbis-semantics}}.
 
-See {{I-D.ietf-httpbis-semantics, Section 16.3.2}} for guidelines to consider when minting new header fields. {{?RFC8941}} provides a common structure for new header fields, and avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
+See {{Section 16.3.2 of I-D.ietf-httpbis-semantics}} for guidelines to consider when minting new header fields. {{?RFC8941}} provides a common structure for new header fields, and avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
 
 It is RECOMMENDED that header field names be short (even when field compression is used, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a "-".
 
