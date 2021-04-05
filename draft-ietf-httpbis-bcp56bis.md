@@ -473,9 +473,9 @@ Cache-Control: no-store
 
 Authors should understand that stale responses (e.g., with "Cache-Control: max-age=0") can be reused by caches when disconnected from the origin server; this can be useful for handling network issues.
 
-If doing so is not suitable for a given response, the origin should use "Cache-Control: must-revalidate". See {{I-D.ietf-httpbis-cache, Section 4.2.4}}, and also {{?RFC5861}} for additional controls over stale content.
+If doing so is not suitable for a given response, the origin should use "Cache-Control: must-revalidate". See {{Section 4.2.4 of I-D.ietf-httpbis-cache}}, and also {{?RFC5861}} for additional controls over stale content.
 
-Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and latency for large responses; see {{?I-D.ietf-httpbis-semantics}}.
+Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and latency for large responses; see {{?Section 13 of I-D.ietf-httpbis-semantics}}.
 
 
 ### Caching and Application Semantics
