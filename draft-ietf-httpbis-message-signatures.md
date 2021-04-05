@@ -417,11 +417,13 @@ The Signature Input is a US-ASCII string containing the content is covered by th
 
 4. Return the output string.    
 
-If Covered Content contains an identifier for a header field that is malformed or is not present in the message, such as a header that does not exist, the implementation MUST produce an error.
-
-If Covered Content contains an identifier for a Dictionary member that references a header field using the `key` parameter that is not present, is malformed in the message, or is not a Dictionary Structured Field, the implementation MUST produce an error. If the header field value does not contain the specified member, the implementation MUST produce an error.
-
-If Covered Content contains an identifier for a List Prefix that references a header field using the `prefix` parameter that is not present, is malformed in the message, or is not a List Structured Field, the implementation MUST produce an error. If the header field value contains fewer than the specified number of members, the implementation MUST produce an error.
+If Covered Content references an identifier that cannot be resolved to a value in the message, the implementation MUST produce an error. Such situations are included but not limited to:
+* The signer or verifier does not understand the content identifier.
+* The identifier identifies a header field that is not present in the message or whose value is malformed.
+* The identifier is a Dictionary member identifier that references a header field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
+* The identifier is a List Prefix member identifier that references a header field that is not present in the message, is not a List Structured Field, or whose value is malformed.
+* The identifier is a Dictionary member identifier that references a member that is not present in the header field value, or whose value is malformed. E.g., the identifier is `"x-dictionary";key=c` and the value of the `x-dictionary` header field is `a=1, b=2`
+* The identifier is a List Prefix member identifier that specifies more List members than are present the header field. E.g., the identifier is `"x-list";prefix=3` and the value of the `x-list` header field is `(1, 2)`.
 
 For the non-normative example Signature metadata in {{example-metadata}}, the corresponding Signature Input is:
 
@@ -509,7 +511,7 @@ In order to create a signature, a signer completes the following process:
    * Signers SHOULD include `@request-target` in the list.
    * Signers SHOULD include a date stamp in some form, such as using the `date` header. Alternatively, the `created` signature metadata parameter can fulfil this role.
    * Further guidance on what to include in this list and in what order is out of scope for this document. However, note that the list order is significant and once established for a given signature it MUST be preserved for that signature.
-   * Note that the signature metadata is not included in the explicit list of covered content identifiers, but its value is included in the `@signature-params` specialty identifier. 
+   * Note that the `@signature-params` specialty identifier is not explicitly listed in the list of covered content identifiers, because it is required to always be present as the last line in the signature input. This ensures that a signature always covers its own metadata.
 
 For example, given the following HTTP message:
 
