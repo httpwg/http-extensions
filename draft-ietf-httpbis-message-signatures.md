@@ -97,7 +97,7 @@ The mechanism described in this document consists of three parts:
 
 ## Requirements Discussion
 
-HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was oringally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signed content.  Since the raw bytes of the message cannot be relied upon as signed content, the signer and verifier must derive the signed content from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
+HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was originally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signed content.  Since the raw bytes of the message cannot be relied upon as signed content, the signer and verifier must derive the signed content from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
 
 For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the body, or the `Date` header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message content is signed.
 
@@ -398,8 +398,9 @@ This example shows a canonicalized value for the parameters of a given signature
 
 ~~~
 # NOTE: '\' line wrapping per RFC 8792
-("@request-target" "host" "date" "cache-control" "x-empty-header" "x-example"); \
-  keyid="test-key-a"; alg="rsa-pss-sha512"; created=1402170695; expires=1402170995
+("@request-target" "host" "date" "cache-control" "x-empty-header" 
+  "x-example"); keyid="test-key-a"; alg="rsa-pss-sha512"; \
+  created=1402170695; expires=1402170995
 ~~~
 
 Note that an HTTP message could contain multiple signatures, but only the signature parameters used for the current signature are included.
@@ -420,9 +421,10 @@ The signature parameter value is defined as:
 
 ~~~
 # NOTE: '\' line wrapping per RFC 8792
-"@signature-params": ("@request-target" "host" "date" "cache-control" "x-empty-header" \
-   "x-example" "x-dictionary";key=b "x-dictionary";key=a "x-list";prefix=3); 
-   \keyid="test-key-a"; alg="rsa-pss-sha512"; created=1402170695; expires=1402170995
+"@signature-params": ("@request-target" "host" "date" "cache-control" \
+  "x-empty-header" "x-example" "x-dictionary";key=b \
+  "x-dictionary";key=a "x-list";prefix=3); keyid="test-key-a"; \
+  alg="rsa-pss-sha512"; created=1402170695; expires=1402170995
 ~~~
 
 ## Creating the Signature Input String {#create-sig-input}
@@ -476,8 +478,9 @@ For the non-normative example Signature metadata in {{example-metadata}}, the co
 "x-dictionary";key=b: 2
 "x-dictionary";key=a: 1
 "x-list";prefix=3: (a, b, c)
-"@signature-params": ("@request-target" "host" "date" "cache-control" "x-empty-header" "x-example" \
-  "x-dictionary";key=b "x-dictionary";key=b "x-list";prefix=3); keyid="test-key-a"; \
+"@signature-params": ("@request-target" "host" "date" "cache-control" \
+  "x-empty-header" "x-example" "x-dictionary";key=b \
+  "x-dictionary";key=a "x-list";prefix=3); keyid="test-key-a"; \
   created=1402170695; expires=1402170995
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
@@ -1017,11 +1020,14 @@ Jeffrey Yasskin
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
-  - Since -02
+  - -03
      * Clarified signing and verification processes.
      * Updated algorithm and key selection method.
+     * Clearly defined core algorithm set.
      * Defined JOSE signature mapping process.
      * Removed legacy signature methods.
+     * Define signature parameters separately from "signature" object model.
+     * Define serialization values for signature-input header based on signature input.
 
   - -02
      * Removed editorial comments on document sources.
