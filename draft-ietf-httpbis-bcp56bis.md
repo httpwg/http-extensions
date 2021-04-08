@@ -388,7 +388,7 @@ When authors believe that a new status code is required, they are encouraged to 
 
 ### Redirection {#redirects}
 
-The 3xx series of status codes specified in {{I-D.ietf-httpbis-semantics, Section 15.4}} direct the user agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and 308, all of which use the Location response header field to indicate where the client should send the request to.
+The 3xx series of status codes specified in {{Section 15.4 of I-D.ietf-httpbis-semantics}} direct the user agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and 308, all of which use the Location response header field to indicate where the client should send the request to.
 
 There are two ways that this group of status codes differ:
 
