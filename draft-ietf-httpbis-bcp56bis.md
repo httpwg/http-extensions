@@ -379,7 +379,7 @@ To distinguish between multiple error conditions that are mapped to the same sta
 
 Because the set of registered HTTP status codes can expand, applications using HTTP should explicitly point out that clients ought to be able to handle all applicable status codes gracefully (i.e., falling back to the generic `n00` semantics of a given status code; e.g., `499` can be safely handled as `400` by clients that don't recognise it). This is preferable to creating a "laundry list" of potential status codes, since such a list won't be complete in the foreseeable future.
 
-Applications using HTTP MUST NOT re-specify the semantics of HTTP status codes, even if it is only by copying their definition. It is RECOMMENDED they require specific reason phrases to be used; the reason phrase has no function in HTTP, is not guaranteed to be preserved by implementations, and is not carried at all in the HTTP/2 {{?RFC7540}} message format.
+Applications using HTTP MUST NOT re-specify the semantics of HTTP status codes, even if it is only by copying their definition. It is NOT RECOMMENDED they require specific reason phrases to be used; the reason phrase has no function in HTTP, is not guaranteed to be preserved by implementations, and is not carried at all in the HTTP/2 {{?RFC7540}} message format.
 
 Applications MUST only use registered HTTP status codes. As with methods, new HTTP status codes are rare, and required (by {{!I-D.ietf-httpbis-semantics}}) to be registered with IETF Review. Similarly, HTTP status codes are generic; they are required (by {{!I-D.ietf-httpbis-semantics}}) to be potentially applicable to all resources, not just to those of one application.
 
