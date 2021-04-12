@@ -94,7 +94,6 @@ The mechanism described in this document consists of three parts:
 - Algorithms for generating and verifying signatures over HTTP message content using this nomenclature and rule set.
 - A mechanism for attaching a signature and related metadata to an HTTP message.
 
-
 ## Requirements Discussion
 
 HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was originally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signed content.  Since the raw bytes of the message cannot be relied upon as signed content, the signer and verifier must derive the signed content from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
@@ -103,7 +102,7 @@ For a variety of reasons, it is impractical to strictly define what constitutes 
 
 HTTP applications may be running in environments that do not provide complete access to or control over HTTP messages (such as a web browser's JavaScript environment), or may be using libraries that abstract away the details of the protocol (such as [the Java HTTPClient library](https://openjdk.java.net/groups/net/httpclient/intro.html)).  These applications need to be able to generate and verify signatures despite incomplete knowledge of the HTTP message.
 
-## HTTP Message Transformations {#about_sigs}
+## HTTP Message Transformations {#transforms}
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:
 
@@ -152,6 +151,21 @@ Signer:
 
 Verifier:
 : An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.
+
+Covered Content:
+: An ordered list of content identifiers for headers {{http-header}} and specialty content {{specialty-content}} that indicates the metadata and message content that is covered by the signature, not including the `@signature-params` specialty field itself.
+
+HTTP Signature Algorithm:
+: A cryptographic algorithm that describes the signing and verification process for the signature. When expressed explicitly, the value maps to a string defined in the HTTP Signature Algorithms Registry defined in this document.
+
+Key Material:
+: The key material required to create or verify the signature. The key material is often identified with an explicit key identifier, allowing the signer to indicate to the verifier which key was used.
+
+Creation Time:
+: A timestamp representing the point in time that the signature was generated, as asserted by the signer. Sub-second precision is not supported.
+
+Expiration Time:
+: A timestamp representing the point in time at which the signature expires, as asserted by the signer. Sub-second precision is not supported. A signature's expiration time could be undefined, indicating that the signature does not expire.
 
 The term "Unix time" is defined by {{POSIX.1}} [section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
@@ -366,32 +380,17 @@ The signature parameters special content is identified by the `@signature-params
 
 Its canonicalized value is the serialization of the signature parameters for this signature, including the covered content list with all associated parameters. The following metadata properties are defined:
 
-{: vspace="0"}
-Covered Content:
-: An ordered list of content identifiers for headers {{http-header}} and specialty content {{specialty-content}} that indicates the metadata and message content that is covered by the signature. This list MUST NOT include the `@signature-params` specialty content identifier itself.
-
-Algorithm:
-: An HTTP Signature Algorithm defined in the HTTP Signature Algorithms Registry defined in this document, represented as a string. It describes the signing and verification algorithms for the signature.
-
-Key Material:
-: The key material required to create or verify the signature. 
-
-Creation Time:
-: A timestamp representing the point in time that the signature was generated, represented as an integer. Sub-second precision is not supported. A signature's Creation Time MAY be undefined, indicating that it is unknown.
-
-Expiration Time:
-: A timestamp representing the point in time at which the signature expires, represented as an integer. An expired signature always fails verification. A signature's Expiration Time MAY be undefined, indicating that the signature does not expire.
-
 The signature parameters are serialized using the rules in {{!RFC8941}} section 4 as follows:
 
 1. Let the output be an empty string.
 2. Serialize the content identifiers of the covered content as an ordered `inner-list` according to {{!RFC8941}} section 4.1.1.1 and append this to the output.
 3. Append the signature metadata as parameters according to {{!RFC8941}} section 4.1.1.2 in the any order, skipping fields that are not available:
-   * `alg`: Algorithm as an `sf-string` value.
-   * `keyid`: Identifier for the key material as an `sf-string` value.
-   * `created`: Creation time as an `sf-integer` timestamp value.
-   * `expires`: Expiration time as an `sf-integer` timestamp value.
-   
+   * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
+   * `keyid`: The identifier for the key material as an `sf-string` value.
+   * `created`: Creation time as an `sf-integer` UNIX timestamp value.
+   * `expires`: Expiration time as an `sf-integer` UNIX timestamp value.
+4. The output contains the signature parameters value.
+
 Note that the `inner-list` serialization is used for the covered content instead of the `sf-list` serialization in order to facilitate this value's additional inclusion in the `Signature-Input` header's dictionary, as discussed in {{signature-input-header}}.
 
 This example shows a canonicalized value for the parameters of a given signature:
@@ -502,7 +501,8 @@ In order to create a signature, a signer completes the following process:
 3. If applicable, the signer sets the signature's expiration time property to the time at which the signature is to expire.
 
 4. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
-   * Each covered content identifier MUST reference either an HTTP header or a specialty content field listed in {{specialty-content}} or its associated registry.
+   * Once an order of covered content is chosen, the order MUST NOT change for the life of the signature.
+   * Each covered content identifier MUST either reference an HTTP header in the request message {{http-header}} or reference a specialty content field listed in {{specialty-content}} or its associated registry.
    * Signers SHOULD include `@request-target` in the covered content list list.
    * Signers SHOULD include a date stamp in some form, such as using the `date` header. Alternatively, the `created` signature metadata parameter can fulfil this role.
    * Further guidance on what to include in this list and in what order is out of scope for this document. However, note that the list order is significant and once established for a given signature it MUST be preserved for that signature.
@@ -600,11 +600,26 @@ Applications MUST enforce the requirements defined in this document.  Regardless
 
 ## Signature Algorithm Methods {#signature-methods}
 
-HTTP Message signatures MAY use any cryptographic digital signature or MAC method that allows for the signing of the signature input string.
-This section contains several common algorithm parameters that can be communicated through the algorithm signature parameter
-defined in {{signature-params}}, by reference to the key material, or through agreement between the signer and verifier.
+HTTP Message signatures MAY use any cryptographic digital signature or MAC method that is appropriate for the key material,
+environment, and needs of the signer and verifier.
+All signatures are generated from and verified against the byte values of the signature input string defined in {{create-sig-input}}.
 
-Signatures are generated from and verified against the byte values of the signature input string defined in {{create-sig-input}}.
+Each signature algorithm method takes as its input the signature input string as a set of byte values (`I`), the signing key material
+(`Ks`), and outputs the signed content as a set of byte values (`S`):
+
+~~~
+HTTP_SIGN (I, Ks)  ->  S
+~~~
+
+Each verification algorithm method takes as its input the signature input string as a set of byte values (`I`), the verification key
+material (`Kv`), and the presented signature to be verified as a set of byte values (`S`) and outputs the verification result (`V`) as a boolean:
+
+~~~
+HTTP_VERIFY (I, Kv, S) -> V
+~~~
+
+This section contains several common algorithm methods. The method to use can be communicated through the algorithm signature parameter
+defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier.
 
 ### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha512}
 
