@@ -1036,6 +1036,10 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - Since -03
+     * Moved signature component definitions up to intro.
+     * Created formal function definitions for algorithms to fulfill.
+
   - -03
      * Clarified signing and verification processes.
      * Updated algorithm and key selection method.
