@@ -980,7 +980,7 @@ The corresponding Signature Input is:
 
 This specification was initially based on the draft-cavage-http-signatures internet draft.  The editors would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.
 
-The editor would also like to thank the following individuals for feedback on and implementations of the draft-cavage-http-signatures draft (in alphabetical order):
+The editors would also like to thank the following individuals for feedback, insight, and implementation of this draft and its predecessors (in alphabetical order):
 Mark Adamcin,
 Mark Allen,
 Paul Annesley,
@@ -996,8 +996,9 @@ Andrey Kislyuk,
 Adam Knight,
 Dave Lehn,
 Dave Longley,
-James H. Manger,
 Ilari Liusvaara,
+James H. Manger,
+Kathleen Moriarty,
 Mark Nottingham,
 Yoav Nir,
 Adrian Palmer,
@@ -1012,7 +1013,7 @@ Dirk Stein,
 Henry Story,
 Lukasz Szewc,
 Chris Webber, and
-Jeffrey Yasskin
+Jeffrey Yasskin.
 
 # Document History
 {:numbered="false"}
