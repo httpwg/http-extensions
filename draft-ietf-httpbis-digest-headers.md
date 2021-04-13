@@ -540,9 +540,8 @@ To allow sender and recipient to provide a checksum which is independent from
 
 # Use of Digest when acting on resources {#acting-on-resources}
 
-POST and PATCH requests can appear to convey partial representations but are
-semantically acting on resources. The enclosed representation, including its
-metadata, refers to that action.
+In POST and PATCH requests, the representation data and metadata
+describe an action on a resource.
 
 In these requests the representation digest MUST be computed on the
 representation-data of that action.
@@ -560,7 +559,7 @@ In responses,
    even if that is different from the target resource.
    That might or might not result in computing `Digest` on the enclosed representation.
 
-The latter case might be done according to the HTTP semantics of the given
+The latter case is done according to the HTTP semantics of the given
 method, for example using the `Content-Location` header field.
 In contrast, the `Location` header field does not affect `Digest` because
 it is not representation metadata.
