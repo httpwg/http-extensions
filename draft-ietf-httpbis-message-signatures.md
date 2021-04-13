@@ -563,7 +563,8 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
     means such as static configuration or external protocol negotiation, the verifier will use that. If the key is
     identified in the signature parameters, the verifier will dereference this to appropriate key material to use 
     with the signature. The verifier has to determine the trustworthiness of the key material for the context
-    in which the signature is presented.
+    in which the signature is presented. If a key is identified that the verifier does not know, does
+    not trust for this request, or does not match something preconfigured, the verification MUST fail.
 3. Determine the algorithm to apply for verification:
     1. If the algorithm is known through external means such as static configuration or external protocol
         negotiation, the verifier will use this algorithm.
@@ -571,12 +572,16 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
         HTTP Message Signatures registry, the verifier will use the referenced algorithm.
     3. If the algorithm can be determined from the keying material, such as through an algorithm field
         on the key value itself, the verifier will use this algorithm.
+    4. If the algorithm is specified in more that one location, such as through static configuration
+        and the algorithm signature parameter, or the algorithm signature parameter and from
+        the key material itself, the resolved algorithms MUST be the same. If the algorithms are
+        not the same, the verifier MUST vail the verification.
 4. Use the received HTTP message and the signature's metadata to recreate the signature input, using 
     the process described in {{create-sig-input}}. The value of the `@signature-params` input is
     the value of the SignatureInput header field for this signature serialized according to the rules described
     in {{signature-params}}, not including the signature's label from the SignatureInput header.
 5. If the key material is appropriate for the algorithm, apply the verification algorithm to the signature,
-    signature input, signature parameters, key material, and algorithm. The results of the verification
+    recalculated signature input, signature parameters, key material, and algorithm. The results of the verification
     algorithm function are the final results of the signature verification. Several algorithms are defined in
     {{signature-methods}}.
 
@@ -611,7 +616,7 @@ Each signature algorithm method takes as its input the signature input string as
 HTTP_SIGN (I, Ks)  ->  S
 ~~~
 
-Each verification algorithm method takes as its input the signature input string as a set of byte values (`I`), the verification key
+Each verification algorithm method takes as its input the recalculated signature input string as a set of byte values (`I`), the verification key
 material (`Kv`), and the presented signature to be verified as a set of byte values (`S`) and outputs the verification result (`V`) as a boolean:
 
 ~~~
