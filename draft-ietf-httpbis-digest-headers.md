@@ -251,6 +251,11 @@ together with an indication of the algorithm used:
                                 <encoded digest output>
 ~~~
 
+When a message has no representation data
+it is still possible to assert that no representation data was sent
+computing the representation digest on an empty string
+(see {{usage-in-signatures}}).
+
 The checksum is computed using one of the digest-algorithms listed in {{algorithms}}
 and then encoded in the associated format.
 
@@ -590,22 +595,18 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ## Server Returns No Representation Data
 
-Requests without content can still send a `Digest` field
-applying the digest-algorithm to an empty representation.
+In this example, a HEAD request is used to retrieve the checksum
+of a resource.
 
 The response `Digest` field-value is calculated over the JSON object
 `{"hello": "world"}`, which is not shown because there is no payload
 data.
-
-In this example there is no content coding applied, so the "sha-256" and the "id-sha-256"
-digest-values in the response would be the same.
 
 Request:
 
 ~~~ http-message
 HEAD /items/123 HTTP/1.1
 Host: foo.example
-Digest: sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 
 ~~~
 
@@ -614,7 +615,7 @@ Response:
 ~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
-Digest: id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ~~~
 
