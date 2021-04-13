@@ -518,15 +518,6 @@ The SRI `integrity` attribute contains a cryptographic hash algorithm and digest
 value which is similar to `representation-data-digest` (see
 {{representation-digest}}). The major differences are in serialization format.
 
-The SRI digest value is calculated over the identity encoding of the resource,
-not the selected representation (as specified for `representation-data-digest`
-in this document). Section 3.4.5 of [SRI] describes the benefit of the identity
-approach - the SRI `integrity` attribute can contain multiple algorithm-value
-pairs where each applies to a different identity encoded payload. This allows
-for protection of distinct resources sharing a URL. However, this is a contrast
-to the design of representation digests, where multiple `Digest` field-values
-all protect the same representation.
-
 SRI does not specify handling of partial representation data (e.g. Range
 requests). In contrast, this document specifies handling in terms that are fully
 compatible with core HTTP concepts (an example is provided in
