@@ -1582,6 +1582,16 @@ print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512))
 
 _RFC Editor: Please remove this section before publication._
 
+## Since draft-ietf-httpbis-digest-headers-04
+{:numbered="false"}
+
+* Improve SRI section #1354
+* About duplicate digest-algorithms #1221
+* Improve security considerations #852
+* md5 and sha deprecation references #1392
+* Obsolete 3230 #1395
+* Editorial #1362
+
 ## Since draft-ietf-httpbis-digest-headers-03
 {:numbered="false"}
 
