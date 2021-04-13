@@ -216,7 +216,7 @@ This document uses the Augmented BNF defined in [RFC5234] and updated by
 {{SEMANTICS}}.
 
 The definitions "representation", "selected representation", "representation
-data", "representation metadata", and "payload data" in this document are to be
+data", "representation metadata", and "content" in this document are to be
 interpreted as described in {{SEMANTICS}}.
 
 Algorithm names respect the casing used in their definition document (eg. SHA-1, CRC32c)
@@ -225,18 +225,18 @@ whereas digest-algorithm tokens are quoted (eg. "sha", "crc32c").
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
-which uses a checksum  that is calculated independently of the payload data
+which uses a checksum  that is calculated independently of the content
 (see Section 6.4 of {{SEMANTICS}}).
 It uses the representation data (see Section 8.1 of {{SEMANTICS}}),
-that can be fully or partially contained in the payload data, or not contained at all:
+that can be fully or partially contained in the content, or not contained at all:
 
 ~~~
    representation-data := Content-Encoding( Content-Type( bits ) )
 ~~~
 
 This takes into account the effect of the HTTP semantics on the messages;
-for example, the payload data can be affected by Range Requests or methods such as HEAD,
-while the way the payload data is transferred "on the wire" is dependent on other
+for example, the content can be affected by Range Requests or methods such as HEAD,
+while the way the content is transferred "on the wire" is dependent on other
 transformations (e.g. transfer codings for HTTP/1.1 - see Section 6.1 of
 {{?HTTP11=I-D.ietf-httpbis-messaging}}). To help illustrate how such things affect `Digest`,
 several examples are provided in {{resource-representation}}.
@@ -558,7 +558,7 @@ The following examples demonstrate interactions where a server responds with a
 `Digest` field even though the client did not solicit one using
 `Want-Digest`.
 
-Some examples include JSON objects in the payload data.
+Some examples include JSON objects in the content.
 For presentation purposes, objects that fit completely within the line-length limits
 are presented on a single line using compact notation with no leading space.
 Objects that would exceed line-length limits are presented across multiple lines
@@ -590,7 +590,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ## Server Returns No Representation Data
 
-Requests without payload data can still send a `Digest` field
+Requests without content can still send a `Digest` field
 applying the digest-algorithm to an empty representation.
 
 The response `Digest` field-value is calculated over the JSON object
@@ -690,7 +690,7 @@ The request `Digest` field-value is calculated on the enclosed payload.
 
 The response `Digest` field-value
 depends on the representation metadata header fields, including
-`Content-Encoding: br` even when the response does not contain payload data.
+`Content-Encoding: br` even when the response does not contain content.
 
 
 Request:
@@ -790,7 +790,7 @@ Digest: id-sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
 }
 ~~~
 
-Note that a `204 No Content` response without payload data but with the same
+Note that a `204 No Content` response without content but with the same
 `Digest` field-value would have been legitimate too.
 
 ## POST Response Describes the Request Status {#post-referencing-action}
@@ -875,7 +875,7 @@ Digest: id-sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
 }
 ~~~
 
-Note that a `204 No Content` response without payload data but with the same
+Note that a `204 No Content` response without content but with the same
 `Digest` field-value would have been legitimate too.
 
 ## Error responses
@@ -956,7 +956,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 The following examples demonstrate interactions where a client solicits a
 `Digest` using `Want-Digest`.
 
-Some examples include JSON objects in the payload data.
+Some examples include JSON objects in the content.
 For presentation purposes, objects that fit completely within the line-length limits
 are presented on a single line using compact notation with no leading space.
 Objects that would exceed line-length limits are presented across multiple lines
@@ -1121,7 +1121,7 @@ might affect signature validation.
 
 ## Usage in Trailer Fields
 
-When `Digest` is used in trailer fields, the receiver gets the digest value after the payload data
+When `Digest` is used in trailer fields, the receiver gets the digest value after the content
 and may thus be tempted to process the data before validating the digest value.
 It is prefereable that data is only be processed after validating the Digest.
 
@@ -1140,7 +1140,7 @@ in conjunction with the encrypted content-coding {{?RFC8188}}.
 
 The representation-data-digest of an encrypted payload can change between different messages
 depending on the encryption algorithm used; in those cases its value could not be used to provide
-a proof of integrity "at rest" unless the whole (e.g. encoded) payload data is persisted.
+a proof of integrity "at rest" unless the whole (e.g. encoded) content is persisted.
 
 ## Algorithm Agility
 
@@ -1352,7 +1352,7 @@ Specification document(s):  {{digest}} of this document
 # Resource Representation and Representation-Data {#resource-representation}
 
 The following examples show how representation metadata, payload transformations
-and method impacts on the message and payload data. When the payload data
+and method impacts on the message and content. When the content
 contains non-printable characters (eg. when it is compressed) it is shown as
 base64-encoded string.
 
@@ -1382,7 +1382,7 @@ Content-Encoding: gzip
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 
-Now the same payload data conveys a malformed JSON object.
+Now the same content conveys a malformed JSON object.
 
 Request:
 
@@ -1394,7 +1394,7 @@ Content-Type: application/json
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 
-A Range-Request alters the payload data, conveying a partial representation.
+A Range-Request alters the content, conveying a partial representation.
 
 Request:
 
@@ -1417,7 +1417,7 @@ iwgAla3RXA==
 ~~~
 
 
-Now the method too alters the payload data.
+Now the method too alters the content.
 
 Request:
 
