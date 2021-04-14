@@ -475,7 +475,7 @@ Authors should understand that stale responses (e.g., with "Cache-Control: max-a
 
 If doing so is not suitable for a given response, the origin should use "Cache-Control: must-revalidate". See {{Section 4.2.4 of I-D.ietf-httpbis-cache}}, and also {{?RFC5861}} for additional controls over stale content.
 
-Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and latency for large responses; see {{?Section 13 of I-D.ietf-httpbis-semantics}}.
+Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and latency for large responses; see {{Section 13 of I-D.ietf-httpbis-semantics}}.
 
 
 ### Caching and Application Semantics
