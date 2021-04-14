@@ -75,7 +75,7 @@ Note that in this specification, "proxy" is used to indicate both forward and re
 
 The Proxy-Status HTTP response field allows an intermediary to convey additional information about its handling of a response and its associated request.
 
-It is a List {{I-D.ietf-httpbis-header-structure, Section 3.1}}:
+It is a List ({{I-D.ietf-httpbis-header-structure, Section 3.1}}):
 
 ~~~ abnf
 Proxy-Status   = sf-list
