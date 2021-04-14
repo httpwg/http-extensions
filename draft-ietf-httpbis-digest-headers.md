@@ -543,10 +543,13 @@ not important. However, a user agent supporting both could benefit from
 performing representation digest validation first because it does not always
 require a conversion into identity encoding.
 
-There is a chance that a user agent supporting both mechanisms may find one
-validates successfully while the other fails. This document specifies no
-requirements or guidance for user agents that experience such cases.
-
+A user agent supporting both mechanisms:
+ - can legitimately ignore `Digest` when using SRI, because
+   {{digest}} specifies that
+   "a recipient MAY ignore any or all of the representation-data-digests";
+ - enforce both `Digest` and SRI: in this case it can be useful to provide
+   enough information to identify whether the mismatch happened at the `Digest`
+   or the SRI level.
 
 # Examples of Unsolicited Digest {#examples-unsolicited}
 
