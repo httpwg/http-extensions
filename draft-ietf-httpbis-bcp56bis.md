@@ -250,7 +250,7 @@ One way to do this is to define it in terms of {{FETCH}}, since that is the abst
 Some client behaviours (e.g., automatic redirect handling) and extensions (e.g., Cookies) are not required by HTTP, but nevertheless have become very common. If their use is not explicitly specified by applications using HTTP, there may be confusion and interoperability problems. In particular:
 
 * Redirect handling - Applications need to specify how redirects are expected to be handled; see {{redirects}}.
-* Cookies - Applications using HTTP should explicitly reference the Cookie specification {{?I-D.ietf-httpbis-rfc6265bis}} if they are required.
+* Cookies - Applications using HTTP should explicitly reference the Cookie specification {{?RFC6265}} if they are required.
 * Certificates - Applications using HTTP should specify that TLS certificates are to be checked according to {{Section 4.3.4 of I-D.ietf-httpbis-semantics}} when HTTPS is used.
 
 Applications using HTTP should not statically require HTTP features that are usually negotiated to be supported by clients. For example, requiring that clients support responses with a certain content-coding ({{I-D.ietf-httpbis-semantics, Section 8.4.1}}) instead of negotiating for it ({{I-D.ietf-httpbis-semantics, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
@@ -302,7 +302,7 @@ However, application-specific schemes can also be defined. When defining an URI 
 
 * Features that rely upon the URL's origin {{?RFC6454}}, such as the Web's same-origin policy, will be impacted by a change of scheme.
 
-* HTTP-specific features such as cookies {{?I-D.ietf-httpbis-rfc6265bis}}, authentication {{?I-D.ietf-httpbis-semantics}}, caching {{?I-D.ietf-httpbis-cache}}, HSTS {{?RFC6797}}, and CORS {{FETCH}} might or might not work correctly, depending on how they are defined and implemented. Generally, they are designed and implemented with an assumption that the URL will always be "http" or "https".
+* HTTP-specific features such as cookies {{?RFC6265}}, authentication {{?I-D.ietf-httpbis-semantics}}, caching {{?I-D.ietf-httpbis-cache}}, HSTS {{?RFC6797}}, and CORS {{FETCH}} might or might not work correctly, depending on how they are defined and implemented. Generally, they are designed and implemented with an assumption that the URL will always be "http" or "https".
 
 * Web features that require a secure context {{?SECCTXT=W3C.CR-secure-contexts-20160915}} will likely treat a new scheme as insecure.
 
@@ -407,7 +407,7 @@ As noted in {{?I-D.ietf-httpbis-semantics}}, a user agent is allowed to automati
 Redirects can be cached (when appropriate cache directives are present), but beyond that they are not 'sticky' -- i.e., redirection of a URI will not result in the client assuming that similar URIs (e.g., with different query parameters) will also be redirected.
 
 Applications using HTTP are encouraged to specify that 301 and 302 responses change the subsequent request method from POST (but no other method) to GET, to be compatible with browsers.
-Generally, when a redirected request is made, its header fields are copied from the original request's. However, they can be modified by various mechanisms; e.g., sent Authorization ({{I-D.ietf-httpbis-semantics, Section 11}}) and Cookie ({{?I-D.ietf-httpbis-rfc6265bis}}) header fields will change if the origin (and sometimes path) of the request changes. An application using HTTP should specify if any request header fields that it defines need to be modified or removed upon a redirect; however, this behaviour cannot be relied upon, since a generic client (like a browser) will be unaware of such requirements.
+Generally, when a redirected request is made, its header fields are copied from the original request's. However, they can be modified by various mechanisms; e.g., sent Authorization ({{I-D.ietf-httpbis-semantics, Section 11}}) and Cookie ({{?RFC6265}}) header fields will change if the origin (and sometimes path) of the request changes. An application using HTTP should specify if any request header fields that it defines need to be modified or removed upon a redirect; however, this behaviour cannot be relied upon, since a generic client (like a browser) will be unaware of such requirements.
 
 ## Specifying HTTP Header Fields {#headers}
 
@@ -508,7 +508,7 @@ can be stored for 60 seconds by both private and shared caches, can be revalidat
 
 ## Handling Application State {#state}
 
-Applications can use stateful cookies {{?I-D.ietf-httpbis-rfc6265bis}} to identify a client and/or store client-specific data to contextualise requests.
+Applications can use stateful cookies {{?RFC6265}} to identify a client and/or store client-specific data to contextualise requests.
 
 When used, it is important to carefully specify the scoping and use of cookies; if the application exposes sensitive data or capabilities (e.g., by acting as an ambient authority), exploits are possible. Mitigations include using a request-specific token to assure the intent of the client.
 
@@ -553,7 +553,7 @@ A complete enumeration of such practices is out of scope for this document, but 
 * Using X-Content-Type-Options: nosniff {{FETCH}} to assure that content under attacker control can't be coaxed into a form that is interpreted as active content by a Web browser.
 * Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (such as HTML {{HTML}}), thereby mitigating Cross-Site Scripting attacks.
 * Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header field.
-* Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?I-D.ietf-httpbis-rfc6265bis}}.
+* Using the 'HttpOnly' flag on Cookies to assure that cookies are not exposed to browser scripting languages {{?RFC6265}}.
 * Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the path of the communication, they can use this capability to recover that information.
 
 Depending on how they are intended to be deployed, specifications for applications using HTTP might require the use of these mechanisms in specific ways, or might merely point them out in Security Considerations.
@@ -578,7 +578,7 @@ If an application has browser compatibility as a goal, client interaction ought 
 
 Because the origin {{!RFC6454}} is how many HTTP capabilities are scoped, applications also need to consider how deployments might interact with other applications (including Web browsing) on the same origin.
 
-For example, if Cookies {{?I-D.ietf-httpbis-rfc6265bis}} are used to carry application state, they will be sent with all requests to the origin by default, unless scoped by path, and the application might receive cookies from other applications on the origin. This can lead to security issues, as well as collision in cookie names.
+For example, if Cookies {{?RFC6265}} are used to carry application state, they will be sent with all requests to the origin by default, unless scoped by path, and the application might receive cookies from other applications on the origin. This can lead to security issues, as well as collision in cookie names.
 
 One solution to these issues is to require a dedicated hostname for the application, so that it has a unique origin. However, it is often desirable to allow multiple applications to be deployed on a single hostname; doing so provides the most deployment flexibility and enables them to be "mixed" together (See {{?RFC8820}} for details). Therefore, applications using HTTP should strive to allow multiple applications on an origin.
 
