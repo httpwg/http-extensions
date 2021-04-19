@@ -16,6 +16,7 @@ keyword: HTTP API
 
 stand_alone: yes
 smart_quotes: no
+pi: [sortrefs]
 
 author:
  -
