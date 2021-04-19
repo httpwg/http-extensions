@@ -1318,10 +1318,11 @@ HTTP request method, as specified in {{storage-model}}.)
 "Lax-allowing-unsafe" is not a distinct value of the `SameSite` attribute.
 Rather, user agents MAY apply "Lax-allowing-unsafe" enforcement only to cookies
 that did not explicitly specify a `SameSite` attribute (i.e., those whose
-same-site-flag was set to "Default" by default). If a user agent applies
-"Lax-allowing-unsafe" enforcement, the user agent SHOULD restrict
-"Lax-allowing-unsafe" enforcement to cookies whose age is less than a duration
-of the user agent’s choosing (2 minutes seems reasonable).
+same-site-flag was set to "Default" by default). To limit the scope of this
+compatibility mode, user agents which apply "Lax-allowing-unsafe" enforcement
+SHOULD restrict the enforcement to cookies which were created recently.
+Deployment experience has shown a cookie age of 2 minutes or less to be a
+reasonable limit.
 
 If the user agent uses "Lax-allowing-unsafe" enforcement, it MUST apply the
 following modification to the retrieval algorithm defined in
@@ -2087,8 +2088,8 @@ sent with a cross-site HTTP request if and only if it is a top-level navigation
 with a "safe" HTTP method. Implementation experience shows that this is
 difficult to apply as the default behavior, as some sites may rely on cookies
 not explicitly specifying a `SameSite` attribute being included on top-level
-cross-site requests with "unsafe" HTTP methods (as was the case in a previous
-version of this specification).
+cross-site requests with "unsafe" HTTP methods (as was the case prior to the
+introduction of the `SameSite` attribute).
 
 For example, a login flow may involve a cross-site top-level `POST` request to
 an endpoint which expects a cookie with login information. For such a cookie,
