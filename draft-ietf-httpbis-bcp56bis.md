@@ -46,7 +46,7 @@ informative:
 
 --- abstract
 
-HTTP is often used as a substrate for other application protocols to create HTTP-based APIs. This document specifies best practices for writing specifications that use HTTP to define new application protocols, especially when they are defined for diverse implementation and broad deployment (e.g., in standards efforts).
+Applications often use HTTP as a substrate to create HTTP-based APIs. This document specifies best practices for writing specifications that use HTTP to define new application protocols, especially when they are defined for diverse implementation and broad deployment (e.g., in standards efforts).
 
 
 --- note_Note_to_Readers_
@@ -61,7 +61,7 @@ Working Group information can be found at <http://httpwg.github.io/>; source cod
 
 # Introduction
 
-HTTP {{!I-D.ietf-httpbis-semantics}} is often used as a substrate for applications other than Web browsing; this is sometimes referred to as creating "HTTP-based APIs", "REST APIs" or just "HTTP APIs". This is done for a variety of reasons, including:
+Applications other than Web browsing often use HTTP {{!I-D.ietf-httpbis-semantics}} as a substrate, a practice sometimes referred to as creating "HTTP-based APIs", "REST APIs" or just "HTTP APIs". This is done for a variety of reasons, including:
 
 * familiarity by implementers, specifiers, administrators, developers and users,
 * availability of a variety of client, server and proxy implementations,
@@ -75,7 +75,7 @@ These protocols are often ad hoc; they are intended for only deployment by one o
 
 However, when such an application has multiple, separate implementations, is deployed on multiple uncoordinated servers, and is consumed by diverse clients -- as is often the case for HTTP APIs defined by standards efforts -- tools and practices intended for limited deployment can become unsuitable.
 
-This is largely because implementations (both client and server) will implement and evolve at different paces, and because deployments will often have different features and versions available. As a result, the designers of such an HTTP-based API will need to more carefully consider how extensibility of the service will be handled and how different deployment requirements will be accommodated.
+This mismatch is largely because the API's clients and servers will implement and evolve at different paces, leading to a need for deployments with different features and versions to co-exist. As a result, the designers of HTTP-based APIs intended for such deployments need to more carefully consider how extensibility of the service will be handled and how different deployment requirements will be accommodated.
 
 More generally, an application protocol using HTTP faces a number of design decisions, including:
 
@@ -106,28 +106,29 @@ Different applications have different goals when using HTTP. The requirements in
 
 Additionally, when a specification is using HTTP, all of the requirements of the HTTP protocol suite are in force (in particular, {{!I-D.ietf-httpbis-semantics}}, but also other specifications as appropriate).
 
-Note that this document is intended to apply to applications, not generic extensions to HTTP, which follow the requirements in the relevant specification. Furthermore, it is intended for applications defined by IETF specifications, although other standards organisations are encouraged to adhere to its requirements.
+Note that this document is intended to apply to applications, not generic extensions to HTTP. Furthermore, while it is intended for IETF-specified applications, other standards organisations are encouraged to adhere to its requirements.
 
 
 ## Non-HTTP Protocols
 
-A specification might not use HTTP according to the criteria above and still define an application that relies upon HTTP in some manner. For example, an application might wish to avoid re-specifying parts of the message format, but change other aspects of the protocol's operation; or, it might want to use a different set of methods.
+An application can rely upon HTTP without meeting the criteria for using it defined above.
+For example, an application might wish to avoid re-specifying parts of the message format, but change other aspects of the protocol's operation; or, it might want to use a different set of methods.
 
-Doing so brings more freedom to modify protocol operations, but loses at least a portion of the benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes, and as the protocol diverges from HTTP, the benefit of mindshare will be lost.
+Doing so brings more freedom to modify protocol operations, but loses at least a portion of the benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes, and the benefit of mindshare will be lost.
 
 Such specifications MUST NOT use HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA registries; rather, they are encouraged to establish their own.
 
 
 # What's Important About HTTP {#overview}
 
-This section examines the characteristics of the HTTP protocol that are important to consider when using HTTP to define an application protocol.
+This section examines the characteristics of HTTP that are important to consider when using HTTP to define an application protocol.
 
 
 ## Generic Semantics
 
-Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined by HTTP are potentially applicable to every resource, not specific to a particular context. Application-specific semantics are best expressed in message content and in header fields, not status codes or methods -- although the latter do have generic semantics that relate to application state.
+Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined by HTTP are potentially applicable to every resource, not specific to a particular context. Application-specific semantics are best expressed in message content and in header fields, not status codes or methods (although the latter do have generic semantics that relate to application state).
 
-This generic/application-specific split allows a HTTP message to be handled by software (e.g., HTTP servers, intermediaries, client implementations, and caches) without understanding the specific application. It also allows people to leverage their knowledge of HTTP semantics without special-casing them for a particular application.
+This generic/application-specific split allows a HTTP message to be handled by common software (e.g., HTTP servers, intermediaries, client implementations, and caches) without understanding the specific application. It also allows people to leverage their knowledge of HTTP semantics without special-casing them for a particular application.
 
 Therefore, applications that use HTTP MUST NOT re-define, refine or overlay the semantics of generic protocol elements such as methods, status codes or existing header fields. Instead, they should focus their specifications on protocol elements that are specific to that application; namely their HTTP resources.
 
@@ -182,9 +183,9 @@ This section contains best practices for specifying the use of HTTP by applicati
 
 ## Specifying the Use of HTTP
 
-When specifying the use of HTTP, an application should use {{!I-D.ietf-httpbis-semantics}} as the primary reference; it is not necessary to reference all of the specifications in the HTTP suite unless there are specific reasons to do so (e.g., a particular feature is called out).
+Specifications should use {{!I-D.ietf-httpbis-semantics}} as the primary reference for HTTP; it is not necessary to reference all of the specifications in the HTTP suite unless there are specific reasons to do so (e.g., a particular feature is called out).
 
-Because it is a hop-by-hop protocol, a HTTP connection can be handled by implementations that are not controlled by the application; for example, proxies, CDNs, firewalls and so on. Requiring a particular version of HTTP makes it difficult to use in these situations, and harms interoperability. Therefore, it is RECOMMENDED that applications using HTTP not specify a minimum version of HTTP to be used.
+Because HTTP is a hop-by-hop protocol, a connection can be handled by implementations that are not controlled by the application; for example, proxies, CDNs, firewalls and so on. Requiring a particular version of HTTP makes it difficult to use in these situations, and harms interoperability. Therefore, it is RECOMMENDED that applications using HTTP not specify a minimum version of HTTP to be used.
 
 However, if an application's deployment would benefit from the use of a particular version of HTTP (for example, HTTP/2's multiplexing), this ought be noted.
 
@@ -211,13 +212,13 @@ Server: Bar/2.2
 
 ## Specifying Server Behaviour {#resource}
 
-The most effective way to specify an application's server-side HTTP behaviours is in terms of the following protocol elements:
+The server-side behaviours of an application are most effectively specified by defining the following protocol elements:
 
 * Media types {{!RFC6838}}, often based upon a format convention such as JSON {{?RFC8259}},
 * HTTP header fields, as per {{headers}}, and
 * The behaviour of resources, as identified by link relations {{!RFC8288}}.
 
-By composing these protocol elements, an application can define a set of resources, identified by link relations, that implement specified behaviours, including:
+An application can define its operation by composing these protocol elements to define a set of resources that are identified by link relations and that implement specified behaviours, including:
 
 * retrieval of their state using GET, in one or more formats identified by media type;
 * resource creation or update using POST or PUT, with an appropriately identified request content format;
@@ -244,7 +245,7 @@ Applications can also specify the use of URI Templates {{?RFC6570}} to allow cli
 
 ## Specifying Client Behaviour {#clients}
 
-In general, applications using HTTP ought to align their expectations for client behaviour as closely as possible with that of Web browsers, to avoid interoperability issues when they are used.
+An application's expectations for client behaviour ought to be closely aligned with those of Web browsers, to avoid interoperability issues when they are used.
 
 One way to do this is to define it in terms of {{FETCH}}, since that is the abstraction that browsers use for HTTP.
 
@@ -259,7 +260,7 @@ Applications using HTTP should not statically require HTTP features that are usu
 
 ## Specifying URLs
 
-In HTTP, the server resources that clients interact with are identified with URLs {{!RFC3986}}. As {{!RFC8820}} explains, parts of the URL are designed to be under the control of the owner (also known as the "authority") of that server, to give them the flexibility in deployment.
+In HTTP, the resources that clients interact with are identified with URLs {{!RFC3986}}. As {{!RFC8820}} explains, parts of the URL are designed to be under the control of the owner (also known as the "authority") of that server, to give them the flexibility in deployment.
 
 This means that in most cases, specifications for applications that use HTTP won't contain its URLs; while it is common practice for a specification of a single-deployment API to specify the path prefix "/app/v1" (for example), doing so in an IETF specification is inappropriate.
 
@@ -336,9 +337,7 @@ When authors believe that a new method is required, they are encouraged to engag
 
 GET is the most common and useful HTTP method; its retrieval semantics allow caching, side-effect free linking and underlies many of the benefits of using HTTP.
 
-A common use of GET is to perform queries, often using the query component of the URL; this is a familiar pattern from Web browsing, and the results can be cached, improving efficiency of an often expensive process.
-
-In some cases, however, GET might be unwieldy for expressing queries, because of the limited syntax of the URI; in particular, if binary data forms part of the query terms, it needs to be encoded to conform to URI syntax.
+Queries can be performed with GET, often using the query component of the URL; this is a familiar pattern from Web browsing, and the results can be cached, improving efficiency of an often expensive process. In some cases, however, GET might be unwieldy for expressing queries, because of the limited syntax of the URI; in particular, if binary data forms part of the query terms, it needs to be encoded to conform to URI syntax.
 
 While this is not an issue for short queries, it can become one for larger query terms, or ones which need to sustain a high rate of requests. Additionally, some HTTP implementations limit the size of URLs they support -- although modern HTTP software has much more generous limits than previously (typically, considerably more than 8000 octets, as required by {{!I-D.ietf-httpbis-semantics}}).
 
@@ -389,9 +388,9 @@ When authors believe that a new status code is required, they are encouraged to 
 
 ### Redirection {#redirects}
 
-The 3xx series of status codes specified in {{Section 15.4 of I-D.ietf-httpbis-semantics}} direct the user agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and 308, all of which use the Location response header field to indicate where the client should send the request to.
+The 3xx series of status codes specified in {{Section 15.4 of I-D.ietf-httpbis-semantics}} direct the user agent to another resource to satisfy the request. The most common of these are 301, 302, 307 and 308, all of which use the Location response header field to indicate where the client should resend the request.
 
-There are two ways that this group of status codes differ:
+There are two ways that the members of this group of status codes differ:
 
 * Whether they are permanent or temporary. Permanent redirects can be used to update links stored in the client (e.g., bookmarks), whereas temporary ones can not. Note that this has no effect on HTTP caching; it is completely separate.
 
@@ -538,9 +537,7 @@ When used, it is important to carefully specify the scoping and use of authentic
 
 ## Co-Existing with Web Browsing {#browser}
 
-Even if there is not an intent for an application to be used with a Web browser, its resources will remain available to browsers and other HTTP clients.
-
-This means that all such applications that use HTTP need to consider how browsers will interact with them, particularly regarding security.
+Even if there is not an intent for an application to be used with a Web browser, its resources will remain available to browsers and other HTTP clients. This means that all such applications that use HTTP need to consider how browsers will interact with them, particularly regarding security.
 
 For example, if an application's state can be changed using a POST request, a Web browser can easily be coaxed into cross-site request forgery (CSRF) from arbitrary Web sites.
 
@@ -577,9 +574,9 @@ If an application has browser compatibility as a goal, client interaction ought 
 
 ## Maintaining Application Boundaries {#other-apps}
 
-Because the origin {{!RFC6454}} is how many HTTP capabilities are scoped, applications also need to consider how deployments might interact with other applications (including Web browsing) on the same origin.
+Because many HTTP capabilities are scoped to the origin {{!RFC6454}}, applications also need to consider how deployments might interact with other applications (including Web browsing) on the same origin.
 
-For example, if Cookies {{?RFC6265}} are used to carry application state, they will be sent with all requests to the origin by default, unless scoped by path, and the application might receive cookies from other applications on the origin. This can lead to security issues, as well as collision in cookie names.
+For example, if Cookies {{?RFC6265}} are used to carry application state, they will be sent with all requests to the origin by default (unless scoped by path), and the application might receive cookies from other applications on the origin. This can lead to security issues, as well as collision in cookie names.
 
 One solution to these issues is to require a dedicated hostname for the application, so that it has a unique origin. However, it is often desirable to allow multiple applications to be deployed on a single hostname; doing so provides the most deployment flexibility and enables them to be "mixed" together (See {{?RFC8820}} for details). Therefore, applications using HTTP should strive to allow multiple applications on an origin.
 
