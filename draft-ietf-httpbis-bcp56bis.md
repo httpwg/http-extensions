@@ -420,9 +420,9 @@ Applications often define new HTTP header fields. Typically, using HTTP header f
 
 When the conditions above are not met, it is usually better to convey application-specific information in other places; e.g., the message content or the URL query string.
 
-New header fields MUST be registered, as per {{!I-D.ietf-httpbis-semantics}}.
+New header fields MUST be registered, as per {{Section 16.3 of I-D.ietf-httpbis-semantics}}.
 
-See {{I-D.ietf-httpbis-semantics, Section 16.3.2}} for guidelines to consider when minting new header fields. {{?RFC8941}} provides a common structure for new header fields, and avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
+See {{Section 16.3.2 of I-D.ietf-httpbis-semantics}} for guidelines to consider when minting new header fields. {{?RFC8941}} provides a common structure for new header fields, and avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
 
 It is RECOMMENDED that header field names be short (even when field compression is used, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a "-".
 
@@ -474,9 +474,9 @@ Cache-Control: no-store
 
 Authors should understand that stale responses (e.g., with "Cache-Control: max-age=0") can be reused by caches when disconnected from the origin server; this can be useful for handling network issues.
 
-If doing so is not suitable for a given response, the origin should use "Cache-Control: must-revalidate". See {{I-D.ietf-httpbis-cache, Section 4.2.4}}, and also {{?RFC5861}} for additional controls over stale content.
+If doing so is not suitable for a given response, the origin should use "Cache-Control: must-revalidate". See {{Section 4.2.4 of I-D.ietf-httpbis-cache}}, and also {{?RFC5861}} for additional controls over stale content.
 
-Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and latency for large responses; see {{?I-D.ietf-httpbis-semantics}}.
+Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and latency for large responses; see {{Section 13 of I-D.ietf-httpbis-semantics}}.
 
 
 ### Caching and Application Semantics
@@ -529,7 +529,7 @@ Applications MUST NOT make assumptions about the relationship between separate r
 
 ## Client Authentication {#client-auth}
 
-Applications can use HTTP authentication {{?I-D.ietf-httpbis-semantics}} to identify clients. The Basic authentication scheme {{?RFC7617}} MUST NOT be used unless the underlying transport is authenticated, integrity-protected and confidential (e.g., as provided the "HTTPS" URI scheme, or another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the underlying transport is similarly secure, or the chosen hash algorithm is not "MD5".
+Applications can use HTTP authentication {{Section 11 of I-D.ietf-httpbis-semantics}} to identify clients. The Basic authentication scheme {{?RFC7617}} MUST NOT be used unless the underlying transport is authenticated, integrity-protected and confidential (e.g., as provided the "HTTPS" URI scheme, or another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the underlying transport is similarly secure, or the chosen hash algorithm is not "MD5".
 
 With HTTPS, clients might also be authenticated using certificates {{?RFC5246}}.
 
