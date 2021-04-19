@@ -544,7 +544,7 @@ This means that all such applications that use HTTP need to consider how browser
 
 For example, if an application's state can be changed using a POST request, a Web browser can easily be coaxed into cross-site request forgery (CSRF) from arbitrary Web sites.
 
-Or, if content returned from the application's resources is under control of an attacker (for example, part of the request is reflected in the response, or the response contains external information that might be under the control of the attacker), a cross-site scripting (XSS) attack is possible, whereby an attacker can inject code into the browser and access data and capabilities on that origin.
+Or, if an attacker gains control of content returned from the application's resources (for example, part of the request is reflected in the response, or the response contains external information that the attacker can change), they can inject code into the browser and access data and capabilities as if they were the origin -- a technique known as a cross-site scripting (XSS) attack.
 
 This is only a small sample of the kinds of issues that applications using HTTP must consider. Generally, the best approach is to consider the application actually as a Web application, and to follow best practices for their secure development.
 
