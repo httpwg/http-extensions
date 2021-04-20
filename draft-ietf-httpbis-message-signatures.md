@@ -162,16 +162,14 @@ Key Material:
 : The key material required to create or verify the signature. The key material is often identified with an explicit key identifier, allowing the signer to indicate to the verifier which key was used.
 
 Creation Time:
-: A timestamp representing the point in time that the signature was generated, as asserted by the signer. Sub-second precision is not supported.
+: A timestamp representing the point in time that the signature was generated, as asserted by the signer.
 
 Expiration Time:
-: A timestamp representing the point in time at which the signature expires, as asserted by the signer. Sub-second precision is not supported. A signature's expiration time could be undefined, indicating that the signature does not expire.
+: A timestamp representing the point in time at which the signature expires, as asserted by the signer. A signature's expiration time could be undefined, indicating that the signature does not expire from the perspective of the signer.
 
 The term "Unix time" is defined by {{POSIX.1}} [section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
-This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [MESSAGING], and senders MUST NOT generate messages that include it.
-
-Additionally, some examples use '\\' line wrapping for long values that contain no whitespace, as per {{!RFC8792}}.
+This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value
 
 ## Application of HTTP Message Signatures {#application}
 
@@ -387,8 +385,8 @@ The signature parameters are serialized using the rules in {{!RFC8941}} section 
     skipping fields that are not available or not used for this signature:
    * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
    * `keyid`: The identifier for the key material as an `sf-string` value.
-   * `created`: Creation time as an `sf-integer` UNIX timestamp value.
-   * `expires`: Expiration time as an `sf-integer` UNIX timestamp value.
+   * `created`: Creation time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
+   * `expires`: Expiration time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
    * `nonce`: A random unique value generated for this signature.
 4. The output contains the signature parameters value.
 
@@ -399,35 +397,12 @@ as discussed in {{signature-input-header}}.
 This example shows a canonicalized value for the parameters of a given signature:
 
 ~~~
-# NOTE: '\' line wrapping per RFC 8792
-("@request-target" "host" "date" "cache-control" "x-empty-header" 
-  "x-example"); keyid="test-key-a"; alg="rsa-pss-sha512"; \
-  created=1402170695; expires=1402170995
+("@request-target" "host" "date" "cache-control" "x-empty-header" \
+  "x-example");keyid="test-key-rsa-pss";alg="rsa-pss-sha512";\
+  created=1618884475;expires=1618884775
 ~~~
 
 Note that an HTTP message could contain multiple signatures, but only the signature parameters used for the current signature are included.
-
-#### Canonicalization Examples
-
-Given the following signature parameters:
-
-|Property|Value|
-|--- |--- |
-|Algorithm|`rsa-pss-sha512`|
-|Covered Content|`@request-target`, `host`, `date`, `cache-control`, `x-emptyheader`, `x-example`, `x-dictionary;key=b`, `x-dictionary;key=a`, `x-list;prefix=3`|
-|Creation Time|`1402174295`|
-|Expiration Time|`1402174595`|
-|Verification Key Material|The public key provided in {{example-key-rsa-test}} and identified by the `keyid` value "test-key-a".|
-
-The signature parameter value is defined as:
-
-~~~
-# NOTE: '\' line wrapping per RFC 8792
-"@signature-params": ("@request-target" "host" "date" "cache-control" \
-  "x-empty-header" "x-example" "x-dictionary";key=b \
-  "x-dictionary";key=a "x-list";prefix=3); keyid="test-key-a"; \
-  alg="rsa-pss-sha512"; created=1402170695; expires=1402170995
-~~~
 
 ## Creating the Signature Input String {#create-sig-input}
 
@@ -467,23 +442,31 @@ If covered content references an identifier that cannot be resolved to a value i
 * The identifier is a Dictionary member identifier that references a member that is not present in the header field value, or whose value is malformed. E.g., the identifier is `"x-dictionary";key=c` and the value of the `x-dictionary` header field is `a=1, b=2`
 * The identifier is a List Prefix member identifier that specifies more List members than are present the header field. E.g., the identifier is `"x-list";prefix=3` and the value of the `x-list` header field is `(1, 2)`.
 
-For the non-normative example Signature metadata in {{example-metadata}}, the corresponding signature input string is:
+In the following non-normative example, the HTTP message being signed is the following request:
+
+~~~ http-message
+GET /foo HTTP/1.1
+Host: example.org
+Date: Tue, 20 Apr 2021 02:07:55 GMT
+X-Example: Example header
+        with some whitespace.
+X-Empty-Header:
+Cache-Control: max-age=60
+Cache-Control: must-revalidate
+~~~
+
+The covered content consists of the `@request-target` speciality header followed by the `Host`, `Date`, `Cache-Control`, `X-Empty-Header`, `X-Example` HTTP headers, in order. The signature creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`.  The signature input string for this message with these parameters is:
 
 ~~~
-# NOTE: '\' line wrapping per RFC 8792
 "@request-target": get /foo
 "host": example.org
-"date": Tue, 07 Jun 2014 20:51:35 GMT
+"date": Tue, 20 Apr 2021 02:07:55 GMT
 "cache-control": max-age=60, must-revalidate
-"x-emptyheader": 
+"x-empty-header": 
 "x-example": Example header with some whitespace.
-"x-dictionary";key=b: 2
-"x-dictionary";key=a: 1
-"x-list";prefix=3: (a, b, c)
 "@signature-params": ("@request-target" "host" "date" "cache-control" \
-  "x-empty-header" "x-example" "x-dictionary";key=b \
-  "x-dictionary";key=a "x-list";prefix=3);keyid="test-key-a";\
-  created=1402170695;expires=1402170995
+  "x-empty-header" "x-example");created=1618884475;\
+  keyid="test-key-rsa-pss"
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
 
@@ -517,41 +500,14 @@ In order to create a signature, a signer MUST follow the following algorithm:
 
 6. The byte array output of the signature function is the HTTP message signature output value to be included in the `Signature` header as defined in {{signature-header}}.
 
-For example, given the following HTTP message:
-
-~~~ http-message
-GET /foo HTTP/1.1
-Host: example.org
-Date: Sat, 07 Jun 2014 20:51:35 GMT
-X-Example: Example header
-        with some whitespace.
-X-EmptyHeader:
-X-Dictionary: a=1, b=2
-X-List: (a b c d)
-Cache-Control: max-age=60
-Cache-Control: must-revalidate
-~~~
-
-The following table presents a non-normative example of metadata values that a signer may choose:
-
-|Property|Value|
-|--- |--- |
-|Covered Content|`@request-target`, `host`, `date`, `cache-control`, `x-emptyheader`, `x-example`, `x-dictionary;key=b`, `x-dictionary;key=a`, `x-list;prefix=3`|
-|Creation Time|`1402174295`|
-|Expiration Time|`1402174595`|
-|Verification Key Material|The public key provided in {{example-key-rsa-test}} and identified by the `keyid` value "test-key-a".|
-{: title="Non-normative example metadata values" #example-metadata}
-
-For the non-normative example signature metadata and signature input in {{example-sig-input}}, the corresponding signature value 
-encoded in Base64 is:
+For example, given the HTTP message and signature parameters in the example in {{create-sig-input}}, the example signature input string when signed with the `test-key-rsa-pss` key in {{test-key-rsa-pss}} gives the following message signature output value, encoded in Base64:
 
 ~~~
-# NOTE: '\' line wrapping per RFC 8792
-K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUeZx/Kdrq32DrfakQ6b\
-PsvB9aqZqognNT6be4olHROIkeV879RrsrObury8L9SCEibeoHyqU/yCjphSmEdd7WD+z\
-rchK57quskKwRefy2iEC5S2uAH0EPyOZKWlvbKmKu5q4CaB8X/I5/+HLZLGvDiezqi6/7\
-p2Gngf5hwZ0lSdy39vyNMaaAT0tKo6nuVw0S1MVg1Q7MpWYZs0soHjttq0uLIA3DIbQfL\
-iIvK6/l0BdWTU7+2uQj7lBkQAsFZHoA96ZZgFquQrXRlmYOh+Hx5D9fJkXcXe5tmAg==
+:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwkUE6H4NWiTs5f2Ef0\
+qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdGR+tlRJ1cbCoWMVoCgEPi\
+4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+szb8SpwJEmkMPr5dBOz6DLEeM3IgKN\
+oBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA1a4MNWoUElr6eh5k20djMZftCYTPUU\
+PMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1aSVfKQQzR+ZEwSaZQBrdQ==:
 ~~~
 {: title="Non-normative example signature value" #example-sig-value}
 
@@ -695,7 +651,8 @@ The results of the verification function are compared to the http message signat
 ### JSON Web Signature (JWS) algorithms {#method-jose}
 
 If the signing algorithm is a JOSE signing algorithm from the JSON Web Signature and Encryption Algorithms Registry established by {{RFC7518}}, the 
-JWS algorithm definition determines the signature and hashing algorithms to apply for both signing and verification. 
+JWS algorithm definition determines the signature and hashing algorithms to apply for both signing and verification. There is no
+use of the explicit `alg` signature parameter when using JOSE signing algorithms.
 
 For both signing and verification, the HTTP messages signature input string {{create-sig-input}} is used as the entire "JWS Signing Input". 
 The JOSE Header defined in {{RFC7517}} is not used, and the signature input string is not first encoded in Base64 before applying the algorithm. 
@@ -707,16 +664,15 @@ The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE I
 Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP header fields, both defined within this specification. 
 
 An HTTP message signature MUST use both headers:
-the `Signature` HTTP header field contains the signature value, while the `Signature-Input` HTTP header field identifies the covered content and parameters that describe how the signature was generated. Each header MAY contain multiple labeled values, where the labels determine the correlation between the `Signature` and `Signature-Input` fields. 
+the `Signature` HTTP header field contains the signature value, while the `Signature-Input` HTTP header field identifies the covered content and parameters that describe how the signature was generated. The Each header MAY contain multiple labeled values, where the labels determine the correlation between the `Signature` and `Signature-Input` fields. 
 
 ## The 'Signature-Input' HTTP Header {#signature-input-header}
 The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered content including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~
-# NOTE: '\' line wrapping per RFC 8792
-Signature-Input: sig1=("@request-target" "host" "date"
-    "cache-control" "x-empty-header" "x-example"); keyid="test-key-a";
-    alg="rsa-pss-sha512"; created=1402170695; expires=1402170995
+Signature-Input: sig1=("@request-target" "host" "date" "cache-control" \
+  "x-empty-header" "x-example");created=1618884475;\
+  keyid="test-key-rsa-pss"
 ~~~
 
 To facilitate signature validation, the `Signature-Input` header value MUST contain the same serialized value used 
@@ -726,49 +682,66 @@ in generating the signature input string's `@signature-params` value.
 The `Signature` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing one or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
 
 ~~~
-# NOTE: '\' line wrapping per RFC 8792
-Signature: sig1=:K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUe\
-    Zx/Kdrq32DrfakQ6bPsvB9aqZqognNT6be4olHROIkeV879RrsrObury8L9SCEibe\
-    oHyqU/yCjphSmEdd7WD+zrchK57quskKwRefy2iEC5S2uAH0EPyOZKWlvbKmKu5q4\
-    CaB8X/I5/+HLZLGvDiezqi6/7p2Gngf5hwZ0lSdy39vyNMaaAT0tKo6nuVw0S1MVg\
-    1Q7MpWYZs0soHjttq0uLIA3DIbQfLiIvK6/l0BdWTU7+2uQj7lBkQAsFZHoA96ZZg\
-    FquQrXRlmYOh+Hx5D9fJkXcXe5tmAg==:
+Signature: sig1=:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwk\
+  UE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdGR+\
+  tlRJ1cbCoWMVoCgEPi4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+szb8SpwJEm\
+  kMPr5dBOz6DLEeM3IgKNoBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA1a4MNWoU\
+  Elr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1aSVfKQQzR\
+  +ZEwSaZQBrdQ==:
 ~~~
 
-## Examples
+## Multiple Signatures
 
-The following is a non-normative example of `Signature-Input` and `Signature` HTTP header fields representing the signature in {{example-sig-value}}:
+Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same content with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in header fields when forwarding the request to a service host, including a signature over those fields and the client's original signature. 
 
-~~~ http-message
-# NOTE: '\' line wrapping per RFC 8792
+The following is a non-normative example of header fields a reverse proxy in addition to the examples in the previous sections. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under `proxy_sig`. The proxy uses the key `rsa-test-key` to create its signature using the `rsa-v1_5-sha256` signature value. This results in a signature input string of:
 
-Signature-Input: sig1=("@request-target" "host" "date"
-    "cache-control" "x-empty-header" "x-example"); keyid="test-key-a";
-    alg="rsa-pss-sha512"; created=1402170695; expires=1402170995
-Signature: sig1=:K2qGT5srn2OGbOIDzQ6kYT+ruaycnDAAUpKv+ePFfD0RAxn/1BUe\
-    Zx/Kdrq32DrfakQ6bPsvB9aqZqognNT6be4olHROIkeV879RrsrObury8L9SCEibe\
-    oHyqU/yCjphSmEdd7WD+zrchK57quskKwRefy2iEC5S2uAH0EPyOZKWlvbKmKu5q4\
-    CaB8X/I5/+HLZLGvDiezqi6/7p2Gngf5hwZ0lSdy39vyNMaaAT0tKo6nuVw0S1MVg\
-    1Q7MpWYZs0soHjttq0uLIA3DIbQfLiIvK6/l0BdWTU7+2uQj7lBkQAsFZHoA96ZZg\
-    FquQrXRlmYOh+Hx5D9fJkXcXe5tmAg==:
+~~~
+"signature";key="sig1": :H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNT\
+  d980hWwkUE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg\
+  /9sOdGR+tlRJ1cbCoWMVoCgEPi4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+sz\
+  b8SpwJEmkMPr5dBOz6DLEeM3IgKNoBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA\
+  1a4MNWoUElr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1a\
+  SVfKQQzR+ZEwSaZQBrdQ==:
+x-forwarded-for: 192.0.2.123
+"@signature-params": ("signature";key="sig1" x-forwarded-for)\
+  ;created=1618884475;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
 ~~~
 
-Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to easily include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same content with different keys and/or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in header fields when forwarding the request to a service host, and may also include a signature over those fields and the client's signature. The following is a non-normative example of header fields a reverse proxy might add to a forwarded request that contains the signature in the above example:
+And a signature output value of:
+
+~~~
+:NgQsRJwOL/EgoRXdcmHMOLZM+KWqLDsO76CrqoiLH279VJs9Fj6bn4V+perAEUbHBEMFCb\
+l6tucEVgKrU+5IIyDMBI85FExQeuBrNPALczjCdxne6LUoBcWBAk8NoRyjfd++DXIAjAZcf\
+/hBUXLll+5veI0ynzBRFTZ4v8AbluYODjJlSprYEwUb2ndbFr12vzgIpy0uTQCslN+3rUUZ\
++lQWlrILvbR0CIvtGwk2+hE0dTRAG0R3wmlR24mhSqiE5RADyoSWQVjVxntp98XHAB6MZE9\
+2bbu2a8Uo951Hvah03XHWEk/WiYdq+mt3hwXVPLXlBU9DWCo2AaYD/rkXtQ==:
+~~~
+
+These values are added to the HTTP request message by the proxy. The different signature values are wrapped onto separate lines to increase human-readability of the result.
 
 ~~~ http-message
-# NOTE: '\' line wrapping per RFC 8792
-
 X-Forwarded-For: 192.0.2.123
-Signature-Input: reverse_proxy_sig=("host" "date"
-    "signature";key=sig1 "x-forwarded-for"); keyid="test-key-a";
-    alg="rsa-pss-sha512"; created=1402170695; expires=1402170695
-Signature: reverse_proxy_sig=:ON3HsnvuoTlX41xfcGWaOEVo1M3bJDRBOp0Pc/O\
-    jAOWKQn0VMY0SvMMWXS7xG+xYVa152rRVAo6nMV7FS3rv0rR5MzXL8FCQ2A35DCEN\
-    LOhEgj/S1IstEAEFsKmE9Bs7McBsCtJwQ3hMqdtFenkDffSoHOZOInkTYGafkoy78\
-    l1VZvmb3Y4yf7McJwAvk2R3gwKRWiiRCw448Nt7JTWzhvEwbh7bN2swc/v3NJbg/w\
-    JYyYVbelZx4IywuZnYFxgPl/qvqbAjeEVvaLKLgSMr11y+uzxCHoMnDUnTYhMrmOT\
-    4O8lBLfRFOcoJPKBdoKg9U0a96U2mUug1bFOozEVYFg==:
+Signature-Input: sig1=("@request-target" "host" "date" "cache-control" \
+    "x-empty-header" "x-example");created=1618884475\
+    ;keyid="test-key-rsa-pss", \
+  proxy_sig=("signature";key="sig1" x-forwarded-for);created=1618884480\
+    ;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
+Signature: sig1=:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwk\
+    UE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdG\
+    R+tlRJ1cbCoWMVoCgEPi4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+szb8Sp\
+    wJEmkMPr5dBOz6DLEeM3IgKNoBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA1a\
+    4MNWoUElr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1a\
+    SVfKQQzR+ZEwSaZQBrdQ==:, \
+  proxy_sig=:NgQsRJwOL/EgoRXdcmHMOLZM+KWqLDsO76CrqoiLH279VJs9Fj6bn4V+pe\
+    rAEUbHBEMFCbl6tucEVgKrU+5IIyDMBI85FExQeuBrNPALczjCdxne6LUoBcWBAk8No\
+    Ryjfd++DXIAjAZcf/hBUXLll+5veI0ynzBRFTZ4v8AbluYODjJlSprYEwUb2ndbFr12\
+    vzgIpy0uTQCslN+3rUUZ+lQWlrILvbR0CIvtGwk2+hE0dTRAG0R3wmlR24mhSqiE5RA\
+    DyoSWQVjVxntp98XHAB6MZE92bbu2a8Uo951Hvah03XHWEk/WiYdq+mt3hwXVPLXlBU\
+    9DWCo2AaYD/rkXtQ==:
 ~~~
+
+The proxy's signature and the client's original signature can be verified independently for the same message, depending on the needs of the application.
 
 # IANA Considerations {#iana}
 
@@ -873,6 +846,7 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 |`created`|Active   | {{signature-params}} of this document|
 |`expires`|Active   | {{signature-params}} of this document|
 |`keyid`|Active     | {{signature-params}} of this document|
+|`nonce`|Acrtive    | {{signature-params}} of this document|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
 ## HTTP Signature Specialty Content Identifiers Registry {#content-registry}
@@ -913,9 +887,12 @@ It is recommended that implementers first detect and validate the `Signature-Inp
 
 This section provides cryptographic keys that are referenced in example signatures throughout this document.  These keys MUST NOT be used for any purpose other than testing.
 
+The key identifiers for each key are used throughout the examples in this specification. It is assumed for these examples that the signer and verifier can unambiguously dereference all key identifiers used here, and that the keys and algorithms used are appropriate for the context in which the signature is presented. 
+
 ### Example Key RSA test {#example-key-rsa-test}
 
-The following key is a 2048-bit RSA public and private key pair:
+The following key is a 2048-bit RSA public and private key pair, referred to in this document
+as `test-key-rsa`:
 
 ~~~
 -----BEGIN RSA PUBLIC KEY-----
@@ -956,23 +933,60 @@ EQeNC8fHGg4UXU8mhHnSBt3EA10qQJfRDs15M38eG2cYwB1PZpDHScDnDA0=
 -----END RSA PRIVATE KEY-----
 ~~~
 
-## Example keyid Values
+### Example Key RSA PSS test {#example-key-rsa-pss-test}
 
-The table below maps example `keyid` values to associated algorithms and/or keys.  These are example mappings that are valid only within the context of examples in examples within this and future documents that reference this section.  Unless otherwise specified, within the context of examples it should be assumed that the signer and verifier understand these `keyid` mappings.  These `keyid` values are not reserved, and deployments are free to use them, with these associations or others.
+The following key is a 2048-bit RSA public and private key pair, referred to in this document
+as `test-key-rsa-pss`:
 
-|keyid|Algorithm|Verification Key|
-|--- |--- |---|
-|`test-key-a`|`rsa-pss-sha512`|The public key specified in {{example-key-rsa-test}}|
-|`test-key-b`|`rsa-v1_5-sha256`|The public key specified in {{example-key-rsa-test}}|
+~~~
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr4tmm3r20Wd/PbqvP1s2
++QEtvpuRaV8Yq40gjUR8y2Rjxa6dpG2GXHbPfvMs8ct+Lh1GH45x28Rw3Ry53mm+
+oAXjyQ86OnDkZ5N8lYbggD4O3w6M6pAvLkhk95AndTrifbIFPNU8PPMO7OyrFAHq
+gDsznjPFmTOtCEcN2Z1FpWgchwuYLPL+Wokqltd11nqqzi+bJ9cvSKADYdUAAN5W
+Utzdpiy6LbTgSxP7ociU4Tn0g5I6aDZJ7A8Lzo0KSyZYoA485mqcO0GVAdVw9lq4
+aOT9v6d+nb4bnNkQVklLQ3fVAvJm+xdDOp9LCNCN48V2pnDOkFV6+U9nV5oyc6XI
+2wIDAQAB
+-----END PUBLIC KEY-----
+
+-----BEGIN PRIVATE KEY-----
+MIIEvgIBADALBgkqhkiG9w0BAQoEggSqMIIEpgIBAAKCAQEAr4tmm3r20Wd/Pbqv
+P1s2+QEtvpuRaV8Yq40gjUR8y2Rjxa6dpG2GXHbPfvMs8ct+Lh1GH45x28Rw3Ry5
+3mm+oAXjyQ86OnDkZ5N8lYbggD4O3w6M6pAvLkhk95AndTrifbIFPNU8PPMO7Oyr
+FAHqgDsznjPFmTOtCEcN2Z1FpWgchwuYLPL+Wokqltd11nqqzi+bJ9cvSKADYdUA
+AN5WUtzdpiy6LbTgSxP7ociU4Tn0g5I6aDZJ7A8Lzo0KSyZYoA485mqcO0GVAdVw
+9lq4aOT9v6d+nb4bnNkQVklLQ3fVAvJm+xdDOp9LCNCN48V2pnDOkFV6+U9nV5oy
+c6XI2wIDAQABAoIBAQCUB8ip+kJiiZVKF8AqfB/aUP0jTAqOQewK1kKJ/iQCXBCq
+pbo360gvdt05H5VZ/RDVkEgO2k73VSsbulqezKs8RFs2tEmU+JgTI9MeQJPWcP6X
+aKy6LIYs0E2cWgp8GADgoBs8llBq0UhX0KffglIeek3n7Z6Gt4YFge2TAcW2WbN4
+XfK7lupFyo6HHyWRiYHMMARQXLJeOSdTn5aMBP0PO4bQyk5ORxTUSeOciPJUFktQ
+HkvGbym7KryEfwH8Tks0L7WhzyP60PL3xS9FNOJi9m+zztwYIXGDQuKM2GDsITeD
+2mI2oHoPMyAD0wdI7BwSVW18p1h+jgfc4dlexKYRAoGBAOVfuiEiOchGghV5vn5N
+RDNscAFnpHj1QgMr6/UG05RTgmcLfVsI1I4bSkbrIuVKviGGf7atlkROALOG/xRx
+DLadgBEeNyHL5lz6ihQaFJLVQ0u3U4SB67J0YtVO3R6lXcIjBDHuY8SjYJ7Ci6Z6
+vuDcoaEujnlrtUhaMxvSfcUJAoGBAMPsCHXte1uWNAqYad2WdLjPDlKtQJK1diCm
+rqmB2g8QE99hDOHItjDBEdpyFBKOIP+NpVtM2KLhRajjcL9Ph8jrID6XUqikQuVi
+4J9FV2m42jXMuioTT13idAILanYg8D3idvy/3isDVkON0X3UAVKrgMEne0hJpkPL
+FYqgetvDAoGBAKLQ6JZMbSe0pPIJkSamQhsehgL5Rs51iX4m1z7+sYFAJfhvN3Q/
+OGIHDRp6HjMUcxHpHw7U+S1TETxePwKLnLKj6hw8jnX2/nZRgWHzgVcY+sPsReRx
+NJVf+Cfh6yOtznfX00p+JWOXdSY8glSSHJwRAMog+hFGW1AYdt7w80XBAoGBAImR
+NUugqapgaEA8TrFxkJmngXYaAqpA0iYRA7kv3S4QavPBUGtFJHBNULzitydkNtVZ
+3w6hgce0h9YThTo/nKc+OZDZbgfN9s7cQ75x0PQCAO4fx2P91Q+mDzDUVTeG30mE
+t2m3S0dGe47JiJxifV9P3wNBNrZGSIF3mrORBVNDAoGBAI0QKn2Iv7Sgo4T/XjND
+dl2kZTXqGAk8dOhpUiw/HdM3OGWbhHj2NdCzBliOmPyQtAr770GITWvbAI+IRYyF
+S7Fnk6ZVVVHsxjtaHy1uJGFlaZzKR4AGNaUTOJMs6NadzCmGPAxNQQOCqoUjn4XR
+rOjr9w349JooGXhOxbu8nOxX
+-----END PRIVATE KEY-----
+~~~
 
 ## Test Cases
 
-This section provides non-normative examples that may be used as test cases to validate implementation correctness.  These examples are based on the following HTTP message:
+This section provides non-normative examples that may be used as test cases to validate implementation correctness. These examples are based on the following HTTP message:
 
 ~~~ http-message
 POST /foo?param=value&pet=dog HTTP/1.1
 Host: example.com
-Date: Tue, 07 Jun 2014 20:51:35 GMT
+Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
 Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Content-Length: 18
@@ -980,40 +994,90 @@ Content-Length: 18
 {"hello": "world"}
 ~~~
 
-### Signature Verification
+### Minimal Signature Header using rsa-pss-sha512
 
-#### Minimal Signature Header using rsa-pss-sha512
+This example presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-pss-sha512` algorithm, covering none
+of the content of the HTTP message request but providing a timestamped signature proof of possession of the key.
 
-This presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-pss-sha512` algorithm:
+The corresponding signature input is:
+
+~~~
+"@signature-params": ();created=1618884475;keyid="test-key-rsa-pss"\
+  ;alg="rsa-pss-sha512"
+~~~
+
+This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
 ~~~ http-message
-# NOTE: '\' line wrapping per RFC 8792
-
-Signature: sig1=("date"); alg="rsa-pss-sha512"; keyid="test-key-b"
-Signature: sig1=:HtXycCl97RBVkZi66ADKnC9c5eSSlb57GnQ4KFqNZplOpNfxqk62\
-    JzZ484jXgLvoOTRaKfR4hwyxlcyb+BWkVasApQovBSdit9Ml/YmN2IvJDPncrlhPD\
-    VDv36Z9/DiSO+RNHD7iLXugdXo1+MGRimW1RmYdenl/ITeb7rjfLZ4b9VNnLFtVWw\
-    rjhAiwIqeLjodVImzVc5srrk19HMZNuUejK6I3/MyN3+3U8tIRW4LWzx6ZgGZUaEE\
-    P0aBlBkt7Fj0Tt5/P5HNW/Sa/m8smxbOHnwzAJDa10PyjzdIbywlnWIIWtZKPPsoV\
-    oKVopUWEU3TNhpWmaVhFrUL/O6SN3w==:
+Signature-Input: sig1=();created=1618884475;keyid="test-key-rsa-pss"\
+  ;alg="rsa-pss-sha512"
+Signature: sig1=:qGKjr1213+iZCU1MCV8w2NTr/HvMGWYDzpqAWx7SrPE1y6gOkIQ3k2\
+  GlZDu9KnKnLN6LKX0JRa2M5vU9v/b0GjV0WSInMMKQJExJ/e9Y9K8q2eE0G9saGebEaWd\
+  R3Ao47odxLh95hBtejKIdiUBmQcQSAzAkoQ4aOZgvrHgkmvQDZQL0w30+8lMz3VglmN73\
+  CKp/ijZemO1iPdNwrdhAtDvj9OdFVJ/wiUECfU78aQWkQocvwrZXTmHCX9BMVUHGneXMY\
+  NQ0Y8umEHjxpnnLLvxUbw2KZrflp+l6m7WlhwXGJ15eAt1+mImanxUCtaKQJvEfcnOQ0S\
+  2jHysSRLheTA==:
 ~~~
 
-The corresponding signature metadata derived from this header field is:
+### Header Coverage
 
-|Property|Value|
-|--- |--- |
-|Algorithm|`rsa-pss-sha512`|
-|Covered Content|`date`|
-|Creation Time|Undefined|
-|Expiration Time|Undefined|
-|Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
+This example covers all the specified headers in the example message.
 
-
-The corresponding Signature Input is:
+The corresponding signature input is:
 
 ~~~
-"date": Tue, 07 Jun 2014 20:51:35 GMT
-"@signature-params": ("date"); alg="rsa-pss-sha512"; keyid="test-key-b"
+"host": example.com
+"date": Tue, 20 Apr 2021 02:07:55 GMT
+"content-type": application/json
+"@signature-params": ("host" "date" "content-type");created=1618884475\
+  ;keyid="test-key-rsa-pss"
+~~~
+
+
+This results in the following `Signature-Input` and `Signature` headers being added to the message:
+
+
+~~~
+Signature-Input: sig1=("host" "date" "content-type");created=1618884475\
+  ;keyid="test-key-rsa-pss"
+Signature: sig1=:NtIKWuXjr4SBEXj97gbick4O95ff378I0CZOa2VnIeEXZ1itzAdqTp\
+  SvG91XYrq5CfxCmk8zz1Zg7ZGYD+ngJyVn805r73rh2eFCPO+ZXDs45Is/Ex8srzGC9sf\
+  VZfqeEfApRFFe5yXDmANVUwzFWCEnGM6+SJVmWl1/jyEn45qA6Hw+ZDHbrbp6qvD4N0S9\
+  2jlPyVVEh/SmCwnkeNiBgnbt+E0K5wCFNHPbo4X1Tj406W+bTtnKzaoKxBWKW8aIQ7rg9\
+  2zqE1oqBRjqtRi5/Q6P5ZYYGGINKzNyV3UjZtxeZNnNJ+MAnWS0mofFqcZHVgSU/1wUzP\
+  7MhzOKLca1Yg==:
+~~~
+
+### Full Coverage
+
+This example covers all headers in the example message plus the request target and message body digest.
+
+The corresponding signature input is:
+
+~~~
+"@request-target": post /foo?param=value&pet=dog
+"host": example.com
+"date": Tue, 20 Apr 2021 02:07:55 GMT
+"content-type": application/json
+"digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+"content-length": 18
+"@signature-params": ("@request-target" "host" "date" "content-type" \
+  "digest" "content-length");created=1618884475\
+  ;keyid="test-key-rsa-pss"
+~~~
+
+This results in the following `Signature-Input` and `Signature` headers being added to the message:
+
+~~~
+Signature-Input: sig1=("@request-target" "host" "date" "content-type" \
+  "digest" "content-length");created=1618884475\
+  ;keyid="test-key-rsa-pss"
+Signature: sig1=:QNPZtqAGWN1YMtsLJ1oyQMLg9TuIwjsIBESTo1/YXUsG+6Sl1uKUdT\
+  e9xswwrc3Ui3gUd4/tLv48NGih2TRDc1AWbEQDuy6pjroxSPtFjquubqzbszxit1arPNh\
+  ONnyR/8yuIh3bOXfc/NYJ3KLNaWR6MKrGinCYKTNwrX/0V67EMdSgd5HHnW5xHFgKfRCj\
+  rG3ncV+jbaeSPJ8e96RZgr8slcdwmqXdiwiIBCQDKRIQ3U2muJWvxyjV/IYhCTwAXJaUz\
+  sQPKzR5QWelXEVdHyv4WIB2lKaYh7mAsz0/ANxFYRRSp2Joms0OAnIAFX9kKCSp4p15/Q\
+  8L9vSIGNpQtw==:
 ~~~
 
 # Acknowledgements {#acknowledgements}
@@ -1065,6 +1129,8 @@ Jeffrey Yasskin.
   - Since -03
      * Moved signature component definitions up to intro.
      * Created formal function definitions for algorithms to fulfill.
+     * Updated all examples.
+     * Added nonce parameter field.
 
   - -03
      * Clarified signing and verification processes.
