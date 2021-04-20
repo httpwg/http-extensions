@@ -500,7 +500,7 @@ In order to create a signature, a signer MUST follow the following algorithm:
 
 6. The byte array output of the signature function is the HTTP message signature output value to be included in the `Signature` header as defined in {{signature-header}}.
 
-For example, given the HTTP message and signature parameters in the example in {{create-sig-input}}, the example signature input string when signed with the `test-key-rsa-pss` key in {{test-key-rsa-pss}} gives the following message signature output value, encoded in Base64:
+For example, given the HTTP message and signature parameters in the example in {{create-sig-input}}, the example signature input string when signed with the `test-key-rsa-pss` key in {{example-key-rsa-pss-test}} gives the following message signature output value, encoded in Base64:
 
 ~~~
 :H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwkUE6H4NWiTs5f2Ef0\
