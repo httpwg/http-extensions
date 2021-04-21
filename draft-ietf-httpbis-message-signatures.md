@@ -153,7 +153,7 @@ Signer:
 Verifier:
 : An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.
 
-The term "Unix time" is defined by {{POSIX.1}} [section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
+The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
 This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [MESSAGING], and senders MUST NOT generate messages that include it.
 
@@ -164,8 +164,8 @@ Additionally, some examples use '\\' line wrapping for long values that contain 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
 - The set of [content identifiers](#covered-content) that are expected and required. For example, an authorization protocol could mandate that the `Authorization` header be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting HTTP message bodies could require the `Digest` header to be present and covered.
-- A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters {{signature-params}} and define rules for resolving a key from there, though the appropriate key could be known from other means.
-- A means of determining the signature algorithm used to verify the signature content is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters {{signature-params}} to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
+- A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means.
+- A means of determining the signature algorithm used to verify the signature content is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
 
 The details of this kind of profiling are the purview of the application and outside the scope of this specification.
@@ -176,11 +176,11 @@ In order to allow signers and verifiers to establish which content is covered by
 
 Some content within HTTP messages can undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.
 
-Content identifiers are defined using production grammar defined by {{!RFC8941}} section 4.
+Content identifiers are defined using production grammar defined by {{RFC8941, Section 4}}.
 The content identifier is an `sf-string` value. The content identifier
 type MAY define parameters which are included using the `parameters` rule.
 
-~~~
+~~~ abnf
 content-identifier = sf-string parameters
 ~~~
 
@@ -202,8 +202,8 @@ The resulting string is the canonicalized value.
 
 ### Canonicalized Structured HTTP Headers {#http-header-structured}
 
-If value of the the HTTP header in question is a structured field {{!RFC8941}}, the content identifier MAY include the `sf` parameter. If this
-parameter is included, the HTTP header value MUST be canonicalized using the rules specified in {{!RFC8941}} section 4. Note that this process
+If value of the the HTTP header in question is a structured field ({{!RFC8941}}), the content identifier MAY include the `sf` parameter. If this
+parameter is included, the HTTP header value MUST be canonicalized using the rules specified in {{Section 4 of RFC8941}}. Note that this process
 will replace any optional whitespace with a single space.
 
 The resulting string is used as the field value input in {{http-header}}.
@@ -240,7 +240,7 @@ The following table shows example canonicalized values for header fields, given 
 
 An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` on the content identifier for the header. The value of this parameter is a the key being identified, without any parameters present on that key in the original dictionary.
 
-An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in Section 4.1.2 of {{!RFC8941}} on a Dictionary containing only that member.
+An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of RFC8941}} on a Dictionary containing only that member.
 
 ### Canonicalization Examples
 
@@ -264,7 +264,7 @@ The following table shows example canonicalized values for different content ide
 
 A prefix of a List Structured Field consisting of the first N members in the field's value (where N is an integer greater than 0 and less than or equal to the number of members in the List) is identified by the parameter `prefix` with the value of N as an integer. 
 
-A list prefix value is canonicalized by applying the serialization algorithm described in Section 4.1.1 of {{!RFC8941}} on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
+A list prefix value is canonicalized by applying the serialization algorithm described in {{Section 4.1.1 of RFC8941}} on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
 
 ### Canonicalization Examples
 
@@ -294,12 +294,12 @@ Content not found in an HTTP header can be included in the signature base string
 To differentiate specialty content identifiers from HTTP headers, specialty content identifiers MUST start with the "at" `@` character. This specification defines the following specialty content identifiers:
 
 @request-target
-: The target request endpoint. {{content-request-target}}
+: The target request endpoint. ({{content-request-target}})
 
 @signature-params
-: The signature metadata parameters for this signature. {{signature-params}}
+: The signature metadata parameters for this signature. ({{signature-params}})
 
-Additional specialty content identifiers MAY be defined and registered in the HTTP Signatures Specialty Content Identifier Registry. {{content-registry}}
+Additional specialty content identifiers MAY be defined and registered in the HTTP Signatures Specialty Content Identifier Registry. ({{content-registry}})
 
 ### Request Target {#content-request-target}
 
@@ -368,7 +368,7 @@ Its canonicalized value is the serialization of the signature parameters for thi
 
 {: vspace="0"}
 Covered Content:
-: An ordered list of content identifiers for headers {{http-header}} and specialty content {{specialty-content}} that indicates the metadata and message content that is covered by the signature. This list MUST NOT include the `@signature-params` specialty content identifier itself.
+: An ordered list of content identifiers for headers ({{http-header}}) and specialty content ({{specialty-content}}) that indicates the metadata and message content that is covered by the signature. This list MUST NOT include the `@signature-params` specialty content identifier itself.
 
 Algorithm:
 : An HTTP Signature Algorithm defined in the HTTP Signature Algorithms Registry defined in this document, represented as a string. It describes the signing and verification algorithms for the signature.
@@ -382,11 +382,11 @@ Creation Time:
 Expiration Time:
 : A timestamp representing the point in time at which the signature expires, represented as an integer. An expired signature always fails verification. A signature's Expiration Time MAY be undefined, indicating that the signature does not expire.
 
-The signature parameters are serialized using the rules in {{!RFC8941}} section 4 as follows:
+The signature parameters are serialized using the rules in {{Section 4 of RFC8941}} as follows:
 
 1. Let the output be an empty string.
-2. Serialize the content identifiers of the covered content as an ordered `inner-list` according to {{!RFC8941}} section 4.1.1.1 and append this to the output.
-3. Append the signature metadata as parameters according to {{!RFC8941}} section 4.1.1.2 in the any order, skipping fields that are not available:
+2. Serialize the content identifiers of the covered content as an ordered `inner-list` according to {{Section 4.1.1.1 of RFC8941}} and append this to the output.
+3. Append the signature metadata as parameters according to {{Section 4.1.1.2 of RFC8941}} in the any order, skipping fields that are not available:
    * `alg`: Algorithm as an `sf-string` value.
    * `keyid`: Identifier for the key material as an `sf-string` value.
    * `created`: Creation time as an `sf-integer` timestamp value.
@@ -441,11 +441,11 @@ The signature input is a US-ASCII string containing the content that is covered 
 
     3. Append a single space `" "`
 
-    4. Append the covered content's canonicalized value, as defined by the covered content type. {{http-header}} and {{specialty-content}}
+    4. Append the covered content's canonicalized value, as defined by the covered content type. ({{http-header}} and {{specialty-content}})
 
     5. Append a single newline `"\\n"`
 
-3. Append the signature parameters {{signature-params}} as follows:
+3. Append the signature parameters ({{signature-params}}) as follows:
 
     1. Append the identifier for the signature parameters serialized according to the `content-identifier` rule, `"@signature-params"`
 
@@ -458,12 +458,13 @@ The signature input is a US-ASCII string containing the content that is covered 
 4. Return the output string.    
 
 If covered content references an identifier that cannot be resolved to a value in the message, the implementation MUST produce an error. Such situations are included but not limited to:
-* The signer or verifier does not understand the content identifier.
-* The identifier identifies a header field that is not present in the message or whose value is malformed.
-* The identifier is a Dictionary member identifier that references a header field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
-* The identifier is a List Prefix member identifier that references a header field that is not present in the message, is not a List Structured Field, or whose value is malformed.
-* The identifier is a Dictionary member identifier that references a member that is not present in the header field value, or whose value is malformed. E.g., the identifier is `"x-dictionary";key=c` and the value of the `x-dictionary` header field is `a=1, b=2`
-* The identifier is a List Prefix member identifier that specifies more List members than are present the header field. E.g., the identifier is `"x-list";prefix=3` and the value of the `x-list` header field is `(1, 2)`.
+
+ * The signer or verifier does not understand the content identifier.
+ * The identifier identifies a header field that is not present in the message or whose value is malformed.
+ * The identifier is a Dictionary member identifier that references a header field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
+ * The identifier is a List Prefix member identifier that references a header field that is not present in the message, is not a List Structured Field, or whose value is malformed.
+ * The identifier is a Dictionary member identifier that references a member that is not present in the header field value, or whose value is malformed. E.g., the identifier is `"x-dictionary";key=c` and the value of the `x-dictionary` header field is `a=1, b=2`
+ * The identifier is a List Prefix member identifier that specifies more List members than are present the header field. E.g., the identifier is `"x-list";prefix=3` and the value of the `x-list` header field is `(1, 2)`.
 
 For the non-normative example Signature metadata in {{example-metadata}}, the corresponding Signature Input is:
 
@@ -508,7 +509,7 @@ In order to create a signature, a signer completes the following process:
    * Further guidance on what to include in this list and in what order is out of scope for this document. However, note that the list order is significant and once established for a given signature it MUST be preserved for that signature.
    * Note that the `@signature-params` specialty identifier is not explicitly listed in the list of covered content identifiers, because it is required to always be present as the last line in the signature input. This ensures that a signature always covers its own metadata.
 
-5. The signer creates the signature input string. {{create-sig-input}}
+5. The signer creates the signature input string. ({{create-sig-input}})
 
 5. The signer signs the signature input with the chosen signing algorithm using the key material chosen by the signer. Several signing algorithms are defined in in {{signature-methods}}.
 
@@ -558,7 +559,7 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
 
 1. Examine the signature's parameters to confirm that the signature meets the requirements described 
     in this document, as well as any additional requirements defined by the application such as which 
-    contents are required to be covered by the signature. {{verify-requirements}}
+    contents are required to be covered by the signature. ({{verify-requirements}})
 2. Determine the verification key material for this signature. If the key material is known through external
     means such as static configuration or external protocol negotiation, the verifier will use that. If the key is
     identified in the signature parameters, the verifier will dereference this to appropriate key material to use 
@@ -609,7 +610,7 @@ Signatures are generated from and verified against the byte values of the signat
 ### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha512}
 
 To sign using this algorithm, the signer applies the `RSASSA-PSS-SIGN (K, M)` function {{RFC8017}} with the signer's private signing key (`K`) and
-the signature input string (`M`) {{create-sig-input}}. The hash SHA-512 {{RFC6234}} is applied to the signature input string to create
+the signature input string (`M`) ({{create-sig-input}}). The hash SHA-512 {{RFC6234}} is applied to the signature input string to create
 the digest content to which the digital signature is applied. The resulting signed content (`S`) is
 Base64-encoded as described in {{sign}}. The resulting encoded value is the HTTP message signature output.
 
@@ -622,7 +623,7 @@ The results of the verification function are compared to the http message signat
 ### RSASSA-PKCS1-v1_5 using SHA-256 {#method-rsa-v1_5-sha256}
 
 To sign using this algorithm, the signer applies the `RSASSA-PKCS1-V1_5-SIGN (K, M)` function {{RFC8017}} to signer's private signing key (`K`) and
-the signature input string (`M`) {{create-sig-input}}. The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
+the signature input string (`M`) ({{create-sig-input}}). The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
 the digest content to which the digital signature is applied. The resulting signed content (`S`) is
 Base64-encoded as described in {{sign}}. The resulting encoded value is the HTTP message signature output.
 
@@ -635,7 +636,7 @@ The results of the verification function are compared to the http message signat
 ### HMAC using SHA-256 {#method-hmac-sha256}
 
 To sign and verify using this algorithm, the signer applies the `HMAC` function {{RFC2104}} with the shared signing key (`K`) and
-the signature input string (`text`) {{create-sig-input}}. The hash function SHA-256 {{RFC6234}} is applied to the signature input
+the signature input string (`text`) ({{create-sig-input}}). The hash function SHA-256 {{RFC6234}} is applied to the signature input
 string to create the digest content to which the HMAC is applied, giving the signature result. 
 
 For signing, the resulting signed content is Base64-encoded as described in {{sign}}. The resulting encoded value is the HTTP message signature output. 
@@ -646,7 +647,7 @@ HMAC function. The results of the comparison determine the validity of the signa
 ### ECDSA using curve P-256 DSS and SHA-256 {#method-ecdsa-p256-sha256}
 
 To sign using this algorithm, the signer applies the `ECDSA` algorithm {{FIPS186-4}} using curve P-256 with signer's private signing key and
-the signature input string {{create-sig-input}}. The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create
+the signature input string ({{create-sig-input}}). The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create
 the digest content to which the digital signature is applied. The resulting signed content is
 Base64-encoded as described in {{sign}}. The resulting encoded value is the HTTP message signature output.
 
@@ -661,7 +662,7 @@ The results of the verification function are compared to the http message signat
 If the signing algorithm is a JOSE signing algorithm from the JSON Web Signature and Encryption Algorithms Registry established by {{RFC7518}}, the 
 JWS algorithm definition determines the signature and hashing algorithms to apply for both signing and verification. 
 
-For both signing and verification, the HTTP messages signature input string {{create-sig-input}} is used as the entire "JWS Signing Input". The JWS 
+For both signing and verification, the HTTP messages signature input string ({{create-sig-input}}) is used as the entire "JWS Signing Input". The JWS 
 Header defined in {{RFC7517}} is not used, nor is the input string first encoded in Base64 before applying the algorithm.
 
 The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE Implementation Requirement of `Prohibited`.
@@ -768,7 +769,7 @@ Definition:
 : RSASSA-PSS using SHA-256
 
 Specification document(s):
-: \[\[This document\]\] {{method-rsa-pss-sha512}}
+: \[\[This document\]\], {{method-rsa-pss-sha512}}
 
 #### rsa-v1_5-sha256
 
@@ -783,7 +784,7 @@ Description:
 : RSASSA-PKCS1-v1_5 using SHA-256
 
 Specification document(s):
-: \[\[This document\]\] {{method-rsa-v1_5-sha256}}
+: \[\[This document\]\], {{method-rsa-v1_5-sha256}}
 
 #### hmac-sha256
 
@@ -798,7 +799,7 @@ Description:
 : HMAC using SHA-256
 
 Specification document(s):
-: \[\[This document\]\] {{method-hmac-sha256}}
+: \[\[This document\]\], {{method-hmac-sha256}}
 
 
 #### ecdsa-p256-sha256
@@ -814,7 +815,7 @@ Description:
 : ECDSA using curve P-256 DSS and SHA-256
 
 Specification document(s):
-: \[\[This document\]\] {{method-ecdsa-p256-sha256}}
+: \[\[This document\]\], {{method-ecdsa-p256-sha256}}
 
 ## HTTP Signature Metadata Parameters Registry {#param-registry}
 
