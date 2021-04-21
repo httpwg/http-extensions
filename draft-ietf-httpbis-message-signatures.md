@@ -188,7 +188,7 @@ In order to allow signers and verifiers to establish which content is covered by
 
 Some content within HTTP messages can undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.
 
-Content identifiers are defined using production grammar defined by {{RFC8941, Section 4}}.
+Content identifiers are defined using production grammar defined by [RFC8941, Section 4](#RFC8941).
 The content identifier is an `sf-string` value. The content identifier
 type MAY define parameters which are included using the `parameters` rule.
 
@@ -215,7 +215,7 @@ The resulting string is the canonicalized value.
 ### Canonicalized Structured HTTP Headers {#http-header-structured}
 
 If value of the the HTTP header in question is a structured field ({{!RFC8941}}), the content identifier MAY include the `sf` parameter. If this
-parameter is included, the HTTP header value MUST be canonicalized using the rules specified in {{Section 4 of RFC8941}}. Note that this process
+parameter is included, the HTTP header value MUST be canonicalized using the rules specified in [Section 4 of RFC8941](#RFC8941). Note that this process
 will replace any optional whitespace with a single space.
 
 The resulting string is used as the field value input in {{http-header}}.
@@ -251,7 +251,7 @@ The following table shows example canonicalized values for header fields, given 
 
 An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` on the content identifier for the header. The value of this parameter is a the key being identified, without any parameters present on that key in the original dictionary.
 
-An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of RFC8941}} on a Dictionary containing only that member.
+An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in [Section 4.1.2 of RFC8941](#RFC8941) on a Dictionary containing only that member.
 
 ### Canonicalization Examples
 
@@ -275,7 +275,7 @@ The following table shows example canonicalized values for different content ide
 
 A prefix of a List Structured Field consisting of the first N members in the field's value (where N is an integer greater than 0 and less than or equal to the number of members in the List) is identified by the parameter `prefix` with the value of N as an integer. 
 
-A list prefix value is canonicalized by applying the serialization algorithm described in {{Section 4.1.1 of RFC8941}} on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
+A list prefix value is canonicalized by applying the serialization algorithm described in [Section 4.1.1 of RFC8941](#RFC8941) on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
 
 ### Canonicalization Examples
 
@@ -377,13 +377,13 @@ The signature parameters special content is identified by the `@signature-params
 
 Its canonicalized value is the serialization of the signature parameters for this signature, including the covered content list with all associated parameters. The following metadata properties are defined:
 
-The signature parameters are serialized using the rules in {{Section 4 of RFC8941}} as follows:
+The signature parameters are serialized using the rules in [Section 4 of RFC8941](#RFC8941) as follows:
 
 1. Let the output be an empty string.
 2. Determine an order for the content identifiers of the covered content. Once this order is chosen, it cannot be changed.
-3. Serialize the content identifiers of the covered content as an ordered `inner-list` according to {{Section 4.1.1.1 of RFC8941}} and append this to the output.
+3. Serialize the content identifiers of the covered content as an ordered `inner-list` according to [Section 4.1.1.1 of RFC8941](#RFC8941) and append this to the output.
 4. Determine an order for signature metadata parameters. Once this order is chosen, it cannot be changed.
-5. Append the signature metadata as parameters according to {{Section 4.1.1.2 of RFC8941}} in the chosen order,
+5. Append the signature metadata as parameters according to [Section 4.1.1.2 of RFC8941](#RFC8941) in the chosen order,
     skipping fields that are not available or not used for this signature:
    * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
    * `keyid`: The identifier for the key material as an `sf-string` value.
