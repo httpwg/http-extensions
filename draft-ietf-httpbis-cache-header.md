@@ -31,12 +31,13 @@ author:
 normative:
   RFC2119:
   RFC8126:
-  I-D.ietf-httpbis-header-structure:
+  RFC8941:
 
 informative:
   ENTANGLE:
     target: https://i.blackhat.com/USA-20/Wednesday/us-20-Kettle-Web-Cache-Entanglement-Novel-Pathways-To-Poisoning-wp.pdf
     title: "Web Cache Entanglement: Novel Pathways to Poisoning"
+    date: 2020
     author:
     -
       ins: J. Kettle
@@ -70,13 +71,13 @@ This specification defines a new HTTP response header field, "Cache-Status" for 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document uses ABNF as defined in {{!RFC5234}}, along with the "%s" extension for case sensitivity defined in {{!RFC7405}}.
+This document uses ABNF as defined in {{!RFC5234}}.
 
 # The Cache-Status HTTP Response Header Field {#field}
 
 The Cache-Status HTTP response header field indicates caches' handling of the request corresponding to the response it occurs within.
 
-Its value is a List {{I-D.ietf-httpbis-header-structure, Section 3.1}}:
+Its value is a List {{RFC8941, Section 3.1}}:
 
 ~~~ abnf
 Cache-Status   = sf-list
