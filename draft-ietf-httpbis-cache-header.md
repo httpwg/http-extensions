@@ -77,7 +77,7 @@ This document uses ABNF as defined in {{!RFC5234}}.
 
 The Cache-Status HTTP response header field indicates caches' handling of the request corresponding to the response it occurs within.
 
-Its value is a List {{RFC8941, Section 3.1}}:
+Its value is a List ({{RFC8941, Section 3.1}}):
 
 ~~~ abnf
 Cache-Status   = sf-list
