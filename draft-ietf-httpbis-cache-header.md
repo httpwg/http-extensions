@@ -37,6 +37,7 @@ informative:
   ENTANGLE:
     target: https://i.blackhat.com/USA-20/Wednesday/us-20-Kettle-Web-Cache-Entanglement-Novel-Pathways-To-Poisoning-wp.pdf
     title: "Web Cache Entanglement: Novel Pathways to Poisoning"
+    date: 2020
     author:
     -
       ins: J. Kettle
