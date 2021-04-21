@@ -31,7 +31,7 @@ author:
 normative:
   RFC2119:
   RFC8126:
-  I-D.ietf-httpbis-header-structure:
+  RFC8941:
 
 informative:
   ENTANGLE:
@@ -76,7 +76,7 @@ This document uses ABNF as defined in {{!RFC5234}}.
 
 The Cache-Status HTTP response header field indicates caches' handling of the request corresponding to the response it occurs within.
 
-Its value is a List {{I-D.ietf-httpbis-header-structure, Section 3.1}}:
+Its value is a List {{RFC8941, Section 3.1}}:
 
 ~~~ abnf
 Cache-Status   = sf-list
