@@ -169,7 +169,7 @@ Expiration Time:
 
 The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
-This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value
+This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
 
 ## Application of HTTP Message Signatures {#application}
 
@@ -380,15 +380,17 @@ Its canonicalized value is the serialization of the signature parameters for thi
 The signature parameters are serialized using the rules in {{Section 4 of RFC8941}} as follows:
 
 1. Let the output be an empty string.
-2. Serialize the content identifiers of the covered content as an ordered `inner-list` according to {{Section 4.1.1.1 of RFC8941}} and append this to the output.
-3. Append the signature metadata as parameters according to {{Section 4.1.1.2 of RFC8941}} in the any order,
+2. Determine an order for the content identifiers of the covered content. Once this order is chosen, it cannot be changed.
+3. Serialize the content identifiers of the covered content as an ordered `inner-list` according to {{Section 4.1.1.1 of RFC8941}} and append this to the output.
+4. Determine an order for signature metadata parameters. Once this order is chosen, it cannot be changed.
+5. Append the signature metadata as parameters according to {{Section 4.1.1.2 of RFC8941}} in the chosen order,
     skipping fields that are not available or not used for this signature:
    * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
    * `keyid`: The identifier for the key material as an `sf-string` value.
    * `created`: Creation time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
    * `expires`: Expiration time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
    * `nonce`: A random unique value generated for this signature.
-4. The output contains the signature parameters value.
+6. The output contains the signature parameters value.
 
 Note that the `inner-list` serialization is used for the covered content value instead of the `sf-list` serialization 
 in order to facilitate this value's additional inclusion in the `Signature-Input` header's dictionary, 
@@ -402,7 +404,7 @@ This example shows a canonicalized value for the parameters of a given signature
   created=1618884475;expires=1618884775
 ~~~
 
-Note that an HTTP message could contain multiple signatures, but only the signature parameters used for the current signature are included.
+Note that an HTTP message could contain multiple signatures, but only the signature parameters used for the current signature are included in this field.
 
 ## Creating the Signature Input String {#create-sig-input}
 
@@ -847,7 +849,7 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 |`created`|Active   | {{signature-params}} of this document|
 |`expires`|Active   | {{signature-params}} of this document|
 |`keyid`|Active     | {{signature-params}} of this document|
-|`nonce`|Acrtive    | {{signature-params}} of this document|
+|`nonce`|Active    | {{signature-params}} of this document|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
 ## HTTP Signature Specialty Content Identifiers Registry {#content-registry}
@@ -1127,7 +1129,7 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
-  - Since -03
+  - -04
      * Moved signature component definitions up to intro.
      * Created formal function definitions for algorithms to fulfill.
      * Updated all examples.
