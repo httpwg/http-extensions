@@ -469,8 +469,7 @@ the user agent.
 
 ### Syntax {#abnf-syntax}
 
-Informally, the Set-Cookie response header contains the header name
-"Set-Cookie" followed by a ":" and a cookie. Each cookie begins with a
+Informally, the Set-Cookie response header contains a cookie, which begins with a
 name-value-pair, followed by zero or more attribute-value pairs. Servers
 SHOULD NOT send Set-Cookie headers that fail to conform to the following
 grammar:
