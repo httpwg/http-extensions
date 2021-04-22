@@ -226,6 +226,7 @@ This section lists the Proxy Error Types defined by this document. See {{registe
 * Description: The intermediary encountered a DNS error when trying to find an IP address for the next hop hostname.
 * Extra Parameters:
   - rcode: A sf-string conveying the DNS RCODE that indicates the error type. See {{RFC8499, Section 3}}.
+  - info-code: A sf-integer conveying the Extended DNS Error Code info-code. See {{!RFC8914}}.
 * Recommended HTTP status code: 502
 
 ### Destination Not Found
