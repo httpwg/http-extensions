@@ -106,7 +106,7 @@ Origin servers MUST NOT generate the Proxy-Status field.
 
 ## Proxy-Status Parameters {#params}
 
-This section lists parameters that can be used on the members of the Proxy-Status field. Unrecognised parameters SHOULD be ignored.
+This section lists parameters that can be used on the members of the Proxy-Status field. Unrecognised parameters MUST be ignored.
 
 ### error
 
