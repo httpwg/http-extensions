@@ -59,7 +59,7 @@ Typically, HTTP intermediaries forward requests towards the origin server and th
 
 HTTP accommodates these types of errors with a few status codes; for example, 502 Bad Gateway and 504 Gateway Timeout. However, experience has shown that more information is necessary to aid debugging and communicate what's happened to the client. Additionally, intermediaries sometimes want to convey additional information about their handling of a response, even if they did not generate it.
 
-To enable these uses, {{header}} defines a new HTTP response field to allow intermediaries to convey details of their handling of a response, {{params}} enumerates the kind of information that can be conveyed, and {{error-types}} defines a set of error types for use when a proxy encounters an issue when obtaining a response for the request.
+To enable these uses, {{header}} defines a new HTTP response field to allow intermediaries to convey details of their handling of a response. {{params}} enumerates the information that can be added to the field by intermediaries, which can be extended as per {{register-param}}. {{error-types}} defines a set of error types for use when a proxy encounters an issue when obtaining a response for the request; these can likewise be extended as per {{register-error}}.
 
 
 ## Notational Conventions
