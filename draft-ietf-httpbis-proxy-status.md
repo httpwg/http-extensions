@@ -66,7 +66,7 @@ To enable these uses, {{header}} defines a new HTTP response field to allow inte
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This specification uses Structured Fields {{!I-D.ietf-httpbis-header-structure}} to specify syntax and parsing. The terms sf-list, sf-item, sf-string, sf-token, sf-integer and key refer to the structured types defined therein.
+This specification uses Structured Fields {{!RFC8941}} to specify syntax and parsing. The terms sf-list, sf-item, sf-string, sf-token, sf-integer and key refer to the structured types defined therein.
 
 Note that in this specification, "proxy" is used to indicate both forward and reverse proxies, otherwise known as gateways. "Next hop" indicates the connection in the direction leading to the origin server for the request.
 
@@ -75,7 +75,7 @@ Note that in this specification, "proxy" is used to indicate both forward and re
 
 The Proxy-Status HTTP response field allows an intermediary to convey additional information about its handling of a response and its associated request.
 
-It is a List {{I-D.ietf-httpbis-header-structure, Section 3.1}}:
+It is a List ({{RFC8941, Section 3.1}}):
 
 ~~~ abnf
 Proxy-Status   = sf-list
