@@ -204,7 +204,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The body payload of the request defines the query. Implementations MAY use
       a request body of any content type with the SEARCH method; however,
       for backwards compatibility with existing WebDAV implementations,
-      SEARCH requests that use the text/xml or application/xml content types
+      SEARCH requests that use the text/xml or application/xml media types
       MUST be processed per the requirements established by
       <xref target="RFC5323" />.
       <cref anchor="xml">This can be relaxed to XML with a document element in the "DAV:" namespace, or even to the two element names mentionbed in <xref target="RFC5323" section="2.2.2"/>.</cref>
@@ -223,10 +223,10 @@ q=foo&amp;limit=10&amp;sort=-published
       A successful response to a SEARCH request is expected to provide some
       indication as to the final disposition of the search operation. For
       instance, a successful search that yields no results can be represented
-      by a 204 No Content response. If the response includes a body payload,
-      the payload is expected to describe the results of the search operation.
+      by a 204 No Content response. If the response includes a content,
+      it is expected to describe the results of the search operation.
       In some cases, the server may choose to respond indirectly to the SEARCH
-      request by returning a 3xx Redirection with a Location header specifying
+      request by returning a 3xx Redirection with a Location header field specifying
       an alternate Request URI from which the search results can be retrieved
       using an HTTP GET request. Various non-normative examples of successful
       SEARCH responses are illustrated in <xref target="examples" />.
@@ -257,18 +257,18 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       The "Accept-Search" response header field MAY be used by a server to
       directly signal support for the SEARCH method while identifying
-      the specific query format Content-Type's that may be used.
+      the specific query format media types that may be used.
     </t>
 <sourcecode type="abnf">
 Accept-Search = 1#media-type
 </sourcecode>
     <t>
-      The Accept-Search header specifies a comma-separated listing of media
+      The Accept-Search header field specifies a comma-separated listing of media
       types (with optional parameters) as defined by
       <xref target="RFC7231" sectionFormat="comma" section="3.1.1.1"/>.
     </t>
     <t>
-      The order of types listed by the Accept-Search header is insignificant.
+      The order of types listed by the Accept-Search header field is insignificant.
     </t>
   </section>
 
