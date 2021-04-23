@@ -4,6 +4,8 @@
 <?rfc symrefs="yes" ?>
 <?rfc sortrefs="yes"?>
 <?rfc compact="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
 <?rfc-ext xml2rfc-backend="202007"?>
 <rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" updates="5323" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
   <front>
