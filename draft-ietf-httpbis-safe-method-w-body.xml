@@ -191,8 +191,8 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       The SEARCH method is used to initiate a server-side search. Unlike
       the HTTP GET method, which requests that a server return a
-      representation of the resource identified by the effective
-      request URI (as defined by <xref target="RFC7230"/>), the SEARCH
+      representation of the resource identified by the target URI
+      (as defined by <xref target="RFCHTTP" section="7.1"/>), the SEARCH
       method is used to ask the server to perform a query operation
       (described by the request payload) over some set of data scoped to the
       effective request URI. The payload returned in response to a SEARCH
@@ -204,7 +204,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The body payload of the request defines the query. Implementations MAY use
       a request body of any content type with the SEARCH method; however,
       for backwards compatibility with existing WebDAV implementations,
-      SEARCH requests that use the text/xml or application/xml content types
+      SEARCH requests that use the text/xml or application/xml media types
       MUST be processed per the requirements established by
       <xref target="RFC5323" />.
       <cref anchor="xml">This can be relaxed to XML with a document element in the "DAV:" namespace, or even to the two element names mentionbed in <xref target="RFC5323" section="2.2.2"/>.</cref>
@@ -223,10 +223,10 @@ q=foo&amp;limit=10&amp;sort=-published
       A successful response to a SEARCH request is expected to provide some
       indication as to the final disposition of the search operation. For
       instance, a successful search that yields no results can be represented
-      by a 204 No Content response. If the response includes a body payload,
-      the payload is expected to describe the results of the search operation.
+      by a 204 No Content response. If the response includes a content,
+      it is expected to describe the results of the search operation.
       In some cases, the server may choose to respond indirectly to the SEARCH
-      request by returning a 3xx Redirection with a Location header specifying
+      request by returning a 3xx Redirection with a Location header field specifying
       an alternate Request URI from which the search results can be retrieved
       using an HTTP GET request. Various non-normative examples of successful
       SEARCH responses are illustrated in <xref target="examples" />.
@@ -244,7 +244,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The semantics of the SEARCH method change to a "conditional SEARCH" if
       the request message includes an If-Modified-Since, If-Unmodified-
       Since, If-Match, If-None-Match, or If-Range header field
-      (<xref target="RFC7232"/>).  A conditional SEARCH requests that the query
+      (<xref target="RFCHTTP" sectionFormat="comma" section="13"/>).  A conditional SEARCH requests that the query
       be performed only under the circumstances described by the conditional
       header field(s). It is important to note, however, that such conditions
       are evaluated against the state of the target resource itself as opposed
@@ -257,18 +257,18 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       The "Accept-Search" response header field MAY be used by a server to
       directly signal support for the SEARCH method while identifying
-      the specific query format Content-Type's that may be used.
+      the specific query format media types that may be used.
     </t>
 <sourcecode type="abnf">
 Accept-Search = 1#media-type
 </sourcecode>
     <t>
-      The Accept-Search header specifies a comma-separated listing of media
+      The Accept-Search header field specifies a comma-separated listing of media
       types (with optional parameters) as defined by
-      <xref target="RFC7231" sectionFormat="comma" section="3.1.1.1"/>.
+      <xref target="RFCHTTP" section="8.3.1"/>.
     </t>
     <t>
-      The order of types listed by the Accept-Search header is insignificant.
+      The order of types listed by the Accept-Search header field is insignificant.
     </t>
   </section>
 
@@ -350,7 +350,7 @@ Dubois, Camille, camille.dubois@example.net
     <t>
       The SEARCH method is subject to the same general security
       considerations as all HTTP methods as described in
-      <xref target="RFC7231"/>.
+      <xref target="RFCHTTP"/>.
     </t>
   </section>
 
@@ -359,7 +359,7 @@ Dubois, Camille, camille.dubois@example.net
     <t>
       IANA is requested to update the registration of the SEARCH method in the
       permanent registry at &lt;http://www.iana.org/assignments/http-methods&gt;
-      (see <xref target="RFC7231" section="8.1"/>).
+      (see <xref target="RFCHTTP" section="16.1.1"/>).
     </t>
 
     <table>
@@ -387,9 +387,16 @@ Dubois, Camille, camille.dubois@example.net
   <references title="Normative References">
     <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
     <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5323.xml"/>
-    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7230.xml"/>
-    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7231.xml"/>
-    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7232.xml"/>
+    <reference anchor="RFCHTTP">
+      <front>
+        <title>HTTP Semantics</title>
+        <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
+        <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
+        <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
+        <date year="2021" month="March" day="30"/>
+      </front>
+      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-15"/>
+    </reference>
   </references>
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
@@ -399,6 +406,7 @@ Dubois, Camille, camille.dubois@example.net
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
 <ul>
   <li>In <xref target="field.accept-search"/>, adjust the grammar to just define the field value (<eref target="https://github.com/httpwg/http-core/issues/1470"/>)</li>
+  <li>Update to latest HTTP core spec, and adjust terminology accordingly (<eref target="https://github.com/httpwg/http-core/issues/1473"/>)</li>
 </ul>
 </section>
 </section>
