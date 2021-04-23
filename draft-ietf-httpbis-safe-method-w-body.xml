@@ -253,27 +253,23 @@ q=foo&amp;limit=10&amp;sort=-published
 
   </section>
 
-  <section title="The &quot;Accept-Search&quot; Header Field" anchor="accept-search">
+  <section title="The &quot;Accept-Search&quot; Header Field" anchor="field.accept-search">
     <t>
       The "Accept-Search" response header field MAY be used by a server to
       directly signal support for the SEARCH method while identifying
       the specific query format Content-Type's that may be used.
     </t>
-
 <sourcecode type="abnf">
-Accept-Search = "Accept-Search" ":" 1#media-type
+Accept-Search = 1#media-type
 </sourcecode>
-
     <t>
       The Accept-Search header specifies a comma-separated listing of media
       types (with optional parameters) as defined by
       <xref target="RFC7231" sectionFormat="comma" section="3.1.1.1"/>.
     </t>
-
     <t>
       The order of types listed by the Accept-Search header is insignificant.
     </t>
-
   </section>
 
   <section title="Examples" anchor="examples">
@@ -398,9 +394,9 @@ Dubois, Camille, camille.dubois@example.net
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
-<t>
-  None yet.
-</t>
+<ul>
+  <li>In <xref target="field.accept-search"/>, adjust the grammar to just define the field value (<eref target="https://github.com/httpwg/http-core/issues/1470"/>)</li>
+</ul>
 </section>
 </section>
 
