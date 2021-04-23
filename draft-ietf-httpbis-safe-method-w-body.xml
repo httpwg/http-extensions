@@ -61,9 +61,9 @@
         source code and issues list for this draft can be found at
         <eref target="https://github.com/httpwg/http-extensions/labels/safe-method-w-body"/>.
       </t>
-      <!--<t>
-        The changes in this draft are summarized in <xref target="changes.since.14"/>.
-      </t>-->
+      <t>
+        The changes in this draft are summarized in <xref target="changes.since.00"/>.
+      </t>
     </note>
 
   </front>
@@ -395,5 +395,14 @@ Dubois, Camille, camille.dubois@example.net
     <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7231.xml"/>
     <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7232.xml"/>
   </references>
+
+<section title="Change Log" anchor="change.log" removeInRFC="true">
+<section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
+<t>
+  None yet.
+</t>
+</section>
+</section>
+
 </back>
 </rfc>
