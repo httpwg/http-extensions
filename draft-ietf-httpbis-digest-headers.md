@@ -466,12 +466,6 @@ In PATCH requests, the representation digest MUST be computed on the patch docum
 because the representation metadata refers to the patch document and not
 to the target resource (see Section 2 of {{?PATCH=RFC5789}}).
 
-In PATCH responses, the representation digest MUST be computed on the selected
-representation of the patched resource.
-
-`Digest` usage with PATCH is thus very similar to POST, but with the
-resource's own semantic partly implied by the method and by the patch document.
-
 # Deprecate Negotiation of Content-MD5 {#deprecate-contentMD5}
 
 This RFC deprecates the negotiation of Content-MD5 as it has been obsoleted by
