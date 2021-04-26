@@ -213,11 +213,7 @@ The representation digest is an integrity mechanism for HTTP resources
 which uses a checksum  that is calculated independently of the content
 (see Section 6.4 of {{SEMANTICS}}).
 It uses the representation data (see Section 8.1 of {{SEMANTICS}}),
-that can be fully or partially contained in the content, or not contained at all:
-
-~~~
-   representation-data := Content-Encoding( Content-Type( bits ) )
-~~~
+that can be fully or partially contained in the content, or not contained at all.
 
 This takes into account the effect of the HTTP semantics on the messages;
 for example, the content can be affected by Range Requests or methods such as HEAD,
@@ -243,12 +239,6 @@ computing the representation digest on an empty string
 
 The checksum is computed using one of the digest-algorithms listed in {{algorithms}}
 and then encoded in the associated format.
-
-The example below shows the  "sha-256" digest-algorithm that uses base64 encoding.
-
-~~~ example
-   sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-~~~
 
 # The Digest Field {#digest}
 
