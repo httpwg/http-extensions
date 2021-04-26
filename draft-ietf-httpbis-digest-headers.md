@@ -282,7 +282,11 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
 
-`Digest` can be sent in a trailer section. When an incremental digest-algorithm
+`Digest` can be sent in a trailer section.
+In this case,
+`Digest` MAY be merged in the header section (See Section 6.5.1 of {{SEMANTICS}}).
+
+When an incremental digest-algorithm
 is used, the sender and the receiver can dynamically compute the digest value
 while streaming the content.
 
@@ -1092,12 +1096,13 @@ might affect signature validation.
 
 ## Usage in Trailer Fields
 
+Before sending `Digest` in a trailer section, the sender
+should consider that intermediaries are explicitly allowed to drop any trailer
+(see Section 6.5.2 of {{SEMANTICS}}).
+
 When `Digest` is used in trailer fields, the receiver gets the digest value after the content
 and may thus be tempted to process the data before validating the digest value.
-It is prefereable that data is only be processed after validating the Digest.
-
-If received in trailers, `Digest` MUST NOT be discarded;
-instead, it MAY be merged in the header section (See Section 6.5.1 of {{SEMANTICS}}).
+It is preferable that data is only be processed after validating the Digest.
 
 Not every digest-algorithm is suitable for use in the trailer section, some may require to pre-process
 the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
