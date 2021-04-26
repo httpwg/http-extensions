@@ -267,7 +267,7 @@ The example below shows the  "sha-256" digest-algorithm that uses base64 encodin
 
 # The Digest Field {#digest}
 
-The `Digest` field contains a list of one or more representation digest values as
+The `Digest` field contains a comma-separated list of one or more representation digest values as
 defined in {{representation-digest}}. It can be used in both requests and
 responses.
 
@@ -307,7 +307,7 @@ A sender MAY send a representation-data-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
 that the recipient will ignore it.
 
-`Digest` can be sent in a trailer section. When an incremental digest-algorithms
+`Digest` can be sent in a trailer section. When an incremental digest-algorithm
 is used, the sender and the receiver can dynamically compute the digest value
 while streaming the content.
 
@@ -315,6 +315,7 @@ while streaming the content.
 
 The `Want-Digest` field indicates the sender's desire to receive a representation
 digest on messages associated with the request URI and representation metadata.
+It can be used in both requests and responses.
 
 ~~~
    Want-Digest = 1#want-digest-value
@@ -323,8 +324,8 @@ digest on messages associated with the request URI and representation metadata.
             ( "1"  [ "."  0*1( "0" ) ] )
 ~~~
 
-If a digest-algorithm is not accompanied by a "qvalue", it is treated as if its
-associated "qvalue" were 1.0.
+If a digest-algorithm is not accompanied by a "qvalue" (see Section 12.4.2 of{{SEMANTICS}}),
+it is treated as if its associated "qvalue" were 1.0.
 
 The sender is willing to accept a digest-algorithm if and only if it is listed
 in a `Want-Digest` field of a message, and its "qvalue" is non-zero.
