@@ -1461,8 +1461,18 @@ Location: /authors/123
 {"id": "123", "author": "Camilleri"}
 ~~~
 
+# Acknowledgements
+{:numbered="false"}
+The vast majority of this document is inherited from [RFC3230], so thanks
+to J. Mogul and A. Van Hoff for their great work.
+The original idea of refreshing this document arose from an interesting
+discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
+the MICE content coding.
 
 # FAQ
+{:numbered="false"}
+
+_RFC Editor: Please remove this section before publication._
 
 1. Why remove all references to content-md5?
 
@@ -1518,14 +1528,6 @@ Location: /authors/123
    precludes future work that would find a use for mid-stream trailers, for
    example an incremental digest-algorithm. A document defining such a
    digest-algorithm is best positioned to describe how it is used.
-
-# Acknowledgements
-{:numbered="false"}
-The vast majority of this document is inherited from [RFC3230], so thanks
-to J. Mogul and A. Van Hoff for their great work.
-The original idea of refreshing this document arose from an interesting
-discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
-the MICE content coding.
 
 
 # Code Samples
