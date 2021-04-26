@@ -141,20 +141,10 @@ HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
 [RFC3230] provided a more flexible solution introducing the concept of
 "instance", and the fields `Digest` and `Want-Digest`.
 
-## This Proposal
+## This Document
 
-The concept of `selected representation` defined in Section 3.2 of
-{{!SEMANTICS=I-D.ietf-httpbis-semantics}} makes [RFC3230] definitions inconsistent with
-current HTTP semantics. This document updates the `Digest` and `Want-Digest`
-field definitions to align with {{SEMANTICS}} concepts.
-
-Basing `Digest` on the selected representation makes it straightforward to
-apply it to use-cases where the transferred data does require some sort of
-manipulation to be considered a representation, or conveys a partial
-representation of a resource eg. Range Requests (see Section 14.2 of
-{{SEMANTICS}}).
-
-This document replaces [RFC3230] to better align with {{SEMANTICS}} and to
+This document replaces [RFC3230]
+to better align with {{!SEMANTICS=I-D.ietf-httpbis-semantics}} and to
 provide more detailed description of `Digest` usage in request and response
 cases. Changes are intended to be semantically compatible with existing
 implementations but note that negotiation of `Content-MD5` is deprecated
@@ -219,8 +209,8 @@ The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "content" in this document are to be
 interpreted as described in {{SEMANTICS}}.
 
-Algorithm names respect the casing used in their definition document (eg. SHA-1, CRC32c)
-whereas digest-algorithm tokens are quoted (eg. "sha", "crc32c").
+Algorithm names respect the casing used in their definition document (for example, SHA-1, CRC32c)
+whereas digest-algorithm tokens are quoted (for example, "sha", "crc32c").
 
 # Representation Digest {#representation-digest}
 
@@ -1093,7 +1083,7 @@ can protect one or more HTTP fields and there are additional considerations when
 `Digest` is included in this set.
 
 Since the `Digest` field is a hash of a resource representation, it explicitly
-depends on the `representation metadata` (eg. the values of `Content-Type`,
+depends on the `representation metadata` (for example, the values of `Content-Type`,
 `Content-Encoding` etc). A signature that protects `Digest` but not other
 `representation metadata` can expose the communication to tampering. For
 example, an actor could manipulate the `Content-Type` field-value and cause a
@@ -1124,7 +1114,7 @@ If received in trailers, `Digest` MUST NOT be discarded;
 instead, it MAY be merged in the header section (See Section 6.5.1 of {{SEMANTICS}}).
 
 Not every digest-algorithm is suitable for use in the trailer section, some may require to pre-process
-the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
+the whole payload before sending a message (for example, see {{?I-D.thomson-http-mice}}).
 
 ## Usage with Encryption
 
@@ -1348,7 +1338,7 @@ Specification document(s):  {{digest}} of this document
 
 The following examples show how representation metadata, payload transformations
 and method impacts on the message and content. When the content
-contains non-printable characters (eg. when it is compressed) it is shown as
+contains non-printable characters (for example, when it is compressed) it is shown as
 base64-encoded string.
 
 A request with a JSON object without any content coding.
