@@ -355,7 +355,7 @@ The Internet Assigned Numbers Authority (IANA) maintains a registry for
 digest-algorithm values.
 The registry is initialized with the tokens listed below.
 
-Deprecated digest algorithms MUST not be used:
+Deprecated digest algorithms MUST NOT be used:
 
 - "md5", see [CMU-836068] and {{?NO-MD5=RFC6151}};
 - "sha", see [IACR-2020-014] and {{?NO-SHA1=RFC6194}}.
