@@ -453,6 +453,13 @@ representation of the patched resource.
 `Digest` usage with PATCH is thus very similar to POST, but with the
 resource's own semantic partly implied by the method and by the patch document.
 
+## Digest and Content-Location in Responses {#digest-and-content-location}
+
+When a state-changing method returns the `Content-Location` header field, the
+enclosed representation refers to the resource identified by its value and
+`Digest` is computed accordingly.
+
+
 # Relationship to Subresource Integrity (SRI) {#sri}
 
 Subresource Integrity [SRI] is an integrity mechanism that shares some
@@ -996,32 +1003,16 @@ Want-Digest: sha-256, sha-512
 ## Digest Does Not Protect the Full HTTP Message
 
 This document specifies a data integrity mechanism that protects HTTP
-`representation data`, but not HTTP `representation metadata` fields, from
+`representation data`, but not HTTP header and trailer fields, from
 certain kinds of accidental corruption.
 
 `Digest` is not intended to be a general protection against malicious tampering with
 HTTP messages. This can be achieved by combining it with other approaches such
 as transport-layer security or digital signatures.
 
-## Broken Cryptographic Algorithms {#broken-algorithms}
-
-Cryptographic algorithms are intended to provide a proof of integrity suited
-towards cryptographic constructions such as signatures.
-
-However, these rely on collision-resistance for their security proofs
-[CMU-836068]. The "md5" and "sha" digest-algorithms are vulnerable to collisions attacks,
-so they MUST NOT be used with `Digest`.
-
-## Other Deprecated Algorithms {#deprecated-algorithms}
-
-The ADLER32 algorithm defined in [RFC1950] has been deprecated by [RFC3309]
-because, under certain conditions, it provides weak detection of errors. It is now
-NOT RECOMMENDED for use with `Digest`.
-
 ## Digest for End-to-End Integrity
 
-`Digest` only covers the `representation data` and not the
-`representation metadata`. `Digest` could help protect the `representation data`
+`Digest` could help protect the `representation data`
 from buggy manipulation, undesired "transforming proxies" (see Section 7.7 of {{SEMANTICS}})
 or other actions as the data passes across multiple hops or system boundaries.
 Even a simple mechanism for end-to-end `representation data` integrity is valuable
@@ -1036,13 +1027,6 @@ apply different content codings.
 Note that using `Digest` alone does not provide end-to-end integrity of HTTP messages over
 multiple hops, since metadata could be manipulated at any stage. Methods to protect
 metadata are discussed in {{usage-in-signatures}}.
-
-## Digest and Content-Location in Responses {#digest-and-content-location}
-
-When a state-changing method returns the `Content-Location` header field, the
-enclosed representation refers to the resource identified by its value and
-`Digest` is computed accordingly.
-
 
 ## Usage in Signatures {#usage-in-signatures}
 
@@ -1117,7 +1101,7 @@ or by sending multiple representation-data-digest values from which the receiver
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{digest}}).
 
-### Duplicate digest-algorithm in field value
+## Duplicate digest-algorithm in field value
 
 An endpoint might receive multiple representation-data-digest values (see {{digest}}) that use the same digest-algorithm with different or identical digest-values. For example:
 
