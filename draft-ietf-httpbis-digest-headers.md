@@ -123,8 +123,8 @@ diagnosis across hops and system boundaries, and can be used to validate
 integrity when reconstructing a representation fetched using different HTTP
 connections.
 
-This document defines a mechanism that acts on HTTP representation data.
-It can be combined with other mechanisms that protect representation metadata, such as
+This document defines a mechanism that acts on HTTP representation-data. It can
+be combined with other mechanisms that protect representation-metadata, such as
 digital signatures, in order to protect the desired parts of an HTTP exchange in
 whole or in part.
 
@@ -416,13 +416,13 @@ To allow sender and recipient to provide a checksum which is independent from
 
   {: vspace="0"}
   id-sha-512
-  : * Description: The sha-512 digest of the representation data of the resource when no
+  : * Description: The sha-512 digest of the representation-data of the resource when no
     content coding is applied
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
   id-sha-256
-  : * Description: The sha-256 digest of the representation data of the resource when no
+  : * Description: The sha-256 digest of the representation-data of the resource when no
       content coding is applied
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
@@ -439,7 +439,7 @@ semantically acting on resources. The enclosed representation, including its
 metadata, refers to that action.
 
 In these requests the representation digest MUST be computed on the
-representation data of that action.
+representation-data of that action.
 This is the only possible choice because representation digest requires complete
 representation metadata (see {{representation-digest}}).
 
@@ -873,7 +873,7 @@ Note that a `204 No Content` response without content but with the same
 
 ## Error responses
 
-In error responses, the representation data does not necessarily refer to the
+In error responses, the representation-data does not necessarily refer to the
 target resource. Instead, it refers to the representation of the error.
 
 In the following example a client attempts to patch the resource located at
