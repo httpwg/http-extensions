@@ -348,15 +348,15 @@ Digest-algorithm values are used to indicate a specific digest computation.
    digest-algorithm = token
 ~~~
 
-All digest-algorithm values are case-insensitive
-but lower case is preferred.
+All digest-algorithm token values are case-insensitive
+but lower case is preferred;
+digest-algorithm token values MUST be compared in a case-insensitive fashion.
 
-The Internet Assigned Numbers Authority (IANA) acts as a registry for
+The Internet Assigned Numbers Authority (IANA) maintains a registry for
 digest-algorithm values.
-The registry contains the tokens listed below.
+The registry is initialized with the tokens listed below.
 
-Some digest-algorithms, although registered, rely on vulnerable algorithms
-and MUST not be used:
+Deprecated digest algorithms MUST NOT be used:
 
 - "md5", see [CMU-836068] and {{?NO-MD5=RFC6151}};
 - "sha", see [IACR-2020-014] and {{?NO-SHA1=RFC6194}}.
@@ -381,7 +381,7 @@ See the references above for further information.
   : * Description: The MD5 algorithm, as specified in [RFC1321].
       The output of this algorithm is encoded using the
       base64 encoding  [RFC4648].
-      This digest-algorithm MUST NOT be used as it's now vulnerable
+      This digest-algorithm is now vulnerable
       to collision attacks. See {{NO-MD5}} and [CMU-836068].
     * Reference: [RFC1321], [RFC4648], this document.
     * Status: deprecated
@@ -389,7 +389,7 @@ See the references above for further information.
   sha
   : * Description:  The SHA-1 algorithm [RFC3174].  The output of this
       algorithm is encoded using the base64 encoding  [RFC4648].
-      This digest-algorithm MUST NOT be used as it's now vulnerable
+      This digest-algorithm is now vulnerable
       to collision attacks. See {{NO-SHA1}} and [IACR-2020-014].
     * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
     * Status: deprecated
