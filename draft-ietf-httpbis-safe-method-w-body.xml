@@ -181,9 +181,11 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
 
     <t>
-      In this document, the key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
-      "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
-      are to be  interpreted as described in <xref target="RFC2119" />.
+      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.
     </t>
 
   </section>
@@ -389,6 +391,7 @@ Dubois, Camille, camille.dubois@example.net
   <references title="Normative References">
     <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
     <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5323.xml"/>
+    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
     <reference anchor="RFCHTTP">
       <front>
         <title>HTTP Semantics</title>
