@@ -223,7 +223,7 @@ q=foo&amp;limit=10&amp;sort=-published
       SEARCH requests that use the text/xml or application/xml media types
       &MUST; be processed per the requirements established by
       <xref target="RFC5323" />.
-      <cref anchor="xml">This can be relaxed to XML with a document element in the "DAV:" namespace, or even to the two element names mentionbed in <xref target="RFC5323" section="2.2.2"/>.</cref>
+      <cref anchor="xml">This can be relaxed to XML with a document element in the "DAV:" namespace, or even to the two element names mentioned in <xref target="RFC5323" section="2.2.2"/>.</cref>
     </t>
 
     <t>
