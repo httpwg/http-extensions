@@ -7,6 +7,18 @@
 <?rfc comments="yes"?>
 <?rfc inline="yes"?>
 <?rfc-ext xml2rfc-backend="202007"?>
+<!DOCTYPE rfc [
+  <!ENTITY MAY "<bcp14>MAY</bcp14>">
+  <!ENTITY MUST "<bcp14>MUST</bcp14>">
+  <!ENTITY MUST-NOT "<bcp14>MUST NOT</bcp14>">
+  <!ENTITY OPTIONAL "<bcp14>OPTIONAL</bcp14>">
+  <!ENTITY RECOMMENDED "<bcp14>RECOMMENDED</bcp14>">
+  <!ENTITY REQUIRED "<bcp14>REQUIRED</bcp14>">
+  <!ENTITY SHALL "<bcp14>SHALL</bcp14>">
+  <!ENTITY SHALL-NOT "<bcp14>SHALL NOT</bcp14>">
+  <!ENTITY SHOULD "<bcp14>SHOULD</bcp14>">
+  <!ENTITY SHOULD-NOT "<bcp14>SHOULD NOT</bcp14>">
+]>
 <rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" updates="5323" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
   <front>
     <title>
@@ -205,11 +217,11 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
 
     <t>
-      The body payload of the request defines the query. Implementations MAY use
+      The body payload of the request defines the query. Implementations &MAY; use
       a request body of any content type with the SEARCH method; however,
       for backwards compatibility with existing WebDAV implementations,
       SEARCH requests that use the text/xml or application/xml media types
-      MUST be processed per the requirements established by
+      &MUST; be processed per the requirements established by
       <xref target="RFC5323" />.
       <cref anchor="xml">This can be relaxed to XML with a document element in the "DAV:" namespace, or even to the two element names mentionbed in <xref target="RFC5323" section="2.2.2"/>.</cref>
     </t>
@@ -239,7 +251,7 @@ q=foo&amp;limit=10&amp;sort=-published
     <t>
       The response to a SEARCH request is not cacheable. It ought to be noted,
       however, that because SEARCH requests are safe and idempotent, responses
-      to a SEARCH MUST NOT invalidate previously cached responses to other
+      to a SEARCH &MUST-NOT; invalidate previously cached responses to other
       requests directed at the same effective request URI.
       <cref anchor="cache">By default, that is. We need to figure out under which conditions we can make the result cacheable.</cref>
     </t>
@@ -259,7 +271,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
   <section title="The &quot;Accept-Search&quot; Header Field" anchor="field.accept-search">
     <t>
-      The "Accept-Search" response header field MAY be used by a server to
+      The "Accept-Search" response header field &MAY; be used by a server to
       directly signal support for the SEARCH method while identifying
       the specific query format media types that may be used.
     </t>
