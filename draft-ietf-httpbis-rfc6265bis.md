@@ -337,8 +337,8 @@ project at {{PSL}}.
 The term "request", as well as a request's "client", "current url", "method",
 "target browsing context", and "url list", are defined in {{FETCH}}.
 
-The term "non-HTTP APIs" refers to non-HTTP methods used to set and retrieve
-cookies, such as a web browser API that exposes cookies to scripts.
+The term "non-HTTP APIs" refers to non-HTTP mechanisms used to set and retrieve cookies,
+such as a web browser API that exposes cookies to scripts.
 
 # Overview
 
@@ -1570,7 +1570,7 @@ retrieval occurs within a third-party context (see {{third-party-cookies}}).
 
 If a user agent does return cookies for a given call to a "non-HTTP" API with an
 associated Document, then the user agent MUST compute the cookie-string following
-the algorithm defined in {{retrieval-algorithm}, whereby the retrieval-uri is the
+the algorithm defined in {{retrieval-algorithm)}, whereby the retrieval-uri is the
 associated Document's URL. The retrieval is same-site if the Document's "site for
 cookies" is same-site with the top-level origin as defined in {{document-requests}}.
 
