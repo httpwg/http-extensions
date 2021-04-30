@@ -755,6 +755,23 @@ practical barriers to determining reasonable stream concurrency limits depending
 on the information that is available to them from the QUIC transport layer.
 TODO: so what can we suggest?
 
+# Retransmission Considerations in QUIC Transport
+
+{{!I-D.ietf-quic-transport}} states endpoints SHOULD prioritize retransmission
+over sending new data, unless otherwise specified by application. When priority
+scheme presented in this document is used, QUIC transport layer MAY take stream
+priorities into account when it has both retransmission data and new data to
+send. For example, if one stream with higher urgency has new data to send and 
+another stream with lower urgency has retransmission data to send, a QUIC
+transport may choose to schedule the higher urgency new data before the lower
+urgency retransmission data.
+
+Another consideration is prioritizing among different streams when sending
+probe packets as desribed in Section 6.2.4 in {{!I-D.ietf-quic-recovery}}. An
+implementation MAY choose a different strategy of probe data prioritization 
+from prioritizing data deemed lost by loss detection algorithm in Section 6.1
+in {{!I-D.ietf-quic-recovery}}.
+
 # IANA Considerations
 
 This specification registers the following entry in the Permanent Message Header
