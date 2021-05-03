@@ -39,12 +39,16 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Proxy-Status
 
+*Sent to IESG*
+
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-proxy-status.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-proxy-status.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-proxy-status) (less recent, more official)
 * [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aproxy-status) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-proxy-status/)
 
 
 ### Cache-Status
+
+*Sent to IESG*
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-cache-header.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-cache-header.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-cache-header) (less recent, more official)
@@ -59,6 +63,8 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 
 ### Building Protocols with HTTP (BCP56bis)
+
+*Sent to IESG*
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-bcp56bis.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-bcp56bis.txt))
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-bcp56bis) (less recent, more official)
