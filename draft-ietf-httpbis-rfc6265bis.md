@@ -469,14 +469,13 @@ the user agent.
 
 ### Syntax {#abnf-syntax}
 
-Informally, the Set-Cookie response header contains the header name
-"Set-Cookie" followed by a ":" and a cookie. Each cookie begins with a
+Informally, the Set-Cookie response header contains a cookie, which begins with a
 name-value-pair, followed by zero or more attribute-value pairs. Servers
 SHOULD NOT send Set-Cookie headers that fail to conform to the following
 grammar:
 
 ~~~ abnf
-set-cookie-header = "Set-Cookie:" SP BWS set-cookie-string
+set-cookie        = set-cookie-string
 set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
 cookie-pair       = cookie-name BWS "=" BWS cookie-value
 cookie-name       = 1*cookie-octet
@@ -761,7 +760,7 @@ conforms to the requirements in {{ua-requirements}}), the user agent will send a
 header that conforms to the following grammar:
 
 ~~~ abnf
-cookie-header = "Cookie:" SP cookie-string
+cookie        = cookie-string
 cookie-string = cookie-pair *( ";" SP cookie-pair )
 ~~~
 
