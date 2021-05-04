@@ -186,8 +186,8 @@ behind the server that the client is directly connected to.
 
 The SETTINGS frame precedes any priority signal sent from a client in HTTP/2, so
 a server can determine if it should respect the HTTP/2 scheme before building
-state. A server that receives SETTINGS_DEPRECATE_HTTP2_PRIORITIES MUST ignore
-HTTP/2 priority signals.
+state. A server that receives SETTINGS_DEPRECATE_HTTP2_PRIORITIES with value of
+1 MUST ignore HTTP/2 priority signals.
 
 Where both endpoints disable HTTP/2 priorities, the client is expected to send
 this scheme's priority signal. Handling of omitted signals is described in
