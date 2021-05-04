@@ -1565,7 +1565,7 @@ from setting cookies (see {{third-party-cookies}}).
 
 If the user agent does attach a Cookie header field to an HTTP request, the
 user agent MUST compute the cookie-string following the algorithm defined in
-{{retrieval-algorithm)}, indicating that the retrieval is for an HTTP request.
+{{retrieval-algorithm}}, indicating that the retrieval is for an HTTP request.
 The retrieval-uri is defined as the request-uri and the same-site status of the
 retrieval is computed for the HTTP request as defined in
 {{same-site-requests}}.
@@ -1581,7 +1581,7 @@ when a retrieval occurs within a third-party context (see
 
 If a user agent does return cookies for a given call to a "non-HTTP" API with
 an associated Document, then the user agent MUST compute the cookie-string
-following the algorithm defined in {{retrieval-algorithm)}, indicating that the
+following the algorithm defined in {{retrieval-algorithm}}, indicating that the
 retrieval is from a "non-HTTP" API. The retrieval-uri is the associated
 Document's cookie URL {{COOKIE-URL}}, and the retrieval is same-site if the
 Document's "site for cookies" is same-site with the top-level origin as defined
