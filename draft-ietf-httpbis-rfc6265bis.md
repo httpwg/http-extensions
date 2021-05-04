@@ -89,6 +89,13 @@ normative:
       ins: D. Denicola
       name: Domenic Denicola
       organization: Google, Inc.
+  COOKIE-URL:
+    target: https://html.spec.whatwg.org/#cookie-url
+    title: HTML - Living Standard
+    date: 2021-05-04
+    author:
+    -
+      org: WHATWG
   SAMESITE:
     target: https://html.spec.whatwg.org/#same-site
     title: HTML - Living Standard
@@ -1539,9 +1546,11 @@ set to false.
 
 ## Retrieval Model {#retrieval-model}
 
-This section defines how cookies are retrieved from a cookie store in the form of
-a cookie-string. A cookie-string may be used to build a Cookie header for an HTTP
-request, or may be returned from a "non-HTTP" API that provides access to cookies.
+This section defines how cookies are retrieved from a cookie store in the form
+of a cookie-string. A "retrieval " is any event which requires generating a
+cookie-string. For example, a retrieval may occur in order to build a Cookie
+header for an HTTP request, or may be required in order to return a
+cookie-string from a call to a "non-HTTP" API that provides access to cookies.
 
 ### The Cookie Header {#cookie}
 
@@ -1555,29 +1564,35 @@ user agent might wish to block sending cookies during "third-party" requests
 from setting cookies (see {{third-party-cookies}}).
 
 If the user agent does attach a Cookie header field to an HTTP request, the
-user agent MUST send the cookie-string as the value of the
-header field. The cookie-string is computed as defined in {{retrieval-algorithm}},
-whereby the retrieval-uri is defined as the request-uri and the same-site status
-is computed for the HTTP request as defined in {{same-site-requests}}.
+user agent MUST compute the cookie-string following the algorithm defined in
+{{retrieval-algorithm)}, indicating that the retrieval is for an HTTP request.
+The retrieval-uri is defined as the request-uri and the same-site status of the
+retrieval is computed for the HTTP request as defined in
+{{same-site-requests}}.
 
 ### Non-HTTP APIs {#non-http}
 
 The user agent MAY implement "non-HTTP" APIs that can be used to access
 stored cookies.
 
-A user agent MAY return an empty cookie-string in certain contexts, such as when
-retrieval occurs within a third-party context (see {{third-party-cookies}}).
+A user agent MAY return an empty cookie-string in certain contexts, such as
+when a retrieval occurs within a third-party context (see
+{{third-party-cookies}}).
 
-If a user agent does return cookies for a given call to a "non-HTTP" API with an
-associated Document, then the user agent MUST compute the cookie-string following
-the algorithm defined in {{retrieval-algorithm)}, whereby the retrieval-uri is the
-associated Document's URL. The retrieval is same-site if the Document's "site for
-cookies" is same-site with the top-level origin as defined in {{document-requests}}.
+If a user agent does return cookies for a given call to a "non-HTTP" API with
+an associated Document, then the user agent MUST compute the cookie-string
+following the algorithm defined in {{retrieval-algorithm)}, indicating that the
+retrieval is from a "non-HTTP" API. The retrieval-uri is the associated
+Document's cookie URL {{COOKIE-URL}}, and the retrieval is same-site if the
+Document's "site for cookies" is same-site with the top-level origin as defined
+in {{document-requests}}.
 
 ### Retrieval Algorithm {#retrieval-algorithm}
 
-Given a cookie store, a retrieval-uri, and the same-site status of the
-retrieval-uri, the following algorithm returns a cookie-string.
+The following algorithm returns a cookie-string from a given cookie store.
+Callers of this algorithm MUST provide a retrieval-uri, indicate the same-site
+status of the retrieval, and indicate whether the retrieval is for an HTTP
+request or from a "non-HTTP" API.
 
 1. Let cookie-list be the set of cookies from the cookie store that meets all
    of the following requirements:
@@ -1604,7 +1619,7 @@ retrieval-uri, the following algorithm returns a cookie-string.
      protocol.
 
    * If the cookie's http-only-flag is true, then exclude the cookie if the
-     cookie-string is being generated for a "non-HTTP" API.
+     retrieval is for a "non-HTTP" API.
 
    * If the cookie's same-site-flag is not "None" and the retrieval's same-site
      status is "cross-site", then exclude the cookie unless all of the following
