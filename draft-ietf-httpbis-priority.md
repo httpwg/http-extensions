@@ -170,23 +170,19 @@ be 0 or 1. Any value other than 0 or 1 MUST be treated as a connection error
 (see {{!RFC7540}}, Section 5.4.1) of type PROTOCOL_ERROR.
 
 Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
-When the peer receives the first SETTINGS frame, it learns the sender has
-deprecated the HTTP/2 priority scheme if it receives the
-SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter with the value of 1.
-
 A sender MUST NOT change the SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter value
 after the first SETTINGS frame. Detection of a change by a receiver MUST be
 treated as a connection error of type PROTOCOL_ERROR.
 
 Until the client receives the SETTINGS frame from the server, the client SHOULD
 send both the priority signal defined in the HTTP/2 priority scheme and also
-that of this prioritization scheme. Once the client learns that the HTTP/2
-priority scheme is deprecated, it SHOULD stop sending the HTTP/2 priority
-signals. If the client learns that the HTTP/2 priority scheme is not deprecated,
-it SHOULD stop sending PRIORITY_UPDATE frames ({{h2-update-frame}}), but MAY
-continue sending the Priority header field ({{header-field}}), as it is an
-end-to-end signal that might be useful to nodes behind the server that the
-client is directly connected to.
+that of this prioritization scheme. When the client receives the first SETTINGS
+frame that contains the SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter with value
+of 1, it SHOULD stop sending the HTTP/2 priority signals. If the value was 0 or
+if the settings parameter was absent, it SHOULD stop sending PRIORITY_UPDATE
+frames ({{h2-update-frame}}), but MAY continue sending the Priority header field
+({{header-field}}), as it is an end-to-end signal that might be useful to nodes
+behind the server that the client is directly connected to.
 
 The SETTINGS frame precedes any priority signal sent from a client in HTTP/2, so
 a server can determine if it should respect the HTTP/2 scheme before building
