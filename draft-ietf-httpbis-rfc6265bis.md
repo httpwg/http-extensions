@@ -350,7 +350,7 @@ caches from storing and reusing a response.
 
 Origin servers SHOULD NOT fold multiple Set-Cookie header fields into a single
 header field. The usual mechanism for folding HTTP headers fields (i.e., as
-defined in Section 5.4.1 of {{HTTPSEM}}) might change the semantics of the Set-Cookie header
+defined in Section 5.3 of {{HTTPSEM}}) might change the semantics of the Set-Cookie header
 field because the %x2C (",") character is used by Set-Cookie in a way that
 conflicts with such folding.
 
