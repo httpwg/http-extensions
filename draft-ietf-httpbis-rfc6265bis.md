@@ -471,7 +471,7 @@ cookie-av         = expires-av / max-age-av / domain-av /
                     samesite-av / extension-av
 expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
-    <IMF-fixdate, defined in [HTTPSEM], Section 5.7.7>
+    <IMF-fixdate, defined in [HTTPSEM], Section 5.6.7>
 max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
                       ; In practice, both expires-av and max-age-av
                       ; are limited to dates representable by the
