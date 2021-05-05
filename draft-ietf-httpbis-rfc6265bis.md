@@ -282,7 +282,7 @@ CHAR (any {{USASCII}} character), VCHAR (any visible {{USASCII}} character),
 and WSP (whitespace).
 
 The OWS (optional whitespace) and BWS (bad whitespace) rules are defined in
-Section 5.7.3 of {{!HTTPSEM=I-D.ietf-httpbis-semantics}}.
+Section 5.6.3 of {{!HTTPSEM=I-D.ietf-httpbis-semantics}}.
 
 ## Terminology
 
