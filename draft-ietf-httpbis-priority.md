@@ -767,10 +767,10 @@ transport may choose to schedule the higher urgency new data before the lower
 urgency retransmission data.
 
 Another consideration is prioritizing among different streams when sending
-probe packets as desribed in Section 6.2.4 in {{!I-D.ietf-quic-recovery}}. An
+probe packets as desribed in Section 6.2.4 in {{?I-D.ietf-quic-recovery}}. An
 implementation MAY choose a different strategy of probe data prioritization 
 from prioritizing data deemed lost by loss detection algorithm in Section 6.1
-in {{!I-D.ietf-quic-recovery}}.
+in {{?I-D.ietf-quic-recovery}}.
 
 # IANA Considerations
 
