@@ -294,7 +294,7 @@ the user agent is sending an HTTP request or from which it is receiving an HTTP
 response (i.e., the name of the host to which it sent the corresponding HTTP
 request).
 
-The term request-uri refers to "request target" as defined in Section 6.1.1 of {{HTTPSEM}}.
+The term request-uri refers to "request target" as defined in Section 7.1 of {{HTTPSEM}}.
 
 Two sequences of octets are said to case-insensitively match each other if and
 only if they are equivalent under the i;ascii-casemap collation defined in
