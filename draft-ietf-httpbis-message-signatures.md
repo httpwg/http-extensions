@@ -26,7 +26,7 @@ author:
     region: WA
     code: 98108-1226
     country: United States of America
-
+    role: editor
 
   - ins: J. Richer
     name: Justin Richer
@@ -47,7 +47,6 @@ author:
 
 normative:
     RFC2104:
-    RFC7230:
     FIPS186-4:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
@@ -58,11 +57,11 @@ normative:
         date: 2018
 
 informative:
-    RFC3339:
     RFC6234:
+    RFC7517:
+    RFC7518:
     RFC7239:
     RFC8017:
-    RFC8032:
     WP-HTTP-Sig-Audit:
         target: https://web-payments.org/specs/source/http-signatures-audit/
         title: Security Considerations for HTTP Signatures
@@ -76,14 +75,16 @@ This document describes a mechanism for creating, encoding, and verifying digita
 
 *RFC EDITOR: please remove this section before publication*
 
-This draft is based on draft-cavage-http-signatures-12.  [The community](https://github.com/w3c-dvcg/http-signatures/issues?page=2&q=is%3Aissue+is%3Aopen) and the authors have identified several issues with the current text.  Additionally, the authors have identified a number of features that are required in order to support additional use cases.  In order to preserve continuity with the effort that has been put into draft-cavage-http-signatures-12, this draft maintains normative compatibility with it, and thus does not address these issues or include these features, as doing so requires making backwards-incompatible changes to normative requirements.  While such changes are inevitable, the editor recommends that they be driven by working group discussion following adoption of the draft (see {{wg-discuss}}).  The editor requests that the working group recognize the intent of this initial draft and this recommendation when considering adoption of this draft.
+Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
+Working Group information can be found at <https://httpwg.org/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/signatures>.
 
 --- middle
 
 # Introduction {#intro}
 
-Message integrity and authenticity are important security properties that are critical to the secure operation of many {{!HTTP=RFC7230}} applications.  Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
+Message integrity and authenticity are important security properties that are critical to the secure operation of many HTTP applications.
+Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
 
 This document defines a mechanism for providing end-to-end integrity and authenticity for content within an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only that content within the message that is meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
 
@@ -93,25 +94,24 @@ The mechanism described in this document consists of three parts:
 - Algorithms for generating and verifying signatures over HTTP message content using this nomenclature and rule set.
 - A mechanism for attaching a signature and related metadata to an HTTP message.
 
-
 ## Requirements Discussion
 
-HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was oringally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signed content.  Since the raw bytes of the message cannot be relied upon as signed content, the signer and verifier must derive the signed content from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
+HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was originally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signed content.  Since the raw bytes of the message cannot be relied upon as signed content, the signer and verifier must derive the signed content from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
 
 For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the body, or the `Date` header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message content is signed.
 
 HTTP applications may be running in environments that do not provide complete access to or control over HTTP messages (such as a web browser's JavaScript environment), or may be using libraries that abstract away the details of the protocol (such as [the Java HTTPClient library](https://openjdk.java.net/groups/net/httpclient/intro.html)).  These applications need to be able to generate and verify signatures despite incomplete knowledge of the HTTP message.
 
-## HTTP Message Transformations {#about_sigs}
+## HTTP Message Transformations {#transforms}
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:
 
-- Re-ordering of header fields with different header field names ({{HTTP}}, Section 3.2.2).
-- Combination of header fields with the same field name ({{HTTP}}, Section 3.2.2).
-- Removal of header fields listed in the `Connection` header field ({{HTTP}}, Section 6.1).
-- Addition of header fields that indicate control options ({{HTTP}}, Section 6.1).
-- Addition or removal of a transfer coding ({{HTTP}}, Section 5.7.2).
-- Addition of header fields such as `Via` ({{HTTP}}, Section 5.7.1) and `Forwarded` ([RFC7239], Section 4).
+- Re-ordering of header fields with different header field names ({{MESSAGING}}, Section 3.2.2).
+- Combination of header fields with the same field name ({{MESSAGING}}, Section 3.2.2).
+- Removal of header fields listed in the `Connection` header field ({{MESSAGING}}, Section 6.1).
+- Addition of header fields that indicate control options ({{MESSAGING}}, Section 6.1).
+- Addition or removal of a transfer coding ({{MESSAGING}}, Section 5.7.2).
+- Addition of header fields such as `Via` ({{MESSAGING}}, Section 5.7.1) and `Forwarded` ([RFC7239], Section 4).
 
 ## Safe Transformations
 
@@ -119,11 +119,13 @@ Based on the definition of HTTP and the requirements described above, we can ide
 
 - Combination of header fields with the same field name.
 - Reordering of header fields with different names.
-- Conversion between HTTP/1.x and HTTP/2, or vice-versa.
+- Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive content such as header field names, request URI scheme, or host.
 - Addition or removal of leading or trailing whitespace to a header field value.
 - Addition or removal of `obs-folds`.
-- Changes to the `request-target` and `Host` header field that when applied together do not result in a change to the message's effective request URI, as defined in Section 5.5 of {{!HTTP}}.
+- Changes to the `request-target` and `Host` header field that when applied together do not
+  result in a change to the message's effective request URI, as defined in Section 5.5 of
+  {{MESSAGING}}.
 
 Additionally, all changes to content not covered by the signature are considered safe.
 
@@ -132,62 +134,103 @@ Additionally, all changes to content not covered by the signature are considered
 
 {::boilerplate bcp14}
 
-The terms "HTTP message", "HTTP method", "HTTP request", "HTTP response", `absolute-form`, `absolute-path`, "effective request URI", "gateway", "header field", "intermediary", `request-target`, "sender", and "recipient" are used as defined in [RFC7230].
+The terms "HTTP message", "HTTP request", "HTTP response",
+`absolute-form`, `absolute-path`, "effective request URI",
+"gateway", "header field", "intermediary", `request-target`,
+"sender", and "recipient" are used as defined in {{!MESSAGING=RFC7230}}.
+
+The term "method" is to be interpreted as defined in Section 4 of {{!SEMANTICS=RFC7231}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs.  Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string.  The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
 In addition to those listed above, this document uses the following terms:
 
-Decimal String
-: 
-: An Integer String optionally concatenated with a period "." followed by a second Integer String, representing a positive real number expressed in base 10.  The first Integer String represents the integral portion of the number, while the optional second Integer String represents the fractional portion of the number.  (( Editor's note: There's got to be a definition for this that we can reference. ))
-
-Integer String
-: 
-: A US-ASCII string of one or more digits "0-9", representing a positive integer in base 10. (( Editor's note: There's got to be a definition for this that we can reference. ))
-
-Signer
-: 
+{: vspace="0"}
+Signer:
 : The entity that is generating or has generated an HTTP Message Signature.
 
-Verifier
-: 
+Verifier:
 : An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.
 
-This document contains non-normative examples of partial and complete HTTP messages.  To improve readability, header fields may be split into multiple lines, using the `obs-fold` syntax.  This syntax is deprecated in [RFC7230], and senders MUST NOT generate messages that include it.
+Covered Content:
+: An ordered list of content identifiers for headers ({{http-header}}) and specialty content ({{specialty-content}}) that indicates the metadata and message content that is covered by the signature, not including the `@signature-params` specialty field itself.
 
+HTTP Signature Algorithm:
+: A cryptographic algorithm that describes the signing and verification process for the signature. When expressed explicitly, the value maps to a string defined in the HTTP Signature Algorithms Registry defined in this document.
 
-# Identifying and Canonicalizing Content {#content-identifiers}
+Key Material:
+: The key material required to create or verify the signature. The key material is often identified with an explicit key identifier, allowing the signer to indicate to the verifier which key was used.
 
-In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for signature metadata and discrete pieces of message content that may be covered by an HTTP Message Signature.
+Creation Time:
+: A timestamp representing the point in time that the signature was generated, as asserted by the signer.
 
-Some content within HTTP messages may undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such innocuous transformations.  This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.
+Expiration Time:
+: A timestamp representing the point in time at which the signature expires, as asserted by the signer. A signature's expiration time could be undefined, indicating that the signature does not expire from the perspective of the signer.
 
-The following sections define content identifiers, their associated content, and their canonicalization rules.
+The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
-## HTTP Header Fields
+This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
 
-An HTTP header field is identified by its header field name.  While HTTP header field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers.
+## Application of HTTP Message Signatures {#application}
 
-An HTTP header field value is canonicalized as follows:
+HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
+
+- The set of [content identifiers](#covered-content) that are expected and required. For example, an authorization protocol could mandate that the `Authorization` header be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting HTTP message bodies could require the `Digest` header to be present and covered.
+- A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means.
+- A means of determining the signature algorithm used to verify the signature content is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
+- A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
+
+The details of this kind of profiling are the purview of the application and outside the scope of this specification.
+
+# HTTP Message Signature Covered Content {#covered-content}
+
+In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for data items covered by an HTTP Message Signature as well as the means for combining these canonicalized values into a signature input string.
+
+Some content within HTTP messages can undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.
+
+Content identifiers are defined using production grammar defined by [RFC8941, Section 4](#RFC8941).
+The content identifier is an `sf-string` value. The content identifier
+type MAY define parameters which are included using the `parameters` rule.
+
+~~~ abnf
+content-identifier = sf-string parameters
+~~~
+
+Note that this means the value of the identifier itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`.
+
+The following sections define content identifier types, their parameters, their associated content, and their canonicalization rules. The method for combining content identifiers into the signature input string is defined in {{create-sig-input}}.
+
+## HTTP Headers {#http-header}
+
+The content identifier for an HTTP header is the lowercased form of its header field name. While HTTP header field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as content identifiers.
+
+Unless overridden by additional parameters and rules, the HTTP header field value MUST be canonicalized with the following steps:
 
 1. Create an ordered list of the field values of each instance of the header field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list.
-3. Concatenate the list items together, with a comma "," and space " " between each item. The resulting string is the canonicalized value.
+3. Concatenate the list items together, with a comma "," and space " " between each item. 
 
+The resulting string is the canonicalized value.
+
+### Canonicalized Structured HTTP Headers {#http-header-structured}
+
+If value of the the HTTP header in question is a structured field ({{!RFC8941}}), the content identifier MAY include the `sf` parameter. If this
+parameter is included, the HTTP header value MUST be canonicalized using the rules specified in [Section 4 of RFC8941](#RFC8941). Note that this process
+will replace any optional whitespace with a single space.
+
+The resulting string is used as the field value input in {{http-header}}.
 
 ### Canonicalization Examples
 
 This section contains non-normative examples of canonicalized values for header fields, given the following example HTTP message:
 
-~~~
-HTTP/1.1 200 OK
+~~~ http-message
 Server: www.example.com
 Date: Tue, 07 Jun 2014 20:51:35 GMT
-X-OWS-Header:   Leading and trailing whitespace.   
-X-Obs-Fold-Header: Obsolete  
+X-OWS-Header:   Leading and trailing whitespace.    
+X-Obs-Fold-Header: Obsolete
     line folding.
-X-Empty-Header: 
+X-Empty-Header:
 Cache-Control: max-age=60
 Cache-Control:    must-revalidate
 ~~~
@@ -196,32 +239,82 @@ The following table shows example canonicalized values for header fields, given 
 
 |Header Field|Canonicalized Value|
 |--- |--- |
-|`(cache-control)`|max-age=60, must-revalidate|
-|`(date)`|Tue, 07 Jun 2014 20:51:35 GMT|
-|`(server)`|www.example.com|
-|`(x-empty-header)`||
-|`(x-obs-fold-header)`|Obsolete line folding.|
-|`(x-ows-header)`|Leading and trailing whitespace.|
+|`"cache-control"`|max-age=60, must-revalidate|
+|`"date"`|Tue, 07 Jun 2014 20:51:35 GMT|
+|`"server"`|www.example.com|
+|`"x-empty-header"`||
+|`"x-obs-fold-header"`|Obsolete line folding.|
+|`"x-ows-header"`|Leading and trailing whitespace.|
 {: title="Non-normative examples of header field canonicalization."}
 
+## Dictionary Structured Field Members
 
-## Signature Creation Time
+An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` on the content identifier for the header. The value of this parameter is a the key being identified, without any parameters present on that key in the original dictionary.
 
-The signature's Creation Time ({{signature-metadata}}) is identified by the `(created)` identifier.
+An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in [Section 4.1.2 of RFC8941](#RFC8941) on a Dictionary containing only that member.
 
-Its canonicalized value is an Integer String containing the signature's Creation Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+### Canonicalization Examples
 
-> The use of seconds since the Epoch to canonicalize a timestamp simplifies processing and avoids timezone management required by specifications such as [RFC3339].
+This section contains non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is assumed to be a Dictionary:
 
-## Signature Expiration Time
+~~~ http-message
+X-Dictionary:  a=1, b=2;x=1;y=2, c=(a b c)
+~~~
 
-The signature's Expiration Time ({{signature-metadata}}) is identified by the `(expired)` identifier.
+The following table shows example canonicalized values for different content identifiers, given that field:
 
-Its canonicalized value is a Decimal String containing the signature's Expiration Time expressed as the number of seconds since the Epoch, as defined in [Section 4.16](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16) of {{POSIX.1}}.
+|Content Identifier|Canonicalized Value|
+|--- |--- |
+|`"x-dictionary";key=a`|1|
+|`"x-dictionary";key=b`|2;x=1;y=2|
+|`"x-dictionary";key=c`|(a, b, c)|
+{: title="Non-normative examples of Dictionary member canonicalization."}
 
-## Target Endpoint
 
-The request target endpoint, consisting of the request method and the path and query of the effective request URI, is identified by the `(request-target)` identifier.
+## List Prefixes
+
+A prefix of a List Structured Field consisting of the first N members in the field's value (where N is an integer greater than 0 and less than or equal to the number of members in the List) is identified by the parameter `prefix` with the value of N as an integer. 
+
+A list prefix value is canonicalized by applying the serialization algorithm described in [Section 4.1.1 of RFC8941](#RFC8941) on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
+
+### Canonicalization Examples
+
+This section contains non-normative examples of canonicalized values for list prefixes given the following example header fields, whose values are assumed to be Dictionaries:
+
+~~~ http-message
+X-List-A: (a b c d e f)
+X-List-B: ()
+~~~
+
+The following table shows example canonicalized values for different content identifiers, given those fields:
+
+|Content Identifier|Canonicalized Value|
+|--- |--- |
+|`"x-list-a";prefix=0`|()|
+|`"x-list-a";prefix=1`|(a)|
+|`"x-list-a";prefix=3`|(a, b, c)|
+|`"x-list-a";prefix=6`|(a, b, c, d, e, f)|
+|`"x-list-b";prefix=0`|()|
+{: title="Non-normative examples of list prefix canonicalization."}
+
+
+## Specialty Content Fields {#specialty-content}
+
+Content not found in an HTTP header can be included in the signature base string by defining a content identifier and the canonicalization method for its content.
+
+To differentiate specialty content identifiers from HTTP headers, specialty content identifiers MUST start with the "at" `@` character. This specification defines the following specialty content identifiers:
+
+@request-target
+: The target request endpoint. ({{content-request-target}})
+
+@signature-params
+: The signature metadata parameters for this signature. ({{signature-params}})
+
+Additional specialty content identifiers MAY be defined and registered in the HTTP Signatures Specialty Content Identifier Registry. ({{content-registry}})
+
+### Request Target {#content-request-target}
+
+The request target endpoint, consisting of the request method and the path and query of the effective request URI, is identified by the `@request-target` identifier.
 
 Its value is canonicalized as follows:
 
@@ -229,46 +322,46 @@ Its value is canonicalized as follows:
 2. Append a space " ".
 3. Append the path and query of the request target of the message, formatted according to the rules defined for the :path pseudo-header in {{!HTTP2=RFC7540}}, Section 8.1.2.3.  The resulting string is the canonicalized value.
 
-### Canonicalization Examples
+#### Canonicalization Examples
 
-The following table contains non-normative example HTTP messages and their canonicalized `(request-target)` values.
+The following table contains non-normative example HTTP messages and their canonicalized `@request-target` values.
 
 <table>
-    <name>Non-normative examples of <tt>(request-target)</tt> canonicalization.</name>
+    <name>Non-normative examples of <tt>@request-target</tt> canonicalization.</name>
     <thead>
-        <tr><th>HTTP Message</th><th>(request-target)</th></tr>
+        <tr><th>HTTP Message</th><th>@request-target</th></tr>
     </thead>
     <tbody>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 POST /?param=value HTTP/1.1
 Host: www.example.com</sourcecode></td>
             <td><tt>post /?param=value</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 POST /a/b HTTP/1.1
 Host: www.example.com</sourcecode></td>
             <td><tt>post /a/b</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 GET http://www.example.com/a/ HTTP/1.1</sourcecode></td>
             <td><tt>get /a/</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 GET http://www.example.com HTTP/1.1</sourcecode></td>
             <td><tt>get /</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 CONNECT server.example.com:80 HTTP/1.1
 Host: server.example.com</sourcecode></td>
             <td><tt>connect /</tt></td>
         </tr>
         <tr>
-            <td><sourcecode>
+            <td><sourcecode type="http-message">
 OPTIONS * HTTP/1.1
 Host: server.example.com</sourcecode></td>
             <td><tt>options *</tt></td>
@@ -276,142 +369,200 @@ Host: server.example.com</sourcecode></td>
     </tbody>
 </table>
 
-# HTTP Message Signatures {#message-signatures}
+### Signature Parameters {#signature-params}
 
-An HTTP Message Signature is a signature over a string generated from a subset of the content in an HTTP message and metadata about the signature itself.  When successfully verified against an HTTP message, it provides cryptographic proof that with respect to the subset of content that was signed, the message is semantically equivalent to the message for which the signature was generated.
+HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification.
 
-## Signature Metadata {#signature-metadata}
+The signature parameters special content is identified by the `@signature-params` identifier.
 
-HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification.  The following metadata properties are defined:
+Its canonicalized value is the serialization of the signature parameters for this signature, including the covered content list with all associated parameters. The following metadata properties are defined:
 
-Algorithm
-: 
-: An HTTP Signature Algorithm defined in the HTTP Signature Algorithms Registry defined in this document. It describes the signing and verification algorithms for the signature.
+The signature parameters are serialized using the rules in [Section 4 of RFC8941](#RFC8941) as follows:
 
-Creation Time
-: 
-: A timestamp representing the point in time that the signature was generated. Sub-second precision is not supported. A signature's Creation Time MAY be undefined, indicating that it is unknown.
+1. Let the output be an empty string.
+2. Determine an order for the content identifiers of the covered content. Once this order is chosen, it cannot be changed.
+3. Serialize the content identifiers of the covered content as an ordered `inner-list` according to [Section 4.1.1.1 of RFC8941](#RFC8941) and append this to the output.
+4. Determine an order for signature metadata parameters. Once this order is chosen, it cannot be changed.
+5. Append the signature metadata as parameters according to [Section 4.1.1.2 of RFC8941](#RFC8941) in the chosen order,
+    skipping fields that are not available or not used for this signature:
+   * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
+   * `keyid`: The identifier for the key material as an `sf-string` value.
+   * `created`: Creation time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
+   * `expires`: Expiration time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
+   * `nonce`: A random unique value generated for this signature.
+6. The output contains the signature parameters value.
 
-Covered Content
-: 
-: An ordered list of content identifiers (Section 2) that indicates the metadata and message content that is covered by the signature. The order of identifiers in this list affects signature generation and verification, and therefore MUST be preserved.
+Note that the `inner-list` serialization is used for the covered content value instead of the `sf-list` serialization 
+in order to facilitate this value's additional inclusion in the `Signature-Input` header's dictionary, 
+as discussed in {{signature-input-header}}.
 
-Expiration Time
-: 
-: A timestamp representing the point in time at which the signature expires. An expired signature always fails verification. A signature's Expiration Time MAY be undefined, indicating that the signature does not expire.
-
-Verification Key Material
-: 
-: The key material required to verify the signature.
-
-
-## Creating a Signature {#create}
-
-In order to create a signature, a signer completes the following process:
-
-1. Choose key material and algorithm, and set metadata properties {{choose-metadata}}
-2. Create the Signature Input {{canonicalization}}
-3. Sign the Signature Input {{sign-sig-input}}
-
-The following sections describe each of these steps in detail.
-
-### Choose and Set Signature Metadata Properties {#choose-metadata}
-
-1. The signer chooses an HTTP Signature Algorithm from those registered in the HTTP Signature Algorithms Registry defined by this document, and sets the signature's Algorithm property to that value.  The signer MUST NOT choose an algorithm marked "Deprecated".  The mechanism by which the signer chooses an algorithm is out of scope for this document.
-
-2. The signer chooses key material to use for signing and verification, and sets the signature's Verification Key Material property to the key material required for verification.  The signer MUST choose key material that is appropriate for the signature's Algorithm, and that conforms to any requirements defined by the Algorithm, such as key size or format.  The mechanism by which the signer chooses key material is out of scope for this document.
-
-3. The signer sets the signature's Creation Time property to the current time.
-
-4. The signer sets the signature's Expiration Time property to the time at which the signature is to expire, or to undefined if the signature will not expire.
-
-5. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
-   * Each identifier MUST be one of those defined in Section 2.
-   * This list MUST NOT be empty, as this would result in creating a signature over the empty string.
-   * If the signature's Algorithm name does not start with rsa, hmac, or ecdsa, signers SHOULD include (created) and (request-target) in the list.
-   * If the signature's Algorithm starts with rsa, hmac, or ecdsa, signers SHOULD include date and (request-target) in the list.
-   * Further guidance on what to include in this list and in what order is out of scope for this document.  However, the list order is significant and once established for a given signature it MUST be preserved for that signature.
-
-
-For example, given the following HTTP message:
+This example shows a canonicalized value for the parameters of a given signature:
 
 ~~~
+("@request-target" "host" "date" "cache-control" "x-empty-header" \
+  "x-example");keyid="test-key-rsa-pss";alg="rsa-pss-sha512";\
+  created=1618884475;expires=1618884775
+~~~
+
+Note that an HTTP message could contain multiple signatures, but only the signature parameters used for the current signature are included in this field.
+
+## Creating the Signature Input String {#create-sig-input}
+
+The signature input is a US-ASCII string containing the content that is covered by the signature. To create the signature input string, the signer or verifier concatenates together entries for each identifier in the signature's covered content and parameters using the following algorithm:
+
+1. Let the output be an empty string.
+
+2. For each covered content item in the covered content list (in order):
+
+    1. Append the identifier for the covered content serialized according to the `content-identifier` rule.
+
+    2. Append a single colon `":"`
+
+    3. Append a single space `" "`
+
+    4. Append the covered content's canonicalized value, as defined by the covered content type. ({{http-header}} and {{specialty-content}})
+
+    5. Append a single newline `"\\n"`
+
+3. Append the signature parameters ({{signature-params}}) as follows:
+
+    1. Append the identifier for the signature parameters serialized according to the `content-identifier` rule, `"@signature-params"`
+
+    2. Append a single colon `":"`
+
+    3. Append a single space `" "`
+
+    4. Append the signature parameters' canonicalized value as defined in {{signature-params}}
+
+4. Return the output string.    
+
+If covered content references an identifier that cannot be resolved to a value in the message, the implementation MUST produce an error. Such situations are included but not limited to:
+
+ * The signer or verifier does not understand the content identifier.
+ * The identifier identifies a header field that is not present in the message or whose value is malformed.
+ * The identifier is a Dictionary member identifier that references a header field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
+ * The identifier is a List Prefix member identifier that references a header field that is not present in the message, is not a List Structured Field, or whose value is malformed.
+ * The identifier is a Dictionary member identifier that references a member that is not present in the header field value, or whose value is malformed. E.g., the identifier is `"x-dictionary";key=c` and the value of the `x-dictionary` header field is `a=1, b=2`
+ * The identifier is a List Prefix member identifier that specifies more List members than are present the header field. E.g., the identifier is `"x-list";prefix=3` and the value of the `x-list` header field is `(1, 2)`.
+
+In the following non-normative example, the HTTP message being signed is the following request:
+
+~~~ http-message
 GET /foo HTTP/1.1
 Host: example.org
-Date: Sat, 07 Jun 2014 20:51:35 GMT
+Date: Tue, 20 Apr 2021 02:07:55 GMT
 X-Example: Example header
         with some whitespace.
-X-EmptyHeader:
+X-Empty-Header:
 Cache-Control: max-age=60
 Cache-Control: must-revalidate
 ~~~
 
-The following table presents a non-normative example of metadata values that a signer may choose:
-
-|Property|Value|
-|--- |--- |
-|Algorithm|`rsa-256`|
-|Covered Content|`(request-target)`, `(created)`, `host`, `date`, `cache-contol`, `x-emptyheader`, `x-example`|
-|Creation Time|`1402174295`|
-|Expiration Time|`1402174595`|
-|Verification Key Material|The public key provided in  and identified by the `keyId` value "test-key-b".|
-{: title="Non-normative example metadata values" #example-metadata}
-
-
-### Create the Signature Input {#canonicalization}
-
-The Signature Input is a US-ASCII string containing the content that will be signed.  To create it, the signer concatenates together entries for each identifier in the signature's Covered Content in the order it occurs in the list, with each entry separated by a newline `"\n"`.  An identifier's entry is a US-ASCII string consisting of the lowercased identifier followed with a colon `":"`, a space `" "`, and the identifier's canonicalized value (described below).
-
-If Covered Content contains `(created)` and the signature's Creation Time is undefined or the signature's Algorithm name starts with `rsa`, `hmac`, or `ecdsa` an implementation MUST produce an error.
-
-If Covered Content contains `(expires)` and the signature does not have an Expiration Time or the signature's Algorithm name starts with `rsa`, `hmac`, or `ecdsa` an implementation MUST produce an error.
-
-If Covered Content contains an identifier for a header field that is not present or malformed in the message, the implementation MUST produce an error.
-
-For the non-normative example Signature metadata in {{example-metadata}}, the corresponding Signature Input is:
+The covered content consists of the `@request-target` speciality header followed by the `Host`, `Date`, `Cache-Control`, `X-Empty-Header`, `X-Example` HTTP headers, in order. The signature creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`.  The signature input string for this message with these parameters is:
 
 ~~~
-(request-target): get /foo
-(created): 1402170695
-host: example.org
-date: Tue, 07 Jun 2014 20:51:35 GMT
-cache-control: max-age=60, must-revalidate
-x-emptyheader:
-x-example: Example header with some whitespace.
+"@request-target": get /foo
+"host": example.org
+"date": Tue, 20 Apr 2021 02:07:55 GMT
+"cache-control": max-age=60, must-revalidate
+"x-empty-header": 
+"x-example": Example header with some whitespace.
+"@signature-params": ("@request-target" "host" "date" "cache-control" \
+  "x-empty-header" "x-example");created=1618884475;\
+  keyid="test-key-rsa-pss"
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
 
-### Sign the Signature Input {#sign-sig-input}
+# HTTP Message Signatures {#message-signatures}
 
-The signer signs the Signature Input using the signing algorithm described by the signature's Algorithm property, and the key material chosen by the signer.  The signer then encodes the result of that operation as a base 64-encoded string {{?RFC4648}}.  This string is the signature value.
+An HTTP Message Signature is a signature over a string generated from a subset of the content in an HTTP message and metadata about the signature itself.  When successfully verified against an HTTP message, it provides cryptographic proof that with respect to the subset of content that was signed, the message is semantically equivalent to the message for which the signature was generated.
 
-For the non-normative example Signature metadata in {{choose-metadata}} and Signature Input in {{example-sig-input}}, the corresponding signature value is:
+## Creating a Signature {#sign}
+
+In order to create a signature, a signer MUST follow the following algorithm:
+
+1. The signer chooses an HTTP signature algorithm and key material for signing. The signer MUST choose key material that is appropriate 
+    for the signature's algorithm, and that conforms to any requirements defined by the algorithm, such as key size or format. The 
+    mechanism by which the signer chooses the algorithm and key material is out of scope for this document.
+
+2. The signer sets the signature's creation time to the current time.
+
+3. If applicable, the signer sets the signature's expiration time property to the time at which the signature is to expire.
+
+4. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
+   * Once an order of covered content is chosen, the order MUST NOT change for the life of the signature.
+   * Each covered content identifier MUST either reference an HTTP header in the request message {{http-header}} or reference a specialty content field listed in {{specialty-content}} or its associated registry.
+   * Signers SHOULD include `@request-target` in the covered content list list.
+   * Signers SHOULD include a date stamp in some form, such as using the `date` header. Alternatively, the `created` signature metadata parameter can fulfil this role.
+   * Further guidance on what to include in this list and in what order is out of scope for this document. However, note that the list order is significant and once established for a given signature it MUST be preserved for that signature.
+   * Note that the `@signature-params` specialty identifier is not explicitly listed in the list of covered content identifiers, because it is required to always be present as the last line in the signature input. This ensures that a signature always covers its own metadata.
+
+5. The signer creates the signature input string. ({{create-sig-input}})
+
+6. The signer signs the signature input with the chosen signing algorithm using the key material chosen by the signer. Several signing algorithms are defined in in {{signature-methods}}.
+
+6. The byte array output of the signature function is the HTTP message signature output value to be included in the `Signature` header as defined in {{signature-header}}.
+
+For example, given the HTTP message and signature parameters in the example in {{create-sig-input}}, the example signature input string when signed with the `test-key-rsa-pss` key in {{example-key-rsa-pss-test}} gives the following message signature output value, encoded in Base64:
 
 ~~~
-T1l3tWH2cSP31nfuvc3nVaHQ6IAu9YLEXg2pCeEOJETXnlWbgKtBTaXV6LNQWtf4O42V2
-DZwDZbmVZ8xW3TFW80RrfrY0+fyjD4OLN7/zV6L6d2v7uBpuWZ8QzKuHYFaRNVXgFBXN3
-VJnsIOUjv20pqZMKO3phLCKX2/zQzJLCBQvF/5UKtnJiMp1ACNhG8LF0Q0FPWfe86YZBB
-xqrQr5WfjMu0LOO52ZAxi9KTWSlceJ2U361gDb7S5Deub8MaDrjUEpluphQeo8xyvHBoN
-Xsqeax/WaHyRYOgaW6krxEGVaBQAfA2czYZhEA05Tb38ahq/gwDQ1bagd9rGnCHtAg==
+:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwkUE6H4NWiTs5f2Ef0\
+qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdGR+tlRJ1cbCoWMVoCgEPi\
+4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+szb8SpwJEmkMPr5dBOz6DLEeM3IgKN\
+oBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA1a4MNWoUElr6eh5k20djMZftCYTPUU\
+PMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1aSVfKQQzR+ZEwSaZQBrdQ==:
 ~~~
 {: title="Non-normative example signature value" #example-sig-value}
 
+
 ## Verifying a Signature {#verify}
 
-In order to verify a signature, a verifier MUST:
+A verifier processes a signature and its associated signature input parameters in concert with each other.
 
-1. Examine the signature's metadata to confirm that the signature meets the requirements described in this document, as well as any additional requirements defined by the application such as which header fields or other content are required to be covered by the signature.
+In order to verify a signature, a verifier MUST follow the following algorithm:
 
-2. Use the received HTTP message and the signature's metadata to recreate the Signature Input, using the process described in {{canonicalization}}.
+1. Parse the `Signature` and `Signature-Input` headers and extract the signatures to be verified.
+    1. If there is more than one signature value present, determine which signature should be processed
+        for this request. If an appropriate signature is not found, produce an error.
+    2. If the chosen `Signature` value does not have a corresponding `Signature-Input` value,
+        produce an error.
+2. Parse the values of the chosen `Signature-Input` header field to get the parameters for the
+    signature to be verified.
+3. Parse the value of the corresponding `Signature` header field to get the byte array value of the signature
+    to be verified.
+4. Examine the signature parameters to confirm that the signature meets the requirements described 
+    in this document, as well as any additional requirements defined by the application such as which 
+    contents are required to be covered by the signature. ({{verify-requirements}})
+5. Determine the verification key material for this signature. If the key material is known through external
+    means such as static configuration or external protocol negotiation, the verifier will use that. If the key is
+    identified in the signature parameters, the verifier will dereference this to appropriate key material to use 
+    with the signature. The verifier has to determine the trustworthiness of the key material for the context
+    in which the signature is presented. If a key is identified that the verifier does not know, does
+    not trust for this request, or does not match something preconfigured, the verification MUST fail.
+6. Determine the algorithm to apply for verification:
+    1. If the algorithm is known through external means such as static configuration or external protocol
+        negotiation, the verifier will use this algorithm.
+    2. If the algorithm is explicitly stated in the signature parameters using a value from the
+        HTTP Message Signatures registry, the verifier will use the referenced algorithm.
+    3. If the algorithm can be determined from the keying material, such as through an algorithm field
+        on the key value itself, the verifier will use this algorithm.
+    4. If the algorithm is specified in more that one location, such as through static configuration
+        and the algorithm signature parameter, or the algorithm signature parameter and from
+        the key material itself, the resolved algorithms MUST be the same. If the algorithms are
+        not the same, the verifier MUST vail the verification.
+7. Use the received HTTP message and the signature's metadata to recreate the signature input, using 
+    the process described in {{create-sig-input}}. The value of the `@signature-params` input is
+    the value of the SignatureInput header field for this signature serialized according to the rules described
+    in {{signature-params}}, not including the signature's label from the `Signature-Input` header.
+8. If the key material is appropriate for the algorithm, apply the verification algorithm to the signature,
+    recalculated signature input, signature parameters, key material, and algorithm. Several algorithms are defined in
+    {{signature-methods}}.
+9. The results of the verification algorithm function are the final results of the signature verification. 
 
-3. Use the signature's Algorithm and Verification Key Material with the recreated Signing Input to verify the signature value.
+If any of the above steps fail, the signature validation fails. 
 
 
-A signature with a Creation Time that is in the future or an Expiration Time that is in the past MUST NOT be processed.  
-
-The verifier MUST ensure that a signature's Algorithm is appropriate for the key material the verifier will use to verify the signature.  If the Algorithm is not appropriate for the key material (for example, if it is the wrong size, or in the wrong format), the signature MUST NOT be processed.
-
-### Enforcing Application Requirements
+### Enforcing Application Requirements {#verify-requirements}
 
 The verification requirements specified in this document are intended as a baseline set of restrictions that are generally applicable to all use cases.  Applications using HTTP Message Signatures MAY impose requirements above and beyond those specified by this document, as appropriate for their use case.
 
@@ -421,64 +572,179 @@ Some non-normative examples of additional requirements an application might defi
 - Enforcing a maximum signature age.
 - Prohibiting the use of certain algorithms, or mandating the use of an algorithm.
 - Requiring keys to be of a certain size (e.g., 2048 bits vs. 1024 bits).
+- Enforcing uniqueness of a nonce value.
 
 Application-specific requirements are expected and encouraged.  When an application defines additional requirements, it MUST enforce them during the signature verification process, and signature verification MUST fail if the signature does not conform to the application's requirements.
 
 Applications MUST enforce the requirements defined in this document.  Regardless of use case, applications MUST NOT accept signatures that do not conform to these requirements.
 
-# The 'Signature' HTTP Header {#sig}
+## Signature Algorithm Methods {#signature-methods}
 
-The "Signature" HTTP header provides a mechanism to attach a signature to the HTTP message from which it was generated.  The header field name is "Signature" and its value is a list of parameters and values, formatted according to the `signature` syntax defined below, using the Augmented Backus-Naur Form (ABNF) notation defined in {{!RFC5234}} notation, with extensions defined in {{HTTP}}.
+HTTP Message signatures MAY use any cryptographic digital signature or MAC method that is appropriate for the key material,
+environment, and needs of the signer and verifier.
+All signatures are generated from and verified against the byte values of the signature input string defined in {{create-sig-input}}.
 
-~~~ abnf
-signature    = #( sig-param )
-sig-param    = token BWS "=" BWS ( token / quoted-string )
-~~~
-
-Each `sig-param` is the name of a parameter defined in the {{param-registry}} defined in this document.  The initial contents of this registry are described in {{params}}.
-
-## Signature Header Parameters {#params}
-
-algorithm
-: 
-: RECOMMENDED. The algorithm parameter contains the name of the signature's Algorithm, as registered in the HTTP Signature Algorithms Registry defined by this document. Verifiers MUST determine the signature's Algorithm from the `keyId` parameter rather than from `algorithm`. If `algorithm` is provided and differs from or is incompatible with the algorithm or key material identified by `keyId` (for example, `algorithm` has a value of `rsa-sha256` but `keyId` identifies an EdDSA key), then implementations MUST produce an error. Implementers should note that previous versions of this specification determined the signature's Algorithm using the algorithm parameter only, and thus could be utilized by attackers to expose security vulnerabilities. The default value for this parameter is "hs2019".
-
-created
-: 
-: RECOMMENDED. The created parameter contains the signature's Creation Time, expressed as the canonicalized value of the `(created)` content identifier, as defined in Section 2.  If not specified, the signature's Creation Time is undefined.  This parameter is useful when signers are not capable of controlling the Date HTTP Header such as when operating in certain web browser environments.
-
-expires
-: 
-: OPTIONAL. The expires parameter contains the signature's Expiration Time, expressed as the canonicalized value of the `(expires)` content identifier, as defined in Section 2.  If the signature does not have an Expiration Time, this parameter MUST be omitted.  If not specified, the signature's Expiration Time is undefined.
-
-headers
-: 
-: OPTIONAL. The headers parameter contains the signature's Covered Content, expressed as a string containing a quoted list of the identifiers in the list, in the order they occur in the list, with a space " " between each identifier. If specified, identifiers for header fields SHOULD be lowercased and all others MUST be lowercased. The default value for this parameter is "(created)".
-
-keyId
-: 
-: REQUIRED. The `keyId` parameter is a US-ASCII string whose value can be used by a verifier to identify and/or obtain the signature's Verification Key Material. The format and semantics of this value are out of scope for this document.
-
-signature
-: 
-: REQUIRED. The signature parameter contains the signature value, as described in {{sign-sig-input}}.
-
-## Example
-
-The following is a non-normative example Signature header field representing the signature in {{example-sig-value}}:
+Each signature algorithm method takes as its input the signature input string as a set of byte values (`I`), the signing key material
+(`Ks`), and outputs the signed content as a set of byte values (`S`):
 
 ~~~
-Signature: keyId="test-key-b", algorithm="rsa-sha256",
-    created=1402170695, expires=1402170995,
-    headers="(request-target) (created) host date cache-control
-        x-emptyheader x-example",
-    signature="T1l3tWH2cSP31nfuvc3nVaHQ6IAu9YLEXg2pCeEOJETXnlWbgKtBTa
-        XV6LNQWtf4O42V2DZwDZbmVZ8xW3TFW80RrfrY0+fyjD4OLN7/zV6L6d2v7uB
-        puWZ8QzKuHYFaRNVXgFBXN3VJnsIOUjv20pqZMKO3phLCKX2/zQzJLCBQvF/5
-        UKtnJiMp1ACNhG8LF0Q0FPWfe86YZBBxqrQr5WfjMu0LOO52ZAxi9KTWSlceJ
-        2U361gDb7S5Deub8MaDrjUEpluphQeo8xyvHBoNXsqeax/WaHyRYOgaW6krxE
-        GVaBQAfA2czYZhEA05Tb38ahq/gwDQ1bagd9rGnCHtAg=="
+HTTP_SIGN (I, Ks)  ->  S
 ~~~
+
+Each verification algorithm method takes as its input the recalculated signature input string as a set of byte values (`I`), the verification key
+material (`Kv`), and the presented signature to be verified as a set of byte values (`S`) and outputs the verification result (`V`) as a boolean:
+
+~~~
+HTTP_VERIFY (I, Kv, S) -> V
+~~~
+
+This section contains several common algorithm methods. The method to use can be communicated through the algorithm signature parameter
+defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier.
+
+### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha512}
+
+To sign using this algorithm, the signer applies the `RSASSA-PSS-SIGN (K, M)` function {{RFC8017}} with the signer's private signing key (`K`) and
+the signature input string (`M`) ({{create-sig-input}}). 
+The hash SHA-512 {{RFC6234}} is applied to the signature input string to create
+the digest content to which the digital signature is applied. 
+The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
+
+To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
+The hash function SHA-512 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
+The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
+The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
+
+### RSASSA-PKCS1-v1_5 using SHA-256 {#method-rsa-v1_5-sha256}
+
+To sign using this algorithm, the signer applies the `RSASSA-PKCS1-V1_5-SIGN (K, M)` function {{RFC8017}} with the signer's private signing key (`K`) and
+the signature input string (`M`) ({{create-sig-input}}). 
+The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
+the digest content to which the digital signature is applied. 
+The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
+
+To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
+The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
+The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
+The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
+
+### HMAC using SHA-256 {#method-hmac-sha256}
+
+To sign and verify using this algorithm, the signer applies the `HMAC` function {{RFC2104}} with the shared signing key (`K`) and
+the signature input string (`text`) ({{create-sig-input}}). 
+The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the HMAC is applied, giving the signature result. 
+
+For signing, the resulting value is the HTTP message signature output used in {{sign}}.
+
+For verification, the verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
+The output of the HMAC function is compared to the value of the HTTP message signature, and the results of the comparison determine the validity of the signature presented.
+
+### ECDSA using curve P-256 DSS and SHA-256 {#method-ecdsa-p256-sha256}
+
+To sign using this algorithm, the signer applies the `ECDSA` algorithm {{FIPS186-4}} using curve P-256 with the signer's private signing key and
+the signature input string ({{create-sig-input}}). 
+The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
+the digest content to which the digital signature is applied. 
+The resulting signed content byte array is the HTTP message signature output used in {{sign}}.
+
+To verify using this algorithm, the verifier applies the `ECDSA` algorithm {{FIPS186-4}}  using the public key portion of the verification key material and the signature input string re-created as described in {{verify}}.
+The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
+The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
+The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
+
+### JSON Web Signature (JWS) algorithms {#method-jose}
+
+If the signing algorithm is a JOSE signing algorithm from the JSON Web Signature and Encryption Algorithms Registry established by {{RFC7518}}, the 
+JWS algorithm definition determines the signature and hashing algorithms to apply for both signing and verification. There is no
+use of the explicit `alg` signature parameter when using JOSE signing algorithms.
+
+For both signing and verification, the HTTP messages signature input string ({{create-sig-input}}) is used as the entire "JWS Signing Input". 
+The JOSE Header defined in {{RFC7517}} is not used, and the signature input string is not first encoded in Base64 before applying the algorithm. 
+The output of the JWS signature is taken as a byte array prior to the Base64url encoding used in JOSE.
+
+The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE Implementation Requirement of `Prohibited`.
+
+# Including a Message Signature in a Message
+Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP header fields, both defined within this specification. 
+
+An HTTP message signature MUST use both headers:
+the `Signature` HTTP header field contains the signature value, while the `Signature-Input` HTTP header field identifies the covered content and parameters that describe how the signature was generated. The Each header MAY contain multiple labeled values, where the labels determine the correlation between the `Signature` and `Signature-Input` fields. 
+
+## The 'Signature-Input' HTTP Header {#signature-input-header}
+The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered content including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
+
+~~~
+Signature-Input: sig1=("@request-target" "host" "date" "cache-control" \
+  "x-empty-header" "x-example");created=1618884475;\
+  keyid="test-key-rsa-pss"
+~~~
+
+To facilitate signature validation, the `Signature-Input` header value MUST contain the same serialized value used 
+in generating the signature input string's `@signature-params` value.
+
+## The 'Signature' HTTP Header {#signature-header}
+The `Signature` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing one or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
+
+~~~
+Signature: sig1=:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwk\
+  UE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdGR+\
+  tlRJ1cbCoWMVoCgEPi4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+szb8SpwJEm\
+  kMPr5dBOz6DLEeM3IgKNoBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA1a4MNWoU\
+  Elr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1aSVfKQQzR\
+  +ZEwSaZQBrdQ==:
+~~~
+
+## Multiple Signatures
+
+Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same content with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in header fields when forwarding the request to a service host, including a signature over those fields and the client's original signature. 
+
+The following is a non-normative example of header fields a reverse proxy in addition to the examples in the previous sections. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under `proxy_sig`. The proxy uses the key `rsa-test-key` to create its signature using the `rsa-v1_5-sha256` signature value. This results in a signature input string of:
+
+~~~
+"signature";key="sig1": :H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNT\
+  d980hWwkUE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg\
+  /9sOdGR+tlRJ1cbCoWMVoCgEPi4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+sz\
+  b8SpwJEmkMPr5dBOz6DLEeM3IgKNoBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA\
+  1a4MNWoUElr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1a\
+  SVfKQQzR+ZEwSaZQBrdQ==:
+x-forwarded-for: 192.0.2.123
+"@signature-params": ("signature";key="sig1" x-forwarded-for)\
+  ;created=1618884475;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
+~~~
+
+And a signature output value of:
+
+~~~
+:NgQsRJwOL/EgoRXdcmHMOLZM+KWqLDsO76CrqoiLH279VJs9Fj6bn4V+perAEUbHBEMFCb\
+l6tucEVgKrU+5IIyDMBI85FExQeuBrNPALczjCdxne6LUoBcWBAk8NoRyjfd++DXIAjAZcf\
+/hBUXLll+5veI0ynzBRFTZ4v8AbluYODjJlSprYEwUb2ndbFr12vzgIpy0uTQCslN+3rUUZ\
++lQWlrILvbR0CIvtGwk2+hE0dTRAG0R3wmlR24mhSqiE5RADyoSWQVjVxntp98XHAB6MZE9\
+2bbu2a8Uo951Hvah03XHWEk/WiYdq+mt3hwXVPLXlBU9DWCo2AaYD/rkXtQ==:
+~~~
+
+These values are added to the HTTP request message by the proxy. The different signature values are wrapped onto separate lines to increase human-readability of the result.
+
+~~~ http-message
+X-Forwarded-For: 192.0.2.123
+Signature-Input: sig1=("@request-target" "host" "date" "cache-control" \
+    "x-empty-header" "x-example");created=1618884475\
+    ;keyid="test-key-rsa-pss", \
+  proxy_sig=("signature";key="sig1" x-forwarded-for);created=1618884480\
+    ;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
+Signature: sig1=:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwk\
+    UE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdG\
+    R+tlRJ1cbCoWMVoCgEPi4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+szb8Sp\
+    wJEmkMPr5dBOz6DLEeM3IgKNoBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA1a\
+    4MNWoUElr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1a\
+    SVfKQQzR+ZEwSaZQBrdQ==:, \
+  proxy_sig=:NgQsRJwOL/EgoRXdcmHMOLZM+KWqLDsO76CrqoiLH279VJs9Fj6bn4V+pe\
+    rAEUbHBEMFCbl6tucEVgKrU+5IIyDMBI85FExQeuBrNPALczjCdxne6LUoBcWBAk8No\
+    Ryjfd++DXIAjAZcf/hBUXLll+5veI0ynzBRFTZ4v8AbluYODjJlSprYEwUb2ndbFr12\
+    vzgIpy0uTQCslN+3rUUZ+lQWlrILvbR0CIvtGwk2+hE0dTRAG0R3wmlR24mhSqiE5RA\
+    DyoSWQVjVxntp98XHAB6MZE92bbu2a8Uo951Hvah03XHWEk/WiYdq+mt3hwXVPLXlBU\
+    9DWCo2AaYD/rkXtQ==:
+~~~
+
+The proxy's signature and the client's original signature can be verified independently for the same message, depending on the needs of the application.
 
 # IANA Considerations {#iana}
 
@@ -488,112 +754,119 @@ This document defines HTTP Signature Algorithms, for which IANA is asked to crea
 
 ### Registration Template {#iana-hsa-template}
 
-Algorithm Name
-: 
+{: vspace="0"}
+Algorithm Name:
 : An identifier for the HTTP Signature Algorithm. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The identifier MUST be unique within the context of the registry.
 
-Status
-: 
+Status:
 : A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
-Description
-: 
-: A description of the algorithm used to sign the signing string when generating an HTTP Message Signature, or instructions on how to determine that algorithm.  When the description specifies an algorithm, it MUST include a reference to the document or documents that define the algorithm.
+Description:
+: A brief description of the algorithm used to sign the signature input string.
+
+Specification document(s):
+: Reference to the document(s) that specify the token endpoint
+    authorization method, preferably including a URI that can be used
+    to retrieve a copy of the document(s).  An indication of the
+    relevant sections may also be included but is not required.
 
 ### Initial Contents {#iana-hsa-contents}
 
-(( MS: The references in this section are problematic as many of the specifications that they refer to are too implementation specific, rather than just pointing to the proper signature and hashing specifications.  A better approach might be just specifying the signature and hashing function specifications, leaving implementers to connect the dots (which are not that hard to connect). ))
+#### rsa-pss-sha512
 
-#### hs2019
+{: vspace="0"}
+Algorithm Name:
+: `rsa-pss-sha512`
 
-Algorithm Name
-: 
-: `hs2019`
+Status:
+: Active
 
-Status
-: 
-: active
+Definition:
+: RSASSA-PSS using SHA-256
 
-Description
-: 
-: Derived from metadata associated with keyId. Recommend support for:
-:    - RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]
-:    - HMAC [RFC2104] using SHA-512 [RFC6234]
-:    - ECDSA using curve P-256 DSS {{FIPS186-4}} and SHA-512 [RFC6234]
-:    - Ed25519ph, Ed25519ctx, and Ed25519 [RFC8032]
+Specification document(s):
+: \[\[This document\]\], {{method-rsa-pss-sha512}}
 
+#### rsa-v1_5-sha256
 
-#### rsa-sha1
-Algorithm Name
-: 
-: `rsa-sha1`
+{: vspace="0"}
+Algorithm Name:
+: `rsa-v1_5-sha256`
 
-Status
-: 
-: Deprecated; SHA-1 not secure. 
+Status:
+: Active
 
-Description
-: 
-: RSASSA-PKCS1-v1_5 [RFC8017] using SHA-1 [RFC6234]
+Description:
+: RSASSA-PKCS1-v1_5 using SHA-256
 
-#### rsa-sha256
-Algorithm Name
-: 
-: `rsa-sha256`
-
-Status
-: 
-: Deprecated; specifying signature algorithm enables attack vector.
-
-Description
-: 
-: RSASSA-PKCS1-v1_5 [RFC8017] using SHA-256 [RFC6234]
+Specification document(s):
+: \[\[This document\]\], {{method-rsa-v1_5-sha256}}
 
 #### hmac-sha256
-Algorithm Name
-: 
+
+{: vspace="0"}
+Algorithm Name:
 : `hmac-sha256`
 
-Status
-: 
-: Deprecated; specifying signature algorithm enables attack vector.
+Status:
+: Active
 
-Description
-: 
-: HMAC [RFC2104] using SHA-256 [RFC6234]
+Description:
+: HMAC using SHA-256
 
-#### ecdsa-sha256
-Algorithm Name
-: 
-: `ecdsa-sha256`
+Specification document(s):
+: \[\[This document\]\], {{method-hmac-sha256}}
 
-Status
-: 
-: Deprecated; specifying signature algorithm enables attack vector.
 
-Description
-: 
-: ECDSA using curve P-256 DSS {{FIPS186-4}} and SHA-256 [RFC6234]
+#### ecdsa-p256-sha256
 
-## HTTP Signature Parameters Registry {#param-registry}
+{: vspace="0"}
+Algorithm Name:
+: `ecdsa-p256-sha256`
 
-This document defines the Signature header field, whose value contains a list of named parameters.  IANA is asked to create and maintain a new registry titled "HTTP Signature Parameters" to record and maintain the set of named parameters defined for use within the Signature header field.  Initial values for this registry are given in {{iana-param-contents}}.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-param-template}}.
+Status:
+: Active
+
+Description:
+: ECDSA using curve P-256 DSS and SHA-256
+
+Specification document(s):
+: \[\[This document\]\], {{method-ecdsa-p256-sha256}}
+
+## HTTP Signature Metadata Parameters Registry {#param-registry}
+
+This document defines the `Signature-Input` Structured Header, whose member values may have parameters containing metadata about a message signature. IANA is asked to create and maintain a new registry titled "HTTP Signature Metadata Parameters" to record and maintain the set of parameters defined for use with member values in the `Signature-Input` Structured Header. Initial values for this registry are given in {{iana-param-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-param-template}}.
 
 ### Registration Template {#iana-param-template}
 
 ### Initial Contents {#iana-param-contents}
 
-The table below contains the initial contents of the HTTP Signature Parameters Registry.  Each row in the table represents a distinct entry in the registry.
+The table below contains the initial contents of the HTTP Signature Metadata Parameters Registry.  Each row in the table represents a distinct entry in the registry.
 
 |Name|Status|Reference(s)|
 |--- |--- |--- |
-|`algorithm`|Active | {{params}} of this document|
-|`created`|Active   | {{params}} of this document|
-|`expires`|Active   | {{params}} of this document|
-|`headers`|Active   | {{params}} of this document|
-|`keyId`|Active     | {{params}} of this document|
-|`signature`|Active | {{params}} of this document|
-{: title="Initial contents of the HTTP Signature Parameters Registry." }
+|`alg`|Active | {{signature-params}} of this document|
+|`created`|Active   | {{signature-params}} of this document|
+|`expires`|Active   | {{signature-params}} of this document|
+|`keyid`|Active     | {{signature-params}} of this document|
+|`nonce`|Active    | {{signature-params}} of this document|
+{: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
+
+## HTTP Signature Specialty Content Identifiers Registry {#content-registry}
+
+This document defines a method for canonicalizing HTTP message content, including content that can be generated from the context of the HTTP message outside of the HTTP headers. This content is identified by a unique key.  IANA is asked to create and maintain a new registry typed "HTTP Signature Specialty Content Identifiers" to record and maintain the set of non-header content identifiers and their canonicalization method. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
+
+### Registration Template {#iana-content-template}
+
+### Initial Contents {#iana-content-contents}
+
+The table below contains the initial contents of the HTTP Signature Specialty Content Identifiers Registry.
+
+|Name|Status|Reference(s)|
+|--- |--- |--- |
+|`@request-target`|Active   | {{content-request-target}} of this document|
+|`@signature-params`|Active   | {{signature-params}} of this document|
+{: title="Initial contents of the HTTP Signature Specialty Content Identifiers Registry." }
 
 # Security Considerations {#security}
 
@@ -604,15 +877,25 @@ The table below contains the initial contents of the HTTP Signature Parameters R
 There are a number of security considerations to take into account when implementing or utilizing this specification.  A thorough security analysis of this protocol, including its strengths and weaknesses, can be found in {{WP-HTTP-Sig-Audit}}.
 
 --- back
+
+# Detecting HTTP Message Signatures {#detection}
+
+There have been many attempts to create signed HTTP messages in the past, including other non-standard definitions of the `Signature` header used within this specification. It is recommended that developers wishing to support both this specification and other historial drafts do so carefully and deliberately, as incompatibilities between this specification and various versions of other drafts could lead to problems.
+
+It is recommended that implementers first detect and validate the `Signature-Input` header defined in this specification to detect that this standard is in use and not an alternative. If the `Signature-Input` header is present, all `Signature` headers can be parsed and interpreted in the context of this draft.
+
 # Examples
 
 ## Example Keys {#example-keys}
 
 This section provides cryptographic keys that are referenced in example signatures throughout this document.  These keys MUST NOT be used for any purpose other than testing.
 
+The key identifiers for each key are used throughout the examples in this specification. It is assumed for these examples that the signer and verifier can unambiguously dereference all key identifiers used here, and that the keys and algorithms used are appropriate for the context in which the signature is presented. 
+
 ### Example Key RSA test {#example-key-rsa-test}
 
-The following key is a 2048-bit RSA public and private key pair:
+The following key is a 2048-bit RSA public and private key pair, referred to in this document
+as `test-key-rsa`:
 
 ~~~
 -----BEGIN RSA PUBLIC KEY-----
@@ -653,23 +936,60 @@ EQeNC8fHGg4UXU8mhHnSBt3EA10qQJfRDs15M38eG2cYwB1PZpDHScDnDA0=
 -----END RSA PRIVATE KEY-----
 ~~~
 
-## Example keyId Values
+### Example Key RSA PSS test {#example-key-rsa-pss-test}
 
-The table below maps example `keyId` values to associated algorithms and/or keys.  These are example mappings that are valid only within the context of examples in examples within this and future documents that reference this section.  Unless otherwise specified, within the context of examples it should be assumed that the signer and verifier understand these `keyId` mappings.  These `keyId` values are not reserved, and deployments are free to use them, with these associations or others.
+The following key is a 2048-bit RSA public and private key pair, referred to in this document
+as `test-key-rsa-pss`:
 
-|keyId|Algorithm|Verification Key|
-|--- |--- |---|
-|`test-key-a`|`hs2019`, using RSASSA-PSS [RFC8017] and SHA-512 [RFC6234]|The public key specified in {{example-key-rsa-test}}|
-|`test-key-b`|`rsa-256`|The public key specified in {{example-key-rsa-test}}|
+~~~
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr4tmm3r20Wd/PbqvP1s2
++QEtvpuRaV8Yq40gjUR8y2Rjxa6dpG2GXHbPfvMs8ct+Lh1GH45x28Rw3Ry53mm+
+oAXjyQ86OnDkZ5N8lYbggD4O3w6M6pAvLkhk95AndTrifbIFPNU8PPMO7OyrFAHq
+gDsznjPFmTOtCEcN2Z1FpWgchwuYLPL+Wokqltd11nqqzi+bJ9cvSKADYdUAAN5W
+Utzdpiy6LbTgSxP7ociU4Tn0g5I6aDZJ7A8Lzo0KSyZYoA485mqcO0GVAdVw9lq4
+aOT9v6d+nb4bnNkQVklLQ3fVAvJm+xdDOp9LCNCN48V2pnDOkFV6+U9nV5oyc6XI
+2wIDAQAB
+-----END PUBLIC KEY-----
+
+-----BEGIN PRIVATE KEY-----
+MIIEvgIBADALBgkqhkiG9w0BAQoEggSqMIIEpgIBAAKCAQEAr4tmm3r20Wd/Pbqv
+P1s2+QEtvpuRaV8Yq40gjUR8y2Rjxa6dpG2GXHbPfvMs8ct+Lh1GH45x28Rw3Ry5
+3mm+oAXjyQ86OnDkZ5N8lYbggD4O3w6M6pAvLkhk95AndTrifbIFPNU8PPMO7Oyr
+FAHqgDsznjPFmTOtCEcN2Z1FpWgchwuYLPL+Wokqltd11nqqzi+bJ9cvSKADYdUA
+AN5WUtzdpiy6LbTgSxP7ociU4Tn0g5I6aDZJ7A8Lzo0KSyZYoA485mqcO0GVAdVw
+9lq4aOT9v6d+nb4bnNkQVklLQ3fVAvJm+xdDOp9LCNCN48V2pnDOkFV6+U9nV5oy
+c6XI2wIDAQABAoIBAQCUB8ip+kJiiZVKF8AqfB/aUP0jTAqOQewK1kKJ/iQCXBCq
+pbo360gvdt05H5VZ/RDVkEgO2k73VSsbulqezKs8RFs2tEmU+JgTI9MeQJPWcP6X
+aKy6LIYs0E2cWgp8GADgoBs8llBq0UhX0KffglIeek3n7Z6Gt4YFge2TAcW2WbN4
+XfK7lupFyo6HHyWRiYHMMARQXLJeOSdTn5aMBP0PO4bQyk5ORxTUSeOciPJUFktQ
+HkvGbym7KryEfwH8Tks0L7WhzyP60PL3xS9FNOJi9m+zztwYIXGDQuKM2GDsITeD
+2mI2oHoPMyAD0wdI7BwSVW18p1h+jgfc4dlexKYRAoGBAOVfuiEiOchGghV5vn5N
+RDNscAFnpHj1QgMr6/UG05RTgmcLfVsI1I4bSkbrIuVKviGGf7atlkROALOG/xRx
+DLadgBEeNyHL5lz6ihQaFJLVQ0u3U4SB67J0YtVO3R6lXcIjBDHuY8SjYJ7Ci6Z6
+vuDcoaEujnlrtUhaMxvSfcUJAoGBAMPsCHXte1uWNAqYad2WdLjPDlKtQJK1diCm
+rqmB2g8QE99hDOHItjDBEdpyFBKOIP+NpVtM2KLhRajjcL9Ph8jrID6XUqikQuVi
+4J9FV2m42jXMuioTT13idAILanYg8D3idvy/3isDVkON0X3UAVKrgMEne0hJpkPL
+FYqgetvDAoGBAKLQ6JZMbSe0pPIJkSamQhsehgL5Rs51iX4m1z7+sYFAJfhvN3Q/
+OGIHDRp6HjMUcxHpHw7U+S1TETxePwKLnLKj6hw8jnX2/nZRgWHzgVcY+sPsReRx
+NJVf+Cfh6yOtznfX00p+JWOXdSY8glSSHJwRAMog+hFGW1AYdt7w80XBAoGBAImR
+NUugqapgaEA8TrFxkJmngXYaAqpA0iYRA7kv3S4QavPBUGtFJHBNULzitydkNtVZ
+3w6hgce0h9YThTo/nKc+OZDZbgfN9s7cQ75x0PQCAO4fx2P91Q+mDzDUVTeG30mE
+t2m3S0dGe47JiJxifV9P3wNBNrZGSIF3mrORBVNDAoGBAI0QKn2Iv7Sgo4T/XjND
+dl2kZTXqGAk8dOhpUiw/HdM3OGWbhHj2NdCzBliOmPyQtAr770GITWvbAI+IRYyF
+S7Fnk6ZVVVHsxjtaHy1uJGFlaZzKR4AGNaUTOJMs6NadzCmGPAxNQQOCqoUjn4XR
+rOjr9w349JooGXhOxbu8nOxX
+-----END PRIVATE KEY-----
+~~~
 
 ## Test Cases
 
-This section provides non-normative examples that may be used as test cases to validate implementation correctness.  These examples are based on the following HTTP message:
+This section provides non-normative examples that may be used as test cases to validate implementation correctness. These examples are based on the following HTTP message:
 
-~~~
+~~~ http-message
 POST /foo?param=value&pet=dog HTTP/1.1
 Host: example.com
-Date: Tue, 07 Jun 2014 20:51:35 GMT
+Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
 Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Content-Length: 18
@@ -677,350 +997,98 @@ Content-Length: 18
 {"hello": "world"}
 ~~~
 
-### Signature Generation
+### Minimal Signature Header using rsa-pss-sha512
 
-#### hs2019 signature over minimal recommended content
+This example presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-pss-sha512` algorithm, covering none
+of the content of the HTTP message request but providing a timestamped signature proof of possession of the key.
 
-This presents metadata for a Signature using `hs2019`, over minimum recommended data to sign:
-
-|Property|Value|
-|--- |--- |
-|Algorithm|`hs2019`, using RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]|
-|Covered Content|`(created) (request-target)`|
-|Creation Time|8:51:35 PM GMT, June 7th, 2014|
-|Expiration Time|Undefined|
-|Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
-
-The Signature Input is:
+The corresponding signature input is:
 
 ~~~
-(created): 1402170695
-(request-target): post /foo?param=value&pet=dog
+"@signature-params": ();created=1618884475;keyid="test-key-rsa-pss"\
+  ;alg="rsa-pss-sha512"
 ~~~
 
-The signature value is:
+This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
-~~~
-e3y37nxAoeuXw2KbaIxE2d9jpE7Z9okgizg6QbD2Z7fUVUvog+ZTKKLRBnhNglVIY6fAa
-YlHwx7ZAXXdBVF8gjWBPL6U9zRrB4PFzjoLSxHaqsvS0ZK9FRxpenptgukaVQ1aeva3PE
-1aD6zZ93df2lFIFXGDefYCQ+M/SrDGQOFvaVykEkte5mO6zQZ/HpokjMKvilfSMJS+vbv
-C1GJItQpjs636Db+7zB2W1BurkGxtQdCLDXuIDg4S8pPSDihkch/dUzL2BpML3PXGKVXw
-HOUkVG6Q2ge07IYdzya6N1fIVA9eKI1Y47HT35QliVAxZgE0EZLo8mxq19ReIVvuFg==
-~~~
-
-A possible Signature header for this signature is:
-
-~~~
-Signature: keyId="test-key-a", created=1402170695,
-    headers="(created) (request-target)",
-    signature="e3y37nxAoeuXw2KbaIxE2d9jpE7Z9okgizg6QbD2Z7fUVUvog+ZTKK
-        LRBnhNglVIY6fAaYlHwx7ZAXXdBVF8gjWBPL6U9zRrB4PFzjoLSxHaqsvS0ZK
-        9FRxpenptgukaVQ1aeva3PE1aD6zZ93df2lFIFXGDefYCQ+M/SrDGQOFvaVyk
-        Ekte5mO6zQZ/HpokjMKvilfSMJS+vbvC1GJItQpjs636Db+7zB2W1BurkGxtQ
-        dCLDXuIDg4S8pPSDihkch/dUzL2BpML3PXGKVXwHOUkVG6Q2ge07IYdzya6N1
-        fIVA9eKI1Y47HT35QliVAxZgE0EZLo8mxq19ReIVvuFg=="
+~~~ http-message
+Signature-Input: sig1=();created=1618884475;keyid="test-key-rsa-pss"\
+  ;alg="rsa-pss-sha512"
+Signature: sig1=:qGKjr1213+iZCU1MCV8w2NTr/HvMGWYDzpqAWx7SrPE1y6gOkIQ3k2\
+  GlZDu9KnKnLN6LKX0JRa2M5vU9v/b0GjV0WSInMMKQJExJ/e9Y9K8q2eE0G9saGebEaWd\
+  R3Ao47odxLh95hBtejKIdiUBmQcQSAzAkoQ4aOZgvrHgkmvQDZQL0w30+8lMz3VglmN73\
+  CKp/ijZemO1iPdNwrdhAtDvj9OdFVJ/wiUECfU78aQWkQocvwrZXTmHCX9BMVUHGneXMY\
+  NQ0Y8umEHjxpnnLLvxUbw2KZrflp+l6m7WlhwXGJ15eAt1+mImanxUCtaKQJvEfcnOQ0S\
+  2jHysSRLheTA==:
 ~~~
 
-#### hs2019 signature covering all header fields
+### Header Coverage
 
-This presents metadata for a Signature using `hs2019` that covers all header fields in the request:
+This example covers all the specified headers in the example message.
 
-|Property|Value|
-|--- |--- |
-|Algorithm|`hs2019`, using RSASSA-PSS [RFC8017] using SHA-512 [RFC6234]|
-|Covered Content|`(created), (request-target), host, date, content-type, digest, content-length`|
-|Creation Time|8:51:35 PM GMT, June 7th, 2014|
-|Expiration Time|Undefined|
-|Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
-
-The Signature Input is:
+The corresponding signature input is:
 
 ~~~
-(created): 1402170695
-(request-target): post /foo?param=value&pet=dog
-host: example.com
-date: Tue, 07 Jun 2014 20:51:35 GMT
-content-type: application/json
-digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-content-length: 18
+"host": example.com
+"date": Tue, 20 Apr 2021 02:07:55 GMT
+"content-type": application/json
+"@signature-params": ("host" "date" "content-type");created=1618884475\
+  ;keyid="test-key-rsa-pss"
 ~~~
 
-The signature value is:
+
+This results in the following `Signature-Input` and `Signature` headers being added to the message:
+
 
 ~~~
-KXUj1H3ZOhv3Nk4xlRLTn4bOMlMOmFiud3VXrMa9MaLCxnVmrqOX5BulRvB65YW/wQp0o
-T/nNQpXgOYeY8ovmHlpkRyz5buNDqoOpRsCpLGxsIJ9cX8XVsM9jy+Q1+RIlD9wfWoPHh
-qhoXt35ZkasuIDPF/AETuObs9QydlsqONwbK+TdQguDK/8Va1Pocl6wK1uLwqcXlxhPEb
-55EmdYB9pddDyHTADING7K4qMwof2mC3t8Pb0yoLZoZX5a4Or4FrCCKK/9BHAhq/RsVk0
-dTENMbTB4i7cHvKQu+o9xuYWuxyvBa0Z6NdOb0di70cdrSDEsL5Gz7LBY5J2N9KdGg==
+Signature-Input: sig1=("host" "date" "content-type");created=1618884475\
+  ;keyid="test-key-rsa-pss"
+Signature: sig1=:NtIKWuXjr4SBEXj97gbick4O95ff378I0CZOa2VnIeEXZ1itzAdqTp\
+  SvG91XYrq5CfxCmk8zz1Zg7ZGYD+ngJyVn805r73rh2eFCPO+ZXDs45Is/Ex8srzGC9sf\
+  VZfqeEfApRFFe5yXDmANVUwzFWCEnGM6+SJVmWl1/jyEn45qA6Hw+ZDHbrbp6qvD4N0S9\
+  2jlPyVVEh/SmCwnkeNiBgnbt+E0K5wCFNHPbo4X1Tj406W+bTtnKzaoKxBWKW8aIQ7rg9\
+  2zqE1oqBRjqtRi5/Q6P5ZYYGGINKzNyV3UjZtxeZNnNJ+MAnWS0mofFqcZHVgSU/1wUzP\
+  7MhzOKLca1Yg==:
 ~~~
 
-A possible Signature header for this signature is:
+### Full Coverage
+
+This example covers all headers in the example message plus the request target and message body digest.
+
+The corresponding signature input is:
 
 ~~~
-Signature: keyId="test-key-a", algorithm="hs2019",
-    created=1402170695,
-    headers="(request-target) (created) host date content-type digest
-        content-length",
-    signature="KXUj1H3ZOhv3Nk4xlRLTn4bOMlMOmFiud3VXrMa9MaLCxnVmrqOX5B
-        ulRvB65YW/wQp0oT/nNQpXgOYeY8ovmHlpkRyz5buNDqoOpRsCpLGxsIJ9cX8
-        XVsM9jy+Q1+RIlD9wfWoPHhqhoXt35ZkasuIDPF/AETuObs9QydlsqONwbK+T
-        dQguDK/8Va1Pocl6wK1uLwqcXlxhPEb55EmdYB9pddDyHTADING7K4qMwof2m
-        C3t8Pb0yoLZoZX5a4Or4FrCCKK/9BHAhq/RsVk0dTENMbTB4i7cHvKQu+o9xu
-        YWuxyvBa0Z6NdOb0di70cdrSDEsL5Gz7LBY5J2N9KdGg=="
+"@request-target": post /foo?param=value&pet=dog
+"host": example.com
+"date": Tue, 20 Apr 2021 02:07:55 GMT
+"content-type": application/json
+"digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+"content-length": 18
+"@signature-params": ("@request-target" "host" "date" "content-type" \
+  "digest" "content-length");created=1618884475\
+  ;keyid="test-key-rsa-pss"
 ~~~
 
-### Signature Verification
-
-#### Minimal Required Signature Header
-
-This presents a Signature header containing only the minimal required parameters:
+This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
 ~~~
-Signature: keyId="test-key-a", (created): 1402170695,
-    signature="V3SijFpJOvDUT8t1/EnYli/4TbF2AGqwBGiGUGrgClCkiOAIlOxxY7
-        2Mr13DccFkYzg3gX1jIOpKXzH70C5bru4b71SBG+ShiJLu34gHCG33iw44NLG
-        UvT5+F+LCKbbHberyk8eyYsZ+TLwtZAYKafxfNOWQXF4o3QaWslDMm8Tcgrd8
-        onM45ayFyR4nXRlcGad4PISYGz8PmO4Y+K8RYOyDkgsmRxKtftFQUYG41anyE
-        lccNLfEfLBKsyV6kxr36U1Q7FdUopLv8kqluQySrWD6kesvFxNvbEOi+1uZqT
-        uFlK8ZldITQiqtNYaabRjQFZio63gma2y+UAaTGLdM9A=="
+Signature-Input: sig1=("@request-target" "host" "date" "content-type" \
+  "digest" "content-length");created=1618884475\
+  ;keyid="test-key-rsa-pss"
+Signature: sig1=:QNPZtqAGWN1YMtsLJ1oyQMLg9TuIwjsIBESTo1/YXUsG+6Sl1uKUdT\
+  e9xswwrc3Ui3gUd4/tLv48NGih2TRDc1AWbEQDuy6pjroxSPtFjquubqzbszxit1arPNh\
+  ONnyR/8yuIh3bOXfc/NYJ3KLNaWR6MKrGinCYKTNwrX/0V67EMdSgd5HHnW5xHFgKfRCj\
+  rG3ncV+jbaeSPJ8e96RZgr8slcdwmqXdiwiIBCQDKRIQ3U2muJWvxyjV/IYhCTwAXJaUz\
+  sQPKzR5QWelXEVdHyv4WIB2lKaYh7mAsz0/ANxFYRRSp2Joms0OAnIAFX9kKCSp4p15/Q\
+  8L9vSIGNpQtw==:
 ~~~
-
-The corresponding signature metadata derived from this header field is:
-
-|Property|Value|
-|--- |--- |
-|Algorithm|`hs2019`, using RSASSA-PSS  using SHA-256|
-|Covered Content|`(created)`|
-|Creation Time|8:51:35 PM GMT, June 7th, 2014|
-|Expiration Time|Undefined|
-|Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
-
-The corresponding Signature Input is:
-
-~~~
-(created): 1402170695
-~~~
-
-#### Minimal Recommended Signature Header
-
-This presents a Signature header containing only the minimal required and recommended parameters:
-
-~~~
-Signature: algorithm="hs2019", keyId="test-key-a",
-    (created): 1402170695,
-    signature="V3SijFpJOvDUT8t1/EnYli/4TbF2AGqwBGiGUGrgClCkiOAIlOxxY7
-        2Mr13DccFkYzg3gX1jIOpKXzH70C5bru4b71SBG+ShiJLu34gHCG33iw44NLG
-        UvT5+F+LCKbbHberyk8eyYsZ+TLwtZAYKafxfNOWQXF4o3QaWslDMm8Tcgrd8
-        onM45ayFyR4nXRlcGad4PISYGz8PmO4Y+K8RYOyDkgsmRxKtftFQUYG41anyE
-        lccNLfEfLBKsyV6kxr36U1Q7FdUopLv8kqluQySrWD6kesvFxNvbEOi+1uZqT
-        uFlK8ZldITQiqtNYaabRjQFZio63gma2y+UAaTGLdM9A=="
-~~~
-
-The corresponding signature metadata derived from this header field is:
-
-|Property|Value|
-|--- |--- |
-|Algorithm|`hs2019`, using RSASSA-PSS  using SHA-512|
-|Covered Content|`(created)`|
-|Creation Time|8:51:35 PM GMT, June 7th, 2014|
-|Expiration Time|Undefined|
-|Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
-
-The corresponding Signature Input is:
-
-~~~
-(created): 1402170695
-~~~
-
-#### Minimal Signature Header using rsa-256
-
-This presents a minimal Signature header for a signature using the `rsa-256` algorithm:
-
-~~~
-Signature: algorithm="rsa-256", keyId="test-key-b",
-    headers="date",
-    signature="HtXycCl97RBVkZi66ADKnC9c5eSSlb57GnQ4KFqNZplOpNfxqk62Jz
-        Z484jXgLvoOTRaKfR4hwyxlcyb+BWkVasApQovBSdit9Ml/YmN2IvJDPncrlh
-        PDVDv36Z9/DiSO+RNHD7iLXugdXo1+MGRimW1RmYdenl/ITeb7rjfLZ4b9VNn
-        LFtVWwrjhAiwIqeLjodVImzVc5srrk19HMZNuUejK6I3/MyN3+3U8tIRW4LWz
-        x6ZgGZUaEEP0aBlBkt7Fj0Tt5/P5HNW/Sa/m8smxbOHnwzAJDa10PyjzdIbyw
-        lnWIIWtZKPPsoVoKVopUWEU3TNhpWmaVhFrUL/O6SN3w=="
-~~~
-
-The corresponding signature metadata derived from this header field is:
-
-|Property|Value|
-|--- |--- |
-|Algorithm|`rsa-256`|
-|Covered Content|`date`|
-|Creation Time|Undefined|
-|Expiration Time|Undefined|
-|Verification Key Material|The public key specified in {{example-key-rsa-test}}.|
-
-
-The corresponding Signature Input is:
-
-~~~
-date: Tue, 07 Jun 2014 20:51:35 GMT
-~~~
-
-# Topics for Working Group Discussion {#wg-discuss}
-
-*RFC EDITOR: please remove this section before publication*
-
-The goal of this draft document is to provide a starting point at feature parity and compatible with the cavage-12 draft. The draft has known issues that will need to be addressed during development, and in the spirit of keeping compatibility, these issues have been enumerated but not addressed in this version. The editor recommends the working group discuss the issues and features described in this section after adoption of the document by the working group.  Topics are not listed in any particular order.
-
-## Issues
-
-### Confusing guidance on algorithm and key identification {#issue-alg-keyid}
-
-The current draft encourages determining the Algorithm metadata property from the `keyId` field, both in the guidance for the use of `algorithm` and `keyId`, and the definition for the `hs2019` algorithm and deprecation of the other algorithms in the registry.  The current state arose from concern that a malicious party could change the value of the `algorithm` parameter, potentially tricking the verifier into accepting a signature that would not have been verified under the actual parameter.
-
-Punting algorithm identification into `keyId` hurts interoperability, since we aren't defining the syntax or semantics of `keyId`.  It actually goes against that claim, as we are dictating that the signing algorithm must be specified by `keyId` or derivable from it.  It also renders the algorithm registry essentially useless.  Instead of this approach, we can protect against manipulation of the Signature header field by adding support for (and possibly mandating) including Signature metadata within the Signature Input.
-
-### Lack of definition of keyId hurts interoperability 
-
-The current text leaves the format and semantics of `keyId` completely up to the implementation.  This is primarily due to the fact that most implementers of Cavage have extensive investment in key distribution and management, and just need to plug an identifier into the header.  We should support those cases, but we also need to provide guidance for the developer that doesn't have that and just wants to know how to identify a key.  It may be enough to punt this to profiling specs, but this needs to be explored more.
-
-### Algorithm Registry duplicates work of JWA
-
-{{?RFC7518}} already defines an IANA registry for cryptographic algorithms.  This wasn't used by Cavage out of concerns about complexity of JOSE, and issues with JWE and JWS being too flexible, leading to insecure combinations of options.  Using JWA's definitions does not need to mean we're using JOSE, however.
-We should look at if/how we can leverage JWA's work without introducing too many sharp edges for implementers.
-
-In any use of JWS algorithms, this spec would define a way to create the JWS Signing Input string to be applied to the algorithm.  It should be noted that this is incompatible with JWS itself, which requires the inclusion of a structured header in the signature input.
-
-A possible approach is to incorporate all elements of the JWA signature algorithm registry into this spec using a prefix or other marker, such as `jws-RS256` for the RSA 256 JSON Web Signature algorithm.
-
-### Algorithm Registry should not be initialized with deprecated entries
-
-The initial entries in this document reflect those in Cavage.  The ones that are marked deprecated were done so because of the issue explained in {{issue-alg-keyid}}, with the possible exception of `rsa-sha1`.  We should probably just remove that one.
-
-### No percent-encoding normalization of path/query
-
-See: [issue #26](https://github.com/w3c-dvcg/http-signatures/issues/26)
-
-The canonicalization rules for `(request-target)` do not perform handle minor, semantically meaningless differences in percent-encoding, such that verification could fail if an intermediary normalizes the effective request URI prior to forwarding the message.  
-
-At a minimum, they should be case and percent-encoding normalized as described in sections 6.2.2.1 and 6.2.2.2 of {{?RFC3986}}.
-
-### Misleading name for headers parameter
-
-The Covered Content list contains identifiers for more than just headers, so the `header` parameter name is no longer appropriate.  Some alternatives: "content", "signed-content", "covered-content".
-
-### Changes to whitespace in header field values break verification
-
-Some header field values contain RWS, OWS, and/or BWS.  Since the header field value canonicalization rules do not address whitespace, changes to it (e.g., removing OWS or BWS or replacing strings of RWS with a single space) can cause verification to fail.
-
-### Multiple Set-Cookie headers are not well supported
-
-The Set-Cookie header can occur multiple times but does not adhere to the list syntax, and thus is not well supported by the header field value concatenation rules.
-
-### Covered Content list is not signed
-
-The Covered Content list should be part of the Signature Input, to protect against malicious changes.
-
-### Algorithm is not signed
-
-The Algorithm should be part of the Signature Input, to protect against malicious changes.
-
-### Verification key identifier is not signed
-
-The Verification key identifier (e.g., the value used for the `keyId` parameter) should be part of the Signature Input, to protect against malicious changes.
-
-### Max values, precision for Integer String and Decimal String not defined
-
-The definitions for Integer String and Decimal String do not specify a maximum value.  The definition for Decimal String (used to provide sub-second precision for Expiration Time) does not define minimum or maximum precision requirements.  It should set a sane requirement here (e.g., MUST support up to 3 decimal places and no more).
-
-### keyId parameter value could break list syntax
-
-The `keyId` parameter value needs to be constrained so as to not break list syntax (e.g., by containing a comma).
-
-### Creation Time and Expiration Time do not allow for clock skew
-
-The processing instructions for Creation Time and Expiration Time imply that verifiers are not permitted to account for clock skew during signature verification.
-
-### Should require lowercased header field names as identifiers
-
-The current text allows mixed-case header field names when they are being used as content identifiers.  This is unnecessary, as header field names are case-insensitive, and creates opportunity for incompatibility.  Instead, content identifiers should always be lowercase.
-
-### Reconcile Date header and Creation Time
-
-The draft is missing guidance on if/how the Date header relates to signature Creation Time.  There are cases where they may be different, such as if a signature was pre-created.  Should Creation Time default to the value in the Date header if the `created` parameter is not specified?
-
-### Remove algorithm-specific rules for content identifiers
-
-The rules that restrict when the signer can or must include certain identifiers appear to be related to the pseudo-revving of the Cavage draft that happened when the `hs2019` algorithm was introduced.  We should drop these rules, as it can be expected that anyone implementing this draft will support all content identifiers.
-
-### Add guidance for signing compressed headers
-
-The draft should provide guidance on how to sign headers when {{?RFC7541}} is used.  This guidance might be as simple as "sign the uncompressed header field value."
-
-### Transformations to Via header field value break verification
-
-Intermediaries are permitted to strip comments from the `Via` header field value, and consolidate related sequences of entries.  The canonicalization rules do not account for these changes, and thus they cause signature verification to fail if the `Via` header is signed. At the very least, guidance on signing or not signing `Via` headers needs to be included.
-
-### Case changes to case-insensitive header field values break verification
-
-Some header field values are case-insensitive, in whole or in part. The canonicalization rules do not account for this, thus a case change to a covered header field value causes verification to fail.
-
-### Need more examples for Signature header
-
-Add more examples showing different cases e.g, where `created` or `expires` are not present.
-
-### Expiration not needed
-
-In many cases, putting the expiration of the signature into the hands of the signer opens up more options for failures than necessary.  Instead of the `expires`, any verifier can use the `created` field and an internal lifetime or offset to calculate expiration.  We should consider dropping the `expires` field.
-
-## Features
-
-### Define more content identifiers
-
-It should be possible to independently include the following content and metadata properties in Covered Content:
-
-- The signature's Algorithm
-- The signature's Covered Content
-- The value used for the `keyId` parameter
-- Request method
-- Individual components of the effective request URI: scheme, authority, path, query
-- Status code
-- Request body (currently supported via Digest header {{?RFC3230}}  )
-
-### Multiple signature support
-
-(( Editor's note: I believe this use case is theoretical.  Please let me know if this is a use case you have. ))
-
-There may be scenarios where attaching multiple signatures to a single message is useful:
-
-- A gateway attaches a signature over headers it adds (e.g., `Forwarded`) to messages already signed by the user agent.
-- A signer attaches two signatures signed by different keys, to be verified by different entities.
-
-This could be addressed by changing the Signature header syntax to accept a list of parameter sets for a single signature, e.g., by separating parameters with `";"` instead of `","`.  It may also be necessary to include a signature identifier parameter.
-
-### Support for incremental signing of header field value list items
-
-(( Editor's note: I believe this use case is theoretical.  Please let me know if this is a use case you have. ))
-
-Currently, signing a header field value is all-or-nothing: either the entire value is signed, or none of it is.  For header fields that use list syntax, it would be useful to be able to specify which items in the list are signed.
-
-A simple approach that allowed the signer to indicate the list size at signing time would allow a signer to sign header fields that are may be appended to by intermediaries as the message makes its way to the recipient.  Specifying list size in terms of number of items could introduce risks of list syntax is not strictly adhered to (e.g., a malicious party crafts a value that gets parsed by the application as 5 items, but by the verifier as 4).  Specifying list size in number of octets might address this, but more exploration is required.
-
-### Support expected authority changes
-
-In some cases, the authority of the effective request URI may be expected to change, for example from "public-service-name.example.com" to "service-host-1.public-service-name.example.com".  This is commonly the case for services that are hosted behind a load-balancing gateway, where the client sends requests to a publicly known domain name for the service, and these requests are transformed by the gateway into requests to specific hosts in the service fleet.
-
-One possible way to handle this would be to special-case the Host header field to allow verifier to substitute a known expected value, or a value provided in another header field (e.g., `Via`) when generating the Signature Input, provided that the verifier also recognizes the real value in the `Host` header.  Alternatively, this logic could apply to an `(audience)` content identifier.
-
-### Support for signing specific cookies
-
-A signer may only wish to sign one or a few cookies, for example if the website requires its authentication state cookie to be signed, but also sets other cookies (e.g., for analytics, ad tracking, etc.)
 
 # Acknowledgements {#acknowledgements}
 {:numbered="false"}
 
-This specification is based on the draft-cavage-http-signatures draft.  The editor would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.
+This specification was initially based on the draft-cavage-http-signatures internet draft.  The editors would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions.
 
-The editor would also like to thank the following individuals for feedback on and implementations of the draft-cavage-http-signatures draft (in alphabetical order):
+The editors would also like to thank the following individuals for feedback, insight, and implementation of this draft and its predecessors (in alphabetical order):
 Mark Adamcin,
 Mark Allen,
 Paul Annesley,
@@ -1036,8 +1104,9 @@ Andrey Kislyuk,
 Adam Knight,
 Dave Lehn,
 Dave Longley,
-James H. Manger,
 Ilari Liusvaara,
+James H. Manger,
+Kathleen Moriarty,
 Mark Nottingham,
 Yoav Nir,
 Adrian Palmer,
@@ -1052,7 +1121,7 @@ Dirk Stein,
 Henry Story,
 Lukasz Szewc,
 Chris Webber, and
-Jeffrey Yasskin
+Jeffrey Yasskin.
 
 # Document History
 {:numbered="false"}
@@ -1060,6 +1129,33 @@ Jeffrey Yasskin
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - -04
+     * Moved signature component definitions up to intro.
+     * Created formal function definitions for algorithms to fulfill.
+     * Updated all examples.
+     * Added nonce parameter field.
+
+  - -03
+     * Clarified signing and verification processes.
+     * Updated algorithm and key selection method.
+     * Clearly defined core algorithm set.
+     * Defined JOSE signature mapping process.
+     * Removed legacy signature methods.
+     * Define signature parameters separately from "signature" object model.
+     * Define serialization values for signature-input header based on signature input.
+
+  - -02
+     * Removed editorial comments on document sources.
+     * Removed in-document issues list in favor of tracked issues.
+     * Replaced unstructured `Signature` header with `Signature-Input` and `Signature` Dictionary Structured Header Fields.
+     * Defined content identifiers for individual Dictionary members, e.g., `"x-dictionary-field";key=member-name`.
+     * Defined content identifiers for first N members of a List, e.g., `"x-list-field":prefix=4`.
+     * Fixed up examples.
+     * Updated introduction now that it's adopted.
+     * Defined specialty content identifiers and a means to extend them.
+     * Required signature parameters to be included in signature.
+     * Added guidance on backwards compatibility, detection, and use of signature methods.
+
   - -01
      * Strengthened requirement for content identifiers for header fields to be lower-case (changed from SHOULD to MUST).
      * Added real example values for Creation Time and Expiration Time.
@@ -1067,7 +1163,7 @@ Jeffrey Yasskin
 
   - -00
      * Initialized from draft-richanna-http-message-signatures-00, following adoption by the working group.
-     
+
 - draft-richanna-http-message-signatures
   - -00
      * Converted to xml2rfc v3 and reformatted to comply with RFC style guides.

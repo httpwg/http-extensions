@@ -27,7 +27,6 @@ author:
     ins: M. Nottingham
     name: Mark Nottingham
     organization: Fastly
-    street: made in
     city: Prahran
     region: VIC
     country: Australia
@@ -54,7 +53,7 @@ informative:
       DOI:  10.1109/IEEESTD.2019.8766229
       ISBN: 978-1-5044-5924-2
 
-  UTF-8:
+  STD63:
     title: UTF-8, a transformation format of ISO 10646
     author:
     - ins: F. Yergeau
@@ -88,13 +87,13 @@ Implementations are tracked at <https://github.com/httpwg/wiki/wiki/Structured-H
 
 # Introduction
 
-Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in Section 8.3.1 of {{?RFC7231}}, there are many decisions -- and pitfalls -- for a prospective HTTP field author.
+Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in {{?RFC7231}}{: section="8.3.1"}, there are many decisions -- and pitfalls -- for a prospective HTTP field author.
 
-Once a field is defined, bespoke parsers and serializers often need to be written, because each field value has slightly different handling of what looks like common syntax.
+Once a field is defined, bespoke parsers and serializers often need to be written, because each field value has a slightly different handling of what looks like common syntax.
 
 This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{?RFC7230}} header and trailer fields.
 
-A HTTP field that is defined as a "Structured Header" or "Structured Trailer" (if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
+An HTTP field that is defined as a "Structured Header" or "Structured Trailer" (if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
 
 Additionally, future versions of HTTP can define alternative serializations of the abstract model of these structures, allowing fields that use that model to be transmitted more efficiently without being redefined.
 
@@ -111,31 +110,31 @@ Those abstract types can be serialized into and parsed from HTTP field values us
 
 This specification intentionally defines strict parsing and serialization behaviors using step-by-step algorithms; the only error handling defined is to fail the operation altogether.
 
-It is designed to encourage faithful implementation and therefore good interoperability. Therefore, an implementation that tried to be helpful by being more tolerant of input would make interoperability worse, since that would create pressure on other implementations to implement similar (but likely subtly different) workarounds.
+It is designed to encourage faithful implementation and good interoperability. Therefore, an implementation that tried to be helpful by being more tolerant of input would make interoperability worse, since that would create pressure on other implementations to implement similar (but likely subtly different) workarounds.
 
-In other words, strict processing is an intentional feature of this specification; it allows non-conformant input to be discovered and corrected by the producer early, and avoids both interoperability and security issues that might otherwise result.
+In other words, strict processing is an intentional feature of this specification; it allows non-conformant input to be discovered and corrected by the producer early and avoids both interoperability and security issues that might otherwise result.
 
-Note that as a result of this strictness, if a field is appended to by multiple parties (e.g., intermediaries, or different components in the sender), an error in one party's value is likely to cause the entire field value to fail parsing.
+Note that as a result of this strictness, if a field is appended to by multiple parties (e.g., intermediaries or different components in the sender), an error in one party's value is likely to cause the entire field value to fail parsing.
 
 
 ## Notational Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document uses algorithms to specify parsing and serialization behaviors, and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA and DQUOTE rules from {{!RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialization behaviors and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{!RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
 
 When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
-For serialization to HTTP fields, the ABNF illustrates their expected wire representations, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm.
+For serialization to HTTP fields, the ABNF illustrates their expected wire representations, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm described in {{text-parse}}.
 
 
 # Defining New Structured Fields {#specify}
 
-To specify a HTTP field as a Structured Field, its authors needs to:
+To specify an HTTP field as a Structured Field, its authors need to:
 
 * Normatively reference this specification. Recipients and generators of the field need to know that the requirements of this document are in effect.
 
-* Identify whether the field is a Structured Header (i.e., it can only be used in the header section - the common case), a Structured Trailer (only in the trailer section), or a Structured Field (both).
+* Identify whether the field is a Structured Header (i.e., it can only be used in the header section -- the common case), a Structured Trailer (only in the trailer section), or a Structured Field (both).
 
 * Specify the type of the field value; either List ({{list}}), Dictionary ({{dictionary}}), or Item ({{item}}).
 
@@ -143,59 +142,63 @@ To specify a HTTP field as a Structured Field, its authors needs to:
 
 * Specify any additional constraints upon the field value, as well as the consequences when those constraints are violated.
 
-Typically, this means that a field definition will specify the top-level type -- List, Dictionary or Item -- and then define its allowable types, and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q", or strings in lowercase. Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
+Typically, this means that a field definition will specify the top-level type -- List, Dictionary, or Item -- and then define its allowable types and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q", or strings in lowercase. Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
 
 When parsing fails, the entire field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different error handling, this should be explicitly specified.
 
-Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized Parameter as an error condition.
+Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized parameter as an error condition.
 
-To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" Parameters be added by senders. A specification could stipulate that all Parameters that fit a defined pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
+To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" parameters be added by senders. A specification could stipulate that all parameters that fit a defined pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
 
-Specifications that use Dictionaries can also allow for forward compatibility by requiring that the presence of -- as well as value and type associated with -- unknown members be ignored. Later specifications can then add additional members, specifying constraints on them as appropriate.
+Specifications that use Dictionaries can also allow for forward compatibility by requiring that the presence of -- as well as value and type associated with -- unknown members be ignored. Subsequent specifications can then add additional members, specifying constraints on them as appropriate.
 
-An extension to a structured field can then require that an entire field value be ignored by a recipient that understands the extension if constraints on the value it defines are not met.
+An extension to a Structured Field can then require that an entire field value be ignored by a recipient that understands the extension if constraints on the value it defines are not met.
 
 A field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List). Likewise, field definitions can only use this specification for the entire field value, not a portion thereof.
 
 This specification defines minimums for the length or number of various structures supported by implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
 
-Specifications can refer to a field name as a "structured header name", "structured trailer name" or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value" or "structured field value" as necessary. Field definitions are encouraged to use the ABNF rules beginning with "sf-" defined in this specification; other rules in this specification are not intended for their use.
+Specifications can refer to a field name as a "structured header name", "structured trailer name", or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value", or "structured field value" as necessary. Field definitions are encouraged to use the ABNF rules beginning with "sf-" defined in this specification; other rules in this specification are not intended to be used in field definitions.
 
 For example, a fictitious Foo-Example header field might be specified as:
 
-~~~ example
---8<--
-42. Foo-Example Header
+<blockquote>
+<t>42. Foo-Example Header</t>
 
-The Foo-Example HTTP header field conveys information about how
-much Foo the message has.
+<t>The Foo-Example HTTP header field conveys information about how
+much Foo the message has.</t>
 
-Foo-Example is a Item Structured Header [RFCxxxx]. Its value MUST be
-an Integer (Section Y.Y of [RFCxxxx]). Its ABNF is:
+<t>Foo-Example is an Item Structured Header [RFC8941]. Its value MUST be
+an Integer (Section 3.3.1 of [RFC8941]). Its ABNF is:</t>
 
+<artwork>
   Foo-Example = sf-integer
+</artwork>
 
-Its value indicates the amount of Foo in the message, and MUST
+<t>Its value indicates the amount of Foo in the message, and it MUST
 be between 0 and 10, inclusive; other values MUST cause
-the entire header field to be ignored.
+the entire header field to be ignored.</t>
 
-The following parameters are defined:
-* A Parameter whose name is "foourl", and whose value is a String
-  (Section Y.Y of [RFCxxxx]), conveying the Foo URL
-  for the message. See below for processing requirements.
+<t>The following parameter is defined:</t>
 
-"foourl" contains a URI-reference (Section 4.1 of [RFC3986]). If
+<ul>
+<li>A parameter whose key is "foourl", and whose value is a String
+  (Section 3.3.3 of [RFC8941]), conveying the Foo URL
+  for the message. See below for processing requirements.</li>
+</ul>
+
+<t>"foourl" contains a URI-reference (Section 4.1 of [RFC3986]). If
 its value is not a valid URI-reference, the entire header field
 MUST be ignored. If its value is a relative reference (Section 4.2
 of [RFC3986]), it MUST be resolved (Section 5 of [RFC3986]) before
-being used.
+being used.</t>
 
-For example:
+<t>For example:</t>
 
+<artwork>
   Foo-Example: 2; foourl="https://foo.example.com/"
--->8--
-~~~
-
+</artwork>
+</blockquote>
 
 # Structured Data Types {#types}
 
@@ -203,11 +206,11 @@ This section defines the abstract types for Structured Fields. The ABNF provided
 
 In summary:
 
-* There are three top-level types that a HTTP field can be defined as: Lists, Dictionaries, and Items.
+* There are three top-level types that an HTTP field can be defined as: Lists, Dictionaries, and Items.
 
 * Lists and Dictionaries are containers; their members can be Items or Inner Lists (which are themselves arrays of Items).
 
-* Both Items and Inner Lists can be parameterized with key/value pairs.
+* Both Items and Inner Lists can be Parameterized with key/value pairs.
 
 
 ## Lists {#list}
@@ -221,28 +224,28 @@ sf-list       = list-member *( OWS "," OWS list-member )
 list-member   = sf-item / inner-list
 ~~~
 
-Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Strings could look like:
+Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
 
-~~~ example
-Example-StrList: "foo", "bar", "It was the best of times."
+~~~ http-message
+Example-List: sugar, tea, rum
 ~~~
 
 An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
 
-Note that Lists can have their members split across multiple lines inside a header or trailer section, as per Section 3.2.2 of {{?RFC7230}}; for example, the following are equivalent:
+Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{?RFC7230}}{: section="3.2.2"}; for example, the following are equivalent:
 
-~~~ example
-Example-Hdr: foo, bar
+~~~ http-message
+Example-List: sugar, tea, rum
 ~~~
 
 and
 
-~~~ example
-Example-Hdr: foo
-Example-Hdr: bar
+~~~ http-message
+Example-List: sugar, tea
+Example-List: rum
 ~~~
 
-However, individual members of a List cannot be safely split between across lines; see {{text-parse}} for details.
+However, individual members of a List cannot be safely split between lines; see {{text-parse}} for details.
 
 Parsers MUST support Lists containing at least 1024 members. Field specifications can constrain the types and cardinality of individual List values as they require.
 
@@ -258,18 +261,18 @@ inner-list    = "(" *SP [ sf-item *( 1*SP sf-item ) *SP ] ")"
                 parameters
 ~~~
 
-Inner Lists are denoted by surrounding parenthesis, and have their values delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
+Inner Lists are denoted by surrounding parenthesis, and their values are delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
-~~~ example
-Example-StrListList: ("foo" "bar"), ("baz"), ("bat" "one"), ()
+~~~ http-message
+Example-List: ("foo" "bar"), ("baz"), ("bat" "one"), ()
 ~~~
 
 Note that the last member in this example is an empty Inner List.
 
 A header field whose value is defined as a List of Inner Lists with Parameters at both levels could look like:
 
-~~~ example
-Example-ListListParam: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
+~~~ http-message
+Example-List: ("foo"; a=1;b=2);lvl=5, ("bar" "baz");lvl=1
 ~~~
 
 Parsers MUST support Inner Lists containing at least 256 members. Field specifications can constrain the types and cardinality of individual Inner List members as they require.
@@ -277,55 +280,57 @@ Parsers MUST support Inner Lists containing at least 256 members. Field specific
 
 ### Parameters {#param}
 
-Parameters are an ordered map of key-value pairs that are associated with an Item ({{item}}) or Inner List ({{inner-list}}). The keys are unique within the scope the Parameters they occur within, and the values are bare items (i.e., they themselves cannot be parameterized; see {{item}}).
+Parameters are an ordered map of key-value pairs that are associated with an Item ({{item}}) or Inner List ({{inner-list}}). The keys are unique within the scope of the Parameters they occur within, and the values are bare items (i.e., they themselves cannot be parameterized; see {{item}}).
+
+Implementations MUST provide access to Parameters both by index and by key. Specifications MAY use either means of accessing them.
 
 The ABNF for Parameters is:
 
 ~~~ abnf
 parameters    = *( ";" *SP parameter )
-parameter     = param-name [ "=" param-value ]
-param-name    = key
+parameter     = param-key [ "=" param-value ]
+param-key     = key
 key           = ( lcalpha / "*" )
                 *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 ~~~
 
-Note that Parameters are ordered as serialized, and Parameter keys cannot contain uppercase letters. A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
+Note that parameters are ordered as serialized, and parameter keys cannot contain uppercase letters. A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
 
-~~~ example
-Example-ParamList: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
+~~~ http-message
+Example-List: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
 ~~~
 
 Parameters whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example, the "a" parameter here is true, while the "b" parameter is false:
 
-~~~ example
-Example-Int: 1; a; b=?0
+~~~ http-message
+Example-Integer: 1; a; b=?0
 ~~~
 
 Note that this requirement is only on serialization; parsers are still required to correctly handle the true value when it appears in a parameter.
 
-Parsers MUST support at least 256 parameters on an Item or Inner List, and support parameter keys with at least 64 characters. Field specifications can constrain the order of individual Parameters, as well as their values' types as required.
+Parsers MUST support at least 256 parameters on an Item or Inner List, and support parameter keys with at least 64 characters. Field specifications can constrain the order of individual parameters, as well as their values' types as required.
 
 
 ## Dictionaries {#dictionary}
 
-Dictionaries are ordered maps of name-value pairs, where the names are short textual strings and the values are Items ({{item}}) or arrays of Items, both of which can be Parameterized ({{param}}). There can be zero or more members, and their names are unique in the scope of the Dictionary they occur within.
+Dictionaries are ordered maps of key-value pairs, where the keys are short textual strings and the values are Items ({{item}}) or arrays of Items, both of which can be Parameterized ({{param}}). There can be zero or more members, and their keys are unique in the scope of the Dictionary they occur within.
 
-Implementations MUST provide access to Dictionaries both by index and by name. Specifications MAY use either means of accessing the members.
+Implementations MUST provide access to Dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
 The ABNF for Dictionaries is:
 
 ~~~ abnf
 sf-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-name [ "=" member-value ]
-member-name    = key
+dict-member    = member-key ( parameters / ( "=" member-value ))
+member-key     = key
 member-value   = sf-item / inner-list
 ~~~
 
-Members are ordered as serialized, and separated by a comma with optional whitespace. Member names cannot contain uppercase characters. Names and values are separated by "=" (without whitespace). For example:
+Members are ordered as serialized and separated by a comma with optional whitespace. Member keys cannot contain uppercase characters. Keys and values are separated by "=" (without whitespace). For example:
 
-~~~ example
+~~~ http-message
 Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
 ~~~
 
@@ -333,7 +338,7 @@ Note that in this example, the final "=" is due to the inclusion of a Byte Seque
 
 Members whose value is Boolean (see {{boolean}}) true MUST omit that value when serialized. For example, here both "b" and "c" are true:
 
-~~~ example
+~~~ http-message
 Example-Dict: a=?0, b, c; foo=bar
 ~~~
 
@@ -341,41 +346,41 @@ Note that this requirement is only on serialization; parsers are still required 
 
 A Dictionary with a member whose value is an Inner List of Tokens:
 
-~~~ example
-Example-DictList: rating=1.5, feelings=(joy sadness)
+~~~ http-message
+Example-Dict: rating=1.5, feelings=(joy sadness)
 ~~~
 
-A Dictionary with a mix of Items and Inner Lists, some with Parameters:
+A Dictionary with a mix of Items and Inner Lists, some with parameters:
 
-~~~ example
-Example-MixDict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
+~~~ http-message
+Example-Dict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
 ~~~
 
-As with lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
+As with Lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
 
-Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their names, as well as whether their presence is required or optional. Recipients MUST ignore names that are undefined or unknown, unless the field's specification specifically disallows them.
+Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their keys, as well as whether their presence is required or optional. Recipients MUST ignore members whose keys that are undefined or unknown, unless the field's specification specifically disallows them.
 
-Note that Dictionaries can have their members split across multiple lines inside a header or trailer section; for example, the following are equivalent:
+Note that Dictionaries can have their members split across multiple lines of the same header or trailer section; for example, the following are equivalent:
 
-~~~ example
-Example-Hdr: foo=1, bar=2
+~~~ http-message
+Example-Dict: foo=1, bar=2
 ~~~
 
 and
 
-~~~ example
-Example-Hdr: foo=1
-Example-Hdr: bar=2
+~~~ http-message
+Example-Dict: foo=1
+Example-Dict: bar=2
 ~~~
 
 However, individual members of a Dictionary cannot be safely split between lines; see {{text-parse}} for details.
 
-Parsers MUST support Dictionaries containing at least 1024 name/value pairs, and names with at least 64 characters. Field specifications can constrain the order of individual Dictionary members, as well as their values' types as required.
+Parsers MUST support Dictionaries containing at least 1024 key/value pairs and keys with at least 64 characters. Field specifications can constrain the order of individual Dictionary members, as well as their values' types as required.
 
 
 ## Items {#item}
 
-An Item can be a Integer ({{integer}}), Decimal ({{decimal}}), String ({{string}}), Token ({{token}}), Byte Sequence ({{binary}}), or Boolean ({{boolean}}). It can have associated Parameters ({{param}}).
+An Item can be an Integer ({{integer}}), a Decimal ({{decimal}}), a String ({{string}}), a Token ({{token}}), a Byte Sequence ({{binary}}), or a Boolean ({{boolean}}). It can have associated parameters ({{param}}).
 
 The ABNF for Items is:
 
@@ -387,20 +392,20 @@ bare-item = sf-integer / sf-decimal / sf-string / sf-token
 
 For example, a header field that is defined to be an Item that is an Integer might look like:
 
-~~~ example
-Example-IntItemHeader: 5
+~~~ http-message
+Example-Integer: 5
 ~~~
 
-or with Parameters:
+or with parameters:
 
-~~~ example
-Example-IntItem: 5; foo=bar
+~~~ http-message
+Example-Integer: 5; foo=bar
 ~~~
 
 
 ### Integers {#integer}
 
-Integers have a range of -999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility ({{IEEE754}}).
+Integers have a range of -999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility {{IEEE754}}.
 
 The ABNF for Integers is:
 
@@ -410,13 +415,13 @@ sf-integer = ["-"] 1*15DIGIT
 
 For example:
 
-~~~ example
+~~~ http-message
 Example-Integer: 42
 ~~~
 
-Integers larger than 15 digits can be supported in a variety of ways; for example, by using a String ({{string}}), Byte Sequence ({{binary}}), or a parameter on an Integer that acts as a scaling factor.
+Integers larger than 15 digits can be supported in a variety of ways; for example, by using a String ({{string}}), a Byte Sequence ({{binary}}), or a parameter on an Integer that acts as a scaling factor.
 
-While it is possible to serialise Integers with leading zeros (e.g., "0002", "-01") and signed zero ("-0"), these distinctions may not be preserved by implementations.
+While it is possible to serialize Integers with leading zeros (e.g., "0002", "-01") and signed zero ("-0"), these distinctions may not be preserved by implementations.
 
 Note that commas in Integers are used in this section's prose only for readability; they are not valid in the wire format.
 
@@ -435,13 +440,13 @@ sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
 
 For example, a header whose value is defined as a Decimal could look like:
 
-~~~ example
+~~~ http-message
 Example-Decimal: 4.5
 ~~~
 
-While it is possible to serialise Decimals with leading zeros (e.g., "0002.5", "-01.334"), trailing zeros (e.g., "5.230", "-0.40"), and signed zero (e.g., "-0.0"), these distinctions may not be preserved by implementations.
+While it is possible to serialize Decimals with leading zeros (e.g., "0002.5", "-01.334"), trailing zeros (e.g., "5.230", "-0.40"), and signed zero (e.g., "-0.0"), these distinctions may not be preserved by implementations.
 
-Note that the serialisation algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the header definition to occur before serialisation.
+Note that the serialization algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the header definition to occur before serialization.
 
 
 ### Strings {#string}
@@ -459,7 +464,7 @@ escaped   = "\" ( DQUOTE / "\" )
 
 Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
-~~~ example
+~~~ http-message
 Example-String: "hello world"
 ~~~
 
@@ -467,7 +472,7 @@ Note that Strings only use DQUOTE as a delimiter; single quotes do not delimit S
 
 Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
 
-When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably {{UTF-8}}).
+When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably UTF-8 {{STD63}}).
 
 Parsers MUST support Strings (after any decoding) with at least 1024 characters.
 
@@ -484,7 +489,7 @@ sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 
 For example:
 
-~~~ example
+~~~ http-message
 Example-Token: foo123/456
 ~~~
 
@@ -504,10 +509,10 @@ sf-binary = ":" *(base64) ":"
 base64    = ALPHA / DIGIT / "+" / "/" / "="
 ~~~
 
-A Byte Sequence is delimited with colons and encoded using base64 ({{!RFC4648}}, Section 4). For example:
+A Byte Sequence is delimited with colons and encoded using base64 ({{RFC4648, Section 4}}). For example:
 
-~~~ example
-Example-Binary: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
+~~~ http-message
+Example-ByteSequence: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
 ~~~
 
 Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
@@ -526,32 +531,32 @@ boolean    = "0" / "1"
 
 A Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
-~~~ example
-Example-Bool: ?1
+~~~ http-message
+Example-Boolean: ?1
 ~~~
 
 Note that in Dictionary ({{dictionary}}) and Parameter ({{param}}) values, Boolean true is indicated by omitting the value.
 
 
-# Working With Structured Fields in HTTP {#text}
+# Working with Structured Fields in HTTP {#text}
 
 This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{?RFC7540}} before compression with HPACK {{?RFC7541}}).
 
 ## Serializing Structured Fields {#text-serialize}
 
-Given a structure defined in this specification, return an ASCII string suitable for use in a HTTP field value.
+Given a structure defined in this specification, return an ASCII string suitable for use in an HTTP field value.
 
 1. If the structure is a Dictionary or List and its value is empty (i.e., it has no members), do not serialize the field at all (i.e., omit both the field-name and field-value).
 3. If the structure is a List, let output_string be the result of running Serializing a List ({{ser-list}}) with the structure.
-2. Else if the structure is a Dictionary, let output_string be the result of running Serializing a Dictionary ({{ser-dictionary}}) with the structure.
-4. Else if the structure is an Item, let output_string be the result of running Serializing an Item ({{ser-item}}) with the structure.
+2. Else, if the structure is a Dictionary, let output_string be the result of running Serializing a Dictionary ({{ser-dictionary}}) with the structure.
+4. Else, if the structure is an Item, let output_string be the result of running Serializing an Item ({{ser-item}}) with the structure.
 5. Else, fail serialization.
 6. Return output_string converted into an array of bytes, using ASCII encoding {{!RFC0020}}.
 
 
 ### Serializing a List {#ser-list}
 
-Given an array of (member_value, parameters) tuples as input_list, return an ASCII string suitable for use in a HTTP field value.
+Given an array of (member_value, parameters) tuples as input_list, return an ASCII string suitable for use in an HTTP field value.
 
 1. Let output be an empty string.
 2. For each (member_value, parameters) of input_list:
@@ -564,7 +569,7 @@ Given an array of (member_value, parameters) tuples as input_list, return an ASC
 
 #### Serializing an Inner List {#ser-innerlist}
 
-Given an array of (member_value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in a HTTP field value.
+Given an array of (member_value, parameters) tuples as inner_list, and parameters as list_parameters, return an ASCII string suitable for use in an HTTP field value.
 
 1. Let output be the string "(".
 2. For each (member_value, parameters) of inner_list:
@@ -576,12 +581,12 @@ Given an array of (member_value, parameters) tuples as inner_list, and parameter
 
 #### Serializing Parameters {#ser-params}
 
-Given an ordered Dictionary as input_parameters (each member having a param_name and a param_value), return an ASCII string suitable for use in a HTTP field value.
+Given an ordered Dictionary as input_parameters (each member having a param_key and a param_value), return an ASCII string suitable for use in an HTTP field value.
 
 0. Let output be an empty string.
-1. For each param_name with a value of param_value in input_parameters:
+1. For each param_key with a value of param_value in input_parameters:
    1. Append ";" to output.
-   2. Append the result of running Serializing a Key ({{ser-key}}) with param_name to output.
+   2. Append the result of running Serializing a Key ({{ser-key}}) with param_key to output.
    4. If param_value is not Boolean true:
       1. Append "=" to output.
       2. Append the result of running Serializing a bare Item ({{ser-bare-item}}) with param_value to output.
@@ -590,10 +595,10 @@ Given an ordered Dictionary as input_parameters (each member having a param_name
 
 #### Serializing a Key {#ser-key}
 
-Given a key as input_key, return an ASCII string suitable for use in a HTTP field value.
+Given a key as input_key, return an ASCII string suitable for use in an HTTP field value.
 
 0. Convert input_key into a sequence of ASCII characters; if conversion fails, fail serialization.
-1. If input_key contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*" fail serialization.
+1. If input_key contains characters not in lcalpha, DIGIT, "\_", "-", ".", or "\*", fail serialization.
 2. If the first character of input_key is not lcalpha or "\*", fail serialization.
 3. Let output be an empty string.
 4. Append input_key to output.
@@ -602,11 +607,11 @@ Given a key as input_key, return an ASCII string suitable for use in a HTTP fiel
 
 ### Serializing a Dictionary {#ser-dictionary}
 
-Given an ordered Dictionary as input_dictionary (each member having a member_name and a tuple value of (member_value, parameters)), return an ASCII string suitable for use in a HTTP field value.
+Given an ordered Dictionary as input_dictionary (each member having a member_key and a tuple value of (member_value, parameters)), return an ASCII string suitable for use in an HTTP field value.
 
 1. Let output be an empty string.
-2. For each member_name with a value of (member_value, parameters) in input_dictionary:
-   1. Append the result of running Serializing a Key ({{ser-key}}) with member's member_name to output.
+2. For each member_key with a value of (member_value, parameters) in input_dictionary:
+   1. Append the result of running Serializing a Key ({{ser-key}}) with member's member_key to output.
    2. If member_value is Boolean true:
        1. Append the result of running Serializing Parameters ({{ser-params}}) with parameters to output.
    3. Otherwise:
@@ -621,30 +626,30 @@ Given an ordered Dictionary as input_dictionary (each member having a member_nam
 
 ### Serializing an Item {#ser-item}
 
-Given an Item as bare_item and Parameters as item_parameters, return an ASCII string suitable for use in a HTTP field value.
+Given an Item as bare_item and Parameters as item_parameters, return an ASCII string suitable for use in an HTTP field value.
 
 1. Let output be an empty string.
-2. Append the result of running Serializing a Bare Item {{ser-bare-item}} with bare_item to output.
-3. Append the result of running Serializing Parameters {{ser-params}} with item_parameters to output.
+2. Append the result of running Serializing a Bare Item ({{ser-bare-item}}) with bare_item to output.
+3. Append the result of running Serializing Parameters ({{ser-params}}) with item_parameters to output.
 4. Return output.
 
 
 #### Serializing a Bare Item {#ser-bare-item}
 
-Given an Item as input_item, return an ASCII string suitable for use in a HTTP field value.
+Given an Item as input_item, return an ASCII string suitable for use in an HTTP field value.
 
 1. If input_item is an Integer, return the result of running Serializing an Integer ({{ser-integer}}) with input_item.
 2. If input_item is a Decimal, return the result of running Serializing a Decimal ({{ser-decimal}}) with input_item.
 3. If input_item is a String, return the result of running Serializing a String ({{ser-string}}) with input_item.
 4. If input_item is a Token, return the result of running Serializing a Token ({{ser-token}}) with input_item.
-5. If input_item is a Boolean, return the result of running Serializing a Boolean ({{ser-boolean}}) with input_item.
-6. If input_item is a Byte Sequence, return the result of running Serializing a Byte Sequence ({{ser-binary}}) with input_item.
+5. If input_item is a Byte Sequence, return the result of running Serializing a Byte Sequence ({{ser-binary}}) with input_item.
+6. If input_item is a Boolean, return the result of running Serializing a Boolean ({{ser-boolean}}) with input_item.
 7. Otherwise, fail serialization.
 
 
 ### Serializing an Integer {#ser-integer}
 
-Given an Integer as input_integer, return an ASCII string suitable for use in a HTTP field value.
+Given an Integer as input_integer, return an ASCII string suitable for use in an HTTP field value.
 
 0. If input_integer is not an integer in the range of -999,999,999,999,999 to 999,999,999,999,999 inclusive, fail serialization.
 1. Let output be an empty string.
@@ -655,7 +660,7 @@ Given an Integer as input_integer, return an ASCII string suitable for use in a 
 
 ### Serializing a Decimal {#ser-decimal}
 
-Given a decimal number as input_decimal, return an ASCII string suitable for use in a HTTP field value.
+Given a decimal number as input_decimal, return an ASCII string suitable for use in an HTTP field value.
 
 1. If input_decimal is not a decimal number, fail serialization.
 2. If input_decimal has more than three significant digits to the right of the decimal point, round it to three decimal places, rounding the final digit to the nearest value, or to the even value if it is equidistant.
@@ -671,10 +676,10 @@ Given a decimal number as input_decimal, return an ASCII string suitable for use
 
 ### Serializing a String {#ser-string}
 
-Given a String as input_string, return an ASCII string suitable for use in a HTTP field value.
+Given a String as input_string, return an ASCII string suitable for use in an HTTP field value.
 
 0. Convert input_string into a sequence of ASCII characters; if conversion fails, fail serialization.
-1. If input_string contains characters in the range %x00-1f or %x7f (i.e., not in VCHAR or SP), fail serialization.
+1. If input_string contains characters in the range %x00-1f or %x7f-ff (i.e., not in VCHAR or SP), fail serialization.
 2. Let output be the string DQUOTE.
 3. For each character char in input_string:
    1. If char is "\\" or DQUOTE:
@@ -686,10 +691,10 @@ Given a String as input_string, return an ASCII string suitable for use in a HTT
 
 ### Serializing a Token {#ser-token}
 
-Given a Token as input_token, return an ASCII string suitable for use in a HTTP field value.
+Given a Token as input_token, return an ASCII string suitable for use in an HTTP field value.
 
 0. Convert input_token into a sequence of ASCII characters; if conversion fails, fail serialization.
-1. If the first character of input_token is not ALPHA or "\*", or the remaining portion contains a character not in tchar, ":" or "/", fail serialization.
+1. If the first character of input_token is not ALPHA or "\*", or the remaining portion contains a character not in tchar, ":", or "/", fail serialization.
 2. Let output be an empty string.
 3. Append input_token to output.
 4. Return output.
@@ -697,23 +702,23 @@ Given a Token as input_token, return an ASCII string suitable for use in a HTTP 
 
 ### Serializing a Byte Sequence {#ser-binary}
 
-Given a Byte Sequence as input_bytes, return an ASCII string suitable for use in a HTTP field value.
+Given a Byte Sequence as input_bytes, return an ASCII string suitable for use in an HTTP field value.
 
 0. If input_bytes is not a sequence of bytes, fail serialization.
 1. Let output be an empty string.
 2. Append ":" to output.
-3. Append the result of base64-encoding input_bytes as per {{!RFC4648}}, Section 4, taking account of the requirements below.
+3. Append the result of base64-encoding input_bytes as per {{RFC4648, Section 4}}, taking account of the requirements below.
 4. Append ":" to output.
 5. Return output.
 
-The encoded data is required to be padded with "=", as per {{!RFC4648}}, Section 3.2.
+The encoded data is required to be padded with "=", as per {{RFC4648, Section 3.2}}.
 
-Likewise, encoded data SHOULD have pad bits set to zero, as per {{!RFC4648}}, Section 3.5, unless it is not possible to do so due to implementation constraints.
+Likewise, encoded data SHOULD have pad bits set to zero, as per {{RFC4648, Section 3.5}}, unless it is not possible to do so due to implementation constraints.
 
 
 ### Serializing a Boolean {#ser-boolean}
 
-Given a Boolean as input_boolean, return an ASCII string suitable for use in a HTTP field value.
+Given a Boolean as input_boolean, return an ASCII string suitable for use in an HTTP field value.
 
 0. If input_boolean is not a boolean, fail serialization.
 1. Let output be an empty string.
@@ -727,7 +732,7 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in a H
 
 When a receiving implementation parses HTTP fields that are known to be Structured Fields, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an array of bytes input_bytes that represents the chosen field's field-value (which is empty if that field is not present), and field_type (one of "dictionary", "list", or "item"), return the parsed header value.
+Given an array of bytes as input_bytes that represent the chosen field's field-value (which is empty if that field is not present) and field_type (one of "dictionary", "list", or "item"), return the parsed header value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading SP characters from input_string.
@@ -738,18 +743,18 @@ Given an array of bytes input_bytes that represents the chosen field's field-val
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
-When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{?RFC7230}}, Section 3.2.2; this assures that the entire field value is processed correctly.
+When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{RFC7230, Section 3.2.2}}; this assures that the entire field value is processed correctly.
 
 For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances. The parsing algorithms for both types allow tab characters, since these might
 be used to combine field lines by some implementations.
 
-Strings split across multiple field lines will have unpredictable results, because comma(s) and whitespace inserted upon combination will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser, even when they are both under the control of the same party.
+Strings split across multiple field lines will have unpredictable results, because one or more commas (with optional whitespace) will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser, even when they are both under the control of the same party.
 
-Tokens, Integers, Decimals and Byte Sequences cannot be split across multiple field lines because the inserted commas will cause parsing to fail.
+Tokens, Integers, Decimals, and Byte Sequences cannot be split across multiple field lines because the inserted commas will cause parsing to fail.
 
-Parsers MAY fail when processing a field value spread across multiple field lines, when one of those lines does not parse as that field. For example, a parsing handling an Example-String field that's defined as a sf-string is allowed to fail when processing this field section:
+Parsers MAY fail when processing a field value spread across multiple field lines, when one of those lines does not parse as that field. For example, a parsing handling an Example-String field that's defined as an sf-string is allowed to fail when processing this field section:
 
-~~~ example
+~~~ http-message
 Example-String: "foo
 Example-String: bar"
 ~~~
@@ -776,7 +781,7 @@ Given an ASCII string as input_string, return an array of (item_or_inner_list, p
 
 #### Parsing an Item or Inner List {#parse-item-or-list}
 
-Given an ASCII string as input_string, return the tuple (item_or_inner_list, parameters), where item_or_inner_list can be either a single bare item, or an array of (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return the tuple (item_or_inner_list, parameters), where item_or_inner_list can be either a single bare item or an array of (bare_item, parameters) tuples. input_string is modified to remove the parsed value.
 
 1. If the first character of input_string is "(", return the result of running Parsing an Inner List ({{parse-innerlist}}) with input_string.
 2. Return the result of running Parsing an Item ({{parse-item}}) with input_string.
@@ -797,7 +802,7 @@ Given an ASCII string as input_string, return the tuple (inner_list, parameters)
    3. Let item be the result of running Parsing an Item ({{parse-item}}) with input_string.
    4. Append item to inner_list.
    5. If the first character of input_string is not SP or ")", fail parsing.
-4. The end of the inner list was not found; fail parsing.
+4. The end of the Inner List was not found; fail parsing.
 
 
 ### Parsing a Dictionary {#parse-dictionary}
@@ -812,17 +817,18 @@ Given an ASCII string as input_string, return an ordered map whose values are (i
        2. Let member be the result of running Parsing an Item or Inner List ({{parse-item-or-list}}) with input_string.
    3. Otherwise:
       1. Let value be Boolean true.
-      2. Let parameters be the result of running Parsing Parameters {{parse-param}} with input_string.
+      2. Let parameters be the result of running Parsing Parameters ({{parse-param}}) with input_string.
       3. Let member be the tuple (value, parameters).
-   4. Add name this_key with value member to dictionary. If dictionary already contains a name this_key (comparing character-for-character), overwrite its value.
-   5. Discard any leading OWS characters from input_string.
-   6. If input_string is empty, return dictionary.
-   7. Consume the first character of input_string; if it is not ",", fail parsing.
-   8. Discard any leading OWS characters from input_string.
-   9. If input_string is empty, there is a trailing comma; fail parsing.
+   4. If dictionary already contains a key this_key (comparing character for character), overwrite its value with member.
+   5. Otherwise, append key this_key with value member to dictionary.
+   6. Discard any leading OWS characters from input_string.
+   7. If input_string is empty, return dictionary.
+   8. Consume the first character of input_string; if it is not ",", fail parsing.
+   9. Discard any leading OWS characters from input_string.
+   0. If input_string is empty, there is a trailing comma; fail parsing.
 3. No structured data has been found; return dictionary (which is empty).
 
-Note that when duplicate Dictionary keys are encountered, this has the effect of ignoring all but the last instance.
+Note that when duplicate Dictionary keys are encountered, all but the last instance are ignored.
 
 ### Parsing an Item {#parse-item}
 
@@ -839,9 +845,9 @@ Given an ASCII string as input_string, return a bare Item. input_string is modif
 
 1. If the first character of input_string is a "-" or a DIGIT, return the result of running Parsing an Integer or Decimal ({{parse-number}}) with input_string.
 2. If the first character of input_string is a DQUOTE, return the result of running Parsing a String ({{parse-string}}) with input_string.
-3. If the first character of input_string is ":", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
-4. If the first character of input_string is "?", return the result of running Parsing a Boolean ({{parse-boolean}}) with input_string.
-5. If the first character of input_string is an ALPHA or "\*", return the result of running Parsing a Token ({{parse-token}}) with input_string.
+3. If the first character of input_string is an ALPHA or "\*", return the result of running Parsing a Token ({{parse-token}}) with input_string.
+4. If the first character of input_string is ":", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
+5. If the first character of input_string is "?", return the result of running Parsing a Boolean ({{parse-boolean}}) with input_string.
 6. Otherwise, the item type is unrecognized; fail parsing.
 
 #### Parsing Parameters {#parse-param}
@@ -851,17 +857,18 @@ Given an ASCII string as input_string, return an ordered map whose values are ba
 1. Let parameters be an empty, ordered map.
 2. While input_string is not empty:
    1. If the first character of input_string is not ";", exit the loop.
-   2. Consume a ";" character from the beginning of input_string.
+   2. Consume the ";" character from the beginning of input_string.
    3. Discard any leading SP characters from input_string.
-   4. let param_name be the result of running Parsing a Key ({{parse-key}}) with input_string.
+   4. Let param_key be the result of running Parsing a Key ({{parse-key}}) with input_string.
    5. Let param_value be Boolean true.
    6. If the first character of input_string is "=":
       1. Consume the "=" character at the beginning of input_string.
       2. Let param_value be the result of running Parsing a Bare Item ({{parse-bare-item}}) with input_string.
-   7. Append key param_name with value param_value to parameters. If parameters already contains a name param_name (comparing character-for-character), overwrite its value.
+   7. If parameters already contains a key param_key (comparing character for character), overwrite its value with param_value.
+   8. Otherwise, append key param_key with value param_value to parameters.
 3. Return parameters.
 
-Note that when duplicate Parameter keys are encountered, this has the effect of ignoring all but the last instance.
+Note that when duplicate parameter keys are encountered, all but the last instance are ignored.
 
 #### Parsing a Key {#parse-key}
 
@@ -899,7 +906,6 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}
    6. If type is "decimal" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
    1. Parse input_number as an integer and let output_number be the product of the result and sign.
-   2. If output_number is outside the range -999,999,999,999,999 to 999,999,999,999,999 inclusive, fail parsing.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
    2. If the number of characters after "." in input_number is greater than three, fail parsing.
@@ -922,7 +928,7 @@ Given an ASCII string as input_string, return an unquoted String. input_string i
       3. If next_char is not DQUOTE or "\\", fail parsing.
       4. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
-   4. Else, if char is in the range %x00-1f or %x7f (i.e., is not in VCHAR or SP), fail parsing.
+   4. Else, if char is in the range %x00-1f or %x7f-ff (i.e., it is not in VCHAR or SP), fail parsing.
    5. Else, append char to output_string.
 5. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
@@ -934,7 +940,7 @@ Given an ASCII string as input_string, return a Token. input_string is modified 
 1. If the first character of input_string is not ALPHA or "\*", fail parsing.
 2. Let output_string be an empty string.
 3. While input_string is not empty:
-   1. If the first character of input_string is not in tchar, ":" or "/", return output_string.
+   1. If the first character of input_string is not in tchar, ":", or "/", return output_string.
    2. Let char be the result of consuming the first character of input_string.
    3. Append char to output_string.
 4. Return output_string.
@@ -949,15 +955,15 @@ Given an ASCII string as input_string, return a Byte Sequence. input_string is m
 3. If there is not a ":" character before the end of input_string, fail parsing.
 4. Let b64_content be the result of consuming content of input_string up to but not including the first instance of the character ":".
 5. Consume the ":" character at the beginning of input_string.
-6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/" and "=", fail parsing.
-7. Let binary_content be the result of Base 64 Decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below).
+6. If b64_content contains a character not included in ALPHA, DIGIT, "+", "/", and "=", fail parsing.
+7. Let binary_content be the result of base64-decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below). If base64 decoding fails, parsing fails.
 8. Return binary_content.
 
-Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{!RFC4648}}, Section 3.2), parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
+Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{RFC4648, Section 3.2}}, parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
 
-Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{!RFC4648}}, Section 3.5), parsers SHOULD NOT fail when non-zero pad bits are present, unless they cannot be configured to do so.
+Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{RFC4648, Section 3.5}}), parsers SHOULD NOT fail when non-zero pad bits are present, unless they cannot be configured to do so.
 
-This specification does not relax the requirements in {{!RFC4648}}, Section 3.1 and 3.3; therefore, parsers MUST fail on characters outside the base64 alphabet, and on line feeds in encoded data.
+This specification does not relax the requirements in {{RFC4648, Sections 3.1 and 3.3}}; therefore, parsers MUST fail on characters outside the base64 alphabet and on line feeds in encoded data.
 
 
 ### Parsing a Boolean {#parse-boolean}
@@ -973,7 +979,7 @@ Given an ASCII string as input_string, return a Boolean. input_string is modifie
 
 # IANA Considerations
 
-This document has no actions for IANA.
+This document has no IANA actions.
 
 # Security Considerations
 
@@ -987,7 +993,7 @@ of a Structured Field. In some circumstances, this will cause parsing to fail, b
 
 # Frequently Asked Questions {#faq}
 
-## Why not JSON?
+## Why Not JSON?
 
 Earlier proposals for Structured Fields were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields required senders and recipients to implement specific additional handling.
 
@@ -997,7 +1003,7 @@ Likewise, JSON strings are by default Unicode strings, which have a number of po
 
 Another example is JSON's ability to nest content to arbitrary depths. Since the resulting memory commitment might be unsuitable (e.g., in embedded and other limited server deployments), it's necessary to limit it in some fashion; however, existing JSON implementations have no such limits, and even if a limit is specified, it's likely that some field definition will find a need to violate it.
 
-Because of JSON's broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability. In short, if it looks like JSON, people will be tempted to use a JSON parser / serializer on field values.
+Because of JSON's broad adoption and implementation, it is difficult to impose such additional constraints across all implementations; some deployments would fail to enforce them, thereby harming interoperability. In short, if it looks like JSON, people will be tempted to use a JSON parser/serializer on field values.
 
 Since a major goal for Structured Fields is to improve interoperability and simplify implementation, these concerns led to a format that requires a dedicated parser and serializer.
 
@@ -1010,13 +1016,13 @@ A generic implementation of this specification should expose the top-level seria
 
 For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-field-tests>.
 
-Implementers should note that Dictionaries and Parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that applications which need to use it will have it available.
+Implementers should note that Dictionaries and Parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that it will be available to applications that need to use it.
 
 Likewise, implementations should note that it's important to preserve the distinction between Tokens and Strings. While most programming languages have native types that map to the other types well, it may be necessary to create a wrapper "token" object or use a parameter on functions to assure that these types remain separate.
 
 The serialization algorithm is defined in a way that it is not strictly limited to the data types defined in {{types}} in every case. For example, Decimals are designed to take broader input and round to allowed values.
 
-Implementations are allowed to limit the allowed size of different structures, subject to the minimums defined for each type. When a structure exceeds an implementation limit, that structure fails parsing or serialisation.
+Implementations are allowed to limit the size of different structures, subject to the minimums defined for each type. When a structure exceeds an implementation limit, that structure fails parsing or serialization.
 
 # Changes
 
