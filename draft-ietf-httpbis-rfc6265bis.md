@@ -315,7 +315,7 @@ The term "origin", the mechanism of deriving an origin from a URI, and the "the
 same" matching algorithm for origins are defined in {{RFC6454}}.
 
 "Safe" HTTP methods include `GET`, `HEAD`, `OPTIONS`, and `TRACE`, as defined
-in Section 8.2.1 of {{!HTTPSEM=I-D.ietf-httpbis-semantics}}.
+in Section 9.2.1 of {{HTTPSEM}}.
 
 A domain's "public suffix" is the portion of a domain that is controlled by a
 public registry, such as "com", "co.uk", and "pvt.k12.wy.us". A domain's
