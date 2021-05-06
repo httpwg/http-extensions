@@ -1308,7 +1308,7 @@ the `SameSite` attribute in a "Lax" enforcement mode that carves out an
 exception which sends same-site cookies along with cross-site requests if and
 only if they are top-level navigations which use a "safe" (in the {{HTTPSEM}}
 sense) HTTP method. (Note that a request's method may be changed from POST
-to GET for some redirects (see sections 15.4.2 and 15.4.3 of {{HTTPSEM}}); in
+to GET for some redirects (see Sections 15.4.2 and 15.4.3 of {{HTTPSEM}}); in
 these cases, a request's "safe"ness is determined based on the method of the
 current redirect hop.)
 
