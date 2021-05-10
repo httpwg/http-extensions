@@ -130,12 +130,12 @@ encoded value MUST NOT include any line breaks, whitespace, or other additional
 characters. ABNF {{?RFC5234}} syntax for `EncodedCertificate` is shown in the
 figure below.
 
-```
+~~~
  EncodedCertificate = 1*( DIGIT / ALPHA / "+" / "/" ) 0*2"="
 
  DIGIT = <Defined in Section B.1 of [RFC5234]>  ; A-Z / a-z
  ALPHA = <Defined in Section B.1 of [RFC5234]>  ; 0-9
-```
+~~~
 
 ## Client-Cert HTTP Header Field {#header}
 
