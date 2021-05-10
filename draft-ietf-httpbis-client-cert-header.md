@@ -360,24 +360,24 @@ responsibility of certificate validation falling on the TTRP, only the
 end-entity certificate is passed to the backend - the root Certificate Authority
 is not included nor are any intermediates.
 
-> TODO: It has been suggested that more information about the certificate chain might
-be needed/wanted by the backend application (to independently evaluate the cert
-chain, for example, although that seems like it would be terribly inefficient)
-and that any intermediates as well as the root should also be somehow conveyed,
-which is an area for further discussion should this draft progress. One
-potential approach suggested by a few folks is to allow some configurability in
-what is sent along with maybe a prefix token to indicate what's being sent -
-something like `Client-Cert: FULL <cert> <intermediate> <anchor>` or
-`Client-Cert: EE <cert>` as the strawman. Or a perhaps a parameter or other
-construct of {{?I-D.ietf-httpbis-header-structure}} to indicate what's being
-sent. It's also been suggested that the end-entity certificate by itself might
-sometimes be too big (esp. e.g., with some post-quantum signature schemes). Hard
-to account for it both being too much data and not enough data at the same time.
-But potentially opening up configuration options to send only specific
-attribute(s) from the client certificate is a possibility for that. In the
-author's humble opinion the end-entity certificate by itself strikes a good
-balance for the vast majority of needs and avoids optionality. But, again, this
-is an area for further discussion should this draft progress.
+> TODO: It has been suggested that more information about the certificate chain
+might be needed/wanted by the backend application (to independently evaluate the
+cert chain, for example, although that seems like it would be terribly
+inefficient) and that any intermediates as well as the root should also be
+somehow conveyed, which is an area for further discussion should this draft
+progress. One potential approach suggested by a few folks is to allow some
+configurability in what is sent along with maybe a prefix token to indicate
+what's being sent - something like `Client-Cert: FULL \<cert> \<intermediate>
+\<anchor>` or `Client-Cert: EE \<cert>` as the strawman. Or a perhaps a
+parameter or other construct of {{?RFC8941}} to indicate what's being sent. It's
+also been suggested that the end-entity certificate by itself might sometimes be
+too big (esp. e.g., with some post-quantum signature schemes). Hard to account
+for it both being too much data and not enough data at the same time. But
+potentially opening up configuration options to send only specific attribute(s)
+from the client certificate is a possibility for that. In the author's humble
+opinion the end-entity certificate by itself strikes a good balance for the vast
+majority of needs and avoids optionality. But, again, this is an area for
+further discussion should this draft progress.
 
 > TODO: It has also been suggested that maybe considerations for {{?RFC7250}} Raw
 Public Keys is maybe worth considering. This too is this is an area for further
