@@ -21,7 +21,6 @@ author:
     name: Brian Campbell
     organization: Ping Identity
     email: bcampbell@pingidentity.com
-
   -
     ins: M. Bishop
     name: Mike Bishop
@@ -108,14 +107,14 @@ requires that the client send the Certificate and CertificateVerify messages
 during the handshake and for the server to verify the CertificateVerify and
 Finished messages.
 
-[[ HTTP2 forbids TLS renegotiation and post-handshake authentication but it's
+> TODO: HTTP2 forbids TLS renegotiation and post-handshake authentication but it's
 possible with HTTP1.1 and maybe needs to be discussed explicitly here or
 somewhere in this document? Naively I'd say that the `Client-Cert` header will
 be sent with the data of the most recent client cert anytime after renegotiation
 or post-handshake auth. And only for requests that are fully covered by the cert
 but that in practice making the determination of where exactly in the
 application data the cert messages arrived is hard to impossible so it'll be a
-best effort kind of thing. ]]
+best effort kind of thing.
 
 
 # HTTP Header Field and Processing Rules
@@ -234,8 +233,8 @@ Other deployments that meet the requirements set forth herein are also possible.
 
 # IANA Considerations
 
-[[ TODO, register the `Client-Cert` HTTP header field in the registry defined by
-http-core. ]]
+> TODO: register the `Client-Cert` HTTP header field in the registry defined by
+http-core.
 
 --- back
 
@@ -361,7 +360,7 @@ responsibility of certificate validation falling on the TTRP, only the
 end-entity certificate is passed to the backend - the root Certificate Authority
 is not included nor are any intermediates.
 
-[[ It has been suggested that more information about the certificate chain might
+> TODO: It has been suggested that more information about the certificate chain might
 be needed/wanted by the backend application (to independently evaluate the cert
 chain, for example, although that seems like it would be terribly inefficient)
 and that any intermediates as well as the root should also be somehow conveyed,
@@ -378,11 +377,11 @@ But potentially opening up configuration options to send only specific
 attribute(s) from the client certificate is a possibility for that. In the
 author's humble opinion the end-entity certificate by itself strikes a good
 balance for the vast majority of needs and avoids optionality. But, again, this
-is an area for further discussion should this draft progress. ]]
+is an area for further discussion should this draft progress.
 
-[[ It has also been suggested that maybe considerations for {{?RFC7250}} Raw
+> TODO: It has also been suggested that maybe considerations for {{?RFC7250}} Raw
 Public Keys is maybe worth considering. This too is this is an area for further
-discussion and consideration should this draft progress. ]]
+discussion and consideration should this draft progress.
 
 # Acknowledgements
 
@@ -411,11 +410,10 @@ The author would like to thank the following individuals who've contributed in v
 - Peter Wu
 - Hans Zandbelt
 
-[[ Please let me know if you've been erroneously omitted or if you prefer not to be named ]]
 
 # Document History
 
-   [[ To be removed by the RFC Editor before publication as an RFC ]]
+   > To be removed by the RFC Editor before publication as an RFC
 
    draft-bdc-something-something-certificate-06
 
@@ -432,11 +430,11 @@ The author would like to thank the following individuals who've contributed in v
 
    draft-bdc-something-something-certificate-03
 
-   * Expanded [[further discussion notes]] to capture some of the feedback in and around the presentation of the draft in SECDISPATCH at IETF 107 and add those who've provided such feedback to the acknowledgements
+   * Expanded further discussion notes to capture some of the feedback in and around the presentation of the draft in SECDISPATCH at IETF 107 and add those who've provided such feedback to the acknowledgements
 
    draft-bdc-something-something-certificate-02
 
-   * Editorial tweaks + [[further discussion notes]]
+   * Editorial tweaks + further discussion notes
 
    draft-bdc-something-something-certificate-01
 
