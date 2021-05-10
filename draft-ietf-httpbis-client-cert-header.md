@@ -415,9 +415,10 @@ The author would like to thank the following individuals who've contributed in v
 
    > To be removed by the RFC Editor before publication as an RFC
 
-   draft-bdc-something-something-certificate-06
+   draft-ietf-httpbis-client-cert-header-00
 
-   *
+   * Initial WG revision 
+   * Mike Bishop added as co-editor
 
    draft-bdc-something-something-certificate-05
 
