@@ -98,6 +98,6 @@ This will incorporate the following drafts:
 
 ### Client Cert Header
 
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-header.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-header.txt))
-* ~~[Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-cert-header) (less recent, more official)~~ *Not yet published*
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-cert-header) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-cert-header/)
+* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-field.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-field.txt))
+* ~~[Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-cert-field) (less recent, more official)~~ *Not yet published*
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-cert-field) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-cert-field/)

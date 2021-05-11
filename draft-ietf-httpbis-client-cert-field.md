@@ -1,7 +1,7 @@
 ---
-title: "Client-Cert HTTP Header: Conveying Client Certificate Information from TLS Terminating Reverse Proxies to Origin Server Applications"
-abbrev: Client-Cert Header
-docname: draft-ietf-httpbis-client-cert-header-latest
+title: "Client-Cert HTTP Header Field: Conveying Client Certificate Information from TLS Terminating Reverse Proxies to Origin Server Applications"
+abbrev: Client-Cert Field
+docname: draft-ietf-httpbis-client-cert-field-latest
 date: {DATE}
 category: info
 
@@ -423,9 +423,9 @@ The author would like to thank the following individuals who've contributed in v
 
    > To be removed by the RFC Editor before publication as an RFC
 
-   draft-ietf-httpbis-client-cert-header-00
+   draft-ietf-httpbis-client-cert-field-00
 
-   * Initial WG revision 
+   * Initial WG revision
    * Mike Bishop added as co-editor
 
    draft-bdc-something-something-certificate-05
