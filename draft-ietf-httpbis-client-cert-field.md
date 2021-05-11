@@ -42,7 +42,7 @@ predictable manner.
 
 Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
 
-Working Group information can be found at <http://httpwg.github.io/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/client-cert-header>.
+Working Group information can be found at <http://httpwg.github.io/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/client-cert-field>.
 
 --- middle
 
@@ -73,27 +73,27 @@ specific details from the certificate needed also vary with the application
 requirements. In order for these types of application deployments to work in
 practice, the reverse proxy needs to convey information about the client
 certificate to the origin application server. A common way this information is
-conveyed in practice today is by using non-standard headers to carry the
+conveyed in practice today is by using non-standard fields to carry the
 certificate (in some encoding) or individual parts thereof in the HTTP request
 that is dispatched to the origin server. This solution works but
 interoperability between independently developed components can be cumbersome or
 even impossible depending on the implementation choices respectively made (like
-what header names are used or are configurable, which parts of the certificate
+what field names are used or are configurable, which parts of the certificate
 are exposed, or how the certificate is encoded). A well-known predictable
 approach to this commonly occurring functionality could improve and simplify
 interoperability between independent implementations.
 
 This document aspires to standardize an HTTP header field named `Client-Cert`
 that a TLS terminating reverse proxy (TTRP) adds to requests that it sends to
-the backend origin servers. The header value contains the client certificate
-from the mutually-authenticated TLS connection between the originating client
-and the TTRP. This enables the backend origin server to utilize the client
-certificate information in its application logic. While there may be additional
-proxies or hops between the TTRP and the origin server (potentially even with
+the backend origin servers. The field value contains the client certificate from
+the mutually-authenticated TLS connection between the originating client and the
+TTRP. This enables the backend origin server to utilize the client certificate
+information in its application logic. While there may be additional proxies or
+hops between the TTRP and the origin server (potentially even with
 mutually-authenticated TLS connections between them), the scope of the
-`Client-Cert` header is intentionally limited to exposing to the origin server
-the certificate that was presented by the originating client in its connection
-to the TTRP.
+`Client-Cert` header field is intentionally limited to exposing to the origin
+server the certificate that was presented by the originating client in its
+connection to the TTRP.
 
 
 ## Requirements Notation and Conventions
@@ -129,8 +129,8 @@ best effort kind of thing.
 
 ## Encoding
 
-The field-values of the HTTP header defined herein utilize the following encoded
-form.
+The field-values of the HTTP header field defined herein utilize the following
+encoded form.
 
 A certificate is represented in text as an `EncodedCertificate`, which is the
 base64-encoded (Section 4 of {{!RFC4648}}) DER {{!ITU.X690.1994}} PKIX certificate. The
@@ -155,7 +155,7 @@ Client-Cert:
 : The end-entity client certificate as an `EncodedCertificate` value.
 
 The `Client-Cert` header field defined herein is only for use in HTTP requests
-and MUST NOT be used in HTTP responses.  It is a single HTTP header field-value
+and MUST NOT be used in HTTP responses.  It is a single HTTP header field value
 as defined in Section 3.2 of {{?RFC7230}}, which MUST NOT have a list of values or
 occur multiple times in a request.
 
@@ -176,54 +176,54 @@ server with the following modifications:
 
 1. The client certificate is be placed in the `Client-Cert` header field of the
    dispatched request as defined in {{header}}.
-1. Any occurrence of the `Client-Cert` header in the original incoming request
-   MUST be removed or overwritten before forwarding the request. An incoming
-   request that has a `Client-Cert` header MAY be rejected with an HTTP 400
-   response.
+1. Any occurrence of the `Client-Cert` header field in the original incoming
+   request MUST be removed or overwritten before forwarding the request. An
+   incoming request that has a `Client-Cert` header field MAY be rejected with
+   an HTTP 400 response.
 
 Requests made over a TLS connection where the use of client certificate
 authentication was not negotiated MUST be sanitized by removing any and all
 occurrences `Client-Cert` header field prior to dispatching the request to the
 backend server.
 
-Backend origin servers may then use the `Client-Cert` header of the request to
-determine if the connection from the client to the TTRP was
+Backend origin servers may then use the `Client-Cert` header field of the
+request to determine if the connection from the client to the TTRP was
 mutually-authenticated and, if so, the certificate thereby presented by the
 client.
 
 Forward proxies and other intermediaries MUST NOT add the `Client-Cert` header
-to requests, or modify an existing `Client-Cert` header. Similarly, clients MUST
-NOT employ the `Client-Cert` header in requests.
+field to requests, or modify an existing `Client-Cert` header field. Similarly,
+clients MUST NOT employ the `Client-Cert` header field in requests.
 
-A server that receives a request with a `Client-Cert` header value that it
+A server that receives a request with a `Client-Cert` header field value that it
 considers to be too large can respond with an HTTP 431 status code per Section 5
 of {{?RFC6585}}.
 
 
 # Security Considerations {#sec}
 
-The header described herein enable a TTRP and backend or origin server to
+The header field described herein enable a TTRP and backend or origin server to
 function together as though, from the client's perspective, they are a single
 logical server side deployment of HTTPS over a mutually-authenticated TLS
-connection. Use of the `Client-Cert` header outside that intended use case,
-however, may undermine the protections afforded by TLS client certificate
+connection. Use of the `Client-Cert` header field outside that intended use
+case, however, may undermine the protections afforded by TLS client certificate
 authentication. Therefore steps MUST be taken to prevent unintended use, both in
-sending the header and in relying on its value.
+sending the header field and in relying on its value.
 
-Producing and consuming the `Client-Cert` header SHOULD be a configurable
+Producing and consuming the `Client-Cert` header field SHOULD be a configurable
 option, respectively, in a TTRP and backend server (or individual application in
 that server). The default configuration for both should be to not use the
-`Client-Cert` header thus requiring an "opt-in" to the functionality.
+`Client-Cert` header field thus requiring an "opt-in" to the functionality.
 
-In order to prevent header injection, backend servers MUST only accept the
-`Client-Cert` header from a trusted TTRP (or other proxy in a trusted path from
-the TTRP). A TTRP MUST sanitize the incoming request before forwarding it on by
-removing or overwriting any existing instances of the header. Otherwise
-arbitrary clients can control the header value as seen and used by the backend
-server. It is important to note that neglecting to prevent header injection does
+In order to prevent field injection, backend servers MUST only accept the
+`Client-Cert` header field from a trusted TTRP (or other proxy in a trusted path
+from the TTRP). A TTRP MUST sanitize the incoming request before forwarding it
+on by removing or overwriting any existing instances of the field. Otherwise
+arbitrary clients can control the field value as seen and used by the backend
+server. It is important to note that neglecting to prevent field injection does
 not "fail safe" in that the nominal functionality will still work as expected
 even when malicious actions are possible. As such, extra care is recommended in
-ensuring that proper header sanitation is in place.
+ensuring that proper field sanitation is in place.
 
 The communication between a TTRP and backend server needs to be secured against
 eavesdropping and modification by unintended parties.
@@ -232,7 +232,7 @@ The configuration options and request sanitization are necessarily functionally
 of the respective servers. The other requirements can be met in a number of
 ways, which will vary based on specific deployments. The communication between a
 TTRP and backend or origin server, for example, might be authenticated in some
-way with the insertion and consumption of the `Client-Cert` header occurring
+way with the insertion and consumption of the `Client-Cert` field occurring
 only on that connection. Alternatively the network topology might dictate a
 private network such that the backend application is only able to accept
 requests from the TTRP and the proxy can only make requests to that server.
@@ -251,9 +251,9 @@ http-core.
 In a hypothetical example where a TLS client presents the client and
 intermediate certificate from {{example-chain}} when establishing a
 mutually-authenticated TLS connection with the TTRP, the proxy would send the
-`Client-Cert` header shown in {#example-header} to the backend. Note that line
-breaks and whitespace have been added to the value of the header field in
-{{example-header}} for display and formatting purposes only.
+`Client-Cert` field shown in {#example-header} to the backend. Note that line
+breaks and whitespace have been added to the field value in {{example-header}}
+for display and formatting purposes only.
 
 ~~~
 -----BEGIN CERTIFICATE-----
@@ -307,7 +307,7 @@ Client-Cert: MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKDBJM
  SM49BAMCA0gAMEUCIBHda/r1vaL6G3VliL4/Di6YK0Q6bMjeSkC3dFCOOB8TAiEAx/kH
  SB4urmiZ0NX5r5XarmPk0wmuydBVoU4hBVZ1yhk=
 ~~~
-{: #example-header title="Header in HTTP Request to Origin Server"}
+{: #example-header title="Header Field in HTTP Request to Origin Server"}
 
 
 
@@ -315,38 +315,38 @@ Client-Cert: MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKDBJM
 
 # Considerations Considered
 
-## Header Injection
+## Field Injection
 
-This draft requires that the TTRP sanitize the headers of the incoming request
-by removing or overwriting any existing instances of the `Client-Cert` header
+This draft requires that the TTRP sanitize the fields of the incoming request by
+removing or overwriting any existing instances of the `Client-Cert` header field
 before dispatching that request to the backend application. Otherwise, a client
-could inject its own `Client-Cert` header that would appear to the backend to
+could inject its own `Client-Cert` field that would appear to the backend to
 have come from the TTRP. Although numerous other methods of detecting/preventing
-header injection are possible; such as the use of a unique secret value as part
-of the header name or value or the application of a signature, HMAC, or AEAD,
+field injection are possible; such as the use of a unique secret value as part
+of the field name or value or the application of a signature, HMAC, or AEAD,
 there is no common general standardized mechanism. The potential problem of
-client header injection is not at all unique to the functionality of this draft
+client field injection is not at all unique to the functionality of this draft
 and it would therefor be inappropriate for this draft to define a one-off
 solution. In the absence of a generic standardized solution existing currently,
-stripping/sanitizing the headers is the de facto means of protecting against
-header injection in practice today. Sanitizing the headers is sufficient when
-properly implemented and is normative requirement of {{sec}}.
+stripping/sanitizing the fields is the de facto means of protecting against
+field injection in practice today. Sanitizing the fields is sufficient when
+properly implemented and is a normative requirement of {{sec}}.
 
 ## The Forwarded HTTP Extension
 
 The `Forwarded` HTTP header field defined in {{?RFC7239}} allows proxy
 components to disclose information lost in the proxying process. The TLS client
 certificate information of concern to this draft could have been communicated
-with an extension parameter to the `Forwarded` header field, however, doing so
+with an extension parameter to the `Forwarded` field; however, doing so
 would have had some disadvantages that this draft endeavored to avoid. The
-`Forwarded` header syntax allows for information about a full chain of proxied
-HTTP requests, whereas the `Client-Cert` header of this document is concerned
+`Forwarded` field syntax allows for information about a full chain of proxied
+HTTP requests, whereas the `Client-Cert` field of this document is concerned
 only with conveying information about the certificate presented by the
 originating client on the TLS connection to the TTRP (which appears as the
 server from that client's perspective) to backend applications.  The multi-hop
-syntax of the `Forwarded` header is expressive but also more complicated, which
+syntax of the `Forwarded` field is expressive but also more complicated, which
 would make processing it more cumbersome, and more importantly, make properly
-sanitizing its content as required by {{sec}} to prevent header injection
+sanitizing its content as required by {{sec}} to prevent field injection
 considerably more difficult and error prone. Thus, this draft opted for the
 flatter and more straightforward structure of a single `Client-Cert` header.
 
@@ -360,7 +360,7 @@ Mutual-TLS Client Authentication and Certificate-Bound Access Tokens"
 {{?RFC8705}}, make use of the entire certificate. In order to accommodate the
 latter and ensure wide applicability by not trying to cherry-pick particular
 certificate information, this draft opted to pass the full encoded certificate
-as the value of the `Client-Cert` header.
+as the value of the `Client-Cert` field.
 
 The handshake and validation of the client certificate (chain) of the
 mutually-authenticated TLS connection is performed by the TTRP.  With the
