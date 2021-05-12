@@ -326,48 +326,16 @@ Its value is canonicalized as follows:
 
 The following table contains non-normative example HTTP messages and their canonicalized `@request-target` values.
 
-<table>
-    <name>Non-normative examples of <tt>@request-target</tt> canonicalization.</name>
-    <thead>
-        <tr><th>HTTP Message</th><th>@request-target</th></tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><sourcecode type="http-message">
-POST /?param=value HTTP/1.1
-Host: www.example.com</sourcecode></td>
-            <td><tt>post /?param=value</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-POST /a/b HTTP/1.1
-Host: www.example.com</sourcecode></td>
-            <td><tt>post /a/b</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-GET http://www.example.com/a/ HTTP/1.1</sourcecode></td>
-            <td><tt>get /a/</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-GET http://www.example.com HTTP/1.1</sourcecode></td>
-            <td><tt>get /</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-CONNECT server.example.com:80 HTTP/1.1
-Host: server.example.com</sourcecode></td>
-            <td><tt>connect /</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-OPTIONS * HTTP/1.1
-Host: server.example.com</sourcecode></td>
-            <td><tt>options *</tt></td>
-        </tr>
-    </tbody>
-</table>
+|HTTP Message|@request-target|
+|--- |--- |
+|`POST /?param=value HTTP/1.1`<br>`Host: www.example.com`|`post /?param=value`|
+|`POST /a/b HTTP/1.1`<br>`Host: www.example.com`|`post /a/b`|
+|`GET http://www.example.com/a/ HTTP/1.1`|`get /a/`|
+|`GET http://www.example.com HTTP/1.1`|`get /`|
+|`CONNECT server.example.com:80 HTTP/1.1`<br>`Host: server.example.com`|`connect /`|
+|`OPTIONS * HTTP/1.1`<br>`Host: server.example.com`|`options *`|
+{: title="Non-normative examples of `@request-target` canonicalization."}
+
 
 ### Signature Parameters {#signature-params}
 
