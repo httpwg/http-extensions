@@ -707,7 +707,7 @@ The following is a non-normative example of header fields a reverse proxy in add
   1a4MNWoUElr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1a\
   SVfKQQzR+ZEwSaZQBrdQ==:
 x-forwarded-for: 192.0.2.123
-"@signature-params": ("signature";key="sig1" "x-forwarded-for")\
+"@signature-params": ("signature";key="sig1" x-forwarded-for)\
   ;created=1618884475;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
 ~~~
 
@@ -728,7 +728,7 @@ X-Forwarded-For: 192.0.2.123
 Signature-Input: sig1=("@request-target" "host" "date" "cache-control" \
     "x-empty-header" "x-example");created=1618884475\
     ;keyid="test-key-rsa-pss", \
-  proxy_sig=("signature";key="sig1" "x-forwarded-for");created=1618884480\
+  proxy_sig=("signature";key="sig1" x-forwarded-for);created=1618884480\
     ;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
 Signature: sig1=:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwk\
     UE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdG\
