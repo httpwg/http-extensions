@@ -667,7 +667,7 @@ The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE I
 Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP header fields, both defined within this specification. 
 
 An HTTP message signature MUST use both headers:
-the `Signature` HTTP header field contains the signature value, while the `Signature-Input` HTTP header field identifies the covered content and parameters that describe how the signature was generated. The Each header MAY contain multiple labeled values, where the labels determine the correlation between the `Signature` and `Signature-Input` fields. 
+the `Signature` HTTP header field contains the signature value, while the `Signature-Input` HTTP header field identifies the covered content and parameters that describe how the signature was generated. Each header MAY contain multiple labeled values, where the labels determine the correlation between the `Signature` and `Signature-Input` fields. 
 
 ## The 'Signature-Input' HTTP Header {#signature-input-header}
 The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered content including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
@@ -707,7 +707,7 @@ The following is a non-normative example of header fields a reverse proxy in add
   1a4MNWoUElr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1a\
   SVfKQQzR+ZEwSaZQBrdQ==:
 x-forwarded-for: 192.0.2.123
-"@signature-params": ("signature";key="sig1" x-forwarded-for)\
+"@signature-params": ("signature";key="sig1" "x-forwarded-for")\
   ;created=1618884475;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
 ~~~
 
@@ -728,7 +728,7 @@ X-Forwarded-For: 192.0.2.123
 Signature-Input: sig1=("@request-target" "host" "date" "cache-control" \
     "x-empty-header" "x-example");created=1618884475\
     ;keyid="test-key-rsa-pss", \
-  proxy_sig=("signature";key="sig1" x-forwarded-for);created=1618884480\
+  proxy_sig=("signature";key="sig1" "x-forwarded-for");created=1618884480\
     ;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
 Signature: sig1=:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwk\
     UE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdG\
