@@ -634,6 +634,32 @@ signal the intended priority to the client by including the Priority field in
 a PUSH_PROMISE or HEADERS frame.
 
 
+# Retransmission Scheduling
+
+A transport may detect packet losses and then retranmit lost information to
+provide reliability. Examples include TCP and QUIC. While this document
+specifies HTTP layer prioritization, its effectiveness can be further achieved
+if transport layer also respect such priorities. Besides scheduling new data,
+transport implementations MAY also consider stream priorities during
+retransmission. In this section we will use QUIC as an example to discusss a
+couple scenarios an implementation need to consider.
+
+{{!I-D.ietf-quic-transport}}, Section 13.3 states that endpoints SHOULD 
+prioritize retransmission over sending new data, unless otherwise specified by
+application. When an HTTP/3 application uses priority scheme defined in this 
+document, the QUIC transport layer MAY take stream priorities as input to 
+scheduling the sending of both retransmission data and new data. For example, 
+if one stream with higher urgency has new data to send and another stream with 
+lower urgency has retransmission data to send, a QUIC transport may choose to 
+schedule the higher urgency new data before the lower urgency retransmission
+data.
+
+{{?I-D.ietf-quic-recovery}}, Section 6.2.4 also highlights consideration of 
+application priorities when sending probe packets after PTO timer expiration.
+An implementation using this prioritization scheme for new or retransmitted
+data, MAY choose a different strategy for prioritizing probe data. 
+
+
 # Fairness {#fairness}
 
 As a general guideline, a server SHOULD NOT use priority information for making
@@ -754,23 +780,6 @@ up-to-date signal to the request. However, HTTP/3 implementations might have
 practical barriers to determining reasonable stream concurrency limits depending
 on the information that is available to them from the QUIC transport layer.
 TODO: so what can we suggest?
-
-# Retransmission Considerations in QUIC Transport
-
-{{!I-D.ietf-quic-transport}} states endpoints SHOULD prioritize retransmission
-over sending new data, unless otherwise specified by application. When priority
-scheme presented in this document is used, QUIC transport layer MAY take stream
-priorities into account when it has both retransmission data and new data to
-send. For example, if one stream with higher urgency has new data to send and 
-another stream with lower urgency has retransmission data to send, a QUIC
-transport may choose to schedule the higher urgency new data before the lower
-urgency retransmission data.
-
-Another consideration is prioritizing among different streams when sending
-probe packets as desribed in Section 6.2.4 in {{?I-D.ietf-quic-recovery}}. An
-implementation MAY choose a different strategy of probe data prioritization 
-from prioritizing data deemed lost by loss detection algorithm in Section 6.1
-in {{?I-D.ietf-quic-recovery}}.
 
 # IANA Considerations
 
