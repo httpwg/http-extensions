@@ -777,20 +777,10 @@ detail that a user agent implementing these requirements precisely can
 interoperate with existing servers (even those that do not conform to the
 well-behaved profile described in {{sane-profile}}).
 
-## Ignoring Set-Cookie Headers {#ignoring-cookies}
-
-User agents MAY ignore Set-Cookie headers contained in responses with 100-level
-status codes or based on its cookie policy.
-
-A cookie policy governs which domains or parties, as in first and third parties
-(see {{third-party-cookies}}), for which the user agent will allow cookie access.
-The policy can also define limits on cookie size, cookie expiry, and the number
-of cookies per domain or in total. The goal of a restrictive cookie policy is
-often to improve security or privacy. User agents often allow users to change
-the cookie policy (see {{user-controls}}).
-
-All other Set-Cookie headers, including those in responses with 400- and 500-level
-status codes, MUST be processed. 
+A user agent could enforce more restrictions than those specified herein (e.g.,
+restrictions specified by its cookie policy, described in {{cookie-policy}}).
+However, such additional restrictions may reduce the likelihood that a user
+agent will be able to interoperate with existing servers.
 
 ## Subcomponent Algorithms
 
@@ -1077,6 +1067,14 @@ Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
 "site for cookies" (either a registered domain, or the empty string):
 
 1.  Return `worker`'s origin's host's registered domain.
+
+## Ignoring Set-Cookie Headers {#ignoring-cookies}
+
+User agents MAY ignore Set-Cookie headers contained in responses with 100-level
+status codes or based on its cookie policy (see {{cookie-policy}}).
+
+All other Set-Cookie headers, including those in responses with 400- and 500-level
+status codes, MUST be processed.
 
 ## The Set-Cookie Header {#set-cookie}
 
@@ -1715,6 +1713,19 @@ privacy goals if servers attempt to work around their restrictions to track
 users. In particular, two collaborating servers can often track users without
 using cookies at all by injecting identifying information into dynamic URLs.
 
+## Cookie policy {#cookie-policy}
+
+User agents MAY enforce a cookie policy consisting of restrictions on how
+cookies may be used or ignored (see {{ignoring-cookies}}).
+
+A cookie policy may govern which domains or parties, as in first and third parties
+(see {{third-party-cookies}}), for which the user agent will allow cookie access.
+The policy can also define limits on cookie size, cookie expiry, and the number
+of cookies per domain or in total.
+
+The goal of a restrictive cookie policy is often to improve security or privacy.
+User agents often allow users to change the cookie policy (see {{user-controls}}).
+
 ## User Controls {#user-controls}
 
 User agents SHOULD provide users with a mechanism for managing the cookies
@@ -1729,18 +1740,13 @@ outbound HTTP requests and the user agent MUST NOT process Set-Cookie headers
 in inbound HTTP responses.
 
 User agents MAY offer a way to change the cookie policy (see
-{{ignoring-cookies}}).
+{{cookie-policy}}).
 
 User agents MAY provide users the option of preventing persistent storage of
 cookies across sessions. When configured thusly, user agents MUST treat all
 received cookies as if the persistent-flag were set to false. Some popular
 user agents expose this functionality via "private browsing" mode
 {{Aggarwal2010}}.
-
-User agents MAY provide users with the ability to approve individual writes to
-the cookie store. In many common usage scenarios, these controls generate a
-large number of prompts. However, some privacy-conscious users find these
-controls useful nonetheless.
 
 ## Expiration Dates
 
