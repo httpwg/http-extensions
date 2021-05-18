@@ -28,4 +28,4 @@ http-lint: $(drafts_xml) http-lint-install
 
 .PHONY: http-lint-install
 http-lint-install:
-	@hash rfc-http-validate 2>/dev/null || pip3 install rfc-http-validate
+	@hash rfc-http-validate.py 2>/dev/null || pip3 install rfc-http-validate

@@ -1,0 +1,433 @@
+<?xml version="1.0"?>
+<?rfc toc="yes"?>
+<?rfc strict="yes"?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="yes"?>
+<?rfc compact="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc-ext xml2rfc-backend="202007"?>
+<!DOCTYPE rfc [
+  <!ENTITY MAY "<bcp14>MAY</bcp14>">
+  <!ENTITY MUST "<bcp14>MUST</bcp14>">
+  <!ENTITY MUST-NOT "<bcp14>MUST NOT</bcp14>">
+  <!ENTITY OPTIONAL "<bcp14>OPTIONAL</bcp14>">
+  <!ENTITY RECOMMENDED "<bcp14>RECOMMENDED</bcp14>">
+  <!ENTITY REQUIRED "<bcp14>REQUIRED</bcp14>">
+  <!ENTITY SHALL "<bcp14>SHALL</bcp14>">
+  <!ENTITY SHALL-NOT "<bcp14>SHALL NOT</bcp14>">
+  <!ENTITY SHOULD "<bcp14>SHOULD</bcp14>">
+  <!ENTITY SHOULD-NOT "<bcp14>SHOULD NOT</bcp14>">
+]>
+<rfc category="std" ipr="trust200902" docName="draft-ietf-httpbis-safe-method-w-body-latest" submissionType="IETF" updates="5323" version="3" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <front>
+    <title>
+      HTTP SEARCH Method
+    </title>
+
+    <author initials="J." surname="Reschke" fullname="Julian Reschke">
+      <organization abbrev="greenbytes">greenbytes GmbH</organization>
+      <address>
+        <postal>
+          <street>Hafenweg 16</street>
+          <city>Münster</city><code>48155</code>
+          <country>Germany</country>
+        </postal>
+        <email>julian.reschke@greenbytes.de</email>
+        <uri>https://greenbytes.de/tech/webdav/</uri>
+      </address>
+    </author>
+    <author initials="A." surname="Malhotra" fullname="Ashok Malhotra">
+      <address>
+        <email>malhotrasahib@gmail.com</email>
+      </address>
+    </author>
+     <author initials="J.M." surname="Snell" fullname="James M Snell">
+      <address>
+        <email>jasnell@gmail.com</email>
+      </address>
+    </author>
+
+    <date/>
+
+    <area>Applications and Real-Time</area>
+    <workgroup>HTTP</workgroup>
+    <keyword>http</keyword>
+    <keyword>search</keyword>
+    <keyword>method</keyword>
+
+    <abstract>
+      <t>
+        This specification updates the definition and semantics of the
+        HTTP SEARCH request method originally defined by
+        RFC 5323.
+      </t>
+    </abstract>
+
+    <note title="Editorial Note" removeInRFC="true">
+      <t>
+        Discussion of this draft takes place on the HTTP working group
+        mailing list (ietf-http-wg@w3.org), which is archived at
+        <eref target="https://lists.w3.org/Archives/Public/ietf-http-wg/"/>.
+      </t>
+      <t>
+        Working Group information can be found at <eref target="https://httpwg.org/"/>;
+        source code and issues list for this draft can be found at
+        <eref target="https://github.com/httpwg/http-extensions/labels/safe-method-w-body"/>.
+      </t>
+      <t>
+        The changes in this draft are summarized in <xref target="changes.since.00"/>.
+      </t>
+    </note>
+
+  </front>
+
+  <middle>
+
+  <section anchor="intro" title="Introduction">
+
+    <t>
+      This specification updates the HTTP SEARCH method originally
+      defined in <xref target="RFC5323"/>.
+    </t>
+
+    <t>
+      Many existing HTTP-based applications use the HTTP GET and POST
+      methods in various ways to implement the functionality provided
+      by SEARCH.
+    </t>
+
+    <t>
+      Using a GET request with some combination of query parameters included
+      within the request URI (as illustrated in the example below) is arguably
+      the most common mechanism for implementing search in web applications.
+      With this approach, implementations are required to parse the request
+      URI into distinct path (everything before the '?') and query elements
+      (everything after the '?'). The path identifies the resource processing
+      the query (in this case 'http://example.org/feed') while the query
+      identifies the specific parameters of the search operation.
+    </t>
+
+    <t>
+      A typical use of HTTP GET for requesting a search
+    </t>
+<artwork type="http-message">
+GET /feed?q=foo&amp;limit=10&amp;sort=-published HTTP/1.1
+Host: example.org
+</artwork>
+
+    <t>
+      While there are definite advantages to using GET requests in this manner,
+      the disadvantages should not be overlooked. Specifically:
+    </t>
+    <ul>
+      <li>
+        Without specific knowledge of the resource and server to which the
+        GET request is being sent, there is no way for the client to know
+        that a search operation is being requested. Identical requests sent
+        to two different servers can implement entirely different semantics.
+      </li>
+      <li>
+        Encoding query parameters directly into the request URI effectively
+        casts every possible combination of query inputs as distinct
+        resources. For instance, because mechanisms such as HTTP caching
+        handle request URIs as opaque character sequences, queries such
+        as 'http://example.org/?q=foo' and 'http://example.org/?q=Foo'
+        will be treated as entirely separate resources even if they
+        yield identical results.
+      </li>
+      <li>
+        While most modern browser and server implementations allow for
+        long request URIs, there is no standardized minimum or maximum
+        length for URIs in general. Many resource constrained devices
+        enforce strict limits on the maximum number of characters that can
+        be included in a URI. Such limits can prove impractical for
+        large or complex query parameters.
+      </li>
+      <li>
+        Query expressions included within a request URI must either be
+        restricted to relatively simple key value pairs or encoded
+        such that the query can be safely represented in the limited
+        character-set allowed by URL standards. Such encoding can add
+        significant complexity, introduce bugs, or otherwise reduce the
+        overall visibility of the query being requested.
+      </li>
+    </ul>
+
+    <t>
+      As an alternative to using GET, many implementations make use of the
+      HTTP POST method to perform queries, as illustrated in the example
+      below. In this case, the input parameters to the search operation are
+      passed along within the request payload as opposed to using the
+      request URI.
+    </t>
+
+    <t>
+      A typical use of HTTP POST for requesting a search
+    </t>
+<artwork type="http-message">
+POST /feed HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+
+q=foo&amp;limit=10&amp;sort=-published
+</artwork>
+
+    <t>
+      This variation, however, suffers from the same basic limitation as GET
+      in that it is not readily apparent -- absent specific knowledge of the
+      resource and server to which the request is being sent -- that a search
+      operation is what is being requested. Web applications use the POST
+      method for a wide variety of uses including the creation or modification
+      of existing resources. Sending the request above to a different server,
+      or even repeatedly sending the request to the same server could have
+      dramatically different effects.
+    </t>
+
+    <t>
+      The SEARCH method provides a solution that spans the gap between the
+      use of GET and POST. As with POST, the input to the query operation
+      is passed along within the payload of the request rather than as part
+      of the request URI. Unlike POST, however the semantics of the SEARCH
+      method are specifically defined.
+    </t>
+
+    <t>
+      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+      "MAY", and "OPTIONAL" in this document are to be interpreted as
+      described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+      appear in all capitals, as shown here.
+    </t>
+
+  </section>
+
+  <section title="SEARCH" anchor="search">
+
+    <t>
+      The SEARCH method is used to initiate a server-side search. Unlike
+      the HTTP GET method, which requests that a server return a
+      representation of the resource identified by the target URI
+      (as defined by <xref target="RFCHTTP" section="7.1"/>), the SEARCH
+      method is used to ask the server to perform a query operation
+      (described by the request payload) over some set of data scoped to the
+      effective request URI. The payload returned in response to a SEARCH
+      cannot be assumed to be a representation of the resource identified by
+      the effective request URI.
+    </t>
+
+    <t>
+      The body payload of the request defines the query. Implementations &MAY; use
+      a request body of any content type with the SEARCH method; however,
+      for backwards compatibility with existing WebDAV implementations,
+      SEARCH requests that use the text/xml or application/xml media types
+      &MUST; be processed per the requirements established by
+      <xref target="RFC5323" />.
+      <cref anchor="xml">This can be relaxed to XML with a document element in the "DAV:" namespace, or even to the two element names mentioned in <xref target="RFC5323" section="2.2.2"/>.</cref>
+    </t>
+
+    <t>
+      SEARCH requests are both safe and idempotent with regards to the
+      resource identified by the request URI. That is, SEARCH requests do not
+      alter the state of the targeted resource. However, while processing a
+      search request, a server can be expected to allocate computing and memory
+      resources or even create additional HTTP resources through which the
+      response can be retrieved.
+    </t>
+
+    <t>
+      A successful response to a SEARCH request is expected to provide some
+      indication as to the final disposition of the search operation. For
+      instance, a successful search that yields no results can be represented
+      by a 204 No Content response. If the response includes a content,
+      it is expected to describe the results of the search operation.
+      In some cases, the server may choose to respond indirectly to the SEARCH
+      request by returning a 3xx Redirection with a Location header field specifying
+      an alternate Request URI from which the search results can be retrieved
+      using an HTTP GET request. Various non-normative examples of successful
+      SEARCH responses are illustrated in <xref target="examples" />.
+    </t>
+
+    <t>
+      The response to a SEARCH request is not cacheable. It ought to be noted,
+      however, that because SEARCH requests are safe and idempotent, responses
+      to a SEARCH &MUST-NOT; invalidate previously cached responses to other
+      requests directed at the same effective request URI.
+      <cref anchor="cache">By default, that is. We need to figure out under which conditions we can make the result cacheable.</cref>
+    </t>
+
+    <t>
+      The semantics of the SEARCH method change to a "conditional SEARCH" if
+      the request message includes an If-Modified-Since, If-Unmodified-
+      Since, If-Match, If-None-Match, or If-Range header field
+      (<xref target="RFCHTTP" sectionFormat="comma" section="13"/>).  A conditional SEARCH requests that the query
+      be performed only under the circumstances described by the conditional
+      header field(s). It is important to note, however, that such conditions
+      are evaluated against the state of the target resource itself as opposed
+      to the collected results of the search operation.
+    </t>
+
+  </section>
+
+  <section title="The &quot;Accept-Search&quot; Header Field" anchor="field.accept-search">
+    <t>
+      The "Accept-Search" response header field &MAY; be used by a server to
+      directly signal support for the SEARCH method while identifying
+      the specific query format media types that may be used.
+    </t>
+<sourcecode type="abnf">
+Accept-Search = 1#media-type
+</sourcecode>
+    <t>
+      The Accept-Search header field specifies a comma-separated listing of media
+      types (with optional parameters) as defined by
+      <xref target="RFCHTTP" section="8.3.1"/>.
+    </t>
+    <t>
+      The order of types listed by the Accept-Search header field is insignificant.
+    </t>
+  </section>
+
+  <section title="Examples" anchor="examples">
+
+    <t>
+      The non-normative examples in this section make use of a simple,
+      hypothetical plain-text based query syntax based on SQL with results
+      returned as comma-separated values. This is done for illustration
+      purposes only. Implementations are free to use any format they wish on
+      both the request and response.
+    </t>
+
+    <section title="Simple SEARCH with a Direct Response">
+
+      <t>A simple query with a direct response:</t>
+<artwork type="http-message">
+SEARCH /contacts HTTP/1.1
+Host: example.org
+Content-Type: text/query
+Accept: text/csv
+
+select surname, givenname, email limit 10
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: text/csv
+
+surname, givenname, email
+Smith, John, john.smith@example.org
+Jones, Sally, sally.jones@example.com
+Dubois, Camille, camille.dubois@example.net
+</artwork>
+
+    </section>
+
+    <section title="Simple SEARCH with indirect response (303 See Other)">
+
+      <t>A simple query with an Indirect Response (303 See Other):</t>
+<artwork type="http-message">
+SEARCH /contacts HTTP/1.1
+Host: example.org
+Content-Type: text/query
+Accept: text/csv
+
+select surname, givenname, email limit 10
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 303 See Other
+Location: http://example.org/contacts/query123
+</artwork>
+
+      <t>Fetch Query Response:</t>
+<artwork type="http-message">
+GET /contacts/query123 HTTP/1.1
+Host: example.org
+</artwork>
+
+      <t>Response:</t>
+<artwork type="http-message">
+HTTP/1.1 200 OK
+Content-Type: text/csv
+
+surname, givenname, email
+Smith, John, john.smith@example.org
+Jones, Sally, sally.jones@example.com
+Dubois, Camille, camille.dubois@example.net
+</artwork>
+
+    </section>
+
+  </section>
+
+  <section title="Security Considerations">
+    <t>
+      The SEARCH method is subject to the same general security
+      considerations as all HTTP methods as described in
+      <xref target="RFCHTTP"/>.
+    </t>
+  </section>
+
+  <section title="IANA Considerations">
+
+    <t>
+      IANA is requested to update the registration of the SEARCH method in the
+      permanent registry at &lt;http://www.iana.org/assignments/http-methods&gt;
+      (see <xref target="RFCHTTP" section="16.1.1"/>).
+    </t>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Method Name</th>
+          <th>Safe</th>
+          <th>Idempotent</th>
+          <th>Specification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SEARCH</td>
+          <td>Yes</td>
+          <td>Yes</td>
+          <td><xref target="search"/></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</middle>
+<back>
+  <references title="Normative References">
+    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5323.xml"/>
+    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+    <reference anchor="RFCHTTP">
+      <front>
+        <title>HTTP Semantics</title>
+        <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
+        <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
+        <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
+        <date year="2021" month="March" day="30"/>
+      </front>
+      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-15"/>
+    </reference>
+  </references>
+
+<section title="Change Log" anchor="change.log" removeInRFC="true">
+<t>
+  <cref>(see <eref target="https://trac.tools.ietf.org/tools/xml2rfc/trac/ticket/622"/>)</cref>
+</t>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
+<ul>
+  <li>In <xref target="field.accept-search"/>, adjust the grammar to just define the field value (<eref target="https://github.com/httpwg/http-core/issues/1470"/>)</li>
+  <li>Update to latest HTTP core spec, and adjust terminology accordingly (<eref target="https://github.com/httpwg/http-core/issues/1473"/>)</li>
+  <li>Reference RFC 8174 and markup bcp14 terms (<eref target="https://github.com/httpwg/http-core/issues/1497"/>)</li>
+</ul>
+</section>
+</section>
+
+</back>
+</rfc>
