@@ -89,10 +89,10 @@ normative:
       ins: D. Denicola
       name: Domenic Denicola
       organization: Google, Inc.
-  COOKIE-URL:
-    target: https://html.spec.whatwg.org/#cookie-url
+  DOM-DOCUMENT-COOKIE:
+    target: https://html.spec.whatwg.org/#dom-document-cookie
     title: HTML - Living Standard
-    date: 2021-05-04
+    date: 2021-05-18
     author:
     -
       org: WHATWG
@@ -1547,10 +1547,12 @@ set to false.
 ## Retrieval Model {#retrieval-model}
 
 This section defines how cookies are retrieved from a cookie store in the form
-of a cookie-string. A "retrieval " is any event which requires generating a
+of a cookie-string. A "retrieval" is any event which requires generating a
 cookie-string. For example, a retrieval may occur in order to build a Cookie
 header for an HTTP request, or may be required in order to return a
-cookie-string from a call to a "non-HTTP" API that provides access to cookies.
+cookie-string from a call to a "non-HTTP" API that provides access to cookies. A
+retrieval has an associated URI, same-site status, and type, which
+are defined below depending on the type of retrieval.
 
 ### The Cookie Header {#cookie}
 
@@ -1565,10 +1567,9 @@ from setting cookies (see {{third-party-cookies}}).
 
 If the user agent does attach a Cookie header field to an HTTP request, the
 user agent MUST compute the cookie-string following the algorithm defined in
-{{retrieval-algorithm}}, indicating that the retrieval is for an HTTP request.
-The retrieval-uri is defined as the request-uri and the same-site status of the
-retrieval is computed for the HTTP request as defined in
-{{same-site-requests}}.
+{{retrieval-algorithm}}, where the retrieval's URI is the request-uri, the
+retrieval's same-site status is computed for the HTTP request as defined in
+{{same-site-requests}}, and the retrieval's type is "HTTP".
 
 ### Non-HTTP APIs {#non-http}
 
@@ -1581,18 +1582,17 @@ when a retrieval occurs within a third-party context (see
 
 If a user agent does return cookies for a given call to a "non-HTTP" API with
 an associated Document, then the user agent MUST compute the cookie-string
-following the algorithm defined in {{retrieval-algorithm}}, indicating that the
-retrieval is from a "non-HTTP" API. The retrieval-uri is the associated
-Document's cookie URL {{COOKIE-URL}}, and the retrieval is same-site if the
-Document's "site for cookies" is same-site with the top-level origin as defined
-in {{document-requests}}.
+following the algorithm defined in {{retrieval-algorithm}}, where the
+retrieval's URI is defined by the caller (see {{DOM-DOCUMENT-COOKIE}}), the
+retrieval's same-site status is "same-site" if the Document's "site for
+cookies" is same-site with the top-level origin as defined in
+{{document-requests}} (otherwise it is "cross-site"), and the retrieval's type
+is "non-HTTP".
 
 ### Retrieval Algorithm {#retrieval-algorithm}
 
-The following algorithm returns a cookie-string from a given cookie store.
-Callers of this algorithm MUST provide a retrieval-uri, indicate the same-site
-status of the retrieval, and indicate whether the retrieval is for an HTTP
-request or from a "non-HTTP" API.
+Given a cookie store and a retrieval, the following algorithm returns a
+cookie-string from a given cookie store.
 
 1. Let cookie-list be the set of cookies from the cookie store that meets all
    of the following requirements:
@@ -1600,16 +1600,16 @@ request or from a "non-HTTP" API.
    * Either:
 
      *   The cookie's host-only-flag is true and the canonicalized
-         host of the retrieval-uri is identical to the cookie's domain.
+         host of the retrieval's URI is identical to the cookie's domain.
 
      Or:
 
      *   The cookie's host-only-flag is false and the canonicalized
-         host of the retrieval-uri domain-matches the cookie's domain.
+         host of the retrieval's URI domain-matches the cookie's domain.
 
-   * The retrieval-uri's path path-matches the cookie's path.
+   * The retrieval's URI's path path-matches the cookie's path.
 
-   * If the cookie's secure-only-flag is true, then the retrieval-uri's
+   * If the cookie's secure-only-flag is true, then the retrieval's URI's
      scheme must denote a "secure" protocol (as defined by the user agent).
 
      NOTE: The notion of a "secure" protocol is not defined by this document.
@@ -1619,17 +1619,17 @@ request or from a "non-HTTP" API.
      protocol.
 
    * If the cookie's http-only-flag is true, then exclude the cookie if the
-     retrieval is for a "non-HTTP" API.
+     retrieval's type is "non-HTTP".
 
    * If the cookie's same-site-flag is not "None" and the retrieval's same-site
-     status is "cross-site", then exclude the cookie unless all of the following
-     conditions are met:
+     status is "cross-site", then exclude the cookie unless all of the
+     following conditions are met:
 
-     * The retrieval is for a Cookie header in the HTTP request associated with
-       the retrieval-uri.
+     * The retrieval's type is "HTTP".
      * The same-site-flag is "Lax" or "Default".
-     * The HTTP request's method is "safe".
-     * The HTTP request's target browsing context is a top-level browsing context.
+     * The HTTP request associated with the retrieval uses a "safe" method.
+     * The target browsing context of the HTTP request associated with the
+       retrieval is a top-level browsing context.
 
 2. The user agent SHOULD sort the cookie-list in the following order:
 
