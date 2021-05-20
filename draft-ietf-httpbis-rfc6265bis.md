@@ -99,6 +99,13 @@ normative:
       ins: D. Denicola
       name: Domenic Denicola
       organization: Google, Inc.
+  DOM-DOCUMENT-COOKIE:
+    target: https://html.spec.whatwg.org/#dom-document-cookie
+    title: HTML - Living Standard
+    date: 2021-05-18
+    author:
+    -
+      org: WHATWG
   SAMESITE:
     target: https://html.spec.whatwg.org/#same-site
     title: HTML - Living Standard
@@ -313,7 +320,8 @@ the user agent is sending an HTTP request or from which it is receiving an HTTP
 response (i.e., the name of the host to which it sent the corresponding HTTP
 request).
 
-The term request-uri refers to "request target" as defined in Section 7.1 of {{HTTPSEM}}.
+The term request-uri refers to "target URI" as defined in Section 7.1 of
+{{HTTPSEM}}.
 
 Two sequences of octets are said to case-insensitively match each other if and
 only if they are equivalent under the i;ascii-casemap collation defined in
@@ -346,6 +354,9 @@ project at {{PSL}}.
 
 The term "request", as well as a request's "client", "current url", "method",
 "target browsing context", and "url list", are defined in {{FETCH}}.
+
+The term "non-HTTP APIs" refers to non-HTTP mechanisms used to set and retrieve
+cookies, such as a web browser API that exposes cookies to scripts.
 
 # Overview
 
@@ -656,8 +667,7 @@ disrupting their integrity (see {{weak-integrity}} for more details).
 
 The HttpOnly attribute limits the scope of the cookie to HTTP requests. In
 particular, the attribute instructs the user agent to omit the cookie when
-providing access to cookies via "non-HTTP" APIs (such as a web browser API that
-exposes cookies to scripts).
+providing access to cookies via non-HTTP APIs.
 
 Note that the HttpOnly attribute is independent of the Secure attribute: a
 cookie can have both the HttpOnly and the Secure attribute.
@@ -923,11 +933,7 @@ The user agent MUST use an algorithm equivalent to the following algorithm to
 compute the default-path of a cookie:
 
 1.  Let uri-path be the path portion of the request-uri if such a portion
-    exists (and empty otherwise). For example, if the request-uri contains
-    just a path (and optional query string), then the uri-path is that path
-    (without the %x3F ("?") character or query string), and if the request-uri
-    contains a full absoluteURI, the uri-path is the path component of
-    that URI.
+    exists (and empty otherwise).
 
 2.  If the uri-path is empty or if the first character of the uri-path is
     not a %x2F ("/") character, output %x2F ("/") and skip the remaining steps.
@@ -1564,7 +1570,17 @@ When "the current session is over" (as defined by the user agent), the user
 agent MUST remove from the cookie store all cookies with the persistent-flag
 set to false.
 
-## The Cookie Header {#cookie}
+## Retrieval Model {#retrieval-model}
+
+This section defines how cookies are retrieved from a cookie store in the form
+of a cookie-string. A "retrieval" is any event which requires generating a
+cookie-string. For example, a retrieval may occur in order to build a Cookie
+header for an HTTP request, or may be required in order to return a
+cookie-string from a call to a "non-HTTP" API that provides access to cookies. A
+retrieval has an associated URI, same-site status, and type, which
+are defined below depending on the type of retrieval.
+
+### The Cookie Header {#cookie}
 
 The user agent includes stored cookies in the Cookie HTTP request header.
 
@@ -1576,76 +1592,96 @@ user agent might wish to block sending cookies during "third-party" requests
 from setting cookies (see {{third-party-cookies}}).
 
 If the user agent does attach a Cookie header field to an HTTP request, the
-user agent MUST send the cookie-string (defined below) as the value of the
-header field.
+user agent MUST compute the cookie-string following the algorithm defined in
+{{retrieval-algorithm}}, where the retrieval's URI is the request-uri, the
+retrieval's same-site status is computed for the HTTP request as defined in
+{{same-site-requests}}, and the retrieval's type is "HTTP".
 
-The user agent MUST use an algorithm equivalent to the following algorithm to
-compute the cookie-string from a cookie store and a request-uri:
+### Non-HTTP APIs {#non-http}
 
-1.  Let cookie-list be the set of cookies from the cookie store that meets all
-    of the following requirements:
+The user agent MAY implement "non-HTTP" APIs that can be used to access
+stored cookies.
 
-    *   Either:
+A user agent MAY return an empty cookie-string in certain contexts, such as
+when a retrieval occurs within a third-party context (see
+{{third-party-cookies}}).
 
-        *   The cookie's host-only-flag is true and the canonicalized
-            request-host is identical to the cookie's domain.
+If a user agent does return cookies for a given call to a "non-HTTP" API with
+an associated Document, then the user agent MUST compute the cookie-string
+following the algorithm defined in {{retrieval-algorithm}}, where the
+retrieval's URI is defined by the caller (see {{DOM-DOCUMENT-COOKIE}}), the
+retrieval's same-site status is "same-site" if the Document's "site for
+cookies" is same-site with the top-level origin as defined in
+{{document-requests}} (otherwise it is "cross-site"), and the retrieval's type
+is "non-HTTP".
 
-        Or:
+### Retrieval Algorithm {#retrieval-algorithm}
 
-        *   The cookie's host-only-flag is false and the canonicalized
-            request-host domain-matches the cookie's domain.
+Given a cookie store and a retrieval, the following algorithm returns a
+cookie-string from a given cookie store.
 
-    *   The request-uri's path path-matches the cookie's path.
+1. Let cookie-list be the set of cookies from the cookie store that meets all
+   of the following requirements:
 
-    *  If the cookie's secure-only-flag is true, then the request-uri's
-       scheme must denote a "secure" protocol (as defined by the user agent).
+   * Either:
 
-       NOTE: The notion of a "secure" protocol is not defined by this document.
-       Typically, user agents consider a protocol secure if the protocol makes
-       use of transport-layer security, such as SSL or TLS. For example, most
-       user agents consider "https" to be a scheme that denotes a secure
-       protocol.
+     *   The cookie's host-only-flag is true and the canonicalized
+         host of the retrieval's URI is identical to the cookie's domain.
 
-    *  If the cookie's http-only-flag is true, then exclude the cookie if the
-       cookie-string is being generated for a "non-HTTP" API (as defined by
-       the user agent).
+     Or:
 
-    *  If the cookie's same-site-flag is not "None", and the HTTP request is
-       cross-site (as defined in {{same-site-requests}}) then exclude the
-       cookie unless all of the following statements hold:
+     *   The cookie's host-only-flag is false and the canonicalized
+         host of the retrieval's URI domain-matches the cookie's domain.
 
-        1.  The same-site-flag is "Lax" or "Default".
+   * The retrieval's URI's path path-matches the cookie's path.
 
-        2.  The HTTP request's method is "safe".
+   * If the cookie's secure-only-flag is true, then the retrieval's URI's
+     scheme must denote a "secure" protocol (as defined by the user agent).
 
-        3.  The HTTP request's target browsing context is a top-level browsing
-            context.
+     NOTE: The notion of a "secure" protocol is not defined by this document.
+     Typically, user agents consider a protocol secure if the protocol makes
+     use of transport-layer security, such as SSL or TLS. For example, most
+     user agents consider "https" to be a scheme that denotes a secure
+     protocol.
 
-2.  The user agent SHOULD sort the cookie-list in the following order:
+   * If the cookie's http-only-flag is true, then exclude the cookie if the
+     retrieval's type is "non-HTTP".
 
-    *  Cookies with longer paths are listed before cookies with shorter
-       paths.
+   * If the cookie's same-site-flag is not "None" and the retrieval's same-site
+     status is "cross-site", then exclude the cookie unless all of the
+     following conditions are met:
 
-    *  Among cookies that have equal-length path fields, cookies with earlier
-       creation-times are listed before cookies with later creation-times.
+     * The retrieval's type is "HTTP".
+     * The same-site-flag is "Lax" or "Default".
+     * The HTTP request associated with the retrieval uses a "safe" method.
+     * The target browsing context of the HTTP request associated with the
+       retrieval is a top-level browsing context.
 
-    NOTE: Not all user agents sort the cookie-list in this order, but this order
-    reflects common practice when this document was written, and, historically,
-    there have been servers that (erroneously) depended on this order.
+2. The user agent SHOULD sort the cookie-list in the following order:
 
-3.  Update the last-access-time of each cookie in the cookie-list to the
-    current date and time.
+   *  Cookies with longer paths are listed before cookies with shorter
+      paths.
 
-4.  Serialize the cookie-list into a cookie-string by processing each cookie
-    in the cookie-list in order:
+   *  Among cookies that have equal-length path fields, cookies with earlier
+      creation-times are listed before cookies with later creation-times.
 
-    1.  If the cookies' name is not empty, output the cookie's name followed by
-        the %x3D ("=") character.
+   NOTE: Not all user agents sort the cookie-list in this order, but this order
+   reflects common practice when this document was written, and, historically,
+   there have been servers that (erroneously) depended on this order.
 
-    2.  If the cookies' value is not empty, output the cookie's value.
+3. Update the last-access-time of each cookie in the cookie-list to the
+   current date and time.
 
-    3.  If there is an unprocessed cookie in the cookie-list, output the
-        characters %x3B and %x20 ("; ").
+4. Serialize the cookie-list into a cookie-string by processing each cookie
+   in the cookie-list in order:
+
+   1.  If the cookies' name is not empty, output the cookie's name followed by
+       the %x3D ("=") character.
+
+   2.  If the cookies' value is not empty, output the cookie's value.
+
+   3.  If there is an unprocessed cookie in the cookie-list, output the
+       characters %x3B and %x20 ("; ").
 
 NOTE: Despite its name, the cookie-string is actually a sequence of octets, not
 a sequence of characters.  To convert the cookie-string (or components
@@ -1653,6 +1689,8 @@ thereof) into a sequence of characters (e.g., for presentation to the user),
 the user agent might wish to try using the UTF-8 character encoding {{RFC3629}}
 to decode the octet sequence. This decoding might fail, however, because not
 every sequence of octets is valid UTF-8.
+
+
 
 # Implementation Considerations
 
