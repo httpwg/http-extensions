@@ -1358,16 +1358,16 @@ If the user agent uses "Lax-allowing-unsafe" enforcement, it MUST apply the
 following modification to the retrieval algorithm defined in
 {{retrieval-algorithm}}:
 
-Replace the condition in the final bullet point of step 1 of the retrieval
+Replace the condition in the penultimate bullet point of step 1 of the retrieval
 algorithm reading
 
-     * The HTTP request's method is "safe".
+     * The HTTP request associated with the retrieval uses a "safe" method.
 
 with
 
      * At least one of the following is true:
 
-       1.  The HTTP request's method is "safe".
+       1.  The HTTP request associated with the retrieval uses a "safe" method.
 
        2.  The cookie's same-site-flag is "Default" and the amount of time
            elapsed since the cookie's creation-time is at most a duration of the
