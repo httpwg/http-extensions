@@ -15,7 +15,7 @@ pulls.json
 report.xml
 lib
 draft-ietf-httpbis-cache-digest.xml
-draft-ietf-httpbis-client-hints.xml
+draft-ietf-httpbis-client-cert-field.xml
 draft-ietf-httpbis-early-hints.xml
 draft-ietf-httpbis-expect-ct.xml
 draft-ietf-httpbis-header-structure.xml

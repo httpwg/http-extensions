@@ -59,14 +59,14 @@ Typically, HTTP intermediaries forward requests towards the origin server and th
 
 HTTP accommodates these types of errors with a few status codes; for example, 502 Bad Gateway and 504 Gateway Timeout. However, experience has shown that more information is necessary to aid debugging and communicate what's happened to the client. Additionally, intermediaries sometimes want to convey additional information about their handling of a response, even if they did not generate it.
 
-To enable these uses, {{header}} defines a new HTTP response field to allow intermediaries to convey details of their handling of a response, {{params}} enumerates the kind of information that can be conveyed, and {{error-types}} defines a set of error types for use when a proxy encounters an issue when obtaining a response for the request.
+To enable these uses, {{header}} defines a new HTTP response field to allow intermediaries to convey details of their handling of a response. {{params}} enumerates the information that can be added to the field by intermediaries, which can be extended as per {{register-param}}. {{error-types}} defines a set of error types for use when a proxy encounters an issue when obtaining a response for the request; these can likewise be extended as per {{register-error}}.
 
 
 ## Notational Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This specification uses Structured Fields {{!I-D.ietf-httpbis-header-structure}} to specify syntax and parsing. The terms sf-list, sf-item, sf-string, sf-token, sf-integer and key refer to the structured types defined therein.
+This specification uses Structured Fields {{!RFC8941}} to specify syntax and parsing, and ABNF {{?RFC5234}} as a shorthand for that syntax. The terms sf-list, sf-item, sf-string, sf-token, sf-integer and key refer to the structured types defined therein.
 
 Note that in this specification, "proxy" is used to indicate both forward and reverse proxies, otherwise known as gateways. "Next hop" indicates the connection in the direction leading to the origin server for the request.
 
@@ -75,7 +75,7 @@ Note that in this specification, "proxy" is used to indicate both forward and re
 
 The Proxy-Status HTTP response field allows an intermediary to convey additional information about its handling of a response and its associated request.
 
-It is a List {{I-D.ietf-httpbis-header-structure, Section 3.1}}:
+It is a List ({{RFC8941, Section 3.1}}):
 
 ~~~ abnf
 Proxy-Status   = sf-list
@@ -106,7 +106,7 @@ Origin servers MUST NOT generate the Proxy-Status field.
 
 ## Proxy-Status Parameters {#params}
 
-This section lists parameters that can be used on the members of the Proxy-Status field. Unrecognised parameters SHOULD be ignored.
+This section lists parameters that can be used on the members of the Proxy-Status field. Unrecognised parameters MUST be ignored.
 
 ### error
 
@@ -226,6 +226,7 @@ This section lists the Proxy Error Types defined by this document. See {{registe
 * Description: The intermediary encountered a DNS error when trying to find an IP address for the next hop hostname.
 * Extra Parameters:
   - rcode: A sf-string conveying the DNS RCODE that indicates the error type. See {{RFC8499, Section 3}}.
+  - info-code: A sf-integer conveying the Extended DNS Error Code info-code. See {{!RFC8914}}.
 * Recommended HTTP status code: 502
 
 ### Destination Not Found
