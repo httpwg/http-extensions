@@ -87,13 +87,11 @@ informative:
 
 --- abstract
 
-This document defines the HTTP Digest and Want-Digest fields, thus allowing
+This document defines the HTTP Digest and Want-Digest fields, which allows
 client and server to negotiate an integrity checksum of the exchanged resource
 representation data.
 
-This document obsoletes RFC 3230. It replaces the term "instance" with
-"representation", which makes it consistent with the HTTP Semantic and Context
-defined in draft-ietf-httpbis-semantics.
+This document obsoletes RFC 3230.
 
 
 --- note_Note_to_Readers
@@ -112,100 +110,87 @@ The source code and issues list for this draft can be found at
 
 # Introduction
 
-The core specification of HTTP does not define a means to protect the integrity
-of resources. When HTTP messages are transferred between endpoints, the protocol
-might choose to make use of features of the lower layer in order to provide some
-integrity protection; for instance TCP checksums or TLS records [RFC2818].
+HTTP does not define a means to protect the integrity of representations. When
+HTTP messages are transferred between endpoints, the protocol might choose to
+make use of features of the lower layer in order to provide some integrity
+protection; for instance TCP checksums or TLS records [RFC2818].
 
-However, there are cases where relying on this alone is insufficient. An
-HTTP-level integrity mechanism that operates independent of transfer can be used
-to detect programming errors and/or corruption of data in flight or at rest, be used across
-multiple hops in order to provide end-to-end integrity guarantees, can aid fault
-diagnosis across hops and system boundaries, and can be used to validate
-integrity when reconstructing a resource fetched using different HTTP
+This document defines the Digest HTTP integrity mechanism that acts on
+representation data. It operates independent of transport integrity, offering
+the potential to detect programming errors and corruption of data in flight or
+at rest. It can be used across multiple hops in order to provide end-to-end
+integrity guarantees, which can aid fault diagnosis when resources are
+transferred across hops and system boundaries. Finally, it can be used to
+validate integrity when reconstructing a resource fetched using different HTTP
 connections.
 
-This document defines a mechanism that acts on HTTP representation-data. It can
-be combined with other mechanisms that protect representation-metadata, such as
-digital signatures, in order to protect the desired parts of an HTTP exchange in
-whole or in part.
+This document obsoletes [RFC3230].
 
-## A Brief History of HTTP Integrity Fields {#history}
+## Document Structure
 
-The Content-MD5 header field was originally introduced to provide integrity, but
-HTTP/1.1 ([RFC7231], Appendix B) obsoleted it:
+This document describes Digest integrity for HTTP and is structured as follows:
 
-  > The Content-MD5 header field has been removed because it was
-  > inconsistently implemented with respect to partial responses.
+- {{representation-digest}} describes concepts related to representation
+  digests,
+- {{digest}} defines the Digest request and response header and trailer field,
+- {{want-digest}} defines the Want-Digest request and response header and
+  trailer field,
+- {{algorithms}}, {{broken-algorithms}}, {{deprecated-algorithms}} and
+  {{deprecate-contentMD5}}  and  describe algorithms and their relation to
+  Digest,
+- {{acting-on-resources}} details computing representation digests,
+- {{obsolete-parameters}} obsoletes Digest field parameters,
+- {{sri}} describes the relationship between Digest and Subresource Integrity,
+  and
+- {{examples-unsolicited}} and {{examples-solicited}} provide examples of using
+  Digest and Want-Digest.
 
-[RFC3230] provided a more flexible solution introducing the concept of
-"instance", and the fields `Digest` and `Want-Digest`.
+## Concept Overview
 
-## This Proposal
+This document defines the `Digest` request and response header and trailer
+field. At a high level the value contains a checksum, computed over
+`selected representation data`
+(Section 3.2; {{!SEMANTICS=I-D.ietf-httpbis-semantics}}),
+that the recipient can use to validate integrity. `Digest` supports
+algorithm agility. The `Want-Digest` field allows endpoints to express interest
+in `Digest` and preference of algorithms.
 
-The concept of `selected representation` defined in Section 3.2 of
-{{!SEMANTICS=I-D.ietf-httpbis-semantics}} makes [RFC3230] definitions inconsistent with
-current HTTP semantics. This document updates the `Digest` and `Want-Digest`
-field definitions to align with {{SEMANTICS}} concepts.
-
-Basing `Digest` on the selected representation makes it straightforward to
-apply it to use-cases where the transferred data does require some sort of
+Basing `Digest` on the selected representation makes it straightforward to apply
+it to use-cases where the transferred data requires some sort of
 manipulation to be considered a representation, or conveys a partial
-representation of a resource eg. Range Requests (see Section 14.2 of
+representation of a resource, for example Range Requests (see Section 14.2 of
 {{SEMANTICS}}).
 
-This document replaces [RFC3230] to better align with {{SEMANTICS}} and to
-provide more detailed description of `Digest` usage in request and response
-cases. Changes are intended to be semantically compatible with existing
+Historically, the Content-MD5 header field provided an HTTP integrity mechanism
+but HTTP/1.1 ([RFC7231], Appendix B) obsoleted it due to inconsistent handling
+of partial responses. [RFC3230] defined the concept of "instance" digests and a
+more flexible integrity scheme to help address issues with Content-MD5. It first
+introduced the `Digest` and `Want-Digest` fields. HTTP terminology has evolved
+since [RFC3230] was published. The concept of "instance" has been superseded by
+`selected representation`.
+
+This document replaces [RFC3230]. The `Digest` and `Want-Digest` field
+definitions are updated to align with the terms and notational conventions in
+{{!SEMANTICS}}. Changes are intended to be semantically compatible with existing
 implementations but note that negotiation of `Content-MD5` is deprecated
 {{deprecate-contentMD5}}, `Digest` field parameters are obsoleted
 {{obsolete-parameters}}, "md5" and "sha" digest-algorithms are obsoleted
-{{broken-algorithms}} and the "adler32" algorithm is deprecated
+{{broken-algorithms}}, and the "adler32" algorithm is deprecated
 {{deprecated-algorithms}}.
 
-The value of `Digest` is calculated on selected representation, which is tied to
-the value contained in any `Content-Encoding` or `Content-Type` header fields.
-Therefore, a given resource may have multiple different digest values.
+Calculating the value of `Digest` using selected representation means it is tied
+to the `Content-Encoding` and `Content-Type` header fields. Therefore, a given
+resource may have multiple different digest values. To allow both parties to
+exchange a Digest of a representation with no content codings (see Section 8.4.1
+of {{SEMANTICS}}) two more digest-algorithms are added ("id-sha-256" and
+"id-sha-512").
 
-To allow both parties to exchange a Digest of a representation with no content
-codings (see Section 8.4.1 of {{SEMANTICS}}) two more digest-algorithms
-are added ("id-sha-256" and "id-sha-512").
+`Digest` is used for representation integrity. It does not provide integrity for
+HTTP messages or fields. However, it can be combined with other mechanisms that
+protect representation metadata, such as digital signatures, in order to protect
+the phases of an HTTP exchange in whole or in part.
 
-## Goals
-
-The goals of this proposal are:
-
-   1. Digest coverage for either the resource's `representation data` or
-      `selected representation data` communicated via HTTP.
-
-   2. Support for multiple digest-algorithms.
-
-   3. Negotiation of the use of digests.
-
-The goals do not include:
-
-  HTTP message integrity:
-  : Digest mechanisms do not cover the full HTTP message
-    nor its semantic, as representation metadata is not included in the
-    checksum.
-
-  HTTP field integrity:
-  : Digest mechanisms cover only representation and selected
-    representation data, and do not protect the integrity of associated
-    representation metadata or other message fields.
-
-  Authentication:
-  : Digest mechanisms do not support authentication
-    of the source of a digest, message or anything else. These mechanisms,
-    therefore, are not a sufficient defense against many kinds of malicious
-    attacks.
-
-  Privacy:
-  : Digest mechanisms do not provide message privacy.
-
-  Authorization:
-  : Digest mechanisms do not support authorization
-    or other kinds of access controls.
+`Digest` does not define means for authentication, authorization or privacy.
 
 
 ## Notational Conventions
@@ -495,7 +480,7 @@ A digest-algorithm can still be parameterized by defining its own way to encode 
 representation-data-digest, in such a way as to mitigate security risks related to its computation.
 
 
-# Relationship to Subresource Integrity (SRI)
+# Relationship to Subresource Integrity (SRI) {#sri}
 
 Subresource Integrity [SRI] is an integrity mechanism that shares some
 similarities to the present document's mechanism. However, there are differences
