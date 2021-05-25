@@ -32,7 +32,6 @@ normative:
   RFC3174:
   RFC1950:
   RFC3230:
-  RFC3309:
   RFC2119:
   RFC5843:
   RFC4648:
@@ -135,9 +134,8 @@ This document describes Digest integrity for HTTP and is structured as follows:
 - {{digest}} defines the Digest request and response header and trailer field,
 - {{want-digest}} defines the Want-Digest request and response header and
   trailer field,
-- {{algorithms}}, {{broken-algorithms}}, {{deprecated-algorithms}} and
-  {{deprecate-contentMD5}}  and  describe algorithms and their relation to
-  Digest,
+- {{algorithms}} and {{deprecate-contentMD5}} describe algorithms and their
+  relation to Digest,
 - {{acting-on-resources}} details computing representation digests,
 - {{obsolete-parameters}} obsoletes Digest field parameters,
 - {{sri}} describes the relationship between Digest and Subresource Integrity,
