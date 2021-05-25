@@ -2196,8 +2196,9 @@ Specification document:
 
 ## Cookie Attribute Registry
 
-The "Cookie Attribute Registry" defines the name space of attribute used to
-control cookies' behavior. The registry is maintained at
+IANA is requested to create the "Cookie Attribute Registry", defining the
+name space of attribute used to control cookies' behavior.
+The registry should be maintained at
 <https://www.iana.org/assignments/cookie-attribute-names>.
 
 ### Procedure
@@ -2212,7 +2213,7 @@ defined in CamelCase, but technically accepted case-insensitively.
 
 ### Registration
 
-The "Cookie Attribute Registry" will be updated with the registrations below:
+The "Cookie Attribute Registry" should be created with the registrations below:
 
 | Name     | Reference                               |
 |----------:+----------------------------------------|
