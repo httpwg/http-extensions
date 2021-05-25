@@ -309,7 +309,7 @@ that the recipient will ignore it.
 
 `Digest` can be sent in a trailer section.
 In this case,
-`Digest` MAY be merged in the header section (See Section 6.5.1 of {{SEMANTICS}}).
+`Digest` MAY be merged in to the header section (See Section 6.5.1 of {{SEMANTICS}}).
 
 When an incremental digest-algorithm
 is used, the sender and the receiver can dynamically compute the digest value
