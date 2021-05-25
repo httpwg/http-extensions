@@ -453,27 +453,6 @@ representation of the patched resource.
 `Digest` usage with PATCH is thus very similar to POST, but with the
 resource's own semantic partly implied by the method and by the patch document.
 
-# Deprecate Negotiation of Content-MD5 {#deprecate-contentMD5}
-
-This RFC deprecates the negotiation of Content-MD5 as it has been obsoleted by
-[RFC7231].
-The `contentMD5` token defined in Section 5 of [RFC3230] MUST NOT be used as a digest-algorithm.
-
-# Obsolete Digest Field Parameters {#obsolete-parameters}
-
-Section 4.1.1 and 4.2 of [RFC3230] defined field parameters. This document
-obsoletes the usage of parameters with `Digest` because this feature has not
-been widely deployed and complicates field-value processing.
-
-[RFC3230] intended field parameters to provide a common way to attach additional
-information to a representation-data-digest. However, if parameters are used as
-an input to validate the checksum, an attacker could alter them to steer the
-validation behavior.
-
-A digest-algorithm can still be parameterized by defining its own way to encode parameters into the
-representation-data-digest, in such a way as to mitigate security risks related to its computation.
-
-
 # Relationship to Subresource Integrity (SRI) {#sri}
 
 Subresource Integrity [SRI] is an integrity mechanism that shares some
@@ -1286,6 +1265,11 @@ registry:
 * Description: As specified in {{algorithms}}.
 * Status: As specified in {{algorithms}}.
 
+## Changes Compared to RFC3230
+￼
+The `contentMD5` digest-algorithm token defined in Section 5 of [RFC3230] is removed from
+the HTTP Digest Algorithm Values Registry.
+
 ## Changes Compared to RFC5843
 
 The digest-algorithm values for "MD5", "SHA", "SHA-256", "SHA-512", "UNIXcksum", "UNIXsum",
@@ -1440,6 +1424,27 @@ Location: /authors/123
 
 {"id": "123", "author": "Camilleri"}
 ~~~
+
+# Changes from RFC3230
+
+## Deprecate Negotiation of Content-MD5 {#deprecate-contentMD5}
+
+This RFC deprecates the negotiation of `Content-MD5` as it has been obsoleted by
+[RFC7231].
+
+## Obsolete Digest Field Parameters {#obsolete-parameters}
+
+Section 4.1.1 and 4.2 of [RFC3230] defined field parameters. This document
+obsoletes the usage of parameters with `Digest` because this feature has not
+been widely deployed and complicates field-value processing.
+
+[RFC3230] intended field parameters to provide a common way to attach additional
+information to a representation-data-digest. However, if parameters are used as
+an input to validate the checksum, an attacker could alter them to steer the
+validation behavior.
+
+A digest-algorithm can still be parameterized by defining its own way to encode parameters into the
+representation-data-digest, in such a way as to mitigate security risks related to its computation.
 
 # Acknowledgements
 {:numbered="false"}
