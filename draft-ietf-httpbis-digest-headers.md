@@ -174,9 +174,8 @@ definitions are updated to align with the terms and notational conventions in
 {{!SEMANTICS}}. Changes are intended to be semantically compatible with existing
 implementations but note that negotiation of `Content-MD5` is deprecated
 {{deprecate-contentMD5}}, `Digest` field parameters are obsoleted
-{{obsolete-parameters}}, "md5" and "sha" digest-algorithms are obsoleted
-{{broken-algorithms}}, and the "adler32" algorithm is deprecated
-{{deprecated-algorithms}}.
+{{obsolete-parameters}}, "md5" and "sha" digest-algorithms are obsoleted,
+and the "adler32" algorithm is deprecated.
 
 Calculating the value of `Digest` using selected representation means it is tied
 to the `Content-Encoding` and `Content-Type` header fields. Therefore, a given
