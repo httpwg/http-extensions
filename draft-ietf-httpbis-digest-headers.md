@@ -1012,8 +1012,8 @@ as transport-layer security or digital signatures.
 
 ## Digest for End-to-End Integrity
 
-`Digest` could help protect the `representation data`
-from buggy manipulation, undesired "transforming proxies" (see Section 7.7 of {{SEMANTICS}})
+`Digest` can help detect `representation data` modification due to implementation errors,
+undesired "transforming proxies" (see Section 7.7 of {{SEMANTICS}})
 or other actions as the data passes across multiple hops or system boundaries.
 Even a simple mechanism for end-to-end `representation data` integrity is valuable
 because user-agent can validate that resource retrieval succeeded before handing off to a
