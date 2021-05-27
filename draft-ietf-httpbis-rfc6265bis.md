@@ -1073,8 +1073,10 @@ Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
 User agents MAY ignore Set-Cookie headers contained in responses with 100-level
 status codes or based on its cookie policy (see {{cookie-policy}}).
 
-All other Set-Cookie headers, including those in responses with 400- and 500-level
-status codes, MUST be processed.
+All other Set-Cookie headers SHOULD be processed according to {{set-cookie}}.
+That is, Set-Cookie headers contained in responses with non-100-level status
+codes (including those in responses with 400- and 500-level status codes)
+SHOULD be processed unless ignored according to the user agent's cookie policy.
 
 ## The Set-Cookie Header {#set-cookie}
 
