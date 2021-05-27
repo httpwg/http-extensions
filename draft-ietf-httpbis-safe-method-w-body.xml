@@ -410,9 +410,9 @@ Dubois, Camille, camille.dubois@example.net
         <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
         <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
         <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2021" month="March" day="30"/>
+        <date year="2021" month="May" day="27"/>
       </front>
-      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-15"/>
+      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-16"/>
     </reference>
   </references>
 
@@ -425,6 +425,7 @@ Dubois, Camille, camille.dubois@example.net
   <li>In <xref target="field.accept-search"/>, adjust the grammar to just define the field value (<eref target="https://github.com/httpwg/http-extensions/issues/1470"/>)</li>
   <li>Update to latest HTTP core spec, and adjust terminology accordingly (<eref target="https://github.com/httpwg/http-extensions/issues/1473"/>)</li>
   <li>Reference RFC 8174 and markup bcp14 terms (<eref target="https://github.com/httpwg/http-extensions/issues/1497"/>)</li>
+  <li>Update HTTP reference (<eref target="https://github.com/httpwg/http-extensions/issues/1524"/>)</li>
 </ul>
 </section>
 </section>
