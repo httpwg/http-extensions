@@ -607,6 +607,7 @@ To sign using this algorithm, the signer applies the `RSASSA-PSS-SIGN (K, M)` fu
 the signature input string (`M`) ({{create-sig-input}}). 
 The hash SHA-512 {{RFC6234}} is applied to the signature input string to create
 the digest content to which the digital signature is applied. 
+A salt length (`sLen`) of 64 is used.
 The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
 
 To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
@@ -620,6 +621,7 @@ To sign using this algorithm, the signer applies the `RSASSA-PKCS1-V1_5-SIGN (K,
 the signature input string (`M`) ({{create-sig-input}}). 
 The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
 the digest content to which the digital signature is applied. 
+A salt length (`sLen`) of 64 is used.
 The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
 
 To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
