@@ -2388,6 +2388,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Refactor cookie retrieval algorithm to support non-HTTP APIs:
   <https://github.com/httpwg/http-extensions/pull/1428>
 
+* Define "Lax-allowing-unsafe" SameSite enforcement mode:
+  <https://github.com/httpwg/http-extensions/pull/1435>
+  
 * Consistently use "header field" (vs 'header"):
   <https://github.com/httpwg/http-extensions/pull/1527>
 
