@@ -2385,6 +2385,12 @@ The "Cookie Attribute Registry" should be created with the registrations below:
   {{storage-model}} to explicitly handle control characters:
   <https://github.com/httpwg/http-extensions/pull/1420>
 
+* Refactor cookie retrieval algorithm to support non-HTTP APIs:
+  <https://github.com/httpwg/http-extensions/pull/1428>
+
+* Consistently use "header field" (vs 'header"):
+  <https://github.com/httpwg/http-extensions/pull/1527>
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
