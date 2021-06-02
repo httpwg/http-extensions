@@ -240,7 +240,7 @@ the Set-Cookie header field, an HTTP server can pass name/value pairs and
 associated metadata (called cookies) to a user agent. When the user agent makes
 subsequent requests to the server, the user agent uses the metadata and other
 information to determine whether to return the name/value pairs in the Cookie
-header.
+header field.
 
 Although simple on their surface, cookies have a number of complexities. For
 example, the server indicates a scope for each cookie when sending it to the
@@ -265,7 +265,7 @@ to the well-behaved profile defined in {{sane-profile}} when generating cookies.
 User agents MUST implement the more liberal processing rules defined in {{ua-requirements}}, in order to maximize interoperability with existing servers that do not
 conform to the well-behaved profile defined in {{sane-profile}}.
 
-This document specifies the syntax and semantics of these headers as they are
+This document specifies the syntax and semantics of these header fields as they are
 actually used on the Internet. In particular, this document does not create
 new syntax or semantics beyond those in use today. The recommendations for
 cookie generation provided in {{sane-profile}} represent a preferred subset of current
@@ -364,13 +364,13 @@ This section outlines a way for an origin server to send state information to a
 user agent and for the user agent to return the state information to the origin
 server.
 
-To store state, the origin server includes a Set-Cookie header in an HTTP
+To store state, the origin server includes a Set-Cookie header field in an HTTP
 response. In subsequent requests, the user agent returns a Cookie request
-header to the origin server. The Cookie header contains cookies the user agent
-received in previous Set-Cookie headers. The origin server is free to ignore
-the Cookie header or use its contents for an application-defined purpose.
+header field to the origin server. The Cookie header field contains cookies the user agent
+received in previous Set-Cookie header fields. The origin server is free to ignore
+the Cookie header field or use its contents for an application-defined purpose.
 
-Origin servers MAY send a Set-Cookie response header with any response. An
+Origin servers MAY send a Set-Cookie response header field with any response. An
 origin server can include multiple Set-Cookie header fields in a single response.
 The presence of a Cookie or a Set-Cookie header field does not preclude HTTP
 caches from storing and reusing a response.
@@ -381,12 +381,12 @@ defined in Section 5.3 of {{HTTPSEM}}) might change the semantics of the Set-Coo
 field because the %x2C (",") character is used by Set-Cookie in a way that
 conflicts with such folding.
 
-User agents MAY ignore Set-Cookie headers based on response status codes or
+User agents MAY ignore Set-Cookie header fieldss based on response status codes or
 the user agent's cookie policy (see {{ignoring-cookies}}).
 
 ## Examples
 
-Using the Set-Cookie header, a server can send the user agent a short string
+Using the Set-Cookie header field, a server can send the user agent a short string
 in an HTTP response that the user agent will return in future HTTP requests that
 are within the scope of the cookie. For example, the server can send the user
 agent a "session identifier" named SID with the value 31d4d96e407aad42. The
@@ -434,7 +434,7 @@ Set-Cookie: lang=en-US; Path=/; Domain=site.example
 Cookie: SID=31d4d96e407aad42; lang=en-US
 ~~~
 
-Notice that the Cookie header above contains two cookies, one named SID and
+Notice that the Cookie header field above contains two cookies, one named SID and
 one named lang. If the server wishes the user agent to persist the cookie over
 multiple "sessions" (e.g., user agent restarts), the server can specify an
 expiration date in the Expires attribute. Note that the user agent might
@@ -451,9 +451,9 @@ Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT
 Cookie: SID=31d4d96e407aad42; lang=en-US
 ~~~
 
-Finally, to remove a cookie, the server returns a Set-Cookie header with an
+Finally, to remove a cookie, the server returns a Set-Cookie header field with an
 expiration date in the past. The server will be successful in removing the
-cookie only if the Path and the Domain attribute in the Set-Cookie header
+cookie only if the Path and the Domain attribute in the Set-Cookie header field
 match the values used when the cookie was created.
 
 ~~~ example
@@ -469,18 +469,18 @@ Cookie: SID=31d4d96e407aad42
 # Server Requirements {#sane-profile}
 
 This section describes the syntax and semantics of a well-behaved profile of the
-Cookie and Set-Cookie headers.
+Cookie and Set-Cookie header fields.
 
 ## Set-Cookie {#sane-set-cookie}
 
-The Set-Cookie HTTP response header is used to send cookies from the server to
+The Set-Cookie HTTP response header field is used to send cookies from the server to
 the user agent.
 
 ### Syntax {#abnf-syntax}
 
-Informally, the Set-Cookie response header contains a cookie, which begins with a
+Informally, the Set-Cookie response header field contains a cookie, which begins with a
 name-value-pair, followed by zero or more attribute-value pairs. Servers
-SHOULD NOT send Set-Cookie headers that fail to conform to the following
+SHOULD NOT send Set-Cookie header fields that fail to conform to the following
 grammar:
 
 ~~~ abnf
@@ -535,7 +535,7 @@ data in a cookie-value SHOULD encode that data, for example, using Base64
 Per the grammar above, the cookie-value MAY be wrapped in DQUOTE characters.
 Note that in this case, the initial and trailing DQUOTE characters are not
 stripped. They are part of the cookie-value, and will be included in Cookie
-headers sent to the server.
+header fields sent to the server.
 
 The portions of the set-cookie-string produced by the cookie-av term are
 known as attributes. To maximize compatibility with user agents, servers SHOULD
@@ -546,7 +546,7 @@ Servers SHOULD NOT include more than one Set-Cookie header field in the same
 response with the same cookie-name. (See {{set-cookie}} for how user agents
 handle this case.)
 
-If a server sends multiple responses containing Set-Cookie headers
+If a server sends multiple responses containing Set-Cookie header fields
 concurrently to the user agent (e.g., when communicating with the user agent
 over multiple sockets), these responses create a "race condition" that can lead
 to unpredictable behavior.
@@ -562,14 +562,14 @@ incorrectly.
 
 ### Semantics (Non-Normative) {#sane-set-cookie-semantics}
 
-This section describes simplified semantics of the Set-Cookie header. These
+This section describes simplified semantics of the Set-Cookie header field. These
 semantics are detailed enough to be useful for understanding the most common
 uses of cookies by servers. The full semantics are described in {{ua-requirements}}.
 
-When the user agent receives a Set-Cookie header, the user agent stores the
+When the user agent receives a Set-Cookie header field, the user agent stores the
 cookie together with its attributes. Subsequently, when the user agent makes
 an HTTP request, the user agent includes the applicable, non-expired cookies
-in the Cookie header.
+in the Cookie header field.
 
 If the user agent receives a new cookie with the same cookie-name,
 domain-value, and path-value as a cookie that it has already stored, the
@@ -609,7 +609,7 @@ user agent).
 
 The Domain attribute specifies those hosts to which the cookie will be sent.
 For example, if the value of the Domain attribute is "site.example", the user
-agent will include the cookie in the Cookie header when making HTTP requests to
+agent will include the cookie in the Cookie header field when making HTTP requests to
 site.example, www.site.example, and www.corp.site.example. (Note that a
 leading %x2E ("."), if present, is ignored even though that character is not
 permitted, but a trailing %x2E ("."), if present, will cause the user agent to
@@ -618,7 +618,7 @@ agent will return the cookie only to the origin server.
 
 WARNING: Some existing user agents treat an absent Domain attribute as if the
 Domain attribute were present and contained the current host name. For
-example, if site.example returns a Set-Cookie header without a Domain
+example, if site.example returns a Set-Cookie header field without a Domain
 attribute, these user agents will erroneously send the cookie to
 www.site.example as well.
 
@@ -711,14 +711,14 @@ storage model algorithm defined in {{storage-model}}.
 If a cookie's name begins with a case-sensitive match for the string
 `__Secure-`, then the cookie will have been set with a `Secure` attribute.
 
-For example, the following `Set-Cookie` header would be rejected by a conformant
+For example, the following `Set-Cookie` header field would be rejected by a conformant
 user agent, as it does not have a `Secure` attribute.
 
 ~~~ example
 Set-Cookie: __Secure-SID=12345; Domain=site.example
 ~~~
 
-Whereas the following `Set-Cookie` header would be accepted:
+Whereas the following `Set-Cookie` header field would be accepted:
 
 ~~~ example
 Set-Cookie: __Secure-SID=12345; Domain=site.example; Secure
@@ -762,10 +762,10 @@ Set-Cookie: __Host-SID=12345; Secure; Path=/
 
 ### Syntax
 
-The user agent sends stored cookies to the origin server in the Cookie header.
+The user agent sends stored cookies to the origin server in the Cookie header field.
 If the server conforms to the requirements in {{sane-set-cookie}} (and the user agent
 conforms to the requirements in {{ua-requirements}}), the user agent will send a Cookie
-header that conforms to the following grammar:
+header field that conforms to the following grammar:
 
 ~~~ abnf
 cookie        = cookie-string
@@ -776,26 +776,26 @@ cookie-string = cookie-pair *( ";" SP cookie-pair )
 
 Each cookie-pair represents a cookie stored by the user agent. The
 cookie-pair contains the cookie-name and cookie-value the user agent
-received in the Set-Cookie header.
+received in the Set-Cookie header field.
 
 Notice that the cookie attributes are not returned. In particular, the server
-cannot determine from the Cookie header alone when a cookie will expire, for
+cannot determine from the Cookie  field alone when a cookie will expire, for
 which hosts the cookie is valid, for which paths the cookie is valid, or
 whether the cookie was set with the Secure or HttpOnly attributes.
 
-The semantics of individual cookies in the Cookie header are not defined by
+The semantics of individual cookies in the Cookie header field are not defined by
 this document. Servers are expected to imbue these cookies with
 application-specific semantics.
 
-Although cookies are serialized linearly in the Cookie header, servers SHOULD
-NOT rely upon the serialization order. In particular, if the Cookie header
+Although cookies are serialized linearly in the Cookie header field, servers SHOULD
+NOT rely upon the serialization order. In particular, if the Cookie header field
 contains two cookies with the same name (e.g., that were set with different
 Path or Domain attributes), servers SHOULD NOT rely upon the order in which
-these cookies appear in the header.
+these cookies appear in the header field.
 
 # User Agent Requirements {#ua-requirements}
 
-This section specifies the Cookie and Set-Cookie headers in sufficient
+This section specifies the Cookie and Set-Cookie header fields in sufficient
 detail that a user agent implementing these requirements precisely can
 interoperate with existing servers (even those that do not conform to the
 well-behaved profile described in {{sane-profile}}).
@@ -808,7 +808,7 @@ agent will be able to interoperate with existing servers.
 ## Subcomponent Algorithms
 
 This section defines some algorithms used by user agents to process specific
-subcomponents of the Cookie and Set-Cookie headers.
+subcomponents of the Cookie and Set-Cookie header fields.
 
 ### Dates {#cookie-date}
 
@@ -1087,17 +1087,17 @@ Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
 
 1.  Return `worker`'s origin.
 
-## Ignoring Set-Cookie Headers {#ignoring-cookies}
+## Ignoring Set-Cookie Header Fields {#ignoring-cookies}
 
-User agents MAY ignore Set-Cookie headers contained in responses with 100-level
+User agents MAY ignore Set-Cookie header fields contained in responses with 100-level
 status codes or based on its cookie policy (see {{cookie-policy}}).
 
-All other Set-Cookie headers SHOULD be processed according to {{set-cookie}}.
-That is, Set-Cookie headers contained in responses with non-100-level status
+All other Set-Cookie header fields SHOULD be processed according to {{set-cookie}}.
+That is, Set-Cookie header fields contained in responses with non-100-level status
 codes (including those in responses with 400- and 500-level status codes)
 SHOULD be processed unless ignored according to the user agent's cookie policy.
 
-## The Set-Cookie Header {#set-cookie}
+## The Set-Cookie Header Field {#set-cookie}
 
 When a user agent receives a Set-Cookie header field in an HTTP response, the
 user agent MAY ignore the Set-Cookie header field in its entirety
@@ -1622,19 +1622,19 @@ set to false.
 This section defines how cookies are retrieved from a cookie store in the form
 of a cookie-string. A "retrieval" is any event which requires generating a
 cookie-string. For example, a retrieval may occur in order to build a Cookie
-header for an HTTP request, or may be required in order to return a
+header field for an HTTP request, or may be required in order to return a
 cookie-string from a call to a "non-HTTP" API that provides access to cookies. A
 retrieval has an associated URI, same-site status, and type, which
 are defined below depending on the type of retrieval.
 
-### The Cookie Header {#cookie}
+### The Cookie Header Field {#cookie}
 
-The user agent includes stored cookies in the Cookie HTTP request header.
+The user agent includes stored cookies in the Cookie HTTP request header field.
 
 When the user agent generates an HTTP request, the user agent MUST NOT attach
 more than one Cookie header field.
 
-A user agent MAY omit the Cookie header in its entirety.  For example, the
+A user agent MAY omit the Cookie header field in its entirety.  For example, the
 user agent might wish to block sending cookies during "third-party" requests
 from setting cookies (see {{third-party-cookies}}).
 
@@ -1756,19 +1756,19 @@ following minimum capabilities:
 
 Servers SHOULD use as few and as small cookies as possible to avoid reaching
 these implementation limits and to minimize network bandwidth due to the
-Cookie header being included in every request.
+Cookie header field being included in every request.
 
 Servers SHOULD gracefully degrade if the user agent fails to return one or more
-cookies in the Cookie header because the user agent might evict any cookie at
+cookies in the Cookie header field because the user agent might evict any cookie at
 any time on orders from the user.
 
 ## Application Programming Interfaces
 
-One reason the Cookie and Set-Cookie headers use such esoteric syntax is
+One reason the Cookie and Set-Cookie header fields use such esoteric syntax is
 that many platforms (both in servers and user agents) provide a string-based
 application programming interface (API) to cookies, requiring
 application-layer programmers to generate and parse the syntax used by the
-Cookie and Set-Cookie headers, which many programmers have done incorrectly,
+Cookie and Set-Cookie header fields, which many programmers have done incorrectly,
 resulting in interoperability problems.
 
 Instead of providing string-based APIs to cookies, platforms would be
@@ -1809,8 +1809,8 @@ can track the user between the two sites.
 
 Given this risk to user privacy, some user agents restrict how third-party
 cookies behave, and those restrictions vary widly. For instance, user agents
-might block third-party cookies entirely by refusing to send Cookie headers or
-process Set-Cookie headers during third-party requests. They might take a less
+might block third-party cookies entirely by refusing to send Cookie header fields or
+process Set-Cookie header fields during third-party requests. They might take a less
 draconian approach by partitioning cookies based on the first-party context,
 sending one set of cookies to a given third party in one first-party context,
 and another to the same third party in another.
@@ -1847,8 +1847,8 @@ to a particular domain. In addition, many user agents include a user interface
 element that lets users examine the cookies stored in their cookie store.
 
 User agents SHOULD provide users with a mechanism for disabling cookies. When
-cookies are disabled, the user agent MUST NOT include a Cookie header in
-outbound HTTP requests and the user agent MUST NOT process Set-Cookie headers
+cookies are disabled, the user agent MUST NOT include a Cookie header field in
+outbound HTTP requests and the user agent MUST NOT process Set-Cookie header fields
 in inbound HTTP responses.
 
 User agents MAY offer a way to change the cookie policy (see
@@ -1916,15 +1916,15 @@ principles can lead to more robust security.
 ## Clear Text
 
 Unless sent over a secure channel (such as TLS), the information in the Cookie
-and Set-Cookie headers is transmitted in the clear.
+and Set-Cookie header fields is transmitted in the clear.
 
-1.  All sensitive information conveyed in these headers is exposed to an
+1.  All sensitive information conveyed in these header fields is exposed to an
     eavesdropper.
 
-2.  A malicious intermediary could alter the headers as they travel in either
+2.  A malicious intermediary could alter the header fields as they travel in either
     direction, with unpredictable results.
 
-3.  A malicious client could alter the Cookie header before transmission,
+3.  A malicious client could alter the Cookie header fields before transmission,
     with unpredictable results.
 
 Servers SHOULD encrypt and sign the contents of cookies (using whatever format
@@ -1935,7 +1935,7 @@ agent to another or from replaying the cookie at a later time.
 
 In addition to encrypting and signing the contents of every cookie, servers that
 require a higher level of security SHOULD use the Cookie and Set-Cookie
-headers only over a secure channel. When using cookies over a secure channel,
+header fields only over a secure channel. When using cookies over a secure channel,
 servers SHOULD set the Secure attribute (see {{attribute-secure}}) for every
 cookie. If a server does not set the Secure attribute, the protection
 provided by the secure channel will be largely moot.
@@ -2012,17 +2012,17 @@ distinguish this cookie from a cookie it set itself. The foo.site.example
 server might be able to leverage this ability to mount an attack against
 bar.site.example.
 
-Even though the Set-Cookie header supports the Path attribute, the Path
+Even though the Set-Cookie header field supports the Path attribute, the Path
 attribute does not provide any integrity protection because the user agent
-will accept an arbitrary Path attribute in a Set-Cookie header. For
+will accept an arbitrary Path attribute in a Set-Cookie header field. For
 example, an HTTP response to a request for http://site.example/foo/bar can set
 a cookie with a Path attribute of "/qux". Consequently, servers SHOULD NOT
 both run mutually distrusting services on different paths of the same host and
 use cookies to store security-sensitive information.
 
-An active network attacker can also inject cookies into the Cookie header
+An active network attacker can also inject cookies into the Cookie header field
 sent to https://site.example/ by impersonating a response from
-http://site.example/ and injecting a Set-Cookie header. The HTTPS server
+http://site.example/ and injecting a Set-Cookie header field. The HTTPS server
 at site.example will be unable to distinguish these cookies from cookies that
 it set itself in an HTTPS response. An active network attacker might be able
 to leverage this ability to mount an attack against site.example even if
