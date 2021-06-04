@@ -271,33 +271,6 @@ The following table shows example canonicalized values for different content ide
 {: title="Non-normative examples of Dictionary member canonicalization."}
 
 
-## List Prefixes
-
-A prefix of a List Structured Field consisting of the first N members in the field's value (where N is an integer greater than 0 and less than or equal to the number of members in the List) is identified by the parameter `prefix` with the value of N as an integer. 
-
-A list prefix value is canonicalized by applying the serialization algorithm described in [Section 4.1.1 of RFC8941](#RFC8941) on a List containing only the first N members as specified in the list prefix, in the order they appear in the original List.
-
-### Canonicalization Examples
-
-This section contains non-normative examples of canonicalized values for list prefixes given the following example header fields, whose values are assumed to be Dictionaries:
-
-~~~ http-message
-X-List-A: (a b c d e f)
-X-List-B: ()
-~~~
-
-The following table shows example canonicalized values for different content identifiers, given those fields:
-
-|Content Identifier|Canonicalized Value|
-|--- |--- |
-|`"x-list-a";prefix=0`|()|
-|`"x-list-a";prefix=1`|(a)|
-|`"x-list-a";prefix=3`|(a, b, c)|
-|`"x-list-a";prefix=6`|(a, b, c, d, e, f)|
-|`"x-list-b";prefix=0`|()|
-{: title="Non-normative examples of list prefix canonicalization."}
-
-
 ## Specialty Content Fields {#specialty-content}
 
 Content not found in an HTTP header can be included in the signature base string by defining a content identifier and the canonicalization method for its content.
@@ -441,9 +414,7 @@ If covered content references an identifier that cannot be resolved to a value i
  * The signer or verifier does not understand the content identifier.
  * The identifier identifies a header field that is not present in the message or whose value is malformed.
  * The identifier is a Dictionary member identifier that references a header field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
- * The identifier is a List Prefix member identifier that references a header field that is not present in the message, is not a List Structured Field, or whose value is malformed.
  * The identifier is a Dictionary member identifier that references a member that is not present in the header field value, or whose value is malformed. E.g., the identifier is `"x-dictionary";key=c` and the value of the `x-dictionary` header field is `a=1, b=2`
- * The identifier is a List Prefix member identifier that specifies more List members than are present the header field. E.g., the identifier is `"x-list";prefix=3` and the value of the `x-list` header field is `(1, 2)`.
 
 In the following non-normative example, the HTTP message being signed is the following request:
 
@@ -492,7 +463,7 @@ In order to create a signature, a signer MUST follow the following algorithm:
 4. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
    * Once an order of covered content is chosen, the order MUST NOT change for the life of the signature.
    * Each covered content identifier MUST either reference an HTTP header in the request message {{http-header}} or reference a specialty content field listed in {{specialty-content}} or its associated registry.
-   * Signers SHOULD include `@request-target` in the covered content list list.
+   * Signers SHOULD include `@request-target` in the covered content list.
    * Signers SHOULD include a date stamp in some form, such as using the `date` header. Alternatively, the `created` signature metadata parameter can fulfil this role.
    * Further guidance on what to include in this list and in what order is out of scope for this document. However, note that the list order is significant and once established for a given signature it MUST be preserved for that signature.
    * Note that the `@signature-params` specialty identifier is not explicitly listed in the list of covered content identifiers, because it is required to always be present as the last line in the signature input. This ensures that a signature always covers its own metadata.
@@ -1129,6 +1100,9 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - -05
+     * Remove list prefixes.
+
   - -04
      * Moved signature component definitions up to intro.
      * Created formal function definitions for algorithms to fulfill.
