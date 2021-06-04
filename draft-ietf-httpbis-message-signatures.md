@@ -600,7 +600,7 @@ HTTP_VERIFY (I, Kv, S) -> V
 ~~~
 
 This section contains several common algorithm methods. The method to use can be communicated through the algorithm signature parameter
-defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier.
+defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier. 
 
 ### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha512}
 
@@ -758,6 +758,8 @@ The proxy's signature and the client's original signature can be verified indepe
 ## HTTP Signature Algorithms Registry {#hsa-registry}
 
 This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms".  Initial values for this registry are given in {{iana-hsa-contents}}.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-hsa-template}}.
+
+Algorithms referenced by algorithm identifiers have to be fully defined with all parameters fixed. Algorithm identifiers in this registry are to be interpreted as whole string values and not as a combination of parts. That is to say, it is expected that implementors understand `rsa-pss-sha512` as referring to one specific algorithm with its hash, mask, and salt values set as defined here. Implementors do not parse out the `rsa`, `pss`, and `sha512` portions of the identifier to determine parameters of the signing algorithm from the string.
 
 ### Registration Template {#iana-hsa-template}
 
