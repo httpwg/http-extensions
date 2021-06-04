@@ -605,13 +605,16 @@ defined in {{signature-params}}, by reference to the key material, or through mu
 
 To sign using this algorithm, the signer applies the `RSASSA-PSS-SIGN (K, M)` function {{RFC8017}} with the signer's private signing key (`K`) and
 the signature input string (`M`) ({{create-sig-input}}). 
-The hash SHA-512 {{RFC6234}} is applied to the signature input string to create
+The mask generation function is `MGF1` as specified in {{RFC8017}} with a hash function of SHA-512 {{RFC6234}}.
+The salt length (`sLen`) is 64 bytes.
+The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input string to create
 the digest content to which the digital signature is applied. 
-A salt length (`sLen`) of 64 is used.
 The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
 
 To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
-The hash function SHA-512 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
+The mask generation function is `MGF1` as specified in {{RFC8017}} with a hash function of SHA-512 {{RFC6234}}.
+The salt length (`sLen`) is 64 bytes.
+The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
 
@@ -621,10 +624,9 @@ To sign using this algorithm, the signer applies the `RSASSA-PKCS1-V1_5-SIGN (K,
 the signature input string (`M`) ({{create-sig-input}}). 
 The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
 the digest content to which the digital signature is applied. 
-A salt length (`sLen`) of 64 is used.
 The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
 
-To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
+To verify using this algorithm, the verifier applies the `RSASSA-PKCS1-V1_5-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
 The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
