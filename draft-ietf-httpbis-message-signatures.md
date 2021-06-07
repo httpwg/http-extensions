@@ -506,11 +506,12 @@ In order to create a signature, a signer MUST follow the following algorithm:
 For example, given the HTTP message and signature parameters in the example in {{create-sig-input}}, the example signature input string when signed with the `test-key-rsa-pss` key in {{example-key-rsa-pss-test}} gives the following message signature output value, encoded in Base64:
 
 ~~~
-:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwkUE6H4NWiTs5f2Ef0\
-qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdGR+tlRJ1cbCoWMVoCgEPi\
-4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+szb8SpwJEmkMPr5dBOz6DLEeM3IgKN\
-oBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA1a4MNWoUElr6eh5k20djMZftCYTPUU\
-PMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1aSVfKQQzR+ZEwSaZQBrdQ==:
+lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k8/GH7g5s2q0VTTKVm\
+xyfpUDp/HsDphh5Z7Fa/lvtujHyFe/0EP9z7bnVb7YBZrxV52LGvP8p4APhOYuG4yaH\
+z478GsJav9BQYK0B2IOHdLFJe8qwWPJs07J47gPewpNwCt0To/zZ2KPpylGX5UHVgJP\
+Uom64KjX43u2OwIvSoPEYk4nuBvLR9yxYAHURaTfLoEDUCtY1FsU1hOfG3jAlcT6ill\
+fnyS72PEdSSzw1KsxroMj9IYpFhva77YxmJRk4pCIW0F0Kj0ukl7J4y2aZJHMCYI3g8\
+yfqh/wQ==
 ~~~
 {: title="Non-normative example signature value" #example-sig-value}
 
@@ -599,18 +600,22 @@ HTTP_VERIFY (I, Kv, S) -> V
 ~~~
 
 This section contains several common algorithm methods. The method to use can be communicated through the algorithm signature parameter
-defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier.
+defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier. 
 
 ### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha512}
 
 To sign using this algorithm, the signer applies the `RSASSA-PSS-SIGN (K, M)` function {{RFC8017}} with the signer's private signing key (`K`) and
 the signature input string (`M`) ({{create-sig-input}}). 
-The hash SHA-512 {{RFC6234}} is applied to the signature input string to create
+The mask generation function is `MGF1` as specified in {{RFC8017}} with a hash function of SHA-512 {{RFC6234}}.
+The salt length (`sLen`) is 64 bytes.
+The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input string to create
 the digest content to which the digital signature is applied. 
 The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
 
 To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
-The hash function SHA-512 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
+The mask generation function is `MGF1` as specified in {{RFC8017}} with a hash function of SHA-512 {{RFC6234}}.
+The salt length (`sLen`) is 64 bytes.
+The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
 
@@ -622,7 +627,7 @@ The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
 the digest content to which the digital signature is applied. 
 The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
 
-To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
+To verify using this algorithm, the verifier applies the `RSASSA-PKCS1-V1_5-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
 The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
@@ -673,9 +678,9 @@ the `Signature` HTTP header field contains the signature value, while the `Signa
 The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered content including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~
-Signature-Input: sig1=("@request-target" "host" "date" "cache-control" \
-  "x-empty-header" "x-example");created=1618884475;\
-  keyid="test-key-rsa-pss"
+Signature-Input: sig1=("@request-target" "host" "date" \
+  "cache-control" "x-empty-header" "x-example");created=1618884475\
+  ;keyid="test-key-rsa-pss"
 ~~~
 
 To facilitate signature validation, the `Signature-Input` header value MUST contain the same serialized value used 
@@ -685,12 +690,12 @@ in generating the signature input string's `@signature-params` value.
 The `Signature` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing one or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
 
 ~~~
-Signature: sig1=:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwk\
-  UE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdGR+\
-  tlRJ1cbCoWMVoCgEPi4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+szb8SpwJEm\
-  kMPr5dBOz6DLEeM3IgKNoBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA1a4MNWoU\
-  Elr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1aSVfKQQzR\
-  +ZEwSaZQBrdQ==:
+Signature: sig1=:lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k\
+  8/GH7g5s2q0VTTKVmxyfpUDp/HsDphh5Z7Fa/lvtujHyFe/0EP9z7bnVb7YBZrxV5\
+  2LGvP8p4APhOYuG4yaHz478GsJav9BQYK0B2IOHdLFJe8qwWPJs07J47gPewpNwCt\
+  0To/zZ2KPpylGX5UHVgJPUom64KjX43u2OwIvSoPEYk4nuBvLR9yxYAHURaTfLoED\
+  UCtY1FsU1hOfG3jAlcT6illfnyS72PEdSSzw1KsxroMj9IYpFhva77YxmJRk4pCIW\
+  0F0Kj0ukl7J4y2aZJHMCYI3g8yfqh/wQ==:
 ~~~
 
 ## Multiple Signatures
@@ -700,48 +705,50 @@ Since `Signature-Input` and `Signature` are both defined as Dictionary Structure
 The following is a non-normative example of header fields a reverse proxy in addition to the examples in the previous sections. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under `proxy_sig`. The proxy uses the key `rsa-test-key` to create its signature using the `rsa-v1_5-sha256` signature value. This results in a signature input string of:
 
 ~~~
-"signature";key="sig1": :H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNT\
-  d980hWwkUE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg\
-  /9sOdGR+tlRJ1cbCoWMVoCgEPi4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+sz\
-  b8SpwJEmkMPr5dBOz6DLEeM3IgKNoBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA\
-  1a4MNWoUElr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1a\
-  SVfKQQzR+ZEwSaZQBrdQ==:
-x-forwarded-for: 192.0.2.123
-"@signature-params": ("signature";key="sig1" x-forwarded-for)\
-  ;created=1618884475;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
+"signature";key="sig1": \
+  :lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k8/GH7g5s2q0VTT\
+  KVmxyfpUDp/HsDphh5Z7Fa/lvtujHyFe/0EP9z7bnVb7YBZrxV52LGvP8p4APhOYu\
+  G4yaHz478GsJav9BQYK0B2IOHdLFJe8qwWPJs07J47gPewpNwCt0To/zZ2KPpylGX\
+  5UHVgJPUom64KjX43u2OwIvSoPEYk4nuBvLR9yxYAHURaTfLoEDUCtY1FsU1hOfG3\
+  jAlcT6illfnyS72PEdSSzw1KsxroMj9IYpFhva77YxmJRk4pCIW0F0Kj0ukl7J4y2\
+  aZJHMCYI3g8yfqh/wQ==:
+"x-forwarded-for": 192.0.2.123
+"@signature-params": ("signature";key="sig1" "x-forwarded-for")\
+  ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
 ~~~
 
 And a signature output value of:
 
 ~~~
-:NgQsRJwOL/EgoRXdcmHMOLZM+KWqLDsO76CrqoiLH279VJs9Fj6bn4V+perAEUbHBEMFCb\
-l6tucEVgKrU+5IIyDMBI85FExQeuBrNPALczjCdxne6LUoBcWBAk8NoRyjfd++DXIAjAZcf\
-/hBUXLll+5veI0ynzBRFTZ4v8AbluYODjJlSprYEwUb2ndbFr12vzgIpy0uTQCslN+3rUUZ\
-+lQWlrILvbR0CIvtGwk2+hE0dTRAG0R3wmlR24mhSqiE5RADyoSWQVjVxntp98XHAB6MZE9\
-2bbu2a8Uo951Hvah03XHWEk/WiYdq+mt3hwXVPLXlBU9DWCo2AaYD/rkXtQ==:
+XD1O/vEh772WVpY7jYvReXop2+b7xTIIPKH8/OCYzPn78Wd9jodCwAJPF5TYCn9L6n6\
+8j4EjGsqFOMkVLVdSQEZqMLjEbvMEdIe8m1a0CLd5kydeaAwoHoglqod6ijkwhhEtxt\
+aD8tDZmihQw2mZEH8u4aMSnRntqy7ExCNld0JLharsHV0iCbRO9jIP+d2ApD7gB+eZp\
+n3pIvvVJZlxTwPkahFpxKlQtNMPaSqa1lvejURx+ST8CEuz4sS+G/oLJiX3MZenuUoO\
+R8HeOHDnjN/VLzrEN4x44iF7WIL+iY2PtK87LUWRAsJAX9GqHL/upsGh1nxIdoVaoLV\
+V5w+fRw==
 ~~~
 
 These values are added to the HTTP request message by the proxy. The different signature values are wrapped onto separate lines to increase human-readability of the result.
 
 ~~~ http-message
 X-Forwarded-For: 192.0.2.123
-Signature-Input: sig1=("@request-target" "host" "date" "cache-control" \
-    "x-empty-header" "x-example");created=1618884475\
-    ;keyid="test-key-rsa-pss", \
-  proxy_sig=("signature";key="sig1" x-forwarded-for);created=1618884480\
-    ;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
-Signature: sig1=:H00a6KdNCRWgOWBMvuRtxh6c/wrVxwt2p5KyqBJqmtPbNTd980hWwk\
-    UE6H4NWiTs5f2Ef0qJ3iypXT2bR9Pc+PVU9U2gAzTcZKK8MDJLjYKfaE835zg/9sOdG\
-    R+tlRJ1cbCoWMVoCgEPi4t6QewbI0xgdx8AmP5ItTunYmhe8G0JR42lfvz60+szb8Sp\
-    wJEmkMPr5dBOz6DLEeM3IgKNoBlJPp94WSJkgvwTM64rXw049ZkYenl9jwKlcXEmA1a\
-    4MNWoUElr6eh5k20djMZftCYTPUUPMxZUavcQy+cp6lfKonz6HIDe3+n3VOTOo8uu1a\
-    SVfKQQzR+ZEwSaZQBrdQ==:, \
-  proxy_sig=:NgQsRJwOL/EgoRXdcmHMOLZM+KWqLDsO76CrqoiLH279VJs9Fj6bn4V+pe\
-    rAEUbHBEMFCbl6tucEVgKrU+5IIyDMBI85FExQeuBrNPALczjCdxne6LUoBcWBAk8No\
-    Ryjfd++DXIAjAZcf/hBUXLll+5veI0ynzBRFTZ4v8AbluYODjJlSprYEwUb2ndbFr12\
-    vzgIpy0uTQCslN+3rUUZ+lQWlrILvbR0CIvtGwk2+hE0dTRAG0R3wmlR24mhSqiE5RA\
-    DyoSWQVjVxntp98XHAB6MZE92bbu2a8Uo951Hvah03XHWEk/WiYdq+mt3hwXVPLXlBU\
-    9DWCo2AaYD/rkXtQ==:
+Signature-Input: sig1=("@request-target" "host" "date" \
+    "cache-control" "x-empty-header" "x-example")\
+    ;created=1618884475;keyid="test-key-rsa-pss", \
+  proxy_sig=("signature";key="sig1" "x-forwarded-for")\
+    ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
+Signature: sig1=:lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k\
+    8/GH7g5s2q0VTTKVmxyfpUDp/HsDphh5Z7Fa/lvtujHyFe/0EP9z7bnVb7YBZrx\
+    V52LGvP8p4APhOYuG4yaHz478GsJav9BQYK0B2IOHdLFJe8qwWPJs07J47gPewp\
+    NwCt0To/zZ2KPpylGX5UHVgJPUom64KjX43u2OwIvSoPEYk4nuBvLR9yxYAHURa\
+    TfLoEDUCtY1FsU1hOfG3jAlcT6illfnyS72PEdSSzw1KsxroMj9IYpFhva77Yxm\
+    JRk4pCIW0F0Kj0ukl7J4y2aZJHMCYI3g8yfqh/wQ==:, \
+  proxy_sig=:XD1O/vEh772WVpY7jYvReXop2+b7xTIIPKH8/OCYzPn78Wd9jodCwA\
+    JPF5TYCn9L6n68j4EjGsqFOMkVLVdSQEZqMLjEbvMEdIe8m1a0CLd5kydeaAwoH\
+    oglqod6ijkwhhEtxtaD8tDZmihQw2mZEH8u4aMSnRntqy7ExCNld0JLharsHV0i\
+    CbRO9jIP+d2ApD7gB+eZpn3pIvvVJZlxTwPkahFpxKlQtNMPaSqa1lvejURx+ST\
+    8CEuz4sS+G/oLJiX3MZenuUoOR8HeOHDnjN/VLzrEN4x44iF7WIL+iY2PtK87LU\
+    WRAsJAX9GqHL/upsGh1nxIdoVaoLVV5w+fRw==:
 ~~~
 
 The proxy's signature and the client's original signature can be verified independently for the same message, depending on the needs of the application.
@@ -751,6 +758,8 @@ The proxy's signature and the client's original signature can be verified indepe
 ## HTTP Signature Algorithms Registry {#hsa-registry}
 
 This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms".  Initial values for this registry are given in {{iana-hsa-contents}}.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-hsa-template}}.
+
+Algorithms referenced by algorithm identifiers have to be fully defined with all parameters fixed. Algorithm identifiers in this registry are to be interpreted as whole string values and not as a combination of parts. That is to say, it is expected that implementors understand `rsa-pss-sha512` as referring to one specific algorithm with its hash, mask, and salt values set as defined here. Implementors do not parse out the `rsa`, `pss`, and `sha512` portions of the identifier to determine parameters of the signing algorithm from the string.
 
 ### Registration Template {#iana-hsa-template}
 
@@ -936,7 +945,7 @@ EQeNC8fHGg4UXU8mhHnSBt3EA10qQJfRDs15M38eG2cYwB1PZpDHScDnDA0=
 -----END RSA PRIVATE KEY-----
 ~~~
 
-### Example Key RSA PSS test {#example-key-rsa-pss-test}
+### Example RSA PSS Key {#example-key-rsa-pss-test}
 
 The following key is a 2048-bit RSA public and private key pair, referred to in this document
 as `test-key-rsa-pss`:
@@ -982,9 +991,41 @@ rOjr9w349JooGXhOxbu8nOxX
 -----END PRIVATE KEY-----
 ~~~
 
+### Example ECC P-256 Test Key {#example-key-ecc-p256}
+
+The following key is an elliptical curve key over the curve P-256, referred
+to in this document as `test-key-ecc-p256`.
+
+~~~
+-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIFKbhfNZfpDsW43+0+JjUr9K+bTeuxopu653+hBaXGA7oAoGCCqGSM49
+AwEHoUQDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lfw0EkjqF7xB4FivAxzic30tMM
+4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
+-----END EC PRIVATE KEY-----
+~~~
+
+~~~
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lf
+w0EkjqF7xB4FivAxzic30tMM4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
+-----END PUBLIC KEY-----
+~~~
+
+### Example Shared Secret {#example-shared-secret}
+
+The following shared secret is 64 randomly-generated bytes encoded in Base64,
+referred to in this document as `test-shared-secret`.
+
+~~~
+uzvJfB4u3N0Jy4T7NZ75MDVcr8zSTInedJtkgcu46YW4XByzNJjxBdtjUkdJPBt\
+  bmHhIDi6pcl8jsasjlTMtDQ==
+~~~
+
 ## Test Cases
 
-This section provides non-normative examples that may be used as test cases to validate implementation correctness. These examples are based on the following HTTP message:
+This section provides non-normative examples that may be used as test cases to validate implementation correctness. These examples are based on the following HTTP messages:
+
+For requests, this `test-request` message is used:
 
 ~~~ http-message
 POST /foo?param=value&pet=dog HTTP/1.1
@@ -997,34 +1038,46 @@ Content-Length: 18
 {"hello": "world"}
 ~~~
 
+For responses, this `test-response` message is used:
+
+~~~
+HTTP/1.1 200 OK
+Date: Tue, 20 Apr 2021 02:07:56 GMT
+Content-Type: application/json
+Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+Content-Length: 18
+
+{"hello": "world"}
+~~~
+
 ### Minimal Signature Header using rsa-pss-sha512
 
-This example presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-pss-sha512` algorithm, covering none
+This example presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-pss-sha512` algorithm over `test-request`, covering none
 of the content of the HTTP message request but providing a timestamped signature proof of possession of the key.
 
 The corresponding signature input is:
 
 ~~~
-"@signature-params": ();created=1618884475;keyid="test-key-rsa-pss"\
-  ;alg="rsa-pss-sha512"
+"@signature-params": ();created=1618884475\
+  ;keyid="test-key-rsa-pss";alg="rsa-pss-sha512"
 ~~~
 
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
 ~~~ http-message
-Signature-Input: sig1=();created=1618884475;keyid="test-key-rsa-pss"\
-  ;alg="rsa-pss-sha512"
-Signature: sig1=:qGKjr1213+iZCU1MCV8w2NTr/HvMGWYDzpqAWx7SrPE1y6gOkIQ3k2\
-  GlZDu9KnKnLN6LKX0JRa2M5vU9v/b0GjV0WSInMMKQJExJ/e9Y9K8q2eE0G9saGebEaWd\
-  R3Ao47odxLh95hBtejKIdiUBmQcQSAzAkoQ4aOZgvrHgkmvQDZQL0w30+8lMz3VglmN73\
-  CKp/ijZemO1iPdNwrdhAtDvj9OdFVJ/wiUECfU78aQWkQocvwrZXTmHCX9BMVUHGneXMY\
-  NQ0Y8umEHjxpnnLLvxUbw2KZrflp+l6m7WlhwXGJ15eAt1+mImanxUCtaKQJvEfcnOQ0S\
-  2jHysSRLheTA==:
+Signature-Input: sig1=();created=1618884475\
+  ;keyid="test-key-rsa-pss";alg="rsa-pss-sha512"
+Signature: sig1=:VrfdC2KEFFLoGMYTbQz4PSlKat4hAxcr5XkVN7Mm/7OQQJG+uX\
+  gOez7kA6n/yTCaR1VL+FmJd2IVFCsUfcc/jO9siZK3siadoK1Dfgp2ieh9eO781ty\
+  SS70OwvAkdORuQLWDnaDMRDlQhg5sNP6JaQghFLqD4qgFrM9HMPxLrznhAQugJ0Fd\
+  RZLtSpnjECW6qsu2PVRoCYfnwe4gu8TfqH5GDx2SkpCF9BQ8CijuIWlOg7QP73tKt\
+  QNp65u14Si9VEVXHWGiLw4blyPLzWz/fqJbdLaq94Ep60Nq8WjYEAInYH6KyV7EAD\
+  60LXdspwF50R3dkWXJP/x+gkAHSMsxbg==:
 ~~~
 
-### Header Coverage
+### Header Coverage using rsa-pss-sha512
 
-This example covers all the specified headers in the example message.
+This example covers all the specified headers in `test-request` except for the body digest header using the `rsa-pss-sha512` algorithm.
 
 The corresponding signature input is:
 
@@ -1032,8 +1085,8 @@ The corresponding signature input is:
 "host": example.com
 "date": Tue, 20 Apr 2021 02:07:55 GMT
 "content-type": application/json
-"@signature-params": ("host" "date" "content-type");created=1618884475\
-  ;keyid="test-key-rsa-pss"
+"@signature-params": ("host" "date" "content-type")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
 ~~~
 
 
@@ -1041,19 +1094,19 @@ This results in the following `Signature-Input` and `Signature` headers being ad
 
 
 ~~~
-Signature-Input: sig1=("host" "date" "content-type");created=1618884475\
-  ;keyid="test-key-rsa-pss"
-Signature: sig1=:NtIKWuXjr4SBEXj97gbick4O95ff378I0CZOa2VnIeEXZ1itzAdqTp\
-  SvG91XYrq5CfxCmk8zz1Zg7ZGYD+ngJyVn805r73rh2eFCPO+ZXDs45Is/Ex8srzGC9sf\
-  VZfqeEfApRFFe5yXDmANVUwzFWCEnGM6+SJVmWl1/jyEn45qA6Hw+ZDHbrbp6qvD4N0S9\
-  2jlPyVVEh/SmCwnkeNiBgnbt+E0K5wCFNHPbo4X1Tj406W+bTtnKzaoKxBWKW8aIQ7rg9\
-  2zqE1oqBRjqtRi5/Q6P5ZYYGGINKzNyV3UjZtxeZNnNJ+MAnWS0mofFqcZHVgSU/1wUzP\
-  7MhzOKLca1Yg==:
+Signature-Input: sig1=("host" "date" "content-type")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
+Signature: sig1=:Zu48JBrHlXN+hVj3T5fPQUjMNEEhABM5vNmiWuUUl7BWNid5Rz\
+  OH1tEjVi+jObYkYT8p09lZ2hrNuU3xm+JUBT8WNIlopJtt0EzxFnjGlHvkhu3KbJf\
+  xNlvCJVlOEdR4AivDLMeK/ZgASpZ7py1UNHJqRyGCYkYpeedinXUertL/ySNp+VbK\
+  2O/qCoui2jFgff2kXQd6rjL1Up83Fpr+/KoZ6HQkv3qwBdMBDyHQykfZHhLn4AO1I\
+  G+vKhOLJQDfaLsJ/fYfzsgc1s46j3GpPPD/W2nEEtdhNwu7oXq81qVRsENChIu1XI\
+  FKR9q7WpyHDKEWTtaNZDS8TFvIQRU22w==:
 ~~~
 
-### Full Coverage
+### Full Coverage using rsa-pss-sha512
 
-This example covers all headers in the example message plus the request target and message body digest.
+This example covers all headers in `test-request` plus the request target and message body digest using the `rsa-pss-sha512` algorithm.
 
 The corresponding signature input is:
 
@@ -1064,23 +1117,73 @@ The corresponding signature input is:
 "content-type": application/json
 "digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 "content-length": 18
-"@signature-params": ("@request-target" "host" "date" "content-type" \
-  "digest" "content-length");created=1618884475\
+"@signature-params": ("@request-target" "host" "date" \
+  "content-type" "digest" "content-length");created=1618884475\
   ;keyid="test-key-rsa-pss"
 ~~~
 
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
 ~~~
-Signature-Input: sig1=("@request-target" "host" "date" "content-type" \
-  "digest" "content-length");created=1618884475\
+Signature-Input: sig1=("@request-target" "host" "date" \
+  "content-type" "digest" "content-length");created=1618884475\
   ;keyid="test-key-rsa-pss"
-Signature: sig1=:QNPZtqAGWN1YMtsLJ1oyQMLg9TuIwjsIBESTo1/YXUsG+6Sl1uKUdT\
-  e9xswwrc3Ui3gUd4/tLv48NGih2TRDc1AWbEQDuy6pjroxSPtFjquubqzbszxit1arPNh\
-  ONnyR/8yuIh3bOXfc/NYJ3KLNaWR6MKrGinCYKTNwrX/0V67EMdSgd5HHnW5xHFgKfRCj\
-  rG3ncV+jbaeSPJ8e96RZgr8slcdwmqXdiwiIBCQDKRIQ3U2muJWvxyjV/IYhCTwAXJaUz\
-  sQPKzR5QWelXEVdHyv4WIB2lKaYh7mAsz0/ANxFYRRSp2Joms0OAnIAFX9kKCSp4p15/Q\
-  8L9vSIGNpQtw==:
+Signature: \
+  sig1=:iD5NhkJoGSuuTpWMzS0BI47DfbWwsGmHHLTwOxT0n+0cQFSC+1c26B7IOfI\
+  RTYofqD0sfYYrnSwCvWJfA1zthAEv9J1CxS/CZXe7CQvFpuKuFJxMpkAzVYdE/TA6\
+  fELxNZy9RJEWZUPBU4+aJ26d8PC0XhPObXe6JkP6/C7XvG2QinsDde7rduMdhFN/H\
+  j2MuX1Ipzvv4EgbHJdKwmWRNamfmKJZC4U5Tn0F58lzGF+WIpU73V67/6aSGvJGM5\
+  7U9bRHrBB7ExuQhOX2J2dvJMYkE33pEJA70XBUp9ZvciTI+vjIUgUQ2oRww3huWML\
+  mMMqEc95CliwIoL5aBdCnlQ==:
+~~~
+
+### Signing a Response using ecdsa-p256-sha256
+
+This example covers portions of the `test-response` response message using the `ecdsa-p256-sha256` algorithm
+and the key `test-key-ecc-p256`.
+
+The corresponding signature input is:
+
+~~~
+"date": Tue, 20 Apr 2021 02:07:56 GMT
+"content-type": application/json
+"digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+"content-length": 18
+"@signature-params": ("date" "content-type" "digest" \
+  "content-length");created=1618884475;keyid="test-key-ecc-p256"
+~~~
+
+This results in the following `Signature-Input` and `Signature` headers being added to the message:
+
+~~~
+Signature-Input: sig1=("date" "content-type" "digest" \
+  "content-length");created=1618884475;keyid="test-key-ecc-p256"
+Signature: \
+  sig1=:3zmRDW6r50/RETqqhtx/N5sdd5eTh8xmHdsrYRK9wK4rCNEwLjCOBlcQxTL\
+  2oJTCWGRkuqE2r9KyqZFY9jd+NQ==:
+~~~
+
+### Signing a Request using hmac-sha256
+
+This example covers portions of the `test-request` using the `hmac-sha256` algorithm and the
+secret `test-shared-secret`.
+
+The corresponding signature input is:
+
+~~~
+"host": example.com
+"date": Tue, 20 Apr 2021 02:07:55 GMT
+"content-type": application/json
+"@signature-params": ("host" "date" "content-type")\
+  ;created=1618884475;keyid="test-shared-secret"
+~~~
+
+This results in the following `Signature-Input` and `Signature` headers being added to the message:
+
+~~~
+Signature-Input: sig1=("host" "date" "content-type")\
+  ;created=1618884475;keyid="test-shared-secret"
+Signature: sig1=:x54VEvVOb0TMw8fUbsWdUHqqqOre+K7sB/LqHQvnfaQ=:
 ~~~
 
 # Acknowledgements {#acknowledgements}
@@ -1129,6 +1232,11 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - -05
+     * Clarify signature algorithm parameters.
+     * Update and fix examples.
+     * Add examples for ECC and HMAC.
+
   - -04
      * Moved signature component definitions up to intro.
      * Created formal function definitions for algorithms to fulfill.
