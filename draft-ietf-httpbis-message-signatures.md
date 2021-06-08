@@ -1206,6 +1206,8 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - -06
+
   - -05
      * Remove list prefixes.
      * Clarify signature algorithm parameters.
