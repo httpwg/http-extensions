@@ -220,10 +220,11 @@ q=foo&amp;limit=10&amp;sort=-published
       The body payload of the request defines the query. Implementations &MAY; use
       a request body of any content type with the SEARCH method; however,
       for backwards compatibility with existing WebDAV implementations,
-      SEARCH requests that use the text/xml or application/xml media types
+      SEARCH requests that use the text/xml or application/xml media types with
+      a root element (<xref target="XML" section="2.1" relative="#sec-well-formed"/>) in
+      the "DAV:" XML namespace (<xref target="XMLNS"/>)
       &MUST; be processed per the requirements established by
       <xref target="RFC5323" />.
-      <cref anchor="xml">This can be relaxed to XML with a document element in the "DAV:" namespace, or even to the two element names mentioned in <xref target="RFC5323" section="2.2.2"/>.</cref>
     </t>
 
     <t>
@@ -414,6 +415,40 @@ Dubois, Camille, camille.dubois@example.net
       </front>
       <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-16"/>
     </reference>
+    <reference anchor='XML'
+               target='https://www.w3.org/TR/2008/REC-xml-20081126/'>
+      <front>
+        <title>Extensible Markup Language (XML) 1.0 (Fifth Edition)</title>
+        <author fullname='Tim Bray' surname='Bray' initials='T.'/>
+        <author fullname='Jean Paoli' surname='Paoli' initials='J.'/>
+        <author fullname='Michael Sperberg-McQueen' surname='Sperberg-McQueen' initials='M.'/>
+        <author fullname='Eve Maler' surname='Maler' initials='E.'/>
+        <author fullname='Francois Yergeau' surname='Yergeau' initials='F.'/>
+        <date year='2008' month='November' day='26'/>
+      </front>
+      <seriesInfo name='W3C Recommendation' value='REC-xml-20081126'/>
+      <annotation>
+        Latest version available at
+        <eref target='https://www.w3.org/TR/xml/'/>.
+      </annotation>
+    </reference>
+    <reference anchor='XMLNS'
+               target='https://www.w3.org/TR/2009/REC-xml-names-20091208/'>
+      <front>
+        <title>Namespaces in XML 1.0 (Third Edition)</title>
+        <author fullname='Tim Bray' surname='Bray' initials='T.'/>
+        <author fullname='Dave Hollander' surname='Hollander' initials='D.'/>
+        <author fullname='Andrew Layman' surname='Layman' initials='A.'/>
+        <author fullname='Richard Tobin' surname='Tobin' initials='R.'/>
+        <author fullname='Henry Thompson' surname='Thompson' initials='H.'/>
+        <date year='2009' month='December' day='08'/>
+      </front>
+      <seriesInfo name='W3C Recommendation' value='REC-xml-names-20091208'/>
+      <annotation>
+        Latest version available at
+        <eref target='https://www.w3.org/TR/xml-names/'/>.
+      </annotation>
+    </reference>
   </references>
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
@@ -427,6 +462,7 @@ Dubois, Camille, camille.dubois@example.net
   <li>Update to latest HTTP core spec, and adjust terminology accordingly (<eref target="https://github.com/httpwg/http-extensions/issues/1473"/>)</li>
   <li>Reference RFC 8174 and markup bcp14 terms (<eref target="https://github.com/httpwg/http-extensions/issues/1497"/>)</li>
   <li>Update HTTP reference (<eref target="https://github.com/httpwg/http-extensions/issues/1524"/>)</li>
+  <li>Relax restriction of generic XML media type in request body (<eref target="https://github.com/httpwg/http-extensions/issues/1535"/>)</li>
 </ul>
 </section>
 </section>
