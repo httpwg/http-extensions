@@ -76,7 +76,7 @@
         <eref target="https://github.com/httpwg/http-extensions/labels/safe-method-w-body"/>.
       </t>
       <t>
-        The changes in this draft are summarized in <xref target="changes.since.00"/>.
+        The changes in this draft are summarized in <xref target="changes.since.01"/>.
       </t>
     </note>
 
@@ -464,6 +464,9 @@ Dubois, Camille, camille.dubois@example.net
   <li>Update HTTP reference (<eref target="https://github.com/httpwg/http-extensions/issues/1524"/>)</li>
   <li>Relax restriction of generic XML media type in request body (<eref target="https://github.com/httpwg/http-extensions/issues/1535"/>)</li>
 </ul>
+</section>
+<section title="Since draft-ietf-httpbis-safe-method-w-body-01" anchor="changes.since.01">
+<t>None yet.</t>
 </section>
 </section>
 
