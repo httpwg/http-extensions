@@ -346,23 +346,26 @@ Host: server.example.com</sourcecode></td>
 
 HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification.
 
-The signature parameters special content is identified by the `@signature-params` identifier.
+The signature parameters specialty content is identified by the `@signature-params` identifier.
 
-Its canonicalized value is the serialization of the signature parameters for this signature, including the covered content list with all associated parameters. The following metadata properties are defined:
+Its canonicalized value is the serialization of the signature parameters for this signature, including the covered content list with all associated parameters.
+
+* `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
+* `keyid`: The identifier for the key material as an `sf-string` value.
+* `created`: Creation time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
+* `expires`: Expiration time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
+* `nonce`: A random unique value generated for this signature.
+
+Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents).
 
 The signature parameters are serialized using the rules in [Section 4 of RFC8941](#RFC8941) as follows:
 
 1. Let the output be an empty string.
 2. Determine an order for the content identifiers of the covered content. Once this order is chosen, it cannot be changed.
-3. Serialize the content identifiers of the covered content as an ordered `inner-list` according to [Section 4.1.1.1 of RFC8941](#RFC8941) and append this to the output.
-4. Determine an order for signature metadata parameters. Once this order is chosen, it cannot be changed.
-5. Append the signature metadata as parameters according to [Section 4.1.1.2 of RFC8941](#RFC8941) in the chosen order,
-    skipping fields that are not available or not used for this signature:
-   * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
-   * `keyid`: The identifier for the key material as an `sf-string` value.
-   * `created`: Creation time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
-   * `expires`: Expiration time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
-   * `nonce`: A random unique value generated for this signature.
+3. Serialize the content identifiers of the covered content, including all parameters, as an ordered `inner-list` according to [Section 4.1.1.1 of RFC8941](#RFC8941) and append this to the output.
+4. Determine an order for any signature parameters. Once this order is chosen, it cannot be changed.
+5. Append the parameters to the `inner-list` in the chosen order according to [Section 4.1.1.2 of RFC8941](#RFC8941),
+    skipping parameters that are not available or not used for this signature.
 6. The output contains the signature parameters value.
 
 Note that the `inner-list` serialization is used for the covered content value instead of the `sf-list` serialization 
@@ -414,7 +417,7 @@ If covered content references an identifier that cannot be resolved to a value i
  * The signer or verifier does not understand the content identifier.
  * The identifier identifies a header field that is not present in the message or whose value is malformed.
  * The identifier is a Dictionary member identifier that references a header field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
- * The identifier is a Dictionary member identifier that references a member that is not present in the header field value, or whose value is malformed. E.g., the identifier is `"x-dictionary";key=c` and the value of the `x-dictionary` header field is `a=1, b=2`
+ * The identifier is a Dictionary member identifier that references a member that is not present in the header field value, or whose value is malformed. E.g., the identifier is `"x-dictionary";key="c"` and the value of the `x-dictionary` header field is `a=1, b=2`
 
 In the following non-normative example, the HTTP message being signed is the following request:
 
@@ -429,7 +432,7 @@ Cache-Control: max-age=60
 Cache-Control: must-revalidate
 ~~~
 
-The covered content consists of the `@request-target` speciality header followed by the `Host`, `Date`, `Cache-Control`, `X-Empty-Header`, `X-Example` HTTP headers, in order. The signature creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`.  The signature input string for this message with these parameters is:
+The covered content consists of the `@request-target` specialty content followed by the `Host`, `Date`, `Cache-Control`, `X-Empty-Header`, `X-Example` HTTP headers, in order. The signature creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`.  The signature input string for this message with these parameters is:
 
 ~~~
 "@request-target": get /foo
@@ -673,7 +676,7 @@ Signature: sig1=:lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k\
 
 Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same content with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in header fields when forwarding the request to a service host, including a signature over those fields and the client's original signature. 
 
-The following is a non-normative example of header fields a reverse proxy in addition to the examples in the previous sections. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under `proxy_sig`. The proxy uses the key `rsa-test-key` to create its signature using the `rsa-v1_5-sha256` signature value. This results in a signature input string of:
+The following is a non-normative example of header fields a reverse proxy sets in addition to the examples in the previous sections. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under `proxy_sig`. The proxy uses the key `rsa-test-key` to create its signature using the `rsa-v1_5-sha256` signature value. This results in a signature input string of:
 
 ~~~
 "signature";key="sig1": \
@@ -860,7 +863,7 @@ There are a number of security considerations to take into account when implemen
 
 # Detecting HTTP Message Signatures {#detection}
 
-There have been many attempts to create signed HTTP messages in the past, including other non-standard definitions of the `Signature` header used within this specification. It is recommended that developers wishing to support both this specification and other historial drafts do so carefully and deliberately, as incompatibilities between this specification and various versions of other drafts could lead to problems.
+There have been many attempts to create signed HTTP messages in the past, including other non-standard definitions of the `Signature` header used within this specification. It is recommended that developers wishing to support both this specification and other historical drafts do so carefully and deliberately, as incompatibilities between this specification and various versions of other drafts could lead to unexpected problems.
 
 It is recommended that implementers first detect and validate the `Signature-Input` header defined in this specification to detect that this standard is in use and not an alternative. If the `Signature-Input` header is present, all `Signature` headers can be parsed and interpreted in the context of this draft.
 
@@ -1203,6 +1206,8 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - -06
+
   - -05
      * Remove list prefixes.
      * Clarify signature algorithm parameters.
