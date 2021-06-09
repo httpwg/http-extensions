@@ -18,6 +18,8 @@ stand_alone: yes
 smart_quotes: no
 pi: [sortrefs]
 
+github-issue-label: bcp56bis
+
 author:
  -
     ins: M. Nottingham
