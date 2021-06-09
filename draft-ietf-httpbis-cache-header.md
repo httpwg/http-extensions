@@ -14,6 +14,8 @@ keyword:
 - debugging
 - x-cache
 
+github-issue-label: cache-header
+
 stand_alone: yes
 smart_quotes: no
 

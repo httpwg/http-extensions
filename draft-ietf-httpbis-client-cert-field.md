@@ -15,6 +15,8 @@ keyword:
 stand_alone: yes
 smart_quotes: no
 
+github-issue-label: client-cert-header
+
 author:
   -
     ins: B. Campbell

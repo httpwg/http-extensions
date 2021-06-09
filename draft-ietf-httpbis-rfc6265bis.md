@@ -12,6 +12,8 @@ pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 stand_alone: yes #_
 smart_quotes: no
 
+github-issue-label: 6265bis
+
 author:
 -
   ins: L. Chen
@@ -2390,7 +2392,7 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Define "Lax-allowing-unsafe" SameSite enforcement mode:
   <https://github.com/httpwg/http-extensions/pull/1435>
-  
+
 * Consistently use "header field" (vs 'header"):
   <https://github.com/httpwg/http-extensions/pull/1527>
 

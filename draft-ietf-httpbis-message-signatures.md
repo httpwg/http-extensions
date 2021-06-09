@@ -15,6 +15,8 @@ stand_alone: yes
 smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline, docmapping]
 
+github-issue-label: signatures
+
 author:
   - ins: A. Backman
     name: Annabelle Backman
@@ -208,7 +210,7 @@ Unless overridden by additional parameters and rules, the HTTP header field valu
 
 1. Create an ordered list of the field values of each instance of the header field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list.
-3. Concatenate the list items together, with a comma "," and space " " between each item. 
+3. Concatenate the list items together, with a comma "," and space " " between each item.
 
 The resulting string is the canonicalized value.
 
@@ -227,7 +229,7 @@ This section contains non-normative examples of canonicalized values for header 
 ~~~ http-message
 Server: www.example.com
 Date: Tue, 07 Jun 2014 20:51:35 GMT
-X-OWS-Header:   Leading and trailing whitespace.    
+X-OWS-Header:   Leading and trailing whitespace.
 X-Obs-Fold-Header: Obsolete
     line folding.
 X-Empty-Header:
@@ -368,8 +370,8 @@ The signature parameters are serialized using the rules in [Section 4 of RFC8941
     skipping parameters that are not available or not used for this signature.
 6. The output contains the signature parameters value.
 
-Note that the `inner-list` serialization is used for the covered content value instead of the `sf-list` serialization 
-in order to facilitate this value's additional inclusion in the `Signature-Input` header's dictionary, 
+Note that the `inner-list` serialization is used for the covered content value instead of the `sf-list` serialization
+in order to facilitate this value's additional inclusion in the `Signature-Input` header's dictionary,
 as discussed in {{signature-input-header}}.
 
 This example shows a canonicalized value for the parameters of a given signature:
@@ -410,7 +412,7 @@ The signature input is a US-ASCII string containing the content that is covered 
 
     4. Append the signature parameters' canonicalized value as defined in {{signature-params}}
 
-4. Return the output string.    
+4. Return the output string.
 
 If covered content references an identifier that cannot be resolved to a value in the message, the implementation MUST produce an error. Such situations are included but not limited to:
 
@@ -439,7 +441,7 @@ The covered content consists of the `@request-target` specialty content followed
 "host": example.org
 "date": Tue, 20 Apr 2021 02:07:55 GMT
 "cache-control": max-age=60, must-revalidate
-"x-empty-header": 
+"x-empty-header":
 "x-example": Example header with some whitespace.
 "@signature-params": ("@request-target" "host" "date" "cache-control" \
   "x-empty-header" "x-example");created=1618884475;\
@@ -455,8 +457,8 @@ An HTTP Message Signature is a signature over a string generated from a subset o
 
 In order to create a signature, a signer MUST follow the following algorithm:
 
-1. The signer chooses an HTTP signature algorithm and key material for signing. The signer MUST choose key material that is appropriate 
-    for the signature's algorithm, and that conforms to any requirements defined by the algorithm, such as key size or format. The 
+1. The signer chooses an HTTP signature algorithm and key material for signing. The signer MUST choose key material that is appropriate
+    for the signature's algorithm, and that conforms to any requirements defined by the algorithm, such as key size or format. The
     mechanism by which the signer chooses the algorithm and key material is out of scope for this document.
 
 2. The signer sets the signature's creation time to the current time.
@@ -505,12 +507,12 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
     signature to be verified.
 3. Parse the value of the corresponding `Signature` header field to get the byte array value of the signature
     to be verified.
-4. Examine the signature parameters to confirm that the signature meets the requirements described 
-    in this document, as well as any additional requirements defined by the application such as which 
+4. Examine the signature parameters to confirm that the signature meets the requirements described
+    in this document, as well as any additional requirements defined by the application such as which
     contents are required to be covered by the signature. ({{verify-requirements}})
 5. Determine the verification key material for this signature. If the key material is known through external
     means such as static configuration or external protocol negotiation, the verifier will use that. If the key is
-    identified in the signature parameters, the verifier will dereference this to appropriate key material to use 
+    identified in the signature parameters, the verifier will dereference this to appropriate key material to use
     with the signature. The verifier has to determine the trustworthiness of the key material for the context
     in which the signature is presented. If a key is identified that the verifier does not know, does
     not trust for this request, or does not match something preconfigured, the verification MUST fail.
@@ -525,16 +527,16 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
         and the algorithm signature parameter, or the algorithm signature parameter and from
         the key material itself, the resolved algorithms MUST be the same. If the algorithms are
         not the same, the verifier MUST vail the verification.
-7. Use the received HTTP message and the signature's metadata to recreate the signature input, using 
+7. Use the received HTTP message and the signature's metadata to recreate the signature input, using
     the process described in {{create-sig-input}}. The value of the `@signature-params` input is
     the value of the SignatureInput header field for this signature serialized according to the rules described
     in {{signature-params}}, not including the signature's label from the `Signature-Input` header.
 8. If the key material is appropriate for the algorithm, apply the verification algorithm to the signature,
     recalculated signature input, signature parameters, key material, and algorithm. Several algorithms are defined in
     {{signature-methods}}.
-9. The results of the verification algorithm function are the final results of the signature verification. 
+9. The results of the verification algorithm function are the final results of the signature verification.
 
-If any of the above steps fail, the signature validation fails. 
+If any of the above steps fail, the signature validation fails.
 
 
 ### Enforcing Application Requirements {#verify-requirements}
@@ -574,43 +576,43 @@ HTTP_VERIFY (I, Kv, S) -> V
 ~~~
 
 This section contains several common algorithm methods. The method to use can be communicated through the algorithm signature parameter
-defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier. 
+defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier.
 
 ### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha512}
 
 To sign using this algorithm, the signer applies the `RSASSA-PSS-SIGN (K, M)` function {{RFC8017}} with the signer's private signing key (`K`) and
-the signature input string (`M`) ({{create-sig-input}}). 
+the signature input string (`M`) ({{create-sig-input}}).
 The mask generation function is `MGF1` as specified in {{RFC8017}} with a hash function of SHA-512 {{RFC6234}}.
 The salt length (`sLen`) is 64 bytes.
 The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input string to create
-the digest content to which the digital signature is applied. 
+the digest content to which the digital signature is applied.
 The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
 
 To verify using this algorithm, the verifier applies the `RSASSA-PSS-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
 The mask generation function is `MGF1` as specified in {{RFC8017}} with a hash function of SHA-512 {{RFC6234}}.
 The salt length (`sLen`) is 64 bytes.
-The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
+The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied.
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
 
 ### RSASSA-PKCS1-v1_5 using SHA-256 {#method-rsa-v1_5-sha256}
 
 To sign using this algorithm, the signer applies the `RSASSA-PKCS1-V1_5-SIGN (K, M)` function {{RFC8017}} with the signer's private signing key (`K`) and
-the signature input string (`M`) ({{create-sig-input}}). 
+the signature input string (`M`) ({{create-sig-input}}).
 The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
-the digest content to which the digital signature is applied. 
+the digest content to which the digital signature is applied.
 The resulting signed content byte array (`S`) is the HTTP message signature output used in {{sign}}.
 
 To verify using this algorithm, the verifier applies the `RSASSA-PKCS1-V1_5-VERIFY ((n, e), M, S)` function {{RFC8017}} using the public key portion of the verification key material (`(n, e)`) and the signature input string (`M`) re-created as described in {{verify}}.
-The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
+The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied.
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
 
 ### HMAC using SHA-256 {#method-hmac-sha256}
 
 To sign and verify using this algorithm, the signer applies the `HMAC` function {{RFC2104}} with the shared signing key (`K`) and
-the signature input string (`text`) ({{create-sig-input}}). 
-The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the HMAC is applied, giving the signature result. 
+the signature input string (`text`) ({{create-sig-input}}).
+The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the HMAC is applied, giving the signature result.
 
 For signing, the resulting value is the HTTP message signature output used in {{sign}}.
 
@@ -620,33 +622,33 @@ The output of the HMAC function is compared to the value of the HTTP message sig
 ### ECDSA using curve P-256 DSS and SHA-256 {#method-ecdsa-p256-sha256}
 
 To sign using this algorithm, the signer applies the `ECDSA` algorithm {{FIPS186-4}} using curve P-256 with the signer's private signing key and
-the signature input string ({{create-sig-input}}). 
+the signature input string ({{create-sig-input}}).
 The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
-the digest content to which the digital signature is applied. 
+the digest content to which the digital signature is applied.
 The resulting signed content byte array is the HTTP message signature output used in {{sign}}.
 
 To verify using this algorithm, the verifier applies the `ECDSA` algorithm {{FIPS186-4}}  using the public key portion of the verification key material and the signature input string re-created as described in {{verify}}.
-The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied. 
+The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied.
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
 
 ### JSON Web Signature (JWS) algorithms {#method-jose}
 
-If the signing algorithm is a JOSE signing algorithm from the JSON Web Signature and Encryption Algorithms Registry established by {{RFC7518}}, the 
+If the signing algorithm is a JOSE signing algorithm from the JSON Web Signature and Encryption Algorithms Registry established by {{RFC7518}}, the
 JWS algorithm definition determines the signature and hashing algorithms to apply for both signing and verification. There is no
 use of the explicit `alg` signature parameter when using JOSE signing algorithms.
 
-For both signing and verification, the HTTP messages signature input string ({{create-sig-input}}) is used as the entire "JWS Signing Input". 
-The JOSE Header defined in {{RFC7517}} is not used, and the signature input string is not first encoded in Base64 before applying the algorithm. 
+For both signing and verification, the HTTP messages signature input string ({{create-sig-input}}) is used as the entire "JWS Signing Input".
+The JOSE Header defined in {{RFC7517}} is not used, and the signature input string is not first encoded in Base64 before applying the algorithm.
 The output of the JWS signature is taken as a byte array prior to the Base64url encoding used in JOSE.
 
 The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE Implementation Requirement of `Prohibited`.
 
 # Including a Message Signature in a Message
-Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP header fields, both defined within this specification. 
+Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP header fields, both defined within this specification.
 
 An HTTP message signature MUST use both headers:
-the `Signature` HTTP header field contains the signature value, while the `Signature-Input` HTTP header field identifies the covered content and parameters that describe how the signature was generated. Each header MAY contain multiple labeled values, where the labels determine the correlation between the `Signature` and `Signature-Input` fields. 
+the `Signature` HTTP header field contains the signature value, while the `Signature-Input` HTTP header field identifies the covered content and parameters that describe how the signature was generated. Each header MAY contain multiple labeled values, where the labels determine the correlation between the `Signature` and `Signature-Input` fields.
 
 ## The 'Signature-Input' HTTP Header {#signature-input-header}
 The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered content including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
@@ -657,7 +659,7 @@ Signature-Input: sig1=("@request-target" "host" "date" \
   ;keyid="test-key-rsa-pss"
 ~~~
 
-To facilitate signature validation, the `Signature-Input` header value MUST contain the same serialized value used 
+To facilitate signature validation, the `Signature-Input` header value MUST contain the same serialized value used
 in generating the signature input string's `@signature-params` value.
 
 ## The 'Signature' HTTP Header {#signature-header}
@@ -674,7 +676,7 @@ Signature: sig1=:lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k\
 
 ## Multiple Signatures
 
-Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same content with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in header fields when forwarding the request to a service host, including a signature over those fields and the client's original signature. 
+Since `Signature-Input` and `Signature` are both defined as Dictionary Structured Headers, they can be used to include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same content with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in header fields when forwarding the request to a service host, including a signature over those fields and the client's original signature.
 
 The following is a non-normative example of header fields a reverse proxy sets in addition to the examples in the previous sections. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under `proxy_sig`. The proxy uses the key `rsa-test-key` to create its signature using the `rsa-v1_5-sha256` signature value. This results in a signature input string of:
 
@@ -873,7 +875,7 @@ It is recommended that implementers first detect and validate the `Signature-Inp
 
 This section provides cryptographic keys that are referenced in example signatures throughout this document.  These keys MUST NOT be used for any purpose other than testing.
 
-The key identifiers for each key are used throughout the examples in this specification. It is assumed for these examples that the signer and verifier can unambiguously dereference all key identifiers used here, and that the keys and algorithms used are appropriate for the context in which the signature is presented. 
+The key identifiers for each key are used throughout the examples in this specification. It is assumed for these examples that the signer and verifier can unambiguously dereference all key identifiers used here, and that the keys and algorithms used are appropriate for the context in which the signature is presented.
 
 ### Example Key RSA test {#example-key-rsa-test}
 

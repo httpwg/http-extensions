@@ -13,6 +13,8 @@ stand_alone: yes
 smart_quotes: no
 pi: [toc, docindent, sortrefs, symrefs, strict, compact, comments, inline]
 
+github-issue-label: priorities
+
 author:
   -
     ins: K. Oku
