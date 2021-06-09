@@ -9,6 +9,13 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.org/) 
 See also the [official document listing](https://datatracker.ietf.org/wg/httpbis/documents/) and the [detailed repo list](https://httpwg.org/http-extensions/) (which contains drafts and diffs for each branch).
 
 
+### Client Cert Header
+
+* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-field.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-field.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-cert-field) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-cert-field) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-cert-field/)
+
+
 ### Safe Method with Content
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-safe-method-w-body.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-safe-method-w-body.txt))
@@ -96,8 +103,3 @@ This will incorporate the following drafts:
   *  [Requiring "Secure" for "SameSite=None"](https://tools.ietf.org/html/draft-west-cookie-incrementalism-01#section-3.2) ✅
   *  [Schemeful Same-Site](https://tools.ietf.org/html/draft-west-cookie-incrementalism-01#section-3.3) ✅
 
-### Client Cert Header
-
-* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-field.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-field.txt))
-* ~~[Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-client-cert-field) (less recent, more official)~~ *Not yet published*
-* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Aclient-cert-field) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-client-cert-field/)
