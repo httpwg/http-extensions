@@ -15,7 +15,7 @@ keyword:
 stand_alone: yes
 smart_quotes: no
 
-github-issue-label: client-cert-header
+github-issue-label: client-cert-field
 
 author:
   -
