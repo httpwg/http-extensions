@@ -636,13 +636,12 @@ a PUSH_PROMISE or HEADERS frame.
 
 # Retransmission Scheduling
 
-A transport may detect packet losses and then retranmit lost information to
-provide reliability. Examples include TCP and QUIC. While this document
-specifies HTTP layer prioritization, its effectiveness can be further achieved
-if transport layer also respect such priorities. Besides scheduling new data,
-transport implementations MAY also consider stream priorities during
-retransmission. In this section we will use QUIC as an example to discusss a
-couple scenarios an implementation need to consider.
+Transport protocols such as TCP and QUIC provide reliability by detecting packet
+losses and retransmitting lost information. While this document specifies
+HTTP-layer prioritization, its effectiveness can be further enhanced if the
+transport layer factors priority into scheduling both new data and
+retransmission data. The remainder of this section discusses considerations when
+using QUIC.
 
 {{!I-D.ietf-quic-transport}}, Section 13.3 states "Endpoints SHOULD prioritize
 retransmission of data over sending new data, unless priorities specified by the
@@ -657,10 +656,10 @@ data. While there is no requirement on QUIC implementations to implement the
 extensible priority scheme, an aligned prioritization model can help
 applications manage scheduling expectations.
 
-{{?I-D.ietf-quic-recovery}}, Section 6.2.4 also highlights consideration of 
-application priorities when sending probe packets after PTO timer expiration.
-An implementation using this prioritization scheme for new or retransmitted
-data, MAY choose a different strategy for prioritizing probe data. 
+{{?I-D.ietf-quic-recovery}}, Section 6.2.4 also highlights consideration of
+application priorities when sending probe packets after PTO timer expiration. An
+QUIC implementation supporting application-indicated priorities might use the
+relative priority of streams when choosing probe data. 
 
 
 # Fairness {#fairness}
