@@ -652,6 +652,12 @@ suboptimal. How ever a server decides to schedule a pushed response, it can
 signal the intended priority to the client by including the Priority field in
 a PUSH_PROMISE or HEADERS frame.
 
+# Scheduling and the CONNECT Method
+
+When a request stream carries the CONNECT method, the scheduling guidance in
+this document applies to the DATA frames that carry either HTTP content or
+payload related to the established TCP connection.
+
 
 ## Intermediaries with Multiple Backend Connections
 
