@@ -152,18 +152,38 @@ This document describes Digest integrity for HTTP and is structured as follows:
 ## Concept Overview
 
 This document defines the `Digest` request and response header and trailer
-field. At a high level the value contains a checksum, computed over
-`selected representation data`
-(Section 3.2; {{!SEMANTICS=I-D.ietf-httpbis-semantics}}),
-that the recipient can use to validate integrity. `Digest` supports
-algorithm agility. The `Want-Digest` field allows endpoints to express interest
-in `Digest` and preference of algorithms.
+field, see {{digest}}. At a high level the value contains a checksum, computed
+over `selected representation data` (Section 3.2;
+{{!SEMANTICS=I-D.ietf-httpbis-semantics}}), that the recipient can use to
+validate integrity. Basing `Digest` on the selected representation makes it
+straightforward to apply it to use-cases where the transferred data requires
+some sort of manipulation to be considered a representation, or conveys a
+partial representation of a resource, for example Range Requests (see Section
+14.2 of {{SEMANTICS}}).
 
-Basing `Digest` on the selected representation makes it straightforward to apply
-it to use-cases where the transferred data requires some sort of
-manipulation to be considered a representation, or conveys a partial
-representation of a resource, for example Range Requests (see Section 14.2 of
-{{SEMANTICS}}).
+To support use cases where a simple checksum of the content bytes is required,
+this document introduces the `Content-Digest` request and response field, see
+{{content-digest}}.
+
+`Digest` and `Content-Digest` support algorithm agility. The `Want-Digest` and
+`Want-Content-Digest` fields allows endpoints to express interest in `Digest` and
+`Content-Digest` respectively, and preference of algorithms in either.
+
+`Digest` and `Content-Digest` calculations are tied to the `Content-Encoding`
+and `Content-Type` header fields. Therefore, a given resource may have multiple
+different checksum values when transferred with HTTP. To allow both parties to
+exchange a simple checksum with no content codings (see Section 8.4.1
+of {{SEMANTICS}}), two more digest-algorithms are added ("id-sha-256" and
+"id-sha-512").
+
+`Digest` and `Content-Digest` do not provide integrity for
+HTTP messages or fields. However, they can be combined with other mechanisms that
+protect metadata, such as digital signatures, in order to protect
+the phases of an HTTP exchange in whole or in part.
+
+This specification does not define means for authentication, authorization or privacy.
+
+## Replacing RFC 3230
 
 Historically, the Content-MD5 header field provided an HTTP integrity mechanism
 but HTTP/1.1 ([RFC7231], Appendix B) obsoleted it due to inconsistent handling
@@ -180,24 +200,6 @@ implementations but note that negotiation of `Content-MD5` is deprecated
 {{deprecate-contentMD5}}, `Digest` field parameters are obsoleted
 {{obsolete-parameters}}, "md5" and "sha" digest-algorithms are obsoleted,
 and the "adler32" algorithm is deprecated.
-
-Calculating the value of `Digest` using selected representation means it is tied
-to the `Content-Encoding` and `Content-Type` header fields. Therefore, a given
-resource may have multiple different digest values. To allow both parties to
-exchange a Digest of a representation with no content codings (see Section 8.4.1
-of {{SEMANTICS}}) two more digest-algorithms are added ("id-sha-256" and
-"id-sha-512").
-
-`Digest` is used for representation integrity. It does not provide integrity for
-HTTP messages or fields. However, it can be combined with other mechanisms that
-protect representation metadata, such as digital signatures, in order to protect
-the phases of an HTTP exchange in whole or in part.
-
-To support use cases where a simple checksum of the content bytes is required,
-this document introduces the `Content-Digest` request and response field.
-
-This specification does not define means for authentication, authorization or privacy.
-
 
 ## Notational Conventions
 {::boilerplate bcp14}
