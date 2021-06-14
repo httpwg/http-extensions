@@ -88,7 +88,8 @@ informative:
 
 --- abstract
 
-This document defines the HTTP Digest and Want-Digest fields, which allows
+This document defines the HTTP Digest, Want-Digest,
+Content-Digest and Want-Content-Digest fields, which allow
 client and server to negotiate an integrity checksum of the exchanged resource
 representation data.
 
@@ -135,6 +136,9 @@ This document describes Digest integrity for HTTP and is structured as follows:
   digests,
 - {{digest}} defines the Digest request and response header and trailer field,
 - {{want-digest}} defines the Want-Digest request and response header and
+  trailer field,
+- {{content-digest}} defines the Content-Digest request and response header and trailer field,
+- {{want-content-digest}} defines the Want-Content-Digest request and response header and
   trailer field,
 - {{algorithms}} and {{deprecate-contentMD5}} describe algorithms and their
   relation to Digest,
@@ -189,7 +193,10 @@ HTTP messages or fields. However, it can be combined with other mechanisms that
 protect representation metadata, such as digital signatures, in order to protect
 the phases of an HTTP exchange in whole or in part.
 
-`Digest` does not define means for authentication, authorization or privacy.
+To support use cases where a simple checksum of the content bytes is required,
+this document introduces the `Content-Digest` request and response field.
+
+This specification does not define means for authentication, authorization or privacy.
 
 
 ## Notational Conventions
@@ -317,6 +324,79 @@ Two examples of its use are:
 Want-Digest: sha-256
 Want-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
 ~~~
+
+
+# The Content-Digest Field {#content-digest}
+
+The `Content-Digest` field contains a comma-separated list of one or more content digest
+values.
+A content digest value is computed applying a digest-algorithm to the actual message content
+(see Section 6.4 of {{SEMANTICS}}).
+It can be used in both requests and responses.
+
+~~~ abnf
+   Content-Digest = 1#content-digest
+   content-digest = digest-algorithm "="
+                    <encoded digest output>
+~~~
+
+For example:
+
+~~~ http-message
+Content-Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
+                           AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
+~~~
+
+A `Content-Digest` field MAY contain multiple content-digest values,
+similarly to `Digest` (see {{digest}})
+
+~~~ http-message
+Content-Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
+                id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+~~~
+
+A recipient MAY ignore any or all of the content-digests in a Content-Digest
+field. This allows the recipient to choose which digest-algorithm(s) to use for
+validation instead of verifying every received representation-data-digest.
+
+A sender MAY send a content-digest using a digest-algorithm without
+knowing whether the recipient supports the digest-algorithm, or even knowing
+that the recipient will ignore it.
+
+`Content-Digest` can be sent in a trailer section.
+In this case,
+`Content-Digest` MAY be merged in to the header section (See Section 6.5.1 of {{SEMANTICS}}).
+
+When an incremental digest-algorithm
+is used, the sender and the receiver can dynamically compute the digest value
+while streaming the content.
+
+# The Want-Content-Digest Field {#want-content-digest}
+
+The `Want-Content-Digest` field indicates the sender's desire to receive a content
+digest on messages associated with the request URI and representation metadata.
+It can be used in both requests and responses.
+
+~~~
+   Want-Content-Digest = 1#want-digest-value
+~~~
+
+If a digest-algorithm is not accompanied by a "qvalue" (see Section 12.4.2 of{{SEMANTICS}}),
+it is treated as if its associated "qvalue" were 1.0.
+
+The sender is willing to accept a digest-algorithm if and only if it is listed
+in a `Want-Content-Digest` field of a message, and its "qvalue" is non-zero.
+
+If multiple acceptable digest-algorithm values are given, the sender's preferred
+digest-algorithm is the one (or ones) with the highest "qvalue".
+
+Two examples of its use are:
+
+~~~ http-message
+Want-Content-Digest: sha-256
+Want-Content-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
+~~~
+
 
 # Digest Algorithm Values {#algorithms}
 
