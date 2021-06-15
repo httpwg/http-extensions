@@ -186,7 +186,7 @@ after the first SETTINGS frame. Detection of a change by a receiver MUST be
 treated as a connection error of type PROTOCOL_ERROR.
 
 Until the client receives the SETTINGS frame from the server, the client SHOULD
-send the signals of the HTTP/2 priority scheme  (see {{motivation}} ) and the
+send the signals of the HTTP/2 priority scheme  (see {{motivation}}) and the
 signals of this prioritization scheme (see {{header-field}} and
 {{h2-update-frame}}). When the client receives the first SETTINGS frame that
 contains the SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter with value of 1, it
