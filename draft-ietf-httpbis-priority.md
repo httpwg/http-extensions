@@ -651,7 +651,7 @@ application indicated stream priority, a transport that considers the relative
 priority of streams when scheduling both new data and retransmission data might
 better match the expectations of the application. However, here are no
 requirements on how a transport chooses to schedule based on this information
-because the decision depends on several factors and trade-offs, It could
+because the decision depends on several factors and trade-offs. It could
 prioritize new data for a higher urgency stream over retransmission data for a
 lower priority stream, or it could prioritize retransmission data over new data
 irrespective of urgencies.
