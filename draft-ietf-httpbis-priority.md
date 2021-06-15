@@ -646,15 +646,15 @@ using QUIC.
 {{!I-D.ietf-quic-transport}}, Section 13.3 states "Endpoints SHOULD prioritize
 retransmission of data over sending new data, unless priorities specified by the
 application indicate otherwise". When an HTTP/3 application uses the priority
-scheme defined in this document, the QUIC transport implementation SHOULD
-consider the relative priority of streams when scheduling of new data and
-retransmission data. For example, if one stream with higher urgency has new data
-to send and another stream with lower urgency has retransmission data to send, a
-QUIC transport is more likely to fulfil the application's intent if it chooses
-to schedule the higher urgency new data before the lower urgency retransmission
-data. While there is no requirement on QUIC implementations to implement the
-extensible priority scheme, an aligned prioritization model can help
-applications manage scheduling expectations.
+scheme defined in this document and the QUIC transport implementation supports
+application indicated stream priority, a transport that considers the relative
+priority of streams when scheduling both new data and retransmission data might
+better match the expectations of the application. However, here are no
+requirements on how a transport chooses to schedule based on this information
+because the decision depends on several factors and trade-offs, It could
+prioritize new data for a higher urgency stream over retransmission data for a
+lower priority stream, or it could prioritize retransmission data over new data
+irrespective of urgencies.
 
 {{?I-D.ietf-quic-recovery}}, Section 6.2.4 also highlights consideration of
 application priorities when sending probe packets after PTO timer expiration. An
