@@ -116,16 +116,25 @@ an important realization in the design of HTTP/2. Prioritization is a
 difficult problem, so it will always be suboptimal, particularly if one endpoint
 operates in ignorance of the needs of its peer.
 
-HTTP/2 introduced a complex prioritization signaling scheme that used a
-combination of dependencies and weights, formed into an unbalanced tree. This
-scheme has suffered from poor deployment and interoperability.
+HTTP/2 introduced a complex prioritization scheme that uses a combination of
+stream dependencies and weights to describe an unbalanced tree. This scheme has
+suffered from poor deployment and interoperability.
 
-The rich flexibility of client-driven HTTP/2 prioritization tree building is
-rarely exercised. Experience has shown that clients tend to choose a single
-model optimized for a web use case and experiment within the model constraints,
-or do nothing at all. Furthermore, many clients build their prioritization tree
-in a unique way, which makes it difficult for servers to understand their intent
-and act or intervene accordingly.
+Clients build an HTTP/2 prioritization tree through a series of individual
+stream relationships, which are transferred to the server using HTTP/2 priority
+signals in either of three forms. First, a HEADERS frame with the PRIORITY flag
+set is an explicit signal that includes an Exclusive flag, Stream Dependency
+field, and Weight field. Second, a HEADERS frame with no PRIORITY flag is an
+implicit signal to use the default priority. Third, the PRIORITY frame, which is
+always explicit since it always contains an Exclusive flag, Stream Dependency
+field, and Weight field.
+
+The rich flexibility of tree building is rarely exercised. Experience has shown
+that clients tend to choose a single model optimized for a web use case and
+experiment within the model constraints, or do nothing at all. Furthermore, many
+clients build their prioritization tree in a unique way, which makes it
+difficult for servers to understand their intent and act or intervene
+accordingly.
 
 Many HTTP/2 server implementations do not include support for the priority
 scheme. Some instead favor custom server-driven schemes based on heuristics or
@@ -177,12 +186,13 @@ after the first SETTINGS frame. Detection of a change by a receiver MUST be
 treated as a connection error of type PROTOCOL_ERROR.
 
 Until the client receives the SETTINGS frame from the server, the client SHOULD
-send both the priority signal defined in the HTTP/2 priority scheme and also
-that of this prioritization scheme. When the client receives the first SETTINGS
-frame that contains the SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter with value
-of 1, it SHOULD stop sending the HTTP/2 priority signals. If the value was 0 or
-if the settings parameter was absent, it SHOULD stop sending PRIORITY_UPDATE
-frames ({{h2-update-frame}}), but MAY continue sending the Priority header field
+send the signals of the HTTP/2 priority scheme  (see {{motivation}}) and the
+signals of this prioritization scheme (see {{header-field}} and
+{{h2-update-frame}}). When the client receives the first SETTINGS frame that
+contains the SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter with value of 1, it
+SHOULD stop sending the HTTP/2 priority signals. If the value was 0 or if the
+settings parameter was absent, it SHOULD stop sending PRIORITY_UPDATE frames
+({{h2-update-frame}}), but MAY continue sending the Priority header field
 ({{header-field}}), as it is an end-to-end signal that might be useful to nodes
 behind the server that the client is directly connected to.
 
