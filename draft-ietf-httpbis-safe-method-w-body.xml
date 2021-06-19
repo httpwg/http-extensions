@@ -240,7 +240,7 @@ q=foo&amp;limit=10&amp;sort=-published
       A successful response to a SEARCH request is expected to provide some
       indication as to the final disposition of the search operation. For
       instance, a successful search that yields no results can be represented
-      by a 204 No Content response. If the response includes a content,
+      by a 204 No Content response. If the response includes content,
       it is expected to describe the results of the search operation.
       In some cases, the server may choose to respond indirectly to the SEARCH
       request by returning a 3xx Redirection with a Location header field specifying
