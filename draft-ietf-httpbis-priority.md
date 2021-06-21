@@ -205,6 +205,17 @@ Where both endpoints disable HTTP/2 priorities, the client is expected to send
 this scheme's priority signal. Handling of omitted signals is described in
 {{parameters}}.
 
+# Applicability of the Extensible Priority Scheme
+
+The priority scheme defined by this document considers only the prioritization
+of HTTP response data. Clients express priority values to a server, which are
+input into scheduling decisions, see {{client-scheduling}} and
+{{server-scheduling}}.
+
+Where HTTP extensions change stream behavior or define new data carriage
+mechanisms, they MAY also define how this priority scheme can be applied.
+
+
 # Priority Parameters {#parameters}
 
 The priority information is a sequence of key-value pairs, providing room for
@@ -667,7 +678,7 @@ irrespective of urgencies.
 {{?I-D.ietf-quic-recovery}}, Section 6.2.4 also highlights consideration of
 application priorities when sending probe packets after PTO timer expiration. An
 QUIC implementation supporting application-indicated priorities might use the
-relative priority of streams when choosing probe data. 
+relative priority of streams when choosing probe data.
 
 
 # Fairness {#fairness}
