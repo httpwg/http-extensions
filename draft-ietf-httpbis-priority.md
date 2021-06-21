@@ -77,7 +77,7 @@ To provide meaningful presentation of a document at the earliest moment, it is
 important for an HTTP server to prioritize the HTTP responses, or the chunks of
 those HTTP responses, that it sends.
 
-HTTP/2 ({{?RFC7540}}) provides such a prioritization scheme. A client sends a
+HTTP/2 ({{!HTTP2=RFC7540}}) provides such a prioritization scheme. A client sends a
 series of PRIORITY frames to communicate to the server a "priority tree"; this
 represents the client's preferred ordering and weighted distribution of the
 bandwidth among the HTTP responses. However, the design and implementation of
@@ -96,16 +96,16 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 interpreted as described in {{!RFC2119}}.
 
 The terms sf-token and sf-boolean are imported from
-{{!STRUCTURED-FIELDS=I-D.ietf-httpbis-header-structure}}.
+{{!STRUCTURED-FIELDS=RFC8941}}.
 
 Example HTTP requests and responses use the HTTP/2-style formatting from
-{{?RFC7540}}.
+{{HTTP2}}.
 
 This document uses the variable-length integer encoding from
-{{!I-D.ietf-quic-transport}}.
+{{!QUIC=RFC9000}}.
 
 The term control stream is used to describe the HTTP/2 stream with identifier
-0x0, and HTTP/3 control stream; see {{!I-D.ietf-quic-http}}, Section 6.2.1.
+0x0, and HTTP/3 control stream; see {{!HTTP3=I-D.ietf-quic-http}}, Section 6.2.1.
 
 
 # Motivation for Replacing HTTP/2 Priorities {#motivation}
@@ -160,7 +160,7 @@ priority tree.
 
 The HTTP/2 scheme depends on in-order delivery of signals, leading to challenges
 in porting the scheme to protocols that do not provide global ordering. For
-example, the scheme cannot be used in HTTP/3 {{?I-D.ietf-quic-http}} without
+example, the scheme cannot be used in HTTP/3 {{HTTP3}} without
 changing the signal and its processing.
 
 Considering the problems with deployment and adaptability to HTTP/3, retaining
@@ -178,7 +178,7 @@ such as the scheme defined in this specification. The
 SETTINGS_DEPRECATE_HTTP2_PRIORITIES setting described below enables endpoints to
 understand their peer's intention. The value of the parameter MUST
 be 0 or 1. Any value other than 0 or 1 MUST be treated as a connection error
-(see {{!RFC7540}}, Section 5.4.1) of type PROTOCOL_ERROR.
+(see {{HTTP2}}, Section 5.4.1) of type PROTOCOL_ERROR.
 
 Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
 A sender MUST NOT change the SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter value
@@ -219,7 +219,7 @@ HTTP connection, they SHOULD use a PRIORITY_UPDATE frame and SHOULD NOT change
 the Priority header field.
 
 In both cases, the set of priority parameters is encoded as a Structured Fields
-Dictionary ({{!STRUCTURED-FIELDS}}).
+Dictionary ({{STRUCTURED-FIELDS}}).
 
 This document defines the urgency(`u`) and incremental(`i`) parameters. When
 receiving an HTTP request that does not carry these priority parameters, a
@@ -375,8 +375,8 @@ reprioritization.
 
 # The PRIORITY_UPDATE Frame {#frame}
 
-This document specifies a new PRIORITY_UPDATE frame for HTTP/2 ({{!RFC7540}})
-and HTTP/3 ({{!I-D.ietf-quic-http}}). It carries priority parameters and
+This document specifies a new PRIORITY_UPDATE frame for HTTP/2 ({{HTTP2}})
+and HTTP/3 ({{HTTP3}}). It carries priority parameters and
 references the target of the prioritization based on a version-specific
 identifier. In HTTP/2, this identifier is the Stream ID; in HTTP/3, the
 identifier is either the Stream ID or Push ID. Unlike the Priority header field,
@@ -414,7 +414,7 @@ initial priority of a response, or to reprioritize a response or push stream. It
 carries the stream ID of the response and the priority in ASCII text, using the
 same representation as the Priority header field value.
 
-The Stream Identifier field ({{!RFC7540}}, Section 4.1) in the PRIORITY_UPDATE
+The Stream Identifier field ({{HTTP2}}, Section 4.1) in the PRIORITY_UPDATE
 frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE frame with a field
 of any other value MUST be treated as a connection error of type PROTOCOL_ERROR.
 
@@ -448,7 +448,7 @@ provide a Prioritized Stream ID that refers to a stream in the "open",
 Prioritized Stream ID refers to a stream in the "half-closed (local)" or
 "closed" state. The number of streams which have been prioritized but remain in
 the "idle" state plus the number of active streams (those in the "open" or
-either "half-closed" state; see section 5.1.2 of {{RFC7540}}) MUST NOT exceed
+either "half-closed" state; see section 5.1.2 of {{HTTP2}}) MUST NOT exceed
 the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. Servers that receive
 such a PRIORITY_UPDATE MUST respond with a connection error of type
 PROTOCOL_ERROR.
@@ -478,7 +478,7 @@ used for request streams, while PRIORITY_UPDATE with a frame type of 0xF0701 is
 used for push streams.
 
 The PRIORITY_UPDATE frame MUST be sent on the client control stream
-({{!I-D.ietf-quic-http}}, Section 6.2.1). Receiving a PRIORITY_UPDATE frame on a
+({{HTTP3}}, Section 6.2.1). Receiving a PRIORITY_UPDATE frame on a
 stream other than the client control stream MUST be treated as a connection
 error of type H3_FRAME_UNEXPECTED.
 
@@ -651,7 +651,7 @@ transport layer factors priority into scheduling both new data and
 retransmission data. The remainder of this section discusses considerations when
 using QUIC.
 
-{{!I-D.ietf-quic-transport}}, Section 13.3 states "Endpoints SHOULD prioritize
+{{QUIC}}, Section 13.3 states "Endpoints SHOULD prioritize
 retransmission of data over sending new data, unless priorities specified by the
 application indicate otherwise". When an HTTP/3 application uses the priority
 scheme defined in this document and the QUIC transport implementation supports
@@ -664,10 +664,10 @@ prioritize new data for a higher urgency stream over retransmission data for a
 lower priority stream, or it could prioritize retransmission data over new data
 irrespective of urgencies.
 
-{{?I-D.ietf-quic-recovery}}, Section 6.2.4 also highlights consideration of
+{{?QUIC-RECOVERY=RFC9002}}, Section 6.2.4 also highlights consideration of
 application priorities when sending probe packets after PTO timer expiration. An
 QUIC implementation supporting application-indicated priorities might use the
-relative priority of streams when choosing probe data. 
+relative priority of streams when choosing probe data.
 
 
 # Fairness {#fairness}
@@ -766,11 +766,11 @@ dependencies, which mitigates this vulnerability.
 TBD: depending on the outcome of reprioritization discussions, following
 paragraphs may change or be removed.
 
-{{RFC7540}}, Section 5.3.4 describes a scenario where closure of streams in the
-priority tree could cause suboptimal prioritization. To avoid this, {{RFC7540}}
+{{HTTP2}}, Section 5.3.4 describes a scenario where closure of streams in the
+priority tree could cause suboptimal prioritization. To avoid this, {{HTTP2}}
 states that "an endpoint SHOULD retain stream prioritization state for a period
 after streams become closed". Retaining state for streams no longer counted
-towards stream concurrency consumes server resources. Furthermore, {{RFC7540}}
+towards stream concurrency consumes server resources. Furthermore, {{HTTP2}}
 identifies that reprioritization of a closed stream could affect dependents; it
 recommends updating the priority tree if sufficient state is stored, which will
 also consume server resources. To limit this commitment, it is stated that "The
@@ -780,7 +780,7 @@ allowed by their setting for SETTINGS_MAX_CONCURRENT_STREAMS.". Extensible
 priorities does not use stream dependencies, which minimizes most of the
 resource concerns related to this scenario.
 
-{{RFC7540}}, Section 5.3.4 also presents considerations about the state required
+{{HTTP2}}, Section 5.3.4 also presents considerations about the state required
 to store priority information about streams in an "idle" state. This state can
 be limited by adopting the guidance about concurrency limits described above.
 Extensible priorities is subject to a similar consideration because
@@ -815,7 +815,7 @@ Related information:
 : n/a
 
 This specification registers the following entry in the HTTP/2 Settings registry
-established by {{!RFC7540}}:
+established by {{HTTP2}}:
 
 Name:
 : SETTINGS_DEPRECATE_HTTP2_PRIORITIES
@@ -830,7 +830,7 @@ Specification:
 : This document
 
 This specification registers the following entry in the HTTP/2 Frame Type
-registry established by {{?RFC7540}}:
+registry established by {{HTTP2}}:
 
 Frame Type:
 : PRIORITY_UPDATE
@@ -842,7 +842,7 @@ Specification:
 : This document
 
 This specification registers the following entries in the HTTP/3 Frame Type
-registry established by {{!I-D.ietf-quic-http}}:
+registry established by {{HTTP3}}:
 
 Frame Type:
 : PRIORITY_UPDATE
