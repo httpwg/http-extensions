@@ -644,15 +644,14 @@ a PUSH_PROMISE or HEADERS frame.
 
 ## Intermediaries with Multiple Backend Connections
 
-When the prioritization rules are applied strictly, low priority requests cannot
-make any progress while requests with higher priorities are inflight. If
-intermediaries forwarding requests to other endpoints through multiple
-connections block low priority requests as such, connections that only carry the
-low priority requests could remain blocked for certain amount of time,
-misleading the peer to believe that the connection has stalled.
-
-To prevent such misidentification that might lead to peers abruptly closing the
-connections, intermediaries may allocate small amount of bandwidths for all the
+An intermediary serving an HTTP connection might split requests over multiple
+backend connections. When it applies prioritization rules strictly, low priority
+requests cannot make progress while requests with priorities are inflight. This
+blocking can propagate to backend connections, which the peer might interpret as
+a connection stall. Endpoints often implement protections against stalls, such
+as abruptly closing connections after a certain time period. To reduce the
+possibility of this occurring, intermediaries can avoid strictly following
+prioritization and instead allocate small amounts of bandwidth for all the
 requests that they are forwarding, so that every request can make some progress
 over time.
 
