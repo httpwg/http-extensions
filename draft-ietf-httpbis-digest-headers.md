@@ -332,7 +332,7 @@ Want-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
 
 The `Content-Digest` field contains a comma-separated list of one or more content digest
 values.
-A content digest value is computed applying a digest-algorithm to the actual message content
+A content digest value is computed by applying a digest-algorithm to the actual message content
 (see Section 6.4 of {{SEMANTICS}}).
 It can be used in both requests and responses.
 
