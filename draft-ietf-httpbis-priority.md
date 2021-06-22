@@ -648,8 +648,8 @@ When the prioritization rules are applied strictly, low priority requests cannot
 make any progress while requests with higher priorities are inflight. If
 intermediaries forwarding requests to other endpoints through multiple
 connections block low priority requests as such, connections that only carry the
-low priority requests could remain idle for certain amount of time, misleading
-the peer to believe that the connection has stalled.
+low priority requests could remain blocked for certain amount of time,
+misleading the peer to believe that the connection has stalled.
 
 To prevent such misidentification that might lead to peers abruptly closing the
 connections, intermediaries may allocate small amount of bandwidths for all the
