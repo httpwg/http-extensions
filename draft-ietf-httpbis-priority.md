@@ -642,6 +642,24 @@ signal the intended priority to the client by including the Priority field in
 a PUSH_PROMISE or HEADERS frame.
 
 
+## Intermediaries with Multiple Backend Connections
+
+When the prioritization rules are applied strictly, low priority requests cannot
+make any progress while requests with higher priorities are inflight. If
+intermediaries forwarding requests to other endpoints through multiple
+connections block low priority requests as such, connections that only carry the
+low priority requests could remain idle for certain amount of time, misleading
+the peer to believe that the connection has stalled.
+
+To prevent such misidentification that might lead to peers abruptly closing the
+connections, intermediaries may allocate small amount of bandwidths for all the
+requests that they are forwarding, so that every request can make some progress
+over time.
+
+Similarly, servers SHOULD allocate some amount of bandwidths to streams acting
+as tunnels.
+
+
 # Retransmission Scheduling
 
 Transport protocols such as TCP and QUIC provide reliability by detecting packet
