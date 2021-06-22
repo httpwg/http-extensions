@@ -157,12 +157,12 @@ over `selected representation data` (Section 3.2;
 {{!SEMANTICS=I-D.ietf-httpbis-semantics}}), that the recipient can use to
 validate integrity. Basing `Digest` on the selected representation makes it
 straightforward to apply it to use-cases where the transferred data requires
-some sort of manipulation to be considered a representation, or conveys a
-partial representation of a resource, for example Range Requests (see Section
+some sort of manipulation to be considered a representation or conveys a
+partial representation of a resource, such as Range Requests (see Section
 14.2 of {{SEMANTICS}}).
 
-To support use cases where a simple checksum of the content bytes is required,
-this document introduces the `Content-Digest` request and response field, see
+To support use-cases where a simple checksum of the content bytes is required,
+this document introduces the `Content-Digest` request and response field; see
 {{content-digest}}.
 
 `Digest` and `Content-Digest` support algorithm agility. The `Want-Digest` and
