@@ -1759,13 +1759,21 @@ following minimum capabilities:
 
 *   At least 3000 cookies total.
 
+User agents MAY limit the maximum number of cookies they store, and may evict
+any cookie at any time (whether at the request of the user or due to
+implementation limitations).
+
+Note that a limit on the maximum number of cookies also limits the total size of
+the stored cookies, due to the length limits which MUST be enforced in
+{{set-cookie}}.
+
 Servers SHOULD use as few and as small cookies as possible to avoid reaching
 these implementation limits and to minimize network bandwidth due to the
 Cookie header field being included in every request.
 
 Servers SHOULD gracefully degrade if the user agent fails to return one or more
-cookies in the Cookie header field because the user agent might evict any cookie at
-any time on orders from the user.
+cookies in the Cookie header field because the user agent might evict any cookie
+at any time.
 
 ## Application Programming Interfaces
 
