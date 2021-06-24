@@ -1155,8 +1155,8 @@ parse a set-cookie-string:
 5.  Remove any leading or trailing WSP characters from the name string and the
     value string.
 
-6.  If the sum of cookie-name and cookie-value is more than 4096 bytes, abort
-    these steps and ignore the set-cookie-string entirely.
+6.  If the sum of the lengths of the name string and the value string is more
+    than 4096 bytes, abort these steps and ignore the set-cookie-string entirely.
 
 7.  The cookie-name is the name string, and the cookie-value is the value string.
 
