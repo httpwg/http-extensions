@@ -1155,7 +1155,10 @@ parse a set-cookie-string:
 5.  Remove any leading or trailing WSP characters from the name string and the
     value string.
 
-6.  The cookie-name is the name string, and the cookie-value is the value string.
+6.  If the sum of the lengths of the name string and the value string is more
+    than 4096 bytes, abort these steps and ignore the set-cookie-string entirely.
+
+7.  The cookie-name is the name string, and the cookie-value is the value string.
 
 The user agent MUST use an algorithm equivalent to the following algorithm to
 parse the unparsed-attributes:
@@ -1191,11 +1194,14 @@ parse the unparsed-attributes:
 5.  Remove any leading or trailing WSP characters from the attribute-name
     string and the attribute-value string.
 
-6.  Process the attribute-name and attribute-value according to the
+6.  If the attribute-value is longer than 1024 bytes, ignore the cookie-av
+    string and return to Step 1 of this algorithm.
+
+7.  Process the attribute-name and attribute-value according to the
     requirements in the following subsections. (Notice that attributes with
     unrecognized attribute-names are ignored.)
 
-7.  Return to Step 1 of this algorithm.
+8.  Return to Step 1 of this algorithm.
 
 When the user agent finishes parsing the set-cookie-string, the user agent is
 said to "receive a cookie" from the request-uri with name cookie-name,
@@ -1749,20 +1755,25 @@ Practical user agent implementations have limits on the number and size of
 cookies that they can store. General-use user agents SHOULD provide each of the
 following minimum capabilities:
 
-*   At least 4096 bytes per cookie (as measured by the sum of the length of the
-    cookie's name, value, and attributes).
-
 *   At least 50 cookies per domain.
 
 *   At least 3000 cookies total.
+
+User agents MAY limit the maximum number of cookies they store, and may evict
+any cookie at any time (whether at the request of the user or due to
+implementation limitations).
+
+Note that a limit on the maximum number of cookies also limits the total size of
+the stored cookies, due to the length limits which MUST be enforced in
+{{set-cookie}}.
 
 Servers SHOULD use as few and as small cookies as possible to avoid reaching
 these implementation limits and to minimize network bandwidth due to the
 Cookie header field being included in every request.
 
 Servers SHOULD gracefully degrade if the user agent fails to return one or more
-cookies in the Cookie header field because the user agent might evict any cookie at
-any time on orders from the user.
+cookies in the Cookie header field because the user agent might evict any cookie
+at any time.
 
 ## Application Programming Interfaces
 
