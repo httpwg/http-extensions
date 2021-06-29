@@ -186,7 +186,7 @@ The details of this kind of profiling are the purview of the application and out
 
 # HTTP Message Signature Covered Content {#covered-content}
 
-In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for data items covered by an HTTP Message Signature as well as the means for combining these canonicalized values into a signature input string.
+In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for data items covered by an HTTP Message Signature as well as the means for combining these canonicalized values into a signature input string. The values for these items MUST be accessible to both the sender and the receiver of the message, which means these are usually are derived from aspects of the HTTP message or signature itself.
 
 Some content within HTTP messages can undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.
 
@@ -275,74 +275,35 @@ The following table shows example canonicalized values for different content ide
 
 ## Specialty Content Fields {#specialty-content}
 
-Content not found in an HTTP header can be included in the signature base string by defining a content identifier and the canonicalization method for its content.
+Content not found in an HTTP header can be included in the signature base string by defining a content identifier and the canonicalization method for its content. 
 
 To differentiate specialty content identifiers from HTTP headers, specialty content identifiers MUST start with the "at" `@` character. This specification defines the following specialty content identifiers:
-
-@request-target
-: The target request endpoint. ({{content-request-target}})
 
 @signature-params
 : The signature metadata parameters for this signature. ({{signature-params}})
 
+@method
+: The method used for a request. ({{content-request-method}})
+
+@authority
+: The authority for a request. ({{content-request-authority}})
+
+@scheme
+: The scheme of the requested URI. ({{content-request-scheme}})
+
+@request-origin
+: The origin-form of the request target. ({{content-request-origin}})
+
+@path
+: The absolute path portion of the request target. ({{content-request-path}})
+
+@query-param
+: The parsed query parameters of the request target. ({{content-request-query}})
+
+@status-code
+: The status code for a response. ({{content-status-code}}).
+
 Additional specialty content identifiers MAY be defined and registered in the HTTP Signatures Specialty Content Identifier Registry. ({{content-registry}})
-
-### Request Target {#content-request-target}
-
-The request target endpoint, consisting of the request method and the path and query of the effective request URI, is identified by the `@request-target` identifier.
-
-Its value is canonicalized as follows:
-
-1. Take the lowercased HTTP method of the message.
-2. Append a space " ".
-3. Append the path and query of the request target of the message, formatted according to the rules defined for the :path pseudo-header in {{!HTTP2=RFC7540}}, Section 8.1.2.3.  The resulting string is the canonicalized value.
-
-#### Canonicalization Examples
-
-The following table contains non-normative example HTTP messages and their canonicalized `@request-target` values.
-
-<table>
-    <name>Non-normative examples of <tt>@request-target</tt> canonicalization.</name>
-    <thead>
-        <tr><th>HTTP Message</th><th>@request-target</th></tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><sourcecode type="http-message">
-POST /?param=value HTTP/1.1
-Host: www.example.com</sourcecode></td>
-            <td><tt>post /?param=value</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-POST /a/b HTTP/1.1
-Host: www.example.com</sourcecode></td>
-            <td><tt>post /a/b</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-GET http://www.example.com/a/ HTTP/1.1</sourcecode></td>
-            <td><tt>get /a/</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-GET http://www.example.com HTTP/1.1</sourcecode></td>
-            <td><tt>get /</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-CONNECT server.example.com:80 HTTP/1.1
-Host: server.example.com</sourcecode></td>
-            <td><tt>connect /</tt></td>
-        </tr>
-        <tr>
-            <td><sourcecode type="http-message">
-OPTIONS * HTTP/1.1
-Host: server.example.com</sourcecode></td>
-            <td><tt>options *</tt></td>
-        </tr>
-    </tbody>
-</table>
 
 ### Signature Parameters {#signature-params}
 
@@ -382,7 +343,153 @@ This example shows a canonicalized value for the parameters of a given signature
   created=1618884475;expires=1618884775
 ~~~
 
-Note that an HTTP message could contain multiple signatures, but only the signature parameters used for the current signature are included in this field.
+Note that an HTTP message could contain multiple signatures, but only the signature parameters used for the current signature are included in this entry.
+
+### Method {#content-request-method}
+
+The `@method` identifier refers to the HTTP method of a request message. The value of is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{!SEMANTICS=RFC7231}}, and conventionally standardized method names are uppercase US-ASCII.
+
+For example, the following request message:
+
+~~~
+POST /path?param=value HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@method` value:
+
+~~~
+"@method": POST
+~~~
+
+### Authority {#content-request-authority}
+
+The `@authority` identifier refers to the authority component of the target of the HTTP request message. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
+
+For example, the following request message:
+
+~~~
+POST /path?param=value HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@authority` value:
+
+~~~
+"@authority": www.example.com
+~~~
+
+### Scheme {#content-request-scheme}
+
+The `@scheme` identifier refers to the scheme of the target URL of the HTTP request message. The value is the scheme as a string.
+
+For example, the following request message requested over plain HTTP:
+
+~~~
+POST /path?param=value HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@scheme` value:
+
+~~~
+"@scheme": http
+~~~
+
+### Request Origin {#content-request-origin}
+
+The `@request-origin` identifier refers to the full origin component of the HTTP request message. The value is combination of the absolute path and query components of the request URL.
+
+For example, the following request message:
+
+~~~
+POST /path?param=value HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@request-origin` value:
+
+~~~
+"@request-origin": /path?param=value
+~~~
+
+The following OPTIONS request message:
+
+~~~
+OPTIONS * HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@request-origin` value:
+
+~~~
+"@request-origin": *
+~~~
+
+### Path {#content-request-path}
+
+The `@path` identifier refers to the target path of the HTTP request message. The value is the absolute path of the request target, with no query parameters and no trailing `?` character.
+
+For example, the following request message:
+
+~~~
+POST /path?param=value HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@path` value:
+
+~~~
+"@path": /path
+~~~
+
+### Query Components {#content-request-query}
+
+The `@query` identifier refers to the query parameters of the HTTP request message. When the identifier is used with no parameters, the value is the entire normalized query string, not including the leading `?` character.
+
+For example, the following request message:
+
+~~~
+POST /path?param=value&foo=bar&baz=batman HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@query` value:
+
+~~~
+"@query": param=value&foo=bar&baz=batman
+~~~
+
+The identifier supports an OPTIONAL `key` parameter containing the name of a single query parameter. When this parameter is present, the value is the normalized key-value pair of the named query parameter, not including any leading `?` characters or separating `&` characters.
+
+~~~
+POST /path?param=value&foo=bar&baz=batman HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@query` value:
+
+~~~
+"@query";key="baz": baz=batman
+"@query";key="param": param=value
+~~~
+
+### Status Code {#content-status-code}
+
+The `@status-code` identifier refers to the HTTP status code of a response message. The value is the serialized integer of the HTTP response code, with no descriptive text.
+
+For example, the following response message:
+
+~~~
+HTTP/1.1 200 OK
+Date: Fri, 26 Mar 2010 00:05:00 GMT
+~~~
+
+Would result in the following `@status-code` value:
+
+~~~
+"@status-code": 200
+~~~
 
 ## Creating the Signature Input String {#create-sig-input}
 
@@ -1209,6 +1316,7 @@ Jeffrey Yasskin.
 
 - draft-ietf-httpbis-message-signatures
   - -06
+     * Define new specialty content identifier, remove request-target identifiers.
 
   - -05
      * Remove list prefixes.
