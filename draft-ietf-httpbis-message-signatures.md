@@ -954,10 +954,16 @@ This document defines a method for canonicalizing HTTP message content, includin
 
 The table below contains the initial contents of the HTTP Signature Specialty Content Identifiers Registry.
 
-|Name|Status|Reference(s)|
+|Name|Status|Reference|
 |--- |--- |--- |
-|`@request-target`|Active   | {{content-request-target}} of this document|
 |`@signature-params`|Active   | {{signature-params}} of this document|
+|`@method`| Active | {{content-request-method}} of this document|
+|`@authority`| Active | {{content-request-authority}} of this document|
+|`@scheme`| Active | {{content-request-scheme}} of this document|
+|`@request-origin`| Active | {{content-request-origin}} of this document|
+|`@path`| Active | {{content-request-path}} of this document|
+|`@query-param`| Active | {{content-request-query}} of this document|
+|`@status-code`| Active | {{content-status-code}} of this document|
 {: title="Initial contents of the HTTP Signature Specialty Content Identifiers Registry." }
 
 # Security Considerations {#security}
