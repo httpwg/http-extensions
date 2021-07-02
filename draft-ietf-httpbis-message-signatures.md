@@ -177,10 +177,12 @@ This document contains non-normative examples of partial and complete HTTP messa
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
-- The set of [content identifiers](#covered-content) that are expected and required. For example, an authorization protocol could mandate that the `Authorization` header be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting HTTP message bodies could require the `Digest` header to be present and covered.
+- The set of [content identifiers](#covered-content) that are expected and required. For example, an authorization protocol could mandate that the `Authorization` header be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting HTTP message bodies could require the `Digest` header to be present and covered. 
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means.
 - A means of determining the signature algorithm used to verify the signature content is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
+
+An application using signatures also has to ensure that the verifier will have access to all required information to re-create the signature input string. For example, a server behind a reverse proxy would need to know the original request URI to make use of identifiers like `@request-target`. Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions, including any portions of the request that were signed by the server.
 
 The details of this kind of profiling are the purview of the application and outside the scope of this specification.
 
@@ -285,14 +287,17 @@ To differentiate specialty content identifiers from HTTP headers, specialty cont
 @method
 : The method used for a request. ({{content-request-method}})
 
+@target-uri
+: The target URI for a request. ({{content-target-uri}})
+
 @authority
 : The authority for a request. ({{content-request-authority}})
 
 @scheme
 : The scheme of the requested URI. ({{content-request-scheme}})
 
-@request-origin
-: The origin-form of the request target. ({{content-request-origin}})
+@request-target
+: The request target. ({{content-request-target}})
 
 @path
 : The absolute path portion of the request target. ({{content-request-path}})
@@ -362,6 +367,27 @@ Would result in the following `@method` value:
 "@method": POST
 ~~~
 
+If used in a response message, the `@method` identifier refers to the associated value of the request that triggered the response message being signed.
+
+### Target URI {#content-target-uri}
+
+The `@target-uri` identifier refers to the target URI of a request message. The value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target.
+
+For example, the following message sent over HTTPS:
+
+~~~
+POST /path?param=value HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@target-uri` value:
+
+~~~
+"@target-uri": https://www.example.com/path?param=value
+~~~
+
+If used in a response message, the `@target-uri` identifier refers to the associated value of the request that triggered the response message being signed.
+
 ### Authority {#content-request-authority}
 
 The `@authority` identifier refers to the authority component of the target of the HTTP request message. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
@@ -378,6 +404,8 @@ Would result in the following `@authority` value:
 ~~~
 "@authority": www.example.com
 ~~~
+
+If used in a response message, the `@authority` identifier refers to the associated value of the request that triggered the response message being signed.
 
 ### Scheme {#content-request-scheme}
 
@@ -396,39 +424,68 @@ Would result in the following `@scheme` value:
 "@scheme": http
 ~~~
 
-### Request Origin {#content-request-origin}
+If used in a response message, the `@scheme` identifier refers to the associated value of the request that triggered the response message being signed.
 
-The `@request-origin` identifier refers to the full origin component of the HTTP request message. The value is combination of the absolute path and query components of the request URL.
+### Request Target {#content-request-target}
 
-For example, the following request message:
+The `@request-target` identifier refers to the full request target of the HTTP request message. The value of the request target can take different forms, depending on the type of request.
+
+The origin form value is combination of the absolute path and query components of the request URL. For example, the following request message:
 
 ~~~
 POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@request-origin` value:
+Would result in the following `@request-target` value:
 
 ~~~
-"@request-origin": /path?param=value
+"@request-target": /path?param=value
 ~~~
 
-The following OPTIONS request message:
+The following request to an HTTP proxy with the absolute-form value, containing the fully qualified target URI:
+
+~~~
+GET https://www.example.com/path?param=value HTTP/1.1
+~~~
+
+Would result in the following `@request-target` value:
+
+~~~
+"@request-target": https://www.example.com/path?param=value
+~~~
+
+The following CONNECT request with an authority-form value, containing the host and port of the target:
+
+~~~
+CONNECT www.example.com:80 HTTP/1.1
+Host: www.example.com
+~~~
+
+Would result in the following `@request-target` value:
+
+~~~
+"@request-target": www.example.com:80
+~~~
+
+The following OPTIONS request message with the asterisk-form value, containing a single asterisk `*` character:
 
 ~~~
 OPTIONS * HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@request-origin` value:
+Would result in the following `@request-target` value:
 
 ~~~
-"@request-origin": *
+"@request-target": *
 ~~~
+
+If used in a response message, the `@request-target` identifier refers to the associated value of the request that triggered the response message being signed.
 
 ### Path {#content-request-path}
 
-The `@path` identifier refers to the target path of the HTTP request message. The value is the absolute path of the request target, with no query parameters and no trailing `?` character.
+The `@path` identifier refers to the target path of the HTTP request message. The value is the absolute path of the request target, with no query component and no trailing `?` character.
 
 For example, the following request message:
 
@@ -445,7 +502,7 @@ Would result in the following `@path` value:
 
 ### Query Components {#content-request-query}
 
-The `@query` identifier refers to the query parameters of the HTTP request message. When the identifier is used with no parameters, the value is the entire normalized query string, not including the leading `?` character.
+The `@query` identifier refers to the query component of the HTTP request message. When the identifier is used with no parameters, the value is the entire normalized query string, not including the leading `?` character.
 
 For example, the following request message:
 
@@ -460,7 +517,7 @@ Would result in the following `@query` value:
 "@query": param=value&foo=bar&baz=batman
 ~~~
 
-The identifier supports an OPTIONAL `key` parameter containing the name of a single query parameter. When this parameter is present, the value is the normalized key-value pair of the named query parameter, not including any leading `?` characters or separating `&` characters.
+If the request uses HTML form parameters in the query string, this identifier allows addressing of individual query parameters by using an OPTIONAL `key` parameter containing the name of a single query parameter. When this parameter is present, the value is the normalized key-value pair of the named query parameter, separated by an equals sign, not including any leading `?` characters or separating `&` characters.
 
 ~~~
 POST /path?param=value&foo=bar&baz=batman HTTP/1.1
@@ -473,6 +530,8 @@ Would result in the following `@query` value:
 "@query";key="baz": baz=batman
 "@query";key="param": param=value
 ~~~
+
+If used in a response message, the `@query` identifier refers to the associated value of the request that triggered the response message being signed.
 
 ### Status Code {#content-status-code}
 
@@ -490,6 +549,8 @@ Would result in the following `@status-code` value:
 ~~~
 "@status-code": 200
 ~~~
+
+This identifier MUST NOT be used in a request message.
 
 ## Creating the Signature Input String {#create-sig-input}
 
@@ -960,7 +1021,8 @@ The table below contains the initial contents of the HTTP Signature Specialty Co
 |`@method`| Active | {{content-request-method}} of this document|
 |`@authority`| Active | {{content-request-authority}} of this document|
 |`@scheme`| Active | {{content-request-scheme}} of this document|
-|`@request-origin`| Active | {{content-request-origin}} of this document|
+|`@target-uri`| Active | {{content-target-uri}} of this document|
+|`@request-target`| Active | {{content-request-target}} of this document|
 |`@path`| Active | {{content-request-path}} of this document|
 |`@query-param`| Active | {{content-request-query}} of this document|
 |`@status-code`| Active | {{content-status-code}} of this document|
@@ -1322,7 +1384,7 @@ Jeffrey Yasskin.
 
 - draft-ietf-httpbis-message-signatures
   - -06
-     * Define new specialty content identifier, remove request-target identifiers.
+     * Define new specialty content identifiers, re-defined request-target identifier.
 
   - -05
      * Remove list prefixes.
