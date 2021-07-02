@@ -1016,7 +1016,7 @@ This document defines a method for canonicalizing HTTP message content, includin
 The table below contains the initial contents of the HTTP Signature Specialty Content Identifiers Registry.
 
 |Name|Status|Target|Reference|
-|--- |--- |--- |
+|--- |--- |--- |--- |
 |`@signature-params`|Active   | Request, Response | {{signature-params}} of this document|
 |`@method`| Active | Request, Related-Response | {{content-request-method}} of this document|
 |`@authority`| Active | Request, Related-Response | {{content-request-authority}} of this document|
