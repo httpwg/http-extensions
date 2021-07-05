@@ -420,7 +420,7 @@ Registrations MUST include the following fields:
      The registry can be used to reserve token values
  - Status: the status of the algorithm.
      Use "standard" for standardized algorithms without known problems;
-     "experimental", "obsoleted", or some other appropriate value
+     "experimental" or some other appropriate value
      - e.g. according to the type and status of the primary document
      in which the algorithm is defined;
      "deprecated" when the algorithm is insecure or otherwise undesirable;
