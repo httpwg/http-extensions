@@ -251,6 +251,12 @@ See the registry at <https://iana.org/assignments/http-cache-status> for details
 
 Upon publication, please create the HTTP Cache-Status Parameters registry at <https://iana.org/assignments/http-cache-status> and populate it with the types defined in {{field}}; see {{register}} for its associated procedures.
 
+Also, please create the following entry in the Hypertext Transfer Protocol (HTTP) Field Name Registry:
+
+* Field name: Cache-Status
+* Status: permanent
+* Specification document: \[this document]
+* Comments:
 
 # Security Considerations
 
