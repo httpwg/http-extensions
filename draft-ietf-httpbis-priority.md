@@ -209,8 +209,7 @@ this scheme's priority signal. Handling of omitted signals is described in
 
 The priority scheme defined by this document considers only the prioritization
 of HTTP messages and tunnels, see {{client-scheduling}}, {{server-scheduling}},
-and {TODO: xref to CONNECT, depends on
-https://github.com/httpwg/http-extensions/pull/1544}
+and {{connect-scheduling}}.
 
 Where HTTP extensions change stream behavior or define new data carriage
 mechanisms, they MAY also define how this priority scheme can be applied.
@@ -652,13 +651,6 @@ suboptimal. How ever a server decides to schedule a pushed response, it can
 signal the intended priority to the client by including the Priority field in
 a PUSH_PROMISE or HEADERS frame.
 
-# Scheduling and the CONNECT Method
-
-When a request stream carries the CONNECT method, the scheduling guidance in
-this document applies to the DATA frames that carry either HTTP content or
-payload related to the established TCP connection.
-
-
 ## Intermediaries with Multiple Backend Connections
 
 An intermediary serving an HTTP connection might split requests over multiple
@@ -674,6 +666,15 @@ over time.
 
 Similarly, servers SHOULD allocate some amount of bandwidths to streams acting
 as tunnels.
+
+
+# Scheduling and the CONNECT Method {#connect-scheduling}
+
+When a request stream carries the CONNECT method, the scheduling guidance in
+this document applies to the frames on the stream. A client that issues multiple
+CONNECT requests can set the incremental parameter to `true`, servers that
+implement the recommendation in {{server-scheduling}} will schedule these
+fairly.
 
 
 # Retransmission Scheduling
