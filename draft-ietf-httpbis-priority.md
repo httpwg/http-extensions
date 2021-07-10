@@ -205,6 +205,17 @@ Where both endpoints disable HTTP/2 priorities, the client is expected to send
 this scheme's priority signal. Handling of omitted signals is described in
 {{parameters}}.
 
+# Applicability of the Extensible Priority Scheme
+
+The priority scheme defined by this document considers only the prioritization
+of HTTP messages and tunnels, see {{client-scheduling}}, {{server-scheduling}},
+and {TODO: xref to CONNECT, depends on
+https://github.com/httpwg/http-extensions/pull/1544}
+
+Where HTTP extensions change stream behavior or define new data carriage
+mechanisms, they MAY also define how this priority scheme can be applied.
+
+
 # Priority Parameters {#parameters}
 
 The priority information is a sequence of key-value pairs, providing room for
