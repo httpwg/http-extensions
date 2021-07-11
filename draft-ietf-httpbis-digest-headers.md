@@ -428,7 +428,6 @@ Registrations MUST include the following fields:
  - Description: the description of the digest-algorithm and its encoding
  - Reference: a set of pointers to the primary documents defining the digest-algorithm
 
-Values to be added to this registry require IETF Review (see Section 4.8 of {{!RFC8126}}).
 The associated encoding for new digest-algorithms MUST either
 be represented as a quoted string
 or MUST NOT include ";" or "," in the character sets used for the encoding.
