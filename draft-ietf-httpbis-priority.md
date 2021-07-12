@@ -917,8 +917,15 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 
 # Change Log
 
-## Since draft-ietf-httpbis-priority-01
-* Describe considerations for server push prioritisation (#1056, #1345)
+## Since draft-ietf-httpbis-priority-03
+* Add statement about what this scheme applies to. Clarify extensions can
+  use it but must define how themselves (#1550, #1559)
+* Describe scheduling considerations for the CONNECT method (#1495, #1544)
+* Describe scheduling considerations for retransmitted data (#1429, #1504)
+* Suggest intermediaries might avoid strict prioritization (#1562)
+
+## Since draft-ietf-httpbis-priority-02
+* Describe considerations for server push prioritization (#1056, #1345)
 * Define HTTP/2 PRIORITY_UPDATE ID limits in HTTP/2 terms (#1261, #1344)
 * Add a Parameters registry (#1371)
 
