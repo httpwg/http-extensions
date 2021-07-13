@@ -138,7 +138,7 @@ The following parameter values are defined to explain why the request went forwa
 * stale - The cache was able to select a response for the request, but it was stale
 * partial - The cache was able to select a partial response for the request, but it did not contain all of the requested ranges (or the request was for the complete response)
 
-The most specific reason that the cache is aware of SHOULD be used. See also {{I-D.ietf-httpbis-semantics, Section 4}}.
+The most specific reason that the cache is aware of SHOULD be used, to the extent that it is possible to implement. See also {{I-D.ietf-httpbis-semantics, Section 4}}.
 
 ## The fwd-status parameter
 
