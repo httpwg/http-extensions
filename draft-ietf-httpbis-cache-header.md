@@ -75,7 +75,7 @@ This specification defines a new HTTP response header field, "Cache-Status" for 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document uses ABNF as defined in {{!RFC5234}}, with rules prefixed with "sf-" as defined in {{!RFC8941}}. It uses terminology from {{!I-D.ietf-httpbis-semantics}} and {{!I-D.ietf-httpbis-cache}}.
+This document uses ABNF as defined in {{!RFC5234}}, with rules prefixed with "sf-" and the "key" rule as defined in {{!RFC8941}}. It uses terminology from {{!I-D.ietf-httpbis-semantics}} and {{!I-D.ietf-httpbis-cache}}.
 
 
 # The Cache-Status HTTP Response Header Field {#field}
@@ -243,7 +243,7 @@ The Expert(s) should consider the following factors when evaluating requests:
 
 Registration requests should use the following template:
 
-* Name: \[a name for the Cache-Status Parameter that matches key\]
+* Name: \[a name for the Cache-Status Parameter that matches the 'key' ABNF rule\]
 * Description: \[a description of the parameter semantics and value\]
 * Reference: \[to a specification defining this parameter\]
 
