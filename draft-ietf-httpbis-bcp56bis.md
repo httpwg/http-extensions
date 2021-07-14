@@ -108,7 +108,7 @@ Different applications have different goals when using HTTP. The requirements in
 * uses the transport port 80 or 443, or
 * uses the URI scheme "http" or "https", or
 * uses an ALPN protocol ID {{!RFC7301}} that generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
-* updates or modifies the IANA registries defined for HTTP.
+* makes registrations in or overall modifications to the IANA registries defined for HTTP.
 
 Additionally, when a specification is using HTTP, all of the requirements of the HTTP protocol suite are in force (in particular, {{!I-D.ietf-httpbis-semantics}}, but also other specifications as appropriate).
 
