@@ -634,7 +634,7 @@ This document has no requirements for IANA.
 
 {{state}} discusses the impact of using stateful mechanisms in the protocol as ambient authority, and suggests a mitigation.
 
-{{scheme}} requires support for 'https' URLs, and discourages the use of 'http' URLs, to provide authentication, integrity and confidentiality, as well as mitigate pervasive monitoring attacks.
+{{scheme}} recommends support for 'https' URLs, and discourages the use of 'http' URLs, to provide authentication, integrity and confidentiality, as well as mitigate pervasive monitoring attacks.
 
 {{browser}} highlights the implications of Web browsers' capabilities on applications that use HTTP.
 
