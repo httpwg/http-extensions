@@ -93,6 +93,8 @@ This document contains best current practices for the specification of such appl
 
 It is written primarily to guide IETF efforts to define application protocols using HTTP for deployment on the Internet, but might be applicable in other situations. Note that the requirements herein do not necessarily apply to the development of generic HTTP extensions.
 
+This document obsoletes {{?RFC3205}}, to reflect experience and developments regarding HTTP in the intervening time.
+
 
 ## Notational Conventions
 
