@@ -120,7 +120,7 @@ Note that this document is intended to apply to applications, not generic extens
 An application can rely upon HTTP without meeting the criteria for using it defined above.
 For example, an application might wish to avoid re-specifying parts of the message format, but change other aspects of the protocol's operation; or, it might want to use application-specific methods.
 
-Doing so brings more freedom to modify protocol operations, but loses at least a portion of the benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes, and the benefit of mindshare will be lost.
+Doing so brings more freedom to modify protocol operations, but loses at least a portion of the benefits outlined in {{overview}}, as most HTTP implementations won't be easily adaptable to these changes, and the benefit of mindshare will be lost.
 
 Such specifications MUST NOT use HTTP's URI schemes, transport ports, ALPN protocol IDs or IANA registries; rather, they are encouraged to establish their own.
 
