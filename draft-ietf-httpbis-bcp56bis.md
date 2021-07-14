@@ -367,7 +367,7 @@ However, OPTIONS does have significant limitations:
 
 Instead of OPTIONS, one of these alternative approaches might be more appropriate:
 
-* For server-wide metadata, create a well-known URI {{?RFC8615}}, or using an already existing one if it's appropriate (e.g., HostMeta {{?RFC6415}}).
+* For server-wide metadata, create a well-known URI {{?RFC8615}}, or use an already existing one if appropriate (e.g., HostMeta {{?RFC6415}}).
 * For metadata about a specific resource, create a separate resource and link to it using a Link response header field or a link serialised into the response's content. See {{?RFC8288}}. Note that the Link header field is available on HEAD responses, which is useful if the client wants to discover a resource's capabilities before they interact with it.
 
 
