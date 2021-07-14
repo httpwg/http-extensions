@@ -444,7 +444,7 @@ See {{state}} for considerations regarding header fields that carry application 
 
 ## Defining Message Content {#content}
 
-Common syntactic conventions for message contents include JSON {{?RFC8259}}, XML {{?XML=W3C.REC-xml-20081126}}, and CBOR {{?RFC7049}}. Best practices for their use are out of scope for this document.
+Common syntactic conventions for message contents include JSON {{?RFC8259}}, XML {{?XML=W3C.REC-xml-20081126}}, and CBOR {{?RFC8949}}. Best practices for their use are out of scope for this document.
 
 Applications should register distinct media types for each format they define; this makes it possible to identify them unambiguously and negotiate for their use. See {{!RFC6838}} for more information.
 
