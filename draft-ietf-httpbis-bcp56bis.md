@@ -118,7 +118,7 @@ Note that this document is intended to apply to applications, not generic extens
 ## Non-HTTP Protocols
 
 An application can rely upon HTTP without meeting the criteria for using it defined above.
-For example, an application might wish to avoid re-specifying parts of the message format, but change other aspects of the protocol's operation; or, it might want to use a different set of methods.
+For example, an application might wish to avoid re-specifying parts of the message format, but change other aspects of the protocol's operation; or, it might want to use application-specific methods.
 
 Doing so brings more freedom to modify protocol operations, but loses at least a portion of the benefits outlined above, as most HTTP implementations won't be easily adaptable to these changes, and the benefit of mindshare will be lost.
 
