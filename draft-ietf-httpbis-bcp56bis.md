@@ -50,6 +50,8 @@ informative:
 
 Applications often use HTTP as a substrate to create HTTP-based APIs. This document specifies best practices for writing specifications that use HTTP to define new application protocols. It is written primarily to guide IETF efforts to define application protocols using HTTP for deployment on the Internet, but might be applicable in other situations.
 
+This document obsoletes {{?RFC3205}}.
+
 
 --- note_Note_to_Readers_
 
