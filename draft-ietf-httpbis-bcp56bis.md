@@ -268,7 +268,7 @@ Applications using HTTP should not statically require HTTP features that are usu
 
 In HTTP, the resources that clients interact with are identified with URLs {{!RFC3986}}. As {{!RFC8820}} explains, parts of the URL are designed to be under the control of the owner (also known as the "authority") of that server, to give them the flexibility in deployment.
 
-This means that in most cases, specifications for applications that use HTTP won't contain its URLs; while it is common practice for a specification of a single-deployment API to specify the path prefix "/app/v1" (for example), doing so in an IETF specification is inappropriate.
+This means that in most cases, specifications for applications that use HTTP won't contain fixed application URLs or paths; while it is common practice for a specification of a single-deployment API to specify the path prefix "/app/v1" (for example), doing so in an IETF specification is inappropriate.
 
 Therefore, the specification writer needs some mechanism to allow clients to discovery an application's URLs. Additionally, they need to specify what URL scheme(s) the application should be used with, and whether to use a dedicated port, or reuse HTTP's port(s).
 
