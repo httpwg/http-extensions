@@ -49,6 +49,7 @@ author:
 
 normative:
     RFC2104:
+    RFC3986:
     FIPS186-4:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
@@ -57,6 +58,12 @@ normative:
         target: https://pubs.opengroup.org/onlinepubs/9699919799/
         title: The Open Group Base Specifications Issue 7, 2018 edition
         date: 2018
+    SEMANTICS: I-D.ietf-httpbis-semantics
+    MESSAGING: I-D.ietf-httpbis-messaging
+    HTMLURL:
+        target: https://url.spec.whatwg.org/
+        title: URL (Living Standard)
+        date: 2021
 
 informative:
     RFC6234:
@@ -139,9 +146,9 @@ Additionally, all changes to content not covered by the signature are considered
 The terms "HTTP message", "HTTP request", "HTTP response",
 `absolute-form`, `absolute-path`, "effective request URI",
 "gateway", "header field", "intermediary", `request-target`,
-"sender", and "recipient" are used as defined in {{!MESSAGING=RFC7230}}.
+"sender", and "recipient" are used as defined in {{MESSAGING}}.
 
-The term "method" is to be interpreted as defined in Section 4 of {{!SEMANTICS=RFC7231}}.
+The term "method" is to be interpreted as defined in Section 4 of {{SEMANTICS}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs.  Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string.  The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
@@ -177,7 +184,7 @@ This document contains non-normative examples of partial and complete HTTP messa
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
-- The set of [content identifiers](#covered-content) that are expected and required. For example, an authorization protocol could mandate that the `Authorization` header be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting HTTP message bodies could require the `Digest` header to be present and covered. 
+- The set of [content identifiers](#covered-content) that are expected and required. For example, an authorization protocol could mandate that the `Authorization` header be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting HTTP message bodies could require the `Digest` header to be present and covered.
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means.
 - A means of determining the signature algorithm used to verify the signature content is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
@@ -193,7 +200,7 @@ In order to allow signers and verifiers to establish which content is covered by
 Some content within HTTP messages can undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.
 
 Content identifiers are defined using production grammar defined by [RFC8941, Section 4](#RFC8941).
-The content identifier is an `sf-string` value. The content identifier
+The content identifier itself is an `sf-string` value. The content identifier
 type MAY define parameters which are included using the `parameters` rule.
 
 ~~~ abnf
@@ -277,7 +284,7 @@ The following table shows example canonicalized values for different content ide
 
 ## Specialty Content Fields {#specialty-content}
 
-Content not found in an HTTP header can be included in the signature base string by defining a content identifier and the canonicalization method for its content. 
+Content not found in an HTTP header can be included in the signature base string by defining a content identifier and the canonicalization method for its content.
 
 To differentiate specialty content identifiers from HTTP headers, specialty content identifiers MUST start with the "at" `@` character. This specification defines the following specialty content identifiers:
 
@@ -288,41 +295,44 @@ To differentiate specialty content identifiers from HTTP headers, specialty cont
 : The method used for a request. ({{content-request-method}})
 
 @target-uri
-: The target URI for a request. ({{content-target-uri}})
+: The full target URI for a request. ({{content-target-uri}})
 
 @authority
-: The authority for a request. ({{content-request-authority}})
+: The authority of the target URI for a request. ({{content-request-authority}})
 
 @scheme
-: The scheme of the requested URI. ({{content-request-scheme}})
+: The scheme of the target URI for a request. ({{content-request-scheme}})
 
 @request-target
 : The request target. ({{content-request-target}})
 
 @path
-: The absolute path portion of the request target. ({{content-request-path}})
+: The absolute path portion of the target URI for a request. ({{content-request-path}})
 
-@query-param
-: The parsed query parameters of the request target. ({{content-request-query}})
+@query
+: The query portion of the target URI for a request. ({{content-request-query}})
 
-@status-code
+@query-params
+: The parsed query parameters of the target URI for a request. ({{content-request-query-params}})
+
+@status
 : The status code for a response. ({{content-status-code}}).
 
 Additional specialty content identifiers MAY be defined and registered in the HTTP Signatures Specialty Content Identifier Registry. ({{content-registry}})
 
 ### Signature Parameters {#signature-params}
 
-HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification.
+HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and/or verification, such as the list of covered content, a timestamp, identifiers for verification key material, and other utilities.
 
 The signature parameters specialty content is identified by the `@signature-params` identifier.
 
 Its canonicalized value is the serialization of the signature parameters for this signature, including the covered content list with all associated parameters.
 
-* `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
-* `keyid`: The identifier for the key material as an `sf-string` value.
 * `created`: Creation time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
 * `expires`: Expiration time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
 * `nonce`: A random unique value generated for this signature.
+* `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
+* `keyid`: The identifier for the key material as an `sf-string` value.
 
 Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents).
 
@@ -352,7 +362,8 @@ Note that an HTTP message could contain multiple signatures, but only the signat
 
 ### Method {#content-request-method}
 
-The `@method` identifier refers to the HTTP method of a request message. The value of is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{!SEMANTICS=RFC7231}}, and conventionally standardized method names are uppercase US-ASCII.
+The `@method` identifier refers to the HTTP method of a request message. The value of is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS}} Section 9.1, and conventionally standardized method names are uppercase US-ASCII.
+If used, the `@method` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
 
@@ -371,7 +382,8 @@ If used in a response message, the `@method` identifier refers to the associated
 
 ### Target URI {#content-target-uri}
 
-The `@target-uri` identifier refers to the target URI of a request message. The value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target.
+The `@target-uri` identifier refers to the target URI of a request message. The value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target as described in {{SEMANTICS}} Section 7.1.
+If used, the `@target-uri` identifier MUST occur only once in the signature input.
 
 For example, the following message sent over HTTPS:
 
@@ -390,7 +402,8 @@ If used in a response message, the `@target-uri` identifier refers to the associ
 
 ### Authority {#content-request-authority}
 
-The `@authority` identifier refers to the authority component of the target of the HTTP request message. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
+The `@authority` identifier refers to the authority component of the target URI of the HTTP request message, as defined in {{SEMANTICS}} Section 7.2. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string. The Authority value MUST be normalized according to the rules in {{SEMANTICS}} Section 7.2.
+If used, the `@authority` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
 
@@ -409,7 +422,7 @@ If used in a response message, the `@authority` identifier refers to the associa
 
 ### Scheme {#content-request-scheme}
 
-The `@scheme` identifier refers to the scheme of the target URL of the HTTP request message. The value is the scheme as a string.
+The `@scheme` identifier refers to the scheme of the target URL of the HTTP request message. The value is the scheme as a string as defined in {{SEMANTICS}} Section 4.2.
 
 For example, the following request message requested over plain HTTP:
 
@@ -428,7 +441,11 @@ If used in a response message, the `@scheme` identifier refers to the associated
 
 ### Request Target {#content-request-target}
 
-The `@request-target` identifier refers to the full request target of the HTTP request message. The value of the request target can take different forms, depending on the type of request.
+The `@request-target` identifier refers to the full request target of the HTTP request message,
+as defined in {{SEMANTICS}} Section 7.1. The value of the request target can take different forms,
+depending on the type of request. For HTTP 1.1, the value is equivalent to the request target
+portion of the request line.
+If used, the `@request-target` identifier MUST occur only once in the signature input.
 
 The origin form value is combination of the absolute path and query components of the request URL. For example, the following request message:
 
@@ -485,7 +502,8 @@ If used in a response message, the `@request-target` identifier refers to the as
 
 ### Path {#content-request-path}
 
-The `@path` identifier refers to the target path of the HTTP request message. The value is the absolute path of the request target, with no query component and no trailing `?` character.
+The `@path` identifier refers to the target path of the HTTP request message. The value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character.
+If used, the `@path` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
 
@@ -500,9 +518,10 @@ Would result in the following `@path` value:
 "@path": /path
 ~~~
 
-### Query Components {#content-request-query}
+### Query {#content-request-query}
 
-The `@query` identifier refers to the query component of the HTTP request message. When the identifier is used with no parameters, the value is the entire normalized query string, not including the leading `?` character.
+The `@query` identifier refers to the query component of the HTTP request message. The value is the entire normalized query string defined by {{RFC3986}}, not including the leading `?` character.
+If used, the `@query` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
 
@@ -517,25 +536,55 @@ Would result in the following `@query` value:
 "@query": param=value&foo=bar&baz=batman
 ~~~
 
-If the request uses HTML form parameters in the query string, this identifier allows addressing of individual query parameters by using an OPTIONAL `key` parameter containing the name of a single query parameter. When this parameter is present, the value is the normalized key-value pair of the named query parameter, separated by an equals sign, not including any leading `?` characters or separating `&` characters.
+The following request message:
 
 ~~~
-POST /path?param=value&foo=bar&baz=batman HTTP/1.1
+POST /path?queryString HTTP/1.1
 Host: www.example.com
 ~~~
 
 Would result in the following `@query` value:
 
 ~~~
-"@query";key="baz": baz=batman
-"@query";key="param": param=value
+"@query": queryString
 ~~~
 
-If used in a response message, the `@query` identifier refers to the associated value of the request that triggered the response message being signed.
+### Query Parameters {#content-request-query-params}
+
+If a request target URI uses HTML form parameters in the query string as defined in {{HTMLURL}} Section 5,
+the `@query-params` identifier allows addressing of individual query parameters. The query parameters MUST be parsed according to {{HTMLURL}} Section 5.1, resulting in a list of (`nameString`, `valueString`) tuples.
+The REQUIRED `name` parameter of each input identifier contains the `nameString` of a single query parameter.
+Several named query parameters MAY be included in a single signature input.
+Single named parameters MAY occur in any order in the signature input string.
+
+The value of a single named parameter is the the `valueString` of the named query parameter defined by {{HTMLURL}} Section 5.1, which is the value after URL decoding.
+Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
+Named query parameters with an empty `valueString` are included with an empty string as the covered content value.
+
+If a parameter name occurs multiple times in a request, all values of that name MUST be included
+in separate signature input lines in the order in which the parameters occur in the target URI.
+
+For example for the following request:
+
+~~~
+POST /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
+Host: www.example.com
+~~~
+
+Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` value:
+
+~~~
+"@query-params";name="baz": batman
+"@query-params";name="qux":
+"@query-params";name="param": value
+~~~
+
+If used in a response message, the `@query-params` identifier refers to the associated value of the request that triggered the response message being signed.
 
 ### Status Code {#content-status-code}
 
-The `@status-code` identifier refers to the HTTP status code of a response message. The value is the serialized integer of the HTTP response code, with no descriptive text.
+The `@status` identifier refers to the three-digit numeric HTTP status code of a response message as defined in {{SEMANTICS}} Section 15. The value is the serialized three-digit integer of the HTTP response code, with no descriptive text.
+If used, the `@status` identifier MUST occur only once in the signature input.
 
 For example, the following response message:
 
@@ -544,13 +593,13 @@ HTTP/1.1 200 OK
 Date: Fri, 26 Mar 2010 00:05:00 GMT
 ~~~
 
-Would result in the following `@status-code` value:
+Would result in the following `@status` value:
 
 ~~~
-"@status-code": 200
+"@status": 200
 ~~~
 
-This identifier MUST NOT be used in a request message.
+The `@status` identifier MUST NOT be used in a request message.
 
 ## Creating the Signature Input String {#create-sig-input}
 
@@ -1024,8 +1073,9 @@ The table below contains the initial contents of the HTTP Signature Specialty Co
 |`@target-uri`| Active | Request, Related-Response | {{content-target-uri}} of this document|
 |`@request-target`| Active | Request, Related-Response | {{content-request-target}} of this document|
 |`@path`| Active | Request, Related-Response | {{content-request-path}} of this document|
-|`@query-param`| Active | Request, Related-Response | {{content-request-query}} of this document|
-|`@status-code`| Active | Response | {{content-status-code}} of this document|
+|`@query`| Active | Request, Related-Response | {{content-request-query}} of this document|
+|`@query-params`| Active | Request, Related-Response | {{content-request-query-params}} of this document|
+|`@status`| Active | Response | {{content-status-code}} of this document|
 {: title="Initial contents of the HTTP Signature Specialty Content Identifiers Registry." }
 
 # Security Considerations {#security}
