@@ -402,7 +402,8 @@ If used in a response message, the `@target-uri` identifier refers to the associ
 
 ### Authority {#content-request-authority}
 
-The `@authority` identifier refers to the authority component of the target URI of the HTTP request message, as defined in {{SEMANTICS}} Section 7.2. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string. The Authority value MUST be normalized according to the rules in {{SEMANTICS}} Section 7.2.
+The `@authority` identifier refers to the authority component of the target URI of the HTTP request message, as defined in {{SEMANTICS}} Section 7.2. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
+The Authority value MUST be normalized according to the rules in {{SEMANTICS}} Section 4.2.3. Namely, the host name is normalized to lowercase and the default port is omitted.
 If used, the `@authority` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
@@ -423,6 +424,8 @@ If used in a response message, the `@authority` identifier refers to the associa
 ### Scheme {#content-request-scheme}
 
 The `@scheme` identifier refers to the scheme of the target URL of the HTTP request message. The value is the scheme as a string as defined in {{SEMANTICS}} Section 4.2.
+While the scheme itself is case-insensitive, it MUST be normalized to lowercase for
+inclusion in the signature input string.
 
 For example, the following request message requested over plain HTTP:
 
@@ -502,7 +505,7 @@ If used in a response message, the `@request-target` identifier refers to the as
 
 ### Path {#content-request-path}
 
-The `@path` identifier refers to the target path of the HTTP request message. The value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character.
+The `@path` identifier refers to the target path of the HTTP request message. The value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{SEMANTICS}} Section 4.2.3. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
 If used, the `@path` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
@@ -520,7 +523,7 @@ Would result in the following `@path` value:
 
 ### Query {#content-request-query}
 
-The `@query` identifier refers to the query component of the HTTP request message. The value is the entire normalized query string defined by {{RFC3986}}, not including the leading `?` character.
+The `@query` identifier refers to the query component of the HTTP request message. The value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{SEMANTICS}} Section 4.2.3. Namely, percent-encoded octets are decoded.
 If used, the `@query` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
@@ -533,7 +536,7 @@ Host: www.example.com
 Would result in the following `@query` value:
 
 ~~~
-"@query": param=value&foo=bar&baz=batman
+"@query": ?param=value&foo=bar&baz=batman
 ~~~
 
 The following request message:
@@ -546,7 +549,7 @@ Host: www.example.com
 Would result in the following `@query` value:
 
 ~~~
-"@query": queryString
+"@query": ?queryString
 ~~~
 
 ### Query Parameters {#content-request-query-params}
@@ -557,7 +560,7 @@ The REQUIRED `name` parameter of each input identifier contains the `nameString`
 Several named query parameters MAY be included in a single signature input.
 Single named parameters MAY occur in any order in the signature input string.
 
-The value of a single named parameter is the the `valueString` of the named query parameter defined by {{HTMLURL}} Section 5.1, which is the value after URL decoding.
+The value of a single named parameter is the the `valueString` of the named query parameter defined by {{HTMLURL}} Section 5.1, which is the value after percent-encoded octets are decoded.
 Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
 Named query parameters with an empty `valueString` are included with an empty string as the covered content value.
 
