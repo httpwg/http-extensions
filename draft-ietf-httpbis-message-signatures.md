@@ -318,6 +318,9 @@ To differentiate specialty content identifiers from HTTP headers, specialty cont
 @status
 : The status code for a response. ({{content-status-code}}).
 
+@request-response
+: A signature from a request message that resulted in this response message. ({{content-request-response}})
+
 Additional specialty content identifiers MAY be defined and registered in the HTTP Signatures Specialty Content Identifier Registry. ({{content-registry}})
 
 ### Signature Parameters {#signature-params}
@@ -611,6 +614,84 @@ Would result in the following `@status` value:
 ~~~
 
 The `@status` identifier MUST NOT be used in a request message.
+
+### Request-Response Signature Binding {#content-request-response}
+
+When a signed request message results in a signed response message, the `@request-response` identifier can be used to cryptographically link the request and the response to each other by including the identified request signature value in the response. This identifier has a single REQUIRED parameter:
+
+`key`
+: Identifies which signature from the response to sign.
+
+The value is the `sf-binary` representation of the signature value of the referenced request identified by the `key` parameter.
+
+For example, when serving this signed request:
+
+~~~ http-message
+POST /foo?param=value&pet=dog HTTP/1.1
+Host: example.com
+Date: Tue, 20 Apr 2021 02:07:55 GMT
+Content-Type: application/json
+Content-Length: 18
+Signature-Input: sig1=("@authority" "content-type")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
+Signature: sig1=:KuhJjsOKCiISnKHh2rln5ZNIrkRvue0DSu5rif3g7ckTbbX7C4\
+  Jp3bcGmi8zZsFRURSQTcjbHdJtN8ZXlRptLOPGHkUa/3Qov79gBeqvHNUO4bhI27p\
+  4WzD1bJDG9+6ml3gkrs7rOvMtROObPuc78A95fa4+skS/t2T7OjkfsHAm/enxf1fA\
+  wkk15xj0n6kmriwZfgUlOqyff0XLwuH4XFvZ+ZTyxYNoo2+EfFg4NVfqtSJch2WDY\
+  7n/qmhZOzMfyHlggWYFnDpyP27VrzQCQg8rM1Crp6MrwGLa94v6qP8pq0sQVq2DLt\
+  4NJSoRRqXTvqlWIRnexmcKXjQFVz6YSA==:
+
+{"hello": "world"}
+~~~
+
+This would result in the following unsigned response message:
+
+~~~ http-message
+HTTP/1.1 200 OK
+Date: Tue, 20 Apr 2021 02:07:56 GMT
+Content-Type: application/json
+Content-Length: 62
+
+{"busy": true, "message": "Your call is very important to us"}
+~~~
+
+
+The server signs the response with its own key and includes the signature of `sig1` from the request in the signed content of the response. The signature input string for this example is:
+
+~~~
+"content-type": application/json
+"content-length": 62
+"@status": 200
+"@request-response";key="sig1": :KuhJjsOKCiISnKHh2rln5ZNIrkRvue0DSu\
+  5rif3g7ckTbbX7C4Jp3bcGmi8zZsFRURSQTcjbHdJtN8ZXlRptLOPGHkUa/3Qov79\
+  gBeqvHNUO4bhI27p4WzD1bJDG9+6ml3gkrs7rOvMtROObPuc78A95fa4+skS/t2T7\
+  OjkfsHAm/enxf1fAwkk15xj0n6kmriwZfgUlOqyff0XLwuH4XFvZ+ZTyxYNoo2+Ef\
+  Fg4NVfqtSJch2WDY7n/qmhZOzMfyHlggWYFnDpyP27VrzQCQg8rM1Crp6MrwGLa94\
+  v6qP8pq0sQVq2DLt4NJSoRRqXTvqlWIRnexmcKXjQFVz6YSA==:
+"@signature-params": ("content-type" "content-length" "@status" \
+  "@request-response";key="sig1");created=1618884475\
+  ;keyid="test-key-ecc-p256"
+~~~
+
+The signed response message is:
+
+~~~ http-message
+HTTP/1.1 200 OK
+Date: Tue, 20 Apr 2021 02:07:56 GMT
+Content-Type: application/json
+Content-Length: 62
+Signature-Input: sig1=("content-type" "content-length" "@status" \
+  "@request-response";key="sig1");created=1618884475\
+  ;keyid="test-key-ecc-p256"
+Signature: sig1=:crVqK54rxvdx0j7qnt2RL1oQSf+o21S/6Uk2hyFpoIfOT0q+Hv\
+  msYAXUXzo0Wn8NFWh/OjWQOXHAQdVnTk87Pw==:
+
+{"busy": true, "message": "Your call is very important to us"}
+~~~
+
+Since the request's signature value itself is not repeated in the response, the requester MUST keep the original signature value around long enough to validate the signature of the response.
+
+The `@request-response` identifier MUST NOT be used in a request message.
 
 ## Creating the Signature Input String {#create-sig-input}
 
@@ -1087,6 +1168,7 @@ The table below contains the initial contents of the HTTP Signature Specialty Co
 |`@query`| Active | Request, Related-Response | {{content-request-query}} of this document|
 |`@query-params`| Active | Request, Related-Response | {{content-request-query-params}} of this document|
 |`@status`| Active | Response | {{content-status-code}} of this document|
+|`@request-response`|Active | {{content-request-response}} of this document|
 {: title="Initial contents of the HTTP Signature Specialty Content Identifiers Registry." }
 
 # Security Considerations {#security}
@@ -1444,6 +1526,7 @@ Jeffrey Yasskin.
 - draft-ietf-httpbis-message-signatures
   - -06
      * Define new specialty content identifiers, re-defined request-target identifier.
+     * Added request-response binding.
 
   - -05
      * Remove list prefixes.
