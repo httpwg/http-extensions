@@ -446,9 +446,13 @@ If used in a response message, the `@scheme` identifier refers to the associated
 
 The `@request-target` identifier refers to the full request target of the HTTP request message,
 as defined in {{SEMANTICS}} Section 7.1. The value of the request target can take different forms,
-depending on the type of request. For HTTP 1.1, the value is equivalent to the request target
-portion of the request line.
+depending on the type of request, as described below.
 If used, the `@request-target` identifier MUST occur only once in the signature input.
+
+For HTTP 1.1, the value is equivalent to the request target
+portion of the request line. However, this value is more difficult to reliably construct in
+other versions of HTTP. Therefore, it is NOT RECOMMENDED that this identifier be used
+when versions of HTTP other than 1.1 might be in use.
 
 The origin form value is combination of the absolute path and query components of the request URL. For example, the following request message:
 
