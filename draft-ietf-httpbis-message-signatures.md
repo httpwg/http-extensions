@@ -1289,7 +1289,7 @@ Signature: sig1=:HWP69ZNiom9Obu1KIdqPPcu/C1a5ZUMBbqS/xwJECV8bhIQVmE\
 
 ### Selective Coverage using rsa-pss-sha512
 
-This example covers additional elements in `test-request`, not including the body Digest header using the `rsa-pss-sha512` algorithm.
+This example covers additional elements in `test-request`, not including the body Digest header, using the `rsa-pss-sha512` algorithm.
 
 The corresponding signature input is:
 
