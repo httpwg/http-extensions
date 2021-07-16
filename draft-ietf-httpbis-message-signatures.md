@@ -120,7 +120,7 @@ As mentioned earlier, HTTP explicitly permits and in some cases requires impleme
 - Removal of header fields listed in the `Connection` header field ({{MESSAGING}}, Section 6.1).
 - Addition of header fields that indicate control options ({{MESSAGING}}, Section 6.1).
 - Addition or removal of a transfer coding ({{MESSAGING}}, Section 5.7.2).
-- Addition of header fields such as `Via` ({{MESSAGING}}, Section 5.7.1) and `Forwarded` ([RFC7239], Section 4).
+- Addition of header fields such as `Via` ({{MESSAGING}}, Section 5.7.1) and `Forwarded` ({{RFC7239}}, Section 4).
 
 ## Safe Transformations
 
@@ -189,7 +189,7 @@ HTTP Message Signatures are designed to be a general-purpose security mechanism 
 - A means of determining the signature algorithm used to verify the signature content is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
 
-An application using signatures also has to ensure that the verifier will have access to all required information to re-create the signature input string. For example, a server behind a reverse proxy would need to know the original request URI to make use of identifiers like `@request-target`. Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions, including any portions of the request that were signed by the server.
+An application using signatures also has to ensure that the verifier will have access to all required information to re-create the signature input string. For example, a server behind a reverse proxy would need to know the original request URI to make use of identifiers like `@target-uri`. Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions, including any portions of the request that were signed by the server.
 
 The details of this kind of profiling are the purview of the application and outside the scope of this specification.
 
@@ -236,7 +236,7 @@ The resulting string is used as the field value input in {{http-header}}.
 This section contains non-normative examples of canonicalized values for header fields, given the following example HTTP message:
 
 ~~~ http-message
-Server: www.example.com
+Host: www.example.com
 Date: Tue, 07 Jun 2014 20:51:35 GMT
 X-OWS-Header:   Leading and trailing whitespace.
 X-Obs-Fold-Header: Obsolete
@@ -252,7 +252,7 @@ The following table shows example canonicalized values for header fields, given 
 |--- |--- |
 |`"cache-control"`|max-age=60, must-revalidate|
 |`"date"`|Tue, 07 Jun 2014 20:51:35 GMT|
-|`"server"`|www.example.com|
+|`"host"`|www.example.com|
 |`"x-empty-header"`||
 |`"x-obs-fold-header"`|Obsolete line folding.|
 |`"x-ows-header"`|Leading and trailing whitespace.|
@@ -353,7 +353,7 @@ as discussed in {{signature-input-header}}.
 This example shows a canonicalized value for the parameters of a given signature:
 
 ~~~
-("@request-target" "host" "date" "cache-control" "x-empty-header" \
+("@target-uri" "@authority" "date" "cache-control" "x-empty-header" \
   "x-example");keyid="test-key-rsa-pss";alg="rsa-pss-sha512";\
   created=1618884475;expires=1618884775
 ~~~
@@ -654,18 +654,18 @@ Cache-Control: max-age=60
 Cache-Control: must-revalidate
 ~~~
 
-The covered content consists of the `@request-target` specialty content followed by the `Host`, `Date`, `Cache-Control`, `X-Empty-Header`, `X-Example` HTTP headers, in order. The signature creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`.  The signature input string for this message with these parameters is:
+The covered content consists of the `@method`, `@path`, and `@authority` specialty content followed by the `Cache-Control`, `X-Empty-Header`, `X-Example` HTTP headers, in order. The signature creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`.  The signature input string for this message with these parameters is:
 
 ~~~
-"@request-target": get /foo
-"host": example.org
-"date": Tue, 20 Apr 2021 02:07:55 GMT
+"@method": GET
+"@path": /foo
+"@authority": example.org
 "cache-control": max-age=60, must-revalidate
 "x-empty-header":
 "x-example": Example header with some whitespace.
-"@signature-params": ("@request-target" "host" "date" "cache-control" \
-  "x-empty-header" "x-example");created=1618884475;\
-  keyid="test-key-rsa-pss"
+"@signature-params": ("@method" "@path" "@authority" \
+  "cache-control" "x-empty-header" "x-example");created=1618884475\
+  ;keyid="test-key-rsa-pss"
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
 
@@ -688,8 +688,8 @@ In order to create a signature, a signer MUST follow the following algorithm:
 4. The signer creates an ordered list of content identifiers representing the message content and signature metadata to be covered by the signature, and assigns this list as the signature's Covered Content.
    * Once an order of covered content is chosen, the order MUST NOT change for the life of the signature.
    * Each covered content identifier MUST either reference an HTTP header in the request message {{http-header}} or reference a specialty content field listed in {{specialty-content}} or its associated registry.
-   * Signers SHOULD include `@request-target` in the covered content list.
-   * Signers SHOULD include a date stamp in some form, such as using the `date` header. Alternatively, the `created` signature metadata parameter can fulfil this role.
+   * Signers of a request SHOULD include some or all of the control data in the covered content list, such as the `@method`, `@authority`, `@target-uri`, or some combination thereof.
+   * Signers SHOULD include the `created` signature metadata parameter to indicate when the signature was created.
    * Further guidance on what to include in this list and in what order is out of scope for this document. However, note that the list order is significant and once established for a given signature it MUST be preserved for that signature.
    * Note that the `@signature-params` specialty identifier is not explicitly listed in the list of covered content identifiers, because it is required to always be present as the last line in the signature input. This ensures that a signature always covers its own metadata.
 
@@ -702,12 +702,12 @@ In order to create a signature, a signer MUST follow the following algorithm:
 For example, given the HTTP message and signature parameters in the example in {{create-sig-input}}, the example signature input string when signed with the `test-key-rsa-pss` key in {{example-key-rsa-pss-test}} gives the following message signature output value, encoded in Base64:
 
 ~~~
-lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k8/GH7g5s2q0VTTKVm\
-xyfpUDp/HsDphh5Z7Fa/lvtujHyFe/0EP9z7bnVb7YBZrxV52LGvP8p4APhOYuG4yaH\
-z478GsJav9BQYK0B2IOHdLFJe8qwWPJs07J47gPewpNwCt0To/zZ2KPpylGX5UHVgJP\
-Uom64KjX43u2OwIvSoPEYk4nuBvLR9yxYAHURaTfLoEDUCtY1FsU1hOfG3jAlcT6ill\
-fnyS72PEdSSzw1KsxroMj9IYpFhva77YxmJRk4pCIW0F0Kj0ukl7J4y2aZJHMCYI3g8\
-yfqh/wQ==
+P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo1RSHi+oEF1FuX6O29\
+d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCiHzC87qmSQjvu1CFyFuWSj\
+dGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyoyZW84jS8gyarxAiWI97mPXU+OVM64\
++HVBHmnEsS+lTeIsEQo36T3NFf2CujWARPQg53r58RmpZ+J9eKR2CD6IJQvacn5A4Ix\
+5BUAVGqlyp8JYm+S/CWJi31PNUjRRCusCVRj05NrxABNFv3r5S9IXf2fYJK+eyW4AiG\
+VMvMcOg==
 ~~~
 {: title="Non-normative example signature value" #example-sig-value}
 
@@ -874,7 +874,7 @@ the `Signature` HTTP header field contains the signature value, while the `Signa
 The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered content including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~
-Signature-Input: sig1=("@request-target" "host" "date" \
+Signature-Input: sig1=("@method" "@target-uri" "host" "date" \
   "cache-control" "x-empty-header" "x-example");created=1618884475\
   ;keyid="test-key-rsa-pss"
 ~~~
@@ -886,12 +886,12 @@ in generating the signature input string's `@signature-params` value.
 The `Signature` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing one or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
 
 ~~~
-Signature: sig1=:lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k\
-  8/GH7g5s2q0VTTKVmxyfpUDp/HsDphh5Z7Fa/lvtujHyFe/0EP9z7bnVb7YBZrxV5\
-  2LGvP8p4APhOYuG4yaHz478GsJav9BQYK0B2IOHdLFJe8qwWPJs07J47gPewpNwCt\
-  0To/zZ2KPpylGX5UHVgJPUom64KjX43u2OwIvSoPEYk4nuBvLR9yxYAHURaTfLoED\
-  UCtY1FsU1hOfG3jAlcT6illfnyS72PEdSSzw1KsxroMj9IYpFhva77YxmJRk4pCIW\
-  0F0Kj0ukl7J4y2aZJHMCYI3g8yfqh/wQ==:
+Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
+  1RSHi+oEF1FuX6O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCiHz\
+  C87qmSQjvu1CFyFuWSjdGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyoyZW84jS8\
+  gyarxAiWI97mPXU+OVM64+HVBHmnEsS+lTeIsEQo36T3NFf2CujWARPQg53r58Rmp\
+  Z+J9eKR2CD6IJQvacn5A4Ix5BUAVGqlyp8JYm+S/CWJi31PNUjRRCusCVRj05NrxA\
+  BNFv3r5S9IXf2fYJK+eyW4AiGVMvMcOg==:
 ~~~
 
 ## Multiple Signatures
@@ -902,12 +902,12 @@ The following is a non-normative example of header fields a reverse proxy sets i
 
 ~~~
 "signature";key="sig1": \
-  :lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k8/GH7g5s2q0VTT\
-  KVmxyfpUDp/HsDphh5Z7Fa/lvtujHyFe/0EP9z7bnVb7YBZrxV52LGvP8p4APhOYu\
-  G4yaHz478GsJav9BQYK0B2IOHdLFJe8qwWPJs07J47gPewpNwCt0To/zZ2KPpylGX\
-  5UHVgJPUom64KjX43u2OwIvSoPEYk4nuBvLR9yxYAHURaTfLoEDUCtY1FsU1hOfG3\
-  jAlcT6illfnyS72PEdSSzw1KsxroMj9IYpFhva77YxmJRk4pCIW0F0Kj0ukl7J4y2\
-  aZJHMCYI3g8yfqh/wQ==:
+  :P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo1RSHi+oEF1FuX6\
+  O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCiHzC87qmSQjvu1CFy\
+  FuWSjdGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyoyZW84jS8gyarxAiWI97mPX\
+  U+OVM64+HVBHmnEsS+lTeIsEQo36T3NFf2CujWARPQg53r58RmpZ+J9eKR2CD6IJQ\
+  vacn5A4Ix5BUAVGqlyp8JYm+S/CWJi31PNUjRRCusCVRj05NrxABNFv3r5S9IXf2f\
+  YJK+eyW4AiGVMvMcOg==:
 "x-forwarded-for": 192.0.2.123
 "@signature-params": ("signature";key="sig1" "x-forwarded-for")\
   ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
@@ -916,35 +916,35 @@ The following is a non-normative example of header fields a reverse proxy sets i
 And a signature output value of:
 
 ~~~
-XD1O/vEh772WVpY7jYvReXop2+b7xTIIPKH8/OCYzPn78Wd9jodCwAJPF5TYCn9L6n6\
-8j4EjGsqFOMkVLVdSQEZqMLjEbvMEdIe8m1a0CLd5kydeaAwoHoglqod6ijkwhhEtxt\
-aD8tDZmihQw2mZEH8u4aMSnRntqy7ExCNld0JLharsHV0iCbRO9jIP+d2ApD7gB+eZp\
-n3pIvvVJZlxTwPkahFpxKlQtNMPaSqa1lvejURx+ST8CEuz4sS+G/oLJiX3MZenuUoO\
-R8HeOHDnjN/VLzrEN4x44iF7WIL+iY2PtK87LUWRAsJAX9GqHL/upsGh1nxIdoVaoLV\
-V5w+fRw==
+W9otb2eiOoBUuGrM+1skBRPL8e3OIXbgk7eSwiMSOGtjB0IM7ewAZHzgINIammyGwtr\
+vznAhsSF6Y+wuBu3js7CzRGh0waKFr5V3EVi1ioE8/e4CHjEsErD4WFmZAbNhCqVzrX\
+2EzhvR2+UHOVjczDb5ZopvErPjE6DFVcWRvqAKb2ODEoecabCyrXbwaIDiSZN49YX47\
+5cT6ZpPYXuDBUZZv+JY8EAnWTB++TmsZLxOVx3e1Bt9go+8sEjdo/7lJBWYZYVUTfAr\
+6UyzU8EgHyGTrXYMk6vo0tAXI6TQpUA/dr2YulOe5BFlemDgSVVvzqsRUJQ4K2a45Xe\
+uJm0Wlg==
 ~~~
 
 These values are added to the HTTP request message by the proxy. The different signature values are wrapped onto separate lines to increase human-readability of the result.
 
 ~~~ http-message
 X-Forwarded-For: 192.0.2.123
-Signature-Input: sig1=("@request-target" "host" "date" \
+Signature-Input: sig1=("@method" "@path" "@authority" \
     "cache-control" "x-empty-header" "x-example")\
     ;created=1618884475;keyid="test-key-rsa-pss", \
   proxy_sig=("signature";key="sig1" "x-forwarded-for")\
     ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
-Signature: sig1=:lPxkxqDEPhgrx1yPaKLO7eJ+oPjSwsQ5NjWNRfYP7Jw0FwnK1k\
-    8/GH7g5s2q0VTTKVmxyfpUDp/HsDphh5Z7Fa/lvtujHyFe/0EP9z7bnVb7YBZrx\
-    V52LGvP8p4APhOYuG4yaHz478GsJav9BQYK0B2IOHdLFJe8qwWPJs07J47gPewp\
-    NwCt0To/zZ2KPpylGX5UHVgJPUom64KjX43u2OwIvSoPEYk4nuBvLR9yxYAHURa\
-    TfLoEDUCtY1FsU1hOfG3jAlcT6illfnyS72PEdSSzw1KsxroMj9IYpFhva77Yxm\
-    JRk4pCIW0F0Kj0ukl7J4y2aZJHMCYI3g8yfqh/wQ==:, \
-  proxy_sig=:XD1O/vEh772WVpY7jYvReXop2+b7xTIIPKH8/OCYzPn78Wd9jodCwA\
-    JPF5TYCn9L6n68j4EjGsqFOMkVLVdSQEZqMLjEbvMEdIe8m1a0CLd5kydeaAwoH\
-    oglqod6ijkwhhEtxtaD8tDZmihQw2mZEH8u4aMSnRntqy7ExCNld0JLharsHV0i\
-    CbRO9jIP+d2ApD7gB+eZpn3pIvvVJZlxTwPkahFpxKlQtNMPaSqa1lvejURx+ST\
-    8CEuz4sS+G/oLJiX3MZenuUoOR8HeOHDnjN/VLzrEN4x44iF7WIL+iY2PtK87LU\
-    WRAsJAX9GqHL/upsGh1nxIdoVaoLVV5w+fRw==:
+Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
+    1RSHi+oEF1FuX6O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCi\
+    HzC87qmSQjvu1CFyFuWSjdGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyoyZW8\
+    4jS8gyarxAiWI97mPXU+OVM64+HVBHmnEsS+lTeIsEQo36T3NFf2CujWARPQg53\
+    r58RmpZ+J9eKR2CD6IJQvacn5A4Ix5BUAVGqlyp8JYm+S/CWJi31PNUjRRCusCV\
+    Rj05NrxABNFv3r5S9IXf2fYJK+eyW4AiGVMvMcOg==:, \
+  proxy_sig=:W9otb2eiOoBUuGrM+1skBRPL8e3OIXbgk7eSwiMSOGtjB0IM7ewAZH\
+    zgINIammyGwtrvznAhsSF6Y+wuBu3js7CzRGh0waKFr5V3EVi1ioE8/e4CHjEsE\
+    rD4WFmZAbNhCqVzrX2EzhvR2+UHOVjczDb5ZopvErPjE6DFVcWRvqAKb2ODEoec\
+    abCyrXbwaIDiSZN49YX475cT6ZpPYXuDBUZZv+JY8EAnWTB++TmsZLxOVx3e1Bt\
+    9go+8sEjdo/7lJBWYZYVUTfAr6UyzU8EgHyGTrXYMk6vo0tAXI6TQpUA/dr2Yul\
+    Oe5BFlemDgSVVvzqsRUJQ4K2a45XeuJm0Wlg==:
 ~~~
 
 The proxy's signature and the client's original signature can be verified independently for the same message, depending on the needs of the application.
@@ -1271,25 +1271,24 @@ This results in the following `Signature-Input` and `Signature` headers being ad
 ~~~ http-message
 Signature-Input: sig1=();created=1618884475\
   ;keyid="test-key-rsa-pss";alg="rsa-pss-sha512"
-Signature: sig1=:VrfdC2KEFFLoGMYTbQz4PSlKat4hAxcr5XkVN7Mm/7OQQJG+uX\
-  gOez7kA6n/yTCaR1VL+FmJd2IVFCsUfcc/jO9siZK3siadoK1Dfgp2ieh9eO781ty\
-  SS70OwvAkdORuQLWDnaDMRDlQhg5sNP6JaQghFLqD4qgFrM9HMPxLrznhAQugJ0Fd\
-  RZLtSpnjECW6qsu2PVRoCYfnwe4gu8TfqH5GDx2SkpCF9BQ8CijuIWlOg7QP73tKt\
-  QNp65u14Si9VEVXHWGiLw4blyPLzWz/fqJbdLaq94Ep60Nq8WjYEAInYH6KyV7EAD\
-  60LXdspwF50R3dkWXJP/x+gkAHSMsxbg==:
+Signature: sig1=:HWP69ZNiom9Obu1KIdqPPcu/C1a5ZUMBbqS/xwJECV8bhIQVmE\
+  AAAzz8LQPvtP1iFSxxluDO1KE9b8L+O64LEOvhwYdDctV5+E39Jy1eJiD7nYREBgx\
+  TpdUfzTO+Trath0vZdTylFlxK4H3l3s/cuFhnOCxmFYgEa+cw+StBRgY1JtafSFwN\
+  cZgLxVwialuH5VnqJS4JN8PHD91XLfkjMscTo4jmVMpFd3iLVe0hqVFl7MDt6TMkw\
+  IyVFnEZ7B/VIQofdShO+C/7MuupCSLVjQz5xA+Zs6Hw+W9ESD/6BuGs6LF1TcKLxW\
+  +5K+2zvDY/Cia34HNpRW5io7Iv9/b7iQ==:
 ~~~
 
-### Header Coverage using rsa-pss-sha512
+### Selective Coverage using rsa-pss-sha512
 
-This example covers all the specified headers in `test-request` except for the body digest header using the `rsa-pss-sha512` algorithm.
+This example covers additional elements in `test-request`, not including the body Digest header using the `rsa-pss-sha512` algorithm.
 
 The corresponding signature input is:
 
 ~~~
-"host": example.com
-"date": Tue, 20 Apr 2021 02:07:55 GMT
+"@authority": example.com
 "content-type": application/json
-"@signature-params": ("host" "date" "content-type")\
+"@signature-params": ("@authority" "content-type")\
   ;created=1618884475;keyid="test-key-rsa-pss"
 ~~~
 
@@ -1298,14 +1297,14 @@ This results in the following `Signature-Input` and `Signature` headers being ad
 
 
 ~~~
-Signature-Input: sig1=("host" "date" "content-type")\
+Signature-Input: sig1=("@authority" "content-type")\
   ;created=1618884475;keyid="test-key-rsa-pss"
-Signature: sig1=:Zu48JBrHlXN+hVj3T5fPQUjMNEEhABM5vNmiWuUUl7BWNid5Rz\
-  OH1tEjVi+jObYkYT8p09lZ2hrNuU3xm+JUBT8WNIlopJtt0EzxFnjGlHvkhu3KbJf\
-  xNlvCJVlOEdR4AivDLMeK/ZgASpZ7py1UNHJqRyGCYkYpeedinXUertL/ySNp+VbK\
-  2O/qCoui2jFgff2kXQd6rjL1Up83Fpr+/KoZ6HQkv3qwBdMBDyHQykfZHhLn4AO1I\
-  G+vKhOLJQDfaLsJ/fYfzsgc1s46j3GpPPD/W2nEEtdhNwu7oXq81qVRsENChIu1XI\
-  FKR9q7WpyHDKEWTtaNZDS8TFvIQRU22w==:
+Signature: sig1=:ik+OtGmM/kFqENDf9Plm8AmPtqtC7C9a+zYSaxr58b/E6h81gh\
+  JS3PcH+m1asiMp8yvccnO/RfaexnqanVB3C72WRNZN7skPTJmUVmoIeqZncdP2mlf\
+  xlLP6UbkrgYsk91NS6nwkKC6RRgLhBFqzP42oq8D2336OiQPDAo/04SxZt4Wx9nDG\
+  uy2SfZJUhsJqZyEWRk4204x7YEB3VxDAAlVgGt8ewilWbIKKTOKp3ymUeQIwptqYw\
+  v0l8mN404PPzRBTpB7+HpClyK4CNp+SVv46+6sHMfJU4taz10s/NoYRmYCGXyadzY\
+  YDj0BYnFdERB6NblI/AOWFGl5Axhhmjg==:
 ~~~
 
 ### Full Coverage using rsa-pss-sha512
@@ -1315,30 +1314,31 @@ This example covers all headers in `test-request` plus the request target and me
 The corresponding signature input is:
 
 ~~~
-"@request-target": post /foo?param=value&pet=dog
-"host": example.com
-"date": Tue, 20 Apr 2021 02:07:55 GMT
+"date": Tue, 20 Apr 2021 02:07:56 GMT
+"@method": POST
+"@path": /foo
+"@query": ?param=value&pet=dog
+"@authority": example.com
 "content-type": application/json
 "digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 "content-length": 18
-"@signature-params": ("@request-target" "host" "date" \
-  "content-type" "digest" "content-length");created=1618884475\
-  ;keyid="test-key-rsa-pss"
+"@signature-params": ("date" "@method" "@path" "@query" \
+  "@authority" "content-type" "digest" "content-length")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
 ~~~
 
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
 ~~~
-Signature-Input: sig1=("@request-target" "host" "date" \
-  "content-type" "digest" "content-length");created=1618884475\
-  ;keyid="test-key-rsa-pss"
-Signature: \
-  sig1=:iD5NhkJoGSuuTpWMzS0BI47DfbWwsGmHHLTwOxT0n+0cQFSC+1c26B7IOfI\
-  RTYofqD0sfYYrnSwCvWJfA1zthAEv9J1CxS/CZXe7CQvFpuKuFJxMpkAzVYdE/TA6\
-  fELxNZy9RJEWZUPBU4+aJ26d8PC0XhPObXe6JkP6/C7XvG2QinsDde7rduMdhFN/H\
-  j2MuX1Ipzvv4EgbHJdKwmWRNamfmKJZC4U5Tn0F58lzGF+WIpU73V67/6aSGvJGM5\
-  7U9bRHrBB7ExuQhOX2J2dvJMYkE33pEJA70XBUp9ZvciTI+vjIUgUQ2oRww3huWML\
-  mMMqEc95CliwIoL5aBdCnlQ==:
+Signature-Input: sig1=("date" "@method" "@path" "@query" \
+  "@authority" "content-type" "digest" "content-length")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
+Signature: sig1=:JuJnJMFGD4HMysAGsfOY6N5ZTZUknsQUdClNG51VezDgPUOW03\
+  QMe74vbIdndKwW1BBrHOHR3NzKGYZJ7X3ur23FMCdANe4VmKb3Rc1Q/5YxOO8p7Ko\
+  yfVa4uUcMk5jB9KAn1M1MbgBnqwZkRWsbv8ocCqrnD85Kavr73lx51k1/gU8w673W\
+  T/oBtxPtAn1eFjUyIKyA+XD7kYph82I+ahvm0pSgDPagu917SlqUjeaQaNnlZzO03\
+  Iy1RZ5XpgbNeDLCqSLuZFVID80EohC2CQ1cL5svjslrlCNstd2JCLmhjL7xV3NYXe\
+  rLim4bqUQGRgDwNJRnqobpS6C1NBns/Q==:
 ~~~
 
 ### Signing a Response using ecdsa-p256-sha256
@@ -1349,22 +1349,20 @@ and the key `test-key-ecc-p256`.
 The corresponding signature input is:
 
 ~~~
-"date": Tue, 20 Apr 2021 02:07:56 GMT
 "content-type": application/json
 "digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 "content-length": 18
-"@signature-params": ("date" "content-type" "digest" \
-  "content-length");created=1618884475;keyid="test-key-ecc-p256"
+"@signature-params": ("content-type" "digest" "content-length")\
+  ;created=1618884475;keyid="test-key-ecc-p256"
 ~~~
 
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
 ~~~
-Signature-Input: sig1=("date" "content-type" "digest" \
-  "content-length");created=1618884475;keyid="test-key-ecc-p256"
-Signature: \
-  sig1=:3zmRDW6r50/RETqqhtx/N5sdd5eTh8xmHdsrYRK9wK4rCNEwLjCOBlcQxTL\
-  2oJTCWGRkuqE2r9KyqZFY9jd+NQ==:
+Signature-Input: sig1=("content-type" "digest" "content-length")\
+  ;created=1618884475;keyid="test-key-ecc-p256"
+Signature: sig1=:n8RKXkj0iseWDmC6PNSQ1GX2R9650v+lhbb6rTGoSrSSx18zmn\
+  6fPOtBx48/WffYLO0n1RHHf9scvNGAgGq52Q==:
 ~~~
 
 ### Signing a Request using hmac-sha256
@@ -1375,19 +1373,19 @@ secret `test-shared-secret`.
 The corresponding signature input is:
 
 ~~~
-"host": example.com
+"@authority": example.com
 "date": Tue, 20 Apr 2021 02:07:55 GMT
 "content-type": application/json
-"@signature-params": ("host" "date" "content-type")\
+"@signature-params": ("@authority" "date" "content-type")\
   ;created=1618884475;keyid="test-shared-secret"
 ~~~
 
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
 ~~~
-Signature-Input: sig1=("host" "date" "content-type")\
+Signature-Input: sig1=("@authority" "date" "content-type")\
   ;created=1618884475;keyid="test-shared-secret"
-Signature: sig1=:x54VEvVOb0TMw8fUbsWdUHqqqOre+K7sB/LqHQvnfaQ=:
+Signature: sig1=:fN3AMNGbx0V/cIEKkZOvLOoC3InI+lM2+gTv22x3ia8=:
 ~~~
 
 # Acknowledgements {#acknowledgements}
