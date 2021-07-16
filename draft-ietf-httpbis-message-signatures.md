@@ -1526,6 +1526,7 @@ Jeffrey Yasskin.
 - draft-ietf-httpbis-message-signatures
   - -06
      * Define new specialty content identifiers, re-defined request-target identifier.
+     * Added request-response binding.
 
   - -05
      * Remove list prefixes.
