@@ -195,7 +195,7 @@ The details of this kind of profiling are the purview of the application and out
 
 # HTTP Message Signature Covered Content {#covered-content}
 
-In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for data items covered by an HTTP Message Signature as well as the means for combining these canonicalized values into a signature input string. The values for these items MUST be accessible to both the sender and the receiver of the message, which means these are usually are derived from aspects of the HTTP message or signature itself.
+In order to allow signers and verifiers to establish which content is covered by a signature, this document defines content identifiers for data items covered by an HTTP Message Signature as well as the means for combining these canonicalized values into a signature input string. The values for these items MUST be accessible to both the sender and the receiver of the message, which means these are usually derived from aspects of the HTTP message or signature itself.
 
 Some content within HTTP messages can undergo transformations that change the bitwise value without altering meaning of the content (for example, the merging together of header fields with the same name).  Message content must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each content identifier that transform the identifier's associated content into such a canonical form.
 
