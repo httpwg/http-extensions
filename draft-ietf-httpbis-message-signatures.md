@@ -525,6 +525,8 @@ Would result in the following `@path` value:
 "@path": /path
 ~~~
 
+If used in a response message, the `@path` identifier refers to the associated value of the request that triggered the response message being signed.
+
 ### Query {#content-request-query}
 
 The `@query` identifier refers to the query component of the HTTP request message. The value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{SEMANTICS}} Section 4.2.3. Namely, percent-encoded octets are decoded.
@@ -555,6 +557,8 @@ Would result in the following `@query` value:
 ~~~
 "@query": ?queryString
 ~~~
+
+If used in a response message, the `@query` identifier refers to the associated value of the request that triggered the response message being signed.
 
 ### Query Parameters {#content-request-query-params}
 
