@@ -622,7 +622,7 @@ When a signed request message results in a signed response message, the `@reques
 `key`
 : Identifies which signature from the response to sign.
 
-The value MUST contain the `sf-binary` representation of the signature value of the referenced request identified by the `key` parameter.
+The value is the `sf-binary` representation of the signature value of the referenced request identified by the `key` parameter.
 
 For example, when serving this signed request:
 
@@ -632,14 +632,14 @@ Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
 Content-Length: 18
-Signature-Input: sig1=("host" "content-type");created=1618884475\
-  ;keyid="test-key-rsa-pss"
-Signature: sig1=:f0KeSHnWqp0SdVrZOpyx4fooj4Ez+sb25j+vSzcNe8S8P+wKIC\
-  j5Tu39yfSS2C5WzAyYy9zk+jNSRVrcVJ9/onaJp7dE2wcHFc80958491cf+YMK4h7\
-  SBkLMEtaUNHOQQo7e7b/NHOH20R/7RXFE98l51C4SSCtgREjxSOm3ceRGZSz0Ev+S\
-  PSlXxHn0OY7u4GHxSvPbr7ml/3H/+J4bJZu6juwWB7ym0AUfyuBFFFFmd/iu1WUtg\
-  je47Q4Q89G7SnADbSFZPhjWWyaNWOo2d3qjLGwx1dfA31hEB5NSxzc3UI7M5L9gp8\
-  F9oOKYvZsIIWQCUqtg+Gcs4u3wWa7Pqg==:
+Signature-Input: sig1=("@authority" "content-type")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
+Signature: sig1=:KuhJjsOKCiISnKHh2rln5ZNIrkRvue0DSu5rif3g7ckTbbX7C4\
+  Jp3bcGmi8zZsFRURSQTcjbHdJtN8ZXlRptLOPGHkUa/3Qov79gBeqvHNUO4bhI27p\
+  4WzD1bJDG9+6ml3gkrs7rOvMtROObPuc78A95fa4+skS/t2T7OjkfsHAm/enxf1fA\
+  wkk15xj0n6kmriwZfgUlOqyff0XLwuH4XFvZ+ZTyxYNoo2+EfFg4NVfqtSJch2WDY\
+  7n/qmhZOzMfyHlggWYFnDpyP27VrzQCQg8rM1Crp6MrwGLa94v6qP8pq0sQVq2DLt\
+  4NJSoRRqXTvqlWIRnexmcKXjQFVz6YSA==:
 
 {"hello": "world"}
 ~~~
@@ -650,27 +650,27 @@ This would result in the following unsigned response message:
 HTTP/1.1 200 OK
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
-Content-Length: 68
+Content-Length: 62
 
-{"from": "world", "busy": true, "your call is very important to us"}
+{"busy": true, "message": "Your call is very important to us"}
 ~~~
 
 
-The server signs the response with its own key and includes the signature of `sig1` from the request in the response. The signature input string for this example is:
+The server signs the response with its own key and includes the signature of `sig1` from the request in the signed content of the response. The signature input string for this example is:
 
 ~~~
 "content-type": application/json
-"content-length": 68
-"@status-code": 200
-"@request-response";key="sig1": :f0KeSHnWqp0SdVrZOpyx4fooj4Ez+sb25j\
-  +vSzcNe8S8P+wKICj5Tu39yfSS2C5WzAyYy9zk+jNSRVrcVJ9/onaJp7dE2wcHFc8\
-  0958491cf+YMK4h7SBkLMEtaUNHOQQo7e7b/NHOH20R/7RXFE98l51C4SSCtgREjx\
-  SOm3ceRGZSz0Ev+SPSlXxHn0OY7u4GHxSvPbr7ml/3H/+J4bJZu6juwWB7ym0AUfy\
-  uBFFFFmd/iu1WUtgje47Q4Q89G7SnADbSFZPhjWWyaNWOo2d3qjLGwx1dfA31hEB5\
-  NSxzc3UI7M5L9gp8F9oOKYvZsIIWQCUqtg+Gcs4u3wWa7Pqg==:
-"@signature-params": ("content-type" "content-length" \
-  "@status-code" "@request-response";key="sig1")\
-  ;created=1618884475;keyid="test-key-ecc-p256"
+"content-length": 62
+"@status": 200
+"@request-response";key="sig1": :KuhJjsOKCiISnKHh2rln5ZNIrkRvue0DSu\
+  5rif3g7ckTbbX7C4Jp3bcGmi8zZsFRURSQTcjbHdJtN8ZXlRptLOPGHkUa/3Qov79\
+  gBeqvHNUO4bhI27p4WzD1bJDG9+6ml3gkrs7rOvMtROObPuc78A95fa4+skS/t2T7\
+  OjkfsHAm/enxf1fAwkk15xj0n6kmriwZfgUlOqyff0XLwuH4XFvZ+ZTyxYNoo2+Ef\
+  Fg4NVfqtSJch2WDY7n/qmhZOzMfyHlggWYFnDpyP27VrzQCQg8rM1Crp6MrwGLa94\
+  v6qP8pq0sQVq2DLt4NJSoRRqXTvqlWIRnexmcKXjQFVz6YSA==:
+"@signature-params": ("content-type" "content-length" "@status" \
+  "@request-response";key="sig1");created=1618884475\
+  ;keyid="test-key-ecc-p256"
 ~~~
 
 The signed response message is:
@@ -679,17 +679,19 @@ The signed response message is:
 HTTP/1.1 200 OK
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
-Content-Length: 68
-Signature-Input: sig1=("content-type" "content-length" \
-  "@status-code" "@request-response";key="sig1")\
-  ;created=1618884475;keyid="test-key-ecc-p256"
-Signature: sig1=:QIn6qMJDPiPPkZH3oAJ7B3qeOMZaR3MChSZ4Bh+cm2OpEcL8+/\
-  0P/MepfbHQarEgWHIBmmtC41JvZ7RHzi/Zlg==:
+Content-Length: 62
+Signature-Input: sig1=("content-type" "content-length" "@status" \
+  "@request-response";key="sig1");created=1618884475\
+  ;keyid="test-key-ecc-p256"
+Signature: sig1=:crVqK54rxvdx0j7qnt2RL1oQSf+o21S/6Uk2hyFpoIfOT0q+Hv\
+  msYAXUXzo0Wn8NFWh/OjWQOXHAQdVnTk87Pw==:
 
-{"hello": "world"}
+{"busy": true, "message": "Your call is very important to us"}
 ~~~
 
 Since the request's signature value itself is not repeated in the response, the requester MUST keep the original signature value around long enough to validate the signature of the response.
+
+The `@request-response` identifier MUST NOT be used in a request message.
 
 ## Creating the Signature Input String {#create-sig-input}
 
