@@ -798,9 +798,6 @@ makes the prioritization scheme extensible; see the discussion below.
 the HTTP/2 priority tree. Extensible priorities does not use stream
 dependencies, which mitigates this vulnerability.
 
-TBD: depending on the outcome of reprioritization discussions, following
-paragraphs may change or be removed.
-
 {{HTTP2}}, Section 5.3.4 describes a scenario where closure of streams in the
 priority tree could cause suboptimal prioritization. To avoid this, {{HTTP2}}
 states that "an endpoint SHOULD retain stream prioritization state for a period
