@@ -2405,7 +2405,11 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 ## draft-ietf-httpbis-rfc6265bis-09
 
-* No changes yet.
+* Update cookie size requirements:
+  <https://github.com/httpwg/http-extensions/pull/1563>
+
+* Reject cookies with control characters:
+  <https://github.com/httpwg/http-extensions/pull/1576>
 
 # Acknowledgements
 {:numbered="false"}
