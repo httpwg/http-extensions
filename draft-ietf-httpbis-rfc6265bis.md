@@ -1125,14 +1125,10 @@ explicitly.
 A user agent MUST use an algorithm equivalent to the following algorithm to
 parse a set-cookie-string:
 
-1.  If the set-cookie-string contains a %x0D (CR), %x0A (LF), or %x00 (NUL)
-    octet, then set the set-cookie-string equal to all the characters of
-    set-cookie-string up to, but not including, the first such octet.
-
-2.  If the set-cookie-string contains a %x00-1F / %x7F (CTL) character:
+1.  If the set-cookie-string contains a %x00-1F / %x7F (CTL) character:
     Abort these steps and ignore the set-cookie-string entirely.
 
-3.  If the set-cookie-string contains a %x3B (";") character:
+2.  If the set-cookie-string contains a %x3B (";") character:
 
     1.  The name-value-pair string consists of the characters up to, but not
         including, the first %x3B (";"), and the unparsed-attributes consist of
@@ -1145,20 +1141,20 @@ parse a set-cookie-string:
         the set-cookie-string, and the unparsed-attributes is the empty
         string.
 
-4.  If the name-value-pair string lacks a %x3D ("=") character, then the name
+3.  If the name-value-pair string lacks a %x3D ("=") character, then the name
     string is empty, and the value string is the value of name-value-pair.
 
     Otherwise, the name string consists of the characters up to, but not
     including, the first %x3D ("=") character, and the (possibly empty) value
     string consists of the characters after the first %x3D ("=") character.
 
-5.  Remove any leading or trailing WSP characters from the name string and the
+4.  Remove any leading or trailing WSP characters from the name string and the
     value string.
 
-6.  If the sum of the lengths of the name string and the value string is more
+5.  If the sum of the lengths of the name string and the value string is more
     than 4096 bytes, abort these steps and ignore the set-cookie-string entirely.
 
-7.  The cookie-name is the name string, and the cookie-value is the value string.
+6.  The cookie-name is the name string, and the cookie-value is the value string.
 
 The user agent MUST use an algorithm equivalent to the following algorithm to
 parse the unparsed-attributes:
@@ -2409,7 +2405,11 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 ## draft-ietf-httpbis-rfc6265bis-09
 
-* No changes yet.
+* Update cookie size requirements:
+  <https://github.com/httpwg/http-extensions/pull/1563>
+
+* Reject cookies with control characters:
+  <https://github.com/httpwg/http-extensions/pull/1576>
 
 # Acknowledgements
 {:numbered="false"}
