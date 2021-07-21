@@ -9,6 +9,13 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.org/) 
 See also the [official document listing](https://datatracker.ietf.org/wg/httpbis/documents/) and the [detailed repo list](https://httpwg.org/http-extensions/) (which contains drafts and diffs for each branch).
 
 
+### Targeted HTTP Cache Control
+
+* [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-targeted-cache-control.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-targeted-cache-control.txt))
+* [Working Group Draft](https://tools.ietf.org/html/draft-ietf-httpbis-targeted-cache-control) (less recent, more official)
+* [Open Issues](https://github.com/httpwg/http-extensions/issues?q=is%3Aopen+is%3Aissue+label%3Atargeted-cc) / [Document Status](https://datatracker.ietf.org/doc/draft-ietf-httpbis-targeted-cache-control/)
+
+
 ### Client Cert Header
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-field.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-client-cert-field.txt))
