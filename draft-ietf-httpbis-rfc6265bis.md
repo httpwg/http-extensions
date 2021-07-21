@@ -383,7 +383,7 @@ defined in Section 5.3 of {{HTTPSEM}}) might change the semantics of the Set-Coo
 field because the %x2C (",") character is used by Set-Cookie in a way that
 conflicts with such folding.
 
-User agents MAY ignore Set-Cookie header fieldss based on response status codes or
+User agents MAY ignore Set-Cookie header fields based on response status codes or
 the user agent's cookie policy (see {{ignoring-cookies}}).
 
 ## Examples
