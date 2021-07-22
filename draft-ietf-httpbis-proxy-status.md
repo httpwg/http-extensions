@@ -155,7 +155,7 @@ Proxy-Status: cdn.example.org; next-hop=backend.example.org
 
 The `next-protocol` parameter's value indicates the ALPN protocol identifier {{!RFC7301}} used by the intermediary to connect to the next hop. This is only applicable when that connection was actually established.
 
-The value MUST be either an sf-token or sf-binary. If the protocol identifier is able to be expressed as an sf-token using UTF-8 encoding, that form MUST be used.
+The value MUST be either an sf-token or sf-binary, representing a TLS Application-Layer Protocol Negotiation (ALPN) Protocol ID (see <https://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml#alpn-protocol-ids>). If the protocol identifier is able to be expressed as an sf-token using UTF-8 encoding, that form MUST be used.
 
 For example:
 
