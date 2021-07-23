@@ -89,7 +89,7 @@ For example:
 Proxy-Status: FooProxy, ExampleCDN
 ~~~
 
-indicates that this response was handled first by FooProxy and then ExampleCDN.
+indicates that this response was handled first by FooProxy (a reverse proxy adjacent to the origin server) and then ExampleCDN.
 
 Intermediaries determine when it is appropriate to add the Proxy-Status field to a response. Some might decide to append to it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header that activates a debugging mode.
 
