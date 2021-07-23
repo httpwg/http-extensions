@@ -1152,7 +1152,7 @@ parse a set-cookie-string:
     value string.
 
 5.  If the sum of the lengths of the name string and the value string is more
-    than 4096 bytes, abort these steps and ignore the set-cookie-string entirely.
+    than 4096 octets, abort these steps and ignore the set-cookie-string entirely.
 
 6.  The cookie-name is the name string, and the cookie-value is the value string.
 
@@ -1190,7 +1190,7 @@ parse the unparsed-attributes:
 5.  Remove any leading or trailing WSP characters from the attribute-name
     string and the attribute-value string.
 
-6.  If the attribute-value is longer than 1024 bytes, ignore the cookie-av
+6.  If the attribute-value is longer than 1024 octets, ignore the cookie-av
     string and return to Step 1 of this algorithm.
 
 7.  Process the attribute-name and attribute-value according to the
@@ -1407,7 +1407,7 @@ user agent MUST process the cookie as follows:
     character, abort these steps and ignore the cookie entirely.
 
 4.  If the sum of the lengths of cookie-name and cookie-value is more than
-    4096 bytes, abort these steps and ignore the cookie entirely.
+    4096 octets, abort these steps and ignore the cookie entirely.
 
 5.  Create a new cookie with name cookie-name, value cookie-value. Set the
     creation-time and the last-access-time to the current date and time.
@@ -1441,9 +1441,9 @@ user agent MUST process the cookie as follows:
     attribute-name of "Domain":
 
     1.  Let the domain-attribute be the attribute-value of the last
-        attribute in the cookie-attribute-list with an attribute-name of
-        "Domain" and with an attribute-value whose length is no more
-        than 1024 bytes.
+        attribute in the cookie-attribute-list with both an
+        attribute-name of "Domain" and an attribute-value whose
+        length is no more than 1024 octets.
 
     Otherwise:
 
@@ -1485,10 +1485,10 @@ user agent MUST process the cookie as follows:
 
 10. If the cookie-attribute-list contains an attribute with an
     attribute-name of "Path", set the cookie's path to attribute-value of
-    the last attribute in the cookie-attribute-list with an attribute-name
-    of "Path" and with an attribute-value whose length is no more than 1024
-    bytes. Otherwise, set the cookie's path to the default-path of the
-    request-uri.
+    the last attribute in the cookie-attribute-list with both an
+    attribute-name of "Path" and an attribute-value whose length is no
+    more than 1024 octets. Otherwise, set the cookie's path to the
+    default-path of the request-uri.
 
 11. If the cookie-attribute-list contains an attribute with an
     attribute-name of "Secure", set the cookie's secure-only-flag to true.
