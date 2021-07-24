@@ -478,7 +478,7 @@ Note that additional information about the error can be recorded in the details 
 * Name: proxy_internal_response
 * Description: The intermediary generated the response locally, without attempting to connect to the next hop (e.g. in response to a request to a debug endpoint terminated at the intermediary).
 * Extra Parameters: None.
-* Recommended HTTP status code:
+* Recommended HTTP status code: The most appropriate status code for the response
 * Reference: \[this document\]
 
 ### Proxy Internal Error
