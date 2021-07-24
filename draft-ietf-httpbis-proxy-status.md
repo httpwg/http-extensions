@@ -213,6 +213,8 @@ See the registry at <https://iana.org/assignments/http-proxy-status> for details
 
 This section lists the Proxy Error Types defined by this document. See {{register-error}} for information about defining new Proxy Error Types.
 
+Note that implementations might not produce all Proxy Error Types. The set of types below is designed to map to existing states in implementations, and so may not be applicable to some.
+
 ### DNS Timeout
 
 * Name: dns_timeout
