@@ -212,7 +212,7 @@ of HTTP messages and tunnels, see {{client-scheduling}}, {{server-scheduling}},
 and {{connect-scheduling}}.
 
 Where HTTP extensions change stream behavior or define new data carriage
-mechanisms, they MAY also define how this priority scheme can be applied.
+mechanisms, they can also define how this priority scheme can be applied.
 
 
 # Priority Parameters {#parameters}
