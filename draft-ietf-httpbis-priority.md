@@ -95,7 +95,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in {{!RFC2119}}.
 
-The terms sf-token and sf-boolean are imported from
+The terms sf-integer and sf-boolean are imported from
 {{!STRUCTURED-FIELDS=RFC8941}}.
 
 Example HTTP requests and responses use the HTTP/2-style formatting from
