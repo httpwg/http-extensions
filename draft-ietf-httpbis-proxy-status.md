@@ -542,7 +542,7 @@ See the registry at <https://iana.org/assignments/http-proxy-status> for details
 
 # IANA Considerations
 
-Upon publication, please create the HTTP Proxy-Status Parameters registry and the HTTP Proxy Error Types registry at <https://iana.org/assignments/http-proxy-statuses> and populate them with the types defined in {{params}} and {{error-types}} respectively; see {{register-param}} and {{register-error}} for its associated procedures.
+Upon publication, please create the HTTP Proxy-Status Parameters registry and the HTTP Proxy Error Types registry at <https://iana.org/assignments/http-proxy-status> and populate them with the types defined in {{params}} and {{error-types}} respectively; see {{register-param}} and {{register-error}} for its associated procedures.
 
 
 # Security Considerations {#security}
