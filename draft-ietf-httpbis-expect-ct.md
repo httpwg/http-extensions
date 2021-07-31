@@ -761,7 +761,7 @@ Applications that use this media type:
 
 Additional information:
 
-: 
+: <!-- trailing whitespace is needed here -->
 
 : Deprecated alias names for this type: n/a
 
