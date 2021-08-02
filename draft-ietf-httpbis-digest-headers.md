@@ -1461,6 +1461,9 @@ Location: /authors/123
 This RFC deprecates the negotiation of `Content-MD5` as it has been obsoleted by
 [RFC7231].
 
+See {{content-digest}} and {{want-content-digest}} for a new checksum negotiation mechanism
+for HTTP message content.
+
 ## Obsolete Digest Field Parameters {#obsolete-parameters}
 
 Section 4.1.1 and 4.2 of [RFC3230] defined field parameters. This document
