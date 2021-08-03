@@ -24,7 +24,7 @@ clean::
 rfc-http-validate ?= rfc-http-validate.py
 .PHONY: http-lint
 http-lint: $(drafts_xml) http-lint-install
-	$(rfc-http-validate) -m sf.json $(filter-out http-lint-install,$^)
+	$(rfc-http-validate) -q -m sf.json $(filter-out http-lint-install,$^)
 
 .PHONY: http-lint-install
 http-lint-install:
