@@ -370,7 +370,7 @@ If used, the `@method` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
 
-~~~
+~~~ http-message
 POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
@@ -390,7 +390,7 @@ If used, the `@target-uri` identifier MUST occur only once in the signature inpu
 
 For example, the following message sent over HTTPS:
 
-~~~
+~~~ http-message
 POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
@@ -411,7 +411,7 @@ If used, the `@authority` identifier MUST occur only once in the signature input
 
 For example, the following request message:
 
-~~~
+~~~ http-message
 POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
@@ -432,7 +432,7 @@ inclusion in the signature input string.
 
 For example, the following request message requested over plain HTTP:
 
-~~~
+~~~ http-message
 POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
@@ -459,7 +459,7 @@ when versions of HTTP other than 1.1 might be in use.
 
 The origin form value is combination of the absolute path and query components of the request URL. For example, the following request message:
 
-~~~
+~~~ http-message
 POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
@@ -472,7 +472,7 @@ Would result in the following `@request-target` value:
 
 The following request to an HTTP proxy with the absolute-form value, containing the fully qualified target URI:
 
-~~~
+~~~ http-message
 GET https://www.example.com/path?param=value HTTP/1.1
 ~~~
 
@@ -484,7 +484,7 @@ Would result in the following `@request-target` value:
 
 The following CONNECT request with an authority-form value, containing the host and port of the target:
 
-~~~
+~~~ http-message
 CONNECT www.example.com:80 HTTP/1.1
 Host: www.example.com
 ~~~
@@ -497,7 +497,7 @@ Would result in the following `@request-target` value:
 
 The following OPTIONS request message with the asterisk-form value, containing a single asterisk `*` character:
 
-~~~
+~~~ http-message
 OPTIONS * HTTP/1.1
 Host: www.example.com
 ~~~
@@ -517,7 +517,7 @@ If used, the `@path` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
 
-~~~
+~~~ http-message
 POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
@@ -537,7 +537,7 @@ If used, the `@query` identifier MUST occur only once in the signature input.
 
 For example, the following request message:
 
-~~~
+~~~ http-message
 POST /path?param=value&foo=bar&baz=batman HTTP/1.1
 Host: www.example.com
 ~~~
@@ -550,7 +550,7 @@ Would result in the following `@query` value:
 
 The following request message:
 
-~~~
+~~~ http-message
 POST /path?queryString HTTP/1.1
 Host: www.example.com
 ~~~
@@ -580,7 +580,7 @@ in separate signature input lines in the order in which the parameters occur in 
 
 For example for the following request:
 
-~~~
+~~~ http-message
 POST /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
 Host: www.example.com
 ~~~
@@ -602,7 +602,7 @@ If used, the `@status` identifier MUST occur only once in the signature input.
 
 For example, the following response message:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Date: Fri, 26 Mar 2010 00:05:00 GMT
 ~~~
@@ -627,6 +627,8 @@ The value is the `sf-binary` representation of the signature value of the refere
 For example, when serving this signed request:
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 POST /foo?param=value&pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
@@ -676,6 +678,8 @@ The server signs the response with its own key and includes the signature of `si
 The signed response message is:
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
@@ -962,7 +966,9 @@ the `Signature` HTTP header field contains the signature value, while the `Signa
 ## The 'Signature-Input' HTTP Header {#signature-input-header}
 The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more message signatures generated from content within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered content including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
-~~~
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 Signature-Input: sig1=("@method" "@target-uri" "host" "date" \
   "cache-control" "x-empty-header" "x-example");created=1618884475\
   ;keyid="test-key-rsa-pss"
@@ -974,7 +980,9 @@ in generating the signature input string's `@signature-params` value.
 ## The 'Signature' HTTP Header {#signature-header}
 The `Signature` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing one or more message signatures generated from content within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured Header within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP header field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP header field MUST be ignored.
 
-~~~
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
   1RSHi+oEF1FuX6O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCiHz\
   C87qmSQjvu1CFyFuWSjdGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyoyZW84jS8\
@@ -1016,6 +1024,8 @@ uJm0Wlg==
 These values are added to the HTTP request message by the proxy. The different signature values are wrapped onto separate lines to increase human-readability of the result.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 X-Forwarded-For: 192.0.2.123
 Signature-Input: sig1=("@method" "@path" "@authority" \
     "cache-control" "x-empty-header" "x-example")\
@@ -1334,7 +1344,7 @@ Content-Length: 18
 
 For responses, this `test-response` message is used:
 
-~~~
+~~~ http-message
 HTTP/1.1 200 OK
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
@@ -1359,6 +1369,8 @@ The corresponding signature input is:
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 Signature-Input: sig1=();created=1618884475\
   ;keyid="test-key-rsa-pss";alg="rsa-pss-sha512"
 Signature: sig1=:HWP69ZNiom9Obu1KIdqPPcu/C1a5ZUMBbqS/xwJECV8bhIQVmE\
@@ -1386,7 +1398,9 @@ The corresponding signature input is:
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
 
-~~~
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 Signature-Input: sig1=("@authority" "content-type")\
   ;created=1618884475;keyid="test-key-rsa-pss"
 Signature: sig1=:ik+OtGmM/kFqENDf9Plm8AmPtqtC7C9a+zYSaxr58b/E6h81gh\
@@ -1419,7 +1433,9 @@ The corresponding signature input is:
 
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
-~~~
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 Signature-Input: sig1=("date" "@method" "@path" "@query" \
   "@authority" "content-type" "digest" "content-length")\
   ;created=1618884475;keyid="test-key-rsa-pss"
@@ -1448,7 +1464,9 @@ The corresponding signature input is:
 
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
-~~~
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 Signature-Input: sig1=("content-type" "digest" "content-length")\
   ;created=1618884475;keyid="test-key-ecc-p256"
 Signature: sig1=:n8RKXkj0iseWDmC6PNSQ1GX2R9650v+lhbb6rTGoSrSSx18zmn\
@@ -1472,7 +1490,9 @@ The corresponding signature input is:
 
 This results in the following `Signature-Input` and `Signature` headers being added to the message:
 
-~~~
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 Signature-Input: sig1=("@authority" "date" "content-type")\
   ;created=1618884475;keyid="test-shared-secret"
 Signature: sig1=:fN3AMNGbx0V/cIEKkZOvLOoC3InI+lM2+gTv22x3ia8=:
