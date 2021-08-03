@@ -349,7 +349,7 @@ While this is not an issue for short queries, it can become one for larger query
 
 In these cases, an application using HTTP might consider using POST to express queries in the request's content; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought consider allowing both methods.
 
-Applications should not change their state or have other side effects that might be significant to the client, since implementations can and do retry HTTP GET requests that fail, and some GET requests might be automatically replayed (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{I-D.ietf-httpbis-semantics, Section 9.2.1}}.
+Applications should not change their state or have other side effects that might be significant to the client, since implementations can and do retry HTTP GET requests that fail, and some GET requests protected by TLS Early Data might be vulnerable to replay attacks (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{I-D.ietf-httpbis-semantics, Section 9.2.1}}.
 
 Finally, note that while HTTP allows GET requests to have content syntactically, this is done only to allow parsers to be generic; as per {{I-D.ietf-httpbis-semantics, Section 9.3.1}}, content on a GET has no meaning, and will be either ignored or rejected by generic HTTP software.
 
