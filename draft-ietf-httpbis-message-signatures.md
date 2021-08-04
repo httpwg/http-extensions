@@ -1048,6 +1048,44 @@ Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
 
 The proxy's signature and the client's original signature can be verified independently for the same message, depending on the needs of the application.
 
+# Requesting Signatures
+
+While signer is free to attach a signature to a request or response without prompting, it is often desirable for a potential verifier to signal that it expects a signature from a potential signer using the `Accept-Signature` header.
+
+The message to which the requested signature is applied is known as the "target message". When the `Accept-Signature` header is sent in an HTTP Request message, the header indicates that the client desires the server to sign the response using the identified parameters. When used in a response, the header indicates that the server desires the client to sign its next request to the server with the identified parameters.
+
+The target message of an `Accept-Signature` MUST include all labeled signatures, each covering the same identified content of the `Accept-Signature` field.
+
+The sender of an `Accept-Signature` header MUST include identifiers that are appropriate for the type of the target message. For example, if the target message is a response, the identifiers can not include the `@status` identifier. 
+
+
+## The Accept-Signature Header {#accept-signature-header}
+
+The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more requested message signatures to be generated from content within the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered content of the target message, including any signature metadata parameters, using the serialization process defined in {{signature-params}}.
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+Accept-Signature: sig1=("@method" "@target-uri" "host" "date" \
+  "cache-control" "x-empty-header" "x-example")\
+  ;keyid="test-key-rsa-pss"
+~~~
+
+## Processing an Accept-Signature
+
+The receiver of an `Accept-Signature` header fulfills that header as follows:
+
+1. Parse the field value as a Dictionary
+2. For each member of the dictionary:
+    1. The name of the member is the label of the output signature as specified in {{signature-input-header}}
+    2. Parse the value of the member to obtain the list of covered content identifiers
+    3. Select any additional parameters necessary for completing the signature, such as the signing algorithm and key material
+    4. Create the `Signature-Input` and `Signature` header values and associate them with the label
+3. Optionally create any additional `Signature-Input` and `Signature` values, with unique labels not found in the `Accept-Signature` field
+4. Combine all labeled `Signature-Input` and `Signature` values and attach both headers to the target message
+
+Note that by this process, a signature applied to a target message MUST have the same label, MUST have the same covered content list, and MAY have additional parameters. Also note that the target message MAY include additional signatures not specified by the `Accept-Signature` field.
+
 # IANA Considerations {#iana}
 
 ## HTTP Signature Algorithms Registry {#hsa-registry}
