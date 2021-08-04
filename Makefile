@@ -21,6 +21,8 @@ $(GHPAGES_EXTRA):
 clean::
 	-rm -f $(GHPAGES_EXTRA)
 
+lint:: http-lint
+
 rfc-http-validate ?= rfc-http-validate.py
 .PHONY: http-lint
 http-lint: $(drafts_xml) http-lint-install
