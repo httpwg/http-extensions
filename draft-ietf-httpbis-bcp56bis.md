@@ -536,7 +536,7 @@ Applications MUST NOT make assumptions about the relationship between separate r
 
 ## Client Authentication {#client-auth}
 
-Applications can use HTTP authentication {{Section 11 of I-D.ietf-httpbis-semantics}} to identify clients. The Basic authentication scheme {{?RFC7617}} MUST NOT be used unless the underlying transport is authenticated, integrity-protected and confidential (e.g., as provided the "HTTPS" URI scheme, or another using TLS). The Digest scheme {{?RFC7616}} MUST NOT be used unless the underlying transport is similarly secure, or the chosen hash algorithm is not "MD5".
+Applications can use HTTP authentication {{Section 11 of I-D.ietf-httpbis-semantics}} to identify clients. As per {{?RFC7617}}, the Basic authentication scheme is not suitable for protecting sensitive or valuable information unless the channel is secure (e.g., using the "HTTPS" URI scheme). Likewise, {{?RFC7617}} requiers the Digest authentication scheme to be used over a secure channel.
 
 With HTTPS, clients might also be authenticated using certificates {{?RFC5246}}.
 
