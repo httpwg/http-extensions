@@ -1120,12 +1120,15 @@ so as to interoperate with servers that do not follow the recommendations in
 
 NOTE: As set-cookie-string may originate from a non-HTTP API, it is not
 guaranteed to be free of CTL characters, so this algorithm handles them
-explicitly.
+explicitly. Horizontal tab (%x09) is excluded from the CTL characters that
+lead to set-cookie-string rejection, as it is considered whitespace, which is
+handled separately.
 
 A user agent MUST use an algorithm equivalent to the following algorithm to
 parse a set-cookie-string:
 
-1.  If the set-cookie-string contains a %x00-1F / %x7F (CTL) character:
+1.  If the set-cookie-string contains a %x00-08 / %x0A-1F / %x7F character
+    (CTL characters excluding HTAB):
     Abort these steps and ignore the set-cookie-string entirely.
 
 2.  If the set-cookie-string contains a %x3B (";") character:
@@ -1403,8 +1406,9 @@ user agent MUST process the cookie as follows:
 2. If cookie-name is empty and cookie-value is empty, abort these steps and
    ignore the cookie entirely.
 
-3.  If the cookie-name or the cookie-value contains a %x00-1F / %x7F (CTL)
-    character, abort these steps and ignore the cookie entirely.
+3.  If the cookie-name or the cookie-value contains a
+    %x00-08 / %x0A-1F / %x7F character (CTL characters excluding HTAB),
+    abort these steps and ignore the cookie entirely.
 
 4.  If the sum of the lengths of cookie-name and cookie-value is more than
     4096 octets, abort these steps and ignore the cookie entirely.
