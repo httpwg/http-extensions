@@ -1735,12 +1735,15 @@ cookie-string from a given cookie store.
 4. Serialize the cookie-list into a cookie-string by processing each cookie
    in the cookie-list in order:
 
-   1.  If the cookies' name is not empty, output the cookie's name followed by
-       the %x3D ("=") character.
+   1.  If the cookie's name is not empty, output the cookie's name.
 
-   2.  If the cookies' value is not empty, output the cookie's value.
+   2.  If the cookie's name is empty and the cookie's value does not contain
+       the %x3D ("=") character, either output the %x3D ("=") character or
+       skip this step.  Otherwise, output the %x3D ("=") character.
 
-   3.  If there is an unprocessed cookie in the cookie-list, output the
+   3.  If the cookie's value is not empty, output the cookie's value.
+
+   4.  If there is an unprocessed cookie in the cookie-list, output the
        characters %x3B and %x20 ("; ").
 
 NOTE: Despite its name, the cookie-string is actually a sequence of octets, not
