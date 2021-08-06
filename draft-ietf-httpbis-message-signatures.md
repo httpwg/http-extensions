@@ -1586,6 +1586,7 @@ Jeffrey Yasskin.
 
 - draft-ietf-httpbis-message-signatures
   - -06
+     * Add "Accept-Signature" header and semantics.
      * Define new specialty content identifiers, re-defined request-target identifier.
      * Added request-response binding.
 
