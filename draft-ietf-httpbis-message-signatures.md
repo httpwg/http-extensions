@@ -1050,7 +1050,7 @@ The proxy's signature and the client's original signature can be verified indepe
 
 # Requesting Signatures
 
-While signer is free to attach a signature to a request or response without prompting, it is often desirable for a potential verifier to signal that it expects a signature from a potential signer using the `Accept-Signature` header.
+While a signer is free to attach a signature to a request or response without prompting, it is often desirable for a potential verifier to signal that it expects a signature from a potential signer using the `Accept-Signature` header.
 
 The message to which the requested signature is applied is known as the "target message". When the `Accept-Signature` header is sent in an HTTP Request message, the header indicates that the client desires the server to sign the response using the identified parameters. When used in a response, the header indicates that the server desires the client to sign its next request to the server with the identified parameters.
 
@@ -1061,7 +1061,7 @@ The sender of an `Accept-Signature` header MUST include identifiers that are app
 
 ## The Accept-Signature Header {#accept-signature-header}
 
-The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more requested message signatures to be generated from content within the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered content of the target message, including any signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more requested message signatures to be generated from content within the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered content of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1071,6 +1071,8 @@ Accept-Signature: sig1=("@method" "@target-uri" "host" "date" \
   ;keyid="test-key-rsa-pss"
 ~~~
 
+The requested signature MAY include parameters, such as a desired algorithm or key identifier. These parameters MUST NOT include parameters that the signer is expected to generate, including the `created` and `nonce` parameters.
+
 ## Processing an Accept-Signature
 
 The receiver of an `Accept-Signature` header fulfills that header as follows:
@@ -1079,8 +1081,9 @@ The receiver of an `Accept-Signature` header fulfills that header as follows:
 2. For each member of the dictionary:
     1. The name of the member is the label of the output signature as specified in {{signature-input-header}}
     2. Parse the value of the member to obtain the list of covered content identifiers
-    3. Select any additional parameters necessary for completing the signature, such as the signing algorithm and key material
-    4. Create the `Signature-Input` and `Signature` header values and associate them with the label
+    3. Process the requested parameters, such as the signing algorithm and key material. If any requested parameters cannot be fulfilled, or if the requested parameters conflict with those deemed appropriate to the target message, the process fails and returns an error.
+    4. Select any additional parameters necessary for completing the signature
+    5. Create the `Signature-Input` and `Signature` header values and associate them with the label
 3. Optionally create any additional `Signature-Input` and `Signature` values, with unique labels not found in the `Accept-Signature` field
 4. Combine all labeled `Signature-Input` and `Signature` values and attach both headers to the target message
 
