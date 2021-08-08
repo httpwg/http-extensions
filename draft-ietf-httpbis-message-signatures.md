@@ -1061,7 +1061,7 @@ The sender of an `Accept-Signature` header MUST include identifiers that are app
 
 ## The Accept-Signature Header {#accept-signature-header}
 
-The `Signature-Input` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more requested message signatures to be generated from content within the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered content of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The `Accept-Signature` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more requested message signatures to be generated from content within the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered content of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
