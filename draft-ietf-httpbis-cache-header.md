@@ -265,7 +265,9 @@ Also, please create the following entry in the Hypertext Transfer Protocol (HTTP
 
 Attackers can use the information in Cache-Status to probe the behaviour of the cache (and other components), and infer the activity of those using the cache. The Cache-Status header field may not create these risks on its own, but can assist attackers in exploiting them.
 
-For example, knowing if a cache has stored a response can help an attacker execute a timing attack on sensitive data. Exposing the cache key can help an attacker understand modifications to the cache key, which may assist cache poisoning attacks. See {{ENTANGLE}} for details.
+For example, knowing if a cache has stored a response can help an attacker execute a timing attack on sensitive data.
+
+Additionally, exposing the cache key can help an attacker understand modifications to the cache key, which may assist cache poisoning attacks. See {{ENTANGLE}} for details.
 
 The underlying risks can be mitigated with a variety of techniques (e.g., use of encryption and authentication; avoiding the inclusion of attacker-controlled data in the cache key), depending on their exact nature.
 
