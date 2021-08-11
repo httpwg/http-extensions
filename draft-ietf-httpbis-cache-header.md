@@ -68,7 +68,7 @@ Working Group information can be found at <https://httpwg.org/>; source code and
 
 To aid debugging, HTTP caches often append header fields to a response explaining how they handled the request. Unfortunately, the semantics of these headers are often unclear, and both the semantics and syntax used vary between implementations.
 
-This specification defines a new HTTP response header field, "Cache-Status" for this purpose.
+This specification defines a new HTTP response header field, "Cache-Status" for this purpose, with standardized syntax and semantics.
 
 
 ## Notational Conventions
@@ -96,7 +96,7 @@ An intermediary SHOULD NOT append a Cache-Status member to responses that it gen
 
 When adding a value to the Cache-Status header field, caches SHOULD preserve the existing field value, to allow debugging of the entire chain of caches handling the request.
 
-Each list member identifies the cache that inserted it and MUST be a String or Token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), an IP address, or a generated string.
+Each list member identifies the cache that inserted it and this identifier MUST be a String or Token. Depending on the deployment, this might be a product or service name (e.g., ExampleCache or "Example CDN"), a hostname ("cache-3.example.com"), an IP address, or a generated string.
 
 Each member of the list can have parameters that describe that cache's handling of the request. While these parameters are OPTIONAL, caches are encouraged to provide as much information as possible.
 
@@ -142,7 +142,7 @@ The most specific reason that the cache is aware of SHOULD be used, to the exten
 
 ## The fwd-status parameter
 
-"fwd-status" indicates what status code (see {{I-D.ietf-httpbis-semantics, Section 15}}) the next hop server returned in response to the request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
+"fwd-status" indicates what status code (see {{I-D.ietf-httpbis-semantics, Section 15}}) the next hop server returned in response to the forwarded request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
 
 This parameter is useful to distinguish cases when the next hop server sends a 304 Not Modified response to a conditional request, or a 206 Partial Response because of a range request.
 
@@ -245,7 +245,7 @@ Registration requests should use the following template:
 
 * Name: \[a name for the Cache-Status Parameter that matches the 'key' ABNF rule\]
 * Description: \[a description of the parameter semantics and value\]
-* Reference: \[to a specification defining this parameter\]
+* Reference: \[to a specification defining this parameter, if available\]
 
 See the registry at <https://iana.org/assignments/http-cache-status> for details on where to send registration requests.
 
