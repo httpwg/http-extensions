@@ -79,6 +79,7 @@ informative:
 --- abstract
 
 This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over content within an HTTP message.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.
+This document also describes a means for requesting that a signature be applied to a subsequent HTTP message in an ongoing HTTP exchange.
 
 --- note_Note_to_Readers
 
@@ -97,11 +98,13 @@ Application developers typically rely on the transport layer to provide these pr
 
 This document defines a mechanism for providing end-to-end integrity and authenticity for content within an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only that content within the message that is meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
 
-The mechanism described in this document consists of three parts:
+The signing mechanism described in this document consists of three parts:
 
 - A common nomenclature and canonicalization rule set for the different protocol elements and other content within HTTP messages.
 - Algorithms for generating and verifying signatures over HTTP message content using this nomenclature and rule set.
 - A mechanism for attaching a signature and related metadata to an HTTP message.
+
+This document also provides a mechanism for one party to signal to another party that a signature is desired in one or more subsequent messages. This optional negotiation mechanism can be used along with opportunistic or application-driven message signatures by either party.
 
 ## Requirements Discussion
 
@@ -1052,11 +1055,15 @@ The proxy's signature and the client's original signature can be verified indepe
 
 While a signer is free to attach a signature to a request or response without prompting, it is often desirable for a potential verifier to signal that it expects a signature from a potential signer using the `Accept-Signature` header.
 
-The message to which the requested signature is applied is known as the "target message". When the `Accept-Signature` header is sent in an HTTP Request message, the header indicates that the client desires the server to sign the response using the identified parameters. When used in a response, the header indicates that the server desires the client to sign its next request to the server with the identified parameters.
+The message to which the requested signature is applied is known as the "target message". When the `Accept-Signature` header is sent in an HTTP Request message, the header indicates that the client desires the server to sign the response using the identified parameters and the target message is the response to this request. The server can choose to also continue signing future responses to the same client in the same way.
 
-The target message of an `Accept-Signature` MUST include all labeled signatures, each covering the same identified content of the `Accept-Signature` field.
+Responses that are the result of signature negotiation in this manner MUST either be marked as not cacheable or contain a `Vary` field, in order to prevent a proxy from returning a response with a signature intended for a different request.
 
-The sender of an `Accept-Signature` header MUST include identifiers that are appropriate for the type of the target message. For example, if the target message is a response, the identifiers can not include the `@status` identifier. 
+When the `Accept-Signature` header is used in an HTTP Response message, the header indicates that the server desires the client to sign its next request to the server with the identified parameters, and the target message is the client's next request. The client can choose to also continue signing future requests to the same server in the same way.
+
+The target message of an `Accept-Signature` MUST include all labeled signatures indicated in the `Accept-Header` signature, each covering the same identified content of the `Accept-Signature` field.
+
+The sender of an `Accept-Signature` header MUST include identifiers that are appropriate for the type of the target message. For example, if the target message is a response, the identifiers can not include the `@status` identifier.
 
 
 ## The Accept-Signature Header {#accept-signature-header}
