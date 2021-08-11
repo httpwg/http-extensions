@@ -1738,8 +1738,8 @@ cookie-string from a given cookie store.
    1.  If the cookie's name is not empty, output the cookie's name.
 
    2.  If the cookie's name is empty and the cookie's value does not contain
-       the %x3D ("=") character, either output the %x3D ("=") character or
-       skip this step.  Otherwise, output the %x3D ("=") character.
+       the %x3D ("=") character, skip the remainder of this step and continue
+       to step 3. Otherwise, output the %x3D ("=") character.
 
    3.  If the cookie's value is not empty, output the cookie's value.
 
