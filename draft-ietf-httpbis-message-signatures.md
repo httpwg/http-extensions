@@ -1053,22 +1053,20 @@ The proxy's signature and the client's original signature can be verified indepe
 
 # Requesting Signatures
 
-While a signer is free to attach a signature to a request or response without prompting, it is often desirable for a potential verifier to signal that it expects a signature from a potential signer using the `Accept-Signature` header.
+While a signer is free to attach a signature to a request or response without prompting, it is often desirable for a potential verifier to signal that it expects a signature from a potential signer using the `Accept-Signature` field.
 
-The message to which the requested signature is applied is known as the "target message". When the `Accept-Signature` header is sent in an HTTP Request message, the header indicates that the client desires the server to sign the response using the identified parameters and the target message is the response to this request. The server can choose to also continue signing future responses to the same client in the same way.
+The message to which the requested signature is applied is known as the "target message". When the `Accept-Signature` field is sent in an HTTP Request message, the field indicates that the client desires the server to sign the response using the identified parameters and the target message is the response to this request. The server can choose to also continue signing future responses to the same client in the same way. Responses that are the result of signature negotiation in this manner MUST either be marked as not cacheable or contain a `Vary` field, in order to prevent a proxy from returning a response with a signature intended for a different request.
 
-Responses that are the result of signature negotiation in this manner MUST either be marked as not cacheable or contain a `Vary` field, in order to prevent a proxy from returning a response with a signature intended for a different request.
+When the `Accept-Signature` field is used in an HTTP Response message, the field indicates that the server desires the client to sign its next request to the server with the identified parameters, and the target message is the client's next request. The client can choose to also continue signing future requests to the same server in the same way.
 
-When the `Accept-Signature` header is used in an HTTP Response message, the header indicates that the server desires the client to sign its next request to the server with the identified parameters, and the target message is the client's next request. The client can choose to also continue signing future requests to the same server in the same way.
+The target message of an `Accept-Signature` field MUST include all labeled signatures indicated in the `Accept-Header` signature, each covering the same identified components of the `Accept-Signature` field.
 
-The target message of an `Accept-Signature` MUST include all labeled signatures indicated in the `Accept-Header` signature, each covering the same identified content of the `Accept-Signature` field.
-
-The sender of an `Accept-Signature` header MUST include identifiers that are appropriate for the type of the target message. For example, if the target message is a response, the identifiers can not include the `@status` identifier.
+The sender of an `Accept-Signature` field MUST include identifiers that are appropriate for the type of the target message. For example, if the target message is a response, the identifiers can not include the `@status` identifier.
 
 
-## The Accept-Signature Header {#accept-signature-header}
+## The Accept-Signature Field {#accept-signature-header}
 
-The `Accept-Signature` HTTP header field is a Dictionary Structured Header {{!RFC8941}} containing the metadata for one or more requested message signatures to be generated from content within the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered content of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The `Accept-Signature` HTTP header field is a Dictionary Structured field {{!RFC8941}} containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered components of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1082,19 +1080,19 @@ The requested signature MAY include parameters, such as a desired algorithm or k
 
 ## Processing an Accept-Signature
 
-The receiver of an `Accept-Signature` header fulfills that header as follows:
+The receiver of an `Accept-Signature` field fulfills that header as follows:
 
 1. Parse the field value as a Dictionary
 2. For each member of the dictionary:
     1. The name of the member is the label of the output signature as specified in {{signature-input-header}}
-    2. Parse the value of the member to obtain the list of covered content identifiers
+    2. Parse the value of the member to obtain the set of covered component identifiers
     3. Process the requested parameters, such as the signing algorithm and key material. If any requested parameters cannot be fulfilled, or if the requested parameters conflict with those deemed appropriate to the target message, the process fails and returns an error.
     4. Select any additional parameters necessary for completing the signature
     5. Create the `Signature-Input` and `Signature` header values and associate them with the label
 3. Optionally create any additional `Signature-Input` and `Signature` values, with unique labels not found in the `Accept-Signature` field
 4. Combine all labeled `Signature-Input` and `Signature` values and attach both headers to the target message
 
-Note that by this process, a signature applied to a target message MUST have the same label, MUST have the same covered content list, and MAY have additional parameters. Also note that the target message MAY include additional signatures not specified by the `Accept-Signature` field.
+Note that by this process, a signature applied to a target message MUST have the same label, MUST have the same set of covered component, and MAY have additional parameters. Also note that the target message MAY include additional signatures not specified by the `Accept-Signature` field.
 
 # IANA Considerations {#iana}
 
@@ -1593,7 +1591,7 @@ Jeffrey Yasskin.
 
 - draft-ietf-httpbis-message-signatures
   - -06
-     * Add "Accept-Signature" header and semantics.
+     * Add "Accept-Signature" field and semantics for signature negotiation.
      * Define new specialty content identifiers, re-defined request-target identifier.
      * Added request-response binding.
 
