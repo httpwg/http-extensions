@@ -80,7 +80,7 @@ This document uses ABNF as defined in {{!RFC5234}}, with rules prefixed with "sf
 
 # The Cache-Status HTTP Response Header Field {#field}
 
-The Cache-Status HTTP response header field indicates caches' handling of the request corresponding to the response it occurs within.
+The Cache-Status HTTP response header field indicates how caches have handled that response and its corresponding request.
 
 Its value is a List ({{RFC8941, Section 3.1}}):
 
