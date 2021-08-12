@@ -802,12 +802,12 @@ In order to create a signature, a signer MUST follow the following algorithm:
 
 3. If applicable, the signer sets the signature's expiration time property to the time at which the signature is to expire.
 
-4. The signer creates the signature parameters, which is an ordered set of component identifiers representing the message components to be covered by the signature, and assigns signature metadata parameters to this value. The value of this is later used as the value of the `Signature-Input` field as described in {{signature-input-header}}.
+4. The signer creates an ordered set of component identifiers representing the message components to be covered by the signature, and attaches signature metadata parameters to this set. The serialized value of this is later used as the value of the `Signature-Input` field as described in {{signature-input-header}}.
    * Once an order of covered components is chosen, the order MUST NOT change for the life of the signature.
-   * Each covered component identifier MUST be either an HTTP field in the request message {{http-header}} or a specialty component identifier listed in {{specialty-content}} or its associated registry.
-   * Signers of a request SHOULD include some or all of the control data in the covered components, such as the `@method`, `@authority`, `@target-uri`, or some combination thereof.
+   * Each covered component identifier MUST be either an HTTP field in the message {{http-header}} or a specialty component identifier listed in {{specialty-content}} or its associated registry.
+   * Signers of a request SHOULD include some or all of the message control data in the covered components, such as the `@method`, `@authority`, `@target-uri`, or some combination thereof.
    * Signers SHOULD include the `created` signature metadata parameter to indicate when the signature was created.
-   * The `@signature-params` specialty identifier is not explicitly listed in the list of covered component identifiers, because it is required to always be present as the last line in the signature input. This ensures that a signature always covers its own metadata.
+   * The `@signature-params` specialty component identifier is not explicitly listed in the list of covered component identifiers, because it is required to always be present as the last line in the signature input. This ensures that a signature always covers its own metadata.
    * Further guidance on what to include in this set and in what order is out of scope for this document.
 
 5. The signer creates the signature input string based on these signature parameters. ({{create-sig-input}})
@@ -985,12 +985,14 @@ The output of the JWS signature is taken as a byte array prior to the Base64url 
 The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE Implementation Requirement of `Prohibited`.
 
 # Including a Message Signature in a Message
-Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP fields, both defined within this specification.
+
+Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP fields, both defined within this specification. When attached to a message, an HTTP message signature is identified by a label. This label MUST be unique within a given HTTP message and MUST be used in both the `Signature-Input` and `Signature`. The label is chosen by the signer, except where a specific label is dictated by protocol negotiations.
 
 An HTTP message signature MUST use both fields containing the same labels:
 the `Signature` HTTP field contains the signature value, while the `Signature-Input` HTTP field identifies the covered components and parameters that describe how the signature was generated. Each field contains labeled values and MAY contain multiple labeled values, where the labels determine the correlation between the `Signature` and `Signature-Input` fields.
 
 ## The 'Signature-Input' HTTP Field {#signature-input-header}
+
 The `Signature-Input` HTTP field is a Dictionary Structured Field {{!RFC8941}} containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered components including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~ http-message
@@ -1004,11 +1006,12 @@ Signature-Input: sig1=("@method" "@target-uri" "host" "date" \
 To facilitate signature validation, the `Signature-Input` field value MUST contain the same serialized value used
 in generating the signature input string's `@signature-params` value.
 
-It is RECOMMENDED that the `Signature-Input` HTTP field be included as a header, though it is possible to include it as a trailer to facilitate signing a message after its content has been processed by the signer.
+The signer MAY include the `Signature-Input` field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the `Signature-Input` HTTP field be included only as a header to avoid signatures being inadvertently stripped from a message.
 
 Multiple `Signature-Input` fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
 
 ## The 'Signature' HTTP Field {#signature-header}
+
 The `Signature` HTTP field is a Dictionary Structured field {{!RFC8941}} containing one or more message signatures generated from components within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured field within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP field MUST be ignored.
 
 ~~~ http-message
@@ -1022,13 +1025,13 @@ Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
   BNFv3r5S9IXf2fYJK+eyW4AiGVMvMcOg==:
 ~~~
 
-It is RECOMMENDED that the `Signature` HTTP field be included as a header, though it is possible to include it as a trailer to facilitate signing a message after its content has been processed by the signer.
+The signer MAY include the `Signature` field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the `Signature-Input` HTTP field be included only as a header to avoid signatures being inadvertently stripped from a message.
 
 Multiple `Signature` fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
 
 ## Multiple Signatures
 
-Since `Signature-Input` and `Signature` are both defined as Dictionary Structured fields, they can be used to include multiple signatures within the same HTTP message. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over those fields and the client's original signature.
+Multiple distinct signatures MAY be included in a single message. Since `Signature-Input` and `Signature` are both defined as Dictionary Structured fields, they can be used to include multiple signatures within the same HTTP message by using distinct signature labels. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
 
 The following is a non-normative example of header fields a reverse proxy sets in addition to the examples in the previous sections. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under `proxy_sig`. The proxy uses the key `rsa-test-key` to create its signature using the `rsa-v1_5-sha256` signature value. This results in a signature input string of:
 
