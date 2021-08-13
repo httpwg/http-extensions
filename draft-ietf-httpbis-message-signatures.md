@@ -71,6 +71,7 @@ informative:
     RFC7518:
     RFC7239:
     RFC8017:
+    I-D.ietf-httpbis-client-cert-field:
     WP-HTTP-Sig-Audit:
         target: https://web-payments.org/specs/source/http-signatures-audit/
         title: Security Considerations for HTTP Signatures
@@ -1092,6 +1093,103 @@ Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
 ~~~
 
 The proxy's signature and the client's original signature can be verified independently for the same message, depending on the needs of the application.
+
+## TLS-Terminating Proxies
+
+In another example, there is a TLS-terminating reverse proxy sitting in front of the resource. The client does not sign the request but instead uses mutual TLS to make its call. The terminating proxy validates the TLS stream and injects a `Client-Cert` header according to {{I-D.ietf-httpbis-client-cert-field}}. By signing this header field, a reverse proxy can not only attest to its own validation of the initial request but also authenticate itself to the backend system independently of the client's actions. The client makes the following request to the TLS terminating proxy using mutual TLS:
+
+~~~ http-message
+POST /foo?Param=value&pet=Dog HTTP/1.1
+Host: example.com
+Date: Tue, 20 Apr 2021 02:07:55 GMT
+Content-Type: application/json
+Content-Length: 18
+
+{"hello": "world"}
+~~~
+
+The proxy processes the TLS connection and extracts the client's TLS certificate to a `Client-Cert` header field and passes it along to the internal service hosted at `service.internal.example`. This results in the following unsigned request:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+POST /foo?Param=value&pet=Dog HTTP/1.1
+Host: service.internal.example
+Date: Tue, 20 Apr 2021 02:07:55 GMT
+Content-Type: application/json
+Content-Length: 18
+Client-Cert: :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKD\
+  BJMZXQncyBBdXRoZW50aWNhdGUxGzAZBgNVBAMMEkxBIEludGVybWVkaWF0ZSBDQT\
+  AeFw0yMDAxMTQyMjU1MzNaFw0yMTAxMjMyMjU1MzNaMA0xCzAJBgNVBAMMAkJDMFk\
+  wEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE8YnXXfaUgmnMtOXU/IncWalRhebrXmck\
+  C8vdgJ1p5Be5F/3YC8OthxM4+k1M6aEAEFcGzkJiNy6J84y7uzo9M6NyMHAwCQYDV\
+  R0TBAIwADAfBgNVHSMEGDAWgBRm3WjLa38lbEYCuiCPct0ZaSED2DAOBgNVHQ8BAf\
+  8EBAMCBsAwEwYDVR0lBAwwCgYIKwYBBQUHAwIwHQYDVR0RAQH/BBMwEYEPYmRjQGV\
+  4YW1wbGUuY29tMAoGCCqGSM49BAMCA0gAMEUCIBHda/r1vaL6G3VliL4/Di6YK0Q6\
+  bMjeSkC3dFCOOB8TAiEAx/kHSB4urmiZ0NX5r5XarmPk0wmuydBVoU4hBVZ1yhk=:
+
+{"hello": "world"}
+~~~
+
+Without a signature, the internal service would need to trust that the incoming connection has the right information. By signing the `Client-Cert` header and other portions of the internal request, the internal service can be assured that the correct party, the trusted proxy, has processed the request and presented it to the correct service. The proxy's signature input consists of the following:
+
+~~~
+NOTE: '\' line wrapping per RFC 8792
+
+"@path": /foo
+"@query": Param=value&pet=Dog
+"@method": POST
+"@authority": service.internal.example
+"client-cert": :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQ\
+  KDBJMZXQncyBBdXRoZW50aWNhdGUxGzAZBgNVBAMMEkxBIEludGVybWVkaWF0ZSBD\
+  QTAeFw0yMDAxMTQyMjU1MzNaFw0yMTAxMjMyMjU1MzNaMA0xCzAJBgNVBAMMAkJDM\
+  FkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE8YnXXfaUgmnMtOXU/IncWalRhebrXm\
+  ckC8vdgJ1p5Be5F/3YC8OthxM4+k1M6aEAEFcGzkJiNy6J84y7uzo9M6NyMHAwCQY\
+  DVR0TBAIwADAfBgNVHSMEGDAWgBRm3WjLa38lbEYCuiCPct0ZaSED2DAOBgNVHQ8B\
+  Af8EBAMCBsAwEwYDVR0lBAwwCgYIKwYBBQUHAwIwHQYDVR0RAQH/BBMwEYEPYmRjQ\
+  GV4YW1wbGUuY29tMAoGCCqGSM49BAMCA0gAMEUCIBHda/r1vaL6G3VliL4/Di6YK0\
+  Q6bMjeSkC3dFCOOB8TAiEAx/kHSB4urmiZ0NX5r5XarmPk0wmuydBVoU4hBVZ1yhk=:
+"@signature-params": ("@path" "@query" "@method" "@authority" \
+  "client-cert");created=1618884475;keyid="test-key-ecc-p256"
+~~~
+
+This results in the following signature:
+
+~~~
+NOTE: '\' line wrapping per RFC 8792
+
+5gudRjXaHrAYbEaQUOoY9TuvqWOdPcspkp7YyKCB0XhyAG9cB715hucPPanEK0OVyiN\
+LJqcoq2Yn1DPWQcnbog==
+~~~
+
+Which results in the following signed request sent from the proxy to the internal service:
+
+~~~
+NOTE: '\' line wrapping per RFC 8792
+
+POST /foo?Param=value&pet=Dog HTTP/1.1
+Host: service.internal.example
+Date: Tue, 20 Apr 2021 02:07:55 GMT
+Content-Type: application/json
+Content-Length: 18
+Client-Cert: :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKD\
+  BJMZXQncyBBdXRoZW50aWNhdGUxGzAZBgNVBAMMEkxBIEludGVybWVkaWF0ZSBDQT\
+  AeFw0yMDAxMTQyMjU1MzNaFw0yMTAxMjMyMjU1MzNaMA0xCzAJBgNVBAMMAkJDMFk\
+  wEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE8YnXXfaUgmnMtOXU/IncWalRhebrXmck\
+  C8vdgJ1p5Be5F/3YC8OthxM4+k1M6aEAEFcGzkJiNy6J84y7uzo9M6NyMHAwCQYDV\
+  R0TBAIwADAfBgNVHSMEGDAWgBRm3WjLa38lbEYCuiCPct0ZaSED2DAOBgNVHQ8BAf\
+  8EBAMCBsAwEwYDVR0lBAwwCgYIKwYBBQUHAwIwHQYDVR0RAQH/BBMwEYEPYmRjQGV\
+  4YW1wbGUuY29tMAoGCCqGSM49BAMCA0gAMEUCIBHda/r1vaL6G3VliL4/Di6YK0Q6\
+  bMjeSkC3dFCOOB8TAiEAx/kHSB4urmiZ0NX5r5XarmPk0wmuydBVoU4hBVZ1yhk=:
+Signature-Input: ttrp=("@path" "@query" "@method" "@authority" \
+  "client-cert");created=1618884475;keyid="test-key-ecc-p256"
+Signature: ttrp=:5gudRjXaHrAYbEaQUOoY9TuvqWOdPcspkp7YyKCB0XhyAG9cB7\
+  15hucPPanEK0OVyiNLJqcoq2Yn1DPWQcnbog==:
+
+{"hello": "world"}
+~~~
+
+The internal service can validate the proxy's signature and therefore be able to trust that the client's certificate has been appropriately processed.
 
 # Requesting Signatures
 
