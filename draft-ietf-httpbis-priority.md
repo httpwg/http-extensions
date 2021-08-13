@@ -105,7 +105,7 @@ This document uses the variable-length integer encoding from
 {{!QUIC=RFC9000}}.
 
 The term control stream is used to describe the HTTP/2 stream with identifier
-0x0, and HTTP/3 control stream; see {{!HTTP3=I-D.ietf-quic-http}}, Section 6.2.1.
+0x0, and HTTP/3 control stream; see {{Section 6.2.1 of !HTTP3=I-D.ietf-quic-http}}.
 
 
 # Motivation for Replacing HTTP/2 Priorities {#motivation}
@@ -178,7 +178,7 @@ such as the scheme defined in this specification. The
 SETTINGS_DEPRECATE_HTTP2_PRIORITIES setting described below enables endpoints to
 understand their peer's intention. The value of the parameter MUST
 be 0 or 1. Any value other than 0 or 1 MUST be treated as a connection error
-(see {{HTTP2}}, Section 5.4.1) of type PROTOCOL_ERROR.
+(see {{Section 5.4.1 of HTTP2}}) of type PROTOCOL_ERROR.
 
 Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
 A sender MUST NOT change the SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter value
@@ -331,7 +331,7 @@ New Priority parameters can be defined by registering them in the HTTP Priority
 Parameters Registry.
 
 Registration requests are reviewed and approved by a Designated Expert, as per
-{{!RFC8126}}, Section 4.5. A specification document is appreciated, but not
+{{Section 4.5 of !RFC8126}}. A specification document is appreciated, but not
 required.
 
 The Expert(s) should consider the following factors when evaluating requests:
@@ -424,7 +424,7 @@ initial priority of a response, or to reprioritize a response or push stream. It
 carries the stream ID of the response and the priority in ASCII text, using the
 same representation as the Priority header field value.
 
-The Stream Identifier field ({{HTTP2}}, Section 4.1) in the PRIORITY_UPDATE
+The Stream Identifier field ({{Section 4.1 of HTTP2}}) in the PRIORITY_UPDATE
 frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE frame with a field
 of any other value MUST be treated as a connection error of type PROTOCOL_ERROR.
 
@@ -488,7 +488,7 @@ used for request streams, while PRIORITY_UPDATE with a frame type of 0xF0701 is
 used for push streams.
 
 The PRIORITY_UPDATE frame MUST be sent on the client control stream
-({{HTTP3}}, Section 6.2.1). Receiving a PRIORITY_UPDATE frame on a
+({{Section 6.2.1 of HTTP3}}). Receiving a PRIORITY_UPDATE frame on a
 stream other than the client control stream MUST be treated as a connection
 error of type H3_FRAME_UNEXPECTED.
 
@@ -686,7 +686,7 @@ transport layer factors priority into scheduling both new data and
 retransmission data. The remainder of this section discusses considerations when
 using QUIC.
 
-{{QUIC}}, Section 13.3 states "Endpoints SHOULD prioritize
+{{Section 13.3 of QUIC}} states "Endpoints SHOULD prioritize
 retransmission of data over sending new data, unless priorities specified by the
 application indicate otherwise". When an HTTP/3 application uses the priority
 scheme defined in this document and the QUIC transport implementation supports
@@ -699,7 +699,7 @@ prioritize new data for a higher urgency stream over retransmission data for a
 lower priority stream, or it could prioritize retransmission data over new data
 irrespective of urgencies.
 
-{{?QUIC-RECOVERY=RFC9002}}, Section 6.2.4 also highlights consideration of
+{{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}},  also highlights consideration of
 application priorities when sending probe packets after PTO timer expiration. An
 QUIC implementation supporting application-indicated priorities might use the
 relative priority of streams when choosing probe data.
@@ -742,7 +742,7 @@ configuration, or by consulting if that request contains one of the following
 header fields:
 
 * Forwarded, X-Forwarded-For ({{?RFC7239}})
-* Via ({{?RFC7230}}, Section 5.7.1)
+* Via (Section 5.7.1 of {{?RFC7230}})
 
 ## HTTP/1.x Back Ends
 
@@ -798,7 +798,7 @@ makes the prioritization scheme extensible; see the discussion below.
 the HTTP/2 priority tree. Extensible priorities does not use stream
 dependencies, which mitigates this vulnerability.
 
-{{HTTP2}}, Section 5.3.4 describes a scenario where closure of streams in the
+{{Section 5.3.4 of HTTP2}} describes a scenario where closure of streams in the
 priority tree could cause suboptimal prioritization. To avoid this, {{HTTP2}}
 states that "an endpoint SHOULD retain stream prioritization state for a period
 after streams become closed". Retaining state for streams no longer counted
@@ -812,7 +812,7 @@ allowed by their setting for SETTINGS_MAX_CONCURRENT_STREAMS.". Extensible
 priorities does not use stream dependencies, which minimizes most of the
 resource concerns related to this scenario.
 
-{{HTTP2}}, Section 5.3.4 also presents considerations about the state required
+{{Section 5.3.4 of HTTP2}} also presents considerations about the state required
 to store priority information about streams in an "idle" state. This state can
 be limited by adopting the guidance about concurrency limits described above.
 Extensible priorities is subject to a similar consideration because
