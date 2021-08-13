@@ -1762,6 +1762,9 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - -07
+     * 
+
   - -06
      * Updated language for message components, including identifiers and values.
      * Clarified that Signature-Input and Signature are fields which can be used as headers or trailers.
