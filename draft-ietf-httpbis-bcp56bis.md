@@ -153,7 +153,7 @@ Another common practice is assuming that the HTTP server's name space (or a port
 
 As explained in {{!RFC8820}}, such "squatting" on a part of the URL space by a standard usurps the server's authority over its own resources, can cause deployment issues, and is therefore bad practice in standards.
 
-Instead of statically defining URI components like paths, it is RECOMMENDED that applications using HTTP define and use links, to allow flexibility in deployment.
+Instead of statically defining URI components like paths, it is RECOMMENDED that applications using HTTP define and use links {{!RFC8288}} to allow flexibility in deployment.
 
 Using runtime links in this fashion has a number of other benefits -- especially when an application is to have multiple implementations and/or deployments (as is often the case for those that are standardised).
 
@@ -169,7 +169,7 @@ Using links also offers a form of cache invalidation that's seen on the Web; whe
 HTTP offers a number of features to applications, such as:
 
 * Message framing
-* Multiplexing (in HTTP/2)
+* Multiplexing (in HTTP/2 {{?I-D.ietf-httpbis-http2bis}} and HTTP/3 {{?I-D.ietf-quic-http}})
 * Integration with TLS
 * Support for intermediaries (proxies, gateways, Content Delivery Networks)
 * Client authentication
@@ -197,7 +197,7 @@ However, if an application's deployment would benefit from the use of a particul
 
 Applications using HTTP MUST NOT specify a maximum version, to preserve the protocol's ability to evolve.
 
-When specifying examples of protocol interactions, applications should document both the request and response messages, with complete header sections, preferably in HTTP/1.1 format. For example:
+When specifying examples of protocol interactions, applications should document both the request and response messages, with complete header sections, preferably in HTTP/1.1 format {{?I-D.ietf-httpbis-messaging}}. For example:
 
 ~~~ http-message
 GET /thing HTTP/1.1
@@ -385,7 +385,7 @@ To distinguish between multiple error conditions that are mapped to the same sta
 
 Because the set of registered HTTP status codes can expand, applications using HTTP should explicitly point out that clients ought to be able to handle all applicable status codes gracefully (i.e., falling back to the generic `n00` semantics of a given status code; e.g., `499` can be safely handled as `400` by clients that don't recognise it). This is preferable to creating a "laundry list" of potential status codes, since such a list won't be complete in the foreseeable future.
 
-Applications using HTTP MUST NOT re-specify the semantics of HTTP status codes, even if it is only by copying their definition. It is NOT RECOMMENDED they require specific reason phrases to be used; the reason phrase has no function in HTTP, is not guaranteed to be preserved by implementations, and is not carried at all in the HTTP/2 {{?RFC7540}} message format.
+Applications using HTTP MUST NOT re-specify the semantics of HTTP status codes, even if it is only by copying their definition. It is NOT RECOMMENDED they require specific reason phrases to be used; the reason phrase has no function in HTTP, is not guaranteed to be preserved by implementations, and is not carried at all in the HTTP/2 {{{?I-D.ietf-httpbis-http2bis}}} message format.
 
 Applications MUST only use registered HTTP status codes. As with methods, new HTTP status codes are rare, and required (by {{!I-D.ietf-httpbis-semantics}}) to be registered with IETF Review. Similarly, HTTP status codes are generic; they are required (by {{!I-D.ietf-httpbis-semantics}}) to be potentially applicable to all resources, not just to those of one application.
 
@@ -525,9 +525,9 @@ When used, it is important to carefully specify the scoping and use of cookies; 
 
 Clients often need to send multiple requests to perform a task.
 
-In HTTP/1, parallel requests are most often supported by opening multiple connections. Application performance can be impacted when too many simultaneous connections are used, because connections' congestion control will not be coordinated. Furthermore, it can be difficult for applications to decide when and to select which connection to use to issue a given request, further impacting performance.
+In HTTP/1 {{?I-D.ietf-httpbis-messaging}}, parallel requests are most often supported by opening multiple connections. Application performance can be impacted when too many simultaneous connections are used, because connections' congestion control will not be coordinated. Furthermore, it can be difficult for applications to decide when and to select which connection to use to issue a given request, further impacting performance.
 
-HTTP/2 and HTTP/3 offer multiplexing to applications, removing the need to use multiple connections. However, application performance can still be significantly affected by how the server chooses to prioritize responses. Depending on the application, it might be best for the server to determine the priority of responses, or for the client to hint its priorities to the server (see, e.g., {{?I-D.ietf-httpbis-priority}}).
+HTTP/2 {{?I-D.ietf-httpbis-http2bis}} and HTTP/3 {{{?I-D.ietf-quic-http}} offer multiplexing to applications, removing the need to use multiple connections. However, application performance can still be significantly affected by how the server chooses to prioritize responses. Depending on the application, it might be best for the server to determine the priority of responses, or for the client to hint its priorities to the server (see, e.g., {{?I-D.ietf-httpbis-priority}}).
 
 In all versions of HTTP, requests are made independently -- you can't rely on the relative order of two requests to guarantee processing order. This is because they might be sent over a multiplexed protocol by an intermediary, sent to different origin servers, or the server might even perform processing in a different order. If two requests need strict ordering, the only reliable way to assure the outcome is to issue the second request when the final response to the first has begun.
 
@@ -595,7 +595,7 @@ Modern Web browsers constrain the ability of content from one origin to access r
 
 ## Using Server Push {#server-push}
 
-HTTP/2 adds the ability for servers to "push" request/response pairs to clients in {{RFC7540, Section 8.2}}. While server push seems like a natural fit for many common application semantics (e.g., "fanout" and publish/subscribe), a few caveats should be noted:
+HTTP/2 added the ability for servers to "push" request/response pairs to clients in {{I-D.ietf-httpbis-http2bis, Section 8.4}}. While server push seems like a natural fit for many common application semantics (e.g., "fanout" and publish/subscribe), a few caveats should be noted:
 
 * Server push is hop-by-hop; that is, it is not automatically forwarded by intermediaries. As a result, it might not work easily (or at all) with proxies, reverse proxies, and Content Delivery Networks.
 
@@ -611,7 +611,7 @@ HTTP/2 adds the ability for servers to "push" request/response pairs to clients 
 
 Applications wishing to optimise cases where the client can perform work related to requests before the full response is available (e.g., fetching links for things likely to be contained within) might benefit from using the 103 (Early Hints) status code; see {{?RFC8297}}.
 
-Applications using server push directly need to enforce the requirements regarding authority in {{RFC7540, Section 8.2}}, to avoid cross-origin push attacks.
+Applications using server push directly need to enforce the requirements regarding authority in {{I-D.ietf-httpbis-http2bis, Section 8.4}}, to avoid cross-origin push attacks.
 
 
 ## Allowing Versioning and Evolution {#versioning}
