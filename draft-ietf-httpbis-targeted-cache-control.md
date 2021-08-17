@@ -95,7 +95,7 @@ is a targeted field that applies to Content Delivery Networks (CDNs), as defined
 
 ## Cache Behavior
 
-A cache that implement this specification has a _target list_ - an ordered list of the targeted field names that it uses for caching policy, with the order reflecting priority from most applicable to least. The target list might be fixed, user-configurable, or generated per request, depending upon the implementation.
+A cache that implement this specification maintains a _target list_ - an ordered list of the targeted field names that it uses for caching policy, with the order reflecting priority from most applicable to least. The target list might be fixed, user-configurable, or generated per request, depending upon the implementation.
 
 For example, a CDN cache might support both CDN-Cache-Control and a header specific to that CDN, ExampleCDN-Cache-Control, with the latter overriding the former. Its target list would be:
 
