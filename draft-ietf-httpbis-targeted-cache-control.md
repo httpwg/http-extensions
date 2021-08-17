@@ -119,7 +119,7 @@ Caches that use a targeted field MUST implement the semantics of the following c
 
 Furthermore, they SHOULD implement other cache directives (including extension cache directives) that they support in the Cache-Control response header field.
 
-The semantics and precedence of cache directives in a targeted field are the same as those in Cache-Control. In particular, no-store and no-cache make max-age inoperative.
+The semantics and precedence of cache directives in a targeted field are the same as those in Cache-Control. In particular, no-store and no-cache make max-age inoperative, and unrecognised extension directives are ignored.
 
 
 ## Parsing Targeted Fields
