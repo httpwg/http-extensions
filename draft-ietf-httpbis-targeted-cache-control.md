@@ -146,7 +146,7 @@ By convention, targeted fields SHOULD have the suffix "-Cache-Control": e.g., "E
 
 # The CDN-Cache-Control Targeted Field {#cdn-cache-control}
 
-The CDN-Cache-Control response header field is a targeted field {{targeted}} that allows origin servers to control the behaviour of CDN caches interposed between them and clients, separately from other caches that might handle the response.
+The CDN-Cache-Control response header field is a targeted field ({{targeted}}) that allows origin servers to control the behaviour of CDN caches interposed between them and clients, separately from other caches that might handle the response.
 
 It applies to caches that are part of a distributed network that operate on behalf of an origin server (commonly called a Content Delivery Network or CDN).
 
