@@ -228,6 +228,14 @@ Cache-Status: OriginCache; hit; ttl=1100,
               "CDN Company Here"; hit; ttl=545
 ~~~
 
+Going through a three-layer caching system, where the closest to the origin is a reverse proxy (where the response was served from cache), the next is a forward proxy interposed by the network (where the request was forwarded because there wasn't any response cached with its URI, the request was collapsed with others, and the resulting response was stored), and the closest to the user is a browser cache (where there wasn't any response cached with the request's URI):
+
+~~~ http-message
+Cache-Status: ReverseProxyCache; hit
+Cache-Status: ForwardProxyCache; fwd=uri-miss; collapsed; stored
+Cache-Status: BrowserCache; fwd=uri-miss
+~~~
+
 
 # Defining New Cache-Status Parameters {#register}
 
