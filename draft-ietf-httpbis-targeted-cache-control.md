@@ -165,8 +165,8 @@ CDN-Cache-Control: max-age=600
 These header fields would instruct a CDN cache to consider the response fresh for 600 seconds, while all other caches would be prevented from storing it:
 
 ~~~ http-message
-Cache-Control: no-store
 CDN-Cache-Control: max-age=600
+Cache-Control: no-store
 ~~~
 
 Because CDN-Cache-Control is not present, this header field would prevent all caches from storing the response:
