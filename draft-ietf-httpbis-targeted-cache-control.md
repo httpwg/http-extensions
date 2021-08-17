@@ -70,7 +70,7 @@ Because it is often desirable to control these different classes of caches separ
 
 The HTTP Cache-Control response header field is widely used to direct caching behavior. However, it is relatively undifferentiated; while some directives (e.g., s-maxage) are targeted at a specific class of caches (for s-maxage, shared caches), targeting is not consistently available across all existing cache directives (e.g., stale-while-revalidate). This is problematic, especially as the number of caching extensions grows, along with the number of potential targets.
 
-Some caches have defined ad hoc control mechanisms to overcome this issue, but interoperability is low. {{targeted}} defines a standard framework for targeted cache control using HTTP response headers, and {{cdn-cache-control}} defines one such header: the CDN-Cache-Control response header field.
+Some implementations have defined ad hoc control mechanisms to overcome this issue, but their interoperability is low. {{targeted}} defines a standard framework for targeted cache control using HTTP response headers, and {{cdn-cache-control}} defines one such header: the CDN-Cache-Control response header field.
 
 
 ## Notational Conventions
