@@ -182,7 +182,7 @@ Cache-Control: no-store
 CDN-Cache-Control: none
 ~~~
 
-(note that 'none' is not a registered cache directive; it is here to avoid sending a header field with an empty value, because such a header might not be preserved in all cases)
+(note that 'none' is not a registered cache directive; it is here to avoid sending a header field with an empty value, which would be ignored)
 
 
 # IANA Considerations
