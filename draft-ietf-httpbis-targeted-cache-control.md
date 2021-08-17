@@ -14,6 +14,7 @@ keyword:
 
 stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+github-issue-label: targeted-cc
 
 author:
  -
