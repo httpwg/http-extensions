@@ -148,7 +148,7 @@ This parameter is useful to distinguish cases when the next hop server sends a 3
 
 ## The ttl parameter
 
-"ttl" indicates the response's remaining freshness lifetime (see {{HTTP-CACHING, Section 4.2.1}}) as calculated by the cache, as an integer number of seconds, measured when the response header section is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics (see {{HTTP-CACHING, Section 4.2.2}}), local configuration, or other factors. May be negative, to indicate staleness.
+"ttl" indicates the response's remaining freshness lifetime (see {{HTTP-CACHING, Section 4.2.1}}) as calculated by the cache, as an integer number of seconds, measured as closely as possible to when the response header section is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics (see {{HTTP-CACHING, Section 4.2.2}}), local configuration, or other factors. May be negative, to indicate staleness.
 
 ## The stored parameter
 
