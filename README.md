@@ -87,7 +87,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Expect-CT
 
-*Sent to IESG*
+*in RFC Editor Queue*
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-expect-ct.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-expect-ct.txt))
 * [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-expect-ct) (less recent, more official)
