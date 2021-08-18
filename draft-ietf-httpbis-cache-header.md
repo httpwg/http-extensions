@@ -33,9 +33,9 @@ author:
 normative:
   RFC2119:
   RFC8126:
-  RFC8941:
-  I-D.ietf-httpbis-semantics:
-  I-D.ietf-httpbis-cache:
+  STRUCTURED-FIELDS: RFC8941
+  HTTP: I-D.ietf-httpbis-semantics
+  HTTP-CACHING: I-D.ietf-httpbis-cache
 
 informative:
   ENTANGLE:
@@ -75,14 +75,14 @@ This specification defines a new HTTP response header field, "Cache-Status" for 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document uses ABNF as defined in {{!RFC5234}}, with rules prefixed with "sf-" and the "key" rule as defined in {{!RFC8941}}. It uses terminology from {{!I-D.ietf-httpbis-semantics}} and {{!I-D.ietf-httpbis-cache}}.
+This document uses ABNF as defined in {{!RFC5234}}, with rules prefixed with "sf-" and the "key" rule as defined in {{!STRUCTURED-FIELDS}}. It uses terminology from {{!HTTP}} and {{!HTTP-CACHING}}.
 
 
 # The Cache-Status HTTP Response Header Field {#field}
 
 The Cache-Status HTTP response header field indicates how caches have handled that response and its corresponding request.
 
-Its value is a List ({{RFC8941, Section 3.1}}):
+Its value is a List ({{STRUCTURED-FIELDS, Section 3.1}}):
 
 ~~~ abnf
 Cache-Status   = sf-list
@@ -138,29 +138,29 @@ The following parameter values are defined to explain why the request went forwa
 * stale - The cache was able to select a response for the request, but it was stale
 * partial - The cache was able to select a partial response for the request, but it did not contain all of the requested ranges (or the request was for the complete response)
 
-The most specific reason that the cache is aware of SHOULD be used, to the extent that it is possible to implement. See also {{I-D.ietf-httpbis-cache, Section 4}}.
+The most specific reason that the cache is aware of SHOULD be used, to the extent that it is possible to implement. See also {{HTTP-CACHING, Section 4}}.
 
 ## The fwd-status parameter
 
-"fwd-status" indicates what status code (see {{I-D.ietf-httpbis-semantics, Section 15}}) the next hop server returned in response to the forwarded request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
+"fwd-status" indicates what status code (see {{HTTP, Section 15}}) the next hop server returned in response to the forwarded request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
 
 This parameter is useful to distinguish cases when the next hop server sends a 304 Not Modified response to a conditional request, or a 206 Partial Response because of a range request.
 
 ## The ttl parameter
 
-"ttl" indicates the response's remaining freshness lifetime (see {{I-D.ietf-httpbis-cache, Section 4.2.1}}) as calculated by the cache, as an integer number of seconds, measured when the response header section is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics (see {{I-D.ietf-httpbis-cache, Section 4.2.2}}), local configuration, or other factors. May be negative, to indicate staleness.
+"ttl" indicates the response's remaining freshness lifetime (see {{HTTP-CACHING, Section 4.2.1}}) as calculated by the cache, as an integer number of seconds, measured when the response header section is sent by the cache. This includes freshness assigned by the cache; e.g., through heuristics (see {{HTTP-CACHING, Section 4.2.2}}), local configuration, or other factors. May be negative, to indicate staleness.
 
 ## The stored parameter
 
-"stored" indicates whether the cache stored the response (see {{I-D.ietf-httpbis-cache, Section 3}}); a true value indicates that it did. Only meaningful when fwd is present.
+"stored" indicates whether the cache stored the response (see {{HTTP-CACHING, Section 3}}); a true value indicates that it did. Only meaningful when fwd is present.
 
 ## The collapsed parameter
 
-"collapsed" indicates whether this request was collapsed together with one or more other forward requests (see {{I-D.ietf-httpbis-cache, Section 4}}); if true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others. Only meaningful when fwd is present.
+"collapsed" indicates whether this request was collapsed together with one or more other forward requests (see {{HTTP-CACHING, Section 4}}); if true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others. Only meaningful when fwd is present.
 
 ## The key parameter
 
-"key" conveys a representation of the cache key (see {{I-D.ietf-httpbis-cache, Section 2}}) used for the response. Note that this may be implementation-specific.
+"key" conveys a representation of the cache key (see {{HTTP-CACHING, Section 2}}) used for the response. Note that this may be implementation-specific.
 
 ## The detail parameter
 
@@ -262,7 +262,7 @@ See the registry at <https://iana.org/assignments/http-cache-status> for details
 
 Upon publication, please create the HTTP Cache-Status Parameters registry at <https://iana.org/assignments/http-cache-status> and populate it with the types defined in {{field}}; see {{register}} for its associated procedures.
 
-Also, please create the following entry in the Hypertext Transfer Protocol (HTTP) Field Name Registry defined in {{I-D.ietf-httpbis-semantics, Section 18.4}}:
+Also, please create the following entry in the Hypertext Transfer Protocol (HTTP) Field Name Registry defined in {{HTTP, Section 18.4}}:
 
 * Field name: Cache-Status
 * Status: permanent
