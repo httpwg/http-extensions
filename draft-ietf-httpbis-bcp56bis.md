@@ -360,7 +360,7 @@ The OPTIONS method was defined for metadata retrieval, and is used both by WebDA
 
 However, OPTIONS does have significant limitations:
 
-* It isn't possible to link to the metadata with a simple URL, because OPTIONS is not the default GET method.
+* It isn't possible to link to the metadata with a simple URL, because OPTIONS is not the default method.
 * OPTIONS responses are not cacheable, because HTTP caches operate on representations of the resource (i.e., GET and HEAD). If OPTIONS responses are cached separately, their interaction with HTTP cache expiry, secondary keys and other mechanisms needs to be considered.
 * OPTIONS is "chatty" - always separating metadata out into a separate request increases the number of requests needed to interact with the application.
 * Implementation support for OPTIONS is not universal; some servers do not expose the ability to respond to OPTIONS requests without significant effort.
