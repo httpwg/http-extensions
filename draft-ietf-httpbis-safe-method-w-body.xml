@@ -411,9 +411,9 @@ Dubois, Camille, camille.dubois@example.net
         <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
         <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
         <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2021" month="May" day="27"/>
+        <date year="2021" month="Aug" day="18"/>
       </front>
-      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-16"/>
+      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-18"/>
     </reference>
     <reference anchor='XML'
                target='https://www.w3.org/TR/2008/REC-xml-20081126/'>
