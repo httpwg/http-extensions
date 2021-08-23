@@ -351,7 +351,7 @@ In these cases, an application using HTTP might consider using POST to express q
 
 Applications should not change their state or have other side effects that might be significant to the client, since implementations can and do retry HTTP GET requests that fail, and some GET requests protected by TLS Early Data might be vulnerable to replay attacks (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{I-D.ietf-httpbis-semantics, Section 9.2.1}}.
 
-Finally, note that while the generic HTTP syntax allows a GET request message to have content, the purpose is to allow message parsers to be generic; as per {{I-D.ietf-httpbis-semantics, Section 9.3.1}}, content on a GET is not recommended, has no meaning, and will be either ignored or rejected by generic HTTP software (such as intermediaries, caches, servers, and client libraries).
+Finally, note that while the generic HTTP syntax allows a GET request message to contain content, the purpose is to allow message parsers to be generic; as per {{I-D.ietf-httpbis-semantics, Section 9.3.1}}, content on a GET is not recommended, has no meaning, and will be either ignored or rejected by generic HTTP software (such as intermediaries, caches, servers, and client libraries).
 
 
 ### OPTIONS
