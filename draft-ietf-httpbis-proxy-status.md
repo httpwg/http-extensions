@@ -148,7 +148,7 @@ The `next-hop` parameter's value is an sf-string or sf-token that identifies the
 For example:
 
 ~~~ http-message
-Proxy-Status: cdn.example.org; next-hop=backend.example.org
+Proxy-Status: cdn.example.org; next-hop=backend.example.org:8001
 ~~~
 
 ### next-protocol
