@@ -352,7 +352,7 @@ New HTTP methods are rare; they are required to be registered in the HTTP Method
 
 While historically some applications (e.g., {{?RFC4791}}) have defined non-generic methods, {{HTTP}} now forbids this.
 
-When authors believe that a new method is required, they are encouraged to engage with the HTTP community early, and document their proposal as a separate HTTP extension, rather than as part of an application's specification.
+When authors believe that a new method is required, they are encouraged to engage with the HTTP community early (e.g., on the ietf-http-wg@w3.org mailing list), and document their proposal as a separate HTTP extension, rather than as part of an application's specification.
 
 
 ### GET
