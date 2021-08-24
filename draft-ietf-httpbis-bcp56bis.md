@@ -405,7 +405,7 @@ Applications using HTTP MUST NOT re-specify the semantics of HTTP status codes, 
 
 Applications MUST only use registered HTTP status codes. As with methods, new HTTP status codes are rare, and required (by {{HTTP}}) to be registered with IETF Review. Similarly, HTTP status codes are generic; they are required (by {{HTTP}}) to be potentially applicable to all resources, not just to those of one application.
 
-When authors believe that a new status code is required, they are encouraged to engage with the HTTP community early, and document their proposal as a separate HTTP extension, rather than as part of an application's specification.
+When authors believe that a new status code is required, they are encouraged to engage with the HTTP community early (e.g., on the ietf-http-wg@w3.org mailing list), and document their proposal as a separate HTTP extension, rather than as part of an application's specification.
 
 
 ### Redirection {#redirects}
