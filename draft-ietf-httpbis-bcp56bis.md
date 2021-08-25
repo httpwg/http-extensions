@@ -33,12 +33,12 @@ author:
 
 normative:
   HTTP: I-D.ietf-httpbis-semantics
+  HTTP-CACHING: I-D.ietf-httpbis-cache
   WEB-LINKING: RFC8288
   URL: RFC3986
   WELL-KNOWN-URI: RFC8615
 
 informative:
-  HTTP-CACHING: I-D.ietf-httpbis-cache
   HTTP11: I-D.ietf-httpbis-messaging
   HTTP2: I-D.ietf-httpbis-http2bis
   HTTP3: I-D.ietf-quic-http
@@ -123,7 +123,7 @@ Different applications have different goals when using HTTP. The requirements in
 
 * uses the transport port 80 or 443, or
 * uses the URI scheme "http" or "https", or
-* uses an ALPN protocol ID {{!RFC7301}} that generically identifies HTTP (e.g., "http/1.1", "h2", "h2c"), or
+* uses an ALPN protocol ID {{?RFC7301}} that generically identifies HTTP (e.g., "http/1.1", "h2", "h3"), or
 * makes registrations in or overall modifications to the IANA registries defined for HTTP.
 
 Additionally, when a specification is using HTTP, all of the requirements of the HTTP protocol suite are in force (in particular, {{HTTP}}, but also other specifications such as the specific version of HTTP in use, and any extensions in use).
@@ -477,7 +477,7 @@ Assigning even a short freshness lifetime ({{HTTP-CACHING, Section 4.2}}) -- e.g
 
 The most common method for specifying freshness is the max-age response directive ({{HTTP-CACHING, Section 5.2.2.1}}). The Expires header field ({{HTTP-CACHING, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support Cache-Control, and specifying freshness as a delta is usually more convenient and less error-prone.
 
-It is not necessary to add the "public" response directive ({{HTTP-CACHING, Section 5.2.2.9}}) to cache most responses; it is only necessary when it's desirable to store an authenticated response.
+It is not necessary to add the "public" response directive ({{HTTP-CACHING, Section 5.2.2.9}}) to cache most responses; it is only necessary when it's desirable to store an authenticated response, or when the status code isn't understood by the cache and there isn't explicit freshness information available.
 
 In some situations, responses without explicit cache freshness directives will be stored and served using a heuristic freshness lifetime; see {{HTTP-CACHING, Section 4.2.2}}. As the heuristic is not under control of the application, it is generally preferable to set an explicit freshness lifetime, or make the response explicitly uncacheable.
 
@@ -502,13 +502,13 @@ If doing so is not suitable for a given response, the origin should use "Cache-C
 Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and latency for large responses; see {{Section 13 of HTTP}}.
 
 
-### Caching and Application Semantics
+### Caching and Application Semantics {#caching-app-semantics}
 
 When an application has a need to express a lifetime that's separate from the freshness lifetime, this should be conveyed separately, either in the response's content or in a separate header field. When this happens, the relationship between HTTP caching and that lifetime needs to be carefully considered, since the response will be used as long as it is considered fresh.
 
 In particular, application authors need to consider how responses that are not freshly obtained from the origin server should be handled; if they have a concept like a validity period, this will need to be calculated considering the age of the response (see {{HTTP-CACHING, Section 4.2.3}}).
 
-One way to address this is to explicitly specify that all responses be fresh upon use.
+One way to address this is to explicitly specify that responses need to be fresh upon use.
 
 
 ### Varying Content Based Upon the Request
@@ -554,7 +554,7 @@ Applications MUST NOT make assumptions about the relationship between separate r
 
 Applications can use HTTP authentication {{Section 11 of HTTP}} to identify clients. As per {{?RFC7617}}, the Basic authentication scheme is not suitable for protecting sensitive or valuable information unless the channel is secure (e.g., using the "HTTPS" URI scheme). Likewise, {{?RFC7616}} requires the Digest authentication scheme to be used over a secure channel.
 
-With HTTPS, clients might also be authenticated using certificates {{?RFC8446}}.
+With HTTPS, clients might also be authenticated using certificates {{?RFC8446}}, but note that such authentication is intrinsically scoped to the underlying transport connection. As a result, a client has no way of knowing whether the authenticated status was used in preparing the response (though "Vary: *" and/or "Cache-Control: private" can provide a partial indication), and the only way to obtain a specifically unauthenticated response is to open a new connection.
 
 When used, it is important to carefully specify the scoping and use of authentication; if the application exposes sensitive data or capabilities (e.g., by acting as an ambient authority; see {{Section 8.3 of RFC6454}}), exploits are possible. Mitigations include using a request-specific token to assure the intent of the client.
 
@@ -634,7 +634,7 @@ Applications using server push directly need to enforce the requirements regardi
 
 It's often necessary to introduce new features into application protocols, and change existing ones.
 
-In HTTP, backwards-incompatible changes are possible using a number of mechanisms:
+In HTTP, backwards-incompatible changes can be made using mechanisms such as:
 
 * Using a distinct link relation type {{WEB-LINKING}} to identify a URL for a resource that implements the new functionality.
 * Using a distinct media type {{!RFC6838}} to identify formats that enable the new functionality.
@@ -648,9 +648,13 @@ This document has no requirements for IANA.
 
 # Security Considerations
 
-{{state}} discusses the impact of using stateful mechanisms in the protocol as ambient authority, and suggests a mitigation.
+Applications using HTTP are subject to the security considerations of HTTP itself and any extensions used; {{HTTP}}, {{HTTP-CACHING}}, and {{WEB-LINKING}} are often relevant, amongst others.
 
 {{scheme}} recommends support for 'https' URLs, and discourages the use of 'http' URLs, to provide authentication, integrity and confidentiality, as well as mitigate pervasive monitoring attacks. Many applications using HTTP perform authentication and authorization with bearer tokens (e.g., in session cookies). If the transport is unencrypted, an attacker that can eavesdrop upon or modify HTTP communications can often escalate their privilege to perform operations on resources.
+
+{{caching-app-semantics}} highlights the potential for mismatch between HTTP caching and application-specific storage of responses or information therein.
+
+{{state}} discusses the impact of using stateful mechanisms in the protocol as ambient authority, and suggests a mitigation.
 
 {{browser}} highlights the implications of Web browsers' capabilities on applications that use HTTP.
 
