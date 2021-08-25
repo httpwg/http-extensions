@@ -91,7 +91,7 @@ Applications other than Web browsing often use HTTP {{HTTP}} as a substrate, a p
 * presence of HTTP servers and clients in target deployments, and
 * its ability to traverse firewalls.
 
-These protocols are often ad hoc; they are intended for only deployment by one or a few servers, and consumption by a limited set of clients. As a result, a body of practices and tools has arisen around defining HTTP-based APIs that favours these conditions.
+These protocols are often ad hoc, intended for only deployment by one or a few servers and consumption by a limited set of clients. As a result, a body of practices and tools has arisen around defining HTTP-based APIs that favours these conditions.
 
 However, when such an application has multiple, separate implementations, is deployed on multiple uncoordinated servers, and is consumed by diverse clients -- as is often the case for HTTP APIs defined by standards efforts -- tools and practices intended for limited deployment can become unsuitable.
 
@@ -339,7 +339,7 @@ Applications can use the applicable default port (80 for HTTP, 443 for HTTPS), o
 
 If a non-default port is used, it needs to be reflected in the authority of all URLs for that resource; the only mechanism for changing a default port is changing the URI scheme (see {{scheme}}).
 
-Using a port other than the default has privacy implications (i.e., the protocol can now be distinguished from other traffic), as well as operability concerns (as some networks might block or otherwise interfere with it). Privacy implications should be documented in Security Considerations.
+Using a port other than the default has privacy implications (i.e., the protocol can now be distinguished from other traffic), as well as operability concerns (as some networks might block or otherwise interfere with it). Privacy implications (including those stemming from this distinguishability) should be documented in Security Considerations.
 
 See {{?RFC7605}} for further guidance.
 
@@ -363,9 +363,9 @@ Queries can be performed with GET, often using the query component of the URL; t
 
 While this is not an issue for short queries, it can become one for larger query terms, or ones which need to sustain a high rate of requests. Additionally, some HTTP implementations limit the size of URLs they support -- although modern HTTP software has much more generous limits than previously (typically, considerably more than 8000 octets, as required by {{HTTP}}).
 
-In these cases, an application using HTTP might consider using POST to express queries in the request's content; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought consider allowing both methods.
+In these cases, an application using HTTP might consider using POST to express queries in the request's content; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought to consider allowing both methods.
 
-Applications should not change their state or have other side effects that might be significant to the client, since implementations can and do retry HTTP GET requests that fail, and some GET requests protected by TLS Early Data might be vulnerable to replay attacks (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{HTTP, Section 9.2.1}}.
+Processing of GET requests should not change application state or have other side effects that might be significant to the client, since implementations can and do retry HTTP GET requests that fail, and some GET requests protected by TLS Early Data might be vulnerable to replay attacks (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{HTTP, Section 9.2.1}}.
 
 Finally, note that while the generic HTTP syntax allows a GET request message to contain content, the purpose is to allow message parsers to be generic; as per {{HTTP, Section 9.3.1}}, content on a GET is not recommended, has no meaning, and will be either ignored or rejected by generic HTTP software (such as intermediaries, caches, servers, and client libraries).
 
@@ -477,7 +477,7 @@ Assigning even a short freshness lifetime ({{HTTP-CACHING, Section 4.2}}) -- e.g
 
 The most common method for specifying freshness is the max-age response directive ({{HTTP-CACHING, Section 5.2.2.1}}). The Expires header field ({{HTTP-CACHING, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support Cache-Control, and specifying freshness as a delta is usually more convenient and less error-prone.
 
-It is not necessary to add the public response directive ({{HTTP-CACHING, Section 5.2.2.9}}) to cache most responses; it is only necessary when it's desirable to store an authenticated response, or when the status code isn't understood by the cache and there isn't explicit freshness information available.
+It is not necessary to add the "public" response directive ({{HTTP-CACHING, Section 5.2.2.9}}) to cache most responses; it is only necessary when it's desirable to store an authenticated response, or when the status code isn't understood by the cache and there isn't explicit freshness information available.
 
 In some situations, responses without explicit cache freshness directives will be stored and served using a heuristic freshness lifetime; see {{HTTP-CACHING, Section 4.2.2}}. As the heuristic is not under control of the application, it is generally preferable to set an explicit freshness lifetime, or make the response explicitly uncacheable.
 
@@ -541,7 +541,7 @@ When used, it is important to carefully specify the scoping and use of cookies; 
 
 Clients often need to send multiple requests to perform a task.
 
-In HTTP/1 {{HTTP11}}, parallel requests are most often supported by opening multiple connections. Application performance can be impacted when too many simultaneous connections are used, because connections' congestion control will not be coordinated. Furthermore, it can be difficult for applications to decide when and to select which connection to use to issue a given request, further impacting performance.
+In HTTP/1 {{HTTP11}}, parallel requests are most often supported by opening multiple connections. Application performance can be impacted when too many simultaneous connections are used, because connections' congestion control will not be coordinated. Furthermore, it can be difficult for applications to decide when to issue and which connection to use for a given request, further impacting performance.
 
 HTTP/2 {{HTTP2}} and HTTP/3 {{HTTP3}} offer multiplexing to applications, removing the need to use multiple connections. However, application performance can still be significantly affected by how the server chooses to prioritize responses. Depending on the application, it might be best for the server to determine the priority of responses, or for the client to hint its priorities to the server (see, e.g., {{HTTP-PRIORITY}}).
 
@@ -554,7 +554,7 @@ Applications MUST NOT make assumptions about the relationship between separate r
 
 Applications can use HTTP authentication {{Section 11 of HTTP}} to identify clients. As per {{?RFC7617}}, the Basic authentication scheme is not suitable for protecting sensitive or valuable information unless the channel is secure (e.g., using the "HTTPS" URI scheme). Likewise, {{?RFC7616}} requires the Digest authentication scheme to be used over a secure channel.
 
-With HTTPS, clients might also be authenticated using certificates {{?RFC5246}}, but note that such authentication is intrinsically scoped to the underlying transport connection. As a result, a client has no way of knowing whether the authenticated status was used in preparing the response (though "Vary: *" and/or "Cache-Control: private" can provide a partial indication), and the only way to obtain a specifically unauthenticated response is to open a new connection.
+With HTTPS, clients might also be authenticated using certificates {{?RFC8446}}, but note that such authentication is intrinsically scoped to the underlying transport connection. As a result, a client has no way of knowing whether the authenticated status was used in preparing the response (though "Vary: *" and/or "Cache-Control: private" can provide a partial indication), and the only way to obtain a specifically unauthenticated response is to open a new connection.
 
 When used, it is important to carefully specify the scoping and use of authentication; if the application exposes sensitive data or capabilities (e.g., by acting as an ambient authority; see {{Section 8.3 of RFC6454}}), exploits are possible. Mitigations include using a request-specific token to assure the intent of the client.
 
