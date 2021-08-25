@@ -648,6 +648,8 @@ This document has no requirements for IANA.
 
 # Security Considerations
 
+Applications using HTTP are subject to the security considerations of HTTP itself and any extensions used; {{HTTP}}, {{HTTP-CACHING}}, and {{WEB-LINKING}} are often relevant, amongst others.
+
 {{state}} discusses the impact of using stateful mechanisms in the protocol as ambient authority, and suggests a mitigation.
 
 {{scheme}} recommends support for 'https' URLs, and discourages the use of 'http' URLs, to provide authentication, integrity and confidentiality, as well as mitigate pervasive monitoring attacks. Many applications using HTTP perform authentication and authorization with bearer tokens (e.g., in session cookies). If the transport is unencrypted, an attacker that can eavesdrop upon or modify HTTP communications can often escalate their privilege to perform operations on resources.
