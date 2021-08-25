@@ -502,7 +502,7 @@ If doing so is not suitable for a given response, the origin should use "Cache-C
 Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and latency for large responses; see {{Section 13 of HTTP}}.
 
 
-### Caching and Application Semantics
+### Caching and Application Semantics {#caching-app-semantics}
 
 When an application has a need to express a lifetime that's separate from the freshness lifetime, this should be conveyed separately, either in the response's content or in a separate header field. When this happens, the relationship between HTTP caching and that lifetime needs to be carefully considered, since the response will be used as long as it is considered fresh.
 
@@ -651,6 +651,8 @@ This document has no requirements for IANA.
 Applications using HTTP are subject to the security considerations of HTTP itself and any extensions used; {{HTTP}}, {{HTTP-CACHING}}, and {{WEB-LINKING}} are often relevant, amongst others.
 
 {{scheme}} recommends support for 'https' URLs, and discourages the use of 'http' URLs, to provide authentication, integrity and confidentiality, as well as mitigate pervasive monitoring attacks. Many applications using HTTP perform authentication and authorization with bearer tokens (e.g., in session cookies). If the transport is unencrypted, an attacker that can eavesdrop upon or modify HTTP communications can often escalate their privilege to perform operations on resources.
+
+{{caching-app-semantics}} highlights the potential for mismatch between HTTP caching and application-specific storage of responses or information therein.
 
 {{state}} discusses the impact of using stateful mechanisms in the protocol as ambient authority, and suggests a mitigation.
 
