@@ -634,7 +634,7 @@ Applications using server push directly need to enforce the requirements regardi
 
 It's often necessary to introduce new features into application protocols, and change existing ones.
 
-In HTTP, backwards-incompatible changes are possible using a number of mechanisms:
+In HTTP, backwards-incompatible changes can be made using mechanisms such as:
 
 * Using a distinct link relation type {{WEB-LINKING}} to identify a URL for a resource that implements the new functionality.
 * Using a distinct media type {{!RFC6838}} to identify formats that enable the new functionality.
