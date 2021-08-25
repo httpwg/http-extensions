@@ -33,12 +33,12 @@ author:
 
 normative:
   HTTP: I-D.ietf-httpbis-semantics
+  HTTP-CACHING: I-D.ietf-httpbis-cache
   WEB-LINKING: RFC8288
   URL: RFC3986
   WELL-KNOWN-URI: RFC8615
 
 informative:
-  HTTP-CACHING: I-D.ietf-httpbis-cache
   HTTP11: I-D.ietf-httpbis-messaging
   HTTP2: I-D.ietf-httpbis-http2bis
   HTTP3: I-D.ietf-quic-http
