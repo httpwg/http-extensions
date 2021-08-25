@@ -508,7 +508,7 @@ When an application has a need to express a lifetime that's separate from the fr
 
 In particular, application authors need to consider how responses that are not freshly obtained from the origin server should be handled; if they have a concept like a validity period, this will need to be calculated considering the age of the response (see {{HTTP-CACHING, Section 4.2.3}}).
 
-One way to address this is to explicitly specify that all responses be fresh upon use.
+One way to address this is to explicitly specify that responses need to be fresh upon use.
 
 
 ### Varying Content Based Upon the Request
