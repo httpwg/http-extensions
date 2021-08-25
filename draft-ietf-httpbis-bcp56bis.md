@@ -554,7 +554,7 @@ Applications MUST NOT make assumptions about the relationship between separate r
 
 Applications can use HTTP authentication {{Section 11 of HTTP}} to identify clients. As per {{?RFC7617}}, the Basic authentication scheme is not suitable for protecting sensitive or valuable information unless the channel is secure (e.g., using the "HTTPS" URI scheme). Likewise, {{?RFC7616}} requires the Digest authentication scheme to be used over a secure channel.
 
-With HTTPS, clients might also be authenticated using certificates {{?RFC5246}}.
+With HTTPS, clients might also be authenticated using certificates {{?RFC5246}}, but note that such authentication is intrinsically scoped to the underlying transport connection. As a result, a client has no way of knowing whether the authenticated status was used in preparing the response (though "Vary: *" and/or "Cache-Control: private" can provide a partial indication), and the only way to obtain a specifically unauthenticated response is to open a new connection.
 
 When used, it is important to carefully specify the scoping and use of authentication; if the application exposes sensitive data or capabilities (e.g., by acting as an ambient authority; see {{Section 8.3 of RFC6454}}), exploits are possible. Mitigations include using a request-specific token to assure the intent of the client.
 
