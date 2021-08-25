@@ -572,9 +572,9 @@ Upon publication, please create the HTTP Proxy-Status Parameters registry and th
 
 # Security Considerations {#security}
 
-One of the primary security concerns when using Proxy-Status is leaking information that might aid an attacker. For example, information about the intermediary's configuration and back-end topology can be exposed.
+One of the primary security concerns when using Proxy-Status is leaking information that might aid an attacker. For example, information about the intermediary's configuration and back-end topology can be exposed, allowing attackers to directly target back-end services that are not prepared for high traffic volume or malformed inputs.  Some information might only be suitable to reveal to authorized parties.
 
-As a result, care needs to be taken when deciding to generate a Proxy-Status field. Note that intermediaries are not required to generate a Proxy-Status field in any response, and can conditionally generate them based upon request attributes (e.g., authentication tokens, IP address).
+As a result, care needs to be taken when deciding to generate a Proxy-Status field and what information to include in it. Note that intermediaries are not required to generate a Proxy-Status field in any response, and can conditionally generate them based upon request attributes (e.g., authentication tokens, IP address).
 
 Likewise, generation of all parameters is optional.
 
