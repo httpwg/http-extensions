@@ -101,9 +101,10 @@ Parameters on each member convey additional information about that intermediary'
 
 When adding a value to the Proxy-Status field, intermediaries SHOULD preserve the existing members of the field to allow debugging of the entire chain of intermediaries handling the request, unless explicitly configured to remove them (e.g., to prevent internal network details from leaking; see {{security}}).
 
+Origin servers MUST NOT generate the Proxy-Status field.
+
 Proxy-Status MAY be sent in HTTP trailers. For example, if an intermediary is streaming a response and the inbound connection suddenly terminates, Proxy-Status can only be appended to the trailers of the outbound message, since the headers have already been sent. As with all trailers, it might be silently discarded along the path to the user agent, so this SHOULD NOT be done unless it is not possible to send it in headers, and an intermediary MUST NOT send Proxy-Status as a trailer field unless it has also sent a corresponding Proxy-Status header field in the same message, so that the trailer value's ordering relative to other intermediaries is preserved.
 
-Origin servers MUST NOT generate the Proxy-Status field.
 
 
 ## Proxy-Status Parameters {#params}
