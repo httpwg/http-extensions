@@ -119,7 +119,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 # Is HTTP Being Used? {#used}
 
-Different applications have different goals when using HTTP. The requirements in this document apply when a specification defines an application that:
+Different applications have different goals when using HTTP. The recommendations in this document apply when a specification defines an application that:
 
 * uses the transport port 80 or 443, or
 * uses the URI scheme "http" or "https", or
