@@ -107,7 +107,7 @@ Proxy-Status MAY be sent as a HTTP trailer field. For example, if an intermediar
 
 To allow recipients to reconstruct the relative ordering of Proxy-Status members conveyed in trailer fields with those conveyed in header fields, an intermediary MUST NOT send Proxy-Status as a trailer field unless it has also generated a Proxy-Status header field with the same member (although potentially different parameters) in that message.
 
-For example, a proxy that receives a response bearing a header field:
+For example, a proxy identified as 'ThisProxy' that receives a response bearing a header field:
 
 ~~~ http-message
 Proxy-Status: SomeOtherProxy
