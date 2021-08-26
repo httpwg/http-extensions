@@ -122,7 +122,7 @@ Proxy-Status: SomeOtherProxy, ThisProxy
 thus allowing it to append a trailer field:
 
 ~~~ http-message
-Proxy-Status: SomeOtherProxy, ThisProxy; error=read_timeout
+Proxy-Status: ThisProxy; error=read_timeout
 ~~~
 
 ... which would thereby allow a downstream recipient to understand that processing by 'SomeOtherProxy' occurred before 'ThisProxy'.
