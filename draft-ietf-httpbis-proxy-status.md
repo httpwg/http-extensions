@@ -103,8 +103,29 @@ When adding a value to the Proxy-Status field, intermediaries SHOULD preserve th
 
 Origin servers MUST NOT generate the Proxy-Status field.
 
-Proxy-Status MAY be sent in HTTP trailers. For example, if an intermediary is streaming a response and the inbound connection suddenly terminates, Proxy-Status can only be appended to the trailers of the outbound message, since the headers have already been sent. As with all trailers, it might be silently discarded along the path to the user agent, so this SHOULD NOT be done unless it is not possible to send it in headers, and an intermediary MUST NOT send Proxy-Status as a trailer field unless it has also sent a corresponding Proxy-Status header field in the same message, so that the trailer value's ordering relative to other intermediaries is preserved.
+Proxy-Status MAY be sent as a HTTP trailer field. For example, if an intermediary is streaming a response and the inbound connection suddenly terminates, Proxy-Status can only be appended to the trailer section of the outbound message, since the header section has already been sent. However, because it might be silently discarded along the path to the user agent (as is the case for all trailer fields; see {{Section 6.5 of HTTP}}), Proxy-Status SHOULD NOT be sent as a trailer field unless it is not possible to send it in the header section.
 
+To allow recipients to reconstruct the relative ordering of Proxy-Status members conveyed in trailer fields with those conveyed in header fields, an intermediary MUST NOT send Proxy-Status as a trailer field unless it has also generated a Proxy-Status header field with the same member (although potentially different parameters) in that message.
+
+For example, a proxy that receives a response bearing a header field:
+
+~~~ http-message
+Proxy-Status: SomeOtherProxy
+~~~
+
+would add its own entry to the header field:
+
+~~~ http-message
+Proxy-Status: SomeOtherProxy, ThisProxy
+~~~
+
+thus allowing it to append a trailer field:
+
+~~~ http-message
+Proxy-Status: SomeOtherProxy, ThisProxy; error=read_timeout
+~~~
+
+... which would thereby allow a downstream recipient to understand that processing by 'SomeOtherProxy' occurred before 'ThisProxy'.
 
 
 ## Proxy-Status Parameters {#params}
