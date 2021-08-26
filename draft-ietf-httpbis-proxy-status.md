@@ -130,9 +130,9 @@ Proxy-Status: SomeOtherProxy, ThisProxy; error=read_timeout
 A client MAY promote the Proxy-Status trailer field into a header field by following these steps:
 
 1. For each member trailer_member of the Proxy-Status trailer field value:
-  1. Let header_member be the first (left-most) value of the Proxy-Status header field value, comparing the sf-token or sf-string character-by-character and without consideration of parameters.
-  2. If no matching header_member is found, continue processing the next trailer_member.
-  3. Replace header member with trailer_member in its entirety, including any parameters.
+   1. Let header_member be the first (left-most) value of the Proxy-Status header field value, comparing the sf-token or sf-string character-by-character and without consideration of parameters.
+   2. If no matching header_member is found, continue processing the next trailer_member.
+   3. Replace header member with trailer_member in its entirety, including any parameters.
 2. Remove the Proxy-Status trailer field.
 
 
