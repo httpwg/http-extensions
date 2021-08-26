@@ -579,6 +579,6 @@ One of the primary security concerns when using Proxy-Status is leaking informat
 
 As a result, care needs to be taken when deciding to generate a Proxy-Status field and what information to include in it. Note that intermediaries are not required to generate a Proxy-Status field in any response, and can conditionally generate them based upon request attributes (e.g., authentication tokens, IP address).
 
-Likewise, generation of all parameters is optional.
+Likewise, generation of all parameters is optional, as is generation of the field itself. Also, the field's content is not verified; an intermediary can claim certain actions (e.g., sending a request over an encrypted channel) but fail to actually do that.
 
 --- back
