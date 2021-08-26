@@ -158,6 +158,9 @@ For example:
 Proxy-Status: cdn.example.org; next-hop=backend.example.org:8001
 ~~~
 
+indicates that cdn.example.org used backend.example.org:8001 as the next hop for this request.
+
+
 ### next-protocol
 
 The `next-protocol` parameter's value indicates the ALPN protocol identifier {{!RFC7301}} used by the intermediary to connect to the next hop. This is only applicable when that connection was actually established.
