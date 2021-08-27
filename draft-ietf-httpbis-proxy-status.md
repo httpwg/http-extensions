@@ -97,7 +97,7 @@ Intermediaries determine when it is appropriate to add the Proxy-Status field to
 
 Each member of the list identifies the intermediary that inserted the value, and MUST have a type of either sf-string or sf-token. Depending on the deployment, this might be a product or service name (e.g., ExampleProxy or "Example CDN"), a hostname ("proxy-3.example.com"), an IP address, or a generated string.
 
-Parameters on each member convey additional information about that intermediary's handling of the response and its associated request; see {{params}}. While all of these parameters are OPTIONAL, intermediaries are encouraged to provide as much information as possible (but see {{security}} for security considerations in doing so).
+Parameters on each member (as per {{Section 3.1.2 of STRUCTURED-FIELDS}}) convey additional information about that intermediary's handling of the response and its associated request; see {{params}}. While all of these parameters are OPTIONAL, intermediaries are encouraged to provide as much information as possible (but see {{security}} for security considerations in doing so).
 
 When adding a value to the Proxy-Status field, intermediaries SHOULD preserve the existing members of the field to allow debugging of the entire chain of intermediaries handling the request, unless explicitly configured to remove them (e.g., to prevent internal network details from leaking; see {{security}}).
 
