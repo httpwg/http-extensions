@@ -25,8 +25,8 @@ author:
     ins: M. Nottingham
     name: Mark Nottingham
     organization:
-    city: Prahran
-    region: VIC
+    postal:
+      - Prahran
     country: Australia
     email: mnot@mnot.net
     uri: https://www.mnot.net/
