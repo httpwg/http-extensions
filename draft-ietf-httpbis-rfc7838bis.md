@@ -86,6 +86,10 @@ It also endorses the status code 421 (Misdirected Request)
 use to indicate that they are not authoritative for a given origin,
 in cases where the wrong location is used.
 
+## Changes from RFC 7838
+
+No substantive changes.
+
 ## Notational Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
