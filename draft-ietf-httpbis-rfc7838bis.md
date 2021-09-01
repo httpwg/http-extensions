@@ -35,8 +35,12 @@ normative:
   RFC5226:
   RFC5890:
   RFC6066:
-  RFC7230:
-  RFC7234:
+  HTTP:
+    I-D.ietf-httpbis-semantics
+  HTTP11:
+    I-D.ietf-httpbis-messaging
+  Caching:
+    I-D.ietf-httpbis-cache
   RFC7301:
   HTTP2:
     I-D.ietf-httpbis-http2
@@ -56,7 +60,7 @@ configuration.
 
 # Introduction
 
-HTTP {{RFC7230}} conflates the identification of resources with their
+HTTP {{HTTP}} conflates the identification of resources with their
 location.  In other words, "http://" and "https://" URIs are used to
 both name and find things to interact with.
 
@@ -102,17 +106,17 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 document are to be interpreted as described in {{!RFC2119}}.
 
 This document uses the Augmented BNF defined in {{!RFC5234}} and updated
-by {{!RFC7405}} along with the "#rule" extension defined in {{Section 7 of
-RFC7230}}.  The rules below are defined in {{!RFC5234}}, {{RFC7230}}, and
-{{RFC7234}}:
+by {{!RFC7405}} along with the "#rule" extension defined in {{Section 5.6.1 of
+HTTP}}.  The rules below are defined in {{!RFC5234}}, {{HTTP}}, and
+{{Caching}}:
 
 ~~~ abnf
-OWS           = <OWS, see [RFC7230], Section 3.2.3>
-delta-seconds = <delta-seconds; see [RFC7234], Section 1.2.1>
-port          = <port, see [RFC7230], Section 2.7>
-quoted-string = <quoted-string, see [RFC7230], Section 3.2.6>
-token         = <token, see [RFC7230], Section 3.2.6>
-uri-host      = <uri-host, see [RFC7230], Section 2.7>
+OWS           = <OWS, see [HTTP], Section 5.6.3>
+delta-seconds = <delta-seconds; see [Caching], Section 1.2.2>
+port          = <port, see [HTTP], Section 4.1>
+quoted-string = <quoted-string, see [HTTP], Section 5.6.4>
+token         = <token, see [HTTP], Section 5.6.2>
+uri-host      = <uri-host, see [HTTP], Section 4.1>
 ~~~
 
 # Alternative Services Concepts {#concepts}
@@ -126,7 +130,7 @@ An alternative service can be used to interact with the resources on
 an origin server at a separate location on the network, possibly
 using a different protocol configuration.  Alternative services are
 considered authoritative for an origin's resources, in the sense of
-{{Section 9.1 of RFC7230}}.
+{{Section 4.3 of HTTP}}.
 
 For example, an origin:
 
@@ -171,7 +175,7 @@ before.
 Importantly, this includes its security context; in particular, when TLS
 {{?RFC5246}} is used to authenticate, the alternative service will need to
 present a certificate for the origin's host name, not that of the alternative.
-Likewise, the Host header field ({{Section 5.4 of RFC7230}}) is still derived
+Likewise, the Host header field ({{Section 7.2 of HTTP}}) is still derived
 from the origin, not the alternative service (just as it would if a CNAME were
 being used).
 
@@ -337,7 +341,7 @@ origin requests all alternatives for that origin to be invalidated
 invalid reply containing both "clear" and alternative services).
 
 ALPN protocol names are octet sequences with no additional constraints on
-format.  Octets not allowed in tokens ({{Section 3.2.6 of RFC7230}}) MUST be
+format.  Octets not allowed in tokens ({{Section 5.6.2 of HTTP}}) MUST be
 percent-encoded as per {{Section 2.1 of RFC3986}}.  Consequently, the octet
 representing the percent character "%" (hex 25) MUST be percent-encoded as well.
 
@@ -420,7 +424,7 @@ New parameters can be defined in extension specifications (see
 {{registry}} for registration details).
 
 Note that all field elements that allow "quoted-string" syntax MUST
-be processed as per {{Section 3.2.6 of RFC7230}}.
+be processed as per {{Section 5.6.4 of HTTP}}.
 
 ## Caching Alt-Svc Header Field Values {#header-caching}
 
@@ -431,7 +435,7 @@ can be modified with the "ma" (max-age) parameter.
 Syntax:
 
 ~~~ abnf
-ma = delta-seconds; see [RFC7234], Section 1.2.1
+ma = delta-seconds; see [Caching], Section 1.2.2
 ~~~
 
 The delta-seconds value indicates the number of seconds since the
@@ -442,7 +446,7 @@ considered fresh.
 Alt-Svc: h2=":443"; ma=3600
 ~~~
 
-See {{Section 4.2.3 of RFC7234}} for details on determining the
+See {{Section 4.2.3 of Caching}} for details on determining the
 response age.
 
 For example, a response:
@@ -569,7 +573,7 @@ hard to predict.
 
 The Alt-Used header field is used in requests to identify the
 alternative service in use, just as the Host header field
-({{Section 5.4 of RFC7230}}) identifies the host and port of the
+({{Section 7.2 of HTTP}}) identifies the host and port of the
 origin.
 
 ~~~ abnf
@@ -595,7 +599,7 @@ Alt-Used: alternate.example.net
 
 # The 421 (Misdirected Request) HTTP Status Code {#status-code}
 
-The 421 (Misdirected Request) status code is defined in {{Section 9.1.2
+The 421 (Misdirected Request) status code is defined in {{Section 15.5.20
 of HTTP2}} to indicate that the current server instance is not
 authoritative for the requested resource.  This can be used to
 indicate that an alternative service is not authoritative; see
@@ -794,7 +798,7 @@ This risk can be mitigated in servers by using the URI scheme
 explicitly carried by the protocol (such as ":scheme" in HTTP/2 or
 the "absolute form" of the request target in HTTP/1.1) as an
 indication of security context, instead of other connection
-properties ({{Section 8.3.1 of HTTP2}} and {{Section 5.3.2 of RFC7230}}).
+properties ({{Section 8.3.1 of HTTP2}} and {{Section 3.2.2 of HTTP11}}).
 
 When the protocol does not explicitly carry the scheme (as is usually
 the case for HTTP/1.1 over TLS), servers can mitigate this risk by
