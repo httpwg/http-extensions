@@ -117,11 +117,10 @@ HTTP messages are transferred between endpoints, the protocol might choose to
 make use of features of the lower layer in order to provide some integrity
 protection; for instance TCP checksums or TLS records [RFC2818].
 
-This document defines the representation digest integrity mechanism that acts on
-representation data
-and the content digest integrity mechanism that acts instead
-on the conveyed content.
-They operate independent of transport integrity, offering
+This document defines two digest integrity mechanisms for HTTP.
+First, representation data integrity, which acts on representation data.
+Second, content digest integrity, which acts on conveyed content.
+Both mechanisms operate independent of transport integrity, offering
 the potential to detect programming errors and corruption of data in flight or
 at rest.
 They can be used across multiple hops in order to provide end-to-end
@@ -658,11 +657,11 @@ Checksum mechanisms defined in this document are media-type agnostic
 and do not provide canonicalization algorithms for specific formats.
 Examples are calculated inclusive of any space.
 While examples can include both fields,
-`Digest` and `Content-Digest` and can be returned independently.
+`Digest` and `Content-Digest` can be returned independently.
 
 ## Server Returns Full Representation Data {#example-full-representation}
 
-In this example, the message content conveys a complete representation data,
+In this example, the message content conveys complete representation data,
 so `Digest` and `Content-Digest` have the same value.
 
 Request:
@@ -692,7 +691,7 @@ of a resource.
 The response `Digest` field-value is calculated over the JSON object
 `{"hello": "world"}`, which is not shown because there is no payload
 data.
-`Content-Digest` is computed on an empty content.
+`Content-Digest` is computed on empty content.
 
 Request:
 
@@ -717,7 +716,7 @@ Content-Digest: sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 In this example, the client makes a range request and the server
 responds with partial content. The `Digest` field-value represents
 the entire JSON object `{"hello": "world"}`
-while the `Content-Digest` one is computed on the message content `"hello"`.
+, while the `Content-Digest` field-value is computed on the message content `"hello"`.
 
 Request:
 
@@ -1051,7 +1050,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 The following examples demonstrate interactions where a client solicits a
 `Digest` using `Want-Digest`.
-The behavior of `Content-Digest` and `Want-Content-Digest` is analogous.
+The behavior of `Content-Digest` and `Want-Content-Digest` is identical.
 
 Some examples include JSON objects in the content.
 For presentation purposes, objects that fit completely within the line-length limits
@@ -1199,9 +1198,9 @@ Before sending digest fields in a trailer section, the sender
 should consider that intermediaries are explicitly allowed to drop any trailer
 (see Section 6.5.2 of {{SEMANTICS}}).
 
-When digest fields are used in a trailer section, the receiver gets there value after the content
-and may thus be tempted to process the data before validating their value.
-It is preferable that data is only be processed after validation.
+When digest fields are used in a trailer section, the field-values are received after the content.
+Eager processing of content before the trailer section prevents digest validation, possibly leading to
+processing of invalid data.
 
 Not every digest-algorithm is suitable for use in the trailer section, some may require to pre-process
 the whole payload before sending a message (eg. see {{?I-D.thomson-http-mice}}).
