@@ -78,7 +78,7 @@ See also the [official document listing](https://datatracker.ietf.org/wg/httpbis
 
 ### Building Protocols with HTTP (BCP56bis)
 
-*Sent to IESG*
+*in RFC Editor Queue*
 
 * [Editors' Draft](https://httpwg.org/http-extensions/draft-ietf-httpbis-bcp56bis.html) ([plain text](https://httpwg.org/http-extensions/draft-ietf-httpbis-bcp56bis.txt))
 * [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-bcp56bis) (less recent, more official)
