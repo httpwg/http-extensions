@@ -71,7 +71,7 @@ For example:
   location that is more local to the client.
 
 - An origin server might wish to offer access to its resources using
-  a new protocol, such as HTTP/2 {{!RFC7540}}, or one using improved
+  a new protocol, such as HTTP/2 {{HTTP2}}, or one using improved
   security, such as Transport Layer Security (TLS) {{?RFC5246}}.
 
 - An origin server might wish to segment its clients into groups of
@@ -362,7 +362,7 @@ For example:
 Alt-Svc: h2=":8000"
 ~~~
 
-   This indicates the "h2" protocol ({{!RFC7540}}) on the same host using
+   This indicates the "h2" protocol ({{HTTP2}}) on the same host using
    the indicated port 8000.
 
    An example involving a change of host:
@@ -402,7 +402,7 @@ new connection to an alternative service.  Subsequent requests can
 start using this new connection immediately or can continue using the
 existing connection while the new connection is created.
 
-When using HTTP/2 ({{RFC7540}}), servers SHOULD instead send an ALTSVC frame
+When using HTTP/2 ({{HTTP2}}), servers SHOULD instead send an ALTSVC frame
 ({{ALTSVC-frame}}).  A single ALTSVC frame can be sent for a connection; a new
 frame is not needed for every request.  Note that, despite this recommendation,
 Alt-Svc header fields remain valid in responses delivered over HTTP/2.
@@ -495,12 +495,12 @@ services.
 
 # The ALTSVC HTTP/2 Frame {#ALTSVC-frame}
 
-The ALTSVC HTTP/2 frame ({{Section 4 of RFC7540}}) advertises the
+The ALTSVC HTTP/2 frame ({{Section 4 of HTTP2}}) advertises the
 availability of an alternative service to an HTTP/2 client.
 
 The ALTSVC frame is a non-critical extension to HTTP/2.  Endpoints
 that do not support this frame will ignore it (as per the
-extensibility rules defined in {{Section 4.1 of RFC7540}}).
+extensibility rules defined in {{Section 4.1 of HTTP2}}).
 
 An ALTSVC frame from a server to a client on a stream other than
 stream 0 indicates that the conveyed alternative service is
@@ -633,7 +633,7 @@ Engineering Task Force".
 ## The ALTSVC HTTP/2 Frame Type
 
 This document registers the ALTSVC frame type in the "HTTP/2 Frame
-Type" registry ({{Section 11.2 of RFC7540}}).
+Type" registry ({{Section 11.2 of HTTP2}}).
 
 Frame Type:
 
@@ -794,7 +794,7 @@ This risk can be mitigated in servers by using the URI scheme
 explicitly carried by the protocol (such as ":scheme" in HTTP/2 or
 the "absolute form" of the request target in HTTP/1.1) as an
 indication of security context, instead of other connection
-properties ({{Section 8.1.2.3 of RFC7540}} and {{Section 5.3.2 of RFC7230}}).
+properties ({{Section 8.3.1 of HTTP2}} and {{Section 5.3.2 of RFC7230}}).
 
 When the protocol does not explicitly carry the scheme (as is usually
 the case for HTTP/1.1 over TLS), servers can mitigate this risk by
