@@ -2420,6 +2420,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Reject cookies with control characters:
   <https://github.com/httpwg/http-extensions/pull/1576>
 
+* No longer treat horizontal tab as a control character:
+  <https://github.com/httpwg/http-extensions/pull/1589>
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
