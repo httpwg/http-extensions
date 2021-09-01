@@ -31,11 +31,15 @@ author:
 
 
 normative:
+  RFC3986:
+  RFC5226:
+  RFC5890:
   RFC6066:
   RFC7230:
   RFC7234:
-  RFC5890:
-  RFC5226:
+  RFC7301:
+  HTTP2:
+    I-D.ietf-httpbis-http2
 
 informative:
 
@@ -79,7 +83,7 @@ Services", that allows an origin server to nominate additional means
 of interacting with it on the network.  It defines a general
 framework for this in {{concepts}}, along with specific mechanisms for
 advertising their existence using HTTP header fields ({{alt-svc-field}}) or
-HTTP/2 frames ({{alt-svc-frame}}), plus a way to indicate that an alternative
+HTTP/2 frames ({{ALTSVC-frame}}), plus a way to indicate that an alternative
 service was used ({{alt-used-field}}).
 
 It also endorses the status code 421 (Misdirected Request)
@@ -164,12 +168,12 @@ HTTP; from that standpoint, the URI being accessed and all
 information derived from it (scheme, host, and port) are the same as
 before.
 
-Importantly, this includes its security context; in particular, when
-TLS {{?RFC5246}} is used to authenticate, the alternative service will
-need to present a certificate for the origin's host name, not that of
-the alternative.  Likewise, the Host header field ({{RFC7230}},
-Section 5.4) is still derived from the origin, not the alternative
-service (just as it would if a CNAME were being used).
+Importantly, this includes its security context; in particular, when TLS
+{{?RFC5246}} is used to authenticate, the alternative service will need to
+present a certificate for the origin's host name, not that of the alternative.
+Likewise, the Host header field ({{Section 5.4 of RFC7230}}) is still derived
+from the origin, not the alternative service (just as it would if a CNAME were
+being used).
 
 The changes MAY, however, be made visible in debugging tools,
 consoles, etc.
@@ -177,7 +181,7 @@ consoles, etc.
 Formally, an alternative service is identified by the combination of:
 
 - An Application Layer Protocol Negotiation (ALPN) protocol name, as
-  per {{!RFC7301}}
+  per {{RFC7301}}
 
 - A host, as per {{Section 3.2.2 of RFC3986}}
 
@@ -188,16 +192,16 @@ or suite of protocols used by the alternative service.  Note that for
 the purpose of this specification, an ALPN protocol name implicitly
 includes TLS in the suite of protocols it identifies, unless
 specified otherwise in its definition.  In particular, the ALPN name
-"http/1.1", registered by Section 6 of {{!RFC7301}}, identifies HTTP/1.1
+"http/1.1", registered by {{Section 6 of RFC7301}}, identifies HTTP/1.1
 over TLS.
 
 Additionally, each alternative service MUST have a freshness
-lifetime, expressed in seconds (see Section 2.2).
+lifetime, expressed in seconds (see {{caching}}).
 
-There are many ways that a client could discover the alternative
-service(s) associated with an origin.  This document describes two
-such mechanisms: the "Alt-Svc" HTTP header field (Section 3) and the
-"ALTSVC" HTTP/2 frame type (Section 4).
+There are many ways that a client could discover the alternative service(s)
+associated with an origin.  This document describes two such mechanisms: the
+"Alt-Svc" HTTP header field ({{alt-svc-field}}) and the "ALTSVC" HTTP/2 frame
+type ({{ALTSVC-frame}}).
 
 The remainder of this section describes requirements that are common
 to alternative services, regardless of how they are discovered.
@@ -206,7 +210,7 @@ to alternative services, regardless of how they are discovered.
 
 Clients MUST have reasonable assurances that the alternative service
 is under control of and valid for the whole origin.  This mitigates
-the attack described in Section 9.2.
+the attack described in {{changing-hosts}}.
 
 For the purposes of this document, "reasonable assurances" can be
 established through use of a TLS-based protocol with the certificate
@@ -222,14 +226,14 @@ mechanism (at the time of the publication of this specification) in
 that protocol to establish the relationship between the origin and
 the alternative.
 
-## Alternative Service Caching
+## Alternative Service Caching {#caching}
 
 Mechanisms for discovering alternative services also associate a
 freshness lifetime with them; for example, the Alt-Svc header field
 uses the "ma" parameter.
 
 Clients can choose to use an alternative service instead of the
-origin at any time when it is considered fresh; see Section 2.4 for
+origin at any time when it is considered fresh; see {{using}} for
 specific recommendations.
 
 Clients with existing connections to an alternative service do not
@@ -260,7 +264,7 @@ Note that the SNI information provided in TLS by the client will be
 that of the origin, not the alternative (as will the Host HTTP header
 field value).
 
-## Using Alternative Services
+## Using Alternative Services {#using}
 
 By their nature, alternative services are OPTIONAL: clients do not
 need to use them.  However, it is advantageous for clients to behave
@@ -271,7 +275,7 @@ Therefore, if a client supporting this specification becomes aware of
 an alternative service, the client SHOULD use that alternative
 service for all requests to the associated origin as soon as it is
 available, provided the alternative service information is fresh
-(Section 2.2) and the security properties of the alternative service
+({{caching}}) and the security properties of the alternative service
 protocol are desirable, as compared to the existing connection.  A
 viable alternative service is then treated in every way as the
 origin; this includes the ability to advertise alternative services.
@@ -288,7 +292,7 @@ instead route it through that proxy.
 
 When a client uses an alternative service for a request, it can
 indicate this to the server using the Alt-Used header field
-(Section 5).
+({{alt-used-field}}).
 
 The client does not need to block requests on any existing
 connection; it can be used until the alternative connection is
@@ -332,11 +336,10 @@ origin requests all alternatives for that origin to be invalidated
 (including those specified in the same response, in case of an
 invalid reply containing both "clear" and alternative services).
 
-ALPN protocol names are octet sequences with no additional
-constraints on format.  Octets not allowed in tokens ({{RFC7230}},
-Section 3.2.6) MUST be percent-encoded as per Section 2.1 of
-{{!RFC3986}}.  Consequently, the octet representing the percent
-character "%" (hex 25) MUST be percent-encoded as well.
+ALPN protocol names are octet sequences with no additional constraints on
+format.  Octets not allowed in tokens ({{Section 3.2.6 of RFC7230}}) MUST be
+percent-encoded as per {{Section 2.1 of RFC3986}}.  Consequently, the octet
+representing the percent character "%" (hex 25) MUST be percent-encoded as well.
 
 In order to have precisely one way to represent any ALPN protocol
 name, the following additional constraints apply:
@@ -350,7 +353,7 @@ With these constraints, recipients can apply simple string comparison
 to match protocol identifiers.
 
 The "alt-authority" component consists of an OPTIONAL uri-host
-("host" in Section 3.2.2 of {{!RFC3986}}), a colon (":"), and a port
+("host" in {{Section 3.2.2 of RFC3986}}), a colon (":"), and a port
 number.
 
 For example:
@@ -380,10 +383,9 @@ Examples for protocol name escaping:
 | w=x:y#z            | w%3Dx%3Ay#z | "=" and ":" escaped |
 | x%y                | x%25y       | "%" needs escaping  |
 
-Alt-Svc MAY occur in any HTTP response message, regardless of the
-status code.  Note that recipients of Alt-Svc can ignore the header
-field (and are required to in some situations; see Sections 2.1 and
-6).
+Alt-Svc MAY occur in any HTTP response message, regardless of the status code.
+Note that recipients of Alt-Svc can ignore the header field (and are required to
+in some situations; see {{host-authentication}} and {{status-code}}).
 
 The Alt-Svc field value can have multiple values:
 
@@ -400,28 +402,27 @@ new connection to an alternative service.  Subsequent requests can
 start using this new connection immediately or can continue using the
 existing connection while the new connection is created.
 
-When using HTTP/2 ({{!RFC7540}}), servers SHOULD instead send an ALTSVC
-frame (Section 4).  A single ALTSVC frame can be sent for a
-connection; a new frame is not needed for every request.  Note that,
-despite this recommendation, Alt-Svc header fields remain valid in
-responses delivered over HTTP/2.
+When using HTTP/2 ({{RFC7540}}), servers SHOULD instead send an ALTSVC frame
+({{ALTSVC-frame}}).  A single ALTSVC frame can be sent for a connection; a new
+frame is not needed for every request.  Note that, despite this recommendation,
+Alt-Svc header fields remain valid in responses delivered over HTTP/2.
 
 Each "alt-value" is followed by an OPTIONAL semicolon-separated list
 of additional parameters, each such "parameter" comprising a name and
 a value.
 
 This specification defines two parameters: "ma" and "persist",
-defined in Section 3.1.  Unknown parameters MUST be ignored.  That
+defined in {{header-caching}}.  Unknown parameters MUST be ignored.  That
 is, the values (alt-value) they appear in MUST be processed as if the
 unknown parameter was not present.
 
 New parameters can be defined in extension specifications (see
-Section 7.3 for registration details).
+{{registry}} for registration details).
 
 Note that all field elements that allow "quoted-string" syntax MUST
 be processed as per {{Section 3.2.6 of RFC7230}}.
 
-## Caching Alt-Svc Header Field Values
+## Caching Alt-Svc Header Field Values {#header-caching}
 
 When an alternative service is advertised using Alt-Svc, it is
 considered fresh for 24 hours from generation of the message.  This
@@ -489,17 +490,17 @@ Alt-Svc: h2=":443"; ma=2592000; persist=1
 This specification only defines a single value for "persist".
 Clients MUST ignore "persist" parameters with values other than "1".
 
-See Section 2.2 for general requirements on caching alternative
+See {{caching}} for general requirements on caching alternative
 services.
 
-# The ALTSVC HTTP/2 Frame {#alt-svc-frame}
+# The ALTSVC HTTP/2 Frame {#ALTSVC-frame}
 
 The ALTSVC HTTP/2 frame ({{Section 4 of RFC7540}}) advertises the
 availability of an alternative service to an HTTP/2 client.
 
 The ALTSVC frame is a non-critical extension to HTTP/2.  Endpoints
 that do not support this frame will ignore it (as per the
-extensibility rules defined in Section 4.1 of {{!RFC7540}}).
+extensibility rules defined in {{Section 4.1 of RFC7540}}).
 
 An ALTSVC frame from a server to a client on a stream other than
 stream 0 indicates that the conveyed alternative service is
@@ -540,7 +541,7 @@ Alt-Svc-Field-Value:
 : A sequence of octets (length determined by
   subtracting the length of all preceding fields from the frame
   length) containing a value identical to the Alt-Svc field value
-  defined in Section 3 (ABNF production "Alt-Svc").
+  defined in {{alt-svc-field}} (ABNF production "Alt-Svc").
 
 The ALTSVC frame does not define any flags.
 
@@ -594,15 +595,15 @@ Alt-Used: alternate.example.net
 
 # The 421 (Misdirected Request) HTTP Status Code {#status-code}
 
-The 421 (Misdirected Request) status code is defined in Section 9.1.2
-of {{!RFC7540}} to indicate that the current server instance is not
+The 421 (Misdirected Request) status code is defined in {{Section 9.1.2
+of HTTP2}} to indicate that the current server instance is not
 authoritative for the requested resource.  This can be used to
 indicate that an alternative service is not authoritative; see
-Section 2).
+{{concepts}}).
 
 Clients receiving 421 (Misdirected Request) from an alternative
 service MUST remove the corresponding entry from its alternative
-service cache (see Section 2.2) for that origin.  Regardless of the
+service cache (see {{caching}}) for that origin.  Regardless of the
 idempotency of the request method, they MAY retry the request, either
 at another alternative server, or at the origin.
 
@@ -621,10 +622,10 @@ This document defines the following HTTP header fields, so their
 associated registry entries have been added according to the
 permanent registrations below (see {{?BCP90}}):
 
-| Header Field Name | Protocol | Status   | Reference  |
-| ----------------- | -------- | -------- | ---------- |
-| Alt-Svc           | http     | standard | Section 3  |
-| Alt-Used          | http     | standard | Section 5  |
+| Header Field Name | Protocol | Status   | Reference          |
+| ----------------- | -------- | -------- | ------------------ |
+| Alt-Svc           | http     | standard | {{alt-svc-field}}  |
+| Alt-Used          | http     | standard | {{alt-used-field}} |
 
 The change controller is: "IETF (iesg@ietf.org) -- Internet
 Engineering Task Force".
@@ -644,9 +645,9 @@ Code:
 
 Specification:
 
-: Section 4 of this document
+: {{ALTSVC-frame}} of this document
 
-## Alt-Svc Parameter Registry
+## Alt-Svc Parameter Registry {#registry}
 
 The "Hypertext Transfer Protocol (HTTP) Alt-Svc Parameter Registry"
 defines the name space for parameters.  It has been created and will
@@ -668,15 +669,15 @@ Values to be added to this name space require Expert Review (see
 The "Hypertext Transfer Protocol (HTTP) Alt-Svc Parameter Registry"
 has been populated with the registrations below:
 
-| Alt-Svc Parameter | Reference    |
-| ----------------- | ------------ |
-| ma                | Section 3.1  |
-| persist           | Section 3.1  |
+| Alt-Svc Parameter | Reference          |
+| ----------------- | ------------------ |
+| ma                | {{header-caching}} |
+| persist           | {{header-caching}} |
 
 # Internationalization Considerations
 
-An internationalized domain name that appears in either the header
-field (Section 3) or the HTTP/2 frame (Section 4) MUST be expressed
+An internationalized domain name that appears in either the header field
+({{alt-svc-field}}) or the HTTP/2 frame ({{ALTSVC-frame}}) MUST be expressed
 using A-labels ({{Section 2.3.2.1 of RFC5890}}).
 
 # Security Considerations
@@ -696,7 +697,7 @@ port on the same host using the Alt-Svc header field; if that port is
 under the attacker's control, they can thus masquerade as the HTTP
 server.
 
-This risk is mitigated by the requirements in Section 2.1.
+This risk is mitigated by the requirements in {{host-authentication}}.
 
 On servers, this risk can also be reduced by restricting the ability
 to advertise alternative services, and restricting who can open a
@@ -712,14 +713,14 @@ For example, if an attacker can convince a user agent to send all
 traffic for "innocent.example.org" to "evil.example.com" by
 successfully associating it as an alternative service, they can
 masquerade as that origin.  This can be done locally (see mitigations
-in Section 9.1) or remotely (e.g., by an intermediary as a man-in-
+in {{changing-ports}}) or remotely (e.g., by an intermediary as a man-in-
 the-middle attack).
 
-This is the reason for the requirement in Section 2.1 that clients
-have reasonable assurances that the alternative service is under
-control of and valid for the whole origin; for example, presenting a
-certificate for the origin proves that the alternative service is
-authorized to serve traffic for the origin.
+This is the reason for the requirement in {{host-authentication}} that clients
+have reasonable assurances that the alternative service is under control of and
+valid for the whole origin; for example, presenting a certificate for the origin
+proves that the alternative service is authorized to serve traffic for the
+origin.
 
 Note that this assurance is only as strong as the method used to
 authenticate the alternative service.  In particular, when TLS
