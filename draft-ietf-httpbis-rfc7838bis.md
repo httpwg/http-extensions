@@ -8,6 +8,7 @@ ipr: trust200902
 area: General
 workgroup: HTTP Working Group
 keyword: Internet-Draft
+github-issue-label: alt-svc
 
 stand_alone: yes
 smart_quotes: no
