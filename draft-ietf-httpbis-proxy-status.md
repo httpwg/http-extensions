@@ -1,6 +1,6 @@
 ---
 title: The Proxy-Status HTTP Response Header Field
-abbrev: Proxy-Status
+abbrev: Proxy-Status Header
 docname: draft-ietf-httpbis-proxy-status-latest
 date: {DATE}
 category: std
