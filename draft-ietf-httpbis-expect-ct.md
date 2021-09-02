@@ -18,6 +18,9 @@ author:
     org: Google
     email: estark@google.com
 
+normative:
+  HTTP: I-D.ietf-httpbis-semantics
+  HTTP-CACHING: I-D.ietf-httpbis-cache
 
 informative:
   FETCH:
@@ -130,7 +133,7 @@ Terminology is defined in this section.
 
 * UA is an acronym for "user agent". For the purposes of this specification, a
   UA is an HTTP client application typically actively manipulated by a user
-  {{!RFC7230}}.
+  {{!HTTP}}.
 
 * "Unknown Expect-CT Host" is an Expect-CT Host that the UA has not noted.
 
@@ -145,8 +148,8 @@ connections to the host emitting the header field for CT compliance
 
 {{expect-ct-syntax}} describes the syntax (Augmented Backus-Naur Form) of the
 header field, using the grammar defined in {{!RFC5234}} and the rules defined in
-{{Section 3.2 of !RFC7230}}. The "#" ABNF extension is specified in {{Section 7 of
-!RFC7230}}.
+{{Section 5 of !HTTP}}. The "#" ABNF extension is specified in {{Section 5.6.1 of
+!HTTP}}.
 
 ~~~ abnf
 Expect-CT           = 1#expect-ct-directive
@@ -249,7 +252,7 @@ delta-seconds = 1*DIGIT
 ~~~
 {: #maxage-syntax title="Syntax of the max-age directive value"}
 
-`delta-seconds` is used as defined in {{Section 1.2.1 of !RFC7234}}.
+`delta-seconds` is used as defined in {{Section 1.2.2 of !HTTP-CACHING}}.
 
 ### Examples
 
