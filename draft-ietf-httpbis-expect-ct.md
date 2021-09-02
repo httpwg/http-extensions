@@ -145,8 +145,8 @@ connections to the host emitting the header field for CT compliance
 
 {{expect-ct-syntax}} describes the syntax (Augmented Backus-Naur Form) of the
 header field, using the grammar defined in {{!RFC5234}} and the rules defined in
-Section 3.2 of {{!RFC7230}}. The "#" ABNF extension is specified in Section 7 of
-{{!RFC7230}}.
+{{Section 3.2 of !RFC7230}}. The "#" ABNF extension is specified in {{Section 7 of
+!RFC7230}}.
 
 ~~~ abnf
 Expect-CT           = 1#expect-ct-directive
@@ -194,7 +194,7 @@ report-uri-value = absolute-URI
 ~~~
 {: #reporturi-syntax title="Syntax of the report-uri directive value"}
 
-`absolute-URI` is defined in Section 4.3 of {{!RFC3986}}.
+`absolute-URI` is defined in {{Section 4.3 of !RFC3986}}.
 
 UAs MUST ignore `report-uri`s that do not use the HTTPS scheme. UAs MUST check
 Expect-CT compliance when the host in the `report-uri` is a Known Expect-CT
@@ -249,7 +249,7 @@ delta-seconds = 1*DIGIT
 ~~~
 {: #maxage-syntax title="Syntax of the max-age directive value"}
 
-`delta-seconds` is used as defined in Section 1.2.1 of {{!RFC7234}}.
+`delta-seconds` is used as defined in {{Section 1.2.1 of !RFC7234}}.
 
 ### Examples
 
@@ -297,7 +297,7 @@ conveyed over non-secure transport.
 
 The UA processing model relies on parsing domain names.  Note that
 internationalized domain names SHALL be canonicalized by the UA according to the
-scheme in Section 10 of {{!RFC6797}}.
+scheme in {{Section 10 of !RFC6797}}.
 
 The UA stores Known Expect-CT Hosts and their associated Expect-CT
 directives. This data is collectively known as a host's "Expect-CT" metadata".
@@ -362,7 +362,7 @@ use additional directives.
 If the substring matching the host production from the Request-URI (of the
 message to which the host responded) does not exactly match an existing Known
 Expect-CT Host's domain name, per the matching procedure for a Congruent Match
-specified in Section 8.2 of {{!RFC6797}}, then the UA MUST add this host to the
+specified in {{Section 8.2 of !RFC6797}}, then the UA MUST add this host to the
 Known Expect-CT Host cache. The UA caches:
 
 - the Expect-CT Host's domain name,
@@ -427,7 +427,7 @@ connection is not CT-qualified), and if the Known Expect-CT Host's Expect-CT
 metadata indicates an `enforce` configuration, the UA MUST treat the CT
 compliance failure as an error. The UA MAY allow the user to bypass the error,
 unless connection errors should have no user recourse due to other policies in
-effect (such as HSTS, as described in Section 12.1 of {{!RFC6797}}.
+effect (such as HSTS, as described in {{Section 12.1 of !RFC6797}}.
 
 If a connection to a Known Expect-CT Host violates the UA's CT policy, and if the
 Known Expect-CT Host's Expect-CT metadata includes a `report-uri`, the UA SHOULD
@@ -476,8 +476,8 @@ key is optional and is assumed to be "https" if not present.
 
 * "effective-expiration-date": the value indicates the Effective Expiration Date
 (see {{storage-model}}) for the Expect-CT Host that failed the CT compliance
-check, in UTC. The value is provided as a string formatted according to Section
-5.6 of {{!RFC3339}} ("Internet Date/Time Format").
+check, in UTC. The value is provided as a string formatted according to {{Section
+5.6 of !RFC3339}} ("Internet Date/Time Format").
 
 * "served-certificate-chain": the value is the certificate chain as served by
 the Expect-CT Host during TLS session setup. The value is provided as an array
@@ -500,30 +500,30 @@ Expect-CT host and their validation statuses. The value is provided as an array
 of JSON objects. The SCTs may appear in any order. Each JSON object in the array
 has the following keys:
   * A "version" key, with an integer value. The UA MUST set this value to `1` if
-    the SCT is in the format defined in Section 3.2 of {{!RFC6962}} and `2` if
-    it is in the format defined in Section 4.5 of
-    {{!I-D.ietf-trans-rfc6962-bis}}.
+    the SCT is in the format defined in {{Section 3.2 of !RFC6962}} and `2` if
+    it is in the format defined in {{Section 4.5 of
+    !I-D.ietf-trans-rfc6962-bis}}.
   * The "status" key, with a string value that the UA MUST set to one of the
     following values: "unknown" (indicating that the UA does not have or does
     not trust the public key of the log from which the SCT was issued), "valid"
     (indicating that the UA successfully validated the SCT as described in
-    Section 5.2 of {{!RFC6962}} or Section 8.2.3 of
-    {{!I-D.ietf-trans-rfc6962-bis}}), or "invalid" (indicating that the SCT
+    {{Section 5.2 of !RFC6962}} or {{Section 8.2.3 of
+    !I-D.ietf-trans-rfc6962-bis}}), or "invalid" (indicating that the SCT
     validation failed because of a bad signature or an invalid timestamp).
   * The "source" key, with a string value that indicates from where the UA
-    obtained the SCT, as defined in Section 3 of {{!RFC6962}} and Section 6 of
-    {{!I-D.ietf-trans-rfc6962-bis}}. The UA MUST set the value to one of
+    obtained the SCT, as defined in {{Section 3 of !RFC6962}} and {{Section 6 of
+    !I-D.ietf-trans-rfc6962-bis}}. The UA MUST set the value to one of
     "tls-extension", "ocsp", or "embedded". These correspond to the three
     methods of delivering SCTs in the TLS handshake that are described in
-    Section 3.3 of {{!RFC6962}}.
+    {{Section 3.3 of !RFC6962}}.
   * The "serialized_sct" key, with a string value. If the value of the "version"
     key is `1`, the UA MUST set this value to the base64 encoded {{!RFC4648}}
-    serialized `SignedCertificateTimestamp` structure from Section 3.2 of
-    {{!RFC6962}}. The base64 encoding is defined in Section 4 of {{!RFC4648}}.
+    serialized `SignedCertificateTimestamp` structure from {{Section 3.2 of
+    !RFC6962}}. The base64 encoding is defined in {{Section 4 of !RFC4648}}.
     If the value of the "version" key is `2`, the UA MUST set this
     value to the base64 encoded {{!RFC4648}} serialized `TransItem` structure
-    representing the SCT, as defined in Section 4.5 of
-    {{!I-D.ietf-trans-rfc6962-bis}}.
+    representing the SCT, as defined in {{Section 4.5 of
+    !I-D.ietf-trans-rfc6962-bis}}.
 
 * "failure-mode": the value indicates whether the Expect-CT report was triggered
 by an Expect-CT policy in enforce or report-only mode. The value is provided
@@ -656,8 +656,8 @@ certificates, change server software, or act as a man-in-the-middle in
 connections.
 
 Site operators can mitigate this situation by one of: reconfiguring their web
-server to transmit SCTs using the TLS extension defined in Section 6.5 of
-{{!I-D.ietf-trans-rfc6962-bis}}, obtaining a certificate from an alternative
+server to transmit SCTs using the TLS extension defined in {{Section 6.5 of
+!I-D.ietf-trans-rfc6962-bis}}, obtaining a certificate from an alternative
 certificate authority which provides SCTs by one of the other methods, or by
 waiting for the user agents' persisted notation of this as an Expect-CT host to
 reach its `max-age`. User agents may choose to implement mechanisms for users to
