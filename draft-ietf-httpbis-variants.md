@@ -1,6 +1,5 @@
 ---
 title: HTTP Representation Variants
-abbrev:
 docname: draft-ietf-httpbis-variants-latest
 date: {DATE}
 category: std
@@ -17,6 +16,7 @@ keyword: content negotiation
 stand_alone: yes
 smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+github-issue-label: variants
 
 author:
  -

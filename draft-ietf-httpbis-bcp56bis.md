@@ -453,7 +453,7 @@ For example, if the "example" application needs to create three header fields, t
 
 The semantics of existing HTTP header fields MUST NOT be re-defined without updating their registration or defining an extension to them (if allowed). For example, an application using HTTP cannot specify that the `Location` header field has a special meaning in a certain context.
 
-See {{caching}} for the interaction between header fields and HTTP caching; in particular, request header fields that are used to "select" a response have impact there, and need to be carefully considered.
+See {{caching}} for the interaction between header fields and HTTP caching; in particular, request header fields that are used to choose (as per {{Section 4.1 of HTTP-CACHING}}) a response have impact there, and need to be carefully considered.
 
 See {{state}} for considerations regarding header fields that carry application state (e.g., Cookie).
 
