@@ -1,6 +1,5 @@
 ---
 title: Digest Headers
-abbrev:
 docname: draft-ietf-httpbis-digest-headers-latest
 category: std
 obsoletes: 3230

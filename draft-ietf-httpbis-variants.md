@@ -1,6 +1,5 @@
 ---
 title: HTTP Representation Variants
-abbrev:
 docname: draft-ietf-httpbis-variants-latest
 date: {DATE}
 category: std
