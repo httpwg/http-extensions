@@ -510,7 +510,7 @@ has the following keys:
     following values: "unknown" (indicating that the UA does not have or does
     not trust the public key of the log from which the SCT was issued), "valid"
     (indicating that the UA successfully validated the SCT as described in
-    {{Section 5.2 of !RFC6962}} or {{Section 8.2.3 of
+    {{Section 5.2 of !RFC6962}} or {{Section 8.1.3 of
     !I-D.ietf-trans-rfc6962-bis}}), or "invalid" (indicating that the SCT
     validation failed because of a bad signature or an invalid timestamp).
   * The "source" key, with a string value that indicates from where the UA
@@ -659,7 +659,7 @@ certificates, change server software, or act as a man-in-the-middle in
 connections.
 
 Site operators can mitigate this situation by one of: reconfiguring their web
-server to transmit SCTs using the TLS extension defined in {{Section 6.5 of
+server to transmit SCTs using the TLS extension defined in {{Section 6.4 of
 !I-D.ietf-trans-rfc6962-bis}}, obtaining a certificate from an alternative
 certificate authority which provides SCTs by one of the other methods, or by
 waiting for the user agents' persisted notation of this as an Expect-CT host to
