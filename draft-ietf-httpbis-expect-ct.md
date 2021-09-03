@@ -1,12 +1,13 @@
 ---
 title: "Expect-CT Extension for HTTP"
-abbrev: "Expect-CT"
+abbrev: Expect-CT
 docname: draft-ietf-httpbis-expect-ct-latest
 date: {DATE}
 category: exp
 area: Applications and Real-Time
 workgroup: HTTP
 ipr: trust200902
+github-issue-label: expect-ct
 
 stand_alone: yes
 pi: [toc, sortrefs, symrefs]
