@@ -504,7 +504,7 @@ services.
 The ALTSVC frame advertises the availability of an alternative service to an
 HTTP/2 or HTTP/3 client.
 
-The ALTSVC frame is a non-critical extension to both protocols.  Endpoints that
+The ALTSVC frame is a separate non-critical extension in each protocol.  Endpoints that
 do not support this frame will ignore it (as per the extensibility rules defined
 in {{Section 4.1 of HTTP2}} and {{Section 4.1 of HTTP3}}).
 
@@ -513,7 +513,7 @@ indicates that the conveyed alternative service is associated with the origin of
 that stream.
 
 An ALTSVC frame from a server to a client on the control stream (stream 0 in
-HTTP/2) indicates that the conveyed alternative service is associated with the
+HTTP/2 or a stream of type 0 in HTTP/3) indicates that the conveyed alternative service is associated with the
 origin contained in the Origin field of the frame.  An association with an
 origin that the client does not consider authoritative for the current
 connection MUST be ignored.
@@ -549,7 +549,7 @@ Alt-Svc-Field-Value:
   length) containing a value identical to the Alt-Svc field value
   defined in {{alt-svc-field}} (ABNF production "Alt-Svc").
 
-The ALTSVC frame does not define any flags in HTTP/2.
+The ALTSVC frame does not define any flags in HTTP/2; there is no generic flag field for HTTP/3 frames.
 
 The ALTSVC frame is intended for receipt by clients.  A device acting
 as a server MUST ignore it.
