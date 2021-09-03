@@ -163,7 +163,7 @@ indicates that cdn.example.org used backend.example.org:8001 as the next hop for
 
 ### next-protocol
 
-The `next-protocol` parameter's value indicates the ALPN protocol identifier {{!RFC7301}} used by the intermediary to connect to the next hop. This is only applicable when that connection was actually established.
+The `next-protocol` parameter's value indicates the ALPN protocol identifier {{!RFC7301}} of the protocol used by the intermediary to connect to the next hop. This is only applicable when that connection was actually established.
 
 The value MUST be either an sf-token or sf-binary, representing a TLS Application-Layer Protocol Negotiation (ALPN) Protocol ID (see <https://www.iana.org/assignments/tls-extensiontype-values/tls-extensiontype-values.xhtml#alpn-protocol-ids>). If the protocol identifier is able to be expressed as an sf-token using ASCII encoding, that form MUST be used.
 
@@ -172,6 +172,9 @@ For example:
 ~~~ http-message
 Proxy-Status: "proxy.example.org"; next-protocol=h2
 ~~~
+
+Note that the APLN identifier is being used here to identify the protocol in use; it may or may not have been actually used in the protocol negotiation.
+
 
 ### received-status
 
