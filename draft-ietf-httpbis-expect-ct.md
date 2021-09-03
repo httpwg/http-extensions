@@ -19,6 +19,8 @@ author:
     org: Google
     email: estark@google.com
 
+normative:
+  HTTP: I-D.ietf-httpbis-semantics
 
 informative:
   FETCH:
@@ -52,7 +54,7 @@ code and issues list for this draft can be found at
 
 # Introduction
 
-This document defines a new HTTP header field that enables UAs to identify web hosts
+This document defines a new HTTP header field ({{Section 6.3 of HTTP}}) that enables UAs to identify web hosts
 that expect the presence of Signed Certificate Timestamps (SCTs)
 {{!I-D.ietf-trans-rfc6962-bis}} in subsequent Transport Layer Security (TLS)
 {{?RFC8446}} connections.
