@@ -613,7 +613,7 @@ Alt-Used: alternate.example.net
 # The 421 (Misdirected Request) HTTP Status Code {#status-code}
 
 The 421 (Misdirected Request) status code is defined in {{Section 15.5.20
-of HTTP2}} to indicate that the current server instance is not
+of HTTP}} to indicate that the current server instance is not
 authoritative for the requested resource.  This can be used to
 indicate that an alternative service is not authoritative; see
 {{concepts}}).
