@@ -1,6 +1,5 @@
 ---
 title: HTTP Representation Variants
-abbrev:
 docname: draft-ietf-httpbis-variants-latest
 date: {DATE}
 category: std
@@ -17,15 +16,15 @@ keyword: content negotiation
 stand_alone: yes
 smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+github-issue-label: variants
 
 author:
  -
     ins: M. Nottingham
     name: Mark Nottingham
     organization: Fastly
-    street: made in
-    city: Prahran
-    region: VIC
+    postal:
+      - Prahran
     country: Australia
     email: mnot@mnot.net
     uri: https://www.mnot.net/

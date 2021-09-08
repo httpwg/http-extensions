@@ -1,6 +1,8 @@
 LIBDIR := lib
 DISABLE_RIBBON := true
 INDEX_FORMAT := md
+GHPAGES_COMMIT_TTL = 7
+GHPAGES_BRANCH_TTL = 2
 XML_RESOURCE_ORG_PREFIX := https://xml2rfc-tools-ietf-org.lucaspardue.com/public/rfc
 
 
