@@ -88,10 +88,9 @@ informative:
 
 --- abstract
 
-This document defines the HTTP Digest, Want-Digest,
-Content-Digest and Want-Content-Digest fields, which allow
-client and server to negotiate an integrity checksum of the exchanged resource
-representation data.
+This document defines HTTP fields to support integrity checksums.
+Digest and Want-Digest can be used for the integrity of HTTP representations.
+Content-Digest and Want-Content-Digest fields can be used for the integrity of HTTP message content.
 
 This document obsoletes RFC 3230.
 
@@ -118,8 +117,10 @@ make use of features of the lower layer in order to provide some integrity
 protection; for instance TCP checksums or TLS records [RFC2818].
 
 This document defines two digest integrity mechanisms for HTTP.
-First, representation data integrity, which acts on representation data.
-Second, content digest integrity, which acts on conveyed content.
+First, representation data integrity, which acts on representation data (Section 3.2;
+{{!SEMANTICS=I-D.ietf-httpbis-semantics}}).
+Second, content digest integrity, which acts on conveyed content (Section 6.4;
+{{!SEMANTICS=I-D.ietf-httpbis-semantics}}).
 Both mechanisms operate independent of transport integrity, offering
 the potential to detect programming errors and corruption of data in flight or
 at rest.
@@ -173,7 +174,7 @@ this document introduces the `Content-Digest` request and response header and tr
 `Want-Content-Digest` fields allows endpoints to express interest in `Digest` and
 `Content-Digest` respectively, and preference of algorithms in either.
 
-Digest fields calculations are tied to the `Content-Encoding`
+Digest field calculations are tied to the `Content-Encoding`
 and `Content-Type` header fields. Therefore, a given resource may have multiple
 different checksum values when transferred with HTTP. To allow both parties to
 exchange a simple checksum with no content codings (see Section 8.4.1
@@ -364,7 +365,7 @@ Content-Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
 
 A recipient MAY ignore any or all of the content-digests in a Content-Digest
 field. This allows the recipient to choose which digest-algorithm(s) to use for
-validation instead of verifying every received representation-data-digest.
+validation instead of verifying every received content-digest.
 
 A sender MAY send a content-digest using a digest-algorithm without
 knowing whether the recipient supports the digest-algorithm, or even knowing
@@ -1315,7 +1316,7 @@ Specification document(s):  {{digest}} of this document
 
 ## Want-Content-Digest Field Registration
 
-This section registers the `Want-Digest` field in the "Hypertext Transfer
+This section registers the `Want-Content-Digest` field in the "Hypertext Transfer
 Protocol (HTTP) Field Name Registry" {{SEMANTICS}}.
 
 Field name:  `Want-Content-Digest`
