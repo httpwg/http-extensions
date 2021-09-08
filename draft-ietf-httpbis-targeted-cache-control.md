@@ -41,6 +41,21 @@ normative:
   RFC2119:
 
 informative:
+  AGE-PENALTY:
+    target: https://dl.acm.org/doi/10.5555/1251440.1251447
+    title: The age penalty and its effect on cache performance
+    date: March 2001
+    author:
+     -
+        ins: E. Cohen
+        name: Edith Cohen
+        organization: "AT&T Labs - Research"
+        email: edith@research.att.com
+     -
+        ins: H. Kaplan
+        name: Haim Kaplan
+        organization: School of Computer Science, Tel-Aviv University
+        email: haimk@math.tau.ac.il
 
 
 --- abstract
@@ -137,9 +152,7 @@ If a targeted field in a given response is empty, or a parsing error is encounte
 
 ## Interaction with HTTP Freshness
 
-HTTP caching has a single, end-to-end concept of a freshness model, defined in {{Section 4.2 of !I-D.ietf-httpbis-cache}}. When separate cache coherence mechanisms are introduced but only available to some caches along a request path, potential interactions with the freshness model need to be carefully considered.
-
-In particular, a cache with a separate coherence mechanism (such as targeted fields) might have longer freshness lifetimes available to it than other caches, causing it to serve responses that appear to be prematurely (or even immediately) stale to them, negatively impacting cache efficiency.
+HTTP caching has a single, end-to-end freshness model defined in {{Section 4.2 of !I-D.ietf-httpbis-cache}}. When additional freshness mechanisms are only available to some caches along a request path (for example, using targeted fields), their interactions need to be carefully considered. In particular, a targeted cache might have longer freshness lifetimes available to it than other caches, causing it to serve responses that appear to be prematurely (or even immediately) stale to them, negatively impacting cache efficiency.
 
 For example, a response stored by a CDN cache might be served with the following headers:
 
@@ -149,9 +162,9 @@ Cache-Control: max-age=600
 CDN-Cache-Control: max-age=3600
 ~~~
 
-From the CDN's perspective, this response is still fresh, while from other caches' standpoint, this response is already stale.
+From the CDN's perspective, this response is still fresh after being cached for 30 minutes, while from other caches' standpoint, this response is already stale. See {{AGE-PENALTY}} for more discussion.
 
-When the targeted cache has a strong coherence mechanism (eg., the origin server has the ability to proactively invalidate cached responses), it is often desirable to mitigate these effects. Some techniques seen in deployments include:
+When the targeted cache has a strong coherence mechanism (e.g., the origin server has the ability to proactively invalidate cached responses), it is often desirable to mitigate these effects. Some techniques seen in deployments include:
 
 * Removing the Age header field
 * Updating the Date header field value to the current time
