@@ -1270,7 +1270,7 @@ Values](https://www.iana.org/assignments/http-dig-alg/) registry.
 IANA is asked to update the "Reference" for this registry
 to refer this document
 and to inizialize the registry with the tokens 
-defined in {{digest-algorithms}}.
+defined in {{algorithms}}.
 
 New registrations will be permitted
 through the RFC Required policy (see Section 4.7 of {{!RFC8126}}).
