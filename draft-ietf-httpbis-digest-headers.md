@@ -418,8 +418,9 @@ All digest-algorithm token values are case-insensitive
 but lower case is preferred;
 digest-algorithm token values MUST be compared in a case-insensitive fashion.
 
-Every digest-algorithm defines its computation procedure and,
-unless specified otherwise, the comparison is case-sensitive.  
+Every digest-algorithm defines its computation procedure and
+encoding output. Unless specified otherwise, comparison of
+encoded output is case-sensitive.  
 
 The "HTTP Digest Algorithm Values Registry",
 maintained by IANA at <https://www.iana.org/assignments/http-dig-alg/> registers
