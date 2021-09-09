@@ -1273,7 +1273,7 @@ and to inizialize the registry with the tokens
 defined in {{digest-algorithms}}.
 
 New registrations will be permitted
-through the RFC Required policy {{!BCP26}}.
+through the RFC Required policy (see Section 4.7 of {{!RFC8126}}).
 
 
 ## Obsolete "contentMD5" token in Digest Algorithm {#iana-contentMD5}
