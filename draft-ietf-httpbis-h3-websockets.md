@@ -1,6 +1,6 @@
 ---
 title: "Bootstrapping WebSockets with HTTP/3"
-docname: draft-ietf-httbis-h3-websockets.md
+docname: draft-ietf-httbis-h3-websockets
 category: info
 
 ipr: trust200902
