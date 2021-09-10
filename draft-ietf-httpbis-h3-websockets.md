@@ -7,7 +7,7 @@ ipr: trust200902
 area: TODO
 workgroup: HTTP
 keyword: Internet-Draft
-
+github-issue-label: h3-websockets
 stand_alone: yes
 smart_quotes: no
 pi: [toc, sortrefs, symrefs]
