@@ -4,7 +4,7 @@ docname: draft-ietf-httbis-h3-websockets.md
 category: info
 
 ipr: trust200902
-area: TODO
+area: ART
 workgroup: HTTP
 keyword: Internet-Draft
 github-issue-label: h3-websockets
