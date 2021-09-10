@@ -146,7 +146,7 @@ This document is structured as follows:
   trailer field,
 - {{algorithms}} and {{deprecate-contentMD5}} describe algorithms and their
   relation to Digest,
-- {{acting-on-resources}} details computing representation digests,
+- {{state-changing-requests}} details computing representation digests,
 - {{obsolete-parameters}} obsoletes Digest field parameters,
 - {{sri}} describes the relationship between Digest and Subresource Integrity,
   and
@@ -538,14 +538,12 @@ To allow sender and recipient to provide a checksum which is independent from
     * Status: standard
 
 
-# Use of Digest when acting on resources {#acting-on-resources}
+# Using Digest in State-Changing Requests {#state-changing-requests}
 
-POST and PATCH requests can appear to convey partial representations but are
-semantically acting on resources. The enclosed representation, including its
-metadata, refers to that action.
-
-In these requests the representation digest MUST be computed on the
-representation-data of that action.
+When the representation enclosed in a state-changing request
+does not describe the target resource,
+the representation digest MUST be computed on the
+representation-data.
 This is the only possible choice because representation digest requires complete
 representation metadata (see {{representation-digest}}).
 
@@ -553,29 +551,24 @@ In responses,
 
 - if the representation describes the status of the request,
   `Digest` MUST be computed on the enclosed representation
-   (see {{post-referencing-action}} );
+   (see {{post-referencing-status}} );
 
 - if there is a referenced resource
   `Digest` MUST be computed on the selected representation of the referenced resource
    even if that is different from the target resource.
    That might or might not result in computing `Digest` on the enclosed representation.
 
-The latter case might be done according to the HTTP semantics of the given
+The latter case is done according to the HTTP semantics of the given
 method, for example using the `Content-Location` header field.
 In contrast, the `Location` header field does not affect `Digest` because
 it is not representation metadata.
 
-## Digest and PATCH
-
-In PATCH requests, the representation digest MUST be computed on the patch document
+For example, in PATCH requests, the representation digest
+will be computed on the patch document
 because the representation metadata refers to the patch document and not
 to the target resource (see Section 2 of {{?PATCH=RFC5789}}).
-
-In PATCH responses, the representation digest MUST be computed on the selected
+In responses, instead, the representation digest will be computed on the selected
 representation of the patched resource.
-
-`Digest` usage with PATCH is thus very similar to POST, but with the
-resource's own semantic partly implied by the method and by the patch document.
 
 ## Digest and Content-Location in Responses {#digest-and-content-location}
 
@@ -851,7 +844,7 @@ iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ## POST Response does not Reference the Request URI {#post-not-request-uri}
 
 The request `Digest` field-value is computed on the enclosed representation (see
-{{acting-on-resources}}).
+{{state-changing-requests}}).
 
 The representation enclosed in the response refers to the resource identified by
 `Content-Location` (see {{SEMANTICS}}, Section 6.4.2). `Digest` is thus computed on the enclosed representation.
@@ -889,10 +882,10 @@ Note that a `204 No Content` response without content but with the same
 `Digest` field-value would have been legitimate too.
 In that case, `Content-Digest` would have been computed on an empty content.
 
-## POST Response Describes the Request Status {#post-referencing-action}
+## POST Response Describes the Request Status {#post-referencing-status}
 
 The request `Digest` field-value is computed on the enclosed representation (see
-{{acting-on-resources}}).
+{{state-changing-requests}}).
 
 The representation enclosed in the response describes the status of the request,
 so `Digest` is computed on that enclosed representation.
@@ -1502,7 +1495,7 @@ _RFC Editor: Please remove this section before publication._
 
 3. How to use `Digest` with `PATCH` method?
 
-   See {{acting-on-resources}}.
+   See {{state-changing-requests}}.
 
 4. Why remove references to delta-encoding?
 
