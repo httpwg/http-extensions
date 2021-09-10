@@ -250,7 +250,8 @@ it is still possible to assert that no representation data was sent
 computing the representation digest on an empty string
 (see {{usage-in-signatures}}).
 
-The checksum is computed using one of the digest-algorithms listed in {{algorithms}}
+The checksum is computed using one of the digest-algorithms listed in
+the HTTP Digest Algorithm Values Registry (see {{algorithms}})
 and then encoded in the associated format.
 
 # The Digest Field {#digest}
@@ -416,6 +417,10 @@ Digest-algorithm values are used to indicate a specific digest computation.
 All digest-algorithm token values are case-insensitive
 but lower case is preferred;
 digest-algorithm token values MUST be compared in a case-insensitive fashion.
+
+Every digest-algorithm defines its computation procedure and
+encoding output. Unless specified otherwise, comparison of
+encoded output is case-sensitive.  
 
 The "HTTP Digest Algorithm Values Registry",
 maintained by IANA at <https://www.iana.org/assignments/http-dig-alg/> registers
@@ -1256,6 +1261,15 @@ This memo sets this specification to be the establishing document for the [HTTP 
 Algorithm
 Values](https://www.iana.org/assignments/http-dig-alg/) registry.
 
+IANA is asked to update the "Reference" for this registry
+to refer this document
+and to inizialize the registry with the tokens 
+defined in {{algorithms}}.
+
+This registry uses the Specification
+Required policy (Section 4.6 of {{!RFC8126}}).
+
+
 ## Obsolete "contentMD5" token in Digest Algorithm {#iana-contentMD5}
 
 This memo adds the "contentMD5" token in the [HTTP Digest Algorithm
@@ -1269,18 +1283,18 @@ registry:
 * Status: obsoleted
 
 ## Changes Compared to RFC3230
-￼
-The `contentMD5` digest-algorithm token defined in Section 5 of [RFC3230] is removed from
-the HTTP Digest Algorithm Values Registry.
+
+The `contentMD5` digest-algorithm token defined in Section 5 of [RFC3230]
+has been added to the HTTP Digest Algorithm Values Registry with the "obsoleted" status.
 
 All digest-algorithms defined in [RFC3230] are now "deprecated".
 
 ## Changes Compared to RFC5843
 
-The digest-algorithm values for "MD5", "SHA", "SHA-256", "SHA-512" have been updated to lowercase.
+The digest-algorithm tokens for "MD5", "SHA", "SHA-256", "SHA-512" have been updated to lowercase.
 
-The status of "MD5" and "SHA" has been updated to "deprecated", and their description states
-that they MUST NOT be used.
+The status of "MD5" and "SHA" has been updated to "deprecated", and their description
+has been modified accordingly.
 
 The "id-sha-256" and "id-sha-512" algorithms have been added to the registry.
 
