@@ -76,9 +76,11 @@ informative:
 
 --- abstract
 
-This document defines HTTP fields to support integrity checksums.
-Digest and Want-Digest can be used for the integrity of HTTP representations.
-Content-Digest and Want-Content-Digest fields can be used for the integrity of HTTP message content.
+This document defines HTTP fields that support integrity checksums.
+The Digest field can be used for the integrity of HTTP representations.
+The Content-Digest field can be used for the integrity of HTTP message content.
+Want-Digest and Want-Content-Digest can be used to indicate a sender's desire to
+receive integrity fields respectively.
 
 This document obsoletes RFC 3230.
 
@@ -128,10 +130,8 @@ This document is structured as follows:
 - {{representation-digest}} describes concepts related to representation
   digests,
 - {{digest}} defines the Digest request and response header and trailer field,
-- {{want-digest}} defines the Want-Digest request and response header and
-  trailer field,
 - {{content-digest}} defines the Content-Digest request and response header and trailer field,
-- {{want-content-digest}} defines the Want-Content-Digest request and response header and
+- {{want-fields}} defines the Want-Digest and Want-Content-Digest request and response header and
   trailer field,
 - {{algorithms}} and {{deprecate-contentMD5}} describe algorithms and their
   relation to Digest,
@@ -292,35 +292,6 @@ When an incremental digest-algorithm
 is used, the sender and the receiver can dynamically compute the digest value
 while streaming the content.
 
-# The Want-Digest Field {#want-digest}
-
-The `Want-Digest` field indicates the sender's desire to receive a representation
-digest on messages associated with the request URI and representation metadata.
-It can be used in both requests and responses.
-
-~~~
-   Want-Digest = 1#want-digest-value
-   want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
-   qvalue = ( "0"  [ "."  0*1DIGIT ] ) /
-            ( "1"  [ "."  0*1( "0" ) ] )
-~~~
-
-If a digest-algorithm is not accompanied by a "qvalue" (see Section 12.4.2 of{{SEMANTICS}}),
-it is treated as if its associated "qvalue" were 1.0.
-
-The sender is willing to accept a digest-algorithm if and only if it is listed
-in a `Want-Digest` field of a message, and its "qvalue" is non-zero.
-
-If multiple acceptable digest-algorithm values are given, the sender's preferred
-digest-algorithm is the one (or ones) with the highest "qvalue".
-
-Two examples of its use are:
-
-~~~ http-message
-Want-Digest: sha-256
-Want-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
-~~~
-
 
 # The Content-Digest Field {#content-digest}
 
@@ -367,28 +338,42 @@ When an incremental digest-algorithm
 is used, the sender and the receiver can dynamically compute the digest value
 while streaming the content.
 
-# The Want-Content-Digest Field {#want-content-digest}
+# Want-Digest and Want-Content-Digest Fields {#want-fields}
 
-The `Want-Content-Digest` field indicates the sender's desire to receive a content
-digest on messages associated with the request URI and representation metadata.
-It can be used in both requests and responses.
+Senders can indicate their integrity checksum preferences using the
+`Want-Digest` or `Want-Content-Digest` fields. These can be used in both
+requests and responses.
+
+`Want-Digest` indicates the sender's desire to receive a representation digest
+on messages associated with the request URI and representation metadata, using
+the `Digest` header.
+
+`Want-Content-Digest` indicates the sender's desire to receive a content digest
+on messages associated with the request URI and representation metadata, using
+the `Content-Digest` header.
 
 ~~~
+   Want-Digest = 1#want-digest-value
    Want-Content-Digest = 1#want-digest-value
+   want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
+   qvalue = ( "0"  [ "."  0*1DIGIT ] ) /
+            ( "1"  [ "."  0*1( "0" ) ] )
 ~~~
 
-If a digest-algorithm is not accompanied by a "qvalue" (see Section 12.4.2 of{{SEMANTICS}}),
-it is treated as if its associated "qvalue" were 1.0.
+qvalue (see Section 12.4.2 of {{SEMANTICS}}) indicates the sender's preference
+from highest (1.0) to lowest (0.0). If a digest-algorithm is not accompanied by a
+"qvalue" , it is treated as if its associated "qvalue" were 1.0.
 
-The sender is willing to accept a digest-algorithm if and only if it is listed
-in a `Want-Content-Digest` field of a message, and its "qvalue" is non-zero.
+A qvalue of 0.0 indicates that a sender does not accept the associated
+digest-algorithm.
 
-If multiple acceptable digest-algorithm values are given, the sender's preferred
-digest-algorithm is the one (or ones) with the highest "qvalue".
+Senders can provide multiple digest-algorithm items with the same qvalue.
 
-Two examples of its use are:
+Examples:
 
 ~~~ http-message
+Want-Digest: sha-256
+Want-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
 Want-Content-Digest: sha-256
 Want-Content-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
 ~~~
@@ -408,7 +393,7 @@ digest-algorithm token values MUST be compared in a case-insensitive fashion.
 
 Every digest-algorithm defines its computation procedure and
 encoding output. Unless specified otherwise, comparison of
-encoded output is case-sensitive.  
+encoded output is case-sensitive.
 
 The "HTTP Digest Algorithm Values Registry",
 maintained by IANA at <https://www.iana.org/assignments/http-dig-alg/> registers
@@ -1159,7 +1144,7 @@ a new "Status" field containing the most-recent appraisal of the digest-algorith
 An endpoint might have a preference for algorithms,
 such as preferring "standard" algorithms over "deprecated" ones.
 Transition from weak algorithms is supported
-by negotiation of digest-algorithm using eg. `Want-Digest` (see {{want-digest}})
+by negotiation of digest-algorithm using `Want-Digest` or `Want-Content-Digest` (see {{want-fields}})
 or by sending multiple representation-data-digest values from which the receiver chooses.
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{digest}}).
@@ -1194,7 +1179,7 @@ Values](https://www.iana.org/assignments/http-dig-alg/) registry.
 
 IANA is asked to update the "Reference" for this registry
 to refer this document
-and to inizialize the registry with the tokens 
+and to inizialize the registry with the tokens
 defined in {{algorithms}}.
 
 This registry uses the Specification
@@ -1238,7 +1223,7 @@ Field name:  `Want-Digest`
 
 Status:  permanent
 
-Specification document(s):  {{want-digest}} of this document
+Specification document(s):  {{want-fields}} of this document
 
 ## Digest Field Registration
 
@@ -1260,7 +1245,7 @@ Field name:  `Want-Content-Digest`
 
 Status:  permanent
 
-Specification document(s):  {{want-content-digest}} of this document
+Specification document(s):  {{want-fields}} of this document
 
 ## Content-Digest Field Registration
 
@@ -1398,7 +1383,7 @@ Location: /authors/123
 This RFC deprecates the negotiation of `Content-MD5` as it has been obsoleted by
 [RFC7231].
 
-See {{content-digest}} and {{want-content-digest}} for a new checksum negotiation mechanism
+See {{content-digest}} for a new checksum negotiation mechanism
 for HTTP message content.
 
 ## Obsolete Digest Field Parameters {#obsolete-parameters}
