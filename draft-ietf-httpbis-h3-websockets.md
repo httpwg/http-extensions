@@ -67,7 +67,7 @@ represented with an stream error ({{Section 8 of HTTP3}}) of type
 H3_REQUEST_CANCELLED ({{Section 8.1 of HTTP3}})
 
 The semantics of the headers and SETTING are identical to those
-in HTTP/2 as defined {{!RFC8441}}. {{Appendix A.3 of HTTP3}} requires thatt
+in HTTP/2 as defined {{!RFC8441}}. {{Appendix A.3 of HTTP3}} requires that
 HTTP/3 settings be registered separately for HTTP/3. The
 SETTINGS_ENABLE_CONNECT_PROTOCOL value is 0x08 (decimal 8), as in HTTP/2.
 
