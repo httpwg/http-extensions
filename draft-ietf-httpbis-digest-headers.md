@@ -73,17 +73,6 @@ informative:
   RFC2818:
   RFC7231:
   RFC7396:
-  SRI:
-    title: "Subresource Integrity"
-    date: 2016-06-23
-    author:
-      - ins: D. Akhawe
-      - ins: F. Braun
-      - ins: F. Marier
-      - ins: J. Weinberger
-    seriesinfo:
-      W3C Recommendation: REC-SRI-20160623
-    target: https://www.w3.org/TR/2016/REC-SRI-20160623/
 
 --- abstract
 
@@ -148,7 +137,6 @@ This document is structured as follows:
   relation to Digest,
 - {{state-changing-requests}} details computing representation digests,
 - {{obsolete-parameters}} obsoletes Digest field parameters,
-- {{sri}} describes the relationship between Digest and Subresource Integrity,
   and
 - {{examples-unsolicited}} and {{examples-solicited}} provide examples of using
   Digest and Want-Digest.
@@ -581,63 +569,6 @@ When a state-changing method returns the `Content-Location` header field, the
 enclosed representation refers to the resource identified by its value and
 `Digest` is computed accordingly.
 
-
-# Relationship to Subresource Integrity (SRI) {#sri}
-
-Subresource Integrity [SRI] is an integrity mechanism that shares some
-similarities to the present document's mechanism. However, there are differences
-in motivating factors, threat model and specification of integrity digest
-generation, signalling and validation.
-
-SRI allows a first-party authority to declare an integrity assertion on a
-resource served by a first or third party authority. This is done via the
-`integrity` attribute that can be added to `script` or `link` HTML elements.
-Therefore, the integrity assertion is always made out-of-band to the resource
-fetch. In contrast, the `Digest` field is supplied in-band alongside the
-selected representation, meaning that an authority can only declare an integrity
-assertion for itself. Methods to improve the security properties of
-representation digests are presented in {{security-considerations}}. This
-contrast is interesting because on one hand self-assertion is less likely to be
-affected by coordination problems such as the first-party holding stale
-information about the third party, but on the other hand the self-assertion is
-only as trustworthy as the authority that provided it.
-
-The SRI `integrity` attribute contains a cryptographic hash algorithm and digest
-value which is similar to `representation-data-digest` (see
-{{representation-digest}}). The major differences are in serialization format.
-
-SRI does not specify handling of partial representation data (e.g. Range
-requests). In contrast, this document specifies handling in terms that are fully
-compatible with core HTTP concepts (an example is provided in
-{{server-returns-partial-representation-data}}).
-
-SRI specifies strong requirements on the selection of algorithm for generation
-and validation of digests. In contrast, the requirements in this document are
-weaker.
-
-SRI defines no method for a client to declare an integrity assertion on
-resources it transfers to a server. In contrast, the `Digest` field can
-appear on requests.
-
-## Supporting Both SRI and Representation Digest
-
-The SRI and Representation Digest mechanisms are different and complementary but
-one is not capable of replacing the other because they have different
-threat, security and implementation properties.
-
-A user agent that supports both mechanisms is expected to apply the rules
-specified for each but since the two mechanisms are independent, the ordering is
-not important. However, a user agent supporting both could benefit from
-performing representation digest validation first because it does not always
-require a conversion into identity encoding.
-
-A user agent supporting both mechanisms:
- - can legitimately ignore `Digest` when using SRI, because
-   {{digest}} specifies that
-   "a recipient MAY ignore any or all of the representation-data-digests";
- - enforce both `Digest` and SRI: in this case it can be useful to provide
-   enough information to identify whether the mismatch happened at the `Digest`
-   or the SRI level.
 
 # Examples of Unsolicited Digest {#examples-unsolicited}
 
@@ -1610,6 +1541,13 @@ print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512))
 {:numbered="false"}
 
 _RFC Editor: Please remove this section before publication._
+
+## Since draft-ietf-httpbis-digest-headers-05
+{:numbered="false"}
+
+* Reboot digest-algorithm values registry #1567
+* Add Content-Digest #1542
+* Remove SRI section #1478
 
 ## Since draft-ietf-httpbis-digest-headers-04
 {:numbered="false"}
