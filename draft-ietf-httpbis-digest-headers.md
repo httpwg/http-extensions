@@ -1,5 +1,5 @@
 ---
-title: Digest Headers
+title: Digest Fields
 docname: draft-ietf-httpbis-digest-headers-latest
 category: std
 obsoletes: 3230
@@ -346,11 +346,11 @@ requests and responses.
 
 `Want-Digest` indicates the sender's desire to receive a representation digest
 on messages associated with the request URI and representation metadata, using
-the `Digest` header.
+the `Digest` field.
 
 `Want-Content-Digest` indicates the sender's desire to receive a content digest
 on messages associated with the request URI and representation metadata, using
-the `Content-Digest` header.
+the `Content-Digest` field.
 
 ~~~
    Want-Digest = 1#want-digest-value
