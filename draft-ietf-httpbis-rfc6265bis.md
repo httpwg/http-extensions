@@ -660,11 +660,6 @@ attribute, the user agent will include the cookie in an HTTP request only if
 the request is transmitted over a secure channel (typically HTTP over Transport
 Layer Security (TLS) {{RFC2818}}).
 
-Although seemingly useful for protecting cookies from active network attackers,
-the Secure attribute protects only the cookie's confidentiality. An active
-network attacker can overwrite Secure cookies from an insecure channel,
-disrupting their integrity (see {{weak-integrity}} for more details).
-
 #### The HttpOnly Attribute {#attribute-httponly}
 
 The HttpOnly attribute limits the scope of the cookie to HTTP requests. In
@@ -720,7 +715,8 @@ user agent, as it does not have a `Secure` attribute.
 Set-Cookie: __Secure-SID=12345; Domain=site.example
 ~~~
 
-Whereas the following `Set-Cookie` header field would be accepted:
+Whereas the following `Set-Cookie` header field would be accepted if set from a secure origin
+(e.g. "https://site.example/"), and rejected otherwise:
 
 ~~~ example
 Set-Cookie: __Secure-SID=12345; Domain=site.example; Secure
