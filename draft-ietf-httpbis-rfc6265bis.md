@@ -2045,10 +2045,10 @@ to leverage this ability to mount an attack against site.example even if
 site.example uses HTTPS exclusively.
 
 Servers can partially mitigate these attacks by encrypting and signing the
-contents of their cookies. However, using cryptography does not mitigate the
-issue completely because an attacker can replay a cookie he or she received from
-the authentic site.example server in the user's session, with unpredictable
-results.
+contents of their cookies, or by naming the cookie with the `__Secure-` prefix.
+However, using cryptography does not mitigate the issue completely because an
+attacker can replay a cookie he or she received from the authentic site.example
+server in the user's session, with unpredictable results.
 
 Finally, an attacker might be able to force the user agent to delete cookies by
 storing a large number of cookies. Once the user agent reaches its storage
