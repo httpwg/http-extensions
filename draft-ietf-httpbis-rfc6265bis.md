@@ -1831,7 +1831,9 @@ might block third-party cookies entirely by refusing to send Cookie header field
 process Set-Cookie header fields during third-party requests. They might take a less
 draconian approach by partitioning cookies based on the first-party context,
 sending one set of cookies to a given third party in one first-party context,
-and another to the same third party in another.
+and another to the same third party in another. Or they might even allow some
+third-party cookies but block others depending on user-agent cookie policy or
+user controls.
 
 This document grants user agents wide latitude to experiment with third-party
 cookie policies that balance the privacy and compatibility needs of their users.
