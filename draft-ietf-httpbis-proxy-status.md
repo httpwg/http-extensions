@@ -95,7 +95,7 @@ indicates that this response was handled first by revproxy1.example.net (a rever
 
 Intermediaries determine when it is appropriate to add the Proxy-Status field to a response. Some might decide to append to it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header field that activates a debugging mode.
 
-Each member of the list identifies the intermediary that inserted the value, and MUST have a type of either sf-string or sf-token. Depending on the deployment, this might be a service name (e.g., "Example CDN"), a hostname ("proxy-3.example.com"), an IP address, or a generated string.
+Each member of the list identifies the intermediary that inserted the value, and MUST have a type of either sf-string or sf-token. Depending on the deployment, this might be a service name (but not a software or hardware product name; e.g., "Example CDN"is appropriate, but "ExampleProxy" is not, because it doesn't identify the deployment), a hostname ("proxy-3.example.com"), an IP address, or a generated string.
 
 Parameters on each member (as per {{Section 3.1.2 of STRUCTURED-FIELDS}}) convey additional information about that intermediary's handling of the response and its associated request; see {{params}}. While all of these parameters are OPTIONAL, intermediaries are encouraged to provide as much information as possible (but see {{security}} for security considerations in doing so).
 
@@ -595,6 +595,13 @@ See the registry at <https://iana.org/assignments/http-proxy-status> for details
 # IANA Considerations
 
 Upon publication, please create the HTTP Proxy-Status Parameters registry and the HTTP Proxy Error Types registry at <https://iana.org/assignments/http-proxy-status> and populate them with the types defined in {{params}} and {{error-types}} respectively; see {{register-param}} and {{register-error}} for its associated procedures.
+
+Additionally, please register the following entry in the Hypertext Transfer Protocol (HTTP) Field Name Registry:
+
+* Field name: Proxy-Status
+* Status: permanent
+* Specification document(s): \[this document\]
+* Comments:
 
 
 # Security Considerations {#security}

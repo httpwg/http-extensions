@@ -44,6 +44,21 @@ normative:
   STRUCTURED-FIELDS: RFC8941
 
 informative:
+  AGE-PENALTY:
+    target: https://dl.acm.org/doi/10.5555/1251440.1251447
+    title: The age penalty and its effect on cache performance
+    date: March 2001
+    author:
+     -
+        ins: E. Cohen
+        name: Edith Cohen
+        organization: "AT&T Labs - Research"
+        email: edith@research.att.com
+     -
+        ins: H. Kaplan
+        name: Haim Kaplan
+        organization: School of Computer Science, Tel-Aviv University
+        email: haimk@math.tau.ac.il
 
 
 --- abstract
@@ -142,6 +157,28 @@ However, implementers MAY reuse an existing parser for the Cache-Control field v
 
 If a targeted field in a given response is empty, or a parsing error is encountered, that field SHOULD be ignored by the cache (i.e., it should behave as if the field were not present, likely falling back to other cache control mechanisms present).
 
+
+## Interaction with HTTP Freshness
+
+HTTP caching has a single, end-to-end freshness model defined in {{Section 4.2 of !I-D.ietf-httpbis-cache}}. When additional freshness mechanisms are only available to some caches along a request path (for example, using targeted fields), their interactions need to be carefully considered. In particular, a targeted cache might have longer freshness lifetimes available to it than other caches, causing it to serve responses that appear to be prematurely (or even immediately) stale to them, negatively impacting cache efficiency.
+
+For example, a response stored by a CDN cache might be served with the following headers:
+
+~~~ http-message
+Age: 1800
+Cache-Control: max-age=600
+CDN-Cache-Control: max-age=3600
+~~~
+
+From the CDN's perspective, this response is still fresh after being cached for 30 minutes, while from other caches' standpoint, this response is already stale. See {{AGE-PENALTY}} for more discussion.
+
+When the targeted cache has a strong coherence mechanism (e.g., the origin server has the ability to proactively invalidate cached responses), it is often desirable to mitigate these effects. Some techniques seen in deployments include:
+
+* Removing the Age header field
+* Updating the Date header field value to the current time
+* Updating the Expires header field value to the current time, plus any Cache-Control: max-age value
+
+This specification does not place any specific requirements on implementations to mitigate these effects, but definitions of targeted fields can do so.
 
 
 ## Defining Targeted Fields
