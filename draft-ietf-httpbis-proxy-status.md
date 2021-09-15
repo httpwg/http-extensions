@@ -596,6 +596,13 @@ See the registry at <https://iana.org/assignments/http-proxy-status> for details
 
 Upon publication, please create the HTTP Proxy-Status Parameters registry and the HTTP Proxy Error Types registry at <https://iana.org/assignments/http-proxy-status> and populate them with the types defined in {{params}} and {{error-types}} respectively; see {{register-param}} and {{register-error}} for its associated procedures.
 
+Additionally, please register the following entry in the Hypertext Transfer Protocol (HTTP) Field Name Registry:
+
+* Field name: Proxy-Status
+* Status: permanent
+* Specification document(s): \[this document\]
+* Comments:
+
 
 # Security Considerations {#security}
 
