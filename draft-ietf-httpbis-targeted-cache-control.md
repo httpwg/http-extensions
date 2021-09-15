@@ -148,11 +148,12 @@ Because cache directives are not defined in terms of structured data types, it i
 
 For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an integer value; no-store ({{Section 5.2.2.5 of HTTP-CACHING}}) always has a boolean true value, and no-cache ({{Section 5.2.2.4 of HTTP-CACHING}}) has a value that can either be boolean true or a string containing a comma-delimited list of field names.
 
-Implementations SHOULD NOT use or generate values that violate specified constraints on the directive's value (e.g. coerce a max-age with a decimal value into an integer). Likewise, implementations SHOULD ignore parameters on directives, unless otherwise specified.
+Implementations SHOULD NOT generate or consume values that violate these inferred constraints on the directive's value (e.g. coerce a max-age with a decimal value into an integer). Likewise, implementations SHOULD ignore parameters on directives, unless otherwise specified.
 
-However, implementers MAY reuse an existing parser for the Cache-Control field value ({{Section 5.2 of HTTP-CACHING}}) for simplicity. If they do so, they SHOULD implement the following constraints, to aid in a smooth transition to a full Structured Field parser and prevent interoperability issues:
+Sending implementations MUST generate valid Structured Fields. Receiving implementations SHOULD use a Structured Fields parser, but MAY reuse an existing parser for the Cache-Control field value ({{Section 5.2 of HTTP-CACHING}}). In doing so, they SHOULD implement the following constraints, to aid in a smooth transition to a full Structured Field parser and prevent interoperability issues:
 
-* If a directive is repeated in the field value (e.g., "max-age=30, max-age=60"), the last value 'wins' (60, in this case)
+* Directive names are all lowercase (e.g., "MAX-AGE=60" is considered an error).
+* If a directive is repeated in the field value (e.g., "max-age=30, max-age=60"), the last value 'wins' (60, in this case).
 * Members of the directives can have parameters (e.g., "max-age=30;a=b;c=d"), which should be ignored unless specified.
 
 If a targeted field in a given response is empty, or a parsing error is encountered, that field SHOULD be ignored by the cache (i.e., it should behave as if the field were not present, likely falling back to other cache control mechanisms present).
