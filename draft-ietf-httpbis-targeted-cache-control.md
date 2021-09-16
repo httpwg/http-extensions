@@ -39,6 +39,9 @@ author:
 
 normative:
   RFC2119:
+  HTTP: I-D.ietf-httpbis-semantics
+  HTTP-CACHING: I-D.ietf-httpbis-cache
+  STRUCTURED-FIELDS: RFC8941
 
 informative:
   AGE-PENALTY:
@@ -97,7 +100,7 @@ shown here.
 
 # Targeted Cache-Control Header Fields {#targeted}
 
-A Targeted Cache-Control Header Field (hereafter, "targeted field") is a HTTP response header field that has the same syntax and semantics as the Cache-Control response header field {{I-D.ietf-httpbis-cache, Section 5.2}}. However, it has a distinct field name that indicates the target for its directives.
+A Targeted Cache-Control Header Field (hereafter, "targeted field") is a HTTP response header field that has the same semantics as the Cache-Control response header field ({{HTTP-CACHING, Section 5.2}}). However, it has a distinct field name that indicates the target for its directives.
 
 For example:
 
@@ -106,6 +109,7 @@ CDN-Cache-Control: max-age=60
 ~~~
 
 is a targeted field that applies to Content Delivery Networks (CDNs), as defined in {{cdn-cache-control}}.
+
 
 ## Cache Behavior
 
@@ -119,7 +123,7 @@ For example, a CDN cache might support both CDN-Cache-Control and a header speci
 
 When a cache that implements this specification receives a response with one or more of of the header field names on its target list, the cache MUST select the first (in target list order) field with a valid, non-empty value and use its value to determine the caching policy for the response, and MUST ignore the Cache-Control and Expires header fields in that response, unless no valid, non-empty value is available from the listed header fields.
 
-Note that this occurs on a response-by-response basis; if no member of the cache's target list is present, valid and non-empty, a cache falls back to other cache control mechanisms as required by HTTP {{!I-D.ietf-httpbis-cache}}.
+Note that this occurs on a response-by-response basis; if no member of the cache's target list is present, valid and non-empty, a cache falls back to other cache control mechanisms as required by HTTP {{HTTP-CACHING}}.
 
 Targeted fields that are not on a cache's target list MUST NOT change that cache's behaviour, and MUST be passed through.
 
@@ -136,18 +140,23 @@ Furthermore, they SHOULD implement other cache directives (including extension c
 The semantics and precedence of cache directives in a targeted field are the same as those in Cache-Control. In particular, no-store and no-cache make max-age inoperative, and unrecognised extension directives are ignored.
 
 
-## Parsing Targeted Fields
+## Syntax
 
-Targeted fields MAY be parsed as a Dictionary Structured Field {{!RFC8941}}, and implementations are encouraged to use a parser for that format in the interests of robustness, interoperability and security.
+Targeted fields are defined as Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry.
 
-When an implementation parses a targeted field as a Structured Field, each cache directive will be assigned a value. For example, max-age has an integer value; no-store’s value is boolean true, and no-cache’s value can either be boolean true or a list of field names. Implementations SHOULD NOT accept other values (e.g. coerce a max-age with a decimal value into an integer). Likewise, implementations SHOULD ignore parameters on directives, unless otherwise specified.
+Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. Typically, they are mapped into a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) when the member has no separate value, a Token ({{Section 3.3.4 of STRUCTURED-FIELDS}}) for alphanumeric values, a String ({{Section 3.3.3 of STRUCTURED-FIELDS}}) for quote-delimited values, or an Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) for purely numeric values.
 
-However, implementers MAY reuse a Cache-Control parser for simplicity. If they do so, they SHOULD observe the following points, to aid in a smooth transition to a full Structured Field parser and prevent interoperability issues:
+For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an integer value; no-store ({{Section 5.2.2.5 of HTTP-CACHING}}) always has a boolean true value, and no-cache ({{Section 5.2.2.4 of HTTP-CACHING}}) has a value that can either be boolean true or a string containing a comma-delimited list of field names.
 
-* If a directive is repeated in the field value (e.g., "max-age=30, max-age=60"), the last value 'wins' (60, in this case)
+Implementations SHOULD NOT generate or consume values that violate these inferred constraints on the directive's value (e.g. coerce a max-age with a decimal value into an integer). Likewise, implementations SHOULD ignore parameters on directives, unless otherwise specified.
+
+Sending implementations MUST generate valid Structured Fields. Receiving implementations SHOULD use a Structured Fields parser, but MAY reuse an existing parser for the Cache-Control field value ({{Section 5.2 of HTTP-CACHING}}). In doing so, they SHOULD implement the following constraints, to aid in a smooth transition to a full Structured Field parser and prevent interoperability issues:
+
+* Directive names are all lowercase (e.g., "MAX-AGE=60" is considered an error).
+* If a directive is repeated in the field value (e.g., "max-age=30, max-age=60"), the last value 'wins' (60, in this case).
 * Members of the directives can have parameters (e.g., "max-age=30;a=b;c=d"), which should be ignored unless specified.
 
-If a targeted field in a given response is empty, or a parsing error is encountered (when being parsed as a Structured Field), that field SHOULD be ignored by the cache (i.e., it should behave as if the field were not present, likely falling back to other cache control mechanisms present).
+If a targeted field in a given response is empty, or a parsing error is encountered, that field SHOULD be ignored by the cache (i.e., it should behave as if the field were not present, likely falling back to other cache control mechanisms present).
 
 
 ## Interaction with HTTP Freshness
@@ -224,7 +233,7 @@ CDN-Cache-Control: none
 # IANA Considerations
 
 Please register the following entry in the Hypertext Transfer Protocol (HTTP) Field Name Registry
-defined by {{!I-D.ietf-httpbis-semantics}}:
+defined by {{HTTP}}:
 
 * Field Name: CDN-Cache-Control
 * Status: permanent
@@ -234,7 +243,7 @@ defined by {{!I-D.ietf-httpbis-semantics}}:
 
 # Security Considerations
 
-The security considerations of HTTP caching {{!I-D.ietf-httpbis-cache}} apply.
+The security considerations of HTTP caching {{HTTP-CACHING}} apply.
 
 The ability to carry multiple caching policies on a response can result in confusion about how a response will be cached in different systems, if not used carefully. This might result in unintentional reuse of responses with sensitive information.
 
