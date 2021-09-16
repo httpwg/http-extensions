@@ -68,11 +68,14 @@ normative:
          org: Nanyang Technological University, Singapore; Temasek Laboratories, Singapore
     date: 2020-01-05
     target: https://eprint.iacr.org/2020/014.pdf
+  SEMANTICS: I-D.ietf-httpbis-semantics
 
 informative:
   RFC2818:
   RFC7231:
   RFC7396:
+  HTTP11: I-D.ietf-httpbis-messaging
+  PATCH: RFC5789
 
 --- abstract
 
@@ -107,10 +110,10 @@ make use of features of the lower layer in order to provide some integrity
 protection; for instance TCP checksums or TLS records [RFC2818].
 
 This document defines two digest integrity mechanisms for HTTP.
-First, representation data integrity, which acts on representation data (Section 3.2;
-{{!SEMANTICS=I-D.ietf-httpbis-semantics}}).
-Second, content digest integrity, which acts on conveyed content (Section 6.4;
-{{!SEMANTICS=I-D.ietf-httpbis-semantics}}).
+First, representation data integrity, which acts on representation data ({{Section 3.2
+of SEMANTICS}}).
+Second, content digest integrity, which acts on conveyed content ({{Section 6.4 of
+SEMANTICS}}).
 Both mechanisms operate independent of transport integrity, offering
 the potential to detect programming errors and corruption of data in flight or
 at rest.
@@ -145,13 +148,13 @@ This document is structured as follows:
 
 This document defines the `Digest` request and response header and trailer
 field, see {{digest}}. At a high level the value contains a checksum, computed
-over `selected representation data` (Section 3.2;
-{{!SEMANTICS=I-D.ietf-httpbis-semantics}}), that the recipient can use to
+over `selected representation data` ({{Section 3.2 of
+SEMANTICS}}), that the recipient can use to
 validate integrity. Basing `Digest` on the selected representation makes it
 straightforward to apply it to use-cases where the transferred data requires
 some sort of manipulation to be considered a representation or conveys a
-partial representation of a resource, such as Range Requests (see Section
-14.2 of {{SEMANTICS}}).
+partial representation of a resource, such as Range Requests (see {{Section
+14.2 of SEMANTICS}}).
 
 To support use-cases where a simple checksum of the content bytes is required,
 this document introduces the `Content-Digest` request and response header and trailer field; see
@@ -164,8 +167,8 @@ this document introduces the `Content-Digest` request and response header and tr
 Digest field calculations are tied to the `Content-Encoding`
 and `Content-Type` header fields. Therefore, a given resource may have multiple
 different checksum values when transferred with HTTP. To allow both parties to
-exchange a simple checksum with no content codings (see Section 8.4.1
-of {{SEMANTICS}}), two more digest-algorithms are added ("id-sha-256" and
+exchange a simple checksum with no content codings (see {{Section 8.4.1
+of SEMANTICS}}), two more digest-algorithms are added ("id-sha-256" and
 "id-sha-512").
 
 Digest fields do not provide integrity for
@@ -187,7 +190,7 @@ since [RFC3230] was published. The concept of "instance" has been superseded by
 
 This document replaces [RFC3230]. The `Digest` and `Want-Digest` field
 definitions are updated to align with the terms and notational conventions in
-{{!SEMANTICS}}. Changes are intended to be semantically compatible with existing
+{{SEMANTICS}}. Changes are intended to be semantically compatible with existing
 implementations but note that negotiation of `Content-MD5` is deprecated
 {{deprecate-contentMD5}}
 and has been replaced by `Content-Digest` negotiation via `Want-Content-Digest`,
@@ -198,9 +201,9 @@ and the algorithm table has been updated to reflect the current state of the art
 {::boilerplate bcp14}
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
-[RFC7405] along with the "#rule" extension defined in Section 5.6.1 of
-{{SEMANTICS}}
-and the "qvalue" rule defined in Section 12.4.2 of {{SEMANTICS}}.
+[RFC7405] along with the "#rule" extension defined in {{Section 5.6.1 of
+SEMANTICS}}
+and the "qvalue" rule defined in {{Section 12.4.2 of SEMANTICS}}.
 
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "content" in this document are to be
@@ -213,20 +216,20 @@ whereas digest-algorithm tokens are quoted (eg. "sha", "crc32c").
 
 The representation digest is an integrity mechanism for HTTP resources
 which uses a checksum  that is calculated independently of the content
-(see Section 6.4 of {{SEMANTICS}}).
-It uses the representation data (see Section 8.1 of {{SEMANTICS}}),
+(see {{Section 6.4 of SEMANTICS}}).
+It uses the representation data (see {{Section 8.1 of SEMANTICS}}),
 that can be fully or partially contained in the content, or not contained at all.
 
 This takes into account the effect of the HTTP semantics on the messages;
 for example, the content can be affected by Range Requests or methods such as HEAD,
 while the way the content is transferred "on the wire" is dependent on other
-transformations (e.g. transfer codings for HTTP/1.1 - see Section 6.1 of
-{{?HTTP11=I-D.ietf-httpbis-messaging}}). To help illustrate how such things affect `Digest`,
+transformations (e.g. transfer codings for HTTP/1.1 - see {{Section 6.1 of
+HTTP11}}). To help illustrate how such things affect `Digest`,
 several examples are provided in {{resource-representation}}.
 
 A representation digest consists of
 the value of a checksum computed on the entire selected `representation data`
-(see Section 8.1 of {{SEMANTICS}}) of a resource identified according to Section 6.4.2 of {{SEMANTICS}}
+(see {{Section 8.1 of SEMANTICS}}) of a resource identified according to {{Section 6.4.2 of SEMANTICS}}
 together with an indication of the algorithm used:
 
 ~~~ abnf
@@ -281,7 +284,7 @@ that the recipient will ignore it.
 
 `Digest` can be sent in a trailer section.
 In this case,
-`Digest` MAY be merged in to the header section (See Section 6.5.1 of {{SEMANTICS}}).
+`Digest` MAY be merged in to the header section (See {{Section 6.5.1 of SEMANTICS}}).
 
 When an incremental digest-algorithm
 is used, the sender and the receiver can dynamically compute the digest value
@@ -297,7 +300,7 @@ provided in {{examples-unsolicited}} and {{examples-solicited}}.
 The `Content-Digest` field contains a comma-separated list of one or more content digest
 values.
 A content digest value is computed by applying a digest-algorithm to the actual message content
-(see Section 6.4 of {{SEMANTICS}}).
+(see {{Section 6.4 of SEMANTICS}}).
 It can be used in both requests and responses.
 
 ~~~ abnf
@@ -331,7 +334,7 @@ that the recipient will ignore it.
 
 `Content-Digest` can be sent in a trailer section.
 In this case,
-`Content-Digest` MAY be merged in to the header section (See Section 6.5.1 of {{SEMANTICS}}).
+`Content-Digest` MAY be merged in to the header section (See {{Section 6.5.1 of SEMANTICS}}).
 
 When an incremental digest-algorithm
 is used, the sender and the receiver can dynamically compute the digest value
@@ -358,8 +361,7 @@ the `Content-Digest` field.
 ~~~
 
 `qvalue` indicates the sender's digest-algorithm preferences.
-Section 12.4.2 of {{SEMANTICS}}) describes  `qvalue` usage and semantics.
-
+{{Section 12.4.2 of SEMANTICS}}) describes  `qvalue` usage and semantics.
 
 Senders can provide multiple digest-algorithm items with the same qvalue.
 
@@ -531,15 +533,15 @@ In responses,
    That might or might not result in computing `Digest` on the enclosed representation.
 
 The latter case is done according to the HTTP semantics of the given
-method, for example using the `Content-Location` header field (see Section 8.7 of
-{{SEMANTICS}}).
+method, for example using the `Content-Location` header field (see {{Section 8.7 of
+SEMANTICS}}).
 In contrast, the `Location` header field does not affect `Digest` because
 it is not representation metadata.
 
 For example, in PATCH requests, the representation digest
 will be computed on the patch document
 because the representation metadata refers to the patch document and not
-to the target resource (see Section 2 of {{?PATCH=RFC5789}}).
+to the target resource (see {{Section 2 of PATCH}}).
 In responses, instead, the representation digest will be computed on the selected
 representation of the patched resource.
 
@@ -565,7 +567,7 @@ as transport-layer security or digital signatures.
 ## Digest for End-to-End Integrity
 
 Digest fields can help detect `representation data` or content modification due to implementation errors,
-undesired "transforming proxies" (see Section 7.7 of {{SEMANTICS}})
+undesired "transforming proxies" (see {{Section 7.7 of SEMANTICS}})
 or other actions as the data passes across multiple hops or system boundaries.
 Even a simple mechanism for end-to-end `representation data` integrity is valuable
 because user-agent can validate that resource retrieval succeeded before handing off to a
@@ -606,14 +608,14 @@ Using signatures to protect the checksum of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
 
 Any mangling of digest fields, including de-duplication of representation-data-digest values
-or combining different field values (see Section 5.2 of {{SEMANTICS}})
+or combining different field values (see {{Section 5.2 of SEMANTICS}})
 might affect signature validation.
 
 ## Usage in Trailer Fields
 
 Before sending digest fields in a trailer section, the sender
 should consider that intermediaries are explicitly allowed to drop any trailer
-(see Section 6.5.2 of {{SEMANTICS}}).
+(see {{Section 6.5.2 of SEMANTICS}}).
 
 When digest fields are used in a trailer section, the field-values are received after the content.
 Eager processing of content before the trailer section prevents digest validation, possibly leading to
@@ -686,7 +688,7 @@ and to inizialize the registry with the tokens
 defined in {{algorithms}}.
 
 This registry uses the Specification
-Required policy (Section 4.6 of {{!RFC8126}}).
+Required policy ({{Section 4.6 of !RFC8126}}).
 
 
 ## Obsolete "contentMD5" token in Digest Algorithm {#iana-contentMD5}
@@ -696,14 +698,14 @@ Values](https://www.iana.org/assignments/http-dig-alg/)
 registry:
 
 * Digest Algorithm: contentMD5
-* Description: Section 5 of [RFC3230] defined the "contentMD5" token to be used only in Want-Digest.
+* Description: {{Section 5 of RFC3230}} defined the "contentMD5" token to be used only in Want-Digest.
   This token is obsoleted and MUST NOT be used.
-* Reference: {{iana-contentMD5}} of this document, Section 5 of [RFC3230].
+* Reference: {{iana-contentMD5}} of this document, {{Section 5 of RFC3230}}.
 * Status: obsoleted
 
 ## Changes Compared to RFC3230
 
-The `contentMD5` digest-algorithm token defined in Section 5 of [RFC3230]
+The `contentMD5` digest-algorithm token defined in {{Section 5 of RFC3230}}
 has been added to the HTTP Digest Algorithm Values Registry with the "obsoleted" status.
 
 All digest-algorithms defined in [RFC3230] are now "deprecated".
@@ -1066,7 +1068,7 @@ The request `Digest` field-value is computed on the enclosed representation (see
 {{state-changing-requests}}).
 
 The representation enclosed in the response refers to the resource identified by
-`Content-Location` (see {{SEMANTICS}}, Section 6.4.2). `Digest` is thus computed on the enclosed representation.
+`Content-Location` (see {{Section 6.4.2 of SEMANTICS}}). `Digest` is thus computed on the enclosed representation.
 
 ~~~ http-message
 POST /books HTTP/1.1
@@ -1329,7 +1331,7 @@ for HTTP message content.
 
 ## Obsolete Digest Field Parameters {#obsolete-parameters}
 
-Section 4.1.1 and 4.2 of [RFC3230] defined field parameters. This document
+{{Sections 4.1.1 and 4.2 of RFC3230}} defined field parameters. This document
 obsoletes the usage of parameters with `Digest` because this feature has not
 been widely deployed and complicates field-value processing.
 
@@ -1398,7 +1400,7 @@ _RFC Editor: Please remove this section before publication._
 
 6. What changes in `Want-Digest`?
 
-   The contentMD5 token defined in Section 5 of [RFC3230] is deprecated by {{deprecate-contentMD5}}.
+   The contentMD5 token defined in {{Section 5 of RFC3230}} is deprecated by {{deprecate-contentMD5}}.
 
    To clarify that `Digest` and `Want-Digest` can be used in both requests and responses
    - [RFC3230] carefully uses `sender` and `receiver` in their definition -
