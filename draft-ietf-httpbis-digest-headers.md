@@ -73,7 +73,6 @@ normative:
 informative:
   RFC2818:
   RFC7231:
-  RFC7396:
   HTTP11: I-D.ietf-httpbis-messaging
   PATCH: RFC5789
 
