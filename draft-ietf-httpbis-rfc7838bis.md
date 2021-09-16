@@ -199,7 +199,7 @@ consoles, etc.
 
 Formally, an alternative service is identified by the combination of:
 
-- An Application Layer Protocol Negotiation (ALPN) protocol name, as
+- An Application-Layer Protocol Negotiation (ALPN) protocol name, as
   per {{RFC7301}}
 
 - A host, as per {{Section 3.2.2 of RFC3986}}
