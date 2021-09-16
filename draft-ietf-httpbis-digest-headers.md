@@ -33,13 +33,12 @@ normative:
   RFC3174:
   RFC1950:
   RFC3230:
-  RFC2119:
+
   RFC5843:
   RFC4648:
   RFC5234:
   RFC6234:
   RFC7405:
-  RFC8174:
   UNIX:
     title: The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98
     author:
