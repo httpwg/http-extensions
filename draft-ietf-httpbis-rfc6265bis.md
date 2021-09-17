@@ -1443,7 +1443,10 @@ user agent MUST process the cookie as follows:
     1.  Let the domain-attribute be the attribute-value of the last
         attribute in the cookie-attribute-list with both an
         attribute-name of "Domain" and an attribute-value whose
-        length is no more than 1024 octets.
+        length is no more than 1024 octets. (Note that a leading %x2E
+        ("."), if present, is ignored even though that character is not
+        permitted, but a trailing %x2E ("."), if present, will cause
+        the user agent to ignore the attribute.)
 
     Otherwise:
 
