@@ -112,7 +112,7 @@ in cases where the wrong location is used.
 
 ## Changes from RFC 7838
 
-No substantive changes.
+* Added an ALTSVC frame for HTTP/3.
 
 ## Notational Conventions
 
