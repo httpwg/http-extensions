@@ -161,7 +161,7 @@ If a targeted field in a given response is empty, or a parsing error is encounte
 
 ## Interaction with HTTP Freshness
 
-HTTP caching has a single, end-to-end freshness model defined in {{Section 4.2 of !I-D.ietf-httpbis-cache}}. When additional freshness mechanisms are only available to some caches along a request path (for example, using targeted fields), their interactions need to be carefully considered. In particular, a targeted cache might have longer freshness lifetimes available to it than other caches, causing it to serve responses that appear to be prematurely (or even immediately) stale to them, negatively impacting cache efficiency.
+HTTP caching has a single, end-to-end freshness model defined in {{Section 4.2 of HTTP-CACHING}}. When additional freshness mechanisms are only available to some caches along a request path (for example, using targeted fields), their interactions need to be carefully considered. In particular, a targeted cache might have longer freshness lifetimes available to it than other caches, causing it to serve responses that appear to be prematurely (or even immediately) stale to them, negatively impacting cache efficiency.
 
 For example, a response stored by a CDN cache might be served with the following headers:
 
