@@ -85,15 +85,16 @@ input into prioritization decision making.
 
 The design and implementation of RFC 7540 stream priority was observed to have
 shortcomings, explained in {{motivation}}.
-({{!HTTP2=I-D.ietf-httpbis-http2bis}}) has consequently deprecated the use of these stream
-priority signals.
+({{!HTTP2=I-D.ietf-httpbis-http2bis}}) has consequently deprecated the use of
+these stream priority signals.
 
 This document describes an extensible scheme for prioritizing HTTP responses
-that uses absolute values. It defines the Priority HTTP header field that can be
-used by both client and server to specify the precedence of HTTP responses in a
-standardized, extensible, protocol-version-independent, end-to-end format. It
-also defines version-specific frame for reprioritization. This prioritization
-scheme and its signals can act as a substitute for RFC 7540 stream priority.
+that uses absolute values. {#header-field} defines the Priority HTTP header
+field that can be used by both client and server to specify the precedence of
+HTTP responses in a standardized, extensible, protocol-version-independent,
+end-to-end format. {#h2-update-frame} and {#h3-update-frame} define
+version-specific frames for reprioritization. This prioritization scheme and its
+signals can act as a substitute for RFC 7540 stream priority.
 
 ## Notational Conventions
 
@@ -146,12 +147,12 @@ delivery of images that are critical to user experience above other images, but
 below the CSS files. Since client trees vary, it is impossible for the server to
 determine how such images should be prioritized against other responses.
 
-RFC 7540 allows intermediaries to coalesce multiple client trees into a
-single tree that is used for a single upstream HTTP/2 connection. However, most
-intermediaries do not support this. Additionally, RFC 7540 does not define a method that can
-be used by a server to express the priority of a response. Without such a
-method, intermediaries cannot coordinate client-driven and server-driven
-priorities.
+RFC 7540 allows intermediaries to coalesce multiple client trees into a single
+tree that is used for a single upstream HTTP/2 connection. However, most
+intermediaries do not support this. Additionally, RFC 7540 does not define a
+method that can be used by a server to express the priority of a response.
+Without such a method, intermediaries cannot coordinate client-driven and
+server-driven priorities.
 
 RFC 7540 describes denial-of-service considerations for implementations. On
 2019-08-13 Netflix issued an advisory notice about the discovery of several
@@ -159,10 +160,14 @@ resource exhaustion vectors affecting multiple RFC 7540 implementations. One
 attack, [CVE-2019-9513] aka "Resource Loop", is based on using priority signals
 to manipulate the server's stored prioritization state.
 
-HTTP/2 priority signals depend on in-order delivery, leading to challenges in
-porting the approach to protocols that do not provide global ordering. For
-example, it could not be supported in HTTP/3 {{HTTP3}} without changing the
-signals and their processing.
+HTTP/2 priority signals are required to be delivered and processed in the order
+they are sent so that the receiver handling is deterministic. Porting HTTP/2
+priority signals to protocols that do not provide this guarantee presents
+challenges. For example, HTTP/3 {{HTTP3}} lacks global ordering, which meant
+that early attempts to port HTTP/2 priority signals required adding more
+information to the signals and more complicated processing. The problems with
+the porting design could not be easily resolved across multiple draft iterations
+and ultimately the feature was entirely dropped before publication.
 
 Considering the problems with the deployment of RFC 7540 stream priority, and
 the difficulties in adapting it to HTTP/3, continuing to base prioritization on
