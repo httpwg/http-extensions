@@ -78,14 +78,14 @@ important for an HTTP server to prioritize the HTTP responses, or the chunks of
 those HTTP responses, that it sends.
 
 RFC 7540 {{?RFC7540}} stream priority allowed a client to send a series of
-priority signals that communicate to the server a "priority tree"; this
+priority signals that communicate to the server a "priority tree"; the structure of this tree
 represents the client's preferred relative ordering and weighted distribution of
 the bandwidth among HTTP responses. Servers could use these priority signals as
 input into prioritization decision making.
 
 The design and implementation of RFC 7540 stream priority was observed to have
 shortcomings, explained in {{motivation}}.
-({{!HTTP2=I-D.ietf-httpbis-http2bis}}) has deprecated the use of these stream
+({{!HTTP2=I-D.ietf-httpbis-http2bis}}) has consequently deprecated the use of these stream
 priority signals.
 
 This document describes an extensible scheme for prioritizing HTTP responses
@@ -148,7 +148,7 @@ determine how such images should be prioritized against other responses.
 
 RFC 7540 allows intermediaries to coalesce multiple client trees into a
 single tree that is used for a single upstream HTTP/2 connection. However, most
-intermediaries do not support this. RFC 7540 does not define a method that can
+intermediaries do not support this. Additionally, RFC 7540 does not define a method that can
 be used by a server to express the priority of a response. Without such a
 method, intermediaries cannot coordinate client-driven and server-driven
 priorities.
