@@ -1407,6 +1407,22 @@ The original idea of refreshing this document arose from an interesting
 discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
 the MICE content coding.
 
+Thanks to Julian Reschke for his valuable contributions to this document,
+and to the following contributors that have helped improve this specification by reporting bugs,
+asking smart questions, drafting or reviewing text, and evaluating open issues:
+Mike Bishop,
+Brian Campbell,
+Matthew Kerwin,
+James Manger,
+Tommy Pauly,
+Sean Turner
+and Erik Wilde.
+
+
+
+
+ 
+
 # FAQ
 {:numbered="false"}
 
