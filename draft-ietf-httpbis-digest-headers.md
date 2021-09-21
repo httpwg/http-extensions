@@ -1415,7 +1415,7 @@ Brian Campbell,
 Matthew Kerwin,
 James Manger,
 Tommy Pauly,
-Sean Turner
+Sean Turner,
 and Erik Wilde.
 
 
