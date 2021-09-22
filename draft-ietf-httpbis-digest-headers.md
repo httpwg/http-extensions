@@ -357,12 +357,8 @@ the `Content-Digest` field.
    want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
 ~~~
 
-`qvalue` (see Section 12.4.2 of {{SEMANTICS}}) indicates the sender's preference
-from highest (1) to lowest (0.001). If a digest-algorithm is not accompanied by a
-qvalue, it is treated as if its associated qvalue were 1.
+`qvalue` indicates the sender's digest-algorithm's preferences. Section 12.4.2 of {{SEMANTICS}}) describes how endpoints use `qvalue`.
 
-A qvalue of 0 indicates that a sender does not accept the associated
-digest-algorithm.
 
 Senders can provide multiple digest-algorithm items with the same qvalue.
 
