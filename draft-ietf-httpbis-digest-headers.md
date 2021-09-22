@@ -357,7 +357,8 @@ the `Content-Digest` field.
    want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
 ~~~
 
-`qvalue` indicates the sender's digest-algorithm's preferences. Section 12.4.2 of {{SEMANTICS}}) describes how endpoints use `qvalue`.
+`qvalue` indicates the sender's digest-algorithm's preferences.
+Section 12.4.2 of {{SEMANTICS}}) describes  `qvalue` usage and semantics.
 
 
 Senders can provide multiple digest-algorithm items with the same qvalue.
