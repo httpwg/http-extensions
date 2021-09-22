@@ -785,11 +785,7 @@ Content-Type: application/json
 
 {"hello": "world"}
 ~~~
-
-Here is a gzip-compressed JSON object
-using a content coding.
-
-Request:
+{: title="Request containing a JSON object without any content coding"}
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
@@ -799,6 +795,7 @@ Content-Encoding: gzip
 
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
+{: title="Request containing a gzip-encoded JSON object"}
 
 Now the same content conveys a malformed JSON object.
 
@@ -811,10 +808,9 @@ Content-Type: application/json
 
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
+{: title="Request containing malformed JSON"}
 
 A Range-Request alters the content, conveying a partial representation.
-
-Request:
 
 ~~~ http-message
 GET /entries/1234 HTTP/1.1
@@ -822,8 +818,7 @@ Host: foo.example
 Range: bytes=1-7
 
 ~~~
-
-Response:
+{: title="Request for partial content"}
 
 ~~~ http-message
 HTTP/1.1 206 Partial Content
@@ -833,11 +828,10 @@ Content-Range: bytes 1-7/18
 
 iwgAla3RXA==
 ~~~
+{: title="Partial response from a gzip-encoded representation"}
 
-
-Now the method too alters the content.
-
-Request:
+The method can also alter the content.  For example, the response
+to a HEAD request does not carry content.
 
 ~~~ http-message
 HEAD /entries/1234 HTTP/1.1
@@ -846,8 +840,7 @@ Accept: application/json
 Accept-Encoding: gzip
 
 ~~~
-
-Response:
+{: title="HEAD request"}
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -855,6 +848,7 @@ Content-Type: application/json
 Content-Encoding: gzip
 
 ~~~
+{: title="Response to HEAD request (empty content)"}
 
 Finally the semantics of an HTTP response might decouple the effective request URI
 from the enclosed representation. In the example response below, the
@@ -871,8 +865,7 @@ Content-Type: application/json
 
 {"author": "Camilleri"}
 ~~~
-
-Response:
+{: title="POST request"}
 
 ~~~ http-message
 HTTP/1.1 201 Created
@@ -882,6 +875,7 @@ Location: /authors/123
 
 {"id": "123", "author": "Camilleri"}
 ~~~
+{: title="Response with Content-Location header"}
 
 # Examples of Unsolicited Digest {#examples-unsolicited}
 
@@ -906,15 +900,12 @@ While examples can include both fields,
 In this example, the message content conveys complete representation data,
 so `Digest` and `Content-Digest` have the same value.
 
-Request:
-
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
 
 ~~~
-
-Response:
+{: title="GET request for an item"}
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -924,6 +915,7 @@ Content-Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 {"hello": "world"}
 ~~~
+{: title="Response with Content-Digest"}
 
 ## Server Returns No Representation Data
 
@@ -935,15 +927,12 @@ The response `Digest` field-value is calculated over the JSON object
 data.
 `Content-Digest` is computed on empty content.
 
-Request:
-
 ~~~ http-message
 HEAD /items/123 HTTP/1.1
 Host: foo.example
 
 ~~~
-
-Response:
+{: title="HEAD request for an item"}
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -952,15 +941,14 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 Content-Digest: sha-256=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=
 
 ~~~
+{: title="Response with both Content-Digest and Digest; empty content"}
 
 ## Server Returns Partial Representation Data
 
-In this example, the client makes a range request and the server
-responds with partial content. The `Digest` field-value represents
-the entire JSON object `{"hello": "world"}`
-, while the `Content-Digest` field-value is computed on the message content `"hello"`.
-
-Request:
+In this example, the client makes a range request and the server responds with
+partial content. The `Digest` field-value represents the entire JSON object
+`{"hello": "world"}`, while the `Content-Digest` field-value is computed on the
+message content `"hello"`.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -968,8 +956,7 @@ Host: foo.example
 Range: bytes=1-7
 
 ~~~
-
-Response:
+{: title="Request for partial content"}
 
 ~~~ http-message
 HTTP/1.1 206 Partial Content
@@ -980,6 +967,7 @@ Content-Digest: sha-256=Wqdirjg/u3J688ejbUlApbjECpiUUtIwT8lY/z81Tno=
 
 "hello"
 ~~~
+{: title="Partial response with both Content-Digest and Digest"}
 
 
 ## Client and Server Provide Full Representation Data
@@ -995,8 +983,6 @@ different compared to the request.
 For presentation purposes, the response body is displayed as a base64-encoded string because it contains
 non-printable characters.
 
-Request:
-
 ~~~ http-message
 PUT /items/123 HTTP/1.1
 Host: foo.example
@@ -1006,8 +992,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 {"hello": "world"}
 ~~~
-
-Response:
+{: title="PUT Request with Digest"}
 
 ~~~ http-message
 HTTP/1.1 200 Ok
@@ -1019,6 +1004,7 @@ Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
+{: title="Response with Digest of encoded response"}
 
 
 ## Client Provides Full Representation Data, Server Provides No Representation Data
@@ -1030,8 +1016,6 @@ depends on the representation metadata header fields, including
 `Content-Encoding: br` even when the response does not contain content.
 
 
-Request:
-
 ~~~ http-message
 PUT /items/123 HTTP/1.1
 Host: foo.example
@@ -1042,8 +1026,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 {"hello": "world"}
 ~~~
-
-Response:
+{: title="PUT Request with Digest}
 
 ~~~ http-message
 HTTP/1.1 204 No Content
@@ -1052,6 +1035,7 @@ Content-Encoding: br
 Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 
 ~~~
+{: title="Empty response with Digest"}
 
 ## Client and Server Provide Full Representation Data, Client Uses id-sha-256.
 
@@ -1064,8 +1048,6 @@ The response contains two digest values:
 As the response body contains non-printable characters, it is displayed as a
 base64-encoded string.
 
-Request:
-
 ~~~ http-message
 PUT /items/123 HTTP/1.1
 Host: foo.example
@@ -1075,8 +1057,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 {"hello": "world"}
 ~~~
-
-Response:
+{: title="PUT Request with Digest"}
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -1088,7 +1069,7 @@ Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
-
+{: title="Response with Digest of Encoded Content"}
 
 ## POST Response does not Reference the Request URI {#post-not-request-uri}
 
@@ -1110,9 +1091,7 @@ Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
 
 {"title": "New Title"}
 ~~~
-
-
-Response:
+{: title="POST Request with Digest"}
 
 ~~~ http-message
 HTTP/1.1 201 Created
@@ -1126,6 +1105,7 @@ Digest: id-sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
   "title": "New Title"
 }
 ~~~
+{: title="Response with Digest of Resource"}
 
 Note that a `204 No Content` response without content but with the same
 `Digest` field-value would have been legitimate too.
@@ -1142,8 +1122,6 @@ so `Digest` is computed on that enclosed representation.
 Response `Digest` has no explicit relation with the resource referenced by
 `Location`.
 
-Request:
-
 ~~~ http-message
 POST /books HTTP/1.1
 Host: foo.example
@@ -1154,9 +1132,7 @@ Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
 
 {"title": "New Title"}
 ~~~
-
-
-Response:
+{: title="POST Request with Digest"}
 
 ~~~ http-message
 HTTP/1.1 201 Created
@@ -1171,6 +1147,8 @@ Location: /books/123
   "instance": "/books/123"
 }
 ~~~
+{: title="Response with Digest of Representation"}
+
 
 ## Digest with PATCH
 
@@ -1186,8 +1164,6 @@ document.
 The response `Digest` field-value is computed on the complete representation of the patched
 resource.
 
-Request:
-
 ~~~ http-message
 PATCH /books/123 HTTP/1.1
 Host: foo.example
@@ -1198,8 +1174,7 @@ Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
 
 {"title": "New Title"}
 ~~~
-
-Response:
+{: #fig-patch title="PATCH Request with Digest"}
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -1211,6 +1186,7 @@ Digest: id-sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
   "title": "New Title"
 }
 ~~~
+{: title="Response with Digest of Representation"}
 
 Note that a `204 No Content` response without content but with the same
 `Digest` field-value would have been legitimate too.
@@ -1220,26 +1196,12 @@ Note that a `204 No Content` response without content but with the same
 In error responses, the representation-data does not necessarily refer to the
 target resource. Instead, it refers to the representation of the error.
 
-In the following example a client attempts to patch the resource located at
-/books/123. However, the resource does not exist and the server generates a 404
-response with a body that describes the error in accordance with {{?RFC7807}}.
+In the following example, a client sends the same request from {{fig-patch}} to
+patch the resource located at /books/123. However, the resource does not exist
+and the server generates a 404 response with a body that describes the error in
+accordance with {{?RFC7807}}.
 
 The response `Digest` field-value is computed on this enclosed representation.
-
-Request:
-
-~~~ http-message
-PATCH /books/123 HTTP/1.1
-Host: foo.example
-Content-Type: application/merge-patch+json
-Accept: application/json
-Accept-Encoding: identity
-Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
-
-{"title": "New Title"}
-~~~
-
-Response:
 
 ~~~ http-message
 HTTP/1.1 404 Not Found
@@ -1252,6 +1214,7 @@ Digest: sha-256=KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=
   "status": 404
 }
 ~~~
+{: title="Response with Digest of Error Representation"}
 
 ## Use with Trailer Fields and Transfer Coding
 
@@ -1260,15 +1223,12 @@ while streaming content and thus mitigate resource consumption.
 The `Digest` field-value is the same as in {{example-full-representation}} because `Digest` is designed to
 be independent from the use of one or more transfer codings (see {{representation-digest}}).
 
-Request:
-
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
 
 ~~~
-
-Response:
+{: title="GET Request"}
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -1286,6 +1246,7 @@ Trailer: Digest
 Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ~~~
+{: title="Chunked Response with Digest"}
 
 
 # Examples of Want-Digest Solicited Digest {#examples-solicited}
@@ -1309,16 +1270,13 @@ Examples are calculated inclusive of any space.
 The client requests a digest, preferring "sha". The server is free to reply with
 "sha-256" anyway.
 
-Request:
-
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
 Want-Digest: sha-256;q=0.3, sha;q=1
 
 ~~~
-
-Response:
+{: title="GET Request with Want-Digest"}
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -1327,13 +1285,12 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 {"hello": "world"}
 ~~~
+{: title="Response with Different Algorithm"}
 
 ##  Server Selects Algorithm Unsupported by Client
 
 The client requests a "sha" digest only. The server is currently free to reply
 with a Digest containing an unsupported algorithm.
-
-Request:
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -1341,8 +1298,7 @@ Host: foo.example
 Want-Digest: sha;q=1
 
 ~~~
-
-Response:
+{: title="GET Request with Want-Digest"}
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -1352,12 +1308,11 @@ Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
 
 {"hello": "world"}
 ~~~
+{: title="Response with Unsupported Algorithm"}
 
 ## Server Does Not Support Client Algorithm and Returns an Error
 
 The client requests a "sha" Digest, the server advises "sha-256" and "sha-512".
-
-Request:
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -1365,14 +1320,14 @@ Host: foo.example
 Want-Digest: sha;q=1
 
 ~~~
-
-Response:
+{: title="GET Request with Want-Digest"}
 
 ~~~ http-message
 HTTP/1.1 400 Bad Request
 Want-Digest: sha-256, sha-512
 
 ~~~
+{: title="Response with Want-Digest"}
 
 
 # Changes from RFC3230
