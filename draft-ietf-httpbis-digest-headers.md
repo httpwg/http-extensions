@@ -199,7 +199,8 @@ and the algorithm table has been updated to reflect the current state of the art
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405] along with the "#rule" extension defined in Section 5.6.1 of
-{{SEMANTICS}}.
+{{SEMANTICS}}
+and the "qvalue" rule defined in Section 12.4.2 of {{SEMANTICS}}.
 
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", and "content" in this document are to be
@@ -354,16 +355,11 @@ the `Content-Digest` field.
    Want-Digest = 1#want-digest-value
    Want-Content-Digest = 1#want-digest-value
    want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
-   qvalue = ( "0"  [ "."  0*1DIGIT ] ) /
-            ( "1"  [ "."  0*1( "0" ) ] )
 ~~~
 
-qvalue (see Section 12.4.2 of {{SEMANTICS}}) indicates the sender's preference
-from highest (1.0) to lowest (0.0). If a digest-algorithm is not accompanied by a
-"qvalue" , it is treated as if its associated "qvalue" were 1.0.
+`qvalue` indicates the sender's digest-algorithm preferences.
+Section 12.4.2 of {{SEMANTICS}}) describes  `qvalue` usage and semantics.
 
-A qvalue of 0.0 indicates that a sender does not accept the associated
-digest-algorithm.
 
 Senders can provide multiple digest-algorithm items with the same qvalue.
 
