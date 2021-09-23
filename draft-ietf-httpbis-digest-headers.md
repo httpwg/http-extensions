@@ -774,10 +774,6 @@ and method impacts on the message and content. When the content
 contains non-printable characters (eg. when it is compressed) it is shown as
 base64-encoded string.
 
-A request with a JSON object without any content coding.
-
-Request:
-
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
@@ -797,9 +793,8 @@ H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 {: title="Request containing a gzip-encoded JSON object"}
 
-Now the same content conveys a malformed JSON object.
-
-Request:
+The same content would be a malformed JSON object if no Content-Encoding is
+indicated.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
@@ -850,12 +845,10 @@ Content-Encoding: gzip
 ~~~
 {: title="Response to HEAD request (empty content)"}
 
-Finally the semantics of an HTTP response might decouple the effective request URI
+Finally, the semantics of an HTTP response might decouple the effective request URI
 from the enclosed representation. In the example response below, the
 `Content-Location` header field indicates that the enclosed representation
 refers to the resource available at `/authors/123`.
-
-Request:
 
 ~~~ http-message
 POST /authors/ HTTP/1.1
@@ -1078,8 +1071,6 @@ The request `Digest` field-value is computed on the enclosed representation (see
 
 The representation enclosed in the response refers to the resource identified by
 `Content-Location` (see {{SEMANTICS}}, Section 6.4.2). `Digest` is thus computed on the enclosed representation.
-
-Request:
 
 ~~~ http-message
 POST /books HTTP/1.1
