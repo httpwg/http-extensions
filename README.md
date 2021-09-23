@@ -8,7 +8,7 @@ This is the working area for the [IETF HTTP Working Group](https://httpwg.org/)'
 
 See the [list of specifications](https://httpwg.org/http-extensions/) with links to editors' drafts, document status, issues, and more information.
 
-Note that the HTTP Working Group develops documents in other repos; see [our repo list](https://github.com/httpwg/) and also the [official IEGTF list](https://datatracker.ietf.org/wg/httpbis/documents/) of WG documents.
+Note that the HTTP Working Group develops documents in other repos; see [our repo list](https://github.com/httpwg/) and also the [official IETF list](https://datatracker.ietf.org/wg/httpbis/documents/) of WG documents.
 
 
 
