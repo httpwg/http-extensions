@@ -78,10 +78,10 @@ important for an HTTP server to prioritize the HTTP responses, or the chunks of
 those HTTP responses, that it sends.
 
 RFC 7540 {{?RFC7540}} stream priority allowed a client to send a series of
-priority signals that communicate to the server a "priority tree"; the structure of this tree
-represents the client's preferred relative ordering and weighted distribution of
-the bandwidth among HTTP responses. Servers could use these priority signals as
-input into prioritization decision making.
+priority signals that communicate to the server a "priority tree"; the structure
+of this tree represents the client's preferred relative ordering and weighted
+distribution of the bandwidth among HTTP responses. Servers could use these
+priority signals as input into prioritization decision making.
 
 The design and implementation of RFC 7540 stream priority was observed to have
 shortcomings, explained in {{motivation}}.
@@ -89,11 +89,13 @@ shortcomings, explained in {{motivation}}.
 these stream priority signals.
 
 This document describes an extensible scheme for prioritizing HTTP responses
-that uses absolute values. {#header-field} defines the Priority HTTP header
-field that can be used by both client and server to specify the precedence of
-HTTP responses in a standardized, extensible, protocol-version-independent,
-end-to-end format. {#h2-update-frame} and {#h3-update-frame} define
-version-specific frames for reprioritization. This prioritization scheme and its
+that uses absolute values. {{parameters}} defines priority parameters, which are
+a standardized and extensible format of priority information. {{header-field}}
+defines the Priority HTTP header field that can be used by both client and
+server to exchange parameters in order to specify the precedence of HTTP
+responses in a protocol-version-independent and end-to-end manner.
+{{h2-update-frame}} and {{h3-update-frame}} define version-specific frames that
+carry parameters for reprioritization. This prioritization scheme and its
 signals can act as a substitute for RFC 7540 stream priority.
 
 ## Notational Conventions
@@ -113,6 +115,9 @@ This document uses the variable-length integer encoding from
 
 The term control stream is used to describe the HTTP/2 stream with identifier
 0x0, and HTTP/3 control stream; see {{Section 6.2.1 of !HTTP3=I-D.ietf-quic-http}}.
+
+The term HTTP/2 priority signal is used to describe the priority information
+sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
 
 
 # Motivation for Replacing RFC 7540 Priorities {#motivation}
@@ -162,12 +167,13 @@ to manipulate the server's stored prioritization state.
 
 HTTP/2 priority signals are required to be delivered and processed in the order
 they are sent so that the receiver handling is deterministic. Porting HTTP/2
-priority signals to protocols that do not provide this guarantee presents
-challenges. For example, HTTP/3 {{HTTP3}} lacks global ordering, which meant
-that early attempts to port HTTP/2 priority signals required adding more
-information to the signals and more complicated processing. The problems with
-the porting design could not be easily resolved across multiple draft iterations
-and ultimately the feature was entirely dropped before publication.
+priority signals to protocols that do not provide ordering guarantees presents
+challenges. For example, HTTP/3 {{HTTP3}} lacks global ordering across streams
+that would carry priority signals. Early attempts to port HTTP/2 priority
+signals to HTTP/3 required adding additional information to the signals, leading
+to more complicated processing. Problems found with this approach could not be
+resolved and definition of a HTTP/3 priority signalling feature was removed
+before publication.
 
 Considering the problems with the deployment of RFC 7540 stream priority, and
 the difficulties in adapting it to HTTP/3, continuing to base prioritization on
