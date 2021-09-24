@@ -845,7 +845,6 @@ server is required to store the information in order to apply the most
 up-to-date signal to the request. However, HTTP/3 implementations might have
 practical barriers to determining reasonable stream concurrency limits depending
 on the information that is available to them from the QUIC transport layer.
-TODO: so what can we suggest?
 
 # IANA Considerations
 
