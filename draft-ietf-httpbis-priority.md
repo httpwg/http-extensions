@@ -63,15 +63,15 @@ code and issues list for this draft can be found at
 
 # Introduction
 
-It is common for an HTTP ({{!RFC7230}}) resource representation to have
-relationships to one or more other resources.  Clients will often discover these
-relationships while processing a retrieved representation, leading to further
-retrieval requests.  Meanwhile, the nature of the relationship determines
-whether the client is blocked from continuing to process locally available
-resources.  For example, visual rendering of an HTML document could be blocked
-by the retrieval of a CSS file that the document refers to.  In contrast, inline
-images do not block rendering and get drawn incrementally as the chunks of the
-images arrive.
+It is common for an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}} resource
+representation to have relationships to one or more other resources.  Clients
+will often discover these relationships while processing a retrieved
+representation, leading to further retrieval requests.  Meanwhile, the nature of
+the relationship determines whether the client is blocked from continuing to
+process locally available resources.  For example, visual rendering of an HTML
+document could be blocked by the retrieval of a CSS file that the document
+refers to.  In contrast, inline images do not block rendering and get drawn
+incrementally as the chunks of the images arrive.
 
 To provide meaningful presentation of a document at the earliest moment, it is
 important for an HTTP server to prioritize the HTTP responses, or the chunks of
@@ -84,8 +84,8 @@ distribution of the bandwidth among HTTP responses. Servers could use these
 priority signals as input into prioritization decision making.
 
 The design and implementation of RFC 7540 stream priority was observed to have
-shortcomings, explained in {{motivation}}.
-({{!HTTP2=I-D.ietf-httpbis-http2bis}}) has consequently deprecated the use of
+shortcomings, explained in {{motivation}}. HTTP/2
+{{!HTTP2=I-D.ietf-httpbis-http2bis}} has consequently deprecated the use of
 these stream priority signals.
 
 This document describes an extensible scheme for prioritizing HTTP responses
@@ -130,10 +130,10 @@ Priority signalling allows endpoints to communicate their own view of priority
 needs, which can be combined with other factors that are considered during the
 peer's prioritization decision making.
 
-RFC 7540 stream priority ({{Section 5.3 of ?RFC7540}}) is a complex system where
-clients signal stream dependencies and weights to describe an unbalanced tree.
-It suffered from poor deployment and interoperability and was deprecated in a
-revision of HTTP/2 ({{HTTP2}}). However, in order to maintain wire
+RFC 7540 stream priority (see {{Section 5.3 of ?RFC7540}}) is a complex system
+where clients signal stream dependencies and weights to describe an unbalanced
+tree. It suffered from poor deployment and interoperability and was deprecated
+in a revision of HTTP/2 {{HTTP2}}. However, in order to maintain wire
 compatibility, HTTP/2 priority signals are still mandatory to handle (see
 {{Section 5.3.2 of HTTP2}}).
 
@@ -245,7 +245,7 @@ HTTP connection, they SHOULD use a PRIORITY_UPDATE frame and SHOULD NOT change
 the Priority header field.
 
 In both cases, the set of priority parameters is encoded as a Structured Fields
-Dictionary ({{STRUCTURED-FIELDS}}).
+Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
 
 This document defines the urgency(`u`) and incremental(`i`) parameters. When
 receiving an HTTP request that does not carry these priority parameters, a
@@ -376,12 +376,12 @@ amend the precedence to suit it (see {{merging}}).
 The Priority header field is an end-to-end signal of the request priority from
 the client or the response priority from the server.
 
-As is the ordinary case for HTTP caching ({{?RFC7234}}), a response with a
-Priority header field might be cached and re-used for subsequent requests.
-When an origin server generates the Priority response header field based on
-properties of an HTTP request it receives, the server is expected to control the
-cacheability or the applicability of the cached response, by using header fields
-that control the caching behavior (e.g., Cache-Control, Vary).
+As is the ordinary case for HTTP caching {{?CACHING=I-D.ietf-httpbis-cache}}, a
+response with a Priority header field might be cached and re-used for subsequent
+requests. When an origin server generates the Priority response header field
+based on properties of an HTTP request it receives, the server is expected to
+control the cacheability or the applicability of the cached response, by using
+header fields that control the caching behavior (e.g., Cache-Control, Vary).
 
 An endpoint that fails to parse the Priority header field SHOULD use default
 parameter values.
@@ -401,8 +401,8 @@ reprioritization.
 
 # The PRIORITY_UPDATE Frame {#frame}
 
-This document specifies a new PRIORITY_UPDATE frame for HTTP/2 ({{HTTP2}})
-and HTTP/3 ({{HTTP3}}). It carries priority parameters and
+This document specifies a new PRIORITY_UPDATE frame for HTTP/2 {{HTTP2}}
+and HTTP/3 {{HTTP3}}. It carries priority parameters and
 references the target of the prioritization based on a version-specific
 identifier. In HTTP/2, this identifier is the Stream ID; in HTTP/3, the
 identifier is either the Stream ID or Push ID. Unlike the Priority header field,
@@ -440,9 +440,10 @@ initial priority of a response, or to reprioritize a response or push stream. It
 carries the stream ID of the response and the priority in ASCII text, using the
 same representation as the Priority header field value.
 
-The Stream Identifier field ({{Section 5.1.1 of HTTP2}}) in the PRIORITY_UPDATE
-frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE frame with a field
-of any other value MUST be treated as a connection error of type PROTOCOL_ERROR.
+The Stream Identifier field (see {{Section 5.1.1 of HTTP2}}) in the
+PRIORITY_UPDATE frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE
+frame with a field of any other value MUST be treated as a connection error of
+type PROTOCOL_ERROR.
 
 ~~~ drawing
 HTTP/2 PRIORITY_UPDATE Frame {
@@ -512,7 +513,7 @@ used for request streams, while PRIORITY_UPDATE with a frame type of 0xF0701 is
 used for push streams.
 
 The PRIORITY_UPDATE frame MUST be sent on the client control stream
-({{Section 6.2.1 of HTTP3}}). Receiving a PRIORITY_UPDATE frame on a
+(see {{Section 6.2.1 of HTTP3}}). Receiving a PRIORITY_UPDATE frame on a
 stream other than the client control stream MUST be treated as a connection
 error of type H3_FRAME_UNEXPECTED.
 
@@ -765,8 +766,8 @@ A server can determine if a request came from an intermediary through
 configuration, or by consulting if that request contains one of the following
 header fields:
 
-* Forwarded, X-Forwarded-For ({{?RFC7239}})
-* Via (Section 5.7.1 of {{?RFC7230}})
+* Forwarded {{?FORWARDED=RFC7239}}, X-Forwarded-For
+* Via (see {{Section 7.6.3 of HTTP}})
 
 ## HTTP/1.x Back Ends
 
