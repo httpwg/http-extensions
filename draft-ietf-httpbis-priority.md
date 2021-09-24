@@ -77,17 +77,26 @@ To provide meaningful presentation of a document at the earliest moment, it is
 important for an HTTP server to prioritize the HTTP responses, or the chunks of
 those HTTP responses, that it sends.
 
-HTTP/2 ({{!HTTP2=RFC7540}}) provides such a prioritization scheme. A client sends a
-series of PRIORITY frames to communicate to the server a "priority tree"; this
-represents the client's preferred ordering and weighted distribution of the
-bandwidth among the HTTP responses. However, the design and implementation of
-this scheme has been observed to have shortcomings, explained in {{motivation}}.
+RFC 7540 {{?RFC7540}} stream priority allowed a client to send a series of
+priority signals that communicate to the server a "priority tree"; the structure
+of this tree represents the client's preferred relative ordering and weighted
+distribution of the bandwidth among HTTP responses. Servers could use these
+priority signals as input into prioritization decision making.
 
-This document defines the Priority HTTP header field that can be used by both
-client and server to specify the precedence of HTTP responses in a standardized,
-extensible, protocol-version-independent, end-to-end format. Along with the
-protocol-version-specific frame for reprioritization, this prioritization scheme
-acts as a substitute for the original prioritization scheme of HTTP/2.
+The design and implementation of RFC 7540 stream priority was observed to have
+shortcomings, explained in {{motivation}}.
+({{!HTTP2=I-D.ietf-httpbis-http2bis}}) has consequently deprecated the use of
+these stream priority signals.
+
+This document describes an extensible scheme for prioritizing HTTP responses
+that uses absolute values. {{parameters}} defines priority parameters, which are
+a standardized and extensible format of priority information. {{header-field}}
+defines the Priority HTTP header field that can be used by both client and
+server to exchange parameters in order to specify the precedence of HTTP
+responses in a protocol-version-independent and end-to-end manner.
+{{h2-update-frame}} and {{h3-update-frame}} define version-specific frames that
+carry parameters for reprioritization. This prioritization scheme and its
+signals can act as a substitute for RFC 7540 stream priority.
 
 ## Notational Conventions
 
@@ -107,102 +116,109 @@ This document uses the variable-length integer encoding from
 The term control stream is used to describe the HTTP/2 stream with identifier
 0x0, and HTTP/3 control stream; see {{Section 6.2.1 of !HTTP3=I-D.ietf-quic-http}}.
 
+The term HTTP/2 priority signal is used to describe the priority information
+sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
 
-# Motivation for Replacing HTTP/2 Priorities {#motivation}
+
+# Motivation for Replacing RFC 7540 Priorities {#motivation}
 
 An important feature of any implementation of a protocol that provides
-multiplexing is the ability to prioritize the sending of information. This was
-an important realization in the design of HTTP/2. Prioritization is a
-difficult problem, so it will always be suboptimal, particularly if one endpoint
-operates in ignorance of the needs of its peer.
+multiplexing is the ability to prioritize the sending of information.
+Prioritization is a difficult problem, so it will always be suboptimal,
+particularly if one endpoint operates in ignorance of the needs of its peer.
+Priority signalling allows endpoints to communicate their own view of priority
+needs, which can be combined with other factors that are considered during the
+peer's prioritization decision making.
 
-HTTP/2 introduced a complex prioritization scheme that uses a combination of
-stream dependencies and weights to describe an unbalanced tree. This scheme has
-suffered from poor deployment and interoperability.
+RFC 7540 stream priority ({{Section 5.3 of ?RFC7540}}) is a complex system where
+clients signal stream dependencies and weights to describe an unbalanced tree.
+It suffered from poor deployment and interoperability and was deprecated in a
+revision of HTTP/2 ({{HTTP2}}). However, in order to maintain wire
+compatibility, HTTP/2 priority signals are still mandatory to handle (see
+{{Section 5.3.2 of HTTP2}}).
 
-Clients build an HTTP/2 prioritization tree through a series of individual
-stream relationships, which are transferred to the server using HTTP/2 priority
-signals in either of three forms. First, a HEADERS frame with the PRIORITY flag
-set is an explicit signal that includes an Exclusive flag, Stream Dependency
-field, and Weight field. Second, a HEADERS frame with no PRIORITY flag is an
-implicit signal to use the default priority. Third, the PRIORITY frame, which is
-always explicit since it always contains an Exclusive flag, Stream Dependency
-field, and Weight field.
+Clients can build RFC 7540 trees with rich flexibility but experience has shown
+this is rarely exercised. Instead they tend to choose a single model optimized
+for a single use case and experiment within the model constraints, or do nothing
+at all. Furthermore, many clients build their prioritization tree in a unique
+way, which makes it difficult for servers to understand their intent and act or
+intervene accordingly.
 
-The rich flexibility of tree building is rarely exercised. Experience has shown
-that clients tend to choose a single model optimized for a web use case and
-experiment within the model constraints, or do nothing at all. Furthermore, many
-clients build their prioritization tree in a unique way, which makes it
-difficult for servers to understand their intent and act or intervene
-accordingly.
+Many RFC 7540 server implementations do not act on HTTP/2 priority signals. Some
+instead favor custom server-driven schemes based on heuristics or other hints,
+such as resource content type or request generation order. For example, a
+server, with knowledge of the document structure, might want to prioritize the
+delivery of images that are critical to user experience above other images, but
+below the CSS files. Since client trees vary, it is impossible for the server to
+determine how such images should be prioritized against other responses.
 
-Many HTTP/2 server implementations do not include support for the priority
-scheme. Some instead favor custom server-driven schemes based on heuristics or
-other hints, such as resource content type or request generation
-order. For example, a server, with knowledge of the document structure, might
-want to prioritize the delivery of images that are critical to user experience
-above other images, but below the CSS files. Since client trees vary, it is
-impossible for the server to determine how such images should be prioritized
-against other responses.
+RFC 7540 allows intermediaries to coalesce multiple client trees into a single
+tree that is used for a single upstream HTTP/2 connection. However, most
+intermediaries do not support this. Additionally, RFC 7540 does not define a
+method that can be used by a server to express the priority of a response.
+Without such a method, intermediaries cannot coordinate client-driven and
+server-driven priorities.
 
-The HTTP/2 scheme allows intermediaries to coalesce multiple client trees into a
-single tree that is used for a single upstream HTTP/2 connection. However, most
-intermediaries do not support this. The scheme does not define a method that can
-be used by a server to express the priority of a response. Without such a
-method, intermediaries cannot coordinate client-driven and server-driven
-priorities.
-
-HTTP/2 describes denial-of-service considerations for implementations. On
+RFC 7540 describes denial-of-service considerations for implementations. On
 2019-08-13 Netflix issued an advisory notice about the discovery of several
-resource exhaustion vectors affecting multiple HTTP/2 implementations. One
-attack, [CVE-2019-9513] aka "Resource Loop", is based on manipulation of the
-priority tree.
+resource exhaustion vectors affecting multiple RFC 7540 implementations. One
+attack, [CVE-2019-9513] aka "Resource Loop", is based on using priority signals
+to manipulate the server's stored prioritization state.
 
-The HTTP/2 scheme depends on in-order delivery of signals, leading to challenges
-in porting the scheme to protocols that do not provide global ordering. For
-example, the scheme cannot be used in HTTP/3 {{HTTP3}} without
-changing the signal and its processing.
+HTTP/2 priority signals are required to be delivered and processed in the order
+they are sent so that the receiver handling is deterministic. Porting HTTP/2
+priority signals to protocols that do not provide ordering guarantees presents
+challenges. For example, HTTP/3 {{HTTP3}} lacks global ordering across streams
+that would carry priority signals. Early attempts to port HTTP/2 priority
+signals to HTTP/3 required adding additional information to the signals, leading
+to more complicated processing. Problems found with this approach could not be
+resolved and definition of a HTTP/3 priority signalling feature was removed
+before publication.
 
-Considering the problems with deployment and adaptability to HTTP/3, retaining
-the HTTP/2 priority scheme increases the complexity of the entire system without
-any evidence that the value it provides offsets that complexity. In fact,
-multiple experiments from independent research have shown that simpler schemes
-can reach at least equivalent performance characteristics compared to the more
-complex HTTP/2 setups seen in practice, at least for the web use case.
+Considering the problems with the deployment of RFC 7540 stream priority, and
+the difficulties in adapting it to HTTP/3, continuing to base prioritization on
+this mechanism risks increasing the complexity of systems. Multiple experiments
+from independent research have shown that simpler schemes can reach at least
+equivalent performance characteristics compared to the more complex RFC 7540
+setups seen in practice, at least for the web use case.
 
-## Disabling HTTP/2 Priorities {#disabling}
+## Disabling RFC 7540 Priorities {#disabling}
 
-The problems and insights set out above are motivation for allowing endpoints to
-opt out of using the HTTP/2 priority scheme, in favor of using an alternative
-such as the scheme defined in this specification. The
-SETTINGS_DEPRECATE_HTTP2_PRIORITIES setting described below enables endpoints to
-understand their peer's intention. The value of the parameter MUST
-be 0 or 1. Any value other than 0 or 1 MUST be treated as a connection error
-(see {{Section 5.4.1 of HTTP2}}) of type PROTOCOL_ERROR.
+The problems and insights set out above provided the motivation for deprecating
+RFC 7540 stream priority (see {{Section 5.3 of RFC7540}}).
+
+The SETTINGS_DEPRECATE_RFC7540_PRIORITIES setting is defined by this document in
+order to allow endpoints to explicitly opt out of using HTTP/2 priority signals
+(see {{Section 5.3.2 of HTTP2}}). Endpoints are expected to use an alternative,
+such as the scheme defined in this specification.
+
+The value of SETTINGS_DEPRECATE_RFC7540_PRIORITIES MUST be 0 or 1. Any value
+other than 0 or 1 MUST be treated as a connection error (see {{Section 5.4.1 of
+HTTP2}}) of type PROTOCOL_ERROR.
 
 Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
-A sender MUST NOT change the SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter value
+A sender MUST NOT change the SETTINGS_DEPRECATE_RFC7540_PRIORITIES parameter value
 after the first SETTINGS frame. Detection of a change by a receiver MUST be
 treated as a connection error of type PROTOCOL_ERROR.
 
 Until the client receives the SETTINGS frame from the server, the client SHOULD
-send the signals of the HTTP/2 priority scheme  (see {{motivation}}) and the
-signals of this prioritization scheme (see {{header-field}} and
-{{h2-update-frame}}). When the client receives the first SETTINGS frame that
-contains the SETTINGS_DEPRECATE_HTTP2_PRIORITIES parameter with value of 1, it
-SHOULD stop sending the HTTP/2 priority signals. If the value was 0 or if the
-settings parameter was absent, it SHOULD stop sending PRIORITY_UPDATE frames
-({{h2-update-frame}}), but MAY continue sending the Priority header field
-({{header-field}}), as it is an end-to-end signal that might be useful to nodes
-behind the server that the client is directly connected to.
+send both the HTTP/2 priority signals and the signals of this prioritization
+scheme (see {{header-field}} and {{h2-update-frame}}). When the client receives
+the first SETTINGS frame that contains the SETTINGS_DEPRECATE_RFC7540_PRIORITIES
+parameter with value of 1, it SHOULD stop sending the HTTP/2 priority signals.
+If the value was 0 or if the settings parameter was absent, it SHOULD stop
+sending PRIORITY_UPDATE frames ({{h2-update-frame}}), but MAY continue sending
+the Priority header field ({{header-field}}), as it is an end-to-end signal that
+might be useful to nodes behind the server that the client is directly connected
+to.
 
-The SETTINGS frame precedes any priority signal sent from a client in HTTP/2, so
-a server can determine if it should respect the HTTP/2 scheme before building
-state. A server that receives SETTINGS_DEPRECATE_HTTP2_PRIORITIES with value of
-1 MUST ignore HTTP/2 priority signals.
+The SETTINGS frame precedes any HTTP/2 priority signal sent from a client, so a
+server can determine if it needs to allocate any resource to signal handling
+before they arrive. A server that receives SETTINGS_DEPRECATE_RFC7540_PRIORITIES
+with value of 1 MUST ignore HTTP/2 priority signals.
 
-Where both endpoints disable HTTP/2 priorities, the client is expected to send
-this scheme's priority signal. Handling of omitted signals is described in
+Where both endpoints disable RFC 7540 stream priority, the client is expected to
+send this scheme's priority signal. Handling of omitted signals is described in
 {{parameters}}.
 
 # Applicability of the Extensible Priority Scheme
@@ -424,24 +440,32 @@ initial priority of a response, or to reprioritize a response or push stream. It
 carries the stream ID of the response and the priority in ASCII text, using the
 same representation as the Priority header field value.
 
-The Stream Identifier field ({{Section 4.1 of HTTP2}}) in the PRIORITY_UPDATE
+The Stream Identifier field ({{Section 5.1.1 of HTTP2}}) in the PRIORITY_UPDATE
 frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE frame with a field
 of any other value MUST be treated as a connection error of type PROTOCOL_ERROR.
 
 ~~~ drawing
-  0                   1                   2                   3
-  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- +---------------------------------------------------------------+
- |R|                Prioritized Stream ID (31)                   |
- +---------------------------------------------------------------+
- |                   Priority Field Value (*)                  ...
- +---------------------------------------------------------------+
+HTTP/2 PRIORITY_UPDATE Frame {
+  Length (24),
+  Type (i) = 10,
+
+  Unused Flags (8).
+
+  Reserved (1),
+  Stream Identifier (31),
+
+  Reserved (1),
+  Prioritized Stream ID (31),
+  Priority Field Value (..),
+}
 ~~~
 {: #fig-h2-reprioritization-frame title="HTTP/2 PRIORITY_UPDATE Frame Payload"}
 
-The PRIORITY_UPDATE frame payload has the following fields:
+The Length, Type, Unused Flag(s), Reserved, and Stream Identifier fields are
+described in {{Section 4 of HTTP2}}. The frame payload of PRIORITY_UPDATE
+frame payload contains the following additional fields:
 
-R:
+Reserved:
 : A reserved 1-bit field. The semantics of this bit are undefined, and the bit
   MUST remain unset (0x0) when sending and MUST be ignored when receiving.
 
@@ -458,7 +482,7 @@ provide a Prioritized Stream ID that refers to a stream in the "open",
 Prioritized Stream ID refers to a stream in the "half-closed (local)" or
 "closed" state. The number of streams which have been prioritized but remain in
 the "idle" state plus the number of active streams (those in the "open" or
-either "half-closed" state; see section 5.1.2 of {{HTTP2}}) MUST NOT exceed
+either "half-closed" state; see {{Section 5.1.2 of HTTP2}}) MUST NOT exceed
 the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. Servers that receive
 such a PRIORITY_UPDATE MUST respond with a connection error of type
 PROTOCOL_ERROR.
@@ -795,14 +819,14 @@ makes the prioritization scheme extensible; see the discussion below.
 # Security Considerations
 
 [CVE-2019-9513] aka "Resource Loop", is a DoS attack based on manipulation of
-the HTTP/2 priority tree. Extensible priorities does not use stream
+the RFC 7540 priority tree. Extensible priorities does not use stream
 dependencies, which mitigates this vulnerability.
 
-{{Section 5.3.4 of HTTP2}} describes a scenario where closure of streams in the
-priority tree could cause suboptimal prioritization. To avoid this, {{HTTP2}}
+{{Section 5.3.4 of ?RFC7540}} describes a scenario where closure of streams in the
+priority tree could cause suboptimal prioritization. To avoid this, {{?RFC7540}}
 states that "an endpoint SHOULD retain stream prioritization state for a period
 after streams become closed". Retaining state for streams no longer counted
-towards stream concurrency consumes server resources. Furthermore, {{HTTP2}}
+towards stream concurrency consumes server resources. Furthermore, {{?RFC7540}}
 identifies that reprioritization of a closed stream could affect dependents; it
 recommends updating the priority tree if sufficient state is stored, which will
 also consume server resources. To limit this commitment, it is stated that "The
@@ -812,7 +836,7 @@ allowed by their setting for SETTINGS_MAX_CONCURRENT_STREAMS.". Extensible
 priorities does not use stream dependencies, which minimizes most of the
 resource concerns related to this scenario.
 
-{{Section 5.3.4 of HTTP2}} also presents considerations about the state required
+{{Section 5.3.4 of ?RFC7540}} also presents considerations about the state required
 to store priority information about streams in an "idle" state. This state can
 be limited by adopting the guidance about concurrency limits described above.
 Extensible priorities is subject to a similar consideration because
@@ -850,7 +874,7 @@ This specification registers the following entry in the HTTP/2 Settings registry
 established by {{HTTP2}}:
 
 Name:
-: SETTINGS_DEPRECATE_HTTP2_PRIORITIES
+: SETTINGS_DEPRECATE_RFC7540_PRIORITIES
 
 Code:
 : 0x9
