@@ -126,13 +126,12 @@ An important feature of any implementation of a protocol that provides
 multiplexing is the ability to prioritize the sending of information.
 Prioritization is a difficult problem, so it will always be suboptimal,
 particularly if one endpoint operates in ignorance of the needs of its peer.
-Priority signalling allows endpoints to communicate their own view of priority
-needs, which can be combined with other factors that are considered during the
-peer's prioritization decision making.
+Priority signalling allows endpoints to communicate their own view of priority,
+which can be combined with information the peer has to inform scheduling.
 
 RFC 7540 stream priority (see {{Section 5.3 of ?RFC7540}}) is a complex system
 where clients signal stream dependencies and weights to describe an unbalanced
-tree. It suffered from poor deployment and interoperability and was deprecated
+tree. It suffered from limited deployment and interoperability and was deprecated
 in a revision of HTTP/2 {{HTTP2}}. However, in order to maintain wire
 compatibility, HTTP/2 priority signals are still mandatory to handle (see
 {{Section 5.3.2 of HTTP2}}).
@@ -174,6 +173,10 @@ signals to HTTP/3 required adding additional information to the signals, leading
 to more complicated processing. Problems found with this approach could not be
 resolved and definition of a HTTP/3 priority signalling feature was removed
 before publication.
+
+RFC 7540 priorities were specific to a HTTP/2 connection and could not be
+conveyed with prior versions of HTTP.  That, along with the complexity, meant
+intermediaries could not convey the priority information to backends.
 
 Considering the problems with the deployment of RFC 7540 stream priority, and
 the difficulties in adapting it to HTTP/3, continuing to base prioritization on
