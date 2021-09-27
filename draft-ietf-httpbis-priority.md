@@ -174,9 +174,11 @@ to more complicated processing. Problems found with this approach could not be
 resolved and definition of a HTTP/3 priority signalling feature was removed
 before publication.
 
-RFC 7540 priorities were specific to a HTTP/2 connection and could not be
-conveyed with prior versions of HTTP.  That, along with the complexity, meant
-intermediaries could not convey the priority information to backends.
+Intermediaries can convert HTTP/2 to other versions of HTTP. HTTP/2 priority
+signals are specific to a connection and there is no standard definition for
+converting them to a format suitable for other versions. Therefore, a
+motivating factor for replacing RFC 7540 stream priority is to choose a
+signalling mechanism that is more accomodating of intermediaries.
 
 Considering the problems with the deployment of RFC 7540 stream priority, and
 the difficulties in adapting it to HTTP/3, continuing to base prioritization on
