@@ -44,6 +44,8 @@ normative:
   RFC7301:
   HTTP2:
     I-D.ietf-httpbis-http2
+  HTTP3:
+    I-D.ietf-quic-http
 
 informative:
 
@@ -88,7 +90,7 @@ For example:
   location that is more local to the client.
 
 - An origin server might wish to offer access to its resources using
-  a new protocol, such as HTTP/2 {{HTTP2}}, or one using improved
+  a new protocol, such as HTTP/3 {{HTTP3}}, or one using improved
   security, such as Transport Layer Security (TLS) {{?RFC8446}}.
 
 - An origin server might wish to segment its clients into groups of
@@ -110,7 +112,7 @@ in cases where the wrong location is used.
 
 ## Changes from RFC 7838
 
-No substantive changes.
+* Added an ALTSVC frame for HTTP/3.
 
 ## Notational Conventions
 
@@ -197,7 +199,7 @@ consoles, etc.
 
 Formally, an alternative service is identified by the combination of:
 
-- An Application Layer Protocol Negotiation (ALPN) protocol name, as
+- An Application-Layer Protocol Negotiation (ALPN) protocol name, as
   per {{RFC7301}}
 
 - A host, as per {{Section 3.2.2 of RFC3986}}
@@ -217,8 +219,8 @@ lifetime, expressed in seconds (see {{caching}}).
 
 There are many ways that a client could discover the alternative service(s)
 associated with an origin.  This document describes two such mechanisms: the
-"Alt-Svc" HTTP header field ({{alt-svc-field}}) and the "ALTSVC" HTTP/2 frame
-type ({{ALTSVC-frame}}).
+"Alt-Svc" HTTP header field ({{alt-svc-field}}) and the "ALTSVC" frame
+type for HTTP/2 and HTTP/3 ({{ALTSVC-frame}}).
 
 The remainder of this section describes requirements that are common
 to alternative services, regardless of how they are discovered.
@@ -510,26 +512,26 @@ Clients MUST ignore "persist" parameters with values other than "1".
 See {{caching}} for general requirements on caching alternative
 services.
 
-# The ALTSVC HTTP/2 Frame {#ALTSVC-frame}
+# The ALTSVC Extension Frame {#ALTSVC-frame}
 
-The ALTSVC HTTP/2 frame ({{Section 4 of HTTP2}}) advertises the
-availability of an alternative service to an HTTP/2 client.
+The ALTSVC frame advertises the availability of an alternative service to an
+HTTP/2 or HTTP/3 client.
 
-The ALTSVC frame is a non-critical extension to HTTP/2.  Endpoints
-that do not support this frame will ignore it (as per the
-extensibility rules defined in {{Section 4.1 of HTTP2}}).
+The ALTSVC frame is a separate non-critical extension in each protocol.  Endpoints that
+do not support this frame will ignore it (as per the extensibility rules defined
+in {{Section 4.1 of HTTP2}} and {{Section 4.1 of HTTP3}}).
 
-An ALTSVC frame from a server to a client on a stream other than
-stream 0 indicates that the conveyed alternative service is
-associated with the origin of that stream.
+An ALTSVC frame from a server to a client on a request stream or a push stream
+indicates that the conveyed alternative service is associated with the origin of
+that stream.
 
-An ALTSVC frame from a server to a client on stream 0 indicates that
-the conveyed alternative service is associated with the origin
-contained in the Origin field of the frame.  An association with an
-origin that the client does not consider authoritative for the
-current connection MUST be ignored.
+An ALTSVC frame from a server to a client on the control stream (stream 0 in
+HTTP/2 or a stream of type 0 in HTTP/3) indicates that the conveyed alternative service is associated with the
+origin contained in the Origin field of the frame.  An association with an
+origin that the client does not consider authoritative for the current
+connection MUST be ignored.
 
-The ALTSVC frame type is 0xa (decimal 10).
+The ALTSVC frame type is 0xa (decimal 10) in both protocols.
 
 ~~~
 +-------------------------------+-------------------------------+
@@ -560,14 +562,14 @@ Alt-Svc-Field-Value:
   length) containing a value identical to the Alt-Svc field value
   defined in {{alt-svc-field}} (ABNF production "Alt-Svc").
 
-The ALTSVC frame does not define any flags.
+The ALTSVC frame does not define any flags in HTTP/2; there is no generic flag field for HTTP/3 frames.
 
 The ALTSVC frame is intended for receipt by clients.  A device acting
 as a server MUST ignore it.
 
-An ALTSVC frame on stream 0 with empty (length 0) "Origin"
+An ALTSVC frame on the control stream with empty (length 0) "Origin"
 information is invalid and MUST be ignored.  An ALTSVC frame on a
-stream other than stream 0 containing non-empty "Origin" information
+request or push stream containing non-empty "Origin" information
 is invalid and MUST be ignored.
 
 The ALTSVC frame is processed hop-by-hop.  An intermediary MUST NOT
@@ -613,7 +615,7 @@ Alt-Used: alternate.example.net
 # The 421 (Misdirected Request) HTTP Status Code {#status-code}
 
 The 421 (Misdirected Request) status code is defined in {{Section 15.5.20
-of HTTP2}} to indicate that the current server instance is not
+of HTTP}} to indicate that the current server instance is not
 authoritative for the requested resource.  This can be used to
 indicate that an alternative service is not authoritative; see
 {{concepts}}).
@@ -657,6 +659,23 @@ Frame Type:
 : ALTSVC
 
 Code:
+
+: 0xa
+
+Specification:
+
+: {{ALTSVC-frame}} of this document
+
+## The ALTSVC HTTP/3 Frame Type
+
+This document registers the ALTSVC frame type in the "HTTP/3 Frame
+Type" registry ({{Section 11.2.1 of HTTP3}}).
+
+Frame Type:
+
+: ALTSVC
+
+Value:
 
 : 0xa
 

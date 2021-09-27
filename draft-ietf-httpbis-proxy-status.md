@@ -95,15 +95,45 @@ indicates that this response was handled first by revproxy1.example.net (a rever
 
 Intermediaries determine when it is appropriate to add the Proxy-Status field to a response. Some might decide to append to it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header field that activates a debugging mode.
 
-Each member of the list identifies the intermediary that inserted the value, and MUST have a type of either sf-string or sf-token. Depending on the deployment, this might be a service name (e.g., "Example CDN"), a hostname ("proxy-3.example.com"), an IP address, or a generated string.
+Each member of the list identifies the intermediary that inserted the value, and MUST have a type of either sf-string or sf-token. Depending on the deployment, this might be a service name (but not a software or hardware product name; e.g., "Example CDN"is appropriate, but "ExampleProxy" is not, because it doesn't identify the deployment), a hostname ("proxy-3.example.com"), an IP address, or a generated string.
 
 Parameters on each member (as per {{Section 3.1.2 of STRUCTURED-FIELDS}}) convey additional information about that intermediary's handling of the response and its associated request; see {{params}}. While all of these parameters are OPTIONAL, intermediaries are encouraged to provide as much information as possible (but see {{security}} for security considerations in doing so).
 
 When adding a value to the Proxy-Status field, intermediaries SHOULD preserve the existing members of the field to allow debugging of the entire chain of intermediaries handling the request, unless explicitly configured to remove them (e.g., to prevent internal network details from leaking; see {{security}}).
 
-Proxy-Status MAY be sent in HTTP trailers. For example, if an intermediary is streaming a response and the inbound connection suddenly terminates, Proxy-Status can only be appended to the trailers of the outbound message, since the headers have already been sent. As with all trailers, it might be silently discarded along the path to the user agent, so this SHOULD NOT be done unless it is not possible to send it in headers, and an intermediary MUST NOT send Proxy-Status as a trailer field unless it has also sent a corresponding Proxy-Status header field in the same message, so that the trailer value's ordering relative to other intermediaries is preserved.
-
 Origin servers MUST NOT generate the Proxy-Status field.
+
+Proxy-Status MAY be sent as a HTTP trailer field. For example, if an intermediary is streaming a response and the inbound connection suddenly terminates, Proxy-Status can only be appended to the trailer section of the outbound message, since the header section has already been sent. However, because it might be silently discarded along the path to the user agent (as is the case for all trailer fields; see {{Section 6.5 of HTTP}}), Proxy-Status SHOULD NOT be sent as a trailer field unless it is not possible to send it in the header section.
+
+To allow recipients to reconstruct the relative ordering of Proxy-Status members conveyed in trailer fields with those conveyed in header fields, an intermediary MUST NOT send Proxy-Status as a trailer field unless it has also generated a Proxy-Status header field with the same member (although potentially different parameters) in that message.
+
+For example, a proxy identified as 'ThisProxy' that receives a response bearing a header field:
+
+~~~ http-message
+Proxy-Status: SomeOtherProxy
+~~~
+
+would add its own entry to the header field:
+
+~~~ http-message
+Proxy-Status: SomeOtherProxy, ThisProxy
+~~~
+
+thus allowing it to append a trailer field:
+
+~~~ http-message
+Proxy-Status: ThisProxy; error=read_timeout
+~~~
+
+... which would thereby allow a downstream recipient to understand that processing by 'SomeOtherProxy' occurred before 'ThisProxy'.
+
+A client MAY promote the Proxy-Status trailer field into a header field by following these steps:
+
+1. For each member trailer_member of the Proxy-Status trailer field value:
+   1. Let header_member be the first (left-most) value of the Proxy-Status header field value, comparing the sf-token or sf-string character-by-character and without consideration of parameters.
+   2. If no matching header_member is found, continue processing the next trailer_member.
+   3. Replace header_member with trailer_member in its entirety, including any parameters.
+2. Remove the Proxy-Status trailer field, if empty.
 
 
 ## Proxy-Status Parameters {#params}
@@ -565,6 +595,13 @@ See the registry at <https://iana.org/assignments/http-proxy-status> for details
 # IANA Considerations
 
 Upon publication, please create the HTTP Proxy-Status Parameters registry and the HTTP Proxy Error Types registry at <https://iana.org/assignments/http-proxy-status> and populate them with the types defined in {{params}} and {{error-types}} respectively; see {{register-param}} and {{register-error}} for its associated procedures.
+
+Additionally, please register the following entry in the Hypertext Transfer Protocol (HTTP) Field Name Registry:
+
+* Field name: Proxy-Status
+* Status: permanent
+* Specification document(s): \[this document\]
+* Comments:
 
 
 # Security Considerations {#security}

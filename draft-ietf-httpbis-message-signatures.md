@@ -1037,7 +1037,7 @@ Multiple `Signature` fields MAY be included in a single HTTP message. The signat
 
 Multiple distinct signatures MAY be included in a single message. Since `Signature-Input` and `Signature` are both defined as Dictionary Structured fields, they can be used to include multiple signatures within the same HTTP message by using distinct signature labels. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
 
-The following is a non-normative example of header fields a reverse proxy sets in addition to the examples in the previous sections. 
+The following is a non-normative example of header fields a reverse proxy sets in addition to the examples in the previous sections.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1763,7 +1763,7 @@ Jeffrey Yasskin.
 
 - draft-ietf-httpbis-message-signatures
   - -07
-     * 
+     * No substantive changes.
 
   - -06
      * Updated language for message components, including identifiers and values.

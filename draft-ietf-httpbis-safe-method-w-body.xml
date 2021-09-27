@@ -412,9 +412,9 @@ Dubois, Camille, camille.dubois@example.net
         <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
         <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
         <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2021" month="Aug" day="18"/>
+        <date year="2021" month="September" day="10"/>
       </front>
-      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-18"/>
+      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-19"/>
     </reference>
     <reference anchor='XML'
                target='https://www.w3.org/TR/2008/REC-xml-20081126/'>
@@ -467,7 +467,9 @@ Dubois, Camille, camille.dubois@example.net
 </ul>
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-01" anchor="changes.since.01">
-<t>None yet.</t>
+<ul>
+  <li>Update HTTP reference (<eref target="https://github.com/httpwg/http-extensions/issues/1669"/>)</li>
+</ul>
 </section>
 </section>
 

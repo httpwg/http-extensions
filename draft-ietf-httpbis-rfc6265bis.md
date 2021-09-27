@@ -660,11 +660,6 @@ attribute, the user agent will include the cookie in an HTTP request only if
 the request is transmitted over a secure channel (typically HTTP over Transport
 Layer Security (TLS) {{RFC2818}}).
 
-Although seemingly useful for protecting cookies from active network attackers,
-the Secure attribute protects only the cookie's confidentiality. An active
-network attacker can overwrite Secure cookies from an insecure channel,
-disrupting their integrity (see {{weak-integrity}} for more details).
-
 #### The HttpOnly Attribute {#attribute-httponly}
 
 The HttpOnly attribute limits the scope of the cookie to HTTP requests. In
@@ -720,7 +715,8 @@ user agent, as it does not have a `Secure` attribute.
 Set-Cookie: __Secure-SID=12345; Domain=site.example
 ~~~
 
-Whereas the following `Set-Cookie` header field would be accepted:
+Whereas the following `Set-Cookie` header field would be accepted if set from a secure origin
+(e.g. "https://site.example/"), and rejected otherwise:
 
 ~~~ example
 Set-Cookie: __Secure-SID=12345; Domain=site.example; Secure
@@ -1447,7 +1443,10 @@ user agent MUST process the cookie as follows:
     1.  Let the domain-attribute be the attribute-value of the last
         attribute in the cookie-attribute-list with both an
         attribute-name of "Domain" and an attribute-value whose
-        length is no more than 1024 octets.
+        length is no more than 1024 octets. (Note that a leading %x2E
+        ("."), if present, is ignored even though that character is not
+        permitted, but a trailing %x2E ("."), if present, will cause
+        the user agent to ignore the attribute.)
 
     Otherwise:
 
@@ -1831,7 +1830,9 @@ might block third-party cookies entirely by refusing to send Cookie header field
 process Set-Cookie header fields during third-party requests. They might take a less
 draconian approach by partitioning cookies based on the first-party context,
 sending one set of cookies to a given third party in one first-party context,
-and another to the same third party in another.
+and another to the same third party in another. Or they might even allow some
+third-party cookies but block others depending on user-agent cookie policy or
+user controls.
 
 This document grants user agents wide latitude to experiment with third-party
 cookie policies that balance the privacy and compatibility needs of their users.
@@ -2047,10 +2048,10 @@ to leverage this ability to mount an attack against site.example even if
 site.example uses HTTPS exclusively.
 
 Servers can partially mitigate these attacks by encrypting and signing the
-contents of their cookies. However, using cryptography does not mitigate the
-issue completely because an attacker can replay a cookie he or she received from
-the authentic site.example server in the user's session, with unpredictable
-results.
+contents of their cookies, or by naming the cookie with the `__Secure-` prefix.
+However, using cryptography does not mitigate the issue completely because an
+attacker can replay a cookie he or she received from the authentic site.example
+server in the user's session, with unpredictable results.
 
 Finally, an attacker might be able to force the user agent to delete cookies by
 storing a large number of cookies. Once the user agent reaches its storage
