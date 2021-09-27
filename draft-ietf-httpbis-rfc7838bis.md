@@ -91,7 +91,7 @@ For example:
 
 - An origin server might wish to offer access to its resources using
   a new protocol, such as HTTP/3 {{HTTP3}}, or one using improved
-  security, such as Transport Layer Security (TLS) {{?RFC5246}}.
+  security, such as Transport Layer Security (TLS) {{?RFC8446}}.
 
 - An origin server might wish to segment its clients into groups of
   capabilities, such as those supporting Server Name Indication
@@ -188,7 +188,7 @@ information derived from it (scheme, host, and port) are the same as
 before.
 
 Importantly, this includes its security context; in particular, when TLS
-{{?RFC5246}} is used to authenticate, the alternative service will need to
+{{?RFC8446}} is used to authenticate, the alternative service will need to
 present a certificate for the origin's host name, not that of the alternative.
 Likewise, the Host header field ({{Section 7.2 of HTTP}}) is still derived
 from the origin, not the alternative service (just as it would if a CNAME were
