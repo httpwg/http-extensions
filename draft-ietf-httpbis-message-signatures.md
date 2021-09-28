@@ -147,12 +147,16 @@ Additionally, all changes to components not covered by the signature are conside
 
 {::boilerplate bcp14}
 
-The terms "HTTP message", "HTTP request", "HTTP response",
-`absolute-form`, `absolute-path`, "effective request URI",
-"gateway", "header field", "intermediary", `request-target`,
-"sender", and "recipient" are used as defined in {{MESSAGING}}.
+The rule `absolute-path`
+is defined in Section 4.1 of {{SEMANTICS}}.
 
-The term "method" is to be interpreted as defined in Section 4 of {{SEMANTICS}}.
+The terms
+"HTTP message", "HTTP request", "HTTP response,
+"sender", "recipient", "absolute form",
+"intermediary", "gateway"
+"field", "header field",
+"target URI", "recomposted target URI",
+and "method" are to be interpreted as defined in {{SEMANTICS}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs.  Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string.  The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
