@@ -57,7 +57,7 @@ describes the required updates for HTTP/2 settings to be used with HTTP/3.
 {{!RFC6455}} over a single stream of an HTTP/2 connection. It defines
 an Extended CONNECT method which specifies a new ":protocol" pseudo
 header field and new semantics for the ":path" and ":authority" pseudo
-header fields. It also defines a new HTTP/2 SETTING sent by a server to
+header fields. It also defines a new HTTP/2 setting sent by a server to
 allow the client to use  Extended CONNECT.
 
 The HTTP/3 stream closure is also analogous to the TCP connection
@@ -66,7 +66,7 @@ a FIN bit on the stream ({{Section 4.2 of HTTP3}}). RST exceptions are
 represented with an stream error ({{Section 8 of HTTP3}}) of type
 H3_REQUEST_CANCELLED ({{Section 8.1 of HTTP3}})
 
-The semantics of the headers and SETTING are identical to those
+The semantics of the headers and setting are identical to those
 in HTTP/2 as defined {{!RFC8441}}. {{Appendix A.3 of HTTP3}} requires that
 HTTP/3 settings be registered separately for HTTP/3. The
 SETTINGS_ENABLE_CONNECT_PROTOCOL value is 0x08 (decimal 8), as in HTTP/2.
