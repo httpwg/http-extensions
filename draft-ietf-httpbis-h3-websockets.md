@@ -27,8 +27,9 @@ informative:
 --- abstract
 
 The mechanism for running the WebSocket Protocol over a single stream
-of an HTTP/2 connection is equally applicable to HTTP/3, but needs to be
-separately registered.  This document describes the mechanism for HTTP/3.
+of an HTTP/2 connection is equally applicable to HTTP/3, but the HTTP
+version-specific details need to be specified. This document describes
+how the mechanism is adapted for HTTP/3.
 
 --- note_Note_to_Readers
 
