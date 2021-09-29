@@ -64,7 +64,7 @@ The HTTP/3 stream closure is also analogous to the TCP connection
 closure of {{!RFC6455}}. Orderly TCP-level closures are represented as
 a FIN bit on the stream ({{Section 4.2 of HTTP3}}). RST exceptions are
 represented with an stream error ({{Section 8 of HTTP3}}) of type
-H3_REQUEST_CANCELLED ({{Section 8.1 of HTTP3}})
+H3_REQUEST_CANCELLED ({{Section 8.1 of HTTP3}}).
 
 The semantics of the headers and SETTING are identical to those
 in HTTP/2 as defined {{!RFC8441}}. {{Appendix A.3 of HTTP3}} requires that
