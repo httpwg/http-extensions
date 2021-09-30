@@ -126,13 +126,12 @@ An important feature of any implementation of a protocol that provides
 multiplexing is the ability to prioritize the sending of information.
 Prioritization is a difficult problem, so it will always be suboptimal,
 particularly if one endpoint operates in ignorance of the needs of its peer.
-Priority signalling allows endpoints to communicate their own view of priority
-needs, which can be combined with other factors that are considered during the
-peer's prioritization decision making.
+Priority signalling allows endpoints to communicate their own view of priority,
+which can be combined with information the peer has to inform scheduling.
 
 RFC 7540 stream priority (see {{Section 5.3 of ?RFC7540}}) is a complex system
 where clients signal stream dependencies and weights to describe an unbalanced
-tree. It suffered from poor deployment and interoperability and was deprecated
+tree. It suffered from limited deployment and interoperability and was deprecated
 in a revision of HTTP/2 {{HTTP2}}. However, in order to maintain wire
 compatibility, HTTP/2 priority signals are still mandatory to handle (see
 {{Section 5.3.2 of HTTP2}}).
@@ -165,6 +164,13 @@ resource exhaustion vectors affecting multiple RFC 7540 implementations. One
 attack, [CVE-2019-9513] aka "Resource Loop", is based on using priority signals
 to manipulate the server's stored prioritization state.
 
+HTTP/2 priority associated with an HTTP request is signalled as a value relative
+to those of other requests sharing the same HTTP/2 connection. Therefore, in
+order to prioritize requests, endpoints are compelled to have the knowledge of
+the underlying HTTP version and how the requests are coalesced. This has been
+a burden to HTTP endpoints that generate or forward requests in a
+version-agnostic manner.
+
 HTTP/2 priority signals are required to be delivered and processed in the order
 they are sent so that the receiver handling is deterministic. Porting HTTP/2
 priority signals to protocols that do not provide ordering guarantees presents
@@ -175,12 +181,13 @@ to more complicated processing. Problems found with this approach could not be
 resolved and definition of a HTTP/3 priority signalling feature was removed
 before publication.
 
-Considering the problems with the deployment of RFC 7540 stream priority, and
-the difficulties in adapting it to HTTP/3, continuing to base prioritization on
-this mechanism risks increasing the complexity of systems. Multiple experiments
-from independent research have shown that simpler schemes can reach at least
-equivalent performance characteristics compared to the more complex RFC 7540
-setups seen in practice, at least for the web use case.
+Considering the deployment problems and the design restrictions of RFC 7540
+stream priority, as well as the difficulties in adapting it to HTTP/3,
+continuing to base prioritization on this mechanism risks increasing the
+complexity of systems. Multiple experiments from independent research have shown
+that simpler schemes can reach at least equivalent performance characteristics
+compared to the more complex RFC 7540 setups seen in practice, at least for the
+web use case.
 
 ## Disabling RFC 7540 Priorities {#disabling}
 
