@@ -164,7 +164,7 @@ resource exhaustion vectors affecting multiple RFC 7540 implementations. One
 attack, [CVE-2019-9513] aka "Resource Loop", is based on using priority signals
 to manipulate the server's stored prioritization state.
 
-HTTP/2 priority associated to an HTTP request is signalled as a value relative
+HTTP/2 priority associated with an HTTP request is signalled as a value relative
 to those of other requests sharing the same HTTP/2 connection. Therefore, in
 order to prioritize requests, endpoints are compelled to have the knowledge of
 the underlying HTTP version and how the requests are coalesced. This has been
