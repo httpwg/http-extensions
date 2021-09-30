@@ -921,7 +921,7 @@ Roy Fielding presented the idea of using a header field for representing
 priorities in <http://tools.ietf.org/agenda/83/slides/slides-83-httpbis-5.pdf>.
 In <https://github.com/pmeenan/http3-prioritization-proposal>, Patrick Meenan
 advocates for representing the priorities using a tuple of urgency and
-concurrency. The ability to deprecate HTTP/2 prioritization is based on
+concurrency. The ability to disable HTTP/2 prioritization is inspired by
 {{?I-D.lassey-priority-setting}}, authored by Brad Lassey and Lucas Pardue, with
 modifications based on feedback that was not incorporated into an update to that
 document.
