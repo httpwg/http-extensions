@@ -189,8 +189,9 @@ RFC 7540 stream priority (see {{Section 5.3 of RFC7540}}).
 
 The SETTINGS_NO_RFC7540_PRIORITIES setting is defined by this document in
 order to allow endpoints to explicitly opt out of using HTTP/2 priority signals
-(see {{Section 5.3.2 of HTTP2}}). Endpoints are expected to use an alternative,
-such as the scheme defined in this specification.
+(see {{Section 5.3.2 of HTTP2}}). Endpoints are encouraged to use alternative
+priority signals (for example, {{header-field}} or {{h2-update-frame}}) but
+there is no requirement to use a specific signal type.
 
 The value of SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value
 other than 0 or 1 MUST be treated as a connection error (see {{Section 5.4.1 of
@@ -200,6 +201,13 @@ Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
 A sender MUST NOT change the SETTINGS_NO_RFC7540_PRIORITIES parameter value
 after the first SETTINGS frame. Detection of a change by a receiver MUST be
 treated as a connection error of type PROTOCOL_ERROR.
+
+The SETTINGS frame precedes any HTTP/2 priority signal sent from a client, so a
+server can determine if it needs to allocate any resource to signal handling
+before they arrive. A server that receives SETTINGS_NO_RFC7540_PRIORITIES
+with value of 1 MUST ignore HTTP/2 priority signals.
+
+### Advice when Using Extensible Priorities as the Alternative
 
 Until the client receives the SETTINGS frame from the server, the client SHOULD
 send both the HTTP/2 priority signals and the signals of this prioritization
@@ -212,14 +220,6 @@ the Priority header field ({{header-field}}), as it is an end-to-end signal that
 might be useful to nodes behind the server that the client is directly connected
 to.
 
-The SETTINGS frame precedes any HTTP/2 priority signal sent from a client, so a
-server can determine if it needs to allocate any resource to signal handling
-before they arrive. A server that receives SETTINGS_NO_RFC7540_PRIORITIES
-with value of 1 MUST ignore HTTP/2 priority signals.
-
-Where both endpoints disable RFC 7540 stream priority, the client is expected to
-send this scheme's priority signal. Handling of omitted signals is described in
-{{parameters}}.
 
 # Applicability of the Extensible Priority Scheme
 
