@@ -945,6 +945,18 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 
 # Change Log
 
+## Since draft-ietf-httpbis-priority-05
+* Renamed SETTINGS_DEPRECATE_RFC7540_PRIORITIES to
+  SETTINGS_NO_RFC7540_PRIORITIES
+* Clarify that senders of the HTTP/2 setting can use any alternative (#1679,
+  #1705)
+
+## Since draft-ietf-httpbis-priority-04
+* Renamed SETTINGS_DEPRECATE_HTTP2_PRIORITIES to
+  SETTINGS_DEPRECATE_RFC7540_PRIORITIES (#1601)
+* Reoriented text towards RFC7540bis (#1561, #1601)
+* Clarify intermediary behavior (#1562)
+
 ## Since draft-ietf-httpbis-priority-03
 * Add statement about what this scheme applies to. Clarify extensions can
   use it but must define how themselves (#1550, #1559)
