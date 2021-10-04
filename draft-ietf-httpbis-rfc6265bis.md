@@ -1250,21 +1250,24 @@ user agent MUST process the cookie-av as follows.
 If the attribute-name case-insensitively matches the string "Domain", the user
 agent MUST process the cookie-av as follows.
 
-1.  If the attribute-value is empty, the behavior is undefined. However, the
-    user agent SHOULD ignore the cookie-av entirely.
+1.  If the attribute-value is empty:
 
-2.  If the first character of the attribute-value string is %x2E ("."):
-
-    1.  Let cookie-domain be the attribute-value without the leading %x2E
-        (".") character.
+    1. Let cookie-domain be the canonicalized request-host.
 
     Otherwise:
 
-    1. Let cookie-domain be the entire attribute-value.
+    2.  If the first character of the attribute-value string is %x2E ("."):
 
-3.  Convert the cookie-domain to lower case.
+        1.  Let cookie-domain be the attribute-value without the leading %x2E
+        (".") character.
 
-4.  Append an attribute to the cookie-attribute-list with an attribute-name
+        Otherwise:
+
+        2. Let cookie-domain be the entire attribute-value.
+
+2.  Convert the cookie-domain to lower case.
+
+3.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Domain and an attribute-value of cookie-domain.
 
 ### The Path Attribute
