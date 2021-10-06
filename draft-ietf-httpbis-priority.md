@@ -376,7 +376,7 @@ where to send registration requests.
 
 The Priority HTTP header field can appear in requests and responses. A client
 uses it to specify the priority of the response. A server uses it to inform
-the client that the priority that was applied. An intermediary can use
+the client and intemediaries of the priority that was applied. An intermediary can use
 priority information from client requests and server responses to correct or
 amend the precedence to suit it (see {{merging}}).
 
