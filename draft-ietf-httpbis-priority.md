@@ -39,14 +39,11 @@ informative:
 
 --- abstract
 
-This document describes a scheme for prioritizing HTTP responses. This scheme
-expresses the priority of each HTTP response using absolute values, rather than
-as a relative relationship between a group of HTTP responses.
-
-This document defines the Priority header field for communicating the initial
-priority in an HTTP version-independent manner, as well as HTTP/2 and HTTP/3
-frames for reprioritizing the responses. These share a common format structure
-that is designed to provide future extensibility.
+This document describes a scheme for prioritizing HTTP responses.  This document
+defines the Priority header field for communicating the initial priority in an
+HTTP version-independent manner, as well as HTTP/2 and HTTP/3 frames for
+reprioritizing the responses. These share a common format structure that is
+designed to provide future extensibility.
 
 --- note_Note_to_Readers
 
