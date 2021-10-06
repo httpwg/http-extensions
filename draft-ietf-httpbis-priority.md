@@ -402,11 +402,7 @@ JavaScript file with the urgency parameter of the Priority request header field
 set to `u=7` (background). Then, when the user navigates to a page which
 references the new JavaScript file, while the prefetch is in progress, the
 browser would send a reprioritization signal with the priority field value set
-to `u=0`. The PRIORITY_UPDATE frame ({{frame}}) can be used for such
-reprioritization.
-
-
-# The PRIORITY_UPDATE Frame {#frame}
+to `u=0`.
 
 This document specifies a new PRIORITY_UPDATE frame for HTTP/2 {{HTTP2}}
 and HTTP/3 {{HTTP3}}. It carries priority parameters and
