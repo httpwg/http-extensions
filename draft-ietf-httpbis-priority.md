@@ -206,8 +206,8 @@ HTTP2}}) of type PROTOCOL_ERROR.
 
 Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
 A sender MUST NOT change the SETTINGS_NO_RFC7540_PRIORITIES parameter value
-after the first SETTINGS frame. Detection of a change by a receiver MUST be
-treated as a connection error of type PROTOCOL_ERROR.
+after the first SETTINGS frame. Receivers that detect a change MAY treat it as a
+connection error of type PROTOCOL_ERROR.
 
 The SETTINGS frame precedes any HTTP/2 priority signal sent from a client, so a
 server can determine if it needs to allocate any resource to signal handling
