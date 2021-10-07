@@ -266,8 +266,7 @@ types MUST be ignored.
 ## Urgency
 
 The urgency parameter (`u`) takes an integer between 0 and 7, in descending
-order of priority. This range provides sufficient granularity for prioritizing
-responses for ordinary web browsing, at minimal complexity.
+order of priority.
 
 The value is encoded as an sf-integer. The default value is 3.
 
