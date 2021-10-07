@@ -310,10 +310,11 @@ Serving non-incremental responses one by one, in the order in which those
 requests were generated is considered to be the best strategy.
 
 If a client makes concurrent requests with the incremental parameter set to
-true, there could be benefit serving requests with the same urgency in parallel.
+true, serving requests with the same urgency in parallel might be beneficial.
 Doing this distributes the connection bandwidth, meaning that responses take
-longer to complete. However, where clients process chunks as they arrive the
-time to completion is not necessarily a concern.
+longer to complete. Incremental delivery is most useful where multiple
+partial responses might provide some value to clients ahead of a
+complete response being available.
 
 The following example shows a request for a JPEG file with the urgency parameter
 set to `5` and the incremental parameter set to `true`.
