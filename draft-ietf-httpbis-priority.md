@@ -261,7 +261,7 @@ A server or intermediary that fails to parse the Dictionary SHOULD use default
 parameter values. Clients can safely ignore malformed dictionaries entirely.
 
 Where the Dictionary is successfully parsed, unknown priority parameters,
-parameters with out-of-range values. or values of unexpected types MUST be
+parameters with out-of-range values, or values of unexpected types MUST be
 ignored.
 
 ## Urgency
