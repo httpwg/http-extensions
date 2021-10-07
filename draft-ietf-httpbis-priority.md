@@ -306,7 +306,7 @@ The default value of the incremental parameter is false (`0`).
 If a client makes concurrent requests with the incremental parameter set to
 false, there is no benefit serving responses with the same urgency in parallel
 because the client is not going to process those responses incrementally.
-Serving non-incremental responses one by one, in the order in which those
+Serving non-incremental responses with the same urgency one by one, in the order in which those
 requests were generated is considered to be the best strategy.
 
 If a client makes concurrent requests with the incremental parameter set to
