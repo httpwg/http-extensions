@@ -504,9 +504,9 @@ expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [HTTPSEM], Section 5.6.7>
 max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
-                      ; In practice, both expires-av and max-age-av
-                      ; are limited to dates representable by the
-                      ; user agent.
+                      ; Both expires-av and max-age-av must be
+                      ; limited to no more than 400 days in the
+                      ; future by the user agent.
 non-zero-digit    = %x31-39
                       ; digits 1 through 9
 domain-av         = "Domain" BWS "=" BWS domain-value
@@ -591,12 +591,20 @@ represented as the date and time at which the cookie expires. The user agent is
 not required to retain the cookie until the specified date has passed. In fact,
 user agents often evict cookies due to memory pressure or privacy concerns.
 
+The user agent must cap the Expires attribute at no more than 400 days in the
+future. Values farther in the future should be reduced to the cap. If a lower
+cap is set, it must be kept consistent with the Max-Age attribute.
+
 #### The Max-Age Attribute {#attribute-max-age}
 
 The Max-Age attribute indicates the maximum lifetime of the cookie,
 represented as the number of seconds until the cookie expires. The user agent is
 not required to retain the cookie for the specified duration. In fact, user
 agents often evict cookies due to memory pressure or privacy concerns.
+
+The user agent must cap the Max-Age attribute at no more than 400 days. Values
+larger should be reduced to the cap. If a lower cap is set, it must be kept
+consistent with the Expires attribute.
 
 NOTE: Some existing user agents do not support the Max-Age attribute. User
 agents that do not support the Max-Age attribute ignore the attribute.
@@ -1214,9 +1222,9 @@ user agent MUST process the cookie-av as follows.
 2.  If the attribute-value failed to parse as a cookie date, ignore the
     cookie-av.
 
-3.  If the expiry-time is later than the last date the user agent can
-    represent, the user agent MAY replace the expiry-time with the last
-    representable date.
+3.  If the expiry-time is later than 400 days in the future (or less, if the
+    user agent has a lower cap), the user agent MUST replace the expiry-time
+    with the last date within the cap.
 
 4.  If the expiry-time is earlier than the earliest date the user agent can
     represent, the user agent MAY replace the expiry-time with the earliest
@@ -1238,11 +1246,14 @@ user agent MUST process the cookie-av as follows.
 
 3.  Let delta-seconds be the attribute-value converted to an integer.
 
-4.  If delta-seconds is less than or equal to zero (0), let expiry-time be
+4.  If delta-seconds is longer than 400 days (or less if the user agent has a
+    lower cap), the user agent MUST replace delta-seconds with the cap.
+
+5.  If delta-seconds is less than or equal to zero (0), let expiry-time be
     the earliest representable date and time. Otherwise, let the expiry-time
     be the current date and time plus delta-seconds seconds.
 
-5.  Append an attribute to the cookie-attribute-list with an attribute-name
+6.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Max-Age and an attribute-value of expiry-time.
 
 ### The Domain Attribute
