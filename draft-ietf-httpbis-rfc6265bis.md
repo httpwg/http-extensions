@@ -1223,8 +1223,8 @@ user agent MUST process the cookie-av as follows.
     cookie-av.
 
 3.  If the expiry-time is later than 400 days in the future (or less, if the
-    user agent has a lower cap), the user agent MUST replace the expiry-time
-    with the last date within the cap.
+    user agent has a lower cap), the user agent MUST MUST let expiry-time equal
+    the last date within the cap.
 
 4.  If the expiry-time is earlier than the earliest date the user agent can
     represent, the user agent MAY replace the expiry-time with the earliest
@@ -1247,7 +1247,8 @@ user agent MUST process the cookie-av as follows.
 3.  Let delta-seconds be the attribute-value converted to an integer.
 
 4.  If delta-seconds is longer than 400 days (or less if the user agent has a
-    lower cap), the user agent MUST replace delta-seconds with the cap.
+    lower cap), the user agent MUST let expiry-time equal the last date within
+    the cap.
 
 5.  If delta-seconds is less than or equal to zero (0), let expiry-time be
     the earliest representable date and time. Otherwise, let the expiry-time
