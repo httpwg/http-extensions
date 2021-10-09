@@ -270,7 +270,7 @@ tune the prioritization of a multiplexed HTTP connection established to the next
 hop, intermediaries SHOULD use a PRIORITY_UPDATE frame. Doing so preserves the
 intent of the client; see {{header-field-rationale}}. If the intent is to adjust
 the priority parameters provided by clients, intermediaries can rewrite the
-Priority header header field.
+Priority header field.
 
 For both the Priority header field and the PRIORITY_UPDATE frame, the set of
 priority parameters is encoded as a Structured Fields Dictionary (see
