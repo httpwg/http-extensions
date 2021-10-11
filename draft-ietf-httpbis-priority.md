@@ -877,7 +877,6 @@ Specification document(s):
 Related information:
 : n/a
 
-
 This specification registers the following entry in the HTTP/2 Settings registry
 established by {{HTTP2}}:
 
