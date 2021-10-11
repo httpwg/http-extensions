@@ -856,13 +856,27 @@ on the information that is available to them from the QUIC transport layer.
 
 # IANA Considerations
 
-This specification registers the following entry in the Hypertext Transfer
-Protocol (HTTP) Field Name Registry:
+This specification registers the following entry in the Permanent Message Header
+Field Names registry established by {{?RFC3864}}:
 
-* Field name: Priority
-* Status: permanent
-* Specification document(s): \[this document\]
-* Comments:
+Header field name:
+: Priority
+
+Applicable protocol:
+: http
+
+Status:
+: standard
+
+Author/change controller:
+: IETF
+
+Specification document(s):
+: This document
+
+Related information:
+: n/a
+
 
 This specification registers the following entry in the HTTP/2 Settings registry
 established by {{HTTP2}}:
