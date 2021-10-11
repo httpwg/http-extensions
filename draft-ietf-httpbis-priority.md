@@ -376,7 +376,9 @@ The Priority HTTP header field carries priority parameters {{parameters}}. It
 can appear in requests and responses. It is an end-to-end signal of the request
 priority from the client or the response priority from the server. {{merging}}
 describes how intermediaries can combine the priority information from client
-requests and server responses to correct or amend the precedence.
+requests and server responses to correct or amend the precedence. Clients cannot
+interpret the appearance or omission of a Priority response header as
+acknowledgement that any prioritization has occurred.
 
 Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 
