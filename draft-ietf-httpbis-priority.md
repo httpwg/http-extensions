@@ -374,7 +374,7 @@ where to send registration requests.
 
 # The Priority HTTP Header Field {#header-field}
 
-The Priority HTTP header field carries priority parameters {{parameters}}, it
+The Priority HTTP header field carries priority parameters {{parameters}}. It
 can appear in requests and responses. It is an end-to-end signal of the request
 priority from the client or the response priority from the server. {{merging}}
 describes how intermediaries can combine the priority information from client
