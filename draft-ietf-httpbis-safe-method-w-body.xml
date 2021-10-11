@@ -251,14 +251,6 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
 
     <t>
-      The response to a SEARCH request is not cacheable. It ought to be noted,
-      however, that because SEARCH requests are safe and idempotent, responses
-      to a SEARCH &MUST-NOT; invalidate previously cached responses to other
-      requests directed at the same effective request URI.
-      <cref anchor="cache">By default, that is. We need to figure out under which conditions we can make the result cacheable.</cref>
-    </t>
-
-    <t>
       The semantics of the SEARCH method change to a "conditional SEARCH" if
       the request message includes an If-Modified-Since, If-Unmodified-
       Since, If-Match, If-None-Match, or If-Range header field
@@ -268,6 +260,33 @@ q=foo&amp;limit=10&amp;sort=-published
       are evaluated against the state of the target resource itself as opposed
       to the collected results of the search operation.
     </t>
+
+    <section title="Caching">
+
+      <t>
+        The response to a SEARCH method is cacheable; a cache &MAY; use it to satisfy subsequent
+        SEARCH requests as per <xref target="HTTP-CACHING" section="4"/>).
+      </t>
+
+      <t>
+        The cache key for a search request (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
+        incorporate the request content. When doing so, caches &SHOULD; first normalize request
+        content to remove semantically insignificant differences, thereby improving cache
+        efficiency, by:
+      </t>
+
+      <ul>
+        <li>Removing content encoding(s)</li>
+        <li>Normalizing based upon knowledge of format conventions, as indicated by the any media type suffix in the request's Content-Type header (e.g., "+json")</li>
+        <li>Normalizing based upon knowledge of the semantics of the content itself, as indicated by the request's Content-Type header.</li>
+      </ul>
+
+      <t>
+        Note that any such normalization is performed solely for the purpose of generating a cache key; it
+        does not change the request itself.
+      </t>
+
+    </section>
 
   </section>
 
@@ -415,6 +434,16 @@ Dubois, Camille, camille.dubois@example.net
         <date year="2021" month="September" day="10"/>
       </front>
       <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-19"/>
+    </reference>
+    <reference anchor="HTTP-CACHING">
+      <front>
+        <title>HTTP Semantics</title>
+        <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
+        <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
+        <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
+        <date year="2021" month="September" day="10"/>
+      </front>
+      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-cache-19"/>
     </reference>
     <reference anchor='XML'
                target='https://www.w3.org/TR/2008/REC-xml-20081126/'>
