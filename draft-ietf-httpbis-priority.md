@@ -257,12 +257,10 @@ server SHOULD act as if their default values were specified. Note that handling
 of omitted parameters is different when processing an HTTP response; see
 {{merging}}.
 
-A server or intermediary that fails to parse the Dictionary SHOULD use default
-parameter values. Clients can safely ignore malformed dictionaries entirely.
-
-Where the Dictionary is successfully parsed, unknown priority parameters,
-parameters with out-of-range values, or values of unexpected types MUST be
-ignored.
+Receivers parse the Dictionary as defined in {{Section 4.2 of
+STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document
+places the additional requirement that unknown priority parameters, parameters
+with out-of-range values, or values of unexpected types MUST be ignored.
 
 ## Urgency
 
