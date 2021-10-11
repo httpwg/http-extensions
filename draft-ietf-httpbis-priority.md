@@ -299,16 +299,18 @@ meaningful output as chunks of the response arrive.
 
 The default value of the incremental parameter is false (`0`).
 
-A server might distribute the bandwidth of a connection between incremental
-responses that share the same urgency, hoping that providing those responses in
-parallel would be more helpful to the client than delivering the responses one
-by one.
+If a client makes concurrent requests with the incremental parameter set to
+false, there is no benefit serving responses with the same urgency in parallel
+because the client is not going to process those responses incrementally.
+Serving non-incremental responses with the same urgency one by one, in the order in which those
+requests were generated is considered to be the best strategy.
 
 If a client makes concurrent requests with the incremental parameter set to
-false, there is no benefit serving responses in parallel because the client is
-not going to process those responses incrementally. Serving non-incremental
-responses one by one, in the order in which those requests were generated is
-considered to be the best strategy.
+true, serving requests with the same urgency in parallel might be beneficial.
+Doing this distributes the connection bandwidth, meaning that responses take
+longer to complete. Incremental delivery is most useful where multiple
+partial responses might provide some value to clients ahead of a
+complete response being available.
 
 The following example shows a request for a JPEG file with the urgency parameter
 set to `5` and the incremental parameter set to `true`.
