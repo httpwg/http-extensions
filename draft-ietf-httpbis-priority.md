@@ -264,13 +264,12 @@ to reprioritize a request, HTTP-version-specific PRIORITY_UPDATE frames
 ({{h2-update-frame}} and {{h3-update-frame}}) are used by clients to transmit
 the same information on a single hop.
 
-Intermediaries can prioritize the requests that they forward either by using a
-Priority header field or by using a PRIORITY_UPDATE frame. If the intent is to
-tune the prioritization of a multiplexed HTTP connection established to the next
-hop, intermediaries SHOULD use a PRIORITY_UPDATE frame. Doing so preserves the
-intent of the client; see {{header-field-rationale}}. If the intent is to adjust
-the priority parameters provided by clients, intermediaries can rewrite the
-Priority header field.
+Intermediaries can consume and produce priority signals in a PRIORITY_UPDATE
+frame or Priority header field. Sending a PRIORITY_UPDATE frame preserves the
+signal from the client, but provides a signal that overrides for the next hop;
+see {{header-field-rationale}}. Replacing or adding a Priority header field
+overrides any signal from a client and can affect prioritization for all
+subsequent recipients.
 
 For both the Priority header field and the PRIORITY_UPDATE frame, the set of
 priority parameters is encoded as a Structured Fields Dictionary (see
