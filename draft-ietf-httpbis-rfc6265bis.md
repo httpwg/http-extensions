@@ -504,9 +504,6 @@ expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [HTTPSEM], Section 5.6.7>
 max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
-                      ; Both expires-av and max-age-av must be
-                      ; limited to no more than 400 days in the
-                      ; future by the user agent.
 non-zero-digit    = %x31-39
                       ; digits 1 through 9
 domain-av         = "Domain" BWS "=" BWS domain-value
@@ -591,9 +588,9 @@ represented as the date and time at which the cookie expires. The user agent is
 not required to retain the cookie until the specified date has passed. In fact,
 user agents often evict cookies due to memory pressure or privacy concerns.
 
-The user agent must cap the Expires attribute at no more than 400 days in the
-future. Values farther in the future should be reduced to the cap. If a lower
-cap is set, it must be kept consistent with the Max-Age attribute.
+The user agent MUST limit the time that a cookie is stored to no more than 400
+days in the future. Expires attributes that are later MUST be reduced. User agents
+MAY reduce the lifetime of a cookie further according to their own policy.
 
 #### The Max-Age Attribute {#attribute-max-age}
 
@@ -602,9 +599,9 @@ represented as the number of seconds until the cookie expires. The user agent is
 not required to retain the cookie for the specified duration. In fact, user
 agents often evict cookies due to memory pressure or privacy concerns.
 
-The user agent must cap the Max-Age attribute at no more than 400 days. Values
-larger should be reduced to the cap. If a lower cap is set, it must be kept
-consistent with the Expires attribute.
+The user agent MUST limit the time that a cookie is stored to no more than 400
+days in the future. Max-Age attributes that are later MUST be reduced. User agents
+MAY reduce the lifetime of a cookie further according to their own policy.
 
 NOTE: Some existing user agents do not support the Max-Age attribute. User
 agents that do not support the Max-Age attribute ignore the attribute.
