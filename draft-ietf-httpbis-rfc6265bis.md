@@ -1219,9 +1219,8 @@ user agent MUST process the cookie-av as follows.
 2.  If the attribute-value failed to parse as a cookie date, ignore the
     cookie-av.
 
-3.  If the expiry-time is later than 400 days in the future (or less, if the
-    user agent has a lower cap), the user agent MUST MUST let expiry-time equal
-    the last date within the cap.
+3.  If the expiry-time is more than 400 days in the future, the user agent
+    MUST set the expiry time to 400 days from the present.
 
 4.  If the expiry-time is earlier than the earliest date the user agent can
     represent, the user agent MAY replace the expiry-time with the earliest
@@ -1241,11 +1240,9 @@ user agent MUST process the cookie-av as follows.
 2.  If the remainder of attribute-value contains a non-DIGIT character, ignore
     the cookie-av.
 
-3.  Let delta-seconds be the attribute-value converted to an integer.
+3.  Set delta-seconds to the smaller of its present value or 400 days (in seconds).
 
-4.  If delta-seconds is longer than 400 days (or less if the user agent has a
-    lower cap), the user agent MUST let expiry-time equal the last date within
-    the cap.
+4.  Set expiry-time to delta-seconds seconds from the present time.
 
 5.  If delta-seconds is less than or equal to zero (0), let expiry-time be
     the earliest representable date and time. Otherwise, let the expiry-time
@@ -1860,8 +1857,8 @@ cookies may be used or ignored (see {{ignoring-cookies}}).
 
 A cookie policy may govern which domains or parties, as in first and third parties
 (see {{third-party-cookies}}), for which the user agent will allow cookie access.
-The policy can also define limits on cookie size, cookie expiry, and the number
-of cookies per domain or in total.
+The policy can also define limits on cookie size, cookie expiry (e.g., setting a
+maximum age under 400 days), and the number of cookies per domain or in total.
 
 The goal of a restrictive cookie policy is often to improve security or privacy.
 User agents often allow users to change the cookie policy (see {{user-controls}}).
