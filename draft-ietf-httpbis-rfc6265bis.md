@@ -588,9 +588,10 @@ represented as the date and time at which the cookie expires. The user agent is
 not required to retain the cookie until the specified date has passed. In fact,
 user agents often evict cookies due to memory pressure or privacy concerns.
 
-The user agent MUST limit lifetime of a cookie to no more than 400
-days. Expires attributes that are more than 400 days in the future MUST be changed to a date no more than 400 days in the future. A user agent
-MAY reduce the lifetime of a cookie further according to its cookie policy.
+The user agent MUST limit lifetime of a cookie to no more than 400 days. Expires
+attributes that are more than 400 days in the future MUST be changed to a date
+no more than 400 days in the future. A user agent MAY reduce the lifetime of a
+cookie further according to its cookie policy.
 
 #### The Max-Age Attribute {#attribute-max-age}
 
@@ -599,9 +600,10 @@ represented as the number of seconds until the cookie expires. The user agent is
 not required to retain the cookie for the specified duration. In fact, user
 agents often evict cookies due to memory pressure or privacy concerns.
 
-The user agent MUST limit the lifetime of a cookie to no more than 400
-days. Max-Age attributes that are greater than 400 days MUST be reduced to a duration of at most 400 days. A user agent
-MAY reduce the lifetime of a cookie further according to its cookie policy.
+The user agent MUST limit the lifetime of a cookie to no more than 400 days. Max-Age
+attributes that are greater than 400 days MUST be reduced to a duration of at
+most 400 days. A user agent MAY reduce the lifetime of a cookie further according
+to its cookie policy.
 
 NOTE: Some existing user agents do not support the Max-Age attribute. User
 agents that do not support the Max-Age attribute ignore the attribute.
@@ -1857,8 +1859,8 @@ cookies may be used or ignored (see {{ignoring-cookies}}).
 
 A cookie policy may govern which domains or parties, as in first and third parties
 (see {{third-party-cookies}}), for which the user agent will allow cookie access.
-The policy can also define limits on cookie size, cookie expiry (e.g., setting a
-maximum age under 400 days), and the number of cookies per domain or in total.
+The policy can also define limits on cookie size, cookie expiry (see {{attribute-expires}}
+and {{attribute-max-age}}), and the number of cookies per domain or in total.
 
 The goal of a restrictive cookie policy is often to improve security or privacy.
 User agents often allow users to change the cookie policy (see {{user-controls}}).
