@@ -1859,8 +1859,9 @@ cookies may be used or ignored (see {{ignoring-cookies}}).
 
 A cookie policy may govern which domains or parties, as in first and third parties
 (see {{third-party-cookies}}), for which the user agent will allow cookie access.
-The policy can also define limits on cookie size, cookie expiry (see {{attribute-expires}}
-and {{attribute-max-age}}), and the number of cookies per domain or in total.
+The policy can also define limits on cookie size, cookie expiry (see
+{{attribute-expires}} and {{attribute-max-age}}), and the number of cookies per
+domain or in total.
 
 The goal of a restrictive cookie policy is often to improve security or privacy.
 User agents often allow users to change the cookie policy (see {{user-controls}}).
