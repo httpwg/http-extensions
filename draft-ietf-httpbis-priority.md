@@ -645,13 +645,13 @@ response order.
 
 Incremental responses of the same urgency SHOULD be served by sharing bandwidth
 amongst them. Incremental resources are used as parts, or chunks, of the
-response payload are received. Some of these parts might be critical to the
-client use of the resource. Therefore, the timing of response data reception at
-the client, such as the time to early bytes, the time to a critical section, or
-the time to receive the entire payload, plays an important role in perceived
-performance. Timings depend on resource size and type. This scheme provides no
-explicit mandate about how a server should use size, type or any other input to
-decide how to prioritize.
+response payload are received. A client might benefit more from receiving a
+portion of all these resources rather than the entirety of a single resource.
+How large a portion of the resource is needed to be useful in improving
+performance varies. Some resource types place critical elements early, others
+can use information progressively. This scheme provides no explicit mandate
+about how a server should use size, type or any other input to decide how to
+prioritize.
 
 The following examples demonstrate how a server that strictly abides the
 scheduling guidance based on urgency and request generation order could find
