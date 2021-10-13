@@ -215,8 +215,8 @@ q=foo&amp;limit=10&amp;sort=-published
     <section title="Caching">
 
       <t>
-        The response to a SEARCH method is cacheable; a cache &MAY; use it to satisfy subsequent
-        SEARCH requests as per <xref target="HTTP-CACHING" section="4"/>).
+        The response to a QUERY method is cacheable; a cache &MAY; use it to satisfy subsequent
+        QUERY requests as per <xref target="HTTP-CACHING" section="4"/>).
       </t>
 
       <t>
