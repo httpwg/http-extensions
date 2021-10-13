@@ -93,8 +93,8 @@
 
     <t>
       Most often, this is desirable when the data conveyed in a request is
-      too voluminous to be encoded into the request's URI. For example, while a
-      query like this is common and interoperable:
+      too voluminous to be encoded into the request's URI. For example, while
+      this is an common and interoperable query:
     </t>
 
 <artwork type="http-message">
@@ -103,8 +103,8 @@ Host: example.org
 </artwork>
 
     <t>
-      That might not be the case if the query parameters extend to several kilobytes or more of
-      data, because many implementations place limits on their size. Often these limits are not
+      if the query parameters extend to several kilobytes or more of
+      data it may not be, because many implementations place limits on their size. Often these limits are not
       known or discoverable ahead of time, because a request can pass through many uncoordinated
       systems. Additionally, expressing some data in the target URI is inefficient, because it
       needs to be encoded to be a valid URI.
