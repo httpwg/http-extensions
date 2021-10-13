@@ -326,7 +326,7 @@ Dubois, Camille, camille.dubois@example.net
   <section title="IANA Considerations">
 
     <t>
-      IANA is requested to update the registration of the QUERY method in the
+      IANA is requested to add QUERY method in the
       permanent registry at &lt;http://www.iana.org/assignments/http-methods&gt;
       (see <xref target="RFCHTTP" section="16.1.1"/>).
     </t>
