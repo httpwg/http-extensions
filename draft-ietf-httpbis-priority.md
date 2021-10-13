@@ -634,24 +634,28 @@ can use other information to prioritize responses.
 It is RECOMMENDED that, when possible, servers respect the urgency parameter
 ({{urgency}}), sending higher urgency responses before lower urgency responses.
 
-It is RECOMMENDED that, when possible, servers respect the incremental
-parameter ({{incremental}}). Non-incremental responses of the same urgency
-SHOULD be served one-by-one based on the Stream ID, which corresponds to the
-order in which clients make requests. Doing so ensures that clients can use
-request ordering to influence response order. Incremental responses of the same
-urgency SHOULD be served in round-robin manner.
-
 The incremental parameter indicates how a client processes response bytes as
-they arrive. Non-incremental resources are only used when all of the response
-payload has been received. Incremental resources are used as parts, or chunks,
-of the response payload are received. Therefore, the timing of response data
-reception at the client, such as the time to early bytes or the time to receive
-the entire payload, plays an important role in perceived performance. Timings
-depend on resource size but this scheme provides no explicit guidance about how
-a server should use size as an input to prioritization. Instead, the following
-examples demonstrate how a server that strictly abides the scheduling guidance
-based on urgency and request generation order could find that early requests
-prevent serving of later requests.
+they arrive. It is RECOMMENDED that, when possible, servers respect the
+incremental parameter ({{incremental}}). Non-incremental resources can only be used
+when all of the response payload has been received. Therefore, non-incremental
+responses of the same urgency SHOULD be served in their entirety, one-by-one,
+based on the stream ID, which corresponds to the order in which clients make
+requests. Doing so ensures that clients can use request ordering to influence
+response order.
+
+Incremental responses of the same urgency SHOULD be served by sharing bandwidth
+amongst them. Incremental resources are used as parts, or chunks, of the
+response payload are received. A client might benefit more from receiving a
+portion of all these resources rather than the entirety of a single resource.
+How large a portion of the resource is needed to be useful in improving
+performance varies. Some resource types place critical elements early, others
+can use information progressively. This scheme provides no explicit mandate
+about how a server should use size, type or any other input to decide how to
+prioritize.
+
+The following examples demonstrate how a server that strictly abides the
+scheduling guidance based on urgency and request generation order could find
+that early requests prevent serving of later requests.
 
 1. At the same urgency level, a non-incremental request for a large resource
    followed by an incremental request for a small resource.
@@ -762,7 +766,8 @@ to one user agent to be delayed totally after those going to another.
 In order to mitigate this fairness problem, a server could use knowledge about
 the intermediary as another signal in its prioritization decisions. For
 instance, if a server knows the intermediary is coalescing requests, then it
-could serve the responses in round-robin manner. This can work if the
+could avoid serving the responses in their entirety and instead distribute
+bandwidth (for example, in a round-robin manner). This can work if the
 constrained resource is network capacity between the intermediary and the user
 agent, as the intermediary buffers responses and forwards the chunks based on
 the prioritization scheme it implements.
