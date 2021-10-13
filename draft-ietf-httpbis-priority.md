@@ -419,10 +419,8 @@ they can be used to reprioritize a response or a push stream; or signal the
 initial priority of a response instead of the Priority header field.
 
 A PRIORITY_UPDATE frame communicates a complete set of all parameters in the
-Priority Field Value field. Omitting a parameter is a signal to use the
-parameter's default value. Failure to parse the Priority Field Value MUST be
-treated as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in
-HTTP/3 the error is of type H3_FRAME_ERROR.
+Priority Field Value field, encoded as a Structured Fields Dictionary. Receivers
+process the field as described in {{parameters}}.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
 is open (except for HTTP/2 push streams; see {{h2-update-frame}}). Furthermore,
