@@ -375,7 +375,7 @@ Dubois, Camille, camille.dubois@example.net
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
 <ul>
   <li>Use "example/query" media type instead of undefined "text/query" (<eref target="https://github.com/httpwg/http-extensions/issues/1450"/>)</li>
-  <li>In <xref target="field.accept-search"/>, adjust the grammar to just define the field value (<eref target="https://github.com/httpwg/http-extensions/issues/1470"/>)</li>
+  <li>In <xref target="field.accept-query"/>, adjust the grammar to just define the field value (<eref target="https://github.com/httpwg/http-extensions/issues/1470"/>)</li>
   <li>Update to latest HTTP core spec, and adjust terminology accordingly (<eref target="https://github.com/httpwg/http-extensions/issues/1473"/>)</li>
   <li>Reference RFC 8174 and markup bcp14 terms (<eref target="https://github.com/httpwg/http-extensions/issues/1497"/>)</li>
   <li>Update HTTP reference (<eref target="https://github.com/httpwg/http-extensions/issues/1524"/>)</li>
