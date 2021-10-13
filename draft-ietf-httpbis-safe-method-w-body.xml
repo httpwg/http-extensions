@@ -222,7 +222,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
   </section>
 
-  <section title="The &quot;Accept-Query&quot; Header Field" anchor="field.accept-search">
+  <section title="The &quot;Accept-Query&quot; Header Field" anchor="field.accept-query">
     <t>
       The "Accept-Query" response header field &MAY; be used by a server to
       directly signal support for the QUERY method while identifying
