@@ -113,11 +113,7 @@ Host: example.org
     <t>
       Encoding query parameters directly into the request URI also effectively
       casts every possible combination of query inputs as distinct
-      resources. For instance, because mechanisms such as HTTP caching
-      handle request URIs as opaque character sequences, queries such
-      as 'http://example.org/?q=foo' and 'http://example.org/?q=Foo'
-      will be treated as entirely separate resources even if they
-      yield identical results.
+      resources. Depending on the application, that may not be desirable.
     </t>
 
     <t>
