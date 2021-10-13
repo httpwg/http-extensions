@@ -39,10 +39,10 @@ informative:
 
 --- abstract
 
-This document describes a scheme for prioritizing HTTP responses.  This document
+This document describes a scheme for HTTP clients to communicate their priority for HTTP responses to servers.  This document
 defines the Priority header field for communicating the initial priority in an
 HTTP version-independent manner, as well as HTTP/2 and HTTP/3 frames for
-reprioritizing the responses. These share a common format structure that is
+reprioritizing responses. These share a common format structure that is
 designed to provide future extensibility.
 
 --- note_Note_to_Readers
@@ -60,8 +60,8 @@ code and issues list for this draft can be found at
 
 # Introduction
 
-It is common for an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}} resource
-representation to have relationships to one or more other resources.  Clients
+It is common for an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}} resource's
+representations to have relationships to one or more other resources.  Clients
 will often discover these relationships while processing a retrieved
 representation, leading to further retrieval requests.  Meanwhile, the nature of
 the relationship determines whether the client is blocked from continuing to
