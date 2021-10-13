@@ -60,8 +60,8 @@ code and issues list for this draft can be found at
 
 # Introduction
 
-It is common for an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}} resource's
-representations to have relationships to one or more other resources.  Clients
+It is common for representations of an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}} 
+resource to have relationships to one or more other resources.  Clients
 will often discover these relationships while processing a retrieved
 representation, leading to further retrieval requests.  Meanwhile, the nature of
 the relationship determines whether the client is blocked from continuing to
