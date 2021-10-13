@@ -220,7 +220,7 @@ q=foo&amp;limit=10&amp;sort=-published
       </t>
 
       <t>
-        The cache key for a search request (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
+        The cache key for a query (see <xref target="HTTP-CACHING" section="2"/>) &MUST;
         incorporate the request content. When doing so, caches &SHOULD; first normalize request
         content to remove semantically insignificant differences, thereby improving cache
         efficiency, by:
