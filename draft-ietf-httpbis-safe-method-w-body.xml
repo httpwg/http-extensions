@@ -277,8 +277,8 @@ q=foo&amp;limit=10&amp;sort=-published
 
       <ul>
         <li>Removing content encoding(s)</li>
-        <li>Normalizing based upon knowledge of format conventions, as indicated by the any media type suffix in the request's Content-Type header (e.g., "+json")</li>
-        <li>Normalizing based upon knowledge of the semantics of the content itself, as indicated by the request's Content-Type header.</li>
+        <li>Normalizing based upon knowledge of format conventions, as indicated by the any media type suffix in the request's Content-Type field (e.g., "+json")</li>
+        <li>Normalizing based upon knowledge of the semantics of the content itself, as indicated by the request's Content-Type field.</li>
       </ul>
 
       <t>
