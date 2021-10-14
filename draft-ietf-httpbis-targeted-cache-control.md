@@ -150,12 +150,6 @@ For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an 
 
 Implementations MUST NOT generate and SHOULD NOT consume values that violate these inferred constraints on the directive's value (e.g. coerce a max-age with a decimal value into an integer). Parameters received on directives are to be ignored, unless other handling is explicitly specified.
 
-Sending implementations MUST generate valid Structured Fields. Receiving implementations SHOULD use a Structured Fields parser, but MAY reuse an existing parser for the Cache-Control field value ({{Section 5.2 of HTTP-CACHING}}). Those that do SHOULD implement the following constraints, to aid in a smooth transition to a full Structured Field parser and prevent interoperability issues:
-
-* Directive names are all lowercase (e.g., "MAX-AGE=60" is considered an error).
-* If a directive is repeated in the field value (e.g., "max-age=30, max-age=60"), the last value 'wins' (60, in this case).
-* Members of the directives can have parameters (e.g., "max-age=30;a=b;c=d"), which are ignored unless specified.
-
 If a targeted field in a given response is empty, or a parsing error is encountered, that field MUST be ignored by the cache (i.e., it behaves as if the field were not present, likely falling back to other cache control mechanisms present).
 
 
