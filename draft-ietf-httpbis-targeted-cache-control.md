@@ -111,6 +111,19 @@ CDN-Cache-Control: max-age=60
 is a targeted field that applies to Content Delivery Networks (CDNs), as defined in {{cdn-cache-control}}.
 
 
+## Syntax
+
+Targeted fields are defined as Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry.
+
+Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. Typically, they are mapped into a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) when the member has no separate value, a Token ({{Section 3.3.4 of STRUCTURED-FIELDS}}) for alphanumeric values, a String ({{Section 3.3.3 of STRUCTURED-FIELDS}}) for quote-delimited values, or an Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) for purely numeric values.
+
+For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an integer value; no-store ({{Section 5.2.2.5 of HTTP-CACHING}}) always has a boolean true value, and no-cache ({{Section 5.2.2.4 of HTTP-CACHING}}) has a value that can either be boolean true or a string containing a comma-delimited list of field names.
+
+Implementations MUST NOT generate and SHOULD NOT consume values that violate these inferred constraints on the directive's value (e.g. coerce a max-age with a decimal value into an integer). Parameters received on directives are to be ignored, unless other handling is explicitly specified.
+
+If a targeted field in a given response is empty, or a parsing error is encountered, that field MUST be ignored by the cache (i.e., it behaves as if the field were not present, likely falling back to other cache control mechanisms present).
+
+
 ## Cache Behavior
 
 A cache that implement this specification maintains a _target list_ - an ordered list of the targeted field names that it uses for caching policy, with the order reflecting priority from most applicable to least. The target list might be fixed, user-configurable, or generated per request, depending upon the implementation.
@@ -139,18 +152,6 @@ Furthermore, they SHOULD implement other cache directives (including extension c
 
 The semantics and precedence of cache directives in a targeted field are the same as those in Cache-Control. In particular, no-store and no-cache make max-age inoperative, and unrecognised extension directives are ignored.
 
-
-## Syntax
-
-Targeted fields are defined as Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry.
-
-Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. Typically, they are mapped into a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) when the member has no separate value, a Token ({{Section 3.3.4 of STRUCTURED-FIELDS}}) for alphanumeric values, a String ({{Section 3.3.3 of STRUCTURED-FIELDS}}) for quote-delimited values, or an Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) for purely numeric values.
-
-For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an integer value; no-store ({{Section 5.2.2.5 of HTTP-CACHING}}) always has a boolean true value, and no-cache ({{Section 5.2.2.4 of HTTP-CACHING}}) has a value that can either be boolean true or a string containing a comma-delimited list of field names.
-
-Implementations MUST NOT generate and SHOULD NOT consume values that violate these inferred constraints on the directive's value (e.g. coerce a max-age with a decimal value into an integer). Parameters received on directives are to be ignored, unless other handling is explicitly specified.
-
-If a targeted field in a given response is empty, or a parsing error is encountered, that field MUST be ignored by the cache (i.e., it behaves as if the field were not present, likely falling back to other cache control mechanisms present).
 
 
 ## Interaction with HTTP Freshness
