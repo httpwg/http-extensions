@@ -113,7 +113,7 @@ is a targeted field that applies to Content Delivery Networks (CDNs), as defined
 
 ## Syntax
 
-Targeted fields are defined as Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry.
+Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry.
 
 Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. Typically, they are mapped into a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) when the member has no separate value, a Token ({{Section 3.3.4 of STRUCTURED-FIELDS}}) for alphanumeric values, a String ({{Section 3.3.3 of STRUCTURED-FIELDS}}) for quote-delimited values, or an Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) for purely numeric values.
 
