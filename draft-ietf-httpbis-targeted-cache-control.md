@@ -5,7 +5,7 @@ date: {NOW}
 category: std
 
 ipr: trust200902
-area: General
+area: Applications and Real-Time
 workgroup: HTTP
 keyword:
  - CDN
