@@ -829,33 +829,22 @@ makes the prioritization scheme extensible; see the discussion below.
 
 # Security Considerations
 
-[CVE-2019-9513] aka "Resource Loop", is a DoS attack based on manipulation of
-the RFC 7540 priority tree. Extensible priorities does not use stream
-dependencies, which mitigates this vulnerability.
+{{?RFC7540}} stream prioritization relies on dependencies. Considerations are
+presented to implementations, describing how limiting state or work commitments
+can avoid some types of problems. In addition, [CVE-2019-9513] aka "Resource
+Loop", is an example of a DoS attack that abuses stream dependencies. Extensible
+priorities does not use dependencies, which avoids these issues.
 
-{{Section 5.3.4 of ?RFC7540}} describes a scenario where closure of streams in the
-priority tree could cause suboptimal prioritization. To avoid this, {{?RFC7540}}
-states that "an endpoint SHOULD retain stream prioritization state for a period
-after streams become closed". Retaining state for streams no longer counted
-towards stream concurrency consumes server resources. Furthermore, {{?RFC7540}}
-identifies that reprioritization of a closed stream could affect dependents; it
-recommends updating the priority tree if sufficient state is stored, which will
-also consume server resources. To limit this commitment, it is stated that "The
-amount of prioritization state that is retained MAY be limited" and "If a limit
-is applied, endpoints SHOULD maintain state for at least as many streams as
-allowed by their setting for SETTINGS_MAX_CONCURRENT_STREAMS.". Extensible
-priorities does not use stream dependencies, which minimizes most of the
-resource concerns related to this scenario.
+{{frame}} describes considerations for server buffering of PRIORITY_UPDATE
+frames. HTTP/3 implementations might have practical barriers to determining
+reasonable stream concurrency limits depending on the information that is
+available to them from the QUIC transport layer.
 
-{{Section 5.3.4 of ?RFC7540}} also presents considerations about the state required
-to store priority information about streams in an "idle" state. This state can
-be limited by adopting the guidance about concurrency limits described above.
-Extensible priorities is subject to a similar consideration because
-PRIORITY_UPDATE frames may arrive before the request that they reference. A
-server is required to store the information in order to apply the most
-up-to-date signal to the request. However, HTTP/3 implementations might have
-practical barriers to determining reasonable stream concurrency limits depending
-on the information that is available to them from the QUIC transport layer.
+{{server-scheduling}} presents examples where servers that prioritize responses
+in a certain way might be starved of the ability to transmit payload.
+
+The security considerations from {{STRUCTURED-FIELDS}} apply to processing of
+priority parameters defined in {{parameters}}.
 
 # IANA Considerations
 
