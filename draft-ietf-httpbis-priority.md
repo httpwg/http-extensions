@@ -737,10 +737,10 @@ prioritize new data for a higher urgency stream over retransmission data for a
 lower priority stream, or it could prioritize retransmission data over new data
 irrespective of urgencies.
 
-{{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}},  also highlights consideration of
-application priorities when sending probe packets after PTO timer expiration. An
-QUIC implementation supporting application-indicated priorities might use the
-relative priority of streams when choosing probe data.
+{{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}}, also highlights consideration of
+application priorities when sending probe packets after Probe Timeout timer
+expiration. An QUIC implementation supporting application-indicated priorities
+might use the relative priority of streams when choosing probe data.
 
 
 # Fairness {#fairness}
