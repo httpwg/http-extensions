@@ -101,7 +101,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in {{!RFC2119}}.
 
-The terms sf-integer and sf-boolean are imported from
+The terms Dictionary, sf-boolean, sf-dictionary, and sf-integer are imported from
 {{!STRUCTURED-FIELDS=RFC8941}}.
 
 Example HTTP requests and responses use the HTTP/2-style formatting from
@@ -257,8 +257,10 @@ server SHOULD act as if their default values were specified. Note that handling
 of omitted parameters is different when processing an HTTP response; see
 {{merging}}.
 
-Unknown parameters, parameters with out-of-range values or values of unexpected
-types MUST be ignored.
+Receivers parse the Dictionary as defined in {{Section 4.2 of
+STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document
+places the additional requirement that unknown priority parameters, parameters
+with out-of-range values, or values of unexpected types MUST be ignored.
 
 ## Urgency
 
@@ -372,14 +374,19 @@ where to send registration requests.
 
 # The Priority HTTP Header Field {#header-field}
 
-The Priority HTTP header field can appear in requests and responses. A client
-uses it to specify the priority of the response. A server uses it to inform
-the client that the priority was overwritten. An intermediary can use the
-Priority information from client requests and server responses to correct or
-amend the precedence to suit it (see {{merging}}).
+The Priority HTTP header field carries priority parameters {{parameters}}. It
+can appear in requests and responses. It is an end-to-end signal of the request
+priority from the client or the response priority from the server. {{merging}}
+describes how intermediaries can combine the priority information from client
+requests and server responses to correct or amend the precedence. Clients cannot
+interpret the appearance or omission of a Priority response header as
+acknowledgement that any prioritization has occurred.
 
-The Priority header field is an end-to-end signal of the request priority from
-the client or the response priority from the server.
+Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
+
+~~~ abnf
+Priority   = sf-dictionary
+~~~
 
 As is the ordinary case for HTTP caching {{?CACHING=I-D.ietf-httpbis-cache}}, a
 response with a Priority header field might be cached and re-used for subsequent
@@ -387,9 +394,6 @@ requests. When an origin server generates the Priority response header field
 based on properties of an HTTP request it receives, the server is expected to
 control the cacheability or the applicability of the cached response, by using
 header fields that control the caching behavior (e.g., Cache-Control, Vary).
-
-An endpoint that fails to parse the Priority header field SHOULD use default
-parameter values.
 
 
 # Reprioritization
