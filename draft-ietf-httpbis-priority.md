@@ -60,19 +60,31 @@ code and issues list for this draft can be found at
 
 # Introduction
 
-It is common for an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}} resource
-representation to have relationships to one or more other resources.  Clients
-will often discover these relationships while processing a retrieved
-representation, leading to further retrieval requests.  Meanwhile, the nature of
-the relationship determines whether the client is blocked from continuing to
-process locally available resources.  For example, visual rendering of an HTML
-document could be blocked by the retrieval of a CSS file that the document
-refers to.  In contrast, inline images do not block rendering and get drawn
+It is common for representations of an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}}
+resource to have relationships to one or more other resources. Clients will
+often discover these relationships while processing a retrieved representation,
+which may lead to further retrieval requests.  Meanwhile, the nature of the
+relationship determines whether the client is blocked from continuing to process
+locally available resources.  An example of this is visual rendering of an HTML
+document, which could be blocked by the retrieval of a CSS file that the
+document refers to. In contrast, inline images do not block rendering and get drawn
 incrementally as the chunks of the images arrive.
 
-To provide meaningful presentation of a document at the earliest moment, it is
-important for an HTTP server to prioritize the HTTP responses, or the chunks of
-those HTTP responses, that it sends.
+HTTP/2 {{!HTTP2=I-D.ietf-httpbis-http2bis}} and HTTP/3
+{{!HTTP3=I-D.ietf-quic-http}} support multiplexing of requests and responses in
+a single connection. An important feature of any implementation of a protocol
+that provides multiplexing is the ability to prioritize the sending of
+information. For example, to provide meaningful presentation of an HTML document
+at the earliest moment, it is important for an HTTP server to prioritize the
+HTTP responses, or the chunks of those HTTP responses, that it sends to a
+client.
+
+A server that operates in ignorance of how clients issue requests and
+consume responses can cause suboptimal client application performance. Priority
+signals allow clients to communicate their view of request
+priority. Servers have their own needs that are independent from client needs,
+so they often combine priority signals with other available information in order
+to inform scheduling of response data.
 
 RFC 7540 {{?RFC7540}} stream priority allowed a client to send a series of
 priority signals that communicate to the server a "priority tree"; the structure
@@ -88,12 +100,21 @@ these stream priority signals.
 This document describes an extensible scheme for prioritizing HTTP responses
 that uses absolute values. {{parameters}} defines priority parameters, which are
 a standardized and extensible format of priority information. {{header-field}}
-defines the Priority HTTP header field that can be used by both client and
-server to exchange parameters in order to specify the precedence of HTTP
-responses in a protocol-version-independent and end-to-end manner.
+defines the Priority HTTP header field, a protocol-version-independent and
+end-to-end priority signal. Clients can use this header to signal priority to
+servers in order to specify the precedence of HTTP responses. Similarly, servers
+behind an intermediary can use it to signal priority to the intermediary.
 {{h2-update-frame}} and {{h3-update-frame}} define version-specific frames that
-carry parameters for reprioritization. This prioritization scheme and its
-signals can act as a substitute for RFC 7540 stream priority.
+carry parameters, which clients can use for reprioritization.
+
+Header field and frame priority signals are input to a server's response
+prioritization process. They are only a suggestion and do not guarantee any
+particular processing or transmission order for one response relative to any
+other response. {{server-scheduling}} and {{retransmission-scheduling}} provide
+consideration and guidance about how servers might act upon signals.
+
+The prioritization scheme and priority signals defined herein can act as a
+substitute for RFC 7540 stream priority.
 
 ## Notational Conventions
 
@@ -119,13 +140,6 @@ sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
 
 # Motivation for Replacing RFC 7540 Priorities {#motivation}
 
-An important feature of any implementation of a protocol that provides
-multiplexing is the ability to prioritize the sending of information.
-Prioritization is a difficult problem, so it will always be suboptimal,
-particularly if one endpoint operates in ignorance of the needs of its peer.
-Priority signalling allows endpoints to communicate their own view of priority,
-which can be combined with information the peer has to inform scheduling.
-
 RFC 7540 stream priority (see {{Section 5.3 of ?RFC7540}}) is a complex system
 where clients signal stream dependencies and weights to describe an unbalanced
 tree. It suffered from limited deployment and interoperability and was deprecated
@@ -143,10 +157,11 @@ intervene accordingly.
 Many RFC 7540 server implementations do not act on HTTP/2 priority signals. Some
 instead favor custom server-driven schemes based on heuristics or other hints,
 such as resource content type or request generation order. For example, a
-server, with knowledge of the document structure, might want to prioritize the
-delivery of images that are critical to user experience above other images, but
-below the CSS files. Since client trees vary, it is impossible for the server to
-determine how such images should be prioritized against other responses.
+server, with knowledge of an HTML document structure, might want to prioritize
+the delivery of images that are critical to user experience above other images,
+but below the CSS files. Since client trees vary, it is impossible for the
+server to determine how such images should be prioritized against other
+responses.
 
 RFC 7540 allows intermediaries to coalesce multiple client trees into a single
 tree that is used for a single upstream HTTP/2 connection. However, most
