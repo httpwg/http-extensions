@@ -345,9 +345,9 @@ priority = u=5, i
 When attempting to define new parameters, care must be taken so that they do not
 adversely interfere with prioritization performed by existing endpoints or
 intermediaries that do not understand the newly defined parameter. Since unknown
-parameters are ignored, new parameters should not change the interpretation of
-or modify the predefined parameters in a way that is not backwards compatible or
-fallback safe.
+parameters are ignored, new parameters should not change the interpretation of,
+or modify, the urgency (see {{urgency}}) or incremental (see {{incremental}})
+parameters in a way that is not backwards compatible or fallback safe.
 
 For example, if there is a need to provide more granularity than eight urgency
 levels, it would be possible to subdivide the range using an additional
@@ -366,23 +366,38 @@ a prefix that identifies the vendor, application or deployment).
 ### Registration {#register}
 
 New Priority parameters can be defined by registering them in the HTTP Priority
-Parameters Registry.
+Parameters Registry. The registry governs the keys (short textual strings) used
+in Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
+Since each HTTP request can have an associated priority signals, there is value
+in having short key lengths, especially single-character strings. In order to
+encourage extension while avoiding unintended conflict among attractive key
+values, the HTTP Priority Parameters Registry operates two registration policies
+depending on key length.
 
-Registration requests are reviewed and approved by a Designated Expert, as per
-{{Section 4.5 of !RFC8126}}. A specification document is appreciated, but not
-required.
+* Registration requests for parameters with a key length of one use the
+Specification Required policy, as per {{Section 4.6 of !RFC8126}}.
 
-The Expert(s) should consider the following factors when evaluating requests:
+* Registration requests for parameters with a key length greater than one use the
+Expert Review policy, as per {{Section 4.5 of !RFC8126}}. A specification
+document is appreciated, but not required.
 
-* Community feedback
-* If the parameters are sufficiently well-defined and adhere to the guidance
-  provided in {{new-parameters}}.
+When reviewing registration requests, the designated expert(s) should consider
+if the parameters are sufficiently well-defined and adhere to the guidance
+provided in {{new-parameters}}. The expert(s) should only reject registrations
+where it is clear that the interpretation of urgency ({{urgency}}) or
+incremental ({{incremental}}) parameters are changed in non-compatible or
+fallback-safe way that risks widespread interoperability.
 
 Registration requests should use the following template:
 
-* Name: \[a name for the Priority Parameter that matches key\]
-* Description: \[a description of the parameter semantics and value\]
-* Reference: \[to a specification defining this parameter\]
+Name:
+: \[a name for the Priority Parameter that matches key\]
+
+Description:
+: \[a description of the parameter semantics and value\]
+
+Reference:
+: \[to a specification defining this parameter\]
 
 See the registry at <https://iana.org/assignments/http-priority> for details on
 where to send registration requests.
