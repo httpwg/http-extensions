@@ -565,7 +565,10 @@ Stream ID that is not a request stream, this MUST be treated as a connection
 error of type H3_ID_ERROR. The Stream ID MUST be within the client-initiated
 bidirectional stream limit. If a server receives a PRIORITY_UPDATE
 (type=0xF0700) with a Stream ID that is beyond the stream limits, this SHOULD be
-treated as a connection error of type H3_ID_ERROR.
+treated as a connection error of type H3_ID_ERROR. Generating an error is not
+mandatory because HTTP/3 implementations might have practical barriers to
+determining reasonable stream concurrency limits depending on the information
+that is available to them from the QUIC transport layer.
 
 The push-stream variant PRIORITY_UPDATE (type=0xF0701) MUST reference a promised
 push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with a Push ID
@@ -855,9 +858,7 @@ Loop", is an example of a DoS attack that abuses stream dependencies. Extensible
 priorities does not use dependencies, which avoids these issues.
 
 {{frame}} describes considerations for server buffering of PRIORITY_UPDATE
-frames. HTTP/3 implementations might have practical barriers to determining
-reasonable stream concurrency limits depending on the information that is
-available to them from the QUIC transport layer.
+frames.
 
 {{server-scheduling}} presents examples where servers that prioritize responses
 in a certain way might be starved of the ability to transmit payload.
