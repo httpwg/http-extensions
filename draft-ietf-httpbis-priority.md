@@ -67,7 +67,7 @@ which may lead to further retrieval requests.  Meanwhile, the nature of the
 relationship determines whether the client is blocked from continuing to process
 locally available resources.  An example of this is visual rendering of an HTML
 document, which could be blocked by the retrieval of a CSS file that the
-document refers. In contrast, inline images do not block rendering and get drawn
+document refers to. In contrast, inline images do not block rendering and get drawn
 incrementally as the chunks of the images arrive.
 
 HTTP/2 {{!HTTP2=I-D.ietf-httpbis-http2bis}} and HTTP/3
@@ -79,9 +79,9 @@ at the earliest moment, it is important for an HTTP server to prioritize the
 HTTP responses, or the chunks of those HTTP responses, that it sends to a
 client.
 
-A server that operates in ignorance of the how clients issue requests and
+A server that operates in ignorance of how clients issue requests and
 consume responses can cause suboptimal client application performance. Priority
-signalling allows for a client to communication its's own view of request
+signals allow clients to communicate their view of request
 priority. Servers have their own needs that are independent from client needs,
 so they often combine priority signals with other available information in order
 to inform scheduling of response data.
