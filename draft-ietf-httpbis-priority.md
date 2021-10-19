@@ -954,7 +954,7 @@ defined in {{parameters}}; see {{register}} for its associated procedures.
 Roy Fielding presented the idea of using a header field for representing
 priorities in <http://tools.ietf.org/agenda/83/slides/slides-83-httpbis-5.pdf>.
 In <https://github.com/pmeenan/http3-prioritization-proposal>, Patrick Meenan
-advocates for representing the priorities using a tuple of urgency and
+advocated for representing the priorities using a tuple of urgency and
 concurrency. The ability to disable HTTP/2 prioritization is inspired by
 {{?I-D.lassey-priority-setting}}, authored by Brad Lassey and Lucas Pardue, with
 modifications based on feedback that was not incorporated into an update to that
@@ -969,6 +969,8 @@ In addition to the people above, this document owes a lot to the extensive
 discussion in the HTTP priority design team, consisting of Alan Frindell,
 Andrew Galloni, Craig Taylor, Ian Swett, Kazuho Oku, Lucas Pardue, Matthew Cox,
 Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
+
+Yang Chi contributed the section on retransmission scheduling.
 
 # Change Log
 
