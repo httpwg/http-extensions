@@ -410,7 +410,7 @@ be represented as a quoted string
 or MUST NOT include ";" or "," in the character sets used for the encoding.
 
 Insecure digest algorithms MAY be used to preserve integrity against accidental change, but MUST
-NOT be used in adversarial settings; for example, when signing the digest of content for
+NOT be used in a potentially adversarial setting; for example, when signing the digest of content for
 authenticity.
 
 The registry is initialized with the tokens listed below.
