@@ -400,7 +400,7 @@ Registrations MUST include the following fields:
      "experimental" or some other appropriate value
      - e.g. according to the type and status of the primary document
      in which the algorithm is defined;
-     "deprecated" when the algorithm is insecure or otherwise undesirable;
+     "insecure" when the algorithm is insecure;
      "reserved" when Digest algorithm references a reserved token value
  - Description: the description of the digest-algorithm and its encoding
  - Reference: a set of pointers to the primary documents defining the digest-algorithm
@@ -409,7 +409,9 @@ The associated encoding for new digest-algorithms MUST either
 be represented as a quoted string
 or MUST NOT include ";" or "," in the character sets used for the encoding.
 
-Deprecated digest algorithms MUST NOT be used.
+Insecure digest algorithms MAY be used to preserve integrity against accidental change, but MUST
+NOT be used in a potentially adversarial setting; for example, when signing the digest of content for
+authenticity.
 
 The registry is initialized with the tokens listed below.
 
@@ -436,7 +438,7 @@ The registry is initialized with the tokens listed below.
       This digest-algorithm is now vulnerable
       to collision attacks. See {{?NO-MD5=RFC6151}} and [CMU-836068].
     * Reference: [RFC1321], [RFC4648], this document.
-    * Status: deprecated
+    * Status: insecure
 
   sha
   : * Digest Algorithm: sha
@@ -445,7 +447,7 @@ The registry is initialized with the tokens listed below.
       This digest-algorithm is now vulnerable
       to collision attacks. See {{?NO-SHA1=RFC6194}} and [IACR-2020-014].
     * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
-    * Status: deprecated
+    * Status: insecure
 
   unixsum
   : * Digest Algorithm: unixsum
@@ -456,7 +458,7 @@ The registry is initialized with the tokens listed below.
       checksum, which is the first word of the output of
       the UNIX "sum" command.
     * Reference: [UNIX], this document.
-    * Status: deprecated
+    * Status: insecure
 
   unixcksum
   : * Digest Algorithm: unixcksum
@@ -467,7 +469,7 @@ The registry is initialized with the tokens listed below.
       which is the first word of the output of the UNIX
       "cksum" command.
     * Reference: [UNIX], this document.
-    * Status: deprecated
+    * Status: insecure
 
   adler32
   : * Digest Algorithm: adler32
@@ -478,7 +480,7 @@ The registry is initialized with the tokens listed below.
       checksums for the 4-byte message "Wiki". This algorithm is obsoleted and
       SHOULD NOT be used.
     * Reference: [RFC1950], this document.
-    * Status: deprecated
+    * Status: insecure
 
   crc32c
   : * Digest Algorithm: crc32c
@@ -490,7 +492,7 @@ The registry is initialized with the tokens listed below.
       example, crc32c=0a72a4df and crc32c=A72A4DF are both valid checksums for the
       3-byte message "dog".
     * Reference: {{!RFC4960}} appendix B, this document.
-    * Status: deprecated.
+    * Status: insecure
 
 To allow sender and recipient to provide a checksum which is independent from
 `Content-Encoding`, the following additional digest-algorithms are defined:
@@ -644,7 +646,7 @@ this document adds to the IANA Digest Algorithm Values registry
 a new "Status" field containing the most recent appraisal of the digest-algorithm.
 
 An endpoint might have a preference for algorithms,
-such as preferring "standard" algorithms over "deprecated" ones.
+such as preferring "standard" algorithms over "insecure" ones.
 Transition from weak algorithms is supported
 by negotiation of digest-algorithm using `Want-Digest` or `Want-Content-Digest` (see {{want-fields}})
 or by sending multiple representation-data-digest values from which the receiver chooses.
@@ -705,13 +707,13 @@ registry:
 The `contentMD5` digest-algorithm token defined in {{Section 5 of RFC3230}}
 has been added to the HTTP Digest Algorithm Values Registry with the "obsoleted" status.
 
-All digest-algorithms defined in [RFC3230] are now "deprecated".
+All digest-algorithms defined in [RFC3230] are now "insecure".
 
 ## Changes Compared to RFC5843
 
 The digest-algorithm tokens for "MD5", "SHA", "SHA-256", "SHA-512" have been updated to lowercase.
 
-The status of "MD5" and "SHA" has been updated to "deprecated", and their description
+The status of "MD5" and "SHA" has been updated to "insecure", and their description
 has been modified accordingly.
 
 The "id-sha-256" and "id-sha-512" algorithms have been added to the registry.
