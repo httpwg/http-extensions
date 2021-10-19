@@ -2420,6 +2420,10 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Specify empty domain attribute handling:
   <https://github.com/httpwg/http-extensions/pull/1709>
 
+## draft-ietf-httpbis-rfc6265bis-10
+
+* No changes yet.
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
