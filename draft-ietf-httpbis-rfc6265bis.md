@@ -1123,7 +1123,7 @@ in {{sane-set-cookie}} forbids whitespace in these positions. In addition, the
 algorithm below accommodates some characters that are not cookie-octets
 according to the grammar in {{sane-set-cookie}}. User agents use this algorithm
 so as to interoperate with servers that do not follow the recommendations in
-{{sane-profile}}. See {{ua-set-cookie}} for a grammar that corresponds to
+{{sane-profile}}. See {{ua-abnf-syntax}} for a grammar that corresponds to
 the algorithm.
 
 NOTE: As set-cookie-string may originate from a non-HTTP API, it is not
