@@ -39,7 +39,7 @@ informative:
 
 --- abstract
 
-This document describes a scheme for HTTP clients to communicate their priority for HTTP responses to servers.  This document
+This document describes a scheme that allows a HTTP client to communicate its preferences for how the upstream server prioritises responses to its requests, and also allows a server to hint to a downstream intermediary how its responses should be prioritised when they are forwarded.  This document
 defines the Priority header field for communicating the initial priority in an
 HTTP version-independent manner, as well as HTTP/2 and HTTP/3 frames for
 reprioritizing responses. These share a common format structure that is
