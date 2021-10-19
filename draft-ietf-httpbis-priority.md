@@ -368,7 +368,7 @@ a prefix that identifies the vendor, application or deployment).
 New Priority parameters can be defined by registering them in the HTTP Priority
 Parameters Registry. The registry governs the keys (short textual strings) used
 in Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
-Since each HTTP request can have an associated priority signals, there is value
+Since each HTTP request can have associated priority signals, there is value
 in having short key lengths, especially single-character strings. In order to
 encourage extension while avoiding unintended conflict among attractive key
 values, the HTTP Priority Parameters Registry operates two registration policies
