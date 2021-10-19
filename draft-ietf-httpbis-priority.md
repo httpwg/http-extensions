@@ -974,6 +974,11 @@ Yang Chi contributed the section on retransmission scheduling.
 
 # Change Log
 
+## Since draft-ietf-httpbis-priority-06
+* Focus on editorial changes
+* Clarify rules about Sf-Dictionary handling in headers
+* Split policy for parameter IANA registry into two sections based on key length
+
 ## Since draft-ietf-httpbis-priority-05
 * Renamed SETTINGS_DEPRECATE_RFC7540_PRIORITIES to
   SETTINGS_NO_RFC7540_PRIORITIES
