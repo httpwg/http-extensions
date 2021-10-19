@@ -381,12 +381,9 @@ Specification Required policy, as per {{Section 4.6 of !RFC8126}}.
 Expert Review policy, as per {{Section 4.5 of !RFC8126}}. A specification
 document is appreciated, but not required.
 
-When reviewing registration requests, the designated expert(s) should consider
-if the parameters are sufficiently well-defined and adhere to the guidance
-provided in {{new-parameters}}. The expert(s) should only reject registrations
-where it is clear that the interpretation of urgency ({{urgency}}) or
-incremental ({{incremental}}) parameters are changed in non-compatible or
-fallback-safe way that risks widespread interoperability.
+When reviewing registration requests, the designated expert(s) can consider the
+additional guidance provided in {{new-parameters}} but cannot use it as a basis
+for rejection.
 
 Registration requests should use the following template:
 
