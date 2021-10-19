@@ -478,12 +478,14 @@ Cookie and Set-Cookie header fields.
 The Set-Cookie HTTP response header field is used to send cookies from the server to
 the user agent.
 
-### Syntax {#abnf-syntax}
+### Syntax {#sane-abnf-syntax}
 
 Informally, the Set-Cookie response header field contains a cookie, which begins with a
 name-value-pair, followed by zero or more attribute-value pairs. Servers
-SHOULD NOT send Set-Cookie header fields that fail to conform to the following
-grammar:
+SHOULD NOT send Set-Cookie header fields that fail to conform to the grammar below.
+
+Note that the grammar used by the user agent when processing Set-Cookie header fields
+is more permissive than this grammar. (See {{ua-abnf-syntax}} for more details.)
 
 ~~~ abnf
 set-cookie        = set-cookie-string
@@ -1121,7 +1123,8 @@ in {{sane-set-cookie}} forbids whitespace in these positions. In addition, the
 algorithm below accommodates some characters that are not cookie-octets
 according to the grammar in {{sane-set-cookie}}. User agents use this algorithm
 so as to interoperate with servers that do not follow the recommendations in
-{{sane-profile}}.
+{{sane-profile}}. See {{ua-set-cookie}} for a grammar that corresponds to
+the algorithm.
 
 NOTE: As set-cookie-string may originate from a non-HTTP API, it is not
 guaranteed to be free of CTL characters, so this algorithm handles them
@@ -1393,6 +1396,62 @@ with
        2.  The cookie's same-site-flag is "Default" and the amount of time
            elapsed since the cookie's creation-time is at most a duration of the
            user agent's choosing.
+
+## Syntax {#ua-abnf-syntax}
+
+Based on the parsing algorithms defined above, the following grammar defines
+the syntax requirements enforced by user agents when parsing specific
+subcomponents of the Cookie and Set-Cookie header fields:
+
+~~~ abnf
+set-cookie         = set-cookie-string
+set-cookie-string  = cookie-pair *( BWS ";" OWS cookie-av)
+cookie-pair        = *1(BWS cookie-name BWS "=") BWS cookie-value BWS
+                       ; cookie-name plus cookie-value must be less than
+                       ; or equal to 4096 octets
+
+cookie-name        = *4096(cookie-name-octet)
+cookie-value       = *4096(cookie-value-octet)
+cookie-name-octet  = %x09 / %x20-3A / %x3C / %x3E-7E / %x80-FF
+                       ; octets excluding non-whitespace CTLs,
+                       ; semicolon, and equals
+cookie-value-octet = %x09 / %x20-3A / %x3C-7E / %x80-FF
+                       ; octets excluding non-whitespace CTLs and
+                       ; semicolon
+
+cookie-av          = expires-av / max-age-av / domain-av /
+                     path-av / secure-av / httponly-av /
+                     samesite-av / extension-av
+                       ; attributes that don't conform to the grammars
+                       ; below are ignored
+
+expires-av         = "Expires" BWS "=" BWS cookie-date BWS
+                       ; cookie-date is defined in separate grammar
+                       ; in a previous section
+
+max-age-av         = "Max-Age" BWS "=" BWS max-age-value BWS
+max-age-value      = 1*1024(DIGIT) / "-" 1*1023(DIGIT)
+
+domain-av          = "Domain" BWS "=" BWS domain-value BWS
+domain-value       = 1*1024(cookie-value-octet)
+                       ; a leading dot in domain-value will be removed
+                       ; if present
+
+path-av            = "Path" BWS "=" BWS path-value BWS
+path-value         = 1*1024(cookie-value-octet)
+
+secure-av          = "Secure" BWS *ignored-value
+
+httponly-av        = "HttpOnly" BWS *ignored-value
+
+samesite-av        = "SameSite" BWS "=" BWS samesite-value BWS
+samesite-value     = "Strict" / "Lax" / "None"
+
+extension-av       = 1*cookie-name-octet BWS *optional-value
+
+ignored-value      = "=" BWS *1024(cookie-value-octet) BWS
+optional-value     = ignored-value
+~~~
 
 ## Storage Model {#storage-model}
 
@@ -2255,7 +2314,7 @@ reference detailing how the attribute is to be processed and stored.
 
 New registrations happen on a "RFC Required" basis (see Section 4.7 of
 {{RFC8126}}). The attribute to be registered MUST match the `extension-av`
-syntax defined in {{abnf-syntax}}. Note that attribute names are generally
+syntax defined in {{sane-abnf-syntax}}. Note that attribute names are generally
 defined in CamelCase, but technically accepted case-insensitively.
 
 ### Registration
