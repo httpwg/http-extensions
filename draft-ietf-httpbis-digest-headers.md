@@ -1276,10 +1276,10 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 ~~~
 {: title="Response with Different Algorithm"}
 
-##  Server Selects Algorithm Unsupported by Client
+##  Server Selects Algorithm Unsupported by Client {#ex-server-selects-unsupported-algorithm}
 
 The client requests a "sha" digest only. The server is currently free to reply
-with a Digest containing an unsupported algorithm.
+with a `Digest` containing an unsupported algorithm.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -1301,7 +1301,14 @@ Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
 
 ## Server Does Not Support Client Algorithm and Returns an Error
 
-The client requests a "sha" Digest, the server advises "sha-256" and "sha-512".
+The client requests a "sha" `Digest`, the server advises "sha-256" and "sha-512".
+
+While {{ex-server-selects-unsupported-algorithm}} shows a server
+ignoring the digest algorithm requested by the client,
+that is not the sole possible choice.
+For example, the server is also free to return an error response
+advertising a list of supported algorithms.
+
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -1316,7 +1323,7 @@ HTTP/1.1 400 Bad Request
 Want-Digest: sha-256, sha-512
 
 ~~~
-{: title="Response with Want-Digest"}
+{: title="Response advertising the supported algorithms using Want-Digest"}
 
 
 # Changes from RFC3230
