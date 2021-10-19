@@ -60,19 +60,31 @@ code and issues list for this draft can be found at
 
 # Introduction
 
-It is common for an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}} resource
-representation to have relationships to one or more other resources.  Clients
-will often discover these relationships while processing a retrieved
-representation, leading to further retrieval requests.  Meanwhile, the nature of
-the relationship determines whether the client is blocked from continuing to
-process locally available resources.  For example, visual rendering of an HTML
-document could be blocked by the retrieval of a CSS file that the document
-refers to.  In contrast, inline images do not block rendering and get drawn
+It is common for representations of an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}}
+resource to have relationships to one or more other resources. Clients will
+often discover these relationships while processing a retrieved representation,
+which may lead to further retrieval requests.  Meanwhile, the nature of the
+relationship determines whether the client is blocked from continuing to process
+locally available resources.  An example of this is visual rendering of an HTML
+document, which could be blocked by the retrieval of a CSS file that the
+document refers to. In contrast, inline images do not block rendering and get drawn
 incrementally as the chunks of the images arrive.
 
-To provide meaningful presentation of a document at the earliest moment, it is
-important for an HTTP server to prioritize the HTTP responses, or the chunks of
-those HTTP responses, that it sends.
+HTTP/2 {{!HTTP2=I-D.ietf-httpbis-http2bis}} and HTTP/3
+{{!HTTP3=I-D.ietf-quic-http}} support multiplexing of requests and responses in
+a single connection. An important feature of any implementation of a protocol
+that provides multiplexing is the ability to prioritize the sending of
+information. For example, to provide meaningful presentation of an HTML document
+at the earliest moment, it is important for an HTTP server to prioritize the
+HTTP responses, or the chunks of those HTTP responses, that it sends to a
+client.
+
+A server that operates in ignorance of how clients issue requests and
+consume responses can cause suboptimal client application performance. Priority
+signals allow clients to communicate their view of request
+priority. Servers have their own needs that are independent from client needs,
+so they often combine priority signals with other available information in order
+to inform scheduling of response data.
 
 RFC 7540 {{?RFC7540}} stream priority allowed a client to send a series of
 priority signals that communicate to the server a "priority tree"; the structure
@@ -88,12 +100,21 @@ these stream priority signals.
 This document describes an extensible scheme for prioritizing HTTP responses
 that uses absolute values. {{parameters}} defines priority parameters, which are
 a standardized and extensible format of priority information. {{header-field}}
-defines the Priority HTTP header field that can be used by both client and
-server to exchange parameters in order to specify the precedence of HTTP
-responses in a protocol-version-independent and end-to-end manner.
+defines the Priority HTTP header field, a protocol-version-independent and
+end-to-end priority signal. Clients can use this header to signal priority to
+servers in order to specify the precedence of HTTP responses. Similarly, servers
+behind an intermediary can use it to signal priority to the intermediary.
 {{h2-update-frame}} and {{h3-update-frame}} define version-specific frames that
-carry parameters for reprioritization. This prioritization scheme and its
-signals can act as a substitute for RFC 7540 stream priority.
+carry parameters, which clients can use for reprioritization.
+
+Header field and frame priority signals are input to a server's response
+prioritization process. They are only a suggestion and do not guarantee any
+particular processing or transmission order for one response relative to any
+other response. {{server-scheduling}} and {{retransmission-scheduling}} provide
+consideration and guidance about how servers might act upon signals.
+
+The prioritization scheme and priority signals defined herein can act as a
+substitute for RFC 7540 stream priority.
 
 ## Notational Conventions
 
@@ -101,7 +122,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in {{!RFC2119}}.
 
-The terms sf-integer and sf-boolean are imported from
+The terms Dictionary, sf-boolean, sf-dictionary, and sf-integer are imported from
 {{!STRUCTURED-FIELDS=RFC8941}}.
 
 Example HTTP requests and responses use the HTTP/2-style formatting from
@@ -118,13 +139,6 @@ sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
 
 
 # Motivation for Replacing RFC 7540 Priorities {#motivation}
-
-An important feature of any implementation of a protocol that provides
-multiplexing is the ability to prioritize the sending of information.
-Prioritization is a difficult problem, so it will always be suboptimal,
-particularly if one endpoint operates in ignorance of the needs of its peer.
-Priority signalling allows endpoints to communicate their own view of priority,
-which can be combined with information the peer has to inform scheduling.
 
 RFC 7540 stream priority (see {{Section 5.3 of ?RFC7540}}) is a complex system
 where clients signal stream dependencies and weights to describe an unbalanced
@@ -143,10 +157,11 @@ intervene accordingly.
 Many RFC 7540 server implementations do not act on HTTP/2 priority signals. Some
 instead favor custom server-driven schemes based on heuristics or other hints,
 such as resource content type or request generation order. For example, a
-server, with knowledge of the document structure, might want to prioritize the
-delivery of images that are critical to user experience above other images, but
-below the CSS files. Since client trees vary, it is impossible for the server to
-determine how such images should be prioritized against other responses.
+server, with knowledge of an HTML document structure, might want to prioritize
+the delivery of images that are critical to user experience above other images,
+but below the CSS files. Since client trees vary, it is impossible for the
+server to determine how such images should be prioritized against other
+responses.
 
 RFC 7540 allows intermediaries to coalesce multiple client trees into a single
 tree that is used for a single upstream HTTP/2 connection. However, most
@@ -257,8 +272,10 @@ server SHOULD act as if their default values were specified. Note that handling
 of omitted parameters is different when processing an HTTP response; see
 {{merging}}.
 
-Unknown parameters, parameters with out-of-range values or values of unexpected
-types MUST be ignored.
+Receivers parse the Dictionary as defined in {{Section 4.2 of
+STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document
+places the additional requirement that unknown priority parameters, parameters
+with out-of-range values, or values of unexpected types MUST be ignored.
 
 ## Urgency
 
@@ -299,16 +316,18 @@ meaningful output as chunks of the response arrive.
 
 The default value of the incremental parameter is false (`0`).
 
-A server might distribute the bandwidth of a connection between incremental
-responses that share the same urgency, hoping that providing those responses in
-parallel would be more helpful to the client than delivering the responses one
-by one.
+If a client makes concurrent requests with the incremental parameter set to
+false, there is no benefit serving responses with the same urgency in parallel
+because the client is not going to process those responses incrementally.
+Serving non-incremental responses with the same urgency one by one, in the order in which those
+requests were generated is considered to be the best strategy.
 
 If a client makes concurrent requests with the incremental parameter set to
-false, there is no benefit serving responses in parallel because the client is
-not going to process those responses incrementally. Serving non-incremental
-responses one by one, in the order in which those requests were generated is
-considered to be the best strategy.
+true, serving requests with the same urgency in parallel might be beneficial.
+Doing this distributes the connection bandwidth, meaning that responses take
+longer to complete. Incremental delivery is most useful where multiple
+partial responses might provide some value to clients ahead of a
+complete response being available.
 
 The following example shows a request for a JPEG file with the urgency parameter
 set to `5` and the incremental parameter set to `true`.
@@ -370,14 +389,19 @@ where to send registration requests.
 
 # The Priority HTTP Header Field {#header-field}
 
-The Priority HTTP header field can appear in requests and responses. A client
-uses it to specify the priority of the response. A server uses it to inform
-the client that the priority was overwritten. An intermediary can use the
-Priority information from client requests and server responses to correct or
-amend the precedence to suit it (see {{merging}}).
+The Priority HTTP header field carries priority parameters {{parameters}}. It
+can appear in requests and responses. It is an end-to-end signal of the request
+priority from the client or the response priority from the server. {{merging}}
+describes how intermediaries can combine the priority information from client
+requests and server responses to correct or amend the precedence. Clients cannot
+interpret the appearance or omission of a Priority response header as
+acknowledgement that any prioritization has occurred.
 
-The Priority header field is an end-to-end signal of the request priority from
-the client or the response priority from the server.
+Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
+
+~~~ abnf
+Priority   = sf-dictionary
+~~~
 
 As is the ordinary case for HTTP caching {{?CACHING=I-D.ietf-httpbis-cache}}, a
 response with a Priority header field might be cached and re-used for subsequent
@@ -385,9 +409,6 @@ requests. When an origin server generates the Priority response header field
 based on properties of an HTTP request it receives, the server is expected to
 control the cacheability or the applicability of the cached response, by using
 header fields that control the caching behavior (e.g., Cache-Control, Vary).
-
-An endpoint that fails to parse the Priority header field SHOULD use default
-parameter values.
 
 
 # Reprioritization
@@ -632,24 +653,28 @@ can use other information to prioritize responses.
 It is RECOMMENDED that, when possible, servers respect the urgency parameter
 ({{urgency}}), sending higher urgency responses before lower urgency responses.
 
-It is RECOMMENDED that, when possible, servers respect the incremental
-parameter ({{incremental}}). Non-incremental responses of the same urgency
-SHOULD be served one-by-one based on the Stream ID, which corresponds to the
-order in which clients make requests. Doing so ensures that clients can use
-request ordering to influence response order. Incremental responses of the same
-urgency SHOULD be served in round-robin manner.
-
 The incremental parameter indicates how a client processes response bytes as
-they arrive. Non-incremental resources are only used when all of the response
-payload has been received. Incremental resources are used as parts, or chunks,
-of the response payload are received. Therefore, the timing of response data
-reception at the client, such as the time to early bytes or the time to receive
-the entire payload, plays an important role in perceived performance. Timings
-depend on resource size but this scheme provides no explicit guidance about how
-a server should use size as an input to prioritization. Instead, the following
-examples demonstrate how a server that strictly abides the scheduling guidance
-based on urgency and request generation order could find that early requests
-prevent serving of later requests.
+they arrive. It is RECOMMENDED that, when possible, servers respect the
+incremental parameter ({{incremental}}). Non-incremental resources can only be used
+when all of the response payload has been received. Therefore, non-incremental
+responses of the same urgency SHOULD be served in their entirety, one-by-one,
+based on the stream ID, which corresponds to the order in which clients make
+requests. Doing so ensures that clients can use request ordering to influence
+response order.
+
+Incremental responses of the same urgency SHOULD be served by sharing bandwidth
+amongst them. Incremental resources are used as parts, or chunks, of the
+response payload are received. A client might benefit more from receiving a
+portion of all these resources rather than the entirety of a single resource.
+How large a portion of the resource is needed to be useful in improving
+performance varies. Some resource types place critical elements early, others
+can use information progressively. This scheme provides no explicit mandate
+about how a server should use size, type or any other input to decide how to
+prioritize.
+
+The following examples demonstrate how a server that strictly abides the
+scheduling guidance based on urgency and request generation order could find
+that early requests prevent serving of later requests.
 
 1. At the same urgency level, a non-incremental request for a large resource
    followed by an incremental request for a small resource.
@@ -727,10 +752,10 @@ prioritize new data for a higher urgency stream over retransmission data for a
 lower priority stream, or it could prioritize retransmission data over new data
 irrespective of urgencies.
 
-{{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}},  also highlights consideration of
-application priorities when sending probe packets after PTO timer expiration. An
-QUIC implementation supporting application-indicated priorities might use the
-relative priority of streams when choosing probe data.
+{{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}}, also highlights consideration of
+application priorities when sending probe packets after Probe Timeout timer
+expiration. An QUIC implementation supporting application-indicated priorities
+might use the relative priority of streams when choosing probe data.
 
 
 # Fairness {#fairness}
@@ -760,7 +785,8 @@ to one user agent to be delayed totally after those going to another.
 In order to mitigate this fairness problem, a server could use knowledge about
 the intermediary as another signal in its prioritization decisions. For
 instance, if a server knows the intermediary is coalescing requests, then it
-could serve the responses in round-robin manner. This can work if the
+could avoid serving the responses in their entirety and instead distribute
+bandwidth (for example, in a round-robin manner). This can work if the
 constrained resource is network capacity between the intermediary and the user
 agent, as the intermediary buffers responses and forwards the chunks based on
 the prioritization scheme it implements.
@@ -822,33 +848,22 @@ makes the prioritization scheme extensible; see the discussion below.
 
 # Security Considerations
 
-[CVE-2019-9513] aka "Resource Loop", is a DoS attack based on manipulation of
-the RFC 7540 priority tree. Extensible priorities does not use stream
-dependencies, which mitigates this vulnerability.
+{{?RFC7540}} stream prioritization relies on dependencies. Considerations are
+presented to implementations, describing how limiting state or work commitments
+can avoid some types of problems. In addition, [CVE-2019-9513] aka "Resource
+Loop", is an example of a DoS attack that abuses stream dependencies. Extensible
+priorities does not use dependencies, which avoids these issues.
 
-{{Section 5.3.4 of ?RFC7540}} describes a scenario where closure of streams in the
-priority tree could cause suboptimal prioritization. To avoid this, {{?RFC7540}}
-states that "an endpoint SHOULD retain stream prioritization state for a period
-after streams become closed". Retaining state for streams no longer counted
-towards stream concurrency consumes server resources. Furthermore, {{?RFC7540}}
-identifies that reprioritization of a closed stream could affect dependents; it
-recommends updating the priority tree if sufficient state is stored, which will
-also consume server resources. To limit this commitment, it is stated that "The
-amount of prioritization state that is retained MAY be limited" and "If a limit
-is applied, endpoints SHOULD maintain state for at least as many streams as
-allowed by their setting for SETTINGS_MAX_CONCURRENT_STREAMS.". Extensible
-priorities does not use stream dependencies, which minimizes most of the
-resource concerns related to this scenario.
+{{frame}} describes considerations for server buffering of PRIORITY_UPDATE
+frames. HTTP/3 implementations might have practical barriers to determining
+reasonable stream concurrency limits depending on the information that is
+available to them from the QUIC transport layer.
 
-{{Section 5.3.4 of ?RFC7540}} also presents considerations about the state required
-to store priority information about streams in an "idle" state. This state can
-be limited by adopting the guidance about concurrency limits described above.
-Extensible priorities is subject to a similar consideration because
-PRIORITY_UPDATE frames may arrive before the request that they reference. A
-server is required to store the information in order to apply the most
-up-to-date signal to the request. However, HTTP/3 implementations might have
-practical barriers to determining reasonable stream concurrency limits depending
-on the information that is available to them from the QUIC transport layer.
+{{server-scheduling}} presents examples where servers that prioritize responses
+in a certain way might be starved of the ability to transmit payload.
+
+The security considerations from {{STRUCTURED-FIELDS}} apply to processing of
+priority parameters defined in {{parameters}}.
 
 # IANA Considerations
 

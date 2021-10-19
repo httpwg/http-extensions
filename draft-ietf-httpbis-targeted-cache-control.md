@@ -5,7 +5,7 @@ date: {NOW}
 category: std
 
 ipr: trust200902
-area: General
+area: Applications and Real-Time
 workgroup: HTTP
 keyword:
  - CDN
@@ -63,7 +63,7 @@ informative:
 
 --- abstract
 
-This specification defines a convention for HTTP response header fields that allow directives controlling caching to be targeted at specific caches or classes of caches. It also defines one such header field, targeted at Content Delivery Network (CDN) caches.
+This specification defines a convention for HTTP response header fields that allow cache directives to be targeted at specific caches or classes of caches. It also defines one such header field, targeted at Content Delivery Network (CDN) caches.
 
 --- note_Note_to_Readers
 
@@ -81,11 +81,11 @@ See also the draft's current status in the IETF datatracker, at
 # Introduction
 
 
-Modern deployments of HTTP often use multiple layers of caching with varying properties. For example, a Web site might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more Content Delivery Networks (CDNs) that are distributed throughout the Internet, and it might utilise browser caching as well.
+Modern deployments of HTTP often use multiple layers of caching. For example, a Web site might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more Content Delivery Networks (CDNs) that are distributed throughout the Internet, and it might utilise browser caching as well.
 
 Because it is often desirable to control these different classes of caches separately, some means of targeting directives at them is necessary.
 
-The HTTP Cache-Control response header field is widely used to direct caching behavior. However, it is relatively undifferentiated; while some directives (e.g., s-maxage) are targeted at a specific class of caches (for s-maxage, shared caches), targeting is not consistently available across all existing cache directives (e.g., stale-while-revalidate). This is problematic, especially as the number of caching extensions grows, along with the number of potential targets.
+The HTTP Cache-Control response header field (defined in {{Section 5.2 of HTTP-CACHING}}) is widely used to direct caching behavior. However, it is relatively undifferentiated; while some directives (e.g., s-maxage) are targeted at a specific class of caches (for s-maxage, shared caches), targeting is not consistently available across all existing cache directives (e.g., stale-while-revalidate). This is problematic, especially as the number of caching extensions grows, along with the number of potential targets.
 
 Some implementations have defined ad hoc control mechanisms to overcome this issue, but their interoperability is low. {{targeted}} defines a standard framework for targeted cache control using HTTP response headers, and {{cdn-cache-control}} defines one such header: the CDN-Cache-Control response header field.
 
@@ -109,6 +109,25 @@ CDN-Cache-Control: max-age=60
 ~~~
 
 is a targeted field that applies to Content Delivery Networks (CDNs), as defined in {{cdn-cache-control}}.
+
+
+## Syntax
+
+Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache response directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry.
+
+Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. {{Section 5.2 of HTTP-CACHING}} defines cache directive values to be either absent, a quoted-string, or a token.
+
+This means that cache directives that have no value will be mapped to a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}). When the value is a quoted-string, it will be mapped to a String ({{Section 3.3.3 of STRUCTURED-FIELDS}}), and when it is a token, it will map to a Token ({{Section 3.3.4 of STRUCTURED-FIELDS}}), an Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) or a Decimal ({{Section 3.3.2 of STRUCTURED-FIELDS}}), depending on the content of the value.
+
+For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an integer value; no-store ({{Section 5.2.2.5 of HTTP-CACHING}}) always has a boolean true value, and no-cache ({{Section 5.2.2.4 of HTTP-CACHING}}) has a value that can either be boolean true or a string containing a comma-delimited list of field names.
+
+Implementations MUST NOT generate values that violate these inferred constraints on the directive's value. In particular, string values whose first character is not alphabetic or "*" MUST be generated as structured Strings, so they are not mistaken for other types.
+
+Implementations SHOULD NOT consume values that violate these inferred constraints. For example, a consuming implementation were to coerce a max-age with a decimal value into an integer would behave differently than other implementations, potentially causing interoperability issues.
+
+Parameters received on directives are to be ignored, unless other handling is explicitly specified.
+
+If a targeted field in a given response is empty, or a parsing error is encountered, that field MUST be ignored by the cache (i.e., it behaves as if the field were not present, likely falling back to other cache control mechanisms present).
 
 
 ## Cache Behavior
@@ -139,24 +158,6 @@ Furthermore, they SHOULD implement other cache directives (including extension c
 
 The semantics and precedence of cache directives in a targeted field are the same as those in Cache-Control. In particular, no-store and no-cache make max-age inoperative, and unrecognised extension directives are ignored.
 
-
-## Syntax
-
-Targeted fields are defined as Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry.
-
-Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. Typically, they are mapped into a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) when the member has no separate value, a Token ({{Section 3.3.4 of STRUCTURED-FIELDS}}) for alphanumeric values, a String ({{Section 3.3.3 of STRUCTURED-FIELDS}}) for quote-delimited values, or an Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) for purely numeric values.
-
-For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an integer value; no-store ({{Section 5.2.2.5 of HTTP-CACHING}}) always has a boolean true value, and no-cache ({{Section 5.2.2.4 of HTTP-CACHING}}) has a value that can either be boolean true or a string containing a comma-delimited list of field names.
-
-Implementations MUST NOT generate and SHOULD NOT consume values that violate these inferred constraints on the directive's value (e.g. coerce a max-age with a decimal value into an integer). Parameters received on directives are to be ignored, unless other handling is explicitly specified.
-
-Sending implementations MUST generate valid Structured Fields. Receiving implementations SHOULD use a Structured Fields parser, but MAY reuse an existing parser for the Cache-Control field value ({{Section 5.2 of HTTP-CACHING}}). Those that do SHOULD implement the following constraints, to aid in a smooth transition to a full Structured Field parser and prevent interoperability issues:
-
-* Directive names are all lowercase (e.g., "MAX-AGE=60" is considered an error).
-* If a directive is repeated in the field value (e.g., "max-age=30, max-age=60"), the last value 'wins' (60, in this case).
-* Members of the directives can have parameters (e.g., "max-age=30;a=b;c=d"), which are ignored unless specified.
-
-If a targeted field in a given response is empty, or a parsing error is encountered, that field MUST be ignored by the cache (i.e., it behaves as if the field were not present, likely falling back to other cache control mechanisms present).
 
 
 ## Interaction with HTTP Freshness

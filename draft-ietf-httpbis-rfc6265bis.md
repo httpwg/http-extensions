@@ -1261,17 +1261,10 @@ user agent MUST process the cookie-av as follows.
 If the attribute-name case-insensitively matches the string "Domain", the user
 agent MUST process the cookie-av as follows.
 
-1.  If the attribute-value is empty, the behavior is undefined. However, the
-    user agent SHOULD ignore the cookie-av entirely.
+1.  Let cookie-domain be the attribute-value.
 
-2.  If the first character of the attribute-value string is %x2E ("."):
-
-    1.  Let cookie-domain be the attribute-value without the leading %x2E
-        (".") character.
-
-    Otherwise:
-
-    1. Let cookie-domain be the entire attribute-value.
+2.  If cookie-domain starts with %x2E ("."), let cookie-domain be cookie-domain
+    without its leading %x2E (".").
 
 3.  Convert the cookie-domain to lower case.
 
@@ -2435,6 +2428,13 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * No longer treat horizontal tab as a control character:
   <https://github.com/httpwg/http-extensions/pull/1589>
+
+* Specify empty domain attribute handling:
+  <https://github.com/httpwg/http-extensions/pull/1709>
+
+## draft-ietf-httpbis-rfc6265bis-10
+
+* No changes yet.
 
 # Acknowledgements
 {:numbered="false"}
