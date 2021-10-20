@@ -312,6 +312,9 @@ and WSP (whitespace).
 The OWS (optional whitespace) and BWS (bad whitespace) rules are defined in
 Section 5.6.3 of {{!HTTPSEM=I-D.ietf-httpbis-semantics}}.
 
+Note that per {{RFC5234}}, all strings literals used in the grammars are
+case-insensitive (e.g. "Secure" is equiavelent to "secure" and "sEcUrE").
+
 ## Terminology
 
 The terms "user agent", "client", "server", "proxy", and "origin server" have
@@ -478,11 +481,12 @@ Cookie and Set-Cookie header fields.
 The Set-Cookie HTTP response header field is used to send cookies from the server to
 the user agent.
 
-### Syntax {#sane-abnf-syntax}
+### Syntax {#server-abnf-syntax}
 
 Informally, the Set-Cookie response header field contains a cookie, which begins with a
 name-value-pair, followed by zero or more attribute-value pairs. Servers
-SHOULD NOT send Set-Cookie header fields that fail to conform to the grammar below.
+SHOULD NOT send Set-Cookie header fields that fail to conform to the grammar
+immediately below.
 
 Note that the grammar used by the user agent when processing Set-Cookie header fields
 is more permissive than this grammar. (See {{ua-abnf-syntax}} for more details.)
@@ -1400,15 +1404,15 @@ with
 ## Syntax {#ua-abnf-syntax}
 
 Based on the parsing algorithms defined above, the following grammar defines
-the syntax requirements enforced by user agents when parsing specific
-subcomponents of the Cookie and Set-Cookie header fields:
+the syntax requirements enforced by user agents when parsing
+set-cookie-strings:
 
 ~~~ abnf
 set-cookie         = set-cookie-string
 set-cookie-string  = cookie-pair *( BWS ";" OWS cookie-av)
 cookie-pair        = *1(BWS cookie-name BWS "=") BWS cookie-value BWS
-                       ; cookie-name plus cookie-value must be less than
-                       ; or equal to 4096 octets
+                       ; the sum of the lengths of cookie-name and cookie-value
+                       ; must be less than or equal to 4096 octets
 
 cookie-name        = *4096(cookie-name-octet)
 cookie-value       = *4096(cookie-value-octet)
@@ -1425,32 +1429,38 @@ cookie-av          = expires-av / max-age-av / domain-av /
                        ; attributes that don't conform to the grammars
                        ; below are ignored
 
+ignored-eq-value   = "" / ("=" BWS ignored-value)
+ignored-value      = optional-value
+optional-value     = *1024(cookie-value-octet)
+
 expires-av         = "Expires" BWS "=" BWS cookie-date BWS
-                       ; cookie-date is defined in separate grammar
+                       ; cookie-date is defined in a separate grammar
                        ; in a previous section
 
-max-age-av         = "Max-Age" BWS "=" BWS max-age-value BWS
-max-age-value      = 1*1024(DIGIT) / "-" 1*1023(DIGIT)
+max-age-av         = "Max-Age" BWS max-age-eq-value BWS
+max-age-eq-value   = "" / ("=" BWS max-age-value)
+max-age-value      = *1024(DIGIT) / ("-" *1023(DIGIT))
 
-domain-av          = "Domain" BWS "=" BWS domain-value BWS
-domain-value       = 1*1024(cookie-value-octet)
-                       ; a leading dot in domain-value will be removed
-                       ; if present
+domain-av          = "Domain" BWS domain-eq-value BWS
+domain-eq-value    = "" / ("=" BWS domain-value)
+domain-value       = optional-value
+                       ; a leading %x2E (period) in domain-value will be
+                       ; removed if present
 
-path-av            = "Path" BWS "=" BWS path-value BWS
-path-value         = 1*1024(cookie-value-octet)
+path-av            = "Path" BWS path-eq-value BWS
+path-eq-value      = "" / ("=" BWS path-value)
+path-value         = optional-value
 
-secure-av          = "Secure" BWS *ignored-value
+secure-av          = "Secure" BWS ignored-eq-value BWS
 
-httponly-av        = "HttpOnly" BWS *ignored-value
+httponly-av        = "HttpOnly" BWS ignored-eq-value BWS
 
-samesite-av        = "SameSite" BWS "=" BWS samesite-value BWS
-samesite-value     = "Strict" / "Lax" / "None"
+samesite-av        = "SameSite" BWS samesite-eq-value BWS
+samesite-eq-value  = "" / ("=" BWS samesite-value)
+samesite-value     = "Strict" / "Lax" / "None" / ignored-value
 
-extension-av       = 1*cookie-name-octet BWS *optional-value
-
-ignored-value      = "=" BWS *1024(cookie-value-octet) BWS
-optional-value     = ignored-value
+extension-av       = 1*cookie-name-octet BWS extension-eq-value BWS
+extension-eq-value = "" / ("=" BWS optional-value)
 ~~~
 
 ## Storage Model {#storage-model}
@@ -2314,7 +2324,7 @@ reference detailing how the attribute is to be processed and stored.
 
 New registrations happen on a "RFC Required" basis (see Section 4.7 of
 {{RFC8126}}). The attribute to be registered MUST match the `extension-av`
-syntax defined in {{sane-abnf-syntax}}. Note that attribute names are generally
+syntax defined in {{server-abnf-syntax}}. Note that attribute names are generally
 defined in CamelCase, but technically accepted case-insensitively.
 
 ### Registration
