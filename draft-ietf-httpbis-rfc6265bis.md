@@ -1243,16 +1243,18 @@ user agent MUST process the cookie-av as follows.
 2.  If the remainder of attribute-value contains a non-DIGIT character, ignore
     the cookie-av.
 
-3.  Set delta-seconds to the smaller of its present value or 400 days (34560000
+3.  Let delta-seconds be the attribute-value converted to an integer.
+
+4.  Set delta-seconds to the smaller of its present value or 400 days (34560000
     seconds).
 
-4.  Set expiry-time to delta-seconds seconds from the present time.
+5.  Set expiry-time to delta-seconds seconds from the present time.
 
-5.  If delta-seconds is less than or equal to zero (0), let expiry-time be
+6.  If delta-seconds is less than or equal to zero (0), let expiry-time be
     the earliest representable date and time. Otherwise, let the expiry-time
     be the current date and time plus delta-seconds seconds.
 
-6.  Append an attribute to the cookie-attribute-list with an attribute-name
+7.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Max-Age and an attribute-value of expiry-time.
 
 ### The Domain Attribute
