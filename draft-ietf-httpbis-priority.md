@@ -39,11 +39,14 @@ informative:
 
 --- abstract
 
-This document describes a scheme for prioritizing HTTP responses.  This document
-defines the Priority header field for communicating the initial priority in an
-HTTP version-independent manner, as well as HTTP/2 and HTTP/3 frames for
-reprioritizing the responses. These share a common format structure that is
-designed to provide future extensibility.
+This document describes a scheme that allows a HTTP client to communicate its
+preferences for how the upstream server prioritizes responses to its requests,
+and also allows a server to hint to a downstream intermediary how its responses
+should be prioritized when they are forwarded.  This document defines the
+Priority header field for communicating the initial priority in an HTTP
+version-independent manner, as well as HTTP/2 and HTTP/3 frames for
+reprioritizing responses. These share a common format structure that is designed
+to provide future extensibility.
 
 --- note_Note_to_Readers
 
@@ -345,9 +348,9 @@ priority = u=5, i
 When attempting to define new parameters, care must be taken so that they do not
 adversely interfere with prioritization performed by existing endpoints or
 intermediaries that do not understand the newly defined parameter. Since unknown
-parameters are ignored, new parameters should not change the interpretation of
-or modify the predefined parameters in a way that is not backwards compatible or
-fallback safe.
+parameters are ignored, new parameters should not change the interpretation of,
+or modify, the urgency (see {{urgency}}) or incremental (see {{incremental}})
+parameters in a way that is not backwards compatible or fallback safe.
 
 For example, if there is a need to provide more granularity than eight urgency
 levels, it would be possible to subdivide the range using an additional
@@ -366,23 +369,35 @@ a prefix that identifies the vendor, application or deployment).
 ### Registration {#register}
 
 New Priority parameters can be defined by registering them in the HTTP Priority
-Parameters Registry.
+Parameters Registry. The registry governs the keys (short textual strings) used
+in Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
+Since each HTTP request can have associated priority signals, there is value
+in having short key lengths, especially single-character strings. In order to
+encourage extension while avoiding unintended conflict among attractive key
+values, the HTTP Priority Parameters Registry operates two registration policies
+depending on key length.
 
-Registration requests are reviewed and approved by a Designated Expert, as per
-{{Section 4.5 of !RFC8126}}. A specification document is appreciated, but not
-required.
+* Registration requests for parameters with a key length of one use the
+Specification Required policy, as per {{Section 4.6 of !RFC8126}}.
 
-The Expert(s) should consider the following factors when evaluating requests:
+* Registration requests for parameters with a key length greater than one use the
+Expert Review policy, as per {{Section 4.5 of !RFC8126}}. A specification
+document is appreciated, but not required.
 
-* Community feedback
-* If the parameters are sufficiently well-defined and adhere to the guidance
-  provided in {{new-parameters}}.
+When reviewing registration requests, the designated expert(s) can consider the
+additional guidance provided in {{new-parameters}} but cannot use it as a basis
+for rejection.
 
 Registration requests should use the following template:
 
-* Name: \[a name for the Priority Parameter that matches key\]
-* Description: \[a description of the parameter semantics and value\]
-* Reference: \[to a specification defining this parameter\]
+Name:
+: \[a name for the Priority Parameter that matches key\]
+
+Description:
+: \[a description of the parameter semantics and value\]
+
+Reference:
+: \[to a specification defining this parameter\]
 
 See the registry at <https://iana.org/assignments/http-priority> for details on
 where to send registration requests.
@@ -565,7 +580,10 @@ Stream ID that is not a request stream, this MUST be treated as a connection
 error of type H3_ID_ERROR. The Stream ID MUST be within the client-initiated
 bidirectional stream limit. If a server receives a PRIORITY_UPDATE
 (type=0xF0700) with a Stream ID that is beyond the stream limits, this SHOULD be
-treated as a connection error of type H3_ID_ERROR.
+treated as a connection error of type H3_ID_ERROR. Generating an error is not
+mandatory because HTTP/3 implementations might have practical barriers to
+determining the active stream concurrency limit that is applied by the QUIC
+layer.
 
 The push-stream variant PRIORITY_UPDATE (type=0xF0701) MUST reference a promised
 push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with a Push ID
@@ -855,9 +873,7 @@ Loop", is an example of a DoS attack that abuses stream dependencies. Extensible
 priorities does not use dependencies, which avoids these issues.
 
 {{frame}} describes considerations for server buffering of PRIORITY_UPDATE
-frames. HTTP/3 implementations might have practical barriers to determining
-reasonable stream concurrency limits depending on the information that is
-available to them from the QUIC transport layer.
+frames.
 
 {{server-scheduling}} presents examples where servers that prioritize responses
 in a certain way might be starved of the ability to transmit payload.
@@ -938,7 +954,7 @@ defined in {{parameters}}; see {{register}} for its associated procedures.
 Roy Fielding presented the idea of using a header field for representing
 priorities in <http://tools.ietf.org/agenda/83/slides/slides-83-httpbis-5.pdf>.
 In <https://github.com/pmeenan/http3-prioritization-proposal>, Patrick Meenan
-advocates for representing the priorities using a tuple of urgency and
+advocated for representing the priorities using a tuple of urgency and
 concurrency. The ability to disable HTTP/2 prioritization is inspired by
 {{?I-D.lassey-priority-setting}}, authored by Brad Lassey and Lucas Pardue, with
 modifications based on feedback that was not incorporated into an update to that
@@ -953,6 +969,8 @@ In addition to the people above, this document owes a lot to the extensive
 discussion in the HTTP priority design team, consisting of Alan Frindell,
 Andrew Galloni, Craig Taylor, Ian Swett, Kazuho Oku, Lucas Pardue, Matthew Cox,
 Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
+
+Yang Chi contributed the section on retransmission scheduling.
 
 # Change Log
 
