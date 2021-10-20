@@ -588,10 +588,10 @@ represented as the date and time at which the cookie expires. The user agent is
 not required to retain the cookie until the specified date has passed. In fact,
 user agents often evict cookies due to memory pressure or privacy concerns.
 
-The user agent MUST limit lifetime of a cookie to no more than 400 days. Expires
-attributes that are more than 400 days in the future MUST be changed to a date
-no more than 400 days in the future. A user agent MAY reduce the lifetime of a
-cookie further according to its cookie policy.
+The user agent MUST limit the value of the Expires attribute to no more than
+400 days in the future. Expires attributes that are more than 400 days in the
+future MUST be changed to a date no more than 400 days in the future. A user
+agent MAY reduce the lifetime of a cookie further according to its cookie policy.
 
 #### The Max-Age Attribute {#attribute-max-age}
 
@@ -600,10 +600,10 @@ represented as the number of seconds until the cookie expires. The user agent is
 not required to retain the cookie for the specified duration. In fact, user
 agents often evict cookies due to memory pressure or privacy concerns.
 
-The user agent MUST limit the lifetime of a cookie to no more than 400 days. Max-Age
-attributes that are greater than 400 days MUST be reduced to a duration of at
-most 400 days. A user agent MAY reduce the lifetime of a cookie further according
-to its cookie policy.
+The user agent MUST limit the value of the Max-Age attribute to no more than
+400 days in duration. Max-Age attributes that are more than 400 days MUST be
+reduced to a duration of at most 400 days. A user agent MAY reduce the lifetime
+of a cookie further according to its cookie policy.
 
 NOTE: Some existing user agents do not support the Max-Age attribute. User
 agents that do not support the Max-Age attribute ignore the attribute.
