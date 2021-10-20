@@ -413,6 +413,7 @@ Dubois, Camille, camille.dubois@example.net
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-01" anchor="changes.since.01">
 <ul>
+  <li>Add minimal description of cacheability (<eref target="https://github.com/httpwg/http-extensions/issues/1552"/>)</li>
   <li>Use "QUERY" as method name (<eref target="https://github.com/httpwg/http-extensions/issues/1614"/>)</li>
   <li>Update HTTP reference (<eref target="https://github.com/httpwg/http-extensions/issues/1669"/>)</li>
 </ul>
