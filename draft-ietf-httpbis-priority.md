@@ -209,7 +209,7 @@ web use case.
 The problems and insights set out above provided the motivation for deprecating
 RFC 7540 stream priority (see {{Section 5.3 of RFC7540}}).
 
-The SETTINGS_NO_RFC7540_PRIORITIES setting is defined by this document in
+The SETTINGS_NO_RFC7540_PRIORITIES HTTP/2 setting is defined by this document in
 order to allow endpoints to explicitly opt out of using HTTP/2 priority signals
 (see {{Section 5.3.2 of HTTP2}}). Endpoints are encouraged to use alternative
 priority signals (for example, {{header-field}} or {{h2-update-frame}}) but
@@ -217,7 +217,7 @@ there is no requirement to use a specific signal type.
 
 The value of SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value
 other than 0 or 1 MUST be treated as a connection error (see {{Section 5.4.1 of
-HTTP2}}) of type PROTOCOL_ERROR.
+HTTP2}}) of type PROTOCOL_ERROR. The initial value is 0.
 
 Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
 A sender MUST NOT change the SETTINGS_NO_RFC7540_PRIORITIES parameter value
@@ -260,11 +260,11 @@ future extensions. Each key-value pair represents a priority parameter.
 
 The Priority HTTP header field ({{header-field}}) is an end-to-end way to
 transmit this set of parameters when a request or a response is issued. In order
-to reprioritize a request, HTTP-version-specific frames ({{h2-update-frame}} and
-{{h3-update-frame}}) are used by clients to transmit the same information on a
-single hop.  If intermediaries want to specify prioritization on a multiplexed
-HTTP connection, they SHOULD use a PRIORITY_UPDATE frame and SHOULD NOT change
-the Priority header field.
+to reprioritize a request, HTTP-version-specific PRIORITY_UPDATE frames
+({{h2-update-frame}} and {{h3-update-frame}}) are used by clients to transmit
+the same information on a single hop.  If intermediaries want to specify
+prioritization on a multiplexed HTTP connection, they SHOULD use a
+PRIORITY_UPDATE frame and SHOULD NOT change the Priority header field.
 
 In both cases, the set of priority parameters is encoded as a Structured Fields
 Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
@@ -314,7 +314,7 @@ responses that have impact on user interaction.
 ## Incremental
 
 The incremental parameter (`i`) takes an sf-boolean as the value that indicates
-if an HTTP response can be processed incrementally, i.e. provide some
+if an HTTP response can be processed incrementally, i.e., provide some
 meaningful output as chunks of the response arrive.
 
 The default value of the incremental parameter is false (`0`).
@@ -408,9 +408,12 @@ The Priority HTTP header field carries priority parameters {{parameters}}. It
 can appear in requests and responses. It is an end-to-end signal of the request
 priority from the client or the response priority from the server. {{merging}}
 describes how intermediaries can combine the priority information from client
-requests and server responses to correct or amend the precedence. Clients cannot
-interpret the appearance or omission of a Priority response header as
-acknowledgement that any prioritization has occurred.
+requests and server responses to correct or amend the precedence. Guidance for
+how servers can act on Priority header values is given in {{server-scheduling}}.
+Clients cannot interpret the appearance or omission of a Priority response
+header as acknowledgement that any prioritization has occurred. Clients can,
+however, use the priority values that they sent to make local processing
+decisions; see {{client-scheduling}}.
 
 Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 
@@ -435,7 +438,10 @@ set to `u=7` (background). Then, when the user navigates to a page which
 references the new JavaScript file, while the prefetch is in progress, the
 browser would send a reprioritization signal with the priority field value set
 to `u=0`. The PRIORITY_UPDATE frame ({{frame}}) can be used for such
-reprioritization.
+reprioritization. Guidance for how servers can act on priority values contained
+in frames is given in {{server-scheduling}}. Clients can, however, use the
+priority values that they sent to make local processing decisions; see
+{{client-scheduling}}.
 
 
 # The PRIORITY_UPDATE Frame {#frame}
@@ -514,7 +520,8 @@ Prioritized Stream ID:
   update.
 
 Priority Field Value:
-: The priority update value in ASCII text, encoded using Structured Fields.
+: The priority update value in ASCII text, encoded using Structured Fields. This
+  is the same representation as the Priority header field value.
 
 When the PRIORITY_UPDATE frame applies to a request stream, clients SHOULD
 provide a Prioritized Stream ID that refers to a stream in the "open",
@@ -530,9 +537,9 @@ PROTOCOL_ERROR.
 When the PRIORITY_UPDATE frame applies to a push stream, clients SHOULD provide
 a Prioritized Stream ID that refers to a stream in the "reserved (remote)" or
 "half-closed (local)" state. Servers can discard frames where the Prioritized
-Stream ID refers to a stream in the "closed" state.
-Clients MUST NOT provide a Prioritized Stream ID that refers to a push stream in the
-"idle" state. Servers that receive a PRIORITY_UPDATE for a push stream in the "idle" state MUST
+Stream ID refers to a stream in the "closed" state. Clients MUST NOT provide a
+Prioritized Stream ID that refers to a push stream in the "idle" state. Servers
+that receive a PRIORITY_UPDATE for a push stream in the "idle" state MUST
 respond with a connection error of type PROTOCOL_ERROR.
 
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
@@ -572,7 +579,8 @@ Prioritized Element ID:
 : The stream ID or push ID that is the target of the priority update.
 
 Priority Field Value:
-: The priority update value in ASCII text, encoded using Structured Fields.
+: The priority update value in ASCII text, encoded using Structured Fields. This
+  is the same representation as the Priority header field value.
 
 The request-stream variant of PRIORITY_UPDATE (type=0xF0700) MUST reference a
 request stream. If a server receives a PRIORITY_UPDATE (type=0xF0700) for a
@@ -718,9 +726,9 @@ parameter value defaults applies slightly differently because there is no
 explicit client-signalled initial priority. A server can apply priority signals
 provided in an origin response; see the merging guidance given in {{merging}}.
 In the absence of origin signals, applying default parameter values could be
-suboptimal. How ever a server decides to schedule a pushed response, it can
-signal the intended priority to the client by including the Priority field in
-a PUSH_PROMISE or HEADERS frame.
+suboptimal. By whatever means a server decides to schedule a pushed response, it
+can signal the intended priority to the client by including the Priority field
+in a PUSH_PROMISE or HEADERS frame.
 
 ## Intermediaries with Multiple Backend Connections
 
@@ -772,14 +780,14 @@ irrespective of urgencies.
 
 {{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}}, also highlights consideration of
 application priorities when sending probe packets after Probe Timeout timer
-expiration. An QUIC implementation supporting application-indicated priorities
+expiration. A QUIC implementation supporting application-indicated priorities
 might use the relative priority of streams when choosing probe data.
 
 
 # Fairness {#fairness}
 
 As a general guideline, a server SHOULD NOT use priority information for making
-schedule decisions across multiple connections, unless it knows that those
+scheduling decisions across multiple connections, unless it knows that those
 connections originate from the same client. Due to this, priority information
 conveyed over a non-coalesced HTTP connection (e.g., HTTP/1.1) might go unused.
 
@@ -789,7 +797,7 @@ problematic and presents possible mitigations, or where unfairness is desirable.
 ## Coalescing Intermediaries
 
 When an intermediary coalesces HTTP requests coming from multiple clients into
-one HTTP/2 or HTTP/3 connection going to the backend server, requests that
+one HTTP/2 or HTTP/3 connection going to the upstream server, requests that
 originate from one client might have higher precedence than those coming from
 others.
 
@@ -822,13 +830,12 @@ It is common for CDN infrastructure to support different HTTP versions on the
 front end and back end. For instance, the client-facing edge might support
 HTTP/2 and HTTP/3 while communication to back end servers is done using
 HTTP/1.1. Unlike with connection coalescing, the CDN will "de-mux" requests into
-discrete connections to the back end. As HTTP/1.1 and older do not provide a way
-to concurrently transmit multiple responses, there is no immediate fairness
-issue in protocol. However, back end servers MAY still use client headers for
-request scheduling. Back end servers SHOULD only schedule based on client
-priority information where that information can be scoped to individual end
-clients. Authentication and other session information might provide this
-linkability.
+discrete connections to the back end. HTTP/1.1 and older do not support response
+multiplexing in a single connection, so there is not a fairness problem.
+However, back end servers MAY still use client headers for request scheduling.
+Back end servers SHOULD only schedule based on client priority information where
+that information can be scoped to individual end clients. Authentication and
+other session information might provide this linkability.
 
 ## Intentional Introduction of Unfairness
 
