@@ -1278,8 +1278,9 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ##  Server Selects Algorithm Unsupported by Client {#ex-server-selects-unsupported-algorithm}
 
-The client requests a "sha" digest only. The server is currently free to reply
-with a `Digest` containing an unsupported algorithm.
+The client requests a only "sha" digest because that is the only algorithm it
+supports. The server is not obliged to produce a response containing a "sha"
+digest, it instead uses a different algorithm.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -1301,16 +1302,15 @@ Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
 
 ## Server Does Not Support Client Algorithm and Returns an Error
 
-The client requests a "sha" `Digest`, the server
-generates a content advertising "sha-256" and "sha-512".
+{{ex-server-selects-unsupported-algorithm}} is an example where a server ignores
+the client's preferred digest algorithm. Alternatively a server can also reject
+the request and return an error.
 
-While {{ex-server-selects-unsupported-algorithm}} shows a server
-ignoring the digest algorithm requested by the client,
-that is not the sole possible choice.
-For example, the server is also free to return an error response
-advertising a list of supported algorithms.
-However, this specification does not define any standard
-for such content.
+In this example, the client requests a "sha" `Digest`, and the server returns an
+error with problem details {{?RFC7807}} contained in the content. The problem
+details contain a list of the digest algorithms that the server supports. This
+is purely an example, this specification does not specify any format or
+requirements for such content.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
