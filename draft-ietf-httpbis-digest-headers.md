@@ -1309,7 +1309,7 @@ the request and return an error.
 In this example, the client requests a "sha" `Digest`, and the server returns an
 error with problem details {{?RFC7807}} contained in the content. The problem
 details contain a list of the digest algorithms that the server supports. This
-is purely an example, this specification does not specify any format or
+is purely an example, this specification does not define any format or
 requirements for such content.
 
 ~~~ http-message
