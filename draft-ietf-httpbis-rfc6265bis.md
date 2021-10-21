@@ -313,7 +313,7 @@ The OWS (optional whitespace) and BWS (bad whitespace) rules are defined in
 Section 5.6.3 of {{!HTTPSEM=I-D.ietf-httpbis-semantics}}.
 
 Note that per {{RFC5234}}, all strings literals used in the grammars are
-case-insensitive (e.g. "Secure" is equiavelent to "secure" and "sEcUrE").
+case-insensitive (e.g. "Secure" is equivalent to "secure" and "sEcUrE").
 
 ## Terminology
 
