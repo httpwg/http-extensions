@@ -437,10 +437,7 @@ set to `u=7` (background). Then, when the user navigates to a page which
 references the new JavaScript file, while the prefetch is in progress, the
 browser would send a reprioritization signal with the priority field value set
 to `u=0`. The PRIORITY_UPDATE frame ({{frame}}) can be used for such
-reprioritization. Guidance for how servers can act on priority values contained
-in frames is given in {{server-scheduling}}. Clients can, however, use the
-priority values that they sent to make local processing decisions; see
-{{client-scheduling}}.
+reprioritization.
 
 
 # The PRIORITY_UPDATE Frame {#frame}
