@@ -408,12 +408,11 @@ The Priority HTTP header field carries priority parameters {{parameters}}. It
 can appear in requests and responses. It is an end-to-end signal of the request
 priority from the client or the response priority from the server. {{merging}}
 describes how intermediaries can combine the priority information from client
-requests and server responses to correct or amend the precedence. Guidance for
-how servers can act on Priority header values is given in {{server-scheduling}}.
-Clients cannot interpret the appearance or omission of a Priority response
-header as acknowledgement that any prioritization has occurred. Clients can,
-however, use the priority values that they sent to make local processing
-decisions; see {{client-scheduling}}.
+requests and server responses to correct or amend the precedence. Clients cannot
+interpret the appearance or omission of a Priority response header as
+acknowledgement that any prioritization has occurred. Guidance for how endpoints
+can act on Priority header values is given in {{server-scheduling}} and
+{{client-scheduling}}.
 
 Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 
@@ -797,7 +796,7 @@ problematic and presents possible mitigations, or where unfairness is desirable.
 ## Coalescing Intermediaries
 
 When an intermediary coalesces HTTP requests coming from multiple clients into
-one HTTP/2 or HTTP/3 connection going to the upstream server, requests that
+one HTTP/2 or HTTP/3 connection going to the backend server, requests that
 originate from one client might have higher precedence than those coming from
 others.
 
