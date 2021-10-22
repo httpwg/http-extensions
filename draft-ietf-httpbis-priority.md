@@ -694,9 +694,12 @@ can use information progressively. This scheme provides no explicit mandate
 about how a server should use size, type or any other input to decide how to
 prioritize.
 
-The following examples demonstrate how a server that strictly abides the
-scheduling guidance based on urgency and request generation order could find
-that early requests prevent serving of later requests.
+There can be scenarios where a server will need to schedule multiple incremental
+and non-incremental responses at the same urgency level. The competing uses of
+such responses can present difficulties for scheduling; strictly abiding the
+guidance presented here might lead to sub-optimal results at the client. The
+following are example of such challenges, a server strictly abiding rules could
+find that early requests prevent serving of later requests.
 
 1. At the same urgency level, a non-incremental request for a large resource
    followed by an incremental request for a small resource.
