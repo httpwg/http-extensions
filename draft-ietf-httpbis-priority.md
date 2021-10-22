@@ -209,15 +209,16 @@ web use case.
 The problems and insights set out above provided the motivation for deprecating
 RFC 7540 stream priority (see {{Section 5.3 of RFC7540}}).
 
-The SETTINGS_NO_RFC7540_PRIORITIES HTTP/2 setting is defined by this document in
-order to allow endpoints to explicitly opt out of using HTTP/2 priority signals
-(see {{Section 5.3.2 of HTTP2}}). Endpoints are encouraged to use alternative
-priority signals (for example, {{header-field}} or {{h2-update-frame}}) but
-there is no requirement to use a specific signal type.
+The SETTINGS_NO_RFC7540_PRIORITIES HTTP/2 setting is defined by this document.
+The value of SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value other than
+0 or 1 MUST be treated as a connection error (see {{Section 5.4.1 of HTTP2}}) of
+type PROTOCOL_ERROR. The initial value is 0.
 
-The value of SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value
-other than 0 or 1 MUST be treated as a connection error (see {{Section 5.4.1 of
-HTTP2}}) of type PROTOCOL_ERROR. The initial value is 0.
+When endpoints send SETTINGS_NO_RFC7540_PRIORITIES with a value of 1, they
+explicitly opt out of using HTTP/2 priority signals (see {{Section 5.3.2 of
+HTTP2}}). When this occurs, endpoints are encouraged to use alternative priority
+signals (for example, {{header-field}} or {{h2-update-frame}}) but there is no
+requirement to use a specific signal type.
 
 Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
 A sender MUST NOT change the SETTINGS_NO_RFC7540_PRIORITIES parameter value
