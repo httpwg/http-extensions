@@ -287,7 +287,7 @@ order of priority.
 
 The value is encoded as an sf-integer. The default value is 3.
 
-Clients can use this parameter to communicate their view of the precedence of
+Endpoints use this parameter to communicate their view of the precedence of
 HTTP responses. The chosen value of urgency can be based on the expectation that
 servers might use this information to transmit HTTP responses in the order of
 their urgency. The smaller the value, the higher the precedence.
