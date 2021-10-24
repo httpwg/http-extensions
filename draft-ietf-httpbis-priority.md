@@ -287,9 +287,10 @@ order of priority.
 
 The value is encoded as an sf-integer. The default value is 3.
 
-This parameter indicates the sender's recommendation, based on the expectation
-that the server would transmit HTTP responses in the order of their urgency
-values if possible. The smaller the value, the higher the precedence.
+Endpoints use this parameter to communicate their view of the precedence of
+HTTP responses. The chosen value of urgency can be based on the expectation that
+servers might use this information to transmit HTTP responses in the order of
+their urgency. The smaller the value, the higher the precedence.
 
 The following example shows a request for a CSS file with the urgency set to
 `0`:
