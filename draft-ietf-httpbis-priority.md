@@ -39,7 +39,7 @@ informative:
 
 --- abstract
 
-This document describes a scheme that allows a HTTP client to communicate its
+This document describes a scheme that allows an HTTP client to communicate its
 preferences for how the upstream server prioritizes responses to its requests,
 and also allows a server to hint to a downstream intermediary how its responses
 should be prioritized when they are forwarded.  This document defines the
