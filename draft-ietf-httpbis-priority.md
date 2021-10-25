@@ -890,29 +890,21 @@ priority parameters defined in {{parameters}}.
 
 # IANA Considerations
 
-This specification registers the following entry in the Permanent Message Header
-Field Names registry established by {{?RFC3864}}:
+This specification registers the following entry in the the Hypertext Transfer
+Protocol (HTTP) Field Name Registry established by {{HTTP}}:
 
-Header field name:
+Field name:
 : Priority
 
-Applicable protocol:
-: http
-
 Status:
-: standard
-
-Author/change controller:
-: IETF
+: permanent
 
 Specification document(s):
 : This document
 
-Related information:
-: n/a
 
 This specification registers the following entry in the HTTP/2 Settings registry
-established by {{HTTP2}}:
+established by {{RFC7540}}:
 
 Name:
 : SETTINGS_NO_RFC7540_PRIORITIES
@@ -927,7 +919,7 @@ Specification:
 : This document
 
 This specification registers the following entry in the HTTP/2 Frame Type
-registry established by {{HTTP2}}:
+registry established by {{RFC7540}}:
 
 Frame Type:
 : PRIORITY_UPDATE
