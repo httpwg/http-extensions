@@ -1221,15 +1221,17 @@ user agent MUST process the cookie-av as follows.
 2.  If the attribute-value failed to parse as a cookie date, ignore the
     cookie-av.
 
-3.  If the expiry-time is more than 400 days in the future, the user agent
-    MUST set the expiry time to 400 days from the present (34560000 seconds
-    from now).
+3.  Let cookie-age-limit be the maximum age of the cookie (which must be 400 days
+    in the future or sooner, see {{attribute-expires}}).
 
-4.  If the expiry-time is earlier than the earliest date the user agent can
+4.  If the expiry-time is more than cookie-age-limit, the user agent MUST set the
+    expiry time cookie-age-limit in seconds.
+
+5.  If the expiry-time is earlier than the earliest date the user agent can
     represent, the user agent MAY replace the expiry-time with the earliest
     representable date.
 
-5.  Append an attribute to the cookie-attribute-list with an attribute-name
+6.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Expires and an attribute-value of expiry-time.
 
 ### The Max-Age Attribute
