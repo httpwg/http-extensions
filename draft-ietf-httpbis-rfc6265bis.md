@@ -588,11 +588,6 @@ represented as the date and time at which the cookie expires. The user agent is
 not required to retain the cookie until the specified date has passed. In fact,
 user agents often evict cookies due to memory pressure or privacy concerns.
 
-The user agent MUST limit the value of the Expires attribute to no more than
-400 days in the future. Expires attributes that are more than 400 days in the
-future MUST be changed to a date no more than 400 days in the future. A user
-agent MAY reduce the lifetime of a cookie further according to its cookie policy.
-
 The user agent MUST limit the maximum value of the Expires attribute.
 The limit MUST NOT be greater than 400 days.
 The user agent MAY adjust the limit to be less than 400 days.
