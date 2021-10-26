@@ -593,7 +593,6 @@ The limit MUST NOT be greater than 400 days.
 The user agent MAY adjust the limit to be less than 400 days.
 Expires attributes that are greater than the limit MUST be reduced to the limit.
 
-
 #### The Max-Age Attribute {#attribute-max-age}
 
 The Max-Age attribute indicates the maximum lifetime of the cookie,
