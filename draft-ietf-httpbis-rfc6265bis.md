@@ -504,9 +504,6 @@ expires-av        = "Expires" BWS "=" BWS sane-cookie-date
 sane-cookie-date  =
     <IMF-fixdate, defined in [HTTPSEM], Section 5.6.7>
 max-age-av        = "Max-Age" BWS "=" BWS non-zero-digit *DIGIT
-                      ; In practice, both expires-av and max-age-av
-                      ; are limited to dates representable by the
-                      ; user agent.
 non-zero-digit    = %x31-39
                       ; digits 1 through 9
 domain-av         = "Domain" BWS "=" BWS domain-value
@@ -591,12 +588,24 @@ represented as the date and time at which the cookie expires. The user agent is
 not required to retain the cookie until the specified date has passed. In fact,
 user agents often evict cookies due to memory pressure or privacy concerns.
 
+The user agent MUST limit the maximum value of the Expires attribute.
+The limit MUST NOT be greater than 400 days (34560000 seconds) in the future.
+The RECOMMENDED limit is 400 days in the future, but the user agent MAY adjust
+the limit to be less (see {{cookie-policy}}).
+Expires attributes that are greater than the limit MUST be reduced to the limit.
+
 #### The Max-Age Attribute {#attribute-max-age}
 
 The Max-Age attribute indicates the maximum lifetime of the cookie,
 represented as the number of seconds until the cookie expires. The user agent is
 not required to retain the cookie for the specified duration. In fact, user
 agents often evict cookies due to memory pressure or privacy concerns.
+
+The user agent MUST limit the maximum value of the Max-Age attribute.
+The limit MUST NOT be greater than 400 days (34560000 seconds) in duration.
+The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust
+the limit to be less (see {{cookie-policy}}).
+Max-Age attributes that are greater than the limit MUST be reduced to the limit.
 
 NOTE: Some existing user agents do not support the Max-Age attribute. User
 agents that do not support the Max-Age attribute ignore the attribute.
@@ -1214,15 +1223,17 @@ user agent MUST process the cookie-av as follows.
 2.  If the attribute-value failed to parse as a cookie date, ignore the
     cookie-av.
 
-3.  If the expiry-time is later than the last date the user agent can
-    represent, the user agent MAY replace the expiry-time with the last
-    representable date.
+3.  Let cookie-age-limit be the maximum age of the cookie (which must be 400 days
+    in the future or sooner, see {{attribute-expires}}).
 
-4.  If the expiry-time is earlier than the earliest date the user agent can
+4.  If the expiry-time is more than cookie-age-limit, the user agent MUST set the
+    expiry time to cookie-age-limit in seconds.
+
+5.  If the expiry-time is earlier than the earliest date the user agent can
     represent, the user agent MAY replace the expiry-time with the earliest
     representable date.
 
-5.  Append an attribute to the cookie-attribute-list with an attribute-name
+6.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Expires and an attribute-value of expiry-time.
 
 ### The Max-Age Attribute
@@ -1237,12 +1248,17 @@ user agent MUST process the cookie-av as follows.
     the cookie-av.
 
 3.  Let delta-seconds be the attribute-value converted to an integer.
+ 
+4.  Let cookie-age-limit be the maximum age of the cookie (which must be 400 days
+    or less, see {{attribute-max-age}}).
 
-4.  If delta-seconds is less than or equal to zero (0), let expiry-time be
+5.  Set delta-seconds to the smaller of its present value and cookie-age-limit.
+
+6.  If delta-seconds is less than or equal to zero (0), let expiry-time be
     the earliest representable date and time. Otherwise, let the expiry-time
     be the current date and time plus delta-seconds seconds.
 
-5.  Append an attribute to the cookie-attribute-list with an attribute-name
+7.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Max-Age and an attribute-value of expiry-time.
 
 ### The Domain Attribute
@@ -1844,8 +1860,9 @@ cookies may be used or ignored (see {{ignoring-cookies}}).
 
 A cookie policy may govern which domains or parties, as in first and third parties
 (see {{third-party-cookies}}), for which the user agent will allow cookie access.
-The policy can also define limits on cookie size, cookie expiry, and the number
-of cookies per domain or in total.
+The policy can also define limits on cookie size, cookie expiry (see
+{{attribute-expires}} and {{attribute-max-age}}), and the number of cookies per
+domain or in total.
 
 The goal of a restrictive cookie policy is often to improve security or privacy.
 User agents often allow users to change the cookie policy (see {{user-controls}}).
@@ -2422,7 +2439,8 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 ## draft-ietf-httpbis-rfc6265bis-10
 
-* No changes yet.
+* Standardize Max-Age/Expires upper bound:
+  <https://github.com/httpwg/http-extensions/pull/1732>
 
 # Acknowledgements
 {:numbered="false"}
