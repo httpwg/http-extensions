@@ -1227,7 +1227,7 @@ user agent MUST process the cookie-av as follows.
     in the future or sooner, see {{attribute-expires}}).
 
 4.  If the expiry-time is more than cookie-age-limit, the user agent MUST set the
-    expiry time cookie-age-limit in seconds.
+    expiry time to cookie-age-limit in seconds.
 
 5.  If the expiry-time is earlier than the earliest date the user agent can
     represent, the user agent MAY replace the expiry-time with the earliest
