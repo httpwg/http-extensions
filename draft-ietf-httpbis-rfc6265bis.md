@@ -2440,7 +2440,7 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 ## draft-ietf-httpbis-rfc6265bis-10
 
 * Standardize Max-Age/Expires upper bound:
-  <https://github.com/httpwg/http-extensions/pull/1732<
+  <https://github.com/httpwg/http-extensions/pull/1732>
 
 # Acknowledgements
 {:numbered="false"}
