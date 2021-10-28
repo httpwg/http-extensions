@@ -1774,6 +1774,8 @@ following minimum capabilities:
 
 *   At least 3000 cookies total.
 
+*   At least 7 days (604800 seconds) of lifetime allowed upon request.
+
 User agents MAY limit the maximum number of cookies they store, and may evict
 any cookie at any time (whether at the request of the user or due to
 implementation limitations).
