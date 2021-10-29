@@ -151,7 +151,7 @@ The terms "HTTP message", "HTTP request", "HTTP response",
 
 The term "method" is to be interpreted as defined in Section 4 of {{SEMANTICS}}.
 
-For brevity, the term "signature" on its own is used in this document to refer to both digital signatures and keyed MACs.  Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string.  The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
+For brevity, the term "signature" on its own is used in this document to refer to both digital signatures (which use asymmetric cryptography) and keyed MACs (which use symmetric cryptography). Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
 In addition to those listed above, this document uses the following terms:
 
@@ -207,7 +207,7 @@ HTTP Message Signatures are designed to be a general-purpose security mechanism 
 
 An application using signatures also has to ensure that the verifier will have access to all required information to re-create the signature input string. For example, a server behind a reverse proxy would need to know the original request URI to make use of identifiers like `@target-uri`. Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions, including any portions of the request that were signed by the server.
 
-The details of this kind of profiling are the purview of the application and outside the scope of this specification.
+The details of this kind of profiling are the purview of the application and outside the scope of this specification, however some additional considerations are discussed in {{security}}.
 
 # HTTP Message Components {#covered-content}
 
@@ -222,7 +222,11 @@ The component identifier itself is an `sf-string` value and MAY define parameter
 component-identifier = sf-string parameters
 ~~~
 
-Note that this means the value of the component identifier itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`.
+Note that this means the serialization of the component identifier itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`.
+
+Component identifiers including their parameters MUST NOT be repeated within a single list of covered components.
+
+The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`"\n"`) characters.
 
 The following sections define component identifier types, their parameters, their associated values, and the canonicalization rules for their values. The method for combining component identifiers into the signature input is defined in {{create-sig-input}}.
 
@@ -234,7 +238,7 @@ Unless overridden by additional parameters and rules, the HTTP field value MUST 
 
 1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list.
-3. Concatenate the list items together, with a comma "," and space " " between each item.
+3. Concatenate the list items together, with a single comma `","` and space `" "` between each item.
 
 The resulting string is the canonicalized component value.
 
@@ -246,9 +250,9 @@ will replace any optional internal whitespace with a single space character.
 
 The resulting string is used as the component value in {{http-header}}.
 
-### Canonicalization Examples
+### HTTP Field Examples
 
-This section contains non-normative examples of canonicalized values for header fields, given the following example HTTP message:
+Following are non-normative examples of canonicalized values for header fields, given the following example HTTP message:
 
 ~~~ http-message
 Host: www.example.com
@@ -276,15 +280,13 @@ The following table shows example canonicalized values for header fields, given 
 |`"x-dictionary";sf`|a=1, b=2;x=1;y=2, c=(a b c)|
 {: title="Non-normative examples of header field canonicalization."}
 
-## Dictionary Structured Field Members
+### Dictionary Structured Field Members {#http-header-dictionary}
 
 An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` on the component identifier for the field. The value of this parameter is a the key being identified, without any parameters present on that key in the original dictionary.
 
 An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in [Section 4.1.2 of RFC8941](#RFC8941) on a Dictionary containing only that item.
 
-### Canonicalization Examples
-
-This section contains non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
+Following are non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
 
 ~~~ http-message
 X-Dictionary:  a=1, b=2;x=1;y=2, c=(a b c)
@@ -736,7 +738,7 @@ The signature input is a US-ASCII string containing the canonicalized HTTP messa
 
     4. Append the covered component's canonicalized component value, as defined by the HTTP message component type. ({{http-header}} and {{specialty-content}})
 
-    5. Append a single newline `"\\n"`
+    5. Append a single newline `"\n"`
 
 3. Append the signature parameters component ({{signature-params}}) as follows:
 
@@ -936,6 +938,8 @@ The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
 
+Use of this algorithm can be indicated at runtime using the `rsa-pss-sha512` value for the `alg` signature parameter.
+
 ### RSASSA-PKCS1-v1_5 using SHA-256 {#method-rsa-v1_5-sha256}
 
 To sign using this algorithm, the signer applies the `RSASSA-PKCS1-V1_5-SIGN (K, M)` function {{RFC8017}} with the signer's private signing key (`K`) and
@@ -949,6 +953,8 @@ The hash function SHA-256 {{RFC6234}} is applied to the signature input string t
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
 
+Use of this algorithm can be indicated at runtime using the `rsa-v1_5-sha256` value for the `alg` signature parameter.
+
 ### HMAC using SHA-256 {#method-hmac-sha256}
 
 To sign and verify using this algorithm, the signer applies the `HMAC` function {{RFC2104}} with the shared signing key (`K`) and
@@ -959,6 +965,8 @@ For signing, the resulting value is the HTTP message signature output used in {{
 
 For verification, the verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The output of the HMAC function is compared to the value of the HTTP message signature, and the results of the comparison determine the validity of the signature presented.
+
+Use of this algorithm can be indicated at runtime using the `hmac-sha256` value for the `alg` signature parameter.
 
 ### ECDSA using curve P-256 DSS and SHA-256 {#method-ecdsa-p256-sha256}
 
@@ -973,17 +981,20 @@ The hash function SHA-256 {{RFC6234}} is applied to the signature input string t
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
 
+Use of this algorithm can be indicated at runtime using the `ecdsa-p256-sha256` value for the `alg` signature parameter.
+
 ### JSON Web Signature (JWS) algorithms {#method-jose}
 
 If the signing algorithm is a JOSE signing algorithm from the JSON Web Signature and Encryption Algorithms Registry established by {{RFC7518}}, the
-JWS algorithm definition determines the signature and hashing algorithms to apply for both signing and verification. There is no
-use of the explicit `alg` signature parameter when using JOSE signing algorithms.
+JWS algorithm definition determines the signature and hashing algorithms to apply for both signing and verification. 
 
 For both signing and verification, the HTTP messages signature input string ({{create-sig-input}}) is used as the entire "JWS Signing Input".
 The JOSE Header defined in {{RFC7517}} is not used, and the signature input string is not first encoded in Base64 before applying the algorithm.
 The output of the JWS signature is taken as a byte array prior to the Base64url encoding used in JOSE.
 
 The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE Implementation Requirement of `Prohibited`.
+
+There is no use of the explicit `alg` signature parameter when using JOSE signing algorithms, as they can be signaled using JSON Web Keys or other mechanisms.
 
 # Including a Message Signature in a Message
 
@@ -1860,7 +1871,8 @@ Jeffrey Yasskin.
 
 - draft-ietf-httpbis-message-signatures
   - -07
-     * No substantive changes.
+     * Added security and privacy considerations.
+     * Added pointers to algorithm values from definition sections.
 
   - -06
      * Updated language for message components, including identifiers and values.
