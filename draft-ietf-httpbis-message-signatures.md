@@ -50,6 +50,7 @@ author:
 normative:
     RFC2104:
     RFC3986:
+    RFC8491:
     FIPS186-4:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
@@ -72,10 +73,6 @@ informative:
     RFC7239:
     RFC8017:
     I-D.ietf-httpbis-client-cert-field:
-    WP-HTTP-Sig-Audit:
-        target: https://web-payments.org/specs/source/http-signatures-audit/
-        title: Security Considerations for HTTP Signatures
-        date: 2013
 
 --- abstract
 
