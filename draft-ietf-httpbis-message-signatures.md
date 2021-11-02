@@ -383,7 +383,7 @@ NOTE: '\' line wrapping per RFC 8792
   created=1618884475;expires=1618884775
 ~~~
 
-Note that an HTTP message could contain multiple signatures, but only the signature parameters used for the current signature are included in the entry.
+Note that an HTTP message could contain [multiple signatures](#signature-multiple), but only the signature parameters used for the current signature are included in the entry.
 
 ### Method {#content-request-method}
 
@@ -1041,9 +1041,9 @@ The signer MAY include the `Signature` field as a trailer to facilitate signing 
 
 Multiple `Signature` fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
 
-## Multiple Signatures
+## Multiple Signatures {#signature-multiple}
 
-Multiple distinct signatures MAY be included in a single message. Since `Signature-Input` and `Signature` are both defined as Dictionary Structured fields, they can be used to include multiple signatures within the same HTTP message by using distinct signature labels. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
+Multiple distinct signatures MAY be included in a single message. Each distinct signature MUST have a unique label. Since `Signature-Input` and `Signature` are both defined as Dictionary Structured fields, they can be used to include multiple signatures within the same HTTP message by using distinct signature labels. These multiple signatures could be added all by the same signer or could come from several different signers. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
 
 The following is a non-normative example of header fields a reverse proxy sets in addition to the examples in the previous sections.
 
@@ -1401,6 +1401,12 @@ To provide confidentiality at the transport level, TLS or its equivalent can be 
 ## Oracles {#privacy-oracle}
 
 It is important to balance the need for providing useful feedback to developers on error conditions without providing additional information to an attacker. For example, a naive but helpful server implementation might try to indicate the required key identifier needed for requesting a resource. If someone knows who controls that key, a correlation can be made between the resource's existence and the party identified by the key. Access to such information could be used by an attacker as a means to target the legitimate owner of the resource for further attacks.
+
+## Required Content {#privacy-required}
+
+A core design tenet of this specification is that all message components covered by the signature need to be available to the verifier in order to recreate the signature input string and verify the signature. As a consequence, if an application of this specification requires that a particular field be signed, the verifier will need access to the value of that field. 
+
+For example, in some complex systems with intermediary processors this could cause the surprising behavior of an intermediary not being able to remove privacy-sensitive information from a message before forwarding it on for processing, for fear of breaking the signature. A possible mitigation for this specific situation would be for the intermediary to verify the signature itself, then modifying the message to remove the privacy-sensitive information. The intermediary can ad its own signature at this point to signal to the next destination that the incoming signature was validated, as is shown in the example in {{signature-multiple}}.
 
 --- back
 
