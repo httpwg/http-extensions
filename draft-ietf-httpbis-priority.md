@@ -986,6 +986,13 @@ Yang Chi contributed the section on retransmission scheduling.
 # Change Log
 
 ## Since draft-ietf-httpbis-priority-06
+* Relax requirements of receiving SETTINGS_NO_RFC7540_PRIORITIES that changes
+  value (#1714, #1725)
+* Clarify how intermediaries might use frames vs. headers (#1715, #1735)
+* Relax requirement when receiving a PRIORITY_UPDATE with an invalid structured
+  field value (#1741, #1756)
+
+## Since draft-ietf-httpbis-priority-06
 * Focus on editorial changes
 * Clarify rules about Sf-Dictionary handling in headers
 * Split policy for parameter IANA registry into two sections based on key length
