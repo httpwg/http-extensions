@@ -262,12 +262,18 @@ The Priority HTTP header field ({{header-field}}) is an end-to-end way to
 transmit this set of parameters when a request or a response is issued. In order
 to reprioritize a request, HTTP-version-specific PRIORITY_UPDATE frames
 ({{h2-update-frame}} and {{h3-update-frame}}) are used by clients to transmit
-the same information on a single hop.  If intermediaries want to specify
-prioritization on a multiplexed HTTP connection, they SHOULD use a
-PRIORITY_UPDATE frame and SHOULD NOT change the Priority header field.
+the same information on a single hop.
 
-In both cases, the set of priority parameters is encoded as a Structured Fields
-Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
+Intermediaries can consume and produce priority signals in a PRIORITY_UPDATE
+frame or Priority header field. Sending a PRIORITY_UPDATE frame preserves the
+signal from the client, but provides a signal that overrides for the next hop;
+see {{header-field-rationale}}. Replacing or adding a Priority header field
+overrides any signal from a client and can affect prioritization for all
+subsequent recipients.
+
+For both the Priority header field and the PRIORITY_UPDATE frame, the set of
+priority parameters is encoded as a Structured Fields Dictionary (see
+{{Section 3.2 of STRUCTURED-FIELDS}}).
 
 This document defines the urgency(`u`) and incremental(`i`) parameters. When
 receiving an HTTP request that does not carry these priority parameters, a
@@ -849,7 +855,7 @@ connections that only convey background priority responses such as software
 update images. Doing so improves responsiveness of other connections at the cost
 of delaying the delivery of updates.
 
-# Why use an End-to-End Header Field?
+# Why use an End-to-End Header Field? {#header-field-rationale}
 
 Contrary to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
 the Priority header field is defined as end-to-end.
