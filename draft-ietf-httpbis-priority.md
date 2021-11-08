@@ -985,7 +985,12 @@ Yang Chi contributed the section on retransmission scheduling.
 
 # Change Log
 
-## Since draft-ietf-httpbis-priority-06
+*RFC EDITOR: please remove this section before publication*
+
+## Since draft-ietf-httpbis-priority-08
+* Changelog fixups
+
+## Since draft-ietf-httpbis-priority-07
 * Relax requirements of receiving SETTINGS_NO_RFC7540_PRIORITIES that changes
   value (#1714, #1725)
 * Clarify how intermediaries might use frames vs. headers (#1715, #1735)
