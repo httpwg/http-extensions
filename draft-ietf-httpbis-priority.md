@@ -222,7 +222,7 @@ after the first SETTINGS frame. Receivers that detect a change MAY treat it as a
 connection error of type PROTOCOL_ERROR.
 
 Clients can send SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 to indicate
-they are not using HTTP/2 priority signals. The SETTINGS frame precedes any
+that they are not using HTTP/2 priority signals. The SETTINGS frame precedes any
 HTTP/2 priority signal sent from clients, so servers can determine whether they
 need to allocate any resources to signal handling before signals arrive. A
 server that receives SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 MUST
