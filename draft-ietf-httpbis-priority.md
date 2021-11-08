@@ -209,26 +209,31 @@ web use case.
 The problems and insights set out above provided the motivation for deprecating
 RFC 7540 stream priority (see {{Section 5.3 of RFC7540}}).
 
-The SETTINGS_NO_RFC7540_PRIORITIES HTTP/2 setting is defined by this document.
-The value of SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value other than
-0 or 1 MUST be treated as a connection error (see {{Section 5.4.1 of HTTP2}}) of
-type PROTOCOL_ERROR. The initial value is 0.
+The SETTINGS_NO_RFC7540_PRIORITIES HTTP/2 setting is defined by this document in
+order to allow endpoints to omit or ignore HTTP/2 priority signals (see
+{{Section 5.3.2 of HTTP2}}), as described below. The value of
+SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value other than 0 or 1 MUST
+be treated as a connection error (see {{Section 5.4.1 of HTTP2}}) of type
+PROTOCOL_ERROR. The initial value is 0.
 
-When endpoints send SETTINGS_NO_RFC7540_PRIORITIES with a value of 1, they
-explicitly opt out of using HTTP/2 priority signals (see {{Section 5.3.2 of
-HTTP2}}). When this occurs, endpoints are encouraged to use alternative priority
-signals (for example, {{header-field}} or {{h2-update-frame}}) but there is no
-requirement to use a specific signal type.
-
-Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
-A sender MUST NOT change the SETTINGS_NO_RFC7540_PRIORITIES parameter value
+If endpoints use SETTINGS_NO_RFC7540_PRIORITIES they MUST send it in the first
+SETTINGS frame. Senders MUST NOT change the SETTINGS_NO_RFC7540_PRIORITIES value
 after the first SETTINGS frame. Receivers that detect a change MAY treat it as a
 connection error of type PROTOCOL_ERROR.
 
-The SETTINGS frame precedes any HTTP/2 priority signal sent from a client, so a
-server can determine if it needs to allocate any resource to signal handling
-before they arrive. A server that receives SETTINGS_NO_RFC7540_PRIORITIES
-with value of 1 MUST ignore HTTP/2 priority signals.
+Clients can send SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 to indicate
+they are not using HTTP/2 priority signals. The SETTINGS frame precedes any
+HTTP/2 priority signal sent from clients, so servers can determine whether they
+need to allocate any resources to signal handling before signals arrive. A
+server that receives SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 MUST
+ignore HTTP/2 priority signals.
+
+Servers can send SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 to indicate
+that they will ignore HTTP/2 priority signals sent by clients.
+
+Endpoints that send SETTINGS_NO_RFC7540_PRIORITIES are encouraged to use
+alternative priority signals (for example, {{header-field}} or
+{{h2-update-frame}}) but there is no requirement to use a specific signal type.
 
 ### Advice when Using Extensible Priorities as the Alternative
 
