@@ -398,9 +398,6 @@ Dubois, Camille, camille.dubois@example.net
   </references>
 
 <section title="Change Log" anchor="change.log" removeInRFC="true">
-<t>
-  <cref>(see <eref target="https://trac.tools.ietf.org/tools/xml2rfc/trac/ticket/622"/>)</cref>
-</t>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-00" anchor="changes.since.00">
 <ul>
   <li>Use "example/query" media type instead of undefined "text/query" (<eref target="https://github.com/httpwg/http-extensions/issues/1450"/>)</li>
