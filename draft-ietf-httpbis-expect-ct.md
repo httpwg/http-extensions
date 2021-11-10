@@ -470,9 +470,9 @@ request that failed the CT compliance check. The value is provided as a string.
 * "port": the value is the port to which the UA made the original request that
 failed the CT compliance check. The value is provided as an integer.
 
-* "scheme": the value is the scheme with which the UA made the original request
-that failed the CT compliance check. The value is provided as a string. This
-key is optional and is assumed to be "https" if not present.
+* "scheme": (OPTIONAL) the value is the scheme with which the UA made the
+original request that failed the CT compliance check. The value is provided as a
+string and assumed to be "https" if not present.
 
 * "effective-expiration-date": the value indicates the Effective Expiration Date
 (see {{storage-model}}) for the Expect-CT Host that failed the CT compliance
@@ -530,7 +530,7 @@ by an Expect-CT policy in enforce or report-only mode. The value is provided
 as a string. The UA MUST set this value to "enforce" if the Expect-CT metadata
 indicates an `enforce` configuration, and "report-only" otherwise.
 
-* "test-report": the value is set to true if the report is being sent by a
+* "test-report": (OPTIONAL) the value is set to true if the report is being sent by a
 testing client to verify that the report server behaves correctly. The
 value is provided as a boolean, and MUST be set to true if the report serves
 to test the server's behavior and can be discarded.
