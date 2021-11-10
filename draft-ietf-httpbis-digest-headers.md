@@ -1007,7 +1007,7 @@ The response contains two digest values:
 
 - one with no content coding applied, which in this case accidentally
   matches the unencoded digest-value sent in the request;
-- one taking into account the `Content-Encoding`.
+- one using a different digest-algorithm.
 
 As the response body contains non-printable characters, it is displayed as a
 base64-encoded string.
