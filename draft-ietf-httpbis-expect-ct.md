@@ -138,10 +138,9 @@ Terminology is defined in this section.
 
 ## Response Header Field Syntax
 
-The "Expect-CT" response header field is a new field defined in this
-specification. It is used by a server to indicate that UAs should evaluate
-connections to the host emitting the header field for CT compliance
-({{expect-ct-compliance}}).
+The "Expect-CT" response header field is used by a server to indicate that UAs
+should evaluate connections to the host emitting the header field for CT
+compliance ({{expect-ct-compliance}}).
 
 {{expect-ct-syntax}} describes the syntax (Augmented Backus-Naur Form) of the
 header field, using the grammar defined in {{!RFC5234}} and the rules defined in
