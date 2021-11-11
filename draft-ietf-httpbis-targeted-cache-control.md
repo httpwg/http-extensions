@@ -113,7 +113,7 @@ is a targeted field that applies to Content Delivery Networks (CDNs), as defined
 
 ## Syntax
 
-Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache response directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry.
+Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache response directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry. Note that while targeted fields often have the same syntax as Cache-Control fields, differences in error handling mean that using a Cache-Control parser rather than a Structured Fields parser can introduce interoperability issues.
 
 Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. {{Section 5.2 of HTTP-CACHING}} defines cache directive values to be either absent, a quoted-string, or a token.
 
@@ -185,7 +185,7 @@ This specification does not place any specific requirements on implementations t
 
 ## Defining Targeted Fields
 
-A targeted field for a particular class of cache can be defined by requesting registration in the Hypertext Transfer Protocol (HTTP) Field Name Registry <https://www.iana.org/assignments/http-fields/>, listing this specification as the specification document. The Comments field of the registration should clearly define the class of caches that the targeted field applies to.
+A targeted field for a particular class of cache can be defined by requesting registration in the Hypertext Transfer Protocol (HTTP) Field Name Registry ([](https://www.iana.org/assignments/http-fields/)), listing this specification as the specification document. The Comments field of the registration should clearly define the class of caches that the targeted field applies to.
 
 By convention, targeted fields have the suffix "-Cache-Control": e.g., "ExampleCDN-Cache-Control". However, this suffix MUST NOT be used on its own to identify targeted fields; it is only a convention.
 

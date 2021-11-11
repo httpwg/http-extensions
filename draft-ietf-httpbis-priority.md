@@ -210,24 +210,30 @@ The problems and insights set out above provided the motivation for deprecating
 RFC 7540 stream priority (see {{Section 5.3 of RFC7540}}).
 
 The SETTINGS_NO_RFC7540_PRIORITIES HTTP/2 setting is defined by this document in
-order to allow endpoints to explicitly opt out of using HTTP/2 priority signals
-(see {{Section 5.3.2 of HTTP2}}). Endpoints are encouraged to use alternative
-priority signals (for example, {{header-field}} or {{h2-update-frame}}) but
-there is no requirement to use a specific signal type.
+order to allow endpoints to omit or ignore HTTP/2 priority signals (see
+{{Section 5.3.2 of HTTP2}}), as described below. The value of
+SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value other than 0 or 1 MUST
+be treated as a connection error (see {{Section 5.4.1 of HTTP2}}) of type
+PROTOCOL_ERROR. The initial value is 0.
 
-The value of SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value
-other than 0 or 1 MUST be treated as a connection error (see {{Section 5.4.1 of
-HTTP2}}) of type PROTOCOL_ERROR. The initial value is 0.
+If endpoints use SETTINGS_NO_RFC7540_PRIORITIES they MUST send it in the first
+SETTINGS frame. Senders MUST NOT change the SETTINGS_NO_RFC7540_PRIORITIES value
+after the first SETTINGS frame. Receivers that detect a change MAY treat it as a
+connection error of type PROTOCOL_ERROR.
 
-Endpoints MUST send this SETTINGS parameter as part of the first SETTINGS frame.
-A sender MUST NOT change the SETTINGS_NO_RFC7540_PRIORITIES parameter value
-after the first SETTINGS frame. Detection of a change by a receiver MUST be
-treated as a connection error of type PROTOCOL_ERROR.
+Clients can send SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 to indicate
+that they are not using HTTP/2 priority signals. The SETTINGS frame precedes any
+HTTP/2 priority signal sent from clients, so servers can determine whether they
+need to allocate any resources to signal handling before signals arrive. A
+server that receives SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 MUST
+ignore HTTP/2 priority signals.
 
-The SETTINGS frame precedes any HTTP/2 priority signal sent from a client, so a
-server can determine if it needs to allocate any resource to signal handling
-before they arrive. A server that receives SETTINGS_NO_RFC7540_PRIORITIES
-with value of 1 MUST ignore HTTP/2 priority signals.
+Servers can send SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 to indicate
+that they will ignore HTTP/2 priority signals sent by clients.
+
+Endpoints that send SETTINGS_NO_RFC7540_PRIORITIES are encouraged to use
+alternative priority signals (for example, {{header-field}} or
+{{h2-update-frame}}) but there is no requirement to use a specific signal type.
 
 ### Advice when Using Extensible Priorities as the Alternative
 
@@ -262,12 +268,18 @@ The Priority HTTP header field ({{header-field}}) is an end-to-end way to
 transmit this set of parameters when a request or a response is issued. In order
 to reprioritize a request, HTTP-version-specific PRIORITY_UPDATE frames
 ({{h2-update-frame}} and {{h3-update-frame}}) are used by clients to transmit
-the same information on a single hop.  If intermediaries want to specify
-prioritization on a multiplexed HTTP connection, they SHOULD use a
-PRIORITY_UPDATE frame and SHOULD NOT change the Priority header field.
+the same information on a single hop.
 
-In both cases, the set of priority parameters is encoded as a Structured Fields
-Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
+Intermediaries can consume and produce priority signals in a PRIORITY_UPDATE
+frame or Priority header field. Sending a PRIORITY_UPDATE frame preserves the
+signal from the client, but provides a signal that overrides that for the next
+hop; see {{header-field-rationale}}. Replacing or adding a Priority header field
+overrides any signal from a client and can affect prioritization for all
+subsequent recipients.
+
+For both the Priority header field and the PRIORITY_UPDATE frame, the set of
+priority parameters is encoded as a Structured Fields Dictionary (see
+{{Section 3.2 of STRUCTURED-FIELDS}}).
 
 This document defines the urgency(`u`) and incremental(`i`) parameters. When
 receiving an HTTP request that does not carry these priority parameters, a
@@ -457,9 +469,9 @@ initial priority of a response instead of the Priority header field.
 
 A PRIORITY_UPDATE frame communicates a complete set of all parameters in the
 Priority Field Value field. Omitting a parameter is a signal to use the
-parameter's default value. Failure to parse the Priority Field Value MUST be
+parameter's default value. Failure to parse the Priority Field Value MAY be
 treated as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in
-HTTP/3 the error is of type H3_FRAME_ERROR.
+HTTP/3 the error is of type H3_GENERAL_PROTOCOL_ERROR.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
 is open (except for HTTP/2 push streams; see {{h2-update-frame}}). Furthermore,
@@ -849,7 +861,7 @@ connections that only convey background priority responses such as software
 update images. Doing so improves responsiveness of other connections at the cost
 of delaying the delivery of updates.
 
-# Why use an End-to-End Header Field?
+# Why use an End-to-End Header Field? {#header-field-rationale}
 
 Contrary to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
 the Priority header field is defined as end-to-end.
@@ -972,6 +984,18 @@ Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
 Yang Chi contributed the section on retransmission scheduling.
 
 # Change Log
+
+*RFC EDITOR: please remove this section before publication*
+
+## Since draft-ietf-httpbis-priority-08
+* Changelog fixups
+
+## Since draft-ietf-httpbis-priority-07
+* Relax requirements of receiving SETTINGS_NO_RFC7540_PRIORITIES that changes
+  value (#1714, #1725)
+* Clarify how intermediaries might use frames vs. headers (#1715, #1735)
+* Relax requirement when receiving a PRIORITY_UPDATE with an invalid structured
+  field value (#1741, #1756)
 
 ## Since draft-ietf-httpbis-priority-06
 * Focus on editorial changes
