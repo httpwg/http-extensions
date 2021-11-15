@@ -163,10 +163,7 @@ this document introduces the `Content-Digest` request and response header and tr
 
 Digest field calculations are tied to the `Content-Encoding`
 and `Content-Type` header fields. Therefore, a given resource may have multiple
-different checksum values when transferred with HTTP. To allow both parties to
-exchange a simple checksum with no content codings (see {{Section 8.4.1
-of SEMANTICS}}), two more digest-algorithms are added ("id-sha-256" and
-"id-sha-512").
+different checksum values when transferred with HTTP.
 
 Digest fields do not provide integrity for
 HTTP messages or fields. However, they can be combined with other mechanisms that
@@ -256,8 +253,8 @@ responses.
 For example:
 
 ~~~ http-message
-Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                   AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
+Digest: sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
+                AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 ~~~
 
 A `Digest` field MAY contain multiple representation-data-digest values.
@@ -268,7 +265,8 @@ from weaker algorithms should the need arise (see {{algorithm-agility}}).
 
 ~~~ http-message
 Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
-        id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+        sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
+                AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 ~~~
 
 A recipient MAY ignore any or all of the representation-data-digests in a Digest
@@ -309,8 +307,8 @@ It can be used in both requests and responses.
 For example:
 
 ~~~ http-message
-Content-Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                           AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
+Content-Digest: sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
+                        AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 ~~~
 
 A `Content-Digest` field MAY contain multiple content-digest values,
@@ -318,7 +316,8 @@ similarly to `Digest` (see {{digest}})
 
 ~~~ http-message
 Content-Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
-                id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+                sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
+                        AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 ~~~
 
 A recipient MAY ignore any or all of the content-digests in a Content-Digest
@@ -494,23 +493,6 @@ The registry is initialized with the tokens listed below.
     * Reference: {{!RFC4960}} appendix B, this document.
     * Status: insecure
 
-To allow sender and recipient to provide a checksum which is independent from
-`Content-Encoding`, the following additional digest-algorithms are defined:
-
-  {: vspace="0"}
-  id-sha-512
-  : * Description: The sha-512 digest of the representation data of the resource when no
-    content coding is applied
-    * Reference: [RFC6234], [RFC4648], this document.
-    * Status: standard
-
-  id-sha-256
-  : * Description: The sha-256 digest of the representation data of the resource when no
-      content coding is applied
-    * Reference: [RFC6234], [RFC4648], this document.
-    * Status: standard
-
-
 # Using Digest in State-Changing Requests {#state-changing-requests}
 
 When the representation enclosed in a state-changing request
@@ -572,11 +554,6 @@ Even a simple mechanism for end-to-end `representation data` integrity is valuab
 because user-agent can validate that resource retrieval succeeded before handing off to a
 HTML parser, video player etc. for parsing.
 
-Identity digest-algorithms (e.g. "id-sha-256" and "id-sha-512") are particularly useful
-for end-to-end integrity because they allow piecing together a resource from different sources
-with different HTTP messaging characteristics. For example, different servers that
-apply different content codings.
-
 Note that using digest fields alone does not provide end-to-end integrity of HTTP messages over
 multiple hops, since metadata could be manipulated at any stage. Methods to protect
 metadata are discussed in {{usage-in-signatures}}.
@@ -627,8 +604,6 @@ the whole payload before sending a message (e.g. see {{?I-D.thomson-http-mice}})
 
 Digest fields may expose details of encrypted payload when the checksum
 is computed on the unencrypted data.
-For example, the use of the "id-sha-256" digest-algorithm
-in conjunction with the encrypted content-coding {{?RFC8188}}.
 
 The checksum of an encrypted payload can change between different messages
 depending on the encryption algorithm used; in those cases its value could not be used to provide
@@ -715,8 +690,6 @@ The digest-algorithm tokens for "MD5", "SHA", "SHA-256", "SHA-512" have been upd
 
 The status of "MD5" and "SHA" has been updated to "insecure", and their description
 has been modified accordingly.
-
-The "id-sha-256" and "id-sha-512" algorithms have been added to the registry.
 
 ## Want-Digest Field Registration
 
@@ -1028,13 +1001,9 @@ Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
 ~~~
 {: title="Empty response with Digest"}
 
-## Client and Server Provide Full Representation Data, Client Uses id-sha-256.
+## Client and Server Provide Full Representation Data
 
-The response contains two digest values:
-
-- one with no content coding applied, which in this case accidentally
-  matches the unencoded digest-value sent in the request;
-- one taking into account the `Content-Encoding`.
+The response contains two digest values using different algorithms.
 
 As the response body contains non-printable characters, it is displayed as a
 base64-encoded string.
@@ -1056,7 +1025,8 @@ Content-Type: application/json
 Content-Encoding: br
 Content-Location: /items/123
 Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=,
-        id-sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+        sha-512=pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE6
+                0jBCwnMPyA/s3NF3ZO5oIWA7lf8ukk+\n5KJzm3p5og==
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
@@ -1087,7 +1057,7 @@ HTTP/1.1 201 Created
 Content-Type: application/json
 Content-Location: /books/123
 Location: /books/123
-Digest: id-sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
+Digest: sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
 
 {
   "id": "123",
@@ -1126,7 +1096,7 @@ Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
 ~~~ http-message
 HTTP/1.1 201 Created
 Content-Type: application/json
-Digest: id-sha-256=2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=
+Digest: sha-256=2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=
 Location: /books/123
 
 {
@@ -1168,7 +1138,7 @@ Digest: sha-256=bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=
 ~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
-Digest: id-sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
+Digest: sha-256=yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=
 
 {
   "id": "123",
@@ -1293,8 +1263,8 @@ Want-Digest: sha;q=1
 ~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
-Digest: id-sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                   +AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
+Digest: sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
+                +AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 
 {"hello": "world"}
 ~~~
@@ -1425,9 +1395,7 @@ _RFC Editor: Please remove this section before publication._
 7. Does this specification change supported algorithms?
 
    Yes. This RFC updates [RFC5843] which is still delegated for all algorithms
-   updates, and adds two more algorithms: "id-sha-256" and "id-sha-512" which allows
-   to send a checksum of a resource representation with no content codings
-   applied.
+   updates.
    To simplify a future transition to Structured Fields {{?I-D.ietf-httpbis-header-structure}}
    we suggest to use lowercase for digest-algorithms.
 
@@ -1490,15 +1458,24 @@ print("Brotli | sha256 |", digest(item, encoding=brotli.compress))
 
 print("Encoding | digest-algorithm | digest-value")
 print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512))
+print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512, encoding=brotli.compress))
 # Encoding | digest-algorithm | digest-value
 # Identity | sha512 | b'WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm'
 #                      '+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew=='
+# Brotli   | sha512 | b'pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE6'
+#                      '0jBCwnMPyA/s3NF3ZO5oIWA7lf8ukk+\n5KJzm3p5og=='
+
 ~~~
 
 # Changes
 {:numbered="false"}
 
 _RFC Editor: Please remove this section before publication._
+
+## Since draft-ietf-httpbis-digest-headers-06
+{:numbered="false"}
+
+* Remove id-sha-256 and id-sha-512 from the list of supported algorithms #855
 
 ## Since draft-ietf-httpbis-digest-headers-05
 {:numbered="false"}
