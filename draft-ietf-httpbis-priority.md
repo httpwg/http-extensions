@@ -146,9 +146,10 @@ sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
 RFC 7540 stream priority (see {{Section 5.3 of ?RFC7540}}) is a complex system
 where clients signal stream dependencies and weights to describe an unbalanced
 tree. It suffered from limited deployment and interoperability and was deprecated
-in a revision of HTTP/2 {{HTTP2}}. However, in order to maintain wire
-compatibility, HTTP/2 priority signals are still mandatory to handle (see
-{{Section 5.3.2 of HTTP2}}).
+in a revision of HTTP/2 {{HTTP2}}. HTTP/2 retains these protocol elements in
+order to maintain wire compatibility (see {{Section 5.3.2 of HTTP2}}), which
+means that they might still be used in the absence of alternative signaling, such
+as the scheme this document describes.
 
 Clients can build RFC 7540 trees with rich flexibility but experience has shown
 this is rarely exercised. Instead they tend to choose a single model optimized
