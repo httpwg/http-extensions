@@ -133,11 +133,8 @@ This document is structured as follows:
 - {{content-digest}} defines the Content-Digest request and response header and trailer field,
 - {{want-fields}} defines the Want-Digest and Want-Content-Digest request and response header and
   trailer field,
-- {{algorithms}} and {{deprecate-contentMD5}} describe algorithms and their
-  relation to Digest,
+- {{algorithms}} describes algorithms and their relation to Digest,
 - {{state-changing-requests}} details computing representation digests,
-- {{obsolete-parameters}} obsoletes Digest field parameters,
-  and
 - {{examples-unsolicited}} and {{examples-solicited}} provide examples of using
   Digest and Want-Digest.
 
@@ -182,14 +179,29 @@ introduced the `Digest` and `Want-Digest` fields. HTTP terminology has evolved
 since [RFC3230] was published. The concept of "instance" has been superseded by
 `selected representation`.
 
-This document replaces [RFC3230]. The `Digest` and `Want-Digest` field
-definitions are updated to align with the terms and notational conventions in
-{{SEMANTICS}}. Changes are intended to be semantically compatible with existing
-implementations but note that negotiation of `Content-MD5` is deprecated
-{{deprecate-contentMD5}}
-and has been replaced by `Content-Digest` negotiation via `Want-Content-Digest`.
-`Digest` field parameters are obsoleted {{obsolete-parameters}}
-and the algorithm table has been updated to reflect the current state of the art.
+This document replaces [RFC3230]. The changes described in the following
+paragraphs are intended to be semantically compatible with existing
+implementations where possible.
+
+The `Digest` and `Want-Digest` field definitions are updated to align with the
+terms and notational conventions in {{SEMANTICS}}.
+
+Negotiation of `Content-MD5` is deprecated and has been replaced by
+`Content-Digest` negotiation via `Want-Content-Digest`.
+
+{{Sections 4.1.1 and 4.2 of RFC3230}} defined field parameters. This document
+obsoletes the usage of parameters with `Digest` because this feature has not
+been widely deployed and complicates field-value processing. [RFC3230] intended
+field parameters to provide a common way to attach additional information to a
+representation-data-digest. However, if parameters are used as an input to
+validate the checksum, an attacker could alter them to steer the validation
+behavior. A digest-algorithm can still be parameterized by defining its own way
+to encode parameters into the representation-data-digest, in such a way as to
+mitigate security risks related to its computation.
+
+The algorithm table has been updated to reflect the current state of the art,
+(see {{algorithms}}).
+
 
 ## Notational Conventions
 {::boilerplate bcp14}
@@ -1303,30 +1315,6 @@ Content-Type: application/problem+json
 {: title="Response advertising the supported algorithms"}
 
 
-# Changes from RFC3230
-
-## Deprecate Negotiation of Content-MD5 {#deprecate-contentMD5}
-
-This RFC deprecates the negotiation of `Content-MD5` as it has been obsoleted by
-[RFC7231].
-
-See {{content-digest}} for a new checksum negotiation mechanism
-for HTTP message content.
-
-## Obsolete Digest Field Parameters {#obsolete-parameters}
-
-{{Sections 4.1.1 and 4.2 of RFC3230}} defined field parameters. This document
-obsoletes the usage of parameters with `Digest` because this feature has not
-been widely deployed and complicates field-value processing.
-
-[RFC3230] intended field parameters to provide a common way to attach additional
-information to a representation-data-digest. However, if parameters are used as
-an input to validate the checksum, an attacker could alter them to steer the
-validation behavior.
-
-A digest-algorithm can still be parameterized by defining its own way to encode parameters into the
-representation-data-digest, in such a way as to mitigate security risks related to its computation.
-
 # Acknowledgements
 {:numbered="false"}
 The vast majority of this document is inherited from [RFC3230], so thanks
@@ -1384,7 +1372,7 @@ _RFC Editor: Please remove this section before publication._
 
 6. What changes in `Want-Digest`?
 
-   The contentMD5 token defined in {{Section 5 of RFC3230}} is deprecated by {{deprecate-contentMD5}}.
+   The contentMD5 token defined in {{Section 5 of RFC3230}} is deprecated by this document.
 
    To clarify that `Digest` and `Want-Digest` can be used in both requests and responses
    - [RFC3230] carefully uses `sender` and `receiver` in their definition -
