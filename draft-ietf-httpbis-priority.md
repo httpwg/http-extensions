@@ -237,7 +237,7 @@ alternative priority signals (for example, {{header-field}} or
 
 ### Advice when Using Extensible Priorities as the Alternative
 
-Before receiving a SETTINGS frame a server, a client does not know if the server
+Before receiving a SETTINGS frame from a server, a client does not know if the server
 is ignoring HTTP/2 priority signals. Therefore, until the client receives the
 SETTINGS frame from the server, the client SHOULD send both the HTTP/2
 priority signals and the signals of this prioritization scheme (see
