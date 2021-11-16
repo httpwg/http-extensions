@@ -27,16 +27,6 @@ author:
     org: Cloudflare
     email: lucaspardue.24.7@gmail.com
 
-normative:
-
-informative:
-  CVE-2019-9513:
-    title: CVE-2019-9513
-    author:
-      org: Common Vulnerabilities and Exposures
-    date: 2019-03-01
-    target: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-9513
-
 --- abstract
 
 This document describes a scheme that allows an HTTP client to communicate its
