@@ -5,7 +5,13 @@ docname: draft-ietf-httpbis-binary-message-latest
 category: std
 ipr: trust200902
 area: ART
-workgroup: HTTPBIS
+workgroup: HTTP
+venue:
+  group: httpbis
+  type: Working
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  github: httpwg/http-extensions
 
 stand_alone: yes
 pi: [toc, sortrefs, symrefs, docmapping]
