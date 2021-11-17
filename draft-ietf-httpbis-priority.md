@@ -121,9 +121,7 @@ substitute for RFC 7540 stream priority.
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
-interpreted as described in {{!RFC2119}}.
+{::boilerplate bcp14-tagged}
 
 The terms Dictionary, sf-boolean, sf-dictionary, and sf-integer are imported from
 {{!STRUCTURED-FIELDS=RFC8941}}.
