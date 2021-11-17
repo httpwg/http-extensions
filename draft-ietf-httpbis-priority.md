@@ -141,10 +141,16 @@ compatibility, HTTP/2 priority signals are still mandatory to handle (see
 {{Section 5.3.2 of HTTP2}}).
 
 Many RFC 7540 server implementations do not act on HTTP/2 priority
-signals. Prioritization can use information that servers have about resources or
+signals.
+
+Prioritization can use information that servers have about resources or
 the order in which requests are generated. For example, a server, with knowledge
 of an HTML document structure, might want to prioritize the delivery of images
-that are critical to user experience above other images.
+that are critical to user experience above other images.  With RFC 7540 it is
+difficult for servers to interpret signals from clients for prioritization as
+the same conditions could result in very different signaling from different
+clients. This document describes signaling that is simpler and more constrained,
+requiring less interpretation and allowing less variation.
 
 RFC 7540 does not define a method that can be used by a server to provide a
 priority signal for intermediaries.
