@@ -236,16 +236,23 @@ alternative priority signals (for example, {{header-field}} or
 
 ### Advice when Using Extensible Priorities as the Alternative
 
-Until the client receives the SETTINGS frame from the server, the client SHOULD
-send both the HTTP/2 priority signals and the signals of this prioritization
-scheme (see {{header-field}} and {{h2-update-frame}}). When the client receives
-the first SETTINGS frame that contains the SETTINGS_NO_RFC7540_PRIORITIES
-parameter with value of 1, it SHOULD stop sending the HTTP/2 priority signals.
-If the value was 0 or if the settings parameter was absent, it SHOULD stop
-sending PRIORITY_UPDATE frames ({{h2-update-frame}}), but MAY continue sending
-the Priority header field ({{header-field}}), as it is an end-to-end signal that
-might be useful to nodes behind the server that the client is directly connected
-to.
+Before receiving a SETTINGS frame from a server, a client does not know if the server
+is ignoring HTTP/2 priority signals. Therefore, until the client receives the
+SETTINGS frame from the server, the client SHOULD send both the HTTP/2
+priority signals and the signals of this prioritization scheme (see
+{{header-field}} and {{h2-update-frame}}).
+
+Once the client receives the first SETTINGS frame that contains the
+SETTINGS_NO_RFC7540_PRIORITIES parameter with value of 1, it SHOULD stop sending
+the HTTP/2 priority signals. This avoids sending redundant signals that are
+known to be ignored.
+
+Similarly, if the client receives SETTINGS_NO_RFC7540_PRIORITIES with value of 0
+or if the settings parameter was absent, it SHOULD stop sending PRIORITY_UPDATE
+frames ({{h2-update-frame}}), since those frames are likely to be ignored.
+However, the client MAY continue sending the Priority header field
+({{header-field}}), as it is an end-to-end signal that might be useful to nodes
+behind the server that the client is directly connected to.
 
 
 # Applicability of the Extensible Priority Scheme
