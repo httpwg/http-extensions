@@ -1248,7 +1248,7 @@ user agent MUST process the cookie-av as follows.
     the cookie-av.
 
 3.  Let delta-seconds be the attribute-value converted to an integer.
- 
+
 4.  Let cookie-age-limit be the maximum age of the cookie (which must be 400 days
     or less, see {{attribute-max-age}}).
 
