@@ -7,11 +7,12 @@ ipr: trust200902
 area: ART
 workgroup: HTTP
 venue:
-  group: httpbis
-  type: Working
+  group: HTTP
+  type: Working Group
+  homepage: https://httpwg.github.io/
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
-  github: httpwg/http-extensions
+  repo: https://github.com/httpwg/http-extensions/labels/binary-messages
 
 stand_alone: yes
 pi: [toc, sortrefs, symrefs, docmapping]
