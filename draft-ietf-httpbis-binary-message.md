@@ -9,7 +9,7 @@ workgroup: HTTP
 venue:
   group: HTTP
   type: Working Group
-  homepage: https://httpwg.org/
+  home: https://httpwg.org/
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/binary-messages
