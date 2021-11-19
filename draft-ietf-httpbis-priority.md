@@ -27,16 +27,6 @@ author:
     org: Cloudflare
     email: lucaspardue.24.7@gmail.com
 
-normative:
-
-informative:
-  CVE-2019-9513:
-    title: CVE-2019-9513
-    author:
-      org: Common Vulnerabilities and Exposures
-    date: 2019-03-01
-    target: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-9513
-
 --- abstract
 
 This document describes a scheme that allows an HTTP client to communicate its
@@ -149,64 +139,34 @@ order to maintain wire compatibility (see {{Section 5.3.2 of HTTP2}}), which
 means that they might still be used in the absence of alternative signaling, such
 as the scheme this document describes.
 
-Clients can build RFC 7540 trees with rich flexibility but experience has shown
-this is rarely exercised. Instead they tend to choose a single model optimized
-for a single use case and experiment within the model constraints, or do nothing
-at all. Furthermore, many clients build their prioritization tree in a unique
-way, which makes it difficult for servers to understand their intent and act or
-intervene accordingly.
+Many RFC 7540 server implementations do not act on HTTP/2 priority
+signals.
 
-Many RFC 7540 server implementations do not act on HTTP/2 priority signals. Some
-instead favor custom server-driven schemes based on heuristics or other hints,
-such as resource content type or request generation order. For example, a
-server, with knowledge of an HTML document structure, might want to prioritize
-the delivery of images that are critical to user experience above other images,
-but below the CSS files. Since client trees vary, it is impossible for the
-server to determine how such images should be prioritized against other
-responses.
+Prioritization can use information that servers have about resources or
+the order in which requests are generated. For example, a server, with knowledge
+of an HTML document structure, might want to prioritize the delivery of images
+that are critical to user experience above other images.  With RFC 7540 it is
+difficult for servers to interpret signals from clients for prioritization as
+the same conditions could result in very different signaling from different
+clients. This document describes signaling that is simpler and more constrained,
+requiring less interpretation and allowing less variation.
 
-RFC 7540 allows intermediaries to coalesce multiple client trees into a single
-tree that is used for a single upstream HTTP/2 connection. However, most
-intermediaries do not support this. Additionally, RFC 7540 does not define a
-method that can be used by a server to express the priority of a response.
-Without such a method, intermediaries cannot coordinate client-driven and
-server-driven priorities.
+RFC 7540 does not define a method that can be used by a server to provide a
+priority signal for intermediaries.
 
-RFC 7540 describes denial-of-service considerations for implementations. On
-2019-08-13 Netflix issued an advisory notice about the discovery of several
-resource exhaustion vectors affecting multiple RFC 7540 implementations. One
-attack, [CVE-2019-9513] aka "Resource Loop", is based on using priority signals
-to manipulate the server's stored prioritization state.
+RFC 7540 priority is expressed relative to other requests on the same connection.
+Many requests are generated without knowledge of how other requests might share a
+connection, which makes this difficult to use reliably, especially in protocols
+that do not have strong ordering guarantees, like HTTP/3 {{HTTP3}}.
 
-HTTP/2 priority associated with an HTTP request is signalled as a value relative
-to those of other requests sharing the same HTTP/2 connection. Therefore, in
-order to prioritize requests, endpoints are compelled to have the knowledge of
-the underlying HTTP version and how the requests are coalesced. This has been
-a burden to HTTP endpoints that generate or forward requests in a
-version-agnostic manner.
-
-HTTP/2 priority signals are required to be delivered and processed in the order
-they are sent so that the receiver handling is deterministic. Porting HTTP/2
-priority signals to protocols that do not provide ordering guarantees presents
-challenges. For example, HTTP/3 {{HTTP3}} lacks global ordering across streams
-that would carry priority signals. Early attempts to port HTTP/2 priority
-signals to HTTP/3 required adding additional information to the signals, leading
-to more complicated processing. Problems found with this approach could not be
-resolved and definition of a HTTP/3 priority signalling feature was removed
-before publication.
-
-Considering the deployment problems and the design restrictions of RFC 7540
-stream priority, as well as the difficulties in adapting it to HTTP/3,
-continuing to base prioritization on this mechanism risks increasing the
-complexity of systems. Multiple experiments from independent research have shown
-that simpler schemes can reach at least equivalent performance characteristics
-compared to the more complex RFC 7540 setups seen in practice, at least for the
-web use case.
+Multiple experiments from independent research have shown that simpler schemes
+can reach at least equivalent performance characteristics compared to the more
+complex RFC 7540 setups seen in practice, at least for the web use case.
 
 ## Disabling RFC 7540 Priorities {#disabling}
 
-The problems and insights set out above provided the motivation for deprecating
-RFC 7540 stream priority (see {{Section 5.3 of RFC7540}}).
+The problems and insights set out above provided the motivation for an
+alternative to RFC 7540 stream priority (see {{Section 5.3 of HTTP2}}).
 
 The SETTINGS_NO_RFC7540_PRIORITIES HTTP/2 setting is defined by this document in
 order to allow endpoints to omit or ignore HTTP/2 priority signals (see
