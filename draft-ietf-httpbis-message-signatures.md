@@ -72,6 +72,7 @@ informative:
     RFC7518:
     RFC7239:
     RFC8017:
+    BCP195:
     I-D.ietf-httpbis-client-cert-field:
 
 --- abstract
@@ -226,7 +227,7 @@ Note that this means the serialization of the component identifier itself is enc
 
 Component identifiers including their parameters MUST NOT be repeated within a single list of covered components.
 
-The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`"\n"`) characters.
+The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters.
 
 The following sections define component identifier types, their parameters, their associated values, and the canonicalization rules for their values. The method for combining component identifiers into the signature input is defined in {{create-sig-input}}.
 
@@ -732,21 +733,21 @@ The signature input is a US-ASCII string containing the canonicalized HTTP messa
 
     1. Append the component identifier for the covered component serialized according to the `component-identifier` rule.
 
-    2. Append a single colon `":"`
+    2. Append a single colon `:`
 
-    3. Append a single space `" "`
+    3. Append a single space "` `"
 
     4. Append the covered component's canonicalized component value, as defined by the HTTP message component type. ({{http-header}} and {{specialty-content}})
 
-    5. Append a single newline `"\n"`
+    5. Append a single newline `\n`
 
 3. Append the signature parameters component ({{signature-params}}) as follows:
 
     1. Append the component identifier for the signature parameters serialized according to the `component-identifier` rule, i.e. `"@signature-params"`
 
-    2. Append a single colon `":"`
+    2. Append a single colon `:`
 
-    3. Append a single space `" "`
+    3. Append a single space "` `"
 
     4. Append the signature parameters' canonicalized component value as defined in {{signature-params}}
 
@@ -1315,7 +1316,9 @@ To detect this, verifiers should be tested using both valid and invalid signatur
 
 The use of HTTP Message Signatures does not negate the need for TLS or its equivalent to protect information in transit. Message signatures provide message integrity over the covered message components but do not provide any confidentiality for the communication between parties.
 
-TLS also protects the signature data itself from being captured by an attacker, which is an important step in preventing [signature replay](#security-replay).
+TLS provides such confidentiality between the TLS endpoints. As part of this, TLS also protects the signature data itself from being captured by an attacker, which is an important step in preventing [signature replay](#security-replay).
+
+When TLS is used, it needs to be deployed according to the recommendations in {{BCP195}}.
 
 ## Signature Replay {#security-replay}
 
@@ -1339,11 +1342,13 @@ A common attack against signature systems is to force a signature collision, whe
 
 To counter this, only vetted keys and signature algorithms should be used to sign HTTP messages. The HTTP Message Signatures Algorithm Registry is one source of potential trusted algorithms.
 
-While it is possible for an attacker to substitute the signature parameters value or the signature value separately, the [signature input generation algorithm](#create-sig-input) always covers the signature parameters as the final value in the input string. This strongly binds the signature input with the signature value in a way that makes it much more difficult for an attacker to perform a partial substitution.
+While it is possible for an attacker to substitute the signature parameters value or the signature value separately, the [signature input generation algorithm](#create-sig-input) always covers the signature parameters as the final value in the input string using a deterministic serialization method. This step strongly binds the signature input with the signature value in a way that makes it much more difficult for an attacker to perform a partial substitution on the signature inputs.
 
 ## Key Theft {#security-keys}
 
 A foundational assumption of signature-based cryptographic systems is that the signing key is not compromised by an attacker. If the keys used to sign the message are exfiltrated or stolen, the attacker will be able to generate their own signatures using those keys. As a consequence, signers have to protect any signing key material from exfiltration, capture, and use by an attacker.
+
+To combat this, signers can rotate keys over time to limit the amount of time stolen keys are useful. Signers can also use key escrow and storage systems to limit the attack surface against keys. Furthermore, the use of asymmetric signing algorithms exposes key material less than the use of [symmetric signing algorithms](#security-symmetric).
 
 ## Modification of Required Message Parameters {#security-modify}
 
@@ -1374,6 +1379,8 @@ Therefore, applications should not rely on specific labels being present, and ap
 The HTTP Message Signatures specification allows for both asymmetric and symmetric cryptography to be applied to HTTP messages. By its nature, symmetric cryptographic methods require the same key material to be known by both the signer and verifier. This effectively means that a verifier is capable of generating a valid signature, since they have access to the same key material. An attacker that is able to compromise a verifier would be able to then impersonate a signer.
 
 Where possible, asymmetric methods or secure key agreement mechanisms should be used in order to avoid this type of attack. When symmetric methods are used, distribution of the key material needs to be protected by the overall system. One technique for this is the use of separate cryptographic modules that separate the verification process (and therefore the key material) from other code, minimizing the vulnerable attack surface. Another technique is the use of key derivation functions that allow the signer and verifier to agree on unique keys for each message without having to share the key values directly.
+
+Additionally, if symmetric algorithms are allowed within a system, special care must be taken to avoid [key downgrade attacks](#security-keydowngrade).
 
 ## Canonicalization Attacks {#security-canonicalization}
 
@@ -1409,7 +1416,7 @@ To counteract this, implementations should use fully compliant and trusted parse
 
 ## Choosing Message Components {#signature-components}
 
-Applications of HTTP Message Signatures need to decide which message components will be covered by the signature. Depending on the application, some components could be expected to be changed by intermediaries prior to the signature's verification. If these components are covered, such changes would, by design, break the signature. In such circumstances, it is often tempting for the verifier to simply turn off signature verification entirely in order to allow these otherwise good messages to pass. 
+Applications of HTTP Message Signatures need to decide which message components will be covered by the signature. Depending on the application, some components could be expected to be changed by intermediaries prior to the signature's verification. If these components are covered, such changes would, by design, break the signature.
 
 However, the HTTP Message Signature standard allows for flexibility in determining which components are signed precisely so that a given application can choose the appropriate portions of the message that need to be signed, avoiding problematic components. For example, a web application framework that relies on rewriting query parameters might avoid use of the `@query` content identifier in favor of sub-indexing the query value using `@query-params` content identifier instead.
 
