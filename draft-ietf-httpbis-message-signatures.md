@@ -354,7 +354,7 @@ The signature parameters component value is the serialization of the signature p
 
 * `created`: Creation time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported. Inclusion of this parameter is RECOMMENDED.
 * `expires`: Expiration time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
-* `nonce`: A random unique value generated for this signature.
+* `nonce`: A random unique value generated for this signature as an `sf-string` value.
 * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
 * `keyid`: The identifier for the key material as an `sf-string` value.
 
