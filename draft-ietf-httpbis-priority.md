@@ -953,6 +953,9 @@ Yang Chi contributed the section on retransmission scheduling.
 
 *RFC EDITOR: please remove this section before publication*
 
+## Since draft-ietf-httpbis-priority-09
+* Editorial changes
+
 ## Since draft-ietf-httpbis-priority-08
 * Changelog fixups
 
