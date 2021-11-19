@@ -25,3 +25,14 @@ draft-ietf-httpbis-origin-frame.xml
 draft-ietf-httpbis-rand-access-live.xml
 draft-ietf-httpbis-replay.xml
 draft-ietf-httpbis-rfc6265bis.xml
+draft-ietf-httpbis-bcp56bis.xml
+draft-ietf-httpbis-binary-message.xml
+draft-ietf-httpbis-cache-header.xml
+draft-ietf-httpbis-digest-headers.xml
+draft-ietf-httpbis-h3-websockets.xml
+draft-ietf-httpbis-message-signatures.xml
+draft-ietf-httpbis-priority.xml
+draft-ietf-httpbis-proxy-status.xml
+draft-ietf-httpbis-rfc7838bis.xml
+draft-ietf-httpbis-targeted-cache-control.xml
+draft-ietf-httpbis-variants.xml
