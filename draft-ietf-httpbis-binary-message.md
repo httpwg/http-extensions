@@ -13,6 +13,7 @@ venue:
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/binary-messages
+github-issue-label: binary-messages
 
 stand_alone: yes
 pi: [toc, sortrefs, symrefs, docmapping]
