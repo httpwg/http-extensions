@@ -25,3 +25,5 @@ draft-ietf-httpbis-origin-frame.xml
 draft-ietf-httpbis-rand-access-live.xml
 draft-ietf-httpbis-replay.xml
 draft-ietf-httpbis-rfc6265bis.xml
+draft-ietf-httpbis-*.xml
+!draft-ietf-httpbis-safe-method-w-body.xml
