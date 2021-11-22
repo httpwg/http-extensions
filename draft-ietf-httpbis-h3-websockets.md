@@ -1,7 +1,7 @@
 ---
 title: "Bootstrapping WebSockets with HTTP/3"
 docname: draft-ietf-httpbis-h3-websockets-latest
-category: info
+category: std
 
 ipr: trust200902
 area: ART
