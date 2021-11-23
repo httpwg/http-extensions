@@ -10,6 +10,13 @@ workgroup: HTTP
 keyword: Internet-Draft
 stand_alone: yes
 smart_quotes: no
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.github.io/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/proxy-status
 github-issue-label: proxy-status
 
 author:
@@ -42,14 +49,6 @@ informative:
 
 This document defines the Proxy-Status HTTP field to convey the details of intermediary response handling, including generated errors.
 
-
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <https://httpwg.org/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/proxy-status>.
 
 --- middle
 

@@ -13,6 +13,13 @@ venue:
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/binary-messages
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.github.io/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/binary-messages
 github-issue-label: binary-messages
 
 stand_alone: yes

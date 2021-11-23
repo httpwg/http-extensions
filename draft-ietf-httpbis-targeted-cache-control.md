@@ -14,6 +14,13 @@ keyword:
 
 stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.github.io/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/targeted-cc
 github-issue-label: targeted-cc
 
 author:
@@ -64,17 +71,6 @@ informative:
 --- abstract
 
 This specification defines a convention for HTTP response header fields that allow cache directives to be targeted at specific caches or classes of caches. It also defines one such header field, targeted at Content Delivery Network (CDN) caches.
-
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-The issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/targeted-cc>.
-
-The most recent (often, unpublished) draft is at <https://httpwg.org/http-extensions/draft-ietf-httpbis-targeted-cache-control.html>.
-
-See also the draft's current status in the IETF datatracker, at
-<https://datatracker.ietf.org/doc/draft-ietf-httpbis-targeted-cache-control/>.
 
 --- middle
 

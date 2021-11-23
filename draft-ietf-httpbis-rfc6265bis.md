@@ -12,6 +12,13 @@ pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 stand_alone: yes #_
 smart_quotes: no
 
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.github.io/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/6265bis
 github-issue-label: 6265bis
 
 author:
@@ -224,14 +231,6 @@ mostly stateless HTTP protocol. Although cookies have many historical
 infelicities that degrade their security and privacy, the Cookie and Set-Cookie
 header fields are widely used on the Internet. This document obsoletes RFC
 6265.
-
---- note_Note_to_Readers
-
-Discussion of this draft takes place on the HTTP working group mailing list
-(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <http://httpwg.github.io/>; source
-code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/6265bis>.
 
 --- middle
 

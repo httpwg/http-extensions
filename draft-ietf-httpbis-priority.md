@@ -13,6 +13,13 @@ stand_alone: yes
 smart_quotes: no
 pi: [toc, docindent, sortrefs, symrefs, strict, compact, comments, inline]
 
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.github.io/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/priorities
 github-issue-label: priorities
 
 author:
@@ -45,17 +52,6 @@ Priority header field for communicating the initial priority in an HTTP
 version-independent manner, as well as HTTP/2 and HTTP/3 frames for
 reprioritizing responses. These share a common format structure that is designed
 to provide future extensibility.
-
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-Discussion of this draft takes place on the HTTP working group mailing list
-(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <https://httpwg.org/>; source
-code and issues list for this draft can be found at
-<https://github.com/httpwg/http-extensions/labels/priorities>.
 
 --- middle
 
