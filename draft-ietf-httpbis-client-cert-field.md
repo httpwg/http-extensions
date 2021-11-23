@@ -18,7 +18,7 @@ smart_quotes: no
 venue:
   group: HTTP
   type: Working Group
-  home: https://httpwg.github.io/
+  home: https://httpwg.org/
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/client-cert-field
