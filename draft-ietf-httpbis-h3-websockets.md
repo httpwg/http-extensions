@@ -7,6 +7,13 @@ ipr: trust200902
 area: ART
 workgroup: HTTP
 keyword: Internet-Draft
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/h3-websockets
 github-issue-label: h3-websockets
 stand_alone: yes
 smart_quotes: no
@@ -30,14 +37,6 @@ The mechanism for running the WebSocket Protocol over a single stream
 of an HTTP/2 connection is equally applicable to HTTP/3, but the HTTP
 version-specific details need to be specified. This document describes
 how the mechanism is adapted for HTTP/3.
-
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <https://httpwg.org/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/h3-websockets>.
 
 --- middle
 

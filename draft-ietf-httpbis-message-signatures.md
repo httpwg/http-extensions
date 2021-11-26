@@ -15,6 +15,13 @@ stand_alone: yes
 smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline, docmapping]
 
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/signatures
 github-issue-label: signatures
 
 author:
@@ -79,14 +86,6 @@ informative:
 
 This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over components of an HTTP message.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.
 This document also describes a means for requesting that a signature be applied to a subsequent HTTP message in an ongoing HTTP exchange.
-
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <https://httpwg.org/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/signatures>.
 
 --- middle
 

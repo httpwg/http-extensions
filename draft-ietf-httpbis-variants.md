@@ -16,6 +16,13 @@ keyword: content negotiation
 stand_alone: yes
 smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/variants
 github-issue-label: variants
 
 author:
@@ -38,18 +45,6 @@ informative:
 --- abstract
 
 This specification introduces an alternative way to select a HTTP response from a cache based upon its request headers, using the HTTP "Variants" and "Variant-Key" response header fields. Its aim is to make HTTP proactive content negotiation more cache-friendly.
-
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-Discussion of this draft takes place on the HTTP working group mailing list
-(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <https://httpwg.github.io/>; source code and issues list
-for this draft can be found at <https://github.com/httpwg/http-extensions/labels/variants>.
-
-There is a prototype implementation of the algorithms herein at <https://github.com/mnot/variants-toy>.
 
 --- middle
 
@@ -523,6 +518,11 @@ To be usable with Variants, proactive content negotiation mechanisms need to be 
 
 {{backports}} fulfils these requirements for some existing proactive content negotiation mechanisms in HTTP.
 
+
+# Implementations
+{: removeInRFC="true"}
+
+There is a prototype implementation of the algorithms in this document at [](https://github.com/mnot/variants-toy).
 
 # IANA Considerations
 

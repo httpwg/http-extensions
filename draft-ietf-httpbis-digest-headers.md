@@ -13,6 +13,13 @@ stand_alone: yes
 smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline, docmapping]
 
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/digest-headers
 github-issue-label: digest-headers
 
 author:
@@ -83,18 +90,6 @@ Want-Digest and Want-Content-Digest can be used to indicate a sender's desire to
 receive integrity fields respectively.
 
 This document obsoletes RFC 3230.
-
-
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-Discussion of this draft takes place on the HTTP working group mailing list
-(ietf-http-wg@w3.org), which is archived at
-<https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-The source code and issues list for this draft can be found at
-<https://github.com/httpwg/http-extensions>.
 
 
 --- middle
