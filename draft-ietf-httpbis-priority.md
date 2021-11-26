@@ -126,8 +126,9 @@ Example HTTP requests and responses use the HTTP/2-style formatting from
 This document uses the variable-length integer encoding from
 {{!QUIC=RFC9000}}.
 
-The term control stream is used to describe the HTTP/2 stream with identifier
-0x0, and HTTP/3 control stream; see {{Section 6.2.1 of !HTTP3=I-D.ietf-quic-http}}.
+The term control stream is used to describe both the HTTP/2 stream with
+identifier 0x0, and the HTTP/3 control stream; see {{Section 6.2.1 of
+!HTTP3=I-D.ietf-quic-http}}.
 
 The term HTTP/2 priority signal is used to describe the priority information
 sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
