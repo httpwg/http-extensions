@@ -42,6 +42,31 @@ informative:
     date: 2019-03-01
     target: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-9513
 
+  MARX:
+    target: https://www.scitepress.org/Link.aspx?doi=10.5220/0008191701300143
+    title: "Of the Utmost Importance: Resource Prioritization in HTTP/3 over QUIC"
+    date: 2019-09
+    author:
+    -
+      name: Robin Marx
+    -
+      name: Tom De Decker
+    -
+      name: Peter Quax
+    -
+      name: Wim Lamotte
+    seriesinfo:
+      DOI: 10.5220/0008191701300143
+      SCITEPRESS: "Proceedings of the 15th International Conference on Web Information Systems and Technologies (pages 130-143)"
+
+  MEENAN:
+    title: Better HTTP/2 Prioritization for a Faster Web
+    author:
+      name: Patrick Meenan
+    date: 2019-05-14
+    target: https://blog.cloudflare.com/better-http-2-prioritization-for-a-faster-web/
+
+
 --- abstract
 
 This document describes a scheme that allows an HTTP client to communicate its
@@ -163,9 +188,10 @@ Many requests are generated without knowledge of how other requests might share 
 connection, which makes this difficult to use reliably, especially in protocols
 that do not have strong ordering guarantees, like HTTP/3 {{HTTP3}}.
 
-Multiple experiments from independent research have shown that simpler schemes
-can reach at least equivalent performance characteristics compared to the more
-complex RFC 7540 setups seen in practice, at least for the web use case.
+Multiple experiments from independent research ({{MARX}}, {{MEENAN}}) have shown
+that simpler schemes can reach at least equivalent performance characteristics
+compared to the more complex RFC 7540 setups seen in practice, at least for the
+web use case.
 
 ## Disabling RFC 7540 Priorities {#disabling}
 
