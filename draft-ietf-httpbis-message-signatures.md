@@ -1199,7 +1199,7 @@ Status:
 : Active
 
 Definition:
-: RSASSA-PSS using SHA-256
+: RSASSA-PSS using SHA-512
 
 Specification document(s):
 : \[\[This document\]\], {{method-rsa-pss-sha512}}
