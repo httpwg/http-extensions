@@ -43,7 +43,7 @@ informative:
     target: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-9513
 
   MARX:
-    target: https://www.scitepress.org/Link.aspx?doi=10.5220/0008191701300143
+    target: https://www.doi.org/10.5220/0008191701300143
     title: "Of the Utmost Importance: Resource Prioritization in HTTP/3 over QUIC"
     date: 2019-09
     author:
