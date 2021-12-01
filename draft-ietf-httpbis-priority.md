@@ -925,8 +925,16 @@ Specification:
 : This document
 
 Upon publication, please create the HTTP Priority Parameters registry at
-<https://iana.org/assignments/http-priority> and populate it with the types
-defined in {{parameters}}; see {{register}} for its associated procedures.
+<https://iana.org/assignments/http-priority> and populate it with the entries in
+{{iana-parameter-table}}; see {{register}} for its associated procedures.
+
+| ----- | --------------------------------------------------------- | -------------------------- |
+| Name  | Description                                               | Specification              |
+| ----- | :-------------------------------------------------------: | -------------------------- |
+| u     | The urgency of an HTTP response.                          | {{urgency}}                |
+| i     | Whether an HTTP response can be processed incrementally.  | {{incremental}}            |
+| ----- | --------------------------------------------------------- | -------------------------- |
+{: #iana-parameter-table title="Initial Priority Parameters"}
 
 --- back
 
