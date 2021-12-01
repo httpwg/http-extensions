@@ -126,8 +126,9 @@ Example HTTP requests and responses use the HTTP/2-style formatting from
 This document uses the variable-length integer encoding from
 {{!QUIC=RFC9000}}.
 
-The term control stream is used to describe the HTTP/2 stream with identifier
-0x0, and HTTP/3 control stream; see {{Section 6.2.1 of !HTTP3=I-D.ietf-quic-http}}.
+The term control stream is used to describe both the HTTP/2 stream with
+identifier 0x0, and the HTTP/3 control stream; see {{Section 6.2.1 of
+!HTTP3=I-D.ietf-quic-http}}.
 
 The term HTTP/2 priority signal is used to describe the priority information
 sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
@@ -387,15 +388,15 @@ where to send registration requests.
 
 # The Priority HTTP Header Field {#header-field}
 
-The Priority HTTP header field carries priority parameters {{parameters}}. It
-can appear in requests and responses. It is an end-to-end signal of the request
-priority from the client or the response priority from the server. {{merging}}
-describes how intermediaries can combine the priority information from client
-requests and server responses to correct or amend the precedence. Clients cannot
-interpret the appearance or omission of a Priority response header as
-acknowledgement that any prioritization has occurred. Guidance for how endpoints
-can act on Priority header values is given in {{server-scheduling}} and
-{{client-scheduling}}.
+The Priority HTTP header field carries priority parameters (see {{parameters}}).
+It can appear in requests and responses. It is an end-to-end signal of the
+request priority from the client or the response priority from the server.
+{{merging}} describes how intermediaries can combine the priority information
+from client requests and server responses to correct or amend the precedence.
+Clients cannot interpret the appearance or omission of a Priority response
+header as acknowledgement that any prioritization has occurred. Guidance for how
+endpoints can act on Priority header values is given in {{server-scheduling}}
+and {{client-scheduling}}.
 
 Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 
