@@ -382,7 +382,7 @@ a prefix that identifies the vendor, application or deployment).
 
 New Priority parameters can be defined by registering them in the HTTP Priority
 Parameters Registry. The registry governs the keys (short textual strings) used
-in Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
+in the Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
 Since each HTTP request can have associated priority signals, there is value
 in having short key lengths, especially single-character strings. In order to
 encourage extension while avoiding unintended conflict among attractive key
@@ -482,7 +482,7 @@ scheduling, the most recently received PRIORITY_UPDATE frame can be considered
 as the most up-to-date information that overrides any other signal. Servers
 SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply it once
 the referenced stream is opened. Holding PRIORITY_UPDATE frames for each stream
-requires server resources, which can can be bound by local implementation
+requires server resources, which can can be bounded by local implementation
 policy. Although there is no limit to the number of PRIORITY_UPDATES that can be
 sent, storing only the most recently received frame limits resource commitment.
 
@@ -632,7 +632,7 @@ left as an implementation decision.
 
 Absence of a priority parameter in an HTTP response indicates the server's
 disinterest in changing the client-provided value. This is different from the
-logic being defined for the request header field, in which omission of a
+approach for the request header field, in which omission of a
 priority parameter implies the use of their default values (see {{parameters}}).
 
 As a non-normative example, when the client sends an HTTP request with the
@@ -745,14 +745,14 @@ in a PUSH_PROMISE or HEADERS frame.
 
 An intermediary serving an HTTP connection might split requests over multiple
 backend connections. When it applies prioritization rules strictly, low priority
-requests cannot make progress while requests with higher priorities are inflight. This
-blocking can propagate to backend connections, which the peer might interpret as
-a connection stall. Endpoints often implement protections against stalls, such
-as abruptly closing connections after a certain time period. To reduce the
-possibility of this occurring, intermediaries can avoid strictly following
-prioritization and instead allocate small amounts of bandwidth for all the
-requests that they are forwarding, so that every request can make some progress
-over time.
+requests cannot make progress while requests with higher priorities are in
+flight. This blocking can propagate to backend connections, which the peer might
+interpret as a connection stall. Endpoints often implement protections against
+stalls, such as abruptly closing connections after a certain time period. To
+reduce the possibility of this occurring, intermediaries can avoid strictly
+following prioritization and instead allocate small amounts of bandwidth for all
+the requests that they are forwarding, so that every request can make some
+progress over time.
 
 Similarly, servers SHOULD allocate some amount of bandwidths to streams acting
 as tunnels.
@@ -789,7 +789,7 @@ prioritize new data for a higher urgency stream over retransmission data for a
 lower priority stream, or it could prioritize retransmission data over new data
 irrespective of urgencies.
 
-{{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}}, also highlights consideration of
+{{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}} also highlights consideration of
 application priorities when sending probe packets after Probe Timeout timer
 expiration. A QUIC implementation supporting application-indicated priorities
 might use the relative priority of streams when choosing probe data.
@@ -862,7 +862,7 @@ of delaying the delivery of updates.
 
 # Why use an End-to-End Header Field? {#header-field-rationale}
 
-Contrary to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
+In contrast to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
 the Priority header field is defined as end-to-end.
 
 The rationale is that the Priority header field transmits how each response
