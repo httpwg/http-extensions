@@ -863,22 +863,17 @@ of delaying the delivery of updates.
 Contrary to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
 the Priority header field is defined as end-to-end.
 
-The rationale is that the Priority header field transmits how each response
-affects the client's processing of those responses, rather than how relatively
-urgent each response is to others.  The way a client processes a response is a
-property associated to that client generating that request.  Not that of an
-intermediary.  Therefore, it is an end-to-end property.  How these end-to-end
-properties carried by the Priority header field affect the prioritization
-between the responses that share a connection is a hop-by-hop issue.
+The way a client processes a response is a property associated to that client
+generating that request.  Not that of an intermediary.  Therefore, it is an
+end-to-end property.  How these end-to-end properties carried by the Priority
+header field affect the prioritization between the responses that share a
+connection is a hop-by-hop issue.
 
 Having the Priority header field defined as end-to-end is important for caching
 intermediaries.  Such intermediaries can cache the value of the Priority header
 field along with the response, and utilize the value of the cached header field
 when serving the cached response, only because the header field is defined as
 end-to-end rather than hop-by-hop.
-
-It should also be noted that the use of a header field carrying a textual value
-makes the prioritization scheme extensible; see the discussion below.
 
 # Security Considerations
 
