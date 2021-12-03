@@ -280,9 +280,11 @@ priority parameters is encoded as a Structured Fields Dictionary (see
 
 This document defines the urgency(`u`) and incremental(`i`) parameters. When
 receiving an HTTP request that does not carry these priority parameters, a
-server SHOULD act as if their default values were specified. Note that handling
-of omitted parameters is different when processing an HTTP response; see
-{{merging}}.
+server SHOULD act as if their default values were specified.
+
+An intermediary that forwards requests and response can combine signals from
+both; see {{merging}}. Note that omission of parameters in responses is handled
+differently from omission in requests.
 
 Receivers parse the Dictionary as defined in {{Section 4.2 of
 STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document
