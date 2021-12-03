@@ -282,9 +282,9 @@ This document defines the urgency(`u`) and incremental(`i`) parameters. When
 receiving an HTTP request that does not carry these priority parameters, a
 server SHOULD act as if their default values were specified.
 
-An intermediary that forwards requests and response can combine signals from
-both; see {{merging}}. Note that omission of parameters in responses is handled
-differently from omission in requests.
+An intermediary can combine signals from requests and responses that it forwards.
+Note that omission of parameters in responses is handled differently from
+omission in requests; see {{merging}}.
 
 Receivers parse the Dictionary as defined in {{Section 4.2 of
 STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document
