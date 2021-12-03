@@ -367,12 +367,12 @@ parameters should not change the interpretation of, or modify, the urgency (see
 that is not backwards compatible or fallback safe.
 
 For example, if there is a need to provide more granularity than eight urgency
-levels, it would be possible to subdivide the range using an additional
+levels, it would be possible to subdivide the range using an additional priority
 parameter. Implementations that do not recognize the parameter can safely
 continue to use the less granular eight levels.
 
 Alternatively, the urgency can be augmented. For example, a graphical user agent
-could send a `visible` parameter to indicate if the resource being requested is
+could send a `visible` priority parameter to indicate if the resource being requested is
 within the viewport.
 
 Generic priority parameters are preferred over vendor-specific,
