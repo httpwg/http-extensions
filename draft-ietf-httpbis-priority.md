@@ -632,8 +632,8 @@ left as an implementation decision.
 
 Absence of a priority parameter in an HTTP response indicates the server's
 disinterest in changing the client-provided value. This is different from the
-approach for the request header field, in which omission of a
-priority parameter implies the use of their default values (see {{parameters}}).
+the request header field, in which omission of a priority parameter implies the
+use of their default values (see {{parameters}}).
 
 As a non-normative example, when the client sends an HTTP request with the
 urgency parameter set to `5` and the incremental parameter set to `true`
