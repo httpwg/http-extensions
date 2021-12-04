@@ -166,8 +166,8 @@ where clients signal stream dependencies and weights to describe an unbalanced
 tree. It suffered from limited deployment and interoperability and was deprecated
 in a revision of HTTP/2 {{HTTP2}}. HTTP/2 retains these protocol elements in
 order to maintain wire compatibility (see {{Section 5.3.2 of HTTP2}}), which
-means that they might still be used in the absence of alternative signaling, such
-as the scheme this document describes.
+means that they might still be used even in the presence of alternative signaling,
+such as the scheme this document describes.
 
 Many RFC 7540 server implementations do not act on HTTP/2 priority
 signals.
