@@ -125,9 +125,11 @@ a standardized and extensible format of priority information. {{header-field}}
 defines the Priority HTTP header field, a protocol-version-independent and
 end-to-end priority signal. Clients can use this header to signal priority to
 servers in order to specify the precedence of HTTP responses. Similarly, servers
-behind an intermediary can use it to signal priority to the intermediary.
+behind an intermediary can use it to signal priority to the intermediary. After
+a client sends a request, it may be beneficial for it to change the priority of
+the response, {{reprioritization}} describes this reprioritization.
 {{h2-update-frame}} and {{h3-update-frame}} define version-specific frames that
-carry priority parameters, which clients can use for reprioritization.
+carry priority parameters for reprioritization.
 
 Header field and frame priority signals are input to a server's response
 prioritization process. They are only a suggestion and do not guarantee any
