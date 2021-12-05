@@ -265,9 +265,9 @@ future extensions. Each key-value pair represents a priority parameter.
 
 The Priority HTTP header field ({{header-field}}) is an end-to-end way to
 transmit this set of priority parameters when a request or a response is issued.
-In order to reprioritize a request, HTTP-version-specific PRIORITY_UPDATE frames
-({{h2-update-frame}} and {{h3-update-frame}}) are used by clients to transmit
-the same information on a single hop.
+In order to reprioritize a request ({{reprioritization}}), HTTP-version-specific
+PRIORITY_UPDATE frames ({{h2-update-frame}} and {{h3-update-frame}}) are used by
+clients to transmit the same information on a single hop.
 
 Intermediaries can consume and produce priority signals in a PRIORITY_UPDATE
 frame or Priority header field. Sending a PRIORITY_UPDATE frame preserves the
