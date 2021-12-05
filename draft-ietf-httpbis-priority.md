@@ -127,7 +127,7 @@ end-to-end priority signal. Clients can use this header to signal priority to
 servers in order to specify the precedence of HTTP responses. Similarly, servers
 behind an intermediary can use it to signal priority to the intermediary.
 {{h2-update-frame}} and {{h3-update-frame}} define version-specific frames that
-carry parameters, which clients can use for reprioritization.
+carry priority parameters, which clients can use for reprioritization.
 
 Header field and frame priority signals are input to a server's response
 prioritization process. They are only a suggestion and do not guarantee any
@@ -262,8 +262,8 @@ The priority information is a sequence of key-value pairs, providing room for
 future extensions. Each key-value pair represents a priority parameter.
 
 The Priority HTTP header field ({{header-field}}) is an end-to-end way to
-transmit this set of parameters when a request or a response is issued. In order
-to reprioritize a request, HTTP-version-specific PRIORITY_UPDATE frames
+transmit this set of priority parameters when a request or a response is issued.
+In order to reprioritize a request, HTTP-version-specific PRIORITY_UPDATE frames
 ({{h2-update-frame}} and {{h3-update-frame}}) are used by clients to transmit
 the same information on a single hop.
 
@@ -278,18 +278,19 @@ For both the Priority header field and the PRIORITY_UPDATE frame, the set of
 priority parameters is encoded as a Structured Fields Dictionary (see
 {{Section 3.2 of STRUCTURED-FIELDS}}).
 
-This document defines the urgency(`u`) and incremental(`i`) parameters. When
-receiving an HTTP request that does not carry these priority parameters, a
+This document defines the urgency(`u`) and incremental(`i`) priority parameters.
+When receiving an HTTP request that does not carry these priority parameters, a
 server SHOULD act as if their default values were specified.
 
 An intermediary can combine signals from requests and responses that it forwards.
-Note that omission of parameters in responses is handled differently from
+Note that omission of priority parameters in responses is handled differently from
 omission in requests; see {{merging}}.
 
 Receivers parse the Dictionary as defined in {{Section 4.2 of
 STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document
-places the additional requirement that unknown priority parameters, parameters
-with out-of-range values, or values of unexpected types MUST be ignored.
+places the additional requirement that unknown priority parameters, priority
+parameters with out-of-range values, or values of unexpected types MUST be
+ignored.
 
 ## Urgency
 
@@ -355,32 +356,34 @@ set to `5` and the incremental parameter set to `true`.
 priority = u=5, i
 ~~~
 
-## Defining New Parameters {#new-parameters}
+## Defining New Priority Parameters {#new-parameters}
 
-When attempting to define new parameters, care must be taken so that they do not
-adversely interfere with prioritization performed by existing endpoints or
-intermediaries that do not understand the newly defined parameter. Since unknown
-parameters are ignored, new parameters should not change the interpretation of,
-or modify, the urgency (see {{urgency}}) or incremental (see {{incremental}})
-parameters in a way that is not backwards compatible or fallback safe.
+When attempting to define new priority parameters, care must be taken so that
+they do not adversely interfere with prioritization performed by existing
+endpoints or intermediaries that do not understand the newly defined priority
+parameter. Since unknown priority parameters are ignored, new priority
+parameters should not change the interpretation of, or modify, the urgency (see
+{{urgency}}) or incremental (see {{incremental}}) priority parameters in a way
+that is not backwards compatible or fallback safe.
 
 For example, if there is a need to provide more granularity than eight urgency
-levels, it would be possible to subdivide the range using an additional
+levels, it would be possible to subdivide the range using an additional priority
 parameter. Implementations that do not recognize the parameter can safely
 continue to use the less granular eight levels.
 
 Alternatively, the urgency can be augmented. For example, a graphical user agent
-could send a `visible` parameter to indicate if the resource being requested is
+could send a `visible` priority parameter to indicate if the resource being requested is
 within the viewport.
 
-Generic parameters are preferred over vendor-specific, application-specific or
-deployment-specific values. If a generic value cannot be agreed upon in the
-community, the parameter's name should be correspondingly specific (e.g., with
-a prefix that identifies the vendor, application or deployment).
+Generic priority parameters are preferred over vendor-specific,
+application-specific or deployment-specific values. If a generic value cannot be
+agreed upon in the community, the parameter's name should be correspondingly
+specific (e.g., with a prefix that identifies the vendor, application or
+deployment).
 
 ### Registration {#register}
 
-New Priority parameters can be defined by registering them in the HTTP Priority
+New priority parameters can be defined by registering them in the HTTP Priority
 Parameters Registry. The registry governs the keys (short textual strings) used
 in Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
 Since each HTTP request can have associated priority signals, there is value
@@ -389,12 +392,12 @@ encourage extension while avoiding unintended conflict among attractive key
 values, the HTTP Priority Parameters Registry operates two registration policies
 depending on key length.
 
-* Registration requests for parameters with a key length of one use the
+* Registration requests for priority parameters with a key length of one use the
 Specification Required policy, as per {{Section 4.6 of !RFC8126}}.
 
-* Registration requests for parameters with a key length greater than one use the
-Expert Review policy, as per {{Section 4.5 of !RFC8126}}. A specification
-document is appreciated, but not required.
+* Registration requests for priority parameters with a key length greater than
+one use the Expert Review policy, as per {{Section 4.5 of !RFC8126}}. A
+specification document is appreciated, but not required.
 
 When reviewing registration requests, the designated expert(s) can consider the
 additional guidance provided in {{new-parameters}} but cannot use it as a basis
@@ -406,10 +409,10 @@ Name:
 : \[a name for the Priority Parameter that matches key\]
 
 Description:
-: \[a description of the parameter semantics and value\]
+: \[a description of the priority parameter semantics and value\]
 
 Reference:
-: \[to a specification defining this parameter\]
+: \[to a specification defining this priority parameter\]
 
 See the registry at <https://iana.org/assignments/http-priority> for details on
 where to send registration requests.
@@ -466,11 +469,11 @@ to be sent independent from the stream that carries the response. This means
 they can be used to reprioritize a response or a push stream; or signal the
 initial priority of a response instead of the Priority header field.
 
-A PRIORITY_UPDATE frame communicates a complete set of all parameters in the
-Priority Field Value field. Omitting a parameter is a signal to use the
-parameter's default value. Failure to parse the Priority Field Value MAY be
-treated as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in
-HTTP/3 the error is of type H3_GENERAL_PROTOCOL_ERROR.
+A PRIORITY_UPDATE frame communicates a complete set of all priority parameters
+in the Priority Field Value field. Omitting a priority parameter is a signal to
+use its default value. Failure to parse the Priority Field Value MAY be treated
+as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in HTTP/3
+the error is of type H3_GENERAL_PROTOCOL_ERROR.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
 is open (except for HTTP/2 push streams; see {{h2-update-frame}}). Furthermore,
@@ -611,7 +614,7 @@ receives a PRIORITY_UPDATE frame, this MUST be treated as a connection error of
 type H3_FRAME_UNEXPECTED.
 
 
-# Merging Client- and Server-Driven Parameters {#merging}
+# Merging Client- and Server-Driven Priority Parameters {#merging}
 
 It is not always the case that the client has the best understanding of how the
 HTTP responses deserve to be prioritized. The server might have additional
@@ -625,10 +628,10 @@ information at an early moment.
 
 An origin can use the Priority response header field to indicate its view on how
 an HTTP response should be prioritized. An intermediary that forwards an HTTP
-response can use the parameters found in the Priority response header field, in
-combination with the client Priority request header field, as input to its
-prioritization process. No guidance is provided for merging priorities, this is
-left as an implementation decision.
+response can use the priority parameters found in the Priority response header
+field, in combination with the client Priority request header field, as input to
+its prioritization process. No guidance is provided for merging priorities, this
+is left as an implementation decision.
 
 Absence of a priority parameter in an HTTP response indicates the server's
 disinterest in changing the client-provided value. This is different from the
@@ -1034,7 +1037,7 @@ Yang Chi contributed the section on retransmission scheduling.
 ## Since draft-ietf-httpbis-priority-02
 * Describe considerations for server push prioritization (#1056, #1345)
 * Define HTTP/2 PRIORITY_UPDATE ID limits in HTTP/2 terms (#1261, #1344)
-* Add a Parameters registry (#1371)
+* Add a Priority Parameters registry (#1371)
 
 ## Since draft-ietf-httpbis-priority-01
 
