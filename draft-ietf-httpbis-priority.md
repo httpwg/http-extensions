@@ -678,11 +678,12 @@ a particular order using priority. Expressing priority is therefore only a
 suggestion.
 
 A server can use priority signals along with other inputs to make scheduling
-decisions. No guidance is provided about how this can or should be done. Factors
-such as implementation choices or deployment environment also play a role. Any
-given connection is likely to have many dynamic permutations. For these reasons,
-there is no unilateral perfect scheduler and this document only provides some
-basic recommendations for implementations.
+decisions. Factors such as implementation choices or deployment environment also
+play a role. Any given connection is likely to have many dynamic permutations.
+For these reasons, there is no unilateral perfect scheduler. This document
+provides some basic, non-exhaustive, recommendations for how servers might act
+on priority parameters. It does not describe in detail how servers might combine
+priority signals with other factors.
 
 Clients cannot depend on particular treatment based on priority signals. Servers
 can use other information to prioritize responses.
