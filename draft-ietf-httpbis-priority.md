@@ -813,14 +813,14 @@ originate from one client might have higher precedence than those coming from
 others.
 
 It is sometimes beneficial for the server running behind an intermediary to obey
-to the value of the Priority header field. As an example, a resource-constrained
+Priority header field values. As an example, a resource-constrained
 server might defer the transmission of software update files that would have the
 background urgency being associated. However, in the worst case, the asymmetry
 between the precedence declared by multiple clients might cause responses going
 to one user agent to be delayed totally after those going to another.
 
 In order to mitigate this fairness problem, a server could use knowledge about
-the intermediary as another signal in its prioritization decisions. For
+the intermediary as another input in its prioritization decisions. For
 instance, if a server knows the intermediary is coalescing requests, then it
 could avoid serving the responses in their entirety and instead distribute
 bandwidth (for example, in a round-robin manner). This can work if the
