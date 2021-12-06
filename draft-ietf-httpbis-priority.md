@@ -773,11 +773,9 @@ fairly.
 # Retransmission Scheduling
 
 Transport protocols such as TCP and QUIC provide reliability by detecting packet
-losses and retransmitting lost information. While this document specifies
-HTTP-layer prioritization, its effectiveness can be further enhanced if the
-transport layer factors priority into scheduling both new data and
-retransmission data. The remainder of this section discusses considerations when
-using QUIC.
+losses and retransmitting lost information. In addition to the consideration in
+{{server-scheduling}} scheduling of retransmission data could compete with new
+data. The remainder of this section discusses considerations when using QUIC.
 
 {{Section 13.3 of QUIC}} states "Endpoints SHOULD prioritize
 retransmission of data over sending new data, unless priorities specified by the
