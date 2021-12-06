@@ -676,11 +676,15 @@ about the requests it initiates.
 
 # Server Scheduling
 
-Server scheduling is a prioritization process, based on many inputs and factors,
-that determine how connection resources such as bandwidth are used. This section
-describes considerations that servers can make when scheduling.
+It is generally beneficial for an HTTP server to send all responses as early as
+possible. However, when serving multiple requests on a single connection, there
+could be competition between the requests for resources such as connection
+bandwidth. This section describes considerations regarding how servers can
+schedule the order in which the competing responses will be sent, when such
+competition exists.
 
-Priority signals are only one form of input to a prioritization process. They do
+Server scheduling is a prioritization process based on many inputs and factors,
+with priority signals being only one form of input. Priority signals do
 not guarantee any particular processing or transmission order for one response
 relative to any other response. An endpoint cannot force a peer to process
 concurrent request in a particular order using priority. Expressing priority is
