@@ -38,7 +38,6 @@ author:
     email: me@yuchenwu.net
 
 normative:
-  RFC2119:
   HTTP: I-D.ietf-httpbis-semantics
   HTTP-CACHING: I-D.ietf-httpbis-cache
   STRUCTURED-FIELDS: RFC8941
@@ -53,12 +52,10 @@ informative:
         ins: E. Cohen
         name: Edith Cohen
         organization: "AT&T Labs - Research"
-        email: edith@research.att.com
      -
         ins: H. Kaplan
         name: Haim Kaplan
         organization: School of Computer Science, Tel-Aviv University
-        email: haimk@math.tau.ac.il
 
 
 --- abstract
@@ -92,10 +89,7 @@ Some implementations have defined ad hoc control mechanisms to overcome this iss
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
-"RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as
-described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
-shown here.
+{::boilerplate bcp14-tagged}
 
 
 # Targeted Cache-Control Header Fields {#targeted}
