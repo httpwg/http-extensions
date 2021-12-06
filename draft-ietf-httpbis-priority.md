@@ -250,7 +250,7 @@ behind the server that the client is directly connected to.
 
 The priority scheme defined by this document is primarily focused on the
 prioritization of HTTP response messages (see {{Section 3.4 of HTTP}}). It
-defines new priority parameters ({{parameters}}) and signals ({{header-field}}
+defines new priority parameters ({{parameters}}) and their conveyors ({{header-field}}
 and {{frame}}) intended to communicate the priority of responses to a server
 that is responsible for prioritizing them. {{server-scheduling}} provides
 considerations for servers about acting on those signals in combination with
@@ -263,9 +263,9 @@ server prioritization are given in {{connect-scheduling}}.
 {{client-scheduling}} describes how clients can optionally apply elements of
 this scheme locally to the request messages that they generate.
 
-Some forms of HTTP extensions change HTTP/2 or HTTP/3 stream behavior or
-define new data carriage mechanisms. Such extensions are not considered by this
-document; they can define themselves how this priority scheme might be applied.
+Some forms of HTTP extensions might change HTTP/2 or HTTP/3 stream behavior or
+define new data carriage mechanisms. Such extensions can define themselves how
+this priority scheme is to be applied.
 
 
 # Priority Parameters {#parameters}
