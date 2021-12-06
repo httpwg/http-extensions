@@ -247,12 +247,24 @@ behind the server that the client is directly connected to.
 
 # Applicability of the Extensible Priority Scheme
 
-The priority scheme defined by this document considers only the prioritization
-of HTTP messages and tunnels, see {{client-scheduling}}, {{server-scheduling}},
-and {{connect-scheduling}}.
+The priority scheme defined by this document is primarily focused on the
+prioritization of HTTP response messages (see {{Section 3.4 of HTTP}}). It
+defines new priority parameters ({{parameters}}) and their conveyors ({{header-field}}
+and {{frame}}) intended to communicate the priority of responses to a server
+that is responsible for prioritizing them. {{server-scheduling}} provides
+considerations for servers about acting on those signals in combination with
+other inputs and factors.
 
-Where HTTP extensions change stream behavior or define new data carriage
-mechanisms, they can also define how this priority scheme can be applied.
+The CONNECT method (see {{Section 9.3.6 of HTTP}}) can be used to establish
+tunnels. Signaling applies similarly to tunnels; additional considerations for
+server prioritization are given in {{connect-scheduling}}.
+
+{{client-scheduling}} describes how clients can optionally apply elements of
+this scheme locally to the request messages that they generate.
+
+Some forms of HTTP extensions might change HTTP/2 or HTTP/3 stream behavior or
+define new data carriage mechanisms. Such extensions can define themselves how
+this priority scheme is to be applied.
 
 
 # Priority Parameters {#parameters}
