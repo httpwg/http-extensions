@@ -29,11 +29,6 @@ author:
     email: mnot@mnot.net
     uri: https://www.mnot.net/
 
-normative:
-  RFC2119:
-
-informative:
-
 
 --- abstract
 
@@ -116,10 +111,7 @@ Variants can be seen as a simpler version of the Alternates header field introdu
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
-"RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as
-described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
-shown here.
+{::boilerplate bcp14-tagged}
 
 This specification uses the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} but relies on Structured Headers from {{!I-D.ietf-httpbis-header-structure}} for parsing.
 
@@ -532,7 +524,7 @@ This specification registers the following entry in the Permanent Message Header
 * Applicable protocol: http
 * Status: standard
 * Author/Change Controller: IETF
-* Specification document(s): [this document]
+* Specification document(s): \[this document]
 * Related information:
 
 This specification registers the following entry in the Permanent Message Header Field Names registry established by {{?RFC3864}}:
@@ -541,7 +533,7 @@ This specification registers the following entry in the Permanent Message Header
 * Applicable protocol: http
 * Status: standard
 * Author/Change Controller: IETF
-* Specification document(s): [this document]
+* Specification document(s): \[this document]
 * Related information:
 
 # Security Considerations
