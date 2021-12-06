@@ -404,17 +404,26 @@ maintained by IANA at <https://www.iana.org/assignments/http-dig-alg/> registers
 digest-algorithm values.
 Registrations MUST include the following fields:
 
- - Digest algorithm: the token value.
-     The registry can be used to reserve token values
- - Status: the status of the algorithm.
-     Use "standard" for standardized algorithms without known problems;
-     "experimental" or some other appropriate value
-     - e.g. according to the type and status of the primary document
-     in which the algorithm is defined;
-     "insecure" when the algorithm is insecure;
-     "reserved" when Digest algorithm references a reserved token value
- - Description: the description of the digest-algorithm and its encoding
- - Reference: a set of pointers to the primary documents defining the digest-algorithm
+Digest algorithm:
+: the token value.
+
+: The registry can be used to reserve token values.
+
+Status:
+: the status of the algorithm
+
+: Use "standard" for standardized algorithms without known problems;
+"experimental" or some other appropriate value
+- e.g., according to the type and status of the primary document
+in which the algorithm is defined;
+"insecure" when the algorithm is insecure;
+"reserved" when Digest algorithm references a reserved token value.
+
+Description:
+: the description of the digest-algorithm and its encoding
+
+Reference:
+: a set of pointers to the primary documents defining the digest-algorithm
 
 The associated encoding for new digest-algorithms MUST either
 be represented as a quoted string
@@ -1420,12 +1429,10 @@ def encode_item(item, encoding=lambda x: x):
     json_bytes = json.dumps(item, indent=indent).encode()
     return encoding(json_bytes)
 
-
 def digest_bytes(bytes_, algorithm=hashlib.sha256):
     checksum_bytes = algorithm(bytes_).digest()
     log.warning("Log bytes: \n[%r]", bytes_)
     return base64.encodebytes(checksum_bytes).strip()
-
 
 def digest(item, encoding=lambda x: x, algorithm=hashlib.sha256):
     content_encoded = encode_item(item, encoding)
@@ -1446,12 +1453,13 @@ print("Brotli | sha256 |", digest(item, encoding=brotli.compress))
 
 print("Encoding | digest-algorithm | digest-value")
 print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512))
-print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512, encoding=brotli.compress))
+print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
+                                    encoding=brotli.compress))
 # Encoding | digest-algorithm | digest-value
 # Identity | sha512 | b'WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm'
 #                      '+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew=='
-# Brotli   | sha512 | b'pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE6'
-#                      '0jBCwnMPyA/s3NF3ZO5oIWA7lf8ukk+\n5KJzm3p5og=='
+# Brotli | sha512 | b'pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE6'
+#                   '0jBCwnMPyA/s3NF3ZO5oIWA7lf8ukk+\n5KJzm3p5og=='
 
 ~~~
 
