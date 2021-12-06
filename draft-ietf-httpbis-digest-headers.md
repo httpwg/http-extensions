@@ -1456,8 +1456,8 @@ print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512))
 print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
                                     encoding=brotli.compress))
 # Encoding | digest-algorithm | digest-value
-# Identity | sha512 | b'WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm'
-#                      '+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew=='
+# Identity | sha512 |b'WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm'
+#                     '+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew=='
 # Brotli | sha512 | b'pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE6'
 #                   '0jBCwnMPyA/s3NF3ZO5oIWA7lf8ukk+\n5KJzm3p5og=='
 
