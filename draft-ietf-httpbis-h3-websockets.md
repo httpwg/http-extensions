@@ -27,7 +27,7 @@ author:
 
 normative:
   HTTP3: I-D.draft-ietf-quic-http-34
-  HTTP: I-D.draft-ietf-httpbis-semantics-latest
+  HTTP: I-D.draft-ietf-httpbis-semantics-19
 
 informative:
 
