@@ -863,9 +863,9 @@ of delaying the delivery of updates.
 Contrary to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
 the Priority header field is defined as end-to-end.
 
-The way a client processes a response is a property associated to that client
-generating that request.  Not that of an intermediary.  Therefore, it is an
-end-to-end property.  How these end-to-end properties carried by the Priority
+The way that a client processes a response is a property associated with the
+client generating that request.  Not that of an intermediary.  Therefore, it is
+an end-to-end property.  How these end-to-end properties carried by the Priority
 header field affect the prioritization between the responses that share a
 connection is a hop-by-hop issue.
 
