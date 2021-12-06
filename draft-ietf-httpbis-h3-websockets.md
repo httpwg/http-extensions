@@ -71,6 +71,10 @@ in HTTP/2 as defined {{!RFC8441}}. {{Appendix A.3 of HTTP3}} requires that
 HTTP/3 settings be registered separately for HTTP/3. The
 SETTINGS_ENABLE_CONNECT_PROTOCOL value is 0x08 (decimal 8), as in HTTP/2.
 
+If a server receives an Extended CONNECT request with a ":protocol"
+value that is unknown or is not supported, the server SHOULD respond
+to the request with a 501 status code, see {{Section 6.6.2 of RFC7231}}.
+
 # Security Considerations
 
 This document introduces no new security considerations beyond those
