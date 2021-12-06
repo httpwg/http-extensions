@@ -27,6 +27,7 @@ author:
 
 normative:
   HTTP3: I-D.draft-ietf-quic-http-34
+  HTTP: I-D.draft-ietf-httpbis-semantics-latest
 
 informative:
 
@@ -74,7 +75,7 @@ SETTINGS_ENABLE_CONNECT_PROTOCOL value is 0x08 (decimal 8), as in HTTP/2.
 If a server which advertises support for Extended CONNECT but receives an
 Extended CONNECT request with a ":protocol" value that is unknown or is
 not supported, the server SHOULD respond to the request with a 501 status
-code ({{Section 6.6.2 of !RFC7231}}).
+code ({{Section 15.6.2 of HTTP}}).
 
 # Security Considerations
 
