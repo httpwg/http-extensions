@@ -117,7 +117,8 @@ priority signals as input into prioritization decision making.
 The design and implementation of RFC 7540 stream priority was observed to have
 shortcomings, explained in {{motivation}}. HTTP/2
 {{!HTTP2=I-D.ietf-httpbis-http2bis}} has consequently deprecated the use of
-these stream priority signals.
+these stream priority signals. The prioritization scheme and priority signals
+defined herein can act as a substitute for RFC 7540 stream priority.
 
 This document describes an extensible scheme for prioritizing HTTP responses
 that uses absolute values. {{parameters}} defines priority parameters, which are
@@ -135,8 +136,6 @@ particular processing or transmission order for one response relative to any
 other response. {{server-scheduling}} and {{retransmission-scheduling}} provide
 consideration and guidance about how servers might act upon signals.
 
-The prioritization scheme and priority signals defined herein can act as a
-substitute for RFC 7540 stream priority.
 
 ## Notational Conventions
 
