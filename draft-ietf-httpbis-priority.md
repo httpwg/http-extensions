@@ -813,15 +813,19 @@ might use the relative priority of streams when choosing probe data.
 
 # Fairness {#fairness}
 
-As a general guideline, a server SHOULD NOT use priority information for making
-scheduling decisions across multiple connections, unless it knows that those
-connections originate from the same client. Due to this, priority information
-conveyed over a non-coalesced HTTP connection (e.g., HTTP/1.1) might go unused.
+Typically, HTTP stacks depend on the underlying transport to maintain fairness
+between connections competing for bandwidth. When HTTP requests are forwarded
+through intermediaries, progress made by each connection originating from end
+clients can become different over time, depending on how intermediaries coalesce
+or split requests into backend connections. This unfairness can expand if
+priority signals are used. {{coalescing}} and {{h1-backends}} discuss
+mitigations against this expansion of unfairness.
 
-The remainder of this section discusses scenarios where unfairness is
-problematic and presents possible mitigations, or where unfairness is desirable.
+Conversely, {{intentional-unfairness}} discusses how servers might intentionally
+allocate unequal bandwidth to some connections depending on the priority
+signals.
 
-## Coalescing Intermediaries
+## Coalescing Intermediaries {#coalescing}
 
 When an intermediary coalesces HTTP requests coming from multiple clients into
 one HTTP/2 or HTTP/3 connection going to the backend server, requests that
@@ -851,7 +855,7 @@ header fields:
 * Forwarded {{?FORWARDED=RFC7239}}, X-Forwarded-For
 * Via (see {{Section 7.6.3 of HTTP}})
 
-## HTTP/1.x Back Ends
+## HTTP/1.x Back Ends {#h1-backends}
 
 It is common for CDN infrastructure to support different HTTP versions on the
 front end and back end. For instance, the client-facing edge might support
@@ -864,7 +868,7 @@ Back end servers SHOULD only schedule based on client priority information where
 that information can be scoped to individual end clients. Authentication and
 other session information might provide this linkability.
 
-## Intentional Introduction of Unfairness
+## Intentional Introduction of Unfairness {#intentional-unfairness}
 
 It is sometimes beneficial to deprioritize the transmission of one connection
 over others, knowing that doing so introduces a certain amount of unfairness
