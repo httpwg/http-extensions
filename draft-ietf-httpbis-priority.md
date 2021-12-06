@@ -701,14 +701,6 @@ priority signals with other factors.
 Clients cannot depend on particular treatment based on priority signals. Servers
 can use other information to prioritize responses.
 
-It is generally beneficial for the server to maximize its use of available
-bandwidth when serving concurrent requests. Bandwidth utilization for any given
-connection is an output of scheduling that can be used in a feedback loop for
-subsequent scheduling decisions. For example, a server that prioritizes sending
-response data for a resource that it can only read slowly might find bandwidth
-is under-utilized. The server could redistribute the available bandwidth to
-other requests.
-
 It is RECOMMENDED that, when possible, servers respect the urgency parameter
 ({{urgency}}), sending higher urgency responses before lower urgency responses.
 
