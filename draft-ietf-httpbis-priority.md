@@ -800,13 +800,8 @@ might use the relative priority of streams when choosing probe data.
 
 # Fairness {#fairness}
 
-As a general guideline, a server SHOULD NOT use priority information for making
-scheduling decisions across multiple connections, unless it knows that those
-connections originate from the same client. Due to this, priority information
-conveyed over a non-coalesced HTTP connection (e.g., HTTP/1.1) might go unused.
-
-The remainder of this section discusses scenarios where unfairness is
-problematic and presents possible mitigations, or where unfairness is desirable.
+This section discusses scenarios where unfairness is problematic and presents
+possible mitigations, or where unfairness is desirable.
 
 ## Coalescing Intermediaries
 
