@@ -821,8 +821,8 @@ signals.
 
 When an intermediary coalesces HTTP requests coming from multiple clients into
 one HTTP/2 or HTTP/3 connection going to the backend server, requests that
-originate from one client might have higher precedence than those coming from
-others.
+originate from one client might carry priority signals indicating higher
+precedence than those coming from others.
 
 It is sometimes beneficial for the server running behind an intermediary to obey
 Priority header field values. As an example, a resource-constrained
