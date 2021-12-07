@@ -74,8 +74,8 @@ SETTINGS_ENABLE_CONNECT_PROTOCOL value is 0x08 (decimal 8), as in HTTP/2.
 
 If a server which advertises support for Extended CONNECT but receives an
 Extended CONNECT request with a ":protocol" value that is unknown or is
-not supported, the server SHOULD respond to the request with a 501 status
-code ({{Section 15.6.2 of HTTP}}).
+not supported, the server SHOULD respond to the request with a 501 (Not
+Implemented) status code ({{Section 15.6.2 of HTTP}}).
 
 # Security Considerations
 
