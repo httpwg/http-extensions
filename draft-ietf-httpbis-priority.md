@@ -429,7 +429,7 @@ It can appear in requests and responses. It is an end-to-end signal of the
 request priority from the client or the response priority from the server.
 {{merging}} describes how intermediaries can combine the priority information
 sent from clients and servers. Clients cannot interpret the appearance or
-omission of a Priority response header as acknowledgement that any
+omission of a Priority response header field as acknowledgement that any
 prioritization has occurred. Guidance for how endpoints can act on Priority
 header values is given in {{server-scheduling}} and {{client-scheduling}}.
 
