@@ -813,12 +813,12 @@ might use the relative priority of streams when choosing probe data.
 
 # Fairness {#fairness}
 
-Typically, HTTP stacks depend on the underlying transport to maintain fairness
-between connections competing for bandwidth. When HTTP requests are forwarded
-through intermediaries, progress made by each connection originating from end
-clients can become different over time, depending on how intermediaries coalesce
-or split requests into backend connections. This unfairness can expand if
-priority signals are used. {{coalescing}} and {{h1-backends}} discuss
+Typically, HTTP implementations depend on the underlying transport to maintain
+fairness between connections competing for bandwidth. When HTTP requests are
+forwarded through intermediaries, progress made by each connection originating
+from end clients can become different over time, depending on how intermediaries
+coalesce or split requests into backend connections. This unfairness can expand
+if priority signals are used. {{coalescing}} and {{h1-backends}} discuss
 mitigations against this expansion of unfairness.
 
 Conversely, {{intentional-unfairness}} discusses how servers might intentionally
