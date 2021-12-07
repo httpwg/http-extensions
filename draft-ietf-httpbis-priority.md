@@ -440,12 +440,12 @@ Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 Priority   = sf-dictionary
 ~~~
 
-As is the ordinary case for HTTP caching {{?CACHING=I-D.ietf-httpbis-cache}}, a
-response with a Priority header field might be cached and re-used for subsequent
-requests. When an origin server generates the Priority response header field
-based on properties of an HTTP request it receives, the server is expected to
-control the cacheability or the applicability of the cached response, by using
-header fields that control the caching behavior (e.g., Cache-Control, Vary).
+An HTTP request with a Priority header field might be cached and re-used for
+subsequent requests; see {{?CACHING=I-D.ietf-httpbis-cache}}. When an origin
+server generates the Priority response header field based on properties of an
+HTTP request it receives, the server is expected to control the cacheability or
+the applicability of the cached response, by using header fields that control
+the caching behavior (e.g., Cache-Control, Vary).
 
 
 # Reprioritization
