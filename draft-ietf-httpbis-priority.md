@@ -771,9 +771,10 @@ as tunnels.
 
 When a request stream carries the CONNECT method, the scheduling guidance in
 this document applies to the frames on the stream. A client that issues multiple
-CONNECT requests can set the incremental parameter to `true`, servers that
-implement the recommendation in {{server-scheduling}} will schedule these
-fairly.
+CONNECT requests can set the incremental parameter to `true`. Servers that
+implement the recommendations for handling of the incremental parameter in
+{{server-scheduling}} are likely to schedule these fairly, avoiding one
+CONNECT stream from blocking others.
 
 
 # Retransmission Scheduling
