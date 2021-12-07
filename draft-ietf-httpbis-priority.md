@@ -35,13 +35,6 @@ author:
     email: lucaspardue.24.7@gmail.com
 
 informative:
-  CVE-2019-9513:
-    title: CVE-2019-9513
-    author:
-      org: Common Vulnerabilities and Exposures
-    date: 2019-03-01
-    target: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-9513
-
   MARX:
     target: https://www.doi.org/10.5220/0008191701300143
     title: "Of the Utmost Importance: Resource Prioritization in HTTP/3 over QUIC"
@@ -892,12 +885,6 @@ when serving the cached response, only because the header field is defined as
 end-to-end rather than hop-by-hop.
 
 # Security Considerations
-
-{{?RFC7540}} stream prioritization relies on dependencies. Considerations are
-presented to implementations, describing how limiting state or work commitments
-can avoid some types of problems. In addition, [CVE-2019-9513] aka "Resource
-Loop", is an example of a DoS attack that abuses stream dependencies. Extensible
-priorities does not use dependencies, which avoids these issues.
 
 {{frame}} describes considerations for server buffering of PRIORITY_UPDATE
 frames.
