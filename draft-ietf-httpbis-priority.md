@@ -675,22 +675,22 @@ about the requests it initiates.
 
 # Server Scheduling
 
-Priority signals are input to a prioritization process. They do not guarantee
-any particular processing or transmission order for one response relative to any
-other response. An endpoint cannot force a peer to process concurrent request in
-a particular order using priority. Expressing priority is therefore only a
-suggestion.
+It is generally beneficial for an HTTP server to send all responses as early as
+possible. However, when serving multiple requests on a single connection, there
+could be competition between the requests for resources such as connection
+bandwidth. This section describes considerations regarding how servers can
+schedule the order in which the competing responses will be sent, when such
+competition exists.
 
-A server can use priority signals along with other inputs to make scheduling
-decisions. Factors such as implementation choices or deployment environment also
-play a role. Any given connection is likely to have many dynamic permutations.
-For these reasons, there is no unilateral perfect scheduler. This document
-provides some basic, non-exhaustive, recommendations for how servers might act
-on priority parameters. It does not describe in detail how servers might combine
-priority signals with other factors.
-
-Clients cannot depend on particular treatment based on priority signals. Servers
-can use other information to prioritize responses.
+Server scheduling is a prioritization process based on many inputs, with
+priority signals being only one form of input. Factors such as implementation
+choices or deployment environment also play a role. Any given connection is
+likely to have many dynamic permutations. For these reasons, there is no
+unilateral perfect scheduler. This document provides some basic, non-exhaustive,
+recommendations for how servers might act on priority parameters. It does not
+describe in detail how servers might combine priority signals with other
+factors. Endpoints cannot depend on particular treatment based on priority
+signals. Expressing priority is only a suggestion.
 
 It is RECOMMENDED that, when possible, servers respect the urgency parameter
 ({{urgency}}), sending higher urgency responses before lower urgency responses.
