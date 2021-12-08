@@ -696,9 +696,8 @@ incremental parameter ({{incremental}}).
 
 Non-incremental responses of the same urgency SHOULD be served by prioritizing
 bandwidth allocation in ascending order of the stream ID, which corresponds to
-the order in which clients make requests.
-requests. Doing so ensures that clients can use request ordering to influence
-response order.
+the order in which clients make requests. Doing so ensures that clients can use
+request ordering to influence response order.
 
 Incremental responses of the same urgency SHOULD be served by sharing bandwidth
 amongst them. Incremental resources are used as parts, or chunks, of the
