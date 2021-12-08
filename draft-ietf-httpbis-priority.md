@@ -117,10 +117,10 @@ This document describes an extensible scheme for prioritizing HTTP responses
 that uses absolute values. {{parameters}} defines priority parameters, which are
 a standardized and extensible format of priority information. {{header-field}}
 defines the Priority HTTP header field, a protocol-version-independent and
-end-to-end priority signal. Clients can use this header to signal priority to
-servers in order to specify the precedence of HTTP responses. Similarly, servers
-behind an intermediary can use it to signal priority to the intermediary. After
-sending a request, a client can change the priority of the response (see
+end-to-end priority signal. Clients can send this header field to signal their
+view of how responses should be prioritized. Similarly, servers behind an
+intermediary can use it to signal priority to the intermediary. After sending a
+request, a client can change the priority of the response (see
 {{reprioritization}}) using HTTP-version-specific frames defined in
 {{h2-update-frame}} and {{h3-update-frame}}.
 
@@ -428,11 +428,10 @@ The Priority HTTP header field carries priority parameters (see {{parameters}}).
 It can appear in requests and responses. It is an end-to-end signal of the
 request priority from the client or the response priority from the server.
 {{merging}} describes how intermediaries can combine the priority information
-from client requests and server responses to correct or amend the precedence.
-Clients cannot interpret the appearance or omission of a Priority response
-header as acknowledgement that any prioritization has occurred. Guidance for how
-endpoints can act on Priority header values is given in {{server-scheduling}}
-and {{client-scheduling}}.
+sent from clients and servers. Clients cannot interpret the appearance or
+omission of a Priority response header field as acknowledgement that any
+prioritization has occurred. Guidance for how endpoints can act on Priority
+header values is given in {{server-scheduling}} and {{client-scheduling}}.
 
 Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 
@@ -821,15 +820,15 @@ signals.
 
 When an intermediary coalesces HTTP requests coming from multiple clients into
 one HTTP/2 or HTTP/3 connection going to the backend server, requests that
-originate from one client might carry priority signals indicating higher
-precedence than those coming from others.
+originate from one client might carry signals indicating higher priority than
+those coming from others.
 
 It is sometimes beneficial for the server running behind an intermediary to obey
 Priority header field values. As an example, a resource-constrained
 server might defer the transmission of software update files that would have the
 background urgency being associated. However, in the worst case, the asymmetry
-between the precedence declared by multiple clients might cause responses going
-to one user agent to be delayed totally after those going to another.
+between the priority declared by multiple clients might cause responses going to
+one user agent to be delayed totally after those going to another.
 
 In order to mitigate this fairness problem, a server could use knowledge about
 the intermediary as another input in its prioritization decisions. For
