@@ -527,8 +527,8 @@ described in {{Section 4 of HTTP2}}. The frame payload of PRIORITY_UPDATE
 frame payload contains the following additional fields:
 
 Reserved:
-: A reserved 1-bit field. The semantics of this bit are undefined, and the bit
-  MUST remain unset (0x0) when sending and MUST be ignored when receiving.
+: A reserved 1-bit field. The semantics of this bit is undefined. It MUST remain
+  unset (0x0) when sending and MUST be ignored when receiving.
 
 Prioritized Stream ID:
 : A 31-bit stream identifier for the stream that is the target of the priority
