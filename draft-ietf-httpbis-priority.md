@@ -705,14 +705,13 @@ the order in which clients make requests. Doing so ensures that clients can use
 request ordering to influence response order.
 
 Incremental responses of the same urgency SHOULD be served by sharing bandwidth
-amongst them. Incremental resources are used as parts, or chunks, of the
-response payload are received. A client might benefit more from receiving a
-portion of all these resources rather than the entirety of a single resource.
-How large a portion of the resource is needed to be useful in improving
-performance varies. Some resource types place critical elements early, others
-can use information progressively. This scheme provides no explicit mandate
-about how a server should use size, type or any other input to decide how to
-prioritize.
+amongst them. Payload of incremental responses are used in parts, or chunks, as
+they are received. A client might benefit more from receiving a portion of all
+these resources rather than the entirety of a single resource. How large a
+portion of the resource is needed to be useful in improving performance varies.
+Some resource types place critical elements early, others can use information
+progressively. This scheme provides no explicit mandate about how a server
+should use size, type or any other input to decide how to prioritize.
 
 There can be scenarios where a server will need to schedule multiple incremental
 and non-incremental responses at the same urgency level. Strictly abiding the
