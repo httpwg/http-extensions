@@ -76,7 +76,7 @@ If a server which advertises support for Extended CONNECT but receives an
 Extended CONNECT request with a ":protocol" value that is unknown or is
 not supported, the server SHOULD respond to the request with a 501 (Not
 Implemented) status code ({{Section 15.6.2 of HTTP}}). A server MAY
-provide more information via a Problem Details resoponse {{!RFC7807}}.
+provide more information via a Problem Details response {{!RFC7807}}.
 
 # Security Considerations
 
