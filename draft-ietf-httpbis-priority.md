@@ -145,7 +145,7 @@ This document uses the variable-length integer encoding from
 {{!QUIC=RFC9000}}.
 
 The term control stream is used to describe both the HTTP/2 stream with
-identifier 0x0, and the HTTP/3 control stream; see {{Section 6.2.1 of
+identifier 0x0 and the HTTP/3 control stream; see {{Section 6.2.1 of
 !HTTP3=I-D.ietf-quic-http}}.
 
 The term HTTP/2 priority signal is used to describe the priority information
@@ -243,11 +243,11 @@ behind the server that the client is directly connected to.
 
 The priority scheme defined by this document is primarily focused on the
 prioritization of HTTP response messages (see {{Section 3.4 of HTTP}}). It
-defines new priority parameters ({{parameters}}) and their conveyors ({{header-field}}
-and {{frame}}) intended to communicate the priority of responses to a server
-that is responsible for prioritizing them. {{server-scheduling}} provides
-considerations for servers about acting on those signals in combination with
-other inputs and factors.
+defines new priority parameters ({{parameters}}) and a means of conveying those
+parameters ({{header-field}} and {{frame}}), which is intended to communicate
+the priority of responses to a server that is responsible for prioritizing
+them. {{server-scheduling}} provides considerations for servers about acting on
+those signals in combination with other inputs and factors.
 
 The CONNECT method (see {{Section 9.3.6 of HTTP}}) can be used to establish
 tunnels. Signaling applies similarly to tunnels; additional considerations for
@@ -679,18 +679,18 @@ It is generally beneficial for an HTTP server to send all responses as early as
 possible. However, when serving multiple requests on a single connection, there
 could be competition between the requests for resources such as connection
 bandwidth. This section describes considerations regarding how servers can
-schedule the order in which the competing responses will be sent, when such
+schedule the order in which the competing responses will be sent when such
 competition exists.
 
 Server scheduling is a prioritization process based on many inputs, with
 priority signals being only one form of input. Factors such as implementation
 choices or deployment environment also play a role. Any given connection is
-likely to have many dynamic permutations. For these reasons, there is no
-unilateral perfect scheduler. This document provides some basic, non-exhaustive,
-recommendations for how servers might act on priority parameters. It does not
-describe in detail how servers might combine priority signals with other
-factors. Endpoints cannot depend on particular treatment based on priority
-signals. Expressing priority is only a suggestion.
+likely to have many dynamic permutations. For these reasons, it is not possible
+to describe a universal scheduling algorithm. This document provides some basic,
+non-exhaustive recommendations for how servers might act on priority
+parameters. It does not describe in detail how servers might combine priority
+signals with other factors. Endpoints cannot depend on particular treatment
+based on priority signals. Expressing priority is only a suggestion.
 
 It is RECOMMENDED that, when possible, servers respect the urgency parameter
 ({{urgency}}), sending higher urgency responses before lower urgency responses.
