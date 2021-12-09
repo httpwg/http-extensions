@@ -567,9 +567,9 @@ error of type PROTOCOL_ERROR.
 
 The HTTP/3 PRIORITY_UPDATE frame (type=0xF0700 or 0xF0701) is used by clients to
 signal the initial priority of a response, or to reprioritize a response or push
-stream. It carries the identifier of the element that is being prioritized, and
-the updated priority in ASCII text, using the same representation as that of the
-Priority header field value. PRIORITY_UPDATE with a frame type of 0xF0700 is
+stream. It carries the identifier of the element that is being prioritized and
+the updated priority in ASCII text that uses the same representation as that of
+the Priority header field value. PRIORITY_UPDATE with a frame type of 0xF0700 is
 used for request streams, while PRIORITY_UPDATE with a frame type of 0xF0701 is
 used for push streams.
 
