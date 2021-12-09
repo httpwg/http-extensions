@@ -177,10 +177,11 @@ requiring less interpretation and allowing less variation.
 RFC 7540 does not define a method that can be used by a server to provide a
 priority signal for intermediaries.
 
-RFC 7540 priority is expressed relative to other requests on the same connection.
-Many requests are generated without knowledge of how other requests might share a
-connection, which makes this difficult to use reliably, especially in protocols
-that do not have strong ordering guarantees, like HTTP/3 {{HTTP3}}.
+RFC 7540 priority is expressed relative to other requests sharing the same
+connection at the same time. It is difficult to incorporate such design into
+applications that generate requests without knowledge of how other requests
+might share a connection, or into protocols that do not have strong ordering
+guarantees across streams, like HTTP/3 {{HTTP3}}.
 
 Multiple experiments from independent research ({{MARX}}, {{MEENAN}}) have shown
 that simpler schemes can reach at least equivalent performance characteristics
@@ -431,7 +432,7 @@ request priority from the client or the response priority from the server.
 sent from clients and servers. Clients cannot interpret the appearance or
 omission of a Priority response header field as acknowledgement that any
 prioritization has occurred. Guidance for how endpoints can act on Priority
-header values is given in {{server-scheduling}} and {{client-scheduling}}.
+header values is given in {{client-scheduling}} and {{server-scheduling}}.
 
 Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 
@@ -489,8 +490,8 @@ scheduling, the most recently received PRIORITY_UPDATE frame can be considered
 as the most up-to-date information that overrides any other signal. Servers
 SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply it once
 the referenced stream is opened. Holding PRIORITY_UPDATE frames for each stream
-requires server resources, which can can be bounded by local implementation
-policy. Although there is no limit to the number of PRIORITY_UPDATES that can be
+requires server resources, which can be bounded by local implementation policy.
+Although there is no limit to the number of PRIORITY_UPDATE frames that can be
 sent, storing only the most recently received frame limits resource commitment.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
@@ -523,12 +524,12 @@ HTTP/2 PRIORITY_UPDATE Frame {
 {: #fig-h2-reprioritization-frame title="HTTP/2 PRIORITY_UPDATE Frame Payload"}
 
 The Length, Type, Unused Flag(s), Reserved, and Stream Identifier fields are
-described in {{Section 4 of HTTP2}}. The frame payload of PRIORITY_UPDATE
-frame payload contains the following additional fields:
+described in {{Section 4 of HTTP2}}. The PRIORITY_UPDATE frame payload
+contains the following additional fields:
 
 Reserved:
-: A reserved 1-bit field. The semantics of this bit are undefined, and the bit
-  MUST remain unset (0x0) when sending and MUST be ignored when receiving.
+: A reserved 1-bit field. The semantics of this bit are undefined. It MUST
+  remain unset (0x0) when sending and MUST be ignored when receiving.
 
 Prioritized Stream ID:
 : A 31-bit stream identifier for the stream that is the target of the priority
@@ -567,9 +568,9 @@ error of type PROTOCOL_ERROR.
 
 The HTTP/3 PRIORITY_UPDATE frame (type=0xF0700 or 0xF0701) is used by clients to
 signal the initial priority of a response, or to reprioritize a response or push
-stream. It carries the identifier of the element that is being prioritized, and
-the updated priority in ASCII text, using the same representation as that of the
-Priority header field value. PRIORITY_UPDATE with a frame type of 0xF0700 is
+stream. It carries the identifier of the element that is being prioritized and
+the updated priority in ASCII text that uses the same representation as that of
+the Priority header field value. PRIORITY_UPDATE with a frame type of 0xF0700 is
 used for request streams, while PRIORITY_UPDATE with a frame type of 0xF0701 is
 used for push streams.
 
@@ -639,8 +640,8 @@ is left as an implementation decision.
 
 Absence of a priority parameter in an HTTP response indicates the server's
 disinterest in changing the client-provided value. This is different from the
-the request header field, in which omission of a priority parameter implies the
-use of their default values (see {{parameters}}).
+request header field, in which omission of a priority parameter implies the use
+of their default values (see {{parameters}}).
 
 As a non-normative example, when the client sends an HTTP request with the
 urgency parameter set to `5` and the incremental parameter set to `true`
@@ -705,14 +706,13 @@ the order in which clients make requests. Doing so ensures that clients can use
 request ordering to influence response order.
 
 Incremental responses of the same urgency SHOULD be served by sharing bandwidth
-amongst them. Incremental resources are used as parts, or chunks, of the
-response payload are received. A client might benefit more from receiving a
-portion of all these resources rather than the entirety of a single resource.
-How large a portion of the resource is needed to be useful in improving
-performance varies. Some resource types place critical elements early, others
-can use information progressively. This scheme provides no explicit mandate
-about how a server should use size, type or any other input to decide how to
-prioritize.
+amongst them. Payload of incremental responses are used in parts, or chunks, as
+they are received. A client might benefit more from receiving a portion of all
+these resources rather than the entirety of a single resource. How large a
+portion of the resource is needed to be useful in improving performance varies.
+Some resource types place critical elements early, others can use information
+progressively. This scheme provides no explicit mandate about how a server
+should use size, type or any other input to decide how to prioritize.
 
 There can be scenarios where a server will need to schedule multiple incremental
 and non-incremental responses at the same urgency level. Strictly abiding the
@@ -884,7 +884,7 @@ connection is a hop-by-hop issue.
 
 Having the Priority header field defined as end-to-end is important for caching
 intermediaries.  Such intermediaries can cache the value of the Priority header
-field along with the response, and utilize the value of the cached header field
+field along with the response and utilize the value of the cached header field
 when serving the cached response, only because the header field is defined as
 end-to-end rather than hop-by-hop.
 
