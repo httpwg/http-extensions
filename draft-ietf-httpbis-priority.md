@@ -181,7 +181,7 @@ RFC 7540 priority is expressed relative to other requests sharing the same
 connection at the same time. It is difficult to incorporate such design into
 applications that generate requests without knowledge of how other requests
 might share a connection, or into protocols that do not have strong ordering
-guarantees, like HTTP/3 {{HTTP3}}.
+guarantees across streams, like HTTP/3 {{HTTP3}}.
 
 Multiple experiments from independent research ({{MARX}}, {{MEENAN}}) have shown
 that simpler schemes can reach at least equivalent performance characteristics
