@@ -994,6 +994,10 @@ Yang Chi contributed the section on retransmission scheduling.
 
 *RFC EDITOR: please remove this section before publication*
 
+## Since draft-ietf-httpbis-priority-10
+* Editorial changes
+* Add clearer IANA instructions for Priority Parameter initial population
+
 ## Since draft-ietf-httpbis-priority-09
 * Editorial changes
 
