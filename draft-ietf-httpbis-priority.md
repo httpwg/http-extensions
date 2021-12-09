@@ -697,12 +697,12 @@ It is RECOMMENDED that, when possible, servers respect the urgency parameter
 
 The incremental parameter indicates how a client processes response bytes as
 they arrive. It is RECOMMENDED that, when possible, servers respect the
-incremental parameter ({{incremental}}). Non-incremental resources can only be used
-when all of the response payload has been received. Therefore, non-incremental
-responses of the same urgency SHOULD be served in their entirety, one-by-one,
-based on the stream ID, which corresponds to the order in which clients make
-requests. Doing so ensures that clients can use request ordering to influence
-response order.
+incremental parameter ({{incremental}}).
+
+Non-incremental responses of the same urgency SHOULD be served by prioritizing
+bandwidth allocation in ascending order of the stream ID, which corresponds to
+the order in which clients make requests. Doing so ensures that clients can use
+request ordering to influence response order.
 
 Incremental responses of the same urgency SHOULD be served by sharing bandwidth
 amongst them. Incremental resources are used as parts, or chunks, of the
