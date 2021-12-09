@@ -523,8 +523,8 @@ HTTP/2 PRIORITY_UPDATE Frame {
 {: #fig-h2-reprioritization-frame title="HTTP/2 PRIORITY_UPDATE Frame Payload"}
 
 The Length, Type, Unused Flag(s), Reserved, and Stream Identifier fields are
-described in {{Section 4 of HTTP2}}. The frame payload of PRIORITY_UPDATE
-frame payload contains the following additional fields:
+described in {{Section 4 of HTTP2}}. The frame payload of PRIORITY_UPDATE frame
+contains the following additional fields:
 
 Reserved:
 : A reserved 1-bit field. The semantics of this bit is undefined. It MUST remain
