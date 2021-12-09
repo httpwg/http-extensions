@@ -431,7 +431,7 @@ request priority from the client or the response priority from the server.
 sent from clients and servers. Clients cannot interpret the appearance or
 omission of a Priority response header field as acknowledgement that any
 prioritization has occurred. Guidance for how endpoints can act on Priority
-header values is given in {{server-scheduling}} and {{client-scheduling}}.
+header values is given in {{client-scheduling}} and {{server-scheduling}}.
 
 Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 
