@@ -243,11 +243,11 @@ behind the server that the client is directly connected to.
 
 The priority scheme defined by this document is primarily focused on the
 prioritization of HTTP response messages (see {{Section 3.4 of HTTP}}). It
-defines new priority parameters ({{parameters}}) and their conveyors ({{header-field}}
-and {{frame}}) intended to communicate the priority of responses to a server
-that is responsible for prioritizing them. {{server-scheduling}} provides
-considerations for servers about acting on those signals in combination with
-other inputs and factors.
+defines new priority parameters ({{parameters}}) and a means of conveying those
+parameters ({{header-field}} and {{frame}}), which is intended to communicate
+the priority of responses to a server that is responsible for prioritizing
+them. {{server-scheduling}} provides considerations for servers about acting on
+those signals in combination with other inputs and factors.
 
 The CONNECT method (see {{Section 9.3.6 of HTTP}}) can be used to establish
 tunnels. Signaling applies similarly to tunnels; additional considerations for
