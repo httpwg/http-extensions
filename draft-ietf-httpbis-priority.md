@@ -490,8 +490,8 @@ as the most up-to-date information that overrides any other signal. Servers
 SHOULD buffer the most recently received PRIORITY_UPDATE frame and apply it once
 the referenced stream is opened. Holding PRIORITY_UPDATE frames for each stream
 requires server resources, which can be bounded by local implementation policy.
-Although there is no limit to the number of PRIORITY_UPDATES that can be sent,
-storing only the most recently received frame limits resource commitment.
+Although there is no limit to the number of PRIORITY_UPDATE frames that can be
+sent, storing only the most recently received frame limits resource commitment.
 
 ## HTTP/2 PRIORITY_UPDATE Frame {#h2-update-frame}
 
