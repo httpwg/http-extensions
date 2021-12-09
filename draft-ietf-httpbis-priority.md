@@ -884,7 +884,7 @@ connection is a hop-by-hop issue.
 
 Having the Priority header field defined as end-to-end is important for caching
 intermediaries.  Such intermediaries can cache the value of the Priority header
-field along with the response, and utilize the value of the cached header field
+field along with the response and utilize the value of the cached header field
 when serving the cached response, only because the header field is defined as
 end-to-end rather than hop-by-hop.
 
