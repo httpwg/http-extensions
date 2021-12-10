@@ -197,7 +197,7 @@ CDN caches that use CDN-Cache-Control will typically forward this header so that
 
 ## Examples
 
-For example, the following header fields would instruct a CDN cache to consider the response fresh for 600 seconds, other shared caches for 120 seconds and any remaining caches for 60 seconds:
+For example, the following header fields would instruct a CDN cache (i.e., a cache with a target list of `\[CDN-Cache-Control]]`) to consider the response fresh for 600 seconds, other shared caches for 120 seconds and any remaining caches for 60 seconds:
 
 ~~~ http-message
 Cache-Control: max-age=60, s-maxage=120
