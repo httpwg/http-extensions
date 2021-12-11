@@ -1369,17 +1369,11 @@ _RFC Editor: Please remove this section before publication._
 
    The contentMD5 token defined in {{Section 5 of RFC3230}} is deprecated by this document.
 
-   To clarify that `Digest` and `Want-Digest` can be used in both requests and responses
-   - [RFC3230] carefully uses `sender` and `receiver` in their definition -
-   we added examples on using `Want-Digest` in responses to advertise the supported
-   digest-algorithms and the inability to accept requests with unsupported
-   digest-algorithms.
-
 7. Does this specification change supported algorithms?
 
    Yes. This RFC updates [RFC5843] which is still delegated for all algorithms
    updates.
-   To simplify a future transition to Structured Fields {{?I-D.ietf-httpbis-header-structure}}
+   To simplify a future transition to Structured Fields {{?RFC8941}}
    we suggest to use lowercase for digest-algorithms.
 
 8. What about mid-stream trailer fields?
