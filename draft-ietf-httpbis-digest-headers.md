@@ -635,6 +635,9 @@ or by sending multiple representation-data-digest values from which the receiver
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{digest}}).
 
+Mechanisms such as TLS and digital signatures mitigate substitution attacks
+(see Section 1 of {{?RFC6211}}) on digest-algorithms.
+
 ## Duplicate digest-algorithm in field value
 
 An endpoint might receive multiple representation-data-digest values (see {{digest}}) that use the same digest-algorithm with different or identical digest-values. For example:
