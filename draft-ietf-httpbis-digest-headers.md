@@ -676,7 +676,7 @@ registry:
 
 * Digest Algorithm: contentMD5
 * Description: {{Section 5 of RFC3230}} defined the "contentMD5" token to be used only in Want-Digest.
-  This token is obsoleted and MUST NOT be used.
+  This token is obsoleted by this document.
 * Reference: {{iana-contentMD5}} of this document, {{Section 5 of RFC3230}}.
 * Status: obsoleted
 
