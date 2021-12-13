@@ -181,7 +181,9 @@ This specification does not place any specific requirements on implementations t
 
 ## Defining Targeted Fields
 
-A targeted field for a particular class of cache can be defined by requesting registration in the Hypertext Transfer Protocol (HTTP) Field Name Registry ([](https://www.iana.org/assignments/http-fields/)), listing this specification as the specification document. The Comments field of the registration should clearly define the class of caches that the targeted field applies to.
+A targeted field for a particular class of cache can be defined by requesting registration in the Hypertext Transfer Protocol (HTTP) Field Name Registry ([](https://www.iana.org/assignments/http-fields/)).
+
+Registration requests can use this document as the specification document, in which case the Comments field should clearly define the class of caches that the targeted field applies to. Alternatively, if other documentation for the field has been created, it can be used as the specification document.
 
 By convention, targeted fields have the suffix "-Cache-Control": e.g., "ExampleCDN-Cache-Control". However, this suffix MUST NOT be used on its own to identify targeted fields; it is only a convention.
 
