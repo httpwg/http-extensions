@@ -581,7 +581,7 @@ digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
 endpoints. See also {{digest-and-content-location}}.
 
-Insecure and collision-prone digest-algorithms do not usually fit signature use cases.
+Since signatures are meant to protect against adversarial use cases, insecure and collision-prone algorithms do not provide adequate guarantees (see {{algorithms}}).
 
 Using signatures to protect the checksum of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
