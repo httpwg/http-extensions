@@ -609,9 +609,6 @@ the whole payload before sending a message (e.g. see {{?I-D.thomson-http-mice}})
 
 ## Usage with Encryption
 
-Digest fields may expose details of encrypted payload when the checksum
-is computed on the unencrypted data.
-
 The checksum of an encrypted payload can change between different messages
 depending on the encryption algorithm used; in those cases its value could not be used to provide
 a proof of integrity "at rest" unless the whole (e.g. encoded) content is persisted.
