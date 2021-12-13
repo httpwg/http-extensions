@@ -104,7 +104,7 @@ protection; for instance, TCP checksums or TLS records [RFC2818].
 This document defines two digest integrity mechanisms for HTTP.
 First, representation data integrity, which acts on representation data ({{Section 3.2
 of SEMANTICS}}).
-Second, content digest integrity, which acts on conveyed content ({{Section 6.4 of
+Second, content integrity, which acts on conveyed content ({{Section 6.4 of
 SEMANTICS}}).
 Both mechanisms operate independent of transport integrity, offering
 the potential to detect programming errors and corruption of data in flight or
@@ -213,6 +213,10 @@ interpreted as described in {{SEMANTICS}}.
 Algorithm names respect the casing used in their definition document (e.g. SHA-1, CRC32c)
 whereas digest-algorithm tokens are quoted (e.g. "sha", "crc32c").
 
+The term "checksum" describes the output of the application of an algorithm
+to a sequence of bytes,
+whereas digest is only used in relation to the value of the fields.
+
 # Representation Digest {#representation-digest}
 
 The representation digest is an integrity mechanism for HTTP resources
@@ -235,7 +239,7 @@ together with an indication of the algorithm used:
 
 ~~~ abnf
    representation-data-digest = digest-algorithm "="
-                                <encoded digest output>
+                                <encoded checksum output>
 ~~~
 
 When a message has no representation data
@@ -289,7 +293,7 @@ In this case,
 `Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
 
 When an incremental digest-algorithm
-is used, the sender and the receiver can dynamically compute the digest value
+is used, the sender and the receiver can dynamically compute a checksum
 while streaming the content.
 
 A non-comprehensive set of examples showing the impacts of
@@ -308,7 +312,7 @@ It can be used in both requests and responses.
 ~~~ abnf
    Content-Digest = 1#content-digest
    content-digest = digest-algorithm "="
-                    <encoded digest output>
+                    <encoded checksum output>
 ~~~
 
 For example:
@@ -340,7 +344,7 @@ In this case,
 `Content-Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
 
 When an incremental digest-algorithm
-is used, the sender and the receiver can dynamically compute the digest value
+is used, the sender and the receiver can dynamically compute the checksum
 while streaming the content.
 
 # Want-Digest and Want-Content-Digest Fields {#want-fields}
@@ -407,7 +411,7 @@ Registrations MUST include the following fields:
      - e.g. according to the type and status of the primary document
      in which the algorithm is defined;
      "insecure" when the algorithm is insecure;
-     "reserved" when Digest algorithm references a reserved token value
+     "reserved" when the algorithm references a reserved token value
  - Description: the description of the digest-algorithm and its encoding
  - Reference: a set of pointers to the primary documents defining the digest-algorithm
 
@@ -416,7 +420,7 @@ be represented as a quoted string
 or MUST NOT include ";" or "," in the character sets used for the encoding.
 
 Insecure digest algorithms MAY be used to preserve integrity against corruption, but MUST
-NOT be used in a potentially adversarial setting; for example, when signing the digest of content for
+NOT be used in a potentially adversarial setting; for example, when signing digest fields' values for
 authenticity.
 
 The registry is initialized with the tokens listed below.
@@ -567,10 +571,10 @@ certain identification of the origin of a message [NIST800-32]. Such signatures
 can protect one or more HTTP fields and there are additional considerations when
 `Digest` is included in this set.
 
-Since digest fields are hashes of resource representations, they explicitly
-depend on the `representation metadata` (e.g. the values of `Content-Type`,
+Since digest fields are checksums of resource representations, they explicitly
+depend on the "representation metadata" (e.g. the values of `Content-Type`,
 `Content-Encoding` etc). A signature that protects `Digest` but not other
-`representation metadata` can expose the communication to tampering. For
+"representation metadata" can expose the communication to tampering. For
 example, an actor could manipulate the `Content-Type` field-value and cause a
 digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
@@ -1247,7 +1251,7 @@ Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
 
 ##  Server Selects Algorithm Unsupported by Client {#ex-server-selects-unsupported-algorithm}
 
-The client requests a only "sha" digest because that is the only algorithm it
+The client requests a "sha" digest because that is the only algorithm it
 supports. The server is not obliged to produce a response containing a "sha"
 digest, it instead uses a different algorithm.
 
