@@ -415,7 +415,7 @@ The associated encoding for new digest-algorithms MUST either
 be represented as a quoted string
 or MUST NOT include ";" or "," in the character sets used for the encoding.
 
-Insecure digest algorithms MAY be used to preserve integrity against accidental change, but MUST
+Insecure digest algorithms MAY be used to preserve integrity against corruption, but MUST
 NOT be used in a potentially adversarial setting; for example, when signing the digest of content for
 authenticity.
 
@@ -546,7 +546,7 @@ enclosed representation refers to the resource identified by its value and
 
 This document specifies a data integrity mechanism that protects HTTP
 `representation data` or content, but not HTTP header and trailer fields, from
-certain kinds of accidental corruption.
+certain kinds of corruption.
 
 Digest fields are not intended to be a general protection against malicious tampering with
 HTTP messages. This can be achieved by combining it with other approaches such
