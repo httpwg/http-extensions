@@ -635,8 +635,12 @@ or by sending multiple representation-data-digest values from which the receiver
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{digest}}).
 
-Mechanisms such as TLS and digital signatures mitigate substitution attacks
-(see Section 1 of {{?RFC6211}}) on digest-algorithms.
+Differently from [RFC3230], Algorithm Agility cannot be achieved
+parameterizing digest algorithms for security reasons
+(see {{replacing-rfc-3230}}).
+Mechanisms such as TLS and digital signatures can
+mitigate substitution attacks on digest-algorithms
+(see Section 1 of {{?RFC6211}}).
 
 ## Duplicate digest-algorithm in field value
 
