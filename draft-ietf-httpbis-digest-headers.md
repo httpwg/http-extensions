@@ -175,7 +175,7 @@ since [RFC3230] was published. The concept of "instance" has been superseded by
 `selected representation`.
 
 This document replaces [RFC3230]. The changes described in the following
-paragraphs are intended to be semantically compatible with existing
+paragraphs are intended to be syntactically and semantically compatible with existing
 implementations where possible.
 
 The `Digest` and `Want-Digest` field definitions are updated to align with the
