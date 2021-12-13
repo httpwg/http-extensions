@@ -424,23 +424,22 @@ The registry is initialized with the tokens listed below.
   {: vspace="0"}
   sha-512
   : * Digest Algorithm: sha-512
-    * Description: The SHA-512 algorithm [RFC6234].  The output of
-      this algorithm is encoded using the base64 encoding [RFC4648].
+    * Description: The SHA-512 algorithm [RFC6234].
+      The output of this algorithm is encoded using base64 [RFC4648].
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
   sha-256
   : * Digest Algorithm: sha-256
-    * Description: The SHA-256 algorithm [RFC6234].  The output of
-      this algorithm is encoded using the base64 encoding [RFC4648].
+    * Description: The SHA-256 algorithm [RFC6234].
+      The output of this algorithm is encoded using base64 [RFC4648].
     * Reference: [RFC6234], [RFC4648], this document.
     * Status: standard
 
   md5
   : * Digest Algorithm: md5
-    * Description: The MD5 algorithm, as specified in [RFC1321].
-      The output of this algorithm is encoded using the
-      base64 encoding  [RFC4648].
+    * Description: The MD5 algorithm [RFC1321].
+      The output of this algorithm is encoded using base64 [RFC4648].
       This digest-algorithm is now vulnerable
       to collision attacks. See {{?NO-MD5=RFC6151}} and [CMU-836068].
     * Reference: [RFC1321], [RFC4648], this document.
@@ -448,8 +447,8 @@ The registry is initialized with the tokens listed below.
 
   sha
   : * Digest Algorithm: sha
-    * Description:  The SHA-1 algorithm [RFC3174].  The output of this
-      algorithm is encoded using the base64 encoding  [RFC4648].
+    * Description:  The SHA-1 algorithm [RFC3174].
+      The output of this algorithm is encoded using base64 [RFC4648].
       This digest-algorithm is now vulnerable
       to collision attacks. See {{?NO-SHA1=RFC6194}} and [IACR-2020-014].
     * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
@@ -457,9 +456,8 @@ The registry is initialized with the tokens listed below.
 
   unixsum
   : * Digest Algorithm: unixsum
-    * Description: The algorithm computed by the UNIX "sum" command,
-      as defined by the Single UNIX Specification,
-      Version 2 [UNIX].  The output of this algorithm is an
+    * Description: The algorithm used by the UNIX "sum" command [UNIX].
+      The output of this algorithm is an
       ASCII decimal-digit string representing the 16-bit
       checksum, which is the first word of the output of
       the UNIX "sum" command.
@@ -468,9 +466,8 @@ The registry is initialized with the tokens listed below.
 
   unixcksum
   : * Digest Algorithm: unixcksum
-    * Description: The algorithm computed by the UNIX "cksum" command,
-      as defined by the Single UNIX Specification,
-      Version 2 [UNIX].  The output of this algorithm is an
+    * Description: The algorithm used by the UNIX "cksum" command [UNIX].
+      The output of this algorithm is an
       ASCII digit string representing the 32-bit CRC,
       which is the first word of the output of the UNIX
       "cksum" command.
@@ -479,8 +476,8 @@ The registry is initialized with the tokens listed below.
 
   adler32
   : * Digest Algorithm: adler32
-    * Description: The ADLER32 algorithm is a checksum specified in [RFC1950] "ZLIB
-      Compressed Data Format". The 32-bit output is encoded in hexadecimal (using
+    * Description: The ADLER32 algorithm [RFC1950].
+      The 32-bit output is encoded in hexadecimal (using
       between 1 and 8 ASCII characters from 0-9, A-F, and a-f; leading 0's are
       allowed). For example, adler32=03da0195 and adler32=3DA0195 are both valid
       checksums for the 4-byte message "Wiki". This algorithm is obsoleted and
@@ -490,10 +487,8 @@ The registry is initialized with the tokens listed below.
 
   crc32c
   : * Digest Algorithm: crc32c
-    * Description: The CRC32c algorithm is a 32-bit cyclic redundancy check. It
-      achieves a better hamming distance (for better error-detection performance)
-      than many other 32-bit CRC functions. Other places it is used include iSCSI
-      and SCTP. The 32-bit output is encoded in hexadecimal (using between 1 and 8
+    * Description: The CRC32c algorithm {{!RFC4960}}.
+      The 32-bit output is encoded in hexadecimal (using between 1 and 8
       ASCII characters from 0-9, A-F, and a-f; leading 0's are allowed). For
       example, crc32c=0a72a4df and crc32c=A72A4DF are both valid checksums for the
       3-byte message "dog".
