@@ -411,7 +411,7 @@ Registrations MUST include the following fields:
      - e.g. according to the type and status of the primary document
      in which the algorithm is defined;
      "insecure" when the algorithm is insecure;
-     "reserved" when the digest algorithm references a reserved token value
+     "reserved" when the algorithm references a reserved token value
  - Description: the description of the digest-algorithm and its encoding
  - Reference: a set of pointers to the primary documents defining the digest-algorithm
 
