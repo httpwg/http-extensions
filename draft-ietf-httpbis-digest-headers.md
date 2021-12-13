@@ -631,6 +631,13 @@ or by sending multiple representation-data-digest values from which the receiver
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{digest}}).
 
+While algorithm agility allows the migration to stronger algorithms
+it does not prevent the use of weaker algorithms.
+Digest fields do not provide any mitigiations for downgrade or substitution 
+attacks (see Section 1 of {{?RFC6211}}) of the digest-algorithm.
+To protect against such attacks, endpoints could restrict their set of supported algorithms
+to stronger ones and protect the fields value by using TLS and/or digital signatures.
+
 ## Duplicate digest-algorithm in field value
 
 An endpoint might receive multiple representation-data-digest values (see {{digest}}) that use the same digest-algorithm with different or identical digest-values. For example:
