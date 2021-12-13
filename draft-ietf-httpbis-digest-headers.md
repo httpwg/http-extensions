@@ -219,10 +219,6 @@ The term "checksum" describes the output of the application of an algorithm
 to a sequence of bytes,
 whereas digest is only used in relation to the value of the fields.
 
-When it is convenient to do so,
-the sender and the receiver can dynamically compute the digest value
-while streaming the content.
-
 # The Digest Field {#digest}
 
 The `Digest` field contains a comma-separated list of one or more representation
