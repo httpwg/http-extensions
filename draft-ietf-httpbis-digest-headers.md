@@ -226,12 +226,14 @@ digest values. It can be used in both requests and responses.
 
 A representation digest is an integrity mechanism for HTTP resources that uses a
 checksum  calculated independently of the content (see {{Section 6.4 of
-SEMANTICS}}). A representation digest consists of the value of a checksum
-computed on the entire selected `representation data` (see {{Section 8.1 of
-SEMANTICS}}) of a resource identified according to {{Section 6.4.2 of
-SEMANTICS}}, together with an indication of the algorithm used. Note that
-representation data can be fully or partially contained in the content, or not
-contained at all. When a message has no representation data it is possible to
+SEMANTICS}}).
+A representation digest consists of the value of a checksum computed on
+the entire selected `representation data` (see {{Section 8.1 of SEMANTICS}})
+of a resource identified according to {{Section 6.4.2 of SEMANTICS}},
+together with an indication of the algorithm used.
+Note that representation data can be fully or partially contained in the content,
+or not contained at all.
+When a message has no representation data it is possible to
 assert that no representation data was sent by using the representation digest
 on an empty string (see {{usage-in-signatures}}).
 
