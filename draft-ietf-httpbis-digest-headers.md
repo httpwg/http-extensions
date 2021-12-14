@@ -122,9 +122,8 @@ This document obsoletes [RFC3230].
 
 This document is structured as follows:
 
-- {{representation-digest}} describes concepts related to representation
-  digests,
-- {{digest}} defines the Digest request and response header and trailer field,
+- {{digest}} describes concepts related to representation digests. It also
+  defines the Digest request and response header and trailer field,
 - {{content-digest}} defines the Content-Digest request and response header and trailer field,
 - {{want-fields}} defines the Want-Digest and Want-Content-Digest request and response header and
   trailer field,
@@ -149,9 +148,12 @@ To support use-cases where a simple checksum of the content bytes is required,
 this document introduces the `Content-Digest` request and response header and trailer field; see
 {{content-digest}}.
 
-`Digest` and `Content-Digest` support algorithm agility. The `Want-Digest` and
-`Want-Content-Digest` fields allows endpoints to express interest in `Digest` and
-`Content-Digest` respectively, and preference of algorithms in either.
+`Digest` and `Content-Digest` contain checksums that are calculated using one of
+the digest-algorithms listed in the HTTP Digest Algorithm Values Registry (see
+{{algorithms}}), which are encoded in the format associated with each encoding.
+Algorithm agility is supported. The `Want-Digest` and `Want-Content-Digest`
+fields allows endpoints to express interest in `Digest` and `Content-Digest`
+respectively, and preference of algorithms in either.
 
 Digest field calculations are tied to the `Content-Encoding`
 and `Content-Type` header fields. Therefore, a given resource may have multiple
@@ -217,48 +219,28 @@ The term "checksum" describes the output of the application of an algorithm
 to a sequence of bytes,
 whereas digest is only used in relation to the value of the fields.
 
-# Representation Digest {#representation-digest}
-
-The representation digest is an integrity mechanism for HTTP resources
-which uses a checksum  that is calculated independently of the content
-(see {{Section 6.4 of SEMANTICS}}).
-It uses the representation data (see {{Section 8.1 of SEMANTICS}}),
-that can be fully or partially contained in the content, or not contained at all.
-
-This takes into account the effect of the HTTP semantics on the messages;
-for example, the content can be affected by Range Requests or methods such as HEAD,
-while the way the content is transferred "on the wire" is dependent on other
-transformations (e.g. transfer codings for HTTP/1.1 - see {{Section 6.1 of
-HTTP11}}). To help illustrate how such things affect `Digest`,
-several examples are provided in {{resource-representation}}.
-
-A representation digest consists of
-the value of a checksum computed on the entire selected `representation data`
-(see {{Section 8.1 of SEMANTICS}}) of a resource identified according to {{Section 6.4.2 of SEMANTICS}}
-together with an indication of the algorithm used:
-
-~~~ abnf
-   representation-data-digest = digest-algorithm "="
-                                <encoded checksum output>
-~~~
-
-When a message has no representation data
-it is still possible to assert that no representation data was sent
-computing the representation digest on an empty string
-(see {{usage-in-signatures}}).
-
-The checksum is computed using one of the digest-algorithms listed in
-the HTTP Digest Algorithm Values Registry (see {{algorithms}})
-and then encoded in the associated format.
-
 # The Digest Field {#digest}
 
-The `Digest` field contains a comma-separated list of one or more representation digest values as
-defined in {{representation-digest}}. It can be used in both requests and
-responses.
+The `Digest` field contains a comma-separated list of one or more representation
+digest values. It can be used in both requests and responses.
+
+A representation digest is an integrity mechanism for HTTP resources that uses a
+checksum  calculated independently of the content (see {{Section 6.4 of
+SEMANTICS}}).
+A representation digest consists of the value of a checksum computed on
+the entire selected `representation data` (see {{Section 8.1 of SEMANTICS}})
+of a resource identified according to {{Section 6.4.2 of SEMANTICS}},
+together with an indication of the algorithm used.
+Note that representation data can be fully or partially contained in the content,
+or not contained at all.
+When a message has no representation data it is possible to
+assert that no representation data was sent by using the representation digest
+on an empty string (see {{usage-in-signatures}}).
 
 ~~~ abnf
    Digest = 1#representation-data-digest
+   representation-data-digest = digest-algorithm "="
+                                <encoded checksum output>
 ~~~
 
 For example:
@@ -267,6 +249,13 @@ For example:
 Digest: sha-512=WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
                 AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==
 ~~~
+
+Basing `Digest` on representation data takes into account the effect of HTTP
+semantics on messages; for example, the content can be affected by Range
+Requests or methods such as HEAD, while the way the content is transferred "on
+the wire" is dependent on other transformations (e.g. transfer codings for
+HTTP/1.1 - see {{Section 6.1 of HTTP11}}). To help illustrate how such things
+affect `Digest`, several examples are provided in {{resource-representation}}.
 
 A `Digest` field MAY contain multiple representation-data-digest values.
 For example, a server may provide representation-data-digest values using different algorithms,
@@ -506,7 +495,7 @@ does not describe the target resource,
 the representation digest MUST be computed on the
 representation-data.
 This is the only possible choice because representation digest requires complete
-representation metadata (see {{representation-digest}}).
+representation metadata (see {{digest}}).
 
 In responses,
 
@@ -1190,7 +1179,7 @@ Digest: sha-256=KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=
 An origin server sends `Digest` as trailer field, so it can calculate digest-value
 while streaming content and thus mitigate resource consumption.
 The `Digest` field-value is the same as in {{example-full-representation}} because `Digest` is designed to
-be independent from the use of one or more transfer codings (see {{representation-digest}}).
+be independent from the use of one or more transfer codings (see {{digest}}).
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
