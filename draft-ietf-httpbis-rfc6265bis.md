@@ -507,8 +507,7 @@ non-zero-digit    = %x31-39
                       ; digits 1 through 9
 domain-av         = "Domain" BWS "=" BWS domain-value
 domain-value      = <subdomain>
-                      ; defined in [RFC1034], Section 3.5, as
-                      ; enhanced by [RFC1123], Section 2.1
+                      ; see details below
 path-av           = "Path" BWS "=" BWS path-value
 path-value        = *av-octet
 secure-av         = "Secure"
@@ -529,6 +528,9 @@ The semantics of the cookie-value are not defined by this document.
 To maximize compatibility with user agents, servers that wish to store arbitrary
 data in a cookie-value SHOULD encode that data, for example, using Base64
 {{RFC4648}}.
+
+The domain-value is a subdomain as defined by {{RFC1034}}, Section 3.5, and
+as enhanced by {{RFC1123}}, Section 2.1.
 
 Per the grammar above, the cookie-value MAY be wrapped in DQUOTE characters.
 Note that in this case, the initial and trailing DQUOTE characters are not
@@ -831,7 +833,8 @@ found-year) are initially "not set".
     date-token      = 1*non-delimiter
 
     delimiter       = %x09 / %x20-2F / %x3B-40 / %x5B-60 / %x7B-7E
-    non-delimiter   = %x00-08 / %x0A-1F / DIGIT / ":" / ALPHA / %x7F-FF
+    non-delimiter   = %x00-08 / %x0A-1F / DIGIT / ":" / ALPHA
+                      / %x7F-FF
     non-digit       = %x00-2F / %x3A-FF
 
     day-of-month    = 1*2DIGIT [ non-digit *OCTET ]
@@ -1381,17 +1384,19 @@ following modification to the retrieval algorithm defined in
 Replace the condition in the penultimate bullet point of step 1 of the retrieval
 algorithm reading
 
-     * The HTTP request associated with the retrieval uses a "safe" method.
+     * The HTTP request associated with the retrieval uses a "safe"
+       method.
 
 with
 
      * At least one of the following is true:
 
-       1.  The HTTP request associated with the retrieval uses a "safe" method.
+       1.  The HTTP request associated with the retrieval uses a "safe"
+           method.
 
-       2.  The cookie's same-site-flag is "Default" and the amount of time
-           elapsed since the cookie's creation-time is at most a duration of the
-           user agent's choosing.
+       2.  The cookie's same-site-flag is "Default" and the amount of
+           time elapsed since the cookie's creation-time is at most a
+           duration of the user agent's choosing.
 
 ## Storage Model {#storage-model}
 
