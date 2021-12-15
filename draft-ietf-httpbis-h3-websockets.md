@@ -81,7 +81,7 @@ provide more information via a Problem Details response {{!RFC7807}}.
 # Security Considerations
 
 This document introduces no new security considerations beyond those
-discussed in {{!RFC8841}}.
+discussed in {{!RFC8441}}.
 
 # IANA Considerations
 
