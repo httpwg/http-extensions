@@ -558,7 +558,7 @@ metadata are discussed in {{usage-in-signatures}}.
 Digital signatures are widely used together with checksums to provide the
 certain identification of the origin of a message [NIST800-32]. Such signatures
 can protect one or more HTTP fields and there are additional considerations when
-`Digest` is included in this set.
+digest fields are included in this set.
 
 Since digest fields are checksums of resource representations, they explicitly
 depend on the "representation metadata" (e.g. the values of `Content-Type`,
@@ -569,11 +569,9 @@ digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
 endpoints. See also {{digest-and-content-location}}.
 
-Digest fields SHOULD always be used over a connection that provides integrity at
-the transport layer that protects HTTP fields.
-
-A `Digest` field using NOT RECOMMENDED digest-algorithms SHOULD NOT be used in
-signatures.
+Since signatures are meant to protect against adversarial use cases,
+insecure and collision-prone algorithms do not provide adequate guarantees
+(see {{algorithms}}).
 
 Using signatures to protect the checksum of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
@@ -672,7 +670,7 @@ registry:
 
 * Digest Algorithm: contentMD5
 * Description: {{Section 5 of RFC3230}} defined the "contentMD5" token to be used only in Want-Digest.
-  This token is obsoleted and MUST NOT be used.
+  This token is obsoleted by this document.
 * Reference: {{iana-contentMD5}} of this document, {{Section 5 of RFC3230}}.
 * Status: obsoleted
 
