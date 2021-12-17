@@ -371,10 +371,6 @@ Digest-algorithm values are used to indicate a specific digest computation.
    digest-algorithm = token
 ~~~
 
-When it is convenient to do so,
-the sender and the receiver can dynamically compute the checksum value
-while streaming the content.
-
 All digest-algorithm token values are case-insensitive
 but lower case is preferred;
 digest-algorithm token values MUST be compared in a case-insensitive fashion.
