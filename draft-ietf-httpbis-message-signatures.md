@@ -343,11 +343,24 @@ To differentiate specialty component identifiers from HTTP fields, specialty com
 
 Additional specialty component identifiers MAY be defined and registered in the HTTP Signatures Specialty Component Identifier Registry. ({{content-registry}})
 
+Specialty components can be applied in one or more of three targets:
+
+request:
+: Values derived from and results applied to an HTTP request message as described in {{section 3.4 of SEMANTICS}}.
+
+response:
+: Values derived from and results applied to an HTTP response message as described in {{section 3.4 of SEMANTICS}}.
+
+related-response:
+: Values derived from an HTTP request message and results applied to the HTTP response message that is responding to that specific request.
+
+A component identifier definition MUST define all targets to which it can be applied.
+
 ### Signature Parameters {#signature-params}
 
 HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and verification, such as the set of covered components, a timestamp, identifiers for verification key material, and other utilities.
 
-The signature parameters component identifier is `@signature-params`.
+The signature parameters component identifier is `@signature-params`. This message component's value is REQUIRED as part of the [signature input string](#create-sig-input) but the component identifier MUST NOT be enumerated within the set of covered components itself.
 
 The signature parameters component value is the serialization of the signature parameters for this signature, including the covered components set with all associated parameters. These parameters include any of the following:
 
@@ -362,7 +375,7 @@ Additional parameters can be defined in the [HTTP Signature Parameters Registry]
 The signature parameters component value is serialized as a parameterized inner list using the rules in [Section 4 of RFC8941](#RFC8941) as follows:
 
 1. Let the output be an empty string.
-2. Determine an order for the component identifiers of the covered components. Once this order is chosen, it cannot be changed. This order MUST be the same order as used in creating the signature input ({{create-sig-input}}).
+2. Determine an order for the component identifiers of the covered components, not including the `@signature-params` component identifier itself. Once this order is chosen, it cannot be changed. This order MUST be the same order as used in creating the signature input ({{create-sig-input}}).
 3. Serialize the component identifiers of the covered components, including all parameters, as an ordered `inner-list` according to [Section 4.1.1.1 of RFC8941](#RFC8941) and append this to the output.
 4. Determine an order for any signature parameters. Once this order is chosen, it cannot be changed.
 5. Append the parameters to the `inner-list` in the chosen order according to [Section 4.1.1.2 of RFC8941](#RFC8941),
@@ -383,7 +396,7 @@ NOTE: '\' line wrapping per RFC 8792
   created=1618884475;expires=1618884775
 ~~~
 
-Note that an HTTP message could contain [multiple signatures](#signature-multiple), but only the signature parameters used for the current signature are included in the entry.
+Note that an HTTP message could contain [multiple signatures](#signature-multiple), but only the signature parameters used for a single signature are included in an entry.
 
 ### Method {#content-request-method}
 
@@ -403,7 +416,7 @@ Would result in the following `@method` value:
 "@method": POST
 ~~~
 
-If used in a response message, the `@method` component identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@method` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Target URI {#content-target-uri}
 
@@ -423,7 +436,7 @@ Would result in the following `@target-uri` value:
 "@target-uri": https://www.example.com/path?param=value
 ~~~
 
-If used in a response message, the `@target-uri` component identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@target-uri` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Authority {#content-request-authority}
 
@@ -444,7 +457,7 @@ Would result in the following `@authority` component value:
 "@authority": www.example.com
 ~~~
 
-If used in a response message, the `@authority` component identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@authority` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Scheme {#content-request-scheme}
 
@@ -466,7 +479,7 @@ Would result in the following `@scheme` value:
 "@scheme": http
 ~~~
 
-If used in a response message, the `@scheme` component identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@scheme` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Request Target {#content-request-target}
 
@@ -531,7 +544,7 @@ Would result in the following `@request-target` component value:
 "@request-target": *
 ~~~
 
-If used in a response message, the `@request-target` component identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@request-target` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Path {#content-request-path}
 
@@ -551,7 +564,7 @@ Would result in the following `@path` value:
 "@path": /path
 ~~~
 
-If used in a response message, the `@path` identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@path` identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Query {#content-request-query}
 
@@ -584,7 +597,7 @@ Would result in the following `@query` value:
 "@query": ?queryString
 ~~~
 
-If used in a response message, the `@query` component identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@query` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Query Parameters {#content-request-query-params}
 
@@ -616,7 +629,7 @@ Indicating the `baz`, `qux` and `param` named query parameters in would result i
 "@query-params";name="param": value
 ~~~
 
-If used in a response message, the `@query-params` component identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@query-params` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Status Code {#content-status-code}
 
@@ -718,13 +731,13 @@ Signature: sig1=:crVqK54rxvdx0j7qnt2RL1oQSf+o21S/6Uk2hyFpoIfOT0q+Hv\
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
-Since the request's signature value itself is not repeated in the response, the requester MUST keep the original signature value around long enough to validate the signature of the response.
+Since the request's signature value itself is not repeated in the response, the requester MUST keep the original signature value around long enough to validate the signature of the response that uses this component identifier.
 
 The `@request-response` component identifier MUST NOT be used in a request message.
 
 ## Creating the Signature Input String {#create-sig-input}
 
-The signature input is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. To create the signature input string, the signer or verifier concatenates together entries for each identifier in the signature's covered components (including their parameters) using the following algorithm:
+The signature input is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature creation algorithm is the list of covered component identifiers and their associated values, along with an additional signature parameters. To create the signature input string, the signer or verifier concatenates together entries for each identifier in the signature's covered components (including their parameters) using the following algorithm:
 
 1. Let the output be an empty string.
 
@@ -734,7 +747,7 @@ The signature input is a US-ASCII string containing the canonicalized HTTP messa
 
     2. Append a single colon `:`
 
-    3. Append a single space "` `"
+    3. Append a single space " "
 
     4. Append the covered component's canonicalized component value, as defined by the HTTP message component type. ({{http-header}} and {{specialty-content}})
 
@@ -746,7 +759,7 @@ The signature input is a US-ASCII string containing the canonicalized HTTP messa
 
     2. Append a single colon `:`
 
-    3. Append a single space "` `"
+    3. Append a single space " "
 
     4. Append the signature parameters' canonicalized component value as defined in {{signature-params}}
 
@@ -1163,11 +1176,15 @@ Note that by this process, a signature applied to a target message MUST have the
 
 # IANA Considerations {#iana}
 
+IANA is requested to create three registries and to populate those registries with initial values as described in this section.
+
 ## HTTP Signature Algorithms Registry {#hsa-registry}
 
 This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms".  Initial values for this registry are given in {{iana-hsa-contents}}.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-hsa-template}}.
 
 Algorithms referenced by algorithm identifiers have to be fully defined with all parameters fixed. Algorithm identifiers in this registry are to be interpreted as whole string values and not as a combination of parts. That is to say, it is expected that implementors understand `rsa-pss-sha512` as referring to one specific algorithm with its hash, mask, and salt values set as defined here. Implementors do not parse out the `rsa`, `pss`, and `sha512` portions of the identifier to determine parameters of the signing algorithm from the string.
+
+Algorithms added to this registry MUST NOT be aliases for other entries in the registry.
 
 ### Registration Template {#iana-hsa-template}
 
@@ -1189,66 +1206,11 @@ Specification document(s):
 
 ### Initial Contents {#iana-hsa-contents}
 
-#### rsa-pss-sha512
-
-{: vspace="0"}
-Algorithm Name:
-: `rsa-pss-sha512`
-
-Status:
-: Active
-
-Definition:
-: RSASSA-PSS using SHA-512
-
-Specification document(s):
-: \[\[This document\]\], {{method-rsa-pss-sha512}}
-
-#### rsa-v1_5-sha256
-
-{: vspace="0"}
-Algorithm Name:
-: `rsa-v1_5-sha256`
-
-Status:
-: Active
-
-Description:
-: RSASSA-PKCS1-v1_5 using SHA-256
-
-Specification document(s):
-: \[\[This document\]\], {{method-rsa-v1_5-sha256}}
-
-#### hmac-sha256
-
-{: vspace="0"}
-Algorithm Name:
-: `hmac-sha256`
-
-Status:
-: Active
-
-Description:
-: HMAC using SHA-256
-
-Specification document(s):
-: \[\[This document\]\], {{method-hmac-sha256}}
-
-
-#### ecdsa-p256-sha256
-
-{: vspace="0"}
-Algorithm Name:
-: `ecdsa-p256-sha256`
-
-Status:
-: Active
-
-Description:
-: ECDSA using curve P-256 DSS and SHA-256
-
-Specification document(s):
-: \[\[This document\]\], {{method-ecdsa-p256-sha256}}
+|Algorithm Name|Status|Description|Specification document(s)|
+|`rsa-pss-sha512`|Active|RSASSA-PSS using SHA-512|\[\[This document\]\], {{method-rsa-pss-sha512}}|
+|`rsa-v1_5-sha256`|Active|RSASSA-PKCS1-v1_5 using SHA-256|\[\[This document\]\], {{method-rsa-v1_5-sha256}}|
+|`hmac-sha256`|Active|HMAC using SHA-256|\[\[This document\]\], {{method-hmac-sha256}}|
+|`ecdsa-p256-sha256`|Active|ECDSA using curve P-256 DSS and SHA-256|\[\[This document\]\], {{method-ecdsa-p256-sha256}}|
 
 ## HTTP Signature Metadata Parameters Registry {#param-registry}
 
@@ -1256,32 +1218,62 @@ This document defines the signature parameters structure, the values of which ma
 
 ### Registration Template {#iana-param-template}
 
+{: vspace="0"}
+Name:
+: An identifier for the HTTP signature metadata parameter. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The identifier MUST be unique within the context of the registry.
+
+Description:
+: A brief description of the metadata parameter and what it represents.
+
+Specification document(s):
+: Reference to the document(s) that specify the token endpoint
+    authorization method, preferably including a URI that can be used
+    to retrieve a copy of the document(s).  An indication of the
+    relevant sections may also be included but is not required.
+
+
 ### Initial Contents {#iana-param-contents}
 
 The table below contains the initial contents of the HTTP Signature Metadata Parameters Registry.  Each row in the table represents a distinct entry in the registry.
 
-|Name|Status|Reference(s)|
+|Name|Description|Specification document(s)|
 |--- |--- |--- |
-|`alg`|Active | {{signature-params}} of this document|
-|`created`|Active   | {{signature-params}} of this document|
-|`expires`|Active   | {{signature-params}} of this document|
-|`keyid`|Active     | {{signature-params}} of this document|
-|`nonce`|Active    | {{signature-params}} of this document|
+|`alg`|Explicitly declared signature algorithm|{{signature-params}} of this document|
+|`created`|Timestamp of signature creation| {{signature-params}} of this document|
+|`expires`|Timestamp of proposed signature expiration| {{signature-params}} of this document|
+|`keyid`|Key identifier for the signing and verification keys used to create this signature| {{signature-params}} of this document|
+|`nonce`|A single-use nonce value| {{signature-params}} of this document|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
 ## HTTP Signature Specialty Component Identifiers Registry {#content-registry}
 
-This document defines a method for canonicalizing HTTP message components, including components that can be generated from the context of the HTTP message outside of the HTTP fields. These components are identified by a unique string, known as the component identifier.  IANA is asked to create and maintain a new registry typed "HTTP Signature Specialty Component Identifiers" to record and maintain the set of non-field component identifiers and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
+This document defines a method for canonicalizing HTTP message components, including components that can be derived from the context of the HTTP message outside of the HTTP fields. These components are identified by a unique string, known as the component identifier. Component identifiers for specialty components always start with the "@" (at) symbol to distinguish them from HTTP header fields. IANA is asked to create and maintain a new registry typed "HTTP Signature Specialty Component Identifiers" to record and maintain the set of non-field component identifiers and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
 
 ### Registration Template {#iana-content-template}
+
+{: vspace="0"}
+Identifier:
+: An identifier for the HTTP specialty component identifier. The name MUST begin with the `"@"` character followed by an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The identifier MUST be unique within the context of the registry.
+
+Status:
+: A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
+
+Target:
+: The valid message targets for the specialty parameter. MUST be one of the values "Request", "Request, Response", "Request, Related-Response", or "Related-Response". The semantics of these are defined in {{specialty-content}}.
+
+Specification document(s):
+: Reference to the document(s) that specify the token endpoint
+    authorization method, preferably including a URI that can be used
+    to retrieve a copy of the document(s).  An indication of the
+    relevant sections may also be included but is not required.
 
 ### Initial Contents {#iana-content-contents}
 
 The table below contains the initial contents of the HTTP Signature Specialty Component Identifiers Registry.
 
-|Name|Status|Target|Reference|
+|Identifier|Status|Target|Specification document(s)|
 |--- |--- |--- |--- |
-|`@signature-params`|Active   | Request, Response | {{signature-params}} of this document|
+|`@signature-params`| Active | Request, Response | {{signature-params}} of this document|
 |`@method`| Active | Request, Related-Response | {{content-request-method}} of this document|
 |`@authority`| Active | Request, Related-Response | {{content-request-authority}} of this document|
 |`@scheme`| Active | Request, Related-Response | {{content-request-scheme}} of this document|
