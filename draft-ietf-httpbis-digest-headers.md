@@ -281,10 +281,6 @@ that the recipient will ignore it.
 In this case,
 `Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
 
-When an incremental digest-algorithm
-is used, the sender and the receiver can dynamically compute a checksum
-while streaming the content.
-
 A non-comprehensive set of examples showing the impacts of
 representation metadata, payload transformations and HTTP methods on `Digest` is
 provided in {{examples-unsolicited}} and {{examples-solicited}}.
@@ -332,10 +328,6 @@ that the recipient will ignore it.
 In this case,
 `Content-Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
 
-When an incremental digest-algorithm
-is used, the sender and the receiver can dynamically compute the checksum
-while streaming the content.
-
 # Want-Digest and Want-Content-Digest Fields {#want-fields}
 
 Senders can indicate their integrity checksum preferences using the
@@ -350,7 +342,7 @@ the `Digest` field.
 on messages associated with the request URI and representation metadata, using
 the `Content-Digest` field.
 
-~~~
+~~~ abnf
    Want-Digest = 1#want-digest-value
    Want-Content-Digest = 1#want-digest-value
    want-digest-value = digest-algorithm [ ";" "q" "=" qvalue]
@@ -375,7 +367,7 @@ Want-Content-Digest: sha-512;q=0.3, sha-256;q=1, unixsum;q=0
 
 Digest-algorithm values are used to indicate a specific digest computation.
 
-~~~
+~~~ abnf
    digest-algorithm = token
 ~~~
 
@@ -1372,8 +1364,9 @@ _RFC Editor: Please remove this section before publication._
    [mid-stream trailer fields](https://github.com/httpwg/http-core/issues/313#issuecomment-584389706)
    are interesting, since this specification is a rewrite of [RFC3230] we do not
    think we should face that. As a first thought, nothing in this document
-   precludes future work that would find a use for mid-stream trailers, for
-   example an incremental digest-algorithm. A document defining such a
+   precludes future work that would find a use for mid-stream trailers
+   with specific algorithms.
+   A document defining such a
    digest-algorithm is best positioned to describe how it is used.
 
 
