@@ -57,7 +57,7 @@ author:
 normative:
     RFC2104:
     RFC3986:
-    RFC8491:
+    RFC8941:
     FIPS186-4:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
@@ -116,12 +116,12 @@ HTTP applications may be running in environments that do not provide complete ac
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:
 
-- Re-ordering of header fields with different header field names ({{MESSAGING}}, Section 3.2.2).
-- Combination of header fields with the same field name ({{MESSAGING}}, Section 3.2.2).
-- Removal of header fields listed in the `Connection` header field ({{MESSAGING}}, Section 6.1).
-- Addition of header fields that indicate control options ({{MESSAGING}}, Section 6.1).
-- Addition or removal of a transfer coding ({{MESSAGING}}, Section 5.7.2).
-- Addition of header fields such as `Via` ({{MESSAGING}}, Section 5.7.1) and `Forwarded` ({{RFC7239}}, Section 4).
+- Re-ordering of header fields with different header field names ({{Section 3.2.2 of MESSAGING}}).
+- Combination of header fields with the same field name ({{Section 3.2.2 of MESSAGING}}).
+- Removal of header fields listed in the `Connection` header field ({{Section 6.1 of MESSAGING}}).
+- Addition of header fields that indicate control options ({{Section 6.1 of MESSAGING}}).
+- Addition or removal of a transfer coding ({{Section 5.7.2 of MESSAGING}}).
+- Addition of header fields such as `Via` ({{Section 5.7.1 of MESSAGING}}) and `Forwarded` ({{Section 4 of RFC7239}}).
 
 ## Safe Transformations
 
@@ -134,8 +134,7 @@ Based on the definition of HTTP and the requirements described above, we can ide
 - Addition or removal of leading or trailing whitespace to a header field value.
 - Addition or removal of `obs-folds`.
 - Changes to the `request-target` and `Host` header field that when applied together do not
-  result in a change to the message's effective request URI, as defined in Section 5.5 of
-  {{MESSAGING}}.
+  result in a change to the message's effective request URI, as defined in {{Section 5.5 of MESSAGING}}.
 
 Additionally, all changes to components not covered by the signature are considered safe.
 
@@ -149,7 +148,7 @@ The terms "HTTP message", "HTTP request", "HTTP response",
 "gateway", "header field", "intermediary", `request-target`,
 "sender", and "recipient" are used as defined in {{MESSAGING}}.
 
-The term "method" is to be interpreted as defined in Section 4 of {{SEMANTICS}}.
+The term "method" is to be interpreted as defined in {{Section 4 of SEMANTICS}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures (which use asymmetric cryptography) and keyed MACs (which use symmetric cryptography). Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
@@ -215,7 +214,7 @@ In order to allow signers and verifiers to establish which components are covere
 
 Some HTTP message components can undergo transformations that change the bitwise value without altering meaning of the component's value (for example, the merging together of header fields with the same name).  Message component values must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
 
-Component identifiers are serialized using the production grammar defined by [RFC8941, Section 4](#RFC8941).
+Component identifiers are serialized using the production grammar defined by {{RFC8941, Section 4}}.
 The component identifier itself is an `sf-string` value and MAY define parameters which are included using the `parameters` rule.
 
 ~~~ abnf
@@ -245,7 +244,7 @@ The resulting string is the canonicalized component value.
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
 
 If value of the the HTTP field in question is a structured field ({{!RFC8941}}), the component identifier MAY include the `sf` parameter. If this
-parameter is included, the HTTP field value MUST be canonicalized using the rules specified in [Section 4 of RFC8941](#RFC8941). For example, this process
+parameter is included, the HTTP field value MUST be canonicalized using the rules specified in {{Section 4 of RFC8941}}. For example, this process
 will replace any optional internal whitespace with a single space character.
 
 The resulting string is used as the component value in {{http-header}}.
@@ -284,7 +283,7 @@ The following table shows example canonicalized values for header fields, given 
 
 An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` on the component identifier for the field. The value of this parameter is a the key being identified, without any parameters present on that key in the original dictionary.
 
-An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in [Section 4.1.2 of RFC8941](#RFC8941) on a Dictionary containing only that item.
+An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of RFC8941}} on a Dictionary containing only that item.
 
 Following are non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
 
@@ -346,10 +345,10 @@ Additional specialty component identifiers MAY be defined and registered in the 
 Specialty components can be applied in one or more of three targets:
 
 request:
-: Values derived from and results applied to an HTTP request message as described in Section 3.4 of {{SEMANTICS}}.
+: Values derived from and results applied to an HTTP request message as described in {{Section 3.4 of SEMANTICS.
 
 response:
-: Values derived from and results applied to an HTTP response message as described in Section 3.4 of {{SEMANTICS}}.
+: Values derived from and results applied to an HTTP response message as described in {{Section 3.4 of SEMANTICS}}.
 
 related-response:
 : Values derived from an HTTP request message and results applied to the HTTP response message that is responding to that specific request.
@@ -372,13 +371,13 @@ The signature parameters component value is the serialization of the signature p
 
 Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents).
 
-The signature parameters component value is serialized as a parameterized inner list using the rules in [Section 4 of RFC8941](#RFC8941) as follows:
+The signature parameters component value is serialized as a parameterized inner list using the rules in {{Section 4 of RFC8941}} as follows:
 
 1. Let the output be an empty string.
 2. Determine an order for the component identifiers of the covered components, not including the `@signature-params` component identifier itself. Once this order is chosen, it cannot be changed. This order MUST be the same order as used in creating the signature input ({{create-sig-input}}).
-3. Serialize the component identifiers of the covered components, including all parameters, as an ordered `inner-list` according to [Section 4.1.1.1 of RFC8941](#RFC8941) and append this to the output.
+3. Serialize the component identifiers of the covered components, including all parameters, as an ordered `inner-list` according to {{Section 4.1.1.1 of RFC8941}} and append this to the output.
 4. Determine an order for any signature parameters. Once this order is chosen, it cannot be changed.
-5. Append the parameters to the `inner-list` in the chosen order according to [Section 4.1.1.2 of RFC8941](#RFC8941),
+5. Append the parameters to the `inner-list` in the chosen order according to {{Section 4.1.1.2 of RFC8941}},
     skipping parameters that are not available or not used for this message signature.
 6. The output contains the signature parameters component value.
 
@@ -400,7 +399,7 @@ Note that an HTTP message could contain [multiple signatures](#signature-multipl
 
 ### Method {#content-request-method}
 
-The `@method` component identifier refers to the HTTP method of a request message. The component value of is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS}} Section 9.1, and conventionally standardized method names are uppercase US-ASCII.
+The `@method` component identifier refers to the HTTP method of a request message. The component value of is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
 If used, the `@method` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -420,7 +419,7 @@ If used in a related-response, the `@method` component identifier refers to the 
 
 ### Target URI {#content-target-uri}
 
-The `@target-uri` component identifier refers to the target URI of a request message. The component value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target as described in {{SEMANTICS}} Section 7.1.
+The `@target-uri` component identifier refers to the target URI of a request message. The component value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target as described in {{SEMANTICS, Section 7.1}}.
 If used, the `@target-uri` component identifier MUST occur only once in the covered components.
 
 For example, the following message sent over HTTPS:
@@ -440,8 +439,8 @@ If used in a related-response, the `@target-uri` component identifier refers to 
 
 ### Authority {#content-request-authority}
 
-The `@authority` component identifier refers to the authority component of the target URI of the HTTP request message, as defined in {{SEMANTICS}} Section 7.2. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
-The component value MUST be normalized according to the rules in {{SEMANTICS}} Section 4.2.3. Namely, the host name is normalized to lowercase and the default port is omitted.
+The `@authority` component identifier refers to the authority component of the target URI of the HTTP request message, as defined in {{SEMANTICS, Section 7.2}}. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
+The component value MUST be normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, the host name is normalized to lowercase and the default port is omitted.
 If used, the `@authority` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -461,7 +460,7 @@ If used in a related-response, the `@authority` component identifier refers to t
 
 ### Scheme {#content-request-scheme}
 
-The `@scheme` component identifier refers to the scheme of the target URL of the HTTP request message. The component value is the scheme as a string as defined in {{SEMANTICS}} Section 4.2.
+The `@scheme` component identifier refers to the scheme of the target URL of the HTTP request message. The component value is the scheme as a string as defined in {{SEMANTICS, Section 4.2}}.
 While the scheme itself is case-insensitive, it MUST be normalized to lowercase for
 inclusion in the signature input string.
 If used, the `@scheme` component identifier MUST occur only once in the covered components.
@@ -484,7 +483,7 @@ If used in a related-response, the `@scheme` component identifier refers to the 
 ### Request Target {#content-request-target}
 
 The `@request-target` component identifier refers to the full request target of the HTTP request message,
-as defined in {{SEMANTICS}} Section 7.1. The component value of the request target can take different forms,
+as defined in {{SEMANTICS, Section 7.1}}. The component value of the request target can take different forms,
 depending on the type of request, as described below.
 If used, the `@request-target` component identifier MUST occur only once in the covered components.
 
@@ -548,7 +547,7 @@ If used in a related-response, the `@request-target` component identifier refers
 
 ### Path {#content-request-path}
 
-The `@path` component identifier refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{SEMANTICS}} Section 4.2.3. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
+The `@path` component identifier refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
 If used, the `@path` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -568,7 +567,7 @@ If used in a related-response, the `@path` identifier refers to the associated c
 
 ### Query {#content-request-query}
 
-The `@query` component identifier refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{SEMANTICS}} Section 4.2.3. Namely, percent-encoded octets are decoded.
+The `@query` component identifier refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, percent-encoded octets are decoded.
 If used, the `@query` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -601,13 +600,13 @@ If used in a related-response, the `@query` component identifier refers to the a
 
 ### Query Parameters {#content-request-query-params}
 
-If a request target URI uses HTML form parameters in the query string as defined in {{HTMLURL}} Section 5,
-the `@query-params` component identifier allows addressing of individual query parameters. The query parameters MUST be parsed according to {{HTMLURL}} Section 5.1, resulting in a list of (`nameString`, `valueString`) tuples.
+If a request target URI uses HTML form parameters in the query string as defined in [HTMLURL, Section 5](#HTMLURL),
+the `@query-params` component identifier allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
 The REQUIRED `name` parameter of each input identifier contains the `nameString` of a single query parameter.
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
 
-The component value of a single named parameter is the the `valueString` of the named query parameter defined by {{HTMLURL}} Section 5.1, which is the value after percent-encoded octets are decoded.
+The component value of a single named parameter is the the `valueString` of the named query parameter defined by [HTMLURL, Section 5.1](#HTMLURL), which is the value after percent-encoded octets are decoded.
 Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
 Named query parameters with an empty `valueString` are included with an empty string as the component value.
 
@@ -633,7 +632,7 @@ If used in a related-response, the `@query-params` component identifier refers t
 
 ### Status Code {#content-status-code}
 
-The `@status` component identifier refers to the three-digit numeric HTTP status code of a response message as defined in {{SEMANTICS}} Section 15. The component value is the serialized three-digit integer of the HTTP response code, with no descriptive text.
+The `@status` component identifier refers to the three-digit numeric HTTP status code of a response message as defined in {{SEMANTICS, Section 15}}. The component value is the serialized three-digit integer of the HTTP response code, with no descriptive text.
 If used, the `@status` component identifier MUST occur only once in the covered components.
 
 For example, the following response message:
@@ -1428,7 +1427,7 @@ Another example of a downgrade attack occurs when an asymmetric algorithm is exp
 
 ## Parsing Structured Field Values {#security-structured}
 
-Several parts of this specification rely on the parsing of structured field values {{RFC8491}}. In particular, [normalization of HTTP structured field values](#http-header-structured), [referencing members of a dictionary structured field](#http-header-dictionary), and processing the `@signature-input` value when [verifying a signature](#verify). While structured field values are designed to be relatively simple to parse, a naive or broken implementation of such a parser could lead to subtle attack surfaces being exposed in the implementation.
+Several parts of this specification rely on the parsing of structured field values {{RFC8941}}. In particular, [normalization of HTTP structured field values](#http-header-structured), [referencing members of a dictionary structured field](#http-header-dictionary), and processing the `@signature-input` value when [verifying a signature](#verify). While structured field values are designed to be relatively simple to parse, a naive or broken implementation of such a parser could lead to subtle attack surfaces being exposed in the implementation.
 
 For example, if a buggy parser of the `@signature-input` value does not enforce proper closing of quotes around string values within the list of component identifiers, an attacker could take advantage of this and inject additional content into the signature input string through manipulating the `Signature-Input` field value on a message.
 
