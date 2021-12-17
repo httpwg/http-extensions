@@ -346,10 +346,10 @@ Additional specialty component identifiers MAY be defined and registered in the 
 Specialty components can be applied in one or more of three targets:
 
 request:
-: Values derived from and results applied to an HTTP request message as described in {{section 3.4 of SEMANTICS}}.
+: Values derived from and results applied to an HTTP request message as described in Section 3.4 of {{SEMANTICS}}.
 
 response:
-: Values derived from and results applied to an HTTP response message as described in {{section 3.4 of SEMANTICS}}.
+: Values derived from and results applied to an HTTP response message as described in Section 3.4 of {{SEMANTICS}}.
 
 related-response:
 : Values derived from an HTTP request message and results applied to the HTTP response message that is responding to that specific request.
