@@ -601,7 +601,7 @@ If used in a related-response, the `@query` component identifier refers to the a
 
 If a request target URI uses HTML form parameters in the query string as defined in [HTMLURL, Section 5](#HTMLURL),
 the `@query-params` component identifier allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
-The REQUIRED `name` parameter of each input identifier contains the `nameString` of a single query parameter.
+The REQUIRED `name` parameter of each input identifier contains the `nameString` of a single query parameter as an `sf-string` value.
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
 
