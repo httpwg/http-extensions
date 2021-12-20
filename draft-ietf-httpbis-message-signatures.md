@@ -1935,6 +1935,8 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+  - -08
+
   - -07
      * Added security and privacy considerations.
      * Added pointers to algorithm values from definition sections.
