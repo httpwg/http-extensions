@@ -265,25 +265,26 @@ Cache-Control:    must-revalidate
 X-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
-The following table shows example canonicalized values for header fields, given that message:
+The following example shows canonicalized values for these example header fields, presented using the signature input string format discussed in {{create-sig-input}}:
 
-|Header Field|Canonicalized Value|
-|--- |--- |
-|`"cache-control"`|max-age=60, must-revalidate|
-|`"date"`|Tue, 07 Jun 2014 20:51:35 GMT|
-|`"host"`|www.example.com|
-|`"x-empty-header"`||
-|`"x-obs-fold-header"`|Obsolete line folding.|
-|`"x-ows-header"`|Leading and trailing whitespace.|
-|`"x-dictionary"`|a=1,    b=2;x=1;y=2,   c=(a   b   c)|
-|`"x-dictionary";sf`|a=1, b=2;x=1;y=2, c=(a b c)|
-{: title="Non-normative examples of header field canonicalization."}
+~~~
+"cache-control": max-age=60, must-revalidate|
+"date": Tue, 07 Jun 2014 20:51:35 GMT|
+"host": www.example.com|
+"x-empty-header":
+"x-obs-fold-header": Obsolete line folding.
+"x-ows-header":Leading and trailing whitespace.
+"x-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
+"x-dictionary";sf: a=1, b=2;x=1;y=2, c=(a b c)
+~~~
 
 ### Dictionary Structured Field Members {#http-header-dictionary}
 
-An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` on the component identifier for the field. The value of this parameter is a the key being identified, without any parameters present on that key in the original dictionary.
+An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` to indicate the member key as an `sf-string` value.
 
 An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of RFC8941}} on a Dictionary containing only that item.
+
+Each parameterized key for a given field MUST NOT appear more than once in the signature input. Parameterized keys MAY appear in any order.
 
 Following are non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
 
@@ -291,15 +292,13 @@ Following are non-normative examples of canonicalized values for Dictionary Stru
 X-Dictionary:  a=1, b=2;x=1;y=2, c=(a b c)
 ~~~
 
-The following table shows example canonicalized values for different component identifiers, given that field:
+The following example shows canonicalized values for different component identifiers of this field, presented using the signature input string format discussed in {{create-sig-input}}:
 
-|Component Identifier|Component Value|
-|--- |--- |
-|`"x-dictionary";key=a`|1|
-|`"x-dictionary";key=b`|2;x=1;y=2|
-|`"x-dictionary";key=c`|(a, b, c)|
-{: title="Non-normative examples of Dictionary member canonicalization."}
-
+~~~
+"x-dictionary";key="a": 1
+"x-dictionary";key="b": 2;x=1;y=2
+"x-dictionary";key="c": (a, b, c)
+~~~
 
 ## Specialty Components {#specialty-content}
 
