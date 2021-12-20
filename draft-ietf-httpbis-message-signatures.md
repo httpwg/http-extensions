@@ -268,12 +268,12 @@ X-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 The following example shows canonicalized values for these example header fields, presented using the signature input string format discussed in {{create-sig-input}}:
 
 ~~~
-"cache-control": max-age=60, must-revalidate|
-"date": Tue, 07 Jun 2014 20:51:35 GMT|
-"host": www.example.com|
+"cache-control": max-age=60, must-revalidate
+"date": Tue, 07 Jun 2014 20:51:35 GMT
+"host": www.example.com
 "x-empty-header":
 "x-obs-fold-header": Obsolete line folding.
-"x-ows-header":Leading and trailing whitespace.
+"x-ows-header": Leading and trailing whitespace.
 "x-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 "x-dictionary";sf: a=1, b=2;x=1;y=2, c=(a b c)
 ~~~
@@ -1936,6 +1936,7 @@ Jeffrey Yasskin.
 
 - draft-ietf-httpbis-message-signatures
   - -08
+     * Editorial fixes.
 
   - -07
      * Added security and privacy considerations.
