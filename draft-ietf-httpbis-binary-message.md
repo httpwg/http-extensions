@@ -82,7 +82,7 @@ Two modes for encoding are described:
 
 # Conventions and Definitions
 
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
 This document uses terminology from HTTP ({{HTTP}}) and notation from QUIC
 ({{Section 1.3 of QUIC}}).
