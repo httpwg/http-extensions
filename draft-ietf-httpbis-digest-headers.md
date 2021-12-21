@@ -201,7 +201,7 @@ The algorithm table has been updated to reflect the current state of the art,
 
 
 ## Notational Conventions
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405] along with the "#rule" extension defined in {{Section 5.6.1 of
