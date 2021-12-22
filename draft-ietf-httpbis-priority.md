@@ -426,9 +426,8 @@ where to send registration requests.
 # The Priority HTTP Header Field {#header-field}
 
 The Priority HTTP header field carries priority parameters (see {{parameters}}).
-It can appear in requests and responses. It is an end-to-end signal of the
-requested response
-priority from the client or the response priority from the server.
+It can appear in requests and responses. It is an end-to-end signal that
+indicates the endpoint's view of how HTTP responses should be prioritized.
 {{merging}} describes how intermediaries can combine the priority information
 sent from clients and servers. Clients cannot interpret the appearance or
 omission of a Priority response header field as acknowledgement that any
