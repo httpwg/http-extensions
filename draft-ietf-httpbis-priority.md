@@ -426,8 +426,8 @@ where to send registration requests.
 # The Priority HTTP Header Field {#header-field}
 
 The Priority HTTP header field carries priority parameters (see {{parameters}}).
-It can appear in requests and responses. It is an end-to-end signal of the
-request priority from the client or the response priority from the server.
+It can appear in requests and responses. It is an end-to-end signal that
+indicates the endpoint's view of how HTTP responses should be prioritized.
 {{merging}} describes how intermediaries can combine the priority information
 sent from clients and servers. Clients cannot interpret the appearance or
 omission of a Priority response header field as acknowledgement that any
@@ -635,7 +635,7 @@ An origin can use the Priority response header field to indicate its view on how
 an HTTP response should be prioritized. An intermediary that forwards an HTTP
 response can use the priority parameters found in the Priority response header
 field, in combination with the client Priority request header field, as input to
-its prioritization process. No guidance is provided for merging priorities, this
+its prioritization process. No guidance is provided for merging priorities; this
 is left as an implementation decision.
 
 Absence of a priority parameter in an HTTP response indicates the server's
@@ -710,7 +710,7 @@ amongst them. Payload of incremental responses are used in parts, or chunks, as
 they are received. A client might benefit more from receiving a portion of all
 these resources rather than the entirety of a single resource. How large a
 portion of the resource is needed to be useful in improving performance varies.
-Some resource types place critical elements early, others can use information
+Some resource types place critical elements early; others can use information
 progressively. This scheme provides no explicit mandate about how a server
 should use size, type or any other input to decide how to prioritize.
 
@@ -825,8 +825,8 @@ those coming from others.
 
 It is sometimes beneficial for the server running behind an intermediary to obey
 Priority header field values. As an example, a resource-constrained
-server might defer the transmission of software update files that would have the
-background urgency being associated. However, in the worst case, the asymmetry
+server might defer the transmission of software update files that have the
+background urgency. However, in the worst case, the asymmetry
 between the priority declared by multiple clients might cause responses going to
 one user agent to be delayed totally after those going to another.
 
@@ -877,7 +877,7 @@ In contrast to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
 the Priority header field is defined as end-to-end.
 
 The way that a client processes a response is a property associated with the
-client generating that request.  Not that of an intermediary.  Therefore, it is
+client generating that request, not that of an intermediary.  Therefore, it is
 an end-to-end property.  How these end-to-end properties carried by the Priority
 header field affect the prioritization between the responses that share a
 connection is a hop-by-hop issue.
