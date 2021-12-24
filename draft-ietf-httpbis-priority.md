@@ -120,8 +120,8 @@ defines the Priority HTTP header field, a protocol-version-independent and
 end-to-end priority signal. Clients can send this header field to signal their
 view of how responses should be prioritized. Similarly, servers behind an
 intermediary can use it to signal priority to the intermediary. After sending a
-request, a client can change the priority of the response (see
-{{reprioritization}}) using HTTP-version-specific frames defined in
+request, a client can change their view of response priority (see
+{{reprioritization}}) by sending HTTP-version-specific frames defined in
 {{h2-update-frame}} and {{h3-update-frame}}.
 
 Header field and frame priority signals are input to a server's response
@@ -269,9 +269,10 @@ future extensions. Each key-value pair represents a priority parameter.
 
 The Priority HTTP header field ({{header-field}}) is an end-to-end way to
 transmit this set of priority parameters when a request or a response is issued.
-In order to reprioritize a request ({{reprioritization}}), HTTP-version-specific
-PRIORITY_UPDATE frames ({{h2-update-frame}} and {{h3-update-frame}}) are used by
-clients to transmit the same information on a single hop.
+After sending a request, a client can change their view of response priority
+({{reprioritization}}) by sending HTTP-version-specific PRIORITY_UPDATE frames
+defined in {{h2-update-frame}} and {{h3-update-frame}}. Frames transmit priority
+parameters on a single hop only.
 
 Intermediaries can consume and produce priority signals in a PRIORITY_UPDATE
 frame or Priority header field. Sending a PRIORITY_UPDATE frame preserves the
