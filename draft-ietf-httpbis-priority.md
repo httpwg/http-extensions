@@ -97,7 +97,7 @@ client.
 A server that operates in ignorance of how clients issue requests and
 consume responses can cause suboptimal client application performance. Priority
 signals allow clients to communicate their view of request
-priority. Servers have their own needs that are independent from client needs,
+priority. Servers have their own needs that are independent of client needs,
 so they often combine priority signals with other available information in order
 to inform scheduling of response data.
 
@@ -105,7 +105,7 @@ RFC 7540 {{?RFC7540}} stream priority allowed a client to send a series of
 priority signals that communicate to the server a "priority tree"; the structure
 of this tree represents the client's preferred relative ordering and weighted
 distribution of the bandwidth among HTTP responses. Servers could use these
-priority signals as input into prioritization decision making.
+priority signals as input into prioritization decision-making.
 
 The design and implementation of RFC 7540 stream priority was observed to have
 shortcomings, explained in {{motivation}}. HTTP/2
@@ -471,7 +471,7 @@ identifier is either the Stream ID or Push ID. Unlike the Priority header field,
 the PRIORITY_UPDATE frame is a hop-by-hop signal.
 
 PRIORITY_UPDATE frames are sent by clients on the control stream, allowing them
-to be sent independent from the stream that carries the response. This means
+to be sent independent of the stream that carries the response. This means
 they can be used to reprioritize a response or a push stream; or signal the
 initial priority of a response instead of the Priority header field.
 
@@ -707,7 +707,7 @@ the order in which clients make requests. Doing so ensures that clients can use
 request ordering to influence response order.
 
 Incremental responses of the same urgency SHOULD be served by sharing bandwidth
-amongst them. Payload of incremental responses are used in parts, or chunks, as
+among them. Payload of incremental responses are used in parts, or chunks, as
 they are received. A client might benefit more from receiving a portion of all
 these resources rather than the entirety of a single resource. How large a
 portion of the resource is needed to be useful in improving performance varies.
@@ -718,7 +718,7 @@ should use size, type or any other input to decide how to prioritize.
 There can be scenarios where a server will need to schedule multiple incremental
 and non-incremental responses at the same urgency level. Strictly abiding the
 scheduling guidance based on urgency and request generation order might lead
-to sub-optimal results at the client, as early non-incremental responses might
+to suboptimal results at the client, as early non-incremental responses might
 prevent serving of incremental responses issued later. The following are
 examples of such challenges.
 
@@ -902,7 +902,7 @@ priority parameters defined in {{parameters}}.
 
 # IANA Considerations
 
-This specification registers the following entry in the the Hypertext Transfer
+This specification registers the following entry in the Hypertext Transfer
 Protocol (HTTP) Field Name Registry established by {{HTTP}}:
 
 Field name:
@@ -971,7 +971,7 @@ Upon publication, please create the HTTP Priority Parameters registry at
 # Acknowledgements
 
 Roy Fielding presented the idea of using a header field for representing
-priorities in <http://tools.ietf.org/agenda/83/slides/slides-83-httpbis-5.pdf>.
+priorities in <https://www.ietf.org/proceedings/83/slides/slides-83-httpbis-5.pdf>.
 In <https://github.com/pmeenan/http3-prioritization-proposal>, Patrick Meenan
 advocated for representing the priorities using a tuple of urgency and
 concurrency. The ability to disable HTTP/2 prioritization is inspired by
