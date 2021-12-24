@@ -616,7 +616,7 @@ push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with a Push I
 that is greater than the maximum Push ID or which has not yet been promised, this
 MUST be treated as a connection error of type H3_ID_ERROR.
 
-PRIORITY_UPDATE frames of either type are only sent by clients. If a client
+Servers MUST NOT send PRIORITY_UPDATE frames of either type. If a client
 receives a PRIORITY_UPDATE frame, this MUST be treated as a connection error of
 type H3_FRAME_UNEXPECTED.
 
