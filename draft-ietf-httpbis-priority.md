@@ -562,8 +562,9 @@ respond with a connection error of type PROTOCOL_ERROR.
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
 
-If a client receives a PRIORITY_UPDATE frame, it MUST respond with a connection
-error of type PROTOCOL_ERROR.
+PRIORITY_UPDATE frames are only sent by clients. If a client receives a
+PRIORITY_UPDATE frame, it MUST respond with a connection error of type
+PROTOCOL_ERROR.
 
 ## HTTP/3 PRIORITY_UPDATE Frame {#h3-update-frame}
 
