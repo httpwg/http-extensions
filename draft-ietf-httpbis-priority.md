@@ -562,7 +562,7 @@ respond with a connection error of type PROTOCOL_ERROR.
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
 
-PRIORITY_UPDATE frames are only sent by clients. If a client receives a
+Servers MUST NOT send PRIORITY_UPDATE frames. If a client receives a
 PRIORITY_UPDATE frame, it MUST respond with a connection error of type
 PROTOCOL_ERROR.
 
