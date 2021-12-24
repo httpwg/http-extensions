@@ -510,7 +510,7 @@ type PROTOCOL_ERROR.
 ~~~ drawing
 HTTP/2 PRIORITY_UPDATE Frame {
   Length (24),
-  Type (i) = 10,
+  Type (8) = 0x10,
 
   Unused Flags (8).
 
