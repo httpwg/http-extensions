@@ -128,7 +128,7 @@ If a targeted field in a given response is empty, or a parsing error is encounte
 
 ## Cache Behavior
 
-A cache that implement this specification maintains a _target list_ - an ordered list of the targeted field names that it uses for caching policy, with the order reflecting priority from most applicable to least. The target list might be fixed, user-configurable, or generated per request, depending upon the implementation.
+A cache that implements this specification maintains a _target list_ - an ordered list of the targeted field names that it uses for caching policy, with the order reflecting priority from most applicable to least. The target list might be fixed, user-configurable, or generated per request, depending upon the implementation.
 
 For example, a CDN cache might support both CDN-Cache-Control and a header specific to that CDN, ExampleCDN-Cache-Control, with the latter overriding the former. Its target list would be:
 
