@@ -109,7 +109,7 @@ is a targeted field that applies to Content Delivery Networks (CDNs), as defined
 
 ## Syntax
 
-Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache response directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry. Note that while targeted fields often have the same syntax as Cache-Control fields, differences in error handling mean that using a Cache-Control parser rather than a Structured Fields parser can introduce interoperability issues.
+Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache response directive from the [Hypertext Transfer Protocol (HTTP) Cache Directive Registry](https://www.iana.org/assignments/http-cache-directives/). Note that while targeted fields often have the same syntax as Cache-Control fields, differences in error handling mean that using a Cache-Control parser rather than a Structured Fields parser can introduce interoperability issues.
 
 Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. {{Section 5.2 of HTTP-CACHING}} defines cache directive values to be either absent, a quoted-string, or a token.
 
