@@ -121,7 +121,7 @@ Finished messages.
 
 ## Encoding
 
-The header in this document encodes certificates as Structured Field Byte
+The headers in this document encode certificates as Structured Field Byte
 Sequences ({{Section 3.3.5 of RFC8941}}).
 
 The binary sequence is always a DER {{!ITU.X690.1994}} PKIX certificate. The
@@ -154,6 +154,40 @@ The `Client-Cert` header field is only for use in HTTP requests and MUST NOT be
 used in HTTP responses.  It is a single HTTP header field value as defined in
 Section 3.2 of {{?RFC7230}}, which MUST NOT have a list of values or occur
 multiple times in a request.
+
+## Client-Cert-Chain HTTP Header Field {#chain-header}
+
+In the context of a TLS terminating reverse proxy (TTRP) deployment, the proxy
+MAY make the certificate chain used for validation of the end-entity certificate
+available to the backend application with the Client-Cert-Chain HTTP header
+field. This field contains certificates used by the proxy to validate the
+certificate used by the client in the TLS handshake. These certificates might or
+might not have been provided by the client during the TLS handshake.
+
+Client-Cert-Chain is a List Structured Header {{!RFC8941}}.  Each item in the
+list MUST be a Byte Sequence ({{Section 3.3.5 of RFC8941}}) encoded as described
+in {{encoding}}.
+
+The header's ABNF is:
+
+~~~
+ Client-Cert-Chain = sf-list
+~~~
+
+The `Client-Cert-Chain` header field is only for use in HTTP requests and MUST
+NOT be used in HTTP responses.  It MAY have a list of values or occur multiple
+times in a request.  For header compression purposes, it might be advantageous
+to split lists into multiple instances.
+
+The first certificate in the list SHOULD directly certify the end-entity
+certificate provided in the `Client-Cert` header; each following certificate
+SHOULD directly certify the one immediately preceding it.  Because certificate
+validation requires that trust anchors be distributed independently, a
+certificate that specifies a trust anchor MAY be omitted from the chain,
+provided that the server is known to possess any omitted certificates.
+
+However, for maximum compatibility, servers SHOULD be prepared to handle
+potentially extraneous certificates and arbitrary orderings.
 
 ## Processing Rules
 
