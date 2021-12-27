@@ -119,6 +119,21 @@ Finished messages.
 
 # HTTP Header Field and Processing Rules
 
+## Encoding
+
+The header in this document encodes certificates as Structured Field Byte
+Sequences ({{Section 3.3.5 of RFC8941}}).
+
+The binary sequence is always a DER {{!ITU.X690.1994}} PKIX certificate. The
+encoded value MUST NOT include any line breaks, whitespace, or other additional
+characters. A binary sequence which cannot be successfully parsed as a
+certificate MUST be ignored.
+
+Note that DER certificates are often stored in a format which is already
+compatible with {{!RFC8941}}; if so, it will be sufficient to replace
+`---(BEGIN|END) CERTIFICATE---` with `:` and remove line breaks in order
+to generate an appropriate item.
+
 ## Client-Cert HTTP Header Field {#header}
 
 In the context of a TLS terminating reverse proxy (TTRP) deployment, the proxy
@@ -133,15 +148,7 @@ Byte Sequence ({{Section 3.3.5 of RFC8941}}).  Its ABNF is:
  Client-Cert = sf-binary
 ~~~
 
-The binary sequence is the DER {{!ITU.X690.1994}} PKIX certificate. The encoded
-value MUST NOT include any line breaks, whitespace, or other additional
-characters. A binary sequence which cannot be successfully parsed as a
-certificate MUST be ignored.
-
-Note that DER certificates are often stored in a format which is already
-compatible with {{!RFC8941}}; if so, it will be sufficient to replace
-`---(BEGIN|END) CERTIFICATE---` with `:` and remove line breaks in order
-to generate an appropriate header value.
+The value of the header is encoded as described in {{encoding}}.
 
 The `Client-Cert` header field is only for use in HTTP requests and MUST NOT be
 used in HTTP responses.  It is a single HTTP header field value as defined in
