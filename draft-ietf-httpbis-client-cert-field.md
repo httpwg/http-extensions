@@ -138,6 +138,11 @@ value MUST NOT include any line breaks, whitespace, or other additional
 characters. A binary sequence which cannot be successfully parsed as a
 certificate MUST be ignored.
 
+Note that DER certificates are often stored in a format which is already
+compatible with {{!RFC8941}}; if so, it will be sufficient to replace
+`---(BEGIN|END) CERTIFICATE---` with `:` and remove line breaks in order
+to generate an appropriate header value.
+
 The `Client-Cert` header field is only for use in HTTP requests and MUST NOT be
 used in HTTP responses.  It is a single HTTP header field value as defined in
 Section 3.2 of {{?RFC7230}}, which MUST NOT have a list of values or occur
