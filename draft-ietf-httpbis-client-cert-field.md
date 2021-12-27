@@ -204,16 +204,19 @@ client certificate per its policy and trusted certificate authorities.  Each
 HTTP request on the underlying TLS connection are dispatched to the origin
 server with the following modifications:
 
-1. The client certificate is be placed in the `Client-Cert` header field of the
-   dispatched request as defined in {{header}}.
-1. Any occurrence of the `Client-Cert` header field in the original incoming
-   request MUST be removed or overwritten before forwarding the request. An
-   incoming request that has a `Client-Cert` header field MAY be rejected with
-   an HTTP 400 response.
+1. The client certificate is placed in the `Client-Cert` header field of the
+   dispatched request, as described in {{header}}.
+2. If so configured, the validation chain of the client certificate is placed in
+   the `Client-Cert-Chain` header field of the request, as described in
+   {{chain-header}}.
+3. Any occurrence of the `Client-Cert` or `Client-Cert-Chain` header fields in
+   the original incoming request MUST be removed or overwritten before
+   forwarding the request. An incoming request that has a `Client-Cert` or
+   `Client-Cert-Chain` header field MAY be rejected with an HTTP 400 response.
 
 Requests made over a TLS connection where the use of client certificate
 authentication was not negotiated MUST be sanitized by removing any and all
-occurrences `Client-Cert` header field prior to dispatching the request to the
+occurrences of the `Client-Cert` header field prior to dispatching the request to the
 backend server.
 
 Backend origin servers may then use the `Client-Cert` header field of the
@@ -221,13 +224,14 @@ request to determine if the connection from the client to the TTRP was
 mutually-authenticated and, if so, the certificate thereby presented by the
 client.
 
-Forward proxies and other intermediaries MUST NOT add the `Client-Cert` header
-field to requests, or modify an existing `Client-Cert` header field. Similarly,
-clients MUST NOT employ the `Client-Cert` header field in requests.
+Forward proxies and other intermediaries MUST NOT add the `Client-Cert` or
+`Client-Cert-Chain` header fields to requests, or modify an existing
+`Client-Cert` or `Client-Cert-Chain` header field. Similarly, clients MUST NOT
+employ the `Client-Cert` or `Client-Cert-Chain` header field in requests.
 
-A server that receives a request with a `Client-Cert` header field value that it
-considers to be too large can respond with an HTTP 431 status code per Section 5
-of {{?RFC6585}}.
+A server that receives a request with a `Client-Cert` or `Client-Cert-Chain`
+header field value that it considers to be too large can respond with an HTTP
+431 status code per Section 5 of {{?RFC6585}}.
 
 
 # Security Considerations {#sec}
@@ -338,7 +342,34 @@ Client-Cert: :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKDBJ
 ~~~
 {: #example-header title="Header Field in HTTP Request to Origin Server"}
 
+If the proxy were configured to also include the certificate chain, it would
+also include this header:
 
+~~~
+Client-Cert-Chain: :MIIB5jCCAYugAwIBAgIBFjAKBggqhkjOPQQDAjBWMQsw
+ CQYDVQQGEwJVUzEbMBkGA1UECgwSTGV0J3MgQXV0aGVudGljYXRlMSowKAYDVQQ
+ DDCFMZXQncyBBdXRoZW50aWNhdGUgUm9vdCBBdXRob3JpdHkwHhcNMjAwMTE0Mj
+ EzMjMwWhcNMzAwMTExMjEzMjMwWjA6MRswGQYDVQQKDBJMZXQncyBBdXRoZW50a
+ WNhdGUxGzAZBgNVBAMMEkxBIEludGVybWVkaWF0ZSBDQTBZMBMGByqGSM49AgEG
+ CCqGSM49AwEHA0IABJf+aA54RC5pyLAR5yfXVYmNpgd+CGUTDp2KOGhc0gK91zx
+ hHesEYkdXkpS2UN8Kati+yHtWCV3kkhCngGyv7RqjZjBkMB0GA1UdDgQWBBRm3W
+ jLa38lbEYCuiCPct0ZaSED2DAfBgNVHSMEGDAWgBTEA2Q6eecKu9g9yb5glbkhh
+ VINGDASBgNVHRMBAf8ECDAGAQH/AgEAMA4GA1UdDwEB/wQEAwIBhjAKBggqhkjO
+ PQQDAgNJADBGAiEA5pLvaFwRRkxomIAtDIwg9D7gC1xzxBl4r28EzmSO1pcCIQC
+ JUShpSXO9HDIQMUgH69fNDEMHXD3RRX5gP7kuu2KGMg==:, :MIICBjCCAaygAw
+ IBAgIJAKS0yiqKtlhoMAoGCCqGSM49BAMCMFYxCzAJBgNVBAYTAlVTMRswGQYDV
+ QQKDBJMZXQncyBBdXRoZW50aWNhdGUxKjAoBgNVBAMMIUxldCdzIEF1dGhlbnRp
+ Y2F0ZSBSb290IEF1dGhvcml0eTAeFw0yMDAxMTQyMTI1NDVaFw00MDAxMDkyMTI
+ 1NDVaMFYxCzAJBgNVBAYTAlVTMRswGQYDVQQKDBJMZXQncyBBdXRoZW50aWNhdG
+ UxKjAoBgNVBAMMIUxldCdzIEF1dGhlbnRpY2F0ZSBSb290IEF1dGhvcml0eTBZM
+ BMGByqGSM49AgEGCCqGSM49AwEHA0IABFoaHU+Z5bPKmGzlYXtCf+E6HYj62fOR
+ aHDOrt+yyh3H/rTcs7ynFfGn+gyFsrSP3Ez88rajv+U2NfD0o0uZ4PmjYzBhMB0
+ GA1UdDgQWBBTEA2Q6eecKu9g9yb5glbkhhVINGDAfBgNVHSMEGDAWgBTEA2Q6ee
+ cKu9g9yb5glbkhhVINGDAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIBh
+ jAKBggqhkjOPQQDAgNIADBFAiEAmAeg1ycKHriqHnaD4M/UDBpQRpkmdcRFYGMg
+ 1Qyrkx4CIB4ivz3wQcQkGhcsUZ1SOImd/lq1Q0FLf09rGfLQPWDc:
+~~~
+{: #example-chain-header title="Certificate Chain in HTTP Request to Origin Server"}
 
 
 
