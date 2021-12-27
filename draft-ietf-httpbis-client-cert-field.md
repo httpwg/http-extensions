@@ -119,37 +119,29 @@ Finished messages.
 
 # HTTP Header Field and Processing Rules
 
-## Encoding
-
-The field-values of the HTTP header field defined herein utilize the following
-encoded form.
-
-A certificate is represented in text as an `EncodedCertificate`, which is the
-base64-encoded (Section 4 of {{!RFC4648}}) DER {{!ITU.X690.1994}} PKIX certificate. The
-encoded value MUST NOT include any line breaks, whitespace, or other additional
-characters. ABNF {{?RFC5234}} syntax for `EncodedCertificate` is shown in the
-figure below.
-
-~~~
- EncodedCertificate = 1*( DIGIT / ALPHA / "+" / "/" ) 0*2"="
-
- DIGIT = <Defined in Section B.1 of [RFC5234]>  ; A-Z / a-z
- ALPHA = <Defined in Section B.1 of [RFC5234]>  ; 0-9
-~~~
-
 ## Client-Cert HTTP Header Field {#header}
 
-In the context of a TLS terminating reverse proxy (TTRP) deployment, the TTRP
+In the context of a TLS terminating reverse proxy (TTRP) deployment, the proxy
 makes the TLS client certificate available to the backend application with the
-following header field.
+Client-Cert HTTP header field. This field contains the end-entity certificate
+used by the client in the TLS handshake.
 
-Client-Cert:
-: The end-entity client certificate as an `EncodedCertificate` value.
+Client-Cert is an Item Structured Header {{!RFC8941}}.  Its value MUST be a
+Byte Sequence ({{Section 3.3.5 of RFC8941}}).  Its ABNF is:
 
-The `Client-Cert` header field defined herein is only for use in HTTP requests
-and MUST NOT be used in HTTP responses.  It is a single HTTP header field value
-as defined in Section 3.2 of {{?RFC7230}}, which MUST NOT have a list of values or
-occur multiple times in a request.
+~~~
+ Client-Cert = sf-binary
+~~~
+
+The binary sequence is the DER {{!ITU.X690.1994}} PKIX certificate. The encoded
+value MUST NOT include any line breaks, whitespace, or other additional
+characters. A binary sequence which cannot be successfully parsed as a
+certificate MUST be ignored.
+
+The `Client-Cert` header field is only for use in HTTP requests and MUST NOT be
+used in HTTP responses.  It is a single HTTP header field value as defined in
+Section 3.2 of {{?RFC7230}}, which MUST NOT have a list of values or occur
+multiple times in a request.
 
 ## Processing Rules
 
@@ -288,15 +280,15 @@ YGMg1Qyrkx4CIB4ivz3wQcQkGhcsUZ1SOImd/lq1Q0FLf09rGfLQPWDc
 {: #example-chain title="Certificate Chain (with client certificate first)"}
 
 ~~~
-Client-Cert: MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKDBJM
- ZXQncyBBdXRoZW50aWNhdGUxGzAZBgNVBAMMEkxBIEludGVybWVkaWF0ZSBDQTAeFw0y
- MDAxMTQyMjU1MzNaFw0yMTAxMjMyMjU1MzNaMA0xCzAJBgNVBAMMAkJDMFkwEwYHKoZI
- zj0CAQYIKoZIzj0DAQcDQgAE8YnXXfaUgmnMtOXU/IncWalRhebrXmckC8vdgJ1p5Be5
- F/3YC8OthxM4+k1M6aEAEFcGzkJiNy6J84y7uzo9M6NyMHAwCQYDVR0TBAIwADAfBgNV
- HSMEGDAWgBRm3WjLa38lbEYCuiCPct0ZaSED2DAOBgNVHQ8BAf8EBAMCBsAwEwYDVR0l
- BAwwCgYIKwYBBQUHAwIwHQYDVR0RAQH/BBMwEYEPYmRjQGV4YW1wbGUuY29tMAoGCCqG
- SM49BAMCA0gAMEUCIBHda/r1vaL6G3VliL4/Di6YK0Q6bMjeSkC3dFCOOB8TAiEAx/kH
- SB4urmiZ0NX5r5XarmPk0wmuydBVoU4hBVZ1yhk=
+Client-Cert: :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKDBJ
+ MZXQncyBBdXRoZW50aWNhdGUxGzAZBgNVBAMMEkxBIEludGVybWVkaWF0ZSBDQTAeFw0
+ yMDAxMTQyMjU1MzNaFw0yMTAxMjMyMjU1MzNaMA0xCzAJBgNVBAMMAkJDMFkwEwYHKoZ
+ Izj0CAQYIKoZIzj0DAQcDQgAE8YnXXfaUgmnMtOXU/IncWalRhebrXmckC8vdgJ1p5Be
+ 5F/3YC8OthxM4+k1M6aEAEFcGzkJiNy6J84y7uzo9M6NyMHAwCQYDVR0TBAIwADAfBgN
+ VHSMEGDAWgBRm3WjLa38lbEYCuiCPct0ZaSED2DAOBgNVHQ8BAf8EBAMCBsAwEwYDVR0
+ lBAwwCgYIKwYBBQUHAwIwHQYDVR0RAQH/BBMwEYEPYmRjQGV4YW1wbGUuY29tMAoGCCq
+ GSM49BAMCA0gAMEUCIBHda/r1vaL6G3VliL4/Di6YK0Q6bMjeSkC3dFCOOB8TAiEAx/k
+ HSB4urmiZ0NX5r5XarmPk0wmuydBVoU4hBVZ1yhk=:
 ~~~
 {: #example-header title="Header Field in HTTP Request to Origin Server"}
 
