@@ -216,8 +216,8 @@ server with the following modifications:
 
 Requests made over a TLS connection where the use of client certificate
 authentication was not negotiated MUST be sanitized by removing any and all
-occurrences of the `Client-Cert` header field prior to dispatching the request to the
-backend server.
+occurrences of the `Client-Cert` and `Client-Cert-Chain` header fields prior to
+dispatching the request to the backend server.
 
 Backend origin servers may then use the `Client-Cert` header field of the
 request to determine if the connection from the client to the TTRP was
@@ -231,8 +231,7 @@ employ the `Client-Cert` or `Client-Cert-Chain` header field in requests.
 
 A server that receives a request with a `Client-Cert` or `Client-Cert-Chain`
 header field value that it considers to be too large can respond with an HTTP
-431 status code per Section 5 of {{?RFC6585}}.
-
+431 status code per {{Section 5 of ?RFC6585}}.
 
 # Security Considerations {#sec}
 
@@ -386,7 +385,7 @@ field injection are possible; such as the use of a unique secret value as part
 of the field name or value or the application of a signature, HMAC, or AEAD,
 there is no common general standardized mechanism. The potential problem of
 client field injection is not at all unique to the functionality of this draft
-and it would therefor be inappropriate for this draft to define a one-off
+and it would therefore be inappropriate for this draft to define a one-off
 solution. In the absence of a generic standardized solution existing currently,
 stripping/sanitizing the fields is the de facto means of protecting against
 field injection in practice today. Sanitizing the fields is sufficient when
