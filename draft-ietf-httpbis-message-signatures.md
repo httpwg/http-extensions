@@ -141,7 +141,7 @@ Additionally, all changes to components not covered by the signature are conside
 
 ## Conventions and Terminology {#definitions}
 
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
 The terms "HTTP message", "HTTP request", "HTTP response",
 `absolute-form`, `absolute-path`, "effective request URI",
