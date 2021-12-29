@@ -125,15 +125,14 @@ Finished messages.
 ## Encoding
 
 The headers in this document encode certificates as Structured Field Byte
-Sequences ({{Section 3.3.5 of RFC8941}}).
+Sequences ({{Section 3.3.5 of RFC8941}}) where the value of the binary data
+is a DER encoded {{!ITU.X690.1994}} X.509 certificate {{!RFC5280}}.
+In effect, this means that the binary DER certificate is encoded using base64
+and delimited with colons on either side.
 
-The binary sequence is always a DER {{!ITU.X690.1994}} PKIX certificate. The
-encoded value MUST NOT include any line breaks, whitespace, or other additional
-characters. A binary sequence which cannot be successfully parsed as a
-certificate MUST be ignored.
-
-Note that DER certificates are often stored in a format which is already
-compatible with {{!RFC8941}}; if so, it will be sufficient to replace
+Note that certificates are often stored encoded in a textual format, such as
+the one described in {{Section 5.1 of ?RFC7468}}, which is already nearly
+compatible with a Structured Field Byte Sequence; if so, it will be sufficient to replace
 `---(BEGIN|END) CERTIFICATE---` with `:` and remove line breaks in order
 to generate an appropriate item.
 
