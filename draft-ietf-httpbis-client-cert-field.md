@@ -139,7 +139,7 @@ to generate an appropriate item.
 
 ## Client-Cert HTTP Header Field {#header}
 
-In the context of a TLS terminating reverse proxy (TTRP) deployment, the proxy
+In the context of a TLS terminating reverse proxy deployment, the proxy
 makes the TLS client certificate available to the backend application with the
 Client-Cert HTTP header field. This field contains the end-entity certificate
 used by the client in the TLS handshake.
@@ -160,7 +160,7 @@ multiple times in a request.
 
 ## Client-Cert-Chain HTTP Header Field {#chain-header}
 
-In the context of a TLS terminating reverse proxy (TTRP) deployment, the proxy
+In the context of a TLS terminating reverse proxy deployment, the proxy
 MAY make the certificate chain used for validation of the end-entity certificate
 available to the backend application with the Client-Cert-Chain HTTP header
 field. This field contains certificates used by the proxy to validate the
@@ -182,15 +182,13 @@ NOT be used in HTTP responses.  It MAY have a list of values or occur multiple
 times in a request.  For header compression purposes, it might be advantageous
 to split lists into multiple instances.
 
-The first certificate in the list SHOULD directly certify the end-entity
+The first certificate in the list directly certifies the end-entity
 certificate provided in the `Client-Cert` header; each following certificate
-SHOULD directly certify the one immediately preceding it.  Because certificate
+directly certifies the one immediately preceding it.  Because certificate
 validation requires that trust anchors be distributed independently, a
 certificate that specifies a trust anchor MAY be omitted from the chain,
 provided that the server is known to possess any omitted certificates.
 
-However, for maximum compatibility, servers SHOULD be prepared to handle
-potentially extraneous certificates and arbitrary orderings.
 
 ## Processing Rules
 
@@ -238,24 +236,26 @@ header field value that it considers to be too large can respond with an HTTP
 
 # Security Considerations {#sec}
 
-The header field described herein enable a TTRP and backend or origin server to
+The header fields described herein enable a TTRP and backend or origin server to
 function together as though, from the client's perspective, they are a single
 logical server side deployment of HTTPS over a mutually-authenticated TLS
-connection. Use of the `Client-Cert` header field outside that intended use
+connection. Use of the header fields outside that intended use
 case, however, may undermine the protections afforded by TLS client certificate
-authentication. Therefore steps MUST be taken to prevent unintended use, both in
+authentication. Therefore, steps MUST be taken to prevent unintended use, both in
 sending the header field and in relying on its value.
 
-Producing and consuming the `Client-Cert` header field SHOULD be a configurable
-option, respectively, in a TTRP and backend server (or individual application in
+Producing and consuming the `Client-Cert` and `Client-Cert-Chain` header
+fields SHOULD be a configurable
+options, respectively, in a TTRP and backend server (or individual application in
 that server). The default configuration for both should be to not use the
-`Client-Cert` header field thus requiring an "opt-in" to the functionality.
+header fields thus requiring an "opt-in" to the functionality.
 
 In order to prevent field injection, backend servers MUST only accept the
-`Client-Cert` header field from a trusted TTRP (or other proxy in a trusted path
+`Client-Cert` and `Client-Cert-Chain` header fields from a trusted
+TTRP (or other proxy in a trusted path
 from the TTRP). A TTRP MUST sanitize the incoming request before forwarding it
-on by removing or overwriting any existing instances of the field. Otherwise
-arbitrary clients can control the field value as seen and used by the backend
+on by removing or overwriting any existing instances of the fields. Otherwise,
+arbitrary clients can control the field values as seen and used by the backend
 server. It is important to note that neglecting to prevent field injection does
 not "fail safe" in that the nominal functionality will still work as expected
 even when malicious actions are possible. As such, extra care is recommended in
@@ -268,7 +268,8 @@ The configuration options and request sanitization are necessarily functionally
 of the respective servers. The other requirements can be met in a number of
 ways, which will vary based on specific deployments. The communication between a
 TTRP and backend or origin server, for example, might be authenticated in some
-way with the insertion and consumption of the `Client-Cert` field occurring
+way with the insertion and consumption of the `Client-Cert`
+and `Client-Cert-Chain` header fields occurring
 only on that connection. Alternatively the network topology might dictate a
 private network such that the backend application is only able to accept
 requests from the TTRP and the proxy can only make requests to that server.
@@ -277,7 +278,7 @@ Other deployments that meet the requirements set forth herein are also possible.
 
 # IANA Considerations
 
-The `Client-Cert` HTTP header field will be added to the registry defined by http-core.
+The `Client-Cert` and `Client-Cert-Chain` HTTP header fields will be added to the registry defined by http-core.
 
 --- back
 
@@ -380,14 +381,15 @@ Client-Cert-Chain: :MIIB5jCCAYugAwIBAgIBFjAKBggqhkjOPQQDAjBWMQsw
 ## Field Injection
 
 This draft requires that the TTRP sanitize the fields of the incoming request by
-removing or overwriting any existing instances of the `Client-Cert` header field
+removing or overwriting any existing instances of the `Client-Cert`
+and `Client-Cert-Chain` header fields
 before dispatching that request to the backend application. Otherwise, a client
-could inject its own `Client-Cert` field that would appear to the backend to
+could inject its own values that would appear to the backend to
 have come from the TTRP. Although numerous other methods of detecting/preventing
 field injection are possible; such as the use of a unique secret value as part
 of the field name or value or the application of a signature, HMAC, or AEAD,
 there is no common general standardized mechanism. The potential problem of
-client field injection is not at all unique to the functionality of this draft
+client field injection is not at all unique to the functionality of this draft,
 and it would therefore be inappropriate for this draft to define a one-off
 solution. In the absence of a generic standardized solution existing currently,
 stripping/sanitizing the fields is the de facto means of protecting against
@@ -402,23 +404,23 @@ certificate information of concern to this draft could have been communicated
 with an extension parameter to the `Forwarded` field; however, doing so
 would have had some disadvantages that this draft endeavored to avoid. The
 `Forwarded` field syntax allows for information about a full chain of proxied
-HTTP requests, whereas the `Client-Cert` field of this document is concerned
+HTTP requests, whereas the `Client-Cert` and `Client-Cert-Chain`
+header fields of this document are concerned
 only with conveying information about the certificate presented by the
 originating client on the TLS connection to the TTRP (which appears as the
 server from that client's perspective) to backend applications.  The multi-hop
 syntax of the `Forwarded` field is expressive but also more complicated, which
 would make processing it more cumbersome, and more importantly, make properly
 sanitizing its content as required by {{sec}} to prevent field injection
-considerably more difficult and error prone. Thus, this draft opted for the
-flatter and more straightforward structure of a single `Client-Cert` header.
+considerably more difficult and error-prone. Thus, this draft opted for a
+flatter and more straightforward structure.
 
-## The Whole Certificate and Only the Whole Certificate
+## The Whole Certificate and Certificate Chain
 
 Different applications will have varying requirements about what information
 from the client certificate is needed, such as the subject and/or issuer
 distinguished name, subject alternative name(s), serial number, subject public
-key info, fingerprint, etc.. Furthermore some applications, such as "OAuth 2.0
-Mutual-TLS Client Authentication and Certificate-Bound Access Tokens"
+key info, fingerprint, etc.. Furthermore, some applications, such as
 {{?RFC8705}}, make use of the entire certificate. In order to accommodate the
 latter and ensure wide applicability by not trying to cherry-pick particular
 certificate information, this draft opted to pass the full encoded certificate
@@ -426,24 +428,24 @@ as the value of the `Client-Cert` field.
 
 The handshake and validation of the client certificate (chain) of the
 mutually-authenticated TLS connection is performed by the TTRP.  With the
-responsibility of certificate validation falling on the TTRP, only the
-end-entity certificate is passed to the backend - the root Certificate Authority
-is not included nor are any intermediates.
-
+responsibility of certificate validation falling on the TTRP, the
+end-entity certificate is oftentimes sufficient for the needs of the origin server.
+The separate `Client-Cert-Chain` field can convey the certificate chain for
+deployments that require such information.
 
 # Acknowledgements
 
-The author would like to thank the following individuals who've contributed in various ways ranging from just being generally supportive of bringing forth the draft to providing specific feedback or content:
+The authors would like to thank the following individuals who've contributed in various ways ranging from just being generally supportive of bringing forth the draft to providing specific feedback or content:
 
 - Evan Anderson
 - Annabelle Backman
-- Mike Bishop
 - Rory Hewitt
 - Fredrik Jeansson
 - Benjamin Kaduk
 - Torsten Lodderstedt
 - Kathleen Moriarty
 - Mark Nottingham
+- Erik Nygren
 - Mike Ounsworth
 - Matt Peterson
 - Eric Rescorla
@@ -455,6 +457,7 @@ The author would like to thank the following individuals who've contributed in v
 - Rifaat Shekh-Yusef
 - Travis Spencer
 - Nick Sullivan
+- Martin Thomson
 - Peter Wu
 - Hans Zandbelt
 
@@ -462,6 +465,11 @@ The author would like to thank the following individuals who've contributed in v
 # Document History
 
    > To be removed by the RFC Editor before publication as an RFC
+
+   draft-ietf-httpbis-client-cert-field-01
+
+   * Use RFC 8941 Structured Field Values for HTTP
+   * Introduce a separate header that can convey the certificate chain
 
    draft-ietf-httpbis-client-cert-field-00
 
