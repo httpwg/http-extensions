@@ -128,6 +128,7 @@ The headers in this document encode certificates as Structured Field Byte
 Sequences ({{Section 3.3.5 of RFC8941}}) where the value of the binary data
 is a DER encoded {{!ITU.X690.1994}} X.509 certificate {{!RFC5280}}.
 In effect, this means that the binary DER certificate is encoded using base64
+(without line breaks, spaces, or other characters outside the base64 alphabet)
 and delimited with colons on either side.
 
 Note that certificates are often stored encoded in a textual format, such as
