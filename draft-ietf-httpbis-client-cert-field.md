@@ -120,7 +120,7 @@ during the handshake and for the server to verify the CertificateVerify and
 Finished messages.
 
 
-# HTTP Header Field and Processing Rules
+# HTTP Header Fields and Processing Rules
 
 ## Encoding
 
