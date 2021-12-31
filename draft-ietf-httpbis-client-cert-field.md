@@ -184,10 +184,6 @@ Forward proxies and other intermediaries MUST NOT add the `Client-Cert` header
 field to requests, or modify an existing `Client-Cert` header field. Similarly,
 clients MUST NOT employ the `Client-Cert` header field in requests.
 
-A server that receives a request with a `Client-Cert` header field value that it
-considers to be too large can respond with an HTTP 431 status code per Section 5
-of {{?RFC6585}}.
-
 # Deployment Considerations {#deployment}
 
 ## Header Field Compression
@@ -201,6 +197,18 @@ Recipients that anticipate connections with these characteristics can mitigate t
 efficiency loss by increasing the size of the dynamic table.
 If a recipient does not do so, senders may find it beneficial to always send the
 field value as a literal, rather than entering it into the dynamic table.
+
+## Header Block Size
+
+A server in receipt of a larger header block than it is willing to handle can send
+an HTTP 431 (Request Header Fields Too Large) status code per {{Section 5 of ?RFC6585}}.
+Due to the typical size of the field values containing certificate data,
+recipients may need to be configured to allow for a larger maximum header block size.
+An intermediary generating client certificate header fields on connections that allow
+for advertising the maximum acceptable header block size (e.g. HTTP/2 {{?RFC7540}}
+or HTTP/3 {{?I-D.ietf-quic-http}}) should account for the additional size of header
+block of the requests it sends vs. requests it receives by advertising a value to its
+clients that is sufficiently smaller so as to allow for the addition of certificate data.
 
 # Security Considerations {#sec}
 
@@ -377,6 +385,7 @@ The author would like to thank the following individuals who've contributed in v
 - Evan Anderson
 - Annabelle Backman
 - Mike Bishop
+- Alan Frindell
 - Rory Hewitt
 - Fredrik Jeansson
 - Benjamin Kaduk
