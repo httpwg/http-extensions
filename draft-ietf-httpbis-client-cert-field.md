@@ -257,7 +257,7 @@ authentication. Therefore, steps MUST be taken to prevent unintended use, both i
 sending the header field and in relying on its value.
 
 Producing and consuming the `Client-Cert` and `Client-Cert-Chain` header
-fields SHOULD be a configurable
+fields SHOULD be configurable
 options, respectively, in a TTRP and backend server (or individual application in
 that server). The default configuration for both should be to not use the
 header fields thus requiring an "opt-in" to the functionality.
