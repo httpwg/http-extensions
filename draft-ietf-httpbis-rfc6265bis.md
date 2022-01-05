@@ -1820,7 +1820,7 @@ IDNA2003 {{RFC3490}}.
 
 # Privacy Considerations
 
-The primary privacy risk associated with Cookies is their ability to correlate user activity. This can happen on a single site, but is most problematic when activity is tracked across different, seemingly unconnected Web sites to build a profile of the user.
+The primary privacy risk associated with cookies is their ability to correlate user activity. This can happen on a single site, but is most problematic when activity is tracked across different, seemingly unconnected Web sites to build a profile of the user.
 
 Over time, this capability (warned against explicitly in {{?RFC2109}} and all of its successors) has become widely used for varied reasons including:
 
@@ -1831,11 +1831,13 @@ Over time, this capability (warned against explicitly in {{?RFC2109}} and all of
 * measuring how often ads are shown to users, and
 * recognizing when an ad resulted in a change in user behavior.
 
-While in some instances these purposes may not be privacy-invasive, the potential abuses of tracking imply a need for significant limitations on cookies. However, any such limitations need to be imposed with care, because cookies are widely used for a variety of purposes that are critical to the functioning of a Web site (and the Web).
+While not every use of cookies is necessarily problematic for privacy, their potential for abuse has become a widespread concern in industry and society. In response to these concerns, user agents have actively constrained cookie functionality in various ways (as allowed and encouraged by previous specifications), while avoiding disruption to features they judge desirable for the health of the Web.
 
-This document describes limited mitigations against the privacy risks associated with cookies below. These mitigations are the most widely implemented and compatible at the time of writing.  It is expected that implementations will impose stricter and more well-defined limitations on cookies.  Future versions of this document might codify those limitations based upon experience with those limitations. If functions that currently rely on cookies can be supported by separate, targeted mechanisms, stricter limitations might be more feasible.
+It is too early to declare consensus on how the privacy impact of cookies can be successfully mitigated in detail; ongoing developments in user agents are best characterised as experiments that can provide input into that eventual consensus.
 
-Cookies are not the only mechanism that can be used to track users across sites, so while these mitigations are necessary to improve Web privacy, they are not sufficient on their own.
+Instead, this document describes limited, general mitigations against the privacy risks associated with cookies that enjoy wide deployment at the time of writing.  It is expected that implementations will continue to experiment and impose stricter, more well-defined limitations on cookies over time.  Future versions of this document might codify those mechanisms based upon deployment experience. If functions that currently rely on cookies can be supported by separate, targeted mechanisms, they might be documented in separate specifications and stricter limitations on cookies might become feasible.
+
+Note that cookies are not the only mechanism that can be used to track users across sites, so while these mitigations are necessary to improve Web privacy, they are not sufficient on their own.
 
 
 ## Third-Party Cookies {#third-party-cookies}
