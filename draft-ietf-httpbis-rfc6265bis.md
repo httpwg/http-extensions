@@ -1826,7 +1826,7 @@ Over time, this capability (warned against explicitly in {{?RFC2109}} and all of
 
 While in some instances these purposes may not be privacy-invasive, the potential abuses of tracking imply a need for significant limitations on cookies. However, any such limitations need to be imposed with care, because cookies are widely used for a variety of purposes that are critical to the functioning of a Web site (and the Web).
 
-As a result, this document recommends limited mitigations against the privacy risks associated with cookies below. It is expected that future updates will impose stricter and more well-defined limitations on cookies, based upon experiments now being undertaken in user agents. Note that some functions currently relying on cookies might eventually be supported by separate, targeted mechanisms.
+This document describes limited mitigations against the privacy risks associated with cookies below. These mitigations are the most widely implemented and compatible at the time of writing.  It is expected that implementations will impose stricter and more well-defined limitations on cookies.  Future versions of this document might codify those limitations based upon experience with those limitations. If functions that currently rely on cookies can be supported by separate, targeted mechanisms, stricter limitations might be more feasible.
 
 Cookies are not the only mechanism that can be used to track users across sites, so while these mitigations are necessary to improve Web privacy, they are not sufficient on their own.
 
