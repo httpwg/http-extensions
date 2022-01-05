@@ -1858,13 +1858,10 @@ these mitigations are necessary to improve Web privacy, they are not sufficient 
 
 ## Third-Party Cookies {#third-party-cookies}
 
-In a Web browsing context, a "third-party" or cross-site cookie is a cookie that is associated with
-content that is served from a different server than the one that hosts the primary resource (that
-is, the HTML). HTML documents can embed content (such as scripts, images, stylesheets, frames) that
-is served from other domains. These third-party resources can use cookies to track the user even if
-they never visit that server directly. For example, if a user visits a site that contains content
-from a third party and then later visits another site that contains content from the same third
-party, the third party can track the user between the two sites.
+A "third-party" or cross-site cookie is a cookie that is associated with embedded content (such as
+scripts, images, stylesheets, frames) that is served from a different server than the one that
+hosts the primary resource (usually, the Web page that the user is viewing). Third-party cookies
+are often used to correlate users' activity on different sites.
 
 Because of their inherent privacy issues, most user agents now limit third-party cookies in a
 variety of ways. Some completely block third-party cookies by refusing to process third-party
