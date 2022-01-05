@@ -1833,13 +1833,13 @@ Cookies are not the only mechanism that can be used to track users across sites,
 
 ## Third-Party Cookies {#third-party-cookies}
 
-A cookie that is sent to a site other than the one it originated from is known as a "third-party"
-cookie. When rendering a document, a user agent can request resources from sites other than that
-where that document was obtained from (such as advertising networks). Those third-party resources
-can use cookies to track the user even if they never visit that server directly. For example, if a
-user visits a site that contains content from a third party and then later visits another site that
-contains content from the same third party, the third party can track the user between the two
-sites.
+In a Web browsing context, a "third-party" or cross-site cookie is a cookie that is associated with
+content that is served from a different server than the one that hosts the primary resource (that
+is, the HTML). HTML documents can embed content (such as scripts, images, stylesheets, frames) that
+is served from other domains. These third-party resources can use cookies to track the user even if
+they never visit that server directly. For example, if a user visits a site that contains content
+from a third party and then later visits another site that contains content from the same third
+party, the third party can track the user between the two sites.
 
 Because of their inherent privacy issues, most user agents now limit third-party cookies in a
 variety of ways. Some completely block third-party cookies by refusing to process third-party
