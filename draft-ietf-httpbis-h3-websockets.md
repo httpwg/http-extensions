@@ -86,7 +86,9 @@ discussed in {{!RFC8441}}.
 # IANA Considerations
 
 This document registers a new setting in the "HTTP/3 Settings"
-registry ([HTTP3]).
+registry ([HTTP3]) assigned permanent status and lists a change
+controller of the IETF and a contact of the HTTP working group
+(ietf-http-wg@w3.org).
 
 
 | -------------------------------- | ------- | -------------------- | ------- |
