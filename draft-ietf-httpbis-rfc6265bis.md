@@ -1820,44 +1820,41 @@ IDNA2003 {{RFC3490}}.
 
 # Privacy Considerations
 
-Cookies are often criticized for letting servers track users. For example, a
-number of "web analytics" companies use cookies to recognize when a user returns
-to a web site or visits another web site. Although cookies are not the only
-mechanism servers can use to track users across HTTP requests, cookies
-facilitate tracking because they are persistent across user agent sessions and
-can be shared between hosts.
+The primary privacy risk associated with Cookies is their ability to correlate user activity. This can happen on a single site, but is most problematic when activity is tracked across different, seemingly unconnected Web sites to build a profile of the user.
+
+Over time, this capability (warned against explicitly in {{?RFC2109}} and all of its successors) has become widely used to authenticate users across sites, to combat fraud and other forms of undesirable traffic, to target advertisements at specific users or at users with specified attributes, to measure how often ads are shown to users, and to recognise when an ad resulted in a change in user behavior.
+
+While in some instances these purposes may not be privacy-invasive, the potential abuses of tracking imply a need for significant limitations on cookies. However, any such limitations need to be imposed with care, because cookies are widely used for a variety of purposes that are critical to the functioning of a Web site (and the Web).
+
+As a result, this document recommends limited mitigations against the privacy risks associated with cookies below. It is expected that future updates will impose stricter and more well-defined limitations on cookies, based upon experiments now being undertaken in user agents. Note that some functions currently relying on cookies might eventually be supported by separate, targeted mechanisms.
+
+Cookies are not the only mechanism that can be used to track users across sites, so while these mitigations are necessary to improve Web privacy, they are not sufficient on their own.
+
 
 ## Third-Party Cookies {#third-party-cookies}
 
-Particularly worrisome are so-called "third-party" cookies. In rendering an HTML
-document, a user agent often requests resources from other servers (such as
-advertising networks). These third-party servers can use cookies to track the
-user even if the user never visits the server directly. For example, if a user
-visits a site that contains content from a third party and then later visits
-another site that contains content from the same third party, the third party
-can track the user between the two sites.
+A cookie that is sent to a site other than the one it originated from is known as a "third-party"
+cookie. When rendering a document, a user agent can request resources from sites other than that
+where that document was obtained from (such as advertising networks). Those third-party resources
+can use cookies to track the user even if they never visit that server directly. For example, if a
+user visits a site that contains content from a third party and then later visits another site that
+contains content from the same third party, the third party can track the user between the two
+sites.
 
-Given this risk to user privacy, some user agents restrict how third-party
-cookies behave, and those restrictions vary widly. For instance, user agents
-might block third-party cookies entirely by refusing to send Cookie header fields or
-process Set-Cookie header fields during third-party requests. They might take a less
-draconian approach by partitioning cookies based on the first-party context,
-sending one set of cookies to a given third party in one first-party context,
-and another to the same third party in another. Or they might even allow some
-third-party cookies but block others depending on user-agent cookie policy or
-user controls.
+Because of their inherent privacy issues, most user agents now limit third-party cookies in a
+variety of ways. Some completely block third-party cookies by refusing to process third-party
+Set-Cookie header fields and refusing to send third-party Cookie header fields. Some partition
+cookies based upon the first-party context, so that different cookies are sent depending on the
+site being browsed. Some block cookies based upon user agent cookie policy and/or user controls.
 
-This document grants user agents wide latitude to experiment with third-party
-cookie policies that balance the privacy and compatibility needs of their users.
-However, this document does not endorse any particular third-party cookie
-policy.
+It is RECOMMENDED that user agents implement third-party cookie policies that balance the
+privacy and compatibility needs of their users. However, this document does not yet endorse any
+particular third-party cookie policy.
 
-Third-party cookie blocking policies are often ineffective at achieving their
-privacy goals if servers attempt to work around their restrictions to track
-users. In particular, two collaborating servers can often track users without
-using cookies at all by injecting identifying information into dynamic URLs.
+As a result, resources SHOULD NOT rely upon third-party cookies functioning reliably.
 
-## Cookie policy {#cookie-policy}
+
+## Cookie Policy {#cookie-policy}
 
 User agents MAY enforce a cookie policy consisting of restrictions on how
 cookies may be used or ignored (see {{ignoring-cookies}}).
