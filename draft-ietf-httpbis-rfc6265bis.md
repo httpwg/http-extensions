@@ -1820,9 +1820,12 @@ IDNA2003 {{RFC3490}}.
 
 # Privacy Considerations
 
-The primary privacy risk associated with cookies is their ability to correlate user activity. This can happen on a single site, but is most problematic when activity is tracked across different, seemingly unconnected Web sites to build a profile of the user.
+The primary privacy risk associated with cookies is their ability to correlate user activity. This
+can happen on a single site, but is most problematic when activity is tracked across different,
+seemingly unconnected Web sites to build a profile of the user.
 
-Over time, this capability (warned against explicitly in {{?RFC2109}} and all of its successors) has become widely used for varied reasons including:
+Over time, this capability (warned against explicitly in {{?RFC2109}} and all of its successors)
+has become widely used for varied reasons including:
 
 * authenticating users across sites,
 * assembling information on users,
@@ -1831,13 +1834,26 @@ Over time, this capability (warned against explicitly in {{?RFC2109}} and all of
 * measuring how often ads are shown to users, and
 * recognizing when an ad resulted in a change in user behavior.
 
-While not every use of cookies is necessarily problematic for privacy, their potential for abuse has become a widespread concern in industry and society. In response to these concerns, user agents have actively constrained cookie functionality in various ways (as allowed and encouraged by previous specifications), while avoiding disruption to features they judge desirable for the health of the Web.
+While not every use of cookies is necessarily problematic for privacy, their potential for abuse
+has become a widespread concern in industry and society. In response to these concerns, user agents
+have actively constrained cookie functionality in various ways (as allowed and encouraged by
+previous specifications), while avoiding disruption to features they judge desirable for the health
+of the Web.
 
-It is too early to declare consensus on how the privacy impact of cookies can be successfully mitigated in detail; ongoing developments in user agents are best characterised as experiments that can provide input into that eventual consensus.
+It is too early to declare consensus on how the privacy impact of cookies can be successfully
+mitigated in detail; ongoing developments in user agents are best characterised as experiments that
+can provide input into that eventual consensus.
 
-Instead, this document describes limited, general mitigations against the privacy risks associated with cookies that enjoy wide deployment at the time of writing.  It is expected that implementations will continue to experiment and impose stricter, more well-defined limitations on cookies over time.  Future versions of this document might codify those mechanisms based upon deployment experience. If functions that currently rely on cookies can be supported by separate, targeted mechanisms, they might be documented in separate specifications and stricter limitations on cookies might become feasible.
+Instead, this document describes limited, general mitigations against the privacy risks associated
+with cookies that enjoy wide deployment at the time of writing. It is expected that implementations
+will continue to experiment and impose stricter, more well-defined limitations on cookies over
+time. Future versions of this document might codify those mechanisms based upon deployment
+experience. If functions that currently rely on cookies can be supported by separate, targeted
+mechanisms, they might be documented in separate specifications and stricter limitations on cookies
+might become feasible.
 
-Note that cookies are not the only mechanism that can be used to track users across sites, so while these mitigations are necessary to improve Web privacy, they are not sufficient on their own.
+Note that cookies are not the only mechanism that can be used to track users across sites, so while
+these mitigations are necessary to improve Web privacy, they are not sufficient on their own.
 
 
 ## Third-Party Cookies {#third-party-cookies}
@@ -1856,7 +1872,10 @@ Set-Cookie header fields and refusing to send third-party Cookie header fields. 
 cookies based upon the first-party context, so that different cookies are sent depending on the
 site being browsed. Some block cookies based upon user agent cookie policy and/or user controls.
 
-While this document does not endorse or require a specific approach, it is RECOMMENDED that user agents adopt a policy for third-party cookies that is as restrictive as compatibility constraints permit. Consequently, resources cannot rely upon third-party cookies being treated consistently by user agents for the foreseeable future.
+While this document does not endorse or require a specific approach, it is RECOMMENDED that user
+agents adopt a policy for third-party cookies that is as restrictive as compatibility constraints
+permit. Consequently, resources cannot rely upon third-party cookies being treated consistently by
+user agents for the foreseeable future.
 
 
 ## Cookie Policy {#cookie-policy}
