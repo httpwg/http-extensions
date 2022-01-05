@@ -1822,7 +1822,14 @@ IDNA2003 {{RFC3490}}.
 
 The primary privacy risk associated with Cookies is their ability to correlate user activity. This can happen on a single site, but is most problematic when activity is tracked across different, seemingly unconnected Web sites to build a profile of the user.
 
-Over time, this capability (warned against explicitly in {{?RFC2109}} and all of its successors) has become widely used to correlate user activity across sites, known also as tracking. Reasons are varied and include protection against fraud and other forms of undesirable traffic, assembling information on users, targeting advertisements at specific users or at users with specified attributes, measuring how often ads are shown to users, and to recognize when an ad resulted in a change in user behavior.
+Over time, this capability (warned against explicitly in {{?RFC2109}} and all of its successors) has become widely used for varied reasons including:
+
+* authenticating users across sites,
+* assembling information on users,
+* protecting against fraud and other forms of undesirable traffic,
+* targeting advertisements at specific users or at users with specified attributes,
+* measuring how often ads are shown to users, and
+* recognizing when an ad resulted in a change in user behavior.
 
 While in some instances these purposes may not be privacy-invasive, the potential abuses of tracking imply a need for significant limitations on cookies. However, any such limitations need to be imposed with care, because cookies are widely used for a variety of purposes that are critical to the functioning of a Web site (and the Web).
 
