@@ -1856,11 +1856,7 @@ Set-Cookie header fields and refusing to send third-party Cookie header fields. 
 cookies based upon the first-party context, so that different cookies are sent depending on the
 site being browsed. Some block cookies based upon user agent cookie policy and/or user controls.
 
-It is RECOMMENDED that user agents implement third-party cookie policies that balance the
-privacy and compatibility needs of their users. However, this document does not yet endorse any
-particular third-party cookie policy.
-
-As a result, resources cannot rely upon third-party cookies functioning reliably.
+While this document does not endorse or require a specific approach, it is RECOMMENDED that user agents adopt a policy for third-party cookies that is as restrictive as compatibility constraints permit. Consequently, resources cannot rely upon third-party cookies being treated consistently by user agents for the foreseeable future.
 
 
 ## Cookie Policy {#cookie-policy}
