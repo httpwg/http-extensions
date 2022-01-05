@@ -1860,7 +1860,7 @@ It is RECOMMENDED that user agents implement third-party cookie policies that ba
 privacy and compatibility needs of their users. However, this document does not yet endorse any
 particular third-party cookie policy.
 
-As a result, resources SHOULD NOT rely upon third-party cookies functioning reliably.
+As a result, resources cannot rely upon third-party cookies functioning reliably.
 
 
 ## Cookie Policy {#cookie-policy}
