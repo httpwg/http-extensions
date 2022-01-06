@@ -94,12 +94,14 @@ at the earliest moment, it is important for an HTTP server to prioritize the
 HTTP responses, or the chunks of those HTTP responses, that it sends to a
 client.
 
-A server that operates in ignorance of how clients issue requests and
-consume responses can cause suboptimal client application performance. Priority
-signals allow clients to communicate their view of request
-priority. Servers have their own needs that are independent of client needs,
-so they often combine priority signals with other available information in order
-to inform scheduling of response data.
+HTTP/2 and HTTP/3 servers can schedule transmission of concurrent response data
+by any means they choose. Servers can ignore client priority signals and still
+successfully serve HTTP responses. However, servers that operate in ignorance
+of how clients issue requests and consume responses can cause suboptimal client
+application performance. Priority signals allow clients to communicate their
+view of request priority. Servers have their own needs that are independent of
+client needs, so they often combine priority signals with other available
+information in order to inform scheduling of response data.
 
 RFC 7540 {{?RFC7540}} stream priority allowed a client to send a series of
 priority signals that communicate to the server a "priority tree"; the structure
@@ -562,8 +564,9 @@ respond with a connection error of type PROTOCOL_ERROR.
 If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
 
-If a client receives a PRIORITY_UPDATE frame, it MUST respond with a connection
-error of type PROTOCOL_ERROR.
+Servers MUST NOT send PRIORITY_UPDATE frames. If a client receives a
+PRIORITY_UPDATE frame, it MUST respond with a connection error of type
+PROTOCOL_ERROR.
 
 ## HTTP/3 PRIORITY_UPDATE Frame {#h3-update-frame}
 
@@ -615,7 +618,7 @@ push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with a Push I
 that is greater than the maximum Push ID or which has not yet been promised, this
 MUST be treated as a connection error of type H3_ID_ERROR.
 
-PRIORITY_UPDATE frames of either type are only sent by clients. If a client
+Servers MUST NOT send PRIORITY_UPDATE frames of either type. If a client
 receives a PRIORITY_UPDATE frame, this MUST be treated as a connection error of
 type H3_FRAME_UNEXPECTED.
 
