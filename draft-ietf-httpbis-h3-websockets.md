@@ -90,6 +90,7 @@ registry ({{Section 11.2.2 of HTTP3}}).
 
 Value:
 : 0x08
+
 Setting Name:
 : SETTINGS_ENABLE_CONNECT_PROTOCOL
 Default:
@@ -101,10 +102,11 @@ Specification:
 Date:
 : [ date of publication ]
 Change Controller:
-: HTTP Working Group
+: IETF
 Contact:
-: ietf-http-wg@w3.org
+: HTTP Working Group (ietf-http-wg@w3.org)
 Notes:
+: <!-- -->
 
 --- back
 
