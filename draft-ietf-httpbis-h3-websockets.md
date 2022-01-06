@@ -93,18 +93,25 @@ Value:
 
 Setting Name:
 : SETTINGS_ENABLE_CONNECT_PROTOCOL
+
 Default:
 : 0
+
 Status:
 : permanent
+
 Specification:
 : This Document
+
 Date:
 : [ date of publication ]
+
 Change Controller:
 : IETF
+
 Contact:
 : HTTP Working Group (ietf-http-wg@w3.org)
+
 Notes:
 : <!-- -->
 
