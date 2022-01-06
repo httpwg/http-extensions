@@ -276,10 +276,10 @@ parameters on a single hop only.
 
 Intermediaries can consume and produce priority signals in a PRIORITY_UPDATE
 frame or Priority header field. Sending a PRIORITY_UPDATE frame preserves the
-signal from the client, but provides a signal that overrides that for the next
-hop; see {{header-field-rationale}}. Replacing or adding a Priority header field
-overrides any signal from a client and can affect prioritization for all
-subsequent recipients.
+signal from the client carried by the Priority header field, but provides a
+signal that overrides that for the next hop; see {{header-field-rationale}}.
+Replacing or adding a Priority header field overrides any signal from a client
+and can affect prioritization for all subsequent recipients.
 
 For both the Priority header field and the PRIORITY_UPDATE frame, the set of
 priority parameters is encoded as a Structured Fields Dictionary (see
