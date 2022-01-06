@@ -86,16 +86,25 @@ discussed in {{!RFC8441}}.
 # IANA Considerations
 
 This document registers a new setting in the "HTTP/3 Settings"
-registry ([HTTP3]) assigned permanent status and lists a change
-controller of the IETF and a contact of the HTTP working group
-(ietf-http-wg@w3.org).
+registry ({{Section 11.2.2 of HTTP3}}).
 
-
-| -------------------------------- | ------- | -------------------- | ------- |
-| Setting Name                     |  Value  | Specification        | Default |
-| -------------------------------- | :-----: | -------------------- | ------- |
-| SETTINGS_ENABLE_CONNECT_PROTOCOL |  0x08   | This document        | 0       |
-| -------------------------------- | ------- | -------------------- | ------- |
+Value:
+: 0x08
+Setting Name:
+: SETTINGS_ENABLE_CONNECT_PROTOCOL
+Default:
+: 0
+Status:
+: permanent
+Specification:
+: This Document
+Date:
+: [ date of publication ]
+Change Controller:
+: HTTP Working Group
+Contact:
+: ietf-http-wg@w3.org
+Notes:
 
 --- back
 
