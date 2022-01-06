@@ -183,7 +183,7 @@ applications that generate requests without knowledge of how other requests
 might share a connection, or into protocols that do not have strong ordering
 guarantees across streams, like HTTP/3 {{HTTP3}}.
 
-Multiple experiments from independent research ({{MARX}}, {{MEENAN}}) have shown
+Experiments from independent research ({{MARX}}) have shown
 that simpler schemes can reach at least equivalent performance characteristics
 compared to the more complex RFC 7540 setups seen in practice, at least for the
 web use case.
