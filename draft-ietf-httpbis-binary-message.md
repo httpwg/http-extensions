@@ -509,7 +509,7 @@ A response that uses the chunked encoding (see {{Section 7.1 of MESSAGING}}) as
 shown for {{ex-chunked}} can be encoded using indefinite-length encoding, which
 minimizes buffering needed to translate into the binary format. However, chunk
 boundaries do not need to be retained and any chunk extensions cannot be
-conveyed using the binary format.
+conveyed using the binary format; see {{differences}}.
 
 ~~~ http-message
 HTTP/1.1 200 OK
@@ -537,6 +537,27 @@ the transfer-encoding header field is removed.
 0d0a0d07 74726169 6c657204 74657874  ....trailer.text
 ~~~
 {: #ex-bink-chunked title="Known-Length Encoding of Response"}
+
+
+# Notable Differences with HTTP Protocol Messages {#differences}
+
+This format is designed to carry most HTTP messages.  However, there are some
+notable differences between this format and the format used in some HTTP
+versions.  In particular, this format does not allow for:
+
+* chunk extensions ({{Section 7.1.1 of MESSAGING}}) and transfer encoding
+  ({{Section 6.1 of MESSAGING}}) from HTTP/1.1
+
+* field blocks other than a single header and trailer field block
+
+* carrying reason phrases in responses ({{Section 4 of MESSAGING}})
+
+* header compression ({{?HPACK=RFC7541}}, {{?QPACK=I-D.ietf-quic-qpack}})
+
+* framing of responses that depends on the corresponding request (such as HEAD)
+  or the value of the status code (such as 204 or 304)
+
+Many of these characteristics are shared by HTTP/2 {{?H2}} and HTTP/3 {{?H3}}.
 
 
 # "message/bhttp" Media Type {#media-type}
