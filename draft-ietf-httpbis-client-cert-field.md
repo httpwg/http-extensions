@@ -194,13 +194,15 @@ NOT be used in HTTP responses.  It MAY have a list of values or occur multiple
 times in a request.  For header compression purposes, it might be advantageous
 to split lists into multiple instances.
 
-The first certificate in the list directly certifies the end-entity
+The first certificate in the list SHOULD directly certify the end-entity
 certificate provided in the `Client-Cert` header; each following certificate
-directly certifies the one immediately preceding it.  Because certificate
+SHOULD directly certify the one immediately preceding it.  Because certificate
 validation requires that trust anchors be distributed independently, a
 certificate that specifies a trust anchor MAY be omitted from the chain,
 provided that the server is known to possess any omitted certificates.
 
+However, for maximum compatibility, servers SHOULD be prepared to handle
+potentially extraneous certificates and arbitrary orderings.
 
 ## Processing Rules
 
