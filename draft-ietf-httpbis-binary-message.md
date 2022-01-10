@@ -558,7 +558,7 @@ versions.  In particular, this format does not allow for:
 * framing of responses that depends on the corresponding request (such as HEAD)
   or the value of the status code (such as 204 or 304)
 
-Many of these characteristics are shared by HTTP/2 {{H2}} and HTTP/3 {{H3}}.
+Many of these same restrictions are shared by HTTP/2 {{H2}} and HTTP/3 {{H3}}.
 
 
 # "message/bhttp" Media Type {#media-type}
