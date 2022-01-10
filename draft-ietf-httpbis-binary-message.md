@@ -41,6 +41,7 @@ normative:
   HTTP: I-D.ietf-httpbis-semantics
   MESSAGING: I-D.ietf-httpbis-messaging
   H2: I-D.ietf-httpbis-http2bis
+  H3: I-D.ietf-quic-http
   QUIC: RFC9000
 
 informative:
@@ -61,10 +62,10 @@ messages that can be conveyed outside of an HTTP protocol. This enables the
 transformation of entire messages, including the application of authenticated
 encryption.
 
-This format is informed by the framing structure of HTTP/2 ({{H2}})
-and HTTP/3 ({{?H3=I-D.ietf-quic-http}}). In comparison, this format simpler by
-virtue of not including either header compression ({{?HPACK=RFC7541}},
-{{?QPACK=I-D.ietf-quic-qpack}}) or a generic framing layer.
+This format is informed by the framing structure of HTTP/2 ({{H2}}) and HTTP/3
+({{H3}}). In comparison, this format simpler by virtue of not including either
+header compression ({{?HPACK=RFC7541}}, {{?QPACK=I-D.ietf-quic-qpack}}) or a
+generic framing layer.
 
 This format provides an alternative to the `message/http` content type defined
 in {{MESSAGING}}. A binary format permits more efficient encoding and processing
@@ -557,7 +558,7 @@ versions.  In particular, this format does not allow for:
 * framing of responses that depends on the corresponding request (such as HEAD)
   or the value of the status code (such as 204 or 304)
 
-Many of these characteristics are shared by HTTP/2 {{?H2}} and HTTP/3 {{?H3}}.
+Many of these characteristics are shared by HTTP/2 {{H2}} and HTTP/3 {{H3}}.
 
 
 # "message/bhttp" Media Type {#media-type}
