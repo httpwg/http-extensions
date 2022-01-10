@@ -371,7 +371,9 @@ zero-length.
 
 ## Padding
 
-Messages can be padded with any number of zero-valued bytes.
+Messages can be padded with any number of zero-valued bytes.  Non-zero padding
+bytes cause a message to be invalid (see {{invalid}}). Unlike other parts of a
+message, a processor MAY decide not to validate the value of padding bytes.
 
 Padding is compatible with truncation of empty parts of the messages.
 Zero-valued bytes will be interpreted as zero-length part, which is semantically
