@@ -636,14 +636,6 @@ maliciously crafted message.
 
 # IANA Considerations
 
-Please add the "Media Types" registry at
-<https://www.iana.org/assignments/media-types> with the registration
+IANA is requested to add the "Media Types" registry at
+[](https://www.iana.org/assignments/media-types) with the registration
 information in {{media-type}} for the media type "message/bhttp".
-
-
---- back
-
-# Acknowledgments
-{: numbered="false"}
-
-TODO: credit where credit is due.
