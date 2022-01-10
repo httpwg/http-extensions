@@ -63,9 +63,9 @@ transformation of entire messages, including the application of authenticated
 encryption.
 
 This format is informed by the framing structure of HTTP/2 ({{H2}}) and HTTP/3
-({{H3}}). In comparison, this format simpler by virtue of not including either
-header compression ({{?HPACK=RFC7541}}, {{?QPACK=I-D.ietf-quic-qpack}}) or a
-generic framing layer.
+({{H3}}). In comparison, this format is simpler by virtue of not including
+either header compression ({{?HPACK=RFC7541}}, {{?QPACK=I-D.ietf-quic-qpack}})
+or a generic framing layer.
 
 This format provides an alternative to the `message/http` content type defined
 in {{MESSAGING}}. A binary format permits more efficient encoding and processing
