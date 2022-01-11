@@ -237,7 +237,7 @@ defined by {{HTTP}}:
 * Field Name: CDN-Cache-Control
 * Status: permanent
 * Specification Document: \[this document\]
-* Comments: Cache-Control directives targeted at Content Delivery Networks
+* Comments: Cache directives targeted at Content Delivery Networks
 
 
 # Security Considerations
