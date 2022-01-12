@@ -86,14 +86,34 @@ discussed in {{!RFC8441}}.
 # IANA Considerations
 
 This document registers a new setting in the "HTTP/3 Settings"
-registry ([HTTP3]).
+registry ({{Section 11.2.2 of HTTP3}}).
 
+Value:
+: 0x08
 
-| -------------------------------- | ------- | -------------------- | ------- |
-| Setting Name                     |  Value  | Specification        | Default |
-| -------------------------------- | :-----: | -------------------- | ------- |
-| SETTINGS_ENABLE_CONNECT_PROTOCOL |  0x08   | This document        | 0       |
-| -------------------------------- | ------- | -------------------- | ------- |
+Setting Name:
+: SETTINGS_ENABLE_CONNECT_PROTOCOL
+
+Default:
+: 0
+
+Status:
+: permanent
+
+Specification:
+: This Document
+
+Date:
+: [ date of publication ]
+
+Change Controller:
+: IETF
+
+Contact:
+: HTTP Working Group (ietf-http-wg@w3.org)
+
+Notes:
+: <!-- -->
 
 --- back
 
