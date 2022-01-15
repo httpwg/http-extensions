@@ -119,7 +119,7 @@ For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an 
 
 Implementations MUST NOT generate values that violate these inferred constraints on the directive's value. In particular, string values whose first character is not alphabetic or "*" MUST be generated as structured Strings, so they are not mistaken for other types.
 
-Implementations SHOULD NOT consume values that violate these inferred constraints. For example, a consuming implementation were to coerce a max-age with a decimal value into an integer would behave differently than other implementations, potentially causing interoperability issues.
+Implementations SHOULD NOT consume values that violate these inferred constraints. For example, a consuming implementation that coerces a max-age with a decimal value into an integer would behave differently than other implementations, potentially causing interoperability issues.
 
 Parameters received on directives are to be ignored, unless other handling is explicitly specified.
 
