@@ -72,7 +72,7 @@ in HTTP/2 as defined {{!RFC8441}}. {{Appendix A.3 of HTTP3}} requires that
 HTTP/3 settings be registered separately for HTTP/3. The
 SETTINGS_ENABLE_CONNECT_PROTOCOL value is 0x08 (decimal 8), as in HTTP/2.
 
-If a server which advertises support for Extended CONNECT but receives an
+If a server advertises support for Extended CONNECT but receives an
 Extended CONNECT request with a ":protocol" value that is unknown or is
 not supported, the server SHOULD respond to the request with a 501 (Not
 Implemented) status code ({{Section 15.6.2 of HTTP}}). A server MAY
@@ -86,14 +86,34 @@ discussed in {{!RFC8441}}.
 # IANA Considerations
 
 This document registers a new setting in the "HTTP/3 Settings"
-registry ([HTTP3]).
+registry ({{Section 11.2.2 of HTTP3}}).
 
+Value:
+: 0x08
 
-| -------------------------------- | ------- | -------------------- | ------- |
-| Setting Name                     |  Value  | Specification        | Default |
-| -------------------------------- | :-----: | -------------------- | ------- |
-| SETTINGS_ENABLE_CONNECT_PROTOCOL |  0x08   | This document        | 0       |
-| -------------------------------- | ------- | -------------------- | ------- |
+Setting Name:
+: SETTINGS_ENABLE_CONNECT_PROTOCOL
+
+Default:
+: 0
+
+Status:
+: permanent
+
+Specification:
+: This Document
+
+Date:
+: [ date of publication ]
+
+Change Controller:
+: IETF
+
+Contact:
+: HTTP Working Group (ietf-http-wg@w3.org)
+
+Notes:
+: <!-- -->
 
 --- back
 
