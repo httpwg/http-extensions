@@ -52,13 +52,6 @@ informative:
       DOI: 10.5220/0008191701300143
       SCITEPRESS: "Proceedings of the 15th International Conference on Web Information Systems and Technologies (pages 130-143)"
 
-  MEENAN:
-    title: Better HTTP/2 Prioritization for a Faster Web
-    author:
-      name: Patrick Meenan
-    date: 2019-05-14
-    target: https://blog.cloudflare.com/better-http-2-prioritization-for-a-faster-web/
-
 
 --- abstract
 
@@ -997,6 +990,9 @@ Yang Chi contributed the section on retransmission scheduling.
 # Change Log
 
 *RFC EDITOR: please remove this section before publication*
+
+## Since draft-ietf-httpbis-priority-11
+* Changes to address Last Call/IESG feedback
 
 ## Since draft-ietf-httpbis-priority-10
 * Editorial changes
