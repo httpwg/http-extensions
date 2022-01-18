@@ -1,6 +1,6 @@
 ---
-title: "Client-Cert HTTP Header Field: Conveying Client Certificate Information from TLS Terminating Reverse Proxies to Origin Server Applications"
-abbrev: Client-Cert Field
+title: "Client-Cert HTTP Header Field"
+abbrev: Client-Cert Header
 docname: draft-ietf-httpbis-client-cert-field-latest
 date: {DATE}
 category: info
