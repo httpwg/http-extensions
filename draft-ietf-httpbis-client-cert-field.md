@@ -116,6 +116,14 @@ requires that the client send the Certificate and CertificateVerify messages
 during the handshake and for the server to verify the CertificateVerify and
 Finished messages.
 
+HTTP/2 restricts TLS 1.2 renegotiation ({{Section 9.2.1 of ?RFC7540}}) and
+prohibits TLS 1.3 post-handshake authentication {{?RFC8740}}. However, they are
+sometimes used to implement reactive client certificate authentication in HTTP/1.1
+{{?RFC7230}} where the server decides whether to request a client certificate
+based on the HTTP request. HTTP application data sent on such a connection
+after receipt and verification of the client certificate is also
+mutually-authenticated and thus suitable for the mechanisms described in this
+document.
 
 # HTTP Header Fields and Processing Rules
 
@@ -515,6 +523,7 @@ The authors would like to thank the following individuals who've contributed in 
    * Introduce a separate header that can convey the certificate chain
    * Add considerations on header compression and size 
    * Describe interaction with caching
+   * Discuss renegotiation
 
    draft-ietf-httpbis-client-cert-field-00
 
