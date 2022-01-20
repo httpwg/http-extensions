@@ -79,9 +79,9 @@ This specification defines a convention for HTTP response header fields that all
 
 Modern deployments of HTTP often use multiple layers of caching. For example, a Web site might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more Content Delivery Networks (CDNs) that are distributed throughout the Internet, and it might benefit from browser caching as well.
 
-Because it is often desirable to control these different classes of caches separately, some means of targeting directives at them is necessary.
+Because it is often desirable to control these different classes of caches separately, some means of targeting cache directives at them is necessary.
 
-The HTTP Cache-Control response header field (defined in {{Section 5.2 of HTTP-CACHING}}) is widely used to direct caching behavior. However, it is relatively undifferentiated; while some directives (e.g., s-maxage) are targeted at a specific class of caches (for s-maxage, shared caches), targeting is not consistently available across all existing cache directives (e.g., stale-while-revalidate). This is problematic, especially as the number of caching extensions grows, along with the number of potential targets.
+The HTTP Cache-Control response header field (defined in {{Section 5.2 of HTTP-CACHING}}) is widely used to direct caching behavior. However, it is relatively undifferentiated; while some cache directives (e.g., s-maxage) are targeted at a specific class of caches (for s-maxage, shared caches), targeting is not consistently available across all existing cache directives (e.g., stale-while-revalidate). This is problematic, especially as the number of caching extensions grows, along with the number of potential targets.
 
 Some implementations have defined ad hoc control mechanisms to overcome this issue, but their interoperability is low. {{targeted}} defines a standard framework for targeted cache control using HTTP response headers, and {{cdn-cache-control}} defines one such header: the CDN-Cache-Control response header field.
 
@@ -96,7 +96,7 @@ shown here.
 
 # Targeted Cache-Control Header Fields {#targeted}
 
-A Targeted Cache-Control Header Field (hereafter, "targeted field") is an HTTP response header field that has the same semantics as the Cache-Control response header field ({{HTTP-CACHING, Section 5.2}}). However, it has a distinct field name that indicates the target for its directives.
+A Targeted Cache-Control Header Field (hereafter, "targeted field") is an HTTP response header field that has the same semantics as the Cache-Control response header field ({{HTTP-CACHING, Section 5.2}}). However, it has a distinct field name that indicates the target for its cache directives.
 
 For example:
 
@@ -117,11 +117,11 @@ This means that cache directives that have no value will be mapped to a Boolean 
 
 For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an integer value; no-store ({{Section 5.2.2.5 of HTTP-CACHING}}) always has a boolean true value, and no-cache ({{Section 5.2.2.4 of HTTP-CACHING}}) has a value that can either be boolean true or a string containing a comma-delimited list of field names.
 
-Implementations MUST NOT generate values that violate these inferred constraints on the directive's value. In particular, string values whose first character is not alphabetic or "*" MUST be generated as structured Strings, so they are not mistaken for other types.
+Implementations MUST NOT generate values that violate these inferred constraints on the cache directive's value. In particular, string values whose first character is not alphabetic or "*" MUST be generated as structured Strings, so they are not mistaken for other types.
 
 Implementations SHOULD NOT consume values that violate these inferred constraints. For example, a consuming implementation that coerces a max-age with a decimal value into an integer would behave differently than other implementations, potentially causing interoperability issues.
 
-Parameters received on directives are to be ignored, unless other handling is explicitly specified.
+Parameters received on cache directives are to be ignored, unless other handling is explicitly specified.
 
 If a targeted field in a given response is empty, or a parsing error is encountered, that field MUST be ignored by the cache (i.e., it behaves as if the field were not present, likely falling back to other cache-control mechanisms present).
 
@@ -136,7 +136,7 @@ For example, a CDN cache might support both CDN-Cache-Control and a header speci
   [ExampleCDN-Cache-Control, CDN-Cache-Control]
 ~~~
 
-When a cache that implements this specification receives a response with one or more of of the header field names on its target list, the cache MUST select the first (in target list order) field with a valid, non-empty value and use its value to determine the caching policy for the response, and MUST ignore the Cache-Control and Expires header fields in that response, unless no valid, non-empty value is available from the listed header fields.
+When a cache that implements this specification receives a response with one or more of the header field names on its target list, the cache MUST select the first (in target list order) field with a valid, non-empty value and use its value to determine the caching policy for the response, and MUST ignore the Cache-Control and Expires header fields in that response, unless no valid, non-empty value is available from the listed header fields.
 
 Note that this occurs on a response-by-response basis; if no member of the cache's target list is present, valid and non-empty, a cache falls back to other cache control mechanisms as required by HTTP {{HTTP-CACHING}}.
 
@@ -199,7 +199,7 @@ CDN caches that use CDN-Cache-Control will typically forward this header so that
 
 ## Examples
 
-For example, the following header fields would instruct a CDN cache (i.e., a cache with a target list of `\[CDN-Cache-Control]]`) to consider the response fresh for 600 seconds, other shared caches to consider the response fresh for 120 seconds, and any remaining caches to consider the response fresh for 60 seconds:
+For example, the following header fields would instruct a CDN cache (i.e., a cache with a target list of `\[CDN-Cache-Control\]`) to consider the response fresh for 600 seconds, other shared caches to consider the response fresh for 120 seconds, and any remaining caches to consider the response fresh for 60 seconds:
 
 ~~~ http-message
 Cache-Control: max-age=60, s-maxage=120
