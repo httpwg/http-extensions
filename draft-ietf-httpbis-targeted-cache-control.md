@@ -79,7 +79,7 @@ This specification defines a convention for HTTP response header fields that all
 
 Modern deployments of HTTP often use multiple layers of caching. For example, a Web site might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more Content Delivery Networks (CDNs) that are distributed throughout the Internet, and it might benefit from browser caching as well.
 
-Because it is often desirable to control these different classes of caches separately, some means of targeting cache directives at them is necessary.
+Because it is often desirable to control these different classes of caches separately, some means of targeting cache directives at them is necessary. For example, if a publisher has a mechanism to invalidate the contents of a cache that it has a relationship with (such as a CDN cache), they might be more comfortable assigning a more generous caching policy to it, while still wanting to restrict the behavior of other caches.
 
 The HTTP Cache-Control response header field (defined in {{Section 5.2 of HTTP-CACHING}}) is widely used to direct caching behavior. However, it is relatively undifferentiated; while some cache directives (e.g., s-maxage) are targeted at a specific class of caches (for s-maxage, shared caches), targeting is not consistently available across all existing cache directives (e.g., stale-while-revalidate). This is problematic, especially as the number of caching extensions grows, along with the number of potential targets.
 
