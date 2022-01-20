@@ -241,6 +241,15 @@ Forward proxies and other intermediaries MUST NOT add the `Client-Cert` or
 `Client-Cert` or `Client-Cert-Chain` header field. Similarly, clients MUST NOT
 employ the `Client-Cert` or `Client-Cert-Chain` header field in requests.
 
+When the value of the `Client-Cert` request header field is used to select a response
+(e.g., the response content is access-controlled), the response MUST either be
+uncacheable (e.g., by sending `Cache-Control: no-store`) or be designated for
+selective reuse only for subsequent requests with the same `Client-Cert`
+header value by sending a `Vary: Client-Cert` response header.
+If a TTRP encounters a response with a `client-cert` field name in the `Vary`
+header field, it SHOULD prevent the user agent from caching the response by
+transforming the value of the `Vary` response header field to `*`.
+
 # Deployment Considerations {#deployment}
 
 ## Header Field Compression
@@ -505,6 +514,7 @@ The authors would like to thank the following individuals who've contributed in 
    * Use RFC 8941 Structured Field Values for HTTP
    * Introduce a separate header that can convey the certificate chain
    * Add considerations on header compression and size 
+   * Describe interaction with caching
 
    draft-ietf-httpbis-client-cert-field-00
 
