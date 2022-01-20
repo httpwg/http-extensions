@@ -243,7 +243,7 @@ employ the `Client-Cert` or `Client-Cert-Chain` header field in requests.
 
 When the value of the `Client-Cert` request header is used to select a response
 (e.g., the response content is access-controlled), the response MUST either be
-marked as uncacheable (e.g., `Cache-Control: no-store`) or be designated for
+uncacheable (e.g., by sending `Cache-Control: no-store`) or be designated for
 selective reuse only for subsequent requests with the same `Client-Cert`
 header value (e.g., `Vary: client-cert`).
 If a TTRP encounters a response with a `client-cert` field name in the `Vary`
