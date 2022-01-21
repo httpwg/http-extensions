@@ -77,7 +77,7 @@ This specification defines a convention for HTTP response header fields that all
 # Introduction
 
 
-Modern deployments of HTTP often use multiple layers of caching. For example, a Web site might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more Content Delivery Networks (CDNs) that are distributed throughout the Internet, and it might benefit from browser caching as well.
+Modern deployments of HTTP often use multiple layers of caching. For example, a website might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more Content Delivery Networks (CDNs) that are distributed throughout the Internet, and it might benefit from browser caching as well.
 
 Because it is often desirable to control these different classes of caches separately, some means of targeting cache directives at them is necessary. For example, if a publisher has a mechanism to invalidate the contents of a cache that it has a relationship with (such as a CDN cache), they might be more comfortable assigning a more generous caching policy to it, while still wanting to restrict the behavior of other caches.
 
@@ -109,7 +109,7 @@ is a targeted field that applies to Content Delivery Networks (CDNs), as defined
 
 ## Syntax
 
-Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a HTTP cache response directive ({{Section 5.2.2 of HTTP-CACHING}}) including extension response directives (as per {{Section 5.2.3 of HTTP-CACHING}}). Note that while targeted fields often have the same syntax as Cache-Control fields, differences in error handling mean that using a Cache-Control parser rather than a Structured Fields parser can introduce interoperability issues.
+Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is an HTTP cache response directive ({{Section 5.2.2 of HTTP-CACHING}}) including extension response directives (as per {{Section 5.2.3 of HTTP-CACHING}}). Note that while targeted fields often have the same syntax as Cache-Control fields, differences in error handling mean that using a Cache-Control parser rather than a Structured Fields parser can introduce interoperability issues.
 
 Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. {{Section 5.2 of HTTP-CACHING}} defines cache directive values to be either absent, a quoted-string, or a token.
 
