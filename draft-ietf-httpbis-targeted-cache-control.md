@@ -244,7 +244,7 @@ defined by {{HTTP}}:
 
 The security considerations of HTTP caching {{HTTP-CACHING}} apply.
 
-The ability to carry multiple caching policies on a response can result in confusion about how a response will be cached in different systems, if not used carefully. This might result in unintentional reuse of responses with sensitive information.
+The ability to carry multiple caching policies on a response can result in confusion about how a response will be cached in different systems, potentially resulting in unintentional reuse of responses with sensitive information. For this reason, care must be exercised.
 
 
 --- back
