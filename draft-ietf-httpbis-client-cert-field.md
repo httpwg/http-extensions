@@ -125,7 +125,7 @@ after receipt and verification of the client certificate is also
 mutually-authenticated and thus suitable for the mechanisms described in this
 document.
 
-# HTTP Header Fields and Processing Rules
+# HTTP Header Fields and Processing Rules {#headers}
 
 This document designates the following headers, defined further in {{header}}
 and {{chain-header}} respectively, to carry the client certificate information of a
@@ -328,7 +328,19 @@ Other deployments that meet the requirements set forth herein are also possible.
 
 # IANA Considerations
 
-The `Client-Cert` and `Client-Cert-Chain` HTTP header fields will be added to the registry defined by http-core.
+## HTTP Field Name Registrations
+
+Please register the following entries in the "Hypertext Transfer Protocol (HTTP) Field
+Name Registry" defined by {{?I-D.ietf-httpbis-semantics}}:
+
+* Field name: Client-Cert
+* Status: permanent
+* Specification document: {{headers}} of \[this document]
+<br>
+
+* Field name: Client-Cert-Chain
+* Status: permanent
+* Specification document: {{headers}} of \[this document]
 
 --- back
 
@@ -521,8 +533,9 @@ The authors would like to thank the following individuals who've contributed in 
 
    * Use RFC 8941 Structured Field Values for HTTP
    * Introduce a separate header that can convey the certificate chain
-   * Add considerations on header compression and size 
+   * Add considerations on header compression and size
    * Describe interaction with caching
+   * Fill out IANA Considerations with HTTP field name registrations
    * Discuss renegotiation
 
    draft-ietf-httpbis-client-cert-field-00
