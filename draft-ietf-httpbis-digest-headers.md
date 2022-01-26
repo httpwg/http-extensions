@@ -147,7 +147,7 @@ algorithms are registered in the HTTP Digest Algorithm Values Registry (see
 {{algorithms}}).
 
 Selecting the data on which checksums are calculated depends on the use case of
-HTTP messages. This document provides different headers for HTTP representation
+HTTP messages. This document provides different fields for HTTP representation
 data and HTTP content.
 
 This document defines the `Digest` ({{digest-field}}) and `Representation-Digest`
@@ -218,7 +218,7 @@ to encode parameters into the representation-data-digest, in such a way as to
 mitigate security risks related to its computation.
 
 While this document updates `Digest` and `Want-Digest`, their syntax remains
-unmodified. The custom syntax is now treated as legacy. It is RECOMMENDED that
+unmodified. The original syntax is now treated as legacy. It is RECOMMENDED that
 the new Structured-Fields-based `Representation-Digest` and `Want-Content-Digest`
 fields are used instead.
 
@@ -271,7 +271,7 @@ string (see {{usage-in-signatures}}).
 
 The `Digest` an `Representation-Digest` HTTP fields carry a set of
 representation digests; the fields differ only in their wire syntax. Each entry
-in the set conveys the hashing algorithm used to compute the associated computed
+in the set conveys the hashing algorithm used to compute the associated
 checksum.
 
 ## The Digest Field {#digest-field}
@@ -330,7 +330,7 @@ Representation-Digest   = sf-dictionary
 ~~~
 
 `Representation-Digest` member-keys convey the hashing algorithm (see
-{{algorithms}}) used to compute the checksum. Member-values are the the output
+{{algorithms}}) used to compute the checksum. Member-values are the output
 of the checksum calculation. Member-values MUST be of type sf-binary.
 
 For example:
