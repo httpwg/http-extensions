@@ -1000,7 +1000,9 @@ The mask generation function is `MGF1` as specified in {{RFC8017}} with a hash f
 The salt length (`sLen`) is 64 bytes.
 The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied.
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
-The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
+The results of the verification function indicate if the signature presented is valid.
+
+Note that the output of RSA PSS algorithms are non-deterministic, and therefore it is not correct to re-calculate a new signature on the signature input and compare the results to an existing signature. Instead, the verification algorithm here needs to be used.
 
 Use of this algorithm can be indicated at runtime using the `rsa-pss-sha512` value for the `alg` signature parameter.
 
@@ -1037,13 +1039,15 @@ Use of this algorithm can be indicated at runtime using the `hmac-sha256` value 
 To sign using this algorithm, the signer applies the `ECDSA` algorithm {{FIPS186-4}} using curve P-256 with the signer's private signing key and
 the signature input string ({{create-sig-input}}).
 The hash SHA-256 {{RFC6234}} is applied to the signature input string to create
-the digest content to which the digital signature is applied.
-The resulting signed content byte array is the HTTP message signature output used in {{sign}}.
+the digest content to which the digital signature is applied, (`M`).
+The signature algorithm returns two integer values, `r` and `s`. These are both encoded in big-endian unsigned integers, zero-padded to 32-octets each. These encoded values are concatenated into a single 64-octet array consisting of the encoded value of `r` followed by the encoded value of `s`. The resulting concatenation of `(r, s)` is byte array of the HTTP message signature output used in {{sign}}.
 
 To verify using this algorithm, the verifier applies the `ECDSA` algorithm {{FIPS186-4}}  using the public key portion of the verification key material and the signature input string re-created as described in {{verify}}.
-The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the verification function is applied.
-The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
-The results of the verification function are compared to the http message signature to determine if the signature presented is valid.
+The hash function SHA-256 {{RFC6234}} is applied to the signature input string to create the digest content to which the signature verification function is applied, (`M`).
+The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}. This value is a 64-octet array consisting of the encoded values of `r` and `s` concatenated in order. These are both encoded in big-endian unsigned integers, zero-padded to 32-octets each. The resulting signature value `(r, s)` is used as input to the signature verification function.
+The results of the verification function indicate if the signature presented is valid.
+
+Note that the output of ECDSA algorithms are non-deterministic, and therefore it is not correct to re-calculate a new signature on the signature input and compare the results to an existing signature. Instead, the verification algorithm here needs to be used.
 
 Use of this algorithm can be indicated at runtime using the `ecdsa-p256-sha256` value for the `alg` signature parameter.
 
