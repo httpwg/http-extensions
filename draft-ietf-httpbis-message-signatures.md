@@ -871,6 +871,8 @@ VMvMcOg==
 ~~~
 {: title="Non-normative example signature value" #example-sig-value}
 
+Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
+
 ## Verifying a Signature {#verify}
 
 Verification of an HTTP message signature is a process that takes as its input the message (including `Signature` and `Signature-Input` fields) and the requirements for the application. The output of the verification is either a positive verification or an error.
@@ -1002,7 +1004,7 @@ The hash function (`Hash`) SHA-512 {{RFC6234}} is applied to the signature input
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}.
 The results of the verification function indicate if the signature presented is valid.
 
-Note that the output of RSA PSS algorithms are non-deterministic, and therefore it is not correct to re-calculate a new signature on the signature input and compare the results to an existing signature. Instead, the verification algorithm here needs to be used.
+Note that the output of RSA PSS algorithms are non-deterministic, and therefore it is not correct to re-calculate a new signature on the signature input and compare the results to an existing signature. Instead, the verification algorithm defined here needs to be used. See {{security-nondeterministic}}.
 
 Use of this algorithm can be indicated at runtime using the `rsa-pss-sha512` value for the `alg` signature parameter.
 
@@ -1047,7 +1049,7 @@ The hash function SHA-256 {{RFC6234}} is applied to the signature input string t
 The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}. This value is a 64-octet array consisting of the encoded values of `r` and `s` concatenated in order. These are both encoded in big-endian unsigned integers, zero-padded to 32-octets each. The resulting signature value `(r, s)` is used as input to the signature verification function.
 The results of the verification function indicate if the signature presented is valid.
 
-Note that the output of ECDSA algorithms are non-deterministic, and therefore it is not correct to re-calculate a new signature on the signature input and compare the results to an existing signature. Instead, the verification algorithm here needs to be used.
+Note that the output of ECDSA algorithms are non-deterministic, and therefore it is not correct to re-calculate a new signature on the signature input and compare the results to an existing signature. Instead, the verification algorithm defined here needs to be used. See {{security-nondeterministic}}.
 
 Use of this algorithm can be indicated at runtime using the `ecdsa-p256-sha256` value for the `alg` signature parameter.
 
@@ -1476,6 +1478,10 @@ The definition of HTTP field names does not allow for the use of the `@` charact
 
 To combat this, when selecting values for a message component, if the component identifier starts with the `@` character, it needs to be processed as a derived component and never taken as a fields. Only if the component identifier does not start with the `@` character can it be taken from the fields of the message. The algorithm discussed in {{create-sig-input}} provides a safe order of operations.
 
+## Non-deterministic Signature Primitives {#security-nondeterministic}
+
+Some cryptographic primitives such as RSA PSS and ECDSA have non-deterministic outputs, which include some amount of entropy within the algorithm. For such algorithms, multiple signatures generated in succession will not match. A lazy implementation of a verifier could ignore this distinction and simply check for the same value being created by re-signing the signature input. Such an implementation would work for deterministic algorithms such as HMAC and EdDSA but fail to verify valid signatures made using non-deterministic algorithms. It is therefore important that a verifier always use the correctly-defined verification function for the algorithm in question and not do a simple comparison.
+
 # Privacy Considerations {#privacy}
 
 ## Identification through Keys {#privacy-identify-keys}
@@ -1696,7 +1702,9 @@ Signature: sig1=:HWP69ZNiom9Obu1KIdqPPcu/C1a5ZUMBbqS/xwJECV8bhIQVmE\
   +5K+2zvDY/Cia34HNpRW5io7Iv9/b7iQ==:
 ~~~
 
-Note that since the covered components list is empty, this signature could be applied by an attacker to an unrelated HTTP message. Therefore, use of an empty covered components set is discouraged.
+Note that since the covered components list is empty, this signature could be applied by an attacker to an unrelated HTTP message. Therefore, use of an empty covered components set is discouraged. See {{security-coverage}} for more information.
+
+Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
 ### Selective Covered Components using rsa-pss-sha512
 
@@ -1729,6 +1737,8 @@ Signature: sig1=:ik+OtGmM/kFqENDf9Plm8AmPtqtC7C9a+zYSaxr58b/E6h81gh\
   v0l8mN404PPzRBTpB7+HpClyK4CNp+SVv46+6sHMfJU4taz10s/NoYRmYCGXyadzY\
   YDj0BYnFdERB6NblI/AOWFGl5Axhhmjg==:
 ~~~
+
+Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
 ### Full Coverage using rsa-pss-sha512
 
@@ -1770,6 +1780,8 @@ Signature: sig1=:JuJnJMFGD4HMysAGsfOY6N5ZTZUknsQUdClNG51VezDgPUOW03\
 
 Note in this example that the value of the `Date` header and the value of the `created` signature parameter need not be the same. This is due to the fact that the `Date` header is added when creating the HTTP Message and the `created` parameter is populated when creating the signature over that message, and these two times could vary. If the `Date` header is covered by the signature, it is up to the verifier to determine whether its value has to match that of the `created` parameter or not.
 
+Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
+
 ### Signing a Response using ecdsa-p256-sha256
 
 This example covers portions of the `test-response` response message using the `ecdsa-p256-sha256` algorithm
@@ -1797,6 +1809,8 @@ Signature-Input: sig1=("content-type" "digest" "content-length")\
 Signature: sig1=:n8RKXkj0iseWDmC6PNSQ1GX2R9650v+lhbb6rTGoSrSSx18zmn\
   6fPOtBx48/WffYLO0n1RHHf9scvNGAgGq52Q==:
 ~~~
+
+Note that the ECDSA algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
 ### Signing a Request using hmac-sha256
 
