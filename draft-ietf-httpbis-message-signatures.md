@@ -2004,6 +2004,9 @@ Jeffrey Yasskin.
      * Editorial fixes.
      * Changed "specialty component" to "derived component".
      * Expanded signature input generation and ABNF rules.
+     * Added Ed25519 algorithm.
+     * Clarified encoding of ECDSA signature.
+     * Clarified use of non-deterministic algorithms.
 
   - -07
      * Added security and privacy considerations.
