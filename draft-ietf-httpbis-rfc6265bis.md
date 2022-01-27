@@ -1131,6 +1131,11 @@ explicitly. Horizontal tab (%x09) is excluded from the CTL characters that
 lead to set-cookie-string rejection, as it is considered whitespace, which is
 handled separately.
 
+NOTE: The set-cookie-string may contain octet sequences that appear
+percent-encoded as per {{Section 2.1 of RFC3986}}. However, a user agent
+MUST NOT decode these sequences and instead parse the individual octets
+as specified in this algorithm.
+
 A user agent MUST use an algorithm equivalent to the following algorithm to
 parse a set-cookie-string:
 
