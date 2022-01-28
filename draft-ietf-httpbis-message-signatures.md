@@ -832,7 +832,7 @@ If covered components reference a component identifier that cannot be resolved t
  * The component identifier identifies a field that is not present in the message or whose value is malformed.
  * The component identifier indicates that a structured field serialization is used (via the `sf` parameter), but the field in question is known to not be a structured field or the type of structured field is not known to the implementation.
  * The component identifier is a dictionary member identifier that references a field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
- * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dictionary";key="c"` and the value of the `example-dictionary` header field is `a=1, b=2`
+ * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dictionary";key="c"` and the value of the `Example-Dictionary` header field is `a=1, b=2`, which does not have the `c` value.
 
 In the following non-normative example, the HTTP message being signed is the following request:
 
@@ -1002,20 +1002,19 @@ Applications MUST enforce the requirements defined in this document.  Regardless
 
 HTTP Message signatures MAY use any cryptographic digital signature or MAC method that is appropriate for the key material,
 environment, and needs of the signer and verifier.
-All signatures are generated from and verified against the byte values of the signature input string defined in {{create-sig-input}}.
 
-Each signature algorithm method takes as its input the signature input string as a set of byte values (`I`), the signing key material
-(`Ks`), and outputs the signature output as a set of byte values (`S`):
-
-~~~
-HTTP_SIGN (I, Ks)  ->  S
-~~~
-
-Each verification algorithm method takes as its input the recalculated signature input string as a set of byte values (`I`), the verification key
-material (`Kv`), and the presented signature to be verified as a set of byte values (`S`) and outputs the verification result (`V`) as a boolean:
+Each signature algorithm method takes as its input the signature input string defined in {{create-sig-input}} as a byte array (`M`), the signing key material
+(`Ks`), and outputs the signature output as a byte array (`S`):
 
 ~~~
-HTTP_VERIFY (I, Kv, S) -> V
+HTTP_SIGN (M, Ks)  ->  S
+~~~
+
+Each verification algorithm method takes as its input the recalculated signature input string defined in {{create-sig-input}} as a byte array (`M`), the verification key
+material (`Kv`), and the presented signature to be verified as a byte array (`S`) and outputs the verification result (`V`) as a boolean:
+
+~~~
+HTTP_VERIFY (M, Kv, S) -> V
 ~~~
 
 This section contains several common algorithm methods. The method to use can be communicated through the algorithm signature parameter
@@ -1700,11 +1699,11 @@ This section provides non-normative examples that may be used as test cases to v
 For requests, this `test-request` message is used:
 
 ~~~ http-message
-POST /foo?param=value&pet=dog HTTP/1.1
+POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
-Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+Content-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 Content-Length: 18
 
 {"hello": "world"}
@@ -1716,7 +1715,7 @@ For responses, this `test-response` message is used:
 HTTP/1.1 200 OK
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
-Digest: SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+Content-Digest: SHA-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 Content-Length: 18
 
 {"hello": "world"}
