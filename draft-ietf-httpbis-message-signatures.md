@@ -769,7 +769,7 @@ To create the signature input string, the signer or verifier concatenates togeth
 
         - If the component identifier starts with an "at" character (`@`), derive the component's value from the message according to the specific rules defined for the derived component identifier, as in {{derived-components}}. If the derived component identifier is unknown or the value cannot be derived, produce an error.
 
-        - If the component identifier does not start with an "at" character (`@`), canonicalize the HTTP field value as described in {{http-headers}}. If the value cannot be calculated, produce an error.
+        - If the component identifier does not start with an "at" character (`@`), canonicalize the HTTP field value as described in {{http-header}}. If the value cannot be calculated, produce an error.
 
     5. Append the covered component's canonicalized component value.
 
