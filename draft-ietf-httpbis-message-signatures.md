@@ -249,7 +249,7 @@ Following are non-normative examples of canonicalized values for header fields, 
 
 ~~~ http-message
 Host: www.example.com
-Date: Tue, 07 Jun 2014 20:51:35 GMT
+Date: Tue, 20 Apr 2021 02:07:56 GMT
 X-OWS-Header:   Leading and trailing whitespace.
 X-Obs-Fold-Header: Obsolete
     line folding.
@@ -262,7 +262,7 @@ The following example shows canonicalized values for these example header fields
 
 ~~~
 "host": www.example.com
-"date": Tue, 07 Jun 2014 20:51:35 GMT
+"date": Tue, 20 Apr 2021 02:07:56 GMT
 "x-ows-header": Leading and trailing whitespace.
 "x-obs-fold-header": Obsolete line folding.
 "cache-control": max-age=60, must-revalidate
@@ -287,7 +287,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 ~~~
 
-Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format.
+Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
 
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
 
@@ -712,19 +712,22 @@ For example, when serving this signed request:
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-POST /foo?param=value&pet=dog HTTP/1.1
+POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
+Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
+  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 Content-Length: 18
-Signature-Input: sig1=("@authority" "content-type")\
+Signature-Input: sig1=("@method" "@authority" "@path" \
+  "content-digest" "content-length" "content-type")\
   ;created=1618884475;keyid="test-key-rsa-pss"
-Signature: sig1=:KuhJjsOKCiISnKHh2rln5ZNIrkRvue0DSu5rif3g7ckTbbX7C4\
-  Jp3bcGmi8zZsFRURSQTcjbHdJtN8ZXlRptLOPGHkUa/3Qov79gBeqvHNUO4bhI27p\
-  4WzD1bJDG9+6ml3gkrs7rOvMtROObPuc78A95fa4+skS/t2T7OjkfsHAm/enxf1fA\
-  wkk15xj0n6kmriwZfgUlOqyff0XLwuH4XFvZ+ZTyxYNoo2+EfFg4NVfqtSJch2WDY\
-  7n/qmhZOzMfyHlggWYFnDpyP27VrzQCQg8rM1Crp6MrwGLa94v6qP8pq0sQVq2DLt\
-  4NJSoRRqXTvqlWIRnexmcKXjQFVz6YSA==:
+Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
+  RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkBIS1M8Br\
+  c8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpWINTEzpx\
+  jqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2Tr65+BXe\
+  TG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZElYyUKaAI\
+  jZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
 
 {"hello": "world"}
 ~~~
@@ -732,7 +735,7 @@ Signature: sig1=:KuhJjsOKCiISnKHh2rln5ZNIrkRvue0DSu5rif3g7ckTbbX7C4\
 This would result in the following unsigned response message:
 
 ~~~ http-message
-HTTP/1.1 200 OK
+HTTP/1.1 503 Service Unavailable
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
 Content-Length: 62
@@ -740,23 +743,22 @@ Content-Length: 62
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
-
-The server signs the response with its own key and includes the signature of `sig1` from the request in the covered components of the response. The signature input string for this example is:
+To cryptographically link the response to the request, the server signs the response with its own key and includes the signature of `sig1` from the request in the covered components of the response. The signature input string for this example is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-"content-type": application/json
+"@status": 503
 "content-length": 62
-"@status": 200
-"@request-response";key="sig1": :KuhJjsOKCiISnKHh2rln5ZNIrkRvue0DSu\
-  5rif3g7ckTbbX7C4Jp3bcGmi8zZsFRURSQTcjbHdJtN8ZXlRptLOPGHkUa/3Qov79\
-  gBeqvHNUO4bhI27p4WzD1bJDG9+6ml3gkrs7rOvMtROObPuc78A95fa4+skS/t2T7\
-  OjkfsHAm/enxf1fAwkk15xj0n6kmriwZfgUlOqyff0XLwuH4XFvZ+ZTyxYNoo2+Ef\
-  Fg4NVfqtSJch2WDY7n/qmhZOzMfyHlggWYFnDpyP27VrzQCQg8rM1Crp6MrwGLa94\
-  v6qP8pq0sQVq2DLt4NJSoRRqXTvqlWIRnexmcKXjQFVz6YSA==:
-"@signature-params": ("content-type" "content-length" "@status" \
-  "@request-response";key="sig1");created=1618884475\
+"content-type": application/json
+"@request-response";key="sig1": :LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJR\
+  GziCLuD8r5MW9S0RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVd\
+  wXyY/UkBIS1M8Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMT\
+  e0QE3IpWINTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuT\
+  Z9HdbD2Tr65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S\
+  1ag3LZElYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+"@signature-params": ("@status" "content-length" "content-type" \
+  "@request-response";key="sig1");created=1618884479\
   ;keyid="test-key-ecc-p256"
 ~~~
 
@@ -765,20 +767,22 @@ The signed response message is:
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-HTTP/1.1 200 OK
+HTTP/1.1 503 Service Unavailable
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
 Content-Length: 62
-Signature-Input: sig1=("content-type" "content-length" "@status" \
-  "@request-response";key="sig1");created=1618884475\
+Signature-Input: reqres=("@status" "content-length" "content-type" \
+  "@request-response";key="sig1");created=1618884479\
   ;keyid="test-key-ecc-p256"
-Signature: sig1=:crVqK54rxvdx0j7qnt2RL1oQSf+o21S/6Uk2hyFpoIfOT0q+Hv\
-  msYAXUXzo0Wn8NFWh/OjWQOXHAQdVnTk87Pw==:
+Signature: reqres=:JqzXLIjNd6VWVg/M7enbjWkOgsPmIK9vcoFQEkLD0SXNbFjR\
+  6d+olsof1dv7xC7ygF1q0YKjVrbV2QlCpDxrHg==:
 
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
 Since the request's signature value itself is not repeated in the response, the requester MUST keep the original signature value around long enough to validate the signature of the response that uses this component identifier.
+
+Note that the ECDSA algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
 The `@request-response` component identifier MUST NOT be used in a request message.
 
@@ -841,26 +845,32 @@ POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
-Content-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
+  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 Content-Length: 18
 
 {"hello": "world"}
 ~~~
 
-The covered components consist of the `@method`, `@path`, and `@authority` derived component identifiers followed by the `Cache-Control` HTTP header, in order. The signature parameters consist of a creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature input string for this message with these parameters is:
+The covered components consist of the `@method`, `@path`, and `@authority` derived component identifiers followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature input string for this message with these parameters is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-"@method": GET
+"@method": POST
+"@authority": example.com
 "@path": /foo
-"@authority": example.org
-"cache-control": max-age=60, must-revalidate
-"@signature-params": ("@method" "@path" "@authority" \
-  "cache-control");created=1618884475\
-  ;keyid="test-key-rsa-pss"
+"content-digest": sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX\
+  +TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
+"content-length": 18
+"content-type": application/json
+"@signature-params": ("@method" "@authority" "@path" \
+  "content-digest" "content-length" "content-type")\
+  ;created=1618884473;keyid="test-key-rsa-pss"
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
+
+Note that the example signature input here, or anywhere else within this specification, does not include the final newline that ends the example.
 
 # HTTP Message Signatures {#message-signatures}
 
@@ -899,12 +909,12 @@ For example, given the HTTP message and signature parameters in the example in {
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo1RSHi+oEF1FuX6O29\
-d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCiHzC87qmSQjvu1CFyFuWSj\
-dGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyoyZW84jS8gyarxAiWI97mPXU+OVM64\
-+HVBHmnEsS+lTeIsEQo36T3NFf2CujWARPQg53r58RmpZ+J9eKR2CD6IJQvacn5A4Ix\
-5BUAVGqlyp8JYm+S/CWJi31PNUjRRCusCVRj05NrxABNFv3r5S9IXf2fYJK+eyW4AiG\
-VMvMcOg==
+HIbjHC5rS0BYaa9v4QfD4193TORw7u9edguPh0AW3dMq9WImrlFrCGUDih47vAxi4L2\
+YRZ3XMJc1uOKk/J0ZmZ+wcta4nKIgBkKq0rM9hs3CQyxXGxHLMCy8uqK488o+9jrptQ\
++xFPHK7a9sRL1IXNaagCNN3ZxJsYapFj+JXbmaI5rtAdSfSvzPuBCh+ARHBmWuNo1Uz\
+VVdHXrl8ePL4cccqlazIJdC4QEjrF+Sn4IxBQzTZsL9y9TP5FsZYzHvDqbInkTNigBc\
+E9cKOYNFCn4D/WM7F6TNuZO9EgtzepLWcjTymlHzK7aXq6Am6sfOrpIC49yXjj3ae6H\
+RalVc/g==
 ~~~
 {: title="Non-normative example signature value" #example-sig-value}
 
@@ -961,20 +971,24 @@ For example, verifying the signature with the key `sig1` of the following messag
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-GET /foo HTTP/1.1
-Host: example.org
+POST /foo?param=Value&Pet=dog HTTP/1.1
+Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
-Cache-Control: max-age=60
-Cache-Control: must-revalidate
-Signature-Input: sig1=("@method" "@path" "@authority" \
-  "cache-control");created=1618884475\
-  ;keyid="test-key-rsa-pss"
-Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo1\
-  RSHi+oEF1FuX6O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCiHzC8\
-  7qmSQjvu1CFyFuWSjdGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyoyZW84jS8gya\
-  rxAiWI97mPXU+OVM64+HVBHmnEsS+lTeIsEQo36T3NFf2CujWARPQg53r58RmpZ+J9\
-  eKR2CD6IJQvacn5A4Ix5BUAVGqlyp8JYm+S/CWJi31PNUjRRCusCVRj05NrxABNFv3\
-  r5S9IXf2fYJK+eyW4AiGVMvMcOg==:
+Content-Type: application/json
+Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
+  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
+Content-Length: 18
+Signature-Input: sig1=("@method" "@authority" "@path" \
+  "content-digest" "content-length" "content-type")\
+  ;created=1618884473;keyid="test-key-rsa-pss"
+Signature: sig1=:HIbjHC5rS0BYaa9v4QfD4193TORw7u9edguPh0AW3dMq9WImrl\
+  FrCGUDih47vAxi4L2YRZ3XMJc1uOKk/J0ZmZ+wcta4nKIgBkKq0rM9hs3CQyxXGxH\
+  LMCy8uqK488o+9jrptQ+xFPHK7a9sRL1IXNaagCNN3ZxJsYapFj+JXbmaI5rtAdSf\
+  SvzPuBCh+ARHBmWuNo1UzVVdHXrl8ePL4cccqlazIJdC4QEjrF+Sn4IxBQzTZsL9y\
+  9TP5FsZYzHvDqbInkTNigBcE9cKOYNFCn4D/WM7F6TNuZO9EgtzepLWcjTymlHzK7\
+  aXq6Am6sfOrpIC49yXjj3ae6HRalVc/g==:
+
+{"hello": "world"}
 ~~~
 
 With the additional requirements that at least the method, path, authority, and cache-control be signed, and that the signature creation timestamp is recent enough at the time of verification, the verification passes.
@@ -1162,37 +1176,72 @@ Multiple `Signature` fields MAY be included in a single HTTP message. The signat
 
 Multiple distinct signatures MAY be included in a single message. Each distinct signature MUST have a unique label. Since `Signature-Input` and `Signature` are both defined as Dictionary Structured fields, they can be used to include multiple signatures within the same HTTP message by using distinct signature labels. These multiple signatures could be added all by the same signer or could come from several different signers. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
 
-The following is a non-normative example of header fields a reverse proxy sets in addition to the examples in the previous sections.
+The following is a non-normative example starts with a signed request from the client. The proxy takes this request validates the client's signature.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Forwarded: for=192.0.2.123
-Signature-Input: sig1=("@method" "@path" "@authority" \
-    "cache-control")\
-    ;created=1618884475;keyid="test-key-rsa-pss"
-Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
-    1RSHi+oEF1FuX6O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCi\
-    HzC87qmSQjvu1CFyFuWSjdGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyoyZW8\
-    4jS8gyarxAiWI97mPXU+OVM64+HVBHmnEsS+lTeIsEQo36T3NFf2CujWARPQg53\
-    r58RmpZ+J9eKR2CD6IJQvacn5A4Ix5BUAVGqlyp8JYm+S/CWJi31PNUjRRCusCV\
-    Rj05NrxABNFv3r5S9IXf2fYJK+eyW4AiGVMvMcOg==:
+POST /foo?param=Value&Pet=dog HTTP/1.1
+Host: example.com
+Date: Tue, 20 Apr 2021 02:07:55 GMT
+Content-Type: application/json
+Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
+  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
+Content-Length: 18
+Signature-Input: sig1=("@method" "@authority" "@path" \
+  "content-digest" "content-length" "content-type")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
+Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
+  RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkBIS1M8Br\
+  c8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpWINTEzpx\
+  jqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2Tr65+BXe\
+  TG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZElYyUKaAI\
+  jZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+
+{"hello": "world"}
 ~~~
 
-The client's request includes a signature value under the label `sig1`, which the proxy signs in addition to the `Forwarded` header defined in {{RFC7239}}. Note that since the client's signature already covers the client's `Signature-Input` value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. This results in a signature input string of:
+The proxy then alters the message before forwarding it on to the origin server, changing the target host and adding the `Forwarded` header defined in {{RFC7239}}.
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+POST /foo?param=Value&Pet=dog HTTP/1.1
+Host: origin.host.internal.example
+Date: Tue, 20 Apr 2021 02:07:56 GMT
+Content-Type: application/json
+Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
+  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
+Content-Length: 18
+Forwarded: for=192.0.2.123
+Signature-Input: sig1=("@method" "@authority" "@path" \
+  "content-digest" "content-length" "content-type")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
+Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
+  RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkBIS1M8Br\
+  c8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpWINTEzpx\
+  jqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2Tr65+BXe\
+  TG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZElYyUKaAI\
+  jZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+
+{"hello": "world"}
+~~~
+
+The proxy includes the client's signature value under the label `sig1`, which the proxy signs in addition to the `Forwarded` header. Note that since the client's signature already covers the client's `Signature-Input` value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature input string of:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-"signature";key="sig1": :P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP\
-  4uKwxyJo1RSHi+oEF1FuX6O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9Gl\
-  yntiCiHzC87qmSQjvu1CFyFuWSjdGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyo\
-  yZW84jS8gyarxAiWI97mPXU+OVM64+HVBHmnEsS+lTeIsEQo36T3NFf2CujWARPQg\
-  53r58RmpZ+J9eKR2CD6IJQvacn5A4Ix5BUAVGqlyp8JYm+S/CWJi31PNUjRRCusCV\
-  Rj05NrxABNFv3r5S9IXf2fYJK+eyW4AiGVMvMcOg==:
+"signature";key="sig1": :LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8\
+  r5MW9S0RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkB\
+  IS1M8Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpW\
+  INTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2T\
+  r65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZEl\
+  YyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
 "forwarded": for=192.0.2.123
 "@signature-params": ("signature";key="sig1" "forwarded")\
-  ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
+  ;created=1618884480;expires=1618884540;keyid="test-key-rsa"\
+  ;alg="rsa-v1_5-sha256"
 ~~~
 
 And a signature output value of:
@@ -1200,12 +1249,12 @@ And a signature output value of:
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-cjGvZwbsq9JwexP9TIvdLiivxqLINwp/ybAc19KOSQuLvtmMt3EnZxNiE+797dXK2cj\
-PPUFqoZxO8WWx1SnKhAU9SiXBr99NTXRmA1qGBjqus/1Yxwr8keB8xzFt4inv3J3zP0\
-k6TlLkRJstkVnNjuhRIUA/ZQCo8jDYAl4zWJJjppy6Gd1XSg03iUa0sju1yj6rcKbMA\
-BBuzhUz4G0u1hZkIGbQprCnk/FOsqZHpwaWvY8P3hmcDHkNaavcokmq+3EBDCQTzgwL\
-qfDmV0vLCXtDda6CNO2Zyum/pMGboCnQn/VkQ+j8kSydKoFg6EbVuGbrQijth6I0dDX\
-2/HYcJg==
+G1WLTL4/9PGSKEQbSAMypZNk+I2dpLJ6qvl2JISahlP31OO/QEUd8/HdO2O7vYLi5k3\
+JIiAK3UPK4U+kvJZyIUidsiXlzRI+Y2se3SGo0D8dLfhG95bKr6ukYXl60QHpsGRTfS\
+iwdtvYKXGpKNrMlISJYd+oGrGRyI9gbCy0aFhc6I/okIMLeK4g9PgzpC3YTwhUQ98KI\
+BNLWHgREfBgJxjPbxFlsgJ9ykPviLj8GKJ81HwsK3XM9P7WaS7fMGOt8h1kSqgkZQB9\
+YqiIo+WhHvJa7iPy8QrYFKzx9BBEY6AwfStZAsXXz3LobZseyxsYcLJLs8rY0wVA9NP\
+sxKrHGA==
 ~~~
 
 These values are added to the HTTP request message by the proxy. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under the label `proxy_sig`. The proxy uses the key `test-key-rsa` to create its signature using the `rsa-v1_5-sha256` signature algorithm, while the client's original signature was made using the key id of `test-key-rsa-pss` and an RSA PSS signature algorithm.
@@ -1213,24 +1262,34 @@ These values are added to the HTTP request message by the proxy. The original si
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
+POST /foo?param=Value&Pet=dog HTTP/1.1
+Host: origin.host.internal.example
+Date: Tue, 20 Apr 2021 02:07:56 GMT
+Content-Type: application/json
+Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
+  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
+Content-Length: 18
 Forwarded: for=192.0.2.123
-Signature-Input: sig1=("@method" "@path" "@authority" \
-    "cache-control")\
+Signature-Input: sig1=("@method" "@authority" "@path" \
+    "content-digest" "content-length" "content-type")\
     ;created=1618884475;keyid="test-key-rsa-pss", \
   proxy_sig=("signature";key="sig1" "forwarded")\
-    ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
-Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
-    1RSHi+oEF1FuX6O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCi\
-    HzC87qmSQjvu1CFyFuWSjdGa3qLYYlNm7pVaJFalQiKWnUaqfT4LyttaXyoyZW8\
-    4jS8gyarxAiWI97mPXU+OVM64+HVBHmnEsS+lTeIsEQo36T3NFf2CujWARPQg53\
-    r58RmpZ+J9eKR2CD6IJQvacn5A4Ix5BUAVGqlyp8JYm+S/CWJi31PNUjRRCusCV\
-    Rj05NrxABNFv3r5S9IXf2fYJK+eyW4AiGVMvMcOg==:, \
-  proxy_sig=:cjGvZwbsq9JwexP9TIvdLiivxqLINwp/ybAc19KOSQuLvtmMt3EnZx\
-    NiE+797dXK2cjPPUFqoZxO8WWx1SnKhAU9SiXBr99NTXRmA1qGBjqus/1Yxwr8k\
-    eB8xzFt4inv3J3zP0k6TlLkRJstkVnNjuhRIUA/ZQCo8jDYAl4zWJJjppy6Gd1X\
-    Sg03iUa0sju1yj6rcKbMABBuzhUz4G0u1hZkIGbQprCnk/FOsqZHpwaWvY8P3hm\
-    cDHkNaavcokmq+3EBDCQTzgwLqfDmV0vLCXtDda6CNO2Zyum/pMGboCnQn/VkQ+\
-    j8kSydKoFg6EbVuGbrQijth6I0dDX2/HYcJg==:
+    ;created=1618884480;expires=1618884540;keyid="test-key-rsa"\
+    ;alg="rsa-v1_5-sha256"
+Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
+    RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkBIS1M8\
+    Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpWINT\
+    EzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2Tr\
+    65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZE\
+    lYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:, \
+  proxy_sig=:G1WLTL4/9PGSKEQbSAMypZNk+I2dpLJ6qvl2JISahlP31OO/QEUd8/\
+    HdO2O7vYLi5k3JIiAK3UPK4U+kvJZyIUidsiXlzRI+Y2se3SGo0D8dLfhG95bKr\
+    6ukYXl60QHpsGRTfSiwdtvYKXGpKNrMlISJYd+oGrGRyI9gbCy0aFhc6I/okIML\
+    eK4g9PgzpC3YTwhUQ98KIBNLWHgREfBgJxjPbxFlsgJ9ykPviLj8GKJ81HwsK3X\
+    M9P7WaS7fMGOt8h1kSqgkZQB9YqiIo+WhHvJa7iPy8QrYFKzx9BBEY6AwfStZAs\
+    XXz3LobZseyxsYcLJLs8rY0wVA9NPsxKrHGA==:
+
+{"hello": "world"}
 ~~~
 
 The proxy's signature and the client's original signature can be verified independently for the same message, based on the needs of the application. Since the proxy's signature covers the client signature, the backend service fronted by the proxy can trust that the proxy has validated the incoming signature.
@@ -1671,9 +1730,7 @@ MHcCAQEEIFKbhfNZfpDsW43+0+JjUr9K+bTeuxopu653+hBaXGA7oAoGCCqGSM49
 AwEHoUQDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lfw0EkjqF7xB4FivAxzic30tMM
 4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
 -----END EC PRIVATE KEY-----
-~~~
 
-~~~
 -----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lf
 w0EkjqF7xB4FivAxzic30tMM4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
@@ -1692,6 +1749,20 @@ uzvJfB4u3N0Jy4T7NZ75MDVcr8zSTInedJtkgcu46YW4XByzNJjxBdtjUkdJPBt\
   bmHhIDi6pcl8jsasjlTMtDQ==
 ~~~
 
+### Example Ed25519 Test Key {#example-key-ed25519}
+
+The following key is an elliptical curve key over the Edwards curve ed25519, referred to in this document as `test-key-edd25519`.
+
+~~~
+-----BEGIN PRIVATE KEY-----
+MC4CAQAwBQYDK2VwBCIEIJ+DYvh6SEqVTm50DFtMDoQikTmiCqirVv9mWG9qfSnF
+-----END PRIVATE KEY-----
+
+-----BEGIN PUBLIC KEY-----
+MCowBQYDK2VwAyEAJrQLj5P/89iXES9+vFgrIy29clF9CC/oPPsw3c5D0bs=
+-----END PUBLIC KEY-----
+~~~
+
 ## Test Cases
 
 This section provides non-normative examples that may be used as test cases to validate implementation correctness. These examples are based on the following HTTP messages:
@@ -1703,7 +1774,8 @@ POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
-Content-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
+  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 Content-Length: 18
 
 {"hello": "world"}
@@ -1715,42 +1787,43 @@ For responses, this `test-response` message is used:
 HTTP/1.1 200 OK
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
-Content-Digest: SHA-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
-Content-Length: 18
+Content-Digest: sha-512=:JlEy2bfUz7WrWIjc1qV6KVLpdr/7L5/L4h7Sxvh6sN\
+  HpDQWDCL+GauFQWcZBvVDhiyOnAQsxzZFYwi0wDH+1pw==:
+Content-Length: 23
 
-{"hello": "world"}
+{"message": "good dog"}
 ~~~
 
 ### Minimal Signature Using rsa-pss-sha512
 
-This example presents a minimal `Signature-Input` and `Signature` header for a signature using the `rsa-pss-sha512` algorithm over `test-request`, covering none
-of the components of the HTTP message request but providing a timestamped signature proof of possession of the key.
+This example presents a minimal signature using the `rsa-pss-sha512` algorithm over `test-request`, covering none
+of the components of the HTTP message, but providing a timestamped signature proof of possession of the key with a signer-provided nonce.
 
 The corresponding signature input is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-"@signature-params": ();created=1618884475\
-  ;keyid="test-key-rsa-pss";alg="rsa-pss-sha512"
+"@signature-params": ();created=1618884473;keyid="test-key-rsa-pss"\
+  ;nonce="b3k2pp5k7z-50gnwp.yemd"
 ~~~
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message:
+This results in the following `Signature-Input` and `Signature` headers being added to the message under the signature label `sig-b21`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=();created=1618884475\
-  ;keyid="test-key-rsa-pss";alg="rsa-pss-sha512"
-Signature: sig1=:HWP69ZNiom9Obu1KIdqPPcu/C1a5ZUMBbqS/xwJECV8bhIQVmE\
-  AAAzz8LQPvtP1iFSxxluDO1KE9b8L+O64LEOvhwYdDctV5+E39Jy1eJiD7nYREBgx\
-  TpdUfzTO+Trath0vZdTylFlxK4H3l3s/cuFhnOCxmFYgEa+cw+StBRgY1JtafSFwN\
-  cZgLxVwialuH5VnqJS4JN8PHD91XLfkjMscTo4jmVMpFd3iLVe0hqVFl7MDt6TMkw\
-  IyVFnEZ7B/VIQofdShO+C/7MuupCSLVjQz5xA+Zs6Hw+W9ESD/6BuGs6LF1TcKLxW\
-  +5K+2zvDY/Cia34HNpRW5io7Iv9/b7iQ==:
+Signature-Input: sig-b21=();created=1618884473\
+  ;keyid="test-key-rsa-pss";nonce="b3k2pp5k7z-50gnwp.yemd"
+Signature: sig-b21=:d2pmTvmbncD3xQm8E9ZV2828BjQWGgiwAaw5bAkgibUopem\
+  LJcWDy/lkbbHAve4cRAtx31Iq786U7it++wgGxbtRxf8Udx7zFZsckzXaJMkA7ChG\
+  52eSkFxykJeNqsrWH5S+oxNFlD4dzVuwe8DhTSja8xxbR/Z2cOGdCbzR72rgFWhzx\
+  2VjBqJzsPLMIQKhO4DGezXehhWwE56YCE+O6c0mKZsfxVrogUvA4HELjVKWmAvtl6\
+  UnCh8jYzuVG5WSb/QEVPnP5TmcAnLH1g+s++v6d4s8m0gCw1fV5/SITLq9mhho8K3\
+  +7EPYTU8IU1bLhdxO5Nyt8C8ssinQ98Xw9Q==:
 ~~~
 
-Note that since the covered components list is empty, this signature could be applied by an attacker to an unrelated HTTP message. Therefore, use of an empty covered components set is discouraged. See {{security-coverage}} for more information.
+Note that since the covered components list is empty, this signature could be applied by an attacker to an unrelated HTTP message. In this example, the `nonce` parameter is included to prevent the same signature from being replayed more than once, but if an attacker intercepts the signature and prevents its delivery to the verifier, the attacker could apply this signature to another message. Therefore, use of an empty covered components set is discouraged. See {{security-coverage}} for more discussion.
 
 Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
@@ -1764,66 +1837,68 @@ The corresponding signature input is:
 NOTE: '\' line wrapping per RFC 8792
 
 "@authority": example.com
-"content-type": application/json
-"@signature-params": ("@authority" "content-type")\
-  ;created=1618884475;keyid="test-key-rsa-pss"
+"content-digest": sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX\
+  +TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
+"@signature-params": ("@authority" "content-digest")\
+  ;created=1618884473;keyid="test-key-rsa-pss"
 ~~~
 
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message:
+This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b22`:
 
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=("@authority" "content-type")\
-  ;created=1618884475;keyid="test-key-rsa-pss"
-Signature: sig1=:ik+OtGmM/kFqENDf9Plm8AmPtqtC7C9a+zYSaxr58b/E6h81gh\
-  JS3PcH+m1asiMp8yvccnO/RfaexnqanVB3C72WRNZN7skPTJmUVmoIeqZncdP2mlf\
-  xlLP6UbkrgYsk91NS6nwkKC6RRgLhBFqzP42oq8D2336OiQPDAo/04SxZt4Wx9nDG\
-  uy2SfZJUhsJqZyEWRk4204x7YEB3VxDAAlVgGt8ewilWbIKKTOKp3ymUeQIwptqYw\
-  v0l8mN404PPzRBTpB7+HpClyK4CNp+SVv46+6sHMfJU4taz10s/NoYRmYCGXyadzY\
-  YDj0BYnFdERB6NblI/AOWFGl5Axhhmjg==:
+Signature-Input: sig-b22=("@authority" "content-digest")\
+  ;created=1618884473;keyid="test-key-rsa-pss"
+Signature: sig-b22=:Fee1uy9YGZq5UUwwYU6vz4dZNvfw3GYrFl1L6YlVIyUMuWs\
+  wWDNSvql4dVtSeidYjYZUm7SBCENIb5KYy2ByoC3bI+7gydd2i4OAT5lyDtmeapnA\
+  a8uP/b9xUpg+VSPElbBs6JWBIQsd+nMdHDe+ls/IwVMwXktC37SqsnbNyhNp6kcvc\
+  WpevjzFcD2VqdZleUz4jN7P+W5A3wHiMGfIjIWn36KXNB+RKyrlGnIS8yaBBrom5r\
+  cZWLrLbtg6VlrH1+/07RV+kgTh/l10h8qgpl9zQHu7mWbDKTq0tJ8K4ywcPoC4s2I\
+  4rU88jzDKDGdTTQFZoTVZxZmuTM1FvHfzIw==:
 ~~~
 
 Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
 ### Full Coverage using rsa-pss-sha512
 
-This example covers all headers in `test-request` (including the message body `Digest`) plus various elements of the control data, using the `rsa-pss-sha512` algorithm.
+This example covers all applicable in `test-request` (including the content type and length) plus many derived components, again using the `rsa-pss-sha512` algorithm. Note that the `Host` header field is not covered because the `@authority` derived component is included instead.
 
 The corresponding signature input is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-"date": Tue, 20 Apr 2021 02:07:56 GMT
+"date": Tue, 20 Apr 2021 02:07:55 GMT
 "@method": POST
 "@path": /foo
-"@query": ?param=value&pet=dog
+"@query": param=Value&Pet=dog
 "@authority": example.com
 "content-type": application/json
-"digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+"content-digest": sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX\
+  +TaPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 "content-length": 18
 "@signature-params": ("date" "@method" "@path" "@query" \
-  "@authority" "content-type" "digest" "content-length")\
-  ;created=1618884475;keyid="test-key-rsa-pss"
+  "@authority" "content-type" "content-digest" "content-length")\
+  ;created=1618884473;keyid="test-key-rsa-pss"
 ~~~
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message:
+This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b23`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=("date" "@method" "@path" "@query" \
-  "@authority" "content-type" "digest" "content-length")\
-  ;created=1618884475;keyid="test-key-rsa-pss"
-Signature: sig1=:JuJnJMFGD4HMysAGsfOY6N5ZTZUknsQUdClNG51VezDgPUOW03\
-  QMe74vbIdndKwW1BBrHOHR3NzKGYZJ7X3ur23FMCdANe4VmKb3Rc1Q/5YxOO8p7Ko\
-  yfVa4uUcMk5jB9KAn1M1MbgBnqwZkRWsbv8ocCqrnD85Kavr73lx51k1/gU8w673W\
-  T/oBtxPtAn1eFjUyIKyA+XD7kYph82I+ahvm0pSgDPagu917SlqUjeaQaNnlZzO03\
-  Iy1RZ5XpgbNeDLCqSLuZFVID80EohC2CQ1cL5svjslrlCNstd2JCLmhjL7xV3NYXe\
-  rLim4bqUQGRgDwNJRnqobpS6C1NBns/Q==:
+Signature-Input: sig-b23=("date" "@method" "@path" "@query" \
+  "@authority" "content-type" "content-digest" "content-length")\
+  ;created=1618884473;keyid="test-key-rsa-pss"
+Signature: sig-b23=:f9nOGJSjCdQ/t+/Mp7gpAHU7Kn1LpnWJE6W2081yRFITJob\
+  BDODwQNxnjiIdAGstfGKuM2vlc5SyN16//K5dBLGoiaboMco4J6R0zS+8oXqD7o6K\
+  RpIZR/qMrFc5Bu6f6UxuoWZPfCxhs3vxL/60JbF8dcdul1b77mWyC07ZjZ9VkelBy\
+  eF5+zN7v6Al/vnBzMS3H1NLz9dI2sw5Vb7kxQQ6CvEI9v3R30aFgWz4rCuyT0Kt3y\
+  tQvTHOBsadF66eDe641Sd6O/DgbdFibsE/+ToYopL9NlAuva42NlcFemrozvOKvGI\
+  PXdAPqmng/bePoSR6DIaFbWp5aDlNSbWlcA==:
 ~~~
 
 Note in this example that the value of the `Date` header and the value of the `created` signature parameter need not be the same. This is due to the fact that the `Date` header is added when creating the HTTP Message and the `created` parameter is populated when creating the signature over that message, and these two times could vary. If the `Date` header is covered by the signature, it is up to the verifier to determine whether its value has to match that of the `created` parameter or not.
@@ -1840,22 +1915,25 @@ The corresponding signature input is:
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
+"@status": 200
 "content-type": application/json
-"digest": SHA-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
-"content-length": 18
-"@signature-params": ("content-type" "digest" "content-length")\
-  ;created=1618884475;keyid="test-key-ecc-p256"
+"content-digest": sha-512=:JlEy2bfUz7WrWIjc1qV6KVLpdr/7L5/L4h7Sxvh6\
+  sNHpDQWDCL+GauFQWcZBvVDhiyOnAQsxzZFYwi0wDH+1pw==:
+"content-length": 23
+"@signature-params": ("@status" "content-type" "content-digest" \
+  "content-length");created=1618884473;keyid="test-key-ecc-p256"
 ~~~
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message:
+This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b24`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=("content-type" "digest" "content-length")\
-  ;created=1618884475;keyid="test-key-ecc-p256"
-Signature: sig1=:n8RKXkj0iseWDmC6PNSQ1GX2R9650v+lhbb6rTGoSrSSx18zmn\
-  6fPOtBx48/WffYLO0n1RHHf9scvNGAgGq52Q==:
+Signature-Input: sig-b24=("@status" "content-type" \
+  "content-digest" "content-length");created=1618884473\
+  ;keyid="test-key-ecc-p256"
+Signature: sig-b24=:0Ry6HsvzS5VmA6HlfBYS/fYYeNs7fYuA7s0tAdxfUlPGv0C\
+  SVuwrrzBOjcCFHTxVRJ01wjvSzM2BetJauj8dsw==:
 ~~~
 
 Note that the ECDSA algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
@@ -1870,21 +1948,56 @@ The corresponding signature input is:
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-"@authority": example.com
 "date": Tue, 20 Apr 2021 02:07:55 GMT
+"@authority": example.com
 "content-type": application/json
-"@signature-params": ("@authority" "date" "content-type")\
-  ;created=1618884475;keyid="test-shared-secret"
+"@signature-params": ("date" "@authority" "content-type")\
+  ;created=1618884473;keyid="test-shared-secret"
 ~~~
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message:
+This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b25`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=("@authority" "date" "content-type")\
-  ;created=1618884475;keyid="test-shared-secret"
-Signature: sig1=:fN3AMNGbx0V/cIEKkZOvLOoC3InI+lM2+gTv22x3ia8=:
+Signature-Input: sig-b25=("date" "@authority" "content-type")\
+  ;created=1618884473;keyid="test-shared-secret"
+Signature: sig-b25=:pxcQw6G3AjtMBQjwo8XzkZf/bws5LelbaMk5rGIGtE8=:
+~~~
+
+Before using symmetric signatures in practice, see the discussion of the security tradeoffs in {{security-symmetric}}.
+
+### Signing a Request using ed25519
+
+This example covers portions of the `test-request` using the `ed25519` algorithm 
+and the key `test-key-ed25519`.
+
+The corresponding signature input is:
+
+~~~
+NOTE: '\' line wrapping per RFC 8792
+
+"date": Tue, 20 Apr 2021 02:07:55 GMT
+"@method": POST
+"@path": /foo
+"@authority": example.com
+"content-type": application/json
+"content-length": 18
+"@signature-params": ("date" "@method" "@path" "@authority" \
+  "content-type" "content-length");created=1618884473\
+  ;keyid="test-key-ed25519"
+~~~
+
+This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b26`:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+Signature-Input: sig-b26=("date" "@method" "@path" "@authority" \
+  "content-type" "content-length");created=1618884473\
+  ;keyid="test-key-ed25519"
+Signature: sig-b26=:wqcAqbmYJ2ji2glfAMaRy4gruYYnx2nEFN2HN6jrnDnQCK1\
+  u02Gb04v9EDgwUPiu4A0w6vuQv5lIp5WPpBKRCw==:
 ~~~
 
 ## TLS-Terminating Proxies
@@ -1908,7 +2021,7 @@ The proxy processes the TLS connection and extracts the client's TLS certificate
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-POST /foo?Param=value&pet=Dog HTTP/1.1
+POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: service.internal.example
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
@@ -1932,7 +2045,7 @@ Without a signature, the internal service would need to trust that the incoming 
 NOTE: '\' line wrapping per RFC 8792
 
 "@path": /foo
-"@query": Param=value&pet=Dog
+"@query": param=Value&Pet=dog
 "@method": POST
 "@authority": service.internal.example
 "client-cert": :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQ\
@@ -1945,7 +2058,7 @@ NOTE: '\' line wrapping per RFC 8792
   GV4YW1wbGUuY29tMAoGCCqGSM49BAMCA0gAMEUCIBHda/r1vaL6G3VliL4/Di6YK0\
   Q6bMjeSkC3dFCOOB8TAiEAx/kHSB4urmiZ0NX5r5XarmPk0wmuydBVoU4hBVZ1yhk=:
 "@signature-params": ("@path" "@query" "@method" "@authority" \
-  "client-cert");created=1618884475;keyid="test-key-ecc-p256"
+  "client-cert");created=1618884473;keyid="test-key-ecc-p256"
 ~~~
 
 This results in the following signature:
@@ -1953,16 +2066,16 @@ This results in the following signature:
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-5gudRjXaHrAYbEaQUOoY9TuvqWOdPcspkp7YyKCB0XhyAG9cB715hucPPanEK0OVyiN\
-LJqcoq2Yn1DPWQcnbog==
+aLFj9LxKArG+6IY9mfdR3e6K1zfoDJKw71fAkWROXZh34FIiWKAgshFIfBjmiU2X01u\
+6YbDkRgzwyg5L9tky0w==
 ~~~
 
-Which results in the following signed request sent from the proxy to the internal service:
+Which results in the following signed request sent from the proxy to the internal service with the proxy's signature under the label `ttrp`:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-POST /foo?Param=value&pet=Dog HTTP/1.1
+POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: service.internal.example
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
@@ -1977,9 +2090,9 @@ Client-Cert: :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKD\
   4YW1wbGUuY29tMAoGCCqGSM49BAMCA0gAMEUCIBHda/r1vaL6G3VliL4/Di6YK0Q6\
   bMjeSkC3dFCOOB8TAiEAx/kHSB4urmiZ0NX5r5XarmPk0wmuydBVoU4hBVZ1yhk=:
 Signature-Input: ttrp=("@path" "@query" "@method" "@authority" \
-  "client-cert");created=1618884475;keyid="test-key-ecc-p256"
-Signature: ttrp=:5gudRjXaHrAYbEaQUOoY9TuvqWOdPcspkp7YyKCB0XhyAG9cB7\
-  15hucPPanEK0OVyiNLJqcoq2Yn1DPWQcnbog==:
+  "client-cert");created=1618884473;keyid="test-key-ecc-p256"
+Signature: ttrp=:aLFj9LxKArG+6IY9mfdR3e6K1zfoDJKw71fAkWROXZh34FIiWK\
+  AgshFIfBjmiU2X01u6YbDkRgzwyg5L9tky0w==:
 
 {"hello": "world"}
 ~~~
