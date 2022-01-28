@@ -792,7 +792,8 @@ The signature input is a US-ASCII string containing the canonicalized HTTP messa
 
 ~~~ abnf
 signature-input = *( signature-input-line LF ) signature-params-line
-signature-input-line = component-identifier ":" SP ( derived-component-value / field-value )
+signature-input-line = component-identifier ":" SP
+    ( derived-component-value / field-value )
 signature-params-line = DQUOTE "@signature-params" DQUOTE ":" SP inner-list
 ~~~
 
