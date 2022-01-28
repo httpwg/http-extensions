@@ -2145,6 +2145,9 @@ Jeffrey Yasskin.
 
 - draft-ietf-httpbis-message-signatures
 
+  - -09
+     *
+
   - -08
      * Editorial fixes.
      * Changed "specialty component" to "derived component".
