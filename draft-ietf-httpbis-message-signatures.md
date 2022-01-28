@@ -255,7 +255,7 @@ X-Obs-Fold-Header: Obsolete
     line folding.
 Cache-Control: max-age=60
 Cache-Control:    must-revalidate
-X-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
+Example-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 The following example shows canonicalized values for these example header fields, presented using the signature input string format discussed in {{create-sig-input}}:
@@ -266,7 +266,7 @@ The following example shows canonicalized values for these example header fields
 "x-ows-header": Leading and trailing whitespace.
 "x-obs-fold-header": Obsolete line folding.
 "cache-control": max-age=60, must-revalidate
-"x-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
+"Example-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 Since empty HTTP header fields are allowed, they are also able to be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header:
@@ -298,19 +298,19 @@ will replace any optional internal whitespace with a single space character, amo
 For example, the following dictionary field is a valid serialization:
 
 ~~~http-message
-X-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
+Example-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 If included in the input string as-is, it would be:
 
 ~~~
-"x-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
+"example-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 However, if the `sf` parameter is added, the value is re-serialized as follows:
 
 ~~~
-"x-dictionary";sf: a=1, b=2;x=1;y=2, c=(a b c)
+"example-dictionary";sf: a=1, b=2;x=1;y=2, c=(a b c)
 ~~~
 
 The resulting string is used as the component value in {{http-header}}.
@@ -319,23 +319,25 @@ The resulting string is used as the component value in {{http-header}}.
 
 An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` to indicate the member key as an `sf-string` value.
 
-An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of RFC8941}} on a Dictionary containing only that item.
+An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of RFC8941}} on the member value and its parameters, without the dictionary key.
 
 Each parameterized key for a given field MUST NOT appear more than once in the signature input. Parameterized keys MAY appear in any order.
 
 Following are non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
 
 ~~~ http-message
-X-Dictionary:  a=1, b=2;x=1;y=2, c=(a b c)
+Example-Dictionary:  a=1, b=2;x=1;y=2, c=(a   b    c)
 ~~~
 
 The following example shows canonicalized values for different component identifiers of this field, presented using the signature input string format discussed in {{create-sig-input}}:
 
 ~~~
-"x-dictionary";key="a": 1
-"x-dictionary";key="b": 2;x=1;y=2
-"x-dictionary";key="c": (a, b, c)
+"example-dictionary";key="a": 1
+"example-dictionary";key="b": 2;x=1;y=2
+"example-dictionary";key="c": (a b c)
 ~~~
+
+Note that the value for `key="c"` has been re-serialized.
 
 ## Derived Components {#derived-components}
 
@@ -826,20 +828,23 @@ To create the signature input string, the signer or verifier concatenates togeth
 
 If covered components reference a component identifier that cannot be resolved to a component value in the message, the implementation MUST produce an error and not create an input string. Such situations are included but not limited to:
 
- * The signer or verifier does not understand the component identifier.
+ * The signer or verifier does not understand the derived component identifier.
  * The component identifier identifies a field that is not present in the message or whose value is malformed.
- * The component identifier indicates that a structured field serialization is used, but the field in question is known to not be a structured field or the type of structured field is not known to the verifier.
+ * The component identifier indicates that a structured field serialization is used (via the `sf` parameter), but the field in question is known to not be a structured field or the type of structured field is not known to the implementation.
  * The component identifier is a dictionary member identifier that references a field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
- * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"x-dictionary";key="c"` and the value of the `x-dictionary` header field is `a=1, b=2`
+ * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dictionary";key="c"` and the value of the `example-dictionary` header field is `a=1, b=2`
 
 In the following non-normative example, the HTTP message being signed is the following request:
 
 ~~~ http-message
-GET /foo HTTP/1.1
-Host: example.org
+POST /foo?param=Value&Pet=dog HTTP/1.1
+Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
-Cache-Control: max-age=60
-Cache-Control: must-revalidate
+Content-Type: application/json
+Content-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Content-Length: 18
+
+{"hello": "world"}
 ~~~
 
 The covered components consist of the `@method`, `@path`, and `@authority` derived component identifiers followed by the `Cache-Control` HTTP header, in order. The signature parameters consist of a creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature input string for this message with these parameters is:
@@ -852,7 +857,7 @@ NOTE: '\' line wrapping per RFC 8792
 "@authority": example.org
 "cache-control": max-age=60, must-revalidate
 "@signature-params": ("@method" "@path" "@authority" \
-  "cache-control" "x-empty-header" "x-example");created=1618884475\
+  "cache-control");created=1618884475\
   ;keyid="test-key-rsa-pss"
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
