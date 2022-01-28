@@ -234,25 +234,18 @@ The following sections define component identifier types, their parameters, thei
 
 The component identifier for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component identifiers.
 
-Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized with the following steps:
+Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of SEMANTICS}}. 
+
+If the combined value is not available for a given header, the following algorithm will produce canonicalized results for an implementation:
 
 1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
-2. Strip leading and trailing whitespace from each item in the list.
-3. Concatenate the list items together, with a single comma `","` and space `" "` between each item.
+2. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
+3. Remove any obsolete line-folding within the line and replace it with a single space (` `), as discussed in {{Section 5.2 of MESSAGING}}. Note that this behavior is specific to {{MESSAGING}} and does not apply to other versions of the HTTP specification.
+4. Concatenate the list of values together with a single comma (`,`) and a single space (` `) between each item.
 
 The resulting string is the canonicalized component value.
 
-### Canonicalized Structured HTTP Fields {#http-header-structured}
-
-If value of the the HTTP field in question is a structured field ({{!RFC8941}}), the component identifier MAY include the `sf` parameter. If this
-parameter is included, the HTTP field value MUST be canonicalized using the rules specified in {{Section 4 of RFC8941}}. For example, this process
-will replace any optional internal whitespace with a single space character.
-
-The resulting string is used as the component value in {{http-header}}.
-
-### HTTP Field Examples
-
-Following are non-normative examples of canonicalized values for header fields, given the following example HTTP message:
+Following are non-normative examples of canonicalized values for header fields, given the following example HTTP message fragment:
 
 ~~~ http-message
 Host: www.example.com
@@ -260,7 +253,6 @@ Date: Tue, 07 Jun 2014 20:51:35 GMT
 X-OWS-Header:   Leading and trailing whitespace.
 X-Obs-Fold-Header: Obsolete
     line folding.
-X-Empty-Header:
 Cache-Control: max-age=60
 Cache-Control:    must-revalidate
 X-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
@@ -269,15 +261,59 @@ X-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 The following example shows canonicalized values for these example header fields, presented using the signature input string format discussed in {{create-sig-input}}:
 
 ~~~
-"cache-control": max-age=60, must-revalidate
-"date": Tue, 07 Jun 2014 20:51:35 GMT
 "host": www.example.com
-"x-empty-header":
-"x-obs-fold-header": Obsolete line folding.
+"date": Tue, 07 Jun 2014 20:51:35 GMT
 "x-ows-header": Leading and trailing whitespace.
+"x-obs-fold-header": Obsolete line folding.
+"cache-control": max-age=60, must-revalidate
 "x-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
+~~~
+
+Since empty HTTP header fields are allowed, they are also able to be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header:
+
+~~~http-message
+NOTE: '\' line wrapping per RFC 8792
+
+X-Empty-Header: \
+
+~~~
+
+Is serialized by the [signature input generation algorithm](#create-sig-input) with an empty string value following the colon and space added after the content identifier. 
+
+~~~
+NOTE: '\' line wrapping per RFC 8792
+
+"x-empty-header": \
+
+~~~
+
+Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format.
+
+### Canonicalized Structured HTTP Fields {#http-header-structured}
+
+If value of the the HTTP field in question is a structured field ({{!RFC8941}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
+parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of RFC8941}} applicable to the type of the HTTP field. Note that this process
+will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
+
+For example, the following dictionary field is a valid serialization:
+
+~~~http-message
+X-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
+~~~
+
+If included in the input string as-is, it would be:
+
+~~~
+"x-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
+~~~
+
+However, if the `sf` parameter is added, the value is re-serialized as follows:
+
+~~~
 "x-dictionary";sf: a=1, b=2;x=1;y=2, c=(a b c)
 ~~~
+
+The resulting string is used as the component value in {{http-header}}.
 
 ### Dictionary Structured Field Members {#http-header-dictionary}
 
@@ -400,8 +436,8 @@ This example shows a canonicalized value for the parameters of a given signature
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-("@target-uri" "@authority" "date" "cache-control" "x-empty-header" \
-  "x-example");keyid="test-key-rsa-pss";alg="rsa-pss-sha512";\
+("@target-uri" "@authority" "date" "cache-control")\
+  ;keyid="test-key-rsa-pss";alg="rsa-pss-sha512";\
   created=1618884475;expires=1618884775
 ~~~
 
@@ -802,14 +838,11 @@ In the following non-normative example, the HTTP message being signed is the fol
 GET /foo HTTP/1.1
 Host: example.org
 Date: Tue, 20 Apr 2021 02:07:55 GMT
-X-Example: Example header
-        with some whitespace.
-X-Empty-Header:
 Cache-Control: max-age=60
 Cache-Control: must-revalidate
 ~~~
 
-The covered components consist of the `@method`, `@path`, and `@authority` derived component identifiers followed by the `Cache-Control`, `X-Empty-Header`, `X-Example` HTTP headers, in order. The signature parameters consist of a creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`.  The signature input string for this message with these parameters is:
+The covered components consist of the `@method`, `@path`, and `@authority` derived component identifiers followed by the `Cache-Control` HTTP header, in order. The signature parameters consist of a creation timestamp is `1618884475` and the key identifier is `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature input string for this message with these parameters is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -818,8 +851,6 @@ NOTE: '\' line wrapping per RFC 8792
 "@path": /foo
 "@authority": example.org
 "cache-control": max-age=60, must-revalidate
-"x-empty-header":
-"x-example": Example header with some whitespace.
 "@signature-params": ("@method" "@path" "@authority" \
   "cache-control" "x-empty-header" "x-example");created=1618884475\
   ;keyid="test-key-rsa-pss"
@@ -928,13 +959,10 @@ NOTE: '\' line wrapping per RFC 8792
 GET /foo HTTP/1.1
 Host: example.org
 Date: Tue, 20 Apr 2021 02:07:55 GMT
-X-Example: Example header
-        with some whitespace.
-X-Empty-Header:
 Cache-Control: max-age=60
 Cache-Control: must-revalidate
 Signature-Input: sig1=("@method" "@path" "@authority" \
-  "cache-control" "x-empty-header" "x-example");created=1618884475\
+  "cache-control");created=1618884475\
   ;keyid="test-key-rsa-pss"
 Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo1\
   RSHi+oEF1FuX6O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCiHzC8\
@@ -1096,7 +1124,7 @@ The `Signature-Input` HTTP field is a Dictionary Structured Field {{!RFC8941}} c
 NOTE: '\' line wrapping per RFC 8792
 
 Signature-Input: sig1=("@method" "@target-uri" "host" "date" \
-  "cache-control" "x-empty-header" "x-example");created=1618884475\
+  "cache-control");created=1618884475\
   ;keyid="test-key-rsa-pss"
 ~~~
 
@@ -1137,7 +1165,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 Forwarded: for=192.0.2.123
 Signature-Input: sig1=("@method" "@path" "@authority" \
-    "cache-control" "x-empty-header" "x-example")\
+    "cache-control")\
     ;created=1618884475;keyid="test-key-rsa-pss"
 Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
     1RSHi+oEF1FuX6O29d+lbxwwBao1BAgadijW+7O/PyezlTnqAOVPWx9GlyntiCi\
@@ -1183,7 +1211,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 Forwarded: for=192.0.2.123
 Signature-Input: sig1=("@method" "@path" "@authority" \
-    "cache-control" "x-empty-header" "x-example")\
+    "cache-control")\
     ;created=1618884475;keyid="test-key-rsa-pss", \
   proxy_sig=("signature";key="sig1" "forwarded")\
     ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"
@@ -1224,7 +1252,7 @@ The `Accept-Signature` HTTP header field is a Dictionary Structured field {{!RFC
 NOTE: '\' line wrapping per RFC 8792
 
 Accept-Signature: sig1=("@method" "@target-uri" "host" "date" \
-  "cache-control" "x-empty-header" "x-example")\
+  "cache-control")\
   ;keyid="test-key-rsa-pss"
 ~~~
 
