@@ -223,7 +223,7 @@ component-identifier = sf-string parameters
 
 Note that this means the serialization of the component identifier itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`.
 
-Component identifiers including their parameters MUST NOT be repeated within a single list of covered components.
+Component identifiers, including component identifiers with parameters, MUST NOT be repeated within a single list of covered components. Component identifiers with different parameter values MAY be repeated within a single list of covered components.
 
 The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters.
 
@@ -304,7 +304,9 @@ The following example shows canonicalized values for different component identif
 
 In addition to HTTP fields, there are a number of different components that can be derived from the control data, processing context, or other aspects of the HTTP message being signed. Such derived components can be included in the signature input by defining a component identifier and the derivation method for its component value.
 
-To differentiate for identifiers derived components from identifiers for HTTP fields, derived component identifiers MUST start with the "at" `@` character. This specification defines the following derived component identifiers:
+Derived component identifiers MUST start with the "at" `@` character. This differentiates derived component identifiers from HTTP field names, which cannot contain the `@` character as per {{Section 5.1 of SEMANTICS}}. Processors of HTTP Message Signatures MUST treat derived component identifiers separately from field names, as discussed in {{security-lazy-header-parser}}.
+
+This specification defines the following derived component identifiers:
 
 @signature-params
 : The signature metadata parameters for this signature. ({{signature-params}})
@@ -353,6 +355,14 @@ related-response:
 : Values derived from an HTTP request message and results applied to the HTTP response message that is responding to that specific request.
 
 A component identifier definition MUST define all targets to which it can be applied.
+
+The component value MUST be derived from the HTTP message being signed or the context in which the derivation occurs. The derived component value MUST be of the following form:
+
+~~~ abnf
+derived-component-value = *VCHAR
+~~~
+
+
 
 ### Signature Parameters {#signature-params}
 
@@ -735,21 +745,35 @@ The `@request-response` component identifier MUST NOT be used in a request messa
 
 ## Creating the Signature Input String {#create-sig-input}
 
-The signature input is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature creation algorithm is the list of covered component identifiers and their associated values, along with an additional signature parameters. To create the signature input string, the signer or verifier concatenates together entries for each identifier in the signature's covered components (including their parameters) using the following algorithm:
+The signature input is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature input creation algorithm is the list of covered component identifiers and their associated values, along with any additional signature parameters. The output is the signature input string, which has the following form:
+
+~~~ abnf
+signature-input = *( signature-input-line LF ) signature-params-line
+signature-input-line = component-identifier ":" SP ( derived-component-value / field-value )
+signature-params-line = DQUOTE "@signature-params" DQUOTE ":" SP inner-list
+~~~
+
+To create the signature input string, the signer or verifier concatenates together entries for each identifier in the signature's covered components (including their parameters) using the following algorithm:
 
 1. Let the output be an empty string.
 
 2. For each message component item in the covered components set (in order):
 
-    1. Append the component identifier for the covered component serialized according to the `component-identifier` rule.
+    1. Append the component identifier for the covered component serialized according to the `component-identifier` rule. Note that this serialization places the component identifier in double quotes and appends any parameters outside of the quotes.
 
     2. Append a single colon `:`
 
     3. Append a single space " "
 
-    4. Append the covered component's canonicalized component value, as defined by the HTTP message component type. ({{http-header}} and {{derived-components}})
+    4. Determine the component value for the component identifier.
 
-    5. Append a single newline `\n`
+        - If the component identifier starts with an "at" character (`@`), derive the component's value from the message according to the specific rules defined for the derived component identifier, as in {{derived-components}}. If the derived component identifier is unknown or the value cannot be derived, produce an error.
+
+        - If the component identifier does not start with an "at" character (`@`), canonicalize the HTTP field value as described in {{http-headers}}. If the value cannot be calculated, produce an error.
+
+    5. Append the covered component's canonicalized component value.
+
+    6. Append a single newline `\n`
 
 3. Append the signature parameters component ({{signature-params}}) as follows:
 
@@ -763,7 +787,7 @@ The signature input is a US-ASCII string containing the canonicalized HTTP messa
 
 4. Return the output string.
 
-If covered components reference a component identifier that cannot be resolved to a component value in the message, the implementation MUST produce an error. Such situations are included but not limited to:
+If covered components reference a component identifier that cannot be resolved to a component value in the message, the implementation MUST produce an error and not create an input string. Such situations are included but not limited to:
 
  * The signer or verifier does not understand the component identifier.
  * The component identifier identifies a field that is not present in the message or whose value is malformed.
@@ -1442,6 +1466,12 @@ Some components are expected to be changed by intermediaries and ought not to be
 
 Additional considerations for choosing signature aspects are discussed in {{application}}.
 
+## Confusing HTTP Field Names for Derived Component Identifiers {#security-lazy-header-parser}
+
+The definition of HTTP field names does not allow for the use of the `@` character anywhere in the name. As such, since all derived component identifiers start with the `@` character, these namespaces should be completely separate. However, some HTTP implementations are not sufficiently strict about the characters accepted in HTTP headers. In such implementations, a sender (or attacker) could inject a header field starting with an `@` character and have it passed through to the application code. These invalid header fields could be used to override a portion of the derived message content and substitute an arbitrary value, providing a potential place for an attacker to mount a [signature collision](#security-collision) attack.
+
+To combat this, when selecting values for a message component, if the component identifier starts with the `@` character, it needs to be processed as a derived component and never taken as a fields. Only if the component identifier does not start with the `@` character can it be taken from the fields of the message. The algorithm discussed in {{create-sig-input}} provides a safe order of operations.
+
 # Privacy Considerations {#privacy}
 
 ## Identification through Keys {#privacy-identify-keys}
@@ -1935,11 +1965,11 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
-  - -09
-     * Changed "specialty component" to "derived component".
 
   - -08
      * Editorial fixes.
+     * Changed "specialty component" to "derived component".
+     * Expanded signature input generation and ABNF rules.
 
   - -07
      * Added security and privacy considerations.
