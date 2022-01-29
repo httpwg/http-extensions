@@ -14,6 +14,13 @@ keyword:
 
 stand_alone: yes
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/targeted-cc
 github-issue-label: targeted-cc
 
 author:
@@ -62,27 +69,16 @@ informative:
 
 This specification defines a convention for HTTP response header fields that allow cache directives to be targeted at specific caches or classes of caches. It also defines one such header field, targeted at Content Delivery Network (CDN) caches.
 
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-The issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/targeted-cc>.
-
-The most recent (often, unpublished) draft is at <https://httpwg.org/http-extensions/draft-ietf-httpbis-targeted-cache-control.html>.
-
-See also the draft's current status in the IETF datatracker, at
-<https://datatracker.ietf.org/doc/draft-ietf-httpbis-targeted-cache-control/>.
-
 --- middle
 
 # Introduction
 
 
-Modern deployments of HTTP often use multiple layers of caching. For example, a Web site might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more Content Delivery Networks (CDNs) that are distributed throughout the Internet, and it might utilise browser caching as well.
+Modern deployments of HTTP often use multiple layers of caching. For example, a website might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more Content Delivery Networks (CDNs) that are distributed throughout the Internet, and it might benefit from browser caching as well.
 
-Because it is often desirable to control these different classes of caches separately, some means of targeting directives at them is necessary.
+Because it is often desirable to control these different classes of caches separately, some means of targeting cache directives at them is necessary. For example, if a publisher has a mechanism to invalidate the contents of a cache that it has a relationship with (such as a CDN cache), they might be more comfortable assigning a more generous caching policy to it, while still wanting to restrict the behavior of other caches.
 
-The HTTP Cache-Control response header field (defined in {{Section 5.2 of HTTP-CACHING}}) is widely used to direct caching behavior. However, it is relatively undifferentiated; while some directives (e.g., s-maxage) are targeted at a specific class of caches (for s-maxage, shared caches), targeting is not consistently available across all existing cache directives (e.g., stale-while-revalidate). This is problematic, especially as the number of caching extensions grows, along with the number of potential targets.
+The HTTP Cache-Control response header field (defined in {{Section 5.2 of HTTP-CACHING}}) is widely used to direct caching behavior. However, it is relatively undifferentiated; while some cache directives (e.g., s-maxage) are targeted at a specific class of caches (for s-maxage, shared caches), targeting is not consistently available across all existing cache directives (e.g., stale-while-revalidate). This is problematic, especially as the number of caching extensions grows, along with the number of potential targets.
 
 Some implementations have defined ad hoc control mechanisms to overcome this issue, but their interoperability is low. {{targeted}} defines a standard framework for targeted cache control using HTTP response headers, and {{cdn-cache-control}} defines one such header: the CDN-Cache-Control response header field.
 
@@ -94,7 +90,7 @@ Some implementations have defined ad hoc control mechanisms to overcome this iss
 
 # Targeted Cache-Control Header Fields {#targeted}
 
-A Targeted Cache-Control Header Field (hereafter, "targeted field") is a HTTP response header field that has the same semantics as the Cache-Control response header field ({{HTTP-CACHING, Section 5.2}}). However, it has a distinct field name that indicates the target for its directives.
+A Targeted Cache-Control Header Field (hereafter, "targeted field") is an HTTP response header field that has the same semantics as the Cache-Control response header field ({{HTTP-CACHING, Section 5.2}}). However, it has a distinct field name that indicates the target for its cache directives.
 
 For example:
 
@@ -107,7 +103,7 @@ is a targeted field that applies to Content Delivery Networks (CDNs), as defined
 
 ## Syntax
 
-Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is a cache response directive from the Hypertext Transfer Protocol (HTTP) Cache Directive Registry. Note that while targeted fields often have the same syntax as Cache-Control fields, differences in error handling mean that using a Cache-Control parser rather than a Structured Fields parser can introduce interoperability issues.
+Targeted fields are Dictionary Structured Fields ({{Section 3.2 of STRUCTURED-FIELDS}}). Each member of the dictionary is an HTTP cache response directive ({{Section 5.2.2 of HTTP-CACHING}}) including extension response directives (as per {{Section 5.2.3 of HTTP-CACHING}}). Note that while targeted fields often have the same syntax as Cache-Control fields, differences in error handling mean that using a Cache-Control parser rather than a Structured Fields parser can introduce interoperability issues.
 
 Because cache directives are not defined in terms of structured data types, it is necessary to map their values into the appropriate types. {{Section 5.2 of HTTP-CACHING}} defines cache directive values to be either absent, a quoted-string, or a token.
 
@@ -115,18 +111,18 @@ This means that cache directives that have no value will be mapped to a Boolean 
 
 For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an integer value; no-store ({{Section 5.2.2.5 of HTTP-CACHING}}) always has a boolean true value, and no-cache ({{Section 5.2.2.4 of HTTP-CACHING}}) has a value that can either be boolean true or a string containing a comma-delimited list of field names.
 
-Implementations MUST NOT generate values that violate these inferred constraints on the directive's value. In particular, string values whose first character is not alphabetic or "*" MUST be generated as structured Strings, so they are not mistaken for other types.
+Implementations MUST NOT generate values that violate these inferred constraints on the cache directive's value. In particular, string values whose first character is not alphabetic or "*" MUST be generated as structured Strings, so they are not mistaken for other types.
 
-Implementations SHOULD NOT consume values that violate these inferred constraints. For example, a consuming implementation were to coerce a max-age with a decimal value into an integer would behave differently than other implementations, potentially causing interoperability issues.
+Implementations SHOULD NOT consume values that violate these inferred constraints. For example, a consuming implementation that coerces a max-age with a decimal value into an integer would behave differently than other implementations, potentially causing interoperability issues.
 
-Parameters received on directives are to be ignored, unless other handling is explicitly specified.
+Parameters received on cache directives are to be ignored, unless other handling is explicitly specified.
 
-If a targeted field in a given response is empty, or a parsing error is encountered, that field MUST be ignored by the cache (i.e., it behaves as if the field were not present, likely falling back to other cache control mechanisms present).
+If a targeted field in a given response is empty, or a parsing error is encountered, that field MUST be ignored by the cache (i.e., it behaves as if the field were not present, likely falling back to other cache-control mechanisms present).
 
 
 ## Cache Behavior
 
-A cache that implement this specification maintains a _target list_ - an ordered list of the targeted field names that it uses for caching policy, with the order reflecting priority from most applicable to least. The target list might be fixed, user-configurable, or generated per request, depending upon the implementation.
+A cache that implements this specification maintains a _target list_ - an ordered list of the targeted field names that it uses for caching policy, with the order reflecting priority from most applicable to least. The target list might be fixed, user-configurable, or generated per request, depending upon the implementation.
 
 For example, a CDN cache might support both CDN-Cache-Control and a header specific to that CDN, ExampleCDN-Cache-Control, with the latter overriding the former. Its target list would be:
 
@@ -134,7 +130,7 @@ For example, a CDN cache might support both CDN-Cache-Control and a header speci
   [ExampleCDN-Cache-Control, CDN-Cache-Control]
 ~~~
 
-When a cache that implements this specification receives a response with one or more of of the header field names on its target list, the cache MUST select the first (in target list order) field with a valid, non-empty value and use its value to determine the caching policy for the response, and MUST ignore the Cache-Control and Expires header fields in that response, unless no valid, non-empty value is available from the listed header fields.
+When a cache that implements this specification receives a response with one or more of the header field names on its target list, the cache MUST select the first (in target list order) field with a valid, non-empty value and use its value to determine the caching policy for the response, and MUST ignore the Cache-Control and Expires header fields in that response, unless no valid, non-empty value is available from the listed header fields.
 
 Note that this occurs on a response-by-response basis; if no member of the cache's target list is present, valid and non-empty, a cache falls back to other cache control mechanisms as required by HTTP {{HTTP-CACHING}}.
 
@@ -156,7 +152,7 @@ The semantics and precedence of cache directives in a targeted field are the sam
 
 ## Interaction with HTTP Freshness
 
-HTTP caching has a single, end-to-end freshness model defined in {{Section 4.2 of HTTP-CACHING}}. When additional freshness mechanisms are only available to some caches along a request path (for example, using targeted fields), their interactions need to be carefully considered. In particular, a targeted cache might have longer freshness lifetimes available to it than other caches, causing it to serve responses that appear to be prematurely (or even immediately) stale to them, negatively impacting cache efficiency.
+HTTP caching has a single, end-to-end freshness model defined in {{Section 4.2 of HTTP-CACHING}}. When additional freshness mechanisms are only available to some caches along a request path (for example, using targeted fields), their interactions need to be carefully considered. In particular, a targeted cache might have longer freshness lifetimes available to it than other caches, causing it to serve responses that appear to be prematurely (or even immediately) stale to those other caches, negatively impacting cache efficiency.
 
 For example, a response stored by a CDN cache might be served with the following headers:
 
@@ -179,7 +175,9 @@ This specification does not place any specific requirements on implementations t
 
 ## Defining Targeted Fields
 
-A targeted field for a particular class of cache can be defined by requesting registration in the Hypertext Transfer Protocol (HTTP) Field Name Registry ([](https://www.iana.org/assignments/http-fields/)), listing this specification as the specification document. The Comments field of the registration should clearly define the class of caches that the targeted field applies to.
+A targeted field for a particular class of cache can be defined by requesting registration in the Hypertext Transfer Protocol (HTTP) Field Name Registry ([](https://www.iana.org/assignments/http-fields/)).
+
+Registration requests can use this document as the specification document, in which case the Comments field should clearly define the class of caches that the targeted field applies to. Alternatively, if other documentation for the field has been created, it can be used as the specification document.
 
 By convention, targeted fields have the suffix "-Cache-Control": e.g., "ExampleCDN-Cache-Control". However, this suffix MUST NOT be used on its own to identify targeted fields; it is only a convention.
 
@@ -195,7 +193,7 @@ CDN caches that use CDN-Cache-Control will typically forward this header so that
 
 ## Examples
 
-For example, the following header fields would instruct a CDN cache to consider the response fresh for 600 seconds, other shared caches for 120 seconds and any remaining caches for 60 seconds:
+For example, the following header fields would instruct a CDN cache (i.e., a cache with a target list of `[CDN-Cache-Control]`) to consider the response fresh for 600 seconds, other shared caches to consider the response fresh for 120 seconds, and any remaining caches to consider the response fresh for 60 seconds:
 
 ~~~ http-message
 Cache-Control: max-age=60, s-maxage=120
@@ -233,14 +231,14 @@ defined by {{HTTP}}:
 * Field Name: CDN-Cache-Control
 * Status: permanent
 * Specification Document: \[this document\]
-* Comments: Cache-Control directives targeted at Content Delivery Networks
+* Comments: Cache directives targeted at Content Delivery Networks
 
 
 # Security Considerations
 
 The security considerations of HTTP caching {{HTTP-CACHING}} apply.
 
-The ability to carry multiple caching policies on a response can result in confusion about how a response will be cached in different systems, if not used carefully. This might result in unintentional reuse of responses with sensitive information.
+The ability to carry multiple caching policies on a response can result in confusion about how a response will be cached in different systems, potentially resulting in unintentional reuse of responses with sensitive information. For this reason, care must be exercised.
 
 
 --- back

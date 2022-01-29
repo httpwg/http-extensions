@@ -12,6 +12,13 @@ pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 stand_alone: yes #_
 smart_quotes: no
 
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/6265bis
 github-issue-label: 6265bis
 
 author:
@@ -224,14 +231,6 @@ mostly stateless HTTP protocol. Although cookies have many historical
 infelicities that degrade their security and privacy, the Cookie and Set-Cookie
 header fields are widely used on the Internet. This document obsoletes RFC
 6265.
-
---- note_Note_to_Readers
-
-Discussion of this draft takes place on the HTTP working group mailing list
-(ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <http://httpwg.github.io/>; source
-code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/6265bis>.
 
 --- middle
 
@@ -508,8 +507,7 @@ non-zero-digit    = %x31-39
                       ; digits 1 through 9
 domain-av         = "Domain" BWS "=" BWS domain-value
 domain-value      = <subdomain>
-                      ; defined in [RFC1034], Section 3.5, as
-                      ; enhanced by [RFC1123], Section 2.1
+                      ; see details below
 path-av           = "Path" BWS "=" BWS path-value
 path-value        = *av-octet
 secure-av         = "Secure"
@@ -530,6 +528,9 @@ The semantics of the cookie-value are not defined by this document.
 To maximize compatibility with user agents, servers that wish to store arbitrary
 data in a cookie-value SHOULD encode that data, for example, using Base64
 {{RFC4648}}.
+
+The domain-value is a subdomain as defined by {{RFC1034}}, Section 3.5, and
+as enhanced by {{RFC1123}}, Section 2.1.
 
 Per the grammar above, the cookie-value MAY be wrapped in DQUOTE characters.
 Note that in this case, the initial and trailing DQUOTE characters are not
@@ -832,7 +833,8 @@ found-year) are initially "not set".
     date-token      = 1*non-delimiter
 
     delimiter       = %x09 / %x20-2F / %x3B-40 / %x5B-60 / %x7B-7E
-    non-delimiter   = %x00-08 / %x0A-1F / DIGIT / ":" / ALPHA / %x7F-FF
+    non-delimiter   = %x00-08 / %x0A-1F / DIGIT / ":" / ALPHA
+                      / %x7F-FF
     non-digit       = %x00-2F / %x3A-FF
 
     day-of-month    = 1*2DIGIT [ non-digit *OCTET ]
@@ -1129,6 +1131,11 @@ explicitly. Horizontal tab (%x09) is excluded from the CTL characters that
 lead to set-cookie-string rejection, as it is considered whitespace, which is
 handled separately.
 
+NOTE: The set-cookie-string may contain octet sequences that appear
+percent-encoded as per {{Section 2.1 of RFC3986}}. However, a user agent
+MUST NOT decode these sequences and instead parse the individual octets
+as specified in this algorithm.
+
 A user agent MUST use an algorithm equivalent to the following algorithm to
 parse a set-cookie-string:
 
@@ -1382,17 +1389,19 @@ following modification to the retrieval algorithm defined in
 Replace the condition in the penultimate bullet point of step 1 of the retrieval
 algorithm reading
 
-     * The HTTP request associated with the retrieval uses a "safe" method.
+     * The HTTP request associated with the retrieval uses a "safe"
+       method.
 
 with
 
      * At least one of the following is true:
 
-       1.  The HTTP request associated with the retrieval uses a "safe" method.
+       1.  The HTTP request associated with the retrieval uses a "safe"
+           method.
 
-       2.  The cookie's same-site-flag is "Default" and the amount of time
-           elapsed since the cookie's creation-time is at most a duration of the
-           user agent's choosing.
+       2.  The cookie's same-site-flag is "Default" and the amount of
+           time elapsed since the cookie's creation-time is at most a
+           duration of the user agent's choosing.
 
 ## Storage Model {#storage-model}
 

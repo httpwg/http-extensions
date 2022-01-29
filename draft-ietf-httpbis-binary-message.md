@@ -13,6 +13,13 @@ venue:
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/binary-messages
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/binary-messages
 github-issue-label: binary-messages
 
 stand_alone: yes
@@ -75,7 +82,7 @@ Two modes for encoding are described:
 
 # Conventions and Definitions
 
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
 This document uses terminology from HTTP ({{HTTP}}) and notation from QUIC
 ({{Section 1.3 of QUIC}}).

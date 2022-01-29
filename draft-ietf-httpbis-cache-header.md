@@ -14,6 +14,13 @@ keyword:
 - debugging
 - x-cache
 
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/cache-header
 github-issue-label: cache-header
 
 stand_alone: yes
@@ -52,14 +59,6 @@ informative:
 
 To aid debugging, HTTP caches often append header fields to a response explaining how they handled the request in an ad hoc manner. This specification defines a standard mechanism to do so that is aligned with HTTP's caching model.
 
-
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <https://httpwg.org/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/cache-header>.
 
 --- middle
 
