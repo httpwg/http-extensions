@@ -38,7 +38,6 @@ author:
     uri: https://www.mnot.net/
 
 normative:
-  RFC2119:
   RFC8126:
   STRUCTURED-FIELDS: RFC8941
   HTTP: I-D.ietf-httpbis-semantics
@@ -72,9 +71,9 @@ This specification defines a new HTTP response header field, "Cache-Status" for 
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
+{::boilerplate bcp14-tagged}
 
-This document uses ABNF as defined in {{!RFC5234}}, with rules prefixed with "sf-" and the "key" rule as defined in {{!STRUCTURED-FIELDS}}. It uses terminology from {{!HTTP}} and {{!HTTP-CACHING}}.
+This document uses ABNF as defined in {{!RFC5234}}, with rules prefixed with "sf-" and the "key" rule as defined in {{STRUCTURED-FIELDS}}. It uses terminology from {{HTTP}} and {{HTTP-CACHING}}.
 
 
 # The Cache-Status HTTP Response Header Field {#field}

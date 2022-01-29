@@ -38,7 +38,6 @@ author:
 normative:
   HTTP: I-D.ietf-httpbis-semantics
   STRUCTURED-FIELDS: RFC8941
-  RFC2119:
   RFC8126:
   RFC8499:
 
@@ -65,7 +64,7 @@ To enable these uses, {{header}} defines a new HTTP response field to allow inte
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
+{::boilerplate bcp14-tagged}
 
 This specification uses Structured Fields {{STRUCTURED-FIELDS}} to specify syntax and parsing, and ABNF {{?RFC5234}} as a shorthand for that syntax. The terms sf-list, sf-item, sf-string, sf-token, sf-integer and key refer to the structured types defined therein.
 
