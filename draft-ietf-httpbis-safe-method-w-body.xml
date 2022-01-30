@@ -256,7 +256,7 @@ Accept-Query = 1#media-type
       <xref target="RFCHTTP" section="8.3.1"/>.
     </t>
     <t>
-      The order of types listed by the Accept-Query header field is insignificant.
+      The order of types listed by the Accept-Query header field is not significant.
     </t>
   </section>
 
@@ -416,9 +416,9 @@ Dubois, Camille, camille.dubois@example.net
 </ul>
 </section>
 <section title="Since draft-ietf-httpbis-safe-method-w-body-02" anchor="changes.since.02">
-<t>
-  None yet.
-</t>
+<ul>
+  <li>In <xref target="field.accept-query"/>, slightly rephrase statement about significance of ordering (<eref target="https://github.com/httpwg/http-extensions/issues/1896"/>)</li>
+</ul>
 </section>
 </section>
 
