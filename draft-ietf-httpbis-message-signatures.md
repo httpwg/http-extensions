@@ -837,7 +837,7 @@ If covered components reference a component identifier that cannot be resolved t
  * The component identifier identifies a field that is not present in the message or whose value is malformed.
  * The component identifier indicates that a structured field serialization is used (via the `sf` parameter), but the field in question is known to not be a structured field or the type of structured field is not known to the implementation.
  * The component identifier is a dictionary member identifier that references a field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
- * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dictionary";key="c"` and the value of the `Example-Dictionary` header field is `a=1, b=2`, which does not have the `c` value.
+ * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dict";key="c"` and the value of the `Example-Dict` header field is `a=1, b=2`, which does not have the `c` value.
 
 In the following non-normative example, the HTTP message being signed is the following request:
 
