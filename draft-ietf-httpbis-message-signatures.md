@@ -255,7 +255,7 @@ X-Obs-Fold-Header: Obsolete
     line folding.
 Cache-Control: max-age=60
 Cache-Control:    must-revalidate
-Example-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
+Example-Dict:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 The following example shows canonicalized values for these example header fields, presented using the signature input string format discussed in {{create-sig-input}}:
@@ -266,7 +266,7 @@ The following example shows canonicalized values for these example header fields
 "x-ows-header": Leading and trailing whitespace.
 "x-obs-fold-header": Obsolete line folding.
 "cache-control": max-age=60, must-revalidate
-"Example-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
+"example-dict": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 Since empty HTTP header fields are allowed, they are also able to be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header:
@@ -298,19 +298,19 @@ will replace any optional internal whitespace with a single space character, amo
 For example, the following dictionary field is a valid serialization:
 
 ~~~http-message
-Example-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
+Example-Dict:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 If included in the input string as-is, it would be:
 
 ~~~
-"example-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
+"example-dict": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 However, if the `sf` parameter is added, the value is re-serialized as follows:
 
 ~~~
-"example-dictionary";sf: a=1, b=2;x=1;y=2, c=(a b c)
+"example-dict";sf: a=1, b=2;x=1;y=2, c=(a b c)
 ~~~
 
 The resulting string is used as the component value in {{http-header}}.
@@ -326,15 +326,15 @@ Each parameterized key for a given field MUST NOT appear more than once in the s
 Following are non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
 
 ~~~ http-message
-Example-Dictionary:  a=1, b=2;x=1;y=2, c=(a   b    c)
+Example-Dict:  a=1, b=2;x=1;y=2, c=(a   b    c)
 ~~~
 
 The following example shows canonicalized values for different component identifiers of this field, presented using the signature input string format discussed in {{create-sig-input}}:
 
 ~~~
-"example-dictionary";key="a": 1
-"example-dictionary";key="b": 2;x=1;y=2
-"example-dictionary";key="c": (a b c)
+"example-dict";key="a": 1
+"example-dict";key="b": 2;x=1;y=2
+"example-dict";key="c": (a b c)
 ~~~
 
 Note that the value for `key="c"` has been re-serialized.
