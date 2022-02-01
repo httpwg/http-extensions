@@ -13,13 +13,6 @@ venue:
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/binary-messages
-venue:
-  group: HTTP
-  type: Working Group
-  home: https://httpwg.org/
-  mail: ietf-http-wg@w3.org
-  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
-  repo: https://github.com/httpwg/http-extensions/labels/binary-messages
 github-issue-label: binary-messages
 
 stand_alone: yes
@@ -636,14 +629,6 @@ maliciously crafted message.
 
 # IANA Considerations
 
-Please add the "Media Types" registry at
-<https://www.iana.org/assignments/media-types> with the registration
+IANA is requested to add the "Media Types" registry at
+[](https://www.iana.org/assignments/media-types) with the registration
 information in {{media-type}} for the media type "message/bhttp".
-
-
---- back
-
-# Acknowledgments
-{: numbered="false"}
-
-TODO: credit where credit is due.
