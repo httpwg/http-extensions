@@ -234,7 +234,7 @@ The following sections define component identifier types, their parameters, thei
 
 The component identifier for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component identifiers.
 
-Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of SEMANTICS}}. 
+Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of SEMANTICS}}.
 
 If the combined value is not available for a given header, the following algorithm will produce canonicalized results for an implementation:
 
@@ -278,7 +278,7 @@ X-Empty-Header: \
 
 ~~~
 
-Is serialized by the [signature input generation algorithm](#create-sig-input) with an empty string value following the colon and space added after the content identifier. 
+Is serialized by the [signature input generation algorithm](#create-sig-input) with an empty string value following the colon and space added after the content identifier.
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -1970,7 +1970,7 @@ Before using symmetric signatures in practice, see the discussion of the securit
 
 ### Signing a Request using ed25519
 
-This example covers portions of the `test-request` using the `ed25519` algorithm 
+This example covers portions of the `test-request` using the `ed25519` algorithm
 and the key `test-key-ed25519`.
 
 The corresponding signature input is:
