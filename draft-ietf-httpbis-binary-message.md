@@ -103,6 +103,8 @@ indicator is added to signal how these parts are composed:
 
 6. Trailer section.  This contains zero or more trailer fields.
 
+7. Optional padding. Any amount of zero-valued bytes.
+
 All lengths and numeric values are encoded using the variable-length integer
 encoding from {{Section 16 of QUIC}}.
 
@@ -120,6 +122,7 @@ Message with Known-Length {
   Known-Length Field Section (..),
   Known-Length Content (..),
   Known-Length Field Section (..),
+  Padding (..),
 }
 
 Known-Length Field Section {
@@ -173,6 +176,7 @@ Indeterminate-Length Message  {
   Indeterminate-Length Field Section (..),
   Indeterminate-Length Content (..) ...,
   Indeterminate-Length Field Section (..),
+  Padding (..),
 }
 
 Indeterminate-Length Content {
@@ -359,6 +363,17 @@ Omitting content by truncating a message is only possible if the content is
 zero-length.
 
 
+## Padding
+
+Messages can be padded with any number of zero-valued bytes.  Non-zero padding
+bytes cause a message to be invalid (see {{invalid}}). Unlike other parts of a
+message, a processor MAY decide not to validate the value of padding bytes.
+
+Padding is compatible with truncation of empty parts of the messages.
+Zero-valued bytes will be interpreted as zero-length part, which is semantically
+equivalent to the part being absent.
+
+
 # Invalid Messages {#invalid}
 
 This document describes a number of ways that a message can be invalid. Invalid
@@ -432,11 +447,13 @@ formats is negligible.
 622f312e 322e3304 686f7374 0f777777  b/1.2.3.host.www
 2e657861 6d706c65 2e636f6d 0f616363  .example.com.acc
 6570742d 6c616e67 75616765 06656e2c  ept-language.en,
-206d6900 0000                         mi...
+206d6900 00000000 00000000 00000000   mi.............
 ~~~
 {: #ex-bini-request title="Indefinite-Length Binary Encoding of Request"}
 
-This indefinite-length encoding can be truncated by two bytes in the same way.
+This indefinite-length encoding contains 10 bytes of padding.  As two additional
+bytes can be truncated in the same way as the known-length example, anything up
+to 12 bytes can be removed from this message without affecting its meaning.
 
 
 ## Response Example
