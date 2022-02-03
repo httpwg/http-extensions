@@ -296,12 +296,15 @@ Informational Response Control Data {
 ~~~
 {: #format-informational title="Format of Informational Response Control Data"}
 
-A response message can include any number of informational responses. If the
-response control data includes an informational status code (that is, a value
-between 100 and 199 inclusive), the control data is followed by a header
+A response message can include any number of informational responses that
+precede a final status code.  These convey an information status code and a
+header block.
+
+If the response control data includes an informational status code (that is, a
+value between 100 and 199 inclusive), the control data is followed by a header
 section (encoded with known- or indeterminate- length according to the framing
-indicator). After the header section, another response control data block
-follows.
+indicator) and another block of control data.  This pattern repeats until the
+control data contains a final status code (200 to 599 inclusive).
 
 
 ## Header and Trailer Field Lines {#fields}
