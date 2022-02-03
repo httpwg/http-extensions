@@ -115,7 +115,7 @@ of SEMANTICS}}). This supports more advanced use cases such as validating the
 integrity of a resource the was reconstructed from parts retrieved using
 multiple requests or connections.
 
-This document obsoletes RFC 3230 and therefore the Digest and Wants-Digest HTTP
+This document obsoletes RFC 3230 and therefore the Digest and Want-Digest HTTP
 fields; see {{obsolete-3230}}.
 
 
