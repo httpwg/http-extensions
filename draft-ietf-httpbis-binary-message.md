@@ -60,10 +60,10 @@ This format is informed by the framing structure of HTTP/2 ({{H2}}) and HTTP/3
 either header compression ({{?HPACK=RFC7541}}, {{?QPACK=I-D.ietf-quic-qpack}})
 or a generic framing layer.
 
-This format provides an alternative to the `message/http` content type defined
-in {{MESSAGING}}. A binary format permits more efficient encoding and processing
-of messages. A binary format also reduces exposure to security problems related
-to processing of HTTP messages.
+This format defines `message/bhttp`, a binary alternative to the `message/http`
+content type defined in {{MESSAGING}}. A binary format permits more efficient
+encoding and processing of messages. A binary format also reduces exposure to
+security problems related to processing of HTTP messages.
 
 Two modes for encoding are described:
 
