@@ -676,3 +676,11 @@ maliciously crafted message.
 IANA is requested to add the "Media Types" registry at
 [](https://www.iana.org/assignments/media-types) with the registration
 information in {{media-type}} for the media type "message/bhttp".
+
+--- back
+
+# Acknowledgments
+{:numbered="false"}
+
+Julian Reschke, Lucas Pardue and Tommy Pauly provided excellent feedback on both the design and its
+documentation.
