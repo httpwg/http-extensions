@@ -55,9 +55,9 @@ messages that can be conveyed outside of an HTTP protocol. This enables the
 transformation of entire messages, including the application of authenticated
 encryption.
 
-The design of this format is a informed by the framing structure of HTTP/2
-({{H2}}) and HTTP/3 ({{H3}}), but it is distinct from those formats; see
-{{differences}}.
+The design of this format is informed by the framing structure of HTTP/2
+({{H2}}) and HTTP/3 ({{H3}}).  Rules for constructing messages rely on the rules
+defined in HTTP/2, but the format itself is distinct; see {{differences}}.
 
 This format provides an alternative to the `message/http` content type defined
 in {{MESSAGING}}. A binary format permits more efficient encoding and processing
