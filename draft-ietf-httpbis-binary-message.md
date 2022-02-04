@@ -55,10 +55,9 @@ messages that can be conveyed outside of an HTTP protocol. This enables the
 transformation of entire messages, including the application of authenticated
 encryption.
 
-This format is informed by the framing structure of HTTP/2 ({{H2}}) and HTTP/3
-({{H3}}). In comparison, this format is simpler by virtue of not including
-either header compression ({{?HPACK=RFC7541}}, {{?QPACK=I-D.ietf-quic-qpack}})
-or a generic framing layer.
+The design of this format is a informed by the framing structure of HTTP/2
+({{H2}}) and HTTP/3 ({{H3}}), but it is distinct from those formats; see
+{{differences}}.
 
 This format provides an alternative to the `message/http` content type defined
 in {{MESSAGING}}. A binary format permits more efficient encoding and processing
@@ -556,11 +555,16 @@ the transfer-encoding header field is removed.
 # Notable Differences with HTTP Protocol Messages {#differences}
 
 This format is designed to carry most HTTP messages.  However, there are some
-notable differences between this format and the format used in some HTTP
-versions.  In particular, this format does not allow for:
+notable differences between this format and the format used in an interactive
+protocol version.
+
+In particular, as a standalone representation, this format lacks the following
+features of the format used in protocols:
 
 * chunk extensions ({{Section 7.1.1 of MESSAGING}}) and transfer encoding
   ({{Section 6.1 of MESSAGING}}) from HTTP/1.1
+
+* generic framing and extensibility capabilities
 
 * field blocks other than a single header and trailer field block
 
