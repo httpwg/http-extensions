@@ -85,9 +85,10 @@ This document defines HTTP fields that support integrity checksums. The
 Representation-Digest field can be used for the integrity of HTTP
 representations. The Content-Digest field can be used for the integrity of
 HTTP message content. Want-Representation-Digest and Want-Content-Digest can be
-used to indicate a sender's interest and preferences for receiving respective integrity fields.
+used to indicate a sender's interest and preferences for receiving the respective
+integrity fields.
 
-This document obsoletes RFC 3230 and therefore the Digest and Wants-Digest HTTP
+This document obsoletes RFC 3230 and the Digest and Want-Digest HTTP
 fields.
 
 
@@ -112,7 +113,7 @@ First, content integrity, which acts on conveyed content ({{Section 6.4 of
 SEMANTICS}}).
 Second, representation data integrity, which acts on representation data ({{Section 3.2
 of SEMANTICS}}). This supports more advanced use cases such as validating the
-integrity of a resource the was reconstructed from parts retrieved using
+integrity of a resource that was reconstructed from parts retrieved using
 multiple requests or connections.
 
 This document obsoletes RFC 3230 and therefore the Digest and Want-Digest HTTP
@@ -264,7 +265,7 @@ Representation-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
 Since `Representation-Digest` is a Dictionary, it can contain multiple
 members. This could be used, for example, to attach multiple checksums
 calculated using different hashing algorithms in order to support a population
-of endpoints with different evolving capabilities. Such an approach could
+of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
 
 ~~~ http-message
@@ -310,7 +311,7 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
 Since `Content-Digest` is a Dictionary, it can contain multiple
 members. This could be used, for example, to attach multiple checksums
 calculated using different hashing algorithms in order to support a population
-of endpoints with different evolving capabilities. Such an approach could
+of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
 
 ~~~ http-message
