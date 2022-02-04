@@ -234,15 +234,14 @@ Other values cause the message to be invalid; see {{invalid}}.
 
 ## Request Control Data
 
-The control data for a request message includes four values that correspond to
-the values of the `:method`, `:scheme`, `:authority`, and `:path` pseudo-header
-fields described in HTTP/2 ({{Section 8.3.1 of H2}}). These fields are
-encoded, each with a length prefix, in the order listed.
+Request Control Data contains the method and target of a request message. That
+information is encoded as an ordered sequence of fields: Method, Scheme,
+Authority, Path. Each field is prefixed with a length.
 
-The rules in {{Section 8.3 of H2}} for constructing pseudo-header fields
-apply to the construction of these values. However, where the `:authority`
-pseudo-header field might be omitted in HTTP/2, a zero-length value is encoded
-instead.
+The values of these fields follow the rules in HTTP/2 ({{Section 8.3.1 of H2}})
+that apply to the `:method`, `:scheme`, `:authority`, and `:path` pseudo-header
+fields respectively. However, where the `:authority` pseudo-header field might
+be omitted in HTTP/2, a zero-length value is encoded instead.
 
 The format of request control data is shown in {{format-request-control-data}}.
 
@@ -263,10 +262,9 @@ Request Control Data {
 
 ## Response Control Data
 
-The control data for a request message includes a single field that corresponds
-to the `:status` pseudo-header field in HTTP/2; see {{Section 8.3.2 of
-H2}}. This field is encoded as a single variable length integer, not a decimal
-string.
+The control data for a request message includes a single field that includes the
+status code.  This field is encoded as a single variable length integer, not a
+decimal string.
 
 The format of final response control data is shown in
 {{format-response-control-data}}.
