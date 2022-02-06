@@ -342,15 +342,6 @@ instances of the `Cookie` field. Instances of fields with the ASCII-encoded
 value of `cookie` are combined using a semicolon octet (0x3b) rather than a
 comma; see {{Section 8.2.3 of H2}}.
 
-This format provides fixed locations for content that would be carried in HTTP/2
-pseudo-fields. Therefore, there is no need to include field lines containing a
-name of `:method`, `:scheme`, `:authority`, `:path`, or `:status`.  Fields that
-contain one of these names cause the message to be invalid; see
-{{invalid}}. Pseudo-fields that are defined by protocol extensions MAY be
-included.  Field lines containing pseudo-fields MUST precede other field lines;
-a message that contains a pseudo-field after any other field is invalid; see
-{{invalid}}.
-
 
 ## Content
 
@@ -552,12 +543,13 @@ the transfer-encoding header field is removed.
 
 # Notable Differences with HTTP Protocol Messages {#differences}
 
-This format is designed to carry most HTTP messages.  However, there are some
-notable differences between this format and the format used in an interactive
-protocol version.
+This format is designed to carry HTTP semantics just like HTTP/1.1, HTTP/2, or
+HTTP/3 ({{MESSAGING}}, {{H2}}, {{H3}}).  However, there are some notable
+differences between this format and the format used in an interactive protocol
+version.
 
 In particular, as a standalone representation, this format lacks the following
-features of the format used in protocols:
+features of the formats used those protocols:
 
 * chunk extensions ({{Section 7.1.1 of MESSAGING}}) and transfer encoding
   ({{Section 6.1 of MESSAGING}}) from HTTP/1.1
@@ -573,7 +565,14 @@ features of the format used in protocols:
 * framing of responses that depends on the corresponding request (such as HEAD)
   or the value of the status code (such as 204 or 304)
 
-Many of these same restrictions are shared by HTTP/2 {{H2}} and HTTP/3 {{H3}}.
+This format shares some of these properties with HTTP/2 and HTTP/3.
+
+Unlike HTTP/2 and HTTP/3, this format uses a a fixed format for control data
+rather than using pseudo-fields.  Messages are invalid ({{invalid}}) if they
+contain fields named `:method`, `:scheme`, `:authority`, `:path`, or `:status`.
+Other pseudo-fields that are defined by protocol extensions MAY be included.
+Field lines containing pseudo-fields MUST precede other field lines.  A message
+that contains a pseudo-field after any other field is invalid; see {{invalid}}.
 
 Note that while some messages - CONNECT or upgrade requests in particular - can
 be represented using this format, doing so serves no purpose as these requests
