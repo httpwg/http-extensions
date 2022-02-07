@@ -1,5 +1,5 @@
 ---
-title: Structured Digest Fields
+title: Digest Fields
 docname: draft-ietf-httpbis-digest-headers-latest
 category: std
 obsoletes: 3230
