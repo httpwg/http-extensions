@@ -254,7 +254,7 @@ Representation-Digest   = sf-dictionary
 ~~~
 
 `Representation-Digest` member-keys convey the hashing algorithm (see
-{{algorithms}}) used to compute the digest. Member-values are the the output
+{{algorithms}}) used to compute the digest. Member-values are the output
 of the digest calculation. Member-values MUST be of type sf-binary.
 
 For example:
@@ -300,7 +300,7 @@ Content-Digest   = sf-dictionary
 ~~~
 
 `Content-Digest` member-keys convey the hashing algorithm (see {{algorithms}})
-used to compute the digest. Member-values are the the output of the digest
+used to compute the digest. Member-values are the output of the digest
 calculation. Member-values MUST be of type sf-binary.
 
 For example:
