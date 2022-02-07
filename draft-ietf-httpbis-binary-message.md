@@ -221,7 +221,7 @@ known-length messages; see {{fields}}.
 
 ## Framing Indicator {#framing}
 
-The start of each is a framing indicator that is a single integer that
+The start of each binary message is a framing indicator that is a single integer that
 describes the structure of the subsequent sections. The framing indicator can
 take just four values:
 
