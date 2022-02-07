@@ -83,7 +83,7 @@ informative:
 
 --- abstract
 
-This document defines HTTP fields that support integrity checksums. The
+This document defines HTTP fields that support integrity digests. The
 Representation-Digest field can be used for the integrity of HTTP
 representations. The Content-Digest field can be used for the integrity of
 HTTP message content. Want-Representation-Digest and Want-Content-Digest can be
@@ -138,18 +138,18 @@ This document is structured as follows:
 ## Concept Overview
 
 The HTTP fields defined in this document can be used for HTTP integrity. Senders
-choose a hashing algorithm and calculate a checksum from an input related to the
-HTTP message, the algorithm identifier and checksum are transmitted in an HTTP
-field. Receivers can validate the checksum for integrity purposes. Hashing
+choose a hashing algorithm and calculate a digest from an input related to the
+HTTP message, the algorithm identifier and digest are transmitted in an HTTP
+field. Receivers can validate the digest for integrity purposes. Hashing
 algorithms are registered in the HTTP Digest Algorithm Values Registry (see
 {{algorithms}}).
 
-Selecting the data on which checksums are calculated depends on the use case of
+Selecting the data on which digests are calculated depends on the use case of
 HTTP messages. This document provides different headers for HTTP representation
 data and HTTP content.
 
 This document defines the `Representation-Digest` request and response header
-and trailer field ({{representation-digest}}) that contains a checksum value
+and trailer field ({{representation-digest}}) that contains a digest value
 computed by applying a hashing algorithm to `selected representation data`
 ({{Section 3.2 of SEMANTICS}}). Basing `Representation-Digest` on the selected
 representation makes it straightforward to apply it to use-cases where the
@@ -157,9 +157,9 @@ transferred data requires some sort of manipulation to be considered a
 representation or conveys a partial representation of a resource, such as Range
 Requests (see {{Section 14.2 of SEMANTICS}}).
 
-There are use-cases where a simple checksum of the HTTP content bytes is
+There are use-cases where a simple digest of the HTTP content bytes is
 required. The `Content-Digest` request and response header and trailer field is
-defined to support checksums of content ({{Section 3.2 of SEMANTICS}}); see
+defined to support digests of content ({{Section 3.2 of SEMANTICS}}); see
 {{content-digest}}.
 
 `Representation-Digest` and `Content-Digest` support hashing algorithm agility.
@@ -173,7 +173,7 @@ collectively termed integrity preference fields.
 
 Integrity fields are tied to the `Content-Encoding`
 and `Content-Type` header fields. Therefore, a given resource may have multiple
-different checksum values when transferred with HTTP.
+different digest values when transferred with HTTP.
 
 Integrity fields do not provide integrity for
 HTTP messages or fields. However, they can be combined with other mechanisms that
@@ -191,9 +191,9 @@ semantics such as `selected representation data` ({{Section 3.2 of SEMANTICS}}).
 
 Experience has shown that implementations of [RFC3230] have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
-most common mistake being the calculation of the checksum using (what we now call)
+most common mistake being the calculation of the digest using (what we now call)
 message content, rather than using (what we now call) representation data as was
-originally intended. Interestingly, time has also shown that a checksum of
+originally intended. Interestingly, time has also shown that a digest of
 message content can be beneficial for some use cases. So it is difficult to
 detect if non-conformance to [RFC3230] is intentional or unintentional.
 
@@ -232,7 +232,7 @@ Integrity preference fields: collective term for `Want-Representation-Digest` an
 # The Representation-Digest Field {#representation-digest}
 
 The `Representation-Digest` HTTP field can be used in requests and responses to
-communicate checksums that are calculated using a hashing algorithm applied to
+communicate digests that are calculated using a hashing algorithm applied to
 the entire selected `representation data` (see {{Section 8.1 of SEMANTICS}}).
 
 Representations take into account the effect of the HTTP semantics on
@@ -254,8 +254,8 @@ Representation-Digest   = sf-dictionary
 ~~~
 
 `Representation-Digest` member-keys convey the hashing algorithm (see
-{{algorithms}}) used to compute the checksum. Member-values are the the output
-of the checksum calculation. Member-values MUST be of type sf-binary.
+{{algorithms}}) used to compute the digest. Member-values are the the output
+of the digest calculation. Member-values MUST be of type sf-binary.
 
 For example:
 
@@ -265,7 +265,7 @@ Representation-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
 ~~~
 
 Since `Representation-Digest` is a Dictionary, it can contain multiple
-members. This could be used, for example, to attach multiple checksums
+members. This could be used, for example, to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
@@ -291,7 +291,7 @@ In this case,
 # The Content-Digest Field {#content-digest}
 
 The `Content-Digest` HTTP field can be used in requests and responses to
-communicate checksums that are calculated using a hashing algorithm applied to
+communicate digests that are calculated using a hashing algorithm applied to
 the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
 Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}):
 
@@ -300,7 +300,7 @@ Content-Digest   = sf-dictionary
 ~~~
 
 `Content-Digest` member-keys convey the hashing algorithm (see {{algorithms}})
-used to compute the checksum. Member-values are the the output of the checksum
+used to compute the digest. Member-values are the the output of the digest
 calculation. Member-values MUST be of type sf-binary.
 
 For example:
@@ -311,7 +311,7 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
 ~~~
 
 Since `Content-Digest` is a Dictionary, it can contain multiple
-members. This could be used, for example, to attach multiple checksums
+members. This could be used, for example, to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
@@ -490,7 +490,7 @@ certain identification of the origin of a message [NIST800-32]. Such signatures
 can protect one or more HTTP fields and there are additional considerations when
 `Representation-Digest` or `Content-Digest` is included in this set.
 
-Checksums explicitly
+Digests explicitly
 depend on the "representation metadata" (e.g. the values of `Content-Type`,
 `Content-Encoding` etc). A signature that protects `Representation-Digest` but not other
 "representation metadata" can expose the communication to tampering. For
