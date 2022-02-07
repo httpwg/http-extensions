@@ -111,12 +111,12 @@ and make a choice about how to act on it. An example use case is to aid
 fault detection and diagnosis across system boundaries.
 
 This document defines two digest integrity mechanisms for HTTP.
-First, content integrity, which acts on conveyed content ({{Section 6.4 of
-SEMANTICS}}).
-Second, representation data integrity, which acts on representation data ({{Section 3.2
-of SEMANTICS}}). This supports more advanced use cases such as validating the
+First, representation data integrity, which acts on representation data ({{Section 3.2
+of SEMANTICS}}). This supports advanced use cases such as validating the
 integrity of a resource that was reconstructed from parts retrieved using
 multiple requests or connections.
+Second, content integrity, which acts on conveyed content ({{Section 6.4 of
+SEMANTICS}}).
 
 This document obsoletes RFC 3230 and therefore the Digest and Want-Digest HTTP
 fields; see {{obsolete-3230}}.
