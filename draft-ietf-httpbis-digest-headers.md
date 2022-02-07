@@ -410,7 +410,7 @@ The entries in {{iana-hash-algorithm-table}} are registered by this document.
 | sha-512        | standard | The SHA-512 algorithm.              | [RFC6234], [RFC4648], this document. |
 | sha-256        | standard | The SHA-256 algorithm.              | [RFC6234], [RFC4648], this document. |
 | md5            | insecure | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and [CMU-836068] | [RFC1321], [RFC4648], this document. |
-| sha            | insecure | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [CMU-836068] | [RFC3174], [RFC4648], [RFC6234] this document. |
+| sha            | insecure | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [IACR-2020-014] | [RFC3174], [RFC4648], [RFC6234] this document. |
 | unixsum        | insecure | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
 | unixcksum      | insecure | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
 | adler          | insecure | The ADLER32 algorithm.                          | [RFC1950], this document. |
