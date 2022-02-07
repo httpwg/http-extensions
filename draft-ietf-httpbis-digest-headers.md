@@ -502,7 +502,7 @@ enclosed representation refers to the resource identified by its value and
 
 # Security Considerations
 
-## HTTP Messages are not protected in full
+## HTTP Messages Are Not Protected In Full
 
 This document specifies a data integrity mechanism that protects HTTP
 `representation data` or content, but not HTTP header and trailer fields, from
