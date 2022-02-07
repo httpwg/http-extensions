@@ -78,6 +78,8 @@ informative:
   RFC2818:
   HTTP11: I-D.ietf-httpbis-messaging
   PATCH: RFC5789
+  NO-MD5: RFC6151
+  NO-SHA: RFC6194
 
 --- abstract
 
@@ -370,16 +372,18 @@ Want-Content-Digest: sha-512=3, sha-256=10, unixsum=0
 ~~~
 
 
-# Structured Digest Algorithm Registry {#algorithms}
+# Hash Algorithms for HTTP Digest Fields Registry {#algorithms}
 
-The "HTTP Structured Digest Algorithm Registry", maintained by IANA at
-<https://www.iana.org/assignments/http-dig-alg/> registers algorithms for use
-with a range of HTTP fields.
+The "Hash Algorithms for HTTP Digest Fields", maintained by IANA at
+<https://www.iana.org/assignments/http-dig-alg/>, registers algorithms for use
+with the Representation-Digest, Content-Digest, Want-Representation-Digest, and
+Want-Content-Digest fields defined in this document.
+
+This registry uses the Specification
+Required policy ({{Section 4.6 of !RFC8126}}).
 
 Registrations MUST include the following fields:
 
- - Algorithm: a friendly name of the algorithm
- - Description: a short description of the algorithm
  - Algorithm Key: the Structured Fields key value used in
    `Representation-Digest`, `Content-Digest`, `Want-Representation-Digest` or
     `Want-Content-Digest` field Dictionary member keys
@@ -390,75 +394,29 @@ Registrations MUST include the following fields:
      in which the algorithm is defined;
      "insecure" when the algorithm is insecure;
      "reserved" when the algorithm references a reserved token value
- - Reference: a set of pointers to the primary documents defining the algorithm
-   and key
+ - Description: a short description of the algorithm
+ - Reference(s): a set of pointers to the primary documents defining the
+   algorithm and key
 
 Insecure digest algorithms MAY be used to preserve integrity against corruption, but MUST
 NOT be used in a potentially adversarial setting; for example, when signing digest fields' values for
 authenticity.
 
-The registry is initialized with the algorithms listed below.
+The entries in {{iana-hash-algorithm-table}} are registered by this document.
 
-  {: vspace="0"}
-  SHA-512
-  : * Algorithm: SHA-512
-    * Description: The SHA-512 algorithm [RFC6234].
-    * Algorithm Key: sha-512
-    * Reference: [RFC6234], [RFC4648], this document.
-    * Status: standard
-
-  SHA-256
-  : * Algorithm: SHA-256
-    * Description: The SHA-256 algorithm [RFC6234].
-    * Algorithm Key: sha-256
-    * Reference: [RFC6234], [RFC4648], this document.
-    * Status: standard
-
-  MD5
-  : * Algorithm: md5
-    * Description: The MD5 algorithm [RFC1321].
-      This algorithm is now vulnerable
-      to collision attacks. See {{?NO-MD5=RFC6151}} and [CMU-836068].
-    * Algorithm Key: md5
-    * Reference: [RFC1321], [RFC4648], this document.
-    * Status: insecure
-
-  SHA
-  : * Algorithm: SHA
-    * Description:  The SHA-1 algorithm [RFC3174].
-      This algorithm is now vulnerable
-      to collision attacks. See {{?NO-SHA1=RFC6194}} and [IACR-2020-014].
-    * Algorithm Key: sha
-    * Reference: [RFC3174], [RFC6234], [RFC4648], this document.
-    * Status: insecure
-
-  UNIXSUM
-  : * Algorithm: UNIXSUM
-    * Description: The algorithm used by the UNIX "sum" command [UNIX].
-    * Algorithm Key: unixsum
-    * Reference: [UNIX], this document.
-    * Status: insecure
-
-  UNIXCKSUM
-  : * Algorithm: UNIXCKSUM
-    * Description: The algorithm used by the UNIX "cksum" command [UNIX].
-    * Algorithm Key: unixcksum
-    * Reference: [UNIX], this document.
-    * Status: insecure
-
-  ADLER
-  : * Algorithm: ADLER32
-    * Description: The ADLER32 algorithm [RFC1950].
-    * Algorithm Key: adler32
-    * Reference: [RFC1950], this document.
-    * Status: insecure
-
-  CRC32C
-  : * Algorithm: CRC32C
-    * Description: The CRC32c algorithm {{!RFC4960}}.
-    * Algorithm Key: crc32c
-    * Reference: {{!RFC4960}} appendix B, this document.
-    * Status: insecure
+| -------------- | -------- | ----------------------------------- | -------------- |
+| Algorithm Key  | Status   | Description                         | Reference(s)   |
+| -------------- | -------- | ----------------------------------- | --------- |
+| sha-512        | standard | The SHA-512 algorithm.              | [RFC6234], [RFC4648], this document. |
+| sha-256        | standard | The SHA-256 algorithm.              | [RFC6234], [RFC4648], this document. |
+| md5            | insecure | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and [CMU-836068] | [RFC1321], [RFC4648], this document. |
+| sha            | insecure | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [CMU-836068] | [RFC3174], [RFC4648], [RFC6234] this document. |
+| unixsum        | insecure | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
+| unixcksum      | insecure | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
+| adler          | insecure | The ADLER32 algorithm.                          | [RFC1950], this document. |
+| crc32          | insecure | The CRC32c algorithm.                           | {{!RFC4960}} appendix B, this document. |
+| -------------- | -------- | ----------------------------------- | -------------- |
+{: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
 # Using Representation-Digest in State-Changing Requests {#state-changing-requests}
 
@@ -577,8 +535,8 @@ a proof of integrity "at rest" unless the whole (e.g. encoded) content is persis
 
 The security properties of hashing algorithms are not fixed.
 Algorithm Agility (see {{?RFC7696}}) is achieved by providing implementations with flexibility
-to choose hashing algorithms from the IANA HTTP Structured Digest Algorithm Values registry in
-{{iana-digest-algorithm-registry}}.
+to choose hashing algorithms from the IANA Hash Algorithms for HTTP Digest Fields registry; see
+{{establish-hash-algorithm-registry}}.
 
 To help endpoints distinguish weaker algorithms from stronger ones,
 this document adds to the IANA Digest Algorithm Values registry
@@ -607,16 +565,14 @@ validation of the algorithm types, number of validations, or the size of content
 
 # IANA Considerations
 
-## Establish the HTTP Structured Digest Algorithm Values Registry {#iana-digest-algorithm-registry}
+## Establish the Hash Algorithms for HTTP Digest Fields Registry {#establish-hash-algorithm-registry}
 
-This memo sets this specification to be the establishing document for the [HTTP Structured Digest
-Algorithm](https://www.iana.org/assignments/http-structured-dig-alg/) registry.
+This memo sets this specification to be the establishing document for the
+[Hash Algorithms for HTTP Digest Fields](https://www.iana.org/assignments/http-structured-dig-alg/)
+registry defined in {{algorithms}}.
 
-IANA is asked to initialize the registry with the tokens
-defined in {{algorithms}}.
-
-This registry uses the Specification
-Required policy ({{Section 4.6 of !RFC8126}}).
+IANA is asked to initialize the registry with the entries in
+{{iana-hash-algorithm-table}}.
 
 ## Representation-Digest Field Registration
 
