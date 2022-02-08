@@ -27,6 +27,7 @@ author:
 
 normative:
   HTTP3: I-D.draft-ietf-quic-http-34
+  HTTP2: I-D.draft-ietf-httpbis-http2bis-07
   HTTP: I-D.draft-ietf-httpbis-semantics-19
 
 informative:
@@ -44,7 +45,7 @@ how the mechanism is adapted for HTTP/3.
 # Introduction
 
 "Bootstrapping WebSockets with HTTP/2" {{!RFC8441}} defines an extension
-to HTTP/2 {{!HTTP2=RFC7540}} which is also useful in HTTP/3 {{HTTP3}}.
+to HTTP/2 {{HTTP2}} which is also useful in HTTP/3 {{HTTP3}}.
 This extension makes use of an HTTP/2 setting.  {{Appendix A.3 of HTTP3}}
 gives some guidance on what changes (if any) are appropriate when porting
 settings from HTTP/2 to HTTP/3.
