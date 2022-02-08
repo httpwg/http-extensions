@@ -260,8 +260,11 @@ of the digest calculation. Member-values MUST be of type sf-binary.
 For example:
 
 ~~~ http-message
-Representation-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==:
+NOTE: '\' line wrapping per RFC 8792
+
+Representation-Digest: \
+  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
 Since `Representation-Digest` is a Dictionary, it can contain multiple
@@ -271,9 +274,12 @@ of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
 
 ~~~ http-message
-Representation-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,
-        sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==:
+NOTE: '\' line wrapping per RFC 8792
+
+Representation-Digest: \
+  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
+  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
 A recipient MAY ignore any or all of members of `Representation-Digest`.
@@ -306,8 +312,11 @@ calculation. Member-values MUST be of type sf-binary.
 For example:
 
 ~~~ http-message
-Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                        AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==:
+NOTE: '\' line wrapping per RFC 8792
+
+Content-Digest: \
+  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
 Since `Content-Digest` is a Dictionary, it can contain multiple
@@ -317,9 +326,12 @@ of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
 
 ~~~ http-message
-Content-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,
-                sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                        AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==:
+NOTE: '\' line wrapping per RFC 8792
+
+Representation-Digest: \
+  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
+  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
 A recipient MAY ignore any or all of members of `Content-Digest`. This allows
@@ -752,10 +764,14 @@ Host: foo.example
 {: title="GET request for an item"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
-Content-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Representation-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Content-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -779,10 +795,14 @@ Host: foo.example
 {: title="HEAD request for an item"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
-Content-Digest: sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:
+Representation-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Content-Digest: \
+  sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:
 
 ~~~
 {: title="Response with both Content-Digest and Digest; empty content"}
@@ -803,11 +823,15 @@ Range: bytes=1-7
 {: title="Request for partial content"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 206 Partial Content
 Content-Type: application/json
 Content-Range: bytes 1-7/18
-Representation-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
-Content-Digest: sha-256=:Wqdirjg/u3J688ejbUlApbjECpiUUtIwT8lY/z81Tno=:
+Representation-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Content-Digest: \
+  sha-256=:Wqdirjg/u3J688ejbUlApbjECpiUUtIwT8lY/z81Tno=:
 
 "hello"
 ~~~
@@ -828,23 +852,29 @@ For presentation purposes, the response body is displayed as a Base64-encoded st
 non-printable characters.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Representation-Digest: sha-256=X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+Representation-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
 {: title="PUT Request with Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Location: /items/123
 Content-Encoding: br
 Content-Length: 22
-Representation-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
+Representation-Digest: \
+  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
@@ -861,22 +891,28 @@ depends on the representation metadata header fields, including
 
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Content-Length: 18
 Accept-Encoding: br
-Representation-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Representation-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
 {: title="PUT Request with Digest}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 204 No Content
 Content-Type: application/json
 Content-Encoding: br
-Representation-Digest: sha-256=4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+Representation-Digest: \
+  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
 ~~~
 {: title="Empty response with Digest"}
@@ -889,24 +925,30 @@ As the response body contains non-printable characters, it is displayed as a
 base64-encoded string.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Representation-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Representation-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
 {: title="PUT Request with Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Encoding: br
 Content-Location: /items/123
-Representation-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,
-        sha-512=:pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE6
-                0jBCwnMPyA/s3NF3ZO5oIWA7lf8ukk+\n5KJzm3p5og==:
+Representation-Digest: \
+  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
+  sha-512=:pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE60jBCwnMPyA/\
+  s3NF3ZO5oIWA7lf8ukk+5KJzm3p5og==:
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
@@ -921,23 +963,29 @@ The representation enclosed in the response refers to the resource identified by
 `Content-Location` (see {{Section 6.4.2 of SEMANTICS}}). `Representation-Digest` is thus computed on the enclosed representation.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
-Representation-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Representation-Digest: \
+  sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 
 {"title": "New Title"}
 ~~~
 {: title="POST Request with Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 201 Created
 Content-Type: application/json
 Content-Location: /books/123
 Location: /books/123
-Representation-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
+Representation-Digest: \
+  sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
 
 {
   "id": "123",
@@ -962,21 +1010,27 @@ Response `Representation-Digest` has no explicit relation with the resource refe
 `Location`.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
-Representation-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Representation-Digest: \
+  sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 
 {"title": "New Title"}
 ~~~
 {: title="POST Request with Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 201 Created
 Content-Type: application/json
-Representation-Digest: sha-256=:2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=:
+Representation-Digest: \
+  sha-256=:2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=:
 Location: /books/123
 
 {
@@ -1004,21 +1058,27 @@ The response `Representation-Digest` field-value is computed on the complete rep
 resource.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PATCH /books/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/merge-patch+json
 Accept: application/json
 Accept-Encoding: identity
-Representation-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Representation-Digest: \
+  sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 
 {"title": "New Title"}
 ~~~
 {: #fig-patch title="PATCH Request with Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
+Representation-Digest: \
+  sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
 
 {
   "id": "123",
@@ -1043,9 +1103,12 @@ accordance with {{?RFC7807}}.
 The response `Representation-Digest` field-value is computed on this enclosed representation.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 404 Not Found
 Content-Type: application/problem+json
-Representation-Digest: sha-256=:KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=:
+Representation-Digest: \
+  sha-256=:KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=:
 
 {
   "title": "Not Found",
@@ -1070,6 +1133,8 @@ Host: foo.example
 {: title="GET Request"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -1082,7 +1147,8 @@ Trailer: Digest
 2\r\n
 "}\r\n
 0\r\n
-Representation-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Representation-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 ~~~
 {: title="Chunked Response with Digest"}
@@ -1118,9 +1184,12 @@ Want-Representation-Digest: sha-256=3, sha=10
 {: title="GET Request with Want-Representation-Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Representation-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -1141,10 +1210,13 @@ Want-Representation-Digest: sha=1
 {: title="GET Request with Want-Representation-Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm
-                +AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew==:
+Representation-Digest: \
+  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 
 {"hello": "world"}
 ~~~
@@ -1253,9 +1325,9 @@ print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
                                     encoding=brotli.compress))
 # Encoding | hashing algorithm | digest-value
 # Identity | sha512 |b'WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm'
-#                     '+AbwAgBWnrIiYllu7BNNyealdVLvRwE\nmTHWXvJwew=='
+#                     '+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew=='
 # Brotli | sha512 | b'pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE6'
-#                   '0jBCwnMPyA/s3NF3ZO5oIWA7lf8ukk+\n5KJzm3p5og=='
+#                   '0jBCwnMPyA/s3NF3ZO5oIWA7lf8ukk+5KJzm3p5og=='
 
 ~~~
 
