@@ -549,7 +549,7 @@ differences between this format and the format used in an interactive protocol
 version.
 
 In particular, as a standalone representation, this format lacks the following
-features of the formats used those protocols:
+features of the formats used in those protocols:
 
 * chunk extensions ({{Section 7.1.1 of MESSAGING}}) and transfer encoding
   ({{Section 6.1 of MESSAGING}}) from HTTP/1.1
@@ -565,7 +565,7 @@ features of the formats used those protocols:
 * framing of responses that depends on the corresponding request (such as HEAD)
   or the value of the status code (such as 204 or 304)
 
-This format shares some of these properties with HTTP/2 and HTTP/3.
+Some of these features are also absent in HTTP/2 and HTTP/3.
 
 Unlike HTTP/2 and HTTP/3, this format uses a a fixed format for control data
 rather than using pseudo-fields.  Messages are invalid ({{invalid}}) if they
