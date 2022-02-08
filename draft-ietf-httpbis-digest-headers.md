@@ -141,7 +141,7 @@ The HTTP fields defined in this document can be used for HTTP integrity. Senders
 choose a hashing algorithm and calculate a digest from an input related to the
 HTTP message, the algorithm identifier and digest are transmitted in an HTTP
 field. Receivers can validate the digest for integrity purposes. Hashing
-algorithms are registered in the HTTP Digest Algorithm Values Registry (see
+algorithms are registered in the "Hash Algorithms for HTTP Digest Fields" (see
 {{algorithms}}).
 
 Selecting the data on which digests are calculated depends on the use case of
@@ -538,9 +538,6 @@ Algorithm Agility (see {{?RFC7696}}) is achieved by providing implementations wi
 to choose hashing algorithms from the IANA Hash Algorithms for HTTP Digest Fields registry; see
 {{establish-hash-algorithm-registry}}.
 
-To help endpoints distinguish weaker algorithms from stronger ones,
-this document adds to the IANA Digest Algorithm Values registry
-a new "Status" field containing the most recent appraisal of the hashing algorithm.
 
 An endpoint might have a preference for algorithms,
 such as preferring "standard" algorithms over "insecure" ones.
