@@ -573,6 +573,11 @@ versions.  In particular, this format does not allow for:
 
 Many of these same restrictions are shared by HTTP/2 {{H2}} and HTTP/3 {{H3}}.
 
+Note that while some messages - CONNECT or upgrade requests in particular - can
+be represented using this format, doing so serves no purpose as these requests
+are used to affect protocol behavior, which this format cannot do without
+additional mechanisms.
+
 
 # "message/bhttp" Media Type {#media-type}
 
