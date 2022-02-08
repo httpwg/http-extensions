@@ -60,10 +60,10 @@ This format is informed by the framing structure of HTTP/2 ({{H2}}) and HTTP/3
 either header compression ({{?HPACK=RFC7541}}, {{?QPACK=I-D.ietf-quic-qpack}})
 or a generic framing layer.
 
-This format provides an alternative to the `message/http` content type defined
-in {{MESSAGING}}. A binary format permits more efficient encoding and processing
-of messages. A binary format also reduces exposure to security problems related
-to processing of HTTP messages.
+This format defines `message/bhttp`, a binary alternative to the `message/http`
+content type defined in {{MESSAGING}}. A binary format permits more efficient
+encoding and processing of messages. A binary format also reduces exposure to
+security problems related to processing of HTTP messages.
 
 Two modes for encoding are described:
 
@@ -395,8 +395,8 @@ known-length and indefinite-length forms.
 
 ## Request Example
 
-The example HTTP/1.1 message in {{ex-request}} shows the content of a
-`message/http`.
+The example HTTP/1.1 message in {{ex-request}} shows the content in the
+`message/http` format.
 
 Valid HTTP/1.1 messages require lines terminated with CRLF (the two bytes 0x0a
 and 0x0d). For simplicity and consistency, the content of these examples is
@@ -576,7 +576,7 @@ Many of these same restrictions are shared by HTTP/2 {{H2}} and HTTP/3 {{H3}}.
 
 # "message/bhttp" Media Type {#media-type}
 
-The message/http media type can be used to enclose a single HTTP request or
+The `message/bhttp` media type can be used to enclose a single HTTP request or
 response message, provided that it obeys the MIME restrictions for all
 "message" types regarding line length and encodings.
 
