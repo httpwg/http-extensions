@@ -667,12 +667,14 @@ number of attacks. However, implementations still need to be aware of the
 possibility of resource exhaustion attacks that might arise from receiving
 large messages, particularly those with large numbers of fields.
 
-The format is designed to allow for minimal state when translating for use with
-HTTP proper. However, producing a combined value for fields, which might be
-necessary for the `Cookie` field when translating this format (like HTTP/1.1
-{{MESSAGING}}), can require the commitment of resources. Implementations need
-to ensure that they aren't subject to resource exhaustion attack from a
-maliciously crafted message.
+Implementations need to ensure that they aren't subject to resource exhaustion
+attack from a maliciously crafted message.  Overall, the format is designed to
+allow for minimal state when processing messages.  However, producing a combined
+field value ({{Section 5.2 of HTTP}}) for fields might require the commitment of
+resources.  In particular, combining might be necessary for the `Cookie` field
+when translating this format for use in other contexts, such as use in an API or
+translation to HTTP/1.1 {{MESSAGING}}, where the recipient of the field might
+not expect multiple values.
 
 
 # IANA Considerations
