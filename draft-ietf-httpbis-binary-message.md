@@ -148,8 +148,8 @@ a trailer section with a length prefix.
 
 Response messages that contain informational status codes result in a different
 structure; see {{informational}}.  Note that while the Known-Length
-Informational Response field is shown in {{format-known-length}}, it is only
-permitted in response messages.
+Informational Response field is shown in {{format-known-length}}, it can only
+appear in response messages.
 
 Fields in the header and trailer sections consist of a length-prefixed name and
 length-prefixed value. Both name and value are sequences of bytes that cannot
@@ -210,8 +210,8 @@ that is terminated by a zero value.
 
 Response messages that contain informational status codes result in a different
 structure; see {{informational}}.  Note that while the Indeterminate-Length
-Informational Response field is shown in {{format-indeterminate-length}}, it is
-only permitted in response messages.
+Informational Response field is shown in {{format-indeterminate-length}}, it can only
+appear in response messages.
 
 Indeterminate-length messages can be truncated in a similar way as known-length
 messages. Truncation occurs after the control data, or after the Content
