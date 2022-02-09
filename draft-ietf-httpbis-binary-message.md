@@ -154,8 +154,9 @@ length-prefixed value. Both name and value are sequences of bytes that cannot
 be zero length.
 
 The format allows for the message to be truncated before any of the length
-prefixes that precede the field sections or content. This reduces the overall
-message size. A message that is truncated at any other point is invalid; see
+prefixes that precede the field sections or content. Truncation can be used to
+reduce the size of messages that have no content for subsequent field sections
+or content.  A message that is truncated at any other point is invalid; see
 {{invalid}}.
 
 The variable-length integer encoding means that there is a limit of 2^62-1
