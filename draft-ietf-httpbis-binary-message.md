@@ -105,7 +105,8 @@ indicator is added to signal how these parts are composed:
 7. Optional padding. Any amount of zero-valued bytes.
 
 All lengths and numeric values are encoded using the variable-length integer
-encoding from {{Section 16 of QUIC}}.
+encoding from {{Section 16 of QUIC}}.  Integer values do not need to be encoded
+on the minimum number of bytes necessary.
 
 
 ## Known Length Messages
