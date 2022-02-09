@@ -126,7 +126,7 @@ Message with Known-Length {
 }
 
 Known-Length Field Section {
-  Length (i) = 2..,
+  Length (i),
   Field Line (..) ...,
 }
 
@@ -151,8 +151,7 @@ Response messages that contain informational status codes result in a different
 structure; see {{informational}}.
 
 Fields in the header and trailer sections consist of a length-prefixed name and
-length-prefixed value. Both name and value are sequences of bytes that cannot
-be zero length.
+length-prefixed value; see {{fields}}.
 
 The format allows for the message to be truncated before any of the length
 prefixes that precede the field sections or content. This reduces the overall
