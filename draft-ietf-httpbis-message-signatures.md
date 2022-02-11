@@ -255,7 +255,7 @@ X-Obs-Fold-Header: Obsolete
     line folding.
 Cache-Control: max-age=60
 Cache-Control:    must-revalidate
-Example-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
+Example-Dict:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 The following example shows canonicalized values for these example header fields, presented using the signature input string format discussed in {{create-sig-input}}:
@@ -266,7 +266,7 @@ The following example shows canonicalized values for these example header fields
 "x-ows-header": Leading and trailing whitespace.
 "x-obs-fold-header": Obsolete line folding.
 "cache-control": max-age=60, must-revalidate
-"Example-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
+"example-dict": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 Since empty HTTP header fields are allowed, they are also able to be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header:
@@ -298,19 +298,19 @@ will replace any optional internal whitespace with a single space character, amo
 For example, the following dictionary field is a valid serialization:
 
 ~~~http-message
-Example-Dictionary:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
+Example-Dict:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 If included in the input string as-is, it would be:
 
 ~~~
-"example-dictionary": a=1,    b=2;x=1;y=2,   c=(a   b   c)
+"example-dict": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
 However, if the `sf` parameter is added, the value is re-serialized as follows:
 
 ~~~
-"example-dictionary";sf: a=1, b=2;x=1;y=2, c=(a b c)
+"example-dict";sf: a=1, b=2;x=1;y=2, c=(a b c)
 ~~~
 
 The resulting string is used as the component value in {{http-header}}.
@@ -326,15 +326,15 @@ Each parameterized key for a given field MUST NOT appear more than once in the s
 Following are non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
 
 ~~~ http-message
-Example-Dictionary:  a=1, b=2;x=1;y=2, c=(a   b    c)
+Example-Dict:  a=1, b=2;x=1;y=2, c=(a   b    c)
 ~~~
 
 The following example shows canonicalized values for different component identifiers of this field, presented using the signature input string format discussed in {{create-sig-input}}:
 
 ~~~
-"example-dictionary";key="a": 1
-"example-dictionary";key="b": 2;x=1;y=2
-"example-dictionary";key="c": (a b c)
+"example-dict";key="a": 1
+"example-dict";key="b": 2;x=1;y=2
+"example-dict";key="c": (a b c)
 ~~~
 
 Note that the value for `key="c"` has been re-serialized.
@@ -837,7 +837,7 @@ If covered components reference a component identifier that cannot be resolved t
  * The component identifier identifies a field that is not present in the message or whose value is malformed.
  * The component identifier indicates that a structured field serialization is used (via the `sf` parameter), but the field in question is known to not be a structured field or the type of structured field is not known to the implementation.
  * The component identifier is a dictionary member identifier that references a field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
- * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dictionary";key="c"` and the value of the `Example-Dictionary` header field is `a=1, b=2`, which does not have the `c` value.
+ * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dict";key="c"` and the value of the `Example-Dict` header field is `a=1, b=2`, which does not have the `c` value.
 
 In the following non-normative example, the HTTP message being signed is the following request:
 
@@ -1875,7 +1875,7 @@ NOTE: '\' line wrapping per RFC 8792
 "date": Tue, 20 Apr 2021 02:07:55 GMT
 "@method": POST
 "@path": /foo
-"@query": param=Value&Pet=dog
+"@query": ?param=Value&Pet=dog
 "@authority": example.com
 "content-type": application/json
 "content-digest": sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX\
@@ -1894,12 +1894,12 @@ NOTE: '\' line wrapping per RFC 8792
 Signature-Input: sig-b23=("date" "@method" "@path" "@query" \
   "@authority" "content-type" "content-digest" "content-length")\
   ;created=1618884473;keyid="test-key-rsa-pss"
-Signature: sig-b23=:f9nOGJSjCdQ/t+/Mp7gpAHU7Kn1LpnWJE6W2081yRFITJob\
-  BDODwQNxnjiIdAGstfGKuM2vlc5SyN16//K5dBLGoiaboMco4J6R0zS+8oXqD7o6K\
-  RpIZR/qMrFc5Bu6f6UxuoWZPfCxhs3vxL/60JbF8dcdul1b77mWyC07ZjZ9VkelBy\
-  eF5+zN7v6Al/vnBzMS3H1NLz9dI2sw5Vb7kxQQ6CvEI9v3R30aFgWz4rCuyT0Kt3y\
-  tQvTHOBsadF66eDe641Sd6O/DgbdFibsE/+ToYopL9NlAuva42NlcFemrozvOKvGI\
-  PXdAPqmng/bePoSR6DIaFbWp5aDlNSbWlcA==:
+Signature: sig-b23=:bbN8oArOxYoyylQQUU6QYwrTuaxLwjAC9fbY2F6SVWvh0yB\
+  iMIRGOnMYwZ/5MR6fb0Kh1rIRASVxFkeGt683+qRpRRU5p2voTp768ZrCUb38K0fU\
+  xN0O0iC59DzYx8DFll5GmydPxSmme9v6ULbMFkl+V5B1TP/yPViV7KsLNmvKiLJH1\
+  pFkh/aYA2HXXZzNBXmIkoQoLd7YfW91kE9o/CCoC1xMy7JA1ipwvKvfrs65ldmlu9\
+  bpG6A9BmzhuzF8Eim5f8ui9eH8LZH896+QIF61ka39VBrohr9iyMUJpvRX2Zbhl5Z\
+  JzSRxpJyoEZAFL2FUo5fTIztsDZKEgM4cUA==:
 ~~~
 
 Note in this example that the value of the `Date` header and the value of the `created` signature parameter need not be the same. This is due to the fact that the `Date` header is added when creating the HTTP Message and the `created` parameter is populated when creating the signature over that message, and these two times could vary. If the `Date` header is covered by the signature, it is up to the verifier to determine whether its value has to match that of the `created` parameter or not.
@@ -2046,7 +2046,7 @@ Without a signature, the internal service would need to trust that the incoming 
 NOTE: '\' line wrapping per RFC 8792
 
 "@path": /foo
-"@query": param=Value&Pet=dog
+"@query": ?param=Value&Pet=dog
 "@method": POST
 "@authority": service.internal.example
 "client-cert": :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQ\
@@ -2067,8 +2067,8 @@ This results in the following signature:
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-aLFj9LxKArG+6IY9mfdR3e6K1zfoDJKw71fAkWROXZh34FIiWKAgshFIfBjmiU2X01u\
-6YbDkRgzwyg5L9tky0w==
+xVMHVpawaAC/0SbHrKRs9i8I3eOs5RtTMGCWXm/9nvZzoHsIg6Mce9315T6xoklyy0y\
+zhD9ah4JHRwMLOgmizw==
 ~~~
 
 Which results in the following signed request sent from the proxy to the internal service with the proxy's signature under the label `ttrp`:
@@ -2092,8 +2092,8 @@ Client-Cert: :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKD\
   bMjeSkC3dFCOOB8TAiEAx/kHSB4urmiZ0NX5r5XarmPk0wmuydBVoU4hBVZ1yhk=:
 Signature-Input: ttrp=("@path" "@query" "@method" "@authority" \
   "client-cert");created=1618884473;keyid="test-key-ecc-p256"
-Signature: ttrp=:aLFj9LxKArG+6IY9mfdR3e6K1zfoDJKw71fAkWROXZh34FIiWK\
-  AgshFIfBjmiU2X01u6YbDkRgzwyg5L9tky0w==:
+Signature: ttrp=:xVMHVpawaAC/0SbHrKRs9i8I3eOs5RtTMGCWXm/9nvZzoHsIg6\
+  Mce9315T6xoklyy0yzhD9ah4JHRwMLOgmizw==:
 
 {"hello": "world"}
 ~~~
