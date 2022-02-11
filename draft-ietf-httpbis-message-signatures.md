@@ -240,8 +240,8 @@ If the combined value is not available for a given header, the following algorit
 
 1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
-3. Remove any obsolete line-folding within the line and replace it with a single space (` `), as discussed in {{Section 5.2 of MESSAGING}}. Note that this behavior is specific to {{MESSAGING}} and does not apply to other versions of the HTTP specification.
-4. Concatenate the list of values together with a single comma (`,`) and a single space (` `) between each item.
+3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of MESSAGING}}. Note that this behavior is specific to {{MESSAGING}} and does not apply to other versions of the HTTP specification.
+4. Concatenate the list of values together with a single comma (",") and a single space (" ") between each item.
 
 The resulting string is the canonicalized component value.
 
@@ -505,6 +505,8 @@ Would result in the following `@authority` component value:
 ~~~
 
 If used in a related-response, the `@authority` component identifier refers to the associated component value of the request that triggered the response message being signed.
+
+The `@authority` derived component SHOULD be used instead signing the `Host` header directly, see {{security-not-fields}}.
 
 ### Scheme {#content-request-scheme}
 
@@ -871,7 +873,7 @@ NOTE: '\' line wrapping per RFC 8792
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
 
-Note that the example signature input here, or anywhere else within this specification, does not include the final newline that ends the example.
+Note that the example signature input here, or anywhere else within this specification, does not include the final newline that ends the displayed example.
 
 # HTTP Message Signatures {#message-signatures}
 
@@ -1142,9 +1144,9 @@ The `Signature-Input` HTTP field is a Dictionary Structured Field {{!RFC8941}} c
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=("@method" "@target-uri" "host" "date" \
-  "cache-control");created=1618884475\
-  ;keyid="test-key-rsa-pss"
+Signature-Input: sig1=("@method" "@target-uri" "@authority" \
+  "content-digest" "cache-control");\
+  created=1618884475;keyid="test-key-rsa-pss"
 ~~~
 
 To facilitate signature validation, the `Signature-Input` field value MUST contain the same serialized value used
@@ -1315,9 +1317,9 @@ The `Accept-Signature` HTTP header field is a Dictionary Structured field {{!RFC
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Accept-Signature: sig1=("@method" "@target-uri" "host" "date" \
-  "cache-control")\
-  ;keyid="test-key-rsa-pss"
+Accept-Signature: sig1=("@method" "@target-uri" "@authority" \
+  "content-digest" "cache-control");\
+  created=1618884475;keyid="test-key-rsa-pss"
 ~~~
 
 The requested signature MAY include parameters, such as a desired algorithm or key identifier. These parameters MUST NOT include parameters that the signer is expected to generate, including the `created` and `nonce` parameters.
@@ -1589,6 +1591,16 @@ To combat this, when selecting values for a message component, if the component 
 ## Non-deterministic Signature Primitives {#security-nondeterministic}
 
 Some cryptographic primitives such as RSA PSS and ECDSA have non-deterministic outputs, which include some amount of entropy within the algorithm. For such algorithms, multiple signatures generated in succession will not match. A lazy implementation of a verifier could ignore this distinction and simply check for the same value being created by re-signing the signature input. Such an implementation would work for deterministic algorithms such as HMAC and EdDSA but fail to verify valid signatures made using non-deterministic algorithms. It is therefore important that a verifier always use the correctly-defined verification function for the algorithm in question and not do a simple comparison.
+
+## Choosing Signature Parameters and Derived Components over HTTP Fields {#security-not-fields}
+
+Some HTTP fields have values and interpretations that are similar to HTTP signature parameters or derived components. In most cases, it is more desirable to sign the non-field alternative. In particular, the following fields should usually not be included in the signature unless the application specifically requires it:
+
+"date"
+: The "date" field value represents the timestamp of the HTTP message. However, the creation time of the signature itself is encoded in the `created` signature parameter. These two values can be different, depending on how the signature and the HTTP message are created and serialized. Applications processing signatures for valid time windows should use the `created` signature parameter for such calculations. An application could also put limits on how much skew there is between the "date" field and the `created` signature parameter, in order to limit the application of a generated signature to different HTTP messages. See also {{security-replay}} and {{security-coverage}}.
+
+"host"
+: The "host" header field is specific to HTTP 1.1, and its functionality is subsumed by the "@authority" derived component, defined in {{content-request-authority}}. In order to preserve the value across different HTTP versions, applications should always use the "@authority" derived component.
 
 # Privacy Considerations {#privacy}
 
@@ -1914,7 +1926,7 @@ Signature: sig-b23=:bbN8oArOxYoyylQQUU6QYwrTuaxLwjAC9fbY2F6SVWvh0yB\
   JzSRxpJyoEZAFL2FUo5fTIztsDZKEgM4cUA==:
 ~~~
 
-Note in this example that the value of the `Date` header and the value of the `created` signature parameter need not be the same. This is due to the fact that the `Date` header is added when creating the HTTP Message and the `created` parameter is populated when creating the signature over that message, and these two times could vary. If the `Date` header is covered by the signature, it is up to the verifier to determine whether its value has to match that of the `created` parameter or not.
+Note in this example that the value of the `Date` header and the value of the `created` signature parameter need not be the same. This is due to the fact that the `Date` header is added when creating the HTTP Message and the `created` parameter is populated when creating the signature over that message, and these two times could vary. If the `Date` header is covered by the signature, it is up to the verifier to determine whether its value has to match that of the `created` parameter or not. See {{security-not-fields}} for more discussion.
 
 Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
@@ -2160,7 +2172,8 @@ Jeffrey Yasskin.
 - draft-ietf-httpbis-message-signatures
 
   - -09
-     *
+     * Explained key formats better.
+     * Removed "host" and "date" from most examples.
 
   - -08
      * Editorial fixes.
