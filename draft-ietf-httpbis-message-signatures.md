@@ -1034,7 +1034,7 @@ material (`Kv`), and the presented signature to be verified as a byte array (`S`
 HTTP_VERIFY (M, Kv, S) -> V
 ~~~
 
-This section contains several common algorithm methods. The method to use can be communicated through the algorithm signature parameter
+This section contains several common algorithm methods. The method to use can be communicated through the explicit algorithm signature parameter `alg`
 defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier.
 
 ### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha512}
@@ -1128,7 +1128,7 @@ The output of the JWS signature is taken as a byte array prior to the Base64url 
 
 The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE Implementation Requirement of `Prohibited`.
 
-There is no use of the explicit `alg` signature parameter when using JOSE signing algorithms, as they can be signaled using JSON Web Keys or other mechanisms.
+JWA algorithm values from the JSON Web Signature and Encryption Algorithms Registry are not included as signature parameters. In fact, the explicit `alg` signature parameter is not used at all when using JOSE signing algorithms, as the JWS algorithm can be signaled using JSON Web Keys or other mechanisms common to JOSE implementations.
 
 # Including a Message Signature in a Message
 
