@@ -1624,16 +1624,28 @@ It is recommended that implementers first detect and validate the `Signature-Inp
 
 # Examples
 
+The following non-normative examples are provided as a means of testing implementations of HTTP Message Signatures. The signed messages given can be used to create the signature input strings with the stated parameters, creating signatures using the stated algorithms and keys.
+
+The private keys given can be used to generate signatures, though since several of the demonstrated algorithms are nondeterministic, the results of a signature are expected to be different from the exact bytes of the examples. The public keys given can be used to validate all signed examples.
+
 ## Example Keys {#example-keys}
 
 This section provides cryptographic keys that are referenced in example signatures throughout this document.  These keys MUST NOT be used for any purpose other than testing.
 
 The key identifiers for each key are used throughout the examples in this specification. It is assumed for these examples that the signer and verifier can unambiguously dereference all key identifiers used here, and that the keys and algorithms used are appropriate for the context in which the signature is presented.
 
+The components for each private key in PEM format can be displayed by executing the following OpenSSL command:
+
+~~~
+openssl pkey -text
+~~~
+
+This command was tested with all the example keys on OpenSSL version 1.1.1m. Note that some systems cannot produce or use these keys directly, and may require additional processing.
+
 ### Example Key RSA test {#example-key-rsa-test}
 
 The following key is a 2048-bit RSA public and private key pair, referred to in this document
-as `test-key-rsa`:
+as `test-key-rsa`. This key is encoded in PEM Format, with no encryption.
 
 ~~~
 -----BEGIN RSA PUBLIC KEY-----
@@ -1677,7 +1689,7 @@ EQeNC8fHGg4UXU8mhHnSBt3EA10qQJfRDs15M38eG2cYwB1PZpDHScDnDA0=
 ### Example RSA PSS Key {#example-key-rsa-pss-test}
 
 The following key is a 2048-bit RSA public and private key pair, referred to in this document
-as `test-key-rsa-pss`:
+as `test-key-rsa-pss`. This key is PCKS#8 encoded in PEM format, with no encryption.
 
 ~~~
 -----BEGIN PUBLIC KEY-----
@@ -1722,20 +1734,34 @@ rOjr9w349JooGXhOxbu8nOxX
 
 ### Example ECC P-256 Test Key {#example-key-ecc-p256}
 
-The following key is an elliptical curve key over the curve P-256, referred
-to in this document as `test-key-ecc-p256`.
+The following key is a public and private elliptical curve key pair over the curve P-256, referred
+to in this document as `test-key-ecc-p256. This key is encoded in PEM format, with no encryption.
 
 ~~~
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lf
+w0EkjqF7xB4FivAxzic30tMM4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
+-----END PUBLIC KEY-----
+
 -----BEGIN EC PRIVATE KEY-----
 MHcCAQEEIFKbhfNZfpDsW43+0+JjUr9K+bTeuxopu653+hBaXGA7oAoGCCqGSM49
 AwEHoUQDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lfw0EkjqF7xB4FivAxzic30tMM
 4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
 -----END EC PRIVATE KEY-----
+~~~
 
+### Example Ed25519 Test Key {#example-key-ed25519}
+
+The following key is an elliptical curve key over the Edwards curve ed25519, referred to in this document as `test-key-edd25519`. This key is PCKS#8 encoded in PEM format, with no encryption.
+
+~~~
 -----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lf
-w0EkjqF7xB4FivAxzic30tMM4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
+MCowBQYDK2VwAyEAJrQLj5P/89iXES9+vFgrIy29clF9CC/oPPsw3c5D0bs=
 -----END PUBLIC KEY-----
+
+-----BEGIN PRIVATE KEY-----
+MC4CAQAwBQYDK2VwBCIEIJ+DYvh6SEqVTm50DFtMDoQikTmiCqirVv9mWG9qfSnF
+-----END PRIVATE KEY-----
 ~~~
 
 ### Example Shared Secret {#example-shared-secret}
@@ -1748,20 +1774,6 @@ NOTE: '\' line wrapping per RFC 8792
 
 uzvJfB4u3N0Jy4T7NZ75MDVcr8zSTInedJtkgcu46YW4XByzNJjxBdtjUkdJPBt\
   bmHhIDi6pcl8jsasjlTMtDQ==
-~~~
-
-### Example Ed25519 Test Key {#example-key-ed25519}
-
-The following key is an elliptical curve key over the Edwards curve ed25519, referred to in this document as `test-key-edd25519`.
-
-~~~
------BEGIN PRIVATE KEY-----
-MC4CAQAwBQYDK2VwBCIEIJ+DYvh6SEqVTm50DFtMDoQikTmiCqirVv9mWG9qfSnF
------END PRIVATE KEY-----
-
------BEGIN PUBLIC KEY-----
-MCowBQYDK2VwAyEAJrQLj5P/89iXES9+vFgrIy29clF9CC/oPPsw3c5D0bs=
------END PUBLIC KEY-----
 ~~~
 
 ## Test Cases
@@ -2131,6 +2143,7 @@ Roberto Polli,
 Julian Reschke,
 Michael Richardson,
 Wojciech Rygielski,
+Rich Salz,
 Adam Scarr,
 Cory J. Slep,
 Dirk Stein,
