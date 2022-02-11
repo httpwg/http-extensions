@@ -323,6 +323,8 @@ An individual member in the value of a Dictionary Structured Field is canonicali
 
 Each parameterized key for a given field MUST NOT appear more than once in the signature input. Parameterized keys MAY appear in any order.
 
+If a dictionary key is named as a covered component but it does not occur in the dictionary, this MUST cause an error in the signature input string generation.
+
 Following are non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
 
 ~~~ http-message
@@ -646,6 +648,12 @@ Would result in the following `@query` value:
 "@query": ?queryString
 ~~~
 
+If the query string is absent from the request message, the value is the leading `?` character alone:
+
+~~~
+"@query": ?
+~~~
+
 If used in a related-response, the `@query` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Query Parameters {#content-request-query-params}
@@ -660,8 +668,7 @@ The component value of a single named parameter is the the `valueString` of the 
 Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
 Named query parameters with an empty `valueString` are included with an empty string as the component value.
 
-If a parameter name occurs multiple times in a request, all parameter values of that name MUST be included
-in separate signature input lines in the order in which the parameters occur in the target URI.
+If a query parameter is named as a covered component but it does not occur in the query parameters, this MUST cause an error in the signature input string generation.
 
 For example for the following request:
 
@@ -677,6 +684,9 @@ Indicating the `baz`, `qux` and `param` named query parameters in would result i
 "@query-params";name="qux":
 "@query-params";name="param": value
 ~~~
+
+If a parameter name occurs multiple times in a request, all parameter values of that name MUST be included
+in separate signature input lines in the order in which the parameters occur in the target URI. Note that in some implementations, the order of parsed query parameters is not stable, and this situation could lead to unexpected results. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
 
 If used in a related-response, the `@query-params` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
