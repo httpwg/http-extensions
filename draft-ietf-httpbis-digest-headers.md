@@ -371,8 +371,9 @@ List (see {{Section 3.2 of STRUCTURED-FIELDS}}):
 
 Dictionary members convey hashing algorithm preferences (see {{algorithms}}).
 Member-keys convey the hashing algorithm (see {{algorithms}}), member-values convey
-an ascending relative weighted preference between 0 and 10. Member-values MUST
-be of type sf-integer, in the range 0 to 10.
+an ascending relative weighted preference between 0 and 10. 1 is the least
+preferred, 10 is the most preferred; a value of 0 means "not acceptable".
+Member-values MUST be of type sf-integer, in the range 0 to 10.
 
 Examples:
 
