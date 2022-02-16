@@ -270,8 +270,8 @@ Representation-Digest: \
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
-Since `Representation-Digest` is a Dictionary, it can contain multiple
-`dict-members`. This could be used, for example, to attach multiple digests
+The `sf-dictionary` syntax, can
+be used, for example, to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
@@ -364,8 +364,8 @@ Content-Digest: \
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
-Since `Content-Digest` is a Dictionary, it can contain multiple
-members. This could be used, for example, to attach multiple digests
+The `sf-dictionary` syntax, can
+be used, for example, to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
