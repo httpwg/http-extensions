@@ -88,7 +88,7 @@ Representation-Digest field can be used for the integrity of HTTP
 representations. The Content-Digest field can be used for the integrity of
 HTTP message content. Want-Representation-Digest and Want-Content-Digest can be
 used to indicate a sender's interest and preferences for receiving the respective
-integrity fields.
+Integrity fields.
 
 This document obsoletes RFC 3230 and the Digest and Want-Digest HTTP
 fields.
@@ -168,8 +168,8 @@ endpoints to express interest in `Representation-Digest` and `Content-Digest`
 respectively, and preference of algorithms in either.
 
 `Representation-Digest` and `Content-Digest` are collectively termed
-integrity fields. `Want-Representation-Digest` and `Want-Content-Digest`are
-collectively termed integrity preference fields.
+Integrity fields. `Want-Representation-Digest` and `Want-Content-Digest`are
+collectively termed Integrity preference fields.
 
 Integrity fields are tied to the `Content-Encoding`
 and `Content-Type` header fields. Therefore, a given resource may have multiple
@@ -200,7 +200,7 @@ detect if non-conformance to [RFC3230] is intentional or unintentional.
 In order to address potential inconsistencies and ambiguity across
 implementations of `Digest` and `Want-Digest`, this document obsoletes
 [RFC3230]. The Integrity fields ({{representation-digest}} and
-{{content-digest}}) and integrity preference fields ({{want-fields}})
+{{content-digest}}) and Integrity preference fields ({{want-fields}})
 defined in this document are better aligned with current HTTP semantics and
 have names that more clearly articulate the intended usages.
 
@@ -211,7 +211,8 @@ have names that more clearly articulate the intended usages.
 This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405].
 
-The terms Dictionary, List, sf-dictionary, sf-integer and sf-binary are imported from
+The terms Dictionary, List, sf-dictionary, dict-member, member-key,
+member-value, sf-integer and sf-binary are imported from
 {{!STRUCTURED-FIELDS=RFC8941}}.
 
 The definitions "representation", "selected representation", "representation
@@ -253,9 +254,11 @@ STRUCTURED-FIELDS}}):
 Representation-Digest   = sf-dictionary
 ~~~
 
-`Representation-Digest` member-keys convey the hashing algorithm (see
-{{algorithms}}) used to compute the digest. Member-values are the output
-of the digest calculation. Member-values MUST be of type sf-binary.
+where member-keys convey the hashing algorithm (see
+{{algorithms}}) used to compute the digest
+and have no parameters.
+Member-values are the output of the digest calculation
+and their syntax is `sf-binary`.
 
 For example:
 
@@ -268,7 +271,7 @@ Representation-Digest: \
 ~~~
 
 Since `Representation-Digest` is a Dictionary, it can contain multiple
-members. This could be used, for example, to attach multiple digests
+`dict-members`. This could be used, for example, to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
@@ -282,11 +285,11 @@ Representation-Digest: \
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
-A recipient MAY ignore any or all of members of `Representation-Digest`.
+A recipient MAY ignore any or all `dict-member`s.
 This allows the recipient to choose which hashing algorithm(s) to use for
-validation instead of verifying every received representation-data-digest.
+validation instead of verifying every received `dict-member`.
 
-A sender MAY send a `Representation-Digest` member without knowing whether the
+A sender MAY send a `dict-member` without knowing whether the
 recipient supports a given hashing algorithm, or even knowing that the recipient
 will ignore it.
 
@@ -346,10 +349,11 @@ Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}):
 Content-Digest   = sf-dictionary
 ~~~
 
-`Content-Digest` member-keys convey the hashing algorithm (see {{algorithms}})
-used to compute the digest. Member-values are the output of the digest
-calculation. Member-values MUST be of type sf-binary.
-
+where member-keys convey the hashing algorithm (see
+{{algorithms}}) used to compute the digest
+and have no parameters.
+Member-values are the output of the digest calculation
+and their syntax is `sf-binary`.
 For example:
 
 ~~~ http-message
@@ -375,13 +379,13 @@ Representation-Digest: \
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
-A recipient MAY ignore any or all of members of `Content-Digest`. This allows
+A recipient MAY ignore any or all `dict-member`s. This allows
 the recipient to choose which hashing algorithm(s) to use for validation instead
-of verifying every received representation-data-digest.
+of verifying every received `dict-member`.
 
-A sender MAY send a representation-data-digest using a hashing algorithm without
-knowing whether the recipient supports the hashing algorithm, or even knowing
-that the recipient will ignore it.
+A sender MAY send a `dict-member` without knowing whether the
+recipient supports a given hashing algorithm, or even knowing that the recipient
+will ignore it.
 
 `Content-Digest` can be sent in a trailer section.
 In this case,
@@ -389,7 +393,7 @@ In this case,
 
 # Integrity preference fields  {#want-fields}
 
-Senders can indicate their interest in integrity fields and hashing algorithm
+Senders can indicate their interest in Integrity fields and hashing algorithm
 preferences using the
 `Want-Representation-Digest` or `Want-Content-Digest` fields. These can be used in both
 requests and responses.
@@ -411,10 +415,10 @@ List (see {{Section 3.2 of STRUCTURED-FIELDS}}):
 ~~~
 
 Dictionary members convey hashing algorithm preferences (see {{algorithms}}).
-Member-keys convey the hashing algorithm (see {{algorithms}}), member-values convey
-an ascending relative weighted preference between 0 and 10 inclusive. 1 is the
+Member-keys convey the hashing algorithm (see {{algorithms}}),
+member-values convey an ascending relative weighted preference
+and their syntax is `sf-integer` in the range 0 to 10 inclusive. 1 is the
 least preferred, 10 is the most preferred; a value of 0 means "not acceptable".
-Member-values MUST be of type sf-integer, in the range 0 to 10 inclusive.
 
 Examples:
 
@@ -430,8 +434,7 @@ Want-Content-Digest: sha-512=3, sha-256=10, unixsum=0
 
 The "Hash Algorithms for HTTP Digest Fields", maintained by IANA at
 <https://www.iana.org/assignments/http-dig-alg/>, registers algorithms for use
-with the Representation-Digest, Content-Digest, Want-Representation-Digest, and
-Want-Content-Digest fields defined in this document.
+with the Integrity and Integrity preference fields defined in this document.
 
 This registry uses the Specification
 Required policy ({{Section 4.6 of !RFC8126}}).
@@ -452,9 +455,9 @@ Registrations MUST include the following fields:
  - Reference(s): a set of pointers to the primary documents defining the
    algorithm and key
 
-Insecure digest algorithms MAY be used to preserve integrity against corruption, but MUST
-NOT be used in a potentially adversarial setting; for example, when signing digest fields' values for
-authenticity.
+Insecure hashing algorithms MAY be used to preserve integrity against corruption,
+but MUST NOT be used in a potentially adversarial setting;
+for example, when signing Integrity fields' values for authenticity.
 
 The entries in {{iana-hash-algorithm-table}} are registered by this document.
 
@@ -472,6 +475,47 @@ The entries in {{iana-hash-algorithm-table}} are registered by this document.
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
+<<<<<<< HEAD
+=======
+# Using Representation-Digest in State-Changing Requests {#state-changing-requests}
+
+When the representation enclosed in a state-changing request
+does not describe the target resource,
+the representation digest MUST be computed on the
+representation data.
+This is the only possible choice because representation digest requires complete
+representation metadata (see {{representation-digest}}).
+
+In responses,
+
+- if the representation describes the status of the request,
+  `Representation-Digest` MUST be computed on the enclosed representation
+   (see {{post-referencing-status}} );
+
+- if there is a referenced resource
+  `Representation-Digest` MUST be computed on the selected representation of the referenced resource
+   even if that is different from the target resource.
+   That might or might not result in computing `Representation-Digest` on the enclosed representation.
+
+The latter case is done according to the HTTP semantics of the given
+method, for example using the `Content-Location` header field (see {{Section 8.7 of
+SEMANTICS}}).
+In contrast, the `Location` header field does not affect `Representation-Digest` because
+it is not representation metadata.
+
+For example, in PATCH requests, the representation digest
+will be computed on the patch document
+because the representation metadata refers to the patch document and not
+to the target resource (see {{Section 2 of PATCH}}).
+In responses, instead, the representation digest will be computed on the selected
+representation of the patched resource.
+
+## Representation-Digest and Content-Location in Responses {#digest-and-content-location}
+
+When a state-changing method returns the `Content-Location` header field, the
+enclosed representation refers to the resource identified by its value and
+`Representation-Digest` is computed accordingly. An example is given in {{post-not-request-uri}}.
+>>>>>>> f33c6b21... Fix: #1941. Editorial alignments
 
 
 # Security Considerations
@@ -520,7 +564,7 @@ when applying Integrity fields; see {{algorithms}}.
 Using signatures to protect the checksum of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
 
-Any mangling of digest fields, including de-duplication of representation-data-digest values
+Any mangling of digest fields, including de-duplication of `dict-member`s
 or combining different field values (see {{Section 5.2 of SEMANTICS}})
 might affect signature validation.
 
@@ -564,7 +608,7 @@ will be vulnerable to attacks on the weakest algorithm they are willing to accep
 
 Transition from weak algorithms is supported
 by negotiation of hashing algorithm using `Want-Representation-Digest` or `Want-Content-Digest` (see {{want-fields}})
-or by sending multiple representation-data-digest values from which the receiver chooses.
+or by sending multiple digest calculations from which the receiver chooses.
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{representation-digest}}).
 
@@ -613,7 +657,7 @@ IANA is asked to initialize the registry with the entries in
 
 --- back
 
-# Resource Representation and Representation-Data {#resource-representation}
+# Resource Representation and Representation Data {#resource-representation}
 
 The following examples show how representation metadata, payload transformations
 and method impacts on the message and content. When the content
@@ -1097,7 +1141,7 @@ Note that a `204 No Content` response without content but with the same
 
 ## Error responses
 
-In error responses, the representation-data does not necessarily refer to the
+In error responses, the representation data does not necessarily refer to the
 target resource. Instead, it refers to the representation of the error.
 
 In the following example, a client sends the same request from {{fig-patch}} to
@@ -1209,7 +1253,7 @@ digest, it instead uses a different algorithm.
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
-Want-Representation-Digest: sha=1
+Want-Representation-Digest: sha=10
 
 ~~~
 {: title="GET Request with Want-Representation-Digest"}
@@ -1235,14 +1279,14 @@ the request and return an error.
 
 In this example, the client requests a "sha" `Representation-Digest`, and the server returns an
 error with problem details {{?RFC7807}} contained in the content. The problem
-details contain a list of the digest algorithms that the server supports. This
+details contain a list of the hashing algorithms that the server supports. This
 is purely an example, this specification does not define any format or
 requirements for such content.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
-Want-Representation-Digest: sha=1
+Want-Representation-Digest: sha=10
 
 ~~~
 {: title="GET Request with Want-Representation-Digest"}
@@ -1277,6 +1321,7 @@ Matthew Kerwin,
 James Manger,
 Tommy Pauly,
 Sean Turner,
+Justin Richer,
 and Erik Wilde.
 
 
@@ -1386,7 +1431,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-digest-headers-01
 {:numbered="false"}
 
-* Digest of error responses is computed on the error representation-data #1004
+* Digest of error responses is computed on the error representation data #1004
 * Effect of HTTP semantics on payload and message body moved to appendix #1122
 * Editorial refactoring, moving headers sections up. #1109-#1112, #1116,
   #1117, #1122-#1124
