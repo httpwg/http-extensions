@@ -471,7 +471,7 @@ enclosed representation refers to the resource identified by its value and
 `Representation-Digest` is computed accordingly. An example is given in {{post-not-request-uri}}.
 
 
-# Security Considerations
+# Security Considerations {#security}
 
 ## HTTP Messages Are Not Protected In Full
 
@@ -1255,6 +1255,40 @@ Content-Type: application/problem+json
 ~~~
 {: title="Response advertising the supported algorithms"}
 
+# Migrating from RFC 3230
+
+This section supports current implementers of [RFC3230]
+in the migration to the new integrity fields
+and allows them to replace any reference to [RFC3230]
+with this document.
+
+At first, it is important to clarify that
+in the `Digest` syntax defined in [RFC3230] and reported below
+
+~~~ abnf
+   Digest = 1#instance-digest
+   instance-digest = digest-algorithm "="
+                     <encoded digest output>
+~~~
+
+- the `<encoded digest output>` needs to be computed
+  on the "selected representation data" as clarified
+  in {{representation-digest}};
+- while the `digest-algorithm` is taken from the old
+  "HTTP Digest Algorithm Values Registry" defined in [RFC3230],
+  the "status" field of the new "Hash Algorithms for HTTP Digest Fields"
+  {{algorithms}} marks algorithms now considered insecure
+  and can guide `Digest` implementers in the migration.
+
+Implementers already computing the checksum
+on the selected representation data
+can migrate to `Representation-Digest` {{representation-digest}};
+those using the message content can switch to `Content-Digest` {{content-digest}}.
+
+While the syntax is different, the examples related to `Representation-Digest`
+provide an exhaustive reference of the `Digest` behavior in different scenarios.
+Likewise, {{state-changing-requests}}, {{security}} and in particular
+{{usage-in-signatures}} apply to `Digest` too.
 
 # Acknowledgements
 {:numbered="false"}
