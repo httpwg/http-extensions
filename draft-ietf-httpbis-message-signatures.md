@@ -2042,7 +2042,7 @@ In this example, there is a TLS-terminating reverse proxy sitting in front of th
 The client makes the following request to the TLS terminating proxy using mutual TLS:
 
 ~~~ http-message
-POST /foo?Param=value&pet=Dog HTTP/1.1
+POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
