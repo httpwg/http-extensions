@@ -473,7 +473,7 @@ enclosed representation refers to the resource identified by its value and
 
 # Security Considerations
 
-## HTTP Messages Are Not Protected In Full
+## HTTP Messages Are Not Protected In Full {#sec-limitations}
 
 This document specifies a data integrity mechanism that protects HTTP
 `representation data` or content, but not HTTP header and trailer fields, from
@@ -512,11 +512,9 @@ digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
 endpoints. See also {{digest-and-content-location}}.
 
-Digest fields SHOULD always be used over a connection that provides integrity at
-the transport layer that protects HTTP fields.
-
-A `Representation-Digest` field using NOT RECOMMENDED hashing algorithms SHOULD NOT be used in
-signatures.
+As explained in {{sec-limitations}}, integrity fields rely
+on transport layer integrity protection mechanisms,
+while {{algorithms}} provides further guidance on algorithm's choice.
 
 Using signatures to protect the checksum of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
