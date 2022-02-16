@@ -341,6 +341,30 @@ The following example shows canonicalized values for different component identif
 
 Note that the value for `key="c"` has been re-serialized.
 
+### Absent HTTP Fields
+
+If the signer wants to signal that an HTTP field is not present in the signed message at the time the signature is generated, the signer can include that field in the signature with the parameter `absent` to indicate that the field MUST NOT be present in the message.
+
+The component value is the empty string.
+
+For example, for the following message:
+
+~~~ http-message
+HTTP/1.1 201 No Content
+Date: Wed, 16 Feb 2022 04:20:23 GMT
+~~~
+
+The signer wishes to indicate that a `Content-Encoding` header is not included in the response being signed, which can be shown as presented using the signature input string format discussed in {{create-sig-input}}:
+
+~~~
+NOTE: '\' line wrapping per RFC 8792
+
+"content-encoding";absent: \
+
+~~~
+
+Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
+
 ## Derived Components {#derived-components}
 
 In addition to HTTP fields, there are a number of different components that can be derived from the control data, processing context, or other aspects of the HTTP message being signed. Such derived components can be included in the signature input by defining a component identifier and the derivation method for its component value.
@@ -850,6 +874,7 @@ If covered components reference a component identifier that cannot be resolved t
  * The component identifier indicates that a structured field serialization is used (via the `sf` parameter), but the field in question is known to not be a structured field or the type of structured field is not known to the implementation.
  * The component identifier is a dictionary member identifier that references a field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
  * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dict";key="c"` and the value of the `Example-Dict` header field is `a=1, b=2`, which does not have the `c` value.
+ * The component identifier is a field with the parameter value `absent` but the field exists in the source message.
 
 In the following non-normative example, the HTTP message being signed is the following request:
 
@@ -2184,6 +2209,7 @@ Jeffrey Yasskin.
   - -09
      * Explained key formats better.
      * Removed "host" and "date" from most examples.
+     * Added "absent" header parameter.
 
   - -08
      * Editorial fixes.
