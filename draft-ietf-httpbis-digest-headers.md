@@ -608,7 +608,7 @@ will be vulnerable to attacks on the weakest algorithm they are willing to accep
 
 Transition from weak algorithms is supported
 by negotiation of hashing algorithm using `Want-Representation-Digest` or `Want-Content-Digest` (see {{want-fields}})
-or by sending multiple digest calculations from which the receiver chooses.
+or by sending multiple digests from which the receiver chooses.
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{representation-digest}}).
 
