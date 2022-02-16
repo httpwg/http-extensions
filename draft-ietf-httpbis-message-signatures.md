@@ -240,8 +240,8 @@ If the combined value is not available for a given header, the following algorit
 
 1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
-3. Remove any obsolete line-folding within the line and replace it with a single space (` `), as discussed in {{Section 5.2 of MESSAGING}}. Note that this behavior is specific to {{MESSAGING}} and does not apply to other versions of the HTTP specification.
-4. Concatenate the list of values together with a single comma (`,`) and a single space (` `) between each item.
+3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of MESSAGING}}. Note that this behavior is specific to {{MESSAGING}} and does not apply to other versions of the HTTP specification.
+4. Concatenate the list of values together with a single comma (",") and a single space (" ") between each item.
 
 The resulting string is the canonicalized component value.
 
@@ -322,6 +322,8 @@ An individual member in the value of a Dictionary Structured Field is identified
 An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of RFC8941}} on the member value and its parameters, without the dictionary key.
 
 Each parameterized key for a given field MUST NOT appear more than once in the signature input. Parameterized keys MAY appear in any order.
+
+If a dictionary key is named as a covered component but it does not occur in the dictionary, this MUST cause an error in the signature input string generation.
 
 Following are non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
 
@@ -506,6 +508,8 @@ Would result in the following `@authority` component value:
 
 If used in a related-response, the `@authority` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
+The `@authority` derived component SHOULD be used instead signing the `Host` header directly, see {{security-not-fields}}.
+
 ### Scheme {#content-request-scheme}
 
 The `@scheme` component identifier refers to the scheme of the target URL of the HTTP request message. The component value is the scheme as a string as defined in {{SEMANTICS, Section 4.2}}.
@@ -644,6 +648,12 @@ Would result in the following `@query` value:
 "@query": ?queryString
 ~~~
 
+If the query string is absent from the request message, the value is the leading `?` character alone:
+
+~~~
+"@query": ?
+~~~
+
 If used in a related-response, the `@query` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Query Parameters {#content-request-query-params}
@@ -658,8 +668,7 @@ The component value of a single named parameter is the the `valueString` of the 
 Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
 Named query parameters with an empty `valueString` are included with an empty string as the component value.
 
-If a parameter name occurs multiple times in a request, all parameter values of that name MUST be included
-in separate signature input lines in the order in which the parameters occur in the target URI.
+If a query parameter is named as a covered component but it does not occur in the query parameters, this MUST cause an error in the signature input string generation.
 
 For example for the following request:
 
@@ -675,6 +684,9 @@ Indicating the `baz`, `qux` and `param` named query parameters in would result i
 "@query-params";name="qux":
 "@query-params";name="param": value
 ~~~
+
+If a parameter name occurs multiple times in a request, all parameter values of that name MUST be included
+in separate signature input lines in the order in which the parameters occur in the target URI. Note that in some implementations, the order of parsed query parameters is not stable, and this situation could lead to unexpected results. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
 
 If used in a related-response, the `@query-params` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
@@ -871,7 +883,7 @@ NOTE: '\' line wrapping per RFC 8792
 ~~~
 {: title="Non-normative example Signature Input" artwork-name="example-sig-input" #example-sig-input}
 
-Note that the example signature input here, or anywhere else within this specification, does not include the final newline that ends the example.
+Note that the example signature input here, or anywhere else within this specification, does not include the final newline that ends the displayed example.
 
 # HTTP Message Signatures {#message-signatures}
 
@@ -1032,7 +1044,7 @@ material (`Kv`), and the presented signature to be verified as a byte array (`S`
 HTTP_VERIFY (M, Kv, S) -> V
 ~~~
 
-This section contains several common algorithm methods. The method to use can be communicated through the algorithm signature parameter
+This section contains several common algorithm methods. The method to use can be communicated through the explicit algorithm signature parameter `alg`
 defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier.
 
 ### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha512}
@@ -1126,7 +1138,7 @@ The output of the JWS signature is taken as a byte array prior to the Base64url 
 
 The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE Implementation Requirement of `Prohibited`.
 
-There is no use of the explicit `alg` signature parameter when using JOSE signing algorithms, as they can be signaled using JSON Web Keys or other mechanisms.
+JWA algorithm values from the JSON Web Signature and Encryption Algorithms Registry are not included as signature parameters. In fact, the explicit `alg` signature parameter is not used at all when using JOSE signing algorithms, as the JWS algorithm can be signaled using JSON Web Keys or other mechanisms common to JOSE implementations.
 
 # Including a Message Signature in a Message
 
@@ -1142,9 +1154,9 @@ The `Signature-Input` HTTP field is a Dictionary Structured Field {{!RFC8941}} c
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Signature-Input: sig1=("@method" "@target-uri" "host" "date" \
-  "cache-control");created=1618884475\
-  ;keyid="test-key-rsa-pss"
+Signature-Input: sig1=("@method" "@target-uri" "@authority" \
+  "content-digest" "cache-control");\
+  created=1618884475;keyid="test-key-rsa-pss"
 ~~~
 
 To facilitate signature validation, the `Signature-Input` field value MUST contain the same serialized value used
@@ -1315,9 +1327,9 @@ The `Accept-Signature` HTTP header field is a Dictionary Structured field {{!RFC
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Accept-Signature: sig1=("@method" "@target-uri" "host" "date" \
-  "cache-control")\
-  ;keyid="test-key-rsa-pss"
+Accept-Signature: sig1=("@method" "@target-uri" "@authority" \
+  "content-digest" "cache-control");\
+  created=1618884475;keyid="test-key-rsa-pss"
 ~~~
 
 The requested signature MAY include parameters, such as a desired algorithm or key identifier. These parameters MUST NOT include parameters that the signer is expected to generate, including the `created` and `nonce` parameters.
@@ -1590,6 +1602,16 @@ To combat this, when selecting values for a message component, if the component 
 
 Some cryptographic primitives such as RSA PSS and ECDSA have non-deterministic outputs, which include some amount of entropy within the algorithm. For such algorithms, multiple signatures generated in succession will not match. A lazy implementation of a verifier could ignore this distinction and simply check for the same value being created by re-signing the signature input. Such an implementation would work for deterministic algorithms such as HMAC and EdDSA but fail to verify valid signatures made using non-deterministic algorithms. It is therefore important that a verifier always use the correctly-defined verification function for the algorithm in question and not do a simple comparison.
 
+## Choosing Signature Parameters and Derived Components over HTTP Fields {#security-not-fields}
+
+Some HTTP fields have values and interpretations that are similar to HTTP signature parameters or derived components. In most cases, it is more desirable to sign the non-field alternative. In particular, the following fields should usually not be included in the signature unless the application specifically requires it:
+
+"date"
+: The "date" field value represents the timestamp of the HTTP message. However, the creation time of the signature itself is encoded in the `created` signature parameter. These two values can be different, depending on how the signature and the HTTP message are created and serialized. Applications processing signatures for valid time windows should use the `created` signature parameter for such calculations. An application could also put limits on how much skew there is between the "date" field and the `created` signature parameter, in order to limit the application of a generated signature to different HTTP messages. See also {{security-replay}} and {{security-coverage}}.
+
+"host"
+: The "host" header field is specific to HTTP 1.1, and its functionality is subsumed by the "@authority" derived component, defined in {{content-request-authority}}. In order to preserve the value across different HTTP versions, applications should always use the "@authority" derived component.
+
 # Privacy Considerations {#privacy}
 
 ## Identification through Keys {#privacy-identify-keys}
@@ -1624,16 +1646,28 @@ It is recommended that implementers first detect and validate the `Signature-Inp
 
 # Examples
 
+The following non-normative examples are provided as a means of testing implementations of HTTP Message Signatures. The signed messages given can be used to create the signature input strings with the stated parameters, creating signatures using the stated algorithms and keys.
+
+The private keys given can be used to generate signatures, though since several of the demonstrated algorithms are nondeterministic, the results of a signature are expected to be different from the exact bytes of the examples. The public keys given can be used to validate all signed examples.
+
 ## Example Keys {#example-keys}
 
 This section provides cryptographic keys that are referenced in example signatures throughout this document.  These keys MUST NOT be used for any purpose other than testing.
 
 The key identifiers for each key are used throughout the examples in this specification. It is assumed for these examples that the signer and verifier can unambiguously dereference all key identifiers used here, and that the keys and algorithms used are appropriate for the context in which the signature is presented.
 
+The components for each private key in PEM format can be displayed by executing the following OpenSSL command:
+
+~~~
+openssl pkey -text
+~~~
+
+This command was tested with all the example keys on OpenSSL version 1.1.1m. Note that some systems cannot produce or use these keys directly, and may require additional processing.
+
 ### Example Key RSA test {#example-key-rsa-test}
 
 The following key is a 2048-bit RSA public and private key pair, referred to in this document
-as `test-key-rsa`:
+as `test-key-rsa`. This key is encoded in PEM Format, with no encryption.
 
 ~~~
 -----BEGIN RSA PUBLIC KEY-----
@@ -1677,7 +1711,7 @@ EQeNC8fHGg4UXU8mhHnSBt3EA10qQJfRDs15M38eG2cYwB1PZpDHScDnDA0=
 ### Example RSA PSS Key {#example-key-rsa-pss-test}
 
 The following key is a 2048-bit RSA public and private key pair, referred to in this document
-as `test-key-rsa-pss`:
+as `test-key-rsa-pss`. This key is PCKS#8 encoded in PEM format, with no encryption.
 
 ~~~
 -----BEGIN PUBLIC KEY-----
@@ -1722,20 +1756,34 @@ rOjr9w349JooGXhOxbu8nOxX
 
 ### Example ECC P-256 Test Key {#example-key-ecc-p256}
 
-The following key is an elliptical curve key over the curve P-256, referred
-to in this document as `test-key-ecc-p256`.
+The following key is a public and private elliptical curve key pair over the curve P-256, referred
+to in this document as `test-key-ecc-p256. This key is encoded in PEM format, with no encryption.
 
 ~~~
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lf
+w0EkjqF7xB4FivAxzic30tMM4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
+-----END PUBLIC KEY-----
+
 -----BEGIN EC PRIVATE KEY-----
 MHcCAQEEIFKbhfNZfpDsW43+0+JjUr9K+bTeuxopu653+hBaXGA7oAoGCCqGSM49
 AwEHoUQDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lfw0EkjqF7xB4FivAxzic30tMM
 4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
 -----END EC PRIVATE KEY-----
+~~~
 
+### Example Ed25519 Test Key {#example-key-ed25519}
+
+The following key is an elliptical curve key over the Edwards curve ed25519, referred to in this document as `test-key-edd25519`. This key is PCKS#8 encoded in PEM format, with no encryption.
+
+~~~
 -----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lf
-w0EkjqF7xB4FivAxzic30tMM4GF+hR6Dxh71Z50VGGdldkkDXZCnTNnoXQ==
+MCowBQYDK2VwAyEAJrQLj5P/89iXES9+vFgrIy29clF9CC/oPPsw3c5D0bs=
 -----END PUBLIC KEY-----
+
+-----BEGIN PRIVATE KEY-----
+MC4CAQAwBQYDK2VwBCIEIJ+DYvh6SEqVTm50DFtMDoQikTmiCqirVv9mWG9qfSnF
+-----END PRIVATE KEY-----
 ~~~
 
 ### Example Shared Secret {#example-shared-secret}
@@ -1748,20 +1796,6 @@ NOTE: '\' line wrapping per RFC 8792
 
 uzvJfB4u3N0Jy4T7NZ75MDVcr8zSTInedJtkgcu46YW4XByzNJjxBdtjUkdJPBt\
   bmHhIDi6pcl8jsasjlTMtDQ==
-~~~
-
-### Example Ed25519 Test Key {#example-key-ed25519}
-
-The following key is an elliptical curve key over the Edwards curve ed25519, referred to in this document as `test-key-edd25519`.
-
-~~~
------BEGIN PRIVATE KEY-----
-MC4CAQAwBQYDK2VwBCIEIJ+DYvh6SEqVTm50DFtMDoQikTmiCqirVv9mWG9qfSnF
------END PRIVATE KEY-----
-
------BEGIN PUBLIC KEY-----
-MCowBQYDK2VwAyEAJrQLj5P/89iXES9+vFgrIy29clF9CC/oPPsw3c5D0bs=
------END PUBLIC KEY-----
 ~~~
 
 ## Test Cases
@@ -1902,7 +1936,7 @@ Signature: sig-b23=:bbN8oArOxYoyylQQUU6QYwrTuaxLwjAC9fbY2F6SVWvh0yB\
   JzSRxpJyoEZAFL2FUo5fTIztsDZKEgM4cUA==:
 ~~~
 
-Note in this example that the value of the `Date` header and the value of the `created` signature parameter need not be the same. This is due to the fact that the `Date` header is added when creating the HTTP Message and the `created` parameter is populated when creating the signature over that message, and these two times could vary. If the `Date` header is covered by the signature, it is up to the verifier to determine whether its value has to match that of the `created` parameter or not.
+Note in this example that the value of the `Date` header and the value of the `created` signature parameter need not be the same. This is due to the fact that the `Date` header is added when creating the HTTP Message and the `created` parameter is populated when creating the signature over that message, and these two times could vary. If the `Date` header is covered by the signature, it is up to the verifier to determine whether its value has to match that of the `created` parameter or not. See {{security-not-fields}} for more discussion.
 
 Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
@@ -2008,7 +2042,7 @@ In this example, there is a TLS-terminating reverse proxy sitting in front of th
 The client makes the following request to the TLS terminating proxy using mutual TLS:
 
 ~~~ http-message
-POST /foo?Param=value&pet=Dog HTTP/1.1
+POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
@@ -2131,6 +2165,7 @@ Roberto Polli,
 Julian Reschke,
 Michael Richardson,
 Wojciech Rygielski,
+Rich Salz,
 Adam Scarr,
 Cory J. Slep,
 Dirk Stein,
@@ -2147,7 +2182,8 @@ Jeffrey Yasskin.
 - draft-ietf-httpbis-message-signatures
 
   - -09
-     *
+     * Explained key formats better.
+     * Removed "host" and "date" from most examples.
 
   - -08
      * Editorial fixes.
