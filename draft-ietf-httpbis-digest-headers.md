@@ -287,7 +287,7 @@ Representation-Digest: \
 
 A recipient MAY ignore any or all `dict-member`s.
 This allows the recipient to choose which hashing algorithm(s) to use for
-validation instead of verifying every received `dict-member`.
+validation instead of verifying every `dict-member`.
 
 A sender MAY send a `dict-member` without knowing whether the
 recipient supports a given hashing algorithm, or even knowing that the recipient
