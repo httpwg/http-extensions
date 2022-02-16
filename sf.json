@@ -19,5 +19,9 @@
     "example-token": "item",
     "example-bytesequence": "item",
     "example-boolean": "item",
-    "cdn-cache-control": "dict"
+    "cdn-cache-control": "dict",
+    "representation-digest": "dict",
+    "content-digest": "dict",
+    "want-representation-digest": "dict",
+    "want-content-digest": "dict"
 }
