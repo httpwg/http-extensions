@@ -556,7 +556,7 @@ The "standard" algorithms listed in this document are suitable for many purposes
 including adversarial situations where hash functions might need
 to provide resistance to collision, first-preimage and second-preimage attacks.
 Algorithms listed as "insecure" either provide none of these properties,
-or are known to be weak (see {{NO-MD5}} and {{NO-SHA1}}).
+or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}).
 
 For adversarial situations, which of the "standard" algorithms are acceptable
 will depend on the level of protection the circumstances demand.
