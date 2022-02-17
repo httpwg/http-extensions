@@ -530,7 +530,7 @@ data in a cookie-value SHOULD encode that data, for example, using Base64
 {{RFC4648}}.
 
 The domain-value is a subdomain as defined by {{RFC1034}}, Section 3.5, and
-as enhanced by {{RFC1123}}, Section 2.1. The domain-value MUST be a string of
+as enhanced by {{RFC1123}}, Section 2.1. Thus, domain-value is a string of
 {{USASCII}} characters, such as one obtained by applying the "ToASCII" operation
 defined in {{Section 4 of RFC3490}}.
 
@@ -1473,7 +1473,7 @@ user agent MUST process the cookie as follows:
     1.  Let the domain-attribute be the empty string.
 
 8.  If the domain-attribute contains a character that is not in the range of {{USASCII}}
-    characters (%x00 - %x7F), abort these steps and ignore the cookie entirely.
+    characters, abort these steps and ignore the cookie entirely.
 
 9.  If the user agent is configured to reject "public suffixes" and the
     domain-attribute is a public suffix:
