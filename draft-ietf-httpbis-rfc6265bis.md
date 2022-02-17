@@ -1231,7 +1231,7 @@ user agent MUST process the cookie-av as follows.
     cookie-av.
 
 3.  Let cookie-age-limit be the maximum age of the cookie (which SHOULD be 400 days
-    in the future, see {{attribute-expires}}).
+    in the future or sooner, see {{attribute-expires}}).
 
 4.  If the expiry-time is more than cookie-age-limit, the user agent MUST set the
     expiry time to cookie-age-limit in seconds.
@@ -1256,8 +1256,8 @@ user agent MUST process the cookie-av as follows.
 
 3.  Let delta-seconds be the attribute-value converted to an integer.
 
-4.  Let cookie-age-limit be the maximum age of the cookie (which SHOULD be 400 days,
-    see {{attribute-max-age}}).
+4.  Let cookie-age-limit be the maximum age of the cookie (which SHOULD be 400 days
+    or less, see {{attribute-max-age}}).
 
 5.  Set delta-seconds to the smaller of its present value and cookie-age-limit.
 
