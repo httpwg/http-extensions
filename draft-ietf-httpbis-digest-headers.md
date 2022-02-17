@@ -552,9 +552,17 @@ to choose hashing algorithms from the IANA Hash Algorithms for HTTP Digest Field
 {{establish-hash-algorithm-registry}}.
 
 
-An endpoint might have a preference for algorithms,
-such as preferring "standard" algorithms over "insecure" ones
-(e.g. vulnerable to collisions, as in {{NO-MD5}} and {{NO-SHA1}}).
+The "standard" algorithms listed in this document are suitable for many purposes,
+including adversarial situations where hash functions might need
+to provide resistance to collision, first-preimage and second-preimage attacks.
+Algorithms listed as "insecure" either provide none of these properties,
+or are known to be weak (see {{NO-MD5}} and {{NO-SHA1}}).
+
+For adversarial situations, which of the "standard" algorithms are acceptable
+will depend on the level of protection the circumstances demand.
+As there is no negotiation, endpoints that depend on a digest for security
+will be vulnerable to attacks on the weakest algorithm they are willing to accept.
+
 Transition from weak algorithms is supported
 by negotiation of hashing algorithm using `Want-Representation-Digest` or `Want-Content-Digest` (see {{want-fields}})
 or by sending multiple representation-data-digest values from which the receiver chooses.
