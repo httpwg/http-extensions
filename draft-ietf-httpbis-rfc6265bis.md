@@ -590,9 +590,9 @@ not required to retain the cookie until the specified date has passed. In fact,
 user agents often evict cookies due to memory pressure or privacy concerns.
 
 The user agent MUST limit the maximum value of the Expires attribute.
-The limit MUST NOT be greater than 400 days (34560000 seconds) in the future.
+The limit SHOULD NOT be greater than 400 days (34560000 seconds) in the future.
 The RECOMMENDED limit is 400 days in the future, but the user agent MAY adjust
-the limit to be less (see {{cookie-policy}}).
+the limit (see {{cookie-policy}}).
 Expires attributes that are greater than the limit MUST be reduced to the limit.
 
 #### The Max-Age Attribute {#attribute-max-age}
@@ -603,9 +603,9 @@ not required to retain the cookie for the specified duration. In fact, user
 agents often evict cookies due to memory pressure or privacy concerns.
 
 The user agent MUST limit the maximum value of the Max-Age attribute.
-The limit MUST NOT be greater than 400 days (34560000 seconds) in duration.
+The limit SHOULD NOT be greater than 400 days (34560000 seconds) in duration.
 The RECOMMENDED limit is 400 days in duration, but the user agent MAY adjust
-the limit to be less (see {{cookie-policy}}).
+the limit (see {{cookie-policy}}).
 Max-Age attributes that are greater than the limit MUST be reduced to the limit.
 
 NOTE: Some existing user agents do not support the Max-Age attribute. User
@@ -1230,8 +1230,8 @@ user agent MUST process the cookie-av as follows.
 2.  If the attribute-value failed to parse as a cookie date, ignore the
     cookie-av.
 
-3.  Let cookie-age-limit be the maximum age of the cookie (which must be 400 days
-    in the future or sooner, see {{attribute-expires}}).
+3.  Let cookie-age-limit be the maximum age of the cookie (which SHOULD be 400 days
+    in the future, see {{attribute-expires}}).
 
 4.  If the expiry-time is more than cookie-age-limit, the user agent MUST set the
     expiry time to cookie-age-limit in seconds.
@@ -1256,8 +1256,8 @@ user agent MUST process the cookie-av as follows.
 
 3.  Let delta-seconds be the attribute-value converted to an integer.
 
-4.  Let cookie-age-limit be the maximum age of the cookie (which must be 400 days
-    or less, see {{attribute-max-age}}).
+4.  Let cookie-age-limit be the maximum age of the cookie (which SHOULD be 400 days,
+    see {{attribute-max-age}}).
 
 5.  Set delta-seconds to the smaller of its present value and cookie-age-limit.
 
@@ -1872,6 +1872,10 @@ A cookie policy may govern which domains or parties, as in first and third parti
 The policy can also define limits on cookie size, cookie expiry (see
 {{attribute-expires}} and {{attribute-max-age}}), and the number of cookies per
 domain or in total.
+
+The recomended cookie expiry upper limit is 400 days, but this can be lower to
+reflect shorter browser data retention timelines or higher to support different
+use cases (e.g., machine-to-machine communication over HTTP).
 
 The goal of a restrictive cookie policy is often to improve security or privacy.
 User agents often allow users to change the cookie policy (see {{user-controls}}).
