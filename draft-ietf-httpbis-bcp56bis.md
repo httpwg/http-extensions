@@ -602,7 +602,7 @@ If an application has browser compatibility as a goal, client interaction ought 
 
 ## Maintaining Application Boundaries {#other-apps}
 
-Because many HTTP capabilities are scoped to the origin {{!RFC6454}}, applications also need to consider how deployments might interact with other applications (including Web browsing) on the same origin.
+Because many HTTP capabilities are scoped to the origin {{!RFC6454}}, applications also need to consider how deployments might interact with other applications (including Web browsing) that use the same origin.
 
 For example, if Cookies {{COOKIES}} are used to carry application state, they will be sent with all requests to the origin by default (unless scoped by path), and the application might receive cookies from other applications on the origin. This can lead to security issues as well as collision in cookie names.
 
