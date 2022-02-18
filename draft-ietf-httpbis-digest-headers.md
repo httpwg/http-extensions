@@ -584,6 +584,23 @@ validation of the algorithm types, number of validations, or the size of content
 
 # IANA Considerations
 
+IANA is requested to update one registry and create one new registry.
+
+Please update the
+"Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
+({{SEMANTICS}}) according to the table below:
+
+|--------------------------------|-----------|----------------------------------------------------------------|
+| Field Name                     | Status    |                     Reference                                  |
+|--------------------------------|-----------|----------------------------------------------------------------|
+| Representation-Digest          | permanent | {{representation-digest}} of this document                     |
+| Content-Digest                 | permanent | {{content-digest}} of this document                            |
+| Want-Representation-Digest     | permanent | {{want-fields}} of this document                               |
+| Want-Content-Digest            | permanent | {{want-fields}} of this document                               |
+| Digest                         | obsoleted | [RFC3230], {{obsolete-3230}} of this document                  |
+|--------------------------------|-----------|----------------------------------------------------------------|
+
+
 ## Establish the Hash Algorithms for HTTP Digest Fields Registry {#establish-hash-algorithm-registry}
 
 This memo sets this specification to be the establishing document for the
@@ -593,49 +610,6 @@ registry defined in {{algorithms}}.
 IANA is asked to initialize the registry with the entries in
 {{iana-hash-algorithm-table}}.
 
-## Representation-Digest Field Registration
-
-This section registers the `Representation-Digest` field in the "Hypertext Transfer Protocol
-(HTTP) Field Name Registry" {{SEMANTICS}}.
-
-Field name:  `Representation-Digest`
-
-Status:  permanent
-
-Specification document(s):  {{representation-digest}} of this document
-
-## Content-Digest Field Registration
-
-This section registers the `Content-Digest` field in the "Hypertext Transfer Protocol
-(HTTP) Field Name Registry" {{SEMANTICS}}.
-
-Field name:  `Content-Digest`
-
-Status:  permanent
-
-Specification document(s):  {{content-digest}} of this document
-
-## Want-Representation-Digest Field Registration
-
-This section registers the `Want-Representation-Digest` field in the "Hypertext Transfer
-Protocol (HTTP) Field Name Registry" {{SEMANTICS}}.
-
-Field name:  `Want-Representation-Digest`
-
-Status:  permanent
-
-Specification document(s):  {{want-fields}} of this document
-
-## Want-Content-Digest Field Registration
-
-This section registers the `Want-Content-Digest` field in the "Hypertext Transfer
-Protocol (HTTP) Field Name Registry" {{SEMANTICS}}.
-
-Field name:  `Want-Content-Digest`
-
-Status:  permanent
-
-Specification document(s):  {{want-fields}} of this document
 
 --- back
 
