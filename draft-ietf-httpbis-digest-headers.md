@@ -764,8 +764,8 @@ While examples can include both fields,
 ## Server Returns Full Representation Data {#example-full-representation}
 
 In this example, the message content conveys complete representation data.
-This means that in the response `Representation-Digest` and `Content-Digest`
-are computed on the same value `{"hello": "world"}`, and have the same value.
+This means that in the response, `Representation-Digest` and `Content-Digest`
+are both computed over the JSON object `{"hello": "world"}`, and thus have the same value.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -786,7 +786,7 @@ Content-Digest: \
 
 {"hello": "world"}
 ~~~
-{: title="Response where Representation-Digest is the same as Content-Digest"}
+{: title="Response with identical Representation-Digest and Content-Digest"}
 
 ## Server Returns No Representation Data
 
@@ -846,9 +846,10 @@ Content-Digest: \
 ~~~
 {: title="Partial response with both Content-Digest and Representation-Digest"}
 
-In the response message above, we note that
-the `Representation-Digest` field-value is calculated across the entire JSON object
-`{"hello": "world"}`, and the field will be
+In the response message above, note that the
+`Representation-Digest` and `Content-Digests` are different.
+The `Representation-Digest` field-value is calculated across the entire JSON object
+`{"hello": "world"}`, and the field is
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
