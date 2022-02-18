@@ -598,6 +598,8 @@ IANA is asked to update the
 | Want-Representation-Digest     | permanent | {{want-fields}} of this document                               |
 | Want-Content-Digest            | permanent | {{want-fields}} of this document                               |
 | Digest                         | obsoleted | [RFC3230], {{obsolete-3230}} of this document                  |
+| Want-Digest                    | obsoleted | [RFC3230], {{obsolete-3230}} of this document                  |
+
 |--------------------------------|-----------|----------------------------------------------------------------|
 
 
