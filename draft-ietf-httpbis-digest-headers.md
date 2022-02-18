@@ -584,9 +584,9 @@ validation of the algorithm types, number of validations, or the size of content
 
 # IANA Considerations
 
-IANA is requested to update one registry and create one new registry.
+## HTTP Field Name Registration
 
-Please update the
+IANA is asked to update the
 "Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
 ({{SEMANTICS}}) according to the table below:
 
