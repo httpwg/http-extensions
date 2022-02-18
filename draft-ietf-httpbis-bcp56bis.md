@@ -281,7 +281,7 @@ Cookies:
 Certificates:
 : Applications using HTTP should specify that TLS certificates are to be checked according to {{Section 4.3.4 of HTTP}} when HTTPS is used.
 
-Applications using HTTP should not statically require HTTP features that are usually negotiated to be supported by clients. For example, requiring that clients support responses with a certain content-coding ({{HTTP, Section 8.4.1}}) instead of negotiating for it ({{HTTP, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
+Applications using HTTP should not statically require HTTP features that are usually negotiated to be supported by clients. For example, requiring that clients support responses with a certain content coding ({{HTTP, Section 8.4.1}}) instead of negotiating for it ({{HTTP, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
 
 
 ## Specifying URLs
