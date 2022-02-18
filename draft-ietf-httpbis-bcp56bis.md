@@ -369,7 +369,7 @@ While this is not an issue for short queries, it can become one for larger query
 
 In these cases, an application using HTTP might consider using POST to express queries in the request's content; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so, it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought to consider allowing both methods.
 
-Processing of GET requests should not change application state or have other side effects that might be significant to the client since implementations can and do retry HTTP GET requests that fail and some GET requests protected by TLS Early Data might be vulnerable to replay attacks (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{HTTP, Section 9.2.1}}.
+Processing of GET requests should not change the application's state or have other side effects that might be significant to the client since implementations can and do retry HTTP GET requests that fail and some GET requests protected by TLS Early Data might be vulnerable to replay attacks (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{HTTP, Section 9.2.1}}.
 
 Finally, note that while the generic HTTP syntax allows a GET request message to contain content, the purpose is to allow message parsers to be generic; per {{HTTP, Section 9.3.1}}, content in a GET is not recommended, has no meaning, and will be either ignored or rejected by generic HTTP software (such as intermediaries, caches, servers, and client libraries).
 
