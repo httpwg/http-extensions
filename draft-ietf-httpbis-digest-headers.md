@@ -763,8 +763,9 @@ While examples can include both fields,
 
 ## Server Returns Full Representation Data {#example-full-representation}
 
-In this example, the message content conveys complete representation data,
-so `Representation-Digest` and `Content-Digest` have the same value.
+In this example, the message content conveys complete representation data.
+This means that in the response, `Representation-Digest` and `Content-Digest`
+are both computed over the JSON object `{"hello": "world"}`, and thus have the same value.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -785,7 +786,7 @@ Content-Digest: \
 
 {"hello": "world"}
 ~~~
-{: title="Response with Content-Digest"}
+{: title="Response with identical Representation-Digest and Content-Digest"}
 
 ## Server Returns No Representation Data
 
@@ -820,9 +821,7 @@ Content-Digest: \
 ## Server Returns Partial Representation Data
 
 In this example, the client makes a range request and the server responds with
-partial content. The `Representation-Digest` field-value represents the entire JSON object
-`{"hello": "world"}`, while the `Content-Digest` field-value is computed on the
-message content `"hello"`.
+partial content.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -845,8 +844,30 @@ Content-Digest: \
 
 "hello"
 ~~~
-{: title="Partial response with both Content-Digest and Digest"}
+{: title="Partial response with both Content-Digest and Representation-Digest"}
 
+In the response message above, note that the
+`Representation-Digest` and `Content-Digests` are different.
+The `Representation-Digest` field-value is calculated across the entire JSON object
+`{"hello": "world"}`, and the field is
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+Representation-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:`
+~~~
+
+However, since the message content is constrained to bytes 1-7,
+the `Content-Digest` field-value is calculated over the
+byte sequence  `"hello"`, thus resulting in
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+Content-Digest: \
+  sha-256=:Wqdirjg/u3J688ejbUlApbjECpiUUtIwT8lY/z81Tno=:
+~~~
 
 ## Client and Server Provide Full Representation Data
 
