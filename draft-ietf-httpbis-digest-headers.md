@@ -294,6 +294,47 @@ will ignore it.
 In this case,
 `Representation-Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
 
+## Using Representation-Digest in State-Changing Requests {#state-changing-requests}
+
+When the representation enclosed in a state-changing request
+does not describe the target resource,
+the representation digest MUST be computed on the
+representation data.
+This is the only possible choice because representation digest requires complete
+representation metadata (see {{representation-digest}}).
+
+In responses,
+
+- if the representation describes the status of the request,
+  `Representation-Digest` MUST be computed on the enclosed representation
+   (see {{post-referencing-status}} );
+
+- if there is a referenced resource
+  `Representation-Digest` MUST be computed on the selected representation of the referenced resource
+   even if that is different from the target resource.
+   That might or might not result in computing `Representation-Digest` on the enclosed representation.
+
+The latter case is done according to the HTTP semantics of the given
+method, for example using the `Content-Location` header field (see {{Section 8.7 of
+SEMANTICS}}).
+In contrast, the `Location` header field does not affect `Representation-Digest` because
+it is not representation metadata.
+
+For example, in `PATCH` requests, the representation digest
+will be computed on the patch document
+because the representation metadata refers to the patch document and not
+to the target resource (see {{Section 2 of PATCH}}).
+In responses, instead, the representation digest will be computed on the selected
+representation of the patched resource.
+
+## Representation-Digest and Content-Location in Responses {#digest-and-content-location}
+
+When a state-changing method returns the `Content-Location` header field, the
+enclosed representation refers to the resource identified by its value and
+`Representation-Digest` is computed accordingly.
+An example is given in {{post-not-request-uri}}.
+
+
 # The Content-Digest Field {#content-digest}
 
 The `Content-Digest` HTTP field can be used in requests and responses to
@@ -431,44 +472,6 @@ The entries in {{iana-hash-algorithm-table}} are registered by this document.
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
-# Using Representation-Digest in State-Changing Requests {#state-changing-requests}
-
-When the representation enclosed in a state-changing request
-does not describe the target resource,
-the representation digest MUST be computed on the
-representation-data.
-This is the only possible choice because representation digest requires complete
-representation metadata (see {{representation-digest}}).
-
-In responses,
-
-- if the representation describes the status of the request,
-  `Representation-Digest` MUST be computed on the enclosed representation
-   (see {{post-referencing-status}} );
-
-- if there is a referenced resource
-  `Representation-Digest` MUST be computed on the selected representation of the referenced resource
-   even if that is different from the target resource.
-   That might or might not result in computing `Representation-Digest` on the enclosed representation.
-
-The latter case is done according to the HTTP semantics of the given
-method, for example using the `Content-Location` header field (see {{Section 8.7 of
-SEMANTICS}}).
-In contrast, the `Location` header field does not affect `Representation-Digest` because
-it is not representation metadata.
-
-For example, in PATCH requests, the representation digest
-will be computed on the patch document
-because the representation metadata refers to the patch document and not
-to the target resource (see {{Section 2 of PATCH}}).
-In responses, instead, the representation digest will be computed on the selected
-representation of the patched resource.
-
-## Representation-Digest and Content-Location in Responses {#digest-and-content-location}
-
-When a state-changing method returns the `Content-Location` header field, the
-enclosed representation refers to the resource identified by its value and
-`Representation-Digest` is computed accordingly. An example is given in {{post-not-request-uri}}.
 
 
 # Security Considerations
