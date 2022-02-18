@@ -212,9 +212,10 @@ have names that more clearly articulate the intended usages.
 This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405].
 
-The terms Dictionary, List, Byte Sequence, sf-dictionary,
-sf-integer and sf-binary are imported from
-{{!STRUCTURED-FIELDS=RFC8941}}.
+This document uses the Boolean, Byte Sequence, 
+Dictionary, Integer and List types from
+{{!STRUCTURED-FIELDS=RFC8941}} along with
+the sf-dictionary and sf-list ABNF rules.
 
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", "user agent" and "content" in this document are to be
