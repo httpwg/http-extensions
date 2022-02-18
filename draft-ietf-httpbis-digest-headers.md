@@ -413,11 +413,11 @@ List (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
 * members convey hashing algorithm preferences (see {{algorithms}});
 * keys convey the hashing algorithm (see {{algorithms}})
   and have no parameters;
-* values MUST be `Integers` ({{Section 3.3.1 of STRUCTURED-FIELDS}})
+* values MUST be of type `Integer` ({{Section 3.3.1 of STRUCTURED-FIELDS}})
   in the range 0 to 10 inclusive.
   1 is the least preferred, 10 is the most preferred,
   and a value of 0 means "not acceptable".
-  They convey an ascending, relative, weighted preference.
+  Values convey an ascending, relative, weighted preference.
 
 ~~~ abnf
    Want-Representation-Digest = sf-dictionary
