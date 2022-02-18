@@ -289,7 +289,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
 
-Any HTTP field content identifiers MAY have the following parameters in specific circumstances.
+Any HTTP field component identifiers MAY have the following parameters in specific circumstances.
 
 sf
 : A boolean flag indicating that the field value is to be canonicalized using strict encoding
