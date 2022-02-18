@@ -685,7 +685,7 @@ Finally, if an application exposes the ability to execute code, great care needs
 
 # Changes from RFC 3205
 
-{{?RFC3205}} captured the Best Current Practice in the early 2000s, based on the concerns facing protocol designers at the time. Use of HTTP has changed considerably since then; as a result, this document is substantially different. As a result, the changes are too numerous to list individually.
+{{?RFC3205}} captured the Best Current Practice in the early 2000s based on the concerns facing protocol designers at the time. Use of HTTP has changed considerably since then; as a result, this document is substantially different. As a result, the changes are too numerous to list individually.
 
 
 *[MUST]: <bcp14>
