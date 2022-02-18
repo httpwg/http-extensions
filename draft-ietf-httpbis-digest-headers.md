@@ -246,7 +246,7 @@ dependent on other transformations (e.g. transfer codings for HTTP/1.1 - see
 several examples are provided in {{resource-representation}}.
 
 When a message has no representation data it is still possible to assert that no
-representation data was sent computing the digest on an empty
+representation data was sent by computing the digest on an empty
 string (see {{usage-in-signatures}}).
 
 `Representation-Digest` is a Structured Fields `Dictionary` (see {{Section 3.2 of
