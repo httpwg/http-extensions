@@ -168,7 +168,8 @@ endpoints to express interest in `Representation-Digest` and `Content-Digest`
 respectively, and preference of algorithms in either.
 
 `Representation-Digest` and `Content-Digest` are collectively termed
-Integrity fields. `Want-Representation-Digest` and `Want-Content-Digest`are
+Integrity fields.
+`Want-Representation-Digest` and `Want-Content-Digest`are
 collectively termed Integrity preference fields.
 
 Integrity fields are tied to the `Content-Encoding`
@@ -211,8 +212,8 @@ have names that more clearly articulate the intended usages.
 This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405].
 
-The terms Dictionary, List, sf-dictionary, dict-member, member-key,
-member-value, sf-integer and sf-binary are imported from
+The terms Dictionary, List, Byte Sequence, sf-dictionary,
+sf-integer and sf-binary are imported from
 {{!STRUCTURED-FIELDS=RFC8941}}.
 
 The definitions "representation", "selected representation", "representation
@@ -224,7 +225,7 @@ whereas hashing algorithm keys are quoted (e.g. "sha", "crc32c").
 
 The term "checksum" describes the output of the application of an algorithm
 to a sequence of bytes,
-whereas digest is only used in relation to the value of the fields.
+whereas "digest" is only used in relation to the value contained in the fields.
 
 Integrity fields: collective term for `Representation-Digest` and `Content-Digest`
 
@@ -244,21 +245,21 @@ dependent on other transformations (e.g. transfer codings for HTTP/1.1 - see
 several examples are provided in {{resource-representation}}.
 
 When a message has no representation data it is still possible to assert that no
-representation data was sent computing the representation digest on an empty
+representation data was sent computing the digest on an empty
 string (see {{usage-in-signatures}}).
 
-`Representation-Digest` is a Structured Fields Dictionary (see {{Section 3.2 of
-STRUCTURED-FIELDS}}):
+`Representation-Digest` is a Structured Fields `Dictionary` (see {{Section 3.2 of
+STRUCTURED-FIELDS}}) where:
+* keys convey the hashing algorithm (see {{algorithms}})
+  used to compute the digest
+  and have no parameters;
+* values MUST be `Byte Sequences`
+  containing the output of the digest calculation.
 
 ~~~ abnf
 Representation-Digest   = sf-dictionary
 ~~~
 
-where member-keys convey the hashing algorithm (see
-{{algorithms}}) used to compute the digest
-and have no parameters.
-Member-values are the output of the digest calculation
-and their syntax is `sf-binary`.
 
 For example:
 
@@ -270,8 +271,7 @@ Representation-Digest: \
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
-The `sf-dictionary` syntax, can
-be used, for example, to attach multiple digests
+The `Dictionary` type can be used, for example, to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
@@ -285,11 +285,11 @@ Representation-Digest: \
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
-A recipient MAY ignore any or all `dict-member`s.
+A recipient MAY ignore any or all digests.
 This allows the recipient to choose which hashing algorithm(s) to use for
-validation instead of verifying every `dict-member`.
+validation instead of verifying every digest.
 
-A sender MAY send a `dict-member` without knowing whether the
+A sender MAY send a digest without knowing whether the
 recipient supports a given hashing algorithm, or even knowing that the recipient
 will ignore it.
 
@@ -343,17 +343,18 @@ An example is given in {{post-not-request-uri}}.
 The `Content-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
 the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
-Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}):
+Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}})
+where:
+* keys convey the hashing algorithm (see {{algorithms}})
+  used to compute the digest
+  and have no parameters;
+* values MUST be `Byte Sequences`
+  containing the output of the digest calculation.
 
 ~~~ abnf
 Content-Digest   = sf-dictionary
 ~~~
 
-where member-keys convey the hashing algorithm (see
-{{algorithms}}) used to compute the digest
-and have no parameters.
-Member-values are the output of the digest calculation
-and their syntax is `sf-binary`.
 For example:
 
 ~~~ http-message
@@ -364,8 +365,7 @@ Content-Digest: \
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
-The `sf-dictionary` syntax, can
-be used, for example, to attach multiple digests
+The `Dictionary` type can be used, for example, to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
 support transitions away from weaker algorithms (see {{algorithm-agility}}).
@@ -379,13 +379,13 @@ Representation-Digest: \
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
 
-A recipient MAY ignore any or all `dict-member`s. This allows
-the recipient to choose which hashing algorithm(s) to use for validation instead
-of verifying every received `dict-member`.
+A recipient MAY ignore any or all digests.
+This allows the recipient to choose which hashing algorithm(s) to use for
+validation instead of verifying every digest.
 
-A sender MAY send a `dict-member` without knowing whether the
-recipient supports a given hashing algorithm, or even knowing that the recipient
-will ignore it.
+A sender MAY send a digest without
+knowing whether the recipient supports a given hashing algorithm, or even knowing
+that the recipient will ignore it.
 
 `Content-Digest` can be sent in a trailer section.
 In this case,
@@ -407,18 +407,22 @@ on messages associated with the request URI and representation metadata, using
 the `Content-Digest` field.
 
 `Want-Representation-Digest` and `Want-Content-Digest` are Structured Fields
-List (see {{Section 3.2 of STRUCTURED-FIELDS}}):
+List (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
+
+* members convey hashing algorithm preferences (see {{algorithms}});
+* keys convey the hashing algorithm (see {{algorithms}})
+  and have no parameters;
+* values MUST be `Integers` ({{Section 3.3.1 of STRUCTURED-FIELDS}})
+  in the range 0 to 10 inclusive.
+  1 is the least preferred, 10 is the most preferred,
+  and a value of 0 means "not acceptable".
+  They convey an ascending, relative, weighted preference.
 
 ~~~ abnf
    Want-Representation-Digest = sf-dictionary
    Want-Content-Digest = sf-dictionary
 ~~~
 
-Dictionary members convey hashing algorithm preferences (see {{algorithms}}).
-Member-keys convey the hashing algorithm (see {{algorithms}}),
-member-values convey an ascending relative weighted preference
-and their syntax is `sf-integer` in the range 0 to 10 inclusive. 1 is the
-least preferred, 10 is the most preferred; a value of 0 means "not acceptable".
 
 Examples:
 
@@ -564,7 +568,7 @@ when applying Integrity fields; see {{algorithms}}.
 Using signatures to protect the checksum of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
 
-Any mangling of digest fields, including de-duplication of `dict-member`s
+Any mangling of digest fields, including digests' de-duplication
 or combining different field values (see {{Section 5.2 of SEMANTICS}})
 might affect signature validation.
 
@@ -1431,7 +1435,7 @@ _RFC Editor: Please remove this section before publication._
 ## Since draft-ietf-httpbis-digest-headers-01
 {:numbered="false"}
 
-* Digest of error responses is computed on the error representation data #1004
+* Digest of error responses is computed on the error representation-data #1004
 * Effect of HTTP semantics on payload and message body moved to appendix #1122
 * Editorial refactoring, moving headers sections up. #1109-#1112, #1116,
   #1117, #1122-#1124
