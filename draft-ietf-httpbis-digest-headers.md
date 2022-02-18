@@ -254,8 +254,8 @@ STRUCTURED-FIELDS}}) where:
 * keys convey the hashing algorithm (see {{algorithms}})
   used to compute the digest
   and have no parameters;
-* values MUST be `Byte Sequences`
-  containing the output of the digest calculation.
+* values MUST be of type `Byte Sequence`,
+  which contain the output of the digest calculation.
 
 ~~~ abnf
 Representation-Digest   = sf-dictionary
