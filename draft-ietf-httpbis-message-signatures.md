@@ -289,6 +289,18 @@ NOTE: '\' line wrapping per RFC 8792
 
 Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
 
+Any HTTP field content identifiers MAY have the following parameters in specific circumstances.
+
+sf
+: A boolean flag indicating that the field value is to be canonicalized using strict encoding
+of the structured field value. {{http-header-structured}}
+
+key
+: A string parameter used to select a single member value from a dictionary structured field. {{http-header-dictionary}}
+
+absent
+: A boolean flag indicating that the field does not occur in the target message. {{http-header-absent}}
+
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
 
 If value of the the HTTP field in question is a structured field ({{!RFC8941}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
@@ -341,7 +353,7 @@ The following example shows canonicalized values for different component identif
 
 Note that the value for `key="c"` has been re-serialized.
 
-### Absent HTTP Fields
+### Absent HTTP Fields {#http-header-absent}
 
 If the signer wants to signal that an HTTP field is not present in the signed message at the time the signature is generated, the signer can include that field in the signature with the parameter `absent` to indicate that the field MUST NOT be present in the message.
 
