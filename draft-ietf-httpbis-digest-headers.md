@@ -150,7 +150,7 @@ data and HTTP content.
 
 This document defines the `Representation-Digest` request and response header
 and trailer field ({{representation-digest}}) that contains a digest value
-computed by applying a hashing algorithm to `selected representation data`
+computed by applying a hashing algorithm to *selected representation data*
 ({{Section 3.2 of SEMANTICS}}). Basing `Representation-Digest` on the selected
 representation makes it straightforward to apply it to use-cases where the
 transferred data requires some sort of manipulation to be considered a
@@ -188,7 +188,7 @@ This specification does not define means for authentication, authorization or pr
 [RFC3230] defined the `Digest` and `Want-Digest` HTTP fields for HTTP integrity.
 It also coined the term "instance" and "instance manipulation" in order to
 explain concepts that are now more universally defined, and implemented, as HTTP
-semantics such as `selected representation data` ({{Section 3.2 of SEMANTICS}}).
+semantics such as *selected representation data* ({{Section 3.2 of SEMANTICS}}).
 
 Experience has shown that implementations of [RFC3230] have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
@@ -217,7 +217,7 @@ sf-integer and sf-binary are imported from
 {{!STRUCTURED-FIELDS=RFC8941}}.
 
 The definitions "representation", "selected representation", "representation
-data", "representation metadata", and "content" in this document are to be
+data", "representation metadata", "user agent" and "content" in this document are to be
 interpreted as described in {{SEMANTICS}}.
 
 Hashing algorithm names respect the casing used in their definition document (e.g. SHA-1, CRC32c)
@@ -235,7 +235,7 @@ Integrity preference fields: collective term for `Want-Representation-Digest` an
 
 The `Representation-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
-the entire selected `representation data` (see {{Section 8.1 of SEMANTICS}}).
+the entire selected  *representation data* (see {{Section 8.1 of SEMANTICS}}).
 
 Representations take into account the effect of the HTTP semantics on
 messages. For example, the content can be affected by Range Requests or methods
@@ -479,47 +479,6 @@ The entries in {{iana-hash-algorithm-table}} are registered by this document.
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
-<<<<<<< HEAD
-=======
-# Using Representation-Digest in State-Changing Requests {#state-changing-requests}
-
-When the representation enclosed in a state-changing request
-does not describe the target resource,
-the representation digest MUST be computed on the
-representation data.
-This is the only possible choice because representation digest requires complete
-representation metadata (see {{representation-digest}}).
-
-In responses,
-
-- if the representation describes the status of the request,
-  `Representation-Digest` MUST be computed on the enclosed representation
-   (see {{post-referencing-status}} );
-
-- if there is a referenced resource
-  `Representation-Digest` MUST be computed on the selected representation of the referenced resource
-   even if that is different from the target resource.
-   That might or might not result in computing `Representation-Digest` on the enclosed representation.
-
-The latter case is done according to the HTTP semantics of the given
-method, for example using the `Content-Location` header field (see {{Section 8.7 of
-SEMANTICS}}).
-In contrast, the `Location` header field does not affect `Representation-Digest` because
-it is not representation metadata.
-
-For example, in PATCH requests, the representation digest
-will be computed on the patch document
-because the representation metadata refers to the patch document and not
-to the target resource (see {{Section 2 of PATCH}}).
-In responses, instead, the representation digest will be computed on the selected
-representation of the patched resource.
-
-## Representation-Digest and Content-Location in Responses {#digest-and-content-location}
-
-When a state-changing method returns the `Content-Location` header field, the
-enclosed representation refers to the resource identified by its value and
-`Representation-Digest` is computed accordingly. An example is given in {{post-not-request-uri}}.
->>>>>>> f33c6b21... Fix: #1941. Editorial alignments
 
 
 # Security Considerations
@@ -527,20 +486,20 @@ enclosed representation refers to the resource identified by its value and
 ## HTTP Messages Are Not Protected In Full {#sec-limitations}
 
 This document specifies a data integrity mechanism that protects HTTP
-`representation data` or content, but not HTTP header and trailer fields, from
+*representation data* or content, but not HTTP header and trailer fields, from
 certain kinds of corruption.
 
-Digest fields are not intended to be a general protection against malicious tampering with
+Integrity fields are not intended to be a general protection against malicious tampering with
 HTTP messages. This can be achieved by combining it with other approaches such
 as transport-layer security or digital signatures.
 
 ## End-to-End Integrity
 
-Representation-Digest and Content-Digest can help detect `representation data` or content modification due to implementation errors,
+Integrity fields can help detect  *representation data* or content modification due to implementation errors,
 undesired "transforming proxies" (see {{Section 7.7 of SEMANTICS}})
 or other actions as the data passes across multiple hops or system boundaries.
-Even a simple mechanism for end-to-end `representation data` integrity is valuable
-because user-agent can validate that resource retrieval succeeded before handing off to a
+Even a simple mechanism for end-to-end  *representation data* integrity is valuable
+because a *user agent* can validate that resource retrieval succeeded before handing off to a
 HTML parser, video player etc. for parsing.
 
 Note that using these mechanisms alone does not provide end-to-end integrity of HTTP messages over
@@ -552,11 +511,11 @@ metadata are discussed in {{usage-in-signatures}}.
 Digital signatures are widely used together with checksums to provide the
 certain identification of the origin of a message [NIST800-32]. Such signatures
 can protect one or more HTTP fields and there are additional considerations when
-`Representation-Digest` or `Content-Digest` is included in this set.
+Integrity fields are included in this set.
 
 Digests explicitly
 depend on the "representation metadata" (e.g. the values of `Content-Type`,
-`Content-Encoding` etc). A signature that protects `Representation-Digest` but not other
+`Content-Encoding` etc). A signature that protects Integrity fields but not other
 "representation metadata" can expose the communication to tampering. For
 example, an actor could manipulate the `Content-Type` field-value and cause a
 digest validation failure at the recipient, preventing the application from
@@ -568,17 +527,17 @@ when applying Integrity fields; see {{algorithms}}.
 Using signatures to protect the checksum of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
 
-Any mangling of digest fields, including digests' de-duplication
+Any mangling of Integrity fields, including digests' de-duplication
 or combining different field values (see {{Section 5.2 of SEMANTICS}})
 might affect signature validation.
 
 ## Usage in Trailer Fields
 
-Before sending digest fields in a trailer section, the sender
+Before sending Integrity fields in a trailer section, the sender
 should consider that intermediaries are explicitly allowed to drop any trailer
 (see {{Section 6.5.2 of SEMANTICS}}).
 
-When digest fields are used in a trailer section, the field-values are received after the content.
+When Integrity fields are used in a trailer section, the field-values are received after the content.
 Eager processing of content before the trailer section prevents digest validation, possibly leading to
 processing of invalid data.
 
@@ -625,7 +584,7 @@ to stronger ones and protect the fields value by using TLS and/or digital signat
 
 ## Resource exhaustion
 
-Digest fields validation consumes computational resources.
+Integrity fields validation consumes computational resources.
 In order to avoid resource exhaustion, implementations can restrict
 validation of the algorithm types, number of validations, or the size of content.
 
