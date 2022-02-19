@@ -104,7 +104,7 @@ More generally, an application protocol using HTTP faces a number of design deci
 * How does it coexist with other uses of HTTP -- especially Web browsing?
 * How can interoperability problems and "protocol dead ends" be avoided?
 
-This document contains best current practices for the specification of such applications. {{used}} defines when it applies, {{overview}} surveys the properties of HTTP that are important to preserve, and {{bp}} conveys best practices for specifying them.
+{{used}} defines when this document applies, {{overview}} surveys the properties of HTTP that are important to preserve, and {{bp}} contains best practices for the specification of applications that use HTTP.
 
 It is written primarily to guide IETF efforts to define application protocols using HTTP for deployment on the Internet but might be applicable in other situations. Note that the requirements herein do not necessarily apply to the development of generic HTTP extensions.
 
@@ -135,7 +135,7 @@ Note that this document is intended to apply to applications, not generic extens
 An application can rely upon HTTP without meeting the criteria for using it as defined above.
 For example, an application might wish to avoid re-specifying parts of the message format but might change other aspects of the protocol's operation, or it might want to use application-specific methods.
 
-Doing so brings more freedom to modify protocol operations, but loses at least a portion of the benefits outlined in {{overview}}, as most HTTP implementations won't be easily adaptable to these changes, and the benefit of mindshare will be lost.
+Doing so permits more freedom to modify protocol operations, but at least a portion of the benefits outlined in {{overview}} are lost as most HTTP implementations won't be easily adaptable to these changes. The benefit of mindshare will also be lost.
 
 Such specifications MUST NOT use HTTP's URI schemes, transport ports, ALPN protocol IDs, or IANA registries; rather, they are encouraged to establish their own.
 
@@ -147,17 +147,19 @@ This section examines the characteristics of HTTP that are important to consider
 
 ## Generic Semantics
 
-Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined by HTTP are potentially applicable to every resource and are not specific to a particular context. Application-specific semantics are best expressed in message content and in header fields, not status codes or methods (although the latter do have generic semantics that relate to application state).
+Much of the value of HTTP is in its generic semantics -- that is, the protocol elements defined by HTTP are potentially applicable to every resource and are not specific to a particular context. Application-specific semantics are best expressed in message content and header fields, not status codes or methods (although status codes and methods do have generic semantics that relate to application state).
 
-This generic/application-specific split allows an HTTP message to be handled by common software (e.g., HTTP servers, intermediaries, client implementations, and caches) without understanding the specific application. It also allows people to leverage their knowledge of HTTP semantics without specialising them for a particular application.
+This split between generic and application-specific semantics allows an HTTP message to be handled by common software (e.g., HTTP servers, intermediaries, client implementations, and caches) without requiring those implementations to understand the application in use. It also allows people to leverage their knowledge of HTTP semantics without needing specialised knowledge of a particular application.
 
 Therefore, applications that use HTTP MUST NOT redefine, refine, or overlay the semantics of generic protocol elements such as methods, status codes, or existing header fields. Instead, they should focus their specifications on protocol elements that are specific to that application -- namely, their HTTP resources.
 
 When writing a specification, it's often tempting to specify exactly how HTTP is to be implemented, supported, and used. However, this can easily lead to an unintended profile of HTTP behaviour. For example, it's common to see specifications with language like this:
 
-    A POST request MUST result in a 201 (Created) response.
+<blockquote>
+<t>A POST request MUST result in a 201 (Created) response.</t>
+</blockquote>
 
-This forms an expectation in the client that the response will always be `201 Created` when in fact there are a number of reasons why the status code might differ in a real deployment; for example, there might be a proxy that requires authentication, or a server-side error, or a redirection. If the client does not anticipate this, the application's deployment is brittle.
+This forms an expectation in the client that the response will always be 201 (Created) when in fact there are a number of reasons why the status code might differ in a real deployment; for example, there might be a proxy that requires authentication, or a server-side error, or a redirection. If the client does not anticipate this, the application's deployment is brittle.
 
 See {{resource}} for more details.
 
@@ -174,9 +176,9 @@ Using runtime links in this fashion has a number of other benefits -- especially
 
 For example, navigating with a link allows a request to be routed to a different server without the overhead of a redirection, thereby supporting deployment across machines well.
 
-It also becomes possible to "mix and match" different applications on the same server and offers a natural mechanism for extensibility, versioning, and capability management since the document containing the links can also contain information about their targets.
+By using links, it also becomes possible to "mix and match" different applications on the same server. The use of links also offers a natural mechanism for extensibility, versioning, and capability management because the document containing the links can also contain information about their targets.
 
-Using links also offers a form of cache invalidation that's seen on the Web; when a resource's state changes, the application can change its link to it so that a fresh copy is always fetched.
+Using links also offers a form of cache invalidation that's seen on the Web; when a resource's state changes, the application can change the affected links so that a fresh copy is always fetched.
 
 
 ## Rich Functionality
@@ -194,7 +196,7 @@ HTTP offers a number of features to applications, such as:
 * Partial content to selectively request part of a response
 * The ability to interact with the application easily using a Web browser
 
-Applications that use HTTP are encouraged to utilise the various features that the protocol offers so that their users receive the maximum benefit from it and to allow it to be deployed in a variety of situations. This document does not require specific features to be used since the appropriate design trade-offs are highly specific to a given situation. However, following the practices in {{bp}} is a good starting point.
+An application that uses HTTP is encouraged to utilise the various features that the protocol offers so that its users receive the maximum benefit from those features and so that the application can be deployed in a variety of situations. This document does not require specific features to be used since the appropriate design trade-offs are highly specific to a given situation. However, following the practices in {{bp}} is a good starting point.
 
 
 # Best Practices for Specifying the Use of HTTP {#bp}
@@ -241,25 +243,27 @@ The server-side behaviours of an application are most effectively specified by d
 
 An application can define its operation by composing these protocol elements to define a set of resources that are identified by link relations and that implement specified behaviours, including:
 
-* retrieval of their state using GET in one or more formats identified by media type;
+* retrieval of resource state using GET in one or more formats identified by media type;
 * resource creation or update using POST or PUT, with an appropriately identified request content format;
 * data processing using POST and identified request and response content format(s); and
 * Resource deletion using DELETE.
 
 For example, an application might specify:
 
-    Resources linked to with the "example-widget" link relation type are
-    Widgets. The state of a Widget can be fetched in the
-    "application/example-widget+json" format, and can be updated by PUT
-    to the same link. Widget resources can be deleted.
+<blockquote>
+<t>Resources linked to with the "example-widget" link relation type are
+Widgets. The state of a Widget can be fetched in the
+"application/example-widget+json" format, and can be updated by PUT
+to the same link. Widget resources can be deleted.</t>
 
-    The "Example-Count" response header field on Widget representations
-    indicates how many Widgets are held by the sender.
+<t>The Example-Count response header field on Widget representations
+indicates how many Widgets are held by the sender.</t>
 
-    The "application/example-widget+json" format is a JSON [RFC8259]
-    format representing the state of a Widget. It contains links to
-    related information in the link indicated by the Link header field
-    value with the "example-other-info" link relation type.
+<t>The "application/example-widget+json" format is a JSON [RFC8259]
+format representing the state of a Widget. It contains links to
+related information in the link indicated by the Link header field
+value with the "example-other-info" link relation type.</t>
+</blockquote>
 
 Applications can also specify the use of URI Templates {{URI-TEMPLATE}} to allow clients to generate URLs based upon runtime data.
 
@@ -281,7 +285,7 @@ Cookies:
 Certificates:
 : Applications using HTTP should specify that TLS certificates are to be checked according to {{Section 4.3.4 of HTTP}} when HTTPS is used.
 
-Applications using HTTP should not statically require HTTP features that are usually negotiated to be supported by clients. For example, requiring that clients support responses with a certain content coding ({{HTTP, Section 8.4.1}}) instead of negotiating for it ({{HTTP, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
+Applications using HTTP should not require that clients statically support HTTP features that are usually negotiated. For example, requiring that clients support responses with a certain content coding ({{HTTP, Section 8.4.1}}) instead of negotiating for it ({{HTTP, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
 
 
 ## Specifying URLs
@@ -337,7 +341,7 @@ However, application-specific schemes can also be defined. When defining a URI s
 See {{?RFC7595}} for more information about minting new URI schemes.
 
 
-### Transport Ports
+### Choosing Transport Ports
 
 Applications can use the applicable default port (80 for HTTP, 443 for HTTPS), or they can be deployed upon other ports. This decision can be made at deployment time or might be encouraged by the application's specification (e.g., by registering a port for that application).
 
@@ -352,11 +356,11 @@ See {{?RFC7605}} for further guidance.
 
 Applications that use HTTP MUST confine themselves to using registered HTTP methods such as GET, POST, PUT, DELETE, and PATCH.
 
-New HTTP methods are rare; they are required to be registered in the HTTP Method Registry with IETF Review (see {{HTTP}}) and are also required to be generic. That means that they need to be potentially applicable to all resources, not just those of one application.
+New HTTP methods are rare; they are required to be registered in the "HTTP Method Registry" with IETF Review (see {{HTTP}}) and are also required to be generic. That means that they need to be potentially applicable to all resources, not just those of one application.
 
 While historically some applications (e.g., {{?RFC4791}}) have defined non-generic methods, {{HTTP}} now forbids this.
 
-When authors believe that a new method is required, they are encouraged to engage with the HTTP community early (e.g., on the ietf-http-wg@w3.org mailing list) and document their proposal as a separate HTTP extension rather than as part of an application's specification.
+When authors believe that a new method is required, they are encouraged to engage with the HTTP community early (e.g., on the [](mailto:ietf-http-wg@w3.org){:brackets="angle"} mailing list) and document their proposal as a separate HTTP extension rather than as part of an application's specification.
 
 
 ### GET
@@ -367,7 +371,7 @@ Queries can be performed with GET, often using the query component of the URL; t
 
 While this is not an issue for short queries, it can become one for larger query terms or those that need to sustain a high rate of requests. Additionally, some HTTP implementations limit the size of URLs they support, although modern HTTP software has much more generous limits than previously (typically, considerably more than 8000 octets, as required by {{HTTP}}).
 
-In these cases, an application using HTTP might consider using POST to express queries in the request's content; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so, it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that feel a need to allow POST queries ought to consider allowing both methods.
+In these cases, an application using HTTP might consider using POST to express queries in the request's content; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so, it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that require support for POST queries ought to consider allowing both methods.
 
 Processing of GET requests should not change the application's state or have other side effects that might be significant to the client since implementations can and do retry HTTP GET requests that fail and some GET requests protected by TLS Early Data might be vulnerable to replay attacks (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{HTTP, Section 9.2.1}}.
 
@@ -382,7 +386,7 @@ However, OPTIONS does have significant limitations:
 
 * It isn't possible to link to the metadata with a simple URL because OPTIONS is not the default method.
 * OPTIONS responses are not cacheable because HTTP caches operate on representations of the resource (i.e., GET and HEAD). If OPTIONS responses are cached separately, their interactions with the HTTP cache expiry, secondary keys, and other mechanisms need to be considered.
-* OPTIONS is "chatty" -- always separating metadata out into a separate request increases the number of requests needed to interact with the application.
+* OPTIONS is "chatty" -- requesting metadata separately increases the number of requests needed to interact with the application.
 * Implementation support for OPTIONS is not universal; some servers do not expose the ability to respond to OPTIONS requests without significant effort.
 
 Instead of OPTIONS, one of these alternative approaches might be more appropriate:
@@ -403,13 +407,13 @@ Instead, applications using HTTP should define their errors to use the most appl
 
 To distinguish between multiple error conditions that are mapped to the same status code and to avoid the misattribution issue outlined above, applications using HTTP should convey finer-grained error information in the response's message content and/or header fields. {{PROBLEM-DETAILS}} provides one way to do so.
 
-Because the set of registered HTTP status codes can expand, applications using HTTP should explicitly point out that clients ought to be able to handle all applicable status codes gracefully (i.e., falling back to the generic `n00` semantics of a given status code; e.g., `499` can be safely handled as `400` by clients that don't recognise it). This is preferable to creating a "laundry list" of potential status codes since such a list won't be complete in the foreseeable future.
+Because the set of registered HTTP status codes can expand, applications using HTTP should explicitly point out that clients ought to be able to handle all applicable status codes gracefully (i.e., falling back to the generic n00 semantics of a given status code; e.g., 499 can be safely handled as 400 (Bad Request) by clients that don't recognise it). This is preferable to creating a "laundry list" of potential status codes since such a list won't be complete in the foreseeable future.
 
 Applications using HTTP MUST NOT re-specify the semantics of HTTP status codes, even if it is only by copying their definition. It is NOT RECOMMENDED they require specific reason phrases to be used; the reason phrase has no function in HTTP, is not guaranteed to be preserved by implementations, and is not carried at all in the HTTP/2 {{HTTP2}} message format.
 
 Applications MUST only use registered HTTP status codes. As with methods, new HTTP status codes are rare and required (by {{HTTP}}) to be registered with IETF Review. Similarly, HTTP status codes are generic; they are required (by {{HTTP}}) to be potentially applicable to all resources, not just to those of one application.
 
-When authors believe that a new status code is required, they are encouraged to engage with the HTTP community early (e.g., on the ietf-http-wg@w3.org mailing list) and document their proposal as a separate HTTP extension, rather than as part of an application's specification.
+When authors believe that a new status code is required, they are encouraged to engage with the HTTP community early (e.g., on the [](mailto:ietf-http-wg@w3.org){:brackets="angle"} mailing list) and document their proposal as a separate HTTP extension, rather than as part of an application's specification.
 
 
 ### Redirection {#redirects}
@@ -451,13 +455,13 @@ New header fields MUST be registered, per {{Section 16.3 of HTTP}}.
 
 See {{Section 16.3.2 of HTTP}} for guidelines to consider when minting new header fields. {{STRUCTURED-FIELDS}} provides a common structure for new header fields and avoids many issues in their parsing and handling; it is RECOMMENDED that new header fields use it.
 
-It is RECOMMENDED that header field names be short (even when field compression is used, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a "-".
+It is RECOMMENDED that header field names be short (even when field compression is used, there is an overhead) but appropriately specific. In particular, if a header field is specific to an application, an identifier for that application can form a prefix to the header field name, separated by a hyphen.
 
 For example, if the "example" application needs to create three header fields, they might be called "example-foo", "example-bar", and "example-baz". Note that the primary motivation here is to avoid consuming more generic field names, not to reserve a portion of the namespace for the application; see {{!RFC6648}} for related considerations.
 
 The semantics of existing HTTP header fields MUST NOT be redefined without updating their registration or defining an extension to them (if allowed). For example, an application using HTTP cannot specify that the Location header field has a special meaning in a certain context.
 
-See {{caching}} for the interaction between header fields and HTTP caching; in particular, request header fields that are used to choose (as per {{Section 4.1 of HTTP-CACHING}}) a response have impact there and need to be carefully considered.
+See {{caching}} for the interaction between header fields and HTTP caching; in particular, request header fields that are used to choose (per {{Section 4.1 of HTTP-CACHING}}) a response have impact there and need to be carefully considered.
 
 See {{state}} for considerations regarding header fields that carry application state (e.g., Cookie).
 
@@ -479,13 +483,13 @@ Even when an application using HTTP isn't designed to take advantage of caching,
 
 Assigning even a short freshness lifetime ({{HTTP-CACHING, Section 4.2}}) -- e.g., 5 seconds -- allows a response to be reused to satisfy multiple clients and/or a single client making the same request repeatedly. In general, if it is safe to reuse something, consider assigning a freshness lifetime.
 
-The most common method for specifying freshness is the max-age response directive ({{HTTP-CACHING, Section 5.2.2.1}}). The Expires header field ({{HTTP-CACHING, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support Cache-Control, and specifying freshness as a delta is usually more convenient and less error-prone.
+The most common method for specifying freshness is the max-age response directive ({{HTTP-CACHING, Section 5.2.2.1}}). The Expires header field ({{HTTP-CACHING, Section 5.3}}) can also be used, but it is not necessary; all modern cache implementations support the Cache-Control header field, and specifying freshness as a delta is usually more convenient and less error-prone.
 
-It is not necessary to add the "public" response directive ({{HTTP-CACHING, Section 5.2.2.9}}) to cache most responses; it is only necessary when it's desirable to store an authenticated response, or when the status code isn't understood by the cache and there isn't explicit freshness information available.
+It is not necessary to add the public response directive ({{HTTP-CACHING, Section 5.2.2.9}}) to cache most responses; it is only necessary when it's desirable to store an authenticated response, or when the status code isn't understood by the cache and there isn't explicit freshness information available.
 
 In some situations, responses without explicit cache freshness directives will be stored and served using a heuristic freshness lifetime; see {{HTTP-CACHING, Section 4.2.2}}. As the heuristic is not under the control of the application, it is generally preferable to set an explicit freshness lifetime or make the response explicitly uncacheable.
 
-If caching of a response is not desired, the appropriate response directive is "Cache-Control: no-store". Other directives are not necessary, and no-store only needs to be sent in situations where the response might be cached; see {{HTTP-CACHING, Section 3}}. Note that "Cache-Control: no-cache" allows a response to be stored, just not reused by a cache without validation; it does not prevent caching (despite its name).
+If caching of a response is not desired, the appropriate cache response directive is no-store. Other directives are not necessary, and no-store only needs to be sent in situations where the response might be cached; see {{HTTP-CACHING, Section 3}}. Note that the no-cache directive allows a response to be stored, just not reused by a cache without validation; it does not prevent caching (despite its name).
 
 For example, this response cannot be stored or reused by a cache:
 
@@ -499,9 +503,9 @@ Cache-Control: no-store
 
 ### Stale Responses
 
-Authors should understand that stale responses (e.g., with "Cache-Control: max-age=0") can be reused by caches when disconnected from the origin server; this can be useful for handling network issues.
+Authors should understand that stale responses (e.g., with Cache-Control: max-age=0) can be reused by caches when disconnected from the origin server; this can be useful for handling network issues.
 
-If doing so is not suitable for a given response, the origin should use "Cache-Control: must-revalidate". See {{Section 4.2.4 of HTTP-CACHING}} and also {{?RFC5861}} for additional controls over stale content.
+If doing so is not suitable for a given response, the origin should send the must-revalidate cache directive. See {{Section 4.2.4 of HTTP-CACHING}} and also {{?RFC5861}} for additional controls over stale content.
 
 Stale responses can be refreshed by assigning a validator, saving both transfer bandwidth and latency for large responses; see {{Section 13 of HTTP}}.
 
@@ -517,7 +521,7 @@ One way to address this is to explicitly specify that responses need to be fresh
 
 ### Varying Content Based Upon the Request
 
-If an application uses a request header field to change the response's header fields or content, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the "no-store" cache-control directive defined in {{HTTP-CACHING, Section 5.2.2.5}}) or send the Vary response header field ({{HTTP, Section 12.5.5}}) on all responses from that resource (including the "default" response).
+If an application uses a request header field to change the response's header fields or content, authors should point out that this has implications for caching; in general, such resources need to either make their responses uncacheable (e.g., with the no-store cache directive defined in {{HTTP-CACHING, Section 5.2.2.5}}) or send the Vary response header field ({{HTTP, Section 12.5.5}}) on all responses from that resource (including the "default" response).
 
 For example, this response:
 
@@ -558,7 +562,7 @@ Applications MUST NOT make assumptions about the relationship between separate r
 
 Applications can use HTTP authentication ({{Section 11 of HTTP}}) to identify clients. Per {{?RFC7617}}, the Basic authentication scheme is not suitable for protecting sensitive or valuable information unless the channel is secure (e.g., using the "HTTPS" URI scheme). Likewise, {{?RFC7616}} requires the Digest authentication scheme to be used over a secure channel.
 
-With HTTPS, clients might also be authenticated using certificates {{?RFC8446}}, but note that such authentication is intrinsically scoped to the underlying transport connection. As a result, a client has no way of knowing whether the authenticated status was used in preparing the response (though "Vary: *" and/or "Cache-Control: private" can provide a partial indication), and the only way to obtain a specifically unauthenticated response is to open a new connection.
+With HTTPS, clients might also be authenticated using certificates {{?RFC8446}}, but note that such authentication is intrinsically scoped to the underlying transport connection. As a result, a client has no way of knowing whether the authenticated status was used in preparing the response (though Vary: * and/or the private cache directive can provide a partial indication), and the only way to obtain a specifically unauthenticated response is to open a new connection.
 
 When used, it is important to carefully specify the scoping and use of authentication; if the application exposes sensitive data or capabilities (e.g., by acting as an ambient authority; see {{Section 8.3 of RFC6454}}), exploits are possible. Mitigations include using a request-specific token to ensure the intent of the client.
 
@@ -602,13 +606,13 @@ If an application has browser compatibility as a goal, client interaction ought 
 
 ## Maintaining Application Boundaries {#other-apps}
 
-Because many HTTP capabilities are scoped to the origin {{!RFC6454}}, applications also need to consider how deployments might interact with other applications (including Web browsing) that use the same origin.
+Because many HTTP capabilities are scoped to the origin {{!RFC6454}}, applications also need to consider how deployments might interact with other applications (including Web browsing) that use the same origin server.
 
-For example, if Cookies {{COOKIES}} are used to carry application state, they will be sent with all requests to the origin by default (unless scoped by path), and the application might receive cookies from other applications on the origin. This can lead to security issues as well as collision in cookie names.
+For example, if Cookies {{COOKIES}} are used to carry application state, they will be sent with all requests to the origin by default (unless scoped by path), and the application might receive cookies from other applications on the origin server. This can lead to security issues as well as collision in cookie names.
 
-One solution to these issues is to require a dedicated hostname for the application so that it has a unique origin. However, it is often desirable to allow multiple applications to be deployed on a single hostname; doing so provides the most deployment flexibility and enables them to be "mixed" together (See {{?BCP190}} for details). Therefore, applications using HTTP should strive to allow multiple applications on an origin.
+One solution to these issues is to require a dedicated hostname for the application so that it has a unique origin. However, it is often desirable to allow multiple applications to be deployed on a single hostname; doing so provides the most deployment flexibility and enables them to be "mixed" together (See {{?BCP190}} for details).
 
-To enable this, when specifying the use of Cookies, HTTP authentication realms {{HTTP}}, or other origin-wide HTTP mechanisms, applications using HTTP should not mandate the use of a particular name but instead let deployments configure them. Consideration should be given to scoping them to part of the origin, using their specified mechanisms for doing so.
+Therefore, applications using HTTP should strive to allow multiple applications on an origin. Specifically, when specifying the use of Cookies, HTTP authentication realms {{HTTP}}, or other origin-wide HTTP mechanisms, applications using HTTP should not mandate the use of a particular name but instead let deployments configure them. Consideration should be given to scoping them to part of the origin, using their specified mechanisms for doing so.
 
 Modern Web browsers constrain the ability of content from one origin to access resources from another to avoid leaking private information. As a result, applications that wish to expose cross-origin data to browsers will need to implement the CORS protocol; see {{FETCH}}.
 
