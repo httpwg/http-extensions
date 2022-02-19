@@ -324,7 +324,7 @@ However, application-specific schemes can also be defined. When defining a URI s
 
 * Existing non-browser clients, intermediaries, servers, and associated software will not recognise the new scheme. For example, a client library might fail to dispatch the request, a cache might refuse to store the response, and a proxy might fail to forward the request.
 
-* Because URLs commonly occur in HTTP artefacts and are often generated automatically (e.g., in the `Location` response header field), it can be difficult to ensure that the new scheme is used consistently.
+* Because URLs commonly occur in HTTP artefacts and are often generated automatically (e.g., in the Location response header field), it can be difficult to ensure that the new scheme is used consistently.
 
 * The resources identified by the new scheme will still be available using "http" and/or "https" URLs. Those URLs can "leak" into use, which can present security and operability issues. For example, using a new scheme to ensure that requests don't get sent to a "normal" Web site is likely to fail.
 
@@ -455,7 +455,7 @@ It is RECOMMENDED that header field names be short (even when field compression 
 
 For example, if the "example" application needs to create three header fields, they might be called "example-foo", "example-bar", and "example-baz". Note that the primary motivation here is to avoid consuming more generic field names, not to reserve a portion of the namespace for the application; see {{!RFC6648}} for related considerations.
 
-The semantics of existing HTTP header fields MUST NOT be redefined without updating their registration or defining an extension to them (if allowed). For example, an application using HTTP cannot specify that the `Location` header field has a special meaning in a certain context.
+The semantics of existing HTTP header fields MUST NOT be redefined without updating their registration or defining an extension to them (if allowed). For example, an application using HTTP cannot specify that the Location header field has a special meaning in a certain context.
 
 See {{caching}} for the interaction between header fields and HTTP caching; in particular, request header fields that are used to choose (as per {{Section 4.1 of HTTP-CACHING}}) a response have impact there and need to be carefully considered.
 
