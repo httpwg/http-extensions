@@ -155,9 +155,8 @@ Therefore, applications that use HTTP MUST NOT redefine, refine, or overlay the 
 
 When writing a specification, it's often tempting to specify exactly how HTTP is to be implemented, supported, and used. However, this can easily lead to an unintended profile of HTTP behaviour. For example, it's common to see specifications with language like this:
 
-<blockquote>
-<t>A POST request MUST result in a 201 (Created) response.</t>
-</blockquote>
+{:quote}
+> A POST request MUST result in a 201 (Created) response.
 
 This forms an expectation in the client that the response will always be 201 (Created) when in fact there are a number of reasons why the status code might differ in a real deployment; for example, there might be a proxy that requires authentication, or a server-side error, or a redirection. If the client does not anticipate this, the application's deployment is brittle.
 
@@ -250,20 +249,19 @@ An application can define its operation by composing these protocol elements to 
 
 For example, an application might specify:
 
-<blockquote>
-<t>Resources linked to with the "example-widget" link relation type are
+{:quote}
+> Resources linked to with the "example-widget" link relation type are
 Widgets. The state of a Widget can be fetched in the
 "application/example-widget+json" format, and can be updated by PUT
-to the same link. Widget resources can be deleted.</t>
-
-<t>The Example-Count response header field on Widget representations
-indicates how many Widgets are held by the sender.</t>
-
-<t>The "application/example-widget+json" format is a JSON [RFC8259]
+to the same link. Widget resources can be deleted.
+>
+> The Example-Count response header field on Widget representations
+indicates how many Widgets are held by the sender.
+>
+> The "application/example-widget+json" format is a JSON [RFC8259]
 format representing the state of a Widget. It contains links to
 related information in the link indicated by the Link header field
-value with the "example-other-info" link relation type.</t>
-</blockquote>
+value with the "example-other-info" link relation type.
 
 Applications can also specify the use of URI Templates {{URI-TEMPLATE}} to allow clients to generate URLs based upon runtime data.
 
