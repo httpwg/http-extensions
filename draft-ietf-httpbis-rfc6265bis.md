@@ -1835,7 +1835,7 @@ has become widely used for varied reasons including:
 * recognizing when an ad resulted in a change in user behavior.
 
 While not every use of cookies is necessarily problematic for privacy, their potential for abuse
-has become a widespread concern in industry and society. In response to these concerns, user agents
+has become a widespread concern in the Internet community and broader society. In response to these concerns, user agents
 have actively constrained cookie functionality in various ways (as allowed and encouraged by
 previous specifications), while avoiding disruption to features they judge desirable for the health
 of the Web.
