@@ -1774,7 +1774,7 @@ AwEHoUQDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lfw0EkjqF7xB4FivAxzic30tMM
 
 ### Example Ed25519 Test Key {#example-key-ed25519}
 
-The following key is an elliptical curve key over the Edwards curve ed25519, referred to in this document as `test-key-edd25519`. This key is PCKS#8 encoded in PEM format, with no encryption.
+The following key is an elliptical curve key over the Edwards curve ed25519, referred to in this document as `test-key-ed25519`. This key is PCKS#8 encoded in PEM format, with no encryption.
 
 ~~~
 -----BEGIN PUBLIC KEY-----
