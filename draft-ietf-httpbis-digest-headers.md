@@ -236,7 +236,7 @@ Integrity preference fields: collective term for `Want-Representation-Digest` an
 
 The `Representation-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
-the entire selected  *representation data* (see {{Section 8.1 of SEMANTICS}}).
+the entire *selected representation data* (see {{Section 8.1 of SEMANTICS}}).
 
 Representations take into account the effect of the HTTP semantics on
 messages. For example, the content can be affected by Range Requests or methods
@@ -251,9 +251,9 @@ string (see {{usage-in-signatures}}).
 
 `Representation-Digest` is a Structured Fields `Dictionary` (see {{Section 3.2 of
 STRUCTURED-FIELDS}}) where:
+* members cannot have parameters;
 * keys convey the hashing algorithm (see {{algorithms}})
-  used to compute the digest
-  and have no parameters;
+  used to compute the digest;
 * values MUST be of type `Byte Sequence`,
   which contain the output of the digest calculation.
 
@@ -346,9 +346,9 @@ communicate digests that are calculated using a hashing algorithm applied to
 the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
 Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}})
 where:
+* members cannot have parameters;
 * keys convey the hashing algorithm (see {{algorithms}})
-  used to compute the digest
-  and have no parameters;
+  used to compute the digest;
 * values MUST be `Byte Sequences`
   containing the output of the digest calculation.
 
@@ -410,9 +410,8 @@ the `Content-Digest` field.
 `Want-Representation-Digest` and `Want-Content-Digest` are Structured Fields
 List (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
 
-* members convey hashing algorithm preferences (see {{algorithms}});
-* keys convey the hashing algorithm (see {{algorithms}})
-  and have no parameters;
+* members cannot have parameters;
+* keys convey the hashing algorithm (see {{algorithms}});
 * values MUST be of type `Integer` ({{Section 3.3.1 of STRUCTURED-FIELDS}})
   in the range 0 to 10 inclusive.
   1 is the least preferred, 10 is the most preferred,
