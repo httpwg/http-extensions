@@ -499,7 +499,7 @@ Integrity fields can help detect  *representation data* or content modification 
 undesired "transforming proxies" (see {{Section 7.7 of SEMANTICS}})
 or other actions as the data passes across multiple hops or system boundaries.
 Even a simple mechanism for end-to-end  *representation data* integrity is valuable
-because a *user agent* can validate that resource retrieval succeeded before handing off to a
+because a user agent can validate that resource retrieval succeeded before handing off to a
 HTML parser, video player etc. for parsing.
 
 Note that using these mechanisms alone does not provide end-to-end integrity of HTTP messages over
