@@ -1475,11 +1475,6 @@ user agent MUST process the cookie as follows:
 8.  If the domain-attribute contains a character that is not in the range of {{USASCII}}
     characters, abort these steps and ignore the cookie entirely.
 
-    NOTE: The user agent MAY also reject any cookies that contain characters not
-    in the LDH (letter, digit, hyphen) range of %x41-5A / %x61-7A / %x30-39 / %x2D,
-    which is the character range of the canonicalized request-host the
-    domain-attribute is compared against.
-
 9.  If the user agent is configured to reject "public suffixes" and the
     domain-attribute is a public suffix:
 
