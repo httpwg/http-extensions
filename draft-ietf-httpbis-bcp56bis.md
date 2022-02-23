@@ -179,7 +179,7 @@ By using links, it also becomes possible to "mix and match" different applicatio
 
 Using links also offers a form of cache invalidation that's seen on the Web; when a resource's state changes, the application can change the affected links so that a fresh copy is always fetched.
 
-See {{urls}} for more details.
+See {{specifying-urls}} for more details.
 
 
 ## Rich Functionality
@@ -288,7 +288,7 @@ Certificates:
 Applications using HTTP should not require that clients statically support HTTP features that are usually negotiated. For example, requiring that clients support responses with a certain content coding ({{HTTP, Section 8.4.1}}) instead of negotiating for it ({{HTTP, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
 
 
-## Specifying URLs {#urls}
+## Specifying URLs {#specifying-urls}
 
 In HTTP, the resources that clients interact with are identified with URLs {{URL}}. As {{!BCP190}} explains, parts of the URL are designed to be under the control of the owner (also known as the "authority") of that server to give them the flexibility in deployment.
 
