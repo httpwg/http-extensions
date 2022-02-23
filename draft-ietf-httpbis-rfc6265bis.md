@@ -1875,7 +1875,7 @@ domain or in total.
 
 The recomended cookie expiry upper limit is 400 days. User agents may set
 a lower limit to enforce shorter data retention timelines, or set the limit higher
-to support longer retention when appropriate (e.g., machine-to-machine
+to support longer retention when appropriate (e.g., server-to-server
 communication over HTTP).
 
 The goal of a restrictive cookie policy is often to improve security or privacy.
