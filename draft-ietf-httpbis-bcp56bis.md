@@ -179,6 +179,8 @@ By using links, it also becomes possible to "mix and match" different applicatio
 
 Using links also offers a form of cache invalidation that's seen on the Web; when a resource's state changes, the application can change the affected links so that a fresh copy is always fetched.
 
+See {{urls}} for more details.
+
 
 ## Rich Functionality
 
@@ -286,7 +288,7 @@ Certificates:
 Applications using HTTP should not require that clients statically support HTTP features that are usually negotiated. For example, requiring that clients support responses with a certain content coding ({{HTTP, Section 8.4.1}}) instead of negotiating for it ({{HTTP, Section 12.5.3}}) means that otherwise conformant clients cannot interoperate with the application. Applications can encourage the implementation of such features, though.
 
 
-## Specifying URLs
+## Specifying URLs {#urls}
 
 In HTTP, the resources that clients interact with are identified with URLs {{URL}}. As {{!BCP190}} explains, parts of the URL are designed to be under the control of the owner (also known as the "authority") of that server to give them the flexibility in deployment.
 
@@ -356,7 +358,7 @@ Applications that use HTTP MUST confine themselves to using registered HTTP meth
 
 New HTTP methods are rare; they are required to be registered in the "HTTP Method Registry" with IETF Review (see {{HTTP}}) and are also required to be generic. That means that they need to be potentially applicable to all resources, not just those of one application.
 
-While historically some applications (e.g., {{?RFC4791}}) have defined non-generic methods, {{HTTP}} now forbids this.
+While historically some applications (e.g., {{?RFC4791}}) have defined application-specific methods, {{HTTP}} now forbids this.
 
 When authors believe that a new method is required, they are encouraged to engage with the HTTP community early (e.g., on the [](mailto:ietf-http-wg@w3.org){:brackets="angle"} mailing list) and document their proposal as a separate HTTP extension rather than as part of an application's specification.
 
@@ -371,7 +373,7 @@ While this is not an issue for short queries, it can become one for larger query
 
 In these cases, an application using HTTP might consider using POST to express queries in the request's content; doing so avoids encoding overhead and URL length limits in implementations. However, in doing so, it should be noted that the benefits of GET such as caching and linking to query results are lost. Therefore, applications using HTTP that require support for POST queries ought to consider allowing both methods.
 
-Processing of GET requests should not change the application's state or have other side effects that might be significant to the client since implementations can and do retry HTTP GET requests that fail and some GET requests protected by TLS Early Data might be vulnerable to replay attacks (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{HTTP, Section 9.2.1}}.
+Processing of GET requests should not change the application's state or have other side effects that might be significant to the client since implementations can and do retry HTTP GET requests that fail. Furthermore, some GET requests protected by TLS Early Data might be vulnerable to replay attacks (see {{?RFC8470}}). Note that this does not include logging and similar functions; see {{HTTP, Section 9.2.1}}.
 
 Finally, note that while the generic HTTP syntax allows a GET request message to contain content, the purpose is to allow message parsers to be generic; per {{HTTP, Section 9.3.1}}, content in a GET is not recommended, has no meaning, and will be either ignored or rejected by generic HTTP software (such as intermediaries, caches, servers, and client libraries).
 
@@ -582,7 +584,7 @@ A complete enumeration of such practices is out of scope for this document, but 
 * Using Content-Security-Policy {{?CSP=W3C.WD-CSP3-20160913}} to constrain the capabilities of active content (i.e., that which can execute scripts, such as HTML {{HTML}} and PDF), thereby mitigating XSS attacks.
 * Using Referrer-Policy {{?REFERRER-POLICY=W3C.CR-referrer-policy-20170126}} to prevent sensitive data in URLs from being leaked in the Referer request header field.
 * Using the 'HttpOnly' flag on Cookies to ensure that cookies are not exposed to browser scripting languages {{COOKIES}}.
-* Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the path of the communication, they can use this capability to recover that information.
+* Avoiding use of compression on any sensitive information (e.g., authentication tokens, passwords), as the scripting environment offered by Web browsers allows an attacker to repeatedly probe the compression space; if the attacker has access to the network path of the communication, they can use this capability to recover that information.
 
 Depending on how they are intended to be deployed, specifications for applications using HTTP might require the use of these mechanisms in specific ways or might merely point them out in Security Considerations.
 
