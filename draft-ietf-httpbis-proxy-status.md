@@ -1007,15 +1007,21 @@ See the registry at <https://iana.org/assignments/http-proxy-status> for details
 
 # IANA Considerations
 
-IANA has created the "HTTP Proxy-Status Parameters" registry and the "HTTP Proxy Error Types" registry at <https://iana.org/assignments/http-proxy-status> and has populated them with the types defined in Sections {{<params}} and {{<error-types}} respectively; see {{register-param}} and {{register-error}} for their associated procedures.
+IANA has created the "HTTP Proxy-Status Parameters" registry and the "HTTP Proxy Error Types" registry at [](https://iana.org/assignments/http-proxy-status){:brackets="angle"} and has populated them with the types defined in Sections {{<params}} and {{<error-types}} respectively; see Sections {{<register-param}} and {{<register-error}} for their associated procedures.
 
 Additionally, the following entry has been added to the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
 
-* Field name: Proxy-Status
-* Status: permanent
-* Specification document(s): {{&SELF}}
-* Comments:
+Field name:
+: Proxy-Status
 
+Status:
+: permanent
+
+Specification document(s):
+: {{&SELF}}
+
+Comments:
+: &nbsp;
 
 # Security Considerations {#security}
 
