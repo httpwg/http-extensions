@@ -178,7 +178,7 @@ This parameter is useful to distinguish cases when the next-hop server sends a 3
 
 ## The detail Parameter
 
-"detail" allows implementations to convey additional information not captured in other parameters, such as implementation specific states or other caching-related metrics.
+"detail" allows implementations to convey additional information not captured in other parameters, such as implementation-specific states or other caching-related metrics.
 
 For example:
 
@@ -253,7 +253,7 @@ Cache-Status: BrowserCache; fwd=uri-miss
 
 # Defining New Cache-Status Parameters {#register}
 
-New Cache-Status Parameters can be defined by registering them in the HTTP Cache-Status Parameters registry.
+New Cache-Status Parameters can be defined by registering them in the "HTTP Cache-Status" registry.
 
 Registration requests are reviewed and approved by a Designated Expert, as per {{RFC8126, Section 4.5}}. A specification document is appreciated, but not required.
 
@@ -274,9 +274,9 @@ See the registry at <https://www.iana.org/assignments/http-cache-status> for det
 
 # IANA Considerations
 
-Upon publication, please create the HTTP Cache-Status Parameters registry at <https://iana.org/assignments/http-cache-status> and populate it with the types defined in {{field}}; see {{register}} for its associated procedures.
+IANA has created the "HTTP Cache-Status" registry at [](https://iana.org/assignments/http-cache-status){:brackets="angle"} and populated it with the types defined in {{field}}; see {{register}} for its associated procedures.
 
-Also, please create the following entry in the "Hypertext Transfer Protocol (HTTP) Field Name Registry" defined in {{HTTP, Section 18.4}}:
+IANA has added the following entry in the "Hypertext Transfer Protocol (HTTP) Field Name Registry" defined in {{HTTP, Section 18.4}}:
 
 Field name:
 : Cache-Status
