@@ -278,11 +278,11 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | SF-Content-Location | String          |
 | SF-Location         | String          |
 | SF-Referer          | String          |
-| SF-Date             | Integer         |
-| SF-Expires          | Integer         |
-| SF-IMS              | Integer         |
-| SF-IUS              | Integer         |
-| SF-LM               | Integer         |
+| SF-Date             | Item            |
+| SF-Expires          | Item            |
+| SF-IMS              | Item            |
+| SF-IUS              | Item            |
+| SF-LM               | Item            |
 | SF-ETag             | Item            |
 | SF-INM              | List            |
 | SF-Link             | List            |
