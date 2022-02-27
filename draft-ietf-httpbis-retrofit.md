@@ -74,55 +74,57 @@ While implementations can parse and serialise compatible fields as Structured Fi
 
 # Compatible Fields {#compatible}
 
-HTTP fields with the following names can usually have their values handled as Structured Fields according to the listed parsing and serialisation algorithms in {{STRUCTURED-FIELDS}}, subject to the listed caveats.
+The HTTP fields listed in Table 1 can usually have their values handled as Structured Fields according to the listed parsing and serialisation algorithms in {{STRUCTURED-FIELDS}}, subject to the listed caveats.
 
 The listed types are chosen for compatibility with the defined syntax of the field as well as with actual internet traffic. However, not all instances of these fields will successfully parse. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
 
 An application using this specification will need to consider how to handle such field values. Depending on its requirements, it might be advisable to reject such values, treat them as opaque strings, or attempt to recover a structured value from them in an ad hoc fashion.
 
-* Accept - List
-* Accept-Encoding - List
-* Accept-Language - List
-* Accept-Patch - List
-* Accept-Ranges - List
-* Access-Control-Allow-Credentials - Item
-* Access-Control-Allow-Headers - List
-* Access-Control-Allow-Methods - List
-* Access-Control-Allow-Origin - Item
-* Access-Control-Expose-Headers - List
-* Access-Control-Max-Age - Item
-* Access-Control-Request-Headers - List
-* Access-Control-Request-Method - Item
-* Age - Item
-* Allow - List
-* ALPN - List
-* Alt-Svc - Dictionary
-* Alt-Used - Item
-* Cache-Control - Dictionary
-* Connection - List
-* Content-Encoding - List
-* Content-Language - List
-* Content-Length - List
-* Content-Type - Item
-* Cross-Origin-Resource-Policy - Item
-* Expect - Item
-* Expect-CT - Dictionary
-* Host - Item
-* Keep-Alive - Dictionary
-* Origin - Item
-* Pragma - Dictionary
-* Prefer - Dictionary
-* Preference-Applied - Dictionary
-* Retry-After - Item
-* Surrogate-Control - Dictionary
-* TE - List
-* Timing-Allow-Origin: List
-* Trailer - List
-* Transfer-Encoding - List
-* Vary - List
-* X-Content-Type-Options - Item
-* X-Frame-Options - Item
-* X-XSS-Protection - List
+| Field Name                       | Structured Type |
+|----------------------------------|-----------------|
+| Accept                           | List            |
+| Accept-Encoding                  | List            |
+| Accept-Language                  | List            |
+| Accept-Patch                     | List            |
+| Accept-Ranges                    | List            |
+| Access-Control-Allow-Credentials | Item            |
+| Access-Control-Allow-Headers     | List            |
+| Access-Control-Allow-Methods     | List            |
+| Access-Control-Allow-Origin      | Item            |
+| Access-Control-Expose-Headers    | List            |
+| Access-Control-Max-Age           | Item            |
+| Access-Control-Request-Headers   | List            |
+| Access-Control-Request-Method    | Item            |
+| Age                              | Item            |
+| Allow                            | List            |
+| ALPN                             | List            |
+| Alt-Svc                          | Dictionary      |
+| Alt-Used                         | Item            |
+| Cache-Control                    | Dictionary      |
+| Connection                       | List            |
+| Content-Encoding                 | List            |
+| Content-Language                 | List            |
+| Content-Length                   | List            |
+| Content-Type                     | Item            |
+| Cross-Origin-Resource-Policy     | Item            |
+| Expect                           | Item            |
+| Expect-CT                        | Dictionary      |
+| Host                             | Item            |
+| Keep-Alive                       | Dictionary      |
+| Origin                           | Item            |
+| Pragma                           | Dictionary      |
+| Prefer                           | Dictionary      |
+| Preference-Applied               | Dictionary      |
+| Retry-After                      | Item            |
+| Surrogate-Control                | Dictionary      |
+| TE                               | List            |
+| Timing-Allow-Origin              | List            |
+| Trailer                          | List            |
+| Transfer-Encoding                | List            |
+| Vary                             | List            |
+| X-Content-Type-Options           | Item            |
+| X-Frame-Options                  | Item            |
+| X-XSS-Protection                 | List            |
 
 Note the following caveats:
 
