@@ -76,7 +76,7 @@ While implementations can parse and serialise compatible fields as Structured Fi
 
 HTTP fields with the following names can usually have their values handled as Structured Fields according to the listed parsing and serialisation algorithms in {{STRUCTURED-FIELDS}}, subject to the listed caveats.
 
-The listed types are chosen for compatibility with the defined syntax of the field as well as with actual internet traffic (see {{numbers}}). However, not all instances of these fields will successfully parse. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
+The listed types are chosen for compatibility with the defined syntax of the field as well as with actual internet traffic. However, not all instances of these fields will successfully parse. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
 
 An application using this specification will need to consider how to handle such field values. Depending on its requirements, it might be advisable to reject such values, treat them as opaque strings, or attempt to recover a structured value from them in an ad hoc fashion.
 
@@ -286,85 +286,4 @@ Then, add the following field names, with the corresponding Structured Type as i
 --- back
 
 
-# Data Supporting Field Compatibility {#numbers}
 
-To help guide decisions about compatible fields, the HTTP response headers captured by the HTTP Archive <https://httparchive.org> in September 2021 (representing more than 528,000,000 HTTP exchanges) were parsed as Structured Fields using the types listed in {{compatible}}, with the indicated number of successful header instances, failures, and the resulting failure rate:
-
-~~~
-accept                                 9,099 /        34 =   0.372%*
-accept-encoding                      116,708 /        58 =   0.050%*
-accept-language                      127,710 /        95 =   0.074%*
-accept-patch                             281 /         0 =   0.000%
-accept-ranges                    289,341,375 /     7,776 =   0.003%
-access-control-allow-credentials  36,159,371 /     2,671 =   0.007%
-access-control-allow-headers      25,980,519 /    23,181 =   0.089%
-access-control-allow-methods      32,071,437 /    17,424 =   0.054%
-access-control-allow-origin      165,719,859 /   130,247 =   0.079%
-access-control-expose-headers     20,787,683 /     1,973 =   0.009%
-access-control-max-age             9,549,494 /     9,846 =   0.103%
-access-control-request-headers       165,882 /       503 =   0.302%*
-access-control-request-method        346,135 /    30,680 =   8.142%*
-age                              107,395,872 /    36,649 =   0.034%
-allow                                579,822 /       281 =   0.048%
-alt-svc                           56,773,977 / 4,914,119 =   7.966%
-cache-control                    395,402,834 / 1,146,080 =   0.289%
-connection                       112,017,641 /     3,491 =   0.003%
-content-encoding                 225,568,224 /       237 =   0.000%
-content-language                   3,339,291 /     1,744 =   0.052%
-content-length                   422,415,406 /       126 =   0.000%
-content-type                     503,950,894 /   507,133 =   0.101%
-cross-origin-resource-policy     102,483,430 /       799 =   0.001%
-expect                                     0 /        53 = 100.000%*
-expect-ct                         54,129,244 /    80,333 =   0.148%
-host                                  57,134 /     1,486 =   2.535%*
-keep-alive                        50,606,877 /     1,509 =   0.003%
-origin                                32,438 /     1,396 =   4.126%*
-pragma                            66,321,848 /    97,328 =   0.147%
-preference-applied                       189 /         0 =   0.000%
-referrer-policy                   14,274,787 /     8,091 =   0.057%
-retry-after                          523,533 /     7,585 =   1.428%
-surrogate-control                    282,846 /       976 =   0.344%
-te                                         1 /         0 =   0.000%
-timing-allow-origin               91,979,983 /         8 =   0.000%
-trailer                                1,171 /         0 =   0.000%
-transfer-encoding                 15,098,518 /         0 =   0.000%
-vary                             246,483,644 /    69,607 =   0.028%
-x-content-type-options           166,063,072 /   237,255 =   0.143%
-x-frame-options                   56,863,322 / 1,014,464 =   1.753%
-x-xss-protection                 132,739,109 /   347,133 =   0.261%
-~~~
-
-Note that this data set only includes response headers, although some request headers are present, indicated with an asterisk (because, the Web). Also, Dictionary and Parameter keys have not been force-lowercased, with the result that any values containing uppercase keys are considered to fail.
-
-The top thirty header fields in that data set that were not considered compatible are (\* indicates that the field is mapped in {{mapped}}):
-
-- *date: 524,810,577
-- server: 470,777,294
-- *last-modified: 383,437,099
-- *expires: 292,109,781
-- *etag: 255,788,799
-- strict-transport-security: 111,993,787
-- x-cache: 70,713,258
-- via: 55,983,914
-- cf-ray: 54,556,881
-- p3p: 54,479,183
-- report-to: 54,056,804
-- cf-cache-status: 53,536,789
-- nel: 44,815,769
-- x-powered-by: 37,281,354
-- content-security-policy-report-only: 33,104,387
-- *location: 30,533,957
-- x-amz-cf-pop: 28,549,182
-- x-amz-cf-id: 28,444,359
-- content-security-policy: 25,404,401
-- x-served-by: 23,277,252
-- x-cache-hits: 21,842,899
-- *link: 20,761,372
-- x-timer: 18,780,130
-- content-disposition: 18,516,671
-- x-request-id: 16,048,668
-- referrer-policy: 15,596,734
-- x-cdn: 10,153,756
-- x-amz-version-id: 9,786,024
-- x-amz-request-id: 9,680,689
-- x-dc: 9,557,728
