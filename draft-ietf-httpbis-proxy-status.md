@@ -275,7 +275,7 @@ Description:
 : The intermediary encountered a timeout when trying to find an IP address for the next hop hostname.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 504
@@ -320,7 +320,7 @@ Description:
 : The intermediary cannot determine the appropriate next hop to use for this request; for example, it may not be configured. Note that this error is specific to gateways, which typically require specific configuration to identify the "backend" server; forward proxies use in-band information to identify the origin server.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 500
@@ -341,7 +341,7 @@ Description:
 : The intermediary considers the next hop to be unavailable; e.g., recent attempts to communicate with it may have failed, or a health check may indicate that it is down.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 503
@@ -362,7 +362,7 @@ Description:
 : The intermediary is configured to prohibit connections to the next-hop IP address.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
@@ -383,7 +383,7 @@ Description:
 : The intermediary cannot find a route to the next-hop IP address.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
@@ -404,7 +404,7 @@ Description:
 : The intermediary's connection to the next hop was refused.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
@@ -425,7 +425,7 @@ Description:
 : The intermediary's connection to the next hop was closed before a complete response was received.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
@@ -446,7 +446,7 @@ Description:
 : The intermediary's attempt to open a connection to the next hop timed out.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 504
@@ -467,7 +467,7 @@ Description:
 : The intermediary was expecting data on a connection (e.g., part of a response) but did not receive any new data in a configured time limit.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 504
@@ -488,7 +488,7 @@ Description:
 : The intermediary was attempting to write data to a connection but was not able to (e.g., because its buffers were full).
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 504
@@ -509,7 +509,7 @@ Description:
 : The intermediary is configured to limit the number of connections it has to the next hop, and that limit has been passed.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 503
@@ -530,7 +530,7 @@ Description:
 : The intermediary encountered a TLS error when communicating with the next hop, either during the handshake or afterwards.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
@@ -553,7 +553,7 @@ Description:
 : The intermediary encountered an error when verifying the certificate presented by the next hop.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
@@ -626,7 +626,7 @@ Description:
 : The intermediary rejected the HTTP request based on its configuration and/or policy settings. The request wasn't forwarded to the next hop.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 403
@@ -647,7 +647,7 @@ Description:
 : The intermediary received an incomplete response to the request from the next hop.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
@@ -828,7 +828,7 @@ Description:
 : The intermediary reached a configured time limit waiting for the complete response.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 504
@@ -849,7 +849,7 @@ Description:
 : The HTTP Upgrade between the intermediary and the next hop failed.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
@@ -870,7 +870,7 @@ Description:
 : The intermediary encountered an HTTP protocol error when communicating with the next hop. This error should only be used when a more specific one is not defined.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
@@ -891,7 +891,7 @@ Description:
 : The intermediary generated the response locally without attempting to connect to the next hop (i.e., the intermediary has generated the response itself).
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : The most appropriate status code for the response
@@ -912,7 +912,7 @@ Description:
 : The intermediary encountered an internal error unrelated to the origin.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 500
@@ -933,7 +933,7 @@ Description:
 : The intermediary encountered an error regarding its configuration.
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 500
@@ -954,7 +954,7 @@ Description:
 : The intermediary tried to forward the request to itself, or a loop has been detected using different means (e.g., {{?RFC8586}}).
 
 Extra Parameters:
-: None.
+: None
 
 Recommended HTTP Status Code:
 : 502
