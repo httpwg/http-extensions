@@ -29,7 +29,6 @@ author:
     organization:
     postal:
       - Prahran
-      - VIC
     country: Australia
     email: mnot@mnot.net
     uri: https://www.mnot.net/
