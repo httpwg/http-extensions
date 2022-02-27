@@ -846,7 +846,7 @@ Name:
 : http_upgrade_failed
 
 Description:
-: The HTTP Upgrade between the intermediary and the next hop failed.
+: The process of negotiating an upgrade of the HTTP version between the intermediary and the next hop failed.
 
 Extra Parameters:
 : None
