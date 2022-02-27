@@ -74,7 +74,7 @@ While implementations can parse and serialise compatible fields as Structured Fi
 
 # Compatible Fields {#compatible}
 
-The HTTP fields listed in Table 1 can usually have their values handled as Structured Fields according to the listed parsing and serialisation algorithms in {{STRUCTURED-FIELDS}}, subject to the listed caveats.
+The HTTP fields listed in {{compatible-fields}} can usually have their values handled as Structured Fields according to the listed parsing and serialisation algorithms in {{STRUCTURED-FIELDS}}, subject to the listed caveats.
 
 The listed types are chosen for compatibility with the defined syntax of the field as well as with actual internet traffic. However, not all instances of these fields will successfully parse. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
 
@@ -125,6 +125,7 @@ An application using this specification will need to consider how to handle such
 | X-Content-Type-Options           | Item            |
 | X-Frame-Options                  | Item            |
 | X-XSS-Protection                 | List            |
+{:id="compatible-fields"}
 
 Note the following caveats:
 
@@ -170,11 +171,14 @@ Each field name listed below indicates a replacement field name and a means of m
 
 ## URLs
 
-The following field names (paired with their replacement field names) have values that can be represented as Structured Fields by considering the original field's value as a string.
+The field names in {{url-fields}} (paired with their mapped field names) have values that can be represented as Structured Fields by considering the original field's value as a string.
 
-* Content-Location - SF-Content-Location
-* Location - SF-Location
-* Referer - SF-Referer
+| Field Name       | Mapped Field Name   |
+|------------------|---------------------|
+| Content-Location | SF-Content-Location |
+| Location         | SF-Location         |
+| Referer          | SF-Referer          |
+{:id="url-fields"}
 
 For example, a Location field could be represented as:
 
@@ -185,13 +189,16 @@ SF-Location: "https://example.com/foo"
 
 ## Dates
 
-The following field names (paired with their replacement field names) have values that can be represented as Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, minus leap seconds).
+The field names in {{date-fields}} (paired with their mapped field names) have values that can be represented as Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, minus leap seconds).
 
-* Date - SF-Date
-* Expires - SF-Expires
-* If-Modified-Since - SF-IMS
-* If-Unmodified-Since - SF-IUS
-* Last-Modified - SF-LM
+| Field Name          | Mapped Field Name   |
+|---------------------|---------------------|
+| Date                | SF-Date             |
+| Expires             | SF-Expires          |
+| If-Modified-Since   | SF-IMS              |
+| If-Unmodified-Since | SF-IUS              |
+| Last-Modified       | SF-LM               |
+{:id="date-fields"}
 
 For example, an Expires field could be represented as:
 
@@ -235,12 +242,15 @@ The field values of the Cookie and Set-Cookie fields {{!RFC6265}} can be represe
 
 In each case, cookie names are serialized as tokens, whereas their values are serialised as Strings, unless they can be represented accurately and unambiguously using the textual representation of another structured types (e.g., an Integer or Decimal).
 
-Set-Cookie parameters map to parameters on the appropriate SF-Set-Cookie member, with the parameter name being forced to lowercase. Set-Cookie parameter values are Strings unless a specific type is defined. This specification defines the following parameter types:
+Set-Cookie parameters map to parameters on the appropriate SF-Set-Cookie member, with the parameter name being forced to lowercase. Set-Cookie parameter values are Strings unless a specific type is defined. This specification defines the parameter types in {{cookie-params}}.
 
-* Max-Age: Integer
-* Secure: Boolean
-* HttpOnly: Boolean
-* SameSite: Token
+| Parameter Name      | Structured Type     |
+|---------------------|---------------------|
+| Max-Age             | Integer             |
+| Secure              | Boolean             |
+| HttpOnly            | Boolean             |
+| SameSite            | Token               |
+{:id="cookie-params"}
 
 Note that cookies in both fields are separated by commas, not semicolons, and multiple cookies can appear in each field.
 
@@ -261,21 +271,24 @@ Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field N
 
 Then, add a new column, "Structured Type", with the values from {{compatible}} assigned to the nominated registrations, prefixing each with "*" to indicate that it is a retrofit type.
 
-Then, add the following field names, with the corresponding Structured Type as indicated, a status of "permanent" and referring to this document:
+Then, add the field names in {{new-fields}}, with the corresponding Structured Type as indicated, a status of "permanent" and referring to this document.
 
-* SF-Content-Location - String
-* SF-Location - String
-* SF-Referer - String
-* SF-Date - Integer
-* SF-Expires - Integer
-* SF-IMS - Integer
-* SF-IUS - Integer
-* SF-LM - Integer
-* SF-ETag - Item
-* SF-INM - List
-* SF-Link - List
-* SF-Set-Cookie - Dictionary
-* SF-Cookie - List
+| Field Name          | Structured Type |
+|---------------------|-----------------|
+| SF-Content-Location | String          |
+| SF-Location         | String          |
+| SF-Referer          | String          |
+| SF-Date             | Integer         |
+| SF-Expires          | Integer         |
+| SF-IMS              | Integer         |
+| SF-IUS              | Integer         |
+| SF-LM               | Integer         |
+| SF-ETag             | Item            |
+| SF-INM              | List            |
+| SF-Link             | List            |
+| SF-Set-Cookie       | Dictionary      |
+| SF-Cookie           | List            |
+{:id="new-fields"}
 
 
 # Security Considerations
