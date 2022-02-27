@@ -28,7 +28,6 @@ smart_quotes: no
 
 author:
  -
-    ins: M. Nottingham
     name: Mark Nottingham
     organization: Fastly
     postal:
@@ -45,12 +44,11 @@ normative:
 
 informative:
   ENTANGLE:
-    target: https://i.blackhat.com/USA-20/Wednesday/us-20-Kettle-Web-Cache-Entanglement-Novel-Pathways-To-Poisoning-wp.pdf
+    target: https://portswigger.net/research/web-cache-entanglement
     title: "Web Cache Entanglement: Novel Pathways to Poisoning"
     date: 2020
     author:
     -
-      ins: J. Kettle
       name: James Kettle
       organization: PortSwigger
 
@@ -158,7 +156,7 @@ The most specific reason that the cache is aware of SHOULD be used, to the exten
 
 "fwd-status" indicates which status code (see {{HTTP, Section 15}}) the next-hop server returned in response to the forwarded request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
 
-This parameter is useful to distinguish cases when the next-hop server sends a 304 Not Modified response to a conditional request or a 206 (Partial Content) response because of a range request.
+This parameter is useful to distinguish cases when the next-hop server sends a 304 (Not Modified) response to a conditional request or a 206 (Partial Content) response because of a range request.
 
 ## The ttl Parameter
 
@@ -255,9 +253,9 @@ Cache-Status: BrowserCache; fwd=uri-miss
 
 New Cache-Status Parameters can be defined by registering them in the "HTTP Cache-Status" registry.
 
-Registration requests are reviewed and approved by a Designated Expert, as per {{RFC8126, Section 4.5}}. A specification document is appreciated, but not required.
+Registration requests are reviewed and approved by a designated expert, per {{RFC8126, Section 4.5}}. A specification document is appreciated, but not required.
 
-The Expert(s) should consider the following factors when evaluating requests:
+The expert(s) should consider the following factors when evaluating requests:
 
 * Community feedback
 * If the value is sufficiently well defined
