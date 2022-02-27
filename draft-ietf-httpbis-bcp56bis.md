@@ -612,7 +612,7 @@ For example, if cookies {{COOKIES}} are used to carry application state, they wi
 
 One solution to these issues is to require a dedicated hostname for the application so that it has a unique origin. However, it is often desirable to allow multiple applications to be deployed on a single hostname; doing so provides the most deployment flexibility and enables them to be "mixed" together (see {{?BCP190}} for details).
 
-Therefore, applications using HTTP should strive to allow multiple applications on an origin. Specifically, when specifying the use of Cookies, HTTP authentication realms {{HTTP}}, or other origin-wide HTTP mechanisms, applications using HTTP should not mandate the use of a particular name but instead let deployments configure them. Consideration should be given to scoping them to part of the origin, using their specified mechanisms for doing so.
+Therefore, applications using HTTP should strive to allow multiple applications on an origin. Specifically, when specifying the use of cookies, HTTP authentication realms {{HTTP}}, or other origin-wide HTTP mechanisms, applications using HTTP should not mandate the use of a particular name but instead let deployments configure them. Consideration should be given to scoping them to part of the origin, using their specified mechanisms for doing so.
 
 Modern Web browsers constrain the ability of content from one origin to access resources from another to avoid leaking private information. As a result, applications that wish to expose cross-origin data to browsers will need to implement the CORS protocol; see {{FETCH}}.
 
