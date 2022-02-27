@@ -50,7 +50,7 @@ This specification defines how a selection of existing HTTP fields can be handle
 
 # Introduction
 
-Structured Field Values for HTTP {{STRUCTURED-FIELDS}} introduced a data model with associated parsing and serialisation algorithms for use by new HTTP field values. Header fields that are defined as Structured Fields can realise a number of benefits, including:
+Structured Field Values for HTTP {{STRUCTURED-FIELDS}} introduced a data model with associated parsing and serialization algorithms for use by new HTTP field values. Header fields that are defined as Structured Fields can realise a number of benefits, including:
 
 * Improved interoperability and security: precisely defined parsing and serialisation algorithms are typically not available for fields defined with just ABNF and/or prose.
 * Reuse of common implementations: many parsers for other fields are specific to a single field or a small family of fields
@@ -58,28 +58,25 @@ Structured Field Values for HTTP {{STRUCTURED-FIELDS}} introduced a data model w
 * Enhanced API support: a regular data model makes it easier to expose field values as a native data structure in implementations
 * Alternative serialisations: While {{STRUCTURED-FIELDS}} defines a textual serialisation of that data model, other, more efficient serialisations of the underlying data model are also possible.
 
-However, a field needs to be defined as a Structured Field for these benefits to be realised. Many existing fields are not, making up the bulk of header and trailer fields seen in HTTP traffic on the Internet.
+However, a field needs to be defined as a Structured Field for these benefits to be realised. Many existing fields are not, making up the bulk of header and trailer fields seen in HTTP traffic on the internet.
 
 This specification defines how a selection of existing HTTP fields can be handled as Structured Fields, so that these benefits can be realised -- thereby making them Retrofit Structured Fields.
 
 It does so using two techniques. {{compatible}} lists compatible fields -- those that can be handled as if they were Structured Fields due to the similarity of their defined syntax to that in Structured Fields. {{mapped}} lists mapped fields -- those whose syntax needs to be transformed into an underlying data model which is then mapped into that defined by Structured Fields.
 
-While implementations can parse and serialise Compatible Fields as Structured Fields subject to the caveats in {{compatible}}, a sender cannot generate mapped fields from {{mapped}} and expect them to be understood and acted upon by the recipient without prior negotiation. This specification does not define such a mechanism.
+While implementations can parse and serialise compatible fields as Structured Fields subject to the caveats in {{compatible}}, a sender cannot generate mapped fields from {{mapped}} and expect them to be understood and acted upon by the recipient without prior negotiation. This specification does not define such a mechanism.
 
 
 ## Notational Conventions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT",
-"RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as
-described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as
-shown here.
+{::boilerplate bcp14-tagged}
 
 
 # Compatible Fields {#compatible}
 
 HTTP fields with the following names can usually have their values handled as Structured Fields according to the listed parsing and serialisation algorithms in {{STRUCTURED-FIELDS}}, subject to the listed caveats.
 
-The listed types are chosen for compatibility with the defined syntax of the field as well as with actual Internet traffic (see {{numbers}}). However, not all instances of these fields will successfully parse. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
+The listed types are chosen for compatibility with the defined syntax of the field as well as with actual internet traffic (see {{numbers}}). However, not all instances of these fields will successfully parse. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
 
 An application using this specification will need to consider how to handle such field values. Depending on its requirements, it might be advisable to reject such values, treat them as opaque strings, or attempt to recover a structured value from them in an ad hoc fashion.
 
@@ -130,7 +127,7 @@ An application using this specification will need to consider how to handle such
 Note the following caveats:
 
 Parameter names:
-: HTTP parameter names are case-insensitive (as per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase. Although the vast majority of parameters seen in typical traffic are all-lowercase, compatibility can be improved by force-lowercasing parameters when encountered.
+: HTTP parameter names are case-insensitive (per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase. Although the vast majority of parameters seen in typical traffic are all-lowercase, compatibility can be improved by force-lowercasing parameters when encountered.
 
 Empty Field Values:
 : Empty and whitespace-only field values are considered errors in Structured Fields. For compatible fields, an empty field indicates that the field should be silently ignored.
@@ -138,7 +135,7 @@ Empty Field Values:
 Alt-Svc:
 : Some ALPN tokens (e.g., `h3-Q43`) do not conform to key's syntax. Since the final version of HTTP/3 uses the `h3` token, this shouldn't be a long-term issue, although future tokens may again violate this assumption.
 
-Cache-Control, Expect-CT, Pragma, Prefer, Preference-Applied, Surrogate-Control:
+Cache-Control, Expect-CT, Pragma, Prefer, Preference-Applied, and Surrogate-Control:
 : These Dictionary-based fields consider the key to be case-insensitive, but Structured Fields requires keys to be all-lowercase. Although the vast majority of values seen in typical traffic are all-lowercase, compatibility can be improved by force-lowercasing these Dictionary keys when encountered.
 
 Content-Length:
@@ -256,13 +253,13 @@ SF-Cookie: SID=31d4d96e407aad42, lang=en-US
 
 # IANA Considerations
 
-Please add the following note to the HTTP Field Name Registry:
+Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
 
-> The "Structured Type" column indicates the type of the field as per RFC8941, if any, and may be "Dictionary", "List" or "Item". A prefix of "*" indicates that it is a retrofit type (i.e., not natively Structured); see \[this specification].
+> The "Structured Type" column indicates the type of the field (per RFC8941), if any, and may be "Dictionary", "List" or "Item". A prefix of "*" indicates that it is a retrofit type (i.e., not natively Structured); see \[this specification].
 
 Then, add a new column, "Structured Type", with the values from {{compatible}} assigned to the nominated registrations, prefixing each with "*" to indicate that it is a retrofit type.
 
-Then, add the following field names into the HTTP Field Name Registry, with the corresponding Structured Type as indicated, a status of "permanent" and referring to this document:
+Then, add the following field names, with the corresponding Structured Type as indicated, a status of "permanent" and referring to this document:
 
 * SF-Content-Location - String
 * SF-Location - String
