@@ -977,7 +977,7 @@ The expert(s) should consider the following factors when evaluating requests:
 
 * Community feedback
 * If the value is sufficiently well-defined
-* Generic types are preferred over vendor-specific, application-specific, or deployment-specific values. If a generic value cannot be agreed upon in the community, the type's name should be correspondingly specific (e.g., with a prefix that identifies the vendor, application or deployment).
+* Generic types are preferred over vendor-specific, application-specific, or deployment-specific values. If a generic value cannot be agreed upon in the community, the type's name should be correspondingly specific (e.g., with a prefix that identifies the vendor, application, or deployment).
 * Extra parameters should not conflict with registered Proxy-Status parameters.
 
 Registration requests should use the following template:
