@@ -251,7 +251,8 @@ string (see {{usage-in-signatures}}).
 
 `Representation-Digest` is a Structured Fields `Dictionary` (see {{Section 3.2 of
 STRUCTURED-FIELDS}}) where:
-* members cannot have parameters;
+
+* members MUST NOT have parameters (see {{sec-agility}});
 * keys convey the hashing algorithm (see {{algorithms}})
   used to compute the digest;
 * values MUST be of type `Byte Sequence`,
@@ -346,7 +347,8 @@ communicate digests that are calculated using a hashing algorithm applied to
 the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
 Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}})
 where:
-* members cannot have parameters;
+
+* members MUST NOT have parameters (see {{sec-agility}});
 * keys convey the hashing algorithm (see {{algorithms}})
   used to compute the digest;
 * values MUST be `Byte Sequences`
@@ -549,13 +551,12 @@ The checksum of an encrypted payload can change between different messages
 depending on the encryption algorithm used; in those cases its value could not be used to provide
 a proof of integrity "at rest" unless the whole (e.g. encoded) content is persisted.
 
-## Algorithm Agility
+## Algorithm Agility {#sec-agility}
 
 The security properties of hashing algorithms are not fixed.
 Algorithm Agility (see {{?RFC7696}}) is achieved by providing implementations with flexibility
 to choose hashing algorithms from the IANA Hash Algorithms for HTTP Digest Fields registry; see
 {{establish-hash-algorithm-registry}}.
-
 
 The "standard" algorithms listed in this document are suitable for many purposes,
 including adversarial situations where hash functions might need
@@ -580,6 +581,14 @@ Integrity fields do not provide any mitigiations for downgrade or substitution
 attacks (see Section 1 of {{?RFC6211}}) of the hashing algorithm.
 To protect against such attacks, endpoints could restrict their set of supported algorithms
 to stronger ones and protect the fields value by using TLS and/or digital signatures.
+
+Integrity fields do not support attaching additional information to a digest
+using dictionary member parameters,
+because if they are used to validate the input,
+an attacker could alter them to steer the validation process.
+Hash algorithms can overcome this limitation
+defining a safe way to encode specific parameters into the digest
+and validate its value.
 
 ## Resource exhaustion
 
