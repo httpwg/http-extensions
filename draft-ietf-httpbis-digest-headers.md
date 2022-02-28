@@ -150,7 +150,7 @@ data and HTTP content.
 
 This document defines the `Representation-Digest` request and response header
 and trailer field ({{representation-digest}}) that contains a digest value
-computed by applying a hashing algorithm to *selected representation data*
+computed by applying a hashing algorithm to "selected representation data"
 ({{Section 3.2 of SEMANTICS}}). Basing `Representation-Digest` on the selected
 representation makes it straightforward to apply it to use-cases where the
 transferred data requires some sort of manipulation to be considered a
@@ -188,7 +188,7 @@ This specification does not define means for authentication, authorization or pr
 [RFC3230] defined the `Digest` and `Want-Digest` HTTP fields for HTTP integrity.
 It also coined the term "instance" and "instance manipulation" in order to
 explain concepts that are now more universally defined, and implemented, as HTTP
-semantics such as *selected representation data* ({{Section 3.2 of SEMANTICS}}).
+semantics such as "selected representation data" ({{Section 3.2 of SEMANTICS}}).
 
 Experience has shown that implementations of [RFC3230] have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
@@ -236,7 +236,7 @@ Integrity preference fields: collective term for `Want-Representation-Digest` an
 
 The `Representation-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
-the entire *selected representation data* (see {{Section 8.1 of SEMANTICS}}).
+the entire "selected representation data" (see {{Section 8.1 of SEMANTICS}}).
 
 Representations take into account the effect of the HTTP semantics on
 messages. For example, the content can be affected by Range Requests or methods
@@ -245,8 +245,8 @@ dependent on other transformations (e.g. transfer codings for HTTP/1.1 - see
 {{Section 6.1 of HTTP11}}). To help illustrate HTTP representation concepts,
 several examples are provided in {{resource-representation}}.
 
-When a message has no representation data it is still possible to assert that no
-representation data was sent by computing the digest on an empty
+When a message has no "representation data" it is still possible to assert that no
+"representation data" was sent by computing the digest on an empty
 string (see {{usage-in-signatures}}).
 
 `Representation-Digest` is a Structured Fields `Dictionary` (see {{Section 3.2 of
@@ -410,7 +410,6 @@ the `Content-Digest` field.
 `Want-Representation-Digest` and `Want-Content-Digest` are Structured Fields
 List (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
 
-* members cannot have parameters;
 * keys convey the hashing algorithm (see {{algorithms}});
 * values MUST be of type `Integer` ({{Section 3.3.1 of STRUCTURED-FIELDS}})
   in the range 0 to 10 inclusive.
@@ -486,7 +485,7 @@ The entries in {{iana-hash-algorithm-table}} are registered by this document.
 ## HTTP Messages Are Not Protected In Full {#sec-limitations}
 
 This document specifies a data integrity mechanism that protects HTTP
-*representation data* or content, but not HTTP header and trailer fields, from
+"representation data" or content, but not HTTP header and trailer fields, from
 certain kinds of corruption.
 
 Integrity fields are not intended to be a general protection against malicious tampering with
@@ -495,10 +494,10 @@ as transport-layer security or digital signatures.
 
 ## End-to-End Integrity
 
-Integrity fields can help detect  *representation data* or content modification due to implementation errors,
+Integrity fields can help detect  "representation data" or content modification due to implementation errors,
 undesired "transforming proxies" (see {{Section 7.7 of SEMANTICS}})
 or other actions as the data passes across multiple hops or system boundaries.
-Even a simple mechanism for end-to-end  *representation data* integrity is valuable
+Even a simple mechanism for end-to-end  "representation data" integrity is valuable
 because a user agent can validate that resource retrieval succeeded before handing off to a
 HTML parser, video player etc. for parsing.
 
@@ -1104,7 +1103,7 @@ Note that a `204 No Content` response without content but with the same
 
 ## Error responses
 
-In error responses, the representation data does not necessarily refer to the
+In error responses, the "representation data" does not necessarily refer to the
 target resource. Instead, it refers to the representation of the error.
 
 In the following example, a client sends the same request from {{fig-patch}} to
