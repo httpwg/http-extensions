@@ -26,6 +26,9 @@ github-issue-label: cache-header
 stand_alone: yes
 smart_quotes: no
 
+entity:
+  SELF: "RFC 9211"
+
 author:
  -
     name: Mark Nottingham
@@ -253,7 +256,7 @@ Cache-Status: BrowserCache; fwd=uri-miss
 
 New Cache-Status Parameters can be defined by registering them in the "HTTP Cache-Status" registry.
 
-Registration requests are reviewed and approved by a designated expert, per {{RFC8126, Section 4.5}}. A specification document is appreciated, but not required.
+Registration requests are reviewed and approved by a designated expert, per {{RFC8126, Section 4.5}}. A specification document is appreciated but not required.
 
 The expert(s) should consider the following factors when evaluating requests:
 
@@ -263,11 +266,16 @@ The expert(s) should consider the following factors when evaluating requests:
 
 Registration requests should use the following template:
 
-* Name: \[a name for the Cache-Status Parameter that matches the 'key' ABNF rule\]
-* Description: \[a description of the parameter semantics and value\]
-* Reference: \[to a specification defining this parameter, if available\]
+Name:
+: \[a name for the Cache-Status Parameter that matches the "key" ABNF rule\]
 
-See the registry at <https://www.iana.org/assignments/http-cache-status> for details on where to send registration requests.
+Description:
+: \[a description of the parameter semantics and value\]
+
+Reference:
+: \[to a specification defining this parameter, if available\]
+
+See the registry at [](https://www.iana.org/assignments/http-cache-status){:brackets="angle"} for details on where to send registration requests.
 
 
 # IANA Considerations
@@ -283,7 +291,7 @@ Status:
 : permanent
 
 Reference:
-: \[this document]
+: {{&SELF}}
 
 
 # Security Considerations {#security}
@@ -294,7 +302,7 @@ For example, knowing if a cache has stored a response can help an attacker execu
 
 Additionally, exposing the cache key can help an attacker understand modifications to the cache key, which may assist cache poisoning attacks. See {{ENTANGLE}} for details.
 
-The underlying risks can be mitigated with a variety of techniques (e.g., using encryption and authentication; avoiding the inclusion of attacker-controlled data in the cache key), depending on their exact nature. Note that merely obfuscating the key does not mitigate this risk.
+The underlying risks can be mitigated with a variety of techniques (e.g., using encryption and authentication and avoiding the inclusion of attacker-controlled data in the cache key), depending on their exact nature. Note that merely obfuscating the key does not mitigate this risk.
 
 To avoid assisting such attacks, the Cache-Status header field can be omitted, only sent when the client is authorized to receive it, or only send sensitive information (e.g., the key parameter) when the client is authorized.
 
