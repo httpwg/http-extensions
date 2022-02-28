@@ -276,7 +276,7 @@ Representation-Digest: \
 The `Dictionary` type can be used, for example, to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
-support transitions away from weaker algorithms (see {{algorithm-agility}}).
+support transitions away from weaker algorithms (see {{sec-agility}}).
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -371,7 +371,7 @@ Content-Digest: \
 The `Dictionary` type can be used, for example, to attach multiple digests
 calculated using different hashing algorithms in order to support a population
 of endpoints with different or evolving capabilities. Such an approach could
-support transitions away from weaker algorithms (see {{algorithm-agility}}).
+support transitions away from weaker algorithms (see {{sec-agility}}).
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
