@@ -272,7 +272,7 @@ Name:
 : dns_timeout
 
 Description:
-: The intermediary encountered a timeout when trying to find an IP address for the next hop hostname.
+: The intermediary encountered a timeout when trying to find an IP address for the next-hop hostname.
 
 Extra Parameters:
 : None
@@ -888,7 +888,7 @@ Name:
 : proxy_internal_response
 
 Description:
-: The intermediary generated the response locally without attempting to connect to the next hop (i.e., the intermediary has generated the response itself).
+: The intermediary generated the response itself without attempting to connect to the next hop.
 
 Extra Parameters:
 : None
