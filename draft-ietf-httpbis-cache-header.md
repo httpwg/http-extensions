@@ -74,20 +74,14 @@ This specification defines a new HTTP response header field, "Cache-Status", for
 
 {::boilerplate bcp14-tagged}
 
-This document uses ABNF as defined in {{!RFC5234}}, with rules prefixed with "sf-" and the "key" rule as defined in {{STRUCTURED-FIELDS}}. It uses terminology from {{HTTP}} and {{HTTP-CACHING}}.
+This document uses terminology from {{STRUCTURED-FIELDS}}, {{HTTP}}, and {{HTTP-CACHING}}.
 
 
 # The Cache-Status HTTP Response Header Field {#field}
 
 The Cache-Status HTTP response header field indicates how caches have handled that response and its corresponding request. The syntax of this header field conforms to {{STRUCTURED-FIELDS}}.
 
-Its value is a List (see {{STRUCTURED-FIELDS, Section 3.1}}):
-
-~~~ abnf
-Cache-Status   = sf-list
-~~~
-
-Each member of the list represents a cache that has handled the request. The first member of the list represents the cache closest to the origin server, and the last member of the list represents the cache closest to the user (possibly including the user agent's cache itself if it appends a value).
+Its value is a List (see {{STRUCTURED-FIELDS, Section 3.1}}). Each member of the List represents a cache that has handled the request. The first member represents the cache closest to the origin server, and the last member represents the cache closest to the user (possibly including the user agent's cache itself if it appends a value).
 
 Caches determine when it is appropriate to add the Cache-Status header field to a response. Some might add it to all responses, whereas others might only do so when specifically configured to, or when the request contains a header field that activates a debugging mode. See {{security}} for related security considerations.
 
@@ -95,26 +89,16 @@ An intermediary SHOULD NOT append a Cache-Status member to responses that it gen
 
 When adding a value to the Cache-Status header field, caches SHOULD preserve the existing field value, to allow debugging of the entire chain of caches handling the request.
 
-Each list member identifies the cache that inserted it, and this identifier MUST be a String or Token. Depending on the deployment, this might be a product or service name (e.g., "ExampleCache" or "Example CDN"), a hostname ("cache-3.example.com"), an IP address, or a generated string.
+Each List member identifies the cache that inserted it, and this identifier MUST be a String ({{Section 3.3.3 of STRUCTURED-FIELDS}}) or Token ({{Section 3.3.4 of STRUCTURED-FIELDS}}). Depending on the deployment, this might be a product or service name (e.g., "ExampleCache" or "Example CDN"), a hostname ("cache-3.example.com"), an IP address, or a generated string.
 
 Each member of the list can have parameters that describe that cache's handling of the request. While these parameters are OPTIONAL, caches are encouraged to provide as much information as possible.
 
-This specification defines the following parameters:
+This specification defines the following parameters.
 
-~~~ abnf
-hit          = sf-boolean
-fwd          = sf-token
-fwd-status   = sf-integer
-ttl          = sf-integer
-stored       = sf-boolean
-collapsed    = sf-boolean
-key          = sf-string
-detail       = sf-token / sf-string
-~~~
 
 ## The hit Parameter
 
-"hit", when true, indicates that the request was satisfied by the cache; that is, it was not forwarded, and the response was obtained from the cache.
+"hit"'s value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) that, when true, indicates that the request was satisfied by the cache; that is, it was not forwarded, and the response was obtained from the cache.
 
 A response that was originally produced by the origin but was modified by the cache (for example, a 304 or 206 status code) is still considered a hit, as long as it did not go forward (e.g., for validation).
 
@@ -124,7 +108,7 @@ A response that was in cache but not able to be used without going forward (e.g.
 
 ## The fwd Parameter
 
-"fwd" indicates that the request went forward towards the origin, and why.
+"fwd", when present, indicates that the request went forward towards the origin; its value is a Token ({{Section 3.3.4 of STRUCTURED-FIELDS}}) that indicates why.
 
 The following parameter values are defined to explain why the request went forward, from most specific to least:
 
@@ -157,29 +141,31 @@ The most specific reason that the cache is aware of SHOULD be used, to the exten
 
 ## The fwd-status Parameter
 
-"fwd-status" indicates which status code (see {{HTTP, Section 15}}) the next-hop server returned in response to the forwarded request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
+"fwd-status"'s value is an Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) that indicates which status code (see {{HTTP, Section 15}}) the next-hop server returned in response to the forwarded request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
 
 This parameter is useful to distinguish cases when the next-hop server sends a 304 (Not Modified) response to a conditional request or a 206 (Partial Content) response because of a range request.
 
 ## The ttl Parameter
 
-"ttl" indicates the response's remaining freshness lifetime (see {{HTTP-CACHING, Section 4.2.1}}) as calculated by the cache, as an integer number of seconds, measured as closely as possible to when the response header section is sent by the cache. This includes freshness assigned by the cache through, for example, heuristics (see {{HTTP-CACHING, Section 4.2.2}}), local configuration, or other factors. It may be negative, to indicate staleness.
+"ttl"'s value is an Integer ({{Section 3.3.1 of STRUCTURED-FIELDS}}) that indicates the response's remaining freshness lifetime (see {{HTTP-CACHING, Section 4.2.1}}) as calculated by the cache, as an integer number of seconds, measured as closely as possible to when the response header section is sent by the cache. This includes freshness assigned by the cache through, for example, heuristics (see {{HTTP-CACHING, Section 4.2.2}}), local configuration, or other factors. It may be negative, to indicate staleness.
 
 ## The stored Parameter
 
-"stored" indicates whether the cache stored the response (see {{HTTP-CACHING, Section 3}}); a true value indicates that it did. Only meaningful when fwd is present.
+"stored"'s value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) that indicates whether the cache stored the response (see {{HTTP-CACHING, Section 3}}); a true value indicates that it did. Only meaningful when fwd is present.
 
 ## The collapsed Parameter
 
-"collapsed" indicates whether this request was collapsed together with one or more other forward requests (see {{HTTP-CACHING, Section 4}}). If true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others. Only meaningful when fwd is present.
+"collapsed"'s value is a Boolean ({{Section 3.3.6 of STRUCTURED-FIELDS}}) that indicates whether this request was collapsed together with one or more other forward requests (see {{HTTP-CACHING, Section 4}}). If true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others. Only meaningful when fwd is present.
 
 ## The key Parameter
 
-"key" conveys a representation of the cache key (see {{HTTP-CACHING, Section 2}}) used for the response. Note that this may be implementation specific.
+"key"'s value is a String ({{Section 3.3.3 of STRUCTURED-FIELDS}}) that conveys a representation of the cache key (see {{HTTP-CACHING, Section 2}}) used for the response. Note that this may be implementation specific.
 
 ## The detail Parameter
 
 "detail" allows implementations to convey additional information not captured in other parameters, such as implementation-specific states or other caching-related metrics.
+
+Its value is either a String ({{Section 3.3.3 of STRUCTURED-FIELDS}}) or a Token ({{Section 3.3.3 of STRUCTURED-FIELDS}}).
 
 For example:
 
@@ -267,7 +253,7 @@ The expert(s) should consider the following factors when evaluating requests:
 Registration requests should use the following template:
 
 Name:
-: \[a name for the Cache-Status Parameter that matches the "key" ABNF rule\]
+: \[a name for the Cache-Status Parameter; see {{Section 3.1.2 of STRUCTURED-FIELDS}} for syntactic requirements \]
 
 Description:
 : \[a description of the parameter semantics and value\]
