@@ -252,7 +252,6 @@ string (see {{usage-in-signatures}}).
 `Representation-Digest` is a Structured Fields `Dictionary` (see {{Section 3.2 of
 STRUCTURED-FIELDS}}) where:
 
-* members MUST NOT have parameters (see {{sec-agility}});
 * keys convey the hashing algorithm (see {{algorithms}})
   used to compute the digest;
 * values MUST be of type `Byte Sequence`,
@@ -348,7 +347,6 @@ the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
 Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}})
 where:
 
-* members MUST NOT have parameters (see {{sec-agility}});
 * keys convey the hashing algorithm (see {{algorithms}})
   used to compute the digest;
 * values MUST be `Byte Sequences`
@@ -581,14 +579,6 @@ Integrity fields do not provide any mitigiations for downgrade or substitution
 attacks (see Section 1 of {{?RFC6211}}) of the hashing algorithm.
 To protect against such attacks, endpoints could restrict their set of supported algorithms
 to stronger ones and protect the fields value by using TLS and/or digital signatures.
-
-Integrity fields do not support attaching additional information to a digest
-using dictionary member parameters,
-because if they are used to validate the input,
-an attacker could alter them to steer the validation process.
-Hash algorithms can overcome this limitation
-defining a safe way to encode specific parameters into the digest
-and validate its value.
 
 ## Resource exhaustion
 
