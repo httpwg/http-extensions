@@ -408,7 +408,7 @@ on messages associated with the request URI and representation metadata, using
 the `Content-Digest` field.
 
 `Want-Representation-Digest` and `Want-Content-Digest` are Structured Fields
-List (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
+Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
 
 * keys convey the hashing algorithm (see {{algorithms}});
 * values MUST be of type `Integer` ({{Section 3.3.1 of STRUCTURED-FIELDS}})
