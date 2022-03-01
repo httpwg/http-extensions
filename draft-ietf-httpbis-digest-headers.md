@@ -349,7 +349,7 @@ where:
 
 * keys convey the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* values MUST be `Byte Sequences`
+* values MUST be `Byte Sequences` ({{Section 3.3.5 of STRUCTURED-FIELDS}})
   containing the output of the digest calculation.
 
 ~~~ abnf
