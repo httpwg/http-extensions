@@ -100,7 +100,7 @@ This specification defines the following parameters.
 
 ## The hit Parameter
 
-"hit"'s value is a Boolean that, when true, indicates that the request was satisfied by the cache; that is, it was not forwarded, and the response was obtained from the cache.
+The value of "hit" is a Boolean that, when true, indicates that the request was satisfied by the cache; that is, it was not forwarded, and the response was obtained from the cache.
 
 A response that was originally produced by the origin but was modified by the cache (for example, a 304 or 206 status code) is still considered a hit, as long as it did not go forward (e.g., for validation).
 
@@ -143,31 +143,29 @@ The most specific reason that the cache is aware of SHOULD be used, to the exten
 
 ## The fwd-status Parameter
 
-"fwd-status"'s value is an Integer that indicates which status code (see {{HTTP, Section 15}}) the next-hop server returned in response to the forwarded request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
+The value of "fwd-status" is an Integer that indicates which status code (see {{HTTP, Section 15}}) the next-hop server returned in response to the forwarded request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
 
 This parameter is useful to distinguish cases when the next-hop server sends a 304 (Not Modified) response to a conditional request or a 206 (Partial Content) response because of a range request.
 
 ## The ttl Parameter
 
-"ttl"'s value is an Integer that indicates the response's remaining freshness lifetime (see {{HTTP-CACHING, Section 4.2.1}}) as calculated by the cache, as an integer number of seconds, measured as closely as possible to when the response header section is sent by the cache. This includes freshness assigned by the cache through, for example, heuristics (see {{HTTP-CACHING, Section 4.2.2}}), local configuration, or other factors. It may be negative, to indicate staleness.
+The value of "ttl" is an Integer that indicates the response's remaining freshness lifetime (see {{HTTP-CACHING, Section 4.2.1}}) as calculated by the cache, as an integer number of seconds, measured as closely as possible to when the response header section is sent by the cache. This includes freshness assigned by the cache through, for example, heuristics (see {{HTTP-CACHING, Section 4.2.2}}), local configuration, or other factors. It may be negative, to indicate staleness.
 
 ## The stored Parameter
 
-"stored"'s value is a Boolean that indicates whether the cache stored the response (see {{HTTP-CACHING, Section 3}}); a true value indicates that it did. Only meaningful when fwd is present.
+The value of "stored" is a Boolean that indicates whether the cache stored the response (see {{HTTP-CACHING, Section 3}}); a true value indicates that it did. Only meaningful when fwd is present.
 
 ## The collapsed Parameter
 
-"collapsed"'s value is a Boolean that indicates whether this request was collapsed together with one or more other forward requests (see {{HTTP-CACHING, Section 4}}). If true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others. Only meaningful when fwd is present.
+The value of "collapsed" is a Boolean that indicates whether this request was collapsed together with one or more other forward requests (see {{HTTP-CACHING, Section 4}}). If true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others. Only meaningful when fwd is present.
 
 ## The key Parameter
 
-"key"'s value is a String that conveys a representation of the cache key (see {{HTTP-CACHING, Section 2}}) used for the response. Note that this may be implementation specific.
+The value of "key" is a String that conveys a representation of the cache key (see {{HTTP-CACHING, Section 2}}) used for the response. Note that this may be implementation specific.
 
 ## The detail Parameter
 
-"detail" allows implementations to convey additional information not captured in other parameters, such as implementation-specific states or other caching-related metrics.
-
-Its value is either a String or a Token.
+The value of "detail" is either a String or a Token that allows implementations to convey additional information not captured in other parameters, such as implementation-specific states or other caching-related metrics.
 
 For example:
 
