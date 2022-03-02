@@ -911,9 +911,9 @@ In order to create a signature, a signer MUST follow the following algorithm:
    * The `@signature-params` derived component identifier is not explicitly listed in the list of covered component identifiers, because it is required to always be present as the last line in the signature base. This ensures that a signature always covers its own metadata.
    * Further guidance on what to include in this set and in what order is out of scope for this document.
 
-5. The signer creates the signature base based on these signature parameters. ({{create-sig-input}})
+5. The signer creates the signature base using these parameters and the signature base creation algorithm. ({{create-sig-input}})
 
-6. The signer uses the `HTTP_SIGN` function to sign the signature base with the chosen signing algorithm using the key material chosen by the signer. The `HTTP_SIGN` primitive and several concrete signing algorithms are defined in in {{signature-methods}}.
+6. The signer uses the `HTTP_SIGN` primitive function to sign the signature base with the chosen signing algorithm using the key material chosen by the signer. The `HTTP_SIGN` primitive and several concrete applications of signing algorithms are defined in in {{signature-methods}}.
 
 7. The byte array output of the signature function is the HTTP message signature output value to be included in the `Signature` field as defined in {{signature-header}}.
 
@@ -969,7 +969,7 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
         the key material itself, the resolved algorithms MUST be the same. If the algorithms are
         not the same, the verifier MUST vail the verification.
 7. Use the received HTTP message and the signature's metadata to recreate the signature base, using
-    the process described in {{create-sig-input}}. The value of the `@signature-params` input is
+    the algorithm defined in {{create-sig-input}}. The value of the `@signature-params` input is
     the value of the `Signature-Input` field for this signature serialized according to the rules described
     in {{signature-params}}, not including the signature's label from the `Signature-Input` field.
 8. If the key material is appropriate for the algorithm, apply the appropriate `HTTP_VERIFY` cryptographic verification algorithm to the signature,
