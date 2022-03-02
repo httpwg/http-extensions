@@ -71,7 +71,7 @@ To enable these uses, {{header}} defines a new HTTP response field to allow inte
 
 {::boilerplate bcp14-tagged}
 
-This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}} to specify syntax and parsing: List, String, Token, Integer, Byte Sequence.
+This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}} to specify syntax and parsing: List, String, Token, Integer, and Byte Sequence.
 
 Note that in this specification, "proxy" is used to indicate both forward and reverse proxies, otherwise known as gateways. "Next hop" indicates the connection in the direction leading to the origin server for the request.
 
