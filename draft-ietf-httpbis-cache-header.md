@@ -2,7 +2,7 @@
 title: The Cache-Status HTTP Response Header Field
 abbrev: Cache-Status Header
 docname: draft-ietf-httpbis-cache-header-latest
-date: {DATE}
+date: February 2022
 category: std
 
 ipr: trust200902
@@ -49,7 +49,7 @@ informative:
   ENTANGLE:
     target: https://portswigger.net/research/web-cache-entanglement
     title: "Web Cache Entanglement: Novel Pathways to Poisoning"
-    date: 2020
+    date: September 2020
     author:
     -
       name: James Kettle
