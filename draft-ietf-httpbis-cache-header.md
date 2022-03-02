@@ -255,7 +255,7 @@ The expert(s) should consider the following factors when evaluating requests:
 Registration requests should use the following template:
 
 Name:
-: \[a name for the Cache-Status Parameter; see {{Section 3.1.2 of STRUCTURED-FIELDS}} for syntactic requirements \]
+: \[a name for the Cache-Status Parameter; see {{Section 3.1.2 of STRUCTURED-FIELDS}} for syntactic requirements\]
 
 Description:
 : \[a description of the parameter semantics and value\]
