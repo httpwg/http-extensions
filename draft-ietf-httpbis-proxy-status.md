@@ -78,9 +78,9 @@ Note that in this specification, "proxy" is used to indicate both forward and re
 
 # The Proxy-Status HTTP Field {#header}
 
-The Proxy-Status HTTP response field allows an intermediary to convey additional information about its handling of a response and its associated request. The syntax of this header field conforms to {{STRUCTURED-FIELDS}}.
+The Proxy-Status HTTP response field allows an intermediary to convey additional information about its handling of a response and its associated request.
 
-Its value is a List. Each member of the List represents an intermediary that has handled the response. The first member represents the intermediary closest to the origin server, and the last member represents the intermediary closest to the user agent.
+Its value is a List (see {{Section 3.1 of STRUCTURED-FIELDS}}). Each member of the List represents an intermediary that has handled the response. The first member represents the intermediary closest to the origin server, and the last member represents the intermediary closest to the user agent.
 
 For example:
 
