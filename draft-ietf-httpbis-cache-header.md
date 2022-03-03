@@ -2,7 +2,7 @@
 title: The Cache-Status HTTP Response Header Field
 abbrev: Cache-Status Header
 docname: draft-ietf-httpbis-cache-header-latest
-date: February 2022
+date: March 2022
 category: std
 
 ipr: trust200902
@@ -58,14 +58,14 @@ informative:
 
 --- abstract
 
-To aid debugging, HTTP caches often append header fields to a response explaining how they handled the request in an ad hoc manner. This specification defines a standard mechanism to do so that is aligned with HTTP's caching model.
+To aid debugging, HTTP caches often append header fields to a response, explaining how they handled the request in an ad hoc manner. This specification defines a standard mechanism to do so that is aligned with HTTP's caching model.
 
 
 --- middle
 
 # Introduction
 
-To aid debugging (both by humans and automated tools), HTTP caches often append header fields to a response explaining how they handled the request. Unfortunately, the semantics of these headers are often unclear, and both the semantics and syntax used vary between implementations.
+To aid debugging (both by humans and automated tools), HTTP caches often append header fields to a response explaining how they handled the request. Unfortunately, the semantics of these header fields are often unclear, and both the semantics and syntax used vary between implementations.
 
 This specification defines a new HTTP response header field, "Cache-Status", for this purpose with standardized syntax and semantics.
 
@@ -124,7 +124,7 @@ uri-miss:
 : The cache did not contain any responses that matched the request URI.
 
 vary-miss:
-: The cache contained a response that matched the request URI, but it could not select a response based upon this request's headers and stored Vary headers.
+: The cache contained a response that matched the request URI, but it could not select a response based upon this request's header fields and stored Vary header fields.
 
 miss:
 : The cache did not contain any responses that could be used to satisfy this request (to be used when an implementation cannot distinguish between uri-miss and vary-miss).
@@ -139,11 +139,11 @@ partial:
 : The cache was able to select a partial response for the request, but it did not contain all of the requested ranges (or the request was for the complete response).
 
 
-The most specific reason that the cache is aware of SHOULD be used, to the extent that it is possible to implement. See also {{HTTP-CACHING, Section 4}}.
+The most specific reason known to the cache SHOULD be used, to the extent that it is possible to implement. See also {{HTTP-CACHING, Section 4}}.
 
 ## The fwd-status Parameter
 
-The value of "fwd-status" is an Integer that indicates which status code (see {{HTTP, Section 15}}) the next-hop server returned in response to the forwarded request. Only meaningful when "fwd" is present; if "fwd-status" is not present but "fwd" is, it defaults to the status code sent in the response.
+The value of "fwd-status" is an Integer that indicates which status code (see {{HTTP, Section 15}}) the next-hop server returned in response to the forwarded request. The fwd-status parameter is only meaningful when fwd is present. If fwd-status is not present but the fwd parameter is, it defaults to the status code sent in the response.
 
 This parameter is useful to distinguish cases when the next-hop server sends a 304 (Not Modified) response to a conditional request or a 206 (Partial Content) response because of a range request.
 
@@ -153,11 +153,11 @@ The value of "ttl" is an Integer that indicates the response's remaining freshne
 
 ## The stored Parameter
 
-The value of "stored" is a Boolean that indicates whether the cache stored the response (see {{HTTP-CACHING, Section 3}}); a true value indicates that it did. Only meaningful when fwd is present.
+The value of "stored" is a Boolean that indicates whether the cache stored the response (see {{HTTP-CACHING, Section 3}}); a true value indicates that it did. The stored parameter is only meaningful when fwd is present.
 
 ## The collapsed Parameter
 
-The value of "collapsed" is a Boolean that indicates whether this request was collapsed together with one or more other forward requests (see {{HTTP-CACHING, Section 4}}). If true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others. Only meaningful when fwd is present.
+The value of "collapsed" is a Boolean that indicates whether this request was collapsed together with one or more other forward requests (see {{HTTP-CACHING, Section 4}}). If true, the response was successfully reused; if not, a new request had to be made. If not present, the request was not collapsed with others. The collapsed parameter is only meaningful when fwd is present.
 
 ## The key Parameter
 
@@ -173,14 +173,14 @@ For example:
 Cache-Status: ExampleCache; hit; detail=MEMORY
 ~~~
 
-The semantics of a detail parameter are always specific to the cache that sent it; even if a member of details from another cache shares the same name, it might not mean the same thing.
+The semantics of a detail parameter are always specific to the cache that sent it; even if a details parameter from another cache shares the same value, it might not mean the same thing.
 
 This parameter is intentionally limited. If an implementation's developer or operator needs to convey additional information in an interoperable fashion, they are encouraged to register extension parameters (see {{register}}) or define another header field.
 
 
 # Examples
 
-The most minimal cache hit:
+The following is an example of a minimal cache hit:
 
 ~~~ http-message
 Cache-Status: ExampleCache; hit
@@ -192,44 +192,44 @@ However, a polite cache will give some more information, e.g.:
 Cache-Status: ExampleCache; hit; ttl=376
 ~~~
 
-A stale hit just has negative freshness:
+A stale hit just has negative freshness, as in this example:
 
 ~~~ http-message
 Cache-Status: ExampleCache; hit; ttl=-412
 ~~~
 
-Whereas a complete miss is:
+Whereas this is an example of a complete miss:
 
 ~~~ http-message
 Cache-Status: ExampleCache; fwd=uri-miss
 ~~~
 
-A miss that successfully validated on the backend server:
+This is an example of a miss that successfully validated on the backend server:
 
 ~~~ http-message
 Cache-Status: ExampleCache; fwd=stale; fwd-status=304
 ~~~
 
-A miss that was collapsed with another request:
+This is an example of a miss that was collapsed with another request:
 
 ~~~ http-message
 Cache-Status: ExampleCache; fwd=uri-miss; collapsed
 ~~~
 
-A miss that the cache attempted to collapse, but couldn't:
+This is an example of a miss that the cache attempted to collapse, but couldn't:
 
 ~~~ http-message
 Cache-Status: ExampleCache; fwd=uri-miss; collapsed=?0
 ~~~
 
-Going through two separate layers of caching, where the cache closest to the origin responded to an earlier request with a stored response, and a second cache stored that response and later reused it to satisfy the current request:
+The following is an example of going through two separate layers of caching, where the cache closest to the origin responded to an earlier request with a stored response, and a second cache stored that response and later reused it to satisfy the current request:
 
 ~~~ http-message
 Cache-Status: OriginCache; hit; ttl=1100,
               "CDN Company Here"; hit; ttl=545
 ~~~
 
-Going through a three-layer caching system, where the closest to the origin is a reverse proxy (where the response was served from cache); the next is a forward proxy interposed by the network (where the request was forwarded because there wasn't any response cached with its URI, the request was collapsed with others, and the resulting response was stored); and the closest to the user is a browser cache (where there wasn't any response cached with the request's URI):
+The following is an example of going through a three-layer caching system, where the closest to the origin is a reverse proxy (where the response was served from cache); the next is a forward proxy interposed by the network (where the request was forwarded because there wasn't any response cached with its URI, the request was collapsed with others, and the resulting response was stored); and the closest to the user is a browser cache (where there wasn't any response cached with the request's URI):
 
 ~~~ http-message
 Cache-Status: ReverseProxyCache; hit
@@ -240,7 +240,7 @@ Cache-Status: BrowserCache; fwd=uri-miss
 
 # Defining New Cache-Status Parameters {#register}
 
-New Cache-Status Parameters can be defined by registering them in the "HTTP Cache-Status" registry.
+New Cache-Status parameters can be defined by registering them in the "HTTP Cache-Status" registry.
 
 Registration requests are reviewed and approved by a designated expert, per {{RFC8126, Section 4.5}}. A specification document is appreciated but not required.
 
@@ -253,7 +253,7 @@ The expert(s) should consider the following factors when evaluating requests:
 Registration requests should use the following template:
 
 Name:
-: \[a name for the Cache-Status Parameter; see {{Section 3.1.2 of STRUCTURED-FIELDS}} for syntactic requirements\]
+: \[a name for the Cache-Status parameter; see {{Section 3.1.2 of STRUCTURED-FIELDS}} for syntactic requirements\]
 
 Description:
 : \[a description of the parameter semantics and value\]
@@ -290,7 +290,7 @@ Additionally, exposing the cache key can help an attacker understand modificatio
 
 The underlying risks can be mitigated with a variety of techniques (e.g., using encryption and authentication and avoiding the inclusion of attacker-controlled data in the cache key), depending on their exact nature. Note that merely obfuscating the key does not mitigate this risk.
 
-To avoid assisting such attacks, the Cache-Status header field can be omitted, only sent when the client is authorized to receive it, or only send sensitive information (e.g., the key parameter) when the client is authorized.
+To avoid assisting such attacks, the Cache-Status header field can be omitted, only sent when the client is authorized to receive it, or sent with sensitive information (e.g., the key parameter) only when the client is authorized.
 
 
 --- back
