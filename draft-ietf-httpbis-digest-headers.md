@@ -831,10 +831,7 @@ The `Repr-Digest` field-value is calculated across the entire JSON object
 `{"hello": "world"}`, and the field is
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
-Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:`
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 ~~~
 
 However, since the message content is constrained to bytes 1-7,
@@ -862,29 +859,23 @@ For presentation purposes, the response body is displayed as a Base64-encoded st
 non-printable characters.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
 {: title="PUT Request with Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Location: /items/123
 Content-Encoding: br
 Content-Length: 22
-Repr-Digest: \
-  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
+Repr-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
@@ -901,28 +892,22 @@ depends on the representation metadata header fields, including
 
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Content-Length: 18
 Accept-Encoding: br
-Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
 {: title="PUT Request with Digest}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 204 No Content
 Content-Type: application/json
 Content-Encoding: br
-Repr-Digest: \
-  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
+Repr-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
 ~~~
 {: title="Empty response with Digest"}
@@ -935,14 +920,11 @@ As the response body contains non-printable characters, it is displayed as a
 base64-encoded string.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -973,29 +955,23 @@ The representation enclosed in the response refers to the resource identified by
 `Content-Location` (see {{Section 6.4.2 of SEMANTICS}}). `Repr-Digest` is thus computed on the enclosed representation.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
-Repr-Digest: \
-  sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 
 {"title": "New Title"}
 ~~~
 {: title="POST Request with Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 201 Created
 Content-Type: application/json
 Content-Location: /books/123
 Location: /books/123
-Repr-Digest: \
-  sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
+Repr-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
 
 {
   "id": "123",
@@ -1020,27 +996,21 @@ Response `Repr-Digest` has no explicit relation with the resource referenced by
 `Location`.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
-Repr-Digest: \
-  sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 
 {"title": "New Title"}
 ~~~
 {: title="POST Request with Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 201 Created
 Content-Type: application/json
-Repr-Digest: \
-  sha-256=:2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=:
+Repr-Digest: sha-256=:2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=:
 Location: /books/123
 
 {
@@ -1068,27 +1038,21 @@ The response `Repr-Digest` field-value is computed on the complete representatio
 resource.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 PATCH /books/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/merge-patch+json
 Accept: application/json
 Accept-Encoding: identity
-Repr-Digest: \
-  sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 
 {"title": "New Title"}
 ~~~
 {: #fig-patch title="PATCH Request with Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 200 OK
 Content-Type: application/json
-Repr-Digest: \
-  sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
+Repr-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
 
 {
   "id": "123",
@@ -1113,12 +1077,9 @@ accordance with {{?RFC7807}}.
 The response `Repr-Digest` field-value is computed on this enclosed representation.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 404 Not Found
 Content-Type: application/problem+json
-Repr-Digest: \
-  sha-256=:KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=:
+Repr-Digest: sha-256=:KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=:
 
 {
   "title": "Not Found",
@@ -1143,8 +1104,6 @@ Host: foo.example
 {: title="GET Request"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -1157,8 +1116,7 @@ Trailer: Digest
 2\r\n
 "}\r\n
 0\r\n
-Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 ~~~
 {: title="Chunked Response with Digest"}
@@ -1194,12 +1152,9 @@ Want-Repr-Digest: sha-256=3, sha=10
 {: title="GET Request with Want-Repr-Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 200 OK
 Content-Type: application/json
-Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
