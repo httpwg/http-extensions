@@ -245,6 +245,8 @@ If the combined value is not available for a given header, the following algorit
 
 The resulting string is the canonicalized component value.
 
+Note that some HTTP fields have values with multiple valid serializations that have equivalent semantics. Applications signing and processing such fields MUST consider how to handle the values of such fields to ensure that the signer and verifier can derive the same value, as discussed in {{security-field-values}}.
+
 Following are non-normative examples of canonicalized values for header fields, given the following example HTTP message fragment:
 
 ~~~ http-message
@@ -288,6 +290,16 @@ NOTE: '\' line wrapping per RFC 8792
 ~~~
 
 Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
+
+
+Any HTTP field component identifiers MAY have the following parameters in specific circumstances.
+
+sf
+: A boolean flag indicating that the field value is to be canonicalized using strict encoding
+of the structured field value. {{http-header-structured}}
+
+key
+: A string parameter used to select a single member value from a dictionary structured field. {{http-header-dictionary}}
 
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
 
@@ -1612,6 +1624,12 @@ Some HTTP fields have values and interpretations that are similar to HTTP signat
 "host"
 : The "host" header field is specific to HTTP 1.1, and its functionality is subsumed by the "@authority" derived component, defined in {{content-request-authority}}. In order to preserve the value across different HTTP versions, applications should always use the "@authority" derived component.
 
+## Semantically Equivalent Field Values {#security-field-values}
+
+The [signature base generation algorithm](#create-sig-input) uses the value of an HTTP field as its component value. In the common case, this amounts to taking the actual bytes of the field value as the component value for both the signer and verifier. However, some field values allow for transformation of the values in semantically equivalent ways that alter the bytes used in the value itself. For example, a field definition can declare some or all of its value to be case-insensitive, or to have special handling of internal whitespace characters. Other fields have expected transformations from intermediaries, such as the removal of comments in the `Via` header field. In such cases, a verifier could be tripped up by using the equivalent transformed field value, which would differ from the byte value used by the signer. The verifier would have have a difficult time finding this class of errors since the value of the field is still acceptable for the application, but the actual bytes required by the signature base would not match.
+
+When processing such fields, the signer and verifier have to agree how to handle such transformations, if at all. One option is to not sign problematic fields, but care must be taken to ensure that there is still [sufficient signature coverage](#security-coverage) for the application. Another option is to define an application-specific canonicalization value for the field before it is added to the HTTP message, such as to always remove internal comments before signing, or to always transform values to lowercase. Since these transformations are applied prior to the field being used as input to the signature base generation algorithm, the signature base will still simply contain the byte value of the field as it appears within the message. If the transformations were to be applied after the value is extracted from the message but before it is added to the signature base, different attack surfaces such as value substitution attacks could be launched against the application. All application-specific additional rules are outside the scope of this specification, and by their very nature these transformations would harm interoperability of the implementation outside of this specific application. It is recommended that applications avoid the use of such additional rules wherever possible.
+
 # Privacy Considerations {#privacy}
 
 ## Identification through Keys {#privacy-identify-keys}
@@ -2184,7 +2202,9 @@ Jeffrey Yasskin.
   - -09
      * Explained key formats better.
      * Removed "host" and "date" from most examples.
+     * Fixed query component  generation.
      * Renamed "signature input" and "signature input string" to "signature base".
+     * Added consideration for semantically equivalent field values.
 
   - -08
      * Editorial fixes.
