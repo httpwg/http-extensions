@@ -72,6 +72,12 @@ Two modes for encoding are described:
 * an indefinite-length encoding enables efficient generation of messages where
   lengths are not known when encoding starts.
 
+This format is designed to convey the semantics of valid HTTP messages as simply
+and efficiently as possible.  It is not designed to capture all of the details
+of the encoding of messages from specific HTTP versions ({{MESSAGING}}, {{H2}},
+{{H3}}).  As such, this format is unlikely to be suitable for applications that
+depend on an exact recording of the encoding of messages.
+
 
 # Conventions and Definitions
 
