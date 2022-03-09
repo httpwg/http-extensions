@@ -154,10 +154,7 @@ length-prefixed value. Both name and value are sequences of bytes that cannot
 be zero length.
 
 The format allows for the message to be truncated before any of the length
-prefixes that precede the field sections or content. Truncation can be used to
-reduce the size of messages that have no data in trailing field sections or
-content.  A message that is truncated at any other point is invalid; see
-{{invalid}}.
+prefixes that precede the field sections or content; see {{padding}}.
 
 The variable-length integer encoding means that there is a limit of 2^62-1
 bytes for each field section and the message content.
@@ -211,9 +208,7 @@ Response messages that contain informational status codes result in a different
 structure; see {{informational}}.
 
 Indeterminate-length messages can be truncated in a similar way as known-length
-messages. Truncation occurs after the control data, or after the Content
-Terminator field that ends a field section or sequence of content chunks. A
-message that is truncated at any other point is invalid; see {{invalid}}.
+messages; see {{padding}}.
 
 Indeterminate-length messages use the same encoding for field lines as
 known-length messages; see {{fields}}.
@@ -351,15 +346,22 @@ known-length message has a limit, this limit is large enough that it is
 unlikely to be a practical limitation. There is no limit to the size of content
 in an indeterminate length message.
 
-Omitting content by truncating a message is only possible if the content is
-zero-length.
 
-
-## Padding
+## Padding and Truncation {#padding}
 
 Messages can be padded with any number of zero-valued bytes.  Non-zero padding
 bytes cause a message to be invalid (see {{invalid}}). Unlike other parts of a
 message, a processor MAY decide not to validate the value of padding bytes.
+
+Truncation can be used to reduce the size of messages that have no data in
+trailing field sections or content.  If the trailers of a message is empty, it
+MAY be omitted by the encoder in place of adding a length field equal to
+zero. An encoder MAY omit empty content in the same way if the trailers are also
+empty.  A message that is truncated at any other point is invalid; see
+{{invalid}}.
+
+Decoders MUST treat missing truncated fields as equivalent to having been sent
+with the length field sent to zero.
 
 Padding is compatible with truncation of empty parts of the messages.
 Zero-valued bytes will be interpreted as zero-length part, which is semantically
