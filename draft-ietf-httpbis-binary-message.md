@@ -570,9 +570,10 @@ Some of these features are also absent in HTTP/2 and HTTP/3.
 Unlike HTTP/2 and HTTP/3, this format uses a a fixed format for control data
 rather than using pseudo-fields.  Messages are invalid ({{invalid}}) if they
 contain fields named `:method`, `:scheme`, `:authority`, `:path`, or `:status`.
-Other pseudo-fields that are defined by protocol extensions MAY be included.
-Field lines containing pseudo-fields MUST precede other field lines.  A message
-that contains a pseudo-field after any other field is invalid; see {{invalid}}.
+Other pseudo-fields that are defined by protocol extensions MAY be included;
+pseudo-fields cannot be included in trailers (see {{Section 8.1 of H2}}).  Field
+lines containing pseudo-fields MUST precede other field lines.  A message that
+contains a pseudo-field after any other field is invalid; see {{invalid}}.
 
 Note that while some messages - CONNECT or upgrade requests in particular - can
 be represented using this format, doing so serves no purpose as these requests
