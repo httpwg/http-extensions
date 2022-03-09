@@ -325,17 +325,21 @@ Field Line {
 {: #format-field-line title="Format of a Field Line"}
 
 For field names, byte values that are not permitted in an HTTP field name cause
-the message to be invalid; see {{Section 5.1 of HTTP}} for a definition of
-what is valid and {{invalid}} for handling of invalid messages.
-
-Field names and values MUST be constructed and validated according to the rules
-of {{Section 8.2.1 of H2}}.  A recipient MUST treat a message that contains
-field values that would cause an HTTP/2 message to be malformed ({{Section 8.1.1
-of H2}}) as invalid; see {{invalid}}.
+the message to be invalid; see {{Section 5.1 of HTTP}} for a definition of what
+is valid and {{invalid}} for handling of invalid messages.  A recipient MUST
+treat a message that contains field values that would cause an HTTP/2 message to
+be malformed according to {{Section 8.2.1 of H2}} as invalid; see {{invalid}}.
 
 The same field name can be repeated in multiple field lines; see {{Section 5.2 of
 HTTP}} for the semantics of repeated field names and rules for combining
 values.
+
+Fields that relate to connections ({{Section 7.6.1 of HTTP}}) cannot be used to
+produce the effect on a connection in this context.  These fields SHOULD be
+removed when constructing a binary message.  However, they do not cause a
+message to be invalid ({{invalid}}); permitting these fields allows a binary
+message to capture the content of a messages that are exchanged in a protocol
+context.
 
 Like HTTP/2, this format has an exception for the combination of multiple
 instances of the `Cookie` field. Instances of fields with the ASCII-encoded
