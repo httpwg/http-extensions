@@ -718,5 +718,5 @@ information in {{media-type}} for the media type "message/bhttp".
 # Acknowledgments
 {:numbered="false"}
 
-Julian Reschke, Lucas Pardue and Tommy Pauly provided excellent feedback on both the design and its
-documentation.
+{{{Julian Reschke}}}, {{{David Schinazi}}}, {{{Lucas Pardue}}} and {{{Tommy Pauly}}} provided
+excellent feedback on both the design and its documentation.
