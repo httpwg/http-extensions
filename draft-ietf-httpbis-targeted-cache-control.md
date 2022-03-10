@@ -76,7 +76,7 @@ This specification defines a convention for HTTP response header fields that all
 # Introduction
 
 
-Modern deployments of HTTP often use multiple layers of caching. For example, a website might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more content delivery networks (CDNs) that are distributed throughout the Internet, and it might benefit from browser caching as well.
+Modern deployments of HTTP often use multiple layers of caching. For example, a website might use a cache on the origin server itself; it might deploy a caching layer in the same network as the origin server, it might use one or more CDNs that are distributed throughout the Internet, and it might benefit from browser caching as well.
 
 Because it is often desirable to control these different classes of caches separately, some means of targeting cache directives at them is necessary. For example, if a publisher has a mechanism to invalidate the contents of a cache that it has a relationship with (such as a CDN cache), they might be more comfortable assigning a more generous caching policy to it while still wanting to restrict the behavior of other caches.
 
@@ -113,7 +113,7 @@ This means that cache directives that have no value will be mapped to a Boolean 
 
 For example, the max-age directive ({{Section 5.2.2.1 of HTTP-CACHING}}) has an integer value; no-store ({{Section 5.2.2.5 of HTTP-CACHING}}) always has a Boolean true value, and no-cache ({{Section 5.2.2.4 of HTTP-CACHING}}) has a value that can be either Boolean true or a string containing a comma-delimited list of field names.
 
-Implementations MUST NOT generate values that violate these inferred constraints on the cache directive's value. In particular, string values whose first character is not alphabetic or "*" MUST be generated as structured Strings so that they are not mistaken for other types.
+Implementations MUST NOT generate values that violate these inferred constraints on the cache directive's value. In particular, string values whose first character is not alphabetic or "*" MUST be generated as Strings so that they are not mistaken for other types.
 
 Implementations SHOULD NOT consume values that violate these inferred constraints. For example, a consuming implementation that coerces a max-age with a decimal value into an integer would behave differently than other implementations, potentially causing interoperability issues.
 
@@ -188,7 +188,7 @@ By convention, targeted fields have the suffix "-Cache-Control", e.g., "ExampleC
 
 The CDN-Cache-Control response header field is a targeted field ({{targeted}}) that allows origin servers to control the behavior of CDN caches interposed between them and clients separately from other caches that might handle the response.
 
-It applies to caches that are part of a distributed network that operate on behalf of an origin server (commonly called a content delivery network or CDN).
+It applies to caches that are part of a distributed network that operate on behalf of an origin server (commonly called a CDN).
 
 CDN caches that use CDN-Cache-Control will typically forward this header so that downstream CDN caches can use it as well. However, they MAY remove it when this is undesirable (for example, when configured to do so because it is known not to be used downstream).
 
