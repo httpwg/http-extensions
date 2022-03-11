@@ -228,7 +228,7 @@ component-name = sf-string
 
 Note that this means the serialization of the component name itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`.
 
-Component identifiers, including component identifiers with parameters, MUST NOT be repeated within a single list of covered components. Component identifiers with different parameter values MAY be repeated within a single list of covered components.
+One component identifier is distinct from another if either the component name or its parameters differ. Within a single list of covered components, each component identifier MUST be distinct from every other component identifier. Multiple component identifiers having the same component name MAY be included if they have parameters that make them distinct.
 
 The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters.
 
