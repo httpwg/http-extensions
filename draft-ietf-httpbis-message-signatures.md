@@ -168,8 +168,11 @@ Verifier:
 HTTP Message Component:
 : A portion of an HTTP message that is capable of being covered by an HTTP Message Signature.
 
+HTTP Message Component Name:
+: A name that identifies an HTTP Message Component.
+
 HTTP Message Component Identifier:
-: A value that uniquely identifies a specific HTTP Message Component in respect to a particular HTTP Message Signature and the HTTP Message it applies to.
+: The combination of an HTTP Message Component Name and any parameters that uniquely identifies a specific HTTP Message Component in respect to a particular HTTP Message Signature and the HTTP Message it applies to.
 
 HTTP Message Component Value:
 : The value associated with a given component identifier within the context of a particular HTTP Message. Component values are derived from the HTTP Message and are usually subject to a canonicalization process.
