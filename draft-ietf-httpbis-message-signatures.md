@@ -219,13 +219,14 @@ In order to allow signers and verifiers to establish which components are covere
 Some HTTP message components can undergo transformations that change the bitwise value without altering meaning of the component's value (for example, the merging together of header fields with the same name).  Message component values must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
 
 Component identifiers are serialized using the production grammar defined by {{RFC8941, Section 4}}.
-The component identifier itself is an `sf-string` value and MAY define parameters which are included using the `parameters` rule.
+The component identifier has a component name, which is serialized as an `sf-string` value. The component identifier MAY defined parameters which are included using the `parameters` rule.
 
 ~~~ abnf
-component-identifier = sf-string parameters
+component-identifier = component-name parameters
+component-name = sf-string
 ~~~
 
-Note that this means the serialization of the component identifier itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`.
+Note that this means the serialization of the component name itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`.
 
 Component identifiers, including component identifiers with parameters, MUST NOT be repeated within a single list of covered components. Component identifiers with different parameter values MAY be repeated within a single list of covered components.
 
@@ -235,7 +236,7 @@ The following sections define component identifier types, their parameters, thei
 
 ## HTTP Fields {#http-header}
 
-The component identifier for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component identifiers.
+The component name for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
 Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of SEMANTICS}}.
 
@@ -358,11 +359,11 @@ Note that the value for `key="c"` has been re-serialized.
 
 ## Derived Components {#derived-components}
 
-In addition to HTTP fields, there are a number of different components that can be derived from the control data, processing context, or other aspects of the HTTP message being signed. Such derived components can be included in the signature base by defining a component identifier and the derivation method for its component value.
+In addition to HTTP fields, there are a number of different components that can be derived from the control data, processing context, or other aspects of the HTTP message being signed. Such derived components can be included in the signature base by defining a component name, possible parameters, and the derivation method for its component value.
 
-Derived component identifiers MUST start with the "at" `@` character. This differentiates derived component identifiers from HTTP field names, which cannot contain the `@` character as per {{Section 5.1 of SEMANTICS}}. Processors of HTTP Message Signatures MUST treat derived component identifiers separately from field names, as discussed in {{security-lazy-header-parser}}.
+Derived component names MUST start with the "at" `@` character. This differentiates derived component names from HTTP field names, which cannot contain the `@` character as per {{Section 5.1 of SEMANTICS}}. Processors of HTTP Message Signatures MUST treat derived component names separately from field names, as discussed in {{security-lazy-header-parser}}.
 
-This specification defines the following derived component identifiers:
+This specification defines the following derived components:
 
 @signature-params
 : The signature metadata parameters for this signature. ({{signature-params}})
@@ -397,7 +398,7 @@ This specification defines the following derived component identifiers:
 @request-response
 : A signature from a request message that resulted in this response message. ({{content-request-response}})
 
-Additional derived component identifiers MAY be defined and registered in the HTTP Signatures Derived Component Identifier Registry. ({{content-registry}})
+Additional derived component names MAY be defined and registered in the HTTP Signatures Derived Component Name Registry. ({{content-registry}})
 
 Derived components can be applied in one or more of three targets:
 
@@ -410,7 +411,7 @@ response:
 related-response:
 : Values derived from an HTTP request message and results applied to the HTTP response message that is responding to that specific request.
 
-A component identifier definition MUST define all targets to which it can be applied.
+A derived component definition MUST define all targets to which it can be applied.
 
 The component value MUST be derived from the HTTP message being signed or the context in which the derivation occurs. The derived component value MUST be of the following form:
 
@@ -424,7 +425,7 @@ derived-component-value = *VCHAR
 
 HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and verification, such as the set of covered components, a timestamp, identifiers for verification key material, and other utilities.
 
-The signature parameters component identifier is `@signature-params`. This message component's value is REQUIRED as part of the [signature base](#create-sig-input) but the component identifier MUST NOT be enumerated within the set of covered components itself.
+The signature parameters component name is `@signature-params`. This message component's value is REQUIRED as part of the [signature base](#create-sig-input) but the component identifier MUST NOT be enumerated within the set of covered components itself.
 
 The signature parameters component value is the serialization of the signature parameters for this signature, including the covered components set with all associated parameters. These parameters include any of the following:
 
@@ -464,7 +465,7 @@ Note that an HTTP message could contain [multiple signatures](#signature-multipl
 
 ### Method {#content-request-method}
 
-The `@method` component identifier refers to the HTTP method of a request message. The component value of is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
+The `@method` derived component refers to the HTTP method of a request message. The component value of is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
 If used, the `@method` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -484,7 +485,7 @@ If used in a related-response, the `@method` component identifier refers to the 
 
 ### Target URI {#content-target-uri}
 
-The `@target-uri` component identifier refers to the target URI of a request message. The component value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target as described in {{SEMANTICS, Section 7.1}}.
+The `@target-uri` derived component refers to the target URI of a request message. The component value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target as described in {{SEMANTICS, Section 7.1}}.
 If used, the `@target-uri` component identifier MUST occur only once in the covered components.
 
 For example, the following message sent over HTTPS:
@@ -504,7 +505,7 @@ If used in a related-response, the `@target-uri` component identifier refers to 
 
 ### Authority {#content-request-authority}
 
-The `@authority` component identifier refers to the authority component of the target URI of the HTTP request message, as defined in {{SEMANTICS, Section 7.2}}. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
+The `@authority` derived component refers to the authority component of the target URI of the HTTP request message, as defined in {{SEMANTICS, Section 7.2}}. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
 The component value MUST be normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, the host name is normalized to lowercase and the default port is omitted.
 If used, the `@authority` component identifier MUST occur only once in the covered components.
 
@@ -527,7 +528,7 @@ The `@authority` derived component SHOULD be used instead signing the `Host` hea
 
 ### Scheme {#content-request-scheme}
 
-The `@scheme` component identifier refers to the scheme of the target URL of the HTTP request message. The component value is the scheme as a string as defined in {{SEMANTICS, Section 4.2}}.
+The `@scheme` derived component refers to the scheme of the target URL of the HTTP request message. The component value is the scheme as a string as defined in {{SEMANTICS, Section 4.2}}.
 While the scheme itself is case-insensitive, it MUST be normalized to lowercase for
 inclusion in the signature base.
 If used, the `@scheme` component identifier MUST occur only once in the covered components.
@@ -549,14 +550,14 @@ If used in a related-response, the `@scheme` component identifier refers to the 
 
 ### Request Target {#content-request-target}
 
-The `@request-target` component identifier refers to the full request target of the HTTP request message,
+The `@request-target` derived component refers to the full request target of the HTTP request message,
 as defined in {{SEMANTICS, Section 7.1}}. The component value of the request target can take different forms,
 depending on the type of request, as described below.
 If used, the `@request-target` component identifier MUST occur only once in the covered components.
 
 For HTTP 1.1, the component value is equivalent to the request target
 portion of the request line. However, this value is more difficult to reliably construct in
-other versions of HTTP. Therefore, it is NOT RECOMMENDED that this identifier be used
+other versions of HTTP. Therefore, it is NOT RECOMMENDED that this component be used
 when versions of HTTP other than 1.1 might be in use.
 
 The origin form value is combination of the absolute path and query components of the request URL. For example, the following request message:
@@ -614,7 +615,7 @@ If used in a related-response, the `@request-target` component identifier refers
 
 ### Path {#content-request-path}
 
-The `@path` component identifier refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
+The `@path` derived component refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
 If used, the `@path` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -634,7 +635,7 @@ If used in a related-response, the `@path` identifier refers to the associated c
 
 ### Query {#content-request-query}
 
-The `@query` component identifier refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, percent-encoded octets are decoded.
+The `@query` derived component refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, percent-encoded octets are decoded.
 If used, the `@query` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -674,7 +675,7 @@ If used in a related-response, the `@query` component identifier refers to the a
 ### Query Parameters {#content-request-query-params}
 
 If a request target URI uses HTML form parameters in the query string as defined in [HTMLURL, Section 5](#HTMLURL),
-the `@query-params` component identifier allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
+the `@query-params` derived component allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
 The REQUIRED `name` parameter of each input identifier contains the `nameString` of a single query parameter as an `sf-string` value.
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
@@ -707,7 +708,7 @@ If used in a related-response, the `@query-params` component identifier refers t
 
 ### Status Code {#content-status-code}
 
-The `@status` component identifier refers to the three-digit numeric HTTP status code of a response message as defined in {{SEMANTICS, Section 15}}. The component value is the serialized three-digit integer of the HTTP response code, with no descriptive text.
+The `@status` derived component refers to the three-digit numeric HTTP status code of a response message as defined in {{SEMANTICS, Section 15}}. The component value is the serialized three-digit integer of the HTTP response code, with no descriptive text.
 If used, the `@status` component identifier MUST occur only once in the covered components.
 
 For example, the following response message:
@@ -727,7 +728,7 @@ The `@status` component identifier MUST NOT be used in a request message.
 
 ### Request-Response Signature Binding {#content-request-response}
 
-When a signed request message results in a signed response message, the `@request-response` component identifier can be used to cryptographically link the request and the response to each other by including the identified request signature value in the response's signature base without copying the value of the request's signature to the response directly. This component identifier has a single REQUIRED parameter:
+When a signed request message results in a signed response message, the `@request-response` derived component can be used to cryptographically link the request and the response to each other by including the identified request signature value in the response's signature base without copying the value of the request's signature to the response directly. This derived component has a single REQUIRED parameter:
 
 `key`
 : Identifies which signature from the response to sign.
@@ -830,7 +831,7 @@ To create the signature base, the signer or verifier concatenates together entri
 
 2. For each message component item in the covered components set (in order):
 
-    1. Append the component identifier for the covered component serialized according to the `component-identifier` rule. Note that this serialization places the component identifier in double quotes and appends any parameters outside of the quotes.
+    1. Append the component identifier for the covered component serialized according to the `component-identifier` rule. Note that this serialization places the component name in double quotes and appends any parameters outside of the quotes.
 
     2. Append a single colon `:`
 
@@ -838,9 +839,9 @@ To create the signature base, the signer or verifier concatenates together entri
 
     4. Determine the component value for the component identifier.
 
-        - If the component identifier starts with an "at" character (`@`), derive the component's value from the message according to the specific rules defined for the derived component identifier, as in {{derived-components}}. If the derived component identifier is unknown or the value cannot be derived, produce an error.
+        - If the component name starts with an "at" character (`@`), derive the component's value from the message according to the specific rules defined for the derived component, as in {{derived-components}}. If the derived component name is unknown or the value cannot be derived, produce an error.
 
-        - If the component identifier does not start with an "at" character (`@`), canonicalize the HTTP field value as described in {{http-header}}. If the value cannot be calculated, produce an error.
+        - If the component name does not start with an "at" character (`@`), canonicalize the HTTP field value as described in {{http-header}}. If the value cannot be calculated, produce an error.
 
     5. Append the covered component's canonicalized component value.
 
@@ -860,8 +861,8 @@ To create the signature base, the signer or verifier concatenates together entri
 
 If covered components reference a component identifier that cannot be resolved to a component value in the message, the implementation MUST produce an error and not create an input string. Such situations are included but not limited to:
 
- * The signer or verifier does not understand the derived component identifier.
- * The component identifier identifies a field that is not present in the message or whose value is malformed.
+ * The signer or verifier does not understand the derived component name.
+ * The component name identifies a field that is not present in the message or whose value is malformed.
  * The component identifier indicates that a structured field serialization is used (via the `sf` parameter), but the field in question is known to not be a structured field or the type of structured field is not known to the implementation.
  * The component identifier is a dictionary member identifier that references a field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
  * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dict";key="c"` and the value of the `Example-Dict` header field is `a=1, b=2`, which does not have the `c` value.
@@ -880,7 +881,7 @@ Content-Length: 18
 {"hello": "world"}
 ~~~
 
-The covered components consist of the `@method`, `@path`, and `@authority` derived component identifiers followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
+The covered components consist of the `@method`, `@path`, and `@authority` derived components followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -920,7 +921,7 @@ In order to create a signature, a signer MUST follow the following algorithm:
 
 4. The signer creates an ordered set of component identifiers representing the message components to be covered by the signature, and attaches signature metadata parameters to this set. The serialized value of this is later used as the value of the `Signature-Input` field as described in {{signature-input-header}}.
    * Once an order of covered components is chosen, the order MUST NOT change for the life of the signature.
-   * Each covered component identifier MUST be either an HTTP field in the message {{http-header}} or a derived component identifier listed in {{derived-components}} or its associated registry.
+   * Each covered component identifier MUST be either an HTTP field in the message {{http-header}} or a derived component listed in {{derived-components}} or its associated registry.
    * Signers of a request SHOULD include some or all of the message control data in the covered components, such as the `@method`, `@authority`, `@target-uri`, or some combination thereof.
    * Signers SHOULD include the `created` signature metadata parameter to indicate when the signature was created.
    * The `@signature-params` derived component identifier is not explicitly listed in the list of covered component identifiers, because it is required to always be present as the last line in the signature base. This ensures that a signature always covers its own metadata.
@@ -1437,15 +1438,15 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 |`nonce`|A single-use nonce value| {{signature-params}} of this document|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
-## HTTP Signature Derived Component Identifiers Registry {#content-registry}
+## HTTP Signature Derived Component Names Registry {#content-registry}
 
-This document defines a method for canonicalizing HTTP message components, including components that can be derived from the context of the HTTP message outside of the HTTP fields. These components are identified by a unique string, known as the component identifier. Component identifiers for derived components always start with the "@" (at) symbol to distinguish them from HTTP header fields. IANA is asked to create and maintain a new registry typed "HTTP Signature Derived Component Identifiers" to record and maintain the set of non-field component identifiers and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
+This document defines a method for canonicalizing HTTP message components, including components that can be derived from the context of the HTTP message outside of the HTTP fields. These derived components are identified by a unique string, known as the component name. Component names for derived components always start with the "@" (at) symbol to distinguish them from HTTP header fields. IANA is asked to create and maintain a new registry typed "HTTP Signature Derived Component Names" to record and maintain the set of non-field component names and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
 
 ### Registration Template {#iana-content-template}
 
 {: vspace="0"}
-Identifier:
-: An identifier for the HTTP derived component identifier. The name MUST begin with the `"@"` character followed by an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The identifier MUST be unique within the context of the registry.
+Name:
+: A name for the HTTP derived component. The name MUST begin with the `"@"` character followed by an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The name MUST be unique within the context of the registry.
 
 Status:
 : A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
@@ -1461,9 +1462,9 @@ Specification document(s):
 
 ### Initial Contents {#iana-content-contents}
 
-The table below contains the initial contents of the HTTP Signature Derived Component Identifiers Registry.
+The table below contains the initial contents of the HTTP Signature Derived Component Names Registry.
 
-|Identifier|Status|Target|Specification document(s)|
+|Name|Status|Target|Specification document(s)|
 |--- |--- |--- |--- |
 |`@signature-params`| Active | Request, Response | {{signature-params}} of this document|
 |`@method`| Active | Request, Related-Response | {{content-request-method}} of this document|
@@ -1476,7 +1477,7 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 |`@query-params`| Active | Request, Related-Response | {{content-request-query-params}} of this document|
 |`@status`| Active | Response | {{content-status-code}} of this document|
 |`@request-response`|Active | Related-Response | {{content-request-response}} of this document|
-{: title="Initial contents of the HTTP Signature Derived Component Identifiers Registry." }
+{: title="Initial contents of the HTTP Signature Derived Component Names Registry." }
 
 # Security Considerations {#security}
 
@@ -1581,7 +1582,7 @@ The existence of a valid signature on an HTTP message is not sufficient to prove
 
 Some message components are expressed in different ways across HTTP versions. For example, the authority of the request target is sent using the `Host` header field in HTTP 1.1 but with the `:authority` pseudo-header in HTTP 2. If a signer sends an HTTP 1.1 message and signs the `Host` field, but the message is translated to HTTP 2 before it reaches the verifier, the signature will not validate as the `Host` header field could be dropped.
 
-It is for this reason that HTTP Message Signatures defines a set of derived components that define a single way to get value in question, such as the `@authority` derived component identifier ({{content-request-authority}}) in lieu of the `Host` header field. Applications should therefore prefer derived component identifiers for such options where possible.
+It is for this reason that HTTP Message Signatures defines a set of derived components that define a single way to get value in question, such as the `@authority` derived component ({{content-request-authority}}) in lieu of the `Host` header field. Applications should therefore prefer derived components for such options where possible.
 
 ## Key and Algorithm Specification Downgrades {#security-keydowngrade}
 
@@ -1601,17 +1602,17 @@ To counteract this, implementations should use fully compliant and trusted parse
 
 Applications of HTTP Message Signatures need to decide which message components will be covered by the signature. Depending on the application, some components could be expected to be changed by intermediaries prior to the signature's verification. If these components are covered, such changes would, by design, break the signature.
 
-However, the HTTP Message Signature standard allows for flexibility in determining which components are signed precisely so that a given application can choose the appropriate portions of the message that need to be signed, avoiding problematic components. For example, a web application framework that relies on rewriting query parameters might avoid use of the `@query` content identifier in favor of sub-indexing the query value using `@query-params` content identifier instead.
+However, the HTTP Message Signature standard allows for flexibility in determining which components are signed precisely so that a given application can choose the appropriate portions of the message that need to be signed, avoiding problematic components. For example, a web application framework that relies on rewriting query parameters might avoid use of the `@query` derived component in favor of sub-indexing the query value using `@query-params` derived components instead.
 
 Some components are expected to be changed by intermediaries and ought not to be signed under most circumstance. The `Via` and `Forwarded` header fields, for example, are expected to be manipulated by proxies and other middle-boxes, including replacing or entirely dropping existing values. These fields should not be covered by the signature except in very limited and tightly-coupled scenarios.
 
 Additional considerations for choosing signature aspects are discussed in {{application}}.
 
-## Confusing HTTP Field Names for Derived Component Identifiers {#security-lazy-header-parser}
+## Confusing HTTP Field Names for Derived Component Names {#security-lazy-header-parser}
 
-The definition of HTTP field names does not allow for the use of the `@` character anywhere in the name. As such, since all derived component identifiers start with the `@` character, these namespaces should be completely separate. However, some HTTP implementations are not sufficiently strict about the characters accepted in HTTP headers. In such implementations, a sender (or attacker) could inject a header field starting with an `@` character and have it passed through to the application code. These invalid header fields could be used to override a portion of the derived message content and substitute an arbitrary value, providing a potential place for an attacker to mount a [signature collision](#security-collision) attack.
+The definition of HTTP field names does not allow for the use of the `@` character anywhere in the name. As such, since all derived component names start with the `@` character, these namespaces should be completely separate. However, some HTTP implementations are not sufficiently strict about the characters accepted in HTTP headers. In such implementations, a sender (or attacker) could inject a header field starting with an `@` character and have it passed through to the application code. These invalid header fields could be used to override a portion of the derived message content and substitute an arbitrary value, providing a potential place for an attacker to mount a [signature collision](#security-collision) attack.
 
-To combat this, when selecting values for a message component, if the component identifier starts with the `@` character, it needs to be processed as a derived component and never taken as a fields. Only if the component identifier does not start with the `@` character can it be taken from the fields of the message. The algorithm discussed in {{create-sig-input}} provides a safe order of operations.
+To combat this, when selecting values for a message component, if the component name starts with the `@` character, it needs to be processed as a derived component and never taken as a fields. Only if the component name does not start with the `@` character can it be taken from the fields of the message. The algorithm discussed in {{create-sig-input}} provides a safe order of operations.
 
 ## Non-deterministic Signature Primitives {#security-nondeterministic}
 
