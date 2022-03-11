@@ -100,7 +100,7 @@ For example:
 CDN-Cache-Control: max-age=60
 ~~~
 
-is a targeted field that applies to content delivery networks (CDNs), as defined in {{cdn-cache-control}}.
+is a targeted field that applies to CDNs, as defined in {{cdn-cache-control}}.
 
 
 ## Syntax
@@ -136,7 +136,7 @@ When a cache that implements this specification receives a response with one or 
 
 Note that this occurs on a response-by-response basis; if no member of the cache's target list is present, valid, and non-empty, a cache falls back to other cache control mechanisms as required by HTTP {{HTTP-CACHING}}.
 
-Targeted fields that are not on a cache's target list MUST NOT change that cache's behavior, and MUST be passed through.
+Targeted fields that are not on a cache's target list MUST NOT change that cache's behavior and MUST be passed through.
 
 Caches that use a targeted field MUST implement the semantics of the following cache directives:
 
