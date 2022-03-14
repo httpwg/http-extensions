@@ -84,9 +84,9 @@ informative:
 --- abstract
 
 This document defines HTTP fields that support integrity digests. The
-Representation-Digest field can be used for the integrity of HTTP
+Repr-Digest field can be used for the integrity of HTTP
 representations. The Content-Digest field can be used for the integrity of
-HTTP message content. Want-Representation-Digest and Want-Content-Digest can be
+HTTP message content. Want-Repr-Digest and Want-Content-Digest can be
 used to indicate a sender's interest and preferences for receiving the respective
 Integrity fields.
 
@@ -126,14 +126,14 @@ fields; see {{obsolete-3230}}.
 
 This document is structured as follows:
 
-- {{representation-digest}} defines the Representation-Digest request and response header and trailer field,
+- {{representation-digest}} defines the Repr-Digest request and response header and trailer field,
 - {{content-digest}} defines the Content-Digest request and response header and trailer field,
-- {{want-fields}} defines the Want-Representation-Digest and Want-Content-Digest request and response header and
+- {{want-fields}} defines the Want-Repr-Digest and Want-Content-Digest request and response header and
   trailer field,
 - {{algorithms}} describes algorithms and their relation to the fields defined in this document,
 - {{state-changing-requests}} details computing representation digests,
 - {{examples-unsolicited}} and {{examples-solicited}} provide examples of using
-  Representation-Digest and Want-Representation-Digest.
+  Repr-Digest and Want-Repr-Digest.
 
 ## Concept Overview
 
@@ -148,10 +148,10 @@ Selecting the data on which digests are calculated depends on the use case of
 HTTP messages. This document provides different headers for HTTP representation
 data and HTTP content.
 
-This document defines the `Representation-Digest` request and response header
+This document defines the `Repr-Digest` request and response header
 and trailer field ({{representation-digest}}) that contains a digest value
 computed by applying a hashing algorithm to "selected representation data"
-({{Section 3.2 of SEMANTICS}}). Basing `Representation-Digest` on the selected
+({{Section 3.2 of SEMANTICS}}). Basing `Repr-Digest` on the selected
 representation makes it straightforward to apply it to use-cases where the
 transferred data requires some sort of manipulation to be considered a
 representation or conveys a partial representation of a resource, such as Range
@@ -162,14 +162,14 @@ required. The `Content-Digest` request and response header and trailer field is
 defined to support digests of content ({{Section 3.2 of SEMANTICS}}); see
 {{content-digest}}.
 
-`Representation-Digest` and `Content-Digest` support hashing algorithm agility.
-The `Want-Representation-Digest` and `Want-Content-Digest` fields allows
-endpoints to express interest in `Representation-Digest` and `Content-Digest`
+`Repr-Digest` and `Content-Digest` support hashing algorithm agility.
+The `Want-Repr-Digest` and `Want-Content-Digest` fields allows
+endpoints to express interest in `Repr-Digest` and `Content-Digest`
 respectively, and preference of algorithms in either.
 
-`Representation-Digest` and `Content-Digest` are collectively termed
+`Repr-Digest` and `Content-Digest` are collectively termed
 Integrity fields.
-`Want-Representation-Digest` and `Want-Content-Digest`are
+`Want-Repr-Digest` and `Want-Content-Digest`are
 collectively termed Integrity preference fields.
 
 Integrity fields are tied to the `Content-Encoding`
@@ -212,7 +212,7 @@ have names that more clearly articulate the intended usages.
 This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405].
 
-This document uses the Boolean, Byte Sequence, 
+This document uses the Boolean, Byte Sequence,
 Dictionary, Integer and List types from
 {{!STRUCTURED-FIELDS=RFC8941}} along with
 the sf-dictionary and sf-list ABNF rules.
@@ -228,13 +228,13 @@ The term "checksum" describes the output of the application of an algorithm
 to a sequence of bytes,
 whereas "digest" is only used in relation to the value contained in the fields.
 
-Integrity fields: collective term for `Representation-Digest` and `Content-Digest`
+Integrity fields: collective term for `Repr-Digest` and `Content-Digest`
 
-Integrity preference fields: collective term for `Want-Representation-Digest` and `Want-Content-Digest`
+Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Content-Digest`
 
-# The Representation-Digest Field {#representation-digest}
+# The Repr-Digest Field {#representation-digest}
 
-The `Representation-Digest` HTTP field can be used in requests and responses to
+The `Repr-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
 the entire "selected representation data" (see {{Section 8.1 of SEMANTICS}}).
 
@@ -249,7 +249,7 @@ When a message has no "representation data" it is still possible to assert that 
 "representation data" was sent by computing the digest on an empty
 string (see {{usage-in-signatures}}).
 
-`Representation-Digest` is a Structured Fields `Dictionary` (see {{Section 3.2 of
+`Repr-Digest` is a Structured Fields `Dictionary` (see {{Section 3.2 of
 STRUCTURED-FIELDS}}) where:
 
 * keys convey the hashing algorithm (see {{algorithms}})
@@ -258,7 +258,7 @@ STRUCTURED-FIELDS}}) where:
   which contain the output of the digest calculation.
 
 ~~~ abnf
-Representation-Digest   = sf-dictionary
+Repr-Digest   = sf-dictionary
 ~~~
 
 
@@ -267,7 +267,7 @@ For example:
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Representation-Digest: \
+Repr-Digest: \
   sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 ~~~
@@ -280,7 +280,7 @@ support transitions away from weaker algorithms (see {{sec-agility}}).
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Representation-Digest: \
+Repr-Digest: \
   sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
   sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
@@ -294,11 +294,11 @@ A sender MAY send a digest without knowing whether the
 recipient supports a given hashing algorithm, or even knowing that the recipient
 will ignore it.
 
-`Representation-Digest` can be sent in a trailer section.
+`Repr-Digest` can be sent in a trailer section.
 In this case,
-`Representation-Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
+`Repr-Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
 
-## Using Representation-Digest in State-Changing Requests {#state-changing-requests}
+## Using Repr-Digest in State-Changing Requests {#state-changing-requests}
 
 When the representation enclosed in a state-changing request
 does not describe the target resource,
@@ -310,18 +310,18 @@ representation metadata (see {{representation-digest}}).
 In responses,
 
 - if the representation describes the status of the request,
-  `Representation-Digest` MUST be computed on the enclosed representation
+  `Repr-Digest` MUST be computed on the enclosed representation
    (see {{post-referencing-status}} );
 
 - if there is a referenced resource
-  `Representation-Digest` MUST be computed on the selected representation of the referenced resource
+  `Repr-Digest` MUST be computed on the selected representation of the referenced resource
    even if that is different from the target resource.
-   That might or might not result in computing `Representation-Digest` on the enclosed representation.
+   That might or might not result in computing `Repr-Digest` on the enclosed representation.
 
 The latter case is done according to the HTTP semantics of the given
 method, for example using the `Content-Location` header field (see {{Section 8.7 of
 SEMANTICS}}).
-In contrast, the `Location` header field does not affect `Representation-Digest` because
+In contrast, the `Location` header field does not affect `Repr-Digest` because
 it is not representation metadata.
 
 For example, in `PATCH` requests, the representation digest
@@ -331,11 +331,11 @@ to the target resource (see {{Section 2 of PATCH}}).
 In responses, instead, the representation digest will be computed on the selected
 representation of the patched resource.
 
-## Representation-Digest and Content-Location in Responses {#digest-and-content-location}
+## Repr-Digest and Content-Location in Responses {#digest-and-content-location}
 
 When a state-changing method returns the `Content-Location` header field, the
 enclosed representation refers to the resource identified by its value and
-`Representation-Digest` is computed accordingly.
+`Repr-Digest` is computed accordingly.
 An example is given in {{post-not-request-uri}}.
 
 
@@ -374,7 +374,7 @@ support transitions away from weaker algorithms (see {{sec-agility}}).
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Representation-Digest: \
+Repr-Digest: \
   sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
   sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
@@ -396,18 +396,18 @@ In this case,
 
 Senders can indicate their interest in Integrity fields and hashing algorithm
 preferences using the
-`Want-Representation-Digest` or `Want-Content-Digest` fields. These can be used in both
+`Want-Repr-Digest` or `Want-Content-Digest` fields. These can be used in both
 requests and responses.
 
-`Want-Representation-Digest` indicates the sender's desire to receive a representation digest
+`Want-Repr-Digest` indicates the sender's desire to receive a representation digest
 on messages associated with the request URI and representation metadata, using
-the `Representation-Digest` field.
+the `Repr-Digest` field.
 
 `Want-Content-Digest` indicates the sender's desire to receive a content digest
 on messages associated with the request URI and representation metadata, using
 the `Content-Digest` field.
 
-`Want-Representation-Digest` and `Want-Content-Digest` are Structured Fields
+`Want-Repr-Digest` and `Want-Content-Digest` are Structured Fields
 Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
 
 * keys convey the hashing algorithm (see {{algorithms}});
@@ -418,7 +418,7 @@ Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
   Values convey an ascending, relative, weighted preference.
 
 ~~~ abnf
-   Want-Representation-Digest = sf-dictionary
+   Want-Repr-Digest = sf-dictionary
    Want-Content-Digest = sf-dictionary
 ~~~
 
@@ -426,8 +426,8 @@ Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
 Examples:
 
 ~~~ http-message
-Want-Representation-Digest: sha-256=1
-Want-Representation-Digest: sha-512=3, sha-256=10, unixsum=0
+Want-Repr-Digest: sha-256=1
+Want-Repr-Digest: sha-512=3, sha-256=10, unixsum=0
 Want-Content-Digest: sha-256=1
 Want-Content-Digest: sha-512=3, sha-256=10, unixsum=0
 ~~~
@@ -445,7 +445,7 @@ Required policy ({{Section 4.6 of !RFC8126}}).
 Registrations MUST include the following fields:
 
  - Algorithm Key: the Structured Fields key value used in
-   `Representation-Digest`, `Content-Digest`, `Want-Representation-Digest` or
+   `Repr-Digest`, `Content-Digest`, `Want-Repr-Digest` or
     `Want-Content-Digest` field Dictionary member keys
  - Status: the status of the algorithm.
      Use "standard" for standardized algorithms without known problems;
@@ -568,7 +568,7 @@ As there is no negotiation, endpoints that depend on a digest for security
 will be vulnerable to attacks on the weakest algorithm they are willing to accept.
 
 Transition from weak algorithms is supported
-by negotiation of hashing algorithm using `Want-Representation-Digest` or `Want-Content-Digest` (see {{want-fields}})
+by negotiation of hashing algorithm using `Want-Repr-Digest` or `Want-Content-Digest` (see {{want-fields}})
 or by sending multiple digests from which the receiver chooses.
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{representation-digest}}).
@@ -594,16 +594,16 @@ IANA is asked to update the
 "Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
 ({{SEMANTICS}}) according to the table below:
 
-|--------------------------------|-----------|----------------------------------------------------------------|
-| Field Name                     | Status    |                     Reference                                  |
-|--------------------------------|-----------|----------------------------------------------------------------|
-| Representation-Digest          | permanent | {{representation-digest}} of this document                     |
-| Content-Digest                 | permanent | {{content-digest}} of this document                            |
-| Want-Representation-Digest     | permanent | {{want-fields}} of this document                               |
-| Want-Content-Digest            | permanent | {{want-fields}} of this document                               |
-| Digest                         | obsoleted | [RFC3230], {{obsolete-3230}} of this document                  |
-| Want-Digest                    | obsoleted | [RFC3230], {{obsolete-3230}} of this document                  |
-|--------------------------------|-----------|----------------------------------------------------------------|
+|---------------------|-----------|-----------------------------------------------|
+| Field Name          | Status    |                     Reference                 |
+|---------------------|-----------|-----------------------------------------------|
+| Repr-Digest         | permanent | {{representation-digest}} of this document    |
+| Content-Digest      | permanent | {{content-digest}} of this document           |
+| Want-Repr-Digest    | permanent | {{want-fields}} of this document              |
+| Want-Content-Digest | permanent | {{want-fields}} of this document              |
+| Digest              | obsoleted | [RFC3230], {{obsolete-3230}} of this document |
+| Want-Digest         | obsoleted | [RFC3230], {{obsolete-3230}} of this document |
+|---------------------|-----------|-----------------------------------------------|
 
 
 ## Establish the Hash Algorithms for HTTP Digest Fields Registry {#establish-hash-algorithm-registry}
@@ -725,8 +725,8 @@ Location: /authors/123
 # Examples of Unsolicited Digest {#examples-unsolicited}
 
 The following examples demonstrate interactions where a server responds with a
-`Representation-Digest` or `Content-Digest` fields even though the client did not solicit one using
-`Want-Representation-Digest` or `Want-Content-Digest`.
+`Repr-Digest` or `Content-Digest` fields even though the client did not solicit one using
+`Want-Repr-Digest` or `Want-Content-Digest`.
 
 Some examples include JSON objects in the content.
 For presentation purposes, objects that fit completely within the line-length limits
@@ -738,12 +738,12 @@ Checksum mechanisms defined in this document are media-type agnostic
 and do not provide canonicalization algorithms for specific formats.
 Examples are calculated inclusive of any space.
 While examples can include both fields,
-`Representation-Digest` and `Content-Digest` can be returned independently.
+`Repr-Digest` and `Content-Digest` can be returned independently.
 
 ## Server Returns Full Representation Data {#example-full-representation}
 
 In this example, the message content conveys complete representation data.
-This means that in the response, `Representation-Digest` and `Content-Digest`
+This means that in the response, `Repr-Digest` and `Content-Digest`
 are both computed over the JSON object `{"hello": "world"}`, and thus have the same value.
 
 ~~~ http-message
@@ -758,21 +758,21 @@ NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: \
+Repr-Digest: \
   sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 Content-Digest: \
   sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
-{: title="Response with identical Representation-Digest and Content-Digest"}
+{: title="Response with identical Repr-Digest and Content-Digest"}
 
 ## Server Returns No Representation Data
 
 In this example, a HEAD request is used to retrieve the checksum
 of a resource.
 
-The response `Representation-Digest` field-value is calculated over the JSON object
+The response `Repr-Digest` field-value is calculated over the JSON object
 `{"hello": "world"}`, which is not shown because there is no payload
 data.
 `Content-Digest` is computed on empty content.
@@ -789,7 +789,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: \
+Repr-Digest: \
   sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 Content-Digest: \
   sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:
@@ -816,25 +816,22 @@ NOTE: '\' line wrapping per RFC 8792
 HTTP/1.1 206 Partial Content
 Content-Type: application/json
 Content-Range: bytes 1-7/18
-Representation-Digest: \
+Repr-Digest: \
   sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 Content-Digest: \
   sha-256=:Wqdirjg/u3J688ejbUlApbjECpiUUtIwT8lY/z81Tno=:
 
 "hello"
 ~~~
-{: title="Partial response with both Content-Digest and Representation-Digest"}
+{: title="Partial response with both Content-Digest and Repr-Digest"}
 
 In the response message above, note that the
-`Representation-Digest` and `Content-Digests` are different.
-The `Representation-Digest` field-value is calculated across the entire JSON object
+`Repr-Digest` and `Content-Digests` are different.
+The `Repr-Digest` field-value is calculated across the entire JSON object
 `{"hello": "world"}`, and the field is
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
-Representation-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:`
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 ~~~
 
 However, since the message content is constrained to bytes 1-7,
@@ -850,41 +847,35 @@ Content-Digest: \
 
 ## Client and Server Provide Full Representation Data
 
-The request contains a `Representation-Digest` field-value calculated on the enclosed
+The request contains a `Repr-Digest` field-value calculated on the enclosed
 representation. It also includes an `Accept-Encoding: br` header field that advertises the
 client supports Brotli encoding.
 
 The response includes a `Content-Encoding: br` that indicates the selected
-representation is Brotli-encoded. The `Representation-Digest` field-value is therefore
+representation is Brotli-encoded. The `Repr-Digest` field-value is therefore
 different compared to the request.
 
 For presentation purposes, the response body is displayed as a Base64-encoded string because it contains
 non-printable characters.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Representation-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
 {: title="PUT Request with Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Location: /items/123
 Content-Encoding: br
 Content-Length: 22
-Representation-Digest: \
-  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
+Repr-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
@@ -893,36 +884,30 @@ iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 
 ## Client Provides Full Representation Data, Server Provides No Representation Data
 
-The request `Representation-Digest` field-value is calculated on the enclosed payload.
+The request `Repr-Digest` field-value is calculated on the enclosed payload.
 
-The response `Representation-Digest` field-value
+The response `Repr-Digest` field-value
 depends on the representation metadata header fields, including
 `Content-Encoding: br` even when the response does not contain content.
 
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Content-Length: 18
 Accept-Encoding: br
-Representation-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
 {: title="PUT Request with Digest}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 204 No Content
 Content-Type: application/json
 Content-Encoding: br
-Representation-Digest: \
-  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
+Repr-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
 ~~~
 {: title="Empty response with Digest"}
@@ -935,14 +920,11 @@ As the response body contains non-printable characters, it is displayed as a
 base64-encoded string.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Representation-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -955,7 +937,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Encoding: br
 Content-Location: /items/123
-Representation-Digest: \
+Repr-Digest: \
   sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
   sha-512=:pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE60jBCwnMPyA/\
   s3NF3ZO5oIWA7lf8ukk+5KJzm3p5og==:
@@ -966,36 +948,30 @@ iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 
 ## POST Response does not Reference the Request URI {#post-not-request-uri}
 
-The request `Representation-Digest` field-value is computed on the enclosed representation (see
+The request `Repr-Digest` field-value is computed on the enclosed representation (see
 {{state-changing-requests}}).
 
 The representation enclosed in the response refers to the resource identified by
-`Content-Location` (see {{Section 6.4.2 of SEMANTICS}}). `Representation-Digest` is thus computed on the enclosed representation.
+`Content-Location` (see {{Section 6.4.2 of SEMANTICS}}). `Repr-Digest` is thus computed on the enclosed representation.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
-Representation-Digest: \
-  sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 
 {"title": "New Title"}
 ~~~
 {: title="POST Request with Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 201 Created
 Content-Type: application/json
 Content-Location: /books/123
 Location: /books/123
-Representation-Digest: \
-  sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
+Repr-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
 
 {
   "id": "123",
@@ -1005,42 +981,36 @@ Representation-Digest: \
 {: title="Response with Digest of Resource"}
 
 Note that a `204 No Content` response without content but with the same
-`Representation-Digest` field-value would have been legitimate too.
+`Repr-Digest` field-value would have been legitimate too.
 In that case, `Content-Digest` would have been computed on an empty content.
 
 ## POST Response Describes the Request Status {#post-referencing-status}
 
-The request `Representation-Digest` field-value is computed on the enclosed representation (see
+The request `Repr-Digest` field-value is computed on the enclosed representation (see
 {{state-changing-requests}}).
 
 The representation enclosed in the response describes the status of the request,
-so `Representation-Digest` is computed on that enclosed representation.
+so `Repr-Digest` is computed on that enclosed representation.
 
-Response `Representation-Digest` has no explicit relation with the resource referenced by
+Response `Repr-Digest` has no explicit relation with the resource referenced by
 `Location`.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 POST /books HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
-Representation-Digest: \
-  sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 
 {"title": "New Title"}
 ~~~
 {: title="POST Request with Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 201 Created
 Content-Type: application/json
-Representation-Digest: \
-  sha-256=:2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=:
+Repr-Digest: sha-256=:2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=:
 Location: /books/123
 
 {
@@ -1061,34 +1031,28 @@ effective request URI.
 The PATCH request uses the `application/merge-patch+json` media type defined in
 {{?RFC7396}}.
 
-`Representation-Digest` is calculated on the enclosed payload, which corresponds to the patch
+`Repr-Digest` is calculated on the enclosed payload, which corresponds to the patch
 document.
 
-The response `Representation-Digest` field-value is computed on the complete representation of the patched
+The response `Repr-Digest` field-value is computed on the complete representation of the patched
 resource.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 PATCH /books/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/merge-patch+json
 Accept: application/json
 Accept-Encoding: identity
-Representation-Digest: \
-  sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 
 {"title": "New Title"}
 ~~~
 {: #fig-patch title="PATCH Request with Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: \
-  sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
+Repr-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
 
 {
   "id": "123",
@@ -1098,7 +1062,7 @@ Representation-Digest: \
 {: title="Response with Digest of Representation"}
 
 Note that a `204 No Content` response without content but with the same
-`Representation-Digest` field-value would have been legitimate too.
+`Repr-Digest` field-value would have been legitimate too.
 
 ## Error responses
 
@@ -1110,15 +1074,12 @@ patch the resource located at /books/123. However, the resource does not exist
 and the server generates a 404 response with a body that describes the error in
 accordance with {{?RFC7807}}.
 
-The response `Representation-Digest` field-value is computed on this enclosed representation.
+The response `Repr-Digest` field-value is computed on this enclosed representation.
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 404 Not Found
 Content-Type: application/problem+json
-Representation-Digest: \
-  sha-256=:KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=:
+Repr-Digest: sha-256=:KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=:
 
 {
   "title": "Not Found",
@@ -1130,9 +1091,9 @@ Representation-Digest: \
 
 ## Use with Trailer Fields and Transfer Coding
 
-An origin server sends `Representation-Digest` as trailer field, so it can calculate digest-value
+An origin server sends `Repr-Digest` as trailer field, so it can calculate digest-value
 while streaming content and thus mitigate resource consumption.
-The `Representation-Digest` field-value is the same as in {{example-full-representation}} because `Representation-Digest` is designed to
+The `Repr-Digest` field-value is the same as in {{example-full-representation}} because `Repr-Digest` is designed to
 be independent from the use of one or more transfer codings (see {{representation-digest}}).
 
 ~~~ http-message
@@ -1143,8 +1104,6 @@ Host: foo.example
 {: title="GET Request"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -1157,17 +1116,16 @@ Trailer: Digest
 2\r\n
 "}\r\n
 0\r\n
-Representation-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 ~~~
 {: title="Chunked Response with Digest"}
 
 
-# Examples of Want-Representation-Digest Solicited Digest {#examples-solicited}
+# Examples of Want-Repr-Digest Solicited Digest {#examples-solicited}
 
 The following examples demonstrate interactions where a client solicits a
-`Representation-Digest` using `Want-Representation-Digest`.
+`Repr-Digest` using `Want-Repr-Digest`.
 The behavior of `Content-Digest` and `Want-Content-Digest` is identical.
 
 Some examples include JSON objects in the content.
@@ -1188,18 +1146,15 @@ The client requests a digest, preferring "sha". The server is free to reply with
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
-Want-Representation-Digest: sha-256=3, sha=10
+Want-Repr-Digest: sha-256=3, sha=10
 
 ~~~
-{: title="GET Request with Want-Representation-Digest"}
+{: title="GET Request with Want-Repr-Digest"}
 
 ~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -1214,17 +1169,17 @@ digest, it instead uses a different algorithm.
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
-Want-Representation-Digest: sha=10
+Want-Repr-Digest: sha=10
 
 ~~~
-{: title="GET Request with Want-Representation-Digest"}
+{: title="GET Request with Want-Repr-Digest"}
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Representation-Digest: \
+Repr-Digest: \
   sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
 
@@ -1238,7 +1193,7 @@ Representation-Digest: \
 the client's preferred digest algorithm. Alternatively a server can also reject
 the request and return an error.
 
-In this example, the client requests a "sha" `Representation-Digest`, and the server returns an
+In this example, the client requests a "sha" `Repr-Digest`, and the server returns an
 error with problem details {{?RFC7807}} contained in the content. The problem
 details contain a list of the hashing algorithms that the server supports. This
 is purely an example, this specification does not define any format or
@@ -1247,10 +1202,10 @@ requirements for such content.
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
-Want-Representation-Digest: sha=10
+Want-Repr-Digest: sha=10
 
 ~~~
-{: title="GET Request with Want-Representation-Digest"}
+{: title="GET Request with Want-Repr-Digest"}
 
 ~~~ http-message
 HTTP/1.1 400 Bad Request
@@ -1291,7 +1246,7 @@ and Erik Wilde.
 
 _RFC Editor: Please remove this section before publication._
 
-How can I generate and validate the `Representation-Digest` values shown in the examples
+How can I generate and validate the `Repr-Digest` values shown in the examples
 throughout this document?
 
 The following python3 code can be used to generate digests for JSON objects
