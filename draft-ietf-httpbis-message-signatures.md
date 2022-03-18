@@ -877,7 +877,7 @@ Content-Length: 18
 {"hello": "world"}
 ~~~
 
-The covered components consist of the `@method`, `@path`, and `@authority` derived component identifiers followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
+The covered components consist of the `@method`, `@authority`, and `@path` derived component identifiers followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
