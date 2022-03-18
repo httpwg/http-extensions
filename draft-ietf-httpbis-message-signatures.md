@@ -1201,7 +1201,7 @@ Multiple `Signature` fields MAY be included in a single HTTP message. The signat
 
 Multiple distinct signatures MAY be included in a single message. Each distinct signature MUST have a unique label. Since `Signature-Input` and `Signature` are both defined as Dictionary Structured fields, they can be used to include multiple signatures within the same HTTP message by using distinct signature labels. These multiple signatures could be added all by the same signer or could come from several different signers. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
 
-The following is a non-normative example starts with a signed request from the client. The proxy takes this request validates the client's signature.
+The following non-normative example starts with a signed request from the client. The proxy takes this request validates the client's signature.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
