@@ -976,10 +976,10 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
         HTTP Message Signatures registry, the verifier will use the referenced algorithm.
     3. If the algorithm can be determined from the keying material, such as through an algorithm field
         on the key value itself, the verifier will use this algorithm.
-    4. If the algorithm is specified in more that one location, such as through static configuration
+    4. If the algorithm is specified in more than one location, such as through static configuration
         and the algorithm signature parameter, or the algorithm signature parameter and from
         the key material itself, the resolved algorithms MUST be the same. If the algorithms are
-        not the same, the verifier MUST vail the verification.
+        not the same, the verifier MUST fail the verification.
 7. Use the received HTTP message and the signature's metadata to recreate the signature base, using
     the algorithm defined in {{create-sig-input}}. The value of the `@signature-params` input is
     the value of the `Signature-Input` field for this signature serialized according to the rules described
@@ -1193,7 +1193,7 @@ Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
   BNFv3r5S9IXf2fYJK+eyW4AiGVMvMcOg==:
 ~~~
 
-The signer MAY include the `Signature` field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the `Signature-Input` HTTP field be included only as a header to avoid signatures being inadvertently stripped from a message.
+The signer MAY include the `Signature` field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the `Signature` HTTP field be included only as a header to avoid signatures being inadvertently stripped from a message.
 
 Multiple `Signature` fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
 
@@ -1436,7 +1436,7 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 
 ## HTTP Signature Derived Component Identifiers Registry {#content-registry}
 
-This document defines a method for canonicalizing HTTP message components, including components that can be derived from the context of the HTTP message outside of the HTTP fields. These components are identified by a unique string, known as the component identifier. Component identifiers for derived components always start with the "@" (at) symbol to distinguish them from HTTP header fields. IANA is asked to create and maintain a new registry typed "HTTP Signature Derived Component Identifiers" to record and maintain the set of non-field component identifiers and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
+This document defines a method for canonicalizing HTTP message components, including components that can be derived from the context of the HTTP message outside of the HTTP fields. These components are identified by a unique string, known as the component identifier. Component identifiers for derived components always start with the "@" (at) symbol to distinguish them from HTTP header fields. IANA is asked to create and maintain a new registry titled "HTTP Signature Derived Component Identifiers" to record and maintain the set of non-field component identifiers and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
 
 ### Registration Template {#iana-content-template}
 
