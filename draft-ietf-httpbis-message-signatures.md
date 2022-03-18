@@ -1341,7 +1341,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 Accept-Signature: sig1=("@method" "@target-uri" "@authority" \
   "content-digest" "cache-control");\
-  created=1618884475;keyid="test-key-rsa-pss"
+  keyid="test-key-rsa-pss"
 ~~~
 
 The requested signature MAY include parameters, such as a desired algorithm or key identifier. These parameters MUST NOT include parameters that the signer is expected to generate, including the `created` and `nonce` parameters.
