@@ -689,7 +689,7 @@ POST /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
 Host: www.example.com
 ~~~
 
-Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` value:
+Indicating the `baz`, `qux` and `param` named query parameters would result in the following `@query-param` value:
 
 ~~~
 "@query-params";name="baz": batman
