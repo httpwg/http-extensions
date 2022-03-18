@@ -520,7 +520,7 @@ Would result in the following `@authority` component value:
 
 If used in a related-response, the `@authority` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
-The `@authority` derived component SHOULD be used instead signing the `Host` header directly, see {{security-not-fields}}.
+The `@authority` derived component SHOULD be used instead of signing the `Host` header directly, see {{security-not-fields}}.
 
 ### Scheme {#content-request-scheme}
 
