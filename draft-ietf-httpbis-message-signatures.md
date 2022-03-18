@@ -461,7 +461,7 @@ Note that an HTTP message could contain [multiple signatures](#signature-multipl
 
 ### Method {#content-request-method}
 
-The `@method` component identifier refers to the HTTP method of a request message. The component value of is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
+The `@method` component identifier refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
 If used, the `@method` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
