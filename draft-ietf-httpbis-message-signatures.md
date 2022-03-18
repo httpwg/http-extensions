@@ -303,7 +303,7 @@ key
 
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
 
-If value of the the HTTP field in question is a structured field ({{!RFC8941}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
+If the value of the the HTTP field in question is a structured field ({{!RFC8941}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
 parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of RFC8941}} applicable to the type of the HTTP field. Note that this process
 will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
 
