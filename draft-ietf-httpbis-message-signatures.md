@@ -471,7 +471,7 @@ POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@method` value:
+Would result in the following `@method` component value:
 
 ~~~
 "@method": POST
@@ -491,7 +491,7 @@ POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@target-uri` value:
+Would result in the following `@target-uri` component value:
 
 ~~~
 "@target-uri": https://www.example.com/path?param=value
@@ -536,7 +536,7 @@ POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@scheme` value:
+Would result in the following `@scheme` component value:
 
 ~~~
 "@scheme": http
@@ -621,7 +621,7 @@ POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@path` value:
+Would result in the following `@path` component value:
 
 ~~~
 "@path": /path
@@ -641,7 +641,7 @@ POST /path?param=value&foo=bar&baz=batman HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@query` value:
+Would result in the following `@query` component value:
 
 ~~~
 "@query": ?param=value&foo=bar&baz=batman
@@ -654,7 +654,7 @@ POST /path?queryString HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@query` value:
+Would result in the following `@query` component value:
 
 ~~~
 "@query": ?queryString
@@ -689,7 +689,7 @@ POST /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
 Host: www.example.com
 ~~~
 
-Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` value:
+Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` component value:
 
 ~~~
 "@query-params";name="baz": batman
@@ -714,7 +714,7 @@ HTTP/1.1 200 OK
 Date: Fri, 26 Mar 2010 00:05:00 GMT
 ~~~
 
-Would result in the following `@status` value:
+Would result in the following `@status` component value:
 
 ~~~
 "@status": 200
