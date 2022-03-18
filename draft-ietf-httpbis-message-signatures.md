@@ -1636,7 +1636,7 @@ When processing such fields, the signer and verifier have to agree how to handle
 
 If a signer uses the same key with multiple verifiers, or uses the same key over time with a single verifier, the ongoing use of that key can be used to track the signer throughout the set of verifiers that messages are sent to. Since cryptographic keys are meant to be functionally unique, the use of the same key over time is a strong indicator that it is the same party signing multiple messages.
 
-In many applications, this is a desirable trait, and it allows HTTP Message Signatures to be used as part of authenticating the signer to the verifier. However, unintentional tracking that a signer might not be aware of. To counter this kind of tracking, a signer can use a different key for each verifier that it is in communication with. Sometimes, a signer could also rotate their key when sending messages to a given verifier. These approaches do not negate the need for other anti-tracking techniques to be applied as necessary.
+In many applications, this is a desirable trait, and it allows HTTP Message Signatures to be used as part of authenticating the signer to the verifier. However, it could be unintentional tracking that a signer might not be aware of. To counter this kind of tracking, a signer can use a different key for each verifier that it is in communication with. Sometimes, a signer could also rotate their key when sending messages to a given verifier. These approaches do not negate the need for other anti-tracking techniques to be applied as necessary.
 
 ## Signatures do not provide confidentiality {#privacy-confidentiality}
 
