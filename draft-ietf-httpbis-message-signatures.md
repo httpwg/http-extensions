@@ -1917,7 +1917,7 @@ Note that the RSA PSS algorithm in use here is non-deterministic, meaning a diff
 
 ### Full Coverage using rsa-pss-sha512
 
-This example covers all applicable in `test-request` (including the content type and length) plus many derived components, again using the `rsa-pss-sha512` algorithm. Note that the `Host` header field is not covered because the `@authority` derived component is included instead.
+This example covers all applicable message components in `test-request` (including the content type and length) plus many derived components, again using the `rsa-pss-sha512` algorithm. Note that the `Host` header field is not covered because the `@authority` derived component is included instead.
 
 The corresponding signature base is:
 
