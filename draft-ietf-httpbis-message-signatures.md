@@ -1016,7 +1016,7 @@ Signature: sig1=:HIbjHC5rS0BYaa9v4QfD4193TORw7u9edguPh0AW3dMq9WImrl\
 {"hello": "world"}
 ~~~
 
-With the additional requirements that at least the method, path, authority, and cache-control be signed, and that the signature creation timestamp is recent enough at the time of verification, the verification passes.
+With the additional requirements that at least the method, authority, path, content-digest, content-length, and content-type be signed, and that the signature creation timestamp is recent enough at the time of verification, the verification passes.
 
 ### Enforcing Application Requirements {#verify-requirements}
 
