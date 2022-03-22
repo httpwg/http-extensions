@@ -471,7 +471,13 @@ POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@method` value:
+Would result in the following `@method` component value:
+
+~~~
+POST
+~~~
+
+And the following signature base line:
 
 ~~~
 "@method": POST
@@ -491,7 +497,13 @@ POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@target-uri` value:
+Would result in the following `@target-uri` component value:
+
+~~~
+https://www.example.com/path?param=value
+~~~
+
+And the following signature base line:
 
 ~~~
 "@target-uri": https://www.example.com/path?param=value
@@ -515,6 +527,12 @@ Host: www.example.com
 Would result in the following `@authority` component value:
 
 ~~~
+www.example.com
+~~~
+
+And the following signature base line:
+
+~~~
 "@authority": www.example.com
 ~~~
 
@@ -536,7 +554,13 @@ POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@scheme` value:
+Would result in the following `@scheme` component value:
+
+~~~
+http
+~~~
+
+And the following signature base line:
 
 ~~~
 "@scheme": http
@@ -566,6 +590,12 @@ Host: www.example.com
 Would result in the following `@request-target` component value:
 
 ~~~
+/path?param=value
+~~~
+
+And the following signature base line:
+
+~~~
 "@request-target": /path?param=value
 ~~~
 
@@ -576,6 +606,12 @@ GET https://www.example.com/path?param=value HTTP/1.1
 ~~~
 
 Would result in the following `@request-target` component value:
+
+~~~
+https://www.example.com/path?param=value
+~~~
+
+And the following signature base line:
 
 ~~~
 "@request-target": https://www.example.com/path?param=value
@@ -591,6 +627,12 @@ Host: www.example.com
 Would result in the following `@request-target` component value:
 
 ~~~
+www.example.com:80
+~~~
+
+And the following signature base line:
+
+~~~
 "@request-target": www.example.com:80
 ~~~
 
@@ -602,6 +644,12 @@ Host: www.example.com
 ~~~
 
 Would result in the following `@request-target` component value:
+
+~~~
+*
+~~~
+
+And the following signature base line:
 
 ~~~
 "@request-target": *
@@ -621,7 +669,13 @@ POST /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@path` value:
+Would result in the following `@path` component value:
+
+~~~
+/path
+~~~
+
+And the following signature base line:
 
 ~~~
 "@path": /path
@@ -641,7 +695,13 @@ POST /path?param=value&foo=bar&baz=batman HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@query` value:
+Would result in the following `@query` component value:
+
+~~~
+?param=value&foo=bar&baz=batman
+~~~
+
+And the following signature base line:
 
 ~~~
 "@query": ?param=value&foo=bar&baz=batman
@@ -654,13 +714,25 @@ POST /path?queryString HTTP/1.1
 Host: www.example.com
 ~~~
 
-Would result in the following `@query` value:
+Would result in the following `@query` component value:
+
+~~~
+?queryString
+~~~
+
+And the following signature base line:
 
 ~~~
 "@query": ?queryString
 ~~~
 
 If the query string is absent from the request message, the value is the leading `?` character alone:
+
+~~~
+?
+~~~
+
+Resulting in the following signature base line:
 
 ~~~
 "@query": ?
@@ -689,7 +761,15 @@ POST /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
 Host: www.example.com
 ~~~
 
-Indicating the `baz`, `qux` and `param` named query parameters would result in the following `@query-param` value:
+Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` component values:
+
+*baz:* `batman`
+
+*qux:* an empty string
+
+*param:* `value`
+
+And the following signature base lines:
 
 ~~~
 "@query-param";name="baz": batman
@@ -714,7 +794,13 @@ HTTP/1.1 200 OK
 Date: Fri, 26 Mar 2010 00:05:00 GMT
 ~~~
 
-Would result in the following `@status` value:
+Would result in the following `@status` component value:
+
+~~~
+200
+~~~
+
+And the following signature base line:
 
 ~~~
 "@status": 200
