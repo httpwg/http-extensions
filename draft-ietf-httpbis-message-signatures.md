@@ -385,8 +385,8 @@ This specification defines the following derived component identifiers:
 @query
 : The query portion of the target URI for a request. ({{content-request-query}})
 
-@query-params
-: The parsed query parameters of the target URI for a request. ({{content-request-query-params}})
+@query-param
+: A parsed query parameter of the target URI for a request. ({{content-request-query-param}})
 
 @status
 : The status code for a response. ({{content-status-code}}).
@@ -668,10 +668,10 @@ If the query string is absent from the request message, the value is the leading
 
 If used in a related-response, the `@query` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
-### Query Parameters {#content-request-query-params}
+### Query Parameters {#content-request-query-param}
 
 If a request target URI uses HTML form parameters in the query string as defined in [HTMLURL, Section 5](#HTMLURL),
-the `@query-params` component identifier allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
+the `@query-param` component identifier allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
 The REQUIRED `name` parameter of each input identifier contains the `nameString` of a single query parameter as an `sf-string` value.
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
@@ -692,15 +692,15 @@ Host: www.example.com
 Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` value:
 
 ~~~
-"@query-params";name="baz": batman
-"@query-params";name="qux":
-"@query-params";name="param": value
+"@query-param";name="baz": batman
+"@query-param";name="qux":
+"@query-param";name="param": value
 ~~~
 
 If a parameter name occurs multiple times in a request, all parameter values of that name MUST be included
 in separate signature base lines in the order in which the parameters occur in the target URI. Note that in some implementations, the order of parsed query parameters is not stable, and this situation could lead to unexpected results. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
 
-If used in a related-response, the `@query-params` component identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@query-param` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Status Code {#content-status-code}
 
@@ -1470,7 +1470,7 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 |`@request-target`| Active | Request, Related-Response | {{content-request-target}} of this document|
 |`@path`| Active | Request, Related-Response | {{content-request-path}} of this document|
 |`@query`| Active | Request, Related-Response | {{content-request-query}} of this document|
-|`@query-params`| Active | Request, Related-Response | {{content-request-query-params}} of this document|
+|`@query-param`| Active | Request, Related-Response | {{content-request-query-param}} of this document|
 |`@status`| Active | Response | {{content-status-code}} of this document|
 |`@request-response`|Active | Related-Response | {{content-request-response}} of this document|
 {: title="Initial contents of the HTTP Signature Derived Component Identifiers Registry." }
@@ -1598,7 +1598,7 @@ To counteract this, implementations should use fully compliant and trusted parse
 
 Applications of HTTP Message Signatures need to decide which message components will be covered by the signature. Depending on the application, some components could be expected to be changed by intermediaries prior to the signature's verification. If these components are covered, such changes would, by design, break the signature.
 
-However, the HTTP Message Signature standard allows for flexibility in determining which components are signed precisely so that a given application can choose the appropriate portions of the message that need to be signed, avoiding problematic components. For example, a web application framework that relies on rewriting query parameters might avoid use of the `@query` content identifier in favor of sub-indexing the query value using `@query-params` content identifier instead.
+However, the HTTP Message Signature standard allows for flexibility in determining which components are signed precisely so that a given application can choose the appropriate portions of the message that need to be signed, avoiding problematic components. For example, a web application framework that relies on rewriting query parameters might avoid use of the `@query` content identifier in favor of sub-indexing the query value using `@query-param` content identifier instead.
 
 Some components are expected to be changed by intermediaries and ought not to be signed under most circumstance. The `Via` and `Forwarded` header fields, for example, are expected to be manipulated by proxies and other middle-boxes, including replacing or entirely dropping existing values. These fields should not be covered by the signature except in very limited and tightly-coupled scenarios.
 
