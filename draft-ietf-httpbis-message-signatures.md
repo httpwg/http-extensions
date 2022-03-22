@@ -877,7 +877,7 @@ Content-Length: 18
 {"hello": "world"}
 ~~~
 
-The covered components consist of the `@method`, `@path`, and `@authority` derived component identifiers followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
+The covered components consist of the `@method`, `@authority`, and `@path` derived component identifiers followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -1016,7 +1016,7 @@ Signature: sig1=:HIbjHC5rS0BYaa9v4QfD4193TORw7u9edguPh0AW3dMq9WImrl\
 {"hello": "world"}
 ~~~
 
-With the additional requirements that at least the method, path, authority, and cache-control be signed, and that the signature creation timestamp is recent enough at the time of verification, the verification passes.
+With the additional requirements that at least the method, authority, path, content-digest, content-length, and content-type be signed, and that the signature creation timestamp is recent enough at the time of verification, the verification passes.
 
 ### Enforcing Application Requirements {#verify-requirements}
 
@@ -1341,7 +1341,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 Accept-Signature: sig1=("@method" "@target-uri" "@authority" \
   "content-digest" "cache-control");\
-  created=1618884475;keyid="test-key-rsa-pss"
+  keyid="test-key-rsa-pss"
 ~~~
 
 The requested signature MAY include parameters, such as a desired algorithm or key identifier. These parameters MUST NOT include parameters that the signer is expected to generate, including the `created` and `nonce` parameters.
