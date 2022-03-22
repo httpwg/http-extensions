@@ -385,8 +385,8 @@ This specification defines the following derived component identifiers:
 @query
 : The query portion of the target URI for a request. ({{content-request-query}})
 
-@query-params
-: The parsed query parameters of the target URI for a request. ({{content-request-query-params}})
+@query-param
+: A parsed query parameter of the target URI for a request. ({{content-request-query-param}})
 
 @status
 : The status code for a response. ({{content-status-code}}).
@@ -668,10 +668,10 @@ If the query string is absent from the request message, the value is the leading
 
 If used in a related-response, the `@query` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
-### Query Parameters {#content-request-query-params}
+### Query Parameters {#content-request-query-param}
 
 If a request target URI uses HTML form parameters in the query string as defined in [HTMLURL, Section 5](#HTMLURL),
-the `@query-params` component identifier allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
+the `@query-param` component identifier allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
 The REQUIRED `name` parameter of each component identifier contains the `nameString` of a single query parameter as an `sf-string` value.
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
@@ -692,15 +692,15 @@ Host: www.example.com
 Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` value:
 
 ~~~
-"@query-params";name="baz": batman
-"@query-params";name="qux":
-"@query-params";name="param": value
+"@query-param";name="baz": batman
+"@query-param";name="qux":
+"@query-param";name="param": value
 ~~~
 
 If a parameter name occurs multiple times in a request, all parameter values of that name MUST be included
 in separate signature base lines in the order in which the parameters occur in the target URI. Note that in some implementations, the order of parsed query parameters is not stable, and this situation could lead to unexpected results. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
 
-If used in a related-response, the `@query-params` component identifier refers to the associated component value of the request that triggered the response message being signed.
+If used in a related-response, the `@query-param` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Status Code {#content-status-code}
 
@@ -877,7 +877,7 @@ Content-Length: 18
 {"hello": "world"}
 ~~~
 
-The covered components consist of the `@method`, `@path`, and `@authority` derived component identifiers followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
+The covered components consist of the `@method`, `@authority`, and `@path` derived component identifiers followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -1016,7 +1016,7 @@ Signature: sig1=:HIbjHC5rS0BYaa9v4QfD4193TORw7u9edguPh0AW3dMq9WImrl\
 {"hello": "world"}
 ~~~
 
-With the additional requirements that at least the method, path, authority, and cache-control be signed, and that the signature creation timestamp is recent enough at the time of verification, the verification passes.
+With the additional requirements that at least the method, authority, path, content-digest, content-length, and content-type be signed, and that the signature creation timestamp is recent enough at the time of verification, the verification passes.
 
 ### Enforcing Application Requirements {#verify-requirements}
 
@@ -1341,7 +1341,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 Accept-Signature: sig1=("@method" "@target-uri" "@authority" \
   "content-digest" "cache-control");\
-  created=1618884475;keyid="test-key-rsa-pss"
+  keyid="test-key-rsa-pss"
 ~~~
 
 The requested signature MAY include parameters, such as a desired algorithm or key identifier. These parameters MUST NOT include parameters that the signer is expected to generate, including the `created` and `nonce` parameters.
@@ -1387,8 +1387,8 @@ Description:
 : A brief description of the algorithm used to sign the signature base.
 
 Specification document(s):
-: Reference to the document(s) that specify the token endpoint
-    authorization method, preferably including a URI that can be used
+: Reference to the document(s) that specify the
+    algorithm, preferably including a URI that can be used
     to retrieve a copy of the document(s).  An indication of the
     relevant sections may also be included but is not required.
 
@@ -1415,8 +1415,8 @@ Description:
 : A brief description of the metadata parameter and what it represents.
 
 Specification document(s):
-: Reference to the document(s) that specify the token endpoint
-    authorization method, preferably including a URI that can be used
+: Reference to the document(s) that specify the
+    parameter, preferably including a URI that can be used
     to retrieve a copy of the document(s).  An indication of the
     relevant sections may also be included but is not required.
 
@@ -1451,8 +1451,8 @@ Target:
 : The valid message targets for the derived parameter. MUST be one of the values "Request", "Request, Response", "Request, Related-Response", or "Related-Response". The semantics of these are defined in {{derived-components}}.
 
 Specification document(s):
-: Reference to the document(s) that specify the token endpoint
-    authorization method, preferably including a URI that can be used
+: Reference to the document(s) that specify the
+    derived component, preferably including a URI that can be used
     to retrieve a copy of the document(s).  An indication of the
     relevant sections may also be included but is not required.
 
@@ -1470,7 +1470,7 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 |`@request-target`| Active | Request, Related-Response | {{content-request-target}} of this document|
 |`@path`| Active | Request, Related-Response | {{content-request-path}} of this document|
 |`@query`| Active | Request, Related-Response | {{content-request-query}} of this document|
-|`@query-params`| Active | Request, Related-Response | {{content-request-query-params}} of this document|
+|`@query-param`| Active | Request, Related-Response | {{content-request-query-param}} of this document|
 |`@status`| Active | Response | {{content-status-code}} of this document|
 |`@request-response`|Active | Related-Response | {{content-request-response}} of this document|
 {: title="Initial contents of the HTTP Signature Derived Component Identifiers Registry." }
@@ -1598,7 +1598,7 @@ To counteract this, implementations should use fully compliant and trusted parse
 
 Applications of HTTP Message Signatures need to decide which message components will be covered by the signature. Depending on the application, some components could be expected to be changed by intermediaries prior to the signature's verification. If these components are covered, such changes would, by design, break the signature.
 
-However, the HTTP Message Signature standard allows for flexibility in determining which components are signed precisely so that a given application can choose the appropriate portions of the message that need to be signed, avoiding problematic components. For example, a web application framework that relies on rewriting query parameters might avoid use of the `@query` content identifier in favor of sub-indexing the query value using `@query-params` content identifier instead.
+However, the HTTP Message Signature standard allows for flexibility in determining which components are signed precisely so that a given application can choose the appropriate portions of the message that need to be signed, avoiding problematic components. For example, a web application framework that relies on rewriting query parameters might avoid use of the `@query` content identifier in favor of sub-indexing the query value using `@query-param` content identifier instead.
 
 Some components are expected to be changed by intermediaries and ought not to be signed under most circumstance. The `Via` and `Forwarded` header fields, for example, are expected to be manipulated by proxies and other middle-boxes, including replacing or entirely dropping existing values. These fields should not be covered by the signature except in very limited and tightly-coupled scenarios.
 
