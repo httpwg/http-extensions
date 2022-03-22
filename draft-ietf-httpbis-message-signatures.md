@@ -303,7 +303,7 @@ key
 
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
 
-If value of the the HTTP field in question is a structured field ({{!RFC8941}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
+If the value of the the HTTP field in question is a structured field ({{!RFC8941}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
 parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of RFC8941}} applicable to the type of the HTTP field. Note that this process
 will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
 
@@ -461,7 +461,7 @@ Note that an HTTP message could contain [multiple signatures](#signature-multipl
 
 ### Method {#content-request-method}
 
-The `@method` component identifier refers to the HTTP method of a request message. The component value of is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
+The `@method` component identifier refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
 If used, the `@method` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -520,7 +520,7 @@ Would result in the following `@authority` component value:
 
 If used in a related-response, the `@authority` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
-The `@authority` derived component SHOULD be used instead signing the `Host` header directly, see {{security-not-fields}}.
+The `@authority` derived component SHOULD be used instead of signing the `Host` header directly, see {{security-not-fields}}.
 
 ### Scheme {#content-request-scheme}
 
@@ -689,7 +689,7 @@ POST /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
 Host: www.example.com
 ~~~
 
-Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` value:
+Indicating the `baz`, `qux` and `param` named query parameters would result in the following `@query-param` value:
 
 ~~~
 "@query-param";name="baz": batman
@@ -1201,7 +1201,7 @@ Multiple `Signature` fields MAY be included in a single HTTP message. The signat
 
 Multiple distinct signatures MAY be included in a single message. Each distinct signature MUST have a unique label. Since `Signature-Input` and `Signature` are both defined as Dictionary Structured fields, they can be used to include multiple signatures within the same HTTP message by using distinct signature labels. These multiple signatures could be added all by the same signer or could come from several different signers. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
 
-The following is a non-normative example starts with a signed request from the client. The proxy takes this request validates the client's signature.
+The following non-normative example starts with a signed request from the client. The proxy takes this request validates the client's signature.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1636,7 +1636,7 @@ When processing such fields, the signer and verifier have to agree how to handle
 
 If a signer uses the same key with multiple verifiers, or uses the same key over time with a single verifier, the ongoing use of that key can be used to track the signer throughout the set of verifiers that messages are sent to. Since cryptographic keys are meant to be functionally unique, the use of the same key over time is a strong indicator that it is the same party signing multiple messages.
 
-In many applications, this is a desirable trait, and it allows HTTP Message Signatures to be used as part of authenticating the signer to the verifier. However, unintentional tracking that a signer might not be aware of. To counter this kind of tracking, a signer can use a different key for each verifier that it is in communication with. Sometimes, a signer could also rotate their key when sending messages to a given verifier. These approaches do not negate the need for other anti-tracking techniques to be applied as necessary.
+In many applications, this is a desirable trait, and it allows HTTP Message Signatures to be used as part of authenticating the signer to the verifier. However, it could be unintentional tracking that a signer might not be aware of. To counter this kind of tracking, a signer can use a different key for each verifier that it is in communication with. Sometimes, a signer could also rotate their key when sending messages to a given verifier. These approaches do not negate the need for other anti-tracking techniques to be applied as necessary.
 
 ## Signatures do not provide confidentiality {#privacy-confidentiality}
 
@@ -1917,7 +1917,7 @@ Note that the RSA PSS algorithm in use here is non-deterministic, meaning a diff
 
 ### Full Coverage using rsa-pss-sha512
 
-This example covers all applicable in `test-request` (including the content type and length) plus many derived components, again using the `rsa-pss-sha512` algorithm. Note that the `Host` header field is not covered because the `@authority` derived component is included instead.
+This example covers all applicable message components in `test-request` (including the content type and length) plus many derived components, again using the `rsa-pss-sha512` algorithm. Note that the `Host` header field is not covered because the `@authority` derived component is included instead.
 
 The corresponding signature base is:
 
