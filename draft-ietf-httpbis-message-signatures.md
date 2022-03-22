@@ -1387,8 +1387,8 @@ Description:
 : A brief description of the algorithm used to sign the signature base.
 
 Specification document(s):
-: Reference to the document(s) that specify the token endpoint
-    authorization method, preferably including a URI that can be used
+: Reference to the document(s) that specify the
+    algorithm, preferably including a URI that can be used
     to retrieve a copy of the document(s).  An indication of the
     relevant sections may also be included but is not required.
 
@@ -1415,8 +1415,8 @@ Description:
 : A brief description of the metadata parameter and what it represents.
 
 Specification document(s):
-: Reference to the document(s) that specify the token endpoint
-    authorization method, preferably including a URI that can be used
+: Reference to the document(s) that specify the
+    parameter, preferably including a URI that can be used
     to retrieve a copy of the document(s).  An indication of the
     relevant sections may also be included but is not required.
 
@@ -1451,8 +1451,8 @@ Target:
 : The valid message targets for the derived parameter. MUST be one of the values "Request", "Request, Response", "Request, Related-Response", or "Related-Response". The semantics of these are defined in {{derived-components}}.
 
 Specification document(s):
-: Reference to the document(s) that specify the token endpoint
-    authorization method, preferably including a URI that can be used
+: Reference to the document(s) that specify the
+    derived component, preferably including a URI that can be used
     to retrieve a copy of the document(s).  An indication of the
     relevant sections may also be included but is not required.
 
