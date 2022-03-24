@@ -277,7 +277,7 @@ The following example shows canonicalized values for these example header fields
 
 Since empty HTTP header fields are allowed, they are also able to be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header:
 
-~~~http-message
+~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
 X-Empty-Header: \
@@ -313,7 +313,7 @@ will replace any optional internal whitespace with a single space character, amo
 
 For example, the following dictionary field is a valid serialization:
 
-~~~http-message
+~~~ http-message
 Example-Dict:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
@@ -776,8 +776,11 @@ Indicating the `baz`, `qux` and `param` named query parameters in would result i
 And the following signature base lines:
 
 ~~~
+NOTE: '\' line wrapping per RFC 8792
+
 "@query-param";name="baz": batman
-"@query-param";name="qux":
+"@query-param";name="qux": \
+
 "@query-param";name="param": value
 ~~~
 
@@ -956,6 +959,8 @@ If covered components reference a component identifier that cannot be resolved t
 In the following non-normative example, the HTTP message being signed is the following request:
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
@@ -969,7 +974,7 @@ Content-Length: 18
 
 The covered components consist of the `@method`, `@authority`, and `@path` derived components followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
 
-~~~
+~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
 "@method": POST
@@ -1913,6 +1918,8 @@ This section provides non-normative examples that may be used as test cases to v
 For requests, this `test-request` message is used:
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
@@ -1927,6 +1934,8 @@ Content-Length: 18
 For responses, this `test-response` message is used:
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
