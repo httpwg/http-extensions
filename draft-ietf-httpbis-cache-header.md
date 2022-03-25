@@ -255,8 +255,11 @@ Registration requests should use the following template:
 Name:
 : \[a name for the Cache-Status parameter's key; see {{Section 3.1.2 of STRUCTURED-FIELDS}} for syntactic requirements\]
 
+Type:
+: \[the Structured Type of the parameter's value; see {{Section 3.1.2 of STRUCTURED-FIELDS}}\]
+
 Description:
-: \[a description of the parameter semantics and value\]
+: \[a description of the parameter's semantics\]
 
 Reference:
 : \[to a specification defining this parameter, if available\]
