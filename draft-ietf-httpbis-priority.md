@@ -1,5 +1,6 @@
 ---
 title: Extensible Prioritization Scheme for HTTP
+number: 9218
 abbrev: HTTP Priorities
 docname: draft-ietf-httpbis-priority-latest
 category: std
