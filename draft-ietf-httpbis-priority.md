@@ -118,13 +118,14 @@ signal their view of how responses should be prioritized. Similarly, servers
 behind an intermediary can use it to signal priority to the intermediary. After
 sending a request, a client can change their view of response priority (see
 {{reprioritization}}) by sending HTTP-version-specific frames as defined in
-{{h2-update-frame}} and {{h3-update-frame}}.
+Sections {{<h2-update-frame}} and {{<h3-update-frame}}.
 
 Header field and frame priority signals are input to a server's response
 prioritization process. They are only a suggestion and do not guarantee any
 particular processing or transmission order for one response relative to any
-other response. {{server-scheduling}} and {{retransmission-scheduling}} provide
-considerations and guidance about how servers might act upon signals.
+other response. Sections {{<server-scheduling}} and
+{{<retransmission-scheduling}} provide considerations and guidance about how
+servers might act upon signals.
 
 
 ## Notational Conventions
@@ -220,8 +221,8 @@ alternative priority signals (for example, see {{header-field}} or
 Before receiving a SETTINGS frame from a server, a client does not know if the server
 is ignoring HTTP/2 priority signals. Therefore, until the client receives the
 SETTINGS frame from the server, the client SHOULD send both the HTTP/2
-priority signals and the signals of this prioritization scheme (see
-{{header-field}} and {{h2-update-frame}}).
+priority signals and the signals of this prioritization scheme (see Sections
+{{<header-field}} and {{<h2-update-frame}}).
 
 Once the client receives the first SETTINGS frame that contains the
 SETTINGS_NO_RFC7540_PRIORITIES parameter with value of 1, it SHOULD stop sending
@@ -241,7 +242,7 @@ behind the server that the client is directly connected to.
 The priority scheme defined by this document is primarily focused on the
 prioritization of HTTP response messages (see {{Section 3.4 of HTTP}}). It
 defines new priority parameters ({{parameters}}) and a means of conveying those
-parameters ({{header-field}} and {{frame}}), which is intended to communicate
+parameters (Sections {{<header-field}} and {{<frame}}), which is intended to communicate
 the priority of responses to a server that is responsible for prioritizing
 them. {{server-scheduling}} provides considerations for servers about acting on
 those signals in combination with other inputs and factors.
@@ -267,8 +268,8 @@ The Priority HTTP header field ({{header-field}}) is an end-to-end way to
 transmit this set of priority parameters when a request or a response is issued.
 After sending a request, a client can change their view of response priority
 ({{reprioritization}}) by sending HTTP-version-specific PRIORITY_UPDATE frames
-defined in {{h2-update-frame}} and {{h3-update-frame}}. Frames transmit priority
-parameters on a single hop only.
+defined in Sections {{<h2-update-frame}} and {{<h3-update-frame}}. Frames
+transmit priority parameters on a single hop only.
 
 Intermediaries can consume and produce priority signals in a PRIORITY_UPDATE
 frame or Priority header field. Sending a PRIORITY_UPDATE frame preserves the
@@ -429,7 +430,8 @@ indicates the endpoint's view of how HTTP responses should be prioritized.
 sent from clients and servers. Clients cannot interpret the appearance or
 omission of a Priority response header field as acknowledgement that any
 prioritization has occurred. Guidance for how endpoints can act on Priority
-header values is given in {{client-scheduling}} and {{server-scheduling}}.
+header values is given in Sections {{<client-scheduling}} and
+{{<server-scheduling}}.
 
 Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 
@@ -807,8 +809,8 @@ fairness between connections competing for bandwidth. When HTTP requests are
 forwarded through intermediaries, progress made by each connection originating
 from end clients can become different over time, depending on how intermediaries
 coalesce or split requests into backend connections. This unfairness can expand
-if priority signals are used. {{coalescing}} and {{h1-backends}} discuss
-mitigations against this expansion of unfairness.
+if priority signals are used. Sections {{<coalescing}} and {{<h1-backends}}
+discuss mitigations against this expansion of unfairness.
 
 Conversely, {{intentional-unfairness}} discusses how servers might intentionally
 allocate unequal bandwidth to some connections, depending on the priority
