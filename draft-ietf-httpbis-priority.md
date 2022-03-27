@@ -225,9 +225,9 @@ priority signals and the signals of this prioritization scheme (see Sections
 {{<header-field}} and {{<h2-update-frame}}).
 
 Once the client receives the first SETTINGS frame that contains the
-SETTINGS_NO_RFC7540_PRIORITIES parameter with value of 1, it SHOULD stop sending
-the HTTP/2 priority signals. This avoids sending redundant signals that are
-known to be ignored.
+SETTINGS_NO_RFC7540_PRIORITIES parameter with a value of 1, it SHOULD stop
+sending the HTTP/2 priority signals. This avoids sending redundant signals that
+are known to be ignored.
 
 Similarly, if the client receives SETTINGS_NO_RFC7540_PRIORITIES with value of 0
 or if the settings parameter was absent, it SHOULD stop sending PRIORITY_UPDATE
