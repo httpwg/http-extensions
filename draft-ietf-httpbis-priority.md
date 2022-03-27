@@ -902,68 +902,78 @@ of priority parameters defined in {{parameters}}.
 
 # IANA Considerations
 
-This specification registers the following entry in the Hypertext Transfer
-Protocol (HTTP) Field Name Registry established by {{HTTP}}:
+This specification registers the following entry in the "Hypertext Transfer
+Protocol (HTTP) Field Name Registry" defined in {{HTTP}}:
 
-Field name:
+Field Name:
 : Priority
 
 Status:
 : permanent
 
-Specification document(s):
+Reference:
 : This document
 
 
-This specification registers the following entry in the HTTP/2 Settings registry
-established by {{RFC7540}}:
-
-Name:
-: SETTINGS_NO_RFC7540_PRIORITIES
+This specification registers the following entry in the "HTTP/2 Settings"
+registry defined in {{HTTP2}}:
 
 Code:
 : 0x9
 
-Initial value:
+Name:
+: SETTINGS_NO_RFC7540_PRIORITIES
+
+Initial Value:
 : 0
 
-Specification:
+Reference:
 : This document
 
-This specification registers the following entry in the HTTP/2 Frame Type
-registry established by {{RFC7540}}:
-
-Frame Type:
-: PRIORITY_UPDATE
+This specification registers the following entry in the "HTTP/2 Frame Type"
+registry defined in {{HTTP2}}:
 
 Code:
 : 0x10
 
-Specification:
+Frame Type:
+: PRIORITY_UPDATE
+
+Reference:
 : This document
 
-This specification registers the following entries in the HTTP/3 Frame Type
+This specification registers the following entry in the "HTTP/3 Frame Types"
 registry established by {{HTTP3}}:
+
+Value:
+: 0xF0700-0xF0701
 
 Frame Type:
 : PRIORITY_UPDATE
 
-Code:
-: 0xF0700 and 0xF0701
+Status:
+: permanent
 
 Specification:
 : This document
 
-Upon publication, please create the HTTP Priority Parameters registry at
-<https://iana.org/assignments/http-priority> and populate it with the entries in
-{{iana-parameter-table}}; see {{register}} for its associated procedures.
+Change Controller:
+: IETF
 
-| ----- | --------------------------------------------------------- | -------------------------- |
-| Name  | Description                                               | Specification              |
-| ----- | :-------------------------------------------------------: | -------------------------- |
-| u     | The urgency of an HTTP response.                          | {{urgency}}                |
-| i     | Whether an HTTP response can be processed incrementally.  | {{incremental}}            |
-| ----- | --------------------------------------------------------- | -------------------------- |
+Contact:
+: ietf-http-wg@w3.org
+
+IANA has created the "Hypertext Transfer Protocol (HTTP) Priority" registry at
+<https://www.iana.org/assignments/http-priority> and has populated it with the
+entries in {{iana-parameter-table}}; see {{register}} for its associated
+procedures.
+
+| ----- | --------------------------------------------------------- | ---------------- |
+| Name  | Description                                               | Reference        |
+| ----- | :-------------------------------------------------------: | ---------------- |
+| u     | The urgency of an HTTP response.                          | {{urgency}}      |
+| i     | Whether an HTTP response can be processed incrementally.  | {{incremental}}  |
+| ----- | --------------------------------------------------------- | ---------------- |
 {: #iana-parameter-table title="Initial Priority Parameters"}
 
 --- back
