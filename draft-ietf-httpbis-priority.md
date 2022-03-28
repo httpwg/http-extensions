@@ -664,8 +664,8 @@ priority = u=1
 
 the intermediary might alter its understanding of the urgency from `5` to `1`,
 because it prefers the server-provided value over the client's. The incremental
-value continues to be `true`, the value specified by the client, as the server did
-not specify the incremental (`i`) parameter.
+value continues to be `true`, i.e., the value specified by the client, as the
+server did not specify the incremental (`i`) parameter.
 
 
 # Client Scheduling
