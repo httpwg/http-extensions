@@ -326,7 +326,7 @@ knowledge specific to the website (see {{merging}}).
 
 The lowest urgency level (7) is reserved for background tasks such as delivery
 of software updates. This urgency level SHOULD NOT be used for fetching
-responses that have impact on user interaction.
+responses that have any impact on user interaction.
 
 ## Incremental
 
