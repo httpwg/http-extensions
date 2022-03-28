@@ -476,8 +476,8 @@ initial priority of a response instead of the Priority header field.
 A PRIORITY_UPDATE frame communicates a complete set of all priority parameters
 in the Priority Field Value field. Omitting a priority parameter is a signal to
 use its default value. Failure to parse the Priority Field Value MAY be treated
-as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in HTTP/3
-the error is of type H3_GENERAL_PROTOCOL_ERROR.
+as a connection error. In HTTP/2, the error is of type PROTOCOL_ERROR; in
+HTTP/3, the error is of type H3_GENERAL_PROTOCOL_ERROR.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
 is open (except for HTTP/2 push streams; see {{h2-update-frame}}). Furthermore,
