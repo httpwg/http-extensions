@@ -1,5 +1,6 @@
 ---
 title: Extensible Prioritization Scheme for HTTP
+number: 9218
 abbrev: HTTP Priorities
 docname: draft-ietf-httpbis-priority-latest
 category: std
@@ -72,11 +73,11 @@ It is common for representations of an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}}
 resource to have relationships to one or more other resources. Clients will
 often discover these relationships while processing a retrieved representation,
 which may lead to further retrieval requests.  Meanwhile, the nature of the
-relationship determines whether the client is blocked from continuing to process
-locally available resources.  An example of this is visual rendering of an HTML
-document, which could be blocked by the retrieval of a CSS file that the
-document refers to. In contrast, inline images do not block rendering and get drawn
-incrementally as the chunks of the images arrive.
+relationships determines whether a client is blocked from continuing to process
+locally available resources.  An example of this is the visual rendering of an
+HTML document, which could be blocked by the retrieval of a Cascading Style
+Sheets (CSS) file that the document refers to. In contrast, inline images do not
+block rendering and get drawn incrementally as the chunks of the images arrive.
 
 HTTP/2 {{!HTTP2=I-D.ietf-httpbis-http2bis}} and HTTP/3
 {{!HTTP3=I-D.ietf-quic-http}} support multiplexing of requests and responses in
@@ -100,10 +101,10 @@ RFC 7540 {{?RFC7540}} stream priority allowed a client to send a series of
 priority signals that communicate to the server a "priority tree"; the structure
 of this tree represents the client's preferred relative ordering and weighted
 distribution of the bandwidth among HTTP responses. Servers could use these
-priority signals as input into prioritization decision-making.
+priority signals as input into prioritization decisions.
 
-The design and implementation of RFC 7540 stream priority was observed to have
-shortcomings, explained in {{motivation}}. HTTP/2
+The design and implementation of RFC 7540 stream priority were observed to have
+shortcomings, as explained in {{motivation}}. HTTP/2
 {{!HTTP2=I-D.ietf-httpbis-http2bis}} has consequently deprecated the use of
 these stream priority signals. The prioritization scheme and priority signals
 defined herein can act as a substitute for RFC 7540 stream priority.
@@ -111,27 +112,28 @@ defined herein can act as a substitute for RFC 7540 stream priority.
 This document describes an extensible scheme for prioritizing HTTP responses
 that uses absolute values. {{parameters}} defines priority parameters, which are
 a standardized and extensible format of priority information. {{header-field}}
-defines the Priority HTTP header field, a protocol-version-independent and
-end-to-end priority signal. Clients can send this header field to signal their
-view of how responses should be prioritized. Similarly, servers behind an
-intermediary can use it to signal priority to the intermediary. After sending a
-request, a client can change their view of response priority (see
-{{reprioritization}}) by sending HTTP-version-specific frames defined in
-{{h2-update-frame}} and {{h3-update-frame}}.
+defines the Priority HTTP header field, which is an end-to-end priority signal
+that is independent of protocol version. Clients can send this header field to
+signal their view of how responses should be prioritized. Similarly, servers
+behind an intermediary can use it to signal priority to the intermediary. After
+sending a request, a client can change their view of response priority (see
+{{reprioritization}}) by sending HTTP-version-specific frames as defined in
+Sections {{<h2-update-frame}} and {{<h3-update-frame}}.
 
 Header field and frame priority signals are input to a server's response
 prioritization process. They are only a suggestion and do not guarantee any
 particular processing or transmission order for one response relative to any
-other response. {{server-scheduling}} and {{retransmission-scheduling}} provide
-consideration and guidance about how servers might act upon signals.
+other response. Sections {{<server-scheduling}} and
+{{<retransmission-scheduling}} provide considerations and guidance about how
+servers might act upon signals.
 
 
 ## Notational Conventions
 
 {::boilerplate bcp14-tagged}
 
-The terms Dictionary, sf-boolean, sf-dictionary, and sf-integer are imported from
-{{!STRUCTURED-FIELDS=RFC8941}}.
+The terms "Dictionary", "sf-boolean", "sf-dictionary", and "sf-integer" are
+imported from {{!STRUCTURED-FIELDS=RFC8941}}.
 
 Example HTTP requests and responses use the HTTP/2-style formatting from
 {{HTTP2}}.
@@ -139,11 +141,11 @@ Example HTTP requests and responses use the HTTP/2-style formatting from
 This document uses the variable-length integer encoding from
 {{!QUIC=RFC9000}}.
 
-The term control stream is used to describe both the HTTP/2 stream with
+The term "control stream" is used to describe both the HTTP/2 stream with
 identifier 0x0 and the HTTP/3 control stream; see {{Section 6.2.1 of
 !HTTP3=I-D.ietf-quic-http}}.
 
-The term HTTP/2 priority signal is used to describe the priority information
+The term "HTTP/2 priority signal" is used to describe the priority information
 sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
 
 
@@ -151,11 +153,11 @@ sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
 
 RFC 7540 stream priority (see {{Section 5.3 of ?RFC7540}}) is a complex system
 where clients signal stream dependencies and weights to describe an unbalanced
-tree. It suffered from limited deployment and interoperability and was deprecated
-in a revision of HTTP/2 {{HTTP2}}. HTTP/2 retains these protocol elements in
-order to maintain wire compatibility (see {{Section 5.3.2 of HTTP2}}), which
-means that they might still be used even in the presence of alternative signaling,
-such as the scheme this document describes.
+tree. It suffered from limited deployment and interoperability and has been
+deprecated in a revision of HTTP/2 {{HTTP2}}. HTTP/2 retains these protocol
+elements in order to maintain wire compatibility (see {{Section 5.3.2 of
+HTTP2}}), which means that they might still be used even in the presence of
+alternative signaling, such as the scheme this document describes.
 
 Many RFC 7540 server implementations do not act on HTTP/2 priority
 signals.
@@ -163,8 +165,8 @@ signals.
 Prioritization can use information that servers have about resources or
 the order in which requests are generated. For example, a server, with knowledge
 of an HTML document structure, might want to prioritize the delivery of images
-that are critical to user experience above other images.  With RFC 7540 it is
-difficult for servers to interpret signals from clients for prioritization as
+that are critical to user experience above other images.  With RFC 7540, it is
+difficult for servers to interpret signals from clients for prioritization, as
 the same conditions could result in very different signaling from different
 clients. This document describes signaling that is simpler and more constrained,
 requiring less interpretation and allowing less variation.
@@ -173,15 +175,15 @@ RFC 7540 does not define a method that can be used by a server to provide a
 priority signal for intermediaries.
 
 RFC 7540 priority is expressed relative to other requests sharing the same
-connection at the same time. It is difficult to incorporate such design into
+connection at the same time. It is difficult to incorporate such a design into
 applications that generate requests without knowledge of how other requests
 might share a connection, or into protocols that do not have strong ordering
 guarantees across streams, like HTTP/3 {{HTTP3}}.
 
-Experiments from independent research ({{MARX}}) have shown
+Experiments from independent research {{MARX}} have shown
 that simpler schemes can reach at least equivalent performance characteristics
 compared to the more complex RFC 7540 setups seen in practice, at least for the
-web use case.
+Web use case.
 
 ## Disabling RFC 7540 Priorities {#disabling}
 
@@ -195,7 +197,7 @@ SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value other than 0 or 1 MUST
 be treated as a connection error (see {{Section 5.4.1 of HTTP2}}) of type
 PROTOCOL_ERROR. The initial value is 0.
 
-If endpoints use SETTINGS_NO_RFC7540_PRIORITIES they MUST send it in the first
+If endpoints use SETTINGS_NO_RFC7540_PRIORITIES, they MUST send it in the first
 SETTINGS frame. Senders MUST NOT change the SETTINGS_NO_RFC7540_PRIORITIES value
 after the first SETTINGS frame. Receivers that detect a change MAY treat it as a
 connection error of type PROTOCOL_ERROR.
@@ -211,7 +213,7 @@ Servers can send SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 to indicate
 that they will ignore HTTP/2 priority signals sent by clients.
 
 Endpoints that send SETTINGS_NO_RFC7540_PRIORITIES are encouraged to use
-alternative priority signals (for example, {{header-field}} or
+alternative priority signals (for example, see {{header-field}} or
 {{h2-update-frame}}) but there is no requirement to use a specific signal type.
 
 ### Advice when Using Extensible Priorities as the Alternative
@@ -219,13 +221,13 @@ alternative priority signals (for example, {{header-field}} or
 Before receiving a SETTINGS frame from a server, a client does not know if the server
 is ignoring HTTP/2 priority signals. Therefore, until the client receives the
 SETTINGS frame from the server, the client SHOULD send both the HTTP/2
-priority signals and the signals of this prioritization scheme (see
-{{header-field}} and {{h2-update-frame}}).
+priority signals and the signals of this prioritization scheme (see Sections
+{{<header-field}} and {{<h2-update-frame}}).
 
 Once the client receives the first SETTINGS frame that contains the
-SETTINGS_NO_RFC7540_PRIORITIES parameter with value of 1, it SHOULD stop sending
-the HTTP/2 priority signals. This avoids sending redundant signals that are
-known to be ignored.
+SETTINGS_NO_RFC7540_PRIORITIES parameter with a value of 1, it SHOULD stop
+sending the HTTP/2 priority signals. This avoids sending redundant signals that
+are known to be ignored.
 
 Similarly, if the client receives SETTINGS_NO_RFC7540_PRIORITIES with value of 0
 or if the settings parameter was absent, it SHOULD stop sending PRIORITY_UPDATE
@@ -240,7 +242,7 @@ behind the server that the client is directly connected to.
 The priority scheme defined by this document is primarily focused on the
 prioritization of HTTP response messages (see {{Section 3.4 of HTTP}}). It
 defines new priority parameters ({{parameters}}) and a means of conveying those
-parameters ({{header-field}} and {{frame}}), which is intended to communicate
+parameters (Sections {{<header-field}} and {{<frame}}), which is intended to communicate
 the priority of responses to a server that is responsible for prioritizing
 them. {{server-scheduling}} provides considerations for servers about acting on
 those signals in combination with other inputs and factors.
@@ -253,7 +255,7 @@ server prioritization are given in {{connect-scheduling}}.
 this scheme locally to the request messages that they generate.
 
 Some forms of HTTP extensions might change HTTP/2 or HTTP/3 stream behavior or
-define new data carriage mechanisms. Such extensions can define themselves how
+define new data carriage mechanisms. Such extensions can themselves define how
 this priority scheme is to be applied.
 
 
@@ -266,12 +268,12 @@ The Priority HTTP header field ({{header-field}}) is an end-to-end way to
 transmit this set of priority parameters when a request or a response is issued.
 After sending a request, a client can change their view of response priority
 ({{reprioritization}}) by sending HTTP-version-specific PRIORITY_UPDATE frames
-defined in {{h2-update-frame}} and {{h3-update-frame}}. Frames transmit priority
-parameters on a single hop only.
+defined in Sections {{<h2-update-frame}} and {{<h3-update-frame}}. Frames
+transmit priority parameters on a single hop only.
 
 Intermediaries can consume and produce priority signals in a PRIORITY_UPDATE
 frame or Priority header field. Sending a PRIORITY_UPDATE frame preserves the
-signal from the client carried by the Priority header field, but provides a
+signal from the client carried by the Priority header field but provides a
 signal that overrides that for the next hop; see {{header-field-rationale}}.
 Replacing or adding a Priority header field overrides any signal from a client
 and can affect prioritization for all subsequent recipients.
@@ -280,15 +282,15 @@ For both the Priority header field and the PRIORITY_UPDATE frame, the set of
 priority parameters is encoded as a Structured Fields Dictionary (see
 {{Section 3.2 of STRUCTURED-FIELDS}}).
 
-This document defines the urgency(`u`) and incremental(`i`) priority parameters.
-When receiving an HTTP request that does not carry these priority parameters, a
-server SHOULD act as if their default values were specified.
+This document defines the urgency (`u`) and incremental (`i`) priority
+parameters. When receiving an HTTP request that does not carry these priority
+parameters, a server SHOULD act as if their default values were specified.
 
 An intermediary can combine signals from requests and responses that it forwards.
 Note that omission of priority parameters in responses is handled differently from
 omission in requests; see {{merging}}.
 
-Receivers parse the Dictionary as defined in {{Section 4.2 of
+Receivers parse the Dictionary as described in {{Section 4.2 of
 STRUCTURED-FIELDS}}. Where the Dictionary is successfully parsed, this document
 places the additional requirement that unknown priority parameters, priority
 parameters with out-of-range values, or values of unexpected types MUST be
@@ -296,7 +298,7 @@ ignored.
 
 ## Urgency
 
-The urgency parameter (`u`) takes an integer between 0 and 7, in descending
+The urgency (`u`) parameter takes an integer between 0 and 7, in descending
 order of priority.
 
 The value is encoded as an sf-integer. The default value is 3.
@@ -320,15 +322,15 @@ priority = u=0
 A client that fetches a document that likely consists of multiple HTTP resources
 (e.g., HTML) SHOULD assign the default urgency level to the main resource.  This
 convention allows servers to refine the urgency using
-knowledge specific to the web-site (see {{merging}}).
+knowledge specific to the website (see {{merging}}).
 
 The lowest urgency level (7) is reserved for background tasks such as delivery
 of software updates. This urgency level SHOULD NOT be used for fetching
-responses that have impact on user interaction.
+responses that have any impact on user interaction.
 
 ## Incremental
 
-The incremental parameter (`i`) takes an sf-boolean as the value that indicates
+The incremental (`i`) parameter takes an sf-boolean as the value that indicates
 if an HTTP response can be processed incrementally, i.e., provide some
 meaningful output as chunks of the response arrive.
 
@@ -337,8 +339,8 @@ The default value of the incremental parameter is false (`0`).
 If a client makes concurrent requests with the incremental parameter set to
 false, there is no benefit serving responses with the same urgency concurrently
 because the client is not going to process those responses incrementally.
-Serving non-incremental responses with the same urgency one by one, in the order in which those
-requests were generated is considered to be the best strategy.
+Serving non-incremental responses with the same urgency one by one, in the order
+in which those requests were generated, is considered to be the best strategy.
 
 If a client makes concurrent requests with the incremental parameter set to
 true, serving requests with the same urgency concurrently might be beneficial.
@@ -363,7 +365,7 @@ priority = u=5, i
 When attempting to define new priority parameters, care must be taken so that
 they do not adversely interfere with prioritization performed by existing
 endpoints or intermediaries that do not understand the newly defined priority
-parameter. Since unknown priority parameters are ignored, new priority
+parameters. Since unknown priority parameters are ignored, new priority
 parameters should not change the interpretation of, or modify, the urgency (see
 {{urgency}}) or incremental (see {{incremental}}) priority parameters in a way
 that is not backwards compatible or fallback safe.
@@ -378,9 +380,9 @@ could send a `visible` priority parameter to indicate if the resource being requ
 within the viewport.
 
 Generic priority parameters are preferred over vendor-specific,
-application-specific or deployment-specific values. If a generic value cannot be
-agreed upon in the community, the parameter's name should be correspondingly
-specific (e.g., with a prefix that identifies the vendor, application or
+application-specific, or deployment-specific values. If a generic value cannot
+be agreed upon in the community, the parameter's name should be correspondingly
+specific (e.g., with a prefix that identifies the vendor, application, or
 deployment).
 
 ### Registration {#register}
@@ -388,18 +390,18 @@ deployment).
 New priority parameters can be defined by registering them in the HTTP Priority
 Parameters Registry. The registry governs the keys (short textual strings) used
 in the Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
-Since each HTTP request can have associated priority signals, there is value
-in having short key lengths, especially single-character strings. In order to
-encourage extension while avoiding unintended conflict among attractive key
-values, the HTTP Priority Parameters Registry operates two registration policies
-depending on key length.
+Since each HTTP request can have associated priority signals, there is value in
+having short key lengths, especially single-character strings. In order to
+encourage extensions while avoiding unintended conflict among attractive key
+values, the HTTP Priority Parameters Registry operates two registration
+policies, depending on key length.
 
 * Registration requests for priority parameters with a key length of one use the
-Specification Required policy, as per {{Section 4.6 of !RFC8126}}.
+Specification Required policy, per {{Section 4.6 of !RFC8126}}.
 
 * Registration requests for priority parameters with a key length greater than
-one use the Expert Review policy, as per {{Section 4.5 of !RFC8126}}. A
-specification document is appreciated, but not required.
+one use the Expert Review policy, per {{Section 4.5 of !RFC8126}}. A
+specification document is appreciated but not required.
 
 When reviewing registration requests, the designated expert(s) can consider the
 additional guidance provided in {{new-parameters}} but cannot use it as a basis
@@ -428,7 +430,8 @@ indicates the endpoint's view of how HTTP responses should be prioritized.
 sent from clients and servers. Clients cannot interpret the appearance or
 omission of a Priority response header field as acknowledgement that any
 prioritization has occurred. Guidance for how endpoints can act on Priority
-header values is given in {{client-scheduling}} and {{server-scheduling}}.
+header values is given in Sections {{<client-scheduling}} and
+{{<server-scheduling}}.
 
 Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 
@@ -436,11 +439,11 @@ Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
 Priority   = sf-dictionary
 ~~~
 
-An HTTP request with a Priority header field might be cached and re-used for
+An HTTP request with a Priority header field might be cached and reused for
 subsequent requests; see {{?CACHING=I-D.ietf-httpbis-cache}}. When an origin
 server generates the Priority response header field based on properties of an
 HTTP request it receives, the server is expected to control the cacheability or
-the applicability of the cached response, by using header fields that control
+the applicability of the cached response by using header fields that control
 the caching behavior (e.g., Cache-Control, Vary).
 
 
@@ -449,7 +452,7 @@ the caching behavior (e.g., Cache-Control, Vary).
 After a client sends a request, it may be beneficial to change the priority of
 the response. As an example, a web browser might issue a prefetch request for a
 JavaScript file with the urgency parameter of the Priority request header field
-set to `u=7` (background). Then, when the user navigates to a page which
+set to `u=7` (background). Then, when the user navigates to a page that
 references the new JavaScript file, while the prefetch is in progress, the
 browser would send a reprioritization signal with the priority field value set
 to `u=0`. The PRIORITY_UPDATE frame ({{frame}}) can be used for such
@@ -466,15 +469,15 @@ identifier is either the Stream ID or Push ID. Unlike the Priority header field,
 the PRIORITY_UPDATE frame is a hop-by-hop signal.
 
 PRIORITY_UPDATE frames are sent by clients on the control stream, allowing them
-to be sent independent of the stream that carries the response. This means
-they can be used to reprioritize a response or a push stream; or signal the
+to be sent independently of the stream that carries the response. This means
+they can be used to reprioritize a response or a push stream, or to signal the
 initial priority of a response instead of the Priority header field.
 
 A PRIORITY_UPDATE frame communicates a complete set of all priority parameters
 in the Priority Field Value field. Omitting a priority parameter is a signal to
 use its default value. Failure to parse the Priority Field Value MAY be treated
-as a connection error. In HTTP/2 the error is of type PROTOCOL_ERROR; in HTTP/3
-the error is of type H3_GENERAL_PROTOCOL_ERROR.
+as a connection error. In HTTP/2, the error is of type PROTOCOL_ERROR; in
+HTTP/3, the error is of type H3_GENERAL_PROTOCOL_ERROR.
 
 A client MAY send a PRIORITY_UPDATE frame before the stream that it references
 is open (except for HTTP/2 push streams; see {{h2-update-frame}}). Furthermore,
@@ -539,7 +542,7 @@ When the PRIORITY_UPDATE frame applies to a request stream, clients SHOULD
 provide a Prioritized Stream ID that refers to a stream in the "open",
 "half-closed (local)", or "idle" state. Servers can discard frames where the
 Prioritized Stream ID refers to a stream in the "half-closed (local)" or
-"closed" state. The number of streams which have been prioritized but remain in
+"closed" state. The number of streams that have been prioritized but remain in
 the "idle" state plus the number of active streams (those in the "open" or
 either "half-closed" state; see {{Section 5.1.2 of HTTP2}}) MUST NOT exceed
 the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. Servers that receive
@@ -606,10 +609,10 @@ mandatory because HTTP/3 implementations might have practical barriers to
 determining the active stream concurrency limit that is applied by the QUIC
 layer.
 
-The push-stream variant PRIORITY_UPDATE (type=0xF0701) MUST reference a promised
-push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with a Push ID
-that is greater than the maximum Push ID or which has not yet been promised, this
-MUST be treated as a connection error of type H3_ID_ERROR.
+The push-stream variant of PRIORITY_UPDATE (type=0xF0701) MUST reference a
+promised push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with
+a Push ID that is greater than the maximum Push ID or that has not yet been
+promised, this MUST be treated as a connection error of type H3_ID_ERROR.
 
 Servers MUST NOT send PRIORITY_UPDATE frames of either type. If a client
 receives a PRIORITY_UPDATE frame, this MUST be treated as a connection error of
@@ -622,7 +625,7 @@ It is not always the case that the client has the best understanding of how the
 HTTP responses deserve to be prioritized. The server might have additional
 information that can be combined with the client's indicated priority in order
 to improve the prioritization of the response. For example, use of an HTML
-document might depend heavily on one of the inline images; existence of such
+document might depend heavily on one of the inline images; the existence of such
 dependencies is typically best known to the server. Or, a server that receives
 requests for a font {{?RFC8081}} and images with the same urgency might give
 higher precedence to the font, so that a visual client can render textual
@@ -635,7 +638,7 @@ field, in combination with the client Priority request header field, as input to
 its prioritization process. No guidance is provided for merging priorities; this
 is left as an implementation decision.
 
-Absence of a priority parameter in an HTTP response indicates the server's
+The absence of a priority parameter in an HTTP response indicates the server's
 disinterest in changing the client-provided value. This is different from the
 request header field, in which omission of a priority parameter implies the use
 of their default values (see {{parameters}}).
@@ -661,8 +664,8 @@ priority = u=1
 
 the intermediary might alter its understanding of the urgency from `5` to `1`,
 because it prefers the server-provided value over the client's. The incremental
-value continues to be `true`, the value specified by the client, as the server did
-not specify the incremental(`i`) parameter.
+value continues to be `true`, i.e., the value specified by the client, as the
+server did not specify the incremental (`i`) parameter.
 
 
 # Client Scheduling
@@ -691,7 +694,7 @@ signals with other factors. Endpoints cannot depend on particular treatment
 based on priority signals. Expressing priority is only a suggestion.
 
 It is RECOMMENDED that, when possible, servers respect the urgency parameter
-({{urgency}}), sending higher urgency responses before lower urgency responses.
+({{urgency}}), sending higher-urgency responses before lower-urgency responses.
 
 The incremental parameter indicates how a client processes response bytes as
 they arrive. It is RECOMMENDED that, when possible, servers respect the
@@ -709,14 +712,14 @@ these resources rather than the entirety of a single resource. How large a
 portion of the resource is needed to be useful in improving performance varies.
 Some resource types place critical elements early; others can use information
 progressively. This scheme provides no explicit mandate about how a server
-should use size, type or any other input to decide how to prioritize.
+should use size, type, or any other input to decide how to prioritize.
 
 There can be scenarios where a server will need to schedule multiple incremental
 and non-incremental responses at the same urgency level. Strictly abiding the
 scheduling guidance based on urgency and request generation order might lead
 to suboptimal results at the client, as early non-incremental responses might
 prevent serving of incremental responses issued later. The following are
-examples of such challenges.
+examples of such challenges:
 
 1. At the same urgency level, a non-incremental request for a large resource
    followed by an incremental request for a small resource.
@@ -724,8 +727,8 @@ examples of such challenges.
    followed by a non-incremental large resource.
 
 It is RECOMMENDED that servers avoid such starvation where possible. The method
-to do so is an implementation decision. For example, a server might
-pre-emptively send responses of a particular incremental type based on other
+for doing so is an implementation decision. For example, a server might
+preemptively send responses of a particular incremental type based on other
 information such as content size.
 
 Optimal scheduling of server push is difficult, especially when pushed resources
@@ -739,7 +742,7 @@ a priority and delay the response, negating intended goals of server push.
 
 Priority signals are a factor for server push scheduling. The concept of
 parameter value defaults applies slightly differently because there is no
-explicit client-signalled initial priority. A server can apply priority signals
+explicit client-signaled initial priority. A server can apply priority signals
 provided in an origin response; see the merging guidance given in {{merging}}.
 In the absence of origin signals, applying default parameter values could be
 suboptimal. By whatever means a server decides to schedule a pushed response, it
@@ -749,7 +752,7 @@ in a PUSH_PROMISE or HEADERS frame.
 ## Intermediaries with Multiple Backend Connections
 
 An intermediary serving an HTTP connection might split requests over multiple
-backend connections. When it applies prioritization rules strictly, low priority
+backend connections. When it applies prioritization rules strictly, low-priority
 requests cannot make progress while requests with higher priorities are in
 flight. This blocking can propagate to backend connections, which the peer might
 interpret as a connection stall. Endpoints often implement protections against
@@ -780,23 +783,23 @@ losses and retransmitting lost information. In addition to the considerations in
 {{server-scheduling}}, scheduling of retransmission data could compete with new
 data. The remainder of this section discusses considerations when using QUIC.
 
-{{Section 13.3 of QUIC}} states "Endpoints SHOULD prioritize
+{{Section 13.3 of QUIC}} states the following: "Endpoints SHOULD prioritize
 retransmission of data over sending new data, unless priorities specified by the
 application indicate otherwise". When an HTTP/3 application uses the priority
 scheme defined in this document and the QUIC transport implementation supports
-application indicated stream priority, a transport that considers the relative
+application-indicated stream priority, a transport that considers the relative
 priority of streams when scheduling both new data and retransmission data might
 better match the expectations of the application. However, there are no
 requirements on how a transport chooses to schedule based on this information
 because the decision depends on several factors and trade-offs. It could
-prioritize new data for a higher urgency stream over retransmission data for a
-lower priority stream, or it could prioritize retransmission data over new data
+prioritize new data for a higher-urgency stream over retransmission data for a
+lower-priority stream, or it could prioritize retransmission data over new data
 irrespective of urgencies.
 
-{{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}} also highlights consideration of
-application priorities when sending probe packets after Probe Timeout timer
-expiration. A QUIC implementation supporting application-indicated priorities
-might use the relative priority of streams when choosing probe data.
+{{Section 6.2.4 of ?QUIC-RECOVERY=RFC9002}} also highlights considerations
+regarding application priorities when sending probe packets after Probe Timeout
+timer expiration. A QUIC implementation supporting application-indicated
+priorities might use the relative priority of streams when choosing probe data.
 
 
 # Fairness {#fairness}
@@ -806,11 +809,11 @@ fairness between connections competing for bandwidth. When HTTP requests are
 forwarded through intermediaries, progress made by each connection originating
 from end clients can become different over time, depending on how intermediaries
 coalesce or split requests into backend connections. This unfairness can expand
-if priority signals are used. {{coalescing}} and {{h1-backends}} discuss
-mitigations against this expansion of unfairness.
+if priority signals are used. Sections {{<coalescing}} and {{<h1-backends}}
+discuss mitigations against this expansion of unfairness.
 
 Conversely, {{intentional-unfairness}} discusses how servers might intentionally
-allocate unequal bandwidth to some connections depending on the priority
+allocate unequal bandwidth to some connections, depending on the priority
 signals.
 
 ## Coalescing Intermediaries {#coalescing}
@@ -823,7 +826,7 @@ those coming from others.
 It is sometimes beneficial for the server running behind an intermediary to obey
 Priority header field values. As an example, a resource-constrained
 server might defer the transmission of software update files that have the
-background urgency. However, in the worst case, the asymmetry
+background urgency level (7). However, in the worst case, the asymmetry
 between the priority declared by multiple clients might cause responses going to
 one user agent to be delayed totally after those going to another.
 
@@ -845,16 +848,17 @@ header fields:
 
 ## HTTP/1.x Back Ends {#h1-backends}
 
-It is common for CDN infrastructure to support different HTTP versions on the
-front end and back end. For instance, the client-facing edge might support
-HTTP/2 and HTTP/3 while communication to back end servers is done using
-HTTP/1.1. Unlike with connection coalescing, the CDN will "de-mux" requests into
-discrete connections to the back end. HTTP/1.1 and older do not support response
-multiplexing in a single connection, so there is not a fairness problem.
-However, back end servers MAY still use client headers for request scheduling.
-Back end servers SHOULD only schedule based on client priority information where
-that information can be scoped to individual end clients. Authentication and
-other session information might provide this linkability.
+It is common for content delivery network (CDN) infrastructure to support
+different HTTP versions on the front end and back end. For instance, the
+client-facing edge might support HTTP/2 and HTTP/3 while communication to
+backend servers is done using HTTP/1.1. Unlike connection coalescing, the
+CDN will "demux" requests into discrete connections to the back end. HTTP/1.1
+and older do not support response multiplexing in a single connection, so there
+is not a fairness problem. However, backend servers MAY still use client
+headers for request scheduling. Backend servers SHOULD only schedule based on
+client priority information where that information can be scoped to individual
+end clients. Authentication and other session information might provide this
+linkability.
 
 ## Intentional Introduction of Unfairness {#intentional-unfairness}
 
@@ -868,7 +872,7 @@ connections that only convey background priority responses such as software
 update images. Doing so improves responsiveness of other connections at the cost
 of delaying the delivery of updates.
 
-# Why use an End-to-End Header Field? {#header-field-rationale}
+# Why Use an End-to-End Header Field? {#header-field-rationale}
 
 In contrast to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
 the Priority header field is defined as end-to-end.
@@ -893,8 +897,8 @@ frames.
 {{server-scheduling}} presents examples where servers that prioritize responses
 in a certain way might be starved of the ability to transmit payload.
 
-The security considerations from {{STRUCTURED-FIELDS}} apply to processing of
-priority parameters defined in {{parameters}}.
+The security considerations from {{STRUCTURED-FIELDS}} apply to the processing
+of priority parameters defined in {{parameters}}.
 
 # IANA Considerations
 
@@ -977,7 +981,7 @@ document.
 
 The motivation for defining an alternative to HTTP/2 priorities is drawn from
 discussion within the broad HTTP community. Special thanks to Roberto Peon,
-Martin Thomson and Netflix for text that was incorporated explicitly in this
+Martin Thomson, and Netflix for text that was incorporated explicitly in this
 document.
 
 In addition to the people above, this document owes a lot to the extensive
