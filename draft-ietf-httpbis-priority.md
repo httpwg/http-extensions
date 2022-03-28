@@ -851,7 +851,7 @@ header fields:
 It is common for Content Delivery Network (CDN) infrastructure to support
 different HTTP versions on the front end and back end. For instance, the
 client-facing edge might support HTTP/2 and HTTP/3 while communication to
-backend servers is done using HTTP/1.1. Unlike with connection coalescing, the
+backend servers is done using HTTP/1.1. Unlike connection coalescing, the
 CDN will "demux" requests into discrete connections to the back end. HTTP/1.1
 and older do not support response multiplexing in a single connection, so there
 is not a fairness problem. However, backend servers MAY still use client
