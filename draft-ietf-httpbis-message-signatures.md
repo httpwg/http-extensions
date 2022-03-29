@@ -2069,8 +2069,8 @@ NOTE: '\' line wrapping per RFC 8792
 
 "@status": 200
 "content-type": application/json
-"content-digest": sha-512=:JlEy2bfUz7WrWIjc1qV6KVLpdr/7L5/L4h7Sxvh6\
-  sNHpDQWDCL+GauFQWcZBvVDhiyOnAQsxzZFYwi0wDH+1pw==:
+"content-digest": sha-512=:mEWXIS7MaLRuGgxOBdODa3xqM1XdEvxoYhvlCFJ4\
+  1QJgJc4GTsPp29l5oGX69wWdXymyU0rjJuahq4l5aGgfLQ==:
 "content-length": 23
 "@signature-params": ("@status" "content-type" "content-digest" \
   "content-length");created=1618884473;keyid="test-key-ecc-p256"
@@ -2084,8 +2084,8 @@ NOTE: '\' line wrapping per RFC 8792
 Signature-Input: sig-b24=("@status" "content-type" \
   "content-digest" "content-length");created=1618884473\
   ;keyid="test-key-ecc-p256"
-Signature: sig-b24=:0Ry6HsvzS5VmA6HlfBYS/fYYeNs7fYuA7s0tAdxfUlPGv0C\
-  SVuwrrzBOjcCFHTxVRJ01wjvSzM2BetJauj8dsw==:
+Signature: sig-b24=:wNmSUAhwb5LxtOtOpNa6W5xj067m5hFrj0XQ4fvpaCLx0NK\
+  ocgPquLgyahnzDnDAUy5eCdlYUEkLIj+32oiasw==:
 ~~~
 
 Note that the ECDSA algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
