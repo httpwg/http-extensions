@@ -545,13 +545,14 @@ Priority Field Value:
 
 When the PRIORITY_UPDATE frame applies to a request stream, clients SHOULD
 provide a prioritized stream ID that refers to a stream in the "open",
-"half-closed (local)", or "idle" state. Servers can discard frames where the
-prioritized stream ID refers to a stream in the "half-closed (local)" or
-"closed" state. The number of streams that have been prioritized but remain in
-the "idle" state plus the number of active streams (those in the "open" or
-either "half-closed" state; see {{Section 5.1.2 of HTTP2}}) MUST NOT exceed
-the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. Servers that receive
-such a PRIORITY_UPDATE MUST respond with a connection error of type
+"half-closed (local)", or "idle" state (i.e. streams where data might still be
+received). Servers can discard frames where the prioritized stream ID refers to
+a stream in the "half-closed (local)" or "closed" state (i.e. streams where no
+further data will be sent). The number of streams that have been prioritized but
+remain in the "idle" state plus the number of active streams (those in the
+"open" or either "half-closed" state; see {{Section 5.1.2 of HTTP2}}) MUST NOT
+exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter. Servers that
+receive such a PRIORITY_UPDATE MUST respond with a connection error of type
 PROTOCOL_ERROR.
 
 When the PRIORITY_UPDATE frame applies to a push stream, clients SHOULD provide
