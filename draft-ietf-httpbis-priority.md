@@ -25,8 +25,9 @@ github-issue-label: priorities
 
 author:
   -
-    ins: K. Oku
-    name: Kazuho Oku
+    fullname:
+      :: 奥一穂
+      ascii: Kazuho Oku
     org: Fastly
     email: kazuhooku@gmail.com
   -
