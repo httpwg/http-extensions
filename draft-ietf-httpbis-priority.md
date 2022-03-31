@@ -778,8 +778,8 @@ When a stream carries the CONNECT request, the scheduling guidance in this
 document applies to the frames on the stream. A client that issues multiple
 CONNECT requests can set the incremental parameter to `true`. Servers that
 implement the recommendations for handling of the incremental parameter in
-{{server-scheduling}} are likely to schedule these fairly, avoiding one CONNECT
-stream from blocking others.
+{{server-scheduling}} are likely to schedule these fairly, preventing one
+CONNECT stream from blocking others.
 
 
 # Retransmission Scheduling
