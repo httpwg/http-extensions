@@ -465,8 +465,8 @@ reprioritization.
 This document specifies a new PRIORITY_UPDATE frame for HTTP/2 {{HTTP2}}
 and HTTP/3 {{HTTP3}}. It carries priority parameters and
 references the target of the prioritization based on a version-specific
-identifier. In HTTP/2, this identifier is the Stream ID; in HTTP/3, the
-identifier is either the Stream ID or Push ID. Unlike the Priority header field,
+identifier. In HTTP/2, this identifier is the stream ID; in HTTP/3, the
+identifier is either the stream ID or push ID. Unlike the Priority header field,
 the PRIORITY_UPDATE frame is a hop-by-hop signal.
 
 PRIORITY_UPDATE frames are sent by clients on the control stream, allowing them
@@ -540,9 +540,9 @@ Priority Field Value:
   is the same representation as the Priority header field value.
 
 When the PRIORITY_UPDATE frame applies to a request stream, clients SHOULD
-provide a Prioritized Stream ID that refers to a stream in the "open",
+provide a prioritized stream ID that refers to a stream in the "open",
 "half-closed (local)", or "idle" state. Servers can discard frames where the
-Prioritized Stream ID refers to a stream in the "half-closed (local)" or
+prioritized stream ID refers to a stream in the "half-closed (local)" or
 "closed" state. The number of streams that have been prioritized but remain in
 the "idle" state plus the number of active streams (those in the "open" or
 either "half-closed" state; see {{Section 5.1.2 of HTTP2}}) MUST NOT exceed
@@ -551,14 +551,14 @@ such a PRIORITY_UPDATE MUST respond with a connection error of type
 PROTOCOL_ERROR.
 
 When the PRIORITY_UPDATE frame applies to a push stream, clients SHOULD provide
-a Prioritized Stream ID that refers to a stream in the "reserved (remote)" or
+a prioritized stream ID that refers to a stream in the "reserved (remote)" or
 "half-closed (local)" state. Servers can discard frames where the Prioritized
-Stream ID refers to a stream in the "closed" state. Clients MUST NOT provide a
-Prioritized Stream ID that refers to a push stream in the "idle" state. Servers
+stream ID refers to a stream in the "closed" state. Clients MUST NOT provide a
+Prioritized stream ID that refers to a push stream in the "idle" state. Servers
 that receive a PRIORITY_UPDATE for a push stream in the "idle" state MUST
 respond with a connection error of type PROTOCOL_ERROR.
 
-If a PRIORITY_UPDATE frame is received with a Prioritized Stream ID of 0x0, the
+If a PRIORITY_UPDATE frame is received with a prioritized stream ID of 0x0, the
 recipient MUST respond with a connection error of type PROTOCOL_ERROR.
 
 Servers MUST NOT send PRIORITY_UPDATE frames. If a client receives a
@@ -601,10 +601,10 @@ Priority Field Value:
 
 The request-stream variant of PRIORITY_UPDATE (type=0xF0700) MUST reference a
 request stream. If a server receives a PRIORITY_UPDATE (type=0xF0700) for a
-Stream ID that is not a request stream, this MUST be treated as a connection
-error of type H3_ID_ERROR. The Stream ID MUST be within the client-initiated
+stream ID that is not a request stream, this MUST be treated as a connection
+error of type H3_ID_ERROR. The stream ID MUST be within the client-initiated
 bidirectional stream limit. If a server receives a PRIORITY_UPDATE
-(type=0xF0700) with a Stream ID that is beyond the stream limits, this SHOULD be
+(type=0xF0700) with a stream ID that is beyond the stream limits, this SHOULD be
 treated as a connection error of type H3_ID_ERROR. Generating an error is not
 mandatory because HTTP/3 implementations might have practical barriers to
 determining the active stream concurrency limit that is applied by the QUIC
@@ -612,7 +612,7 @@ layer.
 
 The push-stream variant of PRIORITY_UPDATE (type=0xF0701) MUST reference a
 promised push stream. If a server receives a PRIORITY_UPDATE (type=0xF0701) with
-a Push ID that is greater than the maximum Push ID or that has not yet been
+a push ID that is greater than the maximum push ID or that has not yet been
 promised, this MUST be treated as a connection error of type H3_ID_ERROR.
 
 Servers MUST NOT send PRIORITY_UPDATE frames of either type. If a client
