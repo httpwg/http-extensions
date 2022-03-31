@@ -455,7 +455,7 @@ the response. As an example, a web browser might issue a prefetch request for a
 JavaScript file with the urgency parameter of the Priority request header field
 set to `u=7` (background). Then, when the user navigates to a page that
 references the new JavaScript file, while the prefetch is in progress, the
-browser would send a reprioritization signal with the priority field value set
+browser would send a reprioritization signal with the Priority Field Value set
 to `u=0`. The PRIORITY_UPDATE frame ({{frame}}) can be used for such
 reprioritization.
 
