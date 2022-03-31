@@ -316,7 +316,7 @@ their urgency. The smaller the value, the higher the precedence.
 The following example shows a request for a CSS file with the urgency set to
 `0`:
 
-~~~ example
+~~~
 :method = GET
 :scheme = https
 :authority = example.net
@@ -357,7 +357,7 @@ complete response being available.
 The following example shows a request for a JPEG file with the urgency parameter
 set to `5` and the incremental parameter set to `true`.
 
-~~~ example
+~~~
 :method = GET
 :scheme = https
 :authority = example.net
@@ -510,7 +510,7 @@ PRIORITY_UPDATE frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE
 frame with a field of any other value MUST be treated as a connection error of
 type PROTOCOL_ERROR.
 
-~~~ drawing
+~~~
 HTTP/2 PRIORITY_UPDATE Frame {
   Length (24),
   Type (8) = 0x10,
@@ -584,7 +584,7 @@ The PRIORITY_UPDATE frame MUST be sent on the client control stream
 stream other than the client control stream MUST be treated as a connection
 error of type H3_FRAME_UNEXPECTED.
 
-~~~ drawing
+~~~
 HTTP/3 PRIORITY_UPDATE Frame {
   Type (i) = 0xF0700..0xF0701,
   Length (i),
@@ -651,7 +651,7 @@ of their default values (see {{parameters}}).
 As a non-normative example, when the client sends an HTTP request with the
 urgency parameter set to `5` and the incremental parameter set to `true`
 
-~~~ example
+~~~
 :method = GET
 :scheme = https
 :authority = example.net
@@ -661,7 +661,7 @@ priority = u=5, i
 
 and the origin responds with
 
-~~~ example
+~~~
 :status = 200
 content-type = image/png
 priority = u=1
