@@ -846,7 +846,7 @@ agent, as the intermediary buffers responses and forwards the chunks based on
 the prioritization scheme it implements.
 
 A server can determine if a request came from an intermediary through
-configuration, or by consulting if that request contains one of the following
+configuration, or can check to see if the request contains one of the following
 header fields:
 
 * Forwarded {{?FORWARDED=RFC7239}}, X-Forwarded-For
