@@ -880,8 +880,8 @@ of delaying the delivery of updates.
 
 # Why Use an End-to-End Header Field? {#header-field-rationale}
 
-In contrast to the prioritization scheme of HTTP/2 that uses a hop-by-hop frame,
-the Priority header field is defined as end-to-end.
+In contrast to the prioritization scheme of HTTP/2, which uses a hop-by-hop
+frame, the Priority header field is defined as "end-to-end".
 
 The way that a client processes a response is a property associated with the
 client generating that request, not that of an intermediary.  Therefore, it is
