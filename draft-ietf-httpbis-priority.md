@@ -830,11 +830,11 @@ originate from one client might carry signals indicating higher priority than
 those coming from others.
 
 It is sometimes beneficial for the server running behind an intermediary to obey
-Priority header field values. As an example, a resource-constrained
-server might defer the transmission of software update files that have the
-background urgency level (7). However, in the worst case, the asymmetry
-between the priority declared by multiple clients might cause responses going to
-one user agent to be delayed totally after those going to another.
+Priority header field values. As an example, a resource-constrained server might
+defer the transmission of software update files that have the background urgency
+level (7). However, in the worst case, the asymmetry between the priority
+declared by multiple clients might cause all responses going to one user agent
+to be delayed until all responses going to another user agent have been sent.
 
 In order to mitigate this fairness problem, a server could use knowledge about
 the intermediary as another input in its prioritization decisions. For
