@@ -411,7 +411,7 @@ for rejection.
 Registration requests should use the following template:
 
 Name:
-: \[a name for the Priority Parameter that matches key\]
+: \[a name for the priority parameter that matches key\]
 
 Description:
 : \[a description of the priority parameter semantics and value\]
