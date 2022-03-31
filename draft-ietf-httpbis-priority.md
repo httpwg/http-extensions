@@ -150,7 +150,7 @@ The term "HTTP/2 priority signal" is used to describe the priority information
 sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
 
 
-# Motivation for Replacing RFC 7540 Priorities {#motivation}
+# Motivation for Replacing RFC 7540 Stream Priorities {#motivation}
 
 RFC 7540 stream priority (see {{Section 5.3 of ?RFC7540}}) is a complex system
 where clients signal stream dependencies and weights to describe an unbalanced
@@ -175,9 +175,9 @@ requiring less interpretation and allowing less variation.
 RFC 7540 does not define a method that can be used by a server to provide a
 priority signal for intermediaries.
 
-RFC 7540 priority is expressed relative to other requests sharing the same
-connection at the same time. It is difficult to incorporate such a design into
-applications that generate requests without knowledge of how other requests
+RFC 7540 stream priority is expressed relative to other requests sharing the
+same connection at the same time. It is difficult to incorporate such a design
+into applications that generate requests without knowledge of how other requests
 might share a connection, or into protocols that do not have strong ordering
 guarantees across streams, like HTTP/3 {{HTTP3}}.
 
@@ -186,7 +186,7 @@ that simpler schemes can reach at least equivalent performance characteristics
 compared to the more complex RFC 7540 setups seen in practice, at least for the
 Web use case.
 
-## Disabling RFC 7540 Priorities {#disabling}
+## Disabling RFC 7540 Stream Priorities {#disabling}
 
 The problems and insights set out above provided the motivation for an
 alternative to RFC 7540 stream priority (see {{Section 5.3 of HTTP2}}).
