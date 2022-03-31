@@ -981,26 +981,31 @@ procedures.
 
 # Acknowledgements
 
-Roy Fielding presented the idea of using a header field for representing
-priorities in <https://www.ietf.org/proceedings/83/slides/slides-83-httpbis-5.pdf>.
-In <https://github.com/pmeenan/http3-prioritization-proposal>, Patrick Meenan
+<contact fullname="Roy Fielding"/> presented the idea of using a header
+field for representing priorities in
+<https://www.ietf.org/proceedings/83/slides/slides-83-httpbis-5.pdf>. In
+<https://github.com/pmeenan/http3-prioritization-proposal>, Patrick Meenan
 advocated for representing the priorities using a tuple of urgency and
 concurrency. The ability to disable HTTP/2 prioritization is inspired by
 {{?I-D.lassey-priority-setting}}, authored by Brad Lassey and Lucas Pardue, with
 modifications based on feedback that was not incorporated into an update to that
 document.
 
-The motivation for defining an alternative to HTTP/2 priorities is drawn from
-discussion within the broad HTTP community. Special thanks to Roberto Peon,
-Martin Thomson, and Netflix for text that was incorporated explicitly in this
-document.
+<t>The motivation for defining an alternative to HTTP/2 priorities is drawn from
+discussion within the broad HTTP community. Special thanks to
+<contact fullname="Roberto Peon"/>,  <contact fullname="Martin Thomson"/>,
+and Netflix for text that was incorporated explicitly in this document.</t>
 
-In addition to the people above, this document owes a lot to the extensive
-discussion in the HTTP priority design team, consisting of Alan Frindell,
-Andrew Galloni, Craig Taylor, Ian Swett, Kazuho Oku, Lucas Pardue, Matthew Cox,
-Mike Bishop, Roberto Peon, Robin Marx, Roy Fielding.
+<t>In addition to the people above, this document owes a lot to the extensive
+discussion in the HTTP priority design team, consisting of
+<contact fullname="Alan Frindell"/>, <contact fullname="Andrew Galloni"/>,
+<contact fullname="Craig Taylor"/>, <contact fullname="Ian Swett"/>,
+<contact fullname="Matthew Cox"/>, <contact fullname="Mike Bishop"/>,
+<contact fullname="Roberto Peon"/>, <contact fullname="Robin Marx"/>,
+<contact fullname="Roy Fielding"/>, and the authors of this document.</t>
 
-Yang Chi contributed the section on retransmission scheduling.
+<t><contact fullname="Yang Chi"/> contributed the section on retransmission
+scheduling.</t>
 
 # Change Log
 
