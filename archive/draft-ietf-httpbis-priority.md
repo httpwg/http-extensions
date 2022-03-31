@@ -854,7 +854,7 @@ header fields:
 
 ## HTTP/1.x Back Ends {#h1-backends}
 
-It is common for content delivery network (CDN) infrastructure to support
+It is common for Content Delivery Network (CDN) infrastructure to support
 different HTTP versions on the front end and back end. For instance, the
 client-facing edge might support HTTP/2 and HTTP/3 while communication to
 backend servers is done using HTTP/1.1. Unlike connection coalescing, the CDN
