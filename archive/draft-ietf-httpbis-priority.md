@@ -960,7 +960,7 @@ Frame Type:
 Status:
 : permanent
 
-Specification:
+Reference:
 : This document
 
 Change Controller:
