@@ -8,7 +8,11 @@ category: std
 ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
-keyword: Internet-Draft
+keyword:
+  - Response priority
+  - Stream multiplexing
+  - Reprioritization
+  - Server scheduling
 
 stand_alone: yes
 smart_quotes: no
