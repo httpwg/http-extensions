@@ -526,7 +526,7 @@ HTTP/2 PRIORITY_UPDATE Frame {
   Priority Field Value (..),
 }
 ~~~
-{: #fig-h2-reprioritization-frame title="HTTP/2 PRIORITY_UPDATE Frame Payload"}
+{: #fig-h2-reprioritization-frame title="HTTP/2 PRIORITY_UPDATE Frame Format"}
 
 The Length, Type, Unused Flag(s), Reserved, and Stream Identifier fields are
 described in {{Section 4 of HTTP2}}. The PRIORITY_UPDATE frame payload
