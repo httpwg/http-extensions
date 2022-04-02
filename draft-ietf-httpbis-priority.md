@@ -348,7 +348,7 @@ Serving non-incremental responses with the same urgency one by one, in the order
 in which those requests were generated, is considered to be the best strategy.
 
 If a client makes concurrent requests with the incremental parameter set to
-true, serving requests with the same urgency concurrently might be beneficial.
+`true`, serving requests with the same urgency concurrently might be beneficial.
 Doing this distributes the connection bandwidth, meaning that responses take
 longer to complete. Incremental delivery is most useful where multiple
 partial responses might provide some value to clients ahead of a
