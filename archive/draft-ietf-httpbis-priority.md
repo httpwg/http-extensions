@@ -342,7 +342,7 @@ meaningful output as chunks of the response arrive.
 The default value of the incremental parameter is `false` (`0`).
 
 If a client makes concurrent requests with the incremental parameter set to
-`false`, there is no benefit serving responses with the same urgency concurrently
+`false`, there is no benefit in serving responses with the same urgency concurrently
 because the client is not going to process those responses incrementally.
 Serving non-incremental responses with the same urgency one by one, in the order
 in which those requests were generated, is considered to be the best strategy.
