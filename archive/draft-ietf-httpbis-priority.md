@@ -558,9 +558,9 @@ of type PROTOCOL_ERROR.
 
 When the PRIORITY_UPDATE frame applies to a push stream, clients SHOULD provide
 a prioritized stream ID that refers to a stream in the "reserved (remote)" or
-"half-closed (local)" state. Servers can discard frames where the Prioritized
+"half-closed (local)" state. Servers can discard frames where the prioritized
 stream ID refers to a stream in the "closed" state. Clients MUST NOT provide a
-Prioritized stream ID that refers to a push stream in the "idle" state. Servers
+prioritized stream ID that refers to a push stream in the "idle" state. Servers
 that receive a PRIORITY_UPDATE for a push stream in the "idle" state MUST
 respond with a connection error of type PROTOCOL_ERROR.
 
