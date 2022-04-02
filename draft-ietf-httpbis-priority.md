@@ -516,7 +516,7 @@ HTTP/2 PRIORITY_UPDATE Frame {
   Length (24),
   Type (8) = 0x10,
 
-  Unused Flags (8).
+  Unused Flags (8),
 
   Reserved (1),
   Stream Identifier (31),
