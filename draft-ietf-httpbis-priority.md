@@ -551,7 +551,7 @@ received). Servers can discard frames where the prioritized stream ID refers to
 a stream in the "half-closed (local)" or "closed" state (i.e., streams where no
 further data will be sent). The number of streams that have been prioritized but
 remain in the "idle" state plus the number of active streams (those in the
-"open" or in either of the "half-closed" state; see {{Section 5.1.2 of HTTP2}})
+"open" state or in either of the "half-closed" state; see {{Section 5.1.2 of HTTP2}})
 MUST NOT exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter.
 Servers that receive such a PRIORITY_UPDATE MUST respond with a connection error
 of type PROTOCOL_ERROR.
