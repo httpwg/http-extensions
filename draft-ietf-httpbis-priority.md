@@ -423,7 +423,8 @@ Description:
 Reference:
 : \[to a specification defining this priority parameter\]
 
-See the registry at <https://iana.org/assignments/http-priority> for details on
+See the registry at [](https://iana.org/assignments/http-priority/){:
+brackets="angle"} for details on
 where to send registration requests.
 
 # The Priority HTTP Header Field {#header-field}
@@ -970,9 +971,9 @@ Contact:
 : ietf-http-wg@w3.org
 
 IANA has created the "Hypertext Transfer Protocol (HTTP) Priority" registry at
-<https://www.iana.org/assignments/http-priority> and has populated it with the
-entries in {{iana-parameter-table}}; see {{register}} for its associated
-procedures.
+[](https://iana.org/assignments/http-priority/){: brackets="angle"} and has
+populated it with the entries in {{iana-parameter-table}}; see {{register}} for
+its associated procedures.
 
 | ----- | --------------------------------------------------------- | ---------------- |
 | Name  | Description                                               | Reference        |
@@ -986,15 +987,16 @@ procedures.
 
 # Acknowledgements
 
-<contact fullname="Roy Fielding"/> presented the idea of using a header
-field for representing priorities in
-<https://www.ietf.org/proceedings/83/slides/slides-83-httpbis-5.pdf>. In
-<https://github.com/pmeenan/http3-prioritization-proposal>, Patrick Meenan
-advocated for representing the priorities using a tuple of urgency and
-concurrency. The ability to disable HTTP/2 prioritization is inspired by
-{{?I-D.lassey-priority-setting}}, authored by Brad Lassey and Lucas Pardue, with
-modifications based on feedback that was not incorporated into an update to that
-document.
+<t><contact fullname="Roy Fielding"/> presented the idea of using a header field
+for representing priorities in <eref
+target="https://www.ietf.org/proceedings/83/slides/slides-83-httpbis-5.pdf"
+brackets="angle" />. In <eref
+target="https://github.com/pmeenan/http3-prioritization-proposal"
+brackets="angle" />, Patrick Meenan advocated for representing the priorities
+using a tuple of urgency and concurrency. The ability to disable HTTP/2
+prioritization is inspired by {{?I-D.lassey-priority-setting}}, authored by Brad
+Lassey and Lucas Pardue, with modifications based on feedback that was not
+incorporated into an update to that document.</t>
 
 <t>The motivation for defining an alternative to HTTP/2 priorities is drawn from
 discussion within the broad HTTP community. Special thanks to
