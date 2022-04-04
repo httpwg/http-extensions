@@ -277,11 +277,15 @@ defined in Sections {{<h2-update-frame}} and {{<h3-update-frame}}. Frames
 transmit priority parameters on a single hop only.
 
 Intermediaries can consume and produce priority signals in a PRIORITY_UPDATE
-frame or Priority header field. Sending a PRIORITY_UPDATE frame preserves the
-signal from the client carried by the Priority header field but provides a
-signal that overrides that for the next hop; see {{header-field-rationale}}.
-Replacing or adding a Priority header field overrides any signal from a client
-and can affect prioritization for all subsequent recipients.
+frame or Priority header field. An intermediary that passes only the Priority
+request header field to the next hop preserves the original end-to-end signal
+from the client; see {{header-field-rationale}}. An intermediary could pass the
+Priority header field and additionally send a PRIORITY_UPDATE frame. This would
+have the effect of preserving the original client end-to-end signal, while
+instructing the next hop to use a different priority; per the guidance in
+{{frame}}. An intermediary that replaces or adds a Priority request header field
+overrides the original client end-to-end signal, which can affect prioritization
+for all subsequent recipients of the request.
 
 For both the Priority header field and the PRIORITY_UPDATE frame, the set of
 priority parameters is encoded as a Structured Fields Dictionary (see
