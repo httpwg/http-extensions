@@ -285,8 +285,8 @@ Replacing or adding a Priority header field overrides any signal from a client
 and can affect prioritization for all subsequent recipients.
 
 For both the Priority header field and the PRIORITY_UPDATE frame, the set of
-priority parameters is encoded as a Structured Fields Dictionary (see
-{{Section 3.2 of STRUCTURED-FIELDS}}).
+priority parameters is encoded as a Dictionary (see {{Section 3.2 of
+STRUCTURED-FIELDS}}).
 
 This document defines the urgency (`u`) and incremental (`i`) priority
 parameters. When receiving an HTTP request that does not carry these priority
