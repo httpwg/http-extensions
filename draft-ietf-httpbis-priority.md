@@ -40,7 +40,88 @@ author:
     org: Cloudflare
     email: lucaspardue.24.7@gmail.com
 
+normative:
+
+  RFC9110:
+    display: HTTP
+    title: "HTTP Semantics"
+    date: 1970-01-01
+    seriesinfo:
+      RFC: 9110
+      DOI: 10.17487/RFC9110
+    author:
+      -
+          ins: R. Fielding
+          name: Roy T. Fielding
+          org: Adobe
+          role: editor
+      -
+          ins: M. Nottingham
+          name: Mark Nottingham
+          org: Fastly
+          role: editor
+      -
+          ins: J. Reschke
+          name: Julian Reschke
+          org: greenbytes
+          role: editor
+
+  RFC9113:
+    display: HTTP/2
+    title: "HTTP/2"
+    date: 1970-01-01
+    seriesinfo:
+      RFC: 9113
+      DOI: 10.17487/RFC9113
+    author:
+      -
+          fullname: Martin Thomson
+          org: Mozilla
+          role: editor
+      -
+          fullname: Cory Benfield
+          org: Apple Inc.
+          role: editor
+
+  RFC9114:
+    display: HTTP/3
+    title: "HTTP/3"
+    date: 1970-01-01
+    seriesinfo:
+      RFC: 9114
+      DOI: 10.17487/RFC9114
+    author:
+      -
+          ins: M. Bishop
+          name: Mike Bishop
+          org: Akamai
+          role: editor
+
 informative:
+  RFC9111:
+    display: HTTP-CACHING
+    title: "HTTP Caching"
+    date: 1970-01-01
+    seriesinfo:
+      RFC: 9111
+      DOI: 10.17487/RFC9111
+    author:
+      -
+          ins: R. Fielding
+          name: Roy T. Fielding
+          org: Adobe
+          role: editor
+      -
+          ins: M. Nottingham
+          name: Mark Nottingham
+          org: Fastly
+          role: editor
+      -
+          ins: J. Reschke
+          name: Julian Reschke
+          org: greenbytes
+          role: editor
+
   MARX:
     target: https://www.doi.org/10.5220/0008191701300143
     title: "Of the Utmost Importance: Resource Prioritization in HTTP/3 over QUIC"
@@ -74,7 +155,7 @@ to provide future extensibility.
 
 # Introduction
 
-It is common for representations of an HTTP {{!HTTP=I-D.ietf-httpbis-semantics}}
+It is common for representations of an HTTP {{RFC9110}}
 resource to have relationships to one or more other resources. Clients will
 often discover these relationships while processing a retrieved representation,
 which may lead to further retrieval requests.  Meanwhile, the nature of the
@@ -84,14 +165,13 @@ HTML document, which could be blocked by the retrieval of a Cascading Style
 Sheets (CSS) file that the document refers to. In contrast, inline images do not
 block rendering and get drawn incrementally as the chunks of the images arrive.
 
-HTTP/2 {{!HTTP2=I-D.ietf-httpbis-http2bis}} and HTTP/3
-{{!HTTP3=I-D.ietf-quic-http}} support multiplexing of requests and responses in
-a single connection. An important feature of any implementation of a protocol
-that provides multiplexing is the ability to prioritize the sending of
-information. For example, to provide meaningful presentation of an HTML document
-at the earliest moment, it is important for an HTTP server to prioritize the
-HTTP responses, or the chunks of those HTTP responses, that it sends to a
-client.
+HTTP/2 {{RFC9113}} and HTTP/3 {{RFC9114}} support multiplexing of requests and
+responses in a single connection. An important feature of any implementation of
+a protocol that provides multiplexing is the ability to prioritize the sending
+of information. For example, to provide meaningful presentation of an HTML
+document at the earliest moment, it is important for an HTTP server to
+prioritize the HTTP responses, or the chunks of those HTTP responses, that it
+sends to a client.
 
 HTTP/2 and HTTP/3 servers can schedule transmission of concurrent response data
 by any means they choose. Servers can ignore client priority signals and still
@@ -109,10 +189,10 @@ distribution of the bandwidth among HTTP responses. Servers could use these
 priority signals as input into prioritization decisions.
 
 The design and implementation of RFC 7540 stream priority were observed to have
-shortcomings, as explained in {{motivation}}. HTTP/2
-{{!HTTP2=I-D.ietf-httpbis-http2bis}} has consequently deprecated the use of
-these stream priority signals. The prioritization scheme and priority signals
-defined herein can act as a substitute for RFC 7540 stream priority.
+shortcomings, as explained in {{motivation}}. HTTP/2 {{RFC9113}} has
+consequently deprecated the use of these stream priority signals. The
+prioritization scheme and priority signals defined herein can act as a
+substitute for RFC 7540 stream priority.
 
 This document describes an extensible scheme for prioritizing HTTP responses
 that uses absolute values. {{parameters}} defines priority parameters, which are
@@ -141,17 +221,16 @@ The terms "Dictionary", "sf-boolean", "sf-dictionary", and "sf-integer" are
 imported from {{!STRUCTURED-FIELDS=RFC8941}}.
 
 Example HTTP requests and responses use the HTTP/2-style formatting from
-{{HTTP2}}.
+{{RFC9113}}.
 
 This document uses the variable-length integer encoding from
 {{!QUIC=RFC9000}}.
 
 The term "control stream" is used to describe both the HTTP/2 stream with
-identifier 0x0 and the HTTP/3 control stream; see {{Section 6.2.1 of
-!HTTP3=I-D.ietf-quic-http}}.
+identifier 0x0 and the HTTP/3 control stream; see {{Section 6.2.1 of RFC9114}}.
 
 The term "HTTP/2 priority signal" is used to describe the priority information
-sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
+sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of RFC9113}}.
 
 
 # Motivation for Replacing RFC 7540 Stream Priorities {#motivation}
@@ -159,9 +238,9 @@ sent from clients to servers in HTTP/2 frames; see {{Section 5.3.2 of HTTP2}}.
 RFC 7540 stream priority (see {{Section 5.3 of ?RFC7540}}) is a complex system
 where clients signal stream dependencies and weights to describe an unbalanced
 tree. It suffered from limited deployment and interoperability and has been
-deprecated in a revision of HTTP/2 {{HTTP2}}. HTTP/2 retains these protocol
+deprecated in a revision of HTTP/2 {{RFC9113}}. HTTP/2 retains these protocol
 elements in order to maintain wire compatibility (see {{Section 5.3.2 of
-HTTP2}}), which means that they might still be used even in the presence of
+RFC9113}}), which means that they might still be used even in the presence of
 alternative signaling, such as the scheme this document describes.
 
 Many RFC 7540 server implementations do not act on HTTP/2 priority
@@ -183,7 +262,7 @@ RFC 7540 stream priority is expressed relative to other requests sharing the
 same connection at the same time. It is difficult to incorporate such a design
 into applications that generate requests without knowledge of how other requests
 might share a connection, or into protocols that do not have strong ordering
-guarantees across streams, like HTTP/3 {{HTTP3}}.
+guarantees across streams, like HTTP/3 {{RFC9114}}.
 
 Experiments from independent research {{MARX}} have shown
 that simpler schemes can reach at least equivalent performance characteristics
@@ -193,13 +272,13 @@ Web use case.
 ## Disabling RFC 7540 Stream Priorities {#disabling}
 
 The problems and insights set out above provided the motivation for an
-alternative to RFC 7540 stream priority (see {{Section 5.3 of HTTP2}}).
+alternative to RFC 7540 stream priority (see {{Section 5.3 of RFC9113}}).
 
 The SETTINGS_NO_RFC7540_PRIORITIES HTTP/2 setting is defined by this document in
 order to allow endpoints to omit or ignore HTTP/2 priority signals (see
-{{Section 5.3.2 of HTTP2}}), as described below. The value of
+{{Section 5.3.2 of RFC9113}}), as described below. The value of
 SETTINGS_NO_RFC7540_PRIORITIES MUST be 0 or 1. Any value other than 0 or 1 MUST
-be treated as a connection error (see {{Section 5.4.1 of HTTP2}}) of type
+be treated as a connection error (see {{Section 5.4.1 of RFC9113}}) of type
 PROTOCOL_ERROR. The initial value is 0.
 
 If endpoints use SETTINGS_NO_RFC7540_PRIORITIES, they MUST send it in the first
@@ -245,14 +324,14 @@ behind the server that the client is directly connected to.
 # Applicability of the Extensible Priority Scheme
 
 The priority scheme defined by this document is primarily focused on the
-prioritization of HTTP response messages (see {{Section 3.4 of HTTP}}). It
+prioritization of HTTP response messages (see {{Section 3.4 of RFC9110}}). It
 defines new priority parameters ({{parameters}}) and a means of conveying those
 parameters (Sections {{<header-field}} and {{<frame}}), which is intended to communicate
 the priority of responses to a server that is responsible for prioritizing
 them. {{server-scheduling}} provides considerations for servers about acting on
 those signals in combination with other inputs and factors.
 
-The CONNECT method (see {{Section 9.3.6 of HTTP}}) can be used to establish
+The CONNECT method (see {{Section 9.3.6 of RFC9110}}) can be used to establish
 tunnels. Signaling applies similarly to tunnels; additional considerations for
 server prioritization are given in {{connect-scheduling}}.
 
@@ -446,11 +525,11 @@ Priority   = sf-dictionary
 ~~~
 
 An HTTP request with a Priority header field might be cached and reused for
-subsequent requests; see {{?CACHING=I-D.ietf-httpbis-cache}}. When an origin
-server generates the Priority response header field based on properties of an
-HTTP request it receives, the server is expected to control the cacheability or
-the applicability of the cached response by using header fields that control
-the caching behavior (e.g., Cache-Control, Vary).
+subsequent requests; see {{RFC9111}}. When an origin server generates the
+Priority response header field based on properties of an HTTP request it
+receives, the server is expected to control the cacheability or the
+applicability of the cached response by using header fields that control the
+caching behavior (e.g., Cache-Control, Vary).
 
 
 # Reprioritization
@@ -467,8 +546,8 @@ reprioritization.
 
 # The PRIORITY_UPDATE Frame {#frame}
 
-This document specifies a new PRIORITY_UPDATE frame for HTTP/2 {{HTTP2}}
-and HTTP/3 {{HTTP3}}. It carries priority parameters and
+This document specifies a new PRIORITY_UPDATE frame for HTTP/2 {{RFC9113}}
+and HTTP/3 {{RFC9114}}. It carries priority parameters and
 references the target of the prioritization based on a version-specific
 identifier. In HTTP/2, this identifier is the stream ID; in HTTP/3, the
 identifier is either the stream ID or push ID. Unlike the Priority header field,
@@ -506,7 +585,7 @@ initial priority of a response, or to reprioritize a response or push stream. It
 carries the stream ID of the response and the priority in ASCII text, using the
 same representation as the Priority header field value.
 
-The Stream Identifier field (see {{Section 5.1.1 of HTTP2}}) in the
+The Stream Identifier field (see {{Section 5.1.1 of RFC9113}}) in the
 PRIORITY_UPDATE frame header MUST be zero (0x0). Receiving a PRIORITY_UPDATE
 frame with a field of any other value MUST be treated as a connection error of
 type PROTOCOL_ERROR.
@@ -529,7 +608,7 @@ HTTP/2 PRIORITY_UPDATE Frame {
 {: #fig-h2-reprioritization-frame title="HTTP/2 PRIORITY_UPDATE Frame Format"}
 
 The Length, Type, Unused Flag(s), Reserved, and Stream Identifier fields are
-described in {{Section 4 of HTTP2}}. The PRIORITY_UPDATE frame payload
+described in {{Section 4 of RFC9113}}. The PRIORITY_UPDATE frame payload
 contains the following additional fields:
 
 Reserved:
@@ -551,10 +630,10 @@ received). Servers can discard frames where the prioritized stream ID refers to
 a stream in the "half-closed (local)" or "closed" state (i.e., streams where no
 further data will be sent). The number of streams that have been prioritized but
 remain in the "idle" state plus the number of active streams (those in the
-"open" state or in either of the "half-closed" state; see {{Section 5.1.2 of HTTP2}})
-MUST NOT exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS parameter.
-Servers that receive such a PRIORITY_UPDATE MUST respond with a connection error
-of type PROTOCOL_ERROR.
+"open" state or in either of the "half-closed" state; see {{Section 5.1.2 of
+RFC9113}}) MUST NOT exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS
+parameter. Servers that receive such a PRIORITY_UPDATE MUST respond with a
+connection error of type PROTOCOL_ERROR.
 
 When the PRIORITY_UPDATE frame applies to a push stream, clients SHOULD provide
 a prioritized stream ID that refers to a stream in the "reserved (remote)" or
@@ -582,7 +661,7 @@ used for request streams, while PRIORITY_UPDATE with a frame type of 0xF0701 is
 used for push streams.
 
 The PRIORITY_UPDATE frame MUST be sent on the client control stream
-(see {{Section 6.2.1 of HTTP3}}). Receiving a PRIORITY_UPDATE frame on a
+(see {{Section 6.2.1 of RFC9114}}). Receiving a PRIORITY_UPDATE frame on a
 stream other than the client control stream MUST be treated as a connection
 error of type H3_FRAME_UNEXPECTED.
 
@@ -851,7 +930,7 @@ configuration or can check to see if the request contains one of the following
 header fields:
 
 * Forwarded {{?FORWARDED=RFC7239}}, X-Forwarded-For
-* Via (see {{Section 7.6.3 of HTTP}})
+* Via (see {{Section 7.6.3 of RFC9110}})
 
 ## HTTP/1.x Back Ends {#h1-backends}
 
@@ -910,7 +989,7 @@ of priority parameters defined in {{parameters}}.
 # IANA Considerations
 
 This specification registers the following entry in the "Hypertext Transfer
-Protocol (HTTP) Field Name Registry" defined in {{HTTP}}:
+Protocol (HTTP) Field Name Registry" defined in {{RFC9110}}:
 
 Field Name:
 : Priority
@@ -923,7 +1002,7 @@ Reference:
 
 
 This specification registers the following entry in the "HTTP/2 Settings"
-registry defined in {{HTTP2}}:
+registry defined in {{RFC9113}}:
 
 Code:
 : 0x9
@@ -938,7 +1017,7 @@ Reference:
 : This document
 
 This specification registers the following entry in the "HTTP/2 Frame Type"
-registry defined in {{HTTP2}}:
+registry defined in {{RFC9113}}:
 
 Code:
 : 0x10
@@ -950,7 +1029,7 @@ Reference:
 : This document
 
 This specification registers the following entry in the "HTTP/3 Frame Types"
-registry established by {{HTTP3}}:
+registry established by {{RFC9114}}:
 
 Value:
 : 0xF0700-0xF0701
