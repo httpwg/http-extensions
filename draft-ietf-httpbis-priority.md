@@ -430,18 +430,15 @@ where to send registration requests.
 
 # The Priority HTTP Header Field {#header-field}
 
-The Priority HTTP header field carries priority parameters (see {{parameters}}).
-It can appear in requests and responses. It is an end-to-end signal that
-indicates the endpoint's view of how HTTP responses should be prioritized.
-{{merging}} describes how intermediaries can combine the priority information
-sent from clients and servers. Clients cannot interpret the appearance or
-omission of a Priority response header field as acknowledgement that any
-prioritization has occurred. Guidance for how endpoints can act on Priority
-header values is given in Sections {{<client-scheduling}} and
+The Priority HTTP header field is a Dictionary that carries priority parameters
+(see {{parameters}}). It can appear in requests and responses. It is an
+end-to-end signal that indicates the endpoint's view of how HTTP responses
+should be prioritized. {{merging}} describes how intermediaries can combine the
+priority information sent from clients and servers. Clients cannot interpret the
+appearance or omission of a Priority response header field as acknowledgement
+that any prioritization has occurred. Guidance for how endpoints can act on
+Priority header values is given in Sections {{<client-scheduling}} and
 {{<server-scheduling}}.
-
-Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
-
 
 An HTTP request with a Priority header field might be cached and reused for
 subsequent requests; see {{?CACHING=I-D.ietf-httpbis-cache}}. When an origin
