@@ -55,7 +55,7 @@ settings from HTTP/2 to HTTP/3.
 
 {::boilerplate bcp14-tagged}
 
-# Websockets Upgrade over HTTP/3
+# WebSockets Upgrade over HTTP/3
 
 {{!RFC8441}} defines a mechanism for running the WebSocket Protocol
 {{!RFC6455}} over a single stream of an HTTP/2 connection. It defines
