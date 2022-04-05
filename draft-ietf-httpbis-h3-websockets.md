@@ -7,6 +7,7 @@ ipr: trust200902
 area: ART
 workgroup: HTTP
 keyword: Internet-Draft
+keyword: extended connect
 venue:
   group: HTTP
   type: Working Group
