@@ -8,6 +8,7 @@ area: ART
 workgroup: HTTP
 keyword: Internet-Draft
 keyword: extended connect
+keyword: 42
 venue:
   group: HTTP
   type: Working Group
