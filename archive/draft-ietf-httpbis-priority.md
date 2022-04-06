@@ -606,10 +606,6 @@ The Length, Type, Unused Flag(s), Reserved, and Stream Identifier fields are
 described in {{Section 4 of RFC9113}}. The PRIORITY_UPDATE frame payload
 contains the following additional fields:
 
-Reserved:
-: A reserved 1-bit field. The semantics of this bit are undefined. It MUST
-  remain unset (0x0) when sending and MUST be ignored when receiving.
-
 Prioritized Stream ID:
 : A 31-bit stream identifier for the stream that is the target of the priority
   update.
