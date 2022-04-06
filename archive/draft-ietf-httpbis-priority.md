@@ -787,9 +787,9 @@ the order in which clients make requests. Doing so ensures that clients can use
 request ordering to influence response order.
 
 Incremental responses of the same urgency SHOULD be served by sharing bandwidth
-among them. Payload of incremental responses are used in parts, or chunks, as
-they are received. A client might benefit more from receiving a portion of all
-these resources rather than the entirety of a single resource. How large a
+among them. The message content of incremental responses is used as parts, or
+chunks, are received. A client might benefit more from receiving a portion of
+all these resources rather than the entirety of a single resource. How large a
 portion of the resource is needed to be useful in improving performance varies.
 Some resource types place critical elements early; others can use information
 progressively. This scheme provides no explicit mandate about how a server
@@ -976,7 +976,7 @@ end-to-end rather than hop-by-hop.
 frames.
 
 {{server-scheduling}} presents examples where servers that prioritize responses
-in a certain way might be starved of the ability to transmit payload.
+in a certain way might be starved of the ability to transmit responses.
 
 The security considerations from {{STRUCTURED-FIELDS}} apply to the processing
 of priority parameters defined in {{parameters}}.
