@@ -217,8 +217,9 @@ servers might act upon signals.
 
 {::boilerplate bcp14-tagged}
 
-The terms "Dictionary", "sf-boolean", "sf-dictionary", and "sf-integer" are
-imported from {{!STRUCTURED-FIELDS=RFC8941}}.
+This document uses the following terminology from {{Section 3 of
+!STRUCTURED-FIELDS=RFC8941}} to specify syntax and parsing: Boolean, Dictionary,
+and Integer.
 
 Example HTTP requests and responses use the HTTP/2-style formatting from
 {{RFC9113}}.
@@ -363,8 +364,8 @@ Replacing or adding a Priority header field overrides any signal from a client
 and can affect prioritization for all subsequent recipients.
 
 For both the Priority header field and the PRIORITY_UPDATE frame, the set of
-priority parameters is encoded as a Structured Fields Dictionary (see
-{{Section 3.2 of STRUCTURED-FIELDS}}).
+priority parameters is encoded as a Dictionary (see {{Section 3.2 of
+STRUCTURED-FIELDS}}).
 
 This document defines the urgency (`u`) and incremental (`i`) priority
 parameters. When receiving an HTTP request that does not carry these priority
@@ -382,10 +383,9 @@ ignored.
 
 ## Urgency
 
-The urgency (`u`) parameter takes an integer between 0 and 7, in descending
-order of priority.
-
-The value is encoded as an sf-integer. The default value is 3.
+The urgency (`u`) parameter value is Integer (see {{Section 3.3.1 of
+STRUCTURED-FIELDS}}), between 0 and 7 inclusive, in descending order of
+priority. The default is 3.
 
 Endpoints use this parameter to communicate their view of the precedence of
 HTTP responses. The chosen value of urgency can be based on the expectation that
@@ -414,9 +414,10 @@ responses that have any impact on user interaction.
 
 ## Incremental
 
-The incremental (`i`) parameter takes an sf-boolean as the value that indicates
-if an HTTP response can be processed incrementally, i.e., provide some
-meaningful output as chunks of the response arrive.
+The incremental (`i`) parameter value is Boolean (see {{Section 3.3.6 of
+STRUCTURED-FIELDS}}). It indicates if an HTTP response can be processed
+incrementally, i.e., provide some meaningful output as chunks of the response
+arrive.
 
 The default value of the incremental parameter is `false` (`0`).
 
@@ -508,21 +509,15 @@ where to send registration requests.
 
 # The Priority HTTP Header Field {#header-field}
 
-The Priority HTTP header field carries priority parameters (see {{parameters}}).
-It can appear in requests and responses. It is an end-to-end signal that
-indicates the endpoint's view of how HTTP responses should be prioritized.
-{{merging}} describes how intermediaries can combine the priority information
-sent from clients and servers. Clients cannot interpret the appearance or
-omission of a Priority response header field as acknowledgement that any
-prioritization has occurred. Guidance for how endpoints can act on Priority
-header values is given in Sections {{<client-scheduling}} and
+The Priority HTTP header field is a Dictionary that carries priority parameters
+(see {{parameters}}). It can appear in requests and responses. It is an
+end-to-end signal that indicates the endpoint's view of how HTTP responses
+should be prioritized. {{merging}} describes how intermediaries can combine the
+priority information sent from clients and servers. Clients cannot interpret the
+appearance or omission of a Priority response header field as acknowledgement
+that any prioritization has occurred. Guidance for how endpoints can act on
+Priority header values is given in Sections {{<client-scheduling}} and
 {{<server-scheduling}}.
-
-Priority is a Dictionary ({{Section 3.2 of STRUCTURED-FIELDS}}):
-
-~~~ abnf
-Priority   = sf-dictionary
-~~~
 
 An HTTP request with a Priority header field might be cached and reused for
 subsequent requests; see {{RFC9111}}. When an origin server generates the
