@@ -807,10 +807,10 @@ priorities might use the relative priority of streams when choosing probe data.
 Typically, HTTP implementations depend on the underlying transport to maintain
 fairness between connections competing for bandwidth. When an intermediary
 receives HTTP requests on client connections, it forwards them to backend
-connections. How client requests perform, therefore, depends on how the
-intermediary coalesces or splits requests across different backend connections.
-Different clients might experience dissimilar performance, which is a form of
-unfairness that might expand if the intermediary also uses priority signals when
+connections. Depending on how the
+intermediary coalesces or splits requests across different backend connections,
+different clients might experience dissimilar performance. This dissimilarity
+might expand if the intermediary also uses priority signals when
 forwarding requests. Sections {{<coalescing}} and {{<h1-backends}} discuss
 mitigations against this expansion of unfairness.
 
