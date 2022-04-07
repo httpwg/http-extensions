@@ -298,7 +298,7 @@ Servers can send SETTINGS_NO_RFC7540_PRIORITIES with a value of 1 to indicate
 that they will ignore HTTP/2 priority signals sent by clients.
 
 Endpoints that send SETTINGS_NO_RFC7540_PRIORITIES are encouraged to use
-alternative priority signals (for example, see {{header-field}} or
+alternative priority signals (for example, see Sections {{header-field}} or
 {{h2-update-frame}}) but there is no requirement to use a specific signal type.
 
 ### Advice when Using Extensible Priorities as the Alternative
