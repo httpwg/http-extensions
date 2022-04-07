@@ -472,14 +472,13 @@ deployment).
 
 ### Registration {#register}
 
-New priority parameters can be defined by registering them in the "HTTP Priority"
-registry. This registry governs the keys (short textual strings) used
-in the Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
-Since each HTTP request can have associated priority signals, there is value in
-having short key lengths, especially single-character strings. In order to
-encourage extensions while avoiding unintended conflict among attractive key
-values, the "HTTP Priority" registry operates two registration
-policies, depending on key length.
+New priority parameters can be defined by registering them in the "HTTP
+Priority" registry. This registry governs the keys (short textual strings) used
+in the Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}). Since each HTTP
+request can have associated priority signals, there is value in having short key
+lengths, especially single-character strings. In order to encourage extensions
+while avoiding unintended conflict among attractive key values, the "HTTP
+Priority" registry operates two registration policies, depending on key length.
 
 * Registration requests for priority parameters with a key length of one use the
 Specification Required policy, per {{Section 4.6 of !RFC8126}}.
