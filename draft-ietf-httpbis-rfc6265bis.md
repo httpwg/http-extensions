@@ -1485,7 +1485,7 @@ user agent MUST process the cookie as follows:
 
         Otherwise:
 
-        1.  Ignore the cookie entirely and abort these steps.
+        1.  Abort these steps and ignore the cookie entirely.
 
     NOTE: This step prevents `attacker.example` from disrupting the integrity of
     `site.example` by setting a cookie with a Domain attribute of "example".
@@ -1495,7 +1495,7 @@ user agent MUST process the cookie as follows:
     1.  If the canonicalized request-host does not domain-match the
         domain-attribute:
 
-        1.  Ignore the cookie entirely and abort these steps.
+        1.  Abort these steps and ignore the cookie entirely.
 
         Otherwise:
 
