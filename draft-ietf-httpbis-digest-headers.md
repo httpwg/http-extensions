@@ -1302,6 +1302,14 @@ print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
 
 _RFC Editor: Please remove this section before publication._
 
+## Since draft-ietf-httpbis-digest-headers-07
+{:numbered="false"}
+
+* Introduced Repr-Digest and Want-Repr-Digest, and deprecated
+  Digest and Want-Digest. Use of Structured Fields. #1993, #1919
+* IANA refactoring. #1983
+* No normative text in security considerations. #1972
+
 ## Since draft-ietf-httpbis-digest-headers-06
 {:numbered="false"}
 
