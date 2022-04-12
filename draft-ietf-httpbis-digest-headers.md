@@ -1257,38 +1257,27 @@ Content-Type: application/problem+json
 
 # Migrating from RFC 3230
 
-This section supports current implementers of [RFC3230]
-in the migration to the new integrity fields
-and allows them to replace any reference to [RFC3230]
-with this document.
+HTTP digests are computed by applying a hashing algorithm to input data.
+RFC 3230 defined the input data as an "instance", a term it also defined. 
+The concept of instance has since been superseded by the HTTP semantic term "representation". 
+It is understood that some implementations of RFC 3230
+mistook "instance" to mean HTTP content. 
+Using content for the Digest field is an error 
+that leads to interoperability problems between peers that implement RFC 3230.
 
-At first, it is important to clarify that
-in the `Digest` syntax defined in [RFC3230] and reported below
+For the uncertainty of doubt, RFC 3230 was only ever intended
+to use what HTTP now defines as "selected representation data".
+The semantic concept of digest and representation are explained
+alongside the definition of Representation-Digest {{representation-digest}}.
 
-~~~ abnf
-   Digest = 1#instance-digest
-   instance-digest = digest-algorithm "="
-                     <encoded digest output>
-~~~
+While the syntax of Digest and Representation-Digest are different,
+the considerations and examples this document gives to Representation-Digest
+apply equally to Digest because they operate on the same input data.
+See {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
 
-- the `<encoded digest output>` needs to be computed
-  on the "selected representation data" as clarified
-  in {{representation-digest}};
-- while the `digest-algorithm` is taken from the old
-  "HTTP Digest Algorithm Values Registry" defined in [RFC3230],
-  the "status" field of the new "Hash Algorithms for HTTP Digest Fields"
-  {{algorithms}} marks algorithms now considered insecure
-  and can guide `Digest` implementers in the migration.
-
-Implementers already computing the checksum
-on the selected representation data
-can migrate to `Representation-Digest` {{representation-digest}};
-those using the message content can switch to `Content-Digest` {{content-digest}}.
-
-While the syntax is different, the examples related to `Representation-Digest`
-provide an exhaustive reference of the `Digest` behavior in different scenarios.
-Likewise, {{state-changing-requests}}, {{security}} and in particular
-{{usage-in-signatures}} apply to `Digest` too.
+RFC 3230 could never communicate
+the digest of HTTP message content in the Digest field;
+Content-Digest now provides that capability.
 
 # Acknowledgements
 {:numbered="false"}
