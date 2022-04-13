@@ -472,14 +472,13 @@ deployment).
 
 ### Registration {#register}
 
-New priority parameters can be defined by registering them in the "HTTP Priority"
-registry. This registry governs the keys (short textual strings) used
-in the Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}).
-Since each HTTP request can have associated priority signals, there is value in
-having short key lengths, especially single-character strings. In order to
-encourage extensions while avoiding unintended conflict among attractive key
-values, the "HTTP Priority" registry operates two registration
-policies, depending on key length.
+New priority parameters can be defined by registering them in the "HTTP
+Priority" registry. This registry governs the keys (short textual strings) used
+in the Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}). Since each HTTP
+request can have associated priority signals, there is value in having short key
+lengths, especially single-character strings. In order to encourage extensions
+while avoiding unintended conflict among attractive key values, the "HTTP
+Priority" registry operates two registration policies, depending on key length.
 
 * Registration requests for priority parameters with a key length of one use the
 Specification Required policy, per {{Section 4.6 of !RFC8126}}.
@@ -621,7 +620,7 @@ received). Servers can discard frames where the prioritized stream ID refers to
 a stream in the "half-closed (local)" or "closed" state (i.e., streams where no
 further data will be sent). The number of streams that have been prioritized but
 remain in the "idle" state plus the number of active streams (those in the
-"open" state or in either of the "half-closed" state; see {{Section 5.1.2 of
+"open" state or in either of the "half-closed" states; see {{Section 5.1.2 of
 RFC9113}}) MUST NOT exceed the value of the SETTINGS_MAX_CONCURRENT_STREAMS
 parameter. Servers that receive such a PRIORITY_UPDATE MUST respond with a
 connection error of type PROTOCOL_ERROR.
@@ -845,7 +844,7 @@ as tunnels.
 
 # Scheduling and the CONNECT Method {#connect-scheduling}
 
-When a stream carries the CONNECT request, the scheduling guidance in this
+When a stream carries a CONNECT request, the scheduling guidance in this
 document applies to the frames on the stream. A client that issues multiple
 CONNECT requests can set the incremental parameter to `true`. Servers that
 implement the recommendations for handling of the incremental parameter in
