@@ -1,6 +1,10 @@
 ---
 title: "Bootstrapping WebSockets with HTTP/3"
+number: 9220
 docname: draft-ietf-httpbis-h3-websockets-latest
+submissiontype: IETF
+consensus: true
+area: Transport
 category: std
 
 ipr: trust200902
@@ -38,8 +42,8 @@ informative:
 --- abstract
 
 The mechanism for running the WebSocket Protocol over a single stream
-of an HTTP/2 connection is equally applicable to HTTP/3, but the HTTP
-version-specific details need to be specified. This document describes
+of an HTTP/2 connection is equally applicable to HTTP/3, but the
+HTTP-version-specific details need to be specified. This document describes
 how the mechanism is adapted for HTTP/3.
 
 --- middle
@@ -47,7 +51,7 @@ how the mechanism is adapted for HTTP/3.
 # Introduction
 
 "Bootstrapping WebSockets with HTTP/2" {{!RFC8441}} defines an extension
-to HTTP/2 {{HTTP/2}} which is also useful in HTTP/3 {{HTTP/3}}.
+to HTTP/2 {{HTTP/2}} that is also useful in HTTP/3 {{HTTP/3}}.
 This extension makes use of an HTTP/2 setting.  {{Appendix A.3 of HTTP/3}}
 gives some guidance on what changes (if any) are appropriate when porting
 settings from HTTP/2 to HTTP/3.
@@ -61,13 +65,13 @@ settings from HTTP/2 to HTTP/3.
 
 {{!RFC8441}} defines a mechanism for running the WebSocket Protocol
 {{!RFC6455}} over a single stream of an HTTP/2 connection. It defines
-an Extended CONNECT method which specifies a new ":protocol"
+an Extended CONNECT method that specifies a new ":protocol"
 pseudo-header field and new semantics for the ":path" and ":authority"
 pseudo-header fields. It also defines a new HTTP/2 setting sent by a server to
 allow the client to use  Extended CONNECT.
 
 The semantics of the pseudo-header fields and setting are identical to those
-in HTTP/2 as defined {{!RFC8441}}. {{Appendix A.3 of HTTP/3}} requires that
+in HTTP/2 as defined in {{!RFC8441}}. {{Appendix A.3 of HTTP/3}} requires that
 HTTP/3 settings be registered separately for HTTP/3. The
 SETTINGS_ENABLE_CONNECT_PROTOCOL value is 0x08 (decimal 8), as in HTTP/2.
 
@@ -75,7 +79,7 @@ If a server advertises support for Extended CONNECT but receives an
 Extended CONNECT request with a ":protocol" value that is unknown or is
 not supported, the server SHOULD respond to the request with a 501 (Not
 Implemented) status code ({{Section 15.6.2 of HTTP}}). A server MAY
-provide more information via a Problem Details response {{!RFC7807}}.
+provide more information via a "problem details" response {{!RFC7807}}.
 
 The HTTP/3 stream closure is also analogous to the TCP connection
 closure of {{!RFC6455}}. Orderly TCP-level closures are represented as
@@ -106,19 +110,13 @@ Status:
 : permanent
 
 Specification:
-: This Document
-
-Date:
-: [ date of publication ]
+: This document
 
 Change Controller:
 : IETF
 
 Contact:
 : HTTP Working Group (ietf-http-wg@w3.org)
-
-Notes:
-: <!-- -->
 
 --- back
 
