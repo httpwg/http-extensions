@@ -52,7 +52,7 @@ how the mechanism is adapted for HTTP/3.
 
 "Bootstrapping WebSockets with HTTP/2" {{!RFC8441}} defines an extension
 to HTTP/2 {{HTTP/2}} that is also useful in HTTP/3 {{HTTP/3}}.
-This extension makes use of an HTTP/2 setting.  {{Appendix A.3 of HTTP3}}
+This extension makes use of an HTTP/2 setting.  {{Appendix A.3 of HTTP/3}}
 gives some guidance on what changes (if any) are appropriate when porting
 settings from HTTP/2 to HTTP/3.
 
