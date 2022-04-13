@@ -28,9 +28,61 @@ author:
     email: rch@google.com
 
 normative:
-  HTTP/3: I-D.draft-ietf-quic-http-34
-  HTTP/2: I-D.draft-ietf-httpbis-http2bis-07
-  HTTP: I-D.draft-ietf-httpbis-semantics-19
+
+  HTTP:
+    display: HTTP
+    title: "HTTP Semantics"
+    date: 2022-03
+    seriesinfo:
+      RFC: 9110
+      DOI: 10.17487/RFC9110
+    author:
+      -
+          ins: R. Fielding
+          name: Roy T. Fielding
+          org: Adobe
+          role: editor
+      -
+          ins: M. Nottingham
+          name: Mark Nottingham
+          org: Fastly
+          role: editor
+      -
+          ins: J. Reschke
+          name: Julian Reschke
+          org: greenbytes
+          role: editor
+
+  HTTP2:
+    display: HTTP/2
+    title: "HTTP/2"
+    date: 2022-03
+    seriesinfo:
+      RFC: 9113
+      DOI: 10.17487/RFC9113
+    author:
+      -
+          fullname: Martin Thomson
+          org: Mozilla
+          role: editor
+      -
+          fullname: Cory Benfield
+          org: Apple Inc.
+          role: editor
+
+  HTTP3:
+    display: HTTP/3
+    title: "Hypertext Transfer Protocol Version 3 (HTTP/3)"
+    date: 2022-03
+    seriesinfo:
+      RFC: 9114
+      DOI: 10.17487/RFC9114
+    author:
+      -
+          ins: M. Bishop
+          name: Mike Bishop
+          org: Akamai
+          role: editor
 
 informative:
 
@@ -47,8 +99,8 @@ how the mechanism is adapted for HTTP/3.
 # Introduction
 
 "Bootstrapping WebSockets with HTTP/2" {{!RFC8441}} defines an extension
-to HTTP/2 {{HTTP/2}} which is also useful in HTTP/3 {{HTTP/3}}.
-This extension makes use of an HTTP/2 setting.  {{Appendix A.3 of HTTP/3}}
+to HTTP/2 {{HTTP2}} which is also useful in HTTP/3 {{HTTP3}}.
+This extension makes use of an HTTP/2 setting.  {{Appendix A.3 of HTTP3}}
 gives some guidance on what changes (if any) are appropriate when porting
 settings from HTTP/2 to HTTP/3.
 
@@ -67,7 +119,7 @@ pseudo-header fields. It also defines a new HTTP/2 setting sent by a server to
 allow the client to use  Extended CONNECT.
 
 The semantics of the pseudo-header fields and setting are identical to those
-in HTTP/2 as defined {{!RFC8441}}. {{Appendix A.3 of HTTP/3}} requires that
+in HTTP/2 as defined {{!RFC8441}}. {{Appendix A.3 of HTTP3}} requires that
 HTTP/3 settings be registered separately for HTTP/3. The
 SETTINGS_ENABLE_CONNECT_PROTOCOL value is 0x08 (decimal 8), as in HTTP/2.
 
@@ -79,9 +131,9 @@ provide more information via a Problem Details response {{!RFC7807}}.
 
 The HTTP/3 stream closure is also analogous to the TCP connection
 closure of {{!RFC6455}}. Orderly TCP-level closures are represented as
-a FIN bit on the stream ({{Section 4.2 of HTTP/3}}). RST exceptions are
-represented with a stream error ({{Section 8 of HTTP/3}}) of type
-H3_REQUEST_CANCELLED ({{Section 8.1 of HTTP/3}}).
+a FIN bit on the stream ({{Section 4.2 of HTTP3}}). RST exceptions are
+represented with a stream error ({{Section 8 of HTTP3}}) of type
+H3_REQUEST_CANCELLED ({{Section 8.1 of HTTP3}}).
 
 # Security Considerations
 
@@ -91,7 +143,7 @@ discussed in {{!RFC8441}}.
 # IANA Considerations
 
 This document registers a new setting in the "HTTP/3 Settings"
-registry ({{Section 11.2.2 of HTTP/3}}).
+registry ({{Section 11.2.2 of HTTP3}}).
 
 Value:
 : 0x08
