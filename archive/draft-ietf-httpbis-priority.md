@@ -30,7 +30,7 @@ github-issue-label: priorities
 author:
   -
     fullname:
-      :: 奥一穂
+      :: 奥 一穂
       ascii: Kazuho Oku
     org: Fastly
     email: kazuhooku@gmail.com
