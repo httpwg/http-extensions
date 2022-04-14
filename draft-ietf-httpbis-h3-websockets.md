@@ -36,7 +36,7 @@ normative:
   HTTP:
     display: HTTP
     title: "HTTP Semantics"
-    date: 2022-03
+    date: 2022-04
     seriesinfo:
       RFC: 9110
       DOI: 10.17487/RFC9110
@@ -60,7 +60,7 @@ normative:
   HTTP2:
     display: HTTP/2
     title: "HTTP/2"
-    date: 2022-03
+    date: 2022-04
     seriesinfo:
       RFC: 9113
       DOI: 10.17487/RFC9113
@@ -77,7 +77,7 @@ normative:
   HTTP3:
     display: HTTP/3
     title: "Hypertext Transfer Protocol Version 3 (HTTP/3)"
-    date: 2022-03
+    date: 2022-04
     seriesinfo:
       RFC: 9114
       DOI: 10.17487/RFC9114
