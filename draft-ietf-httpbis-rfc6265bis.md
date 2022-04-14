@@ -1822,7 +1822,7 @@ IDNA2003 {{RFC3490}}.
 
 The primary privacy risk associated with cookies is their ability to correlate user activity. This
 can happen on a single site, but is most problematic when activity is tracked across different,
-seemingly unconnected Web sites to build a profile of the user.
+seemingly unconnected Web sites to build a user profile.
 
 Over time, this capability (warned against explicitly in {{?RFC2109}} and all of its successors)
 has become widely used for varied reasons including:
