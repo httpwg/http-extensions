@@ -1840,7 +1840,7 @@ have actively constrained cookie functionality in various ways (as allowed and e
 previous specifications), while avoiding disruption to features they judge desirable for the health
 of the Web.
 
-It is too early to declare consensus on which specific mechanism(s) should be used to mitigate the privacy impact of cookies; ongoing developments in user agents are best characterised as experiments that
+It is too early to declare consensus on which specific mechanism(s) should be used to mitigate cookies' privacy impact; user agents' ongoing changes to how they are handled are best characterised as experiments that
 can provide input into that eventual consensus.
 
 Instead, this document describes limited, general mitigations against the privacy risks associated
