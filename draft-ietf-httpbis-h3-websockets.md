@@ -33,7 +33,6 @@ author:
 normative:
 
   HTTP:
-    display: HTTP
     title: "HTTP Semantics"
     date: 2022-04
     seriesinfo:
