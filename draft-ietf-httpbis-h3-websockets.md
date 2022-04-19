@@ -10,8 +10,9 @@ category: std
 ipr: trust200902
 area: ART
 workgroup: HTTP
-keyword: extended connect
-keyword: 42
+keyword:
+  - extended connect
+  - 42
 venue:
   group: HTTP
   type: Working Group
