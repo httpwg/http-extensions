@@ -299,6 +299,17 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | SF-Cookie           | List            |
 {:id="new-fields"}
 
+Finally, add the indicated structured type for each existing registry entry below:
+
+| Field Name                                | Structured Type |
+|-------------------------------------------|-----------------|
+| Accept-CH                                 | List            |
+| Cross-Origin-Opener-Policy                | Item            |
+| Cross-Origin-Opener-Policy-Report-Only    | Item            |
+| Cross-Origin-Embedder-Policy              | Item            |
+| Cross-Origin-Embedder-Policy-Report-Only  | Item            |
+| Origin-Agent-Cluster                      | Item            |
+{:id="existing-fields"}
 
 # Security Considerations
 
