@@ -304,11 +304,15 @@ Finally, add the indicated structured type for each existing registry entry belo
 | Field Name                                | Structured Type |
 |-------------------------------------------|-----------------|
 | Accept-CH                                 | List            |
+| Cache-Status                              | List            |
+| CDN-Cache-Control                         | Dictionary      |
 | Cross-Origin-Opener-Policy                | Item            |
 | Cross-Origin-Opener-Policy-Report-Only    | Item            |
 | Cross-Origin-Embedder-Policy              | Item            |
 | Cross-Origin-Embedder-Policy-Report-Only  | Item            |
 | Origin-Agent-Cluster                      | Item            |
+| Priority                                  | Dictionary      |
+| Proxy-Status                              | List            |
 {:id="existing-fields"}
 
 # Security Considerations
