@@ -86,6 +86,7 @@ An application using this specification will need to consider how to handle such
 | Accept-Encoding                  | List            |
 | Accept-Language                  | List            |
 | Accept-Patch                     | List            |
+| Accept-Post                      | List            |
 | Accept-Ranges                    | List            |
 | Access-Control-Allow-Credentials | Item            |
 | Access-Control-Allow-Headers     | List            |
@@ -101,6 +102,8 @@ An application using this specification will need to consider how to handle such
 | Alt-Svc                          | Dictionary      |
 | Alt-Used                         | Item            |
 | Cache-Control                    | Dictionary      |
+| CDN-Loop                         | List            |
+| Clear-Site-Data                  | List            |
 | Connection                       | List            |
 | Content-Encoding                 | List            |
 | Content-Language                 | List            |
@@ -109,13 +112,19 @@ An application using this specification will need to consider how to handle such
 | Cross-Origin-Resource-Policy     | Item            |
 | Expect                           | Item            |
 | Expect-CT                        | Dictionary      |
+| Forwarded                        | Dictionary      |
 | Host                             | Item            |
 | Keep-Alive                       | Dictionary      |
+| Max-Forwards                     | Item            |
 | Origin                           | Item            |
 | Pragma                           | Dictionary      |
 | Prefer                           | Dictionary      |
 | Preference-Applied               | Dictionary      |
 | Retry-After                      | Item            |
+| Sec-WebSocket-Extensions         | List            |
+| Sec-WebSocket-Protocol           | List            |
+| Sec-WebSocket-Version            | Item            |
+| Server-Timing                    | List            |
 | Surrogate-Control                | Dictionary      |
 | TE                               | List            |
 | Timing-Allow-Origin              | List            |
