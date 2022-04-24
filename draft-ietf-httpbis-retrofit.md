@@ -110,7 +110,7 @@ An application using this specification will need to consider how to handle such
 | Content-Length                   | List            |
 | Content-Type                     | Item            |
 | Cross-Origin-Resource-Policy     | Item            |
-| Expect                           | Item            |
+| Expect                           | Dictionary      |
 | Expect-CT                        | Dictionary      |
 | Forwarded                        | Dictionary      |
 | Host                             | Item            |
