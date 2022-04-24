@@ -136,7 +136,7 @@ An application using this specification will need to consider how to handle such
 | X-XSS-Protection                 | List            |
 {:id="compatible-fields"}
 
-Note the following caveats:
+Note the following caveats regarding compatibility:
 
 Parameter and Dictionary keys:
 : HTTP parameter names are case-insensitive (per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase. Although the vast majority of parameters seen in typical traffic are all-lowercase, compatibility can be improved by force-lowercasing parameters when encountered.
@@ -153,6 +153,9 @@ Token limitations:
 
 Integer limitations:
 : Structured Fields Integers can have at most 15 digits; larger values will not be able to be represented in them.
+
+IPv6 Literals:
+: Fields whose values can contain IPv6 literal addresses (such as CDN-Loop, Host, and Origin) are not compatible when those values appear, because the brackets used to delimit them are not allowed in Structured Fields Tokens.
 
 Empty Field Values:
 : Empty and whitespace-only field values are considered errors in Structured Fields. For compatible fields, an empty field indicates that the field should be silently ignored.
