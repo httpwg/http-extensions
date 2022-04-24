@@ -289,7 +289,13 @@ SF-Cookie: SID=31d4d96e407aad42, lang=en-US
 
 Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
 
-> The "Structured Type" column indicates the type of the field (per RFC8941), if any, and may be "Dictionary", "List" or "Item". A prefix of "*" indicates that it is a retrofit type (i.e., not natively Structured); see \[this specification].
+> The "Structured Type" column indicates the type of the field (per RFC8941), if any, and may be
+> "Dictionary", "List" or "Item". A prefix of "*" indicates that it is a retrofit type (i.e., not
+> natively Structured); see \[this specification].
+>
+> Note that field names beginning with characters other than ALPHA or "*" will not be able to be
+> represented as a Structured Fields Token, and therefore may be incompatible with being mapped into
+> fields that refer to it; see \[this specification].
 
 Then, add a new column, "Structured Type", with the values from {{compatible}} assigned to the nominated registrations, prefixing each with "*" to indicate that it is a retrofit type.
 
@@ -327,6 +333,7 @@ Finally, add the indicated structured type for each existing registry entry belo
 | Priority                                  | Dictionary      |
 | Proxy-Status                              | List            |
 {:id="existing-fields"}
+
 
 # Security Considerations
 
