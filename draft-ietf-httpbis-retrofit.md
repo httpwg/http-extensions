@@ -146,16 +146,16 @@ Parameter delimitation:
 : The parameters rule in HTTP (see {{Section 5.6.6 of HTTP}}) allows whitespace before the ";" delimiter, but Structured Fields does not. Compatibility can be improved by allowing such whitespace.
 
 String quoting:
-: {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Fields only allows escaping "\" and DQUOTE. Compatibility can be improved by unescaping other characters before processing.
+: {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Field Strings only escapes "\" and DQUOTE. Compatibility can be improved by unescaping other characters before processing as Strings.
 
 Token limitations:
-: In Structured Fields, tokens are required to begin with an alphabetic character or "\*", whereas HTTP tokens allow a wider range of characters. This prevents use of mapped values that begin with one of these characters. For example, media types, field names, methods, range-units, character and transfer codings that begin with a number or special character other than "*" might be valid HTTP protocol elements, but will not be able to be mapped to Structured Fields.
+: In Structured Fields, tokens are required to begin with an alphabetic character or "\*", whereas HTTP tokens allow a wider range of characters. This prevents use of mapped values that begin with one of these characters. For example, media types, field names, methods, range-units, character and transfer codings that begin with a number or special character other than "*" might be valid HTTP protocol elements, but will not be able to be parsed as Structured Field Tokens.
 
 Integer limitations:
 : Structured Fields Integers can have at most 15 digits; larger values will not be able to be represented in them.
 
 IPv6 Literals:
-: Fields whose values can contain IPv6 literal addresses (such as CDN-Loop, Host, and Origin) are not compatible when those values appear, because the brackets used to delimit them are not allowed in Structured Fields Tokens.
+: Fields whose values can contain IPv6 literal addresses (such as CDN-Loop, Host, and Origin) are not compatible when those values are parsed as Structured Fields Tokens, because the brackets used to delimit them are not allowed in Tokens.
 
 Empty Field Values:
 : Empty and whitespace-only field values are considered errors in Structured Fields. For compatible fields, an empty field indicates that the field should be silently ignored.
