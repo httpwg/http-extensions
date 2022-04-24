@@ -134,7 +134,7 @@ An application using this specification will need to consider how to handle such
 | X-Content-Type-Options           | Item            |
 | X-Frame-Options                  | Item            |
 | X-XSS-Protection                 | List            |
-{:id="compatible-fields"}
+{:id="compatible-fields" title="Compatible Fields"}
 
 Note the following caveats regarding compatibility:
 
@@ -200,7 +200,7 @@ The field names in {{url-fields}} (paired with their mapped field names) have va
 | Content-Location | SF-Content-Location |
 | Location         | SF-Location         |
 | Referer          | SF-Referer          |
-{:id="url-fields"}
+{:id="url-fields" title="URL Fields"}
 
 For example, a Location field could be represented as:
 
@@ -220,7 +220,7 @@ The field names in {{date-fields}} (paired with their mapped field names) have v
 | If-Modified-Since   | SF-IMS              |
 | If-Unmodified-Since | SF-IUS              |
 | Last-Modified       | SF-LM               |
-{:id="date-fields"}
+{:id="date-fields" title="Date Fields"}
 
 For example, an Expires field could be represented as:
 
@@ -272,7 +272,7 @@ Set-Cookie parameters map to parameters on the appropriate SF-Set-Cookie member,
 | Secure              | Boolean             |
 | HttpOnly            | Boolean             |
 | SameSite            | Token               |
-{:id="cookie-params"}
+{:id="cookie-params" title="Cookie Parameter Types"}
 
 Note that cookies in both fields are separated by commas, not semicolons, and multiple cookies can appear in each field.
 
@@ -316,9 +316,9 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | SF-Link             | List            |
 | SF-Set-Cookie       | Dictionary      |
 | SF-Cookie           | List            |
-{:id="new-fields"}
+{:id="new-fields" title="New Fields"}
 
-Finally, add the indicated structured type for each existing registry entry below:
+Finally, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
 
 | Field Name                                | Structured Type |
 |-------------------------------------------|-----------------|
@@ -332,7 +332,7 @@ Finally, add the indicated structured type for each existing registry entry belo
 | Origin-Agent-Cluster                      | Item            |
 | Priority                                  | Dictionary      |
 | Proxy-Status                              | List            |
-{:id="existing-fields"}
+{:id="existing-fields" title="Existing Fields"}
 
 
 # Security Considerations
