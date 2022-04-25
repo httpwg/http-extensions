@@ -1270,8 +1270,8 @@ to use what HTTP now defines as "selected representation data".
 The semantic concept of digest and representation are explained
 alongside the definition of Representation-Digest {{representation-digest}}.
 
-While the syntax of Digest and Representation-Digest are different,
-the considerations and examples this document gives to Representation-Digest
+While the syntax of Digest and Repr-Digest are different,
+the considerations and examples this document gives to Repr-Digest
 apply equally to Digest because they operate on the same input data.
 See {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
 
