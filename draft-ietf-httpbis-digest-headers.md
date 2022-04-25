@@ -84,11 +84,10 @@ informative:
 --- abstract
 
 This document defines HTTP fields that support integrity digests. The
-Repr-Digest field can be used for the integrity of HTTP
-representations. The Content-Digest field can be used for the integrity of
-HTTP message content. Want-Repr-Digest and Want-Content-Digest can be
-used to indicate a sender's interest and preferences for receiving the respective
-Integrity fields.
+Content-Digest field can be used for the integrity of HTTP message content. The
+Repr-Digest field can be used for the integrity of HTTP representations.
+Want-Content-Digest and Want-Repr-Digest can be used to indicate a sender's
+interest and preferences for receiving the respective Integrity fields.
 
 This document obsoletes RFC 3230 and the Digest and Want-Digest HTTP
 fields.
@@ -98,8 +97,8 @@ fields.
 
 # Introduction
 
-HTTP does not define the means to protect the data integrity of representations
-or content. When HTTP messages are transferred between endpoints, lower layer
+HTTP does not define the means to protect the data integrity of content or
+representations. When HTTP messages are transferred between endpoints, lower layer
 features or properties such as TCP checksums or TLS records [RFC2818] can provide
 some integrity protection. However, transport-oriented integrity provides a
 limited utility because it is opaque to the application layer and only covers
@@ -111,12 +110,13 @@ and make a choice about how to act on it. An example use case is to aid
 fault detection and diagnosis across system boundaries.
 
 This document defines two digest integrity mechanisms for HTTP.
-First, representation data integrity, which acts on representation data ({{Section 3.2
+First, content integrity, which acts on conveyed content ({{Section 6.4 of
+SEMANTICS}}).
+Second, representation data integrity, which acts on representation data ({{Section 3.2
 of SEMANTICS}}). This supports advanced use cases such as validating the
 integrity of a resource that was reconstructed from parts retrieved using
 multiple requests or connections.
-Second, content integrity, which acts on conveyed content ({{Section 6.4 of
-SEMANTICS}}).
+
 
 This document obsoletes RFC 3230 and therefore the Digest and Want-Digest HTTP
 fields; see {{obsolete-3230}}.
@@ -126,8 +126,8 @@ fields; see {{obsolete-3230}}.
 
 This document is structured as follows:
 
-- {{representation-digest}} defines the Repr-Digest request and response header and trailer field,
 - {{content-digest}} defines the Content-Digest request and response header and trailer field,
+- {{representation-digest}} defines the Repr-Digest request and response header and trailer field,
 - {{want-fields}} defines the Want-Repr-Digest and Want-Content-Digest request and response header and
   trailer field,
 - {{algorithms}} describes algorithms and their relation to the fields defined in this document,
@@ -148,8 +148,13 @@ Selecting the data on which digests are calculated depends on the use case of
 HTTP messages. This document provides different headers for HTTP representation
 data and HTTP content.
 
-This document defines the `Repr-Digest` request and response header
-and trailer field ({{representation-digest}}) that contains a digest value
+There are use-cases where a simple digest of the HTTP content bytes is
+required. The `Content-Digest` request and response header and trailer field is
+defined to support digests of content ({{Section 3.2 of SEMANTICS}}); see
+{{content-digest}}.
+
+For more advanced use-cases, the `Repr-Digest` request and response header
+and trailer field ({{representation-digest}}) is defined. It contains a digest value
 computed by applying a hashing algorithm to "selected representation data"
 ({{Section 3.2 of SEMANTICS}}). Basing `Repr-Digest` on the selected
 representation makes it straightforward to apply it to use-cases where the
@@ -157,19 +162,15 @@ transferred data requires some sort of manipulation to be considered a
 representation or conveys a partial representation of a resource, such as Range
 Requests (see {{Section 14.2 of SEMANTICS}}).
 
-There are use-cases where a simple digest of the HTTP content bytes is
-required. The `Content-Digest` request and response header and trailer field is
-defined to support digests of content ({{Section 3.2 of SEMANTICS}}); see
-{{content-digest}}.
 
-`Repr-Digest` and `Content-Digest` support hashing algorithm agility.
-The `Want-Repr-Digest` and `Want-Content-Digest` fields allows
-endpoints to express interest in `Repr-Digest` and `Content-Digest`
+`Content-Digest` and `Repr-Digest` support hashing algorithm agility.
+The `Want-Content-Digest` and `Want-Repr-Digest` fields allow
+endpoints to express interest in `Content-Digest` and `Repr-Digest`
 respectively, and preference of algorithms in either.
 
-`Repr-Digest` and `Content-Digest` are collectively termed
+`Content-Digest` and `Repr-Digest` are collectively termed
 Integrity fields.
-`Want-Repr-Digest` and `Want-Content-Digest`are
+`Want-Content-Digest` and `Want-Repr-Digest` are
 collectively termed Integrity preference fields.
 
 Integrity fields are tied to the `Content-Encoding`
@@ -228,9 +229,64 @@ The term "checksum" describes the output of the application of an algorithm
 to a sequence of bytes,
 whereas "digest" is only used in relation to the value contained in the fields.
 
-Integrity fields: collective term for `Repr-Digest` and `Content-Digest`
+Integrity fields: collective term for `Content-Digest` and `Repr-Digest`
 
 Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Content-Digest`
+
+
+# The Content-Digest Field {#content-digest}
+
+The `Content-Digest` HTTP field can be used in requests and responses to
+communicate digests that are calculated using a hashing algorithm applied to
+the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
+Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}})
+where:
+
+* keys convey the hashing algorithm (see {{algorithms}})
+  used to compute the digest;
+* values MUST be `Byte Sequences` ({{Section 3.3.5 of STRUCTURED-FIELDS}})
+  containing the output of the digest calculation.
+
+~~~ abnf
+Content-Digest   = sf-dictionary
+~~~
+
+For example:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+Content-Digest: \
+  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+~~~
+
+The `Dictionary` type can be used, for example, to attach multiple digests
+calculated using different hashing algorithms in order to support a population
+of endpoints with different or evolving capabilities. Such an approach could
+support transitions away from weaker algorithms (see {{sec-agility}}).
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+Repr-Digest: \
+  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
+  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+~~~
+
+A recipient MAY ignore any or all digests.
+This allows the recipient to choose which hashing algorithm(s) to use for
+validation instead of verifying every digest.
+
+A sender MAY send a digest without
+knowing whether the recipient supports a given hashing algorithm, or even knowing
+that the recipient will ignore it.
+
+`Content-Digest` can be sent in a trailer section.
+In this case,
+`Content-Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
+
 
 # The Repr-Digest Field {#representation-digest}
 
@@ -339,75 +395,22 @@ enclosed representation refers to the resource identified by its value and
 An example is given in {{post-not-request-uri}}.
 
 
-# The Content-Digest Field {#content-digest}
-
-The `Content-Digest` HTTP field can be used in requests and responses to
-communicate digests that are calculated using a hashing algorithm applied to
-the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
-Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}})
-where:
-
-* keys convey the hashing algorithm (see {{algorithms}})
-  used to compute the digest;
-* values MUST be `Byte Sequences` ({{Section 3.3.5 of STRUCTURED-FIELDS}})
-  containing the output of the digest calculation.
-
-~~~ abnf
-Content-Digest   = sf-dictionary
-~~~
-
-For example:
-
-~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
-Content-Digest: \
-  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
-  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
-~~~
-
-The `Dictionary` type can be used, for example, to attach multiple digests
-calculated using different hashing algorithms in order to support a population
-of endpoints with different or evolving capabilities. Such an approach could
-support transitions away from weaker algorithms (see {{sec-agility}}).
-
-~~~ http-message
-NOTE: '\' line wrapping per RFC 8792
-
-Repr-Digest: \
-  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
-  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
-  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
-~~~
-
-A recipient MAY ignore any or all digests.
-This allows the recipient to choose which hashing algorithm(s) to use for
-validation instead of verifying every digest.
-
-A sender MAY send a digest without
-knowing whether the recipient supports a given hashing algorithm, or even knowing
-that the recipient will ignore it.
-
-`Content-Digest` can be sent in a trailer section.
-In this case,
-`Content-Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
-
 # Integrity preference fields  {#want-fields}
 
 Senders can indicate their interest in Integrity fields and hashing algorithm
 preferences using the
-`Want-Repr-Digest` or `Want-Content-Digest` fields. These can be used in both
+`Want-Content-Digest` or `Want-Repr-Digest` fields. These can be used in both
 requests and responses.
-
-`Want-Repr-Digest` indicates the sender's desire to receive a representation digest
-on messages associated with the request URI and representation metadata, using
-the `Repr-Digest` field.
 
 `Want-Content-Digest` indicates the sender's desire to receive a content digest
 on messages associated with the request URI and representation metadata, using
 the `Content-Digest` field.
 
-`Want-Repr-Digest` and `Want-Content-Digest` are Structured Fields
+`Want-Repr-Digest` indicates the sender's desire to receive a representation digest
+on messages associated with the request URI and representation metadata, using
+the `Repr-Digest` field.
+
+`Want-Content-Digest` or `Want-Repr-Digest` are Structured Fields
 Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
 
 * keys convey the hashing algorithm (see {{algorithms}});
@@ -445,8 +448,8 @@ Required policy ({{Section 4.6 of !RFC8126}}).
 Registrations MUST include the following fields:
 
  - Algorithm Key: the Structured Fields key value used in
-   `Repr-Digest`, `Content-Digest`, `Want-Repr-Digest` or
-    `Want-Content-Digest` field Dictionary member keys
+   `Content-Digest`, `Repr-Digest`, `Want-Content-Digest`, or `Want-Repr-Digest`
+    field Dictionary member keys
  - Status: the status of the algorithm.
      Use "standard" for standardized algorithms without known problems;
      "experimental" or some other appropriate value
@@ -568,7 +571,7 @@ As there is no negotiation, endpoints that depend on a digest for security
 will be vulnerable to attacks on the weakest algorithm they are willing to accept.
 
 Transition from weak algorithms is supported
-by negotiation of hashing algorithm using `Want-Repr-Digest` or `Want-Content-Digest` (see {{want-fields}})
+by negotiation of hashing algorithm using `Want-Content-Digest` or `Want-Repr-Digest` (see {{want-fields}})
 or by sending multiple digests from which the receiver chooses.
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{representation-digest}}).
@@ -597,10 +600,10 @@ IANA is asked to update the
 |---------------------|-----------|-----------------------------------------------|
 | Field Name          | Status    |                     Reference                 |
 |---------------------|-----------|-----------------------------------------------|
-| Repr-Digest         | permanent | {{representation-digest}} of this document    |
 | Content-Digest      | permanent | {{content-digest}} of this document           |
-| Want-Repr-Digest    | permanent | {{want-fields}} of this document              |
+| Repr-Digest         | permanent | {{representation-digest}} of this document    |
 | Want-Content-Digest | permanent | {{want-fields}} of this document              |
+| Want-Repr-Digest    | permanent | {{want-fields}} of this document              |
 | Digest              | obsoleted | [RFC3230], {{obsolete-3230}} of this document |
 | Want-Digest         | obsoleted | [RFC3230], {{obsolete-3230}} of this document |
 |---------------------|-----------|-----------------------------------------------|
@@ -725,8 +728,8 @@ Location: /authors/123
 # Examples of Unsolicited Digest {#examples-unsolicited}
 
 The following examples demonstrate interactions where a server responds with a
-`Repr-Digest` or `Content-Digest` fields even though the client did not solicit one using
-`Want-Repr-Digest` or `Want-Content-Digest`.
+`Content-Digest` or `Repr-Digest` fields even though the client did not solicit one using
+`Want-Content-Digest` or `Want-Repr-Digest`.
 
 Some examples include JSON objects in the content.
 For presentation purposes, objects that fit completely within the line-length limits
@@ -738,12 +741,12 @@ Checksum mechanisms defined in this document are media-type agnostic
 and do not provide canonicalization algorithms for specific formats.
 Examples are calculated inclusive of any space.
 While examples can include both fields,
-`Repr-Digest` and `Content-Digest` can be returned independently.
+`Content-Digest` and `Repr-Digest` can be returned independently.
 
 ## Server Returns Full Representation Data {#example-full-representation}
 
 In this example, the message content conveys complete representation data.
-This means that in the response, `Repr-Digest` and `Content-Digest`
+This means that in the response, `Content-Digest` and `Repr-Digest`
 are both computed over the JSON object `{"hello": "world"}`, and thus have the same value.
 
 ~~~ http-message
@@ -758,9 +761,9 @@ NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 Content-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: \
   sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
@@ -772,10 +775,11 @@ Content-Digest: \
 In this example, a HEAD request is used to retrieve the checksum
 of a resource.
 
-The response `Repr-Digest` field-value is calculated over the JSON object
+The response `Content-Digest` field-value is computed on empty content.
+`Repr-Digest` is calculated over the JSON object
 `{"hello": "world"}`, which is not shown because there is no payload
 data.
-`Content-Digest` is computed on empty content.
+
 
 ~~~ http-message
 HEAD /items/123 HTTP/1.1
@@ -789,10 +793,10 @@ NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 200 OK
 Content-Type: application/json
-Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 Content-Digest: \
   sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 ~~~
 {: title="Response with both Content-Digest and Digest; empty content"}
@@ -816,10 +820,10 @@ NOTE: '\' line wrapping per RFC 8792
 HTTP/1.1 206 Partial Content
 Content-Type: application/json
 Content-Range: bytes 1-7/18
-Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 Content-Digest: \
   sha-256=:Wqdirjg/u3J688ejbUlApbjECpiUUtIwT8lY/z81Tno=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 "hello"
 ~~~
