@@ -480,7 +480,7 @@ The entries in {{iana-hash-algorithm-table}} are registered by this document.
 
 
 
-# Security Considerations
+# Security Considerations {#security}
 
 ## HTTP Messages Are Not Protected In Full {#sec-limitations}
 
@@ -1219,6 +1219,29 @@ Content-Type: application/problem+json
 ~~~
 {: title="Response advertising the supported algorithms"}
 
+# Migrating from RFC 3230
+
+HTTP digests are computed by applying a hashing algorithm to input data.
+RFC 3230 defined the input data as an "instance", a term it also defined. 
+The concept of instance has since been superseded by the HTTP semantic term "representation". 
+It is understood that some implementations of RFC 3230
+mistook "instance" to mean HTTP content. 
+Using content for the Digest field is an error 
+that leads to interoperability problems between peers that implement RFC 3230.
+
+For the uncertainty of doubt, RFC 3230 was only ever intended
+to use what HTTP now defines as "selected representation data".
+The semantic concept of digest and representation are explained
+alongside the definition of Representation-Digest {{representation-digest}}.
+
+While the syntax of Digest and Repr-Digest are different,
+the considerations and examples this document gives to Repr-Digest
+apply equally to Digest because they operate on the same input data.
+See {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
+
+RFC 3230 could never communicate
+the digest of HTTP message content in the Digest field;
+Content-Digest now provides that capability.
 
 # Acknowledgements
 {:numbered="false"}
