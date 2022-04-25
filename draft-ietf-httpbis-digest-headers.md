@@ -1222,11 +1222,11 @@ Content-Type: application/problem+json
 # Migrating from RFC 3230
 
 HTTP digests are computed by applying a hashing algorithm to input data.
-RFC 3230 defined the input data as an "instance", a term it also defined. 
-The concept of instance has since been superseded by the HTTP semantic term "representation". 
+RFC 3230 defined the input data as an "instance", a term it also defined.
+The concept of instance has since been superseded by the HTTP semantic term "representation".
 It is understood that some implementations of RFC 3230
-mistook "instance" to mean HTTP content. 
-Using content for the Digest field is an error 
+mistook "instance" to mean HTTP content.
+Using content for the Digest field is an error
 that leads to interoperability problems between peers that implement RFC 3230.
 
 For the uncertainty of doubt, RFC 3230 was only ever intended
