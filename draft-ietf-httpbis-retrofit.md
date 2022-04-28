@@ -262,9 +262,9 @@ SF-Link: "/terms"; rel="copyright"; anchor="#foo"
 
 The field values of the Cookie and Set-Cookie fields {{!RFC6265}} can be represented in the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a Dictionary), respectively.
 
-In each case, cookie names are serialized as tokens, whereas their values are serialised as Strings, unless they can be represented accurately and unambiguously using the textual representation of another structured types (e.g., an Integer or Decimal).
+In each case, cookie names are Tokens. Their values are Strings, unless they can be represented accurately and unambiguously using the textual representation of another structured types (e.g., an Integer or Decimal).
 
-Set-Cookie parameters map to parameters on the appropriate SF-Set-Cookie member, with the parameter name being forced to lowercase. Set-Cookie parameter values are Strings unless a specific type is defined. This specification defines the parameter types in {{cookie-params}}.
+Set-Cookie parameters map to Parameters on the appropriate SF-Set-Cookie member, with the parameter name being forced to lowercase. Set-Cookie parameter values are Strings unless a specific type is defined for them. This specification defines the parameter types in {{cookie-params}}.
 
 | Parameter Name      | Structured Type     |
 |---------------------|---------------------|
@@ -279,9 +279,9 @@ Note that cookies in both fields are separated by commas, not semicolons, and mu
 For example:
 
 ~~~ http-message
-SF-Set-Cookie: lang=en-US; expires="Wed, 09 Jun 2021 10:18:14 GMT";
-               samesite=Strict
-SF-Cookie: SID=31d4d96e407aad42, lang=en-US
+SF-Set-Cookie: lang="en-US"; expires="Wed, 09 Jun 2021 10:18:14 GMT";
+               samesite=Strict; secure=?1
+SF-Cookie: SID="31d4d96e407aad42", lang="en-US"
 ~~~
 
 
