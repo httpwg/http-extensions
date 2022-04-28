@@ -172,28 +172,28 @@ Retry-After:
 
 # Mapped Fields {#mapped}
 
-Some HTTP fields can have their values represented in Structured Fields by mapping them into its data types and then serialising the result using an alternative field name.
+Some HTTP field values have syntax that cannot be successfully parsed as Structured Fields. Instead, it is necessary to map them into a separate Structured Field with an alternative name.
 
-For example, the Date HTTP header field carries a string representing a date:
+For example, the Date HTTP header field carries a date:
 
 ~~~ http-message
 Date: Sun, 06 Nov 1994 08:49:37 GMT
 ~~~
 
-Its value is more efficiently represented as an integer number of delta seconds from the Unix epoch (00:00:00 UTC on 1 January 1970, minus leap seconds). Thus, the example above would be mapped as:
+Its value is more efficiently represented as an Integer number of delta seconds from the Unix epoch (00:00:00 UTC on 1 January 1970, minus leap seconds). Thus, the example above would be mapped to:
 
 ~~~ http-message
 SF-Date: 784072177
 ~~~
 
-As in {{compatible}}, these fields are unable to represent values that are not parseable, and so an application using this specification will need to how to support such values. Typically, handling them using the original field name is sufficient.
+As in {{compatible}}, these fields are unable to carry values that are not valid Structured Fields, and so an application using this specification will need to how to support such values. Typically, handling them using the original field name is sufficient.
 
 Each field name listed below indicates a replacement field name and a means of mapping its original value into a Structured Field.
 
 
 ## URLs
 
-The field names in {{url-fields}} (paired with their mapped field names) have values that can be represented as Structured Fields by considering the original field's value as a string.
+The field names in {{url-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by treating the original field's value as a String.
 
 | Field Name       | Mapped Field Name   |
 |------------------|---------------------|
@@ -202,7 +202,7 @@ The field names in {{url-fields}} (paired with their mapped field names) have va
 | Referer          | SF-Referer          |
 {:id="url-fields" title="URL Fields"}
 
-For example, a Location field could be represented as:
+For example, a Location field could be mapped as:
 
 ~~~ http-message
 SF-Location: "https://example.com/foo"
@@ -211,7 +211,7 @@ SF-Location: "https://example.com/foo"
 
 ## Dates
 
-The field names in {{date-fields}} (paired with their mapped field names) have values that can be represented as Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, minus leap seconds).
+The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, minus leap seconds).
 
 | Field Name          | Mapped Field Name   |
 |---------------------|---------------------|
@@ -222,7 +222,7 @@ The field names in {{date-fields}} (paired with their mapped field names) have v
 | Last-Modified       | SF-LM               |
 {:id="date-fields" title="Date Fields"}
 
-For example, an Expires field could be represented as:
+For example, an Expires field could be mapped as:
 
 ~~~ http-message
 SF-Expires: 1571965240
@@ -230,7 +230,7 @@ SF-Expires: 1571965240
 
 ## ETags
 
-The field value of the ETag header field can be represented as a String Structured Field by representing the entity-tag as a string, and the weakness flag as a boolean "w" parameter on it, where true indicates that the entity-tag is weak; if 0 or unset, the entity-tag is strong.
+The field value of the ETag header field can be mapped into the SF-ETag Structured Field by representing the entity-tag as a String, and the weakness flag as a Boolean "w" parameter on it, where true indicates that the entity-tag is weak; if 0 or unset, the entity-tag is strong.
 
 For example:
 
@@ -238,7 +238,7 @@ For example:
 SF-ETag: "abcdef"; w=?1
 ~~~
 
-If-None-Match's field value can be represented as SF-INM, which is a List of the structure described above.
+If-None-Match's field value can be mapped into the SF-INM Structured Field, which is a List of the structure described above.
 
 For example:
 
@@ -249,7 +249,7 @@ SF-INM: "abcdef"; w=?1, "ghijkl"
 
 ## Links
 
-The field value of the Link header field {{!RFC8288}} can be represented in the SF-Link List Structured Field by representing the URI-Reference as a string, and link-param as parameters.
+The field value of the Link header field {{!RFC8288}} can be mapped into the SF-Link List Structured Field by considering the URI-Reference as a String, and link-param as Parameters.
 
 For example:
 
@@ -260,7 +260,7 @@ SF-Link: "/terms"; rel="copyright"; anchor="#foo"
 
 ## Cookies
 
-The field values of the Cookie and Set-Cookie fields {{!RFC6265}} can be represented in the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a Dictionary), respectively.
+The field values of the Cookie and Set-Cookie fields {{!RFC6265}} can be mapped into the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a Dictionary), respectively.
 
 In each case, cookie names are Tokens. Their values are Strings, unless they can be represented accurately and unambiguously using the textual representation of another structured types (e.g., an Integer or Decimal).
 
