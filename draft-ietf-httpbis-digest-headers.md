@@ -213,10 +213,9 @@ have names that more clearly articulate the intended usages.
 This document uses the Augmented BNF defined in [RFC5234] and updated by
 [RFC7405].
 
-This document uses the Boolean, Byte Sequence,
-Dictionary, Integer and List types from
-{{!STRUCTURED-FIELDS=RFC8941}} along with
-the sf-dictionary and sf-list ABNF rules.
+This document uses the following terminology from {{Section 3 of
+!STRUCTURED-FIELDS=RFC8941}} to specify syntax and parsing:
+Boolean, Byte Sequence, Dictionary, Integer, and List.
 
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", "user agent" and "content" in this document are to be
@@ -239,17 +238,13 @@ Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Co
 The `Content-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
 the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
-Structured Fields Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}})
-where:
+Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}})
+where each:
 
-* keys convey the hashing algorithm (see {{algorithms}})
+* key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* values MUST be `Byte Sequences` ({{Section 3.3.5 of STRUCTURED-FIELDS}})
-  containing the output of the digest calculation.
-
-~~~ abnf
-Content-Digest   = sf-dictionary
-~~~
+* value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}),
+  that contains the output of the digest calculation.
 
 For example:
 
@@ -305,18 +300,13 @@ When a message has no "representation data" it is still possible to assert that 
 "representation data" was sent by computing the digest on an empty
 string (see {{usage-in-signatures}}).
 
-`Repr-Digest` is a Structured Fields `Dictionary` (see {{Section 3.2 of
-STRUCTURED-FIELDS}}) where:
+`Repr-Digest` is a `Dictionary` (see {{Section 3.2 of
+STRUCTURED-FIELDS}}) where each:
 
-* keys convey the hashing algorithm (see {{algorithms}})
+* key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* values MUST be of type `Byte Sequence`,
-  which contain the output of the digest calculation.
-
-~~~ abnf
-Repr-Digest   = sf-dictionary
-~~~
-
+* value is a `Byte Sequence` that
+  contains the output of the digest calculation.
 
 For example:
 
@@ -410,21 +400,15 @@ the `Content-Digest` field.
 on messages associated with the request URI and representation metadata, using
 the `Repr-Digest` field.
 
-`Want-Content-Digest` or `Want-Repr-Digest` are Structured Fields
-Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}}) where:
+`Want-Content-Digest` and `Want-Repr-Digest` are of type `Dictionary`
+where each:
 
-* keys convey the hashing algorithm (see {{algorithms}});
-* values MUST be of type `Integer` ({{Section 3.3.1 of STRUCTURED-FIELDS}})
-  in the range 0 to 10 inclusive.
+* key conveys the hashing algorithm (see {{algorithms}});
+* value is an `Integer` ({{Section 3.3.1 of STRUCTURED-FIELDS}})
+  that conveys an ascending, relative, weighted preference.
+  It must be in the range 0 to 10 inclusive.
   1 is the least preferred, 10 is the most preferred,
   and a value of 0 means "not acceptable".
-  Values convey an ascending, relative, weighted preference.
-
-~~~ abnf
-   Want-Repr-Digest = sf-dictionary
-   Want-Content-Digest = sf-dictionary
-~~~
-
 
 Examples:
 
