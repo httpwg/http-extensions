@@ -626,9 +626,8 @@ For example, if the value of the Domain attribute is "site.example", the user
 agent will include the cookie in the Cookie header field when making HTTP requests to
 site.example, www.site.example, and www.corp.site.example. (Note that a
 leading %x2E ("."), if present, is ignored even though that character is not
-permitted, but a trailing %x2E ("."), if present, will cause the user agent to
-ignore the attribute.)  If the server omits the Domain attribute, the user
-agent will return the cookie only to the origin server.
+permitted.)  If the server omits the Domain attribute, the user agent
+will return the cookie only to the origin server.
 
 WARNING: Some existing user agents treat an absent Domain attribute as if the
 Domain attribute were present and contained the current host name. For
