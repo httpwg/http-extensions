@@ -1465,8 +1465,7 @@ user agent MUST process the cookie as follows:
         attribute-name of "Domain" and an attribute-value whose
         length is no more than 1024 octets. (Note that a leading %x2E
         ("."), if present, is ignored even though that character is not
-        permitted, but a trailing %x2E ("."), if present, will cause
-        the user agent to ignore the attribute.)
+        permitted.)
 
     Otherwise:
 
