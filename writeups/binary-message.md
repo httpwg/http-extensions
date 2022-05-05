@@ -61,7 +61,7 @@ Proposed Standard. Because it's likely to be referenced by OHAI documents, and i
 
 12. Has the interested community confirmed that any and all appropriate IPR disclosures required by [BCP 78](https://www.rfc-editor.org/info/bcp78) and [BCP 79](https://www.rfc-editor.org/info/bcp79) have been filed? If not, explain why. If yes, summarize any discussion and conclusion regarding the intellectual property rights (IPR) disclosures, including links to relevant emails.
 
-
+The author has confirmed that no IPR exists to his knowledge.
 
 13. Has each Author or Contributor confirmed their willingness to be listed as such? If the number of Authors/Editors on the front page is greater than 5, please provide a justification.
 
@@ -69,7 +69,7 @@ It's Martin's document, so I believe so.
 
 14. Identify any remaining I-D nits in this document. (See [the idnits tool](http://www.ietf.org/tools/idnits/) and the checkbox items found in Guidelines to Authors of Internet-Drafts). Simply running the idnits tool is not enough; please review the entire guidelines document.
 
-
+I-D nits flags several issues, but none seem germane.
 
 15. Should any informative references be normative or vice-versa?
 
