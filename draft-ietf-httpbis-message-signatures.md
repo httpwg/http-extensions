@@ -850,14 +850,14 @@ NOTE: '\' line wrapping per RFC 8792
 "@status": 503
 "content-length": 62
 "content-type": application/json
-"signature";key="sig1";req: :LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJR\
-  GziCLuD8r5MW9S0RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVd\
-  wXyY/UkBIS1M8Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMT\
-  e0QE3IpWINTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuT\
-  Z9HdbD2Tr65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S\
-  1ag3LZElYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+"signature";req;key="sig1": :LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziC\
+  LuD8r5MW9S0RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY\
+  /UkBIS1M8Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE\
+  3IpWINTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9Hd\
+  bD2Tr65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3\
+  LZElYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
 "@signature-params": ("@status" "content-length" "content-type" \
-  "signature";key="sig1";req);created=1618884479\
+  "signature";req;key="sig1");created=1618884479\
   ;keyid="test-key-ecc-p256"
 ~~~
 
@@ -871,10 +871,10 @@ Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
 Content-Length: 62
 Signature-Input: reqres=("@status" "content-length" "content-type" \
-  "signature";key="sig1";req);created=1618884479\
+  "signature";req;key="sig1");created=1618884479\
   ;keyid="test-key-ecc-p256"
-Signature: reqres=:JqzXLIjNd6VWVg/M7enbjWkOgsPmIK9vcoFQEkLD0SXNbFjR\
-  6d+olsof1dv7xC7ygF1q0YKjVrbV2QlCpDxrHg==:
+Signature: reqres=:vR1E+sDgh0J3dZyVdPc7mK0ZbEMW3N47eDpFjXLE9g95Gx1K\
+  QLpdOmDQfedgdLzaFCqfD0WPn9e9/jubyUuZRw==:
 
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
