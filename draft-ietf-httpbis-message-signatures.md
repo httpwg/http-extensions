@@ -395,21 +395,15 @@ This specification defines the following derived components:
 @status
 : The status code for a response. ({{content-status-code}}).
 
-@request-response
-: A signature from a request message that resulted in this response message. ({{content-request-response}})
-
 Additional derived component names MAY be defined and registered in the HTTP Signatures Derived Component Name Registry. ({{content-registry}})
 
-Derived components can be applied in one or more of three targets:
+Derived component values are taken from the context of the target message for the signature. This context includes information about the message itself, such as its control data, as well as any additional state and context held by the signer. In particular, when signing a response, the signer can include any derived components from the originating request by using the [request-response signature binding parameter](#content-request-response).
 
 request:
 : Values derived from and results applied to an HTTP request message as described in {{Section 3.4 of SEMANTICS}}.
 
 response:
 : Values derived from and results applied to an HTTP response message as described in {{Section 3.4 of SEMANTICS}}.
-
-related-response:
-: Values derived from an HTTP request message and results applied to the HTTP response message that is responding to that specific request.
 
 A derived component definition MUST define all targets to which it can be applied.
 
@@ -487,8 +481,6 @@ And the following signature base line:
 "@method": POST
 ~~~
 
-If used in a related-response, the `@method` component identifier refers to the associated component value of the request that triggered the response message being signed.
-
 ### Target URI {#content-target-uri}
 
 The `@target-uri` derived component refers to the target URI of a request message. The component value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target as described in {{SEMANTICS, Section 7.1}}.
@@ -512,8 +504,6 @@ And the following signature base line:
 ~~~
 "@target-uri": https://www.example.com/path?param=value
 ~~~
-
-If used in a related-response, the `@target-uri` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Authority {#content-request-authority}
 
@@ -539,8 +529,6 @@ And the following signature base line:
 ~~~
 "@authority": www.example.com
 ~~~
-
-If used in a related-response, the `@authority` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 The `@authority` derived component SHOULD be used instead of signing the `Host` header directly, see {{security-not-fields}}.
 
@@ -569,8 +557,6 @@ And the following signature base line:
 ~~~
 "@scheme": http
 ~~~
-
-If used in a related-response, the `@scheme` component identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Request Target {#content-request-target}
 
@@ -659,8 +645,6 @@ And the following signature base line:
 "@request-target": *
 ~~~
 
-If used in a related-response, the `@request-target` component identifier refers to the associated component value of the request that triggered the response message being signed.
-
 ### Path {#content-request-path}
 
 The `@path` derived component refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
@@ -684,8 +668,6 @@ And the following signature base line:
 ~~~
 "@path": /path
 ~~~
-
-If used in a related-response, the `@path` identifier refers to the associated component value of the request that triggered the response message being signed.
 
 ### Query {#content-request-query}
 
@@ -742,8 +724,6 @@ Resulting in the following signature base line:
 "@query": ?
 ~~~
 
-If used in a related-response, the `@query` component identifier refers to the associated component value of the request that triggered the response message being signed.
-
 ### Query Parameters {#content-request-query-param}
 
 If a request target URI uses HTML form parameters in the query string as defined in [HTMLURL, Section 5](#HTMLURL),
@@ -787,8 +767,6 @@ NOTE: '\' line wrapping per RFC 8792
 If a parameter name occurs multiple times in a request, all parameter values of that name MUST be included
 in separate signature base lines in the order in which the parameters occur in the target URI. Note that in some implementations, the order of parsed query parameters is not stable, and this situation could lead to unexpected results. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
 
-If used in a related-response, the `@query-param` component identifier refers to the associated component value of the request that triggered the response message being signed.
-
 ### Status Code {#content-status-code}
 
 The `@status` derived component refers to the three-digit numeric HTTP status code of a response message as defined in {{SEMANTICS, Section 15}}. The component value is the serialized three-digit integer of the HTTP response code, with no descriptive text.
@@ -815,16 +793,20 @@ And the following signature base line:
 
 The `@status` component identifier MUST NOT be used in a request message.
 
-### Request-Response Signature Binding {#content-request-response}
+## Request-Response Signature Binding {#content-request-response}
 
-When a signed request message results in a signed response message, the `@request-response` derived component can be used to cryptographically link the request and the response to each other by including the identified request signature value in the response's signature base without copying the value of the request's signature to the response directly. This derived component has a single REQUIRED parameter:
+When a request message results in a signed response message, the signer can include portions of the request message in the signature base by adding the `req` parameter to the component identifier.
 
-`key`
-: Identifies which signature from the response to sign.
+`req`
+: Indicates that the component value is derived from the request that triggered this response message and not from the response message directly.
 
-The component value is the `sf-binary` representation of the signature value of the referenced request identified by the `key` parameter.
+This parameter can be applied to both HTTP fields and derived components with the same semantics. The component value for a message component using this parameter is calculated in the same manner as it is normally, but data is pulled from the request message.
 
-For example, when serving this signed request:
+Note that the same component name MAY be included with and without the `req` parameter in a single signature base, indicating the same named component from both the request and response message.
+
+The `req` parameter MAY be combined with other parameters as appropriate for the component identifier, such as the `key` parameter for a dictionary field.
+
+For example, when serving a response for this signed request:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -868,14 +850,14 @@ NOTE: '\' line wrapping per RFC 8792
 "@status": 503
 "content-length": 62
 "content-type": application/json
-"@request-response";key="sig1": :LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJR\
-  GziCLuD8r5MW9S0RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVd\
-  wXyY/UkBIS1M8Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMT\
-  e0QE3IpWINTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuT\
-  Z9HdbD2Tr65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S\
-  1ag3LZElYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+"signature";req;key="sig1": :LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziC\
+  LuD8r5MW9S0RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY\
+  /UkBIS1M8Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE\
+  3IpWINTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9Hd\
+  bD2Tr65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3\
+  LZElYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
 "@signature-params": ("@status" "content-length" "content-type" \
-  "@request-response";key="sig1");created=1618884479\
+  "signature";req;key="sig1");created=1618884479\
   ;keyid="test-key-ecc-p256"
 ~~~
 
@@ -889,10 +871,10 @@ Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
 Content-Length: 62
 Signature-Input: reqres=("@status" "content-length" "content-type" \
-  "@request-response";key="sig1");created=1618884479\
+  "signature";req;key="sig1");created=1618884479\
   ;keyid="test-key-ecc-p256"
-Signature: reqres=:JqzXLIjNd6VWVg/M7enbjWkOgsPmIK9vcoFQEkLD0SXNbFjR\
-  6d+olsof1dv7xC7ygF1q0YKjVrbV2QlCpDxrHg==:
+Signature: reqres=:vR1E+sDgh0J3dZyVdPc7mK0ZbEMW3N47eDpFjXLE9g95Gx1K\
+  QLpdOmDQfedgdLzaFCqfD0WPn9e9/jubyUuZRw==:
 
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
@@ -901,7 +883,7 @@ Since the request's signature value itself is not repeated in the response, the 
 
 Note that the ECDSA algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
-The `@request-response` component identifier MUST NOT be used in a request message.
+The `req` parameter MUST NOT be used with a request message.
 
 ## Creating the Signature Base {#create-sig-input}
 
@@ -1543,7 +1525,7 @@ Status:
 : A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
 Target:
-: The valid message targets for the derived parameter. MUST be one of the values "Request", "Request, Response", "Request, Related-Response", or "Related-Response". The semantics of these are defined in {{derived-components}}.
+: The valid message targets for the derived parameter. MUST be one of the values "Request", "Response", or "Request, Response". The semantics of these are defined in {{derived-components}}.
 
 Specification document(s):
 : Reference to the document(s) that specify the
@@ -1558,16 +1540,15 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 |Name|Status|Target|Specification document(s)|
 |--- |--- |--- |--- |
 |`@signature-params`| Active | Request, Response | {{signature-params}} of this document|
-|`@method`| Active | Request, Related-Response | {{content-request-method}} of this document|
-|`@authority`| Active | Request, Related-Response | {{content-request-authority}} of this document|
-|`@scheme`| Active | Request, Related-Response | {{content-request-scheme}} of this document|
-|`@target-uri`| Active | Request, Related-Response | {{content-target-uri}} of this document|
-|`@request-target`| Active | Request, Related-Response | {{content-request-target}} of this document|
-|`@path`| Active | Request, Related-Response | {{content-request-path}} of this document|
-|`@query`| Active | Request, Related-Response | {{content-request-query}} of this document|
-|`@query-param`| Active | Request, Related-Response | {{content-request-query-param}} of this document|
+|`@method`| Active | Request | {{content-request-method}} of this document|
+|`@authority`| Active | Request | {{content-request-authority}} of this document|
+|`@scheme`| Active | Request | {{content-request-scheme}} of this document|
+|`@target-uri`| Active | Request | {{content-target-uri}} of this document|
+|`@request-target`| Active | Request | {{content-request-target}} of this document|
+|`@path`| Active | Request | {{content-request-path}} of this document|
+|`@query`| Active | Request | {{content-request-query}} of this document|
+|`@query-param`| Active | Request | {{content-request-query-param}} of this document|
 |`@status`| Active | Response | {{content-status-code}} of this document|
-|`@request-response`|Active | Related-Response | {{content-request-response}} of this document|
 {: title="Initial contents of the HTTP Signature Derived Component Names Registry." }
 
 # Security Considerations {#security}
@@ -2298,6 +2279,9 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -10
+     * Removed "related response" and "@request-response" in favor of generic "req" parameter.
 
   - -09
      * Explained key formats better.
