@@ -3,7 +3,6 @@ title: "Binary Representation of HTTP Messages"
 abbrev: Binary HTTP Messages
 docname: draft-ietf-httpbis-binary-message-latest
 category: std
-ipr: trust200902
 area: ART
 workgroup: HTTP
 venue:
@@ -14,9 +13,8 @@ venue:
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/binary-messages
 github-issue-label: binary-messages
-
-stand_alone: yes
-pi: [toc, sortrefs, symrefs, docmapping]
+submissionType: IETF
+v: 3
 
 author:
   -
@@ -32,12 +30,18 @@ author:
 
 normative:
   HTTP: I-D.ietf-httpbis-semantics
-  MESSAGING: I-D.ietf-httpbis-messaging
-  H2: I-D.ietf-httpbis-http2bis
-  H3: I-D.ietf-quic-http
   QUIC: RFC9000
 
 informative:
+  MESSAGING:
+    =: I-D.ietf-httpbis-messaging
+    display: HTTP/1.1
+  H2:
+    =: I-D.ietf-httpbis-http2bis
+    display: HTTP/2
+  H3:
+    =: I-D.ietf-quic-http
+    display: HTTP/3
 
 
 --- abstract
