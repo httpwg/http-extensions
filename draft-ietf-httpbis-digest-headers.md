@@ -392,13 +392,17 @@ preferences using the
 `Want-Content-Digest` or `Want-Repr-Digest` fields. These can be used in both
 requests and responses.
 
-`Want-Content-Digest` indicates the sender's desire to receive a content digest
+`Want-Content-Digest` indicates that the sender would like to receive a content digest
 on messages associated with the request URI and representation metadata, using
 the `Content-Digest` field.
 
-`Want-Repr-Digest` indicates the sender's desire to receive a representation digest
+`Want-Repr-Digest` indicates that the sender would like to receive a representation digest
 on messages associated with the request URI and representation metadata, using
 the `Repr-Digest` field.
+
+If `Want-Content-Digest` or `Want-Repr-Digest` are used in a response, it
+indicates that the server  would like the client to provide the respective
+Integrity field on future requests.
 
 `Want-Content-Digest` and `Want-Repr-Digest` are of type `Dictionary`
 where each:
