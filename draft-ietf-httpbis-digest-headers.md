@@ -238,7 +238,7 @@ Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Co
 The `Content-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
 the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
-Dictionary (see {{Section 3.2 of STRUCTURED-FIELDS}})
+`Dictionary` (see {{Section 3.2 of STRUCTURED-FIELDS}})
 where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
