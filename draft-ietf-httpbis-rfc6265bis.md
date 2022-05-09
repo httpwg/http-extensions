@@ -491,8 +491,7 @@ cookie-pair       = cookie-name BWS "=" BWS cookie-value
 cookie-name       = 1*cookie-octet
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
 cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
-                    / %x80-FF
-                      ; octets excluding CTLs,
+                      ; US-ASCII characters excluding CTLs,
                       ; whitespace DQUOTE, comma, semicolon,
                       ; and backslash
 
