@@ -304,18 +304,18 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | Field Name          | Structured Type |
 |---------------------|-----------------|
 | SF-Content-Location | String          |
-| SF-Location         | String          |
-| SF-Referer          | String          |
+| SF-Cookie           | List            |
 | SF-Date             | Item            |
+| SF-ETag             | Item            |
 | SF-Expires          | Item            |
 | SF-IMS              | Item            |
-| SF-IUS              | Item            |
-| SF-LM               | Item            |
-| SF-ETag             | Item            |
 | SF-INM              | List            |
+| SF-IUS              | Item            |
 | SF-Link             | List            |
+| SF-LM               | Item            |
+| SF-Location         | String          |
+| SF-Referer          | String          |
 | SF-Set-Cookie       | Dictionary      |
-| SF-Cookie           | List            |
 {:id="new-fields" title="New Fields"}
 
 Finally, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
@@ -325,10 +325,10 @@ Finally, add the indicated Structured Type for each existing registry entry list
 | Accept-CH                                 | List            |
 | Cache-Status                              | List            |
 | CDN-Cache-Control                         | Dictionary      |
-| Cross-Origin-Opener-Policy                | Item            |
-| Cross-Origin-Opener-Policy-Report-Only    | Item            |
 | Cross-Origin-Embedder-Policy              | Item            |
 | Cross-Origin-Embedder-Policy-Report-Only  | Item            |
+| Cross-Origin-Opener-Policy                | Item            |
+| Cross-Origin-Opener-Policy-Report-Only    | Item            |
 | Origin-Agent-Cluster                      | Item            |
 | Priority                                  | Dictionary      |
 | Proxy-Status                              | List            |
