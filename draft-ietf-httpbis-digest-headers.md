@@ -401,7 +401,7 @@ on messages associated with the request URI and representation metadata, using
 the `Repr-Digest` field.
 
 If `Want-Content-Digest` or `Want-Repr-Digest` are used in a response, it
-indicates that the server  would like the client to provide the respective
+indicates that the server would like the client to provide the respective
 Integrity field on future requests.
 
 `Want-Content-Digest` and `Want-Repr-Digest` are of type `Dictionary`
