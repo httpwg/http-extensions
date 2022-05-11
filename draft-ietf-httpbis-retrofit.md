@@ -272,7 +272,7 @@ Set-Cookie parameters map to Parameters on the appropriate SF-Set-Cookie member,
 | Max-Age             | Integer             |
 | Secure              | Boolean             |
 | SameSite            | Token               |
-{:id="cookie-params" title="Cookie Parameter Types"}
+{:id="cookie-params" title="Set-Cookie Parameter Types"}
 
 Note that cookies in both fields are separated by commas, not semicolons, and multiple cookies can appear in each field.
 
