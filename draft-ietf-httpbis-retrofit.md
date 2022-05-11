@@ -268,9 +268,9 @@ Set-Cookie parameters map to Parameters on the appropriate SF-Set-Cookie member,
 
 | Parameter Name      | Structured Type     |
 |---------------------|---------------------|
+| HttpOnly            | Boolean             |
 | Max-Age             | Integer             |
 | Secure              | Boolean             |
-| HttpOnly            | Boolean             |
 | SameSite            | Token               |
 {:id="cookie-params" title="Cookie Parameter Types"}
 
