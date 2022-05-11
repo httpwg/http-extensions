@@ -80,6 +80,7 @@ informative:
   PATCH: RFC5789
   NO-MD5: RFC6151
   NO-SHA: RFC6194
+  SIGNATURES: I-D.ietf-httpbis-message-signatures
 
 --- abstract
 
@@ -180,7 +181,9 @@ different digest values when transferred with HTTP.
 Integrity fields do not provide integrity for
 HTTP messages or fields. However, they can be combined with other mechanisms that
 protect metadata, such as digital signatures, in order to protect
-the phases of an HTTP exchange in whole or in part.
+the phases of an HTTP exchange in whole or in part. For example, HTTP Message
+Signatures {{SIGNATURES}} could be used to sign Integrity fields, thus providing
+coverage for HTTP content or representation data.
 
 This specification does not define means for authentication, authorization or privacy.
 
@@ -477,7 +480,8 @@ certain kinds of corruption.
 
 Integrity fields are not intended to be a general protection against malicious tampering with
 HTTP messages. This can be achieved by combining it with other approaches such
-as transport-layer security or digital signatures.
+as transport-layer security or digital signatures (for example, HTTP Message
+Signatures {{SIGNATURES}}).
 
 ## End-to-End Integrity
 
@@ -498,6 +502,10 @@ Digital signatures are widely used together with checksums to provide the
 certain identification of the origin of a message [NIST800-32]. Such signatures
 can protect one or more HTTP fields and there are additional considerations when
 Integrity fields are included in this set.
+
+There are no restrictions placed on the type or format of digitial signature that
+Integrity fields can be used with. One possible approach is to combine them with
+HTTP Message Signatures {{SIGNATURES}}.
 
 Digests explicitly
 depend on the "representation metadata" (e.g. the values of `Content-Type`,
