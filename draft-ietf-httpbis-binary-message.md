@@ -603,7 +603,7 @@ features of the formats used in those protocols:
 
 Some of these features are also absent in HTTP/2 and HTTP/3.
 
-Unlike HTTP/2 and HTTP/3, this format uses a a fixed format for control data
+Unlike HTTP/2 and HTTP/3, this format uses a fixed format for control data
 rather than using pseudo-fields.  Messages are invalid ({{invalid}}) if they
 contain fields named `:method`, `:scheme`, `:authority`, `:path`, or `:status`.
 Other pseudo-fields that are defined by protocol extensions MAY be included;
