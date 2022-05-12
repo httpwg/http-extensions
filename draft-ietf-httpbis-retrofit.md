@@ -44,19 +44,21 @@ informative:
 
 --- abstract
 
-This specification defines how a selection of existing HTTP fields can be handled as Structured Fields.
+This specification nominates a selection of existing HTTP fields as having syntax that is compatible with Structured Fields, so that they can be handled as such (subject to certain caveats).
+
+To accommodate some additional fields whose syntax is not compatible, it also defines mappings of their semantics into new Structured Fields. It does not specify how to negotiate their use.
 
 
 --- middle
 
 # Introduction
 
-Structured Field Values for HTTP {{STRUCTURED-FIELDS}} introduced a data model with associated parsing and serialization algorithms for use by new HTTP field values. Header fields that are defined as Structured Fields can realise a number of benefits, including:
+Structured Field Values for HTTP {{STRUCTURED-FIELDS}} introduced a data model with associated parsing and serialization algorithms for use by new HTTP field values. Fields that are defined as Structured Fields can realise a number of benefits, including:
 
 * Improved interoperability and security: precisely defined parsing and serialisation algorithms are typically not available for fields defined with just ABNF and/or prose.
-* Reuse of common implementations: many parsers for other fields are specific to a single field or a small family of fields
-* Canonical form: because a deterministic serialisation algorithm is defined for each type, Structure Fields have a canonical representation
-* Enhanced API support: a regular data model makes it easier to expose field values as a native data structure in implementations
+* Reuse of common implementations: many parsers for other fields are specific to a single field or a small family of fields.
+* Canonical form: because a deterministic serialisation algorithm is defined for each type, Structure Fields have a canonical representation.
+* Enhanced API support: a regular data model makes it easier to expose field values as a native data structure in implementations.
 * Alternative serialisations: While {{STRUCTURED-FIELDS}} defines a textual serialisation of that data model, other, more efficient serialisations of the underlying data model are also possible.
 
 However, a field needs to be defined as a Structured Field for these benefits to be realised. Many existing fields are not, making up the bulk of header and trailer fields seen in HTTP traffic on the internet.
@@ -65,7 +67,7 @@ This specification defines how a selection of existing HTTP fields can be handle
 
 It does so using two techniques. {{compatible}} lists compatible fields -- those that can be handled as if they were Structured Fields due to the similarity of their defined syntax to that in Structured Fields. {{mapped}} lists mapped fields -- those whose syntax needs to be transformed into an underlying data model which is then mapped into that defined by Structured Fields.
 
-While implementations can parse and serialise compatible fields as Structured Fields subject to the caveats in {{compatible}}, a sender cannot generate mapped fields from {{mapped}} and expect them to be understood and acted upon by the recipient without prior negotiation. This specification does not define such a mechanism.
+Note that while implementations can parse and serialise compatible fields as Structured Fields subject to the caveats in {{compatible}}, a sender cannot generate mapped fields from {{mapped}} and expect them to be understood and acted upon by the recipient without prior negotiation. This specification does not define such a mechanism.
 
 
 ## Notational Conventions
