@@ -37,6 +37,7 @@ normative:
   RFC2119:
   HTTP: I-D.ietf-httpbis-semantics
   STRUCTURED-FIELDS: RFC8941
+  COOKIES: I-D.ietf-httpbis-rfc6265bis
 
 informative:
 
@@ -260,7 +261,7 @@ SF-Link: "/terms"; rel="copyright"; anchor="#foo"
 
 ## Cookies
 
-The field values of the Cookie and Set-Cookie fields {{!RFC6265}} can be mapped into the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a Dictionary), respectively.
+The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a Dictionary), respectively.
 
 In each case, cookie names are Tokens. Their values are Strings, unless they can be represented accurately and unambiguously using the textual representation of another structured types (e.g., an Integer or Decimal).
 
@@ -269,10 +270,13 @@ Set-Cookie parameters map to Parameters on the appropriate SF-Set-Cookie member,
 | Parameter Name      | Structured Type     |
 |---------------------|---------------------|
 | HttpOnly            | Boolean             |
+| Expires             | Integer             |
 | Max-Age             | Integer             |
 | Secure              | Boolean             |
 | SameSite            | Token               |
 {:id="cookie-params" title="Set-Cookie Parameter Types"}
+
+Expires is mapped to an Integer representation of parsed-cookie-date (see {{Section x.x of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, minus leap seconds).
 
 Note that cookies in both fields are separated by commas, not semicolons, and multiple cookies can appear in each field.
 
