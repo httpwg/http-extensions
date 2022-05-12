@@ -142,14 +142,14 @@ An application using this specification will need to consider how to handle such
 Note the following caveats regarding compatibility:
 
 Parameter and Dictionary keys:
-: HTTP parameter names are case-insensitive (per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase. Although the vast majority of parameters seen in typical traffic are all-lowercase, compatibility can be improved by force-lowercasing parameters when encountered.
-Likewise, many Dictionary-based fields (e.g., Cache-Control, Expect-CT, Pragma, Prefer, Preference-Applied, Surrogate-Control) have case-insensitive keys, and compatibility can be improved by force-lowercasing them.
+: HTTP parameter names are case-insensitive (per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase. Although the vast majority of parameters seen in typical traffic are all-lowercase, compatibility can be improved by force-lowercasing parameters when parsing.
+Likewise, many Dictionary-based fields (e.g., Cache-Control, Expect-CT, Pragma, Prefer, Preference-Applied, Surrogate-Control) have case-insensitive keys, and compatibility can be improved by force-lowercasing them when parsing.
 
 Parameter delimitation:
-: The parameters rule in HTTP (see {{Section 5.6.6 of HTTP}}) allows whitespace before the ";" delimiter, but Structured Fields does not. Compatibility can be improved by allowing such whitespace.
+: The parameters rule in HTTP (see {{Section 5.6.6 of HTTP}}) allows whitespace before the ";" delimiter, but Structured Fields does not. Compatibility can be improved by allowing such whitespace when parsing.
 
 String quoting:
-: {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Field Strings only escape "\\" and DQUOTE. Compatibility can be improved by unescaping other characters before processing as Strings.
+: {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Field Strings only escape "\\" and DQUOTE. Compatibility can be improved by unescaping other characters before parsing.
 
 Token limitations:
 : In Structured Fields, tokens are required to begin with an alphabetic character or "\*", whereas HTTP tokens allow a wider range of characters. This prevents use of mapped values that begin with one of these characters. For example, media types, field names, methods, range-units, character and transfer codings that begin with a number or special character other than "*" might be valid HTTP protocol elements, but will not be able to be parsed as Structured Field Tokens.
@@ -158,19 +158,19 @@ Integer limitations:
 : Structured Fields Integers can have at most 15 digits; larger values will not be able to be represented in them.
 
 IPv6 Literals:
-: Fields whose values can contain IPv6 literal addresses (such as CDN-Loop, Host, and Origin) are not compatible when those values are parsed as Structured Fields Tokens, because the brackets used to delimit them are not allowed in Tokens.
+: Fields whose values contain IPv6 literal addresses (such as CDN-Loop, Host, and Origin) are not able to be represented as Structured Fields Tokens, because the brackets used to delimit them are not allowed in Tokens.
 
 Empty Field Values:
 : Empty and whitespace-only field values are considered errors in Structured Fields. For compatible fields, an empty field indicates that the field should be silently ignored.
 
 Alt-Svc:
-: Some ALPN tokens (e.g., `h3-Q43`) do not conform to key's syntax. Since the final version of HTTP/3 uses the `h3` token, this shouldn't be a long-term issue, although future tokens may again violate this assumption.
+: Some ALPN tokens (e.g., `h3-Q43`) do not conform to key's syntax, and therefore cannot be represented as a Token. Since the final version of HTTP/3 uses the `h3` token, this shouldn't be a long-term issue, although future tokens may again violate this assumption.
 
 Content-Length:
-: Content-Length is defined as a List because it is not uncommon for implementations to mistakenly send multiple values. See {{Section 8.6 of HTTP}} for handling requirements.
+: Note that Content-Length is defined as a List because it is not uncommon for implementations to mistakenly send multiple values. See {{Section 8.6 of HTTP}} for handling requirements.
 
 Retry-After:
-: Only the delta-seconds form of Retry-After is supported; a Retry-After value containing a http-date will need to be either converted into delta-seconds or represented as a raw value.
+: Only the delta-seconds form of Retry-After can be represented; a Retry-After value containing a http-date will need to be either converted into delta-seconds to be conveyed as a Structured Field Value.
 
 
 # Mapped Fields {#mapped}
