@@ -149,7 +149,7 @@ Parameter delimitation:
 : The parameters rule in HTTP (see {{Section 5.6.6 of HTTP}}) allows whitespace before the ";" delimiter, but Structured Fields does not. Compatibility can be improved by allowing such whitespace.
 
 String quoting:
-: {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Field Strings only escapes "\\" and DQUOTE. Compatibility can be improved by unescaping other characters before processing as Strings.
+: {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Field Strings only escape "\\" and DQUOTE. Compatibility can be improved by unescaping other characters before processing as Strings.
 
 Token limitations:
 : In Structured Fields, tokens are required to begin with an alphabetic character or "\*", whereas HTTP tokens allow a wider range of characters. This prevents use of mapped values that begin with one of these characters. For example, media types, field names, methods, range-units, character and transfer codings that begin with a number or special character other than "*" might be valid HTTP protocol elements, but will not be able to be parsed as Structured Field Tokens.
