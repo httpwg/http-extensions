@@ -101,15 +101,15 @@ The signing mechanism described in this document consists of three parts:
 
 - A common nomenclature and canonicalization rule set for the different protocol elements and other components of HTTP messages, used to create the signature base.
 - Algorithms for generating and verifying signatures over HTTP message components using this signature base through application of cryptographic primitives.
-- A mechanism for attaching a signature and related metadata to an HTTP message, and for parsing attached signatures and metadata from HTTP messages.
+- A mechanism for attaching a signature and related metadata to an HTTP message, and for parsing attached signatures and metadata from HTTP messages. To facilitate this, this document defines the "Signature-Input" and "Signature" fields.
 
-This document also provides a mechanism for a potential verifier to signal to a potential signer that a signature is desired in one or more subsequent messages. This optional negotiation mechanism can be used along with opportunistic or application-driven message signatures by either party.
+This document also provides a mechanism for a potential verifier to signal to a potential signer that a signature is desired in one or more subsequent messages. This optional negotiation mechanism can be used along with opportunistic or application-driven message signatures by either party. To facilitate this, this document defines the "Accept-Signature" field.
 
 ## Requirements Discussion
 
 HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was originally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signature base.  Since the exact raw bytes of the message cannot be relied upon as a reliable source for a signature base, the signer and verifier must independently create the signature base from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
 
-For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the body, or the `Date` header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message components are signed.
+For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the body, or the getDate` header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message components are signed.
 
 HTTP applications may be running in environments that do not provide complete access to or control over HTTP messages (such as a web browser's JavaScript environment), or may be using libraries that abstract away the details of the protocol (such as [the Java HTTPClient library](https://openjdk.java.net/groups/net/httpclient/intro.html)).  These applications need to be able to generate and verify signatures despite incomplete knowledge of the HTTP message.
 
@@ -772,7 +772,7 @@ in separate signature base lines in the order in which the parameters occur in t
 
 ### Status Code {#content-status-code}
 
-The `@status` derived component refers to the three-digit numeric HTTP status code of a response message as defined in {{SEMANTICS, Section 15}}. The component value is the serialized three-digit integer of the HTTP response code, with no descriptive text.
+The `@status` derived component refers to the three-digit numeric HTTP status code of a response message as defined in {{SEMANTICS, Section 15}}. The component value is the serialized three-digit integer of the HTTP status code, with no descriptive text.
 If used, the `@status` component identifier MUST occur only once in the covered components.
 
 For example, the following response message:
@@ -995,7 +995,7 @@ In order to create a signature, a signer MUST follow the following algorithm:
 
 3. If applicable, the signer sets the signature's expiration time property to the time at which the signature is to expire. The expiration is a hint to the verifier, expressing the time at which the signer is no longer willing to vouch for the safety of the signature.
 
-4. The signer creates an ordered set of component identifiers representing the message components to be covered by the signature, and attaches signature metadata parameters to this set. The serialized value of this is later used as the value of the `Signature-Input` field as described in {{signature-input-header}}.
+4. The signer creates an ordered set of component identifiers representing the message components to be covered by the signature, and attaches signature metadata parameters to this set. The serialized value of this is later used as the value of the Signature-Input field as described in {{signature-input-header}}.
    * Once an order of covered components is chosen, the order MUST NOT change for the life of the signature.
    * Each covered component identifier MUST be either an HTTP field in the message {{http-header}} or a derived component listed in {{derived-components}} or its associated registry.
    * Signers of a request SHOULD include some or all of the message control data in the covered components, such as the `@method`, `@authority`, `@target-uri`, or some combination thereof.
@@ -1027,18 +1027,17 @@ Note that the RSA PSS algorithm in use here is non-deterministic, meaning a diff
 
 ## Verifying a Signature {#verify}
 
-Verification of an HTTP message signature is a process that takes as its input the message (including `Signature` and `Signature-Input` fields) and the requirements for the application. The output of the verification is either a positive verification or an error.
+Verification of an HTTP message signature is a process that takes as its input the message (including Signature and Signature-Input fields) and the requirements for the application. The output of the verification is either a positive verification or an error.
 
 In order to verify a signature, a verifier MUST follow the following algorithm:
 
-1. Parse the `Signature` and `Signature-Input` fields as described in {{signature-input-header}} and {{signature-header}}, and extract the signatures to be verified.
+1. Parse the Signature and Signature-Input fields as described in {{signature-input-header}} and {{signature-header}}, and extract the signatures to be verified.
     1. If there is more than one signature value present, determine which signature should be processed
         for this message based on the policy and configuration of the verifier. If an applicable signature is not found, produce an error.
-    2. If the chosen `Signature` value does not have a corresponding `Signature-Input` value,
+    2. If the chosen Signature value does not have a corresponding Signature-Input value,
         produce an error.
-2. Parse the values of the chosen `Signature-Input` field as a parameterized structured field inner list item (`inner-list`) to get the signature parameters for the
-    signature to be verified.
-3. Parse the value of the corresponding `Signature` field to get the byte array value of the signature
+2. Parse the values of the chosen Signature-Input field as a parameterized Inner List to get the ordered list of covered components and the signature parameters for the signature to be verified.
+3. Parse the value of the corresponding Signature field to get the byte array value of the signature
     to be verified.
 4. Examine the signature parameters to confirm that the signature meets the requirements described
     in this document, as well as any additional requirements defined by the application such as which
@@ -1062,8 +1061,8 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
         not the same, the verifier MUST fail the verification.
 7. Use the received HTTP message and the signature's metadata to recreate the signature base, using
     the algorithm defined in {{create-sig-input}}. The value of the `@signature-params` input is
-    the value of the `Signature-Input` field for this signature serialized according to the rules described
-    in {{signature-params}}, not including the signature's label from the `Signature-Input` field.
+    the value of the Signature-Input field for this signature serialized according to the rules described
+    in {{signature-params}}, not including the signature's label from the Signature-Input field.
 8. If the key material is appropriate for the algorithm, apply the appropriate `HTTP_VERIFY` cryptographic verification algorithm to the signature,
     recalculated signature base, key material, signature value. The `HTTP_VERIFY` primitive and several concrete algorithms are defined in
     {{signature-methods}}.
@@ -1234,14 +1233,14 @@ JWA algorithm values from the JSON Web Signature and Encryption Algorithms Regis
 
 # Including a Message Signature in a Message
 
-Message signatures can be included within an HTTP message via the `Signature-Input` and `Signature` HTTP fields, both defined within this specification. When attached to a message, an HTTP message signature is identified by a label. This label MUST be unique within a given HTTP message and MUST be used in both the `Signature-Input` and `Signature`. The label is chosen by the signer, except where a specific label is dictated by protocol negotiations.
+Message signatures can be included within an HTTP message via the Signature-Input and Signature fields, both defined within this specification. When attached to a message, an HTTP message signature is identified by a label. This label MUST be unique within a given HTTP message and MUST be used in both the Signature-Input and Signature fields. The label is chosen by the signer, except where a specific label is dictated by protocol negotiations such as described in {{request-signature}}
 
-An HTTP message signature MUST use both fields containing the same labels:
-the `Signature` HTTP field contains the signature value, while the `Signature-Input` HTTP field identifies the covered components and parameters that describe how the signature was generated. Each field contains labeled values and MAY contain multiple labeled values, where the labels determine the correlation between the `Signature` and `Signature-Input` fields.
+An HTTP message signature MUST use both fields and each field MUST contain the same labels.
+The Signature-Input field identifies the covered components and parameters that describe how the signature was generated, while the Signature field contains the signature value. Each field contains labeled values and MAY contain multiple labeled values. The result of this constraint is that the Signature-Input and Signature Dictionaries are parallel data structures of each other. Any key found in one field but not in the other is an error.
 
-## The 'Signature-Input' HTTP Field {#signature-input-header}
+## The Signature-Input HTTP Field {#signature-input-header}
 
-The `Signature-Input` HTTP field is a Dictionary structured field {{STRUCTURED-FIELDS}} containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered components including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The Signature-Input field is a Dictionary structured field defined in {{Section 3.2 of STRUCTURED-FIELDS}} containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's key is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered components including all signature metadata parameters, using the Inner List serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1251,16 +1250,16 @@ Signature-Input: sig1=("@method" "@target-uri" "@authority" \
   created=1618884475;keyid="test-key-rsa-pss"
 ~~~
 
-To facilitate signature validation, the `Signature-Input` field value MUST contain the same serialized value used
-in generating the signature base's `@signature-params` value.
+To facilitate signature validation, the Signature-Input field value MUST contain the same serialized value used
+in generating the signature base's `@signature-params` value. Note that parameter order MUST be preserved.
 
-The signer MAY include the `Signature-Input` field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the `Signature-Input` HTTP field be included only as a header to avoid signatures being inadvertently stripped from a message.
+The signer MAY include the Signature-Input field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the Signature-Input field be included only as a header to avoid signatures being inadvertently stripped from a message.
 
-Multiple `Signature-Input` fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
+Multiple Signature-Input fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
 
-## The 'Signature' HTTP Field {#signature-header}
+## The Signature HTTP Field {#signature-header}
 
-The `Signature` HTTP field is a Dictionary Structured field {{STRUCTURED-FIELDS}} containing one or more message signatures generated from components within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured field within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP field MUST be ignored.
+The Signature field is a Dictionary structured field defined in {{Section 3.2 of STRUCTURED-FIELDS}} containing one or more message signatures generated from components and context of the HTTP message. The member's key is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is a Byte Sequence containing the signature value for the message signature identified by the member name.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1273,13 +1272,13 @@ Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
   BNFv3r5S9IXf2fYJK+eyW4AiGVMvMcOg==:
 ~~~
 
-The signer MAY include the `Signature` field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the `Signature` HTTP field be included only as a header to avoid signatures being inadvertently stripped from a message.
+The signer MAY include the Signature field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the Signature field be included only as a header to avoid signatures being inadvertently stripped from a message.
 
-Multiple `Signature` fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
+Multiple Signature fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
 
 ## Multiple Signatures {#signature-multiple}
 
-Multiple distinct signatures MAY be included in a single message. Each distinct signature MUST have a unique label. Since `Signature-Input` and `Signature` are both defined as Dictionary Structured fields, they can be used to include multiple signatures within the same HTTP message by using distinct signature labels. These multiple signatures could be added all by the same signer or could come from several different signers. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
+Multiple distinct signatures MAY be included in a single message. Each distinct signature MUST have a unique label. These multiple signatures could be added all by the same signer or could come from several different signers. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
 
 The following non-normative example starts with a signed request from the client. The proxy takes this request validates the client's signature.
 
@@ -1306,7 +1305,7 @@ Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
 {"hello": "world"}
 ~~~
 
-The proxy then alters the message before forwarding it on to the origin server, changing the target host and adding the `Forwarded` header defined in {{RFC7239}}.
+The proxy then alters the message before forwarding it on to the origin server, changing the target host and adding the Forwarded header field defined in {{RFC7239}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1332,7 +1331,7 @@ Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
 {"hello": "world"}
 ~~~
 
-The proxy includes the client's signature value under the label `sig1`, which the proxy signs in addition to the `Forwarded` header. Note that since the client's signature already covers the client's `Signature-Input` value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
+The proxy includes the client's signature value under the label `sig1`, which the proxy signs in addition to the Forwarded field. Note that since the client's signature already covers the client's Signature-Input value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -1399,22 +1398,21 @@ Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
 
 The proxy's signature and the client's original signature can be verified independently for the same message, based on the needs of the application. Since the proxy's signature covers the client signature, the backend service fronted by the proxy can trust that the proxy has validated the incoming signature.
 
-# Requesting Signatures
+# Requesting Signatures {#request-signature}
 
-While a signer is free to attach a signature to a request or response without prompting, it is often desirable for a potential verifier to signal that it expects a signature from a potential signer using the `Accept-Signature` field.
+While a signer is free to attach a signature to a request or response without prompting, it is often desirable for a potential verifier to signal that it expects a signature from a potential signer using the Accept-Signature field.
 
-The message to which the requested signature is applied is known as the "target message". When the `Accept-Signature` field is sent in an HTTP Request message, the field indicates that the client desires the server to sign the response using the identified parameters and the target message is the response to this request. All responses from resources that support such signature negotiation SHOULD either be uncacheable or contain a `Vary` header field that lists `Accept-Signature`, in order to prevent a cache from returning a response with a signature intended for a different request.
+The message to which the requested signature is applied is known as the "target message". When the Accept-Signature field is sent in an HTTP request message, the field indicates that the client desires the server to sign the response using the identified parameters, and the target message is the response to this request. All responses from resources that support such signature negotiation SHOULD either be uncacheable or contain a Vary header field that lists Accept-Signature, in order to prevent a cache from returning a response with a signature intended for a different request.
 
-When the `Accept-Signature` field is used in an HTTP Response message, the field indicates that the server desires the client to sign its next request to the server with the identified parameters, and the target message is the client's next request. The client can choose to also continue signing future requests to the same server in the same way.
+When the Accept-Signature field is used in an HTTP response message, the field indicates that the server desires the client to sign its next request to the server with the identified parameters, and the target message is the client's next request. The client can choose to also continue signing future requests to the same server in the same way.
 
-The target message of an `Accept-Signature` field MUST include all labeled signatures indicated in the `Accept-Header` signature, each covering the same identified components of the `Accept-Signature` field.
+The target message of an Accept-Signature field MUST include all labeled signatures indicated in the Accept-Header signature, each covering the same identified components of the Accept-Signature field.
 
-The sender of an `Accept-Signature` field MUST include identifiers that are appropriate for the type of the target message. For example, if the target message is a response, the identifiers can not include the `@status` identifier.
-
+The sender of an Accept-Signature field MUST include identifiers that are appropriate for the type of the target message. For example, if the target message is a request, the component identifiers can not include the `@status` component identifier.
 
 ## The Accept-Signature Field {#accept-signature-header}
 
-The `Accept-Signature` HTTP header field is a Dictionary Structured field {{STRUCTURED-FIELDS}} containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered components of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The Accept-Signature field is a Dictionary structured field defined in {{Section 3.2 of STRUCTURED-FIELDS}} containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered components of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1428,7 +1426,7 @@ The requested signature MAY include parameters, such as a desired algorithm or k
 
 ## Processing an Accept-Signature
 
-The receiver of an `Accept-Signature` field fulfills that header as follows:
+The receiver of an Accept-Signature field fulfills that header as follows:
 
 1. Parse the field value as a Dictionary
 2. For each member of the dictionary:
@@ -1436,11 +1434,11 @@ The receiver of an `Accept-Signature` field fulfills that header as follows:
     2. Parse the value of the member to obtain the set of covered component identifiers
     3. Process the requested parameters, such as the signing algorithm and key material. If any requested parameters cannot be fulfilled, or if the requested parameters conflict with those deemed appropriate to the target message, the process fails and returns an error.
     4. Select any additional parameters necessary for completing the signature
-    5. Create the `Signature-Input` and `Signature` header values and associate them with the label
-3. Optionally create any additional `Signature-Input` and `Signature` values, with unique labels not found in the `Accept-Signature` field
-4. Combine all labeled `Signature-Input` and `Signature` values and attach both headers to the target message
+    5. Create the Signature-Input and Signature header values and associate them with the label
+3. Optionally create any additional Signature-Input and Signature values, with unique labels not found in the Accept-Signature field
+4. Combine all labeled Signature-Input and Signature values and attach both fields to the target message
 
-Note that by this process, a signature applied to a target message MUST have the same label, MUST have the same set of covered component, and MAY have additional parameters. Also note that the target message MAY include additional signatures not specified by the `Accept-Signature` field.
+Note that by this process, a signature applied to a target message MUST have the same label, MUST have the same set of covered component, and MAY have additional parameters. Also note that the target message MAY include additional signatures not specified by the Accept-Signature field.
 
 # IANA Considerations {#iana}
 
@@ -1629,7 +1627,7 @@ A verifier processing a set of signatures on a message also needs to determine w
 
 ## Signature Labels {#security-labels}
 
-HTTP Message Signature values are identified in the `Signature` and `Signature-Input` field values by unique labels. These labels are chosen only when attaching the signature values to the message and are not accounted for in the signing process. An intermediary adding its own signature is allowed to re-label an existing signature when processing the message.
+HTTP Message Signature values are identified in the Signature and Signature-Input field values by unique labels. These labels are chosen only when attaching the signature values to the message and are not accounted for in the signing process. An intermediary adding its own signature is allowed to re-label an existing signature when processing the message.
 
 Therefore, applications should not rely on specific labels being present, and applications should not put semantic meaning on the labels themselves. Instead, additional signature parmeters can be used to convey whatever additional meaning is required to be attached to and covered by the signature.
 
@@ -1669,7 +1667,7 @@ Another example of a downgrade attack occurs when an asymmetric algorithm is exp
 
 Several parts of this specification rely on the parsing of structured field values {{STRUCTURED-FIELDS}}. In particular, [normalization of HTTP structured field values](#http-header-structured), [referencing members of a dictionary structured field](#http-header-dictionary), and processing the `@signature-input` value when [verifying a signature](#verify). While structured field values are designed to be relatively simple to parse, a naive or broken implementation of such a parser could lead to subtle attack surfaces being exposed in the implementation.
 
-For example, if a buggy parser of the `@signature-input` value does not enforce proper closing of quotes around string values within the list of component identifiers, an attacker could take advantage of this and inject additional content into the signature base through manipulating the `Signature-Input` field value on a message.
+For example, if a buggy parser of the `@signature-input` value does not enforce proper closing of quotes around string values within the list of component identifiers, an attacker could take advantage of this and inject additional content into the signature base through manipulating the Signature-Input field value on a message.
 
 To counteract this, implementations should use fully compliant and trusted parsers for all structured field processing, both on the signer and verifier side.
 
@@ -1737,9 +1735,9 @@ For example, in some complex systems with intermediary processors this could cau
 
 # Detecting HTTP Message Signatures {#detection}
 
-There have been many attempts to create signed HTTP messages in the past, including other non-standardized definitions of the `Signature` field, which is used within this specification. It is recommended that developers wishing to support both this specification and other historical drafts do so carefully and deliberately, as incompatibilities between this specification and various versions of other drafts could lead to unexpected problems.
+There have been many attempts to create signed HTTP messages in the past, including other non-standardized definitions of the Signature field, which is used within this specification. It is recommended that developers wishing to support both this specification and other historical drafts do so carefully and deliberately, as incompatibilities between this specification and various versions of other drafts could lead to unexpected problems.
 
-It is recommended that implementers first detect and validate the `Signature-Input` field defined in this specification to detect that this standard is in use and not an alternative. If the `Signature-Input` field is present, all `Signature` fields can be parsed and interpreted in the context of this draft.
+It is recommended that implementers first detect and validate the Signature-Input field defined in this specification to detect that this standard is in use and not an alternative. If the Signature-Input field is present, all Signature fields can be parsed and interpreted in the context of this draft.
 
 # Examples
 
@@ -1944,7 +1942,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;nonce="b3k2pp5k7z-50gnwp.yemd"
 ~~~
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message under the signature label `sig-b21`:
+This results in the following Signature-Input and Signature headers being added to the message under the signature label `sig-b21`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1980,7 +1978,7 @@ NOTE: '\' line wrapping per RFC 8792
 ~~~
 
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b22`:
+This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b22`:
 
 
 ~~~ http-message
@@ -2021,7 +2019,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;created=1618884473;keyid="test-key-rsa-pss"
 ~~~
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b23`:
+This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b23`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2060,7 +2058,7 @@ NOTE: '\' line wrapping per RFC 8792
   "content-length");created=1618884473;keyid="test-key-ecc-p256"
 ~~~
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b24`:
+This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b24`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2091,7 +2089,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;created=1618884473;keyid="test-shared-secret"
 ~~~
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b25`:
+This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b25`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2124,7 +2122,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;keyid="test-key-ed25519"
 ~~~
 
-This results in the following `Signature-Input` and `Signature` headers being added to the message under the label `sig-b26`:
+This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b26`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
