@@ -62,7 +62,7 @@ normative:
     RFC7518:
     RFC8017:
     RFC8032:
-    RFC8941:
+    STRUCTURED-FIELDS: RFC8941
     FIPS186-4:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
@@ -123,8 +123,6 @@ As mentioned earlier, HTTP explicitly permits and in some cases requires impleme
 - Addition of header fields that indicate control options ({{Section 6.1 of MESSAGING}}).
 - Addition or removal of a transfer coding ({{Section 5.7.2 of MESSAGING}}).
 - Addition of header fields such as `Via` ({{Section 5.7.1 of MESSAGING}}) and `Forwarded` ({{Section 4 of RFC7239}}).
-
-## Safe Transformations
 
 Based on the definition of HTTP and the requirements described above, we can identify certain types of transformations that should not prevent signature verification, even when performed on message components covered by the signature.  The following list describes those transformations:
 
@@ -199,6 +197,10 @@ The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.openg
 
 This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
 
+This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}}
+to specify syntax and parsing: List, Inner List, Dictionary, String, Integer, Byte Sequence, and Boolean.
+
+
 ## Application of HTTP Message Signatures {#application}
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
@@ -218,15 +220,15 @@ In order to allow signers and verifiers to establish which components are covere
 
 Some HTTP message components can undergo transformations that change the bitwise value without altering meaning of the component's value (for example, the merging together of header fields with the same name).  Message component values must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
 
-Component identifiers are serialized using the production grammar defined by {{RFC8941, Section 4}}.
-The component identifier has a component name, which is serialized as an `sf-string` value. The component identifier MAY defined parameters which are included using the `parameters` rule.
+Component identifiers are serialized using the production grammar defined by {{STRUCTURED-FIELDS, Section 4}}.
+The component identifier has a component name, which is a String value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` rule.
 
 ~~~ abnf
 component-identifier = component-name parameters
 component-name = sf-string
 ~~~
 
-Note that this means the serialization of the component name itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`.
+Note that this means the serialization of the component name itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`, and `"example-dictionary";key="foo"`.
 
 One component identifier is distinct from another if either the component name or its parameters differ. Within a single list of covered components, each component identifier MUST be distinct from every other component identifier. Multiple component identifiers having the same component name MAY be included if they have parameters that make them distinct.
 
@@ -307,8 +309,8 @@ key
 
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
 
-If the value of the the HTTP field in question is a structured field ({{!RFC8941}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
-parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of RFC8941}} applicable to the type of the HTTP field. Note that this process
+If the value of the the HTTP field in question is a structured field ({{STRUCTURED-FIELDS}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
+parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
 will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
 
 For example, the following dictionary field is a valid serialization:
@@ -333,29 +335,30 @@ The resulting string is used as the component value in {{http-header}}.
 
 ### Dictionary Structured Field Members {#http-header-dictionary}
 
-An individual member in the value of a Dictionary Structured Field is identified by using the parameter `key` to indicate the member key as an `sf-string` value.
+If a given field is known by the application to be a Dictionary structured field, an individual member in the value of that Dictionary is identified by using the parameter `key` and the Dictionary member key as a String value.
 
-An individual member in the value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of RFC8941}} on the member value and its parameters, without the dictionary key.
+An individual `member_value` of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of STRUCTURED-FIELDS}} on the `member_value` and its parameters, without the dictionary key. Specifically, the value is serialized as an Item or Inner List (the two possible values of a Dictionary member).
 
-Each parameterized key for a given field MUST NOT appear more than once in the signature base. Parameterized keys MAY appear in any order.
+Each parameterized key for a given field MUST NOT appear more than once in the signature base. Parameterized keys MAY appear in any order in the signature base, regardless of the order they occur in the source Dictionary.
 
-If a dictionary key is named as a covered component but it does not occur in the dictionary, this MUST cause an error in the signature base generation.
+If a Dictionary key is named as a covered component but it does not occur in the Dictionary, this MUST cause an error in the signature base generation.
 
-Following are non-normative examples of canonicalized values for Dictionary Structured Field Members given the following example header field, whose value is known to be a Dictionary:
+Following are non-normative examples of canonicalized values for Dictionary structured field members given the following example header field, whose value is known by the application to be a Dictionary:
 
 ~~~ http-message
-Example-Dict:  a=1, b=2;x=1;y=2, c=(a   b    c)
+Example-Dict:  a=1, b=2;x=1;y=2, c=(a   b    c), d
 ~~~
 
 The following example shows canonicalized values for different component identifiers of this field, presented using the signature base format discussed in {{create-sig-input}}:
 
 ~~~
 "example-dict";key="a": 1
+"example-dict";key="d": ?1
 "example-dict";key="b": 2;x=1;y=2
 "example-dict";key="c": (a b c)
 ~~~
 
-Note that the value for `key="c"` has been re-serialized.
+Note that the value for `key="c"` has been re-serialized according to the strict `member_value` algorithm.
 
 ## Derived Components {#derived-components}
 
@@ -423,26 +426,26 @@ The signature parameters component name is `@signature-params`. This message com
 
 The signature parameters component value is the serialization of the signature parameters for this signature, including the covered components set with all associated parameters. These parameters include any of the following:
 
-* `created`: Creation time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported. Inclusion of this parameter is RECOMMENDED.
-* `expires`: Expiration time as an `sf-integer` UNIX timestamp value. Sub-second precision is not supported.
-* `nonce`: A random unique value generated for this signature as an `sf-string` value.
-* `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as an `sf-string` value.
-* `keyid`: The identifier for the key material as an `sf-string` value.
+* `created`: Creation time as an Integer UNIX timestamp value. Sub-second precision is not supported. Inclusion of this parameter is RECOMMENDED.
+* `expires`: Expiration time as an Integer UNIX timestamp value. Sub-second precision is not supported.
+* `nonce`: A random unique value generated for this signature as a String value.
+* `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as a String value.
+* `keyid`: The identifier for the key material as a String value.
 
 Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents).
 
-The signature parameters component value is serialized as a parameterized inner list using the rules in {{Section 4 of RFC8941}} as follows:
+The signature parameters component value is serialized as a parameterized inner list using the rules in {{Section 4 of STRUCTURED-FIELDS}} as follows:
 
 1. Let the output be an empty string.
 2. Determine an order for the component identifiers of the covered components, not including the `@signature-params` component identifier itself. Once this order is chosen, it cannot be changed. This order MUST be the same order as used in creating the signature base ({{create-sig-input}}).
-3. Serialize the component identifiers of the covered components, including all parameters, as an ordered `inner-list` according to {{Section 4.1.1.1 of RFC8941}} and append this to the output.
+3. Serialize the component identifiers of the covered components, including all parameters, as an ordered `inner-list` according to {{Section 4.1.1.1 of STRUCTURED-FIELDS}} and append this to the output.
 4. Determine an order for any signature parameters. Once this order is chosen, it cannot be changed.
-5. Append the parameters to the `inner-list` in the chosen order according to {{Section 4.1.1.2 of RFC8941}},
+5. Append the parameters to the `inner-list` in the chosen order according to {{Section 4.1.1.2 of STRUCTURED-FIELDS}},
     skipping parameters that are not available or not used for this message signature.
 6. The output contains the signature parameters component value.
 
-Note that the `inner-list` serialization is used for the covered component value instead of the `sf-list` serialization
-in order to facilitate this value's inclusion in message fields such as the `Signature-Input` field's dictionary,
+Note that the Inner List serialization from {{Section 4.1.1.1 of STRUCTURED-FIELDS}} is used for the covered component value instead of the List serialization from {{Section 4.1.1 of STRUCTURED-FIELDS}}
+in order to facilitate parallelism with this value's inclusion the Signature-Input field,
 as discussed in {{signature-input-header}}.
 
 This example shows a canonicalized value for the parameters of a given signature:
@@ -728,7 +731,7 @@ Resulting in the following signature base line:
 
 If a request target URI uses HTML form parameters in the query string as defined in [HTMLURL, Section 5](#HTMLURL),
 the `@query-param` derived component allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
-The REQUIRED `name` parameter of each component identifier contains the `nameString` of a single query parameter as an `sf-string` value.
+The REQUIRED `name` parameter of each component identifier contains the `nameString` of a single query parameter as a String value.
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
 
@@ -1238,7 +1241,7 @@ the `Signature` HTTP field contains the signature value, while the `Signature-In
 
 ## The 'Signature-Input' HTTP Field {#signature-input-header}
 
-The `Signature-Input` HTTP field is a Dictionary Structured Field {{!RFC8941}} containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered components including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The `Signature-Input` HTTP field is a Dictionary structured field {{STRUCTURED-FIELDS}} containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered components including all signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1257,7 +1260,7 @@ Multiple `Signature-Input` fields MAY be included in a single HTTP message. The 
 
 ## The 'Signature' HTTP Field {#signature-header}
 
-The `Signature` HTTP field is a Dictionary Structured field {{!RFC8941}} containing one or more message signatures generated from components within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured field within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP field MUST be ignored.
+The `Signature` HTTP field is a Dictionary Structured field {{STRUCTURED-FIELDS}} containing one or more message signatures generated from components within the HTTP message. Each member's name is a signature identifier that is present as a member name in the `Signature-Input` Structured field within the HTTP message. Each member's value is a Byte Sequence containing the signature value for the message signature identified by the member name. Any member in the `Signature` HTTP field that does not have a corresponding member in the HTTP message's `Signature-Input` HTTP field MUST be ignored.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1411,7 +1414,7 @@ The sender of an `Accept-Signature` field MUST include identifiers that are appr
 
 ## The Accept-Signature Field {#accept-signature-header}
 
-The `Accept-Signature` HTTP header field is a Dictionary Structured field {{!RFC8941}} containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered components of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The `Accept-Signature` HTTP header field is a Dictionary Structured field {{STRUCTURED-FIELDS}} containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is an identifier that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered components of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1664,7 +1667,7 @@ Another example of a downgrade attack occurs when an asymmetric algorithm is exp
 
 ## Parsing Structured Field Values {#security-structured}
 
-Several parts of this specification rely on the parsing of structured field values {{RFC8941}}. In particular, [normalization of HTTP structured field values](#http-header-structured), [referencing members of a dictionary structured field](#http-header-dictionary), and processing the `@signature-input` value when [verifying a signature](#verify). While structured field values are designed to be relatively simple to parse, a naive or broken implementation of such a parser could lead to subtle attack surfaces being exposed in the implementation.
+Several parts of this specification rely on the parsing of structured field values {{STRUCTURED-FIELDS}}. In particular, [normalization of HTTP structured field values](#http-header-structured), [referencing members of a dictionary structured field](#http-header-dictionary), and processing the `@signature-input` value when [verifying a signature](#verify). While structured field values are designed to be relatively simple to parse, a naive or broken implementation of such a parser could lead to subtle attack surfaces being exposed in the implementation.
 
 For example, if a buggy parser of the `@signature-input` value does not enforce proper closing of quotes around string values within the list of component identifiers, an attacker could take advantage of this and inject additional content into the signature base through manipulating the `Signature-Input` field value on a message.
 
@@ -2282,6 +2285,7 @@ Jeffrey Yasskin.
 
   - -10
      * Removed "related response" and "@request-response" in favor of generic "req" parameter.
+     * Editorial fixes to comply with HTTP extension style guidelines.
 
   - -09
      * Explained key formats better.
