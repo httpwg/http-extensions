@@ -1462,11 +1462,11 @@ Algorithms added to this registry MUST NOT be aliases for other entries in the r
 Algorithm Name:
 : An identifier for the HTTP Signature Algorithm. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The identifier MUST be unique within the context of the registry.
 
-Status:
-: A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
-
 Description:
 : A brief description of the algorithm used to sign the signature base.
+
+Status:
+: A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
 Specification document(s):
 : Reference to the document(s) that specify the
@@ -1476,12 +1476,12 @@ Specification document(s):
 
 ### Initial Contents {#iana-hsa-contents}
 
-|Algorithm Name|Status|Description|Specification document(s)
-|`rsa-pss-sha512`|Active|RSASSA-PSS using SHA-512|{{method-rsa-pss-sha512}} of {{&SELF}}|
-|`rsa-v1_5-sha256`|Active|RSASSA-PKCS1-v1_5 using SHA-256|{{method-rsa-v1_5-sha256}} of {{&SELF}}|
-|`hmac-sha256`|Active|HMAC using SHA-256|{{method-hmac-sha256}} of {{&SELF}}|
-|`ecdsa-p256-sha256`|Active|ECDSA using curve P-256 DSS and SHA-256|{{method-ecdsa-p256-sha256}} of {{&SELF}}|
-|`ed25519`|Active|Edwards Curve DSA using curve edwards25519|{{method-ed25519}} of {{&SELF}}|
+|Algorithm Name|Description|Status|Specification document(s)
+|`rsa-pss-sha512`|RSASSA-PSS using SHA-512|Active|{{method-rsa-pss-sha512}} of {{&SELF}}|
+|`rsa-v1_5-sha256`|RSASSA-PKCS1-v1_5 using SHA-256|Active|{{method-rsa-v1_5-sha256}} of {{&SELF}}|
+|`hmac-sha256`|HMAC using SHA-256|Active|{{method-hmac-sha256}} of {{&SELF}}|
+|`ecdsa-p256-sha256`|ECDSA using curve P-256 DSS and SHA-256|Active|{{method-ecdsa-p256-sha256}} of {{&SELF}}|
+|`ed25519`|Edwards Curve DSA using curve edwards25519|Active|{{method-ed25519}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Algorithms Registry." }
 
 ## HTTP Signature Metadata Parameters Registry {#param-registry}
@@ -1527,6 +1527,9 @@ This document defines a method for canonicalizing HTTP message components, inclu
 Name:
 : A name for the HTTP derived component. The name MUST begin with the `"@"` character followed by an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The name MUST be unique within the context of the registry.
 
+Description:
+: A description of the derived component.
+
 Status:
 : A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
@@ -1543,19 +1546,53 @@ Specification document(s):
 
 The table below contains the initial contents of the HTTP Signature Derived Component Names Registry.
 
-|Name|Status|Target|Specification document(s)|
-|--- |--- |--- |--- |
-|`@signature-params`| Active | Request, Response | {{signature-params}} of {{&SELF}}|
-|`@method`| Active | Request | {{content-request-method}} of {{&SELF}}|
-|`@authority`| Active | Request | {{content-request-authority}} of {{&SELF}}|
-|`@scheme`| Active | Request | {{content-request-scheme}} of {{&SELF}}|
-|`@target-uri`| Active | Request | {{content-target-uri}} of {{&SELF}}|
-|`@request-target`| Active | Request | {{content-request-target}} of {{&SELF}}|
-|`@path`| Active | Request | {{content-request-path}} of {{&SELF}}|
-|`@query`| Active | Request | {{content-request-query}} of {{&SELF}}|
-|`@query-param`| Active | Request | {{content-request-query-param}} of {{&SELF}}|
-|`@status`| Active | Response | {{content-status-code}} of {{&SELF}}|
+|Name|Description|Status|Target|Specification document(s)|
+|--- |--- |--- |--- |--- |
+|`@signature-params`| Signature parameters, including covered content list | Active | Request, Response | {{signature-params}} of {{&SELF}}|
+|`@method`| The HTTP request method | Active | Request | {{content-request-method}} of {{&SELF}}|
+|`@authority`| The HTTP authority, or target host | Active | Request | {{content-request-authority}} of {{&SELF}}|
+|`@scheme`| The URI scheme of the request URI | Active | Request | {{content-request-scheme}} of {{&SELF}}|
+|`@target-uri`| The full target URI of the request | Active | Request | {{content-target-uri}} of {{&SELF}}|
+|`@request-target`| The request target of the request | Active | Request | {{content-request-target}} of {{&SELF}}|
+|`@path`| The full path of the request URI | Active | Request | {{content-request-path}} of {{&SELF}}|
+|`@query`| The full query of the request URI | Active | Request | {{content-request-query}} of {{&SELF}}|
+|`@query-param`| | A single named query parameter | Active | Request | {{content-request-query-param}} of {{&SELF}}|
+|`@status`| The status code of the response | Active | Response | {{content-status-code}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Derived Component Names Registry." }
+
+## HTTP Signature Component Parameters Registry {#component-param-registry}
+
+This document defines a component identifiers, which can be parameterized in specific circumstances to provide unique modified behavior. IANA is asked to create and maintain a new registry typed "HTTP Signature Component Parameters" to record and maintain the set of non-field component names and the methods to produce their associated component values. Initial values for this registry are given in {{iana-component-param-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-component-param-template}}.
+
+### Registration Template {#iana-component-param-template}
+
+{: vspace="0"}
+Name:
+: A name for the parameter. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The name MUST be unique within the context of the registry.
+
+Description:
+: A description of the parameter's function.
+
+Target:
+: The applicable component identifiers for the parmeter. Can be one or more derived component identifiers as described in {{derived-components}}, "Field Value" meaning all HTTP fields, or a human-readable description of the target.
+
+Specification document(s):
+: Reference to the document(s) that specify the
+    derived component, preferably including a URI that can be used
+    to retrieve a copy of the document(s).  An indication of the
+    relevant sections may also be included but is not required.
+
+### Initial Contents {#iana-component-param-contents}
+
+The table below contains the initial contents of the HTTP Signature Derived Component Names Registry.
+
+|Name|Description|Status|Target|Specification document(s)|
+|--- |--- |--- |--- |
+|`key`| Dictionary structured fields | Active | {{http-header-dictionary}} of {{&SELF}}|
+|`name`| Named query parameters | Active | `@query-param` | {{content-request-query-param}} of {{&SELF}}|
+|`sf`| Strict structured field serialization | Active | Structured fields | {{http-header-structured}} of {{&SELF}}|
+|`req`| Related request indicator | Active | Derived content identifiers with a target of Request or any field | {{content-request-scheme}} of {{&SELF}}|
+{: title="Initial contents of the HTTP Signature Component Parameters Registry." }
 
 # Security Considerations {#security}
 
