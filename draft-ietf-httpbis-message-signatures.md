@@ -84,6 +84,9 @@ informative:
     CLIENT-CERT: I-D.ietf-httpbis-client-cert-field
     DIGEST: I-D.ietf-httpbis-digest-headers
 
+entity:
+  SELF: "RFC nnnn"
+
 --- abstract
 
 This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over components of an HTTP message.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.
@@ -1473,12 +1476,13 @@ Specification document(s):
 
 ### Initial Contents {#iana-hsa-contents}
 
-|Algorithm Name|Status|Description|Specification document(s)|
-|`rsa-pss-sha512`|Active|RSASSA-PSS using SHA-512|\[\[This document\]\], {{method-rsa-pss-sha512}}|
-|`rsa-v1_5-sha256`|Active|RSASSA-PKCS1-v1_5 using SHA-256|\[\[This document\]\], {{method-rsa-v1_5-sha256}}|
-|`hmac-sha256`|Active|HMAC using SHA-256|\[\[This document\]\], {{method-hmac-sha256}}|
-|`ecdsa-p256-sha256`|Active|ECDSA using curve P-256 DSS and SHA-256|\[\[This document\]\], {{method-ecdsa-p256-sha256}}|
-|`ed25519`|Active|Edwards Curve DSA using curve edwards25519|\[\[This document\]\], {{method-ed25519}}|
+|Algorithm Name|Status|Description|Specification document(s)
+|`rsa-pss-sha512`|Active|RSASSA-PSS using SHA-512|{{method-rsa-pss-sha512}} of {{&SELF}}|
+|`rsa-v1_5-sha256`|Active|RSASSA-PKCS1-v1_5 using SHA-256|{{method-rsa-v1_5-sha256}} of {{&SELF}}|
+|`hmac-sha256`|Active|HMAC using SHA-256|{{method-hmac-sha256}} of {{&SELF}}|
+|`ecdsa-p256-sha256`|Active|ECDSA using curve P-256 DSS and SHA-256|{{method-ecdsa-p256-sha256}} of {{&SELF}}|
+|`ed25519`|Active|Edwards Curve DSA using curve edwards25519|{{method-ed25519}} of {{&SELF}}|
+{: title="Initial contents of the HTTP Signature Algorithms Registry." }
 
 ## HTTP Signature Metadata Parameters Registry {#param-registry}
 
@@ -1506,11 +1510,11 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 
 |Name|Description|Specification document(s)|
 |--- |--- |--- |
-|`alg`|Explicitly declared signature algorithm|{{signature-params}} of this document|
-|`created`|Timestamp of signature creation| {{signature-params}} of this document|
-|`expires`|Timestamp of proposed signature expiration| {{signature-params}} of this document|
-|`keyid`|Key identifier for the signing and verification keys used to create this signature| {{signature-params}} of this document|
-|`nonce`|A single-use nonce value| {{signature-params}} of this document|
+|`alg`|Explicitly declared signature algorithm|{{signature-params}} of {{&SELF}}|
+|`created`|Timestamp of signature creation| {{signature-params}} of {{&SELF}}|
+|`expires`|Timestamp of proposed signature expiration| {{signature-params}} of {{&SELF}}|
+|`keyid`|Key identifier for the signing and verification keys used to create this signature| {{signature-params}} of {{&SELF}}|
+|`nonce`|A single-use nonce value| {{signature-params}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
 ## HTTP Signature Derived Component Names Registry {#content-registry}
@@ -1541,16 +1545,16 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 
 |Name|Status|Target|Specification document(s)|
 |--- |--- |--- |--- |
-|`@signature-params`| Active | Request, Response | {{signature-params}} of this document|
-|`@method`| Active | Request | {{content-request-method}} of this document|
-|`@authority`| Active | Request | {{content-request-authority}} of this document|
-|`@scheme`| Active | Request | {{content-request-scheme}} of this document|
-|`@target-uri`| Active | Request | {{content-target-uri}} of this document|
-|`@request-target`| Active | Request | {{content-request-target}} of this document|
-|`@path`| Active | Request | {{content-request-path}} of this document|
-|`@query`| Active | Request | {{content-request-query}} of this document|
-|`@query-param`| Active | Request | {{content-request-query-param}} of this document|
-|`@status`| Active | Response | {{content-status-code}} of this document|
+|`@signature-params`| Active | Request, Response | {{signature-params}} of {{&SELF}}|
+|`@method`| Active | Request | {{content-request-method}} of {{&SELF}}|
+|`@authority`| Active | Request | {{content-request-authority}} of {{&SELF}}|
+|`@scheme`| Active | Request | {{content-request-scheme}} of {{&SELF}}|
+|`@target-uri`| Active | Request | {{content-target-uri}} of {{&SELF}}|
+|`@request-target`| Active | Request | {{content-request-target}} of {{&SELF}}|
+|`@path`| Active | Request | {{content-request-path}} of {{&SELF}}|
+|`@query`| Active | Request | {{content-request-query}} of {{&SELF}}|
+|`@query-param`| Active | Request | {{content-request-query-param}} of {{&SELF}}|
+|`@status`| Active | Response | {{content-status-code}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Derived Component Names Registry." }
 
 # Security Considerations {#security}
