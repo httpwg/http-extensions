@@ -71,8 +71,8 @@ normative:
         target: https://pubs.opengroup.org/onlinepubs/9699919799/
         title: The Open Group Base Specifications Issue 7, 2018 edition
         date: 2018
-    SEMANTICS: I-D.ietf-httpbis-semantics
-    MESSAGING: I-D.ietf-httpbis-messaging
+    HTTP: I-D.ietf-httpbis-semantics
+    HTTP1: I-D.ietf-httpbis-messaging
     HTMLURL:
         target: https://url.spec.whatwg.org/
         title: URL (Living Standard)
@@ -81,7 +81,8 @@ normative:
 informative:
     RFC7239:
     BCP195:
-    I-D.ietf-httpbis-client-cert-field:
+    CLIENT-CERT: I-D.ietf-httpbis-client-cert-field
+    DIGEST: I-D.ietf-httpbis-digest-headers
 
 --- abstract
 
@@ -117,12 +118,12 @@ HTTP applications may be running in environments that do not provide complete ac
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:
 
-- Re-ordering of header fields with different header field names ({{Section 3.2.2 of MESSAGING}}).
-- Combination of header fields with the same field name ({{Section 3.2.2 of MESSAGING}}).
-- Removal of header fields listed in the `Connection` header field ({{Section 6.1 of MESSAGING}}).
-- Addition of header fields that indicate control options ({{Section 6.1 of MESSAGING}}).
-- Addition or removal of a transfer coding ({{Section 5.7.2 of MESSAGING}}).
-- Addition of header fields such as `Via` ({{Section 5.7.1 of MESSAGING}}) and `Forwarded` ({{Section 4 of RFC7239}}).
+- Re-ordering of header fields with different header field names ({{Section 3.2.2 of HTTP1}}).
+- Combination of header fields with the same field name ({{Section 3.2.2 of HTTP1}}).
+- Removal of header fields listed in the `Connection` header field ({{Section 6.1 of HTTP1}}).
+- Addition of header fields that indicate control options ({{Section 6.1 of HTTP1}}).
+- Addition or removal of a transfer coding ({{Section 5.7.2 of HTTP1}}).
+- Addition of header fields such as `Via` ({{Section 5.7.1 of HTTP1}}) and `Forwarded` ({{Section 4 of RFC7239}}).
 
 Based on the definition of HTTP and the requirements described above, we can identify certain types of transformations that should not prevent signature verification, even when performed on message components covered by the signature.  The following list describes those transformations:
 
@@ -133,7 +134,7 @@ Based on the definition of HTTP and the requirements described above, we can ide
 - Addition or removal of leading or trailing whitespace to a header field value.
 - Addition or removal of `obs-folds`.
 - Changes to the `request-target` and `Host` header field that when applied together do not
-  result in a change to the message's effective request URI, as defined in {{Section 5.5 of MESSAGING}}.
+  result in a change to the message's effective request URI, as defined in {{Section 5.5 of HTTP1}}.
 
 Additionally, all changes to components not covered by the signature are considered safe.
 
@@ -145,9 +146,9 @@ Additionally, all changes to components not covered by the signature are conside
 The terms "HTTP message", "HTTP request", "HTTP response",
 `absolute-form`, `absolute-path`, "effective request URI",
 "gateway", "header field", "intermediary", `request-target`,
-"sender", and "recipient" are used as defined in {{MESSAGING}}.
+"sender", and "recipient" are used as defined in {{HTTP1}}.
 
-The term "method" is to be interpreted as defined in {{Section 4 of SEMANTICS}}.
+The term "method" is to be interpreted as defined in {{Section 4 of HTTP}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures (which use asymmetric cryptography) and keyed MACs (which use symmetric cryptography). Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
@@ -240,13 +241,13 @@ The following sections define component identifier types, their parameters, thei
 
 The component name for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
-Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of SEMANTICS}}.
+Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}.
 
 If the combined value is not available for a given header, the following algorithm will produce canonicalized results for an implementation:
 
 1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
-3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of MESSAGING}}. Note that this behavior is specific to {{MESSAGING}} and does not apply to other versions of the HTTP specification.
+3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification.
 4. Concatenate the list of values together with a single comma (",") and a single space (" ") between each item.
 
 The resulting string is the canonicalized component value.
@@ -364,7 +365,7 @@ Note that the value for `key="c"` has been re-serialized according to the strict
 
 In addition to HTTP fields, there are a number of different components that can be derived from the control data, processing context, or other aspects of the HTTP message being signed. Such derived components can be included in the signature base by defining a component name, possible parameters, and the derivation method for its component value.
 
-Derived component names MUST start with the "at" `@` character. This differentiates derived component names from HTTP field names, which cannot contain the `@` character as per {{Section 5.1 of SEMANTICS}}. Processors of HTTP Message Signatures MUST treat derived component names separately from field names, as discussed in {{security-lazy-header-parser}}.
+Derived component names MUST start with the "at" `@` character. This differentiates derived component names from HTTP field names, which cannot contain the `@` character as per {{Section 5.1 of HTTP}}. Processors of HTTP Message Signatures MUST treat derived component names separately from field names, as discussed in {{security-lazy-header-parser}}.
 
 This specification defines the following derived components:
 
@@ -403,10 +404,10 @@ Additional derived component names MAY be defined and registered in the HTTP Sig
 Derived component values are taken from the context of the target message for the signature. This context includes information about the message itself, such as its control data, as well as any additional state and context held by the signer. In particular, when signing a response, the signer can include any derived components from the originating request by using the [request-response signature binding parameter](#content-request-response).
 
 request:
-: Values derived from and results applied to an HTTP request message as described in {{Section 3.4 of SEMANTICS}}.
+: Values derived from and results applied to an HTTP request message as described in {{Section 3.4 of HTTP}}.
 
 response:
-: Values derived from and results applied to an HTTP response message as described in {{Section 3.4 of SEMANTICS}}.
+: Values derived from and results applied to an HTTP response message as described in {{Section 3.4 of HTTP}}.
 
 A derived component definition MUST define all targets to which it can be applied.
 
@@ -462,7 +463,7 @@ Note that an HTTP message could contain [multiple signatures](#signature-multipl
 
 ### Method {#content-request-method}
 
-The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{SEMANTICS, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
+The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
 If used, the `@method` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -486,7 +487,7 @@ And the following signature base line:
 
 ### Target URI {#content-target-uri}
 
-The `@target-uri` derived component refers to the target URI of a request message. The component value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target as described in {{SEMANTICS, Section 7.1}}.
+The `@target-uri` derived component refers to the target URI of a request message. The component value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target as described in {{HTTP, Section 7.1}}.
 If used, the `@target-uri` component identifier MUST occur only once in the covered components.
 
 For example, the following message sent over HTTPS:
@@ -510,8 +511,8 @@ And the following signature base line:
 
 ### Authority {#content-request-authority}
 
-The `@authority` derived component refers to the authority component of the target URI of the HTTP request message, as defined in {{SEMANTICS, Section 7.2}}. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
-The component value MUST be normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, the host name is normalized to lowercase and the default port is omitted.
+The `@authority` derived component refers to the authority component of the target URI of the HTTP request message, as defined in {{HTTP, Section 7.2}}. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
+The component value MUST be normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, the host name is normalized to lowercase and the default port is omitted.
 If used, the `@authority` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -537,7 +538,7 @@ The `@authority` derived component SHOULD be used instead of signing the `Host` 
 
 ### Scheme {#content-request-scheme}
 
-The `@scheme` derived component refers to the scheme of the target URL of the HTTP request message. The component value is the scheme as a string as defined in {{SEMANTICS, Section 4.2}}.
+The `@scheme` derived component refers to the scheme of the target URL of the HTTP request message. The component value is the scheme as a string as defined in {{HTTP, Section 4.2}}.
 While the scheme itself is case-insensitive, it MUST be normalized to lowercase for
 inclusion in the signature base.
 If used, the `@scheme` component identifier MUST occur only once in the covered components.
@@ -564,7 +565,7 @@ And the following signature base line:
 ### Request Target {#content-request-target}
 
 The `@request-target` derived component refers to the full request target of the HTTP request message,
-as defined in {{SEMANTICS, Section 7.1}}. The component value of the request target can take different forms,
+as defined in {{HTTP, Section 7.1}}. The component value of the request target can take different forms,
 depending on the type of request, as described below.
 If used, the `@request-target` component identifier MUST occur only once in the covered components.
 
@@ -650,7 +651,7 @@ And the following signature base line:
 
 ### Path {#content-request-path}
 
-The `@path` derived component refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
+The `@path` derived component refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
 If used, the `@path` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -674,7 +675,7 @@ And the following signature base line:
 
 ### Query {#content-request-query}
 
-The `@query` derived component refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{SEMANTICS, Section 4.2.3}}. Namely, percent-encoded octets are decoded.
+The `@query` derived component refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, percent-encoded octets are decoded.
 If used, the `@query` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
@@ -772,7 +773,7 @@ in separate signature base lines in the order in which the parameters occur in t
 
 ### Status Code {#content-status-code}
 
-The `@status` derived component refers to the three-digit numeric HTTP status code of a response message as defined in {{SEMANTICS, Section 15}}. The component value is the serialized three-digit integer of the HTTP status code, with no descriptive text.
+The `@status` derived component refers to the three-digit numeric HTTP status code of a response message as defined in {{HTTP, Section 15}}. The component value is the serialized three-digit integer of the HTTP status code, with no descriptive text.
 If used, the `@status` component identifier MUST occur only once in the covered components.
 
 For example, the following response message:
@@ -1253,7 +1254,7 @@ Signature-Input: sig1=("@method" "@target-uri" "@authority" \
 To facilitate signature validation, the Signature-Input field value MUST contain the same serialized value used
 in generating the signature base's `@signature-params` value. Note that parameter order MUST be preserved.
 
-The signer MAY include the Signature-Input field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the Signature-Input field be included only as a header to avoid signatures being inadvertently stripped from a message.
+The signer MAY include the Signature-Input field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{HTTP}}, it is RECOMMENDED that the Signature-Input field be included only as a header to avoid signatures being inadvertently stripped from a message.
 
 Multiple Signature-Input fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
 
@@ -1272,7 +1273,7 @@ Signature: sig1=:P0wLUszWQjoi54udOtydf9IWTfNhy+r53jGFj9XZuP4uKwxyJo\
   BNFv3r5S9IXf2fYJK+eyW4AiGVMvMcOg==:
 ~~~
 
-The signer MAY include the Signature field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{SEMANTICS}}, it is RECOMMENDED that the Signature field be included only as a header to avoid signatures being inadvertently stripped from a message.
+The signer MAY include the Signature field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{HTTP}}, it is RECOMMENDED that the Signature field be included only as a header to avoid signatures being inadvertently stripped from a message.
 
 Multiple Signature fields MAY be included in a single HTTP message. The signature labels MUST be unique across all field values.
 
@@ -2136,7 +2137,7 @@ Signature: sig-b26=:wqcAqbmYJ2ji2glfAMaRy4gruYYnx2nEFN2HN6jrnDnQCK1\
 
 ## TLS-Terminating Proxies
 
-In this example, there is a TLS-terminating reverse proxy sitting in front of the resource. The client does not sign the request but instead uses mutual TLS to make its call. The terminating proxy validates the TLS stream and injects a `Client-Cert` header according to {{I-D.ietf-httpbis-client-cert-field}}, and then applies a signature to this field. By signing this header field, a reverse proxy can not only attest to its own validation of the initial request's TLS parameters but also authenticate itself to the backend system independently of the client's actions.
+In this example, there is a TLS-terminating reverse proxy sitting in front of the resource. The client does not sign the request but instead uses mutual TLS to make its call. The terminating proxy validates the TLS stream and injects a `Client-Cert` header according to {{CLIENT-CERT}}, and then applies a signature to this field. By signing this header field, a reverse proxy can not only attest to its own validation of the initial request's TLS parameters but also authenticate itself to the backend system independently of the client's actions.
 
 The client makes the following request to the TLS terminating proxy using mutual TLS:
 
