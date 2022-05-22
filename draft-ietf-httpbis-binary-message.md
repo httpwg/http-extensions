@@ -142,7 +142,7 @@ Known-Length Field Section {
 
 Known-Length Content {
   Content Length (i),
-  Content (..)
+  Content (..),
 }
 
 Known-Length Informational Response {
@@ -199,7 +199,7 @@ Indeterminate-Length Content {
 
 Indeterminate-Length Content Chunk {
   Chunk Length (i) = 1..,
-  Chunk (..)
+  Chunk (..),
 }
 
 Indeterminate-Length Field Section {
@@ -214,9 +214,9 @@ Indeterminate-Length Informational Response {
 ~~~
 {: #format-indeterminate-length title="Indeterminate-Length Message"}
 
-That is, an indeterminate length consists of a framing indicator, a block of
-control data that is formatted according to the value of the framing indicator,
-a header section that is terminated by a zero value, any number of
+That is, an indeterminate length message consists of a framing indicator, a
+block of control data that is formatted according to the value of the framing
+indicator, a header section that is terminated by a zero value, any number of
 non-zero-length chunks of binary content, a zero value, and a trailer section
 that is terminated by a zero value.
 
@@ -332,7 +332,7 @@ control data contains a final status code (200 to 599 inclusive).
 
 Header and trailer sections consist of zero or more field lines; see {{Section 5
 of HTTP}}. The format of a field section depends on whether the message is
-known- or intermediate-length.
+known- or indeterminate-length.
 
 Each field line includes a name and a value. Both the name and value are
 length-prefixed sequences of bytes.  The field name length is at least one
