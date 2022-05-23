@@ -303,9 +303,10 @@ Final Response Control Data {
 
 ### Informational Status Codes {#informational}
 
-Responses that include information status codes (see {{Section 15.2 of HTTP}})
-are encoded by repeating the response control data and associated header section
-until the final status code is encoded.
+Responses that include informational status codes (see {{Section 15.2 of HTTP}})
+are encoded by repeating the informational response control data and associated
+header section until a final response control data is encoded.  The status code
+distinguishes between informational and final responses.
 
 The format of the informational response control data is shown in
 {{format-informational}}.
