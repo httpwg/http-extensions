@@ -157,14 +157,14 @@ control data that is formatted according to the value of the framing indicator,
 a header section with a length prefix, binary content with a length prefix, and
 a trailer section with a length prefix.
 
-For a known-length encoding, the length prefix on field sections and content is
-a variable-length encoding of an integer.  This integer is the number of bytes
-in the field section or content, not including the length field itself.
-
 Response messages that contain informational status codes result in a different
 structure; see {{informational}}.  Note that while the Known-Length
 Informational Response field is shown in {{format-known-length}}, it can only
 appear in response messages.
+
+For a known-length encoding, the length prefix on field sections and content is
+a variable-length encoding of an integer.  This integer is the number of bytes
+in the field section or content, not including the length field itself.
 
 Fields in the header and trailer sections consist of a length-prefixed name and
 length-prefixed value; see {{fields}}.
@@ -220,6 +220,11 @@ indicator, a header section that is terminated by a zero value, any number of
 non-zero-length chunks of binary content, a zero value, and a trailer section
 that is terminated by a zero value.
 
+Response messages that contain informational status codes result in a different
+structure; see {{informational}}.  Note that while the Indeterminate-Length
+Informational Response field is shown in {{format-indeterminate-length}}, it can only
+appear in response messages.
+
 The indeterminate-length encoding only uses length prefixes for content blocks.
 Multiple length-prefixed portions of content can be included, each prefixed by a
 non-zero Chunk Length integer describing the number of bytes in the block.  The
@@ -229,11 +234,6 @@ Each Field Line in an Indeterminate-Length Field Section starts with a Name
 Length field.  An Indeterminate-Length Field Section ends with a Content
 Terminator field.  The zero value of the Content Terminator distinguishes it
 from the Name Length field, which cannot contain a value of 0.
-
-Response messages that contain informational status codes result in a different
-structure; see {{informational}}.  Note that while the Indeterminate-Length
-Informational Response field is shown in {{format-indeterminate-length}}, it can only
-appear in response messages.
 
 Indeterminate-length messages can be truncated in a similar way as known-length
 messages; see {{padding}}.
