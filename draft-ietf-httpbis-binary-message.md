@@ -31,14 +31,14 @@ author:
 normative:
   HTTP: I-D.ietf-httpbis-semantics
   QUIC: RFC9000
+  H2:
+    =: I-D.ietf-httpbis-http2bis
+    display: HTTP/2
 
 informative:
   MESSAGING:
     =: I-D.ietf-httpbis-messaging
     display: HTTP/1.1
-  H2:
-    =: I-D.ietf-httpbis-http2bis
-    display: HTTP/2
   H3:
     =: I-D.ietf-quic-http
     display: HTTP/3
@@ -73,8 +73,8 @@ Two modes for encoding are described:
 * a known-length encoding includes length prefixes for all major message
   components; and
 
-* an indefinite-length encoding enables efficient generation of messages where
-  lengths are not known when encoding starts.
+* an indeterminate-length encoding enables efficient generation of messages
+  where lengths are not known when encoding starts.
 
 This format is designed to convey the semantics of valid HTTP messages as simply
 and efficiently as possible.  It is not designed to capture all of the details
@@ -142,7 +142,7 @@ Known-Length Field Section {
 
 Known-Length Content {
   Content Length (i),
-  Content (..)
+  Content (..),
 }
 
 Known-Length Informational Response {
@@ -157,14 +157,14 @@ control data that is formatted according to the value of the framing indicator,
 a header section with a length prefix, binary content with a length prefix, and
 a trailer section with a length prefix.
 
-For a known-length encoding, the length prefix on field sections and content is
-a variable-length encoding of an integer.  This integer is the number of bytes
-in the field section or content.
-
 Response messages that contain informational status codes result in a different
 structure; see {{informational}}.  Note that while the Known-Length
 Informational Response field is shown in {{format-known-length}}, it can only
 appear in response messages.
+
+For a known-length encoding, the length prefix on field sections and content is
+a variable-length encoding of an integer.  This integer is the number of bytes
+in the field section or content, not including the length field itself.
 
 Fields in the header and trailer sections consist of a length-prefixed name and
 length-prefixed value; see {{fields}}.
@@ -199,7 +199,7 @@ Indeterminate-Length Content {
 
 Indeterminate-Length Content Chunk {
   Chunk Length (i) = 1..,
-  Chunk (..)
+  Chunk (..),
 }
 
 Indeterminate-Length Field Section {
@@ -214,11 +214,16 @@ Indeterminate-Length Informational Response {
 ~~~
 {: #format-indeterminate-length title="Indeterminate-Length Message"}
 
-That is, an indeterminate length consists of a framing indicator, a block of
-control data that is formatted according to the value of the framing indicator,
-a header section that is terminated by a zero value, any number of
+That is, an indeterminate-length message consists of a framing indicator, a
+block of control data that is formatted according to the value of the framing
+indicator, a header section that is terminated by a zero value, any number of
 non-zero-length chunks of binary content, a zero value, and a trailer section
 that is terminated by a zero value.
+
+Response messages that contain informational status codes result in a different
+structure; see {{informational}}.  Note that while the Indeterminate-Length
+Informational Response field is shown in {{format-indeterminate-length}}, it can only
+appear in response messages.
 
 The indeterminate-length encoding only uses length prefixes for content blocks.
 Multiple length-prefixed portions of content can be included, each prefixed by a
@@ -229,11 +234,6 @@ Each Field Line in an Indeterminate-Length Field Section starts with a Name
 Length field.  An Indeterminate-Length Field Section ends with a Content
 Terminator field.  The zero value of the Content Terminator distinguishes it
 from the Name Length field, which cannot contain a value of 0.
-
-Response messages that contain informational status codes result in a different
-structure; see {{informational}}.  Note that while the Indeterminate-Length
-Informational Response field is shown in {{format-indeterminate-length}}, it can only
-appear in response messages.
 
 Indeterminate-length messages can be truncated in a similar way as known-length
 messages; see {{padding}}.
@@ -287,8 +287,8 @@ Request Control Data {
 ## Response Control Data
 
 The control data for a response message consists of the status code. The status
-code is encoded as a variable length integer, not a length-prefixed decimal
-string.
+code ({{Section 15 of HTTP}}) is encoded as a variable length integer, not a
+length-prefixed decimal string.
 
 The format of final response control data is shown in
 {{format-response-control-data}}.
@@ -304,9 +304,9 @@ Final Response Control Data {
 ### Informational Status Codes {#informational}
 
 Responses that include informational status codes (see {{Section 15.2 of HTTP}})
-are encoded by repeating the informational response control data and associated
-header section until a final response control data is encoded.  The status code
-distinguishes between informational and final responses.
+are encoded by repeating the response control data and associated header section
+until a final response control data is encoded.  The status code distinguishes
+between informational and final responses.
 
 The format of the informational response control data is shown in
 {{format-informational}}.
@@ -319,7 +319,7 @@ Informational Response Control Data {
 {: #format-informational title="Format of Informational Response Control Data"}
 
 A response message can include any number of informational responses that
-precede a final status code.  These convey an information status code and a
+precede a final status code.  These convey an informational status code and a
 header block.
 
 If the response control data includes an informational status code (that is, a
@@ -333,7 +333,7 @@ control data contains a final status code (200 to 599 inclusive).
 
 Header and trailer sections consist of zero or more field lines; see {{Section 5
 of HTTP}}. The format of a field section depends on whether the message is
-known- or intermediate-length.
+known- or indeterminate-length.
 
 Each field line includes a name and a value. Both the name and value are
 length-prefixed sequences of bytes.  The field name length is at least one
@@ -604,7 +604,7 @@ features of the formats used in those protocols:
 
 Some of these features are also absent in HTTP/2 and HTTP/3.
 
-Unlike HTTP/2 and HTTP/3, this format uses a a fixed format for control data
+Unlike HTTP/2 and HTTP/3, this format uses a fixed format for control data
 rather than using pseudo-fields.  Messages are invalid ({{invalid}}) if they
 contain fields named `:method`, `:scheme`, `:authority`, `:path`, or `:status`.
 Other pseudo-fields that are defined by protocol extensions MAY be included;

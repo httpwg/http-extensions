@@ -2,6 +2,7 @@
 title: "Client-Cert HTTP Header Field"
 abbrev: Client-Cert Header
 docname: draft-ietf-httpbis-client-cert-field-latest
+submissionType: IETF
 date: {DATE}
 category: info
 

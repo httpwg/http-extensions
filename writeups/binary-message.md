@@ -73,7 +73,7 @@ I-D nits flags several issues, but none seem germane.
 
 15. Should any informative references be normative or vice-versa?
 
-
+They are all now correct, I believe.
 
 16. List any normative references that are not freely available to anyone. Did the community have sufficient access to review any such normative references?
 
