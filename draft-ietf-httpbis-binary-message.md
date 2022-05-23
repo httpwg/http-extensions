@@ -287,8 +287,8 @@ Request Control Data {
 ## Response Control Data
 
 The control data for a response message consists of the status code. The status
-code is encoded as a variable length integer, not a length-prefixed decimal
-string.
+code ({{Section 15 of HTTP}}) is encoded as a variable length integer, not a
+length-prefixed decimal string.
 
 The format of final response control data is shown in
 {{format-response-control-data}}.
