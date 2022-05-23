@@ -31,14 +31,14 @@ author:
 normative:
   HTTP: I-D.ietf-httpbis-semantics
   QUIC: RFC9000
+  H2:
+    =: I-D.ietf-httpbis-http2bis
+    display: HTTP/2
 
 informative:
   MESSAGING:
     =: I-D.ietf-httpbis-messaging
     display: HTTP/1.1
-  H2:
-    =: I-D.ietf-httpbis-http2bis
-    display: HTTP/2
   H3:
     =: I-D.ietf-quic-http
     display: HTTP/3
