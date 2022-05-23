@@ -214,7 +214,7 @@ Indeterminate-Length Informational Response {
 ~~~
 {: #format-indeterminate-length title="Indeterminate-Length Message"}
 
-That is, an indeterminate length message consists of a framing indicator, a
+That is, an indeterminate-length message consists of a framing indicator, a
 block of control data that is formatted according to the value of the framing
 indicator, a header section that is terminated by a zero value, any number of
 non-zero-length chunks of binary content, a zero value, and a trailer section
