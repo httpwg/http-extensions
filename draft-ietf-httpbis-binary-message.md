@@ -159,7 +159,7 @@ a trailer section with a length prefix.
 
 For a known-length encoding, the length prefix on field sections and content is
 a variable-length encoding of an integer.  This integer is the number of bytes
-in the field section or content.
+in the field section or content, not including the length field itself.
 
 Response messages that contain informational status codes result in a different
 structure; see {{informational}}.  Note that while the Known-Length
