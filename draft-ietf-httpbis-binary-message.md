@@ -73,8 +73,8 @@ Two modes for encoding are described:
 * a known-length encoding includes length prefixes for all major message
   components; and
 
-* an indefinite-length encoding enables efficient generation of messages where
-  lengths are not known when encoding starts.
+* an indeterminate-length encoding enables efficient generation of messages
+  where lengths are not known when encoding starts.
 
 This format is designed to convey the semantics of valid HTTP messages as simply
 and efficiently as possible.  It is not designed to capture all of the details
