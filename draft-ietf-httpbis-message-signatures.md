@@ -113,7 +113,7 @@ This document also provides a mechanism for a potential verifier to signal to a 
 
 HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was originally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signature base.  Since the exact raw bytes of the message cannot be relied upon as a reliable source for a signature base, the signer and verifier must independently create the signature base from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
 
-For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the body, or the getDate` header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message components are signed.
+For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the body, or the Date header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message components are signed.
 
 HTTP applications may be running in environments that do not provide complete access to or control over HTTP messages (such as a web browser's JavaScript environment), or may be using libraries that abstract away the details of the protocol (such as [the Java HTTPClient library](https://openjdk.java.net/groups/net/httpclient/intro.html)).  These applications need to be able to generate and verify signatures despite incomplete knowledge of the HTTP message.
 
@@ -341,7 +341,7 @@ The resulting string is used as the component value in {{http-header}}.
 
 If a given field is known by the application to be a Dictionary structured field, an individual member in the value of that Dictionary is identified by using the parameter `key` and the Dictionary member key as a String value.
 
-An individual `member_value` of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of STRUCTURED-FIELDS}} on the `member_value` and its parameters, without the dictionary key. Specifically, the value is serialized as an Item or Inner List (the two possible values of a Dictionary member).
+An individual member value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of STRUCTURED-FIELDS}} on the `member_value` and its parameters, without the dictionary key. Specifically, the value is serialized as an Item or Inner List (the two possible values of a Dictionary member).
 
 Each parameterized key for a given field MUST NOT appear more than once in the signature base. Parameterized keys MAY appear in any order in the signature base, regardless of the order they occur in the source Dictionary.
 
@@ -449,7 +449,7 @@ The signature parameters component value is serialized as a parameterized inner 
 6. The output contains the signature parameters component value.
 
 Note that the Inner List serialization from {{Section 4.1.1.1 of STRUCTURED-FIELDS}} is used for the covered component value instead of the List serialization from {{Section 4.1.1 of STRUCTURED-FIELDS}}
-in order to facilitate parallelism with this value's inclusion the Signature-Input field,
+in order to facilitate parallelism with this value's inclusion in the Signature-Input field,
 as discussed in {{signature-input-header}}.
 
 This example shows a canonicalized value for the parameters of a given signature:
@@ -1562,7 +1562,7 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 
 ## HTTP Signature Component Parameters Registry {#component-param-registry}
 
-This document defines a component identifiers, which can be parameterized in specific circumstances to provide unique modified behavior. IANA is asked to create and maintain a new registry typed "HTTP Signature Component Parameters" to record and maintain the set of non-field component names and the methods to produce their associated component values. Initial values for this registry are given in {{iana-component-param-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-component-param-template}}.
+This document defines several kinds of component identifiers, some of which can be parameterized in specific circumstances to provide unique modified behavior. IANA is asked to create and maintain a new registry typed "HTTP Signature Component Parameters" to record and maintain the set of parameters names, the component identifiers they are associated with, and the modifications these parameters make to the component value. Initial values for this registry are given in {{iana-component-param-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-component-param-template}}.
 
 ### Registration Template {#iana-component-param-template}
 
@@ -1572,6 +1572,9 @@ Name:
 
 Description:
 : A description of the parameter's function.
+
+Status:
+: A brief text description of the status of the parameter. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
 Target:
 : The applicable component identifiers for the parmeter. Can be one or more derived component identifiers as described in {{derived-components}}, "Field Value" meaning all HTTP fields, or a human-readable description of the target.
