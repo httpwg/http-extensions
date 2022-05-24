@@ -533,6 +533,11 @@ The authors would like to thank the following individuals who've contributed in 
 
    > To be removed by the RFC Editor before publication as an RFC
 
+   draft-ietf-httpbis-client-cert-field-02
+
+   * Add a note about cert retention on TLS session resumption
+   * Say to use only the last one in the case of multiple post-handshake client cert authentications
+
    draft-ietf-httpbis-client-cert-field-01
 
    * Use RFC 8941 Structured Field Values for HTTP
