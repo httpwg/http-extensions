@@ -285,6 +285,14 @@ or HTTP/3 {{?I-D.ietf-quic-http}}) should account for the additional size of hea
 block of the requests it sends vs. requests it receives by advertising a value to its
 clients that is sufficiently smaller so as to allow for the addition of certificate data.
 
+## TLS Session Resumption
+
+Some TLS implementations do not retain client certificate information when resuming.
+Providing inconsistent values of Client-Cert and Client-Cert-Chain when resuming might
+lead to errors, so implementations that are unable to provide these values SHOULD
+either disable resumption for connections with client certificates or initially omit a
+`Client-Cert` or `Client-Cert-Chain` field if it might not be available after resuming.
+
 # Security Considerations {#sec}
 
 The header fields described herein enable a TTRP and backend or origin server to
@@ -521,6 +529,7 @@ The authors would like to thank the following individuals who've contributed in 
 - Rifaat Shekh-Yusef
 - Travis Spencer
 - Nick Sullivan
+- Willy Tarreau
 - Martin Thomson
 - Peter Wu
 - Hans Zandbelt
