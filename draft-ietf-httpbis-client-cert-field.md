@@ -105,7 +105,7 @@ connection to the TTRP.
 
 {::boilerplate bcp14-tagged}
 
-## Terminology
+## Terminology and Applicability
 
 Phrases like TLS client certificate authentication or mutually-authenticated TLS
 are used throughout this document to refer to the process whereby, in addition
@@ -124,7 +124,11 @@ sometimes used to implement reactive client certificate authentication in HTTP/1
 based on the HTTP request. HTTP application data sent on such a connection
 after receipt and verification of the client certificate is also
 mutually-authenticated and thus suitable for the mechanisms described in this
-document.
+document. With post-handshake authentication there is also the possibility, though
+unlikely in practice, of multiple certificates and certificate chains from the
+client on a connection, in which case only the certificate and chain
+of the last post-handshake authentication are to be utilized for the header
+fields described herein.
 
 # HTTP Header Fields and Processing Rules {#headers}
 
@@ -538,6 +542,11 @@ The authors would like to thank the following individuals who've contributed in 
 # Document History
 
    > To be removed by the RFC Editor before publication as an RFC
+
+   draft-ietf-httpbis-client-cert-field-02
+
+   * Add a note about cert retention on TLS session resumption
+   * Say to use only the last one in the case of multiple post-handshake client cert authentications
 
    draft-ietf-httpbis-client-cert-field-01
 
