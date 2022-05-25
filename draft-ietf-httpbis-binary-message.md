@@ -134,7 +134,7 @@ Request with Known-Length {
   Padding (..),
 }
 
-Reponse with Known-Length {
+Response with Known-Length {
   Framing Indicator (i) = 1,
   Known-Length Informational Response (..) ...,
   Final Response Control Data (..),
