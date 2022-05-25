@@ -194,7 +194,7 @@ Indeterminate-Length Request  {
   Framing Indicator (i) = 2,
   Request Control Data (..),
   Indeterminate-Length Field Section (..),
-  Indeterminate-Length Content (..) ...,
+  Indeterminate-Length Content (..),
   Indeterminate-Length Field Section (..),
   Padding (..),
 }
@@ -204,7 +204,7 @@ Indeterminate-Length Response  {
   Indeterminate-Length Informational Response (..) ...,
   Final Response Control Data (..),
   Indeterminate-Length Field Section (..),
-  Indeterminate-Length Content (..) ...,
+  Indeterminate-Length Content (..),
   Indeterminate-Length Field Section (..),
   Padding (..),
 }
