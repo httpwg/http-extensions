@@ -1325,6 +1325,13 @@ print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
 
 _RFC Editor: Please remove this section before publication._
 
+## Since draft-ietf-httpbis-digest-headers-08
+{:numbered="false"}
+
+* Add note about migrating from RFC 3230. #1968, #1971
+* Clarify what Want-* means in responses. #2097
+* Editorial changes to structure and to align to HTTP style guide.
+
 ## Since draft-ietf-httpbis-digest-headers-07
 {:numbered="false"}
 
