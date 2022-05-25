@@ -121,14 +121,23 @@ on the minimum number of bytes necessary.
 
 ## Known Length Messages
 
-A message that has a known length at the time of construction uses the
-format shown in {{format-known-length}}.
+A request or response that has a known length at the time of construction uses
+the format shown in {{format-known-length}}.
 
 ~~~ quic-format
-Message with Known-Length {
-  Framing Indicator (i) = 0..1,
+Request with Known-Length {
+  Framing Indicator (i) = 0,
+  Request Control Data (..),
+  Known-Length Field Section (..),
+  Known-Length Content (..),
+  Known-Length Field Section (..),
+  Padding (..),
+}
+
+Reponse with Known-Length {
+  Framing Indicator (i) = 1,
   Known-Length Informational Response (..) ...,
-  Control Data (..),
+  Final Response Control Data (..),
   Known-Length Field Section (..),
   Known-Length Content (..),
   Known-Length Field Section (..),
@@ -152,15 +161,14 @@ Known-Length Informational Response {
 ~~~
 {: #format-known-length title="Known-Length Message"}
 
-That is, a known-length message consists of a framing indicator, a block of
-control data that is formatted according to the value of the framing indicator,
-a header section with a length prefix, binary content with a length prefix, and
-a trailer section with a length prefix.
+A known-length request consists of a framing indicator ({{framing}}), request
+control data ({{request-control}}), a header section with a length prefix,
+binary content with a length prefix, a trailer section with a length prefix, and
+padding.
 
-Response messages that contain informational status codes result in a different
-structure; see {{informational}}.  Note that while the Known-Length
-Informational Response field is shown in {{format-known-length}}, it can only
-appear in response messages.
+A known-length response contains the same fields, with the exception that
+request control data is replaced by zero or more informational responses
+({{informational}}) followed by response control data ({{response-control}}).
 
 For a known-length encoding, the length prefix on field sections and content is
 a variable-length encoding of an integer.  This integer is the number of bytes
@@ -178,14 +186,23 @@ bytes for each field section and the message content.
 
 ## Indeterminate Length Messages
 
-A message that is constructed without encoding a known length for each section
-uses the format shown in {{format-indeterminate-length}}:
+A request or response that is constructed without encoding a known length for
+each section uses the format shown in {{format-indeterminate-length}}:
 
 ~~~ quic-format
-Indeterminate-Length Message  {
-  Framing Indicator (i) = 2..3,
+Indeterminate-Length Request  {
+  Framing Indicator (i) = 2,
+  Request Control Data (..),
+  Indeterminate-Length Field Section (..),
+  Indeterminate-Length Content (..) ...,
+  Indeterminate-Length Field Section (..),
+  Padding (..),
+}
+
+Indeterminate-Length Response  {
+  Framing Indicator (i) = 3,
   Indeterminate-Length Informational Response (..) ...,
-  Control Data (..),
+  Final Response Control Data (..),
   Indeterminate-Length Field Section (..),
   Indeterminate-Length Content (..) ...,
   Indeterminate-Length Field Section (..),
@@ -214,16 +231,14 @@ Indeterminate-Length Informational Response {
 ~~~
 {: #format-indeterminate-length title="Indeterminate-Length Message"}
 
-That is, an indeterminate-length message consists of a framing indicator, a
-block of control data that is formatted according to the value of the framing
-indicator, a header section that is terminated by a zero value, any number of
-non-zero-length chunks of binary content, a zero value, and a trailer section
-that is terminated by a zero value.
+An indeterminate-length request consists of a framing indicator ({{framing}}),
+request control data ({{request-control}}), a header section that is terminated
+by a zero value, any number of non-zero-length chunks of binary content, a zero
+value, a trailer section that is terminated by a zero value, and padding.
 
-Response messages that contain informational status codes result in a different
-structure; see {{informational}}.  Note that while the Indeterminate-Length
-Informational Response field is shown in {{format-indeterminate-length}}, it can only
-appear in response messages.
+An indeterminate-length response contains the same fields, with the exception
+that request control data is replaced by zero or more informational responses
+({{informational}}) and response control data ({{response-control}}).
 
 The indeterminate-length encoding only uses length prefixes for content blocks.
 Multiple length-prefixed portions of content can be included, each prefixed by a
@@ -256,7 +271,7 @@ take just four values:
 Other values cause the message to be invalid; see {{invalid}}.
 
 
-## Request Control Data
+## Request Control Data {#request-control}
 
 The control data for a request message contains the method and request target.
 That information is encoded as an ordered sequence of fields: Method, Scheme,
@@ -284,7 +299,7 @@ Request Control Data {
 {: #format-request-control-data title="Format of Request Control Data"}
 
 
-## Response Control Data
+## Response Control Data {#response-control}
 
 The control data for a response message consists of the status code. The status
 code ({{Section 15 of HTTP}}) is encoded as a variable length integer, not a
