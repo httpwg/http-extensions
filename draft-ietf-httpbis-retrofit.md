@@ -170,7 +170,7 @@ Content-Length:
 : Note that Content-Length is defined as a List because it is not uncommon for implementations to mistakenly send multiple values. See {{Section 8.6 of HTTP}} for handling requirements.
 
 Retry-After:
-: Only the delta-seconds form of Retry-After can be represented; a Retry-After value containing a http-date will need to be either converted into delta-seconds to be conveyed as a Structured Field Value.
+: Only the delta-seconds form of Retry-After can be represented; a Retry-After value containing a http-date will need to be converted into delta-seconds to be conveyed as a Structured Field Value.
 
 
 # Mapped Fields {#mapped}
