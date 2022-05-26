@@ -1239,8 +1239,7 @@ JWA algorithm values from the JSON Web Signature and Encryption Algorithms Regis
 
 Message signatures can be included within an HTTP message via the Signature-Input and Signature fields, both defined within this specification. When attached to a message, an HTTP message signature is identified by a label. This label MUST be unique within a given HTTP message and MUST be used in both the Signature-Input and Signature fields. The label is chosen by the signer, except where a specific label is dictated by protocol negotiations such as described in {{request-signature}}
 
-An HTTP message signature MUST use both fields and each field MUST contain the same labels.
-The Signature-Input field identifies the covered components and parameters that describe how the signature was generated, while the Signature field contains the signature value. Each field contains labeled values and MAY contain multiple labeled values. The result of this constraint is that the Signature-Input and Signature Dictionaries are parallel data structures of each other. Any key found in one field but not in the other is an error.
+An HTTP message signature MUST use both fields and each field MUST contain the same labels. The Signature-Input and Signature Dictionaries are parallel data structures of each other, and the presence of any key in one field but not in the other is an error. The Signature-Input field identifies the covered components and parameters that describe how the signature was generated, while the Signature field contains the signature value. Each field MAY contain multiple labeled values.
 
 ## The Signature-Input HTTP Field {#signature-input-header}
 
@@ -1255,7 +1254,7 @@ Signature-Input: sig1=("@method" "@target-uri" "@authority" \
 ~~~
 
 To facilitate signature validation, the Signature-Input field value MUST contain the same serialized value used
-in generating the signature base's `@signature-params` value. Note that parameter order MUST be preserved.
+in generating the signature base's `@signature-params` value. Note that in a structured field value, parameter order has to be preserved.
 
 The signer MAY include the Signature-Input field as a trailer to facilitate signing a message after its content has been processed by the signer. However, since intermediaries are allowed to drop trailers as per {{HTTP}}, it is RECOMMENDED that the Signature-Input field be included only as a header to avoid signatures being inadvertently stripped from a message.
 
@@ -1568,7 +1567,7 @@ This document defines several kinds of component identifiers, some of which can 
 
 {: vspace="0"}
 Name:
-: A name for the parameter. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The name MUST be unique within the context of the registry.
+: A name for the parameter. The name MUST be an ASCII string that conforms to the `key` ABNF rule defined in {{STRUCTURED-FIELDS}} and SHOULD NOT exceed 20 characters in length.  The name MUST be unique within the context of the registry.
 
 Description:
 : A description of the parameter's function.
@@ -1577,7 +1576,7 @@ Status:
 : A brief text description of the status of the parameter. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
 Target:
-: The applicable component identifiers for the parmeter. Can be one or more derived component identifiers as described in {{derived-components}}, "Field Value" meaning all HTTP fields, or a human-readable description of the target.
+: The applicable component identifiers for the parmeter. Can be a combination of one or more derived component identifiers as described in {{derived-components}}, one or more specific HTTP field names, the special value "Field Value" meaning all HTTP fields, or a separate human-readable description of the target.
 
 Specification document(s):
 : Reference to the document(s) that specify the
