@@ -159,15 +159,14 @@ and trailer field ({{representation-digest}}) is defined. It contains a digest v
 computed by applying a hashing algorithm to selected representation data
 ({{Section 3.2 of SEMANTICS}}). Basing `Repr-Digest` on the selected
 representation makes it straightforward to apply it to use-cases where the
-transferred data requires some sort of manipulation to be considered a
-representation or conveys a partial representation of a resource, such as Range
-Requests (see {{Section 14.2 of SEMANTICS}}).
-
+message content requires some sort of manipulation to be considered as
+representation of the resource or content conveys a partial representation of a resource,
+such as Range Requests (see {{Section 14.2 of SEMANTICS}}).
 
 `Content-Digest` and `Repr-Digest` support hashing algorithm agility.
 The `Want-Content-Digest` and `Want-Repr-Digest` fields allow
 endpoints to express interest in `Content-Digest` and `Repr-Digest`
-respectively, and preference of algorithms in either.
+respectively, and to express algorithm preferences in either.
 
 `Content-Digest` and `Repr-Digest` are collectively termed
 Integrity fields.
