@@ -1265,9 +1265,7 @@ and Erik Wilde.
 
 
 # Code Samples
-{:numbered="false"}
-
-_RFC Editor: Please remove this section before publication._
+{:numbered="false" removeinrfc="true"}
 
 How can I generate and validate the `Repr-Digest` values shown in the examples
 throughout this document?
@@ -1321,9 +1319,7 @@ print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
 ~~~
 
 # Changes
-{:numbered="false"}
-
-_RFC Editor: Please remove this section before publication._
+{:numbered="false" removeinrfc="true"}
 
 ## Since draft-ietf-httpbis-digest-headers-08
 {:numbered="false"}
