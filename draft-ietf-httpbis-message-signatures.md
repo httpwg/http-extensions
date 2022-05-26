@@ -202,7 +202,7 @@ The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.openg
 This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
 
 This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}}
-to specify syntax and parsing: List, Inner List, Dictionary, String, Integer, Byte Sequence, and Boolean.
+to specify syntax and parsing: List, Inner List, Dictionary, String, Integer, Byte Sequence, and Boolean. This document uses the following ABNF rules from {{STRUCTURED-FIELDS}} where applicable: `sf-string`, `key`, `parameters`.
 
 
 ## Application of HTTP Message Signatures {#application}
@@ -2367,6 +2367,7 @@ Jeffrey Yasskin.
   - -10
      * Removed "related response" and "@request-response" in favor of generic "req" parameter.
      * Editorial fixes to comply with HTTP extension style guidelines.
+     * Add security consideration on message content.
 
   - -09
      * Explained key formats better.
