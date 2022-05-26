@@ -1229,15 +1229,15 @@ mistook "instance" to mean HTTP content.
 Using content for the Digest field is an error
 that leads to interoperability problems between peers that implement RFC 3230.
 
-For the uncertainty of doubt, RFC 3230 was only ever intended
+RFC 3230 was only ever intended
 to use what HTTP now defines as selected representation data.
 The semantic concept of digest and representation are explained
-alongside the definition of Representation-Digest {{representation-digest}}.
+alongside the definition of [the Repr-Digest field](#representation-digest).
 
 While the syntax of Digest and Repr-Digest are different,
-the considerations and examples this document gives to Repr-Digest
-apply equally to Digest because they operate on the same input data.
-See {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
+the considerations and examples this document gives for Repr-Digest
+apply equally to Digest because they operate on the same input data;
+see {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
 
 RFC 3230 could never communicate
 the digest of HTTP message content in the Digest field;
