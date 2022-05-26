@@ -214,7 +214,7 @@ SF-Location: "https://example.com/foo"
 
 ## Dates
 
-The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, minus leap seconds).
+The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
 
 | Field Name          | Mapped Field Name   |
 |---------------------|---------------------|
@@ -278,7 +278,7 @@ Set-Cookie parameters map to Parameters on the appropriate SF-Set-Cookie member,
 | SameSite            | Token               |
 {:id="cookie-params" title="Set-Cookie Parameter Types"}
 
-Expires is mapped to an Integer representation of parsed-cookie-date (see {{Section x.x of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, minus leap seconds).
+Expires is mapped to an Integer representation of parsed-cookie-date (see {{Section x.x of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
 
 Note that although this mapping is very similar to the syntax of Cookie and Set-Cookie headers, cookies in both fields are separated by commas, not semicolons, and multiple cookies can appear in each field.
 
