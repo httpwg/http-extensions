@@ -1246,9 +1246,9 @@ Content-Digest now provides that capability.
 # Acknowledgements
 {:numbered="false"}
 This document is based on ideas from [RFC3230], so thanks
-to J. Mogul and A. Van Hoff for their great work.
+to Jeff Mogul and Arthur Van Hoff for their great work.
 The original idea of refreshing RFC3230 arose from an interesting
-discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
+discussion with Mark Nottingham, Jeffrey Yasskin and Martin Thomson when reviewing
 the MICE content coding.
 
 Thanks to Julian Reschke for his valuable contributions to this document,
