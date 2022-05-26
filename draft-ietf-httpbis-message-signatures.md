@@ -113,7 +113,7 @@ This document also provides a mechanism for a potential verifier to signal to a 
 
 HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was originally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signature base.  Since the exact raw bytes of the message cannot be relied upon as a reliable source for a signature base, the signer and verifier must independently create the signature base from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
 
-For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the body, or the Date header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message components are signed.
+For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the message content, the method, or the Date header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message components are signed.
 
 HTTP applications may be running in environments that do not provide complete access to or control over HTTP messages (such as a web browser's JavaScript environment), or may be using libraries that abstract away the details of the protocol (such as [the Java HTTPClient library](https://openjdk.java.net/groups/net/httpclient/intro.html)).  These applications need to be able to generate and verify signatures despite incomplete knowledge of the HTTP message.
 
@@ -209,7 +209,7 @@ to specify syntax and parsing: List, Inner List, Dictionary, String, Integer, By
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
-- The set of [component identifiers](#covered-content) that are expected and required. For example, an authorization protocol could mandate that the `Authorization` header be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting HTTP message bodies could require the `Digest` header to be present and covered.
+- The set of [component identifiers](#covered-content) that are expected and required. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header to be present and covered.
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means.
 - A means of determining the signature algorithm used to verify the signature is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
@@ -1750,6 +1750,45 @@ Some HTTP fields have values and interpretations that are similar to HTTP signat
 The [signature base generation algorithm](#create-sig-input) uses the value of an HTTP field as its component value. In the common case, this amounts to taking the actual bytes of the field value as the component value for both the signer and verifier. However, some field values allow for transformation of the values in semantically equivalent ways that alter the bytes used in the value itself. For example, a field definition can declare some or all of its value to be case-insensitive, or to have special handling of internal whitespace characters. Other fields have expected transformations from intermediaries, such as the removal of comments in the `Via` header field. In such cases, a verifier could be tripped up by using the equivalent transformed field value, which would differ from the byte value used by the signer. The verifier would have have a difficult time finding this class of errors since the value of the field is still acceptable for the application, but the actual bytes required by the signature base would not match.
 
 When processing such fields, the signer and verifier have to agree how to handle such transformations, if at all. One option is to not sign problematic fields, but care must be taken to ensure that there is still [sufficient signature coverage](#security-coverage) for the application. Another option is to define an application-specific canonicalization value for the field before it is added to the HTTP message, such as to always remove internal comments before signing, or to always transform values to lowercase. Since these transformations are applied prior to the field being used as input to the signature base generation algorithm, the signature base will still simply contain the byte value of the field as it appears within the message. If the transformations were to be applied after the value is extracted from the message but before it is added to the signature base, different attack surfaces such as value substitution attacks could be launched against the application. All application-specific additional rules are outside the scope of this specification, and by their very nature these transformations would harm interoperability of the implementation outside of this specific application. It is recommended that applications avoid the use of such additional rules wherever possible.
+
+## Message Content {#security-message-content}
+
+On its own, this specification does not provide coverage for the content of an HTTP message under the signature, either in request or response. However, {{DIGEST}} defines a set of fields that allow a cryptographic digest of the content to be represented in a field. Once this field is created, it can be included just like any other field as defined in {{http-header}}.
+
+For example, in the following response message:
+
+~~~ http-message
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"hello": "world"}
+~~~
+
+The digest of the content can be added to the Content-Digest field as follows:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+
+{"hello": "world"}
+~~~
+
+This field can be included in a signature base just like any other field along with the basic signature parameters:
+
+~~~
+"@status": 200
+"content-digest": \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+"@signature-input": ("@status" "content-digest")
+~~~
+
+From here, the signing process proceeds as usual.
+
+Upon verification, it is important that the verifier validate not only the signature but also the value of the Content-Digest field itself against the actual received content. Unless the verifier performs this step, it would be possible for an attacker to substitute the message content but leave the Content-Digest field value untouched. Since only the field value is covered by the signature directly, checking only the signature is not sufficient protection against such a substitution attack.
 
 # Privacy Considerations {#privacy}
 
