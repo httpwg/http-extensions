@@ -1555,7 +1555,7 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 |`@request-target`| The request target of the request | Active | Request | {{content-request-target}} of {{&SELF}}|
 |`@path`| The full path of the request URI | Active | Request | {{content-request-path}} of {{&SELF}}|
 |`@query`| The full query of the request URI | Active | Request | {{content-request-query}} of {{&SELF}}|
-|`@query-param`| | A single named query parameter | Active | Request | {{content-request-query-param}} of {{&SELF}}|
+|`@query-param`| A single named query parameter | Active | Request | {{content-request-query-param}} of {{&SELF}}|
 |`@status`| The status code of the response | Active | Response | {{content-status-code}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Derived Component Names Registry." }
 
