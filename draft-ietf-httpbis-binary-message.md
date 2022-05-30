@@ -372,10 +372,10 @@ removed when constructing a binary message.  However, they do not cause a
 message to be invalid ({{invalid}}); permitting these fields allows a binary
 message to capture messages that are exchanged in a protocol context.
 
-Like HTTP/2, this format has an exception for the combination of multiple
-instances of the `Cookie` field. Instances of fields with the ASCII-encoded
-value of `cookie` are combined using a semicolon octet (0x3b) rather than a
-comma; see {{Section 8.2.3 of H2}}.
+Like HTTP/2 or HTTP/3, this format has an exception for the combination of
+multiple instances of the `Cookie` field. Instances of fields with the
+ASCII-encoded value of `cookie` are combined using a semicolon octet (0x3b)
+rather than a comma; see {{Section 8.2.3 of H2}}.
 
 
 ## Content
