@@ -547,7 +547,7 @@ phrase is not retained by this encoding.
 6e742069 6e636c75 64657320 61207472  nt includes a tr
 61696c69 6e672043 524c462e 0d0a0000  ailing CRLF.....
 ~~~
-{: #ex-bini-response title="Binary Response including Interim Responses"}
+{: #ex-bini-response title="Binary Response including Informational Responses"}
 
 A response that uses the chunked encoding (see {{Section 7.1 of MESSAGING}}) as
 shown for {{ex-chunked}} can be encoded using indefinite-length encoding, which
