@@ -443,8 +443,8 @@ Accept-Language: en, mi
 
 This can be expressed as a binary message (type `message/bhttp`) using a
 known-length encoding as shown in hexadecimal in {{ex-bink-request}}.
-{{ex-bink-request}} view includes some of the text alongside to show that most
-of the content is not modified.
+{{ex-bink-request}} includes text alongside to show that most of the content is
+not modified.
 
 ~~~ hex-dump
 00034745 54056874 74707300 0a2f6865  ..GET.https../he
