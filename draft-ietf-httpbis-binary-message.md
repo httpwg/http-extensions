@@ -370,8 +370,7 @@ Fields that relate to connections ({{Section 7.6.1 of HTTP}}) cannot be used to
 produce the effect on a connection in this context.  These fields SHOULD be
 removed when constructing a binary message.  However, they do not cause a
 message to be invalid ({{invalid}}); permitting these fields allows a binary
-message to capture the content of a messages that are exchanged in a protocol
-context.
+message to capture messages that are exchanged in a protocol context.
 
 Like HTTP/2, this format has an exception for the combination of multiple
 instances of the `Cookie` field. Instances of fields with the ASCII-encoded
