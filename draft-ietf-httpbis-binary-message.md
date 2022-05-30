@@ -460,7 +460,7 @@ not modified.
 {: #ex-bink-request title="Known-Length Binary Encoding of Request"}
 
 This example shows that the Host header field is not replicated in the
-:authority field, as is required for ensuring that the request is reproduced
+`:authority` field, as is required for ensuring that the request is reproduced
 accurately; see {{Section 8.3.1 of H2}}.
 
 The same message can be truncated with no effect on interpretation. In this
