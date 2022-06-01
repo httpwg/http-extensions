@@ -835,7 +835,7 @@ Content-Length: 62
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
-To cryptographically link the response to the request, the server signs the response with its own key and includes the signature of `sig1` from the request in the covered components of the response. The signature base for this example is:
+To cryptographically link the response to the request, the server signs the response with its own key and includes the method, authority, and the signature value `sig1` from the request in the covered components of the response. The signature base for this example is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -849,9 +849,11 @@ NOTE: '\' line wrapping per RFC 8792
   3IpWINTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9Hd\
   bD2Tr65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3\
   LZElYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+"@authority";req: example.com
+"@method";req: POST
 "@signature-params": ("@status" "content-length" "content-type" \
-  "signature";req;key="sig1");created=1618884479\
-  ;keyid="test-key-ecc-p256"
+  "signature";req;key="sig1" "@authority";req "@method";req)\
+  ;created=1618884479;keyid="test-key-ecc-p256"
 ~~~
 
 The signed response message is:
@@ -864,10 +866,10 @@ Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
 Content-Length: 62
 Signature-Input: reqres=("@status" "content-length" "content-type" \
-  "signature";req;key="sig1");created=1618884479\
-  ;keyid="test-key-ecc-p256"
-Signature: reqres=:vR1E+sDgh0J3dZyVdPc7mK0ZbEMW3N47eDpFjXLE9g95Gx1K\
-  QLpdOmDQfedgdLzaFCqfD0WPn9e9/jubyUuZRw==:
+  "signature";req;key="sig1" "@authority";req "@method";req)\
+  ;created=1618884479;keyid="test-key-ecc-p256"
+Signature: reqres=:mh17P4TbYYBmBwsXPT4nsyVzW4Rp9Fb8WcvnfqKCQLoMvzOB\
+  LD/n32tL/GPW6XE5GAS5bdsg1khK6lBzV1Cx/Q==:
 
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
@@ -876,7 +878,7 @@ Since the request's signature value itself is not repeated in the response, the 
 
 Note that the ECDSA algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
-The `req` parameter MUST NOT be used with a request message.
+The `req` parameter MUST NOT be used in a signature that targets a request message.
 
 ## Creating the Signature Base {#create-sig-input}
 
