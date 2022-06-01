@@ -754,11 +754,11 @@ Host: www.example.com
 
 Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` component values:
 
-*baz:* `batman`
+*baz*: `batman`
 
-*qux:* an empty string
+*qux*: an empty string
 
-*param:* `value`
+*param*: `value`
 
 And the following signature base lines:
 
