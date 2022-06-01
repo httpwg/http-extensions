@@ -83,6 +83,7 @@ informative:
     BCP195:
     CLIENT-CERT: I-D.ietf-httpbis-client-cert-field
     DIGEST: I-D.ietf-httpbis-digest-headers
+    COOKIE: RFC6265
 
 entity:
   SELF: "RFC nnnn"
@@ -232,7 +233,7 @@ The following sections define component identifier names, their parameters, thei
 
 The component name for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
-Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}.
+Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}. Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for easy combination of field values in this manner that would allow the field value to still be parsed. However, the canonicalized component value is never parsed by the message signature process, merely used as part of the signature base in {{create-sig-input}}.
 
 If the combined value is not available for a given header, the following algorithm will produce canonicalized results for an implementation:
 
