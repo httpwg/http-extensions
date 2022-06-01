@@ -77,7 +77,7 @@ normative:
         target: https://url.spec.whatwg.org/
         title: URL (Living Standard)
         date: 2021
-
+    ABNF: RFC5243
 informative:
     RFC7239:
     BCP195:
@@ -202,8 +202,9 @@ The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.openg
 This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
 
 This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}}
-to specify syntax and parsing: List, Inner List, Dictionary, String, Integer, Byte Sequence, and Boolean. This document uses the following ABNF rules from {{STRUCTURED-FIELDS}} where applicable: `sf-string`, `key`, `parameters`.
+to specify syntax and parsing: List, Inner List, Dictionary, Item, String, Integer, Byte Sequence, and Boolean. 
 
+This document defines several string constructions using {{ABNF}} and uses the following ABNF rules: `VCHAR`, `SP`, `DQUOTE`, `LF`. This document also uses the following ABNF rules from {{STRUCTURED-FIELDS}}: `sf-string`, `inner-list`, `parameters`. This document also uses the following ABNF rules from {{HTTP}}: `field-content`.
 
 ## Application of HTTP Message Signatures {#application}
 
@@ -220,25 +221,15 @@ The details of this kind of profiling are the purview of the application and out
 
 # HTTP Message Components {#covered-content}
 
-In order to allow signers and verifiers to establish which components are covered by a signature, this document defines component identifiers for components covered by an HTTP Message Signature, a set of rules for deriving and canonicalizing the values associated with these component identifiers from the HTTP Message, and the means for combining these canonicalized values into a signature base. The values for these items MUST be accessible to both the signer and the verifier of the message, which means these are usually derived from aspects of the HTTP message or signature itself.
+In order to allow signers and verifiers to establish which components are covered by a signature, this document defines component identifiers for components covered by an HTTP Message Signature, a set of rules for deriving and canonicalizing the values associated with these component identifiers from the HTTP Message, and the means for combining these canonicalized values into a signature base. The context for deriving these values MUST be accessible to both the signer and the verifier of the message.
 
-Some HTTP message components can undergo transformations that change the bitwise value without altering meaning of the component's value (for example, the merging together of header fields with the same name).  Message component values must therefore be canonicalized before it is signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
+A component identifier is composed of a component name and any parameters associated with that name. Each component name is either an HTTP field name {{http-header}} or a registered derived component name {{derived-components}}. The possible parameters for a component identifier are dependent on the component identifier, and a registry cataloging all possible parameters is defined in {{param-registry}}.
 
-Component identifiers are serialized using the production grammar defined by {{STRUCTURED-FIELDS, Section 4}}.
-The component identifier has a component name, which is a String value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` rule.
+Within a single list of covered components, each component identifier MUST be distinct from every other component identifier. One component identifier is distinct from another if either the component name or its parameters differ. Multiple component identifiers having the same component name MAY be included if they have parameters that make them distinct. The order of parameters MUST be preserved when processing a component identifier (such as when parsing during verification), but the order of parameters is not significant when comparing two component identifiers for equality.
 
-~~~ abnf
-component-identifier = component-name parameters
-component-name = sf-string
-~~~
+The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters. Some HTTP message components can undergo transformations that change the bitwise value without altering meaning of the component's value (for example, the merging together of header fields with the same name).  Message component values must therefore be canonicalized before they are signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
 
-Note that this means the serialization of the component name itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"date"`, or `"@signature-params"`, and `"example-dictionary";key="foo"`.
-
-One component identifier is distinct from another if either the component name or its parameters differ. Within a single list of covered components, each component identifier MUST be distinct from every other component identifier. Multiple component identifiers having the same component name MAY be included if they have parameters that make them distinct.
-
-The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters.
-
-The following sections define component identifier types, their parameters, their associated values, and the canonicalization rules for their values. The method for combining component identifiers into the signature base is defined in {{create-sig-input}}.
+The following sections define component identifier names, their parameters, their associated values, and the canonicalization rules for their values. The method for combining component identifiers into the signature base is defined in {{create-sig-input}}.
 
 ## HTTP Fields {#http-header}
 
@@ -301,19 +292,23 @@ NOTE: '\' line wrapping per RFC 8792
 
 Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
 
+Any HTTP field component identifiers MAY have the following parameters in specific circumstances, each described in detail in their own sections:
 
-Any HTTP field component identifiers MAY have the following parameters in specific circumstances.
-
-sf
+`sf`
 : A boolean flag indicating that the field value is to be canonicalized using strict encoding
 of the structured field value. {{http-header-structured}}
 
-key
+`key`
 : A string parameter used to select a single member value from a dictionary structured field. {{http-header-dictionary}}
+
+`req`
+: Indicates that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to many derived component identifiers. {{content-request-response}}
+
+Additional parameters MAY be defined in a registry established in {{param-registry}}.
 
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
 
-If the value of the the HTTP field in question is a structured field ({{STRUCTURED-FIELDS}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
+If the value of the the HTTP field in question is known by the application to be a structured field ({{STRUCTURED-FIELDS}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
 parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
 will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
 
@@ -323,7 +318,7 @@ For example, the following dictionary field is a valid serialization:
 Example-Dict:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
-If included in the input string as-is, it would be:
+If included in the signature base without parameters, its value would be:
 
 ~~~
 "example-dict": a=1,    b=2;x=1;y=2,   c=(a   b   c)
@@ -412,15 +407,9 @@ request:
 response:
 : Values derived from and results applied to an HTTP response message as described in {{Section 3.4 of HTTP}}.
 
-A derived component definition MUST define all targets to which it can be applied.
+A derived component definition MUST define all target messages to which it can be applied.
 
-The component value MUST be derived from the HTTP message being signed or the context in which the derivation occurs. The derived component value MUST be of the following form:
-
-~~~ abnf
-derived-component-value = *VCHAR
-~~~
-
-
+Derived component values MUST be limited to printable characters and spaces and MUST NOT contain any newline characters.
 
 ### Signature Parameters {#signature-params}
 
@@ -894,16 +883,27 @@ The `req` parameter MUST NOT be used with a request message.
 
 ## Creating the Signature Base {#create-sig-input}
 
-The signature base is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the list of covered component identifiers and their associated values, along with any additional signature parameters. The output is the ordered set of bytes that form the signature base, which conforms to the following ABNF:
+The signature base is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the list of covered component identifiers and their associated values, along with any additional signature parameters. 
+
+Component identifiers are serialized using the production grammar defined by {{STRUCTURED-FIELDS, Section 4}}.
+The component identifier has a component name, which is a String Item value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` ABNF rule.
+
+Note that this means the serialization of the component name itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"@authority"`, `"@signature-params"`, or `"example-dictionary";key="foo"`.
+
+The output is the ordered set of bytes that form the signature base, which conforms to the following ABNF:
 
 ~~~ abnf
 signature-base = *( signature-base-line LF ) signature-params-line
 signature-base-line = component-identifier ":" SP
-    ( derived-component-value / field-value )
-signature-params-line = DQUOTE "@signature-params" DQUOTE ":" SP inner-list
+    ( derived-component-value / field-content ) ; no obs-fold
+component-identifier = component-name parameters
+component-name = sf-string
+derived-component-value = *( VCHAR / SP )
+signature-params-line = DQUOTE "@signature-params" DQUOTE
+     ":" SP inner-list
 ~~~
 
-To create the signature base, the signer or verifier concatenates together entries for each identifier in the signature's covered components (including their parameters) using the following algorithm:
+To create the signature base, the signer or verifier concatenates together entries for each component identifier in the signature's covered components (including their parameters) using the following algorithm:
 
 1. Let the output be an empty string.
 
@@ -987,7 +987,7 @@ An HTTP Message Signature is a signature over a string generated from a subset o
 
 ## Creating a Signature {#sign}
 
-Creation of an HTTP message signature is a process that takes as its input the message and the requirements for the application. The output is a signature value and set of signature parameters that can be applied to the message.
+Creation of an HTTP message signature is a process that takes as its input the message context and the requirements for the application. The output is a signature value and set of signature parameters that can be communicated to the verifier by adding them to the message.
 
 In order to create a signature, a signer MUST follow the following algorithm:
 
@@ -1001,17 +1001,17 @@ In order to create a signature, a signer MUST follow the following algorithm:
 
 4. The signer creates an ordered set of component identifiers representing the message components to be covered by the signature, and attaches signature metadata parameters to this set. The serialized value of this is later used as the value of the Signature-Input field as described in {{signature-input-header}}.
    * Once an order of covered components is chosen, the order MUST NOT change for the life of the signature.
-   * Each covered component identifier MUST be either an HTTP field in the message {{http-header}} or a derived component listed in {{derived-components}} or its associated registry.
+   * Each covered component identifier MUST be either an HTTP field in the message context {{http-header}} or a derived component listed in {{derived-components}} or its associated registry.
    * Signers of a request SHOULD include some or all of the message control data in the covered components, such as the `@method`, `@authority`, `@target-uri`, or some combination thereof.
    * Signers SHOULD include the `created` signature metadata parameter to indicate when the signature was created.
-   * The `@signature-params` derived component identifier is not explicitly listed in the list of covered component identifiers, because it is required to always be present as the last line in the signature base. This ensures that a signature always covers its own metadata.
+   * The `@signature-params` derived component identifier MUST NOT be listed in the list of covered component identifiers. The derived component is required to always be the last line in the signature base. This practice ensures that a signature always covers its own metadata and the metadata cannot be substituted.
    * Further guidance on what to include in this set and in what order is out of scope for this document.
 
 5. The signer creates the signature base using these parameters and the signature base creation algorithm. ({{create-sig-input}})
 
 6. The signer uses the `HTTP_SIGN` primitive function to sign the signature base with the chosen signing algorithm using the key material chosen by the signer. The `HTTP_SIGN` primitive and several concrete applications of signing algorithms are defined in in {{signature-methods}}.
 
-7. The byte array output of the signature function is the HTTP message signature output value to be included in the `Signature` field as defined in {{signature-header}}.
+7. The byte array output of the signature function is the HTTP message signature output value to be included in the Signature field as defined in {{signature-header}}.
 
 For example, given the HTTP message and signature parameters in the example in {{create-sig-input}}, the example signature base is signed with the `test-key-rsa-pss` key in {{example-key-rsa-pss-test}} and the RSA PSS algorithm described in {{method-rsa-pss-sha512}}, giving the following message signature output value, encoded in Base64:
 
@@ -2363,6 +2363,10 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -11
+     * Added ABNF references, coalesced ABNF rules.
+     * Editorial and formatting fixes.
 
   - -10
      * Removed "related response" and "@request-response" in favor of generic "req" parameter.
