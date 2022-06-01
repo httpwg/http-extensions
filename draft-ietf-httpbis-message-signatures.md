@@ -164,7 +164,7 @@ In addition to those listed above, this document uses the following terms:
 HTTP Message Signature:
 : A digital signature or keyed MAC that covers one or more portions of an HTTP message. Note that a given HTTP Message can contain multiple HTTP Message Signatures.
 
-Signer://
+Signer:
 : The entity that is generating or has generated an HTTP Message Signature. Note that multiple entities can act as signers and apply separate HTTP Message Signatures to a given HTTP Message.
 
 Verifier:
