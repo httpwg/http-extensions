@@ -202,7 +202,7 @@ The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.openg
 This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
 
 This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}}
-to specify syntax and parsing: List, Inner List, Dictionary, Item, String, Integer, Byte Sequence, and Boolean. 
+to specify syntax and parsing: List, Inner List, Dictionary, Item, String, Integer, Byte Sequence, and Boolean.
 
 This document defines several string constructions using {{ABNF}} and uses the following ABNF rules: `VCHAR`, `SP`, `DQUOTE`, `LF`. This document also uses the following ABNF rules from {{STRUCTURED-FIELDS}}: `sf-string`, `inner-list`, `parameters`. This document also uses the following ABNF rules from {{HTTP}}: `field-content`.
 
@@ -883,7 +883,7 @@ The `req` parameter MUST NOT be used with a request message.
 
 ## Creating the Signature Base {#create-sig-input}
 
-The signature base is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the list of covered component identifiers and their associated values, along with any additional signature parameters. 
+The signature base is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the list of covered component identifiers and their associated values, along with any additional signature parameters.
 
 Component identifiers are serialized using the production grammar defined by {{STRUCTURED-FIELDS, Section 4}}.
 The component identifier has a component name, which is a String Item value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` ABNF rule.
