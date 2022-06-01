@@ -121,23 +121,23 @@ HTTP applications may be running in environments that do not provide complete ac
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:
 
-- Re-ordering of header fields with different header field names ({{Section 3.2.2 of HTTP1}}).
-- Combination of header fields with the same field name ({{Section 3.2.2 of HTTP1}}).
-- Removal of header fields listed in the `Connection` header field ({{Section 6.1 of HTTP1}}).
-- Addition of header fields that indicate control options ({{Section 6.1 of HTTP1}}).
-- Addition or removal of a transfer coding ({{Section 5.7.2 of HTTP1}}).
-- Addition of header fields such as `Via` ({{Section 5.7.1 of HTTP1}}) and `Forwarded` ({{Section 4 of RFC7239}}).
+- Re-ordering of header fields with different header field names ({{Section 5.3 of HTTP}}).
+- Combination of header fields with the same field name ({{Section 5.2 of HTTP}}).
+- Removal of header fields listed in the Connection header field ({{Section 7.6.1 of HTTP}}).
+- Addition of header fields that indicate control options ({{Section 7.6.1 of HTTP}}).
+- Addition or removal of a transfer coding ({{Section 7.7 of HTTP}}).
+- Addition of header fields such as `Via` ({{Section 7.6.3 of HTTP}}) and `Forwarded` ({{Section 4 of RFC7239}}).
 
-Based on the definition of HTTP and the requirements described above, we can identify certain types of transformations that should not prevent signature verification, even when performed on message components covered by the signature.  The following list describes those transformations:
+Based on the definition of HTTP and the requirements described above, we can identify certain types of transformations that should not prevent signature verification, even when performed on message components covered by the signature. The following non-exhaustive list describes some of those transformations:
 
 - Combination of header fields with the same field name.
 - Reordering of header fields with different names.
 - Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive components such as header field names, request URI scheme, or host.
-- Addition or removal of leading or trailing whitespace to a header field value.
-- Addition or removal of `obs-folds`.
-- Changes to the `request-target` and `Host` header field that when applied together do not
-  result in a change to the message's effective request URI, as defined in {{Section 5.5 of HTTP1}}.
+- Addition or removal of leading or trailing whitespace to a field value.
+- Addition or removal of `obs-folds` from field values.
+- Changes to the request target and authority that when applied together do not
+    result in a change to the message's target URI, as defined in {{Section 7.1 of HTTP}}.
 
 Additionally, all changes to components not covered by the signature are considered safe.
 
@@ -147,13 +147,15 @@ Additionally, all changes to components not covered by the signature are conside
 {::boilerplate bcp14-tagged}
 
 The terms "HTTP message", "HTTP request", "HTTP response",
-`absolute-form`, `absolute-path`, "effective request URI",
-"gateway", "header field", "intermediary", `request-target`,
-"sender", and "recipient" are used as defined in {{HTTP1}}.
+"target URI", "gateway", "header field", "intermediary", "request target",
+"sender", "method", and "recipient" are used as defined in {{HTTP}}.
 
-The term "method" is to be interpreted as defined in {{Section 4 of HTTP}}.
+For brevity, the term "signature" on its own is used in this document to refer to both digital signatures (which use asymmetric cryptography) and keyed MACs (which use symmetric cryptography). Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given signature base. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
-For brevity, the term "signature" on its own is used in this document to refer to both digital signatures (which use asymmetric cryptography) and keyed MACs (which use symmetric cryptography). Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given input string. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
+This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}}
+to specify data types: List, Inner List, Dictionary, Item, String, Integer, Byte Sequence, and Boolean.
+
+This document defines several string constructions using {{ABNF}} and uses the following ABNF rules: `VCHAR`, `SP`, `DQUOTE`, `LF`. This document also uses the following ABNF rules from {{STRUCTURED-FIELDS}}: `sf-string`, `inner-list`, `parameters`. This document also uses the following ABNF rules from {{HTTP}}: `field-content`.
 
 In addition to those listed above, this document uses the following terms:
 
@@ -161,7 +163,7 @@ In addition to those listed above, this document uses the following terms:
 HTTP Message Signature:
 : A digital signature or keyed MAC that covers one or more portions of an HTTP message. Note that a given HTTP Message can contain multiple HTTP Message Signatures.
 
-Signer:
+Signer://
 : The entity that is generating or has generated an HTTP Message Signature. Note that multiple entities can act as signers and apply separate HTTP Message Signatures to a given HTTP Message.
 
 Verifier:
@@ -200,11 +202,6 @@ Expiration Time:
 The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
 This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
-
-This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}}
-to specify syntax and parsing: List, Inner List, Dictionary, Item, String, Integer, Byte Sequence, and Boolean.
-
-This document defines several string constructions using {{ABNF}} and uses the following ABNF rules: `VCHAR`, `SP`, `DQUOTE`, `LF`. This document also uses the following ABNF rules from {{STRUCTURED-FIELDS}}: `sf-string`, `inner-list`, `parameters`. This document also uses the following ABNF rules from {{HTTP}}: `field-content`.
 
 ## Application of HTTP Message Signatures {#application}
 
@@ -937,7 +934,7 @@ To create the signature base, the signer or verifier concatenates together entri
 
 4. Return the output string.
 
-If covered components reference a component identifier that cannot be resolved to a component value in the message, the implementation MUST produce an error and not create an input string. Such situations are included but not limited to:
+If covered components reference a component identifier that cannot be resolved to a component value in the message, the implementation MUST produce an error and not create a signature base. Such situations are included but not limited to:
 
  * The signer or verifier does not understand the derived component name.
  * The component name identifies a field that is not present in the message or whose value is malformed.
@@ -1639,11 +1636,11 @@ To combat this, an application of this specification should require as much of t
 
 The HTTP Message Signatures specification does not define any of its own cryptographic primitives, and instead relies on other specifications to define such elements. If the signature algorithm or key used to process the signature base is vulnerable to any attacks, the resulting signature will also be susceptible to these same attacks.
 
-A common attack against signature systems is to force a signature collision, where the same signature value successfully verifies against multiple different inputs. Since this specification relies on reconstruction of the input string based on an HTTP message, and the list of components signed is fixed in the signature, it is difficult but not impossible for an attacker to effect such a collision. An attacker would need to manipulate the HTTP message and its covered message components in order to make the collision effective.
+A common attack against signature systems is to force a signature collision, where the same signature value successfully verifies against multiple different inputs. Since this specification relies on reconstruction of the signature base from an HTTP message, and the list of components signed is fixed in the signature, it is difficult but not impossible for an attacker to effect such a collision. An attacker would need to manipulate the HTTP message and its covered message components in order to make the collision effective.
 
 To counter this, only vetted keys and signature algorithms should be used to sign HTTP messages. The HTTP Message Signatures Algorithm Registry is one source of potential trusted algorithms.
 
-While it is possible for an attacker to substitute the signature parameters value or the signature value separately, the [signature base generation algorithm](#create-sig-input) always covers the signature parameters as the final value in the input string using a deterministic serialization method. This step strongly binds the signature base with the signature value in a way that makes it much more difficult for an attacker to perform a partial substitution on the signature bases.
+While it is possible for an attacker to substitute the signature parameters value or the signature value separately, the [signature base generation algorithm](#create-sig-input) always covers the signature parameters as the final value in the signature base using a deterministic serialization method. This step strongly binds the signature base with the signature value in a way that makes it much more difficult for an attacker to perform a partial substitution on the signature bases.
 
 ## Key Theft {#security-keys}
 
@@ -1687,7 +1684,7 @@ Additionally, if symmetric algorithms are allowed within a system, special care 
 
 Any ambiguity in the generation of the signature base could provide an attacker with leverage to substitute or break a signature on a message. Some message component values, particularly HTTP field values, are potentially susceptible to broken implementations that could lead to unexpected and insecure behavior. Naive implementations of this specification might implement HTTP field processing by taking the single value of a field and using it as the direct component value without processing it appropriately.
 
-For example, if the handling of `obs-fold` field values does not remove the internal line folding and whitespace, additional newlines could be introduced into the signature base by the signer, providing a potential place for an attacker to mount a [signature collision](#security-collision) attack. Alternatively, if header fields that appear multiple times are not joined into a single string value, as is required by this specification, similar attacks can be mounted as a signed component value would show up in the input string more than once and could be substituted or otherwise attacked in this way.
+For example, if the handling of `obs-fold` field values does not remove the internal line folding and whitespace, additional newlines could be introduced into the signature base by the signer, providing a potential place for an attacker to mount a [signature collision](#security-collision) attack. Alternatively, if header fields that appear multiple times are not joined into a single string value, as is required by this specification, similar attacks can be mounted as a signed component value would show up in the signature base more than once and could be substituted or otherwise attacked in this way.
 
 To counter this, the entire field processing algorithm needs to be implemented by all implementations of signers and verifiers.
 
