@@ -100,7 +100,7 @@ indicator is added to signal how these parts are composed:
    whether the message is a request or response and how subsequent sections are
    formatted; see {{framing}}.
 
-2. For a response, any number of interim responses, each consisting of an
+2. For a response, any number of informational responses, each consisting of an
    informational status code and header section.
 
 3. Control data. For a request, this contains the request method and target.
@@ -410,8 +410,8 @@ equivalent to the part being absent.
 # Invalid Messages {#invalid}
 
 This document describes a number of ways that a message can be invalid. Invalid
-messages MUST NOT be processed except to log an error and produce an error
-response.
+messages MUST NOT be processed further except to log an error and produce an
+error response.
 
 The format is designed to allow incremental processing. Implementations need to
 be aware of the possibility that an error might be detected after performing
