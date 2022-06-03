@@ -233,7 +233,7 @@ The following sections define component identifier names, their parameters, thei
 
 The component name for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
-Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}. Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for easy combination of field values in this manner that would allow the field value to still be parsed. However, the canonicalized component value is never parsed by the message signature process, merely used as part of the signature base in {{create-sig-input}}.
+Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}. Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for easy combination of field values in this manner that would allow the field value to still be parsed. However, the canonicalized component value is never parsed by the message signature process, merely used as part of the signature base in {{create-sig-input}}. See {{security-non-list}} for more discussion of this issue.
 
 If the combined value is not available for a given header, the following algorithm will produce canonicalized results for an implementation:
 
@@ -886,7 +886,7 @@ The `req` parameter MUST NOT be used in a signature that targets a request messa
 The signature base is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the list of covered component identifiers and their associated values, along with any additional signature parameters.
 
 Component identifiers are serialized using the production grammar defined by {{STRUCTURED-FIELDS, Section 4}}.
-The component identifier has a component name, which is a String Item value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` ABNF rule.
+The component identifier has a component name, which is a String Item value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` ABNF rule. The signature parameters line defined in {{component-signature-params}} follows this same pattern, but the component identifier is a fixed String Item with no parameters and the component value is always an Inner List with optional parameters.
 
 Note that this means the serialization of the component name itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"@authority"`, `"@signature-params"`, or `"example-dictionary";key="foo"`.
 
@@ -903,13 +903,13 @@ signature-params-line = DQUOTE "@signature-params" DQUOTE
      ":" SP inner-list
 ~~~
 
-To create the signature base, the signer or verifier concatenates together entries for each component identifier in the signature's covered components (including their parameters) using the following algorithm:
+To create the signature base, the signer or verifier concatenates together entries for each component identifier in the signature's covered components (including their parameters) using the following algorithm. All errors produced as described immediately MUST fail the algorithm and there is no signature output base created.
 
 1. Let the output be an empty string.
 
 2. For each message component item in the covered components set (in order):
 
-    1. Append the component identifier for the covered component serialized according to the `component-identifier` rule. Note that this serialization places the component name in double quotes and appends any parameters outside of the quotes.
+    1. Append the component identifier for the covered component serialized according to the `component-identifier` ABNF rule. Note that this serialization places the component name in double quotes and appends any parameters outside of the quotes.
 
     2. Append a single colon `:`
 
@@ -917,23 +917,25 @@ To create the signature base, the signer or verifier concatenates together entri
 
     4. Determine the component value for the component identifier.
 
-        - If the component name starts with an "at" character (`@`), derive the component's value from the message according to the specific rules defined for the derived component, as in {{derived-components}}. If the derived component name is unknown or the value cannot be derived, produce an error.
+        - If the component identifier has a parameter that is not understood, produce an error.
 
-        - If the component name does not start with an "at" character (`@`), canonicalize the HTTP field value as described in {{http-header}}. If the value cannot be calculated, produce an error.
+        - If the component name starts with an "at" character (`@`), derive the component's value from the message according to the specific rules defined for the derived component, as in {{derived-components}}, including processing of any known valid parameters. If the derived component name is unknown or the value cannot be derived, produce an error.
+
+        - If the component name does not start with an "at" character (`@`), canonicalize the HTTP field value as described in {{http-header}}, including processing of any known valid parameters. If the field cannot be found in the message, or the value cannot be obtained in the context, produce an error.
 
     5. Append the covered component's canonicalized component value.
 
     6. Append a single newline `\n`
 
-3. Append the signature parameters component ({{signature-params}}) as follows:
+3. Append the signature parameters component ({{signature-params}}) according to the `signature-params-line` as follows:
 
-    1. Append the component identifier for the signature parameters serialized according to the `component-identifier` rule, i.e. `"@signature-params"`
+    1. Append the component identifier for the signature parameters serialized according to the `component-identifier` rule, i.e. the exact value `"@signature-params"` (including double quotes)
 
     2. Append a single colon `:`
 
     3. Append a single space " "
 
-    4. Append the signature parameters' canonicalized component value as defined in {{signature-params}}
+    4. Append the signature parameters' canonicalized component value as defined in {{signature-params}}, i.e. an Inner List structured field value with parameters
 
 4. Return the output string.
 
@@ -941,6 +943,7 @@ If covered components reference a component identifier that cannot be resolved t
 
  * The signer or verifier does not understand the derived component name.
  * The component name identifies a field that is not present in the message or whose value is malformed.
+ * The component identifier includes a parameter that is unknown or does not apply to the component identifier to which it is attached.
  * The component identifier indicates that a structured field serialization is used (via the `sf` parameter), but the field in question is known to not be a structured field or the type of structured field is not known to the implementation.
  * The component identifier is a dictionary member identifier that references a field that is not present in the message, is not a Dictionary Structured Field, or whose value is malformed.
  * The component identifier is a dictionary member identifier or a named query parameter identifier that references a member that is not present in the component value, or whose value is malformed. E.g., the identifier is `"example-dict";key="c"` and the value of the Example-Dict header field is `a=1, b=2`, which does not have the `c` value.
@@ -1789,6 +1792,20 @@ This field can be included in a signature base just like any other field along w
 From here, the signing process proceeds as usual.
 
 Upon verification, it is important that the verifier validate not only the signature but also the value of the Content-Digest field itself against the actual received content. Unless the verifier performs this step, it would be possible for an attacker to substitute the message content but leave the Content-Digest field value untouched. Since only the field value is covered by the signature directly, checking only the signature is not sufficient protection against such a substitution attack.
+
+## Non-List Field Values {#security-non-list}
+
+When an HTTP field occurs multiple times in a single message, these values need to be combined into a single one-line string value to be included in the HTTP signature base, as described in {{create-sig-input}}. Not all HTTP fields can be combined into a single value and still be a valid value for the field. However, for the purposes of generating the signature base, the message component value is never read back out of the signature base string and used in anyway. Therefore it is considered best practice to treat the signature base generation algorithm separately from processing the field values by the application, particularly for fields that are known to have this property.
+
+For example, the Set-Cookie field {{COOKIE}} defines an internal syntax that does not conform to the List syntax in {{STRUCTURED-FIELDS}}. This field is also typically sent as multiple fields with distinct values when sending multiple cookies. When multiple Set-Cookie fields are sent in the same message, it is not possible to combine these into a single and be able to parse and use the results, as discussed in {{HTTP Section 5.3}}. Therefore, all the cookies need to be processed from their separate header values, without being combined, while the signature base needs to be processed from the special combined value generated solely for this purpose.
+
+## Padding Attacks with Multiple Field Values {#security-multiple-fields}
+
+Since HTTP field values need to be combined in a single string value to be included in the HTTP signature base, as described in {{create-sig-input}}, it is possible for an attacker to inject an additional value for a given field and add this to the signature base of the verifier. 
+
+In most circumstances, this causes the signature validation to fail as expected, since the new signature base value will not match the one used by the signer to create the signature. However, it is theoretically possible for the attacker to inject both a garbage value to a field and a desired value to another field. This is a variation of the collision attack described in {{security-collision}}, where the attacker accomplishes their change in the message by adding to existing field values.
+
+To counter this, an application needs to validate the content of the fields covered in the signature in addition to ensuring that the signature itself validates. With such protections, the attacker's padding attack would be rejected by the field value processor, even in the case where the attacker could force a signature collision.
 
 # Privacy Considerations {#privacy}
 
