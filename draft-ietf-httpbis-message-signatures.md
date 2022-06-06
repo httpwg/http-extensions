@@ -1801,7 +1801,7 @@ For example, the Set-Cookie field {{COOKIE}} defines an internal syntax that doe
 
 ## Padding Attacks with Multiple Field Values {#security-multiple-fields}
 
-Since HTTP field values need to be combined in a single string value to be included in the HTTP signature base, as described in {{create-sig-input}}, it is possible for an attacker to inject an additional value for a given field and add this to the signature base of the verifier. 
+Since HTTP field values need to be combined in a single string value to be included in the HTTP signature base, as described in {{create-sig-input}}, it is possible for an attacker to inject an additional value for a given field and add this to the signature base of the verifier.
 
 In most circumstances, this causes the signature validation to fail as expected, since the new signature base value will not match the one used by the signer to create the signature. However, it is theoretically possible for the attacker to inject both a garbage value to a field and a desired value to another field. This is a variation of the collision attack described in {{security-collision}}, where the attacker accomplishes their change in the message by adding to existing field values.
 
