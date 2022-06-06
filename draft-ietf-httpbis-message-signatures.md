@@ -71,8 +71,8 @@ normative:
         target: https://pubs.opengroup.org/onlinepubs/9699919799/
         title: The Open Group Base Specifications Issue 7, 2018 edition
         date: 2018
-    HTTP: I-D.ietf-httpbis-semantics
-    HTTP1: I-D.ietf-httpbis-messaging
+    HTTP: RFC9110
+    HTTP1: RFC9112
     HTMLURL:
         target: https://url.spec.whatwg.org/
         title: URL (Living Standard)
