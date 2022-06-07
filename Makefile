@@ -1,4 +1,4 @@
-# poke 3
+# poke 4
 LIBDIR := lib
 DISABLE_RIBBON := true
 INDEX_FORMAT := md
