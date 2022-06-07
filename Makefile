@@ -14,7 +14,7 @@ ifneq (,$(shell grep "path *= *$(LIBDIR)" .gitmodules 2>/dev/null))
 	git submodule update $(CLONE_ARGS) --init
 else
 	git clone -q --depth 10 $(CLONE_ARGS) \
-	    -b index-titles https://github.com/martinthomson/i-d-template $(LIBDIR)
+	   -b index-titles https://github.com/martinthomson/i-d-template $(LIBDIR)
 endif
 
 $(GHPAGES_EXTRA):
