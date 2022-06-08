@@ -265,7 +265,7 @@ SF-Link: "/terms"; rel="copyright"; anchor="#foo"
 
 The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a Dictionary), respectively.
 
-In each case, cookie names are Tokens. Their values are Strings, unless they can be represented accurately and unambiguously using the textual representation of another structured types (e.g., an Integer or Decimal).
+In each case, cookie names are Tokens. Their values are Strings, unless the value can be successfully parsed as the textual representation of another, bare Item structured type (e.g., Byte Sequence, Decimal, Integer, Token, or Boolean).
 
 Set-Cookie parameters map to Parameters on the appropriate SF-Set-Cookie member, with the parameter name being forced to lowercase. Set-Cookie parameter values are Strings unless a specific type is defined for them. This specification defines the parameter types in {{cookie-params}}.
 
