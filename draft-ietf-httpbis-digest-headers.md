@@ -159,15 +159,14 @@ and trailer field ({{representation-digest}}) is defined. It contains a digest v
 computed by applying a hashing algorithm to selected representation data
 ({{Section 3.2 of SEMANTICS}}). Basing `Repr-Digest` on the selected
 representation makes it straightforward to apply it to use-cases where the
-transferred data requires some sort of manipulation to be considered a
-representation or conveys a partial representation of a resource, such as Range
-Requests (see {{Section 14.2 of SEMANTICS}}).
-
+message content requires some sort of manipulation to be considered as
+representation of the resource or content conveys a partial representation of a resource,
+such as Range Requests (see {{Section 14.2 of SEMANTICS}}).
 
 `Content-Digest` and `Repr-Digest` support hashing algorithm agility.
 The `Want-Content-Digest` and `Want-Repr-Digest` fields allow
 endpoints to express interest in `Content-Digest` and `Repr-Digest`
-respectively, and preference of algorithms in either.
+respectively, and to express algorithm preferences in either.
 
 `Content-Digest` and `Repr-Digest` are collectively termed
 Integrity fields.
@@ -1229,15 +1228,15 @@ mistook "instance" to mean HTTP content.
 Using content for the Digest field is an error
 that leads to interoperability problems between peers that implement RFC 3230.
 
-For the uncertainty of doubt, RFC 3230 was only ever intended
+RFC 3230 was only ever intended
 to use what HTTP now defines as selected representation data.
 The semantic concept of digest and representation are explained
-alongside the definition of Representation-Digest {{representation-digest}}.
+alongside the definition of [the Repr-Digest field](#representation-digest).
 
 While the syntax of Digest and Repr-Digest are different,
-the considerations and examples this document gives to Repr-Digest
-apply equally to Digest because they operate on the same input data.
-See {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
+the considerations and examples this document gives for Repr-Digest
+apply equally to Digest because they operate on the same input data;
+see {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
 
 RFC 3230 could never communicate
 the digest of HTTP message content in the Digest field;
@@ -1246,9 +1245,9 @@ Content-Digest now provides that capability.
 # Acknowledgements
 {:numbered="false"}
 This document is based on ideas from [RFC3230], so thanks
-to J. Mogul and A. Van Hoff for their great work.
+to Jeff Mogul and Arthur Van Hoff for their great work.
 The original idea of refreshing RFC3230 arose from an interesting
-discussion with M. Nottingham, J. Yasskin and M. Thomson when reviewing
+discussion with Mark Nottingham, Jeffrey Yasskin and Martin Thomson when reviewing
 the MICE content coding.
 
 Thanks to Julian Reschke for his valuable contributions to this document,
@@ -1265,9 +1264,7 @@ and Erik Wilde.
 
 
 # Code Samples
-{:numbered="false"}
-
-_RFC Editor: Please remove this section before publication._
+{:numbered="false" removeinrfc="true"}
 
 How can I generate and validate the `Repr-Digest` values shown in the examples
 throughout this document?
@@ -1321,9 +1318,7 @@ print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
 ~~~
 
 # Changes
-{:numbered="false"}
-
-_RFC Editor: Please remove this section before publication._
+{:numbered="false" removeinrfc="true"}
 
 ## Since draft-ietf-httpbis-digest-headers-08
 {:numbered="false"}
