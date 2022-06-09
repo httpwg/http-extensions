@@ -100,7 +100,7 @@ indicator is added to signal how these parts are composed:
    whether the message is a request or response and how subsequent sections are
    formatted; see {{framing}}.
 
-2. For a response, any number of interim responses, each consisting of an
+2. For a response, any number of informational responses, each consisting of an
    informational status code and header section.
 
 3. Control data. For a request, this contains the request method and target.
@@ -374,17 +374,23 @@ The same field name can be repeated in multiple field lines; see {{Section 5.2 o
 HTTP}} for the semantics of repeated field names and rules for combining
 values.
 
+Messages are invalid ({{invalid}}) if they contain fields named `:method`,
+`:scheme`, `:authority`, `:path`, or `:status`.  Other pseudo-fields that are
+defined by protocol extensions MAY be included; pseudo-fields cannot be included
+in trailers (see {{Section 8.1 of H2}}).  Field lines containing pseudo-fields
+MUST precede other field lines.  A message that contains a pseudo-field after
+any other field is invalid; see {{invalid}}.
+
 Fields that relate to connections ({{Section 7.6.1 of HTTP}}) cannot be used to
 produce the effect on a connection in this context.  These fields SHOULD be
 removed when constructing a binary message.  However, they do not cause a
 message to be invalid ({{invalid}}); permitting these fields allows a binary
-message to capture the content of a messages that are exchanged in a protocol
-context.
+message to capture messages that are exchanged in a protocol context.
 
-Like HTTP/2, this format has an exception for the combination of multiple
-instances of the `Cookie` field. Instances of fields with the ASCII-encoded
-value of `cookie` are combined using a semicolon octet (0x3b) rather than a
-comma; see {{Section 8.2.3 of H2}}.
+Like HTTP/2 or HTTP/3, this format has an exception for the combination of
+multiple instances of the `Cookie` field. Instances of fields with the
+ASCII-encoded value of `cookie` are combined using a semicolon octet (0x3b)
+rather than a comma; see {{Section 8.2.3 of H2}}.
 
 
 ## Content
@@ -419,8 +425,8 @@ equivalent to the part being absent.
 # Invalid Messages {#invalid}
 
 This document describes a number of ways that a message can be invalid. Invalid
-messages MUST NOT be processed except to log an error and produce an error
-response.
+messages MUST NOT be processed further except to log an error and produce an
+error response.
 
 The format is designed to allow incremental processing. Implementations need to
 be aware of the possibility that an error might be detected after performing
@@ -452,8 +458,8 @@ Accept-Language: en, mi
 
 This can be expressed as a binary message (type `message/bhttp`) using a
 known-length encoding as shown in hexadecimal in {{ex-bink-request}}.
-{{ex-bink-request}} view includes some of the text alongside to show that most
-of the content is not modified.
+{{ex-bink-request}} includes text alongside to show that most of the content is
+not modified.
 
 ~~~ hex-dump
 00034745 54056874 74707300 0a2f6865  ..GET.https../he
@@ -469,7 +475,7 @@ of the content is not modified.
 {: #ex-bink-request title="Known-Length Binary Encoding of Request"}
 
 This example shows that the Host header field is not replicated in the
-:authority field, as is required for ensuring that the request is reproduced
+`:authority` field, as is required for ensuring that the request is reproduced
 accurately; see {{Section 8.3.1 of H2}}.
 
 The same message can be truncated with no effect on interpretation. In this
@@ -556,7 +562,7 @@ phrase is not retained by this encoding.
 6e742069 6e636c75 64657320 61207472  nt includes a tr
 61696c69 6e672043 524c462e 0d0a0000  ailing CRLF.....
 ~~~
-{: #ex-bini-response title="Binary Response including Interim Responses"}
+{: #ex-bini-response title="Binary Response including Informational Responses"}
 
 A response that uses the chunked encoding (see {{Section 7.1 of MESSAGING}}) as
 shown for {{ex-chunked}} can be encoded using indefinite-length encoding, which
@@ -620,12 +626,7 @@ features of the formats used in those protocols:
 Some of these features are also absent in HTTP/2 and HTTP/3.
 
 Unlike HTTP/2 and HTTP/3, this format uses a fixed format for control data
-rather than using pseudo-fields.  Messages are invalid ({{invalid}}) if they
-contain fields named `:method`, `:scheme`, `:authority`, `:path`, or `:status`.
-Other pseudo-fields that are defined by protocol extensions MAY be included;
-pseudo-fields cannot be included in trailers (see {{Section 8.1 of H2}}).  Field
-lines containing pseudo-fields MUST precede other field lines.  A message that
-contains a pseudo-field after any other field is invalid; see {{invalid}}.
+rather than using pseudo-fields.
 
 Note that while some messages - CONNECT or upgrade requests in particular - can
 be represented using this format, doing so serves no purpose as these requests
