@@ -44,6 +44,15 @@ normative:
   RFC5234:
   RFC6234:
   RFC7405:
+  SEMANTICS: I-D.ietf-httpbis-semantics
+
+informative:
+  RFC2818:
+  HTTP11: I-D.ietf-httpbis-messaging
+  PATCH: RFC5789
+  NO-MD5: RFC6151
+  NO-SHA: RFC6194
+  SIGNATURES: I-D.ietf-httpbis-message-signatures
   UNIX:
     title: The Single UNIX Specification, Version 2 - 6 Vol Set for UNIX 98
     author:
@@ -72,15 +81,6 @@ normative:
          org: Nanyang Technological University, Singapore; Temasek Laboratories, Singapore
     date: 2020-01-05
     target: https://eprint.iacr.org/2020/014.pdf
-  SEMANTICS: I-D.ietf-httpbis-semantics
-
-informative:
-  RFC2818:
-  HTTP11: I-D.ietf-httpbis-messaging
-  PATCH: RFC5789
-  NO-MD5: RFC6151
-  NO-SHA: RFC6194
-  SIGNATURES: I-D.ietf-httpbis-message-signatures
 
 --- abstract
 
