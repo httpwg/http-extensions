@@ -18,10 +18,6 @@ jobs:
   build:
     name: "Update Editor's Copy"
     runs-on: ubuntu-latest
-    env:
-      VENVDIR: ${{ runner.temp }}/.venv
-      BUNDLE_PATH: ${{ runner.temp }}/.gems
-      XML2RFC_REFCACHEDIR: ${{ runner.temp }}/.refcache
     steps:
     - name: "Checkout"
       uses: actions/checkout@v2
@@ -29,7 +25,13 @@ jobs:
     - name: "Setup"
       id: setup
       run: |
+        VENVDIR="${{ runner.temp }}/.venv"
+        BUNDLE_PATH="${{ runner.temp }}/.gems"
+        XML2RFC_REFCACHEDIR="${{ runner.temp }}/.refs"
         mkdir -p "$VENVDIR" "$BUNDLE_PATH" "$XML2RFC_REFCACHEDIR"
+        echo "VENVDIR=$VENVDIR" >>$GITHUB_ENV
+        echo "BUNDLE_PATH=$BUNDLE_PATH" >>$GITHUB_ENV
+        echo "XML2RFC_REFCACHEDIR=$XML2RFC_REFCACHEDIR" >>$GITHUB_ENV
         date -u "+::set-output name=date::%FT%T"
 
     - name: "Cache venv"
