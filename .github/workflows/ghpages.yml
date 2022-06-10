@@ -18,6 +18,10 @@ jobs:
   build:
     name: "Update Editor's Copy"
     runs-on: ubuntu-latest
+    env:
+      VENVDIR: ${{ runner.temp }}/.venv
+      BUNDLE_PATH: ${{ runner.temp }}/.gems
+      XML2RFC_REFCACHEDIR: ${{ runner.temp }}/.refcache
     steps:
     - name: "Checkout"
       uses: actions/checkout@v2
@@ -25,10 +29,7 @@ jobs:
     - name: "Setup"
       id: setup
       run: |
-        mkdir -p "$HOME"/.cache/xml2rfc "$HOME"/.venv "$HOME"/.gems
-        echo "VENVDIR=$HOME/.venv" >>"$GITHUB_ENV"
-        echo "BUNDLE_PATH=$HOME/.gems" >>"$GITHUB_ENV"
-        echo "::set-output name=path::$HOME/.cache/xml2rfc"
+        mkdir -p "$VENVDIR" "$BUNDLE_PATH" "$XML2RFC_REFCACHEDIR"
         date -u "+::set-output name=date::%FT%T"
 
     - name: "Cache venv"
@@ -44,7 +45,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: |
-          ${{ steps.setup.outputs.path }}
+          ${{ env.XML2RFC_REFCACHEDIR }}
           .targets.mk
         key: refcache-${{ steps.setup.outputs.date }}
         restore-keys: refcache-
