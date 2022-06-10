@@ -18,17 +18,16 @@ jobs:
   build:
     name: "Update Editor's Copy"
     runs-on: ubuntu-latest
-    env:
-      VENVDIR: ${{ env.HOME }}/.cache/venv
-      BUNDLE_PATH: ${{ env.HOME }}/.cache/gems
     steps:
     - name: "Checkout"
       uses: actions/checkout@v2
 
-    - name: "Cache Setup"
-      id: cache-setup
+    - name: "Setup"
+      id: setup
       run: |
-        mkdir -p "$HOME"/.cache/xml2rfc
+        mkdir -p "$HOME"/.cache/xml2rfc "$HOME"/.venv "$HOME"/.gems
+        echo "VENVDIR=$HOME/.venv" >>"$GITHUB_ENV"
+        echo "BUNDLE_PATH=$HOME/.gems" >>"$GITHUB_ENV"
         echo "::set-output name=path::$HOME/.cache/xml2rfc"
         date -u "+::set-output name=date::%FT%T"
 
@@ -38,22 +37,17 @@ jobs:
         path: |
           ${{ env.VENVDIR }}
           ${{ env.BUNDLE_PATH }}
-        key: venvcache-${{ steps.cache-setup.outputs.date }}
-        restore-keys: |
-          venvcache-${{ steps.cache-setup.outputs.date }}
-          venvcache-${{ steps.cache-setup.outputs.date }}
-          venvcache-
+        key: venvcache-${{ steps.setup.outputs.date }}
+        restore-keys: venvcache-
 
     - name: "Cache References"
       uses: actions/cache@v3
       with:
         path: |
-          ${{ steps.cache-setup.outputs.path }}
+          ${{ steps.setup.outputs.path }}
           .targets.mk
-        key: refcache-${{ steps.cache-setup.outputs.date }}
-        restore-keys: |
-          refcache-${{ steps.cache-setup.outputs.date }}
-          refcache-
+        key: refcache-${{ steps.setup.outputs.date }}
+        restore-keys: refcache-
 
     - name: "Build Drafts"
       uses: martinthomson/i-d-template@v1
