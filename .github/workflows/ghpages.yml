@@ -43,6 +43,8 @@ jobs:
         key: venvcache-${{ steps.setup.outputs.date }}
         restore-keys: venvcache-
 
+    - name: check
+      run: ls $RUNNER_TEMP; echo a; ls $BUNDLE_PATH; echo a; ls $VENVDIR
     - name: "Cache References"
       uses: actions/cache@v3
       with:
@@ -57,6 +59,8 @@ jobs:
       with:
         token: ${{ github.token }}
 
+    - name: check
+      run: ls $RUNNER_TEMP; echo x; ls $BUNDLE_PATH; echo x; ls $VENVDIR
     - name: "Update GitHub Pages"
       uses: martinthomson/i-d-template@v1
       if: ${{ github.event_name == 'push' }}
