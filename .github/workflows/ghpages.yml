@@ -18,6 +18,9 @@ jobs:
   build:
     name: "Update Editor's Copy"
     runs-on: ubuntu-latest
+    env:
+      BUNDLE_PATH: /tmp/.gems
+      VENVDIR: /tmp/.venv
     steps:
     - name: "Checkout"
       uses: actions/checkout@v2
@@ -29,10 +32,23 @@ jobs:
         echo "::set-output name=path::$HOME/.cache/xml2rfc"
         date -u "+::set-output name=date::%FT%T"
 
-    - name: "Cache References"
-      uses: actions/cache@v2
+    - name: "Cache venv"
+      uses: actions/cache@v3
       with:
-        path: ${{ steps.cache-setup.outputs.path }}
+        path: |
+          ${{ env.VENVDIR }}
+          ${{ env.BUNDLE_PATH }}
+        key: venvcache-${{ steps.cache-setup.outputs.date }}
+        restore-keys: |
+          venvcache-${{ steps.cache-setup.outputs.date }}
+          venvcache-
+
+    - name: "Cache References"
+      uses: actions/cache@v3
+      with:
+        path: |
+          ${{ steps.cache-setup.outputs.path }}
+          .targets.mk
         key: refcache-${{ steps.cache-setup.outputs.date }}
         restore-keys: |
           refcache-${{ steps.cache-setup.outputs.date }}
@@ -40,22 +56,19 @@ jobs:
 
     - name: "Build Drafts"
       uses: martinthomson/i-d-template@v1
+      with:
+        token: ${{ github.token }}
 
     - name: "Update GitHub Pages"
       uses: martinthomson/i-d-template@v1
       if: ${{ github.event_name == 'push' }}
       with:
         make: gh-pages
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ github.token }}
 
-    - name: "Save HTML"
+    - name: "Archive Built Drafts"
       uses: actions/upload-artifact@v2
       with:
-        path: "*.html"
-
-    - name: "Save Text"
-      uses: actions/upload-artifact@v2
-      with:
-        path: "*.txt"
-
+        path: |
+          draft-*.html
+          draft-*.txt
