@@ -19,8 +19,8 @@ jobs:
     name: "Update Editor's Copy"
     runs-on: ubuntu-latest
     env:
-      VENVDIR: /venv/.venv
-      BUNDLE_PATH: /venv/.gems
+      VENVDIR: ${{ env.HOME }}/.cache/venv
+      BUNDLE_PATH: ${{ env.HOME }}/.cache/gems
     steps:
     - name: "Checkout"
       uses: actions/checkout@v2
@@ -40,6 +40,7 @@ jobs:
           ${{ env.BUNDLE_PATH }}
         key: venvcache-${{ steps.cache-setup.outputs.date }}
         restore-keys: |
+          venvcache-${{ steps.cache-setup.outputs.date }}
           venvcache-${{ steps.cache-setup.outputs.date }}
           venvcache-
 
