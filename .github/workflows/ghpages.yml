@@ -18,6 +18,10 @@ jobs:
   build:
     name: "Update Editor's Copy"
     runs-on: ubuntu-latest
+    env:
+      XML2RFC_REFCACHEDIR: ./.refcache
+      VENVDIR: ./.venv
+      BUNDLE_PATH: ./.gems
     steps:
     - name: "Checkout"
       uses: actions/checkout@v2
@@ -25,13 +29,6 @@ jobs:
     - name: "Setup"
       id: setup
       run: |
-        VENVDIR="${{ runner.temp }}/.venv"
-        BUNDLE_PATH="${{ runner.temp }}/.gems"
-        XML2RFC_REFCACHEDIR="${{ runner.temp }}/.refs"
-        mkdir -p "$VENVDIR" "$BUNDLE_PATH" "$XML2RFC_REFCACHEDIR"
-        echo "VENVDIR=$VENVDIR" >>$GITHUB_ENV
-        echo "BUNDLE_PATH=$BUNDLE_PATH" >>$GITHUB_ENV
-        echo "XML2RFC_REFCACHEDIR=$XML2RFC_REFCACHEDIR" >>$GITHUB_ENV
         date -u "+::set-output name=date::%FT%T"
 
     - name: "Cache venv"
@@ -43,8 +40,6 @@ jobs:
         key: venvcache-${{ steps.setup.outputs.date }}
         restore-keys: venvcache-
 
-    - name: check
-      run: ls $RUNNER_TEMP; echo a; ls $BUNDLE_PATH; echo a; ls $VENVDIR
     - name: "Cache References"
       uses: actions/cache@v3
       with:
@@ -59,8 +54,6 @@ jobs:
       with:
         token: ${{ github.token }}
 
-    - name: check
-      run: ls $RUNNER_TEMP; echo x; ls $BUNDLE_PATH; echo x; ls $VENVDIR
     - name: "Update GitHub Pages"
       uses: martinthomson/i-d-template@v1
       if: ${{ github.event_name == 'push' }}
