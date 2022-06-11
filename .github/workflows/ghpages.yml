@@ -28,8 +28,7 @@ jobs:
 
     - name: "Setup"
       id: setup
-      run: |
-        date -u "+::set-output name=date::%FT%T"
+      run: date -u "+::set-output name=date::%FT%T"
 
     - name: "Cache venv"
       uses: actions/cache@v3
@@ -38,8 +37,8 @@ jobs:
           ${{ env.VENVDIR }}
           ${{ env.BUNDLE_PATH }}
           node_modules
-        key: venvcache-${{ steps.setup.outputs.date }}
-        restore-keys: venvcache-
+        key: deps-${{ steps.setup.outputs.date }}
+        restore-keys: deps-
 
     - name: "Cache References"
       uses: actions/cache@v3
@@ -47,8 +46,8 @@ jobs:
         path: |
           ${{ env.XML2RFC_REFCACHEDIR }}
           .targets.mk
-        key: refcache-${{ steps.setup.outputs.date }}
-        restore-keys: refcache-
+        key: refs-${{ steps.setup.outputs.date }}
+        restore-keys: refs-
 
     - name: "Build Drafts"
       uses: martinthomson/i-d-template@v1
