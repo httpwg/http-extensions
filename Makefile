@@ -23,12 +23,7 @@ $(GHPAGES_EXTRA):
 clean::
 	-rm -f $(GHPAGES_EXTRA)
 
-lint:: http-lint test-path
-
-test-path: $(drafts_xml)
-	@echo XML2RFC_REFCACHEDIR='"'$(XML2RFC_REFCACHEDIR)'"'
-	@echo KRAMDOWN_REFCACHEDIR='"'$(KRAMDOWN_REFCACHEDIR)'"'
-	ls .refcache
+lint:: http-lint
 
 rfc-http-validate ?= rfc-http-validate
 .SECONDARY: $(drafts_xml)

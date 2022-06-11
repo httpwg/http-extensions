@@ -37,6 +37,7 @@ jobs:
         path: |
           ${{ env.VENVDIR }}
           ${{ env.BUNDLE_PATH }}
+          node_modules
         key: venvcache-${{ steps.setup.outputs.date }}
         restore-keys: venvcache-
 
