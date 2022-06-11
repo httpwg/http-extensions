@@ -19,9 +19,9 @@ jobs:
     name: "Update Editor's Copy"
     runs-on: ubuntu-latest
     env:
-      XML2RFC_REFCACHEDIR: ./.refcache
-      VENVDIR: ./.venv
-      BUNDLE_PATH: ./.gems
+      XML2RFC_REFCACHEDIR: .refcache
+      VENVDIR: .venv
+      BUNDLE_PATH: .gems
     steps:
     - name: "Checkout"
       uses: actions/checkout@v2
