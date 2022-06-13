@@ -373,8 +373,8 @@ Dubois, Camille, camille.dubois@example.net
 </middle>
 <back>
   <references title="Normative References">
-    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
-    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
     <reference anchor="RFCHTTP">
       <front>
         <title>HTTP Semantics</title>
