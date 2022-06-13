@@ -381,9 +381,10 @@ Dubois, Camille, camille.dubois@example.net
         <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
         <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
         <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2021" month="September" day="10"/>
+        <date year="2022" month="June"/>
       </front>
-      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-19"/>
+      <seriesInfo name="STD" value="97"/>
+      <seriesInfo name="RFC" value="9110"/>
     </reference>
     <reference anchor="HTTP-CACHING">
       <front>
@@ -391,9 +392,10 @@ Dubois, Camille, camille.dubois@example.net
         <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
         <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
         <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2021" month="September" day="10"/>
+        <date year="2022" month="June"/>
       </front>
-      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-cache-19"/>
+      <seriesInfo name="STD" value="98"/>
+      <seriesInfo name="RFC" value="9111"/>
     </reference>
   </references>
 
