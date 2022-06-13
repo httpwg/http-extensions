@@ -421,6 +421,7 @@ Dubois, Camille, camille.dubois@example.net
 <ul>
   <li>In <xref target="field.accept-query"/>, slightly rephrase statement about significance of ordering (<eref target="https://github.com/httpwg/http-extensions/issues/1896"/>)</li>
   <li>Throughout: use "content" instead of "payload" or "body" (<eref target="https://github.com/httpwg/http-extensions/issues/1915"/>)</li>
+  <li>Updated references (<eref target="https://github.com/httpwg/http-extensions/issues/2157"/>)</li>
 </ul>
 </section>
 </section>
