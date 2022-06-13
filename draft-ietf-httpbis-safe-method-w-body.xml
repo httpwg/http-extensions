@@ -165,7 +165,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The QUERY method is used to initiate a server-side query. Unlike
       the HTTP GET method, which requests that a server return a
       representation of the resource identified by the target URI
-      (as defined by <xref target="RFCHTTP" section="7.1"/>), the QUERY
+      (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
       method is used to ask the server to perform a query operation
       (described by the request content) over some set of data scoped to the
       effective request URI. The content returned in response to a QUERY
@@ -205,7 +205,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The semantics of the QUERY method change to a "conditional QUERY" if
       the request message includes an If-Modified-Since, If-Unmodified-
       Since, If-Match, If-None-Match, or If-Range header field
-      (<xref target="RFCHTTP" sectionFormat="comma" section="13"/>).  A conditional QUERY requests that the query
+      (<xref target="HTTP" sectionFormat="comma" section="13"/>).  A conditional QUERY requests that the query
       be performed only under the circumstances described by the conditional
       header field(s). It is important to note, however, that such conditions
       are evaluated against the state of the target resource itself as opposed
@@ -253,7 +253,7 @@ Accept-Query = 1#media-type
     <t>
       The Accept-Query header field specifies a comma-separated listing of media
       types (with optional parameters) as defined by
-      <xref target="RFCHTTP" section="8.3.1"/>.
+      <xref target="HTTP" section="8.3.1"/>.
     </t>
     <t>
       The order of types listed by the Accept-Query header field is not significant.
@@ -338,7 +338,7 @@ Dubois, Camille, camille.dubois@example.net
     <t>
       The QUERY method is subject to the same general security
       considerations as all HTTP methods as described in
-      <xref target="RFCHTTP"/>.
+      <xref target="HTTP"/>.
     </t>
   </section>
 
@@ -347,7 +347,7 @@ Dubois, Camille, camille.dubois@example.net
     <t>
       IANA is requested to add QUERY method in the
       permanent registry at &lt;http://www.iana.org/assignments/http-methods&gt;
-      (see <xref target="RFCHTTP" section="16.1.1"/>).
+      (see <xref target="HTTP" section="16.1.1"/>).
     </t>
 
     <table>
@@ -373,27 +373,29 @@ Dubois, Camille, camille.dubois@example.net
 </middle>
 <back>
   <references title="Normative References">
-    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
-    <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
-    <reference anchor="RFCHTTP">
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
+    <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
+    <reference anchor="HTTP">
       <front>
         <title>HTTP Semantics</title>
         <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
         <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
         <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2021" month="September" day="10"/>
+        <date year="2022" month="June"/>
       </front>
-      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-semantics-19"/>
+      <seriesInfo name="STD" value="97"/>
+      <seriesInfo name="RFC" value="9110"/>
     </reference>
     <reference anchor="HTTP-CACHING">
       <front>
-        <title>HTTP Semantics</title>
+        <title>HTTP Caching</title>
         <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
         <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
         <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
-        <date year="2021" month="September" day="10"/>
+        <date year="2022" month="June"/>
       </front>
-      <seriesInfo name="Internet-Draft" value="draft-ietf-httpbis-cache-19"/>
+      <seriesInfo name="STD" value="98"/>
+      <seriesInfo name="RFC" value="9111"/>
     </reference>
   </references>
 
@@ -419,6 +421,7 @@ Dubois, Camille, camille.dubois@example.net
 <ul>
   <li>In <xref target="field.accept-query"/>, slightly rephrase statement about significance of ordering (<eref target="https://github.com/httpwg/http-extensions/issues/1896"/>)</li>
   <li>Throughout: use "content" instead of "payload" or "body" (<eref target="https://github.com/httpwg/http-extensions/issues/1915"/>)</li>
+  <li>Updated references (<eref target="https://github.com/httpwg/http-extensions/issues/2157"/>)</li>
 </ul>
 </section>
 </section>
