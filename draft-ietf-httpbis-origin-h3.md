@@ -39,9 +39,9 @@ frame for HTTP/3.
 
 # Introduction {#problems}
 
-Existing RFCs define extensions to HTTP/2 {{HTTP2}} which remain useful in HTTP/3.
-{{Section A.2.3 of HTTP3}} describes the required updates
-for HTTP/2 frames to be used with HTTP/3.
+Existing RFCs define extensions to HTTP/2 {{HTTP2}} which remain useful in
+HTTP/3. {{Section A.2.3 of HTTP3}} describes the required updates for HTTP/2
+frames to be used with HTTP/3.
 
 {{!ORIGIN=RFC8336}} defines the HTTP/2 ORIGIN frame, which indicates what
 origins are available on a given connection.  It defines a single HTTP/2 frame
