@@ -387,7 +387,7 @@ Dubois, Camille, camille.dubois@example.net
     </reference>
     <reference anchor="HTTP-CACHING">
       <front>
-        <title>HTTP Semantics</title>
+        <title>HTTP Caching</title>
         <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
         <author fullname="Mark Nottingham" initials="M." surname="Nottingham" role="editor"/>
         <author fullname="Julian Reschke" initials="J." surname="Reschke" role="editor"/>
