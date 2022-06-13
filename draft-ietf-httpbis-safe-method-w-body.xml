@@ -165,7 +165,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The QUERY method is used to initiate a server-side query. Unlike
       the HTTP GET method, which requests that a server return a
       representation of the resource identified by the target URI
-      (as defined by <xref target="RFCHTTP" section="7.1"/>), the QUERY
+      (as defined by <xref target="HTTP" section="7.1"/>), the QUERY
       method is used to ask the server to perform a query operation
       (described by the request content) over some set of data scoped to the
       effective request URI. The content returned in response to a QUERY
@@ -205,7 +205,7 @@ q=foo&amp;limit=10&amp;sort=-published
       The semantics of the QUERY method change to a "conditional QUERY" if
       the request message includes an If-Modified-Since, If-Unmodified-
       Since, If-Match, If-None-Match, or If-Range header field
-      (<xref target="RFCHTTP" sectionFormat="comma" section="13"/>).  A conditional QUERY requests that the query
+      (<xref target="HTTP" sectionFormat="comma" section="13"/>).  A conditional QUERY requests that the query
       be performed only under the circumstances described by the conditional
       header field(s). It is important to note, however, that such conditions
       are evaluated against the state of the target resource itself as opposed
@@ -253,7 +253,7 @@ Accept-Query = 1#media-type
     <t>
       The Accept-Query header field specifies a comma-separated listing of media
       types (with optional parameters) as defined by
-      <xref target="RFCHTTP" section="8.3.1"/>.
+      <xref target="HTTP" section="8.3.1"/>.
     </t>
     <t>
       The order of types listed by the Accept-Query header field is not significant.
@@ -338,7 +338,7 @@ Dubois, Camille, camille.dubois@example.net
     <t>
       The QUERY method is subject to the same general security
       considerations as all HTTP methods as described in
-      <xref target="RFCHTTP"/>.
+      <xref target="HTTP"/>.
     </t>
   </section>
 
@@ -347,7 +347,7 @@ Dubois, Camille, camille.dubois@example.net
     <t>
       IANA is requested to add QUERY method in the
       permanent registry at &lt;http://www.iana.org/assignments/http-methods&gt;
-      (see <xref target="RFCHTTP" section="16.1.1"/>).
+      (see <xref target="HTTP" section="16.1.1"/>).
     </t>
 
     <table>
@@ -375,7 +375,7 @@ Dubois, Camille, camille.dubois@example.net
   <references title="Normative References">
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.2119.xml"/>
     <xi:include href="https://www.rfc-editor.org/refs/bibxml/reference.RFC.8174.xml"/>
-    <reference anchor="RFCHTTP">
+    <reference anchor="HTTP">
       <front>
         <title>HTTP Semantics</title>
         <author fullname="Roy T. Fielding" initials="R." surname="Fielding" role="editor"/>
