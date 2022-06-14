@@ -39,16 +39,17 @@ normative:
   RFC1321:
   RFC3174:
   RFC1950:
-  RFC3230:
   RFC4648:
   RFC5234:
   RFC6234:
   RFC7405:
-  SEMANTICS: I-D.ietf-httpbis-semantics
+  RFC9110:
+    display: HTTP
 
 informative:
-  RFC2818:
-  HTTP11: I-D.ietf-httpbis-messaging
+  RFC3230:
+  RFC9112:
+    display: HTTP/1.1
   PATCH: RFC5789
   NO-MD5: RFC6151
   NO-SHA: RFC6194
@@ -100,7 +101,7 @@ fields.
 
 HTTP does not define the means to protect the data integrity of content or
 representations. When HTTP messages are transferred between endpoints, lower layer
-features or properties such as TCP checksums or TLS records [RFC2818] can provide
+features or properties such as TCP checksums or TLS records {{?TLS=RFC8446}} can provide
 some integrity protection. However, transport-oriented integrity provides a
 limited utility because it is opaque to the application layer and only covers
 the extent of a single connection. HTTP messages often travel over a chain of
@@ -112,9 +113,9 @@ fault detection and diagnosis across system boundaries.
 
 This document defines two digest integrity mechanisms for HTTP.
 First, content integrity, which acts on conveyed content ({{Section 6.4 of
-SEMANTICS}}).
+RFC9110}}).
 Second, representation data integrity, which acts on representation data ({{Section 3.2
-of SEMANTICS}}). This supports advanced use cases such as validating the
+of RFC9110}}). This supports advanced use cases such as validating the
 integrity of a resource that was reconstructed from parts retrieved using
 multiple requests or connections.
 
@@ -151,17 +152,17 @@ data and HTTP content.
 
 There are use-cases where a simple digest of the HTTP content bytes is
 required. The `Content-Digest` request and response header and trailer field is
-defined to support digests of content ({{Section 3.2 of SEMANTICS}}); see
+defined to support digests of content ({{Section 3.2 of RFC9110}}); see
 {{content-digest}}.
 
 For more advanced use-cases, the `Repr-Digest` request and response header
 and trailer field ({{representation-digest}}) is defined. It contains a digest value
 computed by applying a hashing algorithm to selected representation data
-({{Section 3.2 of SEMANTICS}}). Basing `Repr-Digest` on the selected
+({{Section 3.2 of RFC9110}}). Basing `Repr-Digest` on the selected
 representation makes it straightforward to apply it to use-cases where the
 message content requires some sort of manipulation to be considered as
 representation of the resource or content conveys a partial representation of a resource,
-such as Range Requests (see {{Section 14.2 of SEMANTICS}}).
+such as Range Requests (see {{Section 14.2 of RFC9110}}).
 
 `Content-Digest` and `Repr-Digest` support hashing algorithm agility.
 The `Want-Content-Digest` and `Want-Repr-Digest` fields allow
@@ -191,7 +192,7 @@ This specification does not define means for authentication, authorization or pr
 [RFC3230] defined the `Digest` and `Want-Digest` HTTP fields for HTTP integrity.
 It also coined the term "instance" and "instance manipulation" in order to
 explain concepts that are now more universally defined, and implemented, as HTTP
-semantics such as selected representation data ({{Section 3.2 of SEMANTICS}}).
+semantics such as selected representation data ({{Section 3.2 of RFC9110}}).
 
 Experience has shown that implementations of [RFC3230] have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
@@ -221,7 +222,7 @@ Boolean, Byte Sequence, Dictionary, Integer, and List.
 
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", "user agent" and "content" in this document are to be
-interpreted as described in {{SEMANTICS}}.
+interpreted as described in {{RFC9110}}.
 
 Hashing algorithm names respect the casing used in their definition document (e.g. SHA-1, CRC32c)
 whereas hashing algorithm keys are quoted (e.g. "sha", "crc32c").
@@ -239,7 +240,7 @@ Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Co
 
 The `Content-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
-the actual message content (see {{Section 6.4 of SEMANTICS}}). It is a
+the actual message content (see {{Section 6.4 of RFC9110}}). It is a
 `Dictionary` (see {{Section 3.2 of STRUCTURED-FIELDS}})
 where each:
 
@@ -282,20 +283,20 @@ that the recipient will ignore it.
 
 `Content-Digest` can be sent in a trailer section.
 In this case,
-`Content-Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
+`Content-Digest` MAY be merged into the header section; see {{Section 6.5.1 of RFC9110}}.
 
 
 # The Repr-Digest Field {#representation-digest}
 
 The `Repr-Digest` HTTP field can be used in requests and responses to
 communicate digests that are calculated using a hashing algorithm applied to
-the entire selected representation data (see {{Section 8.1 of SEMANTICS}}).
+the entire selected representation data (see {{Section 8.1 of RFC9110}}).
 
 Representations take into account the effect of the HTTP semantics on
 messages. For example, the content can be affected by Range Requests or methods
 such as HEAD, while the way the content is transferred "on the wire" is
 dependent on other transformations (e.g. transfer codings for HTTP/1.1 - see
-{{Section 6.1 of HTTP11}}). To help illustrate HTTP representation concepts,
+{{Section 6.1 of RFC9112}}). To help illustrate HTTP representation concepts,
 several examples are provided in {{resource-representation}}.
 
 When a message has no representation data it is still possible to assert that no
@@ -344,7 +345,7 @@ will ignore it.
 
 `Repr-Digest` can be sent in a trailer section.
 In this case,
-`Repr-Digest` MAY be merged into the header section; see {{Section 6.5.1 of SEMANTICS}}.
+`Repr-Digest` MAY be merged into the header section; see {{Section 6.5.1 of RFC9110}}.
 
 ## Using Repr-Digest in State-Changing Requests {#state-changing-requests}
 
@@ -368,7 +369,7 @@ In responses,
 
 The latter case is done according to the HTTP semantics of the given
 method, for example using the `Content-Location` header field (see {{Section 8.7 of
-SEMANTICS}}).
+RFC9110}}).
 In contrast, the `Location` header field does not affect `Repr-Digest` because
 it is not representation metadata.
 
@@ -467,7 +468,7 @@ The entries in {{iana-hash-algorithm-table}} are registered by this document.
 | unixsum        | insecure | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
 | unixcksum      | insecure | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
 | adler          | insecure | The ADLER32 algorithm.                          | [RFC1950], this document. |
-| crc32c         | insecure | The CRC32c algorithm.                           | {{!RFC4960}} appendix B, this document. |
+| crc32c         | insecure | The CRC32c algorithm.                           | {{?RFC9260}} appendix B, this document. |
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
@@ -489,7 +490,7 @@ Signatures {{SIGNATURES}}).
 ## End-to-End Integrity
 
 Integrity fields can help detect representation data or content modification due to implementation errors,
-undesired "transforming proxies" (see {{Section 7.7 of SEMANTICS}})
+undesired "transforming proxies" (see {{Section 7.7 of RFC9110}})
 or other actions as the data passes across multiple hops or system boundaries.
 Even a simple mechanism for end-to-end representation data integrity is valuable
 because a user agent can validate that resource retrieval succeeded before handing off to a
@@ -525,14 +526,14 @@ Using signatures to protect the checksum of an empty representation
 allows receiving endpoints to detect if an eventual payload has been stripped or added.
 
 Any mangling of Integrity fields, including digests' de-duplication
-or combining different field values (see {{Section 5.2 of SEMANTICS}})
+or combining different field values (see {{Section 5.2 of RFC9110}})
 might affect signature validation.
 
 ## Usage in Trailer Fields
 
 Before sending Integrity fields in a trailer section, the sender
 should consider that intermediaries are explicitly allowed to drop any trailer
-(see {{Section 6.5.2 of SEMANTICS}}).
+(see {{Section 6.5.2 of RFC9110}}).
 
 When Integrity fields are used in a trailer section, the field-values are received after the content.
 Eager processing of content before the trailer section prevents digest validation, possibly leading to
@@ -590,7 +591,7 @@ validation of the algorithm types, number of validations, or the size of content
 
 IANA is asked to update the
 "Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
-({{SEMANTICS}}) according to the table below:
+({{RFC9110}}) according to the table below:
 
 |---------------------|-----------|-----------------------------------------------|
 | Field Name          | Status    |                     Reference                 |
@@ -951,7 +952,7 @@ The request `Repr-Digest` field-value is computed on the enclosed representation
 {{state-changing-requests}}).
 
 The representation enclosed in the response refers to the resource identified by
-`Content-Location` (see {{Section 6.4.2 of SEMANTICS}}). `Repr-Digest` is thus computed on the enclosed representation.
+`Content-Location` (see {{Section 6.4.2 of RFC9110}}). `Repr-Digest` is thus computed on the enclosed representation.
 
 ~~~ http-message
 POST /books HTTP/1.1
