@@ -102,8 +102,8 @@ are comprised of:
    whether the message is a request or response and how subsequent sections are
    formatted; see {{framing}}.
 
-2. For a response, any number of informational responses, each consisting of an
-   informational status code and header section.
+2. For a response, zero or more informational responses.  Each informational
+   response consists of an informational status code and header section.
 
 3. Control data. For a request, this contains the request method and target.
    For a response, this contains the status code.
