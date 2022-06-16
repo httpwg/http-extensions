@@ -205,7 +205,13 @@ The field names in {{url-fields}} (paired with their mapped field names) have va
 | Referer          | SF-Referer          |
 {:id="url-fields" title="URL Fields"}
 
-For example, a Location field could be mapped as:
+For example, this Location field
+
+~~~ http-message
+Location: https://example.com/foo
+~~~
+
+could be mapped as:
 
 ~~~ http-message
 SF-Location: "https://example.com/foo"
@@ -235,10 +241,14 @@ SF-Expires: 1571965240
 
 The field value of the ETag header field can be mapped into the SF-ETag Structured Field by representing the entity-tag as a String, and the weakness flag as a Boolean "w" parameter on it, where true indicates that the entity-tag is weak; if 0 or unset, the entity-tag is strong.
 
-For example:
+For example, this:
 
 ~~~ http-message
-SF-ETag: "abcdef"; w=?1
+ETag: W/"abcdef"
+~~~
+
+~~~ http-message
+SF-ETag: "abcdef"; w
 ~~~
 
 If-None-Match's field value can be mapped into the SF-If-None-Match Structured Field, which is a List of the structure described above. When a field value contains "*", it is represented as a Token.
@@ -249,7 +259,7 @@ Likewise, If-Match's field value can be mapped into the SF-If-Match Structured F
 For example:
 
 ~~~ http-message
-SF-If-None-Match: "abcdef"; w=?1, "ghijkl", *
+SF-If-None-Match: "abcdef"; w, "ghijkl", *
 ~~~
 
 
@@ -257,7 +267,13 @@ SF-If-None-Match: "abcdef"; w=?1, "ghijkl", *
 
 The field value of the Link header field {{!RFC8288}} can be mapped into the SF-Link List Structured Field by considering the URI-Reference as a String, and link-param as Parameters.
 
-For example:
+For example, this:
+
+~~~ http-message
+Link: </terms>; rel="copyright"; anchor="#foo"
+~~~
+
+can be mapped to:
 
 ~~~ http-message
 SF-Link: "/terms"; rel="copyright"; anchor="#foo"
@@ -285,11 +301,20 @@ Expires is mapped to an Integer representation of parsed-cookie-date (see {{Sect
 
 Note that although this mapping is very similar to the syntax of Cookie and Set-Cookie headers, cookies in both fields are separated by commas, not semicolons, and multiple cookies can appear in each field.
 
-For example:
+For example, these unstructured fields:
+
+~~~ http-message
+Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT;
+               samesite=Strict; secure
+Cookie: SID=31d4d96e407aad42; lang=en-US
+~~~
+
+
+can be mapped into:
 
 ~~~ http-message
 SF-Set-Cookie: lang="en-US"; expires="Wed, 09 Jun 2021 10:18:14 GMT";
-               samesite=Strict; secure=?1
+               samesite=Strict; secure
 SF-Cookie: SID="31d4d96e407aad42", lang="en-US"
 ~~~
 
