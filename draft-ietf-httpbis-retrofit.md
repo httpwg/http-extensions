@@ -216,13 +216,13 @@ SF-Location: "https://example.com/foo"
 
 The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
 
-| Field Name          | Mapped Field Name   |
-|---------------------|---------------------|
-| Date                | SF-Date             |
-| Expires             | SF-Expires          |
-| If-Modified-Since   | SF-IMS              |
-| If-Unmodified-Since | SF-IUS              |
-| Last-Modified       | SF-LM               |
+| Field Name          | Mapped Field Name      |
+|---------------------|------------------------|
+| Date                | SF-Date                |
+| Expires             | SF-Expires             |
+| If-Modified-Since   | SF-If-Modified-Since   |
+| If-Unmodified-Since | SF-If-Unmodified-Since |
+| Last-Modified       | SF-Last-Modified       |
 {:id="date-fields" title="Date Fields"}
 
 For example, an Expires field could be mapped as:
@@ -241,7 +241,7 @@ For example:
 SF-ETag: "abcdef"; w=?1
 ~~~
 
-If-None-Match's field value can be mapped into the SF-INM Structured Field, which is a List of the structure described above. When a field value contains "*", it is represented as a Token.
+If-None-Match's field value can be mapped into the SF-If-None-Match Structured Field, which is a List of the structure described above. When a field value contains "*", it is represented as a Token.
 
 Likewise, If-Match's field value can be mapped into the SF-If-Match Structured Field in the same manner.
 
@@ -249,7 +249,7 @@ Likewise, If-Match's field value can be mapped into the SF-If-Match Structured F
 For example:
 
 ~~~ http-message
-SF-INM: "abcdef"; w=?1, "ghijkl", *
+SF-If-None-Match: "abcdef"; w=?1, "ghijkl", *
 ~~~
 
 
@@ -310,22 +310,22 @@ Then, add a new column, "Structured Type", with the values from {{compatible}} a
 
 Then, add the field names in {{new-fields}}, with the corresponding Structured Type as indicated, a status of "permanent" and referring to this document.
 
-| Field Name          | Structured Type |
-|---------------------|-----------------|
-| SF-Content-Location | String          |
-| SF-Cookie           | List            |
-| SF-Date             | Item            |
-| SF-ETag             | Item            |
-| SF-Expires          | Item            |
-| SF-If-Match         | List            |
-| SF-IMS              | Item            |
-| SF-INM              | List            |
-| SF-IUS              | Item            |
-| SF-Link             | List            |
-| SF-LM               | Item            |
-| SF-Location         | String          |
-| SF-Referer          | String          |
-| SF-Set-Cookie       | Dictionary      |
+| Field Name             | Structured Type |
+|------------------------|-----------------|
+| SF-Content-Location    | String          |
+| SF-Cookie              | List            |
+| SF-Date                | Item            |
+| SF-ETag                | Item            |
+| SF-Expires             | Item            |
+| SF-If-Match            | List            |
+| SF-If-Modified-Since   | Item            |
+| SF-If-None-Match       | List            |
+| SF-If-Unmodified-Since | Item            |
+| SF-Link                | List            |
+| SF-Last-Modified       | Item            |
+| SF-Location            | String          |
+| SF-Referer             | String          |
+| SF-Set-Cookie          | Dictionary      |
 {:id="new-fields" title="New Fields"}
 
 Finally, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
