@@ -241,12 +241,15 @@ For example:
 SF-ETag: "abcdef"; w=?1
 ~~~
 
-If-None-Match's field value can be mapped into the SF-INM Structured Field, which is a List of the structure described above.
+If-None-Match's field value can be mapped into the SF-INM Structured Field, which is a List of the structure described above. When a field value contains "*", it is represented as a Token.
+
+Likewise, If-Match's field value can be mapped into the SF-If-Match Structured Field in the same manner.
+
 
 For example:
 
 ~~~ http-message
-SF-INM: "abcdef"; w=?1, "ghijkl"
+SF-INM: "abcdef"; w=?1, "ghijkl", *
 ~~~
 
 
@@ -314,6 +317,7 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | SF-Date             | Item            |
 | SF-ETag             | Item            |
 | SF-Expires          | Item            |
+| SF-If-Match         | List            |
 | SF-IMS              | Item            |
 | SF-INM              | List            |
 | SF-IUS              | Item            |
