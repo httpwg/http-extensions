@@ -35,7 +35,7 @@ author:
 
 normative:
   RFC2119:
-  HTTP: I-D.ietf-httpbis-semantics
+  HTTP: RFC9110
   STRUCTURED-FIELDS: RFC8941
   COOKIES: I-D.ietf-httpbis-rfc6265bis
 
