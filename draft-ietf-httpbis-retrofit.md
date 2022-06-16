@@ -239,7 +239,7 @@ SF-Expires: 1571965240
 
 ## ETags
 
-The field value of the ETag header field can be mapped into the SF-ETag Structured Field by representing the entity-tag as a String, and the weakness flag as a Boolean "W" parameter on it, where true indicates that the entity-tag is weak; if 0 or unset, the entity-tag is strong.
+The field value of the ETag header field can be mapped into the SF-ETag Structured Field by representing the entity-tag as a String, and the weakness flag as a Boolean "w" parameter on it, where true indicates that the entity-tag is weak; if 0 or unset, the entity-tag is strong.
 
 For example, this:
 
@@ -248,7 +248,7 @@ ETag: W/"abcdef"
 ~~~
 
 ~~~ http-message
-SF-ETag: "abcdef"; W
+SF-ETag: "abcdef"; w
 ~~~
 
 If-None-Match's field value can be mapped into the SF-If-None-Match Structured Field, which is a List of the structure described above. When a field value contains "*", it is represented as a Token.
@@ -259,7 +259,7 @@ Likewise, If-Match's field value can be mapped into the SF-If-Match Structured F
 For example:
 
 ~~~ http-message
-SF-If-None-Match: "abcdef"; W, "ghijkl", *
+SF-If-None-Match: "abcdef"; w, "ghijkl", *
 ~~~
 
 
@@ -282,11 +282,11 @@ SF-Link: "/terms"; rel="copyright"; anchor="#foo"
 
 ## Cookies
 
-The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a Dictionary), respectively.
+The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a List), respectively.
 
-In each case, cookie names are Tokens. Their values are Strings, unless the value can be successfully parsed as the textual representation of another, bare Item structured type (e.g., Byte Sequence, Decimal, Integer, Token, or Boolean).
+In each case, a cookie is represented as an Inner List containing two Items; the cookie name and value. The cookie name is always a String; the cookie vale is a String, unless it can be successfully parsed as the textual representation of another, bare Item structured type (e.g., Byte Sequence, Decimal, Integer, Token, or Boolean).
 
-Set-Cookie parameters map to Parameters on the appropriate SF-Set-Cookie member, with the parameter name being forced to lowercase. Set-Cookie parameter values are Strings unless a specific type is defined for them. This specification defines the parameter types in {{cookie-params}}.
+Set-Cookie parameters map to Parameters on the Inner List, with the parameter name being forced to lowercase. Set-Cookie parameter values are Strings unless a specific type is defined for them. This specification defines the parameter types in {{cookie-params}}.
 
 | Parameter Name      | Structured Type     |
 |---------------------|---------------------|
@@ -313,9 +313,9 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 can be mapped into:
 
 ~~~ http-message
-SF-Set-Cookie: lang="en-US"; expires="Wed, 09 Jun 2021 10:18:14 GMT";
+SF-Set-Cookie: ("lang" "en-US"); expires="Wed, 09 Jun 2021 10:18:14 GMT";
                samesite=Strict; secure
-SF-Cookie: SID="31d4d96e407aad42", lang="en-US"
+SF-Cookie: ("SID" "31d4d96e407aad42"), ("lang" "en-US")
 ~~~
 
 
@@ -337,7 +337,7 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 
 | Field Name             | Structured Type |
 |------------------------|-----------------|
-| SF-Content-Location    | String          |
+| SF-Content-Location    | Item            |
 | SF-Cookie              | List            |
 | SF-Date                | Item            |
 | SF-ETag                | Item            |
@@ -348,9 +348,9 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | SF-If-Unmodified-Since | Item            |
 | SF-Link                | List            |
 | SF-Last-Modified       | Item            |
-| SF-Location            | String          |
-| SF-Referer             | String          |
-| SF-Set-Cookie          | Dictionary      |
+| SF-Location            | Item            |
+| SF-Referer             | Item            |
+| SF-Set-Cookie          | List            |
 {:id="new-fields" title="New Fields"}
 
 Finally, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
