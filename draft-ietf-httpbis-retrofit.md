@@ -239,7 +239,7 @@ SF-Expires: 1571965240
 
 ## ETags
 
-The field value of the ETag header field can be mapped into the SF-ETag Structured Field by representing the entity-tag as a String, and the weakness flag as a Boolean "w" parameter on it, where true indicates that the entity-tag is weak; if 0 or unset, the entity-tag is strong.
+The field value of the ETag header field can be mapped into the SF-ETag Structured Field by representing the entity-tag as a String, and the weakness flag as a Boolean "W" parameter on it, where true indicates that the entity-tag is weak; if 0 or unset, the entity-tag is strong.
 
 For example, this:
 
@@ -248,7 +248,7 @@ ETag: W/"abcdef"
 ~~~
 
 ~~~ http-message
-SF-ETag: "abcdef"; w
+SF-ETag: "abcdef"; W
 ~~~
 
 If-None-Match's field value can be mapped into the SF-If-None-Match Structured Field, which is a List of the structure described above. When a field value contains "*", it is represented as a Token.
@@ -259,7 +259,7 @@ Likewise, If-Match's field value can be mapped into the SF-If-Match Structured F
 For example:
 
 ~~~ http-message
-SF-If-None-Match: "abcdef"; w, "ghijkl", *
+SF-If-None-Match: "abcdef"; W, "ghijkl", *
 ~~~
 
 
