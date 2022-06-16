@@ -307,7 +307,6 @@ Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT;
 Cookie: SID=31d4d96e407aad42; lang=en-US
 ~~~
 
-
 can be mapped into:
 
 ~~~ http-message
