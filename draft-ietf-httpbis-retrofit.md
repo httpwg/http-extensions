@@ -297,7 +297,7 @@ Set-Cookie parameters map to Parameters on the Inner List, with the parameter na
 | SameSite            | Token               |
 {:id="cookie-params" title="Set-Cookie Parameter Types"}
 
-Expires is mapped to an Integer representation of parsed-cookie-date (see {{Section x.x of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
+Expires is mapped to an Integer representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
 
 Note that although this mapping is very similar to the syntax of Cookie and Set-Cookie headers, cookies in both fields are separated by commas, not semicolons, and multiple cookies can appear in each field.
 
