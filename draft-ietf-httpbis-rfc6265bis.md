@@ -522,10 +522,9 @@ Note that some of the grammatical terms above reference documents that use
 different grammatical notations than this document (which uses ABNF from
 {{RFC5234}}).
 
-NOTE: The name of an attribute-value pair is not case sensitive (which differs
-from ABNF). So while they are presented here in CamelCase, such as "HttpOnly"
-or "SameSite", any case is accepted. E.x.: "httponly", "Httponly", "hTTPoNLY",
-etc.
+NOTE: The name of an attribute-value pair is not case sensitive. So while they
+are presented here in CamelCase, such as "HttpOnly" or "SameSite", any case is
+accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.
 
 The semantics of the cookie-value are not defined by this document.
 
