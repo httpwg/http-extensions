@@ -1795,15 +1795,38 @@ Upon verification, it is important that the verifier validate not only the signa
 
 ## Non-List Field Values {#security-non-list}
 
-When an HTTP field occurs multiple times in a single message, these values need to be combined into a single one-line string value to be included in the HTTP signature base, as described in {{create-sig-input}}. Not all HTTP fields can be combined into a single value and still be a valid value for the field. However, for the purposes of generating the signature base, the message component value is never read back out of the signature base string and used in anyway. Therefore it is considered best practice to treat the signature base generation algorithm separately from processing the field values by the application, particularly for fields that are known to have this property.
+When an HTTP field occurs multiple times in a single message, these values need to be combined into a single one-line string value to be included in the HTTP signature base, as described in {{create-sig-input}}. Not all HTTP fields can be combined into a single value in this way and still be a valid value for the field. For the purposes of generating the signature base, the message component value is never read back out of the signature base string and used in anyway. Therefore it is considered best practice to treat the signature base generation algorithm separately from processing the field values by the application, particularly for fields that are known to have this property. If the field values that are being signed do not validate, the signed message should also be rejected.
 
-For example, the Set-Cookie field {{COOKIE}} defines an internal syntax that does not conform to the List syntax in {{STRUCTURED-FIELDS}}. This field is also typically sent as multiple fields with distinct values when sending multiple cookies. When multiple Set-Cookie fields are sent in the same message, it is not possible to combine these into a single and be able to parse and use the results, as discussed in {{HTTP, Section 5.3}}. Therefore, all the cookies need to be processed from their separate header values, without being combined, while the signature base needs to be processed from the special combined value generated solely for this purpose.
+If an HTTP field allows for unquoted commas within its values, combining multiple field values can lead to a situation where two semantically different messages produce the same line in a signature base. For example, take the following hypothetical header field with an internal comma in its syntax, here used to define two separate lists of values:
+
+~~~ http-message
+Example-Header: value, with, lots
+Example-Header: of, commas
+~~~
+
+For this header field, sending all of these values as a single field value results in a single list of values:
+
+~~~ http-message
+Example-Header: value, with, lots, of, commas
+~~~
+
+Both of these messages would create the following line in the signature base:
+
+~~~
+"example-header": value, with, lots, of, commas
+~~~
+
+Since two semantically distinct inputs can create the same output in the signature base, special care has to be taken when handling such values.
+
+Specifically, the Set-Cookie field {{COOKIE}} defines an internal syntax that does not conform to the List syntax in {{STRUCTURED-FIELDS}}. In particular some portions allow unquoted commas, and the field is typically sent as multiple separate field lines with distinct values when sending multiple cookies. When multiple Set-Cookie fields are sent in the same message, it is not generally possible to combine these into a single line and be able to parse and use the results, as discussed in {{HTTP, Section 5.3}}. Therefore, all the cookies need to be processed from their separate header values, without being combined, while the signature base needs to be processed from the special combined value generated solely for this purpose. If the cookie value is invalid, the signed message ought to be rejected as this is a possible padding attack as described in {{security-multiple-fields}}.
+
+To deal with this, an application can choose to limit signing of problematic fields like Set-Cookie, such as including the field in a signature only when a single field value is present and the results would be unambiguous. Similar caution needs to be taken with all fields that could have non-deterministic mappings into the signature base.
 
 ## Padding Attacks with Multiple Field Values {#security-multiple-fields}
 
 Since HTTP field values need to be combined in a single string value to be included in the HTTP signature base, as described in {{create-sig-input}}, it is possible for an attacker to inject an additional value for a given field and add this to the signature base of the verifier.
 
-In most circumstances, this causes the signature validation to fail as expected, since the new signature base value will not match the one used by the signer to create the signature. However, it is theoretically possible for the attacker to inject both a garbage value to a field and a desired value to another field. This is a variation of the collision attack described in {{security-collision}}, where the attacker accomplishes their change in the message by adding to existing field values.
+In most circumstances, this causes the signature validation to fail as expected, since the new signature base value will not match the one used by the signer to create the signature. However, it is theoretically possible for the attacker to inject both a garbage value to a field and a desired value to another field in order to force a particular input. This is a variation of the collision attack described in {{security-collision}}, where the attacker accomplishes their change in the message by adding to existing field values.
 
 To counter this, an application needs to validate the content of the fields covered in the signature in addition to ensuring that the signature itself validates. With such protections, the attacker's padding attack would be rejected by the field value processor, even in the case where the attacker could force a signature collision.
 
