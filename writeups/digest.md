@@ -11,7 +11,7 @@
    the consensus was particularly rough?
 
    _There were some philosophical differences about how backwards-compatible we should be, but
-   came to consensus._
+   we came to consensus._
 
 3. Has anyone threatened an appeal or otherwise indicated extreme discontent? If
    so, please summarize the areas of conflict in separate email messages to the
@@ -68,6 +68,7 @@
     reviewers encounter][6]. Do any such issues remain that would merit specific
     attention from subsequent reviews?
 
+    _The Working Group believes that the relevant listed issues have been addressed._
 
 11. What type of RFC publication is being requested on the IETF stream (Best
     Current Practice, Proposed Standard, Internet Standard, Informational,
@@ -82,7 +83,7 @@
     intellectual property rights (IPR) disclosures, including links to relevant
     emails.
 
-
+    _Yes; no relevant IPR has been disclosed._
 
 13. Has each Author or Contributor confirmed their willingness to be listed as
     such? If the number of Authors/Editors on the front page is greater than 5,
@@ -95,28 +96,28 @@
     Simply running the idnits tool is not enough; please review the entire
     guidelines document.
 
-
+    - There is a non-ASCII character in the reference for RFC9260. This should be resolved by the RFC Editor.
 
 15. Should any informative references be normative or vice-versa?
 
-
+    _No._
 
 16. List any normative references that are not freely available to anyone. Did
     the community have sufficient access to review any such normative
     references?
 
-
+    _N/A._
 
 17. Are there any normative downward references (see [RFC 3967][10],
     [BCP 97][11])? If so, list them.
 
-
+    _RFCs 1321; 1950; 3174; 6234._
 
 18. Are there normative references to documents that are not ready for
     advancement or are otherwise in an unclear state? If they exist, what is the
     plan for their completion?
 
-
+    _No._
 
 19. Will publication of this document change the status of any existing RFCs? If
     so, does the Datatracker metadata correctly reflect this and are those RFCs
@@ -124,7 +125,7 @@
     introduction? If not, explain why and point to the part of the document
     where the relationship of this document to these other RFCs is discussed.
 
-
+    _Yes; There is no apparent way to reflect this in datatracker; Yes._
 
 20. Describe the document shepherd's review of the IANA considerations section,
     especially with regard to its consistency with the body of the document.
@@ -134,12 +135,13 @@
     that each newly created IANA registry specifies its initial contents,
     allocations procedures, and a reasonable name (see [RFC 8126][12]).
 
-
+    _I checked section 7 of the draft against its references; all looks to be in order._
 
 21. List any new IANA registries that require Designated Expert Review for
     future allocations. Are the instructions to the Designated Expert clear?
     Please include suggestions of designated experts, if appropriate.
 
+    - Hash Algorithms for HTTP Digest Fields Registry. The instructions are brief but clear. I'd suggest one or both of the authors.
 
 
 [1]: https://www.ietf.org/about/groups/iesg/
