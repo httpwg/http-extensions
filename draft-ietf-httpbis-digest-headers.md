@@ -68,7 +68,7 @@ informative:
   CMU-836068:
     title: MD5 Vulnerable to collision attacks
     author:
-      org: Carnagie Mellon University, Software Engineering Institute
+      org: Carnegie Mellon University, Software Engineering Institute
     date: 2008-12-31
     target: https://www.kb.cert.org/vuls/id/836068/
   IACR-2020-014:
