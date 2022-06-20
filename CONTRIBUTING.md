@@ -129,33 +129,22 @@ The [IETF Guidelines for Conduct](https://tools.ietf.org/html/rfc7154) applies t
 
 ## NOTE WELL
 
-Any submission to the [IETF](https://www.ietf.org/) intended by the Contributor for publication as
-all or part of an IETF Internet-Draft or RFC and any statement made within the context of an IETF
-activity is considered an "IETF Contribution". Such statements include oral statements in IETF
-sessions, as well as written and electronic communications made at any time or place, which are
-addressed to:
+This is a reminder of IETF policies in effect on various topics such as patents or code of conduct. It is only meant to point you in the right direction. Exceptions may apply. The IETF's patent policy and the definition of an IETF "contribution" and "participation" are set forth in BCP 79; please read it carefully.
 
- * The IETF plenary session
- * The IESG, or any member thereof on behalf of the IESG
- * Any IETF mailing list, including the IETF list itself, any working group or design team list, or
-   any other list functioning under IETF auspices
- * Any IETF working group or portion thereof
- * Any Birds of a Feather (BOF) session
- * The IAB or any member thereof on behalf of the IAB
- * The RFC Editor or the Internet-Drafts function
- * All IETF Contributions are subject to the rules of [RFC
-   5378](https://tools.ietf.org/html/rfc5378) and [RFC 3979](https://tools.ietf.org/html/rfc3979)
-   (updated by [RFC 4879](https://tools.ietf.org/html/rfc4879)).
+As a reminder:
 
-Statements made outside of an IETF session, mailing list or other function, that are clearly not
-intended to be input to an IETF activity, group or function, are not IETF Contributions in the
-context of this notice.
+- By participating in the IETF, you agree to follow IETF processes and policies.
+- If you are aware that any IETF contribution is covered by patents or patent applications that are owned or controlled by you or your sponsor, you must disclose that fact, or not participate in the discussion.
+- As a participant in or attendee to any IETF activity you acknowledge that written, audio, video, and photographic records of meetings may be made public.
+- Personal information that you provide to IETF will be handled in accordance with the IETF Privacy Statement.
+- As a participant or attendee, you agree to work respectfully with other participants; please contact the [ombudsteam](https://www.ietf.org/contact/ombudsteam/) if you have questions or concerns about this.
 
-Please consult [RFC 5378](https://tools.ietf.org/html/rfc5378) and [RFC
-3979](https://tools.ietf.org/html/rfc3979) for details.
+Definitive information is in the documents listed below and other IETF BCPs. For advice, please talk to WG chairs or ADs:
 
-A participant in any IETF activity is deemed to accept all IETF rules of process, as documented in
-Best Current Practices RFCs and IESG Statements.
-
-A participant in any IETF activity acknowledges that written, audio and video records of meetings
-may be made and may be available to the public.
+- [BCP 9](https://www.rfc-editor.org/info/bcp9) (Internet Standards Process)
+- [BCP 25](https://www.rfc-editor.org/info/bcp25) (Working Group processes)
+- [BCP 25](https://www.rfc-editor.org/info/bcp25) (Anti-Harassment Procedures)
+- [BCP 54](https://www.rfc-editor.org/info/bcp54) (Code of Conduct)
+- [BCP 78](https://www.rfc-editor.org/info/bcp78) (Copyright)
+- [BCP 79](https://www.rfc-editor.org/info/bcp79) (Patents, Participation)
+- https://www.ietf.org/privacy-policy/ (Privacy Policy)
