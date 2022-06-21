@@ -4,6 +4,7 @@ abbrev: Retrofit Structured Fields
 docname: draft-ietf-httpbis-retrofit-latest
 date: {DATE}
 category: std
+updates: 8941
 
 ipr: trust200902
 keyword:
@@ -48,6 +49,7 @@ This specification nominates a selection of existing HTTP fields as having synta
 
 To accommodate some additional fields whose syntax is not compatible, it also defines mappings of their semantics into new Structured Fields. It does not specify how to negotiate their use.
 
+One of those mappings requires introduction of a new Structured Fields data type, Date.
 
 --- middle
 
@@ -73,6 +75,8 @@ Note that while implementations can parse and serialise compatible fields as Str
 ## Notational Conventions
 
 {::boilerplate bcp14-tagged}
+
+This document uses the date-time, time-offset, and time-secfrac rules from {{!RFC3339}}.
 
 
 # Compatible Fields {#compatible}
@@ -182,10 +186,10 @@ For example, the Date HTTP header field carries a date:
 Date: Sun, 06 Nov 1994 08:49:37 GMT
 ~~~
 
-Its value is more efficiently represented as an Integer number of delta seconds from the Unix epoch (00:00:00 UTC on 1 January 1970, minus leap seconds). Thus, the example above would be mapped to:
+Its value would be mapped to:
 
 ~~~ http-message
-SF-Date: 784072177
+SF-Date: @1994-11-06T08:49:37Z
 ~~~
 
 As in {{compatible}}, these fields are unable to carry values that are not valid Structured Fields, and so an application using this specification will need to how to support such values. Typically, handling them using the original field name is sufficient.
@@ -219,7 +223,7 @@ SF-Location: "https://example.com/foo"
 
 ## Dates
 
-The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
+The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds), using the Date Structured Fields data type defined in {{date-type}}.
 
 | Field Name          | Mapped Field Name      |
 |---------------------|------------------------|
@@ -233,7 +237,7 @@ The field names in {{date-fields}} (paired with their mapped field names) have v
 For example, an Expires field could be mapped as:
 
 ~~~ http-message
-SF-Expires: 1571965240
+SF-Expires: @2022-12-09T06:21:47Z
 ~~~
 
 ## ETags
@@ -380,4 +384,46 @@ Finally, add a new column to the "Cookie Attribute Registry" established by {{CO
 --- back
 
 
+# The Date Structured Type {#date-type}
+
+This section defines a new Structured Fields data type, Date.
+
+Dates have an internal data model that is similar to Integers, representing a delta in seconds from January 1, 1970 00:00:00 UTC, excluding leap seconds. However, their textual representation uses the Internet Date/Time Format {{!RFC3339}}, for human readability.
+
+The internal data model has a range of -62,135,596,800 to 253,402,300,799 inclusive, corresponding to a range of dates from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z.
+
+The ABNF for Dates is:
+
+~~~ abnf
+sf-date = "@" date-time
+~~~
+
+The time-offset MUST be "Z" (case-sensitive), and time-secfrac MUST NOT be included.
+
+For example:
+
+~~~ http-message
+Example-Date: @2022-06-14T06:21:47Z
+~~~
+
+## Serialising a Date
+
+Given a Date as input_integer, return an ASCII string suitable for use in an HTTP field value.
+
+0. If input_date is not an integer in the range of -62,135,596,800 to 253,402,300,799 inclusive, fail serialization.
+1. Let output be an ISO 8601 date, formatted as a date-time per {{RFC3339}} representing seconds delta from 1 January 1970 00:00:00 UTC, with the following constraints:
+   1. time-offset is "Z".
+   2. time-secfrac is not present.
+2. Return output.
+
+## Parsing a Date
+
+Given an ASCII string as input_string, return a Date. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not "@", fail parsing.
+2. Discard the first character of input_string.
+3. Let date_string be the result of consuming the first 20 characters of input_string.
+4. If the last character of date_string is not "Z", fail parsing.
+5. Let output_date be the result of parsing date_string as an ISO 8601 Date, according to {{Section 5.6 of RFC3339}}, as an integer number of seconds delta from 1 January 1970 00:00:00 UTC. If the string cannot be parsed, fail parsing.
+6. Return output_date.
 
