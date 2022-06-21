@@ -312,7 +312,7 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 can be mapped into:
 
 ~~~ http-message
-SF-Set-Cookie: ("lang" "en-US"); expires="Wed, 09 Jun 2021 10:18:14 GMT";
+SF-Set-Cookie: ("lang" "en-US"); expires=1623233894;
                samesite=Strict; secure
 SF-Cookie: ("SID" "31d4d96e407aad42"), ("lang" "en-US")
 ~~~
