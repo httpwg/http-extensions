@@ -286,7 +286,7 @@ The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped i
 
 In each case, a cookie is represented as an Inner List containing two Items; the cookie name and value. The cookie name is always a String; the cookie value is a String, unless it can be successfully parsed as the textual representation of another, bare Item structured type (e.g., Byte Sequence, Decimal, Integer, Token, or Boolean).
 
-Set-Cookie parameters map to Parameters on the Inner List, with the parameter name being forced to lowercase. Set-Cookie parameter values are Strings unless a specific type is defined for them. This specification defines the parameter types in {{cookie-params}}.
+Cookie attributes map to Parameters on the Inner List, with the parameter name being forced to lowercase. Cookie attribute values are Strings unless a specific type is defined for them. This specification defines types for existing cookie attributes in {{cookie-params}}.
 
 | Parameter Name      | Structured Type     |
 |---------------------|---------------------|
@@ -299,7 +299,7 @@ Set-Cookie parameters map to Parameters on the Inner List, with the parameter na
 | SameSite            | Token               |
 {:id="cookie-params" title="Set-Cookie Parameter Types"}
 
-Expires is mapped to an Integer representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
+The Expires attribute is mapped to an Integer representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
 
 For example, these unstructured fields:
 
