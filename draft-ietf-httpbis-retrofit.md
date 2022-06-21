@@ -115,7 +115,6 @@ An application using this specification will need to consider how to handle such
 | Cross-Origin-Resource-Policy     | Item            |
 | Expect                           | Dictionary      |
 | Expect-CT                        | Dictionary      |
-| Forwarded                        | Dictionary      |
 | Host                             | Item            |
 | Keep-Alive                       | Dictionary      |
 | Max-Forwards                     | Item            |
