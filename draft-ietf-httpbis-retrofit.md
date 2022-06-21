@@ -290,9 +290,11 @@ Set-Cookie parameters map to Parameters on the Inner List, with the parameter na
 
 | Parameter Name      | Structured Type     |
 |---------------------|---------------------|
+| Domain              | String              |
 | HttpOnly            | Boolean             |
 | Expires             | Integer             |
 | Max-Age             | Integer             |
+| Path                | String              |
 | Secure              | Boolean             |
 | SameSite            | Token               |
 {:id="cookie-params" title="Set-Cookie Parameter Types"}
