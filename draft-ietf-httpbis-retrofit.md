@@ -352,7 +352,7 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | SF-Set-Cookie          | List            |
 {:id="new-fields" title="New Fields"}
 
-Finally, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
+Then, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
 
 | Field Name                                | Structured Type |
 |-------------------------------------------|-----------------|
@@ -367,6 +367,8 @@ Finally, add the indicated Structured Type for each existing registry entry list
 | Priority                                  | Dictionary      |
 | Proxy-Status                              | List            |
 {:id="existing-fields" title="Existing Fields"}
+
+Finally, add a new column to the "Cookie Attribute Registry" established by {{COOKIES}} with the title "Structured Type", using information from {{cookie-params}}.
 
 
 # Security Considerations
