@@ -162,7 +162,7 @@ computed by applying a hashing algorithm to selected representation data
 representation makes it straightforward to apply it to use-cases where the
 message content requires some sort of manipulation to be considered as
 representation of the resource or content conveys a partial representation of a resource,
-such as Range Requests (see {{Section 14.2 of RFC9110}}).
+such as Range Requests (see {{Section 14 of RFC9110}}).
 
 `Content-Digest` and `Repr-Digest` support hashing algorithm agility.
 The `Want-Content-Digest` and `Want-Repr-Digest` fields allow
