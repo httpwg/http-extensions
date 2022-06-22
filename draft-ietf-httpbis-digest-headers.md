@@ -884,7 +884,7 @@ iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 
 ## Client Provides Full Representation Data, Server Provides No Representation Data
 
-The request `Repr-Digest` field-value is calculated on the enclosed payload.
+The request `Repr-Digest` field-value is calculated on the enclosed content.
 
 The response `Repr-Digest` field-value
 depends on the representation metadata header fields, including
