@@ -147,7 +147,7 @@ algorithms are registered in the "Hash Algorithms for HTTP Digest Fields" (see
 {{algorithms}}).
 
 Selecting the data on which digests are calculated depends on the use case of
-HTTP messages. This document provides different headers for HTTP representation
+HTTP messages. This document provides different fields for HTTP representation
 data and HTTP content.
 
 There are use-cases where a simple digest of the HTTP content bytes is
