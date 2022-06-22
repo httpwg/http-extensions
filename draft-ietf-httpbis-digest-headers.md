@@ -152,7 +152,7 @@ data and HTTP content.
 
 There are use-cases where a simple digest of the HTTP content bytes is
 required. The `Content-Digest` request and response header and trailer field is
-defined to support digests of content ({{Section 3.2 of RFC9110}}); see
+defined to support digests of content ({{Section 6.4 of RFC9110}}); see
 {{content-digest}}.
 
 For more advanced use-cases, the `Repr-Digest` request and response header
