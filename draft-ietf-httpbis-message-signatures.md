@@ -1579,7 +1579,7 @@ Status:
 : A brief text description of the status of the parameter. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
 Target:
-: The applicable component identifiers for the parmeter. Can be a combination of one or more derived component identifiers as described in {{derived-components}}, one or more specific HTTP field names, the special value "Field Value" meaning all HTTP fields, or a separate human-readable description of the target.
+: The applicable component identifiers for the parameter. Can be a combination of one or more derived component identifiers as described in {{derived-components}}, one or more specific HTTP field names, the special value "Field Value" meaning all HTTP fields, or a separate human-readable description of the target.
 
 Specification document(s):
 : Reference to the document(s) that specify the
@@ -1676,7 +1676,7 @@ A verifier processing a set of signatures on a message also needs to determine w
 
 HTTP Message Signature values are identified in the Signature and Signature-Input field values by unique labels. These labels are chosen only when attaching the signature values to the message and are not accounted for in the signing process. An intermediary adding its own signature is allowed to re-label an existing signature when processing the message.
 
-Therefore, applications should not rely on specific labels being present, and applications should not put semantic meaning on the labels themselves. Instead, additional signature parmeters can be used to convey whatever additional meaning is required to be attached to and covered by the signature.
+Therefore, applications should not rely on specific labels being present, and applications should not put semantic meaning on the labels themselves. Instead, additional signature parameters can be used to convey whatever additional meaning is required to be attached to and covered by the signature.
 
 ## Symmetric Cryptography {#security-symmetric}
 
