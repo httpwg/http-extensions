@@ -1096,6 +1096,8 @@ while streaming content and thus mitigate resource consumption.
 The `Repr-Digest` field-value is the same as in {{example-full-representation}} because `Repr-Digest` is designed to
 be independent from the use of one or more transfer codings (see {{representation-digest}}).
 
+In the response content below, the string "\r\n" represent the bytes CRLF.
+
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
@@ -1111,12 +1113,12 @@ Trailer: Digest
 
 8\r\n
 {"hello"\r\n
-8
+8\r\n
 : "world\r\n
 2\r\n
 "}\r\n
 0\r\n
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:\r\n
 
 ~~~
 {: title="Chunked Response with Digest"}
