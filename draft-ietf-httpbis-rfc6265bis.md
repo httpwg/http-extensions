@@ -140,7 +140,6 @@ informative:
   RFC2818:
   RFC3986:
   RFC6265:
-  RFC3629:
   RFC4648:
   RFC3864:
   RFC5895:
@@ -1765,15 +1764,6 @@ cookie-string from a given cookie store.
 
    3.  If there is an unprocessed cookie in the cookie-list, output the
        characters %x3B and %x20 ("; ").
-
-NOTE: Despite its name, the cookie-string is actually a sequence of octets, not
-a sequence of characters.  To convert the cookie-string (or components
-thereof) into a sequence of characters (e.g., for presentation to the user),
-the user agent might wish to try using the UTF-8 character encoding {{RFC3629}}
-to decode the octet sequence. This decoding might fail, however, because not
-every sequence of octets is valid UTF-8.
-
-
 
 # Implementation Considerations
 
