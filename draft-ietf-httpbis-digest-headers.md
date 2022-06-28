@@ -633,6 +633,9 @@ Content-Type: application/json
 ~~~
 {: title="Request containing a JSON object without any content coding"}
 
+Compressing is an efficient way to reduce
+the content length.
+
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
@@ -641,10 +644,10 @@ Content-Encoding: gzip
 
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
-{: title="Request containing a gzip-encoded JSON object"}
+{: title="Request containing a gzip-encoded JSON object" #ex-put-gz}
 
-Now the same content conveys a malformed JSON object, because the request does
-not indicate a content coding.
+Removing the content coding from the same request
+causes the content to become malformed.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
@@ -655,7 +658,9 @@ H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 {: title="Request containing malformed JSON"}
 
-A Range-Request alters the content, conveying a partial representation.
+A Range-Request affects the transferred message content,
+conveying a partial representation of the JSON object
+in {{ex-put-gz}}.
 
 ~~~ http-message
 GET /entries/1234 HTTP/1.1
@@ -675,7 +680,8 @@ iwgAla3RXA==
 ~~~
 {: title="Partial response from a gzip-encoded representation"}
 
-The method can also alter the content.  For example, the response
+The method can also affects the transferred message content.
+For example, the response
 to a HEAD request does not carry content.
 
 ~~~ http-message
@@ -695,7 +701,7 @@ Content-Encoding: gzip
 ~~~
 {: title="Response to HEAD request (empty content)"}
 
-Finally, the semantics of an HTTP response might decouple the effective request URI
+Finally, the semantics of a response might decouple the target URI
 from the enclosed representation. In the example response below, the
 `Content-Location` header field indicates that the enclosed representation
 refers to the resource available at `/authors/123`, even though the request is
@@ -1026,7 +1032,7 @@ Location: /books/123
 ## Digest with PATCH
 
 This case is analogous to a POST request where the target resource reflects the
-effective request URI.
+target URI.
 
 The PATCH request uses the `application/merge-patch+json` media type defined in
 {{?RFC7396}}.
