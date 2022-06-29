@@ -633,7 +633,7 @@ Content-Type: application/json
 ~~~
 {: title="Request containing a JSON object without any content coding"}
 
-Compressing is an efficient way to reduce
+Compression is an efficient way to reduce
 the content length.
 
 ~~~ http-message
@@ -648,6 +648,7 @@ H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 
 Removing the content coding from the same request
 causes the content to become malformed.
+The server replies with an error.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
@@ -657,6 +658,16 @@ Content-Type: application/json
 H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
 ~~~
 {: title="Request containing malformed JSON"}
+
+~~~ http-message
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+
+{"status": "400",
+ "title": "Malformed content."
+}
+~~~
+{: title="An error response for a malformed content"}
 
 A Range-Request affects the transferred message content,
 conveying a partial representation of the JSON object
@@ -680,7 +691,7 @@ iwgAla3RXA==
 ~~~
 {: title="Partial response from a gzip-encoded representation"}
 
-The method can also affects the transferred message content.
+The method can also affect the transferred message content.
 For example, the response
 to a HEAD request does not carry content.
 
