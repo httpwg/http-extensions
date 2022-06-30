@@ -952,7 +952,9 @@ The request `Repr-Digest` field-value is computed on the enclosed representation
 {{state-changing-requests}}).
 
 The representation enclosed in the response refers to the resource identified by
-`Content-Location` (see {{Section 6.4.2 of RFC9110}}). `Repr-Digest` is thus computed on the enclosed representation.
+`Content-Location` (see {{Section 6.4.2 of RFC9110}});
+an application can thus use `Repr-Digest` in association with the resource
+referenced by `Content-Location`.
 
 ~~~ http-message
 POST /books HTTP/1.1
@@ -979,10 +981,6 @@ Repr-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
 }
 ~~~
 {: title="Response with Digest of Resource"}
-
-Note that a `204 No Content` response without content but with the same
-`Repr-Digest` field-value would have been legitimate too.
-In that case, `Content-Digest` would have been computed on an empty content.
 
 ## POST Response Describes the Request Status {#post-referencing-status}
 
@@ -1063,6 +1061,7 @@ Repr-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
 
 Note that a `204 No Content` response without content but with the same
 `Repr-Digest` field-value would have been legitimate too.
+In that case, `Content-Digest` would have been computed on an empty content.
 
 ## Error responses
 
