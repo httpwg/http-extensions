@@ -43,6 +43,7 @@ normative:
   RFC5234:
   RFC6234:
   RFC7405:
+  FOLDING: RFC8792
   RFC9110:
     display: HTTP
 
@@ -224,6 +225,9 @@ The definitions "representation", "selected representation", "representation
 data", "representation metadata", "user agent" and "content" in this document are to be
 interpreted as described in {{RFC9110}}.
 
+This document uses the line folding strategies
+described in [FOLDING].
+
 Hashing algorithm names respect the casing used in their definition document (e.g. SHA-1, CRC32c)
 whereas hashing algorithm keys are quoted (e.g. "sha", "crc32c").
 
@@ -233,7 +237,7 @@ whereas "digest" is only used in relation to the value contained in the fields.
 
 Integrity fields: collective term for `Content-Digest` and `Repr-Digest`
 
-Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Content-Digest`
+Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Content-Digest`.
 
 
 # The Content-Digest Field {#content-digest}
