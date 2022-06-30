@@ -305,6 +305,8 @@ of the structured field value. {{http-header-structured}}
 `bs`
 : A boolean flag indicating that the component value is encoded using Byte Sequence data structures before being combined. {{http-header-byte-sequence}}
 
+Multiple parameters MAY be specified together, though some combinations are redundant or incompatible. For example, the `sf` parameter's functionality is already covered when the `key` parameter is used on a dictionary item. The `bs` parameter, which requires the raw field values from the message, is not compatible with use of the `sf` or `key` parameters, which require the parsed data structures of the field values after combination.
+
 Additional parameters MAY be defined in a registry established in {{param-registry}}.
 
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
@@ -312,6 +314,8 @@ Additional parameters MAY be defined in a registry established in {{param-regist
 If the value of the the HTTP field in question is known by the application to be a structured field ({{STRUCTURED-FIELDS}}), and the expected type of the structured field is known, the signer MAY include the `sf` parameter in the component identifier.
 If this parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
 will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
+
+Processing of this parameter MUST occur after multiple field values have been combined into a single List or Dictionary structure.
 
 For example, the following dictionary field is a valid serialization:
 
@@ -336,6 +340,8 @@ The resulting string is used as the component value in {{http-header}}.
 ### Dictionary Structured Field Members {#http-header-dictionary}
 
 If a given field is known by the application to be a Dictionary structured field, an individual member in the value of that Dictionary is identified by using the parameter `key` and the Dictionary member key as a String value.
+
+Processing of this parameter MUST occur after multiple field values have been combined into a single List or Dictionary structure.
 
 An individual member value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of STRUCTURED-FIELDS}} on the `member_value` and its parameters, without the dictionary key. Specifically, the value is serialized as an Item or Inner List (the two possible values of a Dictionary member).
 
