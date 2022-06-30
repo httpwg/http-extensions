@@ -850,7 +850,7 @@ The `@status` component identifier MUST NOT be used in a request message.
 When a request message results in a signed response message, the signer can include portions of the request message in the signature base by adding the `req` parameter to the component identifier.
 
 `req`
-: A boolean flag indicatin that the component value is derived from the request that triggered this response message and not from the response message directly.
+: A boolean flag indicating that the component value is derived from the request that triggered this response message and not from the response message directly.
 
 This parameter can be applied to both HTTP fields and derived components that target the request, with the same semantics. The component value for a message component using this parameter is calculated in the same manner as it is normally, but data is pulled from the request message instead of the target response message to which the signature is applied.
 
