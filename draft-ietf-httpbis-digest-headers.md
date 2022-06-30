@@ -1221,6 +1221,10 @@ Content-Type: application/problem+json
 ~~~
 {: title="Response advertising the supported algorithms"}
 
+Note that a 5xx response would have been legitimate too,
+since this specification does not prescribe any behavior
+on status codes.
+
 # Migrating from RFC 3230
 
 HTTP digests are computed by applying a hashing algorithm to input data.
