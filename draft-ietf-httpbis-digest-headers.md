@@ -622,7 +622,7 @@ IANA is asked to initialize the registry with the entries in
 The following examples show how representation metadata, payload transformations
 and method impacts on the message and content. When the content
 contains non-printable characters (e.g. when it is compressed) it is shown as
-a Base64-encoded string.
+a sequence of hex-encoded bytes.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
@@ -642,7 +642,10 @@ Host: foo.example
 Content-Type: application/json
 Content-Encoding: gzip
 
-H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
+0x1f0x8b0x80x00xa10xb10xbd0x62\
+0x20xff0xab0x560x4a0x540xb20x5\
+20x500x320xa40x30x500xaa0x50x0\
+0x440x470x2a0x7c0x6d0x00x00x0
 ~~~
 {: title="Request containing a gzip-encoded JSON object" #ex-put-gz}
 
@@ -655,17 +658,16 @@ PUT /entries/1234 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 
-H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
+0x1f0x8b0x80x00xa10xb10xbd0x62\
+0x20xff0xab0x560x4a0x540xb20x5\
+20x500x320xa40x30x500xaa0x50x0\
+0x440x470x2a0x7c0x6d0x00x00x0
 ~~~
 {: title="Request containing malformed JSON"}
 
 ~~~ http-message
 HTTP/1.1 400 Bad Request
-Content-Type: application/json
 
-{"status": "400",
- "title": "Malformed content."
-}
 ~~~
 {: title="An error response for a malformed content"}
 
@@ -685,9 +687,9 @@ Range: bytes=1-7
 HTTP/1.1 206 Partial Content
 Content-Encoding: gzip
 Content-Type: application/json
-Content-Range: bytes 1-7/18
+Content-Range: bytes 0-10/32
 
-iwgAla3RXA==
+0x1f0x8b0x80x00xa10xb10xbd0x62
 ~~~
 {: title="Partial response from a gzip-encoded representation"}
 
