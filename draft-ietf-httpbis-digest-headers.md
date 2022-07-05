@@ -43,6 +43,7 @@ normative:
   RFC5234:
   RFC6234:
   RFC7405:
+  FOLDING: RFC8792
   RFC9110:
     display: HTTP
 
@@ -223,6 +224,9 @@ Boolean, Byte Sequence, Dictionary, Integer, and List.
 The definitions "representation", "selected representation", "representation
 data", "representation metadata", "user agent" and "content" in this document are to be
 interpreted as described in {{RFC9110}}.
+
+This document uses the line folding strategies
+described in [FOLDING].
 
 Hashing algorithm names respect the casing used in their definition document (e.g. SHA-1, CRC32c)
 whereas hashing algorithm keys are quoted (e.g. "sha", "crc32c").
