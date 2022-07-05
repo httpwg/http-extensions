@@ -237,7 +237,7 @@ whereas "digest" is only used in relation to the value contained in the fields.
 
 Integrity fields: collective term for `Content-Digest` and `Repr-Digest`
 
-Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Content-Digest`.
+Integrity preference fields: collective term for `Want-Repr-Digest` and `Want-Content-Digest`
 
 
 # The Content-Digest Field {#content-digest}
