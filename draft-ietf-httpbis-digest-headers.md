@@ -649,9 +649,10 @@ Content-Encoding: gzip
 ~~~
 {: title="Request containing a gzip-encoded JSON object" #ex-put-gz}
 
-Removing the content coding from the same request
-causes the content to become malformed.
-The server replies with an error.
+Sending the compressed form of the content 
+without the correct content coding means that
+the content is malformed.
+In this case, the server can reply with an error.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
