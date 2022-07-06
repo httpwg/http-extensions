@@ -233,7 +233,7 @@ The following sections define component identifier names, their parameters, thei
 
 The component name for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
-Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}. Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for combination of field values in this manner such that the combined output is unambiguous from multiple inputs. However, the canonicalized component value is never parsed by the message signature process, merely used as part of the signature base in {{create-sig-input}}. Even so, caution needs to be taken when including such fields in signatures, see {{security-non-list}} for more discussion of this issue.
+Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}. Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for combination of field values in this manner such that the combined output is unambiguous from multiple inputs. However, the canonicalized component value is never parsed by the message signature process, merely used as part of the signature base in {{create-sig-input}}. Even so, caution needs to be taken when including such fields in signatures, and the `bs` parameter defined in {{http-header-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
 
 If the combined value is not available for a given header, the following algorithm will produce canonicalized results for an implementation:
 
@@ -293,22 +293,29 @@ Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due 
 Any HTTP field component identifiers MAY have the following parameters in specific circumstances, each described in detail in their own sections:
 
 `sf`
-: A boolean flag indicating that the field value is to be canonicalized using strict encoding
+: A boolean flag indicating that the component value is serialized using strict encoding
 of the structured field value. {{http-header-structured}}
 
 `key`
 : A string parameter used to select a single member value from a dictionary structured field. {{http-header-dictionary}}
 
 `req`
-: Indicates that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to many derived component identifiers. {{content-request-response}}
+: A boolean flag indicating that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to many derived component identifiers. {{content-request-response}}
+
+`bs`
+: A boolean flag indicating that the component value is encoded using Byte Sequence data structures before being combined. {{http-header-byte-sequence}}
+
+Multiple parameters MAY be specified together, though some combinations are redundant or incompatible. For example, the `sf` parameter's functionality is already covered when the `key` parameter is used on a dictionary item. The `bs` parameter, which requires the raw field values from the message, is not compatible with use of the `sf` or `key` parameters, which require the parsed data structures of the field values after combination.
 
 Additional parameters MAY be defined in a registry established in {{param-registry}}.
 
 ### Canonicalized Structured HTTP Fields {#http-header-structured}
 
-If the value of the the HTTP field in question is known by the application to be a structured field ({{STRUCTURED-FIELDS}}), the component identifier MAY include the `sf` parameter to indicate it is a known structured field. If this
-parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
+If the value of the the HTTP field in question is known by the application to be a structured field ({{STRUCTURED-FIELDS}}), and the expected type of the structured field is known, the signer MAY include the `sf` parameter in the component identifier.
+If this parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
 will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
+
+Processing of this parameter MUST occur after multiple field values have been combined into a single List or Dictionary structure.
 
 For example, the following dictionary field is a valid serialization:
 
@@ -334,6 +341,8 @@ The resulting string is used as the component value in {{http-header}}.
 
 If a given field is known by the application to be a Dictionary structured field, an individual member in the value of that Dictionary is identified by using the parameter `key` and the Dictionary member key as a String value.
 
+Processing of this parameter MUST occur after multiple field values have been combined into a single List or Dictionary structure.
+
 An individual member value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of STRUCTURED-FIELDS}} on the `member_value` and its parameters, without the dictionary key. Specifically, the value is serialized as an Item or Inner List (the two possible values of a Dictionary member).
 
 Each parameterized key for a given field MUST NOT appear more than once in the signature base. Parameterized keys MAY appear in any order in the signature base, regardless of the order they occur in the source Dictionary.
@@ -356,6 +365,55 @@ The following example shows canonicalized values for different component identif
 ~~~
 
 Note that the value for `key="c"` has been re-serialized according to the strict `member_value` algorithm.
+
+
+### Binary-wrapped HTTP Fields {#http-header-byte-sequence}
+
+If the value of the the HTTP field in question is known by the application to cause problems with serialization, particularly with combination of multiple values as discussed in {{security-non-list}}, the signer MAY include the `bs` parameter in a component identifier to indicate the values of the fields need to be wrapped as binary structures before being combined.
+
+If this parameter is included with a component identifier, the component value is calculated using the following algorithm:
+
+0. Let the input be the ordered set of values for a field
+1. For each field value in the set:
+    0. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
+    1. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification.
+    2. Encode the string as a Byte Sequence
+    3. Add the Byte Sequence to a List accumulator
+2. The intermediate result is a List of Byte Sequence values
+3. Follow the strict serialization of a List as described in {{Section 4.1.1 of STRUCTURED-FIELDS}} and return this output
+
+For example, the following field with internal commas prevents the distinct field values from being safely combined:
+
+~~~ http-message
+Example-Header: value, with, lots
+Example-Header: of, commas
+~~~
+
+If included in the signature base without parameters, its value would be:
+
+~~~
+"example-header": value, with, lots, of, commas
+~~~
+
+This is problematic because the same component value is created with the semantically distinct single field:
+
+~~~ http-message
+Example-Header: value, with, lots, of, commas
+~~~
+
+However, if the `bs` parameter is added, the value is encoded and serialized as follows:
+
+~~~
+"example-header";bs: :dmFsdWUsIHdpdGgsIGxvdHM=:, :b2YsIGNvbW1hcw==:
+~~~
+
+For the single-instance field above, the encoding with the `bs` parameter is:
+
+~~~
+"example-header";bs: :dmFsdWUsIHdpdGgsIGxvdHMsIG9mLCBjb21tYXM=:
+~~~
+
+This component value is distinct from the multiple-instance field above.
 
 ## Derived Components {#derived-components}
 
@@ -792,9 +850,9 @@ The `@status` component identifier MUST NOT be used in a request message.
 When a request message results in a signed response message, the signer can include portions of the request message in the signature base by adding the `req` parameter to the component identifier.
 
 `req`
-: Indicates that the component value is derived from the request that triggered this response message and not from the response message directly.
+: A boolean flag indicating that the component value is derived from the request that triggered this response message and not from the response message directly.
 
-This parameter can be applied to both HTTP fields and derived components with the same semantics. The component value for a message component using this parameter is calculated in the same manner as it is normally, but data is pulled from the request message.
+This parameter can be applied to both HTTP fields and derived components that target the request, with the same semantics. The component value for a message component using this parameter is calculated in the same manner as it is normally, but data is pulled from the request message instead of the target response message to which the signature is applied.
 
 Note that the same component name MAY be included with and without the `req` parameter in a single signature base, indicating the same named component from both the request and response message.
 
@@ -1816,7 +1874,7 @@ Both of these messages would create the following line in the signature base:
 "example-header": value, with, lots, of, commas
 ~~~
 
-Since two semantically distinct inputs can create the same output in the signature base, special care has to be taken when handling such values.
+Since two semantically distinct inputs can create the same output in the signature base, special care has to be taken when handling such values. Signers can make use of the `bs` parameter to armor such fields, as described in {{http-header-byte-sequence}}.
 
 Specifically, the Set-Cookie field {{COOKIE}} defines an internal syntax that does not conform to the List syntax in {{STRUCTURED-FIELDS}}. In particular some portions allow unquoted commas, and the field is typically sent as multiple separate field lines with distinct values when sending multiple cookies. When multiple Set-Cookie fields are sent in the same message, it is not generally possible to combine these into a single line and be able to parse and use the results, as discussed in {{HTTP, Section 5.3}}. Therefore, all the cookies need to be processed from their separate header values, without being combined, while the signature base needs to be processed from the special combined value generated solely for this purpose. If the cookie value is invalid, the signed message ought to be rejected as this is a possible padding attack as described in {{security-multiple-fields}}.
 
