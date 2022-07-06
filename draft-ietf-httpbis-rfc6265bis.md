@@ -2467,7 +2467,37 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 ## draft-ietf-httpbis-rfc6265bis-10
 
 * Standardize Max-Age/Expires upper bound:
-  <https://github.com/httpwg/http-extensions/pull/1732>
+  <https://github.com/httpwg/http-extensions/pull/1732>,
+  <https://github.com/httpwg/http-extensions/pull/1980>.
+
+* Expand on privacy considerations and third-party cookies:
+  <https://github.com/httpwg/http-extensions/pull/1878>
+
+* Specify that no decoding of Set-Cookie line should occur:
+  <https://github.com/httpwg/http-extensions/pull/1902>
+
+* Require ASCII for domain attributes:
+  <https://github.com/httpwg/http-extensions/pull/1969>
+
+* Typos, formatting and editorial fixes:
+  <https://github.com/httpwg/http-extensions/pull/1789>,
+  <https://github.com/httpwg/http-extensions/pull/1858>,
+  <https://github.com/httpwg/http-extensions/pull/2069>.
+
+## draft-ietf-httpbis-rfc6265bis-11
+
+* Remove note to ignore Domain attribute with trailing dot:
+  <https://github.com/httpwg/http-extensions/pull/2087>,
+  <https://github.com/httpwg/http-extensions/pull/2092>.
+
+* Remove an inadvertant change to cookie-octet:
+  <https://github.com/httpwg/http-extensions/pull/2090>
+
+* Remove note regarding cookie serialization:
+  <https://github.com/httpwg/http-extensions/pull/2165>
+
+* Add case insensitivity note to Set-Cookie Syntax:
+  <https://github.com/httpwg/http-extensions/pull/2167>
 
 # Acknowledgements
 {:numbered="false"}
