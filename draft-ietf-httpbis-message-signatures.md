@@ -369,18 +369,19 @@ Note that the value for `key="c"` has been re-serialized according to the strict
 
 ### Binary-wrapped HTTP Fields {#http-header-byte-sequence}
 
-If the value of the the HTTP field in question is known by the application to cause problems with serialization, particularly with combination of multiple values as discussed in {{security-non-list}}, the signer MAY include the `bs` parameter in a component identifier to indicate the values of the fields need to be wrapped as binary structures before being combined.
+If the value of the the HTTP field in question is known by the application to cause problems with serialization, particularly with the combination of multiple values into a single line as discussed in {{security-non-list}}, the signer SHOULD include the `bs` parameter in a component identifier to indicate the values of the fields need to be wrapped as binary structures before being combined.
 
 If this parameter is included with a component identifier, the component value is calculated using the following algorithm:
 
-0. Let the input be the ordered set of values for a field
-1. For each field value in the set:
-    0. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
+0. Let the input be the ordered set of values for a field.
+1. Create an empty List for accumulating processed field values.
+2. For each field value in the set:
+    0. Strip leading and trailing whitespace from the field value. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
     1. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification.
-    2. Encode the string as a Byte Sequence
-    3. Add the Byte Sequence to a List accumulator
-2. The intermediate result is a List of Byte Sequence values
-3. Follow the strict serialization of a List as described in {{Section 4.1.1 of STRUCTURED-FIELDS}} and return this output
+    2. Encode the bytes of the resulting field value's ASCII representation as a Byte Sequence.
+    3. Add the Byte Sequence to the List accumulator.
+3. The intermediate result is a List of Byte Sequence values.
+4. Follow the strict serialization of a List as described in {{Section 4.1.1 of STRUCTURED-FIELDS}} and return this output.
 
 For example, the following field with internal commas prevents the distinct field values from being safely combined:
 
