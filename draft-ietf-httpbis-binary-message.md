@@ -93,15 +93,17 @@ This document uses terminology from HTTP ({{HTTP}}) and notation from QUIC
 
 # Format
 
-{{Section 6 of HTTP}} defines five distinct parts to HTTP messages.  A framing
-indicator is added to signal how these parts are composed:
+{{Section 6 of HTTP}} defines the general structure of HTTP messages and
+composes those messages into distinct parts.  This format describes how those
+parts are composed into a sequence of bytes.  At a high level, binary messages
+are comprised of:
 
 1. Framing indicator. This format uses a single integer to describe framing, which describes
    whether the message is a request or response and how subsequent sections are
    formatted; see {{framing}}.
 
-2. For a response, any number of informational responses, each consisting of an
-   informational status code and header section.
+2. For a response, zero or more informational responses.  Each informational
+   response consists of an informational status code and header section.
 
 3. Control data. For a request, this contains the request method and target.
    For a response, this contains the status code.
