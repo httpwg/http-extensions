@@ -656,7 +656,7 @@ Required parameters:
 
 Optional parameters:
 
-: None
+: N/A
 
 Encoding considerations:
 
@@ -676,7 +676,8 @@ Published specification:
 
 Applications that use this media type:
 
-: N/A
+: Applications looking to convey HTTP request semantics independent of a
+  specific protocol.
 
 Fragment identifier considerations:
 
