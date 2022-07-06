@@ -1609,7 +1609,7 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 
 |Name|Description|Status|Target|Specification document(s)|
 |--- |--- |--- |--- |--- |
-|`@signature-params`| Signature parameters, including covered content list | Active | Request, Response | {{signature-params}} of {{&SELF}}|
+|`@signature-params`| Reserved for signature parameters line in signature base | Active | Request, Response | {{signature-params}} of {{&SELF}}|
 |`@method`| The HTTP request method | Active | Request | {{content-request-method}} of {{&SELF}}|
 |`@authority`| The HTTP authority, or target host | Active | Request | {{content-request-authority}} of {{&SELF}}|
 |`@scheme`| The URI scheme of the request URI | Active | Request | {{content-request-scheme}} of {{&SELF}}|
@@ -1651,11 +1651,12 @@ Specification document(s):
 The table below contains the initial contents of the HTTP Signature Derived Component Names Registry.
 
 |Name|Description|Status|Target|Specification document(s)|
-|--- |--- |--- |--- |
-|`key`| Dictionary structured fields | Active | {{http-header-dictionary}} of {{&SELF}}|
-|`name`| Named query parameters | Active | `@query-param` | {{content-request-query-param}} of {{&SELF}}|
-|`sf`| Strict structured field serialization | Active | Structured fields | {{http-header-structured}} of {{&SELF}}|
-|`req`| Related request indicator | Active | Derived content identifiers with a target of Request or any field | {{content-request-scheme}} of {{&SELF}}|
+|--- |--- |--- |--- |--- |
+|`key`| Single key value of dictionary structured fields | Active | Dictionary structured fields | {{http-header-dictionary}} of {{&SELF}}|
+|`name`| Single named query parameter | Active | `@query-param` | {{content-request-query-param}} of {{&SELF}}|
+|`sf`| Strict structured field serialization | Active | Structured fields of known type | {{http-header-structured}} of {{&SELF}}|
+|`req`| Related request indicator | Active | Derived component identifiers with a target of Request or any field | {{content-request-scheme}} of {{&SELF}}|
+|`bs`| Byte Sequence wrapping indicator | Active | Any field | {{http-header-byte-sequence}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Component Parameters Registry." }
 
 # Security Considerations {#security}
