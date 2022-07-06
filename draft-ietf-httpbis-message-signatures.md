@@ -470,11 +470,11 @@ Derived component values MUST be limited to printable characters and spaces and 
 
 ### Signature Parameters {#signature-params}
 
-HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and verification, such as the set of covered components, a timestamp, identifiers for verification key material, and other utilities.
+HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and verification, consisting of the ordered set of covered components and the ordered set of parameters including a timestamp of signature creation, identifiers for verification key material, and other utilities. This metadata is represented by a special derived component for signature parameters, and it is treated slightly differently from other covered components.
 
-The signature parameters component name is `@signature-params`. This message component's value is REQUIRED as part of the [signature base](#create-sig-input) but the component identifier MUST NOT be enumerated within the set of covered components itself.
+The signature parameters component name is `@signature-params`.
 
-The signature parameters component value is the serialization of the signature parameters for this signature, including the covered components set with all associated parameters. These parameters include any of the following:
+The signature parameters component value is the serialization of the signature parameters for this signature, including the covered components ordered set with all associated parameters. These parameters include any of the following:
 
 * `created`: Creation time as an Integer UNIX timestamp value. Sub-second precision is not supported. Inclusion of this parameter is RECOMMENDED.
 * `expires`: Expiration time as an Integer UNIX timestamp value. Sub-second precision is not supported.
@@ -482,15 +482,15 @@ The signature parameters component value is the serialization of the signature p
 * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as a String value.
 * `keyid`: The identifier for the key material as a String value.
 
-Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents).
+Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents). Note that there is no general ordering to the parameters, but once an ordering is chosen for a given set of signature parameters it cannot be changed without altering the signature parameters value.
 
-The signature parameters component value is serialized as a parameterized inner list using the rules in {{Section 4 of STRUCTURED-FIELDS}} as follows:
+The signature parameters component value is serialized as a parameterized Inner List using the rules in {{Section 4 of STRUCTURED-FIELDS}} as follows:
 
 1. Let the output be an empty string.
 2. Determine an order for the component identifiers of the covered components, not including the `@signature-params` component identifier itself. Once this order is chosen, it cannot be changed. This order MUST be the same order as used in creating the signature base ({{create-sig-input}}).
-3. Serialize the component identifiers of the covered components, including all parameters, as an ordered `inner-list` according to {{Section 4.1.1.1 of STRUCTURED-FIELDS}} and append this to the output.
+3. Serialize the component identifiers of the covered components, including all parameters, as an ordered Inner List of String values according to {{Section 4.1.1.1 of STRUCTURED-FIELDS}} and append this to the output. Note that the component identifiers can include their own parameters, and these parameters are ordered sets. Once an order is chosen for a component's parameters, the order cannot be changed.
 4. Determine an order for any signature parameters. Once this order is chosen, it cannot be changed.
-5. Append the parameters to the `inner-list` in the chosen order according to {{Section 4.1.1.2 of STRUCTURED-FIELDS}},
+5. Append the parameters to the Inner List in order according to {{Section 4.1.1.2 of STRUCTURED-FIELDS}},
     skipping parameters that are not available or not used for this message signature.
 6. The output contains the signature parameters component value.
 
@@ -498,7 +498,9 @@ Note that the Inner List serialization from {{Section 4.1.1.1 of STRUCTURED-FIEL
 in order to facilitate parallelism with this value's inclusion in the Signature-Input field,
 as discussed in {{signature-input-header}}.
 
-This example shows a canonicalized value for the parameters of a given signature:
+This derived component's value is REQUIRED as the last line of the [signature base](#create-sig-input), and the component identifier MUST NOT be enumerated within the set of covered components for any signature parameters set, including itself.
+
+This example shows the serialized component value for the parameters of an example message signature:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -508,7 +510,7 @@ NOTE: '\' line wrapping per RFC 8792
   created=1618884475;expires=1618884775
 ~~~
 
-Note that an HTTP message could contain [multiple signatures](#signature-multiple), but only the signature parameters used for a single signature are included in an entry.
+Note that an HTTP message could contain [multiple signatures](#signature-multiple), but only the signature parameters used for a single signature are included in a given signature parameters entry.
 
 ### Method {#content-request-method}
 
