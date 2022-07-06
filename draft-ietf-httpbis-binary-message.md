@@ -55,7 +55,7 @@ This document defines a binary format for representing HTTP messages.
 
 This document defines a simple format for representing an HTTP message
 ({{HTTP}}), either request or response. This allows for the encoding of HTTP
-messages that can be conveyed outside of an HTTP protocol. This enables the
+messages that can be conveyed outside an HTTP protocol. This enables the
 transformation of entire messages, including the application of authenticated
 encryption.
 
@@ -569,7 +569,7 @@ phrase is not retained by this encoding.
 A response that uses the chunked encoding (see {{Section 7.1 of MESSAGING}}) as
 shown for {{ex-chunked}} can be encoded using indefinite-length encoding, which
 minimizes buffering needed to translate into the binary format. However, chunk
-boundaries do not need to be retained and any chunk extensions cannot be
+boundaries do not need to be retained, and any chunk extensions cannot be
 conveyed using the binary format; see {{differences}}.
 
 ~~~ http-message
