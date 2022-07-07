@@ -1715,6 +1715,12 @@ cookie-string from a given cookie store.
      *   The cookie's host-only-flag is false and the canonicalized
          host of the retrieval's URI domain-matches the cookie's domain.
 
+     NOTE: It's possible that the {{PSL}} has changed since a cookie was
+     created, potentially rendering the cookie now invalid if the
+     cookie's domain was added to the {{PSL}}. User agents should be
+     careful to avoid retrieving these invalid cookies even if they
+     domain match the host of the retrieval's URI.
+
    * The retrieval's URI's path path-matches the cookie's path.
 
    * If the cookie's secure-only-flag is true, then the retrieval's URI's
