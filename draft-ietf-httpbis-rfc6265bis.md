@@ -1088,20 +1088,8 @@ Service Workers are more complicated, as they act as a completely separate
 execution context with only tangential relationship to the Document which
 registered them.
 
-Requests which simply pass through a Service Worker will be handled as described
-above: the request's client will be the Document or Worker which initiated the
-request, and its "site for cookies" will be those defined in
-{{document-requests}} and {{dedicated-and-shared-requests}}
-
-Requests which are initiated by the Service Worker itself (via a direct call to
-`fetch()`, for instance), on the other hand, will have a client which is a
-ServiceWorkerGlobalScope. Its "site for cookies" will be the Service Worker's
-URI's origin.
-
-Given a ServiceWorkerGlobalScope (`worker`), the following algorithm returns its
-"site for cookies":
-
-1.  Return `worker`'s origin.
+How user agents handle Service Workers may differ, but user agents SHOULD
+match the {{SERVICE-WORKERS}} specification.
 
 ## Ignoring Set-Cookie Header Fields {#ignoring-cookies}
 
