@@ -129,14 +129,19 @@ fields; see {{obsolete-3230}}.
 
 This document is structured as follows:
 
-- {{content-digest}} defines the Content-Digest request and response header and trailer field,
-- {{representation-digest}} defines the Repr-Digest request and response header and trailer field,
-- {{want-fields}} defines the Want-Repr-Digest and Want-Content-Digest request and response header and
-  trailer field,
-- {{algorithms}} describes algorithms and their relation to the fields defined in this document,
-- {{state-changing-requests}} details computing representation digests,
-- {{examples-unsolicited}} and {{examples-solicited}} provide examples of using
-  Repr-Digest and Want-Repr-Digest.
+- New request and response header and trailer field definitions.
+  - {{content-digest}} (Content-Digest),
+  - {{representation-digest}} (Repr-Digest), and
+  - {{want-fields}} (Want-Content-Digest and Want-Repr-Digest).
+- Considerations specific to representation data integrity.
+  - {{state-changing-requests}} (State-changing requests),
+  - {{digest-and-content-location}} (Content-Location),
+  - {{resource-representation}} contains worked examples of Representation data
+    in message exchanges, and
+  - {{examples-unsolicited}} and {{examples-solicited}} contain worked examples
+  of Repr-Digest and Want-Repr-Digest fields in message exchanges.
+- {{algorithms}} bootstraps a new IANA registry hash algorithms and defines
+  registration procedures for future entries.
 
 ## Concept Overview
 
