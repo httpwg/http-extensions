@@ -1719,7 +1719,7 @@ cookie-string from a given cookie store.
      created, potentially rendering the cookie now invalid if the
      cookie's domain was added to the {{PSL}}. User agents should be
      careful to avoid retrieving these invalid cookies even if they
-     domain match the host of the retrieval's URI.
+     domain-match the host of the retrieval's URI.
 
    * The retrieval's URI's path path-matches the cookie's path.
 
