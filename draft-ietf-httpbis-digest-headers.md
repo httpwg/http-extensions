@@ -1217,8 +1217,14 @@ Repr-Digest: \
 ## Server Does Not Support Client Algorithm and Returns an Error
 
 {{ex-server-selects-unsupported-algorithm}} is an example where a server ignores
-the client's preferred digest algorithm. Alternatively a server can also reject
-the request and return an error.
+the client's preferred digest algorithm.
+Alternatively a server can also reject
+the request and return a response with
+error status code such as 4xx or 5xx.
+This specification does not prescribe
+any requirement on status code selection;
+the follow example illustrates one possible
+option.
 
 In this example, the client requests a "sha" `Repr-Digest`, and the server returns an
 error with problem details {{?RFC7807}} contained in the content. The problem
@@ -1245,6 +1251,7 @@ Content-Type: application/problem+json
 }
 ~~~
 {: title="Response advertising the supported algorithms"}
+
 
 # Migrating from RFC 3230
 
