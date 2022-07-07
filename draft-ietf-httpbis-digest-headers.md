@@ -649,7 +649,7 @@ Content-Encoding: gzip
 ~~~
 {: title="Request containing a gzip-encoded JSON object" #ex-put-gz}
 
-Sending the compressed form of the content 
+Sending the compressed form of the content
 without the correct content coding means that
 the content is malformed.
 In this case, the server can reply with an error.
