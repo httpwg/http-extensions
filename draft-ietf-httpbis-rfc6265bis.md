@@ -1716,7 +1716,7 @@ cookie-string from a given cookie store.
          host of the retrieval's URI domain-matches the cookie's domain.
 
      NOTE: (For user agents configured to reject "public suffixes") It's
-     possible that the public suffic list was changed since a cookie was
+     possible that the public suffix list was changed since a cookie was
      created. If this change results in a cookie's domain becoming a public
      suffix then that cookie is considered invalid as it would have been
      rejected during creation (See {{storage-model}} step 9). User agents
@@ -2507,7 +2507,7 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Add case insensitivity note to Set-Cookie Syntax:
   <https://github.com/httpwg/http-extensions/pull/2167>
 
-* Add note not to send invalid cookies due to PSL changes:
+* Add note not to send invalid cookies due to public suffix list changes:
   <https://github.com/httpwg/http-extensions/pull/2215>
 
 # Acknowledgements
