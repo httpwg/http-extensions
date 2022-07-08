@@ -1715,10 +1715,12 @@ cookie-string from a given cookie store.
      *   The cookie's host-only-flag is false and the canonicalized
          host of the retrieval's URI domain-matches the cookie's domain.
 
-     NOTE: It's possible that the {{PSL}} has changed since a cookie was
-     created, potentially rendering the cookie now invalid if the
-     cookie's domain was added to the {{PSL}}. User agents should be
-     careful to avoid retrieving these invalid cookies even if they
+     NOTE: (For user agents configured to reject "public suffixes") It's
+     possible that the public suffic list was changed since a cookie was
+     created. If this change results in a cookie's domain becoming a public
+     suffix then that cookie is considered invalid as it would have been
+     rejected during creation (See {{storage-model}} step 9). User agents
+     should be careful to avoid retrieving these invalid cookies even if they
      domain-match the host of the retrieval's URI.
 
    * The retrieval's URI's path path-matches the cookie's path.
