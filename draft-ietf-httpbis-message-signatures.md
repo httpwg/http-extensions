@@ -90,7 +90,7 @@ entity:
 
 --- abstract
 
-This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over components of an HTTP message.  This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.
+This document describes a mechanism for creating, encoding, and verifying digital signatures or message authentication codes over components of an HTTP message. This mechanism supports use cases where the full HTTP message may not be known to the signer, and where the message may be transformed (e.g., by intermediaries) before reaching the verifier.
 This document also describes a means for requesting that a signature be applied to a subsequent HTTP message in an ongoing HTTP exchange.
 
 --- middle
@@ -98,9 +98,9 @@ This document also describes a means for requesting that a signature be applied 
 # Introduction {#intro}
 
 Message integrity and authenticity are important security properties that are critical to the secure operation of many HTTP applications.
-Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}.  However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance).  In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application.  Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity.  Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
+Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}. However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance). In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application. Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity. Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
 
-This document defines a mechanism for providing end-to-end integrity and authenticity for components of an HTTP message.  The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only the components of the message that are meaningful and appropriate for the application.  Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
+This document defines a mechanism for providing end-to-end integrity and authenticity for components of an HTTP message. The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only the components of the message that are meaningful and appropriate for the application. Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
 
 The signing mechanism described in this document consists of three parts:
 
@@ -108,40 +108,7 @@ The signing mechanism described in this document consists of three parts:
 - Algorithms for generating and verifying signatures over HTTP message components using this signature base through application of cryptographic primitives.
 - A mechanism for attaching a signature and related metadata to an HTTP message, and for parsing attached signatures and metadata from HTTP messages. To facilitate this, this document defines the "Signature-Input" and "Signature" fields.
 
-This document also provides a mechanism for a potential verifier to signal to a potential signer that a signature is desired in one or more subsequent messages. This optional negotiation mechanism can be used along with opportunistic or application-driven message signatures by either party. To facilitate this, this document defines the "Accept-Signature" field.
-
-## Requirements Discussion
-
-HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways.  This may result in a recipient receiving a message that is not bitwise equivalent to the message that was originally sent.  In such a case, the recipient will be unable to verify a signature over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signature base.  Since the exact raw bytes of the message cannot be relied upon as a reliable source for a signature base, the signer and verifier must independently create the signature base from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
-
-For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one.  Applications use HTTP in a wide variety of ways, and may disagree on whether a particular piece of information in a message (e.g., the message content, the method, or the Date header field) is relevant.  Thus a general purpose solution must provide signers with some degree of control over which message components are signed.
-
-HTTP applications may be running in environments that do not provide complete access to or control over HTTP messages (such as a web browser's JavaScript environment), or may be using libraries that abstract away the details of the protocol (such as [the Java HTTPClient library](https://openjdk.java.net/groups/net/httpclient/intro.html)).  These applications need to be able to generate and verify signatures despite incomplete knowledge of the HTTP message.
-
-## HTTP Message Transformations {#transforms}
-
-As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways.  Implementations are required to tolerate many of these transformations.  What follows is a non-normative and non-exhaustive list of transformations that may occur under HTTP, provided as context:
-
-- Re-ordering of header fields with different header field names ({{Section 5.3 of HTTP}}).
-- Combination of header fields with the same field name ({{Section 5.2 of HTTP}}).
-- Removal of header fields listed in the Connection header field ({{Section 7.6.1 of HTTP}}).
-- Addition of header fields that indicate control options ({{Section 7.6.1 of HTTP}}).
-- Addition or removal of a transfer coding ({{Section 7.7 of HTTP}}).
-- Addition of header fields such as `Via` ({{Section 7.6.3 of HTTP}}) and `Forwarded` ({{Section 4 of RFC7239}}).
-
-Based on the definition of HTTP and the requirements described above, we can identify certain types of transformations that should not prevent signature verification, even when performed on message components covered by the signature. The following non-exhaustive list describes some of those transformations:
-
-- Combination of header fields with the same field name.
-- Reordering of header fields with different names.
-- Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
-- Changes in casing (e.g., "Origin" to "origin") of any case-insensitive components such as header field names, request URI scheme, or host.
-- Addition or removal of leading or trailing whitespace to a field value.
-- Addition or removal of `obs-folds` from field values.
-- Changes to the request target and authority that when applied together do not
-    result in a change to the message's target URI, as defined in {{Section 7.1 of HTTP}}.
-
-Additionally, all changes to components not covered by the signature are considered safe.
-
+This document also provides a mechanism for a potential verifier to signal to a potential signer that a signature is desired in one or more subsequent messages. To facilitate this, this document defines the "Accept-Signature" field. This optional negotiation mechanism can be used along with opportunistic or application-driven message signatures by either party.
 
 ## Conventions and Terminology {#definitions}
 
@@ -156,7 +123,7 @@ For brevity, the term "signature" on its own is used in this document to refer t
 This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}}
 to specify data types: List, Inner List, Dictionary, Item, String, Integer, Byte Sequence, and Boolean.
 
-This document defines several string constructions using {{ABNF}} and uses the following ABNF rules: `VCHAR`, `SP`, `DQUOTE`, `LF`. This document also uses the following ABNF rules from {{STRUCTURED-FIELDS}}: `sf-string`, `inner-list`, `parameters`. This document also uses the following ABNF rules from {{HTTP}}: `field-content`.
+This document defines several string constructions using {{ABNF}} and uses the following ABNF rules: `VCHAR`, `SP`, `DQUOTE`, `LF`. This document uses the following ABNF rules from {{STRUCTURED-FIELDS}}: `sf-string`, `inner-list`, `parameters`. This document uses the following ABNF rules from {{HTTP}}: `field-content`.
 
 In addition to those listed above, this document uses the following terms:
 
@@ -168,13 +135,16 @@ Signer:
 : The entity that is generating or has generated an HTTP Message Signature. Note that multiple entities can act as signers and apply separate HTTP Message Signatures to a given HTTP Message.
 
 Verifier:
-: An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message.  Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.
+: An entity that is verifying or has verified an HTTP Message Signature against an HTTP Message. Note that an HTTP Message Signature may be verified multiple times, potentially by different entities.
 
 HTTP Message Component:
 : A portion of an HTTP message that is capable of being covered by an HTTP Message Signature.
 
+Derived Component:
+: An HTTP Message Component derived from the HTTP message through the use of a specified algorithm or process. See {{derived-components}}.
+
 HTTP Message Component Name:
-: A name that identifies an HTTP Message Component.
+: A string that identifies an HTTP Message Component's source, such as a field name or derived component name.
 
 HTTP Message Component Identifier:
 : The combination of an HTTP Message Component Name and any parameters that uniquely identifies a specific HTTP Message Component in respect to a particular HTTP Message Signature and the HTTP Message it applies to.
@@ -186,7 +156,7 @@ Covered Components:
 : An ordered set of HTTP message component identifiers for fields ({{http-header}}) and derived components ({{derived-components}}) that indicates the set of message components covered by the signature, never including the `@signature-params` identifier itself. The order of this set is preserved and communicated between the signer and verifier to facilitate reconstruction of the signature base.
 
 Signature Base:
-: The sequence of bytes processed by the cryptographic algorithm to produce or verify the HTTP Message Signature. The signature base is generated by the signer and verifier using the covered components set and the HTTP Message.
+: The sequence of bytes generated by the signer and verifier using the covered components set and the HTTP Message. The signature base is processed by the cryptographic algorithm to produce or verify the HTTP Message Signature.
 
 HTTP Message Signature Algorithm:
 : A cryptographic algorithm that describes the signing and verification process for the signature, defined in terms of the `HTTP_SIGN` and `HTTP_VERIFY` primitives described in {{signature-methods}}.
@@ -202,18 +172,45 @@ Expiration Time:
 
 The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
-This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash '\' to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
+This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash `\` to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
+
+## Requirements
+
+HTTP permits and sometimes requires intermediaries to transform messages in a variety of ways. This can result in a recipient receiving a message that is not bitwise-equivalent to the message that was originally sent. In such a case, the recipient will be unable to verify integrity protections over the raw bytes of the sender's HTTP message, as verifying digital signatures or MACs requires both signer and verifier to have the exact same signature base. Since the exact raw bytes of the message cannot be relied upon as a reliable source for a signature base, the signer and verifier have to independently create the signature base from their respective versions of the message, via a mechanism that is resilient to safe changes that do not alter the meaning of the message.
+
+For a variety of reasons, it is impractical to strictly define what constitutes a safe change versus an unsafe one. Applications use HTTP in a wide variety of ways and may disagree on whether a particular piece of information in a message (e.g., the message content, the method, or a particular header field) is relevant. Thus, a general purpose solution needs to provide signers with some degree of control over which message components are signed.
+
+HTTP applications may be running in environments that do not provide complete access to or control over HTTP messages (such as a web browser's JavaScript environment), or may be using libraries that abstract away the details of the protocol (such as [the Java HTTPClient library](https://openjdk.java.net/groups/net/httpclient/intro.html)). These applications need to be able to generate and verify signatures despite incomplete knowledge of the HTTP message.
+
+## HTTP Message Transformations {#transforms}
+
+As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways. Implementations are required to tolerate many of these transformations. What follows is a non-normative and non-exhaustive list of transformations that could occur under HTTP, provided as context:
+
+- Re-ordering of header fields with different header field names ({{Section 5.3 of HTTP}}).
+- Combination of header fields with the same field name ({{Section 5.2 of HTTP}}).
+- Removal of header fields listed in the Connection header field ({{Section 7.6.1 of HTTP}}).
+- Addition of header fields that indicate control options ({{Section 7.6.1 of HTTP}}).
+- Addition or removal of a transfer coding ({{Section 7.7 of HTTP}}).
+- Addition of header fields such as `Via` ({{Section 7.6.3 of HTTP}}) and `Forwarded` ({{Section 4 of RFC7239}}).
+- Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
+- Changes in casing (e.g., "Origin" to "origin") of any case-insensitive components such as field names, request URI scheme, or host.
+- Addition or removal of leading or trailing whitespace to a field value.
+- Addition or removal of `obs-folds` from field values.
+- Changes to the request target and authority that when applied together do not
+    result in a change to the message's target URI, as defined in {{Section 7.1 of HTTP}}.
+
+We can identify these types of transformations as ones that should not prevent signature verification, even when performed on message components covered by the signature. Additionally, all changes to components not covered by the signature should not prevent signature verification.
 
 ## Application of HTTP Message Signatures {#application}
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
-- The set of [component identifiers](#covered-content) that are expected and required. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header to be present and covered.
-- A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means.
+- The set of [component identifiers](#covered-content) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header to be present and covered.
+- A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means such as pre-registration of a signer's key.
 - A means of determining the signature algorithm used to verify the signature is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
 
-An application using signatures also has to ensure that the verifier will have access to all required information to re-create the signature base. For example, a server behind a reverse proxy would need to know the original request URI to make use of identifiers like `@target-uri`. Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions, including any portions of the request that were signed by the server.
+When choosing these parameters, an application of HTTP message signatures has to ensure that the verifier will have access to all required information needed to re-create the signature base. For example, a server behind a reverse proxy would need to know the original request URI to make use of the derived component `@target-uri`, even though the apparent target URI would be changed by the reverse proxy. Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions of the message, including any portions of the request that were signed by the server using the related-response parameter.
 
 The details of this kind of profiling are the purview of the application and outside the scope of this specification, however some additional considerations are discussed in {{security}}.
 
@@ -223,11 +220,11 @@ In order to allow signers and verifiers to establish which components are covere
 
 A component identifier is composed of a component name and any parameters associated with that name. Each component name is either an HTTP field name {{http-header}} or a registered derived component name {{derived-components}}. The possible parameters for a component identifier are dependent on the component identifier, and a registry cataloging all possible parameters is defined in {{param-registry}}.
 
-Within a single list of covered components, each component identifier MUST be distinct from every other component identifier. One component identifier is distinct from another if either the component name or its parameters differ. Multiple component identifiers having the same component name MAY be included if they have parameters that make them distinct. The order of parameters MUST be preserved when processing a component identifier (such as when parsing during verification), but the order of parameters is not significant when comparing two component identifiers for equality.
+Within a single list of covered components, each component identifier MUST occur only once. One component identifier is distinct from another if either the component name or its parameters differ. Multiple component identifiers having the same component name MAY be included if they have parameters that make them distinct. The order of parameters MUST be preserved when processing a component identifier (such as when parsing during verification), but the order of parameters is not significant when comparing two component identifiers for equality. That is to say, `"foo";bar;baz` cannot be in the same message as `"foo";baz;bar`, since these two component identifiers are equivalent, but a system processing one form is not allowed to transform it into the other form.
 
-The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters. Some HTTP message components can undergo transformations that change the bitwise value without altering meaning of the component's value (for example, the merging together of header fields with the same name).  Message component values must therefore be canonicalized before they are signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
+The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters. Some HTTP message components can undergo transformations that change the bitwise value without altering meaning of the component's value (for example, the merging together of header fields with the same name). Message component values must therefore be canonicalized before they are signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
 
-The following sections define component identifier names, their parameters, their associated values, and the canonicalization rules for their values. The method for combining component identifiers into the signature base is defined in {{create-sig-input}}.
+The following sections define component identifier names, their parameters, their associated values, and the canonicalization rules for their values. The method for combining message components into the signature base is defined in {{create-sig-input}}.
 
 ## HTTP Fields {#http-header}
 
@@ -235,14 +232,14 @@ The component name for an HTTP field is the lowercased form of its field name. W
 
 Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}. Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for combination of field values in this manner such that the combined output is unambiguous from multiple inputs. However, the canonicalized component value is never parsed by the message signature process, merely used as part of the signature base in {{create-sig-input}}. Even so, caution needs to be taken when including such fields in signatures, and the `bs` parameter defined in {{http-header-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
 
-If the combined value is not available for a given header, the following algorithm will produce canonicalized results for an implementation:
+If the combined value is not available for a given field by an implementation, the following algorithm will produce canonicalized results for an implementation:
 
 1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
-3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification.
+3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification which do not allow internal line folding.
 4. Concatenate the list of values together with a single comma (",") and a single space (" ") between each item.
 
-The resulting string is the canonicalized component value.
+The resulting string is the canonicalized component value for the field.
 
 Note that some HTTP fields have values with multiple valid serializations that have equivalent semantics. Applications signing and processing such fields MUST consider how to handle the values of such fields to ensure that the signer and verifier can derive the same value, as discussed in {{security-field-values}}.
 
@@ -297,25 +294,25 @@ Any HTTP field component identifiers MAY have the following parameters in specif
 of the structured field value. {{http-header-structured}}
 
 `key`
-: A string parameter used to select a single member value from a dictionary structured field. {{http-header-dictionary}}
-
-`req`
-: A boolean flag indicating that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to many derived component identifiers. {{content-request-response}}
+: A string parameter used to select a single member value from a Dictionary structured field. {{http-header-dictionary}}
 
 `bs`
-: A boolean flag indicating that the component value is encoded using Byte Sequence data structures before being combined. {{http-header-byte-sequence}}
+: A boolean flag indicating that individual field values are encoded using Byte Sequence data structures before being combined into the component value. {{http-header-byte-sequence}}
 
-Multiple parameters MAY be specified together, though some combinations are redundant or incompatible. For example, the `sf` parameter's functionality is already covered when the `key` parameter is used on a dictionary item. The `bs` parameter, which requires the raw field values from the message, is not compatible with use of the `sf` or `key` parameters, which require the parsed data structures of the field values after combination.
+`req`
+: A boolean flag for signed responses indicating that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to any derived component identifiers that target the request. {{content-request-response}}
 
-Additional parameters MAY be defined in a registry established in {{param-registry}}.
+Multiple parameters MAY be specified together, though some combinations are redundant or incompatible. For example, the `sf` parameter's functionality is already covered when the `key` parameter is used on a dictionary item, since `key` requires strict serialization of the value. The `bs` parameter, which requires the raw field values from the message, is not compatible with use of the `sf` or `key` parameters, which require the parsed data structures of the field values after combination.
 
-### Canonicalized Structured HTTP Fields {#http-header-structured}
+Additional parameters are be defined in a registry established in {{param-registry}}.
+
+### Strict Serialization of HTTP Structured Fields {#http-header-structured}
 
 If the value of the the HTTP field in question is known by the application to be a structured field ({{STRUCTURED-FIELDS}}), and the expected type of the structured field is known, the signer MAY include the `sf` parameter in the component identifier.
 If this parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
 will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
 
-Processing of this parameter MUST occur after multiple field values have been combined into a single List or Dictionary structure.
+If multiple field values occur within a message, these values MUST be combined into a single List or Dictionary structure before serialization.
 
 For example, the following dictionary field is a valid serialization:
 
@@ -341,9 +338,9 @@ The resulting string is used as the component value in {{http-header}}.
 
 If a given field is known by the application to be a Dictionary structured field, an individual member in the value of that Dictionary is identified by using the parameter `key` and the Dictionary member key as a String value.
 
-Processing of this parameter MUST occur after multiple field values have been combined into a single List or Dictionary structure.
+If multiple field values occur within a message, these values MUST be combined into a single Dictionary structure before serialization.
 
-An individual member value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of STRUCTURED-FIELDS}} on the `member_value` and its parameters, without the dictionary key. Specifically, the value is serialized as an Item or Inner List (the two possible values of a Dictionary member).
+An individual member value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of STRUCTURED-FIELDS}} on the `member_value` and its parameters, not including the dictionary key itself. Specifically, the value is serialized as an Item or Inner List (the two possible values of a Dictionary member).
 
 Each parameterized key for a given field MUST NOT appear more than once in the signature base. Parameterized keys MAY appear in any order in the signature base, regardless of the order they occur in the source Dictionary.
 
@@ -364,16 +361,15 @@ The following example shows canonicalized values for different component identif
 "example-dict";key="c": (a b c)
 ~~~
 
-Note that the value for `key="c"` has been re-serialized according to the strict `member_value` algorithm.
-
+Note that the value for `key="c"` has been re-serialized according to the strict `member_value` algorithm, and the value for `key="d"` has been serialized as a Boolean value.
 
 ### Binary-wrapped HTTP Fields {#http-header-byte-sequence}
 
 If the value of the the HTTP field in question is known by the application to cause problems with serialization, particularly with the combination of multiple values into a single line as discussed in {{security-non-list}}, the signer SHOULD include the `bs` parameter in a component identifier to indicate the values of the fields need to be wrapped as binary structures before being combined.
 
-If this parameter is included with a component identifier, the component value is calculated using the following algorithm:
+If this parameter is included with a component identifier, the component value MUST be calculated using the following algorithm:
 
-0. Let the input be the ordered set of values for a field.
+0. Let the input be the ordered set of values for a field, in the order they appear in the message.
 1. Create an empty List for accumulating processed field values.
 2. For each field value in the set:
     0. Strip leading and trailing whitespace from the field value. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
@@ -390,19 +386,19 @@ Example-Header: value, with, lots
 Example-Header: of, commas
 ~~~
 
-If included in the signature base without parameters, its value would be:
-
-~~~
-"example-header": value, with, lots, of, commas
-~~~
-
-This is problematic because the same component value is created with the semantically distinct single field:
+In our example, the same field can be sent with a semantically different single value:
 
 ~~~ http-message
 Example-Header: value, with, lots, of, commas
 ~~~
 
-However, if the `bs` parameter is added, the value is encoded and serialized as follows:
+Both of these versions are treated differently by the application. however, if included in the signature base without parameters, the component value would be the same in both cases:
+
+~~~
+"example-header": value, with, lots, of, commas
+~~~
+
+However, if the `bs` parameter is added, the two separate instances are encoded and serialized as follows:
 
 ~~~
 "example-header";bs: :dmFsdWUsIHdpdGgsIGxvdHM=:, :b2YsIGNvbW1hcw==:
@@ -414,11 +410,11 @@ For the single-instance field above, the encoding with the `bs` parameter is:
 "example-header";bs: :dmFsdWUsIHdpdGgsIGxvdHMsIG9mLCBjb21tYXM=:
 ~~~
 
-This component value is distinct from the multiple-instance field above.
+This component value is distinct from the multiple-instance field above, preventing a collision which could potentially be exploited.
 
 ## Derived Components {#derived-components}
 
-In addition to HTTP fields, there are a number of different components that can be derived from the control data, processing context, or other aspects of the HTTP message being signed. Such derived components can be included in the signature base by defining a component name, possible parameters, and the derivation method for its component value.
+In addition to HTTP fields, there are a number of different components that can be derived from the control data, processing context, or other aspects of the HTTP message being signed. Such derived components can be included in the signature base by defining a component name, possible parameters, message target, and the derivation method for its component value.
 
 Derived component names MUST start with the "at" `@` character. This differentiates derived component names from HTTP field names, which cannot contain the `@` character as per {{Section 5.1 of HTTP}}. Processors of HTTP Message Signatures MUST treat derived component names separately from field names, as discussed in {{security-lazy-header-parser}}.
 
@@ -454,23 +450,23 @@ This specification defines the following derived components:
 @status
 : The status code for a response. ({{content-status-code}}).
 
-Additional derived component names MAY be defined and registered in the HTTP Signatures Derived Component Name Registry. ({{content-registry}})
+Additional derived component names are defined in the HTTP Signatures Derived Component Name Registry. ({{content-registry}})
 
 Derived component values are taken from the context of the target message for the signature. This context includes information about the message itself, such as its control data, as well as any additional state and context held by the signer. In particular, when signing a response, the signer can include any derived components from the originating request by using the [request-response signature binding parameter](#content-request-response).
 
 request:
-: Values derived from and results applied to an HTTP request message as described in {{Section 3.4 of HTTP}}.
+: Values derived from and results applied to an HTTP request message as described in {{Section 3.4 of HTTP}}. If the target message of the signature is a response, using the `req` parameter allows a request-targeted derived component to be included in the signature (see {{content-request-response}}).
 
 response:
 : Values derived from and results applied to an HTTP response message as described in {{Section 3.4 of HTTP}}.
 
-A derived component definition MUST define all target messages to which it can be applied.
+A derived component definition MUST define all target message types to which it can be applied.
 
-Derived component values MUST be limited to printable characters and spaces and MUST NOT contain any newline characters.
+Derived component values MUST be limited to printable characters and spaces and MUST NOT contain any newline characters. Derived component values MUST NOT start or end with whitespace characters.
 
 ### Signature Parameters {#signature-params}
 
-HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and verification, consisting of the ordered set of covered components and the ordered set of parameters including a timestamp of signature creation, identifiers for verification key material, and other utilities. This metadata is represented by a special derived component for signature parameters, and it is treated slightly differently from other covered components.
+HTTP Message Signatures have metadata properties that provide information regarding the signature's generation and verification, consisting of the ordered set of covered components and the ordered set of parameters including a timestamp of signature creation, identifiers for verification key material, and other utilities. This metadata is represented by a special derived component for signature parameters, and it is treated slightly differently from other derived components. Specifically, the signature parameters message component is REQUIRED as the last line of the [signature base](#create-sig-input), and the component identifier MUST NOT be enumerated within the set of covered components for any signature, including itself.
 
 The signature parameters component name is `@signature-params`.
 
@@ -482,7 +478,7 @@ The signature parameters component value is the serialization of the signature p
 * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as a String value.
 * `keyid`: The identifier for the key material as a String value.
 
-Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents). Note that there is no general ordering to the parameters, but once an ordering is chosen for a given set of signature parameters it cannot be changed without altering the signature parameters value.
+Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents). Note that there is no general ordering to the parameters, but once an ordering is chosen for a given set of parameters, it cannot be changed without altering the signature parameters value.
 
 The signature parameters component value is serialized as a parameterized Inner List using the rules in {{Section 4 of STRUCTURED-FIELDS}} as follows:
 
@@ -497,8 +493,6 @@ The signature parameters component value is serialized as a parameterized Inner 
 Note that the Inner List serialization from {{Section 4.1.1.1 of STRUCTURED-FIELDS}} is used for the covered component value instead of the List serialization from {{Section 4.1.1 of STRUCTURED-FIELDS}}
 in order to facilitate parallelism with this value's inclusion in the Signature-Input field,
 as discussed in {{signature-input-header}}.
-
-This derived component's value is REQUIRED as the last line of the [signature base](#create-sig-input), and the component identifier MUST NOT be enumerated within the set of covered components for any signature parameters set, including itself.
 
 This example shows the serialized component value for the parameters of an example message signature:
 
@@ -515,7 +509,6 @@ Note that an HTTP message could contain [multiple signatures](#signature-multipl
 ### Method {#content-request-method}
 
 The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
-If used, the `@method` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
 
@@ -539,7 +532,6 @@ And the following signature base line:
 ### Target URI {#content-target-uri}
 
 The `@target-uri` derived component refers to the target URI of a request message. The component value is the full absolute target URI of the request, potentially assembled from all available parts including the authority and request target as described in {{HTTP, Section 7.1}}.
-If used, the `@target-uri` component identifier MUST occur only once in the covered components.
 
 For example, the following message sent over HTTPS:
 
@@ -562,9 +554,8 @@ And the following signature base line:
 
 ### Authority {#content-request-authority}
 
-The `@authority` derived component refers to the authority component of the target URI of the HTTP request message, as defined in {{HTTP, Section 7.2}}. In HTTP 1.1, this is usually conveyed using the `Host` header, while in HTTP 2 and HTTP 3 it is conveyed using the `:authority` pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
+The `@authority` derived component refers to the authority component of the target URI of the HTTP request message, as defined in {{HTTP, Section 7.2}}. In HTTP 1.1, this is usually conveyed using the Host header, while in HTTP 2 and HTTP 3 it is conveyed using the :authority pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
 The component value MUST be normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, the host name is normalized to lowercase and the default port is omitted.
-If used, the `@authority` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
 
@@ -585,14 +576,13 @@ And the following signature base line:
 "@authority": www.example.com
 ~~~
 
-The `@authority` derived component SHOULD be used instead of signing the `Host` header directly, see {{security-not-fields}}.
+The `@authority` derived component SHOULD be used instead of signing the Host header directly, see {{security-not-fields}}.
 
 ### Scheme {#content-request-scheme}
 
-The `@scheme` derived component refers to the scheme of the target URL of the HTTP request message. The component value is the scheme as a string as defined in {{HTTP, Section 4.2}}.
+The `@scheme` derived component refers to the scheme of the target URL of the HTTP request message. The component value is the scheme as a lowercase string as defined in {{HTTP, Section 4.2}}.
 While the scheme itself is case-insensitive, it MUST be normalized to lowercase for
 inclusion in the signature base.
-If used, the `@scheme` component identifier MUST occur only once in the covered components.
 
 For example, the following request message requested over plain HTTP:
 
@@ -618,7 +608,6 @@ And the following signature base line:
 The `@request-target` derived component refers to the full request target of the HTTP request message,
 as defined in {{HTTP, Section 7.1}}. The component value of the request target can take different forms,
 depending on the type of request, as described below.
-If used, the `@request-target` component identifier MUST occur only once in the covered components.
 
 For HTTP 1.1, the component value is equivalent to the request target
 portion of the request line. However, this value is more difficult to reliably construct in
@@ -703,7 +692,6 @@ And the following signature base line:
 ### Path {#content-request-path}
 
 The `@path` derived component refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
-If used, the `@path` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
 
@@ -727,7 +715,6 @@ And the following signature base line:
 ### Query {#content-request-query}
 
 The `@query` derived component refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, percent-encoded octets are decoded.
-If used, the `@query` component identifier MUST occur only once in the covered components.
 
 For example, the following request message:
 
@@ -825,7 +812,6 @@ in separate signature base lines in the order in which the parameters occur in t
 ### Status Code {#content-status-code}
 
 The `@status` derived component refers to the three-digit numeric HTTP status code of a response message as defined in {{HTTP, Section 15}}. The component value is the serialized three-digit integer of the HTTP status code, with no descriptive text.
-If used, the `@status` component identifier MUST occur only once in the covered components.
 
 For example, the following response message:
 
@@ -944,7 +930,7 @@ The `req` parameter MUST NOT be used in a signature that targets a request messa
 
 ## Creating the Signature Base {#create-sig-input}
 
-The signature base is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the list of covered component identifiers and their associated values, along with any additional signature parameters.
+The signature base is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the ordered set of covered component identifiers and their associated values, along with any additional signature parameters discussed in {{signature-params}}.
 
 Component identifiers are serialized using the production grammar defined by {{STRUCTURED-FIELDS, Section 4}}.
 The component identifier has a component name, which is a String Item value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` ABNF rule. The signature parameters line defined in {{signature-params}} follows this same pattern, but the component identifier is a String Item with a fixed value and no parameters, and the component value is always an Inner List with optional parameters.
@@ -964,7 +950,7 @@ signature-params-line = DQUOTE "@signature-params" DQUOTE
      ":" SP inner-list
 ~~~
 
-To create the signature base, the signer or verifier concatenates together entries for each component identifier in the signature's covered components (including their parameters) using the following algorithm. All errors produced as described immediately MUST fail the algorithm and there is no signature output base created.
+To create the signature base, the signer or verifier concatenates together entries for each component identifier in the signature's covered components (including their parameters) using the following algorithm. All errors produced as described immediately MUST fail the algorithm with no signature output base output.
 
 1. Let the output be an empty string.
 
@@ -979,6 +965,12 @@ To create the signature base, the signer or verifier concatenates together entri
     4. Determine the component value for the component identifier.
 
         - If the component identifier has a parameter that is not understood, produce an error.
+        
+        - If the component identifier has several incompatible parameters, such as `bs` and `sf`, produce an error.
+        
+        - If the component identifier contains the `req` parameter and the target message is a request, produce an error.
+
+        - If the component identifier contains the `req` parameter and the target message is a response, the context for the component value is the related request message of the target response message. Otherwise, the context for the component value is the target message.
 
         - If the component name starts with an "at" character (`@`), derive the component's value from the message according to the specific rules defined for the derived component, as in {{derived-components}}, including processing of any known valid parameters. If the derived component name is unknown or the value cannot be derived, produce an error.
 
@@ -988,7 +980,7 @@ To create the signature base, the signer or verifier concatenates together entri
 
     6. Append a single newline `\n`
 
-3. Append the signature parameters component ({{signature-params}}) according to the `signature-params-line` as follows:
+3. Append the signature parameters component ({{signature-params}}) according to the `signature-params-line` rule as follows:
 
     1. Append the component identifier for the signature parameters serialized according to the `component-identifier` rule, i.e. the exact value `"@signature-params"` (including double quotes)
 
@@ -1025,7 +1017,7 @@ Content-Length: 18
 {"hello": "world"}
 ~~~
 
-The covered components consist of the `@method`, `@authority`, and `@path` derived components followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is assumed by the application to correctly use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
+The covered components consist of the `@method`, `@authority`, and `@path` derived components followed by the `Content-Digest`, `Content-Length`, and `Content-Type` HTTP header fields, in order. The signature parameters consist of a creation timestamp of `1618884473` and a key identifier of `test-key-rsa-pss`. Note that no explicit `alg` parameter is given here since the verifier is known by the application to use the RSA PSS algorithm based on the identified key. The signature base for this message with these parameters is:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1068,7 +1060,7 @@ In order to create a signature, a signer MUST follow the following algorithm:
    * Each covered component identifier MUST be either an HTTP field in the message context {{http-header}} or a derived component listed in {{derived-components}} or its associated registry.
    * Signers of a request SHOULD include some or all of the message control data in the covered components, such as the `@method`, `@authority`, `@target-uri`, or some combination thereof.
    * Signers SHOULD include the `created` signature metadata parameter to indicate when the signature was created.
-   * The `@signature-params` derived component identifier MUST NOT be listed in the list of covered component identifiers. The derived component is required to always be the last line in the signature base. This practice ensures that a signature always covers its own metadata and the metadata cannot be substituted.
+   * The `@signature-params` derived component identifier MUST NOT be listed in the list of covered component identifiers. The derived component is required to always be the last line in the signature base, ensuring that a signature always covers its own metadata and the metadata cannot be substituted.
    * Further guidance on what to include in this set and in what order is out of scope for this document.
 
 5. The signer creates the signature base using these parameters and the signature base creation algorithm. ({{create-sig-input}})
@@ -1095,7 +1087,7 @@ Note that the RSA PSS algorithm in use here is non-deterministic, meaning a diff
 
 ## Verifying a Signature {#verify}
 
-Verification of an HTTP message signature is a process that takes as its input the message (including Signature and Signature-Input fields) and the requirements for the application. The output of the verification is either a positive verification or an error.
+Verification of an HTTP message signature is a process that takes as its input the message context (including Signature and Signature-Input fields) and the requirements for the application. The output of the verification is either a positive verification or an error.
 
 In order to verify a signature, a verifier MUST follow the following algorithm:
 
@@ -1119,18 +1111,18 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
 6. Determine the algorithm to apply for verification:
     1. If the algorithm is known through external means such as static configuration or external protocol
         negotiation, the verifier will use this algorithm.
-    2. If the algorithm is explicitly stated in the signature parameters using a value from the
-        HTTP Message Signatures registry, the verifier will use the referenced algorithm.
-    3. If the algorithm can be determined from the keying material, such as through an algorithm field
+    2. If the algorithm can be determined from the keying material, such as through an algorithm field
         on the key value itself, the verifier will use this algorithm.
+    3. If the algorithm is explicitly stated in the signature parameters using a value from the
+        HTTP Message Signatures registry, the verifier will use the referenced algorithm.
     4. If the algorithm is specified in more than one location, such as through static configuration
         and the algorithm signature parameter, or the algorithm signature parameter and from
         the key material itself, the resolved algorithms MUST be the same. If the algorithms are
         not the same, the verifier MUST fail the verification.
-7. Use the received HTTP message and the signature's metadata to recreate the signature base, using
+7. Use the received HTTP message and the parsed signature parameters to re-create the signature base, using
     the algorithm defined in {{create-sig-input}}. The value of the `@signature-params` input is
     the value of the Signature-Input field for this signature serialized according to the rules described
-    in {{signature-params}}, not including the signature's label from the Signature-Input field.
+    in {{signature-params}}. Note that this does not include the signature's label from the Signature-Input field.
 8. If the key material is appropriate for the algorithm, apply the appropriate `HTTP_VERIFY` cryptographic verification algorithm to the signature,
     recalculated signature base, key material, signature value. The `HTTP_VERIFY` primitive and several concrete algorithms are defined in
     {{signature-methods}}.
@@ -1167,11 +1159,11 @@ With the additional requirements that at least the method, authority, path, cont
 
 ### Enforcing Application Requirements {#verify-requirements}
 
-The verification requirements specified in this document are intended as a baseline set of restrictions that are generally applicable to all use cases.  Applications using HTTP Message Signatures MAY impose requirements above and beyond those specified by this document, as appropriate for their use case.
+The verification requirements specified in this document are intended as a baseline set of restrictions that are generally applicable to all use cases. Applications using HTTP Message Signatures MAY impose requirements above and beyond those specified by this document, as appropriate for their use case.
 
 Some non-normative examples of additional requirements an application might define are:
 
-- Requiring a specific set of header fields to be signed (e.g., `Authorization`, `Digest`).
+- Requiring a specific set of header fields to be signed (e.g., Authorization, Digest).
 - Enforcing a maximum signature age from the time of the `created` time stamp.
 - Rejection of signatures past the expiration time in the `expires` time stamp. Note that the expiration time is a hint from the signer and that a verifier can always reject a signature ahead of its expiration time.
 - Prohibition of certain signature metadata parameters, such as runtime algorithm signaling with the `alg` parameter when the algorithm is determined from the key information.
@@ -1180,9 +1172,9 @@ Some non-normative examples of additional requirements an application might defi
 - Requiring keys to be of a certain size (e.g., 2048 bits vs. 1024 bits).
 - Enforcing uniqueness of a `nonce` value.
 
-Application-specific requirements are expected and encouraged.  When an application defines additional requirements, it MUST enforce them during the signature verification process, and signature verification MUST fail if the signature does not conform to the application's requirements.
+Application-specific requirements are expected and encouraged. When an application defines additional requirements, it MUST enforce them during the signature verification process, and signature verification MUST fail if the signature does not conform to the application's requirements.
 
-Applications MUST enforce the requirements defined in this document.  Regardless of use case, applications MUST NOT accept signatures that do not conform to these requirements.
+Applications MUST enforce the requirements defined in this document. Regardless of use case, applications MUST NOT accept signatures that do not conform to these requirements.
 
 ## Signature Algorithm Methods {#signature-methods}
 
@@ -1513,7 +1505,7 @@ IANA is requested to create three registries and to populate those registries wi
 
 ## HTTP Signature Algorithms Registry {#hsa-registry}
 
-This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms".  Initial values for this registry are given in {{iana-hsa-contents}}.  Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-hsa-template}}.
+This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms". Initial values for this registry are given in {{iana-hsa-contents}}. Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-hsa-template}}.
 
 Algorithms referenced by algorithm identifiers have to be fully defined with all parameters fixed. Algorithm identifiers in this registry are to be interpreted as whole string values and not as a combination of parts. That is to say, it is expected that implementors understand `rsa-pss-sha512` as referring to one specific algorithm with its hash, mask, and salt values set as defined here. Implementors do not parse out the `rsa`, `pss`, and `sha512` portions of the identifier to determine parameters of the signing algorithm from the string.
 
@@ -1523,18 +1515,18 @@ Algorithms added to this registry MUST NOT be aliases for other entries in the r
 
 {: vspace="0"}
 Algorithm Name:
-: An identifier for the HTTP Signature Algorithm. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The identifier MUST be unique within the context of the registry.
+: An identifier for the HTTP Signature Algorithm. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length. The identifier MUST be unique within the context of the registry.
 
 Description:
 : A brief description of the algorithm used to sign the signature base.
 
 Status:
-: A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
+: A brief text description of the status of the algorithm. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
 Specification document(s):
 : Reference to the document(s) that specify the
     algorithm, preferably including a URI that can be used
-    to retrieve a copy of the document(s).  An indication of the
+    to retrieve a copy of the document(s). An indication of the
     relevant sections may also be included but is not required.
 
 ### Initial Contents {#iana-hsa-contents}
@@ -1549,13 +1541,13 @@ Specification document(s):
 
 ## HTTP Signature Metadata Parameters Registry {#param-registry}
 
-This document defines the signature parameters structure, the values of which may have parameters containing metadata about a message signature. IANA is asked to create and maintain a new registry titled "HTTP Signature Metadata Parameters" to record and maintain the set of parameters defined for use with member values in the signature parameters structure. Initial values for this registry are given in {{iana-param-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-param-template}}.
+This document defines the signature parameters structure, the values of which may have parameters containing metadata about a message signature. IANA is asked to create and maintain a new registry titled "HTTP Signature Metadata Parameters" to record and maintain the set of parameters defined for use with member values in the signature parameters structure. Initial values for this registry are given in {{iana-param-contents}}. Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-param-template}}.
 
 ### Registration Template {#iana-param-template}
 
 {: vspace="0"}
 Name:
-: An identifier for the HTTP signature metadata parameter. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The identifier MUST be unique within the context of the registry.
+: An identifier for the HTTP signature metadata parameter. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length. The identifier MUST be unique within the context of the registry.
 
 Description:
 : A brief description of the metadata parameter and what it represents.
@@ -1563,13 +1555,13 @@ Description:
 Specification document(s):
 : Reference to the document(s) that specify the
     parameter, preferably including a URI that can be used
-    to retrieve a copy of the document(s).  An indication of the
+    to retrieve a copy of the document(s). An indication of the
     relevant sections may also be included but is not required.
 
 
 ### Initial Contents {#iana-param-contents}
 
-The table below contains the initial contents of the HTTP Signature Metadata Parameters Registry.  Each row in the table represents a distinct entry in the registry.
+The table below contains the initial contents of the HTTP Signature Metadata Parameters Registry. Each row in the table represents a distinct entry in the registry.
 
 |Name|Description|Specification document(s)|
 |--- |--- |--- |
@@ -1582,19 +1574,19 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 
 ## HTTP Signature Derived Component Names Registry {#content-registry}
 
-This document defines a method for canonicalizing HTTP message components, including components that can be derived from the context of the HTTP message outside of the HTTP fields. These derived components are identified by a unique string, known as the component name. Component names for derived components always start with the "@" (at) symbol to distinguish them from HTTP header fields. IANA is asked to create and maintain a new registry typed "HTTP Signature Derived Component Names" to record and maintain the set of non-field component names and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
+This document defines a method for canonicalizing HTTP message components, including components that can be derived from the context of the HTTP message outside of the HTTP fields. These derived components are identified by a unique string, known as the component name. Component names for derived components always start with the "@" (at) symbol to distinguish them from HTTP header fields. IANA is asked to create and maintain a new registry typed "HTTP Signature Derived Component Names" to record and maintain the set of non-field component names and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}. Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
 
 ### Registration Template {#iana-content-template}
 
 {: vspace="0"}
 Name:
-: A name for the HTTP derived component. The name MUST begin with the `"@"` character followed by an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length.  The name MUST be unique within the context of the registry.
+: A name for the HTTP derived component. The name MUST begin with the `"@"` character followed by an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length. The name MUST be unique within the context of the registry.
 
 Description:
 : A description of the derived component.
 
 Status:
-: A brief text description of the status of the algorithm.  The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
+: A brief text description of the status of the algorithm. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
 Target:
 : The valid message targets for the derived parameter. MUST be one of the values "Request", "Response", or "Request, Response". The semantics of these are defined in {{derived-components}}.
@@ -1602,7 +1594,7 @@ Target:
 Specification document(s):
 : Reference to the document(s) that specify the
     derived component, preferably including a URI that can be used
-    to retrieve a copy of the document(s).  An indication of the
+    to retrieve a copy of the document(s). An indication of the
     relevant sections may also be included but is not required.
 
 ### Initial Contents {#iana-content-contents}
@@ -1625,13 +1617,13 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 
 ## HTTP Signature Component Parameters Registry {#component-param-registry}
 
-This document defines several kinds of component identifiers, some of which can be parameterized in specific circumstances to provide unique modified behavior. IANA is asked to create and maintain a new registry typed "HTTP Signature Component Parameters" to record and maintain the set of parameters names, the component identifiers they are associated with, and the modifications these parameters make to the component value. Initial values for this registry are given in {{iana-component-param-contents}}.  Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-component-param-template}}.
+This document defines several kinds of component identifiers, some of which can be parameterized in specific circumstances to provide unique modified behavior. IANA is asked to create and maintain a new registry typed "HTTP Signature Component Parameters" to record and maintain the set of parameters names, the component identifiers they are associated with, and the modifications these parameters make to the component value. Definitions of parameters MUST define the targets to which they apply and any incompatibilities with other parameters known at the time of definition. Initial values for this registry are given in {{iana-component-param-contents}}. Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-component-param-template}}.
 
 ### Registration Template {#iana-component-param-template}
 
 {: vspace="0"}
 Name:
-: A name for the parameter. The name MUST be an ASCII string that conforms to the `key` ABNF rule defined in {{STRUCTURED-FIELDS}} and SHOULD NOT exceed 20 characters in length.  The name MUST be unique within the context of the registry.
+: A name for the parameter. The name MUST be an ASCII string that conforms to the `key` ABNF rule defined in {{STRUCTURED-FIELDS}} and SHOULD NOT exceed 20 characters in length. The name MUST be unique within the context of the registry.
 
 Description:
 : A description of the parameter's function.
@@ -1639,26 +1631,23 @@ Description:
 Status:
 : A brief text description of the status of the parameter. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
 
-Target:
-: The applicable component identifiers for the parameter. Can be a combination of one or more derived component identifiers as described in {{derived-components}}, one or more specific HTTP field names, the special value "Field Value" meaning all HTTP fields, or a separate human-readable description of the target.
-
 Specification document(s):
 : Reference to the document(s) that specify the
     derived component, preferably including a URI that can be used
-    to retrieve a copy of the document(s).  An indication of the
+    to retrieve a copy of the document(s). An indication of the
     relevant sections may also be included but is not required.
 
 ### Initial Contents {#iana-component-param-contents}
 
 The table below contains the initial contents of the HTTP Signature Derived Component Names Registry.
 
-|Name|Description|Status|Target|Specification document(s)|
+|Name|Description|Status|Specification document(s)|
 |--- |--- |--- |--- |--- |
-|`key`| Single key value of dictionary structured fields | Active | Dictionary structured fields | {{http-header-dictionary}} of {{&SELF}}|
+|`sf`| Strict structured field serialization | Active | {{http-header-structured}} of {{&SELF}}|
+|`key`| Single key value of dictionary structured fields | Active | {{http-header-dictionary}} of {{&SELF}}|
+|`bs`| Byte Sequence wrapping indicator | Active | {{http-header-byte-sequence}} of {{&SELF}}|
+|`req`| Related request indicator | Active | {{content-request-scheme}} of {{&SELF}}|
 |`name`| Single named query parameter | Active | `@query-param` | {{content-request-query-param}} of {{&SELF}}|
-|`sf`| Strict structured field serialization | Active | Structured fields of known type | {{http-header-structured}} of {{&SELF}}|
-|`req`| Related request indicator | Active | Derived component identifiers with a target of Request or any field | {{content-request-scheme}} of {{&SELF}}|
-|`bs`| Byte Sequence wrapping indicator | Active | Any field | {{http-header-byte-sequence}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Component Parameters Registry." }
 
 # Security Considerations {#security}
@@ -1932,7 +1921,7 @@ The private keys given can be used to generate signatures, though since several 
 
 ## Example Keys {#example-keys}
 
-This section provides cryptographic keys that are referenced in example signatures throughout this document.  These keys MUST NOT be used for any purpose other than testing.
+This section provides cryptographic keys that are referenced in example signatures throughout this document. These keys MUST NOT be used for any purpose other than testing.
 
 The key identifiers for each key are used throughout the examples in this specification. It is assumed for these examples that the signer and verifier can unambiguously dereference all key identifiers used here, and that the keys and algorithms used are appropriate for the context in which the signature is presented.
 
@@ -2424,7 +2413,7 @@ The internal service can validate the proxy's signature and therefore be able to
 # Acknowledgements {#acknowledgements}
 {:numbered="false"}
 
-This specification was initially based on the draft-cavage-http-signatures internet draft.  The editors would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions. The specification also includes contributions from the draft-oauth-signed-http-request internet draft and other similar efforts.
+This specification was initially based on the draft-cavage-http-signatures internet draft. The editors would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions. The specification also includes contributions from the draft-oauth-signed-http-request internet draft and other similar efforts.
 
 The editors would also like to thank the following individuals for feedback, insight, and implementation of this draft and its predecessors (in alphabetical order):
 Mark Adamcin,
