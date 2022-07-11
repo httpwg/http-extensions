@@ -968,9 +968,9 @@ To create the signature base, the signer or verifier concatenates together entri
     4. Determine the component value for the component identifier.
 
         - If the component identifier has a parameter that is not understood, produce an error.
-        
+
         - If the component identifier has several incompatible parameters, such as `bs` and `sf`, produce an error.
-        
+
         - If the component identifier contains the `req` parameter and the target message is a request, produce an error.
 
         - If the component identifier contains the `req` parameter and the target message is a response, the context for the component value is the related request message of the target response message. Otherwise, the context for the component value is the target message.
@@ -1181,7 +1181,7 @@ Applications MUST enforce the requirements defined in this document. Regardless 
 
 ## Signature Algorithms {#signature-methods}
 
-An HTTP Message signature MUST use a cryptographic digital signature or MAC method that is 
+An HTTP Message signature MUST use a cryptographic digital signature or MAC method that is
 appropriate for the key material, environment, and needs of the signer and verifier. This specification does not strictly limit the available signature algorithms, and any signature algorithm that meets these basic requirements MAY be used by an application of HTTP message signatures.
 
 Each signing method `HTTP_SIGN` takes as its input the signature base defined in {{create-sig-input}} as a byte array (`M`), the signing key material
