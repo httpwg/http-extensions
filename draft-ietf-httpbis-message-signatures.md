@@ -1556,7 +1556,7 @@ This document defines the signature parameters structure in {{signature-params}}
 
 {: vspace="0"}
 Name:
-: An identifier for the HTTP signature metadata parameter. The name MUST be an ASCII string that conforms to the `key` ABNF rule defined in {{Section 3.1.2 STRUCTURED-FIELDS}} and SHOULD NOT exceed 20 characters in length. The identifier MUST be unique within the context of the registry.
+: An identifier for the HTTP signature metadata parameter. The name MUST be an ASCII string that conforms to the `key` ABNF rule defined in {{Section 3.1.2 of STRUCTURED-FIELDS}} and SHOULD NOT exceed 20 characters in length. The identifier MUST be unique within the context of the registry.
 
 Description:
 : A brief description of the metadata parameter and what it represents.
@@ -1632,7 +1632,7 @@ This document defines several kinds of component identifiers, some of which can 
 
 {: vspace="0"}
 Name:
-: A name for the parameter. The name MUST be an ASCII string that conforms to the `key` ABNF rule defined in {{Section 3.1.2 STRUCTURED-FIELDS}} and SHOULD NOT exceed 20 characters in length. The name MUST be unique within the context of the registry.
+: A name for the parameter. The name MUST be an ASCII string that conforms to the `key` ABNF rule defined in {{Section 3.1.2 of STRUCTURED-FIELDS}} and SHOULD NOT exceed 20 characters in length. The name MUST be unique within the context of the registry.
 
 Description:
 : A description of the parameter's function.
