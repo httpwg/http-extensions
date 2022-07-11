@@ -1717,6 +1717,14 @@ cookie-string from a given cookie store.
      *   The cookie's host-only-flag is false and the canonicalized
          host of the retrieval's URI domain-matches the cookie's domain.
 
+     NOTE: (For user agents configured to reject "public suffixes") It's
+     possible that the public suffix list was changed since a cookie was
+     created. If this change results in a cookie's domain becoming a public
+     suffix then that cookie is considered invalid as it would have been
+     rejected during creation (See {{storage-model}} step 9). User agents
+     should be careful to avoid retrieving these invalid cookies even if they
+     domain-match the host of the retrieval's URI.
+
    * The retrieval's URI's path path-matches the cookie's path.
 
    * If the cookie's secure-only-flag is true, then the retrieval's URI's
@@ -2500,6 +2508,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Add case insensitivity note to Set-Cookie Syntax:
   <https://github.com/httpwg/http-extensions/pull/2167>
+
+* Add note not to send invalid cookies due to public suffix list changes:
+  <https://github.com/httpwg/http-extensions/pull/2215>
 
 # Acknowledgements
 {:numbered="false"}
