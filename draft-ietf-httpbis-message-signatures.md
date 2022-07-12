@@ -1656,7 +1656,7 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 |`key`| Single key value of dictionary structured fields | Active | {{http-header-dictionary}} of {{&SELF}}|
 |`bs`| Byte Sequence wrapping indicator | Active | {{http-header-byte-sequence}} of {{&SELF}}|
 |`req`| Related request indicator | Active | {{content-request-scheme}} of {{&SELF}}|
-|`name`| Single named query parameter | Active | `@query-param` | {{content-request-query-param}} of {{&SELF}}|
+|`name`| Single named query parameter | Active | {{content-request-query-param}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Component Parameters Registry." }
 
 # Security Considerations {#security}
