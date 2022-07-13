@@ -2516,6 +2516,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Add note not to send invalid cookies due to public suffix list changes:
   <https://github.com/httpwg/http-extensions/pull/2215>
 
+* Add warning to not send nameless cookies:
+  <https://github.com/httpwg/http-extensions/pull/2220>
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
