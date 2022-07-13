@@ -525,6 +525,10 @@ NOTE: The name of an attribute-value pair is not case sensitive. So while they
 are presented here in CamelCase, such as "HttpOnly" or "SameSite", any case is
 accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.
 
+Per the grammar above, servers SHOULD NOT produce nameless cookies (i.e.: an
+empty cookie-name) as such cookies may be unpredictably serialized by UAs when
+sent back to the server.
+
 The semantics of the cookie-value are not defined by this document.
 
 To maximize compatibility with user agents, servers that wish to store arbitrary
