@@ -129,14 +129,19 @@ fields; see {{obsolete-3230}}.
 
 This document is structured as follows:
 
-- {{content-digest}} defines the Content-Digest request and response header and trailer field,
-- {{representation-digest}} defines the Repr-Digest request and response header and trailer field,
-- {{want-fields}} defines the Want-Repr-Digest and Want-Content-Digest request and response header and
-  trailer field,
-- {{algorithms}} describes algorithms and their relation to the fields defined in this document,
-- {{state-changing-requests}} details computing representation digests,
-- {{examples-unsolicited}} and {{examples-solicited}} provide examples of using
-  Repr-Digest and Want-Repr-Digest.
+- New request and response header and trailer field definitions.
+  - {{content-digest}} (Content-Digest),
+  - {{representation-digest}} (Repr-Digest), and
+  - {{want-fields}} (Want-Content-Digest and Want-Repr-Digest).
+- Considerations specific to representation data integrity.
+  - {{state-changing-requests}} (State-changing requests),
+  - {{digest-and-content-location}} (Content-Location),
+  - {{resource-representation}} contains worked examples of Representation data
+    in message exchanges, and
+  - {{examples-unsolicited}} and {{examples-solicited}} contain worked examples
+  of Repr-Digest and Want-Repr-Digest fields in message exchanges.
+- {{algorithms}} bootstraps a new IANA registry hash algorithms and defines
+  registration procedures for future entries.
 
 ## Concept Overview
 
@@ -626,7 +631,7 @@ IANA is asked to initialize the registry with the entries in
 The following examples show how representation metadata, payload transformations
 and method impacts on the message and content. When the content
 contains non-printable characters (e.g. when it is compressed) it is shown as
-a Base64-encoded string.
+a sequence of hex-encoded bytes.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
@@ -637,29 +642,50 @@ Content-Type: application/json
 ~~~
 {: title="Request containing a JSON object without any content coding"}
 
+Compression is an efficient way to reduce
+the content length.
+
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Content-Encoding: gzip
 
-H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
+0x1F0x8B0x080x000xA50xB40xBD0x620x020xFF\
+0xAB0x560x4A0x540xB20x520x500x320xA40x03\
+0x500xAA0x050x000x440x470x2A0x7C0x6D0x00\
+0x000x00
 ~~~
-{: title="Request containing a gzip-encoded JSON object"}
+{: title="Request containing a gzip-encoded JSON object" #ex-put-gz}
 
-Now the same content conveys a malformed JSON object, because the request does
-not indicate a content coding.
+Sending the compressed form of the content
+without the correct content coding means that
+the content is malformed.
+In this case, the server can reply with an error.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 
-H4sIAItWyFwC/6tWSlSyUlAypANQqgUAREcqfG0AAAA=
+0x1F0x8B0x080x000xA50xB40xBD0x620x020xFF\
+0xAB0x560x4A0x540xB20x520x500x320xA40x03\
+0x500xAA0x050x000x440x470x2A0x7C0x6D0x00\
+0x000x00
 ~~~
 {: title="Request containing malformed JSON"}
 
-A Range-Request alters the content, conveying a partial representation.
+~~~ http-message
+HTTP/1.1 400 Bad Request
+
+~~~
+{: title="An error response for a malformed content"}
+
+A Range-Request affects the transferred message content,
+conveying a partial representation of the JSON object
+in {{ex-put-gz}}.
 
 ~~~ http-message
 GET /entries/1234 HTTP/1.1
@@ -673,13 +699,14 @@ Range: bytes=1-7
 HTTP/1.1 206 Partial Content
 Content-Encoding: gzip
 Content-Type: application/json
-Content-Range: bytes 1-7/18
+Content-Range: bytes 0-10/32
 
-iwgAla3RXA==
+0x1F0x8B0x080x000xA50xB40xBD0x620x020xFF
 ~~~
 {: title="Partial response from a gzip-encoded representation"}
 
-The method can also alter the content.  For example, the response
+The method can also affect the transferred message content.
+For example, the response
 to a HEAD request does not carry content.
 
 ~~~ http-message
@@ -699,7 +726,7 @@ Content-Encoding: gzip
 ~~~
 {: title="Response to HEAD request (empty content)"}
 
-Finally, the semantics of an HTTP response might decouple the effective request URI
+Finally, the semantics of a response might decouple the target URI
 from the enclosed representation. In the example response below, the
 `Content-Location` header field indicates that the enclosed representation
 refers to the resource available at `/authors/123`, even though the request is
@@ -1028,7 +1055,7 @@ Location: /books/123
 ## Digest with PATCH
 
 This case is analogous to a POST request where the target resource reflects the
-effective request URI.
+target URI.
 
 The PATCH request uses the `application/merge-patch+json` media type defined in
 {{?RFC7396}}.
@@ -1195,8 +1222,14 @@ Repr-Digest: \
 ## Server Does Not Support Client Algorithm and Returns an Error
 
 {{ex-server-selects-unsupported-algorithm}} is an example where a server ignores
-the client's preferred digest algorithm. Alternatively a server can also reject
-the request and return an error.
+the client's preferred digest algorithm.
+Alternatively a server can also reject
+the request and return a response with
+error status code such as 4xx or 5xx.
+This specification does not prescribe
+any requirement on status code selection;
+the follow example illustrates one possible
+option.
 
 In this example, the client requests a "sha" `Repr-Digest`, and the server returns an
 error with problem details {{?RFC7807}} contained in the content. The problem
@@ -1223,6 +1256,7 @@ Content-Type: application/problem+json
 }
 ~~~
 {: title="Response advertising the supported algorithms"}
+
 
 # Migrating from RFC 3230
 

@@ -55,7 +55,7 @@ This document defines a binary format for representing HTTP messages.
 
 This document defines a simple format for representing an HTTP message
 ({{HTTP}}), either request or response. This allows for the encoding of HTTP
-messages that can be conveyed outside of an HTTP protocol. This enables the
+messages that can be conveyed outside an HTTP protocol. This enables the
 transformation of entire messages, including the application of authenticated
 encryption.
 
@@ -93,15 +93,17 @@ This document uses terminology from HTTP ({{HTTP}}) and notation from QUIC
 
 # Format
 
-{{Section 6 of HTTP}} defines five distinct parts to HTTP messages.  A framing
-indicator is added to signal how these parts are composed:
+{{Section 6 of HTTP}} defines the general structure of HTTP messages and
+composes those messages into distinct parts.  This format describes how those
+parts are composed into a sequence of bytes.  At a high level, binary messages
+are comprised of:
 
 1. Framing indicator. This format uses a single integer to describe framing, which describes
    whether the message is a request or response and how subsequent sections are
    formatted; see {{framing}}.
 
-2. For a response, any number of informational responses, each consisting of an
-   informational status code and header section.
+2. For a response, zero or more informational responses.  Each informational
+   response consists of an informational status code and header section.
 
 3. Control data. For a request, this contains the request method and target.
    For a response, this contains the status code.
@@ -567,7 +569,7 @@ phrase is not retained by this encoding.
 A response that uses the chunked encoding (see {{Section 7.1 of MESSAGING}}) as
 shown for {{ex-chunked}} can be encoded using indefinite-length encoding, which
 minimizes buffering needed to translate into the binary format. However, chunk
-boundaries do not need to be retained and any chunk extensions cannot be
+boundaries do not need to be retained, and any chunk extensions cannot be
 conveyed using the binary format; see {{differences}}.
 
 ~~~ http-message
@@ -654,7 +656,7 @@ Required parameters:
 
 Optional parameters:
 
-: None
+: N/A
 
 Encoding considerations:
 
@@ -674,7 +676,8 @@ Published specification:
 
 Applications that use this media type:
 
-: N/A
+: Applications looking to convey HTTP request semantics independent of a
+  specific protocol.
 
 Fragment identifier considerations:
 

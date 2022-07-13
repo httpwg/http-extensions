@@ -1239,24 +1239,26 @@ user agent MUST process the cookie-av as follows.
 If the attribute-name case-insensitively matches the string "Max-Age", the
 user agent MUST process the cookie-av as follows.
 
-1.  If the first character of the attribute-value is not a DIGIT or a "-"
-    character, ignore the cookie-av.
+1.  If the attribute-value is empty, ignore the cookie-av.
 
-2.  If the remainder of attribute-value contains a non-DIGIT character, ignore
+2.  If the first character of the attribute-value is neither a DIGIT, nor a "-"
+    character followed by a DIGIT, ignore the cookie-av.
+
+3.  If the remainder of attribute-value contains a non-DIGIT character, ignore
     the cookie-av.
 
-3.  Let delta-seconds be the attribute-value converted to an integer.
+4.  Let delta-seconds be the attribute-value converted to a base 10 integer.
 
-4.  Let cookie-age-limit be the maximum age of the cookie (which SHOULD be 400 days
+5.  Let cookie-age-limit be the maximum age of the cookie (which SHOULD be 400 days
     or less, see {{attribute-max-age}}).
 
-5.  Set delta-seconds to the smaller of its present value and cookie-age-limit.
+6.  Set delta-seconds to the smaller of its present value and cookie-age-limit.
 
-6.  If delta-seconds is less than or equal to zero (0), let expiry-time be
+7.  If delta-seconds is less than or equal to zero (0), let expiry-time be
     the earliest representable date and time. Otherwise, let the expiry-time
     be the current date and time plus delta-seconds seconds.
 
-7.  Append an attribute to the cookie-attribute-list with an attribute-name
+8.  Append an attribute to the cookie-attribute-list with an attribute-name
     of Max-Age and an attribute-value of expiry-time.
 
 ### The Domain Attribute
@@ -1702,6 +1704,14 @@ cookie-string from a given cookie store.
 
      *   The cookie's host-only-flag is false and the canonicalized
          host of the retrieval's URI domain-matches the cookie's domain.
+
+     NOTE: (For user agents configured to reject "public suffixes") It's
+     possible that the public suffix list was changed since a cookie was
+     created. If this change results in a cookie's domain becoming a public
+     suffix then that cookie is considered invalid as it would have been
+     rejected during creation (See {{storage-model}} step 9). User agents
+     should be careful to avoid retrieving these invalid cookies even if they
+     domain-match the host of the retrieval's URI.
 
    * The retrieval's URI's path path-matches the cookie's path.
 
@@ -2486,6 +2496,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Add case insensitivity note to Set-Cookie Syntax:
   <https://github.com/httpwg/http-extensions/pull/2167>
+
+* Add note not to send invalid cookies due to public suffix list changes:
+  <https://github.com/httpwg/http-extensions/pull/2215>
 
 # Acknowledgements
 {:numbered="false"}
