@@ -521,9 +521,9 @@ Note that some of the grammatical terms above reference documents that use
 different grammatical notations than this document (which uses ABNF from
 {{RFC5234}}).
 
-NOTE: The name of an attribute-value pair is not case sensitive. So while they
-are presented here in CamelCase, such as "HttpOnly" or "SameSite", any case is
-accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.
+Per the grammar above, servers SHOULD NOT produce nameless cookies (i.e.: an
+empty cookie-name) as such cookies may be unpredictably serialized by UAs when
+sent back to the server.
 
 The semantics of the cookie-value are not defined by this document.
 
@@ -531,20 +531,24 @@ To maximize compatibility with user agents, servers that wish to store arbitrary
 data in a cookie-value SHOULD encode that data, for example, using Base64
 {{RFC4648}}.
 
-The domain-value is a subdomain as defined by {{RFC1034}}, Section 3.5, and
-as enhanced by {{RFC1123}}, Section 2.1. Thus, domain-value is a string of
-{{USASCII}} characters, such as one obtained by applying the "ToASCII" operation
-defined in {{Section 4 of RFC3490}}.
-
 Per the grammar above, the cookie-value MAY be wrapped in DQUOTE characters.
 Note that in this case, the initial and trailing DQUOTE characters are not
 stripped. They are part of the cookie-value, and will be included in Cookie
 header fields sent to the server.
 
+The domain-value is a subdomain as defined by {{RFC1034}}, Section 3.5, and
+as enhanced by {{RFC1123}}, Section 2.1. Thus, domain-value is a string of
+{{USASCII}} characters, such as one obtained by applying the "ToASCII" operation
+defined in {{Section 4 of RFC3490}}.
+
 The portions of the set-cookie-string produced by the cookie-av term are
 known as attributes. To maximize compatibility with user agents, servers SHOULD
 NOT produce two attributes with the same name in the same set-cookie-string.
 (See {{storage-model}} for how user agents handle this case.)
+
+NOTE: The name of an attribute-value pair is not case sensitive. So while they
+are presented here in CamelCase, such as "HttpOnly" or "SameSite", any case is
+accepted. E.x.: "httponly", "Httponly", "hTTPoNLY", etc.
 
 Servers SHOULD NOT include more than one Set-Cookie header field in the same
 response with the same cookie-name. (See {{set-cookie}} for how user agents
@@ -2499,6 +2503,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Add note not to send invalid cookies due to public suffix list changes:
   <https://github.com/httpwg/http-extensions/pull/2215>
+
+* Add warning to not send nameless cookies:
+  <https://github.com/httpwg/http-extensions/pull/2220>
 
 * Add note regarding Service Worker's computation of "site for cookies":
   <https://github.com/httpwg/http-extensions/pull/2217>
