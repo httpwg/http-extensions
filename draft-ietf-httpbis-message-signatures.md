@@ -480,6 +480,7 @@ The signature parameters component value is the serialization of the signature p
 * `nonce`: A random unique value generated for this signature as a String value.
 * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as a String value.
 * `keyid`: The identifier for the key material as a String value.
+* `context`: A context for the signature as a String value. This value is used by applications to help identify relevant signatures.
 
 Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents). Note that there is no general ordering to the parameters, but once an ordering is chosen for a given set of parameters, it cannot be changed without altering the signature parameters value.
 
@@ -1173,7 +1174,8 @@ Some non-normative examples of additional requirements an application might defi
 - Ensuring successful dereferencing of the `keyid` parameter to valid and appropriate key material.
 - Prohibiting the use of certain algorithms, or mandating the use of a specific algorithm.
 - Requiring keys to be of a certain size (e.g., 2048 bits vs. 1024 bits).
-- Enforcing uniqueness of a `nonce` value.
+- Enforcing uniqueness of the `nonce` parameter.
+- Requiring an application-specific value for the `context` parameter.
 
 Application-specific requirements are expected and encouraged. When an application defines additional requirements, it MUST enforce them during the signature verification process, and signature verification MUST fail if the signature does not conform to the application's requirements.
 
@@ -1579,6 +1581,7 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 |`expires`|Timestamp of proposed signature expiration| {{signature-params}} of {{&SELF}}|
 |`keyid`|Key identifier for the signing and verification keys used to create this signature| {{signature-params}} of {{&SELF}}|
 |`nonce`|A single-use nonce value| {{signature-params}} of {{&SELF}}|
+|`context`|An application-specific context for a signature| {{signature-params}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
 ## HTTP Signature Derived Component Names Registry {#content-registry}
