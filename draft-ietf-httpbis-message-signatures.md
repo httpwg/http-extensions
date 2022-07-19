@@ -480,7 +480,7 @@ The signature parameters component value is the serialization of the signature p
 * `nonce`: A random unique value generated for this signature as a String value.
 * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as a String value.
 * `keyid`: The identifier for the key material as a String value.
-* `context`: A context for the signature as a String value. This value is used by applications to help identify relevant signatures.
+* `context`: A context for the signature as a String value. This value is used by applications to help identify the signature's validity in specific applications or protocols. Context is often needed for avoiding cross-protocol attacks.
 
 Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents). Note that there is no general ordering to the parameters, but once an ordering is chosen for a given set of parameters, it cannot be changed without altering the signature parameters value.
 
