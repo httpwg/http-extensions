@@ -204,6 +204,8 @@ As mentioned earlier, HTTP explicitly permits and in some cases requires impleme
 
 We can identify these types of transformations as ones that should not prevent signature verification, even when performed on message components covered by the signature. Additionally, all changes to components not covered by the signature should not prevent signature verification.
 
+Some examples of these kinds of transformations, and the effect they have on the message signature, are found in {{example-transform}}.
+
 ## Application of HTTP Message Signatures {#application}
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
@@ -2423,6 +2425,118 @@ Signature: ttrp=:xVMHVpawaAC/0SbHrKRs9i8I3eOs5RtTMGCWXm/9nvZzoHsIg6\
 ~~~
 
 The internal service can validate the proxy's signature and therefore be able to trust that the client's certificate has been appropriately processed.
+
+## HTTP Message Transformations {#example-transform}
+
+The HTTP protocol allows intermediaries and applications to transform an HTTP message without affecting the semantics of the message itself. HTTP message signatures are designed to be robust against many of these transformations in different circumstances.
+
+For example, the following HTTP request message has been signed using the `ed25519` algorithm
+and the key `test-key-ed25519`.
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+GET /demo?name1=Value1&Name2=value2 HTTP/1.1
+Host: example.org
+Date: Fri, 15 Jul 2022 14:24:55 GMT
+Accept: application/json
+Accept: */*
+Signature-Input: transform=("@method" "@path" "@authority" \
+  "accept");created=1618884473;keyid="test-key-ed25519"
+Signature: transform=:ZT1kooQsEHpZ0I1IjCqtQppOmIqlJPeo7DHR3SoMn0s5J\
+  Z1eRGS0A+vyYP9t/LXlh5QMFFQ6cpLt2m0pmj3NDA==:
+~~~
+
+The signature base string for this message is:
+
+~~~
+"@method": GET
+"@path": /demo
+"@authority": example.org
+"accept": application/json, */*
+"@signature-params": ("@method" "@path" "@authority" "accept")\
+  ;created=1618884473;keyid="test-key-ed25519"
+~~~
+
+The following message has been altered by adding the Accept-Language header as well as adding a query parameter. However, since neither the Accept-Language header nor the query are covered by the signature, the same signature is still valid:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+GET /demo?name1=Value1&Name2=value2&param=added HTTP/1.1
+Host: example.org
+Date: Fri, 15 Jul 2022 14:24:55 GMT
+Accept: application/json
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Signature-Input: transform=("@method" "@path" "@authority" \
+  "accept");created=1618884473;keyid="test-key-ed25519"
+Signature: transform=:ZT1kooQsEHpZ0I1IjCqtQppOmIqlJPeo7DHR3SoMn0s5J\
+  Z1eRGS0A+vyYP9t/LXlh5QMFFQ6cpLt2m0pmj3NDA==:
+~~~
+
+The following message has been altered by removing the Date header, adding a Referer header, and collapsing the Accept header into a single line. The Date and Referrer headers are not covered by the signature, and the collapsing of the Accept header is an allowed transformation that is already accounted for by the canonicalization algorithm for HTTP field values. The same signature is still valid:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+GET /demo?name1=Value1&Name2=value2 HTTP/1.1
+Host: example.org
+Referer: https://developer.example.org/demo
+Accept: application/json, */*
+Signature-Input: transform=("@method" "@path" "@authority" \
+  "accept");created=1618884473;keyid="test-key-ed25519"
+Signature: transform=:ZT1kooQsEHpZ0I1IjCqtQppOmIqlJPeo7DHR3SoMn0s5J\
+  Z1eRGS0A+vyYP9t/LXlh5QMFFQ6cpLt2m0pmj3NDA==:
+~~~
+
+The following message has been altered by re-ordering the field values of the original message, but not re-ordering the individual Accept headers. The same signature is still valid:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+GET /demo?name1=Value1&Name2=value2 HTTP/1.1
+Accept: application/json
+Accept: */*
+Date: Fri, 15 Jul 2022 14:24:55 GMT
+Host: example.org
+Signature-Input: transform=("@method" "@path" "@authority" \
+  "accept");created=1618884473;keyid="test-key-ed25519"
+Signature: transform=:ZT1kooQsEHpZ0I1IjCqtQppOmIqlJPeo7DHR3SoMn0s5J\
+  Z1eRGS0A+vyYP9t/LXlh5QMFFQ6cpLt2m0pmj3NDA==:
+~~~
+
+The following message has been altered by changing the method to POST and the authority to "example.com" (inside the Host header). Since both the method and authority are covered by the signature, the same signature is NOT still valid:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+POST /demo?name1=Value1&Name2=value2 HTTP/1.1
+Host: example.com
+Date: Fri, 15 Jul 2022 14:24:55 GMT
+Accept: application/json
+Accept: */*
+Signature-Input: transform=("@method" "@path" "@authority" \
+  "accept");created=1618884473;keyid="test-key-ed25519"
+Signature: transform=:ZT1kooQsEHpZ0I1IjCqtQppOmIqlJPeo7DHR3SoMn0s5J\
+  Z1eRGS0A+vyYP9t/LXlh5QMFFQ6cpLt2m0pmj3NDA==:
+~~~
+
+The following message has been altered by changing the order of the two instances of the Accept header. Since the order of fields with the same name is semantically significant in HTTP, this changes the value used in the signature base, and the same signature is NOT still valid:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+GET /demo?name1=Value1&Name2=value2 HTTP/1.1
+Host: example.org
+Date: Fri, 15 Jul 2022 14:24:55 GMT
+Accept: */*
+Accept: application/json
+Signature-Input: transform=("@method" "@path" "@authority" \
+  "accept");created=1618884473;keyid="test-key-ed25519"
+Signature: transform=:ZT1kooQsEHpZ0I1IjCqtQppOmIqlJPeo7DHR3SoMn0s5J\
+  Z1eRGS0A+vyYP9t/LXlh5QMFFQ6cpLt2m0pmj3NDA==:
+~~~
 
 # Acknowledgements {#acknowledgements}
 {:numbered="false"}
