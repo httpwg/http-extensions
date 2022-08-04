@@ -188,8 +188,8 @@ Date: Sun, 06 Nov 1994 08:49:37 GMT
 
 Its value would be mapped to:
 
-~~~ http-message
-SF-Date: @1994-11-06T08:49:37Z
+~~~ http-message-new
+SF-Date: @784111777
 ~~~
 
 As in {{compatible}}, these fields are unable to carry values that are not valid Structured Fields, and so an application using this specification will need to how to support such values. Typically, handling them using the original field name is sufficient.
@@ -236,8 +236,8 @@ The field names in {{date-fields}} (paired with their mapped field names) have v
 
 For example, an Expires field could be mapped as:
 
-~~~ http-message
-SF-Expires: @2022-12-09T06:21:47Z
+~~~ http-message-new
+SF-Expires: @1659578233
 ~~~
 
 ## ETags
@@ -295,14 +295,14 @@ Cookie attributes map to Parameters on the Inner List, with the parameter name b
 |---------------------|---------------------|
 | Domain              | String              |
 | HttpOnly            | Boolean             |
-| Expires             | Integer             |
+| Expires             | Date                |
 | Max-Age             | Integer             |
 | Path                | String              |
 | Secure              | Boolean             |
 | SameSite            | Token               |
 {:id="cookie-params" title="Set-Cookie Parameter Types"}
 
-The Expires attribute is mapped to an Integer representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
+The Expires attribute is mapped to an Date representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}).
 
 For example, these unstructured fields:
 
@@ -314,8 +314,8 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 
 can be mapped into:
 
-~~~ http-message
-SF-Set-Cookie: ("lang" "en-US"); expires=1623233894;
+~~~ http-message-new
+SF-Set-Cookie: ("lang" "en-US"); expires=@1623233894;
                samesite=Strict; secure
 SF-Cookie: ("SID" "31d4d96e407aad42"), ("lang" "en-US")
 ~~~
@@ -388,32 +388,26 @@ Finally, add a new column to the "Cookie Attribute Registry" established by {{CO
 
 This section defines a new Structured Fields data type, Date.
 
-Dates have an internal data model that is similar to Integers, representing a delta in seconds from January 1, 1970 00:00:00 UTC, excluding leap seconds. However, their textual representation uses the Internet Date/Time Format {{!RFC3339}}, for human readability.
-
-The internal data model has a range of -62,135,596,800 to 253,402,300,799 inclusive, corresponding to a range of dates from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59Z.
+Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from January 1, 1970 00:00:00 UTC, excluding leap seconds.
 
 The ABNF for Dates is:
 
 ~~~ abnf
-sf-date = "@" date-time
+sf-date = "@" ["-"] 1*15DIGIT
 ~~~
-
-The time-offset MUST be "Z" (case-sensitive), and time-secfrac MUST NOT be included.
 
 For example:
 
-~~~ http-message
-Example-Date: @2022-06-14T06:21:47Z
+~~~ http-message-new
+Example-Date: @1659578233
 ~~~
 
 ## Serialising a Date
 
 Given a Date as input_integer, return an ASCII string suitable for use in an HTTP field value.
 
-0. If input_date is not an integer in the range of -62,135,596,800 to 253,402,300,799 inclusive, fail serialization.
-1. Let output be an ISO 8601 date, formatted as a date-time per {{RFC3339}} representing seconds delta from 1 January 1970 00:00:00 UTC, with the following constraints:
-   1. time-offset is "Z".
-   2. time-secfrac is not present.
+1. Let output be "@".
+1. Append to output the result of running Serializing an Integer with input_date (see {{Section 4.1.4 of STRUCTURED-FIELDS}}).
 2. Return output.
 
 ## Parsing a Date
@@ -422,8 +416,7 @@ Given an ASCII string as input_string, return a Date. input_string is modified t
 
 1. If the first character of input_string is not "@", fail parsing.
 2. Discard the first character of input_string.
-3. Let date_string be the result of consuming the first 20 characters of input_string.
-4. If the last character of date_string is not "Z", fail parsing.
-5. Let output_date be the result of parsing date_string as an ISO 8601 Date, according to {{Section 5.6 of RFC3339}}, as an integer number of seconds delta from 1 January 1970 00:00:00 UTC. If the string cannot be parsed, fail parsing.
-6. Return output_date.
+3. Let output_date be the result of running Parsing an Integer or Decimal with input_string (see {{Section 4.2.4 of STRUCTURED-FIELDS}}).
+4. If output_date is a Decimal, fail parsing.
+5. Return output_date.
 
