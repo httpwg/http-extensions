@@ -302,7 +302,7 @@ Cookie attributes map to Parameters on the Inner List, with the parameter name b
 | SameSite            | Token               |
 {:id="cookie-params" title="Set-Cookie Parameter Types"}
 
-The Expires attribute is mapped to an Date representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}).
+The Expires attribute is mapped to a Date representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}).
 
 For example, these unstructured fields:
 
