@@ -676,8 +676,7 @@ Published specification:
 
 Applications that use this media type:
 
-: Applications looking to convey HTTP request semantics independent of a
-  specific protocol.
+: Applications looking to convey HTTP semantics independent of a specific protocol.
 
 Fragment identifier considerations:
 
