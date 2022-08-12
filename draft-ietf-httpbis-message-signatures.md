@@ -208,7 +208,7 @@ We can identify these types of transformations as ones that should not prevent s
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
-- The set of [component identifiers](#covered-content) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header to be present and covered.
+- The set of [component identifiers](#covered-content) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header to be present and covered as well as mandate a value for `context` that is specific to the API being protected.
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means such as pre-registration of a signer's key.
 - A means of determining the signature algorithm used to verify the signature is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
@@ -480,7 +480,7 @@ The signature parameters component value is the serialization of the signature p
 * `nonce`: A random unique value generated for this signature as a String value.
 * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as a String value.
 * `keyid`: The identifier for the key material as a String value.
-* `context`: A context for the signature as a String value. This value is used by applications to help identify the signature's validity in specific applications or protocols. Context is often needed for avoiding cross-protocol attacks.
+* `context`: An application-specific context for the signature as a String value. This value is used by applications to help identify signatures relevant for specific applications or protocols.
 
 Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents). Note that there is no general ordering to the parameters, but once an ordering is chosen for a given set of parameters, it cannot be changed without altering the signature parameters value.
 
@@ -1898,6 +1898,10 @@ In most circumstances, this causes the signature validation to fail as expected,
 
 To counter this, an application needs to validate the content of the fields covered in the signature in addition to ensuring that the signature itself validates. With such protections, the attacker's padding attack would be rejected by the field value processor, even in the case where the attacker could force a signature collision.
 
+## Cross-Application Signature Context {#security-signature-context}
+
+Multiple applications and protocols could apply HTTP signatures on the same message simultaneously. A naive verifier could become confused in processing multiple signatures, either accepting or rejecting a message based on an unrelated or irrelevant signature. In order to help an application select which signatures apply to its own processing, the application can declare a specific value for the `context` signature parameter. For example, a signature targeting an application gateway could require `context="app-gateway"` as part of the signature parameters for that application.
+
 # Privacy Considerations {#privacy}
 
 ## Identification through Keys {#privacy-identify-keys}
@@ -2474,6 +2478,9 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -12
+     * Added "context" parameter.
 
   - -11
      * Added ABNF references, coalesced ABNF rules.
