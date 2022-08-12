@@ -2482,6 +2482,7 @@ Jeffrey Yasskin.
 
   - -12
      * Added "context" parameter.
+     * Added set of safe transformation examples.
 
   - -11
      * Added ABNF references, coalesced ABNF rules.
