@@ -2158,7 +2158,7 @@ Note that the RSA PSS algorithm in use here is non-deterministic, meaning a diff
 
 ### Selective Covered Components using rsa-pss-sha512
 
-This example covers additional components (the authority, the Content-Digest header field, and a single named query parameter) in `test-request` using the `rsa-pss-sha512` algorithm.
+This example covers additional components (the authority, the Content-Digest header field, and a single named query parameter) in `test-request` using the `rsa-pss-sha512` algorithm. This example also adds a `context` parameter with the application-specific value of `header-example`.
 
 The corresponding signature base is:
 
@@ -2171,7 +2171,8 @@ NOTE: '\' line wrapping per RFC 8792
 "@query-param";name="Pet": dog
 "@signature-params": ("@authority" "content-digest" \
   "@query-param";name="Pet")\
-  ;created=1618884473;keyid="test-key-rsa-pss"
+  ;created=1618884473;keyid="test-key-rsa-pss"\
+  ;context="header-example"
 ~~~
 
 
@@ -2183,13 +2184,13 @@ NOTE: '\' line wrapping per RFC 8792
 
 Signature-Input: sig-b22=("@authority" "content-digest" \
   "@query-param";name="Pet");created=1618884473\
-  ;keyid="test-key-rsa-pss"
-Signature: sig-b22=:W2kxR52X0tXN9u7yjyPeWa0T3D0SVG8KkPo+lOWyb2TGdLz\
-  ixWjUlbehjnNhzA+wFWnE6+hdKH8KR6Z9FvsxCc+44XrqxzT7Vcsror5SjMyfx6Nq\
-  tELklj1u2L4JovANI80BSoVobSoc+v9NRVWJZU7WAVow8H2CucCcv2cy1tKFCTMyc\
-  m9LQrIz63Tg5tcGWj64b12nmwj9TwwkCygfz0MTyIytjYLVzKw7mXpL4jGFZ5lsw2\
-  VT2eB3qpF2d/Psy0p1heKhrkz9uvKeCoj+P5QjLMS4eirHDqpKqe9YmCaMsJAUYSU\
-  M86qC8qO6vMQhTMegTkEe25DquVcTiOAEAw==:
+  ;keyid="test-key-rsa-pss";context="header-example"
+Signature: sig-b22=:SW3AKyCPY7PQSARlOEg8+tb43JD4uYGBrt6G+RWKgrOZ9ZJ\
+  Wq8VnVM1qTcdjChi6HGZI4xDwKZteoQH8mj2HT1cWdUTxu2JaUvcJDINpa0m20NYy\
+  wRu/HLXmh/FfeefGIUpkAneT/X/sWL/ShiTtp7REtxdJaiLCjQidY9eUpFmBXPMdR\
+  /FiYI3hGWarGGiGmTpgbjI713ywhKoGPm7Q8lpfhz5T59tOsZVPxlqdpwPD0RVGOw\
+  ZMzI5VzoY4YaGrB2fqvPOxNUNuh5bveYQOYAmzmpDaLfgkQB/C4AHzKWAYs9yV6Wf\
+  78u4en7AP1Y+iM0G6MviZvX1/lcgC2n1bDg==:
 ~~~
 
 Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
