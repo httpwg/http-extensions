@@ -5,7 +5,7 @@ description: How to participate in the HTTP Working Group
 
 Anyone can contribute to HTTP; you don't have to join the Working Group, because there is no "membership" -- anyone who participates in the work, as outlined below, is part of the HTTP Working Group.
 
-Before doing so, it's a good idea to familiarize yourself with our [charter](https://datatracker.ietf.org/wg/httpbis/about/), and [home page](https://httpwg.org/). If you're new to this, you may also want to read [an informal guide to the IETF process](https://www.ietf.org/standards/process/informal/) and the [Tao of the IETF](https://www.ietf.org/tao.html).
+Before doing so, it's a good idea to familiarize yourself with our [charter](https://datatracker.ietf.org/wg/httpbis/about/), and [home page](https://httpwg.org/). If you're new to the [IETF](https://www.ietf.org/), you may also want to read [an informal guide to the IETF process](https://www.ietf.org/standards/process/informal/) and the [Tao of the IETF](https://www.ietf.org/tao.html).
 
 **Be aware that all contributions fall under the "NOTE WELL" terms outlined below.**
 
@@ -37,35 +37,33 @@ The HTTP Working Group has a few venues for discussion:
 
 * Our [mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/) is used for notifications of meetings, adoption of documents, consensus calls, issue discussion, and other business. It's not mandatory to subscribe, but you're likely to miss important things if you don't.
 
-* We discuss most document issues on GitHub. If you don't want to use Github to follow these discussions, you can subscribe to the [issue announce list](https://www.ietf.org/mailman/listinfo/http-issues).
+* We discuss most document issues on [GitHub](https://github.com/httpwg/). If you don't want to use Github to follow these discussions, you can subscribe to the [issue announce list](https://www.ietf.org/mailman/listinfo/http-issues).
 
-To be active in the Working Group, you can participate in any or all of these places.
+You can participate in any or all of these places.
 
 
 ### Raising Issues
 
-We use GitHub to track items for discussion and their resolution.
+We use GitHub to track discussion items and their resolution. Before filing a new issue, please consider a few things:
 
-Before filing a new issue, please consider a few things:
-
-* Issues should be just that: issues with our deliverables, **not proposals, questions, or support requests**.
+* Issues should be just that: issues with our deliverables, **not proposals for new work, questions, or support requests**.
 
 * There may be an existing duplicate issue, so please review the issues list first.
 
 * If you're not sure how to phrase your issue, please ask on the [mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/).
 
-Issues can also be raised on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/) by clearly marking them as such (e.g., in the `Subject:` line).
+Issues can also be raised on the [Working Group mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/) by clearly marking them as such (e.g., with `New issue` in the `Subject:` line).
 
-Be aware that issues might be rephrased, changed in scope, or combined with others, so that the group can focus its efforts. If you feel that such a change loses an important part of your original issue, please bring it up, either in comments or on the list.
+Be aware that issues might be rephrased, changed in scope, or combined with others. If you feel that an important part of your original issue has been lost, please bring it up (on the issue or on the list).
 
-Off-topic and duplicate issues will be closed without discussion. Note that comments on individual commits will only be responded to with best effort, and may not be seen.
+Off-topic and duplicate issues will be closed without discussion. Note that commit comments will only be responded to with best effort, and may not be seen.
 
 
 ### Resolving Issues
 
-As in all IETF Working Groups, final consensus of the Working Group is determined during Working Group Last Call; consensus established in discussion of issues provides a limited precedent, to prevent revisiting topics unnecessarily. Our issues list provides a mechanism for tracking those discussions and their outcomes.
+As in all IETF Working Groups, final consensus of the Working Group is determined during Working Group Last Call; consensus established during issue discussion provides a limited precedent, to prevent revisiting topics unnecessarily. Our issues list provides a mechanism for tracking those discussions and their outcomes.
 
-Some issues might be labeled as `editorial`; they can be dealt with by the editor(s) without consensus or notification. Typically, any discussion will take place on the issue itself. If you believe an `editorial` issue is not purely editorial, please say so on the issue; the Chair(s) will make a determination.
+Some issues might be labeled as `editorial`; they can be dealt with by the editor(s) without consensus or notification, and discussion will take place on the issue itself. If you believe an `editorial` issue is not purely editorial, please say so on the issue; the Chair(s) will make a determination.
 
 The remaining `open` issues in the issues list are those that need Working Group discussion.
 
@@ -73,9 +71,9 @@ Issues can be discussed on the mailing list or the issues list. The editors can 
 
 When an issue is `closed`, it implies that the issue's proposed resolution is reflected in the draft(s). When a new draft is published, the issues that have been closed since the last draft will be highlighted in the draft's change notes and/or on the mailing list, to aid reviewers.
 
-Note that whether or not an issue is closed does not necessarily reflect consensus of the Working Group; an issue's `open`/`closed` state is only used to organise our discussions. If you have a question or problem with an issue in the `closed` state, please comment on it (either in the issues list or mailing list), and we'll adjust its state accordingly.
+Note that whether or not an issue is closed does not necessarily reflect consensus of the Working Group; an issue's `open`/`closed` state is only used to organise our discussions. If you have a question or problem with an issue in the `closed` state, please say so (either on the issue or the mailing list).
 
-Some issues might require an explicit consensus call; if consensus is achieved in this manner, the issue will be labeled with `has-consensus`. Reopening issues with `has-consensus` requires new information (in the judgement of the chairs).
+Some issues might require an explicit consensus call; if consensus is achieved in this manner, the issue will be labeled with `has-consensus`. Reopening issues with `has-consensus` requires new information (in the judgement of the Chairs).
 
 
 ### Pull Requests
@@ -87,11 +85,11 @@ Please do not use a pull request to open a new issue. Instead, file an issue and
 
 ## Proposing New Work
 
-If you'd like to propose a new HTTP extension (e.g., method, header, status code, HTTP/2 or HTTP/3 SETTINGS), it's best to first describe your use to the mailing list. Often, there's an existing HTTP feature that can be used.
+If you'd like to propose a new HTTP extension (e.g., method, header, status code, HTTP/2 or HTTP/3 SETTINGS), it's best to first describe your use case on the mailing list. Often, there's an existing HTTP feature that can be used.
 
 If a new extension is necessary, we usually discuss them in Internet-Draft form. However, if you're unfamiliar with that format, write down your proposal precisely but succinctly and send it to the mailing list.
 
-If there is interest in the proposal, the Chairs will make a _Call for Adoption_, where Working Group participants comment on whether or not they support adoption, and whether or not they might implement it.
+If there is interest in the proposal, the Chairs will issue a _Call for Adoption_, where Working Group participants comment on whether or not they support adoption, and whether or not they might implement it.
 
 Upcoming proposals and calls for adoption are tracked in the [admin repository](https://github.com/httpwg/admin/labels/adoption).
 
@@ -105,26 +103,26 @@ The Editor(s) first task will be to upload an initial draft into a Working Group
 
 There are other places inside and outside the IETF that are doing HTTP-related work. Depending on the nature of your proposal, you might consider taking your work to one of the following venues:
 
-* The new [HTTP APIs Working Group](https://datatracker.ietf.org/wg/httpapi/about/) focuses on API-related HTTP extensions and similar specifications
-* The [DISPATCH Working Group](https://datatracker.ietf.org/wg/dispatch/about/) decides where it's most appropriate to take new work in the IETF's ART area. While you can come directly to the HTTP Working Group with a proposal, you can also take it there. Sometimes that can lead to starting a new Working Group (often for larger or more specialised work)
-* The [WHATWG Fetch Specification](https://fetch.spec.whatwg.org/) defines the API that browsers expose for HTTP
+* The [HTTP APIs Working Group](https://datatracker.ietf.org/wg/httpapi/about/) focuses on API-related HTTP extensions and similar specifications
+* The [DISPATCH Working Group](https://datatracker.ietf.org/wg/dispatch/about/) decides where it's most appropriate to take new work in the IETF's Applications and RealTime (ART) area. While you can come directly to the HTTP Working Group with a proposal, you can also take it there. Sometimes that can lead to starting a new Working Group (often for larger or more specialised work)
+* The [WHATWG Fetch Specification](https://fetch.spec.whatwg.org/) defines the API for HTTP that browsers expose
 
 ### Bringing Work to the IETF
 
-There are a few things that are important to know when you bring work to the IETF.
+There are a few things that are important to know when you bring work to the IETF. 
 
-First, when your draft is adopted by the Working Group, _change control_ -- that is, who determines what's in the specification -- passes from you to the IETF. That means that some things that you don't agree with might happen to it, and it might be published with things that you wouldn't have included (or without things that you would have kept).
+First, when your draft is adopted by the Working Group _change control_ -- that is, who determines what's in the specification -- passes from you to the IETF. That means that some things that you don't agree with might happen to it, and it might be published with things that you wouldn't have included (or without things that you would have kept).
 
 That's because the document's content is determined by consensus of the Working Group, and then the IETF overall. Even though you started it, the document needs to reflect the community's input, and that takes primacy.
 
-As a result, whenever a document is adopted, it's considered a _starting point_ -- i.e., nothing is "locked down". Of course, you will have ample opportunity to discuss any issues you have with proposed changes, and if you make a convincing argument, consensus should follow. However, it's important that you are able to accept that the document will change. If you just want it rubber-stamped, it's not appropriate to bring it to the IETF.
+As a result, whenever a document is adopted it's considered a _starting point_ -- i.e., nothing is "locked down". Of course, you will have ample opportunity to discuss any issues you have with proposed changes, and if you make a convincing argument, consensus should follow. However, it's important that you are able to accept that the document will change. If you just want it rubber-stamped, it's not appropriate to bring it to the IETF.
 
 Why should you bring your document here, if you have to give up control? Not only will your work benefit from the broad review from many HTTP implementers and practitioners, but that community will also be more likely to implement and use an extension once it has gone through that process.
 
 
 ## Code of Conduct
 
-The [IETF Guidelines for Conduct](https://tools.ietf.org/html/rfc7154) applies to all Working Group communications and meetings.
+The [IETF Guidelines for Conduct](https://www.rfc-editor.org/rfc/rfc7154.html) applies to all Working Group communications and meetings.
 
 
 ## NOTE WELL
@@ -147,4 +145,4 @@ Definitive information is in the documents listed below and other IETF BCPs. For
 - [BCP 54](https://www.rfc-editor.org/info/bcp54) (Code of Conduct)
 - [BCP 78](https://www.rfc-editor.org/info/bcp78) (Copyright)
 - [BCP 79](https://www.rfc-editor.org/info/bcp79) (Patents, Participation)
-- https://www.ietf.org/privacy-policy/ (Privacy Policy)
+- [https://www.ietf.org/privacy-policy/](https://www.ietf.org/privacy-policy/) (Privacy Policy)
