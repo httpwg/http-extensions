@@ -127,7 +127,7 @@ A request or response that has a known length at the time of construction uses
 the format shown in {{format-known-length}}.
 
 ~~~ quic-format
-Request with Known-Length {
+Known-Length Request {
   Framing Indicator (i) = 0,
   Request Control Data (..),
   Known-Length Field Section (..),
@@ -136,7 +136,7 @@ Request with Known-Length {
   Padding (..),
 }
 
-Response with Known-Length {
+Known-Length Response {
   Framing Indicator (i) = 1,
   Known-Length Informational Response (..) ...,
   Final Response Control Data (..),
