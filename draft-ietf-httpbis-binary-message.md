@@ -247,15 +247,15 @@ Multiple length-prefixed portions of content can be included, each prefixed by a
 non-zero Chunk Length integer describing the number of bytes in the block.  The
 Chunk Length is encoded as a variable-length integer.
 
-Each Field Line in an Indeterminate-Length Field Section starts with a Name
-Length field.  An Indeterminate-Length Field Section ends with a Content
+Each Field Line in an Indeterminate-Length Field Section starts with a
+Name Length field.  An Indeterminate-Length Field Section ends with a Content
 Terminator field.  The zero value of the Content Terminator distinguishes it
 from the Name Length field, which cannot contain a value of 0.
 
 Indeterminate-length messages can be truncated in a similar to that for
 known-length messages; see {{padding}}.
 
-Indeterminate-length messages use the same encoding for field lines as
+Indeterminate-length messages use the same encoding for Field Line as
 known-length messages; see {{fields}}.
 
 
@@ -353,9 +353,9 @@ Header and trailer sections consist of zero or more field lines; see {{Section 5
 of HTTP}}. The format of a field section depends on whether the message is of
 known length or indeterminate length.
 
-Each field line includes a name and a value. Both the name and value are
-length-prefixed sequences of bytes.  The field name length is at least one
-byte. The format of a field line is shown in {{format-field-line}}.
+Each Field Line encodig includes a name and a value. Both the name and value are
+length-prefixed sequences of bytes.  The Name field is a minimum of one
+byte. The format of a Field Line is shown in {{format-field-line}}.
 
 ~~~ quic-format
 Field Line {
@@ -374,16 +374,16 @@ recipient MUST treat a message that contains field values that would cause an
 HTTP/2 message to be malformed according to {{Section 8.2.1 of H2}} as invalid;
 see {{invalid}}.
 
-The same field name can be repeated in multiple field lines; see {{Section 5.2 of
-HTTP}} for the semantics of repeated field names and rules for combining
+The same field name can be repeated over more than one field line; see {{Section
+5.2 of HTTP}} for the semantics of repeated field names and rules for combining
 values.
 
 Messages are invalid ({{invalid}}) if they contain fields named "`:method`",
-"`:scheme`", "`:authority`", "`:path`", or "`:status`".  Other pseudo-fields that are
-defined by protocol extensions MAY be included; pseudo-fields cannot be included
-in trailers (see {{Section 8.1 of H2}}).  Field lines containing pseudo-fields
-MUST precede other field lines.  A message that contains a pseudo-field after
-any other field is invalid; see {{invalid}}.
+"`:scheme`", "`:authority`", "`:path`", or "`:status`".  Other pseudo-fields
+that are defined by protocol extensions MAY be included; pseudo-fields cannot be
+included in trailers (see {{Section 8.1 of H2}}).  A Field Line containing
+pseudo-fields MUST precede other Field Line values.  A message that contains a
+pseudo-field after any other field is invalid; see {{invalid}}.
 
 Fields that relate to connections ({{Section 7.6.1 of HTTP}}) cannot be used to
 produce the effect on a connection in this context.  These fields SHOULD be
