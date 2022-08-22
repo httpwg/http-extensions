@@ -615,7 +615,7 @@ In particular, as a standalone representation, this format lacks the following
 features of the formats used in those protocols:
 
 * chunk extensions ({{Section 7.1.1 of MESSAGING}}) and transfer encoding
-  ({{Section 6.1 of MESSAGING}}) from HTTP/1.1
+  ({{Section 6.1 of MESSAGING}})
 
 * generic framing and extensibility capabilities
 
