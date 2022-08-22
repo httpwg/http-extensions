@@ -63,7 +63,7 @@ The design of this format is informed by the framing structure of HTTP/2
 ({{H2}}) and HTTP/3 ({{H3}}).  Rules for constructing messages rely on the rules
 defined in HTTP/2, but the format itself is distinct; see {{differences}}.
 
-This format defines `message/bhttp`, a binary alternative to the `message/http`
+This format defines "`message/bhttp`", a binary alternative to the `message/http`
 content type defined in {{MESSAGING}}. A binary format permits more efficient
 encoding and processing of messages. A binary format also reduces exposure to
 security problems related to processing of HTTP messages.
@@ -280,8 +280,8 @@ That information is encoded as an ordered sequence of fields: Method, Scheme,
 Authority, Path. Each of these fields is prefixed with a length.
 
 The values of these fields follow the rules in HTTP/2 ({{Section 8.3.1 of H2}})
-that apply to the `:method`, `:scheme`, `:authority`, and `:path` pseudo-header
-fields respectively. However, where the `:authority` pseudo-header field might
+that apply to the "`:method`", "`:scheme`", "`:authority`", and "`:path`" pseudo-header
+fields respectively. However, where the "`:authority`" pseudo-header field might
 be omitted in HTTP/2, a zero-length value is encoded instead.
 
 The format of request control data is shown in {{format-request-control-data}}.
@@ -376,8 +376,8 @@ The same field name can be repeated in multiple field lines; see {{Section 5.2 o
 HTTP}} for the semantics of repeated field names and rules for combining
 values.
 
-Messages are invalid ({{invalid}}) if they contain fields named `:method`,
-`:scheme`, `:authority`, `:path`, or `:status`.  Other pseudo-fields that are
+Messages are invalid ({{invalid}}) if they contain fields named "`:method`",
+"`:scheme`", "`:authority`", "`:path`", or "`:status`".  Other pseudo-fields that are
 defined by protocol extensions MAY be included; pseudo-fields cannot be included
 in trailers (see {{Section 8.1 of H2}}).  Field lines containing pseudo-fields
 MUST precede other field lines.  A message that contains a pseudo-field after
@@ -458,7 +458,7 @@ Accept-Language: en, mi
 ~~~
 {: #ex-request title="Sample HTTP Request"}
 
-This can be expressed as a binary message (type `message/bhttp`) using a
+This can be expressed as a binary message (type "`message/bhttp`") using a
 known-length encoding as shown in hexadecimal in {{ex-bink-request}}.
 {{ex-bink-request}} includes text alongside to show that most of the content is
 not modified.
@@ -477,7 +477,7 @@ not modified.
 {: #ex-bink-request title="Known-Length Binary Encoding of Request"}
 
 This example shows that the Host header field is not replicated in the
-`:authority` field, as is required for ensuring that the request is reproduced
+"`:authority`" field, as is required for ensuring that the request is reproduced
 accurately; see {{Section 8.3.1 of H2}}.
 
 The same message can be truncated with no effect on interpretation. In this
@@ -638,7 +638,7 @@ additional mechanisms.
 
 # "message/bhttp" Media Type {#media-type}
 
-The `message/bhttp` media type can be used to enclose a single HTTP request or
+The "`message/bhttp`" media type can be used to enclose a single HTTP request or
 response message, provided that it obeys the MIME restrictions for all
 "message" types regarding line length and encodings.
 
