@@ -501,18 +501,20 @@ formats is negligible.
 6570742d 6c616e67 75616765 06656e2c  ept-language.en,
 206d6900 00000000 00000000 00000000   mi.............
 ~~~
-{: #ex-bini-request title="Indefinite-Length Binary Encoding of Request"}
+{: #ex-bini-request title="Indeterminate-Length Binary Encoding of Request"}
 
-This indefinite-length encoding contains 10 bytes of padding.  As two additional
-bytes can be truncated in the same way as the known-length example, anything up
-to 12 bytes can be removed from this message without affecting its meaning.
+This indeterminate-length encoding contains 10 bytes of padding.  As two
+additional bytes can be truncated in the same way as the known-length example,
+anything up to 12 bytes can be removed from this message without affecting its
+meaning.
 
 
 ## Response Example
 
 Response messages can contain interim (1xx) status codes, as the message in
 {{ex-response}} shows. {{ex-response}} includes examples of informational status
-codes defined in {{?RFC2518}} and {{?RFC8297}}.
+codes defined in {{?RFC2518}} (now obsolete but defines status code 102) and
+{{?RFC8297}}.
 
 ~~~ http-message
 HTTP/1.1 102 Processing
