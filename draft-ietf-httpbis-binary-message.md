@@ -440,7 +440,7 @@ incremental processing.
 # Examples
 
 This section includes example requests and responses encoded in both
-known-length and indefinite-length forms.
+known-length and indeterminate-length forms.
 
 ## Request Example
 
@@ -486,7 +486,7 @@ The same message can be truncated with no effect on interpretation. In this
 case, the last two bytes -- corresponding to content and a trailer section --
 can each be removed without altering the semantics of the message.
 
-The same message, encoded using an indefinite-length encoding, is shown in
+The same message, encoded using an indeterminate-length encoding, is shown in
 {{ex-bini-request}}. As the content of this message is empty, the difference in
 formats is negligible.
 
@@ -537,9 +537,9 @@ Hello World! My content includes a trailing CRLF.
 ~~~
 {: #ex-response title="Sample HTTP Response"}
 
-As this is a longer example, only the indefinite-length encoding is shown in
-{{ex-bini-response}}. Note here that the specific text used in the reason
-phrase is not retained by this encoding.
+As this is a longer example, only the indeterminate-length encoding is shown in
+{{ex-bini-response}}. Note here that the specific text used in the reason phrase
+is not retained by this encoding.
 
 ~~~ hex-dump
 03406607 72756e6e 696e670a 22736c65  .@f.running."sle
@@ -569,9 +569,9 @@ phrase is not retained by this encoding.
 {: #ex-bini-response title="Binary Response, including Informational Responses"}
 
 A response that uses the chunked encoding (see {{Section 7.1 of MESSAGING}}) as
-shown in {{ex-chunked}} can be encoded using indefinite-length encoding, which
-minimizes buffering needed to translate into the binary format. However, chunk
-boundaries do not need to be retained, and any chunk extensions cannot be
+shown in {{ex-chunked}} can be encoded using indeterminate-length encoding,
+which minimizes buffering needed to translate into the binary format. However,
+chunk boundaries do not need to be retained, and any chunk extensions cannot be
 conveyed using the binary format; see {{differences}}.
 
 ~~~ http-message
