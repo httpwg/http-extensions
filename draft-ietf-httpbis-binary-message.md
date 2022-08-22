@@ -594,7 +594,7 @@ Trailer: text
 {: #ex-chunked title="Chunked Encoding Example"}
 
 {{ex-bink-chunked}} shows this message using the known-length encoding. Note
-that the transfer-encoding header field is removed.
+that the Transfer-Encoding header field is removed.
 
 ~~~ hex-dump
 0140c800 1d546869 7320636f 6e74656e  .@...This conten
