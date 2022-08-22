@@ -182,8 +182,8 @@ length-prefixed value; see {{fields}}.
 The format allows for the message to be truncated before any of the length
 prefixes that precede the field sections or content; see {{padding}}.
 
-The variable-length integer encoding means that there is a limit of 2^62-1
-bytes for each field section and the message content.
+The variable-length integer encoding means that there is a limit of
+2<sup>62</sup>-1 bytes for each field section and the message content.
 
 
 ## Indeterminate-Length Messages
