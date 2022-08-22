@@ -60,14 +60,14 @@ messages that can be conveyed outside an HTTP protocol. This enables the
 transformation of entire messages, including the application of authenticated
 encryption.
 
-The design of this format is informed by the framing structure of HTTP/2
-({{H2}}) and HTTP/3 ({{H3}}).  Rules for constructing messages rely on the rules
-defined in HTTP/2, but the format itself is distinct; see {{differences}}.
+The design of this format is informed by the framing structure of HTTP/2 {{H2}}
+and HTTP/3 {{H3}}.  Rules for constructing messages rely on the rules defined in
+HTTP/2, but the format itself is distinct; see {{differences}}.
 
-This format defines "`message/bhttp`", a binary alternative to the `message/http`
-content type defined in {{MESSAGING}}. A binary format permits more efficient
-encoding and processing of messages. A binary format also reduces exposure to
-security problems related to processing of HTTP messages.
+This format defines "`message/bhttp`", a binary alternative to the
+"`message/http`" content type defined in {{MESSAGING}}. A binary format permits
+more efficient encoding and processing of messages. A binary format also reduces
+exposure to security problems related to processing of HTTP messages.
 
 Two modes for encoding are described:
 
@@ -79,8 +79,8 @@ Two modes for encoding are described:
 
 This format is designed to convey the semantics of valid HTTP messages as simply
 and efficiently as possible.  It is not designed to capture all of the details
-of the encoding of messages from specific HTTP versions ({{MESSAGING}}, {{H2}},
-{{H3}}).  As such, this format is unlikely to be suitable for applications that
+of the encoding of messages from specific HTTP versions {{MESSAGING}} {{H2}}
+{{H3}}.  As such, this format is unlikely to be suitable for applications that
 depend on an exact recording of the encoding of messages.
 
 
@@ -403,7 +403,7 @@ rather than a comma; see {{Section 8.2.3 of H2}}.
 The content of messages is a sequence of bytes of any length. Though a
 known-length message has a limit, this limit is large enough that it is
 unlikely to be a practical limitation. There is no limit to the size of content
-in an indeterminate length message.
+in an indeterminate-length message.
 
 
 ## Padding and Truncation {#padding}
@@ -420,7 +420,7 @@ empty.  A message that is truncated at any other point is invalid; see
 {{invalid}}.
 
 Decoders MUST treat missing truncated fields as equivalent to having been sent
-with the length field sent to zero.
+with the length field set to zero.
 
 Padding is compatible with truncation of empty parts of the messages.
 Zero-valued bytes will be interpreted as a zero-length part, which is
@@ -607,8 +607,8 @@ that the Transfer-Encoding header field is removed.
 
 # Notable Differences with HTTP Protocol Messages {#differences}
 
-This format is designed to carry HTTP semantics just like HTTP/1.1, HTTP/2, or
-HTTP/3 ({{MESSAGING}}, {{H2}}, {{H3}}).  However, there are some notable
+This format is designed to carry HTTP semantics just like HTTP/1.1
+{{MESSAGING}}, HTTP/2 {{H2}}, or HTTP/3 {{H3}}.  However, there are some notable
 differences between this format and the format used in an interactive protocol
 version.
 
@@ -624,7 +624,7 @@ features of the formats used in those protocols:
 
 * carrying reason phrases in responses ({{Section 4 of MESSAGING}})
 
-* header compression {{?HPACK=RFC7541}}, {{?QPACK=RFC9204}}
+* header compression {{?HPACK=RFC7541}} {{?QPACK=RFC9204}}
 
 * response framing that depends on the corresponding request (such as HEAD) or
   the value of the status code (such as 204 or 304); these responses use the
