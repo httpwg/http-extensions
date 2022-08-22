@@ -322,8 +322,9 @@ Final Response Control Data {
 
 Responses that include informational status codes (see {{Section 15.2 of HTTP}})
 are encoded by repeating the response control data and associated header section
-until a final response control data is encoded.  The status code distinguishes
-between informational and final responses.
+until a final Status Code is encoded; that is, a Status Code field with a value
+from 200 to 599 (inclusive).  The status code distinguishes between
+informational and final responses.
 
 The format of the informational response control data is shown in
 {{format-informational}}.
