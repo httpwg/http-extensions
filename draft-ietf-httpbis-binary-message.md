@@ -55,7 +55,7 @@ This document defines a binary format for representing HTTP messages.
 # Introduction
 
 This document defines a simple format for representing an HTTP message
-({{HTTP}}), either request or response. This allows for the encoding of HTTP
+{{HTTP}}, either request or response. This allows for the encoding of HTTP
 messages that can be conveyed outside an HTTP protocol. This enables the
 transformation of entire messages, including the application of authenticated
 encryption.
