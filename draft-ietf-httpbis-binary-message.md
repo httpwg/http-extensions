@@ -2,9 +2,10 @@
 title: "Binary Representation of HTTP Messages"
 abbrev: Binary HTTP Messages
 docname: draft-ietf-httpbis-binary-message-latest
+number: 9292
 category: std
-area: ART
-workgroup: HTTP
+area: art
+workgroup: httpbis
 venue:
   group: HTTP
   type: Working Group
@@ -664,11 +665,11 @@ Optional parameters:
 
 Encoding considerations:
 
-: Only "8bit" or "binary" is permitted
+: Only "8bit" or "binary" is permitted.
 
 Security considerations:
 
-: See {{security}}
+: See {{security}}.
 
 Interoperability considerations:
 
