@@ -253,7 +253,7 @@ Name Length field.  An Indeterminate-Length Field Section ends with a Content
 Terminator field.  The zero value of the Content Terminator distinguishes it
 from the Name Length field, which cannot contain a value of 0.
 
-Indeterminate-length messages can be truncated in a similar to that for
+Indeterminate-length messages can be truncated in a way similar to that for
 known-length messages; see {{padding}}.
 
 Indeterminate-length messages use the same encoding for Field Line as
@@ -354,8 +354,8 @@ Header and trailer sections consist of zero or more field lines; see {{Section 5
 of HTTP}}. The format of a field section depends on whether the message is of
 known length or indeterminate length.
 
-Each Field Line encodig includes a name and a value. Both the name and value are
-length-prefixed sequences of bytes.  The Name field is a minimum of one
+Each Field Line encoding includes a name and a value. Both the name and value
+are length-prefixed sequences of bytes.  The Name field is a minimum of one
 byte. The format of a Field Line is shown in {{format-field-line}}.
 
 ~~~ quic-format
@@ -446,7 +446,7 @@ known-length and indeterminate-length forms.
 ## Request Example
 
 The example HTTP/1.1 message in {{ex-request}} shows the content in the
-`message/http` format.
+"`message/http`" format.
 
 Valid HTTP/1.1 messages require lines terminated with CRLF (the two bytes 0x0d
 and 0x0a). For simplicity and consistency, the content of these examples is
@@ -514,8 +514,8 @@ meaning.
 
 Response messages can contain interim (1xx) status codes, as the message in
 {{ex-response}} shows. {{ex-response}} includes examples of informational status
-codes defined in {{?RFC2518}} (now obsolete but defines status code 102) and
-{{?RFC8297}}.
+codes 102 and 103, as defined in {{?RFC2518}} (now obsolete but defines status
+code 102) and {{?RFC8297}}, respectively.
 
 ~~~ http-message
 HTTP/1.1 102 Processing
@@ -691,15 +691,15 @@ Fragment identifier considerations:
 Additional information:
 
 : <dl spacing="compact">
-  <dt>Magic number(s):</dt><dd>N/A</dd>
   <dt>Deprecated alias names for this type:</dt><dd>N/A</dd>
+  <dt>Magic number(s):</dt><dd>N/A</dd>
   <dt>File extension(s):</dt><dd>N/A</dd>
   <dt>Macintosh file type code(s):</dt><dd>N/A</dd>
   </dl>
 
 Person & email address to contact for further information:
 
-: see Authors' Addresses section
+: See the Authors' Addresses section.
 
 Intended usage:
 
@@ -711,7 +711,7 @@ Restrictions on usage:
 
 Author:
 
-: see Authors' Addresses section
+: See the Authors' Addresses section.
 
 Change controller:
 
