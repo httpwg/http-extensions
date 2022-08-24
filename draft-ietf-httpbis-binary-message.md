@@ -3,6 +3,7 @@ title: "Binary Representation of HTTP Messages"
 abbrev: Binary HTTP Messages
 docname: draft-ietf-httpbis-binary-message-latest
 number: 9292
+date: 2022-08
 category: std
 area: art
 workgroup: httpbis
@@ -743,7 +744,7 @@ not expect multiple values.
 # IANA Considerations
 
 IANA has added the media type "`message/bhttp`" to the "Media Types" registry at
-[](https://www.iana.org/assignments/media-types). See {{media-type}} for
+[](https://www.iana.org/assignments/media-types){: brackets="angle"}. See {{media-type}} for
 registration information.
 
 --- back
