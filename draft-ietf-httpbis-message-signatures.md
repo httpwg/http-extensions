@@ -1271,6 +1271,23 @@ Note that the output of ECDSA algorithms are non-deterministic, and therefore it
 
 Use of this algorithm can be indicated at runtime using the `ecdsa-p256-sha256` value for the `alg` signature parameter.
 
+### ECDSA using curve P-384 DSS and SHA-384 {#method-ecdsa-p384-sha384}
+
+To sign using this algorithm, the signer applies the `ECDSA` algorithm defined in {{FIPS186-4}} using curve P-384 with the signer's private signing key and
+the signature base ({{create-sig-input}}).
+The hash SHA-384 {{RFC6234}} is applied to the signature base to create
+the digest content to which the digital signature is applied, (`M`).
+The signature algorithm returns two integer values, `r` and `s`. These are both encoded as big-endian unsigned integers, zero-padded to 48-octets each. These encoded values are concatenated into a single 96-octet array consisting of the encoded value of `r` followed by the encoded value of `s`. The resulting concatenation of `(r, s)` is byte array of the HTTP message signature output used in {{sign}}.
+
+To verify using this algorithm, the verifier applies the `ECDSA` algorithm defined in {{FIPS186-4}}  using the public key portion of the verification key material and the signature base re-created as described in {{verify}}.
+The hash function SHA-384 {{RFC6234}} is applied to the signature base to create the digest content to which the signature verification function is applied, (`M`).
+The verifier extracts the HTTP message signature to be verified (`S`) as described in {{verify}}. This value is a 96-octet array consisting of the encoded values of `r` and `s` concatenated in order. These are both encoded in big-endian unsigned integers, zero-padded to 48-octets each. The resulting signature value `(r, s)` is used as input to the signature verification function.
+The results of the verification function indicate if the signature presented is valid.
+
+Note that the output of ECDSA algorithms are non-deterministic, and therefore it is not correct to re-calculate a new signature on the signature base and compare the results to an existing signature. Instead, the verification algorithm defined here needs to be used. See {{security-nondeterministic}}.
+
+Use of this algorithm can be indicated at runtime using the `ecdsa-p384-sha384` value for the `alg` signature parameter.
+
 ### EdDSA using curve edwards25519 {#method-ed25519}
 
 To sign using this algorithm, the signer applies the `Ed25519` algorithm defined in {{Section 5.1.6 of RFC8032}} with the signer's private signing key and
@@ -1549,6 +1566,7 @@ Specification document(s):
 |`rsa-v1_5-sha256`|RSASSA-PKCS1-v1_5 using SHA-256|Active|{{method-rsa-v1_5-sha256}} of {{&SELF}}|
 |`hmac-sha256`|HMAC using SHA-256|Active|{{method-hmac-sha256}} of {{&SELF}}|
 |`ecdsa-p256-sha256`|ECDSA using curve P-256 DSS and SHA-256|Active|{{method-ecdsa-p256-sha256}} of {{&SELF}}|
+|`ecdsa-p384-sha384`|ECDSA using curve P-384 DSS and SHA-384|Active|{{method-ecdsa-p384-sha384}} of {{&SELF}}|
 |`ed25519`|Edwards Curve DSA using curve edwards25519|Active|{{method-ed25519}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Algorithms Registry." }
 
@@ -2597,6 +2615,7 @@ Jeffrey Yasskin.
   - -12
      * Added "context" parameter.
      * Added set of safe transformation examples.
+     * Added ECDSA over P-384.
 
   - -11
      * Added ABNF references, coalesced ABNF rules.
