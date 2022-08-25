@@ -708,7 +708,7 @@ which assert "SameSite=Lax" or "SameSite=Strict" cannot be set in responses to
 cross-site subresource requests, or cross-site nested navigations. They can be
 set along with any top-level navigation, cross-site or otherwise.
 
-### Cookie Name Prefixes
+### Cookie Name Prefixes {#server-name-prefixes}
 
 {{weak-confidentiality}} and {{weak-integrity}} of this document spell out some of the drawbacks of cookies'
 historical implementation. In particular, it is impossible for a server to have
@@ -717,8 +717,11 @@ order to provide such confidence in a backwards-compatible way, two common sets
 of requirements can be inferred from the first few characters of the cookie's
 name.
 
-The normative requirements for the prefixes described below are detailed in the
-storage model algorithm defined in {{storage-model}}.
+The user agent requirements for the prefixes described below are detailed in
+{{ua-name-prefixes}}.
+
+To maximize compatibility with user agents servers SHOULD use prefixes as
+described below.
 
 #### The "__Secure-" Prefix
 
@@ -1100,6 +1103,82 @@ All other Set-Cookie header fields SHOULD be processed according to {{set-cookie
 That is, Set-Cookie header fields contained in responses with non-100-level status
 codes (including those in responses with 400- and 500-level status codes)
 SHOULD be processed unless ignored according to the user agent's cookie policy.
+
+## Cookie Name Prefixes {#ua-name-prefixes}
+
+User agents' requirements for cookie name prefixes differ slightly than
+servers' ({{server-name-prefixes}}) in that UAs MST match the prefix string
+case-insensitively.
+
+The normative requirements for the prefixes are detailed in the storage model
+algorithm defined in {{storage-model}}.
+
+This is because some servers will process cookie case-insensitively, resulting
+in them unintentionally miscapitalizing and accepting miscapitalized prefixes.
+
+For example, if a server sends the following `Set-Cookie` header field
+
+~~~
+Set-Cookie: __SECURE-SID=12345
+~~~
+
+to a UA which checks prefixes case-sensitively it will accept this cookie and
+the server would incorrectly believe the cookie is subject the same guarantees
+as one spelled `__Secure-`.
+
+Additionally the server is vulnerable to an attacker that purposefully
+miscapitalizes a cookie in order to impersonate a prefixed cookie. For example,
+a site already has a cookie `__Secure-SID=12345` and by some means an attacker
+sends the following `Set-Cookie` header field for the site to a UA which checks
+prefixes case-sensitively.
+
+~~~
+Set-Cookie: __SeCuRe-SID=evil
+~~~
+
+The next time a user visits the site the UA will send both cookies:
+
+~~~
+Cookie: __Secure-SID=12345; __SeCuRe-SID=evil
+~~~
+
+The server, being case-insensitive, won't be able to tell the difference
+between the two cookies allowing the attacker to compromise the site.
+
+To prevent these issues, UAs MUST match cookie name prefixes case-insensitive.
+
+Note: Cookies with different names are still considered separate by UAs. So
+both `__Secure-foo=bar` and `__secure-foo=baz` can exist as distinct cookies
+simultaneously and both would have the requirements of the `__Secure-` prefix
+applied.
+
+The following are examples of `Set-Cookie` header fields that would be rejected
+by a conformant user agent.
+
+~~~ example
+Set-Cookie: __Secure-SID=12345; Domain=site.example
+Set-Cookie: __secure-SID=12345; Domain=site.example
+Set-Cookie: __SECURE-SID=12345; Domain=site.example
+Set-Cookie: __Host-SID=12345
+Set-Cookie: __host-SID=12345; Secure
+Set-Cookie: __host-SID=12345; Domain=site.example
+Set-Cookie: __HOST-SID=12345; Domain=site.example; Path=/
+Set-Cookie: __Host-SID=12345; Secure; Domain=site.example; Path=/
+Set-Cookie: __host-SID=12345; Secure; Domain=site.example; Path=/
+Set-Cookie: __HOST-SID=12345; Secure; Domain=site.example; Path=/
+~~~
+
+Whereas the following `Set-Cookie` header fields would be accepted if set from
+a secure origin.
+
+~~~ example
+Set-Cookie: __Secure-SID=12345; Domain=site.example; Secure
+Set-Cookie: __secure-SID=12345; Domain=site.example; Secure
+Set-Cookie: __SECURE-SID=12345; Domain=site.example; Secure
+Set-Cookie: __Host-SID=12345; Secure; Path=/
+Set-Cookie: __host-SID=12345; Secure; Path=/
+Set-Cookie: __HOST-SID=12345; Secure; Path=/
+~~~
 
 ## The Set-Cookie Header Field {#set-cookie}
 
@@ -1579,11 +1658,11 @@ user agent MUST process the cookie as follows:
 19. If the cookie's "same-site-flag" is "None", abort these steps and ignore the
     cookie entirely unless the cookie's secure-only-flag is true.
 
-20. If the cookie-name begins with a case-sensitive match for the string
+20. If the cookie-name begins with a case-insensitive match for the string
     "__Secure-", abort these steps and ignore the cookie entirely unless the
     cookie's secure-only-flag is true.
 
-21. If the cookie-name begins with a case-sensitive match for the string
+21. If the cookie-name begins with a case-insensitive match for the string
     "__Host-", abort these steps and ignore the cookie entirely unless the
     cookie meets all the following criteria:
 
