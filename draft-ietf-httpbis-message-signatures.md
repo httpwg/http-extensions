@@ -214,14 +214,17 @@ HTTP Message Signatures are designed to be a general-purpose security mechanism 
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means such as pre-registration of a signer's key.
 - A means of determining the signature algorithm used to verify the signature is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
+- A means of determining the context for derivation of message components from an HTTP message and its application context. While this is normally the target HTTP message itself, the context could include additional information known to the application, such as an external host name.
 
-When choosing these parameters, an application of HTTP message signatures has to ensure that the verifier will have access to all required information needed to re-create the signature base. For example, a server behind a reverse proxy would need to know the original request URI to make use of the derived component `@target-uri`, even though the apparent target URI would be changed by the reverse proxy. Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions of the message, including any portions of the request that were signed by the server using the related-response parameter.
+When choosing these parameters, an application of HTTP message signatures has to ensure that the verifier will have access to all required information needed to re-create the signature base. For example, a server behind a reverse proxy would need to know the original request URI to make use of the derived component `@target-uri`, even though the apparent target URI would be changed by the reverse proxy (see also {{security-message-component-context}}). Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions of the message, including any portions of the request that were signed by the server using the related-response parameter.
 
 The details of this kind of profiling are the purview of the application and outside the scope of this specification, however some additional considerations are discussed in {{security}}.
 
 # HTTP Message Components {#covered-content}
 
-In order to allow signers and verifiers to establish which components are covered by a signature, this document defines component identifiers for components covered by an HTTP Message Signature, a set of rules for deriving and canonicalizing the values associated with these component identifiers from the HTTP Message, and the means for combining these canonicalized values into a signature base. The context for deriving these values MUST be accessible to both the signer and the verifier of the message.
+In order to allow signers and verifiers to establish which components are covered by a signature, this document defines component identifiers for components covered by an HTTP Message Signature, a set of rules for deriving and canonicalizing the values associated with these component identifiers from the HTTP Message, and the means for combining these canonicalized values into a signature base.
+
+The context for deriving these values MUST be accessible to both the signer and the verifier of the message. The context MUST be consistent across all components. For more considerations of the message component context, see {{security-message-component-context}}.
 
 A component identifier is composed of a component name and any parameters associated with that name. Each component name is either an HTTP field name {{http-header}} or a registered derived component name {{derived-components}}. The possible parameters for a component identifier are dependent on the component identifier, and a registry cataloging all possible parameters is defined in {{param-registry}}.
 
@@ -1922,6 +1925,12 @@ To counter this, an application needs to validate the content of the fields cove
 
 Multiple applications and protocols could apply HTTP signatures on the same message simultaneously. A naive verifier could become confused in processing multiple signatures, either accepting or rejecting a message based on an unrelated or irrelevant signature. In order to help an application select which signatures apply to its own processing, the application can declare a specific value for the `context` signature parameter. For example, a signature targeting an application gateway could require `context="app-gateway"` as part of the signature parameters for that application.
 
+## Message Component Context {#security-message-component-context}
+
+The context for deriving message component values includes the HTTP Message itself, any associated messages (such as the request that triggered a response), and additional information that the signer or verifier has access to. For example, in most cases, the target URI of the message is defined in {{HTTP, Section 7.1}}, but an application configured behind a reverse proxy could be configured to know the external target URI as seen by the client. Such an application would use this configured value as its target URI for the purposes of deriving message components itself.
+
+However, note that an intermediary could instead add its own signature to be verified by the application directly, as demonstrated in {{signature-multiple}}. This mitigation requires a more active intermediary but relies less on the application knowing external configuration values.
+
 # Privacy Considerations {#privacy}
 
 ## Identification through Keys {#privacy-identify-keys}
@@ -2616,6 +2625,7 @@ Jeffrey Yasskin.
      * Added "context" parameter.
      * Added set of safe transformation examples.
      * Added ECDSA over P-384.
+     * Expanded definiton of message component source context.
 
   - -11
      * Added ABNF references, coalesced ABNF rules.
