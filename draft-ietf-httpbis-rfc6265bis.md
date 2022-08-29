@@ -1106,8 +1106,8 @@ SHOULD be processed unless ignored according to the user agent's cookie policy.
 
 ## Cookie Name Prefixes {#ua-name-prefixes}
 
-User agents' requirements for cookie name prefixes differ slightly than
-servers' ({{server-name-prefixes}}) in that UAs MST match the prefix string
+User agents' requirements for cookie name prefixes differ slightly from
+servers' ({{server-name-prefixes}}) in that UAs MUST match the prefix string
 case-insensitively.
 
 The normative requirements for the prefixes are detailed in the storage model
