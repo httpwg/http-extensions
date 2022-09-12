@@ -23,17 +23,11 @@ github-issue-label: 6265bis
 
 author:
 -
-  ins: L. Chen
-  name: Lily Chen
+  ins: S. Bingler
+  name: Steven Bingler
   role: editor
   organization: Google LLC
-  email: chlily@google.com
--
-  ins: S. Englehardt
-  name: Steven Englehardt
-  role: editor
-  organization: Mozilla
-  email: senglehardt@mozilla.com
+  email: bingler@google.com
 -
   ins: M. West
   name: Mike West
@@ -2592,9 +2586,15 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Compare cookie name prefixes case-insensitively:
   <https://github.com/httpwg/http-extensions/pull/2236>
 
+* Update editors and the acknowledgements
+  <https://github.com/httpwg/http-extensions/pull/2244>
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
 adding features and aligning the specification with the reality of today’s
 deployments. Here, we’re standing upon the shoulders of a giant since the
 majority of the text is still Adam’s.
+
+Thank you to both Lily Chen and Steven Englehardt, editors emeritus, for their
+significant contributions improving this draft.
