@@ -4,6 +4,7 @@ abbrev: Retrofit Structured Fields
 docname: draft-ietf-httpbis-retrofit-latest
 date: {DATE}
 category: std
+updates: 8941
 
 ipr: trust200902
 keyword:
@@ -48,6 +49,7 @@ This specification nominates a selection of existing HTTP fields as having synta
 
 To accommodate some additional fields whose syntax is not compatible, it also defines mappings of their semantics into new Structured Fields. It does not specify how to negotiate their use.
 
+One of those mappings requires introduction of a new Structured Fields data type, Date.
 
 --- middle
 
@@ -73,6 +75,8 @@ Note that while implementations can parse and serialise compatible fields as Str
 ## Notational Conventions
 
 {::boilerplate bcp14-tagged}
+
+This document uses the date-time, time-offset, and time-secfrac rules from {{!RFC3339}}.
 
 
 # Compatible Fields {#compatible}
@@ -182,10 +186,10 @@ For example, the Date HTTP header field carries a date:
 Date: Sun, 06 Nov 1994 08:49:37 GMT
 ~~~
 
-Its value is more efficiently represented as an Integer number of delta seconds from the Unix epoch (00:00:00 UTC on 1 January 1970, minus leap seconds). Thus, the example above would be mapped to:
+Its value would be mapped to:
 
-~~~ http-message
-SF-Date: 784072177
+~~~ http-message-new
+SF-Date: @784111777
 ~~~
 
 As in {{compatible}}, these fields are unable to carry values that are not valid Structured Fields, and so an application using this specification will need to how to support such values. Typically, handling them using the original field name is sufficient.
@@ -219,7 +223,7 @@ SF-Location: "https://example.com/foo"
 
 ## Dates
 
-The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
+The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds), using the Date Structured Fields data type defined in {{date-type}}.
 
 | Field Name          | Mapped Field Name      |
 |---------------------|------------------------|
@@ -232,8 +236,8 @@ The field names in {{date-fields}} (paired with their mapped field names) have v
 
 For example, an Expires field could be mapped as:
 
-~~~ http-message
-SF-Expires: 1571965240
+~~~ http-message-new
+SF-Expires: @1659578233
 ~~~
 
 ## ETags
@@ -291,14 +295,14 @@ Cookie attributes map to Parameters on the Inner List, with the parameter name b
 |---------------------|---------------------|
 | Domain              | String              |
 | HttpOnly            | Boolean             |
-| Expires             | Integer             |
+| Expires             | Date                |
 | Max-Age             | Integer             |
 | Path                | String              |
 | Secure              | Boolean             |
 | SameSite            | Token               |
 {:id="cookie-params" title="Set-Cookie Parameter Types"}
 
-The Expires attribute is mapped to an Integer representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
+The Expires attribute is mapped to a Date representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}).
 
 For example, these unstructured fields:
 
@@ -310,8 +314,8 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 
 can be mapped into:
 
-~~~ http-message
-SF-Set-Cookie: ("lang" "en-US"); expires=1623233894;
+~~~ http-message-new
+SF-Set-Cookie: ("lang" "en-US"); expires=@1623233894;
                samesite=Strict; secure
 SF-Cookie: ("SID" "31d4d96e407aad42"), ("lang" "en-US")
 ~~~
@@ -380,4 +384,39 @@ Finally, add a new column to the "Cookie Attribute Registry" established by {{CO
 --- back
 
 
+# The Date Structured Type {#date-type}
+
+This section defines a new Structured Fields data type, Date.
+
+Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from January 1, 1970 00:00:00 UTC, excluding leap seconds.
+
+The ABNF for Dates is:
+
+~~~ abnf
+sf-date = "@" ["-"] 1*15DIGIT
+~~~
+
+For example:
+
+~~~ http-message-new
+Example-Date: @1659578233
+~~~
+
+## Serialising a Date
+
+Given a Date as input_integer, return an ASCII string suitable for use in an HTTP field value.
+
+1. Let output be "@".
+1. Append to output the result of running Serializing an Integer with input_date (see {{Section 4.1.4 of STRUCTURED-FIELDS}}).
+2. Return output.
+
+## Parsing a Date
+
+Given an ASCII string as input_string, return a Date. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not "@", fail parsing.
+2. Discard the first character of input_string.
+3. Let output_date be the result of running Parsing an Integer or Decimal with input_string (see {{Section 4.2.4 of STRUCTURED-FIELDS}}).
+4. If output_date is a Decimal, fail parsing.
+5. Return output_date.
 
