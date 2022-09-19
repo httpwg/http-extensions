@@ -42,6 +42,7 @@ author:
     org: Bespoke Engineering
     email: ietf@justin.richer.org
     uri: https://bspk.io/
+    role: editor
 
   - ins: M. Sporny
     name: Manu Sporny
