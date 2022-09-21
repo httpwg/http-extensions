@@ -1671,10 +1671,10 @@ user agent MUST process the cookie as follows:
     true, abort these steps and ignore the cookie:
 
     * the cookie-value begins with a case-insensitive match for the string
-    "__Secure-"
+      "__Secure-"
 
     * the cookie-value begins with a case-insensitive match for the string
-    "__Host-"
+      "__Host-"
 
 23. If the cookie store contains a cookie with the same name, domain,
     host-only-flag, and path as the newly-created cookie:
@@ -2597,6 +2597,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Update editors and the acknowledgements
   <https://github.com/httpwg/http-extensions/pull/2244>
+  
+* Prevent nameless cookies with prefixed values
+  <https://github.com/httpwg/http-extensions/pull/2251>
 
 # Acknowledgements
 {:numbered="false"}
