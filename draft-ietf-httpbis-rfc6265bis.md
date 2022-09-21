@@ -1667,7 +1667,16 @@ user agent MUST process the cookie as follows:
     3.  The cookie-attribute-list contains an attribute with an attribute-name
         of "Path", and the cookie's path is `/`.
 
-22. If the cookie store contains a cookie with the same name, domain,
+22. If the cookie-name is empty and either of the following conditions are
+    true, abort these steps and ignore the cookie:
+
+    * the cookie-value begins with a case-insensitive match for the string
+    "__Secure-"
+
+    * the cookie-value begins with a case-insensitive match for the string
+    "__Host-"
+
+23. If the cookie store contains a cookie with the same name, domain,
     host-only-flag, and path as the newly-created cookie:
 
     1.  Let old-cookie be the existing cookie with the same name, domain,
@@ -1684,7 +1693,7 @@ user agent MUST process the cookie as follows:
 
     4.  Remove the old-cookie from the cookie store.
 
-23. Insert the newly-created cookie into the cookie store.
+24. Insert the newly-created cookie into the cookie store.
 
 A cookie is "expired" if the cookie has an expiry date in the past.
 
