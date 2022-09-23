@@ -1873,6 +1873,13 @@ This approach is not without problems, as a misconfigured system could accept si
 
 For another example, {{content-request-response}} defines a method for signing response messages but including portions of the request message that triggered the response. In this case, the context for component value calculation is the combination of the response and request message, not just the single message to which the signature is applied. For this feature, the `req` flag allows both signer to explicitly signal which part of the context is being sourced for a component identifier's value. Implementations need to ensure that only the intended message is being referred to for each component, otherwise an attacker could attempt to subvert a signature by manipulating one side or the other.
 
+### Message Component Context with Multiple Signatures {#security-context-multiple-signatures}
+
+The context for deriving message component values may be computed differently for each signature present within a single message. This is particularly the case when proxies mutate messages and include signatures over the mutated values. For example, a reverse proxy may replace a public hostname in a request to a service with the hostname for the individual service host that it is forwarding the request on to. If both the client and the reverse proxy add signatures covering `@authority`, the service host will see two signatures on the request, each signing different values for the `@authority` message component, reflecting the change to that component as the message made its way from the client to the service host.
+
+In such a case, a verifier must construct a different message component context for each signature, or else one or the other will fail validation. In such cases, verifiers MUST ensure that any differences in message component contexts between signatures are expected and permitted. For example, in the above scenario the reverse proxy could include the original hostname in a `Forwarded` header field, and sign `@authority`, `forwarded`, and the client's signature. The verifier could then use the hostname from the `Forwarded` header field as the value for `@authority` when verifying the client's signature, thus allowing the verifier to confirm that the hostname was transformed as expected. This non-normative example notwithstanding, how a verifier ensures differences in message component contexts are expected and permitted is outside of the scope of this document.
+
+
 ## HTTP Processing
 
 ### Confusing HTTP Field Names for Derived Component Names {#security-lazy-header-parser}
