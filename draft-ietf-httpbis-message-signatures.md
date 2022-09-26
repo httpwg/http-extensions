@@ -1873,6 +1873,15 @@ This approach is not without problems, as a misconfigured system could accept si
 
 For another example, {{content-request-response}} defines a method for signing response messages but including portions of the request message that triggered the response. In this case, the context for component value calculation is the combination of the response and request message, not just the single message to which the signature is applied. For this feature, the `req` flag allows both signer to explicitly signal which part of the context is being sourced for a component identifier's value. Implementations need to ensure that only the intended message is being referred to for each component, otherwise an attacker could attempt to subvert a signature by manipulating one side or the other.
 
+### Multiple Message Component Contexts {#security-context-multiple-signatures}
+
+It is possible that the context for deriving message component values could be distinct for each signature present within a single message. This is particularly the case when proxies mutate messages and include signatures over the mutated values, in addition to any existing signatures. For example, a reverse proxy can replace a public hostname in a request to a service with the hostname for the individual service host that it is forwarding the request on to. If both the client and the reverse proxy add signatures covering `@authority`, the service host will see two signatures on the request, each signing different values for the `@authority` message component, reflecting the change to that component as the message made its way from the client to the service host.
+
+In such a case, it's common for the internal service to verify only one of the signatures or to use externally-configured information, as discussed in {{security-message-component-context}}. However, a verifier processing both signatures has to use a different message component context for each signature, since the component value for the `@authority` component will be different for each signature. Verifiers like this need to be aware of both the reverse proxy's context for incoming messages as well as the target service's context for the message coming from the reverse proxy. The verifier needs to take particular care to apply the correct context to the correct signature, otherwise an attacker could use knowledge of this complex setup to confuse the inputs to the verifier.
+
+Such verifiers also need to ensure that any differences in message component contexts between signatures are expected and permitted. For example, in the above scenario, the reverse proxy could include the original hostname in a `Forwarded` header field, and sign `@authority`, `forwarded`, and the client's entry in the `signature` field. The verifier can use the hostname from the `Forwarded` header field to confirm that the hostname was transformed as expected.
+
+
 ## HTTP Processing
 
 ### Confusing HTTP Field Names for Derived Component Names {#security-lazy-header-parser}
@@ -2638,7 +2647,8 @@ Jeffrey Yasskin.
 - draft-ietf-httpbis-message-signatures
 
   - -13
-     * Renamed "context" parameter to "tag"
+     * Renamed "context" parameter to "tag".
+     * Added discussion on messages with multiple known contexts.
 
   - -12
      * Added "context" parameter.
