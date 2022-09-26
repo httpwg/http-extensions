@@ -2230,12 +2230,12 @@ NOTE: '\' line wrapping per RFC 8792
 Signature-Input: sig-b22=("@authority" "content-digest" \
   "@query-param";name="Pet");created=1618884473\
   ;keyid="test-key-rsa-pss";tag="header-example"
-Signature: sig-b22=:SW3AKyCPY7PQSARlOEg8+tb43JD4uYGBrt6G+RWKgrOZ9ZJ\
-  Wq8VnVM1qTcdjChi6HGZI4xDwKZteoQH8mj2HT1cWdUTxu2JaUvcJDINpa0m20NYy\
-  wRu/HLXmh/FfeefGIUpkAneT/X/sWL/ShiTtp7REtxdJaiLCjQidY9eUpFmBXPMdR\
-  /FiYI3hGWarGGiGmTpgbjI713ywhKoGPm7Q8lpfhz5T59tOsZVPxlqdpwPD0RVGOw\
-  ZMzI5VzoY4YaGrB2fqvPOxNUNuh5bveYQOYAmzmpDaLfgkQB/C4AHzKWAYs9yV6Wf\
-  78u4en7AP1Y+iM0G6MviZvX1/lcgC2n1bDg==:
+Signature: sig-b22=:LjbtqUbfmvjj5C5kr1Ugj4PmLYvx9wVjZvD9GsTT4F7GrcQ\
+  EdJzgI9qHxICagShLRiLMlAJjtq6N4CDfKtjvuJyE5qH7KT8UCMkSowOB4+ECxCmT\
+  8rtAmj/0PIXxi0A0nxKyB09RNrCQibbUjsLS/2YyFYXEu4TRJQzRw1rLEuEfY17SA\
+  RYhpTlaqwZVtR8NV7+4UKkjqpcAoFqWFQh62s7Cl+H2fjBSpqfZUJcsIk4N6wiKYd\
+  4je2U/lankenQ99PZfB4jY3I5rSV2DSBVkSFsURIjYErOs0tFTQosMTAoxk//0RoK\
+  UqiYY8Bh0aaUEb0rQl3/XaVe4bXTugEjHSw==:
 ~~~
 
 Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
