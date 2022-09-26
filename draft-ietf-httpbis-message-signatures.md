@@ -211,7 +211,7 @@ Some examples of these kinds of transformations, and the effect they have on the
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
-- The set of [component identifiers](#covered-content) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header to be present and covered as well as mandate a value for `context` that is specific to the API being protected.
+- The set of [component identifiers](#covered-content) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header to be present and covered as well as mandate a value for `tag` that is specific to the API being protected.
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means such as pre-registration of a signer's key.
 - A means of determining the signature algorithm used to verify the signature is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
@@ -811,7 +811,7 @@ The signature parameters component value is the serialization of the signature p
 * `nonce`: A random unique value generated for this signature as a String value.
 * `alg`: The HTTP message signature algorithm from the HTTP Message Signature Algorithm Registry, as a String value.
 * `keyid`: The identifier for the key material as a String value.
-* `context`: An application-specific context for the signature as a String value. This value is used by applications to help identify signatures relevant for specific applications or protocols.
+* `tag`: An application-specific tag for the signature as a String value. This value is used by applications to help identify signatures relevant for specific applications or protocols.
 
 Additional parameters can be defined in the [HTTP Signature Parameters Registry](#iana-param-contents). Note that there is no general ordering to the parameters, but once an ordering is chosen for a given set of parameters, it cannot be changed without altering the signature parameters value.
 
@@ -1178,7 +1178,7 @@ Some non-normative examples of additional requirements an application might defi
 - Prohibiting the use of certain algorithms, or mandating the use of a specific algorithm.
 - Requiring keys to be of a certain size (e.g., 2048 bits vs. 1024 bits).
 - Enforcing uniqueness of the `nonce` parameter.
-- Requiring an application-specific value for the `context` parameter.
+- Requiring an application-specific value for the `tag` parameter.
 
 Application-specific requirements are expected and encouraged. When an application defines additional requirements, it MUST enforce them during the signature verification process, and signature verification MUST fail if the signature does not conform to the application's requirements.
 
@@ -1602,7 +1602,7 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 |`expires`|Timestamp of proposed signature expiration| {{signature-params}} of {{&SELF}}|
 |`keyid`|Key identifier for the signing and verification keys used to create this signature| {{signature-params}} of {{&SELF}}|
 |`nonce`|A single-use nonce value| {{signature-params}} of {{&SELF}}|
-|`context`|An application-specific context for a signature| {{signature-params}} of {{&SELF}}|
+|`tag`|An application-specific tag for a signature| {{signature-params}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Metadata Parameters Registry." }
 
 ## HTTP Signature Derived Component Names Registry {#content-registry}
@@ -1754,7 +1754,7 @@ Some HTTP fields have values and interpretations that are similar to HTTP signat
 
 HTTP Message Signature values are identified in the Signature and Signature-Input field values by unique labels. These labels are chosen only when attaching the signature values to the message and are not accounted for in the signing process. An intermediary is allowed to re-label an existing signature when processing the message.
 
-Therefore, applications should not rely on specific labels being present, and applications should not put semantic meaning on the labels themselves. Instead, additional signature parameters can be used to convey whatever additional meaning is required to be attached to and covered by the signature. In particular, the `context` parameter can be used to define an application-specific value as described in {{security-signature-context}}.
+Therefore, applications should not rely on specific labels being present, and applications should not put semantic meaning on the labels themselves. Instead, additional signature parameters can be used to convey whatever additional meaning is required to be attached to and covered by the signature. In particular, the `tag` parameter can be used to define an application-specific value as described in {{security-signature-tag}}.
 
 ### Multiple Signature Confusion {#security-multiple}
 
@@ -1764,11 +1764,11 @@ A verifier processing a set of valid signatures needs to account for all of the 
 
 A verifier processing a set of signatures on a message also needs to determine what to do when one or more of the signatures are not valid. If a message is accepted when at least one signature is valid, then a verifier could drop all invalid signatures from the request before processing the message further. Alternatively, if the verifier rejects a message for a single invalid signature, an attacker could use this to deny service to otherwise valid messages by injecting invalid signatures alongside the valid ones.
 
-### Collision of Application-Specific Signature Context {#security-signature-context}
+### Collision of Application-Specific Signature Tag {#security-signature-tag}
 
-Multiple applications and protocols could apply HTTP signatures on the same message simultaneously. In fact, this is a desired feature in many circumstances as described in {{signature-multiple}}. A naive verifier could become confused in processing multiple signatures, either accepting or rejecting a message based on an unrelated or irrelevant signature. In order to help an application select which signatures apply to its own processing, the application can declare a specific value for the `context` signature parameter as defined in {{signature-params}}. For example, a signature targeting an application gateway could require `context="app-gateway"` as part of the signature parameters for that application.
+Multiple applications and protocols could apply HTTP signatures on the same message simultaneously. In fact, this is a desired feature in many circumstances as described in {{signature-multiple}}. A naive verifier could become confused in processing multiple signatures, either accepting or rejecting a message based on an unrelated or irrelevant signature. In order to help an application select which signatures apply to its own processing, the application can declare a specific value for the `tag` signature parameter as defined in {{signature-params}}. For example, a signature targeting an application gateway could require `tag="app-gateway"` as part of the signature parameters for that application.
 
-The use of the `context` parameter does not prevent an attacker from also using the same value as a target application, since the parameter's value is public and otherwise unrestricted. As a consequence, a verifier should only use value of the `context` parameter to limit which signatures to check. Each signature still needs to be examined by the verifier to ensure that sufficient coverage is provided, as discussed in {{security-coverage}}.
+The use of the `tag` parameter does not prevent an attacker from also using the same value as a target application, since the parameter's value is public and otherwise unrestricted. As a consequence, a verifier should only use value of the `tag` parameter to limit which signatures to check. Each signature still needs to be examined by the verifier to ensure that sufficient coverage is provided, as discussed in {{security-coverage}}.
 
 ### Message Content {#security-message-content}
 
@@ -2203,7 +2203,7 @@ Note that the RSA PSS algorithm in use here is non-deterministic, meaning a diff
 
 ### Selective Covered Components using rsa-pss-sha512
 
-This example covers additional components (the authority, the Content-Digest header field, and a single named query parameter) in `test-request` using the `rsa-pss-sha512` algorithm. This example also adds a `context` parameter with the application-specific value of `header-example`.
+This example covers additional components (the authority, the Content-Digest header field, and a single named query parameter) in `test-request` using the `rsa-pss-sha512` algorithm. This example also adds a `tag` parameter with the application-specific value of `header-example`.
 
 The corresponding signature base is:
 
@@ -2217,7 +2217,7 @@ NOTE: '\' line wrapping per RFC 8792
 "@signature-params": ("@authority" "content-digest" \
   "@query-param";name="Pet")\
   ;created=1618884473;keyid="test-key-rsa-pss"\
-  ;context="header-example"
+  ;tag="header-example"
 ~~~
 
 
@@ -2229,13 +2229,13 @@ NOTE: '\' line wrapping per RFC 8792
 
 Signature-Input: sig-b22=("@authority" "content-digest" \
   "@query-param";name="Pet");created=1618884473\
-  ;keyid="test-key-rsa-pss";context="header-example"
-Signature: sig-b22=:SW3AKyCPY7PQSARlOEg8+tb43JD4uYGBrt6G+RWKgrOZ9ZJ\
-  Wq8VnVM1qTcdjChi6HGZI4xDwKZteoQH8mj2HT1cWdUTxu2JaUvcJDINpa0m20NYy\
-  wRu/HLXmh/FfeefGIUpkAneT/X/sWL/ShiTtp7REtxdJaiLCjQidY9eUpFmBXPMdR\
-  /FiYI3hGWarGGiGmTpgbjI713ywhKoGPm7Q8lpfhz5T59tOsZVPxlqdpwPD0RVGOw\
-  ZMzI5VzoY4YaGrB2fqvPOxNUNuh5bveYQOYAmzmpDaLfgkQB/C4AHzKWAYs9yV6Wf\
-  78u4en7AP1Y+iM0G6MviZvX1/lcgC2n1bDg==:
+  ;keyid="test-key-rsa-pss";tag="header-example"
+Signature: sig-b22=:LjbtqUbfmvjj5C5kr1Ugj4PmLYvx9wVjZvD9GsTT4F7GrcQ\
+  EdJzgI9qHxICagShLRiLMlAJjtq6N4CDfKtjvuJyE5qH7KT8UCMkSowOB4+ECxCmT\
+  8rtAmj/0PIXxi0A0nxKyB09RNrCQibbUjsLS/2YyFYXEu4TRJQzRw1rLEuEfY17SA\
+  RYhpTlaqwZVtR8NV7+4UKkjqpcAoFqWFQh62s7Cl+H2fjBSpqfZUJcsIk4N6wiKYd\
+  4je2U/lankenQ99PZfB4jY3I5rSV2DSBVkSFsURIjYErOs0tFTQosMTAoxk//0RoK\
+  UqiYY8Bh0aaUEb0rQl3/XaVe4bXTugEjHSw==:
 ~~~
 
 Note that the RSA PSS algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
@@ -2636,6 +2636,9 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -13
+     * Renamed "context" parameter to "tag"
 
   - -12
      * Added "context" parameter.
