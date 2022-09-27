@@ -2597,7 +2597,7 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Update editors and the acknowledgements
   <https://github.com/httpwg/http-extensions/pull/2244>
-  
+
 * Prevent nameless cookies with prefixed values
   <https://github.com/httpwg/http-extensions/pull/2251>
 
