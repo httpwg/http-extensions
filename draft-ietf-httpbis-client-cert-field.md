@@ -183,11 +183,13 @@ multiple times in a request.
 ## Client-Cert-Chain HTTP Header Field {#chain-header}
 
 In the context of a TLS terminating reverse proxy deployment, the proxy
-MAY make the certificate chain used for validation of the end-entity certificate
+MAY make the certificate chain for validation of the end-entity certificate
 available to the backend application with the Client-Cert-Chain HTTP header
-field. This field contains certificates used by the proxy to validate the
-certificate used by the client in the TLS handshake. These certificates might or
-might not have been provided by the client during the TLS handshake.
+field. This field contains certificates for validation of the end-entity
+certificate provided by the client in the TLS handshake. These certificates might or
+might not have been provided by the client during the TLS handshake, however,
+their order is congruent with the ordering from TLS (such as described in
+{{Section 4.4.2 of RFC8446}}).
 
 Client-Cert-Chain is a List Structured Header {{!RFC8941}}.  Each item in the
 list MUST be a Byte Sequence ({{Section 3.3.5 of RFC8941}}) encoded as described
@@ -204,15 +206,7 @@ NOT be used in HTTP responses.  It MAY have a list of values or occur multiple
 times in a request.  For header compression purposes, it might be advantageous
 to split lists into multiple instances.
 
-The first certificate in the list SHOULD directly certify the end-entity
-certificate provided in the `Client-Cert` header; each following certificate
-SHOULD directly certify the one immediately preceding it.  Because certificate
-validation requires that trust anchors be distributed independently, a
-certificate that specifies a trust anchor MAY be omitted from the chain,
-provided that the server is known to possess any omitted certificates.
 
-However, for maximum compatibility, servers SHOULD be prepared to handle
-potentially extraneous certificates and arbitrary orderings.
 
 ## Processing Rules
 
@@ -501,12 +495,13 @@ latter and ensure wide applicability by not trying to cherry-pick particular
 certificate information, this draft opted to pass the full encoded certificate
 as the value of the `Client-Cert` field.
 
-The handshake and validation of the client certificate (chain) of the
-mutually-authenticated TLS connection is performed by the TTRP.  With the
+The validation of the client certificate and chain of the mutually-authenticated
+TLS connection is typically performed by the TTRP during the handshake.  With the
 responsibility of certificate validation falling on the TTRP, the
 end-entity certificate is oftentimes sufficient for the needs of the origin server.
 The separate `Client-Cert-Chain` field can convey the certificate chain for
-deployments that require such information.
+deployments that require such information in order for the origin server to augment
+the chain validation or assume it entirely.
 
 # Acknowledgements
 
@@ -542,6 +537,10 @@ The authors would like to thank the following individuals who've contributed in 
 # Document History
 
    > To be removed by the RFC Editor before publication as an RFC
+
+   draft-ietf-httpbis-client-cert-field-03
+
+   * State that the certificate chain is in the same order as it appears in TLS rather than copying the language from TLS
 
    draft-ietf-httpbis-client-cert-field-02
 
