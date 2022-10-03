@@ -248,11 +248,9 @@ Backend origin servers may then use the `Client-Cert` header field of the
 request to determine if the connection from the client to the TTRP was
 mutually-authenticated and, if so, the certificate thereby presented by the
 client.
-
-Forward proxies and other intermediaries MUST NOT add the `Client-Cert` or
-`Client-Cert-Chain` header fields to requests, or modify an existing
-`Client-Cert` or `Client-Cert-Chain` header field. Similarly, clients MUST NOT
-employ the `Client-Cert` or `Client-Cert-Chain` header field in requests.
+Access control decisions based on the client certificate (or lack thereof) can be
+conveyed by selecting response content as appropriate or with an HTTP 403 response,
+if the certificate is deemed unacceptable for the given context.
 
 When the value of the `Client-Cert` request header field is used to select a response
 (e.g., the response content is access-controlled), the response MUST either be
@@ -262,6 +260,11 @@ header value by sending a `Vary: Client-Cert` response header.
 If a TTRP encounters a response with a `client-cert` field name in the `Vary`
 header field, it SHOULD prevent the user agent from caching the response by
 transforming the value of the `Vary` response header field to `*`.
+
+Forward proxies and other intermediaries MUST NOT add the `Client-Cert` or
+`Client-Cert-Chain` header fields to requests, or modify an existing
+`Client-Cert` or `Client-Cert-Chain` header field. Similarly, clients MUST NOT
+employ the `Client-Cert` or `Client-Cert-Chain` header field in requests.
 
 # Deployment Considerations {#deployment}
 
@@ -542,6 +545,11 @@ The authors would like to thank the following individuals who've contributed in 
 # Document History
 
    > To be removed by the RFC Editor before publication as an RFC
+
+   draft-ietf-httpbis-client-cert-field-03
+
+   * Mention that origin server access control decisions can be
+     conveyed by selecting response content or with a 403
 
    draft-ietf-httpbis-client-cert-field-02
 
