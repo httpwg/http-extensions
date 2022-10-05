@@ -251,6 +251,8 @@ client.
 Access control decisions based on the client certificate (or lack thereof) can be
 conveyed by selecting response content as appropriate or with an HTTP 403 response,
 if the certificate is deemed unacceptable for the given context.
+Note that TLS clients that rely on error indications at the TLS layer for an
+unacceptable certificate will not receive those signals.
 
 When the value of the `Client-Cert` request header field is used to select a response
 (e.g., the response content is access-controlled), the response MUST either be
