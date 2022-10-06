@@ -49,6 +49,8 @@ references:
       display: HTTP/1.1
     RFC9113:
       display: HTTP/2
+    RFC9114:
+      display: HTTP/3
 
 --- abstract
 
