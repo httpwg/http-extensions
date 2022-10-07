@@ -142,7 +142,7 @@ the reverse proxy from the reverse proxy to the origin server.
 
 Client-Cert-Chain:
 : Conveys the certificate chain used for validation of the end-entity
-certificate used by the client in the TLS handshake from the reverse proxy to the origin server.
+certificate provided by the client in the TLS handshake with the reverse proxy from the proxy to the origin server.
 
 ## Encoding
 
@@ -183,17 +183,13 @@ multiple times in a request.
 ## Client-Cert-Chain HTTP Header Field {#chain-header}
 
 In the context of a TLS terminating reverse proxy deployment, the proxy
-MAY make the certificate chain for validation of the end-entity certificate
+MAY make the certificate chain
 available to the backend application with the Client-Cert-Chain HTTP header
-field. This field contains certificates for validation of the end-entity
-certificate provided by the client in the TLS handshake. These certificates might or
-might not have been provided by the client during the TLS handshake, however,
-their order is congruent with the ordering from TLS (such as described in
-{{Section 4.4.2 of RFC8446}}).
+field.
 
 Client-Cert-Chain is a List Structured Header {{!RFC8941}}.  Each item in the
 list MUST be a Byte Sequence ({{Section 3.3.5 of RFC8941}}) encoded as described
-in {{encoding}}.
+in {{encoding}}. The order is the same as the ordering in TLS (such as described in {{Section 4.4.2 of RFC8446}})
 
 The header's ABNF is:
 
