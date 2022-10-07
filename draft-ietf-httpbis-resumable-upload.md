@@ -470,18 +470,8 @@ Specification: This document
 
 * Split the Upload Transfer Procedure into the Upload Creation Procedure and the Upload Appending Procedure.
 
-# Acknowledgments
-{:numbered="false"}
 
-This document is based on an Internet-Draft specification written by Jiten Mehta, Stefan Matsson, and the authors of this document.
-
-TODO: more acknowledgements.
-
-# Appendix
-{:numbered="false"}
-
-## Informational Response
-{:numbered="false"}
+# Informational Response
 
 The server is allowed to respond to Upload Creation Procedure ({{upload-creation}}) requests with a `104 (Upload Resumption Supported)` intermediate response as soon as the server has validated the request. This way, the client knows that the server supports resumable uploads before the complete response for the Upload Creation Procedure is received. The benefit is the clients can defer starting the actual data transfer until the server indicates full support of the incoming Upload Creation Procedure (i.e. resumable are supported, the provided upload token is active etc).
 
@@ -489,8 +479,7 @@ On the contrary, support for intermediate responses (the `1XX` range) in existin
 
 We hope that support for intermediate responses increases in the near future, to allow a wider usage of `104 (Upload Resumption Supported)`.
 
-## Feature Detection
-{:numbered="false"}
+# Feature Detection
 
 This specification includes a section about feature detection (it was called service discovery in earlier discussions, but this name is probably ill-suited). The idea is to allow resumable uploads to be transparently implemented by HTTP clients. This means that application developers just keep using the same API of their HTTP library as they have done in the past with traditional, non-resumable uploads. Once the HTTP library gets updated (e.g. because mobile OS or browsers start implementing resumable uploads), the HTTP library can transparently decide to use resumable uploads without explicit configuration by the application developer. Of course, in order to use resumable uploads, the HTTP library needs to know whether the server supports resumable uploads. If no support is detected, the HTTP library should use the traditional, non-resumable upload technique. We call this process feature detection.
 
@@ -516,14 +505,19 @@ Following **approaches** have already been considered in the past. All except th
 
 **Send a 103 Early Hint response to indicate support.** This approach is the similar to the above one, with one exception: Instead of a new `104 (Upload Resumption Supported)` status code, the existing `103 (Early Hint)` status code is used in the intermediate response. The 103 code would then be accompanied by a header indicating support for resumable uploads (e.g. `Resumable-Uploads: 1`). It is unclear whether the Early Hints code is appropriate for that, as it is currently only used to indicate resources for prefetching them.
 
-## Upload Metadata
-{:numbered="false"}
+# Upload Metadata
 
 The Upload Creation Procedure ({{upload-creation}}) allows the `Content-Type` and `Content-Disposition` header to be included. They are intended to be a standardized way of communicating the file name and file type, if available. However, this is not without controversy. Some argue that since these headers are already defined in other specifications, it is not necessary to include them here again. Furthermore, the `Content-Disposition` header field's format is not clearly enough defined. For example, it is left open which disposition value should be used in the header. There needs to be more discussion whether this approach is suited or not.
 
 However, from experience with the tus project, users are often asking for a way to communicate the file name and file type. Therefore, we believe it is help to explicitly include an approach for doing so.
 
-## FAQ
-{:numbered="false"}
+# FAQ
 
 * **Are multipart requests supported?** Yes, requests whose body is encoded using the `multipart/form-data` are implicitly supported. The entire encoded body can be considered as a single file, which is then uploaded using the resumable protocol. The server, of course, must store the delimiter ("boundary") separating each part and must be able to parse the multipart format once the upload is completed.
+
+# Acknowledgments
+{:numbered="false"}
+
+This document is based on an Internet-Draft specification written by Jiten Mehta, Stefan Matsson, and the authors of this document.
+
+TODO: more acknowledgements.
