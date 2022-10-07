@@ -54,16 +54,45 @@ The ORIGIN HTTP/3 frame allows a server to indicate what origin(s)
 Origin Set ({{Section 2.3 of ORIGIN}}) for the connection within which it
 occurs.
 
-Where HTTP/2 reserves Stream 0 for frames related to the state of the
-connection, HTTP/3 defines a pair of unidirectional streams called "control
-streams" for this purpose.  Where {{ORIGIN}} indicates that the ORIGIN frame
-should be sent on Stream 0, this should be interpreted to mean the HTTP/3
+The semantics of the frame payload are identical to those of the HTTP/2 frame
+defined in {{!ORIGIN}}. Where HTTP/2 reserves Stream 0 for frames related to the
+state of the connection, HTTP/3 defines a pair of unidirectional streams called
+"control streams" for this purpose.  Where {{ORIGIN}} indicates that the ORIGIN
+frame should be sent on Stream 0, this should be interpreted to mean the HTTP/3
 control stream.  The ORIGIN frame is sent from servers to clients on the
 server's control stream.
 
-The layout and semantics of the frame payload are identical to those of the
-HTTP/2 frame defined in {{!ORIGIN}}.  The ORIGIN frame type is 0xc (decimal 12),
-as in HTTP/2.
+## Frame Layout
+
+The ORIGIN frame has a nearly identical layout to that used in HTTP/2, restated
+here for clarity.  The ORIGIN frame type is 0xc (decimal 12) as in HTTP/2. The
+payload contains zero or more instances of the Origin-Entry field.
+
+~~~~~ ascii-art
+HTTP/3 Origin-Entry {
+  Origin-Len (16),
+  ASCII-Origin (..),
+}
+
+HTTP/3 ORIGIN Frame {
+  Type (i) = 0x0c,
+  Length (i),
+  Origin-Entry (..) ...,
+}
+~~~~~
+{: title="ORIGIN Frame Layout"}
+
+An Origin-Entry is a length-delimited string. Specifically, it contains two
+fields:
+
+Origin-Len:
+: An unsigned, 16-bit integer indicating the length, in octets, of
+the ASCII-Origin field.
+
+ASCII-Origin:
+: An OPTIONAL sequence of characters containing the ASCII serialization of an
+  origin ({{RFC6454, Section 6.2}}) that the sender asserts this connection is
+  or could be authoritative for.
 
 # Security Considerations {#security}
 
