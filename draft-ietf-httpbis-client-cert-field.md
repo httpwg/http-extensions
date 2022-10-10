@@ -189,7 +189,7 @@ field.
 
 Client-Cert-Chain is a List Structured Header {{!RFC8941}}.  Each item in the
 list MUST be a Byte Sequence ({{Section 3.3.5 of RFC8941}}) encoded as described
-in {{encoding}}. The order is the same as the ordering in TLS (such as described in {{Section 4.4.2 of RFC8446}})
+in {{encoding}}. The order is the same as the ordering in TLS (such as described in {{Section 4.4.2 of RFC8446}}).
 
 The header's ABNF is:
 
