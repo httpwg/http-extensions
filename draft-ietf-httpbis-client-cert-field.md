@@ -134,15 +134,16 @@ fields described herein.
 
 This document designates the following headers, defined further in {{header}}
 and {{chain-header}} respectively, to carry the client certificate information of a
-mutually-authenticated TLS connection from a reverse proxy to origin server.
+mutually-authenticated TLS connection. The headers convey the information
+from the reverse proxy to the origin server.
 
 Client-Cert:
-: Conveys the end-entity certificate used by the client in the TLS handshake with
-the reverse proxy from the reverse proxy to the origin server.
+:  The end-entity certificate used by the client in the TLS handshake with
+the reverse proxy.
 
 Client-Cert-Chain:
-: Conveys the certificate chain used for validation of the end-entity
-certificate provided by the client in the TLS handshake with the reverse proxy from the proxy to the origin server.
+: The certificate chain used for validation of the end-entity
+certificate provided by the client in the TLS handshake with the reverse proxy.
 
 ## Encoding
 
