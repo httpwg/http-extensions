@@ -501,8 +501,7 @@ TLS connection is typically performed by the TTRP during the handshake.  With th
 responsibility of certificate validation falling on the TTRP, the
 end-entity certificate is oftentimes sufficient for the needs of the origin server.
 The separate `Client-Cert-Chain` field can convey the certificate chain for
-deployments that require such information in order for the origin server to augment
-the chain validation or assume it entirely.
+origin server deployments that require this additional information.
 
 # Acknowledgements
 
