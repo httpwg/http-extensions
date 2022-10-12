@@ -6,7 +6,7 @@ date: {DATE}
 category: std
 
 ipr: trust200902
-area: Applications
+area: Applications and Real-Time
 workgroup: HTTPbis
 keyword: Internet-Draft
 
