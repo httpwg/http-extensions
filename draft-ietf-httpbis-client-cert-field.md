@@ -41,9 +41,9 @@ author:
 normative:
   RFC8941:
     display: STRUCTURED-FIELDS
-informative:
   RFC9110:
     display: HTTP
+informative:
   RFC9112:
     display: HTTP/1.1
   RFC9113:
@@ -189,7 +189,7 @@ The value of the header is encoded as described in {{encoding}}.
 
 The `Client-Cert` header field is only for use in HTTP requests and MUST NOT be
 used in HTTP responses.  It is a singleton header field value as defined in
-Section 5.5 of {{?RFC9110}}, which MUST NOT have a list of values or occur
+{{Section 5.5 of RFC9110}}, which MUST NOT have a list of values or occur
 multiple times in a request.
 
 ## Client-Cert-Chain HTTP Header Field {#chain-header}
@@ -361,7 +361,7 @@ Other deployments that meet the requirements set forth herein are also possible.
 ## HTTP Field Name Registrations
 
 Please register the following entries in the "Hypertext Transfer Protocol (HTTP) Field
-Name Registry" defined by HTTP Semantics {{?RFC9110}}:
+Name Registry" defined by HTTP Semantics {{RFC9110}}:
 
 * Field name: Client-Cert
 * Status: permanent
@@ -563,6 +563,7 @@ The authors would like to thank the following individuals who've contributed in 
    draft-ietf-httpbis-client-cert-field-03
 
    * Update references for HTTP Semantics, HTTP/3, and QPACK to point to the now RFCs 9110/9114/9204
+   * HTTP Semantics now a normative ref
    * Mention that origin server access control decisions can be
      conveyed by selecting response content or with a 403
 
