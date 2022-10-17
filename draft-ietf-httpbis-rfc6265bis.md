@@ -2587,6 +2587,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Update editors and the acknowledgements
   <https://github.com/httpwg/http-extensions/pull/2244>
 
+* Update cookie-value definition to reflect browser behavior
+  <https://github.com/httpwg/http-extensions/pull/2270>
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
