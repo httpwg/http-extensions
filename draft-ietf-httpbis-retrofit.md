@@ -117,6 +117,7 @@ An application using this specification will need to consider how to handle such
 | Content-Length                   | List            |
 | Content-Type                     | Item            |
 | Cross-Origin-Resource-Policy     | Item            |
+| DNT                              | Item            |
 | Expect                           | Dictionary      |
 | Expect-CT                        | Dictionary      |
 | Host                             | Item            |
@@ -136,6 +137,7 @@ An application using this specification will need to consider how to handle such
 | Timing-Allow-Origin              | List            |
 | Trailer                          | List            |
 | Transfer-Encoding                | List            |
+| Upgrade-Insecure-Requests        | Item            |
 | Vary                             | List            |
 | X-Content-Type-Options           | Item            |
 | X-Frame-Options                  | Item            |
