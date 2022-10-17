@@ -483,10 +483,8 @@ set-cookie-string = BWS cookie-pair *( BWS ";" OWS cookie-av )
 cookie-pair       = cookie-name BWS "=" BWS cookie-value
 cookie-name       = 1*cookie-octet
 cookie-value      = *cookie-octet / ( DQUOTE *cookie-octet DQUOTE )
-cookie-octet      = %x21 / %x23-2B / %x2D-3A / %x3C-5B / %x5D-7E
-                      ; US-ASCII characters excluding CTLs,
-                      ; whitespace DQUOTE, comma, semicolon,
-                      ; and backslash
+cookie-octet      = %x20-3A / %x3C-7E / %x80-FF
+                      ; octets excluding CTLs and semicolon
 
 cookie-av         = expires-av / max-age-av / domain-av /
                     path-av / secure-av / httponly-av /
