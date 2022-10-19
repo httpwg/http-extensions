@@ -146,15 +146,16 @@ fields described herein.
 
 This document designates the following headers, defined further in {{header}}
 and {{chain-header}} respectively, to carry the client certificate information of a
-mutually-authenticated TLS connection from a reverse proxy to origin server.
+mutually-authenticated TLS connection. The headers convey the information
+from the reverse proxy to the origin server.
 
 Client-Cert:
-: Conveys the end-entity certificate used by the client in the TLS handshake with
-the reverse proxy from the reverse proxy to the origin server.
+:  The end-entity certificate used by the client in the TLS handshake with
+the reverse proxy.
 
 Client-Cert-Chain:
-: Conveys the certificate chain used for validation of the end-entity
-certificate used by the client in the TLS handshake from the reverse proxy to the origin server.
+: The certificate chain used for validation of the end-entity
+certificate provided by the client in the TLS handshake with the reverse proxy.
 
 ## Encoding
 
@@ -195,15 +196,13 @@ multiple times in a request.
 ## Client-Cert-Chain HTTP Header Field {#chain-header}
 
 In the context of a TLS terminating reverse proxy deployment, the proxy
-MAY make the certificate chain used for validation of the end-entity certificate
+MAY make the certificate chain
 available to the backend application with the Client-Cert-Chain HTTP header
-field. This field contains certificates used by the proxy to validate the
-certificate used by the client in the TLS handshake. These certificates might or
-might not have been provided by the client during the TLS handshake.
+field.
 
 Client-Cert-Chain is a List Structured Header {{!RFC8941}}.  Each item in the
 list MUST be a Byte Sequence ({{Section 3.3.5 of RFC8941}}) encoded as described
-in {{encoding}}.
+in {{encoding}}. The order is the same as the ordering in TLS (such as described in {{Section 4.4.2 of TLS}}).
 
 The header's ABNF is:
 
@@ -216,15 +215,7 @@ NOT be used in HTTP responses.  It MAY have a list of values or occur multiple
 times in a request.  For header compression purposes, it might be advantageous
 to split lists into multiple instances.
 
-The first certificate in the list SHOULD directly certify the end-entity
-certificate provided in the `Client-Cert` header; each following certificate
-SHOULD directly certify the one immediately preceding it.  Because certificate
-validation requires that trust anchors be distributed independently, a
-certificate that specifies a trust anchor MAY be omitted from the chain,
-provided that the server is known to possess any omitted certificates.
 
-However, for maximum compatibility, servers SHOULD be prepared to handle
-potentially extraneous certificates and arbitrary orderings.
 
 ## Processing Rules
 
@@ -518,12 +509,12 @@ latter and ensure wide applicability by not trying to cherry-pick particular
 certificate information, this draft opted to pass the full encoded certificate
 as the value of the `Client-Cert` field.
 
-The handshake and validation of the client certificate (chain) of the
-mutually-authenticated TLS connection is performed by the TTRP.  With the
+The validation of the client certificate and chain of the mutually-authenticated
+TLS connection is typically performed by the TTRP during the handshake.  With the
 responsibility of certificate validation falling on the TTRP, the
 end-entity certificate is oftentimes sufficient for the needs of the origin server.
 The separate `Client-Cert-Chain` field can convey the certificate chain for
-deployments that require such information.
+origin server deployments that require this additional information.
 
 # Acknowledgements
 
@@ -562,6 +553,7 @@ The authors would like to thank the following individuals who've contributed in 
 
    draft-ietf-httpbis-client-cert-field-03
 
+   * State that the certificate chain is in the same order as it appears in TLS rather than copying the language from TLS
    * Update references for HTTP Semantics, HTTP/3, and QPACK to point to the now RFCs 9110/9114/9204
    * HTTP Semantics now a normative ref
    * Mention that origin server access control decisions can be
