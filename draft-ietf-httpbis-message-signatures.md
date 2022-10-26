@@ -78,7 +78,7 @@ normative:
         target: https://url.spec.whatwg.org/
         title: URL (Living Standard)
         date: 2021
-    ABNF: RFC5243
+    ABNF: RFC5234
 informative:
     RFC7239:
     BCP195:
