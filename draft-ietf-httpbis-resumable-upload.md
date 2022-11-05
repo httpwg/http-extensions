@@ -252,9 +252,9 @@ The client MAY automatically attempt upload resumption when the connection is te
 
 File metadata can affect how servers might act on the uploaded file. Clients can send Representation Metadata (see {{Section 8.3 of HTTP}}) in the Upload Creation Procedure request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header can be used to indicate the MIME type of the file. The `Content-Disposition` header can be used to transmit a filename. If included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
 
-## Feature Detection
+## Feature Detection {#feature-detection}
 
-If the client has no knowledge of whether the server supports resumable upload, the Upload Creation Procedure MAY be used with some additional constraints. In particular, the `Upload-Incomplete` header field ({{upload-incomplete}}) MUST NOT be sent in the request if the server support is unclear. This allows the upload to function as if it is a regular upload.
+If the client has no knowledge of whether the resource supports resumable uploads, the Upload Creation Procedure MAY be used with some additional constraints. In particular, the `Upload-Incomplete` header field ({{upload-incomplete}}) MUST NOT be sent in the request if the support of resumable uploads by the resource is unclear. This allows the upload to function as if it is a regular upload.
 
 If the server detects the Upload Creation Procedure and it supports resumable upload, an informational response with `104 (Upload Resumption Supported)` status MAY be sent to the client while the request body is being uploaded.
 
@@ -422,6 +422,8 @@ The `Upload-Incomplete` request and response header field is an Item Structured 
 ~~~ abnf
 Upload-Incomplete = sf-boolean
 ~~~
+
+The `Upload-Incomplete` header field MUST only by used if support by the resource is known to the client ({{feature-detection}}).
 
 # Redirection
 
