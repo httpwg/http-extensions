@@ -168,7 +168,7 @@ In some cases clients might prefer to upload a file as a series of parts sent ac
 
 This example shows how the client, with prior knowledge about the server's resumable upload support, can upload parts of a file over a sequence of procedures.
 
-1) If the client is aware that the server supports resumable upload, it can use the Upload Creation Procedure with the `Upload-Incomplete` header to start an upload.
+1) If the client is aware that the server supports resumable upload, it can use the Upload Creation Procedure with the `Upload-Incomplete` header to start an upload. The client can include the first part of the file in the Upload Creation Procedure.
 
 ~~~
 Client                                      Server
@@ -329,7 +329,7 @@ If the server does not consider the upload associated with the token in the `Upl
 
 The client MUST NOT perform multiple upload transfers for the same token using Upload Creation Procedures ({{upload-creation}}) or Upload Appending Procedures ({{upload-appending}}) in parallel to avoid race conditions and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any ongoing Upload Creation Procedure ({{upload-creation}}) or Upload Appending Procedure ({{upload-appending}}) for the same token. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
-If the offset in the `Upload-Offset` header field does not match the offset provided by the immediate previous Offset Retrieving Procedure ({{offset-retrieving}}), or the end offset of the immediate previous incomplete transfer, the server MUST respond with `409 (Conflict)` status code.
+If the offset in the `Upload-Offset` header field does not match the offset provided by the immediate previous Offset Retrieving Procedure ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with `409 (Conflict)` status code.
 
 The server MUST send the `Upload-Offset` header in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the response status code indicates a success but the offset in the `Upload-Offset` header field in the response does not equal to the begin offset plus the number of bytes uploaded in the request.
 
