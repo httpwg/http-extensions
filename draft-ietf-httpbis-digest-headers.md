@@ -276,7 +276,7 @@ support transitions away from weaker algorithms (see {{sec-agility}}).
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Repr-Digest: \
+Content-Digest: \
   sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
   sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
