@@ -57,7 +57,6 @@ author:
 
 normative:
     RFC2104:
-    RFC3986:
     RFC6234:
     RFC7517:
     RFC7518:
@@ -74,6 +73,7 @@ normative:
         date: 2018
     HTTP: RFC9110
     HTTP1: RFC9112
+    URI: RFC3986
     HTMLURL:
         target: https://url.spec.whatwg.org/
         title: URL (Living Standard)
@@ -655,7 +655,7 @@ And the following signature base line:
 
 ### Path {#content-request-path}
 
-The `@path` derived component refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
+The `@path` derived component refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{URI}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character. Path components are represented by their values before decoding any percent-encoded octets, as described in the simple string comparison rules in {{Section 6.2.1 of URI}}.
 
 For example, the following request message:
 
@@ -678,25 +678,25 @@ And the following signature base line:
 
 ### Query {#content-request-query}
 
-The `@query` derived component refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, percent-encoded octets are decoded.
+The `@query` derived component refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{URI}}, including the leading `?` character. The value is read using the simple string comparison rules in {{Section 6.2.1 of URI}}. Namely, percent-encoded octets are not decoded.
 
 For example, the following request message:
 
 ~~~ http-message
-POST /path?param=value&foo=bar&baz=batman HTTP/1.1
+POST /path?param=value&foo=bar&baz=bat%2Dman HTTP/1.1
 Host: www.example.com
 ~~~
 
 Would result in the following `@query` component value:
 
 ~~~
-?param=value&foo=bar&baz=batman
+?param=value&foo=bar&baz=bat%2Dman
 ~~~
 
 And the following signature base line:
 
 ~~~
-"@query": ?param=value&foo=bar&baz=batman
+"@query": ?param=value&foo=bar&baz=bat%2Dman
 ~~~
 
 The following request message:
@@ -2645,6 +2645,9 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -14
+     * Target raw non-decoded values for "@query" and "@path".
 
   - -13
      * Renamed "context" parameter to "tag".
