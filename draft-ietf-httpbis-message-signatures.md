@@ -2707,6 +2707,8 @@ Jeffrey Yasskin.
      * Target raw non-decoded values for "@query" and "@path".
      * Add method for signing trailers.
      * Call out potential issues of list-based field values.
+     * Update IANA registry for header fields.
+     * Call out potential issues with Content-Digest in example.
 
   - -13
      * Renamed "context" parameter to "tag".
