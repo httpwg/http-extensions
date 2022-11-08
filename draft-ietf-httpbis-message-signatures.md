@@ -1573,7 +1573,21 @@ Note that by this process, a signature applied to a target message MUST have the
 
 # IANA Considerations {#iana}
 
-IANA is requested to create three registries and to populate those registries with initial values as described in this section.
+IANA is asked to update one registry and create four new registries, according to the following sections.
+
+## HTTP Field Name Registration
+
+IANA is asked to update the
+"Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
+({{HTTP}}) according to the table below:
+
+|---------------------|-----------|-----------------------------------------------|
+| Field Name          | Status    |                     Reference                 |
+|---------------------|-----------|-----------------------------------------------|
+| Signature-Input     | permanent | {{signature-input-header}} of {{&SELF}}       |
+| Signature           | permanent | {{signature-header}} of {{&SELF}}             |
+| Accept-Signature    | permanent | {{accept-signature-header}} of {{&SELF}}      |
+|---------------------|-----------|-----------------------------------------------|
 
 ## HTTP Signature Algorithms Registry {#hsa-registry}
 
