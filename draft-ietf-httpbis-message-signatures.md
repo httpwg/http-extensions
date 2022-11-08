@@ -2812,6 +2812,7 @@ Jeffrey Yasskin.
      * Call out potential issues of list-based field values.
      * Update IANA registry for header fields.
      * Call out potential issues with Content-Digest in example.
+     * Add JWK formats for all keys.
 
   - -13
      * Renamed "context" parameter to "tag".
