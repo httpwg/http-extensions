@@ -117,7 +117,7 @@ This document also provides a mechanism for negotiation the use of signatures in
 
 The terms "HTTP message", "HTTP request", "HTTP response",
 "target URI", "gateway", "header field", "intermediary", "request target",
-"sender", "method", and "recipient" are used as defined in {{HTTP}}.
+"trailer field", "sender", "method", and "recipient" are used as defined in {{HTTP}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures (which use asymmetric cryptography) and keyed MACs (which use symmetric cryptography). Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given signature base. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
@@ -190,12 +190,12 @@ HTTP applications may be running in environments that do not provide complete ac
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways. Implementations are required to tolerate many of these transformations. What follows is a non-normative and non-exhaustive list of transformations that could occur under HTTP, provided as context:
 
-- Re-ordering of header fields with different header field names ({{Section 5.3 of HTTP}}).
+- Re-ordering of fields with different header field names ({{Section 5.3 of HTTP}}).
 - Combination of fields with the same field name ({{Section 5.2 of HTTP}}).
-- Removal of header fields listed in the Connection header field ({{Section 7.6.1 of HTTP}}).
-- Addition of header fields that indicate control options ({{Section 7.6.1 of HTTP}}).
+- Removal of fields listed in the Connection header field ({{Section 7.6.1 of HTTP}}).
+- Addition of fields that indicate control options ({{Section 7.6.1 of HTTP}}).
 - Addition or removal of a transfer coding ({{Section 7.7 of HTTP}}).
-- Addition of header fields such as `Via` ({{Section 7.6.3 of HTTP}}) and `Forwarded` ({{Section 4 of RFC7239}}).
+- Addition of fields such as `Via` ({{Section 7.6.3 of HTTP}}) and `Forwarded` ({{Section 4 of RFC7239}}).
 - Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive components such as field names, request URI scheme, or host.
 - Addition or removal of leading or trailing whitespace to a field value.
@@ -211,7 +211,7 @@ Some examples of these kinds of transformations, and the effect they have on the
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
-- The set of [component identifiers](#covered-components) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header defined in {{DIGEST}} to be present and covered as well as mandate a value for `tag` that is specific to the API being protected.
+- The set of [component identifiers](#covered-components) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header field defined in {{DIGEST}} to be present and covered as well as mandate a value for `tag` that is specific to the API being protected.
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means such as pre-registration of a signer's key.
 - A means of determining the signature algorithm used to verify the signature is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
@@ -237,20 +237,24 @@ The following sections define component identifier names, their parameters, thei
 
 ## HTTP Fields {#http-fields}
 
-The component name for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
+The component name for an HTTP field is the lowercased form of its field name as defined in {{Section 5.1 of HTTP}}. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
-Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}. Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for combination of field values in this manner such that the combined output is unambiguous from multiple inputs. However, the canonicalized component value is never parsed by the message signature process; instead, it is merely used as part of the signature base in {{create-sig-input}}. Even so, caution needs to be taken when including such fields in signatures, and the `bs` parameter defined in {{http-header-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
+The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below.
 
-If the combined value is not available for a given field by an implementation, the following algorithm will produce canonicalized results for an implementation:
+Unless overridden by additional parameters and rules, list-based HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}}. Specifically, list-based HTTP fields sent as multiple fields MUST be combined using a single comma (",") and a single space (" ") between each item. Note that intermediaries are allowed to separate values of list-based HTTP fields with any amount of whitespace between commas. If this behavior is not accounted for by the verifier, the signature can fail since the addition or removal of spaces between list items will change the signature base. It is RECOMMENDED that signers and verifiers process list-based fields starting with the individual field values based on the strict algorithm below, where possible, to account for possible intermediary behavior.
+
+Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for combination of field values in this manner (such that the combined output is unambiguous from multiple inputs). Even though the component value is never parsed by the message signature process; instead, it is merely used as part of the signature base in {{create-sig-input}}, caution needs to be taken when including such fields in signatures. The `bs` parameter defined in {{http-header-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
+
+If the correctly combined value is not available for a given field by an implementation, the following algorithm will produce canonicalized results:
 
 1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
 3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification which do not allow internal line folding.
 4. Concatenate the list of values together with a single comma (",") and a single space (" ") between each item.
 
-The resulting string is the canonicalized component value for the field.
+The resulting string is the component value for the field.
 
-Note that some HTTP fields have values with multiple valid serializations that have equivalent semantics. Applications signing and processing such fields MUST consider how to handle the values of such fields to ensure that the signer and verifier can derive the same value, as discussed in {{security-field-values}}.
+Note that some HTTP fields have values with multiple valid serializations that have equivalent semantics, such as allow case-insensitive values that intermediaries could change. Applications signing and processing such fields MUST consider how to handle the values of such fields to ensure that the signer and verifier can derive the same value, as discussed in {{security-field-values}}.
 
 Following are non-normative examples of canonicalized values for header fields, given the following example HTTP message fragment:
 
@@ -310,6 +314,9 @@ of the structured field value. {{http-header-structured}}
 
 `req`
 : A boolean flag for signed responses indicating that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to any derived component identifiers that target the request. {{content-request-response}}
+
+`tr`
+: A boolean flag indicating that the field value is taken from the trailers of the message as defined in {{Section 6.5 of HTTP}}. If this flag is absent, the field value is taken from the headers of the message as defined in {{Section 6.3 of HTTP}}. {{http-trailer}}
 
 Multiple parameters MAY be specified together, though some combinations are redundant or incompatible. For example, the `sf` parameter's functionality is already covered when the `key` parameter is used on a dictionary item, since `key` requires strict serialization of the value. The `bs` parameter, which requires the raw field values from the message, is not compatible with use of the `sf` or `key` parameters, which require the parsed data structures of the field values after combination.
 
@@ -420,6 +427,40 @@ For the single-instance field above, the encoding with the `bs` parameter is:
 ~~~
 
 This component value is distinct from the multiple-instance field above, preventing a collision which could potentially be exploited.
+
+### Trailer Fields {#http-trailer}
+
+If the signer wants to include a trailer field in the signature, the signer MUST include the `tr` boolean parameter to indicate the value MUST be taken from the trailer fields and not from the header fields.
+
+For example, given the following message:
+
+```http-message
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Transfer-Encoding: chunked
+Trailer: Expires
+
+4
+HTTP
+7
+Message
+10
+Signatures
+0
+Expires: Wed, 9 Nov 2022 07:28:00 GMT
+```
+
+The signer decides to add both the Trailer header field as well as the Expires trailer to the signature base:
+
+```
+"@status": 200
+"trailer": Expires
+"expires";tr: Wed, 9 Nov 2022 07:28:00 GMT
+```
+
+IF a field is available as both a header and trailer in a message, both values MAY be signed separately. The values of header fields and trailer fields of the same name MUST NOT be combined.
+
+Since trailer fields could be merged into the header fields or dropped entirely by intermediaries as per {{Section 6.5.1 of HTTP}}, it is NOT RECOMMENDED to include trailers in the signature unless the signer knows that the verifier will have access to the values of the trailers as sent.
 
 ## Derived Components {#derived-components}
 
@@ -1886,7 +1927,7 @@ Such verifiers also need to ensure that any differences in message component con
 
 ### Confusing HTTP Field Names for Derived Component Names {#security-lazy-header-parser}
 
-The definition of HTTP field names does not allow for the use of the `@` character anywhere in the name. As such, since all derived component names start with the `@` character, these namespaces should be completely separate. However, some HTTP implementations are not sufficiently strict about the characters accepted in HTTP headers. In such implementations, a sender (or attacker) could inject a header field starting with an `@` character and have it passed through to the application code. These invalid header fields could be used to override a portion of the derived message content and substitute an arbitrary value, providing a potential place for an attacker to mount a [signature collision](#security-collision) attack or other functional substitution attack (such as using the signature from a GET request on a crafted POST request).
+The definition of HTTP field names does not allow for the use of the `@` character anywhere in the name. As such, since all derived component names start with the `@` character, these namespaces should be completely separate. However, some HTTP implementations are not sufficiently strict about the characters accepted in HTTP fields. In such implementations, a sender (or attacker) could inject a header field starting with an `@` character and have it passed through to the application code. These invalid header fields could be used to override a portion of the derived message content and substitute an arbitrary value, providing a potential place for an attacker to mount a [signature collision](#security-collision) attack or other functional substitution attack (such as using the signature from a GET request on a crafted POST request).
 
 To combat this, when selecting values for a message component, if the component name starts with the `@` character, it needs to be processed as a derived component and never taken as a fields. Only if the component name does not start with the `@` character can it be taken from the fields of the message. The algorithm discussed in {{create-sig-input}} provides a safe order of operations.
 
@@ -2191,7 +2232,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;nonce="b3k2pp5k7z-50gnwp.yemd"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the signature label `sig-b21`:
+This results in the following Signature-Input and Signature header fields being added to the message under the signature label `sig-b21`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2230,7 +2271,7 @@ NOTE: '\' line wrapping per RFC 8792
 ~~~
 
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b22`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b22`:
 
 
 ~~~ http-message
@@ -2272,7 +2313,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;created=1618884473;keyid="test-key-rsa-pss"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b23`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b23`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2311,7 +2352,7 @@ NOTE: '\' line wrapping per RFC 8792
   "content-length");created=1618884473;keyid="test-key-ecc-p256"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b24`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b24`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2342,7 +2383,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;created=1618884473;keyid="test-shared-secret"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b25`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b25`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2375,7 +2416,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;keyid="test-key-ed25519"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b26`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b26`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2648,6 +2689,8 @@ Jeffrey Yasskin.
 
   - -14
      * Target raw non-decoded values for "@query" and "@path".
+     * Add method for signing trailers.
+     * Call out potential issues of list-based field values.
 
   - -13
      * Renamed "context" parameter to "tag".
