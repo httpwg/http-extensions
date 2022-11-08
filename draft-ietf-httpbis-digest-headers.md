@@ -202,11 +202,12 @@ semantics such as selected representation data ({{Section 3.2 of RFC9110}}).
 
 Experience has shown that implementations of [RFC3230] have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
-most common mistake being the calculation of the digest using (what we now call)
-message content, rather than using (what we now call) representation data as was
-originally intended. Interestingly, time has also shown that a digest of
-message content can be beneficial for some use cases. So it is difficult to
-detect if non-conformance to [RFC3230] is intentional or unintentional.
+most common issue relates to the mistake of calculating the digest using (what
+we now call) message content, rather than using (what we now call)
+representation data as was originally intended. Interestingly, time has also
+shown that a digest of message content can be beneficial for some use cases. So
+it is difficult to detect if non-conformance to [RFC3230] is intentional or
+unintentional.
 
 In order to address potential inconsistencies and ambiguity across
 implementations of `Digest` and `Want-Digest`, this document obsoletes
