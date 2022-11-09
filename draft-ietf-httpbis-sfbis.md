@@ -951,7 +951,7 @@ Because some implementations of base64 do not allow rejection of encoded data th
 
 Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{RFC4648, Section 3.5}}), parsers SHOULD NOT fail when non-zero pad bits are present, unless they cannot be configured to do so.
 
-This specification does not relax the requirements in {{Sections 3.1 and 3.3 of RFC4648}}; therefore, parsers MUST fail on characters outside the base64 alphabet and on line feeds in encoded data.
+This specification does not relax the requirements in {{RFC4648, Sections 3.1 and 3.3}}; therefore, parsers MUST fail on characters outside the base64 alphabet and on line feeds in encoded data.
 
 
 ### Parsing a Boolean {#parse-boolean}
