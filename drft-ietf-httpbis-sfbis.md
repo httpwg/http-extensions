@@ -1,6 +1,6 @@
 ---
 title: Structured Field Values for HTTP
-docname: draft-ietf-httpbis-header-structure-latest
+docname: draft-ietf-httpbis-sfbis-latest
 date: {DATE}
 category: std
 ipr: trust200902
