@@ -87,7 +87,7 @@ specific details from the certificate needed also vary with the application
 requirements. In order for these types of application deployments to work in
 practice, the reverse proxy needs to convey information about the client
 certificate to the origin application server. A common way this information is
-conveyed in practice today is by using non-standard fields to carry the
+conveyed in practice at the time of writing is by using non-standard fields to carry the
 certificate (in some encoding) or individual parts thereof in the HTTP request
 that is dispatched to the origin server. This solution works but
 interoperability between independently developed components can be cumbersome or
@@ -476,7 +476,7 @@ client field injection is not at all unique to the functionality of this draft,
 and it would therefore be inappropriate for this draft to define a one-off
 solution. In the absence of a generic standardized solution existing currently,
 stripping/sanitizing the fields is the de facto means of protecting against
-field injection in practice today. Sanitizing the fields is sufficient when
+field injection in practice. Sanitizing the fields is sufficient when
 properly implemented and is a normative requirement of {{sec}}.
 
 ## The Forwarded HTTP Extension
