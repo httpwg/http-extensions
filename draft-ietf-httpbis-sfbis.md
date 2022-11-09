@@ -7,20 +7,11 @@ ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
+obsoletes: 8941
 
 stand_alone: yes
 smart_quotes: no
-pi:
-  toc: yes
-  tocindent: yes
-  sortrefs: yes
-  symrefs: yes
-  strict: yes
-  compact: yes
-  comments: yes
-  inline: yes
-  tocdepth: 3
-
+pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
 author:
  -
