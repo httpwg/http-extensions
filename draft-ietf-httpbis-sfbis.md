@@ -947,11 +947,11 @@ Given an ASCII string as input_string, return a Byte Sequence. input_string is m
 7. Let binary_content be the result of base64-decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below). If base64 decoding fails, parsing fails.
 8. Return binary_content.
 
-Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{RFC4648, Section 3.2}}, parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
+Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{RFC4648, Section 3.2}}), parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
 
 Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{RFC4648, Section 3.5}}), parsers SHOULD NOT fail when non-zero pad bits are present, unless they cannot be configured to do so.
 
-This specification does not relax the requirements in {{RFC4648, Sections 3.1 and 3.3}}; therefore, parsers MUST fail on characters outside the base64 alphabet and on line feeds in encoded data.
+This specification does not relax the requirements in {{Sections 3.1 and 3.3 of RFC4648}}; therefore, parsers MUST fail on characters outside the base64 alphabet and on line feeds in encoded data.
 
 
 ### Parsing a Boolean {#parse-boolean}
@@ -1002,7 +1002,7 @@ Additionally, there were widely shared feelings that JSON doesn't "look right" i
 
 A generic implementation of this specification should expose the top-level serialize ({{text-serialize}}) and parse ({{text-parse}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
-For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-field-tests>.
+For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at \<https://github.com/httpwg/structured-field-tests\>.
 
 Implementers should note that Dictionaries and Parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that it will be available to applications that need to use it.
 
