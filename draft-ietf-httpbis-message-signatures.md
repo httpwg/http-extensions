@@ -239,7 +239,7 @@ The following sections define component identifier names, their parameters, thei
 
 The component name for an HTTP field is the lowercased form of its field name as defined in {{Section 5.1 of HTTP}}. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
-The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below.
+The component value for an HTTP field is the field value for the named field as defined in {{Section 5.5 of HTTP}}. The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below.
 
 Unless overridden by additional parameters and rules, list-based HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}}. Specifically, list-based HTTP fields sent as multiple fields MUST be combined using a single comma (",") and a single space (" ") between each item. Note that intermediaries are allowed to separate values of list-based HTTP fields with any amount of whitespace between commas. If this behavior is not accounted for by the verifier, the signature can fail since the addition or removal of spaces between list items will change the signature base. It is RECOMMENDED that signers and verifiers process list-based fields starting with the individual field values based on the strict algorithm below, where possible, to account for possible intermediary behavior.
 
