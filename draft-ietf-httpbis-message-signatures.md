@@ -190,7 +190,7 @@ HTTP applications may be running in environments that do not provide complete ac
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways. Implementations are required to tolerate many of these transformations. What follows is a non-normative and non-exhaustive list of transformations that could occur under HTTP, provided as context:
 
-- Re-ordering of fields with different header field names ({{Section 5.3 of HTTP}}).
+- Re-ordering of fields with different field names ({{Section 5.3 of HTTP}}).
 - Combination of fields with the same field name ({{Section 5.2 of HTTP}}).
 - Removal of fields listed in the Connection header field ({{Section 7.6.1 of HTTP}}).
 - Addition of fields that indicate control options ({{Section 7.6.1 of HTTP}}).
@@ -243,11 +243,11 @@ The field value MUST be taken from the named header field of the target message 
 
 Unless overridden by additional parameters and rules, list-based HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}}. Specifically, list-based HTTP fields sent as multiple fields MUST be combined using a single comma (",") and a single space (" ") between each item. Note that intermediaries are allowed to separate values of list-based HTTP fields with any amount of whitespace between commas. If this behavior is not accounted for by the verifier, the signature can fail since the addition or removal of spaces between list items will change the signature base. It is RECOMMENDED that signers and verifiers process list-based fields starting with the individual field values based on the strict algorithm below, where possible, to account for possible intermediary behavior.
 
-Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for combination of field values in this manner (such that the combined output is unambiguous from multiple inputs). Even though the component value is never parsed by the message signature process; instead, it is merely used as part of the signature base in {{create-sig-input}}, caution needs to be taken when including such fields in signatures. The `bs` parameter defined in {{http-header-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
+Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for combination of field values in this manner (such that the combined output is unambiguous from multiple inputs). Even though the component value is never parsed by the message signature process and used only as part of the signature base in {{create-sig-input}}, caution needs to be taken when including such fields in signatures since the combined value could be ambiguous. The `bs` parameter defined in {{http-field-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
 
-If the correctly combined value is not available for a given field by an implementation, the following algorithm will produce canonicalized results:
+If the correctly combined value is not directly available for a given field by an implementation, the following algorithm will produce canonicalized results for list-based fields:
 
-1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
+1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message. If necessary, separate individual values found in a field instance.
 2. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
 3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification which do not allow internal line folding.
 4. Concatenate the list of values together with a single comma (",") and a single space (" ") between each item.
@@ -256,7 +256,7 @@ The resulting string is the component value for the field.
 
 Note that some HTTP fields have values with multiple valid serializations that have equivalent semantics, such as allow case-insensitive values that intermediaries could change. Applications signing and processing such fields MUST consider how to handle the values of such fields to ensure that the signer and verifier can derive the same value, as discussed in {{security-field-values}}.
 
-Following are non-normative examples of canonicalized values for header fields, given the following example HTTP message fragment:
+Following are non-normative examples of component values for header fields, given the following example HTTP message fragment:
 
 ~~~ http-message
 Host: www.example.com
@@ -269,7 +269,7 @@ Cache-Control:    must-revalidate
 Example-Dict:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
-The following example shows canonicalized values for these example header fields, presented using the signature base format discussed in {{create-sig-input}}:
+The following example shows the component values for these example header fields, presented using the signature base format defined in in {{create-sig-input}}:
 
 ~~~
 "host": www.example.com
@@ -280,7 +280,7 @@ The following example shows canonicalized values for these example header fields
 "example-dict": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
-Since empty HTTP header fields are allowed, they can also be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header:
+Since empty HTTP fields are allowed, they can also be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -298,19 +298,19 @@ NOTE: '\' line wrapping per RFC 8792
 
 ~~~
 
-Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
+Note: the trailing spaces in these values are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
 
 Any HTTP field component identifiers MAY have the following parameters in specific circumstances, each described in detail in their own sections:
 
 `sf`
 : A boolean flag indicating that the component value is serialized using strict encoding
-of the structured field value. {{http-header-structured}}
+of the structured field value. {{http-field-structured}}
 
 `key`
-: A string parameter used to select a single member value from a Dictionary structured field. {{http-header-dictionary}}
+: A string parameter used to select a single member value from a Dictionary structured field. {{http-field-dictionary}}
 
 `bs`
-: A boolean flag indicating that individual field values are encoded using Byte Sequence data structures before being combined into the component value. {{http-header-byte-sequence}}
+: A boolean flag indicating that individual field values are encoded using Byte Sequence data structures before being combined into the component value. {{http-field-byte-sequence}}
 
 `req`
 : A boolean flag for signed responses indicating that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to any derived component identifiers that target the request. {{content-request-response}}
@@ -322,7 +322,7 @@ Multiple parameters MAY be specified together, though some combinations are redu
 
 Additional parameters can be defined in the registry established in {{param-registry}}.
 
-### Strict Serialization of HTTP Structured Fields {#http-header-structured}
+### Strict Serialization of HTTP Structured Fields {#http-field-structured}
 
 If the value of an HTTP field is known by the application to be a structured field ({{STRUCTURED-FIELDS}}), and the expected type of the structured field is known, the signer MAY include the `sf` parameter in the component identifier.
 If this parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
@@ -350,7 +350,7 @@ However, if the `sf` parameter is added, the value is re-serialized as follows:
 
 The resulting string is used as the component value in {{http-fields}}.
 
-### Dictionary Structured Field Members {#http-header-dictionary}
+### Dictionary Structured Field Members {#http-field-dictionary}
 
 If a given field is known by the application to be a Dictionary structured field, an individual member in the value of that Dictionary is identified by using the parameter `key` and the Dictionary member key as a String value.
 
@@ -379,7 +379,7 @@ The following example shows canonicalized values for different component identif
 
 Note that the value for `key="c"` has been re-serialized according to the strict `member_value` algorithm, and the value for `key="d"` has been serialized as a Boolean value.
 
-### Binary-wrapped HTTP Fields {#http-header-byte-sequence}
+### Binary-wrapped HTTP Fields {#http-field-byte-sequence}
 
 If the value of the the HTTP field in question is known by the application to cause problems with serialization, particularly with the combination of multiple values into a single line as discussed in {{security-non-list}}, the signer SHOULD include the `bs` parameter in a component identifier to indicate the values of the fields need to be wrapped as binary structures before being combined.
 
@@ -1731,9 +1731,10 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 
 |Name|Description|Status|Specification document(s)|
 |--- |--- |--- |--- |
-|`sf`| Strict structured field serialization | Active | {{http-header-structured}} of {{&SELF}}|
-|`key`| Single key value of dictionary structured fields | Active | {{http-header-dictionary}} of {{&SELF}}|
-|`bs`| Byte Sequence wrapping indicator | Active | {{http-header-byte-sequence}} of {{&SELF}}|
+|`sf`| Strict structured field serialization | Active | {{http-field-structured}} of {{&SELF}}|
+|`key`| Single key value of dictionary structured fields | Active | {{http-field-dictionary}} of {{&SELF}}|
+|`bs`| Byte Sequence wrapping indicator | Active | {{http-field-byte-sequence}} of {{&SELF}}|
+|`tr`| Trailer | Active | {{http-trailer}} of {{&SELF}}|
 |`req`| Related request indicator | Active | {{content-request-scheme}} of {{&SELF}}|
 |`name`| Single named query parameter | Active | {{content-request-query-param}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Component Parameters Registry." }
@@ -1955,7 +1956,7 @@ When processing such fields, the signer and verifier have to agree how to handle
 
 ### Parsing Structured Field Values {#security-structured}
 
-Several parts of this specification rely on the parsing of structured field values {{STRUCTURED-FIELDS}}. In particular, [normalization of HTTP structured field values](#http-header-structured), [referencing members of a dictionary structured field](#http-header-dictionary), and processing the `@signature-input` value when [verifying a signature](#verify). While structured field values are designed to be relatively simple to parse, a naive or broken implementation of such a parser could lead to subtle attack surfaces being exposed in the implementation.
+Several parts of this specification rely on the parsing of structured field values {{STRUCTURED-FIELDS}}. In particular, [normalization of HTTP structured field values](#http-field-structured), [referencing members of a dictionary structured field](#http-field-dictionary), and processing the `@signature-input` value when [verifying a signature](#verify). While structured field values are designed to be relatively simple to parse, a naive or broken implementation of such a parser could lead to subtle attack surfaces being exposed in the implementation.
 
 For example, if a buggy parser of the `@signature-input` value does not enforce proper closing of quotes around string values within the list of component identifiers, an attacker could take advantage of this and inject additional content into the signature base through manipulating the Signature-Input field value on a message.
 
@@ -2002,7 +2003,7 @@ Since two semantically distinct inputs can create the same output in the signatu
 
 Specifically, the Set-Cookie field {{COOKIE}} defines an internal syntax that does not conform to the List syntax in {{STRUCTURED-FIELDS}}. In particular some portions allow unquoted commas, and the field is typically sent as multiple separate field lines with distinct values when sending multiple cookies. When multiple Set-Cookie fields are sent in the same message, it is not generally possible to combine these into a single line and be able to parse and use the results, as discussed in {{HTTP, Section 5.3}}. Therefore, all the cookies need to be processed from their separate header values, without being combined, while the signature base needs to be processed from the special combined value generated solely for this purpose. If the cookie value is invalid, the signed message ought to be rejected as this is a possible padding attack as described in {{security-multiple-fields}}.
 
-To deal with this, an application can choose to limit signing of problematic fields like Set-Cookie, such as including the field in a signature only when a single field value is present and the results would be unambiguous. Similar caution needs to be taken with all fields that could have non-deterministic mappings into the signature base. Signers can also make use of the `bs` parameter to armor such fields, as described in {{http-header-byte-sequence}}.
+To deal with this, an application can choose to limit signing of problematic fields like Set-Cookie, such as including the field in a signature only when a single field value is present and the results would be unambiguous. Similar caution needs to be taken with all fields that could have non-deterministic mappings into the signature base. Signers can also make use of the `bs` parameter to armor such fields, as described in {{http-field-byte-sequence}}.
 
 ### Padding Attacks with Multiple Field Values {#security-multiple-fields}
 
