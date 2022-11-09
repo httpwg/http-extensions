@@ -779,7 +779,7 @@ The REQUIRED `name` parameter of each component identifier contains the `nameStr
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
 
-The component value of a single named parameter is the the `valueString` of the named query parameter defined by [HTMLURL, Section 5.1](#HTMLURL), which is the value after percent-encoded octets are decoded.
+The component value of a single named parameter is the `valueString` of the named query parameter defined by [HTMLURL, Section 5.1](#HTMLURL), which is the value after percent-encoded octets are decoded.
 Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
 Named query parameters with an empty `valueString` are included with an empty string as the component value.
 
@@ -792,7 +792,7 @@ POST /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
 Host: www.example.com
 ~~~
 
-Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` component values:
+Indicating the `baz`, `qux` and `param` named query parameters would result in the following `@query-param` component values:
 
 *baz*: `batman`
 
