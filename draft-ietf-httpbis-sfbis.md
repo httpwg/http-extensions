@@ -160,7 +160,7 @@ much Foo the message has.</t>
 an Integer (Section 3.3.1 of [RFC8941]). Its ABNF is:</t>
 
 <artwork>
-Foo-Example = sf-integer
+  Foo-Example = sf-integer
 </artwork>
 
 <t>Its value indicates the amount of Foo in the message, and it MUST
@@ -184,7 +184,7 @@ being used.</t>
 <t>For example:</t>
 
 <artwork>
-Foo-Example: 2; foourl="https://foo.example.com/"
+  Foo-Example: 2; foourl="https://foo.example.com/"
 </artwork>
 </blockquote>
 
