@@ -65,23 +65,20 @@ informative:
       DOI: 10.17487/RFC3629
     target: http://www.rfc-editor.org/info/std63
 
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/header-structure
+github-issue-label: header-structure
+
 
 --- abstract
 
 This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", "Structured Headers", or "Structured Trailers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
 
-
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <https://httpwg.github.io/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/header-structure>.
-
-Tests for implementations are collected at <https://github.com/httpwg/structured-field-tests>.
-
-Implementations are tracked at <https://github.com/httpwg/wiki/wiki/Structured-Headers>.
 
 --- middle
 
