@@ -17,7 +17,7 @@ author:
  -
     ins: M. Nottingham
     name: Mark Nottingham
-    organization: Fastly
+    organization: Cloudflare
     city: Prahran
     region: VIC
     country: Australia
