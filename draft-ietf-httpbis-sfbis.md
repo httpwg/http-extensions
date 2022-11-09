@@ -160,7 +160,7 @@ much Foo the message has.</t>
 an Integer (Section 3.3.1 of [RFC8941]). Its ABNF is:</t>
 
 <artwork>
-  Foo-Example = sf-integer
+Foo-Example = sf-integer
 </artwork>
 
 <t>Its value indicates the amount of Foo in the message, and it MUST
@@ -184,7 +184,7 @@ being used.</t>
 <t>For example:</t>
 
 <artwork>
-  Foo-Example: 2; foourl="https://foo.example.com/"
+Foo-Example: 2; foourl="https://foo.example.com/"
 </artwork>
 </blockquote>
 
@@ -1011,10 +1011,6 @@ Likewise, implementations should note that it's important to preserve the distin
 The serialization algorithm is defined in a way that it is not strictly limited to the data types defined in {{types}} in every case. For example, Decimals are designed to take broader input and round to allowed values.
 
 Implementations are allowed to limit the size of different structures, subject to the minimums defined for each type. When a structure exceeds an implementation limit, that structure fails parsing or serialization.
-
-# Changes
-
-_RFC Editor: Please remove this section before publication._
 
 
 # Acknowledgements
