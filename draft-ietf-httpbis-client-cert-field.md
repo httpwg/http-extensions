@@ -86,8 +86,8 @@ or cookies to a certificate, and the respective validation of such bindings. The
 specific details from the certificate needed also vary with the application
 requirements. In order for these types of application deployments to work in
 practice, the reverse proxy needs to convey information about the client
-certificate to the origin application server. A common way this information is
-conveyed in practice at the time of writing is by using non-standard fields to carry the
+certificate to the origin application server. At the time of writing, a common way this information is
+conveyed is by using non-standard fields to carry the
 certificate (in some encoding) or individual parts thereof in the HTTP request
 that is dispatched to the origin server. This solution works but
 interoperability between independently developed components can be cumbersome or
