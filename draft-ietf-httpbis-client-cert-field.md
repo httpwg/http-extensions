@@ -53,7 +53,7 @@ informative:
 
 --- abstract
 
-This document defines HTTP extension header fields that allow a TLS
+This document describes HTTP extension header fields that allow a TLS
 terminating reverse proxy to convey the client certificate information of a
 mutually-authenticated TLS connection to the origin server in a common and
 predictable manner.
