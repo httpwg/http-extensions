@@ -285,16 +285,16 @@ efficiency loss by increasing the size of the dynamic table.
 If a recipient does not do so, senders may find it beneficial to always send the
 field value as a literal, rather than entering it into the dynamic table.
 
-## Header Block Size
+## Message Header Size
 
-A server in receipt of a larger header block than it is willing to handle can send
+A server in receipt of a larger message header than it is willing to handle can send
 an HTTP 431 (Request Header Fields Too Large) status code per {{Section 5 of ?RFC6585}}.
 Due to the typical size of the field values containing certificate data,
-recipients may need to be configured to allow for a larger maximum header block size.
+recipients may need to be configured to allow for a larger maximum header size.
 An intermediary generating client certificate header fields on connections that allow
-for advertising the maximum acceptable header block size (e.g. HTTP/2 {{?RFC9113}}
+for advertising the maximum acceptable header size (e.g. HTTP/2 {{?RFC9113}}
 or HTTP/3 {{?RFC9114}}) should account for the additional size of the header
-block of the requests it sends vs. requests it receives by advertising a value to its
+of the requests it sends vs. requests it receives by advertising a value to its
 clients that is sufficiently smaller so as to allow for the addition of certificate data.
 
 ## TLS Session Resumption
@@ -550,6 +550,10 @@ The authors would like to thank the following individuals who've contributed in 
 # Document History
 
    > To be removed by the RFC Editor before publication as an RFC
+
+   draft-ietf-httpbis-client-cert-field-04
+
+   * Updates, fixes, and clarifications from WGLC feedback
 
    draft-ietf-httpbis-client-cert-field-03
 
