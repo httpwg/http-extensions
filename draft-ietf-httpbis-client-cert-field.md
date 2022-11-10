@@ -479,7 +479,7 @@ of the field name or value or the application of a signature, HMAC, or AEAD,
 there is no common general mechanism. The potential problem of
 client field injection is not at all unique to the functionality of this draft,
 and it would therefore be inappropriate for this draft to define a one-off
-solution. In the absence of a generic standardized solution existing currently,
+solution. In the absence of a generic common solution existing currently,
 stripping/sanitizing the fields is the de facto means of protecting against
 field injection in practice today. Sanitizing the fields is sufficient when
 properly implemented and is a normative requirement of {{sec}}.
