@@ -530,6 +530,7 @@ The authors would like to thank the following individuals who've contributed in 
 - Mark Nottingham
 - Erik Nygren
 - Mike Ounsworth
+- Lucas Pardue
 - Matt Peterson
 - Eric Rescorla
 - Justin Richer
