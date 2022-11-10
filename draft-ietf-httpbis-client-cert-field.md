@@ -50,6 +50,8 @@ informative:
     display: HTTP/2
   RFC9114:
     display: HTTP/3
+  I-D.ietf-httpbis-message-signatures:
+    display: HTTPSIG
 
 --- abstract
 
@@ -341,7 +343,10 @@ ways, which will vary based on specific deployments. The communication between a
 TTRP and backend or origin server, for example, might be authenticated in some
 way with the insertion and consumption of the `Client-Cert`
 and `Client-Cert-Chain` header fields occurring
-only on that connection. Alternatively the network topology might dictate a
+only on that connection.
+{{Appendix B.3 of ?I-D.ietf-httpbis-message-signatures}} gives one example of
+this with an application of HTTP Message Signatures.
+Alternatively the network topology might dictate a
 private network such that the backend application is only able to accept
 requests from the TTRP and the proxy can only make requests to that server.
 Other deployments that meet the requirements set forth herein are also possible.
@@ -471,7 +476,7 @@ could inject its own values that would appear to the backend to
 have come from the TTRP. Although numerous other methods of detecting/preventing
 field injection are possible; such as the use of a unique secret value as part
 of the field name or value or the application of a signature, HMAC, or AEAD,
-there is no common general standardized mechanism. The potential problem of
+there is no common general mechanism. The potential problem of
 client field injection is not at all unique to the functionality of this draft,
 and it would therefore be inappropriate for this draft to define a one-off
 solution. In the absence of a generic standardized solution existing currently,
