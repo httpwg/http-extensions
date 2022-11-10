@@ -276,7 +276,7 @@ employ the `Client-Cert` or `Client-Cert-Chain` header field in requests.
 ## Header Field Compression
 
 If the connection between the TTRP and origin is capable of field compression
-(e.g., HPACK {{?HPACK=RFC7541}} or QPACK {{?QPACK=RFC9204}}, and the TTRP multiplexes more
+(e.g., HPACK {{?HPACK=RFC7541}} or QPACK {{?QPACK=RFC9204}}), and the TTRP multiplexes more
 than one client's requests into that connection, the size and variation of `Client-Cert` and
 `Client-Cert-Chain` field values can reduce compression efficiency significantly.
 An origin could mitigate the efficiency loss by increasing the size of the dynamic table.
