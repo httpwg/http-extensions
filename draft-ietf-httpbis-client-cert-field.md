@@ -119,6 +119,9 @@ connection to the TTRP.
 
 ## Terminology and Applicability
 
+This document uses the following terminology from {{Section 3 of RFC8941}}
+to specify syntax and parsing: List and Byte Sequence.
+
 Phrases like TLS client certificate authentication or mutually-authenticated TLS
 are used throughout this document to refer to the process whereby, in addition
 to the normal TLS server authentication with a certificate, a client presents
@@ -159,7 +162,7 @@ certificate provided by the client in the TLS handshake with the reverse proxy.
 
 ## Encoding
 
-The headers in this document encode certificates as Structured Field Byte
+The headers in this document encode certificates as Byte
 Sequences ({{Section 3.3.5 of RFC8941}}) where the value of the binary data
 is a DER encoded {{!ITU.X690.1994}} X.509 certificate {{!RFC5280}}.
 In effect, this means that the binary DER certificate is encoded using base64
@@ -168,7 +171,7 @@ and delimited with colons on either side.
 
 Note that certificates are often stored encoded in a textual format, such as
 the one described in {{Section 5.1 of ?RFC7468}}, which is already nearly
-compatible with a Structured Field Byte Sequence; if so, it will be sufficient to replace
+compatible with a Byte Sequence; if so, it will be sufficient to replace
 `---(BEGIN|END) CERTIFICATE---` with `:` and remove line breaks in order
 to generate an appropriate item.
 
@@ -179,14 +182,8 @@ makes the TLS client certificate available to the backend application with the
 Client-Cert HTTP header field. This field contains the end-entity certificate
 used by the client in the TLS handshake.
 
-Client-Cert is an Item Structured Header {{!RFC8941}}.  Its value MUST be a
-Byte Sequence ({{Section 3.3.5 of RFC8941}}).  Its ABNF is:
-
-~~~
- Client-Cert = sf-binary
-~~~
-
-The value of the header is encoded as described in {{encoding}}.
+Client-Cert is a Byte Sequence with the value of
+the header encoded as described in {{encoding}}.
 
 The `Client-Cert` header field is only for use in HTTP requests and MUST NOT be
 used in HTTP responses.  It is a singleton header field value as defined in
@@ -202,15 +199,9 @@ MAY make the certificate chain
 available to the backend application with the Client-Cert-Chain HTTP header
 field.
 
-Client-Cert-Chain is a List Structured Header {{!RFC8941}}.  Each item in the
-list MUST be a Byte Sequence ({{Section 3.3.5 of RFC8941}}) encoded as described
-in {{encoding}}. The order is the same as the ordering in TLS (such as described in {{Section 4.4.2 of TLS}}).
-
-The header's ABNF is:
-
-~~~
- Client-Cert-Chain = sf-list
-~~~
+Client-Cert-Chain is a List ({{Section 3.3.1 of RFC8941}}).  Each item in the
+list MUST be a Byte Sequence encoded as described in {{encoding}}. The order
+is the same as the ordering in TLS (such as described in {{Section 4.4.2 of TLS}}).
 
 The `Client-Cert-Chain` header field is only for use in HTTP requests and MUST
 NOT be used in HTTP responses.  It MAY have a list of values or occur multiple
