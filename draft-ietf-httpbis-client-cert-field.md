@@ -373,8 +373,9 @@ Name Registry" defined by HTTP Semantics {{RFC9110}}:
 In a hypothetical example where a TLS client presents the client and
 intermediate certificate from {{example-chain}} when establishing a
 mutually-authenticated TLS connection with the TTRP, the proxy would send the
-`Client-Cert` field shown in {#example-header} to the backend. Note that line
+`Client-Cert` field shown in {{example-header}} to the backend. Note that line
 breaks and whitespace have been added to the field value in {{example-header}}
+and {{example-chain-header}}
 for display and formatting purposes only.
 
 ~~~
