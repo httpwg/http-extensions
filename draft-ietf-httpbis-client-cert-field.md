@@ -193,6 +193,8 @@ used in HTTP responses.  It is a singleton header field value as defined in
 {{Section 5.5 of RFC9110}}, which MUST NOT have a list of values or occur
 multiple times in a request.
 
+{{example-header}} in {{example}} has an example of the `Client-Cert` header field.
+
 ## Client-Cert-Chain HTTP Header Field {#chain-header}
 
 In the context of a TLS terminating reverse proxy deployment, the proxy
@@ -215,6 +217,7 @@ NOT be used in HTTP responses.  It MAY have a list of values or occur multiple
 times in a request.  For header compression purposes, it might be advantageous
 to split lists into multiple instances.
 
+{{example-chain-header}} in {{example}} has an example of the `Client-Cert-Chain` header field.
 
 
 ## Processing Rules
@@ -365,7 +368,7 @@ Name Registry" defined by HTTP Semantics {{RFC9110}}:
 
 --- back
 
-# Example
+# Example {#example}
 
 In a hypothetical example where a TLS client presents the client and
 intermediate certificate from {{example-chain}} when establishing a
