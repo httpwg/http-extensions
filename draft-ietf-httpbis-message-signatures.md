@@ -57,7 +57,6 @@ author:
 
 normative:
     RFC2104:
-    RFC3986:
     RFC6234:
     RFC7517:
     RFC7518:
@@ -74,6 +73,7 @@ normative:
         date: 2018
     HTTP: RFC9110
     HTTP1: RFC9112
+    URI: RFC3986
     HTMLURL:
         target: https://url.spec.whatwg.org/
         title: URL (Living Standard)
@@ -117,7 +117,7 @@ This document also provides a mechanism for negotiation the use of signatures in
 
 The terms "HTTP message", "HTTP request", "HTTP response",
 "target URI", "gateway", "header field", "intermediary", "request target",
-"sender", "method", and "recipient" are used as defined in {{HTTP}}.
+"trailer field", "sender", "method", and "recipient" are used as defined in {{HTTP}}.
 
 For brevity, the term "signature" on its own is used in this document to refer to both digital signatures (which use asymmetric cryptography) and keyed MACs (which use symmetric cryptography). Similarly, the verb "sign" refers to the generation of either a digital signature or keyed MAC over a given signature base. The qualified term "digital signature" refers specifically to the output of an asymmetric cryptographic signing operation.
 
@@ -190,12 +190,12 @@ HTTP applications may be running in environments that do not provide complete ac
 
 As mentioned earlier, HTTP explicitly permits and in some cases requires implementations to transform messages in a variety of ways. Implementations are required to tolerate many of these transformations. What follows is a non-normative and non-exhaustive list of transformations that could occur under HTTP, provided as context:
 
-- Re-ordering of header fields with different header field names ({{Section 5.3 of HTTP}}).
+- Re-ordering of fields with different field names ({{Section 5.3 of HTTP}}).
 - Combination of fields with the same field name ({{Section 5.2 of HTTP}}).
-- Removal of header fields listed in the Connection header field ({{Section 7.6.1 of HTTP}}).
-- Addition of header fields that indicate control options ({{Section 7.6.1 of HTTP}}).
+- Removal of fields listed in the Connection header field ({{Section 7.6.1 of HTTP}}).
+- Addition of fields that indicate control options ({{Section 7.6.1 of HTTP}}).
 - Addition or removal of a transfer coding ({{Section 7.7 of HTTP}}).
-- Addition of header fields such as `Via` ({{Section 7.6.3 of HTTP}}) and `Forwarded` ({{Section 4 of RFC7239}}).
+- Addition of fields such as `Via` ({{Section 7.6.3 of HTTP}}) and `Forwarded` ({{Section 4 of RFC7239}}).
 - Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive components such as field names, request URI scheme, or host.
 - Addition or removal of leading or trailing whitespace to a field value.
@@ -211,7 +211,7 @@ Some examples of these kinds of transformations, and the effect they have on the
 
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
-- The set of [component identifiers](#covered-components) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest header defined in {{DIGEST}} to be present and covered as well as mandate a value for `tag` that is specific to the API being protected.
+- The set of [component identifiers](#covered-components) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest field defined in {{DIGEST}} to be present and covered as well as mandate a value for `tag` that is specific to the API being protected.
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means such as pre-registration of a signer's key.
 - A means of determining the signature algorithm used to verify the signature is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
@@ -237,22 +237,26 @@ The following sections define component identifier names, their parameters, thei
 
 ## HTTP Fields {#http-fields}
 
-The component name for an HTTP field is the lowercased form of its field name. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
+The component name for an HTTP field is the lowercased form of its field name as defined in {{Section 5.1 of HTTP}}. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
-Unless overridden by additional parameters and rules, the HTTP field value MUST be canonicalized as a single combined value as defined in {{Section 5.2 of HTTP}}. Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for combination of field values in this manner such that the combined output is unambiguous from multiple inputs. However, the canonicalized component value is never parsed by the message signature process; instead, it is merely used as part of the signature base in {{create-sig-input}}. Even so, caution needs to be taken when including such fields in signatures, and the `bs` parameter defined in {{http-header-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
+The component value for an HTTP field is the field value for the named field as defined in {{Section 5.5 of HTTP}}. The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below.
 
-If the combined value is not available for a given field by an implementation, the following algorithm will produce canonicalized results for an implementation:
+Unless overridden by additional parameters and rules, HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}} to create the component value. Specifically, HTTP fields sent as multiple fields MUST be combined using a single comma (",") and a single space (" ") between each item. Note that intermediaries are allowed to combine values of HTTP fields with any amount of whitespace between the commas, and if this behavior is not accounted for by the verifier, the signature can fail since the signer and verifier will be see a different component value in their respective signature bases. For robustness, it is RECOMMENDED that signed messages include only a single instance of any field covered under the signature, particularly with the value for any list-based fields serialized using the algorithm below. This approach increases the chances of the field value remaining untouched through intermediaries. Where that approach is not possible and multiple instances of a field need to be sent separately, it is RECOMMENDED that signers and verifiers process any list-based fields by parsing out individual field values and combining them based on the strict algorithm below, to counter possible intermediary behavior. When the field in question is a structured field of tyle List or Dictionary, this effect can be accomplished more directly by using the strict structured field serialization of the field value, as described in {{http-field-structured}}.
 
-1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
+Note that some HTTP fields, such as Set-Cookie {{COOKIE}}, do not follow a syntax that allows for combination of field values in this manner (such that the combined output is unambiguous from multiple inputs). Even though the component value is never parsed by the message signature process and used only as part of the signature base in {{create-sig-input}}, caution needs to be taken when including such fields in signatures since the combined value could be ambiguous. The `bs` parameter defined in {{http-field-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
+
+If the correctly combined value is not directly available for a given field by an implementation, the following algorithm will produce canonicalized results for list-based fields:
+
+1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message. If necessary, separate individual values found in a field instance.
 2. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
 3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification which do not allow internal line folding.
 4. Concatenate the list of values together with a single comma (",") and a single space (" ") between each item.
 
-The resulting string is the canonicalized component value for the field.
+The resulting string is the component value for the field.
 
-Note that some HTTP fields have values with multiple valid serializations that have equivalent semantics. Applications signing and processing such fields MUST consider how to handle the values of such fields to ensure that the signer and verifier can derive the same value, as discussed in {{security-field-values}}.
+Note that some HTTP fields have values with multiple valid serializations that have equivalent semantics, such as allow case-insensitive values that intermediaries could change. Applications signing and processing such fields MUST consider how to handle the values of such fields to ensure that the signer and verifier can derive the same value, as discussed in {{security-field-values}}.
 
-Following are non-normative examples of canonicalized values for header fields, given the following example HTTP message fragment:
+Following are non-normative examples of component values for header fields, given the following example HTTP message fragment:
 
 ~~~ http-message
 Host: www.example.com
@@ -265,7 +269,7 @@ Cache-Control:    must-revalidate
 Example-Dict:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
-The following example shows canonicalized values for these example header fields, presented using the signature base format discussed in {{create-sig-input}}:
+The following example shows the component values for these example header fields, presented using the signature base format defined in in {{create-sig-input}}:
 
 ~~~
 "host": www.example.com
@@ -276,7 +280,7 @@ The following example shows canonicalized values for these example header fields
 "example-dict": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
-Since empty HTTP header fields are allowed, they can also be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header:
+Since empty HTTP fields are allowed, they can also be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -294,28 +298,31 @@ NOTE: '\' line wrapping per RFC 8792
 
 ~~~
 
-Note: these are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
+Note: the trailing spaces in these values are shown here using the line wrapping algorithm in {{RFC8792}} due to limitations in the document format that strips trailing spaces from diagrams.
 
 Any HTTP field component identifiers MAY have the following parameters in specific circumstances, each described in detail in their own sections:
 
 `sf`
 : A boolean flag indicating that the component value is serialized using strict encoding
-of the structured field value. {{http-header-structured}}
+of the structured field value. {{http-field-structured}}
 
 `key`
-: A string parameter used to select a single member value from a Dictionary structured field. {{http-header-dictionary}}
+: A string parameter used to select a single member value from a Dictionary structured field. {{http-field-dictionary}}
 
 `bs`
-: A boolean flag indicating that individual field values are encoded using Byte Sequence data structures before being combined into the component value. {{http-header-byte-sequence}}
+: A boolean flag indicating that individual field values are encoded using Byte Sequence data structures before being combined into the component value. {{http-field-byte-sequence}}
 
 `req`
 : A boolean flag for signed responses indicating that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to any derived component identifiers that target the request. {{content-request-response}}
+
+`tr`
+: A boolean flag indicating that the field value is taken from the trailers of the message as defined in {{Section 6.5 of HTTP}}. If this flag is absent, the field value is taken from the headers of the message as defined in {{Section 6.3 of HTTP}}. {{http-trailer}}
 
 Multiple parameters MAY be specified together, though some combinations are redundant or incompatible. For example, the `sf` parameter's functionality is already covered when the `key` parameter is used on a dictionary item, since `key` requires strict serialization of the value. The `bs` parameter, which requires the raw field values from the message, is not compatible with use of the `sf` or `key` parameters, which require the parsed data structures of the field values after combination.
 
 Additional parameters can be defined in the registry established in {{param-registry}}.
 
-### Strict Serialization of HTTP Structured Fields {#http-header-structured}
+### Strict Serialization of HTTP Structured Fields {#http-field-structured}
 
 If the value of an HTTP field is known by the application to be a structured field ({{STRUCTURED-FIELDS}}), and the expected type of the structured field is known, the signer MAY include the `sf` parameter in the component identifier.
 If this parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
@@ -343,7 +350,7 @@ However, if the `sf` parameter is added, the value is re-serialized as follows:
 
 The resulting string is used as the component value in {{http-fields}}.
 
-### Dictionary Structured Field Members {#http-header-dictionary}
+### Dictionary Structured Field Members {#http-field-dictionary}
 
 If a given field is known by the application to be a Dictionary structured field, an individual member in the value of that Dictionary is identified by using the parameter `key` and the Dictionary member key as a String value.
 
@@ -372,7 +379,7 @@ The following example shows canonicalized values for different component identif
 
 Note that the value for `key="c"` has been re-serialized according to the strict `member_value` algorithm, and the value for `key="d"` has been serialized as a Boolean value.
 
-### Binary-wrapped HTTP Fields {#http-header-byte-sequence}
+### Binary-wrapped HTTP Fields {#http-field-byte-sequence}
 
 If the value of the the HTTP field in question is known by the application to cause problems with serialization, particularly with the combination of multiple values into a single line as discussed in {{security-non-list}}, the signer SHOULD include the `bs` parameter in a component identifier to indicate the values of the fields need to be wrapped as binary structures before being combined.
 
@@ -420,6 +427,40 @@ For the single-instance field above, the encoding with the `bs` parameter is:
 ~~~
 
 This component value is distinct from the multiple-instance field above, preventing a collision which could potentially be exploited.
+
+### Trailer Fields {#http-trailer}
+
+If the signer wants to include a trailer field in the signature, the signer MUST include the `tr` boolean parameter to indicate the value MUST be taken from the trailer fields and not from the header fields.
+
+For example, given the following message:
+
+```http-message
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Transfer-Encoding: chunked
+Trailer: Expires
+
+4
+HTTP
+7
+Message
+10
+Signatures
+0
+Expires: Wed, 9 Nov 2022 07:28:00 GMT
+```
+
+The signer decides to add both the Trailer header field as well as the Expires trailer to the signature base:
+
+```
+"@status": 200
+"trailer": Expires
+"expires";tr: Wed, 9 Nov 2022 07:28:00 GMT
+```
+
+IF a field is available as both a header and trailer in a message, both values MAY be signed separately. The values of header fields and trailer fields of the same name MUST NOT be combined.
+
+Since trailer fields could be merged into the header fields or dropped entirely by intermediaries as per {{Section 6.5.1 of HTTP}}, it is NOT RECOMMENDED to include trailers in the signature unless the signer knows that the verifier will have access to the values of the trailers as sent.
 
 ## Derived Components {#derived-components}
 
@@ -655,7 +696,7 @@ And the following signature base line:
 
 ### Path {#content-request-path}
 
-The `@path` derived component refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{RFC3986}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character, and path components are represented by their values after decoding any percent-encoded octets.
+The `@path` derived component refers to the target path of the HTTP request message. The component value is the absolute path of the request target defined by {{URI}}, with no query component and no trailing `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, an empty path string is normalized as a single slash `/` character. Path components are represented by their values before decoding any percent-encoded octets, as described in the simple string comparison rules in {{Section 6.2.1 of URI}}.
 
 For example, the following request message:
 
@@ -678,25 +719,25 @@ And the following signature base line:
 
 ### Query {#content-request-query}
 
-The `@query` derived component refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{RFC3986}}, including the leading `?` character. The value is normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, percent-encoded octets are decoded.
+The `@query` derived component refers to the query component of the HTTP request message. The component value is the entire normalized query string defined by {{URI}}, including the leading `?` character. The value is read using the simple string comparison rules in {{Section 6.2.1 of URI}}. Namely, percent-encoded octets are not decoded.
 
 For example, the following request message:
 
 ~~~ http-message
-POST /path?param=value&foo=bar&baz=batman HTTP/1.1
+POST /path?param=value&foo=bar&baz=bat%2Dman HTTP/1.1
 Host: www.example.com
 ~~~
 
 Would result in the following `@query` component value:
 
 ~~~
-?param=value&foo=bar&baz=batman
+?param=value&foo=bar&baz=bat%2Dman
 ~~~
 
 And the following signature base line:
 
 ~~~
-"@query": ?param=value&foo=bar&baz=batman
+"@query": ?param=value&foo=bar&baz=bat%2Dman
 ~~~
 
 The following request message:
@@ -738,7 +779,7 @@ The REQUIRED `name` parameter of each component identifier contains the `nameStr
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
 
-The component value of a single named parameter is the the `valueString` of the named query parameter defined by [HTMLURL, Section 5.1](#HTMLURL), which is the value after percent-encoded octets are decoded.
+The component value of a single named parameter is the `valueString` of the named query parameter defined by [HTMLURL, Section 5.1](#HTMLURL), which is the value after percent-encoded octets are decoded.
 Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
 Named query parameters with an empty `valueString` are included with an empty string as the component value.
 
@@ -751,7 +792,7 @@ POST /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
 Host: www.example.com
 ~~~
 
-Indicating the `baz`, `qux` and `param` named query parameters in would result in the following `@query-param` component values:
+Indicating the `baz`, `qux` and `param` named query parameters would result in the following `@query-param` component values:
 
 *baz*: `batman`
 
@@ -1532,7 +1573,21 @@ Note that by this process, a signature applied to a target message MUST have the
 
 # IANA Considerations {#iana}
 
-IANA is requested to create three registries and to populate those registries with initial values as described in this section.
+IANA is asked to update one registry and create four new registries, according to the following sections.
+
+## HTTP Field Name Registration
+
+IANA is asked to update the
+"Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
+({{HTTP}}) according to the table below:
+
+|---------------------|-----------|-----------------------------------------------|
+| Field Name          | Status    |                     Reference                 |
+|---------------------|-----------|-----------------------------------------------|
+| Signature-Input     | permanent | {{signature-input-header}} of {{&SELF}}       |
+| Signature           | permanent | {{signature-header}} of {{&SELF}}             |
+| Accept-Signature    | permanent | {{accept-signature-header}} of {{&SELF}}      |
+|---------------------|-----------|-----------------------------------------------|
 
 ## HTTP Signature Algorithms Registry {#hsa-registry}
 
@@ -1676,9 +1731,10 @@ The table below contains the initial contents of the HTTP Signature Derived Comp
 
 |Name|Description|Status|Specification document(s)|
 |--- |--- |--- |--- |
-|`sf`| Strict structured field serialization | Active | {{http-header-structured}} of {{&SELF}}|
-|`key`| Single key value of dictionary structured fields | Active | {{http-header-dictionary}} of {{&SELF}}|
-|`bs`| Byte Sequence wrapping indicator | Active | {{http-header-byte-sequence}} of {{&SELF}}|
+|`sf`| Strict structured field serialization | Active | {{http-field-structured}} of {{&SELF}}|
+|`key`| Single key value of dictionary structured fields | Active | {{http-field-dictionary}} of {{&SELF}}|
+|`bs`| Byte Sequence wrapping indicator | Active | {{http-field-byte-sequence}} of {{&SELF}}|
+|`tr`| Trailer | Active | {{http-trailer}} of {{&SELF}}|
 |`req`| Related request indicator | Active | {{content-request-scheme}} of {{&SELF}}|
 |`name`| Single named query parameter | Active | {{content-request-query-param}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Component Parameters Registry." }
@@ -1809,6 +1865,8 @@ From here, the signing process proceeds as usual.
 
 Upon verification, it is important that the verifier validate not only the signature but also the value of the Content-Digest field itself against the actual received content. Unless the verifier performs this step, it would be possible for an attacker to substitute the message content but leave the Content-Digest field value untouched to pass the signature. Since only the field value is covered by the signature directly, checking only the signature is not sufficient protection against such a substitution attack.
 
+As discussed in {{DIGEST}}, the value of the Content-Digest field is dependent on the content encoding of the message. If an intermediary changes the content encoding, the resulting Content-Digest value would change, which would in turn invalidate the signature. Any intermediary performing such an action would need to apply a new signature with the updated Content-Digest field value, similar to the reverse proxy use case discussed in {{signature-multiple}}.
+
 ## Cryptographic Considerations
 
 ### Cryptography and Signature Collision {#security-collision}
@@ -1886,7 +1944,7 @@ Such verifiers also need to ensure that any differences in message component con
 
 ### Confusing HTTP Field Names for Derived Component Names {#security-lazy-header-parser}
 
-The definition of HTTP field names does not allow for the use of the `@` character anywhere in the name. As such, since all derived component names start with the `@` character, these namespaces should be completely separate. However, some HTTP implementations are not sufficiently strict about the characters accepted in HTTP headers. In such implementations, a sender (or attacker) could inject a header field starting with an `@` character and have it passed through to the application code. These invalid header fields could be used to override a portion of the derived message content and substitute an arbitrary value, providing a potential place for an attacker to mount a [signature collision](#security-collision) attack or other functional substitution attack (such as using the signature from a GET request on a crafted POST request).
+The definition of HTTP field names does not allow for the use of the `@` character anywhere in the name. As such, since all derived component names start with the `@` character, these namespaces should be completely separate. However, some HTTP implementations are not sufficiently strict about the characters accepted in HTTP field names. In such implementations, a sender (or attacker) could inject a header field starting with an `@` character and have it passed through to the application code. These invalid header fields could be used to override a portion of the derived message content and substitute an arbitrary value, providing a potential place for an attacker to mount a [signature collision](#security-collision) attack or other functional substitution attack (such as using the signature from a GET request on a crafted POST request).
 
 To combat this, when selecting values for a message component, if the component name starts with the `@` character, it needs to be processed as a derived component and never taken as a fields. Only if the component name does not start with the `@` character can it be taken from the fields of the message. The algorithm discussed in {{create-sig-input}} provides a safe order of operations.
 
@@ -1898,7 +1956,7 @@ When processing such fields, the signer and verifier have to agree how to handle
 
 ### Parsing Structured Field Values {#security-structured}
 
-Several parts of this specification rely on the parsing of structured field values {{STRUCTURED-FIELDS}}. In particular, [normalization of HTTP structured field values](#http-header-structured), [referencing members of a dictionary structured field](#http-header-dictionary), and processing the `@signature-input` value when [verifying a signature](#verify). While structured field values are designed to be relatively simple to parse, a naive or broken implementation of such a parser could lead to subtle attack surfaces being exposed in the implementation.
+Several parts of this specification rely on the parsing of structured field values {{STRUCTURED-FIELDS}}. In particular, [normalization of HTTP structured field values](#http-field-structured), [referencing members of a dictionary structured field](#http-field-dictionary), and processing the `@signature-input` value when [verifying a signature](#verify). While structured field values are designed to be relatively simple to parse, a naive or broken implementation of such a parser could lead to subtle attack surfaces being exposed in the implementation.
 
 For example, if a buggy parser of the `@signature-input` value does not enforce proper closing of quotes around string values within the list of component identifiers, an attacker could take advantage of this and inject additional content into the signature base through manipulating the Signature-Input field value on a message.
 
@@ -1945,7 +2003,7 @@ Since two semantically distinct inputs can create the same output in the signatu
 
 Specifically, the Set-Cookie field {{COOKIE}} defines an internal syntax that does not conform to the List syntax in {{STRUCTURED-FIELDS}}. In particular some portions allow unquoted commas, and the field is typically sent as multiple separate field lines with distinct values when sending multiple cookies. When multiple Set-Cookie fields are sent in the same message, it is not generally possible to combine these into a single line and be able to parse and use the results, as discussed in {{HTTP, Section 5.3}}. Therefore, all the cookies need to be processed from their separate header values, without being combined, while the signature base needs to be processed from the special combined value generated solely for this purpose. If the cookie value is invalid, the signed message ought to be rejected as this is a possible padding attack as described in {{security-multiple-fields}}.
 
-To deal with this, an application can choose to limit signing of problematic fields like Set-Cookie, such as including the field in a signature only when a single field value is present and the results would be unambiguous. Similar caution needs to be taken with all fields that could have non-deterministic mappings into the signature base. Signers can also make use of the `bs` parameter to armor such fields, as described in {{http-header-byte-sequence}}.
+To deal with this, an application can choose to limit signing of problematic fields like Set-Cookie, such as including the field in a signature only when a single field value is present and the results would be unambiguous. Similar caution needs to be taken with all fields that could have non-deterministic mappings into the signature base. Signers can also make use of the `bs` parameter to armor such fields, as described in {{http-field-byte-sequence}}.
 
 ### Padding Attacks with Multiple Field Values {#security-multiple-fields}
 
@@ -2006,7 +2064,7 @@ The components for each private key in PEM format can be displayed by executing 
 openssl pkey -text
 ~~~
 
-This command was tested with all the example keys on OpenSSL version 1.1.1m. Note that some systems cannot produce or use all of these keys directly, and may require additional processing.
+This command was tested with all the example keys on OpenSSL version 1.1.1m. Note that some systems cannot produce or use all of these keys directly, and may require additional processing. All keys are also made available in JWK format.
 
 ### Example Key RSA test {#example-key-rsa-test}
 
@@ -2050,6 +2108,45 @@ qQKBiD5GwESzsFPy3Ga0MvZpn3D6EJQLgsnrtUPZx+z2Ep2x0xc5orneB5fGyF1P
 WtP+fG5Q6Dpdz3LRfm+KwBCWFKQjg7uTxcjerhBWEYPmEMKYwTJF5PBG9/ddvHLQ
 EQeNC8fHGg4UXU8mhHnSBt3EA10qQJfRDs15M38eG2cYwB1PZpDHScDnDA0=
 -----END RSA PRIVATE KEY-----
+~~~
+
+The same public and private keypair in JWK format:
+
+~~~json
+NOTE: '\' line wrapping per RFC 8792
+
+{
+  "kty": "RSA",
+  "kid": "test-key-rsa",
+  "p": "sqeUJmqXE3LP8tYoIjMIAKiTm9o6psPlc8CrLI9CH0UbuaA2JCOMcCNq8Sy\
+  YbTqgnWlB9ZfcAm_cFpA8tYci9m5vYK8HNxQr-8FS3Qo8N9RJ8d0U5CswDzMYfRgh\
+  AfUGwmlWj5hp1pQzAuhwbOXFtxKHVsMPhz1IBtF9Y8jvgqgYHLbmyiu1mw",
+  "q": "vSlgXQbvHzWmuUBFRHAejRh_naQTDV3GnH4lcRHuFBFZCSLn82xQS2_7xFO\
+  qfabqq17kNcvKfzdvWpGxxJ2cILAq0pZS6DmrZlvBU4IkK2ZHCac_XfWVZFh-PrsH\
+  _EnVkDpfcYR_iw1F40C1q5w8R6WBHaew3SAp",
+  "d": "b8lm5JZ2hUduLnq-OAKCSODeWQ7Uqs7eet2bqeuAD0_2po-PG4qhZoo7VwF\
+  CUTWlJan9wqdxiAPlbEQKkCdFRcbakbjN2TMJjMCHWL5zfgvqhmgeyKsrqg1wSce9\
+  7J1_Mkvn3fh6CbqnwNb6bVFDvTJS3i5FzRhKiv6rUsYm8ZAdF4XRaYkFkeuHPl7rc\
+  -ruUTSAjC4GovxIxoDJFe0r4kbFmkiZOr40e8RZYK7T1IKrSvzfxx5AjnlK_OZOTC\
+  q0L7wBPbMW-IxmQpFCjpI-yuoi3FlZG3LaLNrBMXQF_lLZUDHs77q3fAGxDWwum2h\
+  KBfdBuUQtjlqwjQlgXPsskQ",
+  "e": "AQAB",
+  "qi": "PkbARLOwU_LcZrQy9mmfcPoQlAuCyeu1Q9nH7PYSnbHTFzmiud4Hl8bIXU\
+  9a0_58blDoOl3PctF-b4rAEJYUpCODu5PFyN6uEFYRg-YQwpjBMkXk8Eb39128ctA\
+  RB40Lx8caDhRdTyaEedIG3cQDXSpAl9EOzXkzfx4bZxjAHU9mkMdJwOcMDQ",
+  "dp": "aiodZsrWpi8HFfZfeRs8OS_0L5x6WBl3Y9btoZgsIeruc9uZ8NXTIdxaM6\
+  FdnyNEyOYA1VH94tDYR-xEt1br1ud_dkPslLV_Aac7d7EaYc7cdkb7oC9t6sphVg0\
+  dqE0UTDlOwBxBYMtGmQbJsFzGpmjzVgKqWqJ3B947li2U7t63HXEvKprY2w",
+  "dq": "b0DzpSMb5p42dcQgOTU8Mr4S6JOEhRr_YjErMkpaXUEqvZ3jEB9HRmcRi5\
+  Gtt4NBiBMiY6V9br8a5gjEpiAQoIUcWokBMAYjEeurU8M6JLBd3YaZVVjISaFmdty\
+  nwLFoQxCh6_EC1rSywwrfDpSwO29S9i8Xbaap",
+  "n": "hAKYdtoeoy8zcAcR874L8cnZxKzAGwd7v36APp7Pv6Q2jdsPBRrwWEBnez6\
+  d0UDKDwGbc6nxfEXAy5mbhgajzrw3MOEt8uA5txSKobBpKDeBLOsdJKFqMGmXCQvE\
+  G7YemcxDTRPxAleIAgYYRjTSd_QBwVW9OwNFhekro3RtlinV0a75jfZgkne_YiktS\
+  vLG34lw2zqXBDTC5NHROUqGTlML4PlNZS5Ri2U4aCNx2rUPRcKIlE0PuKxI4T-HIa\
+  Fpv8-rdV6eUgOrB2xeI1dSFFn_nnv5OoZJEIB-VmuKn3DCUcCZSFlQPSXSfBDiUGh\
+  wOw76WuSSsf1D4b_vLoJ10w"
+}
 ~~~
 
 ### Example RSA PSS Key {#example-key-rsa-pss-test}
@@ -2098,6 +2195,45 @@ rOjr9w349JooGXhOxbu8nOxX
 -----END PRIVATE KEY-----
 ~~~
 
+The same public and private keypair in JWK format:
+
+~~~json
+NOTE: '\' line wrapping per RFC 8792
+
+{
+  "kty": "RSA",
+  "kid": "test-key-rsa-pss",
+  "p": "5V-6ISI5yEaCFXm-fk1EM2xwAWekePVCAyvr9QbTlFOCZwt9WwjUjhtKRus\
+  i5Uq-IYZ_tq2WRE4As4b_FHEMtp2AER43IcvmXPqKFBoUktVDS7dThIHrsnRi1U7d\
+  HqVdwiMEMe5jxKNgnsKLpnq-4NyhoS6OeWu1SFozG9J9xQk",
+  "q": "w-wIde17W5Y0Cphp3ZZ0uM8OUq1AkrV2IKauqYHaDxAT32EM4ci2MMER2nI\
+  UEo4g_42lW0zYouFFqONwv0-HyOsgPpdSqKRC5WLgn0VXabjaNcy6KhNPXeJ0Agtq\
+  diDwPeJ2_L_eKwNWQ43RfdQBUquAwSd7SEmmQ8sViqB628M",
+  "d": "lAfIqfpCYomVShfAKnwf2lD9I0wKjkHsCtZCif4kAlwQqqW6N-tIL3bdOR-\
+  VWf0Q1ZBIDtpO91UrG7pansyrPERbNrRJlPiYEyPTHkCT1nD-l2isuiyGLNBNnFoK\
+  fBgA4KAbPJZQatFIV9Cn34JSHnpN5-2ehreGBYHtkwHFtlmzeF3yu5bqRcqOhx8lk\
+  YmBzDAEUFyyXjknU5-WjAT9DzuG0MpOTkcU1EnjnIjyVBZLUB5Lxm8puyq8hH8B_E\
+  5LNC-1oc8j-tDy98UvRTTiYvZvs87cGCFxg0LijNhg7CE3g9piNqB6DzMgA9MHSOw\
+  cElVtfKdYfo4H3OHZXsSmEQ",
+  "e": "AQAB",
+  "qi": "jRAqfYi_tKCjhP9eM0N2XaRlNeoYCTx06GlSLD8d0zc4ZZuEePY10LMGWI\
+  6Y_JC0CvvvQYhNa9sAj4hFjIVLsWeTplVVUezGO1ofLW4kYWVpnMpHgAY1pRM4kyz\
+  o1p3MKYY8DE1BA4KqhSOfhdGs6Ov3Dfj0migZeE7Fu7yc7Fc",
+  "dp": "otDolkxtJ7Sk8gmRJqZCGx6GAvlGznWJfibXPv6xgUAl-G83dD84YgcNGn\
+  oeMxRzEekfDtT5LVMRPF4_AoucsqPqHDyOdfb-dlGBYfOBVxj6w-xF5HE0lV_4J-H\
+  rI63Od9fTSn4lY5d1JjyCVJIcnBEAyiD6EUZbUBh23vDzRcE",
+  "dq": "iZE1S6CpqmBoQDxOsXGQmaeBdhoCqkDSJhEDuS_dLhBq88FQa0UkcE1QvO\
+  K3J2Q21VnfDqGBx7SH1hOFOj-cpz45kNluB832ztxDvnHQ9AIA7h_HY_3VD6YPMNR\
+  VN4bfSYS3abdLR0Z7jsmInGJ9X0_fA0E2tkZIgXeas5EFU0M",
+  "n": "r4tmm3r20Wd_PbqvP1s2-QEtvpuRaV8Yq40gjUR8y2Rjxa6dpG2GXHbPfvM\
+  s8ct-Lh1GH45x28Rw3Ry53mm-oAXjyQ86OnDkZ5N8lYbggD4O3w6M6pAvLkhk95An\
+  dTrifbIFPNU8PPMO7OyrFAHqgDsznjPFmTOtCEcN2Z1FpWgchwuYLPL-Wokqltd11\
+  nqqzi-bJ9cvSKADYdUAAN5WUtzdpiy6LbTgSxP7ociU4Tn0g5I6aDZJ7A8Lzo0KSy\
+  ZYoA485mqcO0GVAdVw9lq4aOT9v6d-nb4bnNkQVklLQ3fVAvJm-xdDOp9LCNCN48V\
+  2pnDOkFV6-U9nV5oyc6XI2w"
+}
+~~~
+
 ### Example ECC P-256 Test Key {#example-key-ecc-p256}
 
 The following key is a public and private elliptical curve key pair over the curve P-256, referred
@@ -2116,6 +2252,19 @@ AwEHoUQDQgAEqIVYZVLCrPZHGHjP17CTW0/+D9Lfw0EkjqF7xB4FivAxzic30tMM
 -----END EC PRIVATE KEY-----
 ~~~
 
+The same public and private keypair in JWK format:
+
+~~~json
+{
+  "kty": "EC",
+  "crv": "P-256",
+  "kid": "test-key-ecc-p256",
+  "d": "UpuF81l-kOxbjf7T4mNSv0r5tN67Gim7rnf6EFpcYDs",
+  "x": "qIVYZVLCrPZHGHjP17CTW0_-D9Lfw0EkjqF7xB4FivA",
+  "y": "Mc4nN9LTDOBhfoUeg8Ye9WedFRhnZXZJA12Qp0zZ6F0"
+}
+~~~
+
 ### Example Ed25519 Test Key {#example-key-ed25519}
 
 The following key is an elliptical curve key over the Edwards curve ed25519, referred to in this document as `test-key-ed25519`. This key is PCKS#8 encoded in PEM format, with no encryption.
@@ -2128,6 +2277,18 @@ MCowBQYDK2VwAyEAJrQLj5P/89iXES9+vFgrIy29clF9CC/oPPsw3c5D0bs=
 -----BEGIN PRIVATE KEY-----
 MC4CAQAwBQYDK2VwBCIEIJ+DYvh6SEqVTm50DFtMDoQikTmiCqirVv9mWG9qfSnF
 -----END PRIVATE KEY-----
+~~~
+
+The same public and private keypair in JWK format:
+
+~~~json
+{
+  "kty": "OKP",
+  "crv": "Ed25519",
+  "kid": "test-key-ed25519",
+  "d": "n4Ni-HpISpVObnQMW0wOhCKROaIKqKtW_2ZYb2p9KcU",
+  "x": "JrQLj5P_89iXES9-vFgrIy29clF9CC_oPPsw3c5D0bs"
+}
 ~~~
 
 ### Example Shared Secret {#example-shared-secret}
@@ -2191,7 +2352,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;nonce="b3k2pp5k7z-50gnwp.yemd"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the signature label `sig-b21`:
+This results in the following Signature-Input and Signature header fields being added to the message under the signature label `sig-b21`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2230,7 +2391,7 @@ NOTE: '\' line wrapping per RFC 8792
 ~~~
 
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b22`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b22`:
 
 
 ~~~ http-message
@@ -2272,7 +2433,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;created=1618884473;keyid="test-key-rsa-pss"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b23`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b23`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2311,7 +2472,7 @@ NOTE: '\' line wrapping per RFC 8792
   "content-length");created=1618884473;keyid="test-key-ecc-p256"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b24`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b24`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2342,7 +2503,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;created=1618884473;keyid="test-shared-secret"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b25`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b25`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2375,7 +2536,7 @@ NOTE: '\' line wrapping per RFC 8792
   ;keyid="test-key-ed25519"
 ~~~
 
-This results in the following Signature-Input and Signature headers being added to the message under the label `sig-b26`:
+This results in the following Signature-Input and Signature header fields being added to the message under the label `sig-b26`:
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -2645,6 +2806,14 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -14
+     * Target raw non-decoded values for "@query" and "@path".
+     * Add method for signing trailers.
+     * Call out potential issues of list-based field values.
+     * Update IANA registry for header fields.
+     * Call out potential issues with Content-Digest in example.
+     * Add JWK formats for all keys.
 
   - -13
      * Renamed "context" parameter to "tag".
