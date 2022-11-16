@@ -434,7 +434,7 @@ If the signer wants to include a trailer field in the signature, the signer MUST
 
 For example, given the following message:
 
-```http-message
+~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: text/plain
 Transfer-Encoding: chunked
@@ -448,17 +448,17 @@ Message
 Signatures
 0
 Expires: Wed, 9 Nov 2022 07:28:00 GMT
-```
+~~~
 
-The signer decides to add both the Trailer header field as well as the Expires trailer to the signature base:
+The signer decides to add both the Trailer header field as well as the Expires trailer to the signature base, along with the status code derived component:
 
-```
+~~~
 "@status": 200
 "trailer": Expires
 "expires";tr: Wed, 9 Nov 2022 07:28:00 GMT
-```
+~~~
 
-IF a field is available as both a header and trailer in a message, both values MAY be signed separately. The values of header fields and trailer fields of the same name MUST NOT be combined.
+If a field is available as both a header and trailer in a message, both values MAY be signed, but the values MUST be signed separately. The values of header fields and trailer fields of the same name MUST NOT be combined for purposes of the signature.
 
 Since trailer fields could be merged into the header fields or dropped entirely by intermediaries as per {{Section 6.5.1 of HTTP}}, it is NOT RECOMMENDED to include trailers in the signature unless the signer knows that the verifier will have access to the values of the trailers as sent.
 
