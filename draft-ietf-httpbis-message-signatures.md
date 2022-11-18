@@ -81,6 +81,7 @@ normative:
     ABNF: RFC5234
 informative:
     RFC7239:
+    RFC8792:
     BCP195:
     CLIENT-CERT: I-D.ietf-httpbis-client-cert-field
     DIGEST: I-D.ietf-httpbis-digest-headers
@@ -176,7 +177,7 @@ Target Message:
 
 The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
-This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash `\` to indicate line wrapping for long values, as per {{!RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
+This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash `\` to indicate line wrapping for long values, as per {{RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
 
 ## Requirements
 
