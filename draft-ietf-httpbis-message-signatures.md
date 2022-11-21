@@ -175,6 +175,9 @@ Expiration Time:
 Target Message:
 : The HTTP message to which an HTTP Message Signature is applied.
 
+Signature Context:
+: The data source from which the HTTP Message Component Values are drawn. The context includes the target message and any additional information the signer or verifier might have, such as the full target URI of a request or the related request message for a response.
+
 The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
 
 This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash `\` to indicate line wrapping for long values, as per {{RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
@@ -226,7 +229,7 @@ The details of this kind of profiling are the purview of the application and out
 
 In order to allow signers and verifiers to establish which components are covered by a signature, this document defines component identifiers for components covered by an HTTP Message Signature, a set of rules for deriving and canonicalizing the values associated with these component identifiers from the HTTP Message, and the means for combining these canonicalized values into a signature base.
 
-The context for deriving these values MUST be accessible to both the signer and the verifier of the message. The context MUST be consistent across all components. For more considerations of the message component context, see {{security-message-component-context}}.
+The signature context for deriving these values MUST be accessible to both the signer and the verifier of the message. The context MUST be the same across all components in a given signature. For example, it would be an error to use a the raw query string for the `@query` derived component but combined query and form parameters for the `@query-param` derived component. For more considerations of the message component context, see {{security-message-component-context}}.
 
 A component identifier is composed of a component name and any parameters associated with that name. Each component name is either an HTTP field name ({{http-fields}}) or a registered derived component name ({{derived-components}}). The possible parameters for a component identifier are dependent on the component identifier, and a registry cataloging all possible parameters is defined in {{param-registry}}.
 
@@ -465,7 +468,7 @@ Since trailer fields could be merged into the header fields or dropped entirely 
 
 ## Derived Components {#derived-components}
 
-In addition to HTTP fields, there are a number of different components that can be derived from the control data, processing context, or other aspects of the HTTP message being signed. Such derived components can be included in the signature base by defining a component name, possible parameters, message target, and the derivation method for its component value.
+In addition to HTTP fields, there are a number of different components that can be derived from the control data, signature context, or other aspects of the HTTP message being signed. Such derived components can be included in the signature base by defining a component name, possible parameters, message target, and the derivation method for its component value.
 
 Derived component names MUST start with the "at" `@` character. This differentiates derived component names from HTTP field names, which cannot contain the `@` character as per {{Section 5.1 of HTTP}}. Processors of HTTP Message Signatures MUST treat derived component names separately from field names, as discussed in {{security-lazy-header-parser}}.
 
@@ -500,7 +503,7 @@ This specification defines the following derived components:
 
 Additional derived component names are defined in the HTTP Signatures Derived Component Name Registry. ({{content-registry}})
 
-Derived component values are taken from the context of the target message for the signature. This context includes information about the message itself, such as its control data, as well as any additional state and context held by the signer. In particular, when signing a response, the signer can include any derived components from the originating request by using the [request-response signature binding parameter](#content-request-response).
+Derived component values are taken from the context of the target message for the signature. This context includes information about the message itself, such as its control data, as well as any additional state and context held by the signer or verifier. In particular, when signing a response, the signer can include any derived components from the originating request by using the [request-response signature binding parameter](#content-request-response).
 
 request:
 : Values derived from and results applied to an HTTP request message as described in {{Section 3.4 of HTTP}}. If the target message of the signature is a response, using the `req` parameter allows a request-targeted derived component to be included in the signature (see {{content-request-response}}).
@@ -1092,7 +1095,7 @@ An HTTP Message Signature is a signature over a string generated from a subset o
 
 ## Creating a Signature {#sign}
 
-Creation of an HTTP message signature is a process that takes as its input the message context and the requirements for the application. The output is a signature value and set of signature parameters that can be communicated to the verifier by adding them to the message.
+Creation of an HTTP message signature is a process that takes as its input the signature context (including the target message) and the requirements for the application. The output is a signature value and set of signature parameters that can be communicated to the verifier by adding them to the message.
 
 In order to create a signature, a signer MUST follow the following algorithm:
 
@@ -1106,7 +1109,7 @@ In order to create a signature, a signer MUST follow the following algorithm:
 
 4. The signer creates an ordered set of component identifiers representing the message components to be covered by the signature, and attaches signature metadata parameters to this set. The serialized value of this is later used as the value of the Signature-Input field as described in {{signature-input-header}}.
    * Once an order of covered components is chosen, the order MUST NOT change for the life of the signature.
-   * Each covered component identifier MUST be either an HTTP field in the message context {{http-fields}} or a derived component listed in {{derived-components}} or its associated registry.
+   * Each covered component identifier MUST be either an HTTP field in the signature context {{http-fields}} or a derived component listed in {{derived-components}} or its associated registry.
    * Signers of a request SHOULD include some or all of the message control data in the covered components, such as the `@method`, `@authority`, `@target-uri`, or some combination thereof.
    * Signers SHOULD include the `created` signature metadata parameter to indicate when the signature was created.
    * The `@signature-params` derived component identifier MUST NOT be listed in the list of covered component identifiers. The derived component is required to always be the last line in the signature base, ensuring that a signature always covers its own metadata and the metadata cannot be substituted.
@@ -1136,7 +1139,7 @@ Note that the RSA PSS algorithm in use here is non-deterministic, meaning a diff
 
 ## Verifying a Signature {#verify}
 
-Verification of an HTTP message signature is a process that takes as its input the message context (including Signature and Signature-Input fields) and the requirements for the application. The output of the verification is either a positive verification or an error.
+Verification of an HTTP message signature is a process that takes as its input the signature context (including the target message, particularly its Signature and Signature-Input fields) and the requirements for the application. The output of the verification is either a positive verification or an error.
 
 In order to verify a signature, a verifier MUST follow the following algorithm:
 
