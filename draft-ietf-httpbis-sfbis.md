@@ -526,6 +526,25 @@ Example-Boolean: ?1
 Note that in Dictionary ({{dictionary}}) and Parameter ({{param}}) values, Boolean true is indicated by omitting the value.
 
 
+### Dates {#date}
+
+Date values can be conveyed in Structured Fields.
+
+Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from January 1, 1970 00:00:00 UTC, excluding leap seconds.
+
+The ABNF for Dates is:
+
+~~~ abnf
+sf-date = "@" ["-"] 1*15DIGIT
+~~~
+
+For example:
+
+~~~ http-message-new
+Example-Date: @1659578233
+~~~
+
+
 # Working with Structured Fields in HTTP {#text}
 
 This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{?RFC7540}} before compression with HPACK {{?RFC7541}}).
@@ -714,6 +733,15 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in an 
 3. If input_boolean is true, append "1" to output.
 4. If input_boolean is false, append "0" to output.
 5. Return output.
+
+
+## Serialising a Date
+
+Given a Date as input_integer, return an ASCII string suitable for use in an HTTP field value.
+
+0. Let output be "@".
+1. Append to output the result of running Serializing an Integer with input_date ({{ser-integer}}).
+2. Return output.
 
 
 ## Parsing Structured Fields {#text-parse}
@@ -963,6 +991,17 @@ Given an ASCII string as input_string, return a Boolean. input_string is modifie
 3. If the first character of input_string matches "1", discard the first character, and return true.
 4. If the first character of input_string matches "0", discard the first character, and return false.
 5. No value has matched; fail parsing.
+
+
+### Parsing a Date {#parse-date}
+
+Given an ASCII string as input_string, return a Date. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not "@", fail parsing.
+2. Discard the first character of input_string.
+3. Let output_date be the result of running Parsing an Integer or Decimal ({{parse-number}}) with input_string.
+4. If output_date is a Decimal, fail parsing.
+5. Return output_date.
 
 
 # IANA Considerations

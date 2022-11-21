@@ -37,7 +37,7 @@ author:
 normative:
   RFC2119:
   HTTP: RFC9110
-  STRUCTURED-FIELDS: RFC8941
+  STRUCTURED-FIELDS: I-D.ietf-httpbis-sfbis
   COOKIES: I-D.ietf-httpbis-rfc6265bis
 
 informative:
@@ -48,8 +48,6 @@ informative:
 This specification nominates a selection of existing HTTP fields as having syntax that is compatible with Structured Fields, so that they can be handled as such (subject to certain caveats).
 
 To accommodate some additional fields whose syntax is not compatible, it also defines mappings of their semantics into new Structured Fields. It does not specify how to negotiate their use.
-
-One of those mappings requires introduction of a new Structured Fields data type, Date.
 
 --- middle
 
@@ -75,8 +73,6 @@ Note that while implementations can parse and serialise compatible fields as Str
 ## Notational Conventions
 
 {::boilerplate bcp14-tagged}
-
-This document uses the date-time, time-offset, and time-secfrac rules from {{!RFC3339}}.
 
 
 # Compatible Fields {#compatible}
@@ -225,7 +221,7 @@ SF-Location: "https://example.com/foo"
 
 ## Dates
 
-The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds), using the Date Structured Fields data type defined in {{date-type}}.
+The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as a Date.
 
 | Field Name          | Mapped Field Name      |
 |---------------------|------------------------|
@@ -386,39 +382,9 @@ Finally, add a new column to the "Cookie Attribute Registry" established by {{CO
 --- back
 
 
-# The Date Structured Type {#date-type}
 
-This section defines a new Structured Fields data type, Date.
 
-Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from January 1, 1970 00:00:00 UTC, excluding leap seconds.
 
-The ABNF for Dates is:
 
-~~~ abnf
-sf-date = "@" ["-"] 1*15DIGIT
-~~~
 
-For example:
-
-~~~ http-message-new
-Example-Date: @1659578233
-~~~
-
-## Serialising a Date
-
-Given a Date as input_integer, return an ASCII string suitable for use in an HTTP field value.
-
-1. Let output be "@".
-1. Append to output the result of running Serializing an Integer with input_date (see {{Section 4.1.4 of STRUCTURED-FIELDS}}).
-2. Return output.
-
-## Parsing a Date
-
-Given an ASCII string as input_string, return a Date. input_string is modified to remove the parsed value.
-
-1. If the first character of input_string is not "@", fail parsing.
-2. Discard the first character of input_string.
-3. Let output_date be the result of running Parsing an Integer or Decimal with input_string (see {{Section 4.2.4 of STRUCTURED-FIELDS}}).
-4. If output_date is a Decimal, fail parsing.
-5. Return output_date.
 
