@@ -1373,7 +1373,7 @@ An HTTP message signature MUST use both Signature-Input and Signature fields and
 
 ## The Signature-Input HTTP Field {#signature-input-header}
 
-The Signature-Input field is a Dictionary structured field defined in {{Section 3.2 of STRUCTURED-FIELDS}} containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's key is the label that uniquely identifies the message signature within the context of the HTTP message. The member's value is the serialization of the covered components Inner List plus all signature metadata parameters identified by the label.
+The Signature-Input field is a Dictionary structured field defined in {{Section 3.2 of STRUCTURED-FIELDS}} containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's key is the label that uniquely identifies the message signature within the the HTTP message. The member's value is the serialization of the covered components Inner List plus all signature metadata parameters identified by the label.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1392,7 +1392,7 @@ Multiple Signature-Input fields MAY be included in a single HTTP message. The si
 
 ## The Signature HTTP Field {#signature-header}
 
-The Signature field is a Dictionary structured field defined in {{Section 3.2 of STRUCTURED-FIELDS}} containing one or more message signatures generated from components and context of the HTTP message. The member's key is the label that uniquely identifies the message signature within the context of the HTTP message. The member's value is a Byte Sequence containing the signature value for the message signature identified by the label.
+The Signature field is a Dictionary structured field defined in {{Section 3.2 of STRUCTURED-FIELDS}} containing one or more message signatures generated from the signature context of the target message. The member's key is the label that uniquely identifies the message signature within the HTTP message. The member's value is a Byte Sequence containing the signature value for the message signature identified by the label.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1666,7 +1666,7 @@ The table below contains the initial contents of the HTTP Signature Metadata Par
 
 ## HTTP Signature Derived Component Names Registry {#content-registry}
 
-This document defines a method for canonicalizing HTTP message components, including components that can be derived from the context of the HTTP message outside of the HTTP fields. These derived components are identified by a unique string, known as the component name. Component names for derived components always start with the "@" (at) symbol to distinguish them from HTTP header fields. IANA is asked to create and maintain a new registry typed "HTTP Signature Derived Component Names" to record and maintain the set of non-field component names and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}. Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
+This document defines a method for canonicalizing HTTP message components, including components that can be derived from the context of the target message outside of the HTTP fields. These derived components are identified by a unique string, known as the component name. Component names for derived components always start with the "@" (at) symbol to distinguish them from HTTP header fields. IANA is asked to create and maintain a new registry typed "HTTP Signature Derived Component Names" to record and maintain the set of non-field component names and the methods to produce their associated component values. Initial values for this registry are given in {{iana-content-contents}}. Future assignments and modifications to existing assignments are to be made through the Expert Review registration policy {{?RFC8126}} and shall follow the template presented in {{iana-content-template}}.
 
 ### Registration Template {#iana-content-template}
 
@@ -1927,7 +1927,7 @@ To counter this, the component that generates the signature base needs to be tru
 
 ### Message Component Source and Context {#security-message-component-context}
 
-The context for deriving message component values includes the HTTP Message itself, any associated messages (such as the request that triggered a response), and additional information that the signer or verifier has access to. Both signers and verifiers need to take carefully consider the source of all information when creating component values for the signature base and take care not to take information from untrusted sources. Otherwise, an attacker could leverage such a loosely-defined message context to inject their own values into the signature base string, overriding or corrupting the intended values.
+The signature context for deriving message component values includes the target HTTP Message itself, any associated messages (such as the request that triggered a response), and additional information that the signer or verifier has access to. Both signers and verifiers need to take carefully consider the source of all information when creating component values for the signature base and take care not to take information from untrusted sources. Otherwise, an attacker could leverage such a loosely-defined message context to inject their own values into the signature base string, overriding or corrupting the intended values.
 
 For example, in most situations, the target URI of the message is defined in {{HTTP, Section 7.1}}. However, let's say that there is an application that requires signing of the `@authority` of the incoming request, but the application doing the processing is behind a reverse proxy. Such an application would expect a change in the `@authority` value, and it could be configured to know the external target URI as seen by the client on the other side of the proxy. This application would use this configured value as its target URI for the purposes of deriving message component values such as `@authority` instead of using the target URI of the incoming message.
 
@@ -2810,6 +2810,13 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -16
+     *
+
+  - -15
+     * Editorial cleanup.
+     * Defined "signature context".
 
   - -14
      * Target raw non-decoded values for "@query" and "@path".
