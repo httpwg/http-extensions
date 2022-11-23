@@ -308,19 +308,19 @@ Any HTTP field component identifiers MAY have the following parameters in specif
 
 `sf`
 : A boolean flag indicating that the component value is serialized using strict encoding
-of the structured field value. {{http-field-structured}}
+of the structured field value ({{http-field-structured}}).
 
 `key`
-: A string parameter used to select a single member value from a Dictionary structured field. {{http-field-dictionary}}
+: A string parameter used to select a single member value from a Dictionary structured field ({{http-field-dictionary}}).
 
 `bs`
-: A boolean flag indicating that individual field values are encoded using Byte Sequence data structures before being combined into the component value. {{http-field-byte-sequence}}
+: A boolean flag indicating that individual field values are encoded using Byte Sequence data structures before being combined into the component value ({{http-field-byte-sequence}}).
 
 `req`
-: A boolean flag for signed responses indicating that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to any derived component identifiers that target the request. {{content-request-response}}
+: A boolean flag for signed responses indicating that the component value is derived from the request that triggered this response message and not from the response message directly. Note that this parameter can also be applied to any derived component identifiers that target the request ({{content-request-response}}).
 
 `tr`
-: A boolean flag indicating that the field value is taken from the trailers of the message as defined in {{Section 6.5 of HTTP}}. If this flag is absent, the field value is taken from the headers of the message as defined in {{Section 6.3 of HTTP}}. {{http-trailer}}
+: A boolean flag indicating that the field value is taken from the trailers of the message as defined in {{Section 6.5 of HTTP}}. If this flag is absent, the field value is taken from the headers of the message as defined in {{Section 6.3 of HTTP}} ({{http-trailer}}).
 
 Multiple parameters MAY be specified together, though some combinations are redundant or incompatible. For example, the `sf` parameter's functionality is already covered when the `key` parameter is used on a dictionary item, since `key` requires strict serialization of the value. The `bs` parameter, which requires the raw field values from the message, is not compatible with use of the `sf` or `key` parameters, which require the parsed data structures of the field values after combination.
 
