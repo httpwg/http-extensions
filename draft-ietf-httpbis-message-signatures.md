@@ -202,8 +202,8 @@ As mentioned earlier, HTTP explicitly permits and in some cases requires impleme
 - Addition of fields such as `Via` ({{Section 7.6.3 of HTTP}}) and `Forwarded` ({{Section 4 of RFC7239}}).
 - Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive components such as field names, request URI scheme, or host.
-- Addition or removal of leading or trailing whitespace to a field value.
-- Addition or removal of `obs-folds` from field values.
+- Removal of leading or trailing whitespace to a field value.
+- Removal of `obs-folds` from field values.
 - Changes to the request target and authority that when applied together do not
     result in a change to the message's target URI, as defined in {{Section 7.1 of HTTP}}.
 
