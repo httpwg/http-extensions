@@ -499,7 +499,7 @@ This specification defines the following derived components:
 : A parsed query parameter of the target URI for a request. ({{content-request-query-param}})
 
 @status
-: The status code for a response. ({{content-status-code}}).
+: The status code for a response. ({{content-status-code}})
 
 Additional derived component names are defined in the HTTP Signatures Derived Component Name Registry. ({{content-registry}})
 
