@@ -1373,7 +1373,7 @@ An HTTP message signature MUST use both Signature-Input and Signature fields and
 
 ## The Signature-Input HTTP Field {#signature-input-header}
 
-The Signature-Input field is a Dictionary structured field defined in {{Section 3.2 of STRUCTURED-FIELDS}} containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's key is the label that uniquely identifies the message signature within the the HTTP message. The member's value is the serialization of the covered components Inner List plus all signature metadata parameters identified by the label.
+The Signature-Input field is a Dictionary structured field (defined in {{Section 3.2 of STRUCTURED-FIELDS}}) containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's key is the label that uniquely identifies the message signature within the the HTTP message. The member's value is the serialization of the covered components Inner List plus all signature metadata parameters identified by the label.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1545,7 +1545,7 @@ The sender of an Accept-Signature field MUST include only identifiers that are a
 
 ## The Accept-Signature Field {#accept-signature-header}
 
-The Accept-Signature field is a Dictionary structured field defined in {{Section 3.2 of STRUCTURED-FIELDS}} containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is label that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered components of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The Accept-Signature field is a Dictionary structured field (defined in {{Section 3.2 of STRUCTURED-FIELDS}}) containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is a label that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered components of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
