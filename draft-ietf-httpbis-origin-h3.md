@@ -62,6 +62,10 @@ frame should be sent on Stream 0, this should be interpreted to mean the HTTP/3
 control stream.  The ORIGIN frame is sent from servers to clients on the
 server's control stream.
 
+HTTP/3 does not define a Flags field in the generic frame layout. As no flags
+have been defined for the ORIGIN frame, this specification does not define a
+mechanism for communicating such flags in HTTP/3.
+
 ## Frame Layout
 
 The ORIGIN frame has a nearly identical layout to that used in HTTP/2, restated
