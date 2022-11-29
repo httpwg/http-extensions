@@ -650,8 +650,8 @@ Given an Item as input_item, return an ASCII string suitable for use in an HTTP 
 3. If input_item is a String, return the result of running Serializing a String ({{ser-string}}) with input_item.
 4. If input_item is a Token, return the result of running Serializing a Token ({{ser-token}}) with input_item.
 5. If input_item is a Byte Sequence, return the result of running Serializing a Byte Sequence ({{ser-binary}}) with input_item.
-6. If input_item is a Date, return the result of running Serializing a Date ({{ser-date}}) with input_item.
-7. If input_item is a Boolean, return the result of running Serializing a Boolean ({{ser-boolean}}) with input_item.
+6. If input_item is a Boolean, return the result of running Serializing a Boolean ({{ser-boolean}}) with input_item.
+7. If input_item is a Date, return the result of running Serializing a Date ({{ser-date}}) with input_item.
 8. Otherwise, fail serialization.
 
 
