@@ -736,7 +736,7 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in an 
 5. Return output.
 
 
-### Serialising a Date
+### Serialising a Date {#ser-date}
 
 Given a Date as input_integer, return an ASCII string suitable for use in an HTTP field value.
 
