@@ -157,11 +157,7 @@ For example, a fictitious Foo-Example header field might be specified as:
 much Foo the message has.</t>
 
 <t>Foo-Example is an Item Structured Header [RFC8941]. Its value MUST be
-an Integer (Section 3.3.1 of [RFC8941]). Its ABNF is:</t>
-
-<artwork>
-  Foo-Example = sf-integer
-</artwork>
+an Integer (Section 3.3.1 of [RFC8941]).</t>
 
 <t>Its value indicates the amount of Foo in the message, and it MUST
 be between 0 and 10, inclusive; other values MUST cause
