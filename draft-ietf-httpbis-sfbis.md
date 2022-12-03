@@ -109,11 +109,9 @@ Note that as a result of this strictness, if a field is appended to by multiple 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document uses algorithms to specify parsing and serialization behaviors and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{!RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialization behaviors. When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms.
 
-When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
-
-For serialization to HTTP fields, the ABNF illustrates their expected wire representations, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm described in {{text-parse}}.
+For serialization to HTTP fields, the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm described in {{text-parse}}.
 
 
 # Defining New Structured Fields {#specify}
@@ -186,9 +184,7 @@ being used.</t>
 
 # Structured Data Types {#types}
 
-This section defines the abstract types for Structured Fields. The ABNF provided represents the on-wire format in HTTP field values.
-
-In summary:
+This section defines the abstract types for Structured Fields. In summary:
 
 * There are three top-level types that an HTTP field can be defined as: Lists, Dictionaries, and Items.
 
@@ -200,13 +196,6 @@ In summary:
 ## Lists {#list}
 
 Lists are arrays of zero or more members, each of which can be an Item ({{item}}) or an Inner List ({{inner-list}}), both of which can be Parameterized ({{param}}).
-
-The ABNF for Lists in HTTP fields is:
-
-~~~ abnf
-sf-list       = list-member *( OWS "," OWS list-member )
-list-member   = sf-item / inner-list
-~~~
 
 Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
 
@@ -238,13 +227,6 @@ Parsers MUST support Lists containing at least 1024 members. Field specification
 
 An Inner List is an array of zero or more Items ({{item}}). Both the individual Items and the Inner List itself can be Parameterized ({{param}}).
 
-The ABNF for Inner Lists is:
-
-~~~ abnf
-inner-list    = "(" *SP [ sf-item *( 1*SP sf-item ) *SP ] ")"
-                parameters
-~~~
-
 Inner Lists are denoted by surrounding parenthesis, and their values are delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
 ~~~ http-message
@@ -268,18 +250,6 @@ Parameters are an ordered map of key-value pairs that are associated with an Ite
 
 Implementations MUST provide access to Parameters both by index and by key. Specifications MAY use either means of accessing them.
 
-The ABNF for Parameters is:
-
-~~~ abnf
-parameters    = *( ";" *SP parameter )
-parameter     = param-key [ "=" param-value ]
-param-key     = key
-key           = ( lcalpha / "*" )
-                *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
-lcalpha       = %x61-7A ; a-z
-param-value   = bare-item
-~~~
-
 Note that parameters are ordered as serialized, and parameter keys cannot contain uppercase letters. A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
 
 ~~~ http-message
@@ -302,15 +272,6 @@ Parsers MUST support at least 256 parameters on an Item or Inner List, and suppo
 Dictionaries are ordered maps of key-value pairs, where the keys are short textual strings and the values are Items ({{item}}) or arrays of Items, both of which can be Parameterized ({{param}}). There can be zero or more members, and their keys are unique in the scope of the Dictionary they occur within.
 
 Implementations MUST provide access to Dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
-
-The ABNF for Dictionaries is:
-
-~~~ abnf
-sf-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-key ( parameters / ( "=" member-value ))
-member-key     = key
-member-value   = sf-item / inner-list
-~~~
 
 Members are ordered as serialized and separated by a comma with optional whitespace. Member keys cannot contain uppercase characters. Keys and values are separated by "=" (without whitespace). For example:
 
@@ -366,14 +327,6 @@ Parsers MUST support Dictionaries containing at least 1024 key/value pairs and k
 
 An Item can be an Integer ({{integer}}), a Decimal ({{decimal}}), a String ({{string}}), a Token ({{token}}), a Byte Sequence ({{binary}}), or a Boolean ({{boolean}}). It can have associated parameters ({{param}}).
 
-The ABNF for Items is:
-
-~~~ abnf
-sf-item   = bare-item parameters
-bare-item = sf-integer / sf-decimal / sf-string / sf-token
-            / sf-binary / sf-boolean
-~~~
-
 For example, a header field that is defined to be an Item that is an Integer might look like:
 
 ~~~ http-message
@@ -390,12 +343,6 @@ Example-Integer: 5; foo=bar
 ### Integers {#integer}
 
 Integers have a range of -999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility {{IEEE754}}.
-
-The ABNF for Integers is:
-
-~~~ abnf
-sf-integer = ["-"] 1*15DIGIT
-~~~
 
 For example:
 
@@ -414,14 +361,6 @@ Note that commas in Integers are used in this section's prose only for readabili
 
 Decimals are numbers with an integer and a fractional component. The integer component has at most 12 digits; the fractional component has at most three digits.
 
-
-The ABNF for decimals is:
-
-
-~~~ abnf
-sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
-~~~
-
 For example, a header whose value is defined as a Decimal could look like:
 
 ~~~ http-message
@@ -436,15 +375,6 @@ Note that the serialization algorithm ({{ser-decimal}}) rounds input with more t
 ### Strings {#string}
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
-
-The ABNF for Strings is:
-
-~~~ abnf
-sf-string = DQUOTE *chr DQUOTE
-chr       = unescaped / escaped
-unescaped = %x20-21 / %x23-5B / %x5D-7E
-escaped   = "\" ( DQUOTE / "\" )
-~~~
 
 Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
@@ -463,13 +393,7 @@ Parsers MUST support Strings (after any decoding) with at least 1024 characters.
 
 ### Tokens {#token}
 
-Tokens are short textual words; their abstract model is identical to their expression in the HTTP field value serialization.
-
-The ABNF for Tokens is:
-
-~~~ abnf
-sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
-~~~
+Tokens are short textual words that begin with an alphabetic character or "*", followed by zero to many token characters, which are the same as those allowed by the "token" ABNF rule defined in {{?RFC7230}}, plus the ":" and "/" characters.
 
 For example:
 
@@ -479,19 +403,10 @@ Example-Token: foo123/456
 
 Parsers MUST support Tokens with at least 512 characters.
 
-Note that Token allows the same characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
-
 
 ### Byte Sequences {#binary}
 
 Byte Sequences can be conveyed in Structured Fields.
-
-The ABNF for a Byte Sequence is:
-
-~~~ abnf
-sf-binary = ":" *(base64) ":"
-base64    = ALPHA / DIGIT / "+" / "/" / "="
-~~~
 
 A Byte Sequence is delimited with colons and encoded using base64 ({{RFC4648, Section 4}}). For example:
 
@@ -505,13 +420,6 @@ Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
 ### Booleans {#boolean}
 
 Boolean values can be conveyed in Structured Fields.
-
-The ABNF for a Boolean is:
-
-~~~ abnf
-sf-boolean = "?" boolean
-boolean    = "0" / "1"
-~~~
 
 A Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
@@ -527,12 +435,6 @@ Note that in Dictionary ({{dictionary}}) and Parameter ({{param}}) values, Boole
 Date values can be conveyed in Structured Fields.
 
 Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from January 1, 1970 00:00:00 UTC, excluding leap seconds.
-
-The ABNF for Dates is:
-
-~~~ abnf
-sf-date = "@" ["-"] 1*15DIGIT
-~~~
 
 For example:
 
@@ -1048,6 +950,57 @@ Likewise, implementations should note that it's important to preserve the distin
 The serialization algorithm is defined in a way that it is not strictly limited to the data types defined in {{types}} in every case. For example, Decimals are designed to take broader input and round to allowed values.
 
 Implementations are allowed to limit the size of different structures, subject to the minimums defined for each type. When a structure exceeds an implementation limit, that structure fails parsing or serialization.
+
+
+# Informative ABNF {#abnf}
+
+This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{?RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
+
+This section is non-normative. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
+
+~~~ abnf
+sf-list       = list-member *( OWS "," OWS list-member )
+list-member   = sf-item / inner-list
+
+inner-list    = "(" *SP [ sf-item *( 1*SP sf-item ) *SP ] ")"
+                parameters
+
+parameters    = *( ";" *SP parameter )
+parameter     = param-key [ "=" param-value ]
+param-key     = key
+key           = ( lcalpha / "*" )
+                *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
+lcalpha       = %x61-7A ; a-z
+param-value   = bare-item
+
+sf-dictionary  = dict-member *( OWS "," OWS dict-member )
+dict-member    = member-key ( parameters / ( "=" member-value ))
+member-key     = key
+member-value   = sf-item / inner-list
+
+sf-item   = bare-item parameters
+bare-item = sf-integer / sf-decimal / sf-string / sf-token
+            / sf-binary / sf-boolean
+
+sf-integer = ["-"] 1*15DIGIT
+
+sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
+
+sf-string = DQUOTE *chr DQUOTE
+chr       = unescaped / escaped
+unescaped = %x20-21 / %x23-5B / %x5D-7E
+escaped   = "\" ( DQUOTE / "\" )
+
+sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
+
+sf-binary = ":" *(base64) ":"
+base64    = ALPHA / DIGIT / "+" / "/" / "="
+
+sf-boolean = "?" boolean
+boolean    = "0" / "1"
+
+sf-date = "@" ["-"] 1*15DIGIT
+~~~
 
 
 # Acknowledgements
