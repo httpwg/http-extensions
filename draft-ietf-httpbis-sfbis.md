@@ -30,6 +30,7 @@ author:
     email: phk@varnish-cache.org
 
 normative:
+  HTTP: RFC9110
 
 informative:
   IEEE754:
@@ -55,6 +56,9 @@ informative:
       RFC: 3629
       DOI: 10.17487/RFC3629
     target: http://www.rfc-editor.org/info/std63
+  RFC9113:
+    display: HTTP/2
+  HPACK: RFC7541
 
 venue:
   group: HTTP
@@ -75,11 +79,11 @@ This document describes a set of data types and associated algorithms that are i
 
 # Introduction
 
-Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in {{?RFC7231}}{: section="8.3.1"}, there are many decisions -- and pitfalls -- for a prospective HTTP field author.
+Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in {{Section 16.3.2 of HTTP}}, there are many decisions -- and pitfalls -- for a prospective HTTP field author.
 
 Once a field is defined, bespoke parsers and serializers often need to be written, because each field value has a slightly different handling of what looks like common syntax.
 
-This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{?RFC7230}} header and trailer fields.
+This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{HTTP}} header and trailer fields.
 
 An HTTP field that is defined as a "Structured Header" or "Structured Trailer" (if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
 
@@ -144,7 +148,7 @@ A field definition cannot relax the requirements of this specification because d
 
 This specification defines minimums for the length or number of various structures supported by implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
 
-Specifications can refer to a field name as a "structured header name", "structured trailer name", or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value", or "structured field value" as necessary. Field definitions are encouraged to use the ABNF rules beginning with "sf-" defined in this specification; other rules in this specification are not intended to be used in field definitions.
+Specifications can refer to a field name as a "structured header name", "structured trailer name", or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value", or "structured field value" as necessary.
 
 For example, a fictitious Foo-Example header field might be specified as:
 
@@ -205,7 +209,7 @@ Example-List: sugar, tea, rum
 
 An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
 
-Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{?RFC7230}}{: section="3.2.2"}; for example, the following are equivalent:
+Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{Section 5.3 of HTTP}}; for example, the following are equivalent:
 
 ~~~ http-message
 Example-List: sugar, tea, rum
@@ -393,7 +397,7 @@ Parsers MUST support Strings (after any decoding) with at least 1024 characters.
 
 ### Tokens {#token}
 
-Tokens are short textual words that begin with an alphabetic character or "*", followed by zero to many token characters, which are the same as those allowed by the "token" ABNF rule defined in {{?RFC7230}}, plus the ":" and "/" characters.
+Tokens are short textual words that begin with an alphabetic character or "*", followed by zero to many token characters, which are the same as those allowed by the "token" ABNF rule defined in {{HTTP}}, plus the ":" and "/" characters.
 
 For example:
 
@@ -445,7 +449,7 @@ Example-Date: @1659578233
 
 # Working with Structured Fields in HTTP {#text}
 
-This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{?RFC7540}} before compression with HPACK {{?RFC7541}}).
+This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{RFC9113}} before compression with HPACK {{HPACK}}).
 
 ## Serializing Structured Fields {#text-serialize}
 
@@ -658,7 +662,7 @@ Given an array of bytes as input_bytes that represent the chosen field's field-v
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
-When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{RFC7230, Section 3.2.2}}; this assures that the entire field value is processed correctly.
+When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{Section 5.2 of HTTP}}; this assures that the entire field value is processed correctly.
 
 For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances. The parsing algorithms for both types allow tab characters, since these might
 be used to combine field lines by some implementations.
