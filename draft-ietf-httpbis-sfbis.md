@@ -30,6 +30,7 @@ author:
     email: phk@varnish-cache.org
 
 normative:
+  HTTP: RFC9110
 
 informative:
   IEEE754:
@@ -55,6 +56,9 @@ informative:
       RFC: 3629
       DOI: 10.17487/RFC3629
     target: http://www.rfc-editor.org/info/std63
+  RFC9113:
+    display: HTTP/2
+  HPACK: RFC7541
 
 venue:
   group: HTTP
@@ -75,11 +79,11 @@ This document describes a set of data types and associated algorithms that are i
 
 # Introduction
 
-Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in {{?RFC7231}}{: section="8.3.1"}, there are many decisions -- and pitfalls -- for a prospective HTTP field author.
+Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in {{Section 16.3.2 of HTTP}}, there are many decisions -- and pitfalls -- for a prospective HTTP field author.
 
 Once a field is defined, bespoke parsers and serializers often need to be written, because each field value has a slightly different handling of what looks like common syntax.
 
-This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{?RFC7230}} header and trailer fields.
+This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{HTTP}} header and trailer fields.
 
 An HTTP field that is defined as a "Structured Header" or "Structured Trailer" (if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
 
@@ -109,7 +113,7 @@ Note that as a result of this strictness, if a field is appended to by multiple 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document uses algorithms to specify parsing and serialization behaviors and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{!RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialization behaviors and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{!RFC5234}}. It also includes the tchar and OWS rules from {{HTTP}}.
 
 When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
@@ -216,7 +220,7 @@ Example-List: sugar, tea, rum
 
 An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
 
-Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{?RFC7230}}{: section="3.2.2"}; for example, the following are equivalent:
+Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{Section 5.3 of HTTP}}; for example, the following are equivalent:
 
 ~~~ http-message
 Example-List: sugar, tea, rum
@@ -479,7 +483,7 @@ Example-Token: foo123/456
 
 Parsers MUST support Tokens with at least 512 characters.
 
-Note that Token allows the same characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
+Note that Token allows the same characters as the "token" ABNF rule defined in {{HTTP}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
 
 
 ### Byte Sequences {#binary}
@@ -543,7 +547,7 @@ Example-Date: @1659578233
 
 # Working with Structured Fields in HTTP {#text}
 
-This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{?RFC7540}} before compression with HPACK {{?RFC7541}}).
+This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{RFC9113}} before compression with HPACK {{HPACK}}).
 
 ## Serializing Structured Fields {#text-serialize}
 
@@ -756,7 +760,7 @@ Given an array of bytes as input_bytes that represent the chosen field's field-v
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
-When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{RFC7230, Section 3.2.2}}; this assures that the entire field value is processed correctly.
+When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{Section 5.2 of HTTP}}; this assures that the entire field value is processed correctly.
 
 For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances. The parsing algorithms for both types allow tab characters, since these might
 be used to combine field lines by some implementations.
