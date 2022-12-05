@@ -1015,6 +1015,7 @@ This revision of the Structured Field Values for HTTP specification has made the
 
 * Added the Date structured type. ({{date}})
 * Stopped encouraging use of ABNF in definitions of new structured fields. ({{specify}})
+* Moved ABNF to an informative appendix. ({{abnf}})
 
 
 # Acknowledgements
