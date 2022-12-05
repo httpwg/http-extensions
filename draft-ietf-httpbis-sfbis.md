@@ -1060,8 +1060,8 @@ Implementations are allowed to limit the size of different structures, subject t
 
 This revision of the Structured Field Values for HTTP specification has made the following changes:
 
-* Added the Date structured type. {{date}}
-* Stopped encouraging use of ABNF in definitions of new structured fields. {{specify}}
+* Added the Date structured type. ({{date}})
+* Stopped encouraging use of ABNF in definitions of new structured fields. ({{specify}})
 
 
 # Acknowledgements
