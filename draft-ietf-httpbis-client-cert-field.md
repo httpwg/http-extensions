@@ -223,7 +223,7 @@ the processing rules described herein are for servers operating with that option
 enabled.
 
 A TTRP negotiates the use of a mutually-authenticated TLS connection with the
-client, such as is described in {{?TLS}} or {{?RFC5246}}, and validates the
+client, such as is described in {{?TLS}} or {{?TLS1.2=RFC5246}}, and validates the
 client certificate per its policy and trusted certificate authorities.  Each
 HTTP request on the underlying TLS connection are dispatched to the origin
 server with the following modifications:
