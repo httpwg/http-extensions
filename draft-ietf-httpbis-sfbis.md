@@ -74,6 +74,8 @@ github-issue-label: header-structure
 
 This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", "Structured Headers", or "Structured Trailers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
 
+This document obsoletes RFC 8941; {{changes}} lists changes.
+
 
 --- middle
 
@@ -1052,6 +1054,14 @@ Likewise, implementations should note that it's important to preserve the distin
 The serialization algorithm is defined in a way that it is not strictly limited to the data types defined in {{types}} in every case. For example, Decimals are designed to take broader input and round to allowed values.
 
 Implementations are allowed to limit the size of different structures, subject to the minimums defined for each type. When a structure exceeds an implementation limit, that structure fails parsing or serialization.
+
+
+# Changes from RFC 8941 {#changes}
+
+This revision of the Structured Field Values for HTTP specification has made the following changes:
+
+* Added the Date structured type. {{date}}
+* Stopped encouraging use of ABNF in definitions of new structured fields. {{specify}}
 
 
 # Acknowledgements
