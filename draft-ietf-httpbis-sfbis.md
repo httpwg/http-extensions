@@ -74,6 +74,8 @@ github-issue-label: header-structure
 
 This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", "Structured Headers", or "Structured Trailers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
 
+This document obsoletes RFC 8941; {{changes}} lists changes.
+
 
 --- middle
 
@@ -1005,6 +1007,14 @@ boolean    = "0" / "1"
 
 sf-date = "@" ["-"] 1*15DIGIT
 ~~~
+
+
+# Changes from RFC 8941 {#changes}
+
+This revision of the Structured Field Values for HTTP specification has made the following changes:
+
+* Added the Date structured type. ({{date}})
+* Stopped encouraging use of ABNF in definitions of new structured fields. ({{specify}})
 
 
 # Acknowledgements
