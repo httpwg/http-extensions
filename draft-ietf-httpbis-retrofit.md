@@ -142,6 +142,9 @@ An application using this specification will need to consider how to handle such
 
 Note the following caveats regarding compatibility:
 
+Error handling:
+: Parsing algorithms specified (or just widely implemented) for current HTTP headers may differ from those in Structured Fields in details such as error handling. For example, HTTP specifies that repeated directives in the Cache-Control header field have a different precedence than that assigned by a Dictionary structured field (which Cache-Control is mapped to).
+
 Parameter and Dictionary keys:
 : HTTP parameter names are case-insensitive (per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase. Although the vast majority of parameters seen in typical traffic are all-lowercase, compatibility can be improved by force-lowercasing parameters when parsing.
 Likewise, many Dictionary-based fields (e.g., Cache-Control, Expect-CT, Pragma, Prefer, Preference-Applied, Surrogate-Control) have case-insensitive keys, and compatibility can be improved by force-lowercasing them when parsing.
