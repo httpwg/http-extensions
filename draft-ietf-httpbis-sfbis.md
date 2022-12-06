@@ -958,7 +958,7 @@ The serialization algorithm is defined in a way that it is not strictly limited 
 Implementations are allowed to limit the size of different structures, subject to the minimums defined for each type. When a structure exceeds an implementation limit, that structure fails parsing or serialization.
 
 
-# Informative ABNF {#abnf}
+# ABNF {#abnf}
 
 This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{?RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
 
