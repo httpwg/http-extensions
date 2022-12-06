@@ -190,7 +190,9 @@ being used.</t>
 
 # Structured Data Types {#types}
 
-This section defines the abstract types for Structured Fields. In summary:
+This section defines the abstract types for Structured Fields, and summarises how those types are serialised into textual HTTP fields.
+
+In summary:
 
 * There are three top-level types that an HTTP field can be defined as: Lists, Dictionaries, and Items.
 
@@ -203,13 +205,13 @@ This section defines the abstract types for Structured Fields. In summary:
 
 Lists are arrays of zero or more members, each of which can be an Item ({{item}}) or an Inner List ({{inner-list}}), both of which can be Parameterized ({{param}}).
 
-Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
+An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
+
+When serialised as a textual HTTP field, each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
 
 ~~~ http-message
 Example-List: sugar, tea, rum
 ~~~
-
-An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
 
 Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{Section 5.3 of HTTP}}; for example, the following are equivalent:
 
@@ -233,7 +235,7 @@ Parsers MUST support Lists containing at least 1024 members. Field specification
 
 An Inner List is an array of zero or more Items ({{item}}). Both the individual Items and the Inner List itself can be Parameterized ({{param}}).
 
-Inner Lists are denoted by surrounding parenthesis, and their values are delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
+When serialised in a textual HTTP field, Inner Lists are denoted by surrounding parenthesis, and their values are delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
 ~~~ http-message
 Example-List: ("foo" "bar"), ("baz"), ("bat" "one"), ()
@@ -256,7 +258,9 @@ Parameters are an ordered map of key-value pairs that are associated with an Ite
 
 Implementations MUST provide access to Parameters both by index and by key. Specifications MAY use either means of accessing them.
 
-Note that parameters are ordered as serialized, and parameter keys cannot contain uppercase letters. A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
+Note that parameters are ordered, and parameter keys cannot contain uppercase letters.
+
+When serialised in a textual HTTP field, a Parameter is separated from its Item or Inner List and other Parameters by a semicolon. For example:
 
 ~~~ http-message
 Example-List: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
@@ -279,7 +283,11 @@ Dictionaries are ordered maps of key-value pairs, where the keys are short textu
 
 Implementations MUST provide access to Dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
-Members are ordered as serialized and separated by a comma with optional whitespace. Member keys cannot contain uppercase characters. Keys and values are separated by "=" (without whitespace). For example:
+As with Lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
+
+Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their keys, as well as whether their presence is required or optional. Recipients MUST ignore members whose keys that are undefined or unknown, unless the field's specification specifically disallows them.
+
+When serialised as a textual HTTP field, Members are ordered as serialized and separated by a comma with optional whitespace. Member keys cannot contain uppercase characters. Keys and values are separated by "=" (without whitespace). For example:
 
 ~~~ http-message
 Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
@@ -306,10 +314,6 @@ A Dictionary with a mix of Items and Inner Lists, some with parameters:
 ~~~ http-message
 Example-Dict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
 ~~~
-
-As with Lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
-
-Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their keys, as well as whether their presence is required or optional. Recipients MUST ignore members whose keys that are undefined or unknown, unless the field's specification specifically disallows them.
 
 Note that Dictionaries can have their members split across multiple lines of the same header or trailer section; for example, the following are equivalent:
 
@@ -382,17 +386,17 @@ Note that the serialization algorithm ({{ser-decimal}}) rounds input with more t
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
-Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
+Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
+
+When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably UTF-8 {{STD63}}).
+
+When serialised in a textual HTTP field, Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
 ~~~ http-message
 Example-String: "hello world"
 ~~~
 
 Note that Strings only use DQUOTE as a delimiter; single quotes do not delimit Strings. Furthermore, only DQUOTE and "\\" can be escaped; other characters after "\\" MUST cause parsing to fail.
-
-Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
-
-When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably UTF-8 {{STD63}}).
 
 Parsers MUST support Strings (after any decoding) with at least 1024 characters.
 
@@ -414,7 +418,7 @@ Parsers MUST support Tokens with at least 512 characters.
 
 Byte Sequences can be conveyed in Structured Fields.
 
-A Byte Sequence is delimited with colons and encoded using base64 ({{RFC4648, Section 4}}). For example:
+When serialised in a textual HTTP field, a Byte Sequence is delimited with colons and encoded using base64 ({{RFC4648, Section 4}}). For example:
 
 ~~~ http-message
 Example-ByteSequence: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
@@ -427,7 +431,7 @@ Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
 
 Boolean values can be conveyed in Structured Fields.
 
-A Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
+When serialised in a textual HTTP field, a Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ http-message
 Example-Boolean: ?1
