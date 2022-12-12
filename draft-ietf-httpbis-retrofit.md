@@ -4,6 +4,8 @@ abbrev: Retrofit Structured Fields
 docname: draft-ietf-httpbis-retrofit-latest
 date: {DATE}
 category: std
+area: Applications and Real-Time
+workgroup: HTTP
 
 ipr: trust200902
 keyword:
