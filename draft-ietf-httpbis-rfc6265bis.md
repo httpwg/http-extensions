@@ -1433,13 +1433,19 @@ completely.
 
 #### "Lax-Allowing-Unsafe" enforcement {#lax-allowing-unsafe}
 
-As discussed in {{unsafe-top-level-requests}}, compatibility concerns may
-necessitate the use of a "Lax-allowing-unsafe" enforcement mode that allows
-cookies to be sent with a cross-site HTTP request if and only if it is a
-top-level request, regardless of request method. That is, the
-"Lax-allowing-unsafe" enforcement mode waives the requirement for the HTTP
+As discussed in {{unsafe-top-level-requests}} and {{unsafe-cross-site-redirects}},
+compatibility concerns may necessitate the use of a "Lax-allowing-unsafe"
+enforcement mode that allows cookies to be sent with a cross-site HTTP request
+if and only if the request fits at least one of the following conditions:
+
+  * it is a top-level request regardless of request method
+
+  * it is cross-site only due to its redirect chain and has an unsafe method
+
+This is, the "Lax-allowing-unsafe" enforcement mode waives the requirement for the HTTP
 request's method to be "safe" in the `SameSite` enforcement step of the
-retrieval algorithm in {{retrieval-algorithm}}. (All cookies, regardless of
+retrieval algorithm in {{retrieval-algorithm}} and waives the requirement
+that a same-site request is not the result of a cross-site redirect. (All cookies, regardless of
 `SameSite` enforcement mode, may be set for top-level navigations, regardless of
 HTTP request method, as specified in {{storage-model}}.)
 
@@ -1472,6 +1478,26 @@ with
        2.  The cookie's same-site-flag is "Default" and the amount of
            time elapsed since the cookie's creation-time is at most a
            duration of the user agent's choosing.
+
+The user agent MUST also apply the following modification to the definition of
+"same-site" and "cross-site" requests in {{same-site-requests}}:
+
+Remove
+
+    1. The request is not the result of a cross-site redirect. That is, the
+       origin of every url in the request's url list is same-site with the
+       request's current url's origin.
+
+and renumber the remaining list of criteria. I.e.:
+
+    1. The request is not the result of a reload navigation triggered
+       through a user interface element (as defined by the user agent;
+       e.g., a request triggered by the user clicking a refresh button
+       on a toolbar).
+
+    2. The request's current url's origin is same-site with the request's
+       client's "site for cookies" (which is an origin), or if the request
+       has no client or the request's client is null.
 
 ## Storage Model {#storage-model}
 
@@ -2300,6 +2326,26 @@ As a more permissive variant of "Lax" mode, "Lax-allowing-unsafe" mode
 necessarily provides fewer protections against CSRF. Ultimately, the provision
 of such an enforcement mode should be seen as a temporary, transitional measure
 to ease adoption of "Lax" enforcement by default.
+
+### Cross-site redirects with "unsafe" methods {#unsafe-cross-site-redirects}
+
+A cross-site redirect results in the entire request being cross-site, meaning
+that cookies protected by SameSite=Lax or SameSite=Strict will not be included.
+However, real world breakage indicates that for some flows including such
+cookies may be desirable. This is often the case when the request method is
+unsafe.
+
+For example, a payment flow may navigate a frame through a cross-site payment
+processor before ultimately landing on a same-site payment confirmation url.
+In this instance the site would want the cookie with the user's info to be
+included. However, like with {{unsafe-top-level-requests}}, it might be
+undesirable to mark that cookie with SameSite=None due to its sensitive
+contents.
+
+The "Lax-allowing-unsafe" enforcement mode described in {{lax-allowing-unsafe}}
+retains some of the protections of "Lax" enforcement (as compared to "None")
+while still allowing cookies to be sent with cross-site redirects with unsafe
+methods.
 
 # IANA Considerations
 
