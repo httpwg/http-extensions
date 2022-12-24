@@ -74,7 +74,7 @@ github-issue-label: header-structure
 
 This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", "Structured Headers", or "Structured Trailers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
 
-This document obsoletes RFC 8941; {{changes}} lists changes.
+This document obsoletes RFC 8941.
 
 
 --- middle
