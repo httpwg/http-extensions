@@ -1545,17 +1545,28 @@ The sender of an Accept-Signature field MUST include only identifiers that are a
 
 ## The Accept-Signature Field {#accept-signature-header}
 
-The Accept-Signature field is a Dictionary structured field (defined in {{Section 3.2 of STRUCTURED-FIELDS}}) containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is a label that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered components of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The Accept-Signature field is a Dictionary structured field (defined in {{Section 3.2 of STRUCTURED-FIELDS}}) containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is a label that uniquely identifies the requested message signature within the context of the target HTTP message.
+
+The member's value is the serialization of the desired signature parameters and covered components of the target message using the data structure and serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
 Accept-Signature: sig1=("@method" "@target-uri" "@authority" \
   "content-digest" "cache-control");\
-  keyid="test-key-rsa-pss"
+  keyid="test-key-rsa-pss";created;tag="app-123"
 ~~~
 
-The requested signature MAY include parameters, such as a desired algorithm or key identifier. These parameters MUST NOT include parameters that the signer is expected to generate, such as the `created` parameter.
+The list of component identifiers indicates the exact set of component identifiers to be included in the requested signature, including all applicable component parameters.
+
+The signature request MAY include signature metadata parameters that indicate desired behavior for the signer. The following behavior is defined by this specification:
+
+* `created`: The signer is requested to generate and include a creation time. This parameter has no associated value when sent as a signature request.
+* `expires`: The signer is requested to generate and include a creation time. This parameter has no associated value when sent as a signature request.
+* `nonce`: The signer is requested to include the value of this parameter as the signature `nonce` in the target signature.
+* `alg`: The signer is requested to use the indicated signature algorithm to create the target signature.
+* `keyid`: The signer is requested to use the indicated key material to create the target signature.
+* `tag`: The signer is requested to include the value of this parameter as the signature `tag` in the target signature.
 
 ## Processing an Accept-Signature
 
@@ -1563,17 +1574,21 @@ The receiver of an Accept-Signature field fulfills that header as follows:
 
 1. Parse the field value as a Dictionary
 2. For each member of the dictionary:
-    1. The key is taken as the label of the output signature as specified in {{signature-input-header}}
-    2. Parse the value of the member to obtain the set of covered component identifiers
+    1. The key is taken as the label of the output signature as specified in {{signature-input-header}}.
+    2. Parse the value of the member to obtain the set of covered component identifiers.
     3. Determine that the covered components are applicable to the target message. If not, the process fails and returns an error.
     4. Process the requested parameters, such as the signing algorithm and key material. If any requested parameters cannot be fulfilled, or if the requested parameters conflict with those deemed appropriate to the target message, the process fails and returns an error.
-    5. Select and generate any additional parameters necessary for completing the signature
-    6. Create the HTTP message signature over the target message
-    7. Create the Signature-Input and Signature values and associate them with the label
-3. Optionally create any additional Signature-Input and Signature values, with unique labels not found in the Accept-Signature field
-4. Combine all labeled Signature-Input and Signature values and attach both fields to the target message
+    5. Select and generate any additional parameters necessary for completing the signature.
+    6. Create the HTTP message signature over the target message.
+    7. Create the Signature-Input and Signature values and associate them with the label.
+3. Optionally create any additional Signature-Input and Signature values, with unique labels not found in the Accept-Signature field.
+4. Combine all labeled Signature-Input and Signature values and attach both fields to the target message.
 
-Note that by this process, a signature applied to a target message MUST have the same label, MUST have the same set of covered component, and MAY have additional parameters. Also note that the target message MAY include additional signatures not specified by the Accept-Signature field.
+By this process, a signature applied to a target message MUST have the same label, MUST include the same set of covered component, MUST process all requested parameters, and MAY have additional parameters.
+
+The receiver of an Accept-Signature field MAY ignore any signature request that does not fit application parameters.
+
+The target message MAY include additional signatures not specified by the Accept-Signature field. For example, to cover additional message components, the signer can create a second signature that includes the additional components as well as the signature output of the requested signature.
 
 # IANA Considerations {#iana}
 
