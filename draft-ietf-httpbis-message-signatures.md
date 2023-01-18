@@ -1611,7 +1611,7 @@ Description:
 : A brief description of the algorithm used to sign the signature base.
 
 Status:
-: A brief text description of the status of the algorithm. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
+: A brief text description of the status of the algorithm. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status. A value of "Deprecated" indicates that the signature algorithm is no longer recommended for use and might be insecure or unsafe in practice.
 
 Specification document(s):
 : Reference to the document(s) that specify the
@@ -1678,7 +1678,7 @@ Description:
 : A description of the derived component.
 
 Status:
-: A brief text description of the status of the algorithm. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
+: A brief text description of the status of the algorithm. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status. A value of "Deprecated" indicates that the derived component name is no longer recommended for use.
 
 Target:
 : The valid message targets for the derived parameter. MUST be one of the values "Request", "Response", or "Request, Response". The semantics of these are defined in {{derived-components}}.
@@ -1720,9 +1720,6 @@ Name:
 Description:
 : A description of the parameter's function.
 
-Status:
-: A brief text description of the status of the parameter. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status.
-
 Specification document(s):
 : Reference to the document(s) that specify the
     derived component, preferably including a URI that can be used
@@ -1733,14 +1730,14 @@ Specification document(s):
 
 The table below contains the initial contents of the HTTP Signature Derived Component Names Registry.
 
-|Name|Description|Status|Specification document(s)|
+|Name|Description|Specification document(s)|
 |--- |--- |--- |--- |
-|`sf`| Strict structured field serialization | Active | {{http-field-structured}} of {{&SELF}}|
-|`key`| Single key value of dictionary structured fields | Active | {{http-field-dictionary}} of {{&SELF}}|
-|`bs`| Byte Sequence wrapping indicator | Active | {{http-field-byte-sequence}} of {{&SELF}}|
-|`tr`| Trailer | Active | {{http-trailer}} of {{&SELF}}|
-|`req`| Related request indicator | Active | {{content-request-scheme}} of {{&SELF}}|
-|`name`| Single named query parameter | Active | {{content-request-query-param}} of {{&SELF}}|
+|`sf`| Strict structured field serialization | {{http-field-structured}} of {{&SELF}}|
+|`key`| Single key value of dictionary structured fields | {{http-field-dictionary}} of {{&SELF}}|
+|`bs`| Byte Sequence wrapping indicator | {{http-field-byte-sequence}} of {{&SELF}}|
+|`tr`| Trailer | {{http-trailer}} of {{&SELF}}|
+|`req`| Related request indicator | {{content-request-scheme}} of {{&SELF}}|
+|`name`| Single named query parameter | {{content-request-query-param}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Component Parameters Registry." }
 
 # Security Considerations {#security}
