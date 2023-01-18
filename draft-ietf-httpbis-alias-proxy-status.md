@@ -79,11 +79,11 @@ For example:
 
 ~~~ example
 Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
-    next-hop-aliases="tracker.example.com.,service1.example-cdn.com."
+    next-hop-aliases="tracker.example.com,service1.example-cdn.com"
 ~~~
 
 indicates that proxy.example.net, which used the IP address "2001:db8::1" as the next hop
-for this request, encountered the CNAMEs "tracker.example.com." and "service1.example-cdn.com"
+for this request, encountered the CNAMEs "tracker.example.com" and "service1.example-cdn.com"
 in the DNS resolution chain. Note that while this example includes both the `next-hop` and
 `next-hop-aliases` parameters, `next-hop-aliases` can be included without including `next-hop`.
 
