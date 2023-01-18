@@ -47,6 +47,10 @@ frames to be used with HTTP/3.
 origins are available on a given connection.  It defines a single HTTP/2 frame
 type.
 
+## Notational Conventions
+
+{::boilerplate bcp14-tagged}
+
 # The ORIGIN HTTP/3 Frame {#frame-origin}
 
 The ORIGIN HTTP/3 frame allows a server to indicate what origin(s)
