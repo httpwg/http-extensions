@@ -1414,7 +1414,7 @@ Multiple Signature fields MAY be included in a single HTTP message. The signatur
 
 Multiple distinct signatures MAY be included in a single message. Each distinct signature MUST have a unique label. These multiple signatures could be added all by the same signer or could come from several different signers. For example, a signer may include multiple signatures signing the same message components with different keys or algorithms to support verifiers with different capabilities, or a reverse proxy may include information about the client in fields when forwarding the request to a service host, including a signature over the client's original signature values.
 
-The following non-normative example starts with a signed request from the client. A reverse proxy takes this request validates the client's signature.
+The following non-normative example starts with a signed request from the client. A reverse proxy takes this request and validates the client's signature.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1465,7 +1465,7 @@ Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
 {"hello": "world"}
 ~~~
 
-The proxy includes the client's signature value under the label `sig1`, which the proxy signs in addition to the Forwarded field. Note that since the client's signature already covers the client's Signature-Input value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
+The proxy includes the client's signature value from the original message under the label `sig1`, which the proxy signs in addition to the Forwarded field. Note that since the client's signature already covers the client's Signature-Input value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
