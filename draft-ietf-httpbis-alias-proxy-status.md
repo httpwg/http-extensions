@@ -50,7 +50,7 @@ so it cannot be used to communicate a chain of aliases encountered during DNS re
 when connecting to the next hop.
 
 Knowing the full chain of names that were used during DNS resolution via CNAME records
-{{!DNS=RFC1912}} is particularly useful for clients of forward proxies, in which the
+{{!DNS=RFC1034}} is particularly useful for clients of forward proxies, in which the
 client is requesting to connect to a specific target hostname using the CONNECT method
 {{!HTTP=RFC9110}} or UDP proxying {{!CONNECT-UDP=RFC9298}}. CNAME records can be used to
 "cloak" hosts that perform tracking or malicious activity behind more innocuous hostnames,
@@ -121,7 +121,7 @@ Name:
 : next-hop-aliases
 
 Description:
-: A string containing one or more DNS alises or canonical names used to establish a
+: A string containing one or more DNS aliases or canonical names used to establish a
 proxied connection to the next hop.
 
 Reference:
