@@ -52,7 +52,7 @@ when connecting to the next hop.
 Knowing the full chain of names that were used during DNS resolution via CNAME records
 {{!DNS=RFC1912}} is particularly useful for clients of forward proxies, in which the
 client is requesting to connect to a specific target hostname using the CONNECT method
-{{!HTTP=RFC9110}} or UDP proxying {{!CONNECT-UDP=RFC9298}}. CNAME records can be used to 
+{{!HTTP=RFC9110}} or UDP proxying {{!CONNECT-UDP=RFC9298}}. CNAME records can be used to
 "cloak" hosts that perform tracking or malicious activity behind more innocuous hostnames,
 and clients such as web browsers use the chain of DNS names to influence behavior like cookie
 usage policies {{?COOKIES=RFC6265}} or blocking of malicious hosts.
@@ -74,8 +74,6 @@ appear in the order in which they were received in DNS. If there are multiple CN
 in the chain, the first name in the `next-hop-aliases` list would be the value in the CNAME
 record for the original hostname, and the final name in the `next-hop-aliases` list would
 be the name that ultimately resolved to one or more addresses.
-
-If any 
 
 For example, consider a proxy "proxy.example.net" that receives the following records when
 performing DNS resolution for the next hop "host.example.com":
