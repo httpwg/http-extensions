@@ -27,6 +27,8 @@ normative:
     RFC9114
 
 informative:
+  QUIC-TRANSPORT:
+    RFC9000
 
 
 --- abstract
@@ -50,6 +52,9 @@ type.
 ## Notational Conventions
 
 {::boilerplate bcp14-tagged}
+
+Frame diagrams in this document use the format defined in {{Section 1.3 of
+QUIC-TRANSPORT}} to illustrate the order and size of fields.
 
 # The ORIGIN HTTP/3 Frame {#frame-origin}
 
