@@ -325,7 +325,7 @@ of the structured field value ({{http-field-structured}}).
 
 Multiple parameters MAY be specified together, though some combinations are redundant or incompatible. For example, the `sf` parameter's functionality is already covered when the `key` parameter is used on a dictionary item, since `key` requires strict serialization of the value. The `bs` parameter, which requires the raw field values from the message, is not compatible with use of the `sf` or `key` parameters, which require the parsed data structures of the field values after combination.
 
-Additional parameters can be defined in the registry established in {{param-registry}}.
+Additional parameters can be defined in the HTTP Signature Component Parameters registry established in {{component-param-registry}}.
 
 ### Strict Serialization of HTTP Structured Fields {#http-field-structured}
 
