@@ -22,6 +22,7 @@ venue:
   mail: ietf-http-wg@w3.org
   arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
   repo: https://github.com/httpwg/http-extensions/labels/signatures
+
 github-issue-label: signatures
 
 author:
@@ -563,7 +564,7 @@ And the following signature base line:
 
 ### Authority {#content-request-authority}
 
-The `@authority` derived component refers to the authority component of the target URI of the HTTP request message, as defined in {{HTTP, Section 7.2}}. In HTTP 1.1, this is usually conveyed using the Host header, while in HTTP 2 and HTTP 3 it is conveyed using the :authority pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
+The `@authority` derived component refers to the authority component of the target URI of the HTTP request message, as defined in {{HTTP, Section 7.2}}. In HTTP/1.1, this is usually conveyed using the Host header, while in HTTP/2 and HTTP/3 it is conveyed using the :authority pseudo-header. The value is the fully-qualified authority component of the request, comprised of the host and, optionally, port of the request target, as a string.
 The component value MUST be normalized according to the rules in {{HTTP, Section 4.2.3}}. Namely, the host name is normalized to lowercase and the default port is omitted.
 
 For example, the following request message:
@@ -618,7 +619,7 @@ The `@request-target` derived component refers to the full request target of the
 as defined in {{HTTP, Section 7.1}}. The component value of the request target can take different forms,
 depending on the type of request, as described below.
 
-For HTTP 1.1, the component value is equivalent to the request target
+For HTTP/1.1, the component value is equivalent to the request target
 portion of the request line. However, this value is more difficult to reliably construct in
 other versions of HTTP. Therefore, it is NOT RECOMMENDED that this component be used
 when versions of HTTP other than 1.1 might be in use.
@@ -1808,7 +1809,7 @@ Some HTTP fields have values and interpretations that are similar to HTTP signat
 : The "date" field value represents the timestamp of the HTTP message. However, the creation time of the signature itself is encoded in the `created` signature parameter. These two values can be different, depending on how the signature and the HTTP message are created and serialized. Applications processing signatures for valid time windows should use the `created` signature parameter for such calculations. An application could also put limits on how much skew there is between the "date" field and the `created` signature parameter, in order to limit the application of a generated signature to different HTTP messages. See also {{security-replay}} and {{security-coverage}}.
 
 "host"
-: The "host" header field is specific to HTTP 1.1, and its functionality is subsumed by the "@authority" derived component, defined in {{content-request-authority}}. In order to preserve the value across different HTTP versions, applications should always use the "@authority" derived component. See also {{security-versions}}.
+: The "host" header field is specific to HTTP/1.1, and its functionality is subsumed by the "@authority" derived component, defined in {{content-request-authority}}. In order to preserve the value across different HTTP versions, applications should always use the "@authority" derived component. See also {{security-versions}}.
 
 ### Signature Labels {#security-labels}
 
@@ -1968,7 +1969,7 @@ To counteract this, implementations should use fully compliant and trusted parse
 
 ### HTTP Versions and Component Ambiguity {#security-versions}
 
-Some message components are expressed in different ways across HTTP versions. For example, the authority of the request target is sent using the `Host` header field in HTTP 1.1 but with the `:authority` pseudo-header in HTTP 2. If a signer sends an HTTP 1.1 message and signs the `Host` field, but the message is translated to HTTP 2 before it reaches the verifier, the signature will not validate as the `Host` header field could be dropped.
+Some message components are expressed in different ways across HTTP versions. For example, the authority of the request target is sent using the `Host` header field in HTTP/1.1 but with the `:authority` pseudo-header in HTTP/2. If a signer sends an HTTP/1.1 message and signs the `Host` field, but the message is translated to HTTP/2 before it reaches the verifier, the signature will not validate as the `Host` header field could be dropped.
 
 It is for this reason that HTTP Message Signatures defines a set of derived components that define a single way to get value in question, such as the `@authority` derived component ({{content-request-authority}}) in lieu of the `Host` header field. Applications should therefore prefer derived components for such options where possible.
 
