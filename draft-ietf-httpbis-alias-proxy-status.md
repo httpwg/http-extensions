@@ -33,7 +33,7 @@ author:
 --- abstract
 
 This document defines an HTTP Proxy-Status Parameter that contains a list of aliases
-received over DNS when establishing a connection to the next hop.
+and canonical names received over DNS when establishing a connection to the next hop.
 
 --- middle
 
@@ -49,15 +49,15 @@ IP address, or alias of the next hop. This parameter can contain only one such i
 so it cannot be used to communicate a chain of aliases encountered during DNS resolution
 when connecting to the next hop.
 
-Knowing the full chain of aliases that were used during DNS resolution is particularly
-useful for clients of forward proxies, in which the client is requesting to connect
-to a specific target hostname using the CONNECT method {{!HTTP=RFC9110}} or
-UDP proxying {{!CONNECT-UDP=RFC9298}}. DNS aliases can be used to "cloak" hosts that
-perform tracking or malicious activity behind more innocuous hostnames, and clients
-such as web browsers use the chain of DNS aliases to influence behavior like cookie
+Knowing the full chain of names that were used during DNS resolution via CNAME records
+{{!DNS=RFC1034}} is particularly useful for clients of forward proxies, in which the
+client is requesting to connect to a specific target hostname using the CONNECT method
+{{!HTTP=RFC9110}} or UDP proxying {{!CONNECT-UDP=RFC9298}}. CNAME records can be used to
+"cloak" hosts that perform tracking or malicious activity behind more innocuous hostnames,
+and clients such as web browsers use the chain of DNS names to influence behavior like cookie
 usage policies {{?COOKIES=RFC6265}} or blocking of malicious hosts.
 
-This document allows clients to receive the chain of DNS aliases for the next hop
+This document allows clients to receive the CNAME chain of DNS names for the next hop
 by including the list of names in a new `next-hop-aliases` Proxy-Status parameter.
 
 ## Requirements
@@ -67,23 +67,32 @@ by including the list of names in a new `next-hop-aliases` Proxy-Status paramete
 # next-hop-aliases Parameter {#parameter}
 
 The `next-hop-aliases` parameter's value is a String that contains one or more DNS names in
-a comma-separated list. The items in the list include all names received in CNAME
-records {{!DNS=RFC1912}} during the course of resolving the next hop's hostname using DNS.
-Since DNS names can include comma (`,`) characters in them, any commas that appear in a DNS
-names MUST be represented using a percent-encoded `%2C` value instead. The aliases SHOULD
-appear in the order in which they were received in DNS; that is, if a name has a CNAME record
-with a first alias, which has a CNAME record for a second alias, the aliases should appear
-in that order.
+a comma-separated list. The items in the list include all alias names and canonical names
+received in CNAME records {{DNS}} during the course of resolving the next hop's
+hostname using DNS, not including the original requested hostname itself. The names SHOULD
+appear in the order in which they were received in DNS. If there are multiple CNAME records
+in the chain, the first name in the `next-hop-aliases` list would be the value in the CNAME
+record for the original hostname, and the final name in the `next-hop-aliases` list would
+be the name that ultimately resolved to one or more addresses.
 
-For example:
+For example, consider a proxy "proxy.example.net" that receives the following records when
+performing DNS resolution for the next hop "host.example.com":
+
+~~~ dns-example
+host.example.com.           CNAME   tracker.example.com.
+tracker.example.com.        CNAME   service1.example-cdn.com.
+service1.example-cdn.com.   AAAA    2001:db8::1
+~~~
+
+The proxy could include the following proxy status in its response:
 
 ~~~ example
 Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
     next-hop-aliases="tracker.example.com,service1.example-cdn.com"
 ~~~
 
-indicates that proxy.example.net, which used the IP address "2001:db8::1" as the next hop
-for this request, encountered the CNAMEs "tracker.example.com" and "service1.example-cdn.com"
+This indicates that proxy.example.net, which used the IP address "2001:db8::1" as the next hop
+for this request, encountered the names "tracker.example.com" and "service1.example-cdn.com"
 in the DNS resolution chain. Note that while this example includes both the `next-hop` and
 `next-hop-aliases` parameters, `next-hop-aliases` can be included without including `next-hop`.
 
@@ -91,6 +100,8 @@ The `next-hop-aliases` parameter only applies when DNS was used to resolve the n
 does not apply in all situations. Clients can use the information in this parameter to determine
 how to use the connection established through the proxy, but need to gracefully handle situations
 in which this parameter is not present.
+
+
 
 # Security Considerations {#sec-considerations}
 
@@ -110,8 +121,8 @@ Name:
 : next-hop-aliases
 
 Description:
-: A string containing one or more DNS alises used to establish a proxied connection
-to the next hop.
+: A string containing one or more DNS aliases or canonical names used to establish a
+proxied connection to the next hop.
 
 Reference:
 : This document
