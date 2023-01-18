@@ -763,7 +763,7 @@ And the following signature base line:
 "@query": ?queryString
 ~~~
 
-If the query string is absent from the request message, the value is the leading `?` character alone:
+Just like including an empty path component, the signer can include an empty query component to indicate that this component is not used in the message. If the query string is absent from the request message, the component value is the leading `?` character alone:
 
 ~~~
 ?
