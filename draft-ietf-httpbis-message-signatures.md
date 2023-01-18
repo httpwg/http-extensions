@@ -517,7 +517,7 @@ Derived component values MUST be limited to printable characters and spaces and 
 
 ### Method {#content-request-method}
 
-The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
+The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}. While conventionally standardized method names are uppercase US-ASCII, no transformation to the input method value's case is performed.
 
 For example, the following request message:
 
