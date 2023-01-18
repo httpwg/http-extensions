@@ -79,12 +79,9 @@ The list of DNS names in `next-hop-aliases` use a comma (",") as a separator bet
 DNS names normally just contain alphanumeric characters and hyphens ("-"), although they
 are allowed to contain any character {{?RFC1035, Section 3.1}}, including a comma. To
 prevent commas or other special characters in names leading to incorrect parsing,
-any URI Reserved Characters {{!RFC3986, Section 2.2}} as well as "%" that appear in names
-in this list MUST be percent-encoded as defined in {{!RFC3986, Section 2.1}}.
-Double quote characters and backslash characters use the escaping defined
-in Structured Field Strings {{!STRUCTUREDFIELDS=RFC8941, Section 3.3.3}}.
-Any names that include characters not allowed in Structured Field Strings, such
-as newlines or tabs, MUST NOT be included in the list.
+any characters that appear in names in this list that do not belong to the set of URI
+Unreserved Characters {{!RFC3986, Section 2.3}} MUST be percent-encoded as
+defined in {{!RFC3986, Section 2.1}}.
 
 For example, consider a proxy "proxy.example.net" that receives the following records when
 performing DNS resolution for the next hop "host.example.com":
