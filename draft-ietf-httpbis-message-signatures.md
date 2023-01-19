@@ -274,7 +274,7 @@ Cache-Control:    must-revalidate
 Example-Dict:  a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
-The following example shows the component values for these example header fields, presented using the signature base format defined in in {{create-sig-input}}:
+The following example shows the component values for these example header fields, presented using the signature base format defined in {{create-sig-input}}:
 
 ~~~
 "host": www.example.com
@@ -1110,7 +1110,7 @@ In order to create a signature, a signer MUST follow the following algorithm:
 
 5. The signer creates the signature base using these parameters and the signature base creation algorithm. ({{create-sig-input}})
 
-6. The signer uses the `HTTP_SIGN` primitive function to sign the signature base with the chosen signing algorithm using the key material chosen by the signer. The `HTTP_SIGN` primitive and several concrete applications of signing algorithms are defined in in {{signature-methods}}.
+6. The signer uses the `HTTP_SIGN` primitive function to sign the signature base with the chosen signing algorithm using the key material chosen by the signer. The `HTTP_SIGN` primitive and several concrete applications of signing algorithms are defined in {{signature-methods}}.
 
 7. The byte array output of the signature function is the HTTP message signature output value to be included in the Signature field as defined in {{signature-header}}.
 
@@ -1241,7 +1241,7 @@ material (`Kv`), and the presented signature to be verified as a byte array (`S`
 HTTP_VERIFY (M, Kv, S) -> V
 ~~~
 
-The following sections contain several common signature algorithms and demonstrates how these cryptographic primitives map to the `HTTP_SIGN` and `HTTP_VERIFY` definitions here. Which method to use can be communicated through the explicit algorithm signature parameter `alg`
+The following sections contain several common signature algorithms and demonstrate how these cryptographic primitives map to the `HTTP_SIGN` and `HTTP_VERIFY` definitions here. Which method to use can be communicated through the explicit algorithm signature parameter `alg`
 defined in {{signature-params}}, by reference to the key material, or through mutual agreement between the signer and verifier. Signature algorithms selected using the `alg` parameter MUST use values from the [HTTP Signature Algorithms registry](#hsa-registry).
 
 ### RSASSA-PSS using SHA-512 {#method-rsa-pss-sha512}
@@ -1352,7 +1352,7 @@ The output of the JWS signature is taken as a byte array prior to the Base64url 
 
 The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE Implementation Requirement of `Prohibited`.
 
-JWA algorithm values from the JSON Web Signature and Encryption Algorithms Registry are not included as signature parameters. Typically, the JWS algorithm can be signaled using JSON Web Keys or other mechanisms common to JOSE implementations. In fact, and JWA algorithm values are not registered in the [HTTP Signature Algorithms registry](#hsa-registry), and so the explicit `alg` signature parameter is not used at all when using JOSE signing algorithms.
+JWA algorithm values from the JSON Web Signature and Encryption Algorithms Registry are not included as signature parameters. Typically, the JWS algorithm can be signaled using JSON Web Keys or other mechanisms common to JOSE implementations. In fact, JWA algorithm values are not registered in the [HTTP Signature Algorithms registry](#hsa-registry), and so the explicit `alg` signature parameter is not used at all when using JOSE signing algorithms.
 
 # Including a Message Signature in a Message
 
@@ -1538,7 +1538,9 @@ The sender of an Accept-Signature field MUST include only identifiers that are a
 
 ## The Accept-Signature Field {#accept-signature-header}
 
-The Accept-Signature field is a Dictionary structured field (defined in {{Section 3.2 of STRUCTURED-FIELDS}}) containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's name is a label that uniquely identifies the requested message signature within the context of the target HTTP message. The member's value is the serialization of the desired covered components of the target message, including any allowed signature metadata parameters, using the serialization process defined in {{signature-params}}.
+The Accept-Signature field is a Dictionary structured field (defined in {{Section 3.2 of STRUCTURED-FIELDS}}) containing the metadata for one or more requested message signatures to be generated from message components of the target HTTP message. Each member describes a single message signature. The member's key is the label that uniquely identifies the requested message signature within the context of the target HTTP message. 
+
+The member's value is the serialization of the desired covered components of the target message, including any allowed component metadata parameters, using the serialization process defined in {{signature-params}}.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1920,7 +1922,7 @@ To counter this, the component that generates the signature base needs to be tru
 
 ### Message Component Source and Context {#security-message-component-context}
 
-The signature context for deriving message component values includes the target HTTP Message itself, any associated messages (such as the request that triggered a response), and additional information that the signer or verifier has access to. Both signers and verifiers need to take carefully consider the source of all information when creating component values for the signature base and take care not to take information from untrusted sources. Otherwise, an attacker could leverage such a loosely-defined message context to inject their own values into the signature base string, overriding or corrupting the intended values.
+The signature context for deriving message component values includes the target HTTP Message itself, any associated messages (such as the request that triggered a response), and additional information that the signer or verifier has access to. Both signers and verifiers need to carefully consider the source of all information when creating component values for the signature base and take care not to take information from untrusted sources. Otherwise, an attacker could leverage such a loosely-defined message context to inject their own values into the signature base string, overriding or corrupting the intended values.
 
 For example, in most situations, the target URI of the message is defined in {{HTTP, Section 7.1}}. However, let's say that there is an application that requires signing of the `@authority` of the incoming request, but the application doing the processing is behind a reverse proxy. Such an application would expect a change in the `@authority` value, and it could be configured to know the external target URI as seen by the client on the other side of the proxy. This application would use this configured value as its target URI for the purposes of deriving message component values such as `@authority` instead of using the target URI of the incoming message.
 
@@ -1947,7 +1949,7 @@ To combat this, when selecting values for a message component, if the component 
 
 ### Semantically Equivalent Field Values {#security-field-values}
 
-The [signature base generation algorithm](#create-sig-input) uses the value of an HTTP field as its component value. In the common case, this amounts to taking the actual bytes of the field value as the component value for both the signer and verifier. However, some field values allow for transformation of the values in semantically equivalent ways that alter the bytes used in the value itself. For example, a field definition can declare some or all of its value to be case-insensitive, or to have special handling of internal whitespace characters. Other fields have expected transformations from intermediaries, such as the removal of comments in the `Via` header field. In such cases, a verifier could be tripped up by using the equivalent transformed field value, which would differ from the byte value used by the signer. The verifier would have have a difficult time finding this class of errors since the value of the field is still acceptable for the application, but the actual bytes required by the signature base would not match.
+The [signature base generation algorithm](#create-sig-input) uses the value of an HTTP field as its component value. In the common case, this amounts to taking the actual bytes of the field value as the component value for both the signer and verifier. However, some field values allow for transformation of the values in semantically equivalent ways that alter the bytes used in the value itself. For example, a field definition can declare some or all of its value to be case-insensitive, or to have special handling of internal whitespace characters. Other fields have expected transformations from intermediaries, such as the removal of comments in the `Via` header field. In such cases, a verifier could be tripped up by using the equivalent transformed field value, which would differ from the byte value used by the signer. The verifier would have a difficult time finding this class of errors since the value of the field is still acceptable for the application, but the actual bytes required by the signature base would not match.
 
 When processing such fields, the signer and verifier have to agree how to handle such transformations, if at all. One option is to not sign problematic fields, but care must be taken to ensure that there is still [sufficient signature coverage](#security-coverage) for the application. Another option is to define an application-specific canonicalization value for the field before it is added to the HTTP message, such as to always remove internal comments before signing, or to always transform values to lowercase. Since these transformations are applied prior to the field being used as input to the signature base generation algorithm, the signature base will still simply contain the byte value of the field as it appears within the message. If the transformations were to be applied after the value is extracted from the message but before it is added to the signature base, different attack surfaces such as value substitution attacks could be launched against the application. All application-specific additional rules are outside the scope of this specification, and by their very nature these transformations would harm interoperability of the implementation outside of this specific application. It is recommended that applications avoid the use of such additional rules wherever possible.
 
