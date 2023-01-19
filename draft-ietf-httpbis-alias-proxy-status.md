@@ -75,6 +75,14 @@ in the chain, the first name in the `next-hop-aliases` list would be the value i
 record for the original hostname, and the final name in the `next-hop-aliases` list would
 be the name that ultimately resolved to one or more addresses.
 
+The list of DNS names in `next-hop-aliases` use a comma (",") as a separator between names.
+DNS names normally just contain alphanumeric characters and hyphens ("-"), although they
+are allowed to contain any character {{?RFC1035, Section 3.1}}, including a comma. To
+prevent commas or other special characters in names leading to incorrect parsing,
+any characters that appear in names in this list that do not belong to the set of URI
+Unreserved Characters {{!RFC3986, Section 2.3}} MUST be percent-encoded as
+defined in {{!RFC3986, Section 2.1}}.
+
 For example, consider a proxy "proxy.example.net" that receives the following records when
 performing DNS resolution for the next hop "host.example.com":
 
@@ -100,8 +108,6 @@ The `next-hop-aliases` parameter only applies when DNS was used to resolve the n
 does not apply in all situations. Clients can use the information in this parameter to determine
 how to use the connection established through the proxy, but need to gracefully handle situations
 in which this parameter is not present.
-
-
 
 # Security Considerations {#sec-considerations}
 
