@@ -287,7 +287,7 @@ The following example shows the component values for these example header fields
 
 Since empty HTTP fields are allowed, they can also be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header, with (SP) indicating a single trailing space character before the empty field value:
 
-~~~ http-message
+~~~
 X-Empty-Header:(SP)
 ~~~
 
