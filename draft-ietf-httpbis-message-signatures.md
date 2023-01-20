@@ -285,16 +285,16 @@ The following example shows the component values for these example header fields
 "example-dict": a=1,    b=2;x=1;y=2,   c=(a   b   c)
 ~~~
 
-Since empty HTTP fields are allowed, they can also be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header, with <SP> indicating a single space character:
+Since empty HTTP fields are allowed, they can also be signed when present in a message. The canonicalized value is the empty string. This means that the following empty header, with (SP) indicating a single trailing space character before the empty field value:
 
 ~~~ http-message
-X-Empty-Header:<SP>
+X-Empty-Header:(SP)
 ~~~
 
 Is serialized by the [signature base generation algorithm](#create-sig-input) with an empty string value following the colon and space added after the content identifier.
 
 ~~~
-"x-empty-header":<SP>
+"x-empty-header":(SP)
 ~~~
 
 Any HTTP field component identifiers MAY have the following parameters in specific circumstances, each described in detail in their own sections:
