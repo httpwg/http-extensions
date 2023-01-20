@@ -75,7 +75,7 @@ normative:
     HTTP1: RFC9112
     URI: RFC3986
     HTMLURL:
-        target: https://url.spec.whatwg.org/
+        target: https://url.spec.whatwg.org/#application/x-www-form-urlencoded
         title: URL (Living Standard)
         date: 2021
     ABNF: RFC5234
@@ -777,13 +777,13 @@ Resulting in the following signature base line:
 
 ### Query Parameters {#content-request-query-param}
 
-If a request target URI uses HTML form parameters in the query string as defined in [HTMLURL, Section 5](#HTMLURL),
-the `@query-param` derived component allows addressing of individual query parameters. The query parameters MUST be parsed according to [HTMLURL, Section 5.1](#HTMLURL), resulting in a list of (`nameString`, `valueString`) tuples.
+If a request target URI uses HTML form parameters in the query string as defined in the "application/x-www-form-urlencoded" section of {{HTMLURL}},
+the `@query-param` derived component allows addressing of individual query parameters. The query parameters MUST be parsed according to the "application/x-www-form-urlencoded parsing" section of {{HTMLURL}}, resulting in a list of (`nameString`, `valueString`) tuples.
 The REQUIRED `name` parameter of each component identifier contains the `nameString` of a single query parameter as a String value.
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
 
-The component value of a single named parameter is the `valueString` of the named query parameter defined by [HTMLURL, Section 5.1](#HTMLURL), which is the value after percent-encoded octets are decoded.
+The component value of a single named parameter is the `valueString` of the named query parameter defined by "application/x-www-form-urlencoded parsing" section of {{HTMLURL}}, which is the value after percent-encoded octets are decoded.
 Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
 Named query parameters with an empty `valueString` are included with an empty string as the component value.
 
