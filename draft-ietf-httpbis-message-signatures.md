@@ -1562,7 +1562,7 @@ The list of component identifiers indicates the exact set of component identifie
 The signature request MAY include signature metadata parameters that indicate desired behavior for the signer. The following behavior is defined by this specification:
 
 * `created`: The signer is requested to generate and include a creation time. This parameter has no associated value when sent as a signature request.
-* `expires`: The signer is requested to generate and include a creation time. This parameter has no associated value when sent as a signature request.
+* `expires`: The signer is requested to generate and include an expiration time. This parameter has no associated value when sent as a signature request.
 * `nonce`: The signer is requested to include the value of this parameter as the signature `nonce` in the target signature.
 * `alg`: The signer is requested to use the indicated signature algorithm to create the target signature.
 * `keyid`: The signer is requested to use the indicated key material to create the target signature.
