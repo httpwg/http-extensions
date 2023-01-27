@@ -1415,18 +1415,14 @@ POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
+Content-Length: 18
 Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
   aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
-Content-Length: 18
 Signature-Input: sig1=("@method" "@authority" "@path" \
-  "content-digest" "content-length" "content-type")\
-  ;created=1618884475;keyid="test-key-rsa-pss"
-Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
-  RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkBIS1M8Br\
-  c8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpWINTEzpx\
-  jqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2Tr65+BXe\
-  TG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZElYyUKaAI\
-  jZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+  "content-digest" "content-type" "content-length")\
+  ;created=1618884475;keyid="test-key-ecc-p256"
+Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
+  0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:
 
 {"hello": "world"}
 ~~~
@@ -1440,38 +1436,33 @@ POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: origin.host.internal.example
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
-Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
-  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 Content-Length: 18
 Forwarded: for=192.0.2.123
+Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
+  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 Signature-Input: sig1=("@method" "@authority" "@path" \
-  "content-digest" "content-length" "content-type")\
-  ;created=1618884475;keyid="test-key-rsa-pss"
-Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
-  RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkBIS1M8Br\
-  c8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpWINTEzpx\
-  jqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2Tr65+BXe\
-  TG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZElYyUKaAI\
-  jZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+  "content-digest" "content-type" "content-length")\
+  ;created=1618884475;keyid="test-key-ecc-p256"
+Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
+  0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:
 
 {"hello": "world"}
 ~~~
 
-The proxy includes the client's signature value from the original message under the label `sig1`, which the proxy signs in addition to the Forwarded field. Note that since the client's signature already covers the client's Signature-Input value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
+While the proxy is in a position to validate the client's signature, the changes the proxy makes to the message will invalidate the existing signature when the message is seen by the origin server. While it is possible for the origin server to have additional information in its signature context to account for the change in authority, this practice requires additional configuration and extra care (see further discussion in {{security-context-multiple-signatures}}). To counter this, the proxy adds its own signature over the new message before passing it along. The proxy includes the new `@authority` derived component and the Forwarded header, which it added to the message.
+The proxy's signature also includes the client's signature value from the original message in its covered components, as a dictionary field member under the label `sig1`. Note that since the client's signature already covers the client's Signature-Input value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. While the origin server may not be able to directly verify this original signature, it can verify that the proxy has vouched for the signature's validity.
+The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-"signature";key="sig1": :LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8\
-  r5MW9S0RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkB\
-  IS1M8Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpW\
-  INTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2T\
-  r65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZEl\
-  YyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+"signature";key="sig1": :hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4N\
+  p5iWmJSO0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:
+"@authority": origin.host.internal.example
 "forwarded": for=192.0.2.123
-"@signature-params": ("signature";key="sig1" "forwarded")\
-  ;created=1618884480;expires=1618884540;keyid="test-key-rsa"\
-  ;alg="rsa-v1_5-sha256"
+"@signature-params": ("signature";key="sig1" "@authority" \
+  "forwarded");created=1618884480;keyid="test-key-rsa"\
+  ;alg="rsa-v1_5-sha256";expires=1618884540
 ~~~
 
 And a signature output value of:
@@ -1479,12 +1470,12 @@ And a signature output value of:
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-G1WLTL4/9PGSKEQbSAMypZNk+I2dpLJ6qvl2JISahlP31OO/QEUd8/HdO2O7vYLi5k3\
-JIiAK3UPK4U+kvJZyIUidsiXlzRI+Y2se3SGo0D8dLfhG95bKr6ukYXl60QHpsGRTfS\
-iwdtvYKXGpKNrMlISJYd+oGrGRyI9gbCy0aFhc6I/okIMLeK4g9PgzpC3YTwhUQ98KI\
-BNLWHgREfBgJxjPbxFlsgJ9ykPviLj8GKJ81HwsK3XM9P7WaS7fMGOt8h1kSqgkZQB9\
-YqiIo+WhHvJa7iPy8QrYFKzx9BBEY6AwfStZAsXXz3LobZseyxsYcLJLs8rY0wVA9NP\
-sxKrHGA==
+YvYVO11F+Q+N4WZNeBdjFKluswwE3vQ4cTXpBwEiMz2hwu0J+wSJLRhHlIZ1N83epfn\
+KDxY9cbNaVlbtr2UOLkw5O5Q5M5yrjx3s1mgDOsV7fuItD6iDyNISCiKRuevl+M+TyY\
+Bo10ubG83As5CeeoUdmrtI4G6QX7RqEeX0Xj/CYofHljr/dVzARxskjHEQbTztYVg4W\
+D+LWo1zjx9w5fw26tsOMagfXLpDb4zb4/lgpgyNKoXFwG7c89KId5q+0BC+kryWuA35\
+ZcQGaRPAz/NqzeKq/c7p7b/fmHS71fy1jOaFgWFmD+Z77bJLO8AVKuF0y2fpL3KUYHy\
+ITQHOsA==
 ~~~
 
 These values are added to the HTTP request message by the proxy. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under the label `proxy_sig`. The proxy uses the key `test-key-rsa` to create its signature using the `rsa-v1_5-sha256` signature algorithm, while the client's original signature was made using the key id of `test-key-rsa-pss` and an RSA PSS signature algorithm.
@@ -1496,28 +1487,24 @@ POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: origin.host.internal.example
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
-Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
-  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 Content-Length: 18
 Forwarded: for=192.0.2.123
+Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
+  aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 Signature-Input: sig1=("@method" "@authority" "@path" \
-    "content-digest" "content-length" "content-type")\
-    ;created=1618884475;keyid="test-key-rsa-pss", \
-  proxy_sig=("signature";key="sig1" "forwarded")\
-    ;created=1618884480;expires=1618884540;keyid="test-key-rsa"\
-    ;alg="rsa-v1_5-sha256"
-Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
-    RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkBIS1M8\
-    Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpWINT\
-    EzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2Tr\
-    65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZE\
-    lYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:, \
-  proxy_sig=:G1WLTL4/9PGSKEQbSAMypZNk+I2dpLJ6qvl2JISahlP31OO/QEUd8/\
-    HdO2O7vYLi5k3JIiAK3UPK4U+kvJZyIUidsiXlzRI+Y2se3SGo0D8dLfhG95bKr\
-    6ukYXl60QHpsGRTfSiwdtvYKXGpKNrMlISJYd+oGrGRyI9gbCy0aFhc6I/okIML\
-    eK4g9PgzpC3YTwhUQ98KIBNLWHgREfBgJxjPbxFlsgJ9ykPviLj8GKJ81HwsK3X\
-    M9P7WaS7fMGOt8h1kSqgkZQB9YqiIo+WhHvJa7iPy8QrYFKzx9BBEY6AwfStZAs\
-    XXz3LobZseyxsYcLJLs8rY0wVA9NPsxKrHGA==:
+    "content-digest" "content-type" "content-length")\
+    ;created=1618884475;keyid="test-key-ecc-p256", \
+  proxy_sig=("signature";key="sig1" "@authority" "forwarded")\
+    ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"\
+    ;expires=1618884540
+Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
+    0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:, \
+  proxy_sig=:YvYVO11F+Q+N4WZNeBdjFKluswwE3vQ4cTXpBwEiMz2hwu0J+wSJLR\
+    hHlIZ1N83epfnKDxY9cbNaVlbtr2UOLkw5O5Q5M5yrjx3s1mgDOsV7fuItD6iDy\
+    NISCiKRuevl+M+TyYBo10ubG83As5CeeoUdmrtI4G6QX7RqEeX0Xj/CYofHljr/\
+    dVzARxskjHEQbTztYVg4WD+LWo1zjx9w5fw26tsOMagfXLpDb4zb4/lgpgyNKoX\
+    FwG7c89KId5q+0BC+kryWuA35ZcQGaRPAz/NqzeKq/c7p7b/fmHS71fy1jOaFgW\
+    FmD+Z77bJLO8AVKuF0y2fpL3KUYHyITQHOsA==:
 
 {"hello": "world"}
 ~~~
