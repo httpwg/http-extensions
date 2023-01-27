@@ -135,7 +135,7 @@ CertificateVerify messages during the handshake and for the server to verify the
 CertificateVerify and Finished messages.
 
 HTTP/2 restricts TLS 1.2 renegotiation ({{Section 9.2.1 of ?RFC9113}}) and
-prohibits TLS 1.3 post-handshake authentication {{?RFC8740}}. However, they are
+prohibits TLS 1.3 post-handshake authentication ({{Section 9.2.3 of ?RFC9113}}). However, they are
 sometimes used to implement reactive client certificate authentication in HTTP/1.1
 {{?RFC9112}} where the server decides whether to request a client certificate
 based on the HTTP request. HTTP application data sent on such a connection
@@ -223,7 +223,7 @@ the processing rules described herein are for servers operating with that option
 enabled.
 
 A TTRP negotiates the use of a mutually-authenticated TLS connection with the
-client, such as is described in {{?TLS}} or {{?RFC5246}}, and validates the
+client, such as is described in {{?TLS}} or {{?TLS1.2=RFC5246}}, and validates the
 client certificate per its policy and trusted certificate authorities.  Each
 HTTP request on the underlying TLS connection are dispatched to the origin
 server with the following modifications:
@@ -550,6 +550,10 @@ The authors would like to thank the following individuals who've contributed in 
 # Document History
 
    > To be removed by the RFC Editor before publication as an RFC
+
+   draft-ietf-httpbis-client-cert-field-05
+
+   * Correct a couple references
 
    draft-ietf-httpbis-client-cert-field-04
 
