@@ -16,6 +16,9 @@ stand_alone: yes
 smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
+entity:
+  SELF: "RFC nnnn"
+
 venue:
   group: HTTP
   type: Working Group
@@ -327,13 +330,8 @@ SF-Cookie: ("SID" "31d4d96e407aad42"), ("lang" "en-US")
 
 Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
 
-> The "Structured Type" column indicates the type of the field (per RFC8941), if any, and may be
-> "Dictionary", "List" or "Item". A prefix of "*" indicates that it is a retrofit type (i.e., not
-> natively Structured); see \[this specification].
->
-> Note that field names beginning with characters other than ALPHA or "*" will not be able to be
-> represented as a Structured Fields Token, and therefore may be incompatible with being mapped into
-> fields that refer to it; see \[this specification].
+> A prefix of "*" in the Structured Type column indicates that it is a retrofit type (i.e., not
+> natively Structured); see {{&SELF}}.
 
 Then, add a new column, "Structured Type", with the values from {{compatible}} assigned to the nominated registrations, prefixing each with "*" to indicate that it is a retrofit type.
 
@@ -356,22 +354,6 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | SF-Referer             | Item            |
 | SF-Set-Cookie          | List            |
 {:id="new-fields" title="New Fields"}
-
-Then, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
-
-| Field Name                                | Structured Type |
-|-------------------------------------------|-----------------|
-| Accept-CH                                 | List            |
-| Cache-Status                              | List            |
-| CDN-Cache-Control                         | Dictionary      |
-| Cross-Origin-Embedder-Policy              | Item            |
-| Cross-Origin-Embedder-Policy-Report-Only  | Item            |
-| Cross-Origin-Opener-Policy                | Item            |
-| Cross-Origin-Opener-Policy-Report-Only    | Item            |
-| Origin-Agent-Cluster                      | Item            |
-| Priority                                  | Dictionary      |
-| Proxy-Status                              | List            |
-{:id="existing-fields" title="Existing Fields"}
 
 Finally, add a new column to the "Cookie Attribute Registry" established by {{COOKIES}} with the title "Structured Type", using information from {{cookie-params}}.
 
