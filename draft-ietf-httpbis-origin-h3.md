@@ -27,6 +27,8 @@ normative:
     RFC9114
 
 informative:
+  QUIC-TRANSPORT:
+    RFC9000
 
 
 --- abstract
@@ -46,6 +48,13 @@ frames to be used with HTTP/3.
 {{!ORIGIN=RFC8336}} defines the HTTP/2 ORIGIN frame, which indicates what
 origins are available on a given connection.  It defines a single HTTP/2 frame
 type.
+
+## Notational Conventions
+
+{::boilerplate bcp14-tagged}
+
+Frame diagrams in this document use the format defined in {{Section 1.3 of
+QUIC-TRANSPORT}} to illustrate the order and size of fields.
 
 # The ORIGIN HTTP/3 Frame {#frame-origin}
 
