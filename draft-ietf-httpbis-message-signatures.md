@@ -512,7 +512,7 @@ Derived component values MUST be limited to printable characters and spaces and 
 
 ### Method {#content-request-method}
 
-The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}, and conventionally standardized method names are uppercase US-ASCII.
+The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}. While conventionally standardized method names are uppercase US-ASCII, no transformation to the input method value's case is performed.
 
 For example, the following request message:
 
@@ -758,7 +758,7 @@ And the following signature base line:
 "@query": ?queryString
 ~~~
 
-If the query string is absent from the request message, the value is the leading `?` character alone:
+Just like including an empty path component, the signer can include an empty query component to indicate that this component is not used in the message. If the query string is absent from the request message, the component value is the leading `?` character alone:
 
 ~~~
 ?
