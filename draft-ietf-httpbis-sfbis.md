@@ -13,6 +13,9 @@ stand_alone: yes
 smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
+entity:
+  SELF: "RFC nnnn"
+
 author:
  -
     ins: M. Nottingham
@@ -335,7 +338,7 @@ Parsers MUST support Dictionaries containing at least 1024 key/value pairs and k
 
 ## Items {#item}
 
-An Item can be an Integer ({{integer}}), a Decimal ({{decimal}}), a String ({{string}}), a Token ({{token}}), a Byte Sequence ({{binary}}), or a Boolean ({{boolean}}). It can have associated parameters ({{param}}).
+An Item can be an Integer ({{integer}}), a Decimal ({{decimal}}), a String ({{string}}), a Token ({{token}}), a Byte Sequence ({{binary}}), a Boolean ({{boolean}}), or a Date ({{date}}). It can have associated parameters ({{param}}).
 
 For example, a header field that is defined to be an Item that is an Integer might look like:
 
@@ -914,9 +917,35 @@ Given an ASCII string as input_string, return a Date. input_string is modified t
 5. Return output_date.
 
 
-# IANA Considerations
+# IANA Considerations {#iana}
 
-This document has no IANA actions.
+Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
+
+> The "Structured Type" column indicates the type of the field (per {{&SELF}}), if any, and may be
+> "Dictionary", "List" or "Item".
+>
+> Note that field names beginning with characters other than ALPHA or "*" will not be able to be
+> represented as a Structured Fields Token, and therefore may be incompatible with being mapped into
+> fields that refer to it.
+
+Then, add a new column, "Structured Type".
+
+Then, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
+
+| Field Name                                | Structured Type |
+|-------------------------------------------|-----------------|
+| Accept-CH                                 | List            |
+| Cache-Status                              | List            |
+| CDN-Cache-Control                         | Dictionary      |
+| Cross-Origin-Embedder-Policy              | Item            |
+| Cross-Origin-Embedder-Policy-Report-Only  | Item            |
+| Cross-Origin-Opener-Policy                | Item            |
+| Cross-Origin-Opener-Policy-Report-Only    | Item            |
+| Origin-Agent-Cluster                      | Item            |
+| Priority                                  | Dictionary      |
+| Proxy-Status                              | List            |
+{:id="existing-fields" title="Existing Fields"}
+
 
 # Security Considerations
 
@@ -1020,6 +1049,7 @@ This revision of the Structured Field Values for HTTP specification has made the
 * Added the Date structured type. ({{date}})
 * Stopped encouraging use of ABNF in definitions of new structured fields. ({{specify}})
 * Moved ABNF to an informative appendix. ({{abnf}})
+* Added a "Structured Type" column to the HTTP Field Name Registry. ({{iana}})
 
 
 # Acknowledgements
