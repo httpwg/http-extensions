@@ -338,7 +338,7 @@ Parsers MUST support Dictionaries containing at least 1024 key/value pairs and k
 
 ## Items {#item}
 
-An Item can be an Integer ({{integer}}), a Decimal ({{decimal}}), a String ({{string}}), a Token ({{token}}), a Byte Sequence ({{binary}}), or a Boolean ({{boolean}}). It can have associated parameters ({{param}}).
+An Item can be an Integer ({{integer}}), a Decimal ({{decimal}}), a String ({{string}}), a Token ({{token}}), a Byte Sequence ({{binary}}), a Boolean ({{boolean}}), or a Date ({{date}}). It can have associated parameters ({{param}}).
 
 For example, a header field that is defined to be an Item that is an Integer might look like:
 
