@@ -191,6 +191,9 @@ being used.</t>
 </artwork>
 </blockquote>
 
+Note that a field is defined by referencing a specific RFC for Structured Fields, and its value is limited to the types defined in that RFC. For example, a field whose definition references this document can use the Date type ({{date}}), whereas a field whose definition references RFC8941 cannot. This also limits the kinds of extension values that can be later defined for a given field.
+
+
 # Structured Data Types {#types}
 
 This section defines the abstract types for Structured Fields, and summarises how those types are serialised into textual HTTP fields.
