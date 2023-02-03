@@ -191,7 +191,7 @@ being used.</t>
 </artwork>
 </blockquote>
 
-Note that a field is defined by referencing a specific RFC for Structured Fields, and the types available for use in its value are limited to those defined in that RFC. For example, a field whose definition references this document can have a value that uses the Date type ({{date}}), whereas a field whose definition references RFC8941 cannot, because it will be treated as invalid (and likely discarded) by implementations of that specification.
+Note that a field is defined by referencing a specific RFC for Structured Fields, and the types available for use in its value are limited to those defined in that RFC. For example, a field whose definition references this document can have a value that uses the Date type ({{date}}), whereas a field whose definition references RFC 8941 cannot, because it will be treated as invalid (and likely discarded) by implementations of that specification.
 
 In particular, the extensions available for use in a field are limited to the types allowed by that field's definition, which cannot exceed those defined by the Structured Fields specification it references.
 
