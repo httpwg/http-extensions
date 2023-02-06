@@ -816,7 +816,7 @@ Given an ASCII string as input_string, return a key. input_string is modified to
 
 Given an ASCII string as input_string, return an Integer or Decimal. input_string is modified to remove the parsed value.
 
-NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}}), and returns the corresponding structure.
+NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}}), and returns the corresponding structure, along with the type that the value was determined to be.
 
 1. Let type be "integer".
 2. Let sign be 1.
@@ -839,7 +839,7 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}
    1. If the final character of input_number is ".", fail parsing.
    2. If the number of characters after "." in input_number is greater than three, fail parsing.
    2. Parse input_number as a decimal number and let output_number be the product of the result and sign.
-0. Return output_number.
+0. Return output_number, type.
 
 
 ### Parsing a String {#parse-string}
@@ -912,8 +912,8 @@ Given an ASCII string as input_string, return a Date. input_string is modified t
 
 1. If the first character of input_string is not "@", fail parsing.
 2. Discard the first character of input_string.
-3. Let output_date be the result of running Parsing an Integer or Decimal ({{parse-number}}) with input_string.
-4. If output_date is a Decimal, fail parsing.
+3. Let output_date, type be the result of running Parsing an Integer or Decimal ({{parse-number}}) with input_string.
+4. If type is "decimal", fail parsing.
 5. Return output_date.
 
 
