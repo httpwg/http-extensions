@@ -323,8 +323,8 @@ Additional parameters can be defined in the HTTP Signature Component Parameters 
 
 ### Strict Serialization of HTTP Structured Fields {#http-field-structured}
 
-If the value of an HTTP field is known by the application to be a structured field ({{STRUCTURED-FIELDS}}), and the expected type of the structured field is known, the signer MAY include the `sf` parameter in the component identifier.
-If this parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
+If the value of an HTTP field is known by the application to be a structured field ({{STRUCTURED-FIELDS}}, or an RFC formally updating RFC 8941), and the expected type of the structured field is known, the signer MAY include the `sf` parameter in the component identifier.
+If this parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in the applicable serialization algorithm applying to the structured field type of the HTTP field. Note that this process
 will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
 
 If multiple field values occur within a message, these values MUST be combined into a single List or Dictionary structure before serialization.
