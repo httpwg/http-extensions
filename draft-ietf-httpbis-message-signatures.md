@@ -2817,7 +2817,13 @@ Jeffrey Yasskin.
 - draft-ietf-httpbis-message-signatures
 
   - -16
-     *
+     * Editorial cleanup from AD review.
+     * Clarified dependency on structured field serialization rules.
+     * Define use of all parameters in Accept-Signature.
+     * Update example signature calculations.
+     * Clarify how combined fields are handled.
+     * Add more detailed instructions for IANA DE's.
+     * Fix some references and anchors.
 
   - -15
      * Editorial cleanup.
