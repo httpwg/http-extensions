@@ -218,6 +218,7 @@ Some examples of these kinds of transformations, and the effect they have on the
 HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
 
 - The set of [component identifiers](#covered-components) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest field defined in {{DIGEST}} to be present and covered as well as mandate a value for `tag` that is specific to the API being protected.
+- The expected structured field types ({{STRUCTURED-FIELDS}}) of any required or expected covered component fields or parameters.
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means such as pre-registration of a signer's key.
 - A means of determining the signature algorithm used to verify the signature is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
@@ -323,11 +324,15 @@ Additional parameters can be defined in the HTTP Signature Component Parameters 
 
 ### Strict Serialization of HTTP Structured Fields {#http-field-structured}
 
-If the value of an HTTP field is known by the application to be a structured field ({{STRUCTURED-FIELDS}}), and the expected type of the structured field is known, the signer MAY include the `sf` parameter in the component identifier.
-If this parameter is included with a component identifier, the HTTP field value MUST be serialized using the rules specified in {{Section 4 of STRUCTURED-FIELDS}} applicable to the type of the HTTP field. Note that this process
+If the value of an HTTP field is known by the application to be a structured field type (as defined in {{STRUCTURED-FIELDS}} or its extensions or updates), and the expected type of the structured field is known, the signer MAY include the `sf` parameter in the component identifier.
+If this parameter is included with a component identifier, the HTTP field value MUST be serialized using the formal serialization rules specified in {{Section 4 of STRUCTURED-FIELDS}} (or the
+applicable formal serialization section of its extensions or updates) applicable to
+the type of the HTTP field. Note that this process
 will replace any optional internal whitespace with a single space character, among other potential transformations of the value.
 
 If multiple field values occur within a message, these values MUST be combined into a single List or Dictionary structure before serialization.
+
+If the application does not know the type of the field, or the application does not know how to serialize the type of the field, the use of this flag will produce an error. As a consequence, the signer can only reliably sign fields that it knows the verifier's system supports.
 
 For example, the following dictionary field is a valid serialization:
 
@@ -355,7 +360,7 @@ If a given field is known by the application to be a Dictionary structured field
 
 If multiple field values occur within a message, these values MUST be combined into a single Dictionary structure before serialization.
 
-An individual member value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of STRUCTURED-FIELDS}} on the `member_value` and its parameters, not including the dictionary key itself. Specifically, the value is serialized as an Item or Inner List (the two possible values of a Dictionary member).
+An individual member value of a Dictionary Structured Field is canonicalized by applying the serialization algorithm described in {{Section 4.1.2 of STRUCTURED-FIELDS}} on the `member_value` and its parameters, not including the dictionary key itself. Specifically, the value is serialized as an Item or Inner List (the two possible values of a Dictionary member), with all parameters and possible sub-fields serialized using the strict serialization rules defined in {{Section 4 of STRUCTURED-FIELDS}} (or the applicable section of its extensions or updates).
 
 Each parameterized key for a given field MUST NOT appear more than once in the signature base. Parameterized keys MAY appear in any order in the signature base, regardless of the order they occur in the source Dictionary.
 
@@ -979,7 +984,7 @@ The `req` parameter MUST NOT be used in a signature that targets a request messa
 
 The signature base is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the ordered set of covered component identifiers and their associated values, along with any additional signature parameters discussed in {{signature-params}}.
 
-Component identifiers are serialized using the production grammar defined by {{STRUCTURED-FIELDS, Section 4}}.
+Component identifiers are serialized using the strict serialization rules defined by {{STRUCTURED-FIELDS, Section 4}}.
 The component identifier has a component name, which is a String Item value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` ABNF rule. The signature parameters line defined in {{signature-params}} follows this same pattern, but the component identifier is a String Item with a fixed value and no parameters, and the component value is always an Inner List with optional parameters.
 
 Note that this means the serialization of the component name itself is encased in double quotes, with parameters following as a semicolon-separated list, such as `"cache-control"`, `"@authority"`, `"@signature-params"`, or `"example-dictionary";key="foo"`.
