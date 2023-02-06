@@ -332,7 +332,7 @@ will replace any optional internal whitespace with a single space character, amo
 
 If multiple field values occur within a message, these values MUST be combined into a single List or Dictionary structure before serialization.
 
-If the application does not know the type of the field, or the application does not know how to serialize the type of the field, the use of this flag will produce an error. As a consequence, the signer can only reliably sign fields that it knows the verifier's system supports.
+If the application does not know the type of the field, or the application does not know how to serialize the type of the field, the use of this flag will produce an error. As a consequence, the signer can only reliably sign fields using this flag when the verifier's system knows the type as well.
 
 For example, the following dictionary field is a valid serialization:
 
