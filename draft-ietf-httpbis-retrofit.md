@@ -271,23 +271,6 @@ SF-If-None-Match: "abcdef"; w, "ghijkl", *
 ~~~
 
 
-## Links
-
-The field value of the Link header field {{!RFC8288}} can be mapped into the SF-Link List Structured Field by considering the URI-Reference as a String, and link-param as Parameters.
-
-For example, this:
-
-~~~ http-message
-Link: </terms>; rel="copyright"; anchor="#foo"
-~~~
-
-can be mapped to:
-
-~~~ http-message
-SF-Link: "/terms"; rel="copyright"; anchor="#foo"
-~~~
-
-
 ## Cookies
 
 The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a List), respectively.
@@ -348,7 +331,6 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | SF-If-Modified-Since   | Item            |
 | SF-If-None-Match       | List            |
 | SF-If-Unmodified-Since | Item            |
-| SF-Link                | List            |
 | SF-Last-Modified       | Item            |
 | SF-Location            | Item            |
 | SF-Referer             | Item            |
