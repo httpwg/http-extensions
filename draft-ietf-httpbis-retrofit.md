@@ -146,18 +146,14 @@ An application using this specification will need to consider how to handle such
 
 Note the following caveats regarding compatibility:
 
+Parsing differences:
+: Some values may fail to parse as Structured Fields, even though they are valid according to their originally specified syntax. For example, HTTP parameter names are case-insensitive (per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase.
+Likewise, many Dictionary-based fields (e.g., Cache-Control, Expect-CT, Pragma, Prefer, Preference-Applied, Surrogate-Control) have case-insensitive keys.
+Similarly, the parameters rule in HTTP (see {{Section 5.6.6 of HTTP}}) allows whitespace before the ";" delimiter, but Structured Fields does not.
+And, {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Field Strings only escape "\\" and DQUOTE. The vast majority of fields seen in typical traffic do not exhibit these behaviors.
+
 Error handling:
 : Parsing algorithms specified (or just widely implemented) for current HTTP headers may differ from those in Structured Fields in details such as error handling. For example, HTTP specifies that repeated directives in the Cache-Control header field have a different precedence than that assigned by a Dictionary structured field (which Cache-Control is mapped to).
-
-Parameter and Dictionary keys:
-: HTTP parameter names are case-insensitive (per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase. Although the vast majority of parameters seen in typical traffic are all-lowercase, compatibility can be improved by force-lowercasing parameters when parsing.
-Likewise, many Dictionary-based fields (e.g., Cache-Control, Expect-CT, Pragma, Prefer, Preference-Applied, Surrogate-Control) have case-insensitive keys, and compatibility can be improved by force-lowercasing them when parsing.
-
-Parameter delimitation:
-: The parameters rule in HTTP (see {{Section 5.6.6 of HTTP}}) allows whitespace before the ";" delimiter, but Structured Fields does not. Compatibility can be improved by allowing such whitespace when parsing.
-
-String quoting:
-: {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Field Strings only escape "\\" and DQUOTE. Compatibility can be improved by unescaping other characters before parsing.
 
 Token limitations:
 : In Structured Fields, tokens are required to begin with an alphabetic character or "\*", whereas HTTP tokens allow a wider range of characters. This prevents use of mapped values that begin with one of these characters. For example, media types, field names, methods, range-units, character and transfer codings that begin with a number or special character other than "*" might be valid HTTP protocol elements, but will not be able to be represented as Structured Field Tokens.
