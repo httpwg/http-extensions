@@ -687,7 +687,7 @@ Example-String: "foo
 Example-String: bar"
 ~~~
 
-If parsing fails -- including when calling another algorithm -- the entire field value MUST be ignored (i.e., treated as if the field were not present in the section). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
+If parsing fails -- including when calling another algorithm -- the entire field value MUST be ignored (i.e., treated as if the field were not present in the section), unless the field definition specifies another behavior. It is RECOMMENDED that fields not modify this requirement, as it enhances interoperability and safety.
 
 Note that this requirement does not apply to an implementation that is not parsing the field; for example, an intermediary is not required to strip a failing field from a message before forwarding it.
 
@@ -1050,6 +1050,7 @@ This revision of the Structured Field Values for HTTP specification has made the
 * Stopped encouraging use of ABNF in definitions of new structured fields. ({{specify}})
 * Moved ABNF to an informative appendix. ({{abnf}})
 * Added a "Structured Type" column to the HTTP Field Name Registry. ({{iana}})
+* Allowed fields to specify failure handling. ({{text-parse}})
 
 
 # Acknowledgements
