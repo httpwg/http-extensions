@@ -73,7 +73,10 @@ normative:
         title: The Open Group Base Specifications Issue 7, 2018 edition
         date: 2018
     HTTP: RFC9110
-    HTTP1: RFC9112
+    HTTP1:
+        -: h1
+        =: RFC9112
+        display: "HTTP/1.1"
     URI: RFC3986
     HTMLURL:
         target: https://url.spec.whatwg.org/#application/x-www-form-urlencoded
