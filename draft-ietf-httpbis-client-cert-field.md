@@ -307,8 +307,8 @@ function together as though, from the client's perspective, they are a single
 logical server side deployment of HTTPS over a mutually-authenticated TLS
 connection. Use of the header fields outside that intended use
 case, however, may undermine the protections afforded by TLS client certificate
-authentication. Therefore, steps MUST be taken to prevent unintended use, both in
-sending the header field and in relying on its value.
+authentication. Therefore, steps such as those described below need to be taken
+to prevent unintended use, both in sending the header field and in relying on its value.
 
 Producing and consuming the `Client-Cert` and `Client-Cert-Chain` header
 fields SHOULD be configurable
@@ -323,14 +323,14 @@ from the TTRP). A TTRP MUST sanitize the incoming request before forwarding it
 on by removing or overwriting any existing instances of the fields. Otherwise,
 arbitrary clients can control the field values as seen and used by the backend
 server. It is important to note that neglecting to prevent field injection does
-not "fail safe" in that the nominal functionality will still work as expected
+not "fail-safe" in that the nominal functionality will still work as expected
 even when malicious actions are possible. As such, extra care is recommended in
 ensuring that proper field sanitation is in place.
 
 The communication between a TTRP and backend server needs to be secured against
 eavesdropping and modification by unintended parties.
 
-The configuration options and request sanitization are necessarily functionally
+The configuration options and request sanitization are necessary functionally
 of the respective servers. The other requirements can be met in a number of
 ways, which will vary based on specific deployments. The communication between a
 TTRP and backend or origin server, for example, might be authenticated in some
@@ -369,7 +369,7 @@ In a hypothetical example where a TLS client presents the client and
 intermediate certificate from {{example-chain}} when establishing a
 mutually-authenticated TLS connection with the TTRP, the proxy would send the
 `Client-Cert` field shown in {{example-header}} to the backend. Note that line
-breaks and whitespace have been added to the field value in {{example-header}}
+breaks and extra spaces have been added to the field value in {{example-header}}
 and {{example-chain-header}}
 for display and formatting purposes only.
 
@@ -458,7 +458,7 @@ Client-Cert-Chain: :MIIB5jCCAYugAwIBAgIBFjAKBggqhkjOPQQDAjBWMQsw
 
 
 
-# Considerations Considered
+# Select Design Considerations
 
 ## Field Injection
 
@@ -554,6 +554,8 @@ The authors would like to thank the following individuals who've contributed in 
    draft-ietf-httpbis-client-cert-field-05
 
    * Correct a couple references
+   * Incorporate AD review feedback
+   * Editorial updates
 
    draft-ietf-httpbis-client-cert-field-04
 
