@@ -1,5 +1,5 @@
 ---
-title: tus - Resumable Uploads Protocol
+title: Resumable Uploads Protocol
 abbrev: Resumable Uploads
 docname: draft-ietf-httpbis-resumable-upload-latest
 category: std
@@ -521,5 +521,7 @@ However, from experience with the tus project, users are often asking for a way 
 {:numbered="false"}
 
 This document is based on an Internet-Draft specification written by Jiten Mehta, Stefan Matsson, and the authors of this document.
+
+The Initial version of this document was inspired by the [tus v1 protocol](https://tus.io/) which provides a specification and working implementations for a resumable file upload protocol over HTTP. Memebers of its community helped significantly in creating the early Internet-Draft.
 
 TODO: more acknowledgements.
