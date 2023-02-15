@@ -1,5 +1,5 @@
 ---
-title: Resumable Uploads Protocol
+title: Resumable Uploads for HTTP
 abbrev: Resumable Uploads
 docname: draft-ietf-httpbis-resumable-upload-latest
 category: std
