@@ -50,10 +50,12 @@ informative:
     display: HTTP/2
   RFC9114:
     display: HTTP/3
+  I-D.ietf-httpbis-message-signatures:
+    display: HTTPSIG
 
 --- abstract
 
-This document defines HTTP extension header fields that allow a TLS
+This document describes HTTP extension header fields that allow a TLS
 terminating reverse proxy to convey the client certificate information of a
 mutually-authenticated TLS connection to the origin server in a common and
 predictable manner.
@@ -86,8 +88,8 @@ or cookies to a certificate, and the respective validation of such bindings. The
 specific details from the certificate needed also vary with the application
 requirements. In order for these types of application deployments to work in
 practice, the reverse proxy needs to convey information about the client
-certificate to the origin application server. A common way this information is
-conveyed in practice today is by using non-standard fields to carry the
+certificate to the origin application server. At the time of writing, a common way this information is
+conveyed is by using non-standard fields to carry the
 certificate (in some encoding) or individual parts thereof in the HTTP request
 that is dispatched to the origin server. This solution works but
 interoperability between independently developed components can be cumbersome or
@@ -97,7 +99,7 @@ are exposed, or how the certificate is encoded). A well-known predictable
 approach to this commonly occurring functionality could improve and simplify
 interoperability between independent implementations.
 
-This document aspires to standardize two HTTP header fields, `Client-Cert`
+This document describes two HTTP header fields, `Client-Cert`
 and `Client-Cert-Chain`,  which a TLS terminating reverse proxy (TTRP) adds to
 requests sent to the backend origin servers. The `Client-Cert` field value
 contains the end-entity client certificate from  the mutually-authenticated TLS
@@ -119,6 +121,9 @@ connection to the TTRP.
 
 ## Terminology and Applicability
 
+This document uses the following terminology from {{Section 3 of RFC8941}}
+to specify syntax and parsing: List and Byte Sequence.
+
 Phrases like TLS client certificate authentication or mutually-authenticated TLS
 are used throughout this document to refer to the process whereby, in addition
 to the normal TLS server authentication with a certificate, a client presents
@@ -130,7 +135,7 @@ CertificateVerify messages during the handshake and for the server to verify the
 CertificateVerify and Finished messages.
 
 HTTP/2 restricts TLS 1.2 renegotiation ({{Section 9.2.1 of ?RFC9113}}) and
-prohibits TLS 1.3 post-handshake authentication {{?RFC8740}}. However, they are
+prohibits TLS 1.3 post-handshake authentication ({{Section 9.2.3 of ?RFC9113}}). However, they are
 sometimes used to implement reactive client certificate authentication in HTTP/1.1
 {{?RFC9112}} where the server decides whether to request a client certificate
 based on the HTTP request. HTTP application data sent on such a connection
@@ -159,7 +164,7 @@ certificate provided by the client in the TLS handshake with the reverse proxy.
 
 ## Encoding
 
-The headers in this document encode certificates as Structured Field Byte
+The headers in this document encode certificates as Byte
 Sequences ({{Section 3.3.5 of RFC8941}}) where the value of the binary data
 is a DER encoded {{!ITU.X690.1994}} X.509 certificate {{!RFC5280}}.
 In effect, this means that the binary DER certificate is encoded using base64
@@ -168,7 +173,7 @@ and delimited with colons on either side.
 
 Note that certificates are often stored encoded in a textual format, such as
 the one described in {{Section 5.1 of ?RFC7468}}, which is already nearly
-compatible with a Structured Field Byte Sequence; if so, it will be sufficient to replace
+compatible with a Byte Sequence; if so, it will be sufficient to replace
 `---(BEGIN|END) CERTIFICATE---` with `:` and remove line breaks in order
 to generate an appropriate item.
 
@@ -179,19 +184,15 @@ makes the TLS client certificate available to the backend application with the
 Client-Cert HTTP header field. This field contains the end-entity certificate
 used by the client in the TLS handshake.
 
-Client-Cert is an Item Structured Header {{!RFC8941}}.  Its value MUST be a
-Byte Sequence ({{Section 3.3.5 of RFC8941}}).  Its ABNF is:
-
-~~~
- Client-Cert = sf-binary
-~~~
-
-The value of the header is encoded as described in {{encoding}}.
+Client-Cert is a Byte Sequence with the value of
+the header encoded as described in {{encoding}}.
 
 The `Client-Cert` header field is only for use in HTTP requests and MUST NOT be
 used in HTTP responses.  It is a singleton header field value as defined in
 {{Section 5.5 of RFC9110}}, which MUST NOT have a list of values or occur
 multiple times in a request.
+
+{{example-header}} in {{example}} has an example of the `Client-Cert` header field.
 
 ## Client-Cert-Chain HTTP Header Field {#chain-header}
 
@@ -200,21 +201,16 @@ MAY make the certificate chain
 available to the backend application with the Client-Cert-Chain HTTP header
 field.
 
-Client-Cert-Chain is a List Structured Header {{!RFC8941}}.  Each item in the
-list MUST be a Byte Sequence ({{Section 3.3.5 of RFC8941}}) encoded as described
-in {{encoding}}. The order is the same as the ordering in TLS (such as described in {{Section 4.4.2 of TLS}}).
-
-The header's ABNF is:
-
-~~~
- Client-Cert-Chain = sf-list
-~~~
+Client-Cert-Chain is a List ({{Section 3.3.1 of RFC8941}}).  Each item in the
+list MUST be a Byte Sequence encoded as described in {{encoding}}. The order
+is the same as the ordering in TLS (such as described in {{Section 4.4.2 of TLS}}).
 
 The `Client-Cert-Chain` header field is only for use in HTTP requests and MUST
 NOT be used in HTTP responses.  It MAY have a list of values or occur multiple
 times in a request.  For header compression purposes, it might be advantageous
 to split lists into multiple instances.
 
+{{example-chain-header}} in {{example}} has an example of the `Client-Cert-Chain` header field.
 
 
 ## Processing Rules
@@ -227,7 +223,7 @@ the processing rules described herein are for servers operating with that option
 enabled.
 
 A TTRP negotiates the use of a mutually-authenticated TLS connection with the
-client, such as is described in {{?TLS}} or {{?RFC5246}}, and validates the
+client, such as is described in {{?TLS}} or {{?TLS1.2=RFC5246}}, and validates the
 client certificate per its policy and trusted certificate authorities.  Each
 HTTP request on the underlying TLS connection are dispatched to the origin
 server with the following modifications:
@@ -275,26 +271,25 @@ employ the `Client-Cert` or `Client-Cert-Chain` header field in requests.
 
 ## Header Field Compression
 
-If the client certificate header field is generated by an intermediary on a connection that
-compresses fields (e.g., using HPACK {{?HPACK=RFC7541}} or QPACK {{?QPACK=RFC9204}})
-and more than one client's requests are multiplexed into that connection, it can reduce
-compression efficiency significantly, due to the typical size of the field value and
-its variation between clients.
-Recipients that anticipate connections with these characteristics can mitigate the
-efficiency loss by increasing the size of the dynamic table.
-If a recipient does not do so, senders may find it beneficial to always send the
-field value as a literal, rather than entering it into the dynamic table.
+If the connection between the TTRP and origin is capable of field compression
+(e.g., HPACK {{?HPACK=RFC7541}} or QPACK {{?QPACK=RFC9204}}), and the TTRP multiplexes more
+than one client's requests into that connection, the size and variation of `Client-Cert` and
+`Client-Cert-Chain` field values can reduce compression efficiency significantly.
+An origin could mitigate the efficiency loss by increasing the size of the dynamic table.
+If the TTRP determines that the origin dynamic table is not sufficiently large,
+it may find it beneficial to always send the field value as a literal,
+rather than entering it into the table.
 
-## Header Block Size
+## Message Header Size
 
-A server in receipt of a larger header block than it is willing to handle can send
+A server in receipt of a larger message header than it is willing to handle can send
 an HTTP 431 (Request Header Fields Too Large) status code per {{Section 5 of ?RFC6585}}.
 Due to the typical size of the field values containing certificate data,
-recipients may need to be configured to allow for a larger maximum header block size.
+recipients may need to be configured to allow for a larger maximum header size.
 An intermediary generating client certificate header fields on connections that allow
-for advertising the maximum acceptable header block size (e.g. HTTP/2 {{?RFC9113}}
+for advertising the maximum acceptable header size (e.g. HTTP/2 {{?RFC9113}}
 or HTTP/3 {{?RFC9114}}) should account for the additional size of the header
-block of the requests it sends vs. requests it receives by advertising a value to its
+of the requests it sends vs. requests it receives by advertising a value to its
 clients that is sufficiently smaller so as to allow for the addition of certificate data.
 
 ## TLS Session Resumption
@@ -341,7 +336,10 @@ ways, which will vary based on specific deployments. The communication between a
 TTRP and backend or origin server, for example, might be authenticated in some
 way with the insertion and consumption of the `Client-Cert`
 and `Client-Cert-Chain` header fields occurring
-only on that connection. Alternatively the network topology might dictate a
+only on that connection.
+{{Appendix B.3 of ?I-D.ietf-httpbis-message-signatures}} gives one example of
+this with an application of HTTP Message Signatures.
+Alternatively the network topology might dictate a
 private network such that the backend application is only able to accept
 requests from the TTRP and the proxy can only make requests to that server.
 Other deployments that meet the requirements set forth herein are also possible.
@@ -365,13 +363,14 @@ Name Registry" defined by HTTP Semantics {{RFC9110}}:
 
 --- back
 
-# Example
+# Example {#example}
 
 In a hypothetical example where a TLS client presents the client and
 intermediate certificate from {{example-chain}} when establishing a
 mutually-authenticated TLS connection with the TTRP, the proxy would send the
-`Client-Cert` field shown in {#example-header} to the backend. Note that line
+`Client-Cert` field shown in {{example-header}} to the backend. Note that line
 breaks and whitespace have been added to the field value in {{example-header}}
+and {{example-chain-header}}
 for display and formatting purposes only.
 
 ~~~
@@ -471,12 +470,12 @@ could inject its own values that would appear to the backend to
 have come from the TTRP. Although numerous other methods of detecting/preventing
 field injection are possible; such as the use of a unique secret value as part
 of the field name or value or the application of a signature, HMAC, or AEAD,
-there is no common general standardized mechanism. The potential problem of
+there is no common general mechanism. The potential problem of
 client field injection is not at all unique to the functionality of this draft,
 and it would therefore be inappropriate for this draft to define a one-off
-solution. In the absence of a generic standardized solution existing currently,
+solution. In the absence of a generic common solution existing currently,
 stripping/sanitizing the fields is the de facto means of protecting against
-field injection in practice today. Sanitizing the fields is sufficient when
+field injection in practice. Sanitizing the fields is sufficient when
 properly implemented and is a normative requirement of {{sec}}.
 
 ## The Forwarded HTTP Extension
@@ -531,6 +530,7 @@ The authors would like to thank the following individuals who've contributed in 
 - Mark Nottingham
 - Erik Nygren
 - Mike Ounsworth
+- Lucas Pardue
 - Matt Peterson
 - Eric Rescorla
 - Justin Richer
@@ -550,6 +550,14 @@ The authors would like to thank the following individuals who've contributed in 
 # Document History
 
    > To be removed by the RFC Editor before publication as an RFC
+
+   draft-ietf-httpbis-client-cert-field-05
+
+   * Correct a couple references
+
+   draft-ietf-httpbis-client-cert-field-04
+
+   * Updates, fixes, and clarifications from WGLC feedback
 
    draft-ietf-httpbis-client-cert-field-03
 

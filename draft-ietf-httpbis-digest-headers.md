@@ -202,11 +202,12 @@ semantics such as selected representation data ({{Section 3.2 of RFC9110}}).
 
 Experience has shown that implementations of [RFC3230] have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
-most common mistake being the calculation of the digest using (what we now call)
-message content, rather than using (what we now call) representation data as was
-originally intended. Interestingly, time has also shown that a digest of
-message content can be beneficial for some use cases. So it is difficult to
-detect if non-conformance to [RFC3230] is intentional or unintentional.
+most common issue relates to the mistake of calculating the digest using (what
+we now call) message content, rather than using (what we now call)
+representation data as was originally intended. Interestingly, time has also
+shown that a digest of message content can be beneficial for some use cases. So
+it is difficult to detect if non-conformance to [RFC3230] is intentional or
+unintentional.
 
 In order to address potential inconsistencies and ambiguity across
 implementations of `Digest` and `Want-Digest`, this document obsoletes
@@ -276,7 +277,7 @@ support transitions away from weaker algorithms (see {{sec-agility}}).
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
-Repr-Digest: \
+Content-Digest: \
   sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
   sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
   iYllu7BNNyealdVLvRwEmTHWXvJwew==:
@@ -415,6 +416,14 @@ the `Repr-Digest` field.
 If `Want-Content-Digest` or `Want-Repr-Digest` are used in a response, it
 indicates that the server would like the client to provide the respective
 Integrity field on future requests.
+
+Integrity preference fields are only a hint. The receiver of the field can
+ignore it and send an Integrity field using any algorithm or omit the field
+entirely, for example see {{ex-server-selects-unsupported-algorithm}}. It is not
+a protocol error if preferences are ignored. Applications that use Integrity
+fields and Integrity preferences can define expectations or constraints that
+operate in addition to this specification. How to deal with an ignored
+preferences is a scenario that should be considered.
 
 `Want-Content-Digest` and `Want-Repr-Digest` are of type `Dictionary`
 where each:

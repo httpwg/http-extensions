@@ -6,7 +6,7 @@ date: {DATE}
 category: std
 
 ipr: trust200902
-area: Applications
+area: Applications and Real-Time
 workgroup: HTTPbis
 keyword: Internet-Draft
 
@@ -27,6 +27,8 @@ normative:
     RFC9114
 
 informative:
+  QUIC-TRANSPORT:
+    RFC9000
 
 
 --- abstract
@@ -47,6 +49,13 @@ frames to be used with HTTP/3.
 origins are available on a given connection.  It defines a single HTTP/2 frame
 type.
 
+## Notational Conventions
+
+{::boilerplate bcp14-tagged}
+
+Frame diagrams in this document use the format defined in {{Section 1.3 of
+QUIC-TRANSPORT}} to illustrate the order and size of fields.
+
 # The ORIGIN HTTP/3 Frame {#frame-origin}
 
 The ORIGIN HTTP/3 frame allows a server to indicate what origin(s)
@@ -61,6 +70,10 @@ state of the connection, HTTP/3 defines a pair of unidirectional streams called
 frame should be sent on Stream 0, this should be interpreted to mean the HTTP/3
 control stream.  The ORIGIN frame is sent from servers to clients on the
 server's control stream.
+
+HTTP/3 does not define a Flags field in the generic frame layout. As no flags
+have been defined for the ORIGIN frame, this specification does not define a
+mechanism for communicating such flags in HTTP/3.
 
 ## Frame Layout
 

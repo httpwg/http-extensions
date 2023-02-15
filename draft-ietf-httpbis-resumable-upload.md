@@ -168,7 +168,7 @@ In some cases clients might prefer to upload a file as a series of parts sent ac
 
 This example shows how the client, with prior knowledge about the server's resumable upload support, can upload parts of a file over a sequence of procedures.
 
-1) If the client is aware that the server supports resumable upload, it can use the Upload Creation Procedure with the `Upload-Incomplete` header to start an upload.
+1) If the client is aware that the server supports resumable upload, it can use the Upload Creation Procedure with the `Upload-Incomplete` header to start an upload. The client can include the first part of the file in the Upload Creation Procedure.
 
 ~~~
 Client                                      Server
@@ -253,9 +253,9 @@ If the client received an informational repsonse with the upload URL, it MAY aut
 
 File metadata can affect how servers might act on the uploaded file. Clients can send Representation Metadata (see {{Section 8.3 of HTTP}}) in the Upload Creation Procedure request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header can be used to indicate the MIME type of the file. The `Content-Disposition` header can be used to transmit a filename. If included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
 
-## Feature Detection
+## Feature Detection {#feature-detection}
 
-If the client has no knowledge of whether the server supports resumable upload, the Upload Creation Procedure MAY be used with some additional constraints. In particular, the `Upload-Incomplete` header field ({{upload-incomplete}}) MUST NOT be set to true if the server support is unclear. This allows the upload to function as if it is a regular upload.
+If the client has no knowledge of whether the resource supports resumable uploads, the Upload Creation Procedure MAY be used with some additional constraints. In particular, the `Upload-Incomplete` header field ({{upload-incomplete}}) MUST NOT be set to true if the server support is unclear. This allows the upload to function as if it is a regular upload.
 
 The server SHOULD send the `104 (Upload Resumption Supported)` informational response to the client, to indicate its support for a resumable upload.
 
@@ -330,7 +330,7 @@ If the server does not consider the upload associated with the upload URL active
 
 The client MUST NOT perform multiple upload transfers for the same upload URL using Upload Creation Procedures ({{upload-creation}}) or Upload Appending Procedures ({{upload-appending}}) in parallel to avoid race conditions and data loss or corruption. The server is RECOMMENDED to take measures to avoid parallel upload transfers: The server MAY terminate any ongoing Upload Creation Procedure ({{upload-creation}}) or Upload Appending Procedure ({{upload-appending}}) for the same upload URL. Since the client is not allowed to perform multiple transfers in parallel, the server can assume that the previous attempt has already failed. Therefore, the server MAY abruptly terminate the previous HTTP connection or stream.
 
-If the offset in the `Upload-Offset` header field does not match the offset provided by the immediate previous Offset Retrieving Procedure ({{offset-retrieving}}), or the end offset of the immediate previous incomplete transfer, the server MUST respond with `409 (Conflict)` status code.
+If the offset in the `Upload-Offset` header field does not match the offset provided by the immediate previous Offset Retrieving Procedure ({{offset-retrieving}}), or the end offset of the immediate previous incomplete successful transfer, the server MUST respond with `409 (Conflict)` status code.
 
 The server MUST send the `Upload-Offset` header in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the response status code indicates a success but the offset in the `Upload-Offset` header field in the response does not equal to the begin offset plus the number of bytes uploaded in the request.
 
@@ -410,6 +410,8 @@ The `Upload-Incomplete` request and response header field is an Item Structured 
 Upload-Incomplete = sf-boolean
 ~~~
 
+The `Upload-Incomplete` header field MUST only by used if support by the resource is known to the client ({{feature-detection}}).
+
 # Redirection
 
 The `301 (Moved Permanently)` status code and the `302 (Found)` status code MUST NOT be used in Offset Retrieving Procedure ({{offset-retrieving}}) and Upload Cancellation Procedure ({{upload-cancellation}}) responses. A `308 (Permanent Redirect)` response MAY be persisted for all subsequent procedures. If client receives a `307 (Temporary Redirect)` response in the Offset Retrieving Procedure ({{offset-retrieving}}), it MAY apply the redirection directly in the immediate subsequent Upload Appending Procedure ({{upload-appending}}).
@@ -467,7 +469,7 @@ On the contrary, support for intermediate responses (the `1XX` range) in existin
 
 We hope that support for intermediate responses increases in the near future, to allow a wider usage of `104 (Upload Resumption Supported)`.
 
-# Feature Detection
+# Feature Detection {#changes-feature-detection}
 
 This specification includes a section about feature detection (it was called service discovery in earlier discussions, but this name is probably ill-suited). The idea is to allow resumable uploads to be transparently implemented by HTTP clients. This means that application developers just keep using the same API of their HTTP library as they have done in the past with traditional, non-resumable uploads. Once the HTTP library gets updated (e.g. because mobile OS or browsers start implementing resumable uploads), the HTTP library can transparently decide to use resumable uploads without explicit configuration by the application developer. Of course, in order to use resumable uploads, the HTTP library needs to know whether the server supports resumable uploads. If no support is detected, the HTTP library should use the traditional, non-resumable upload technique. We call this process feature detection.
 
