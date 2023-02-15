@@ -418,7 +418,7 @@ The `301 (Moved Permanently)` status code and the `302 (Found)` status code MUST
 
 # Security Considerations
 
-The upload URL obtained through the Upload Creation Procedure ({{upload-creation}}) is the identifier used for modifying the upload. Without further protection of this upload URL, an attacker may use the upload URL to obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can perform the Offset Retrieving Procedure ({{offset-retrieving}}), Upload Appending Procedure ({{upload-appending}}), or Upload Cancellation Procedure ({{upload-cancellation}}) for a given upload URL and otherwise reject the procedure.
+The upload URL obtained through the Upload Creation Procedure ({{upload-creation}}) is the identifier used for modifying the upload. Without further protection of this upload URL, an attacker may use the upload URL to obtain information about an upload, append data to it, or cancel it. To prevent this, the server SHOULD ensure that only authorized clients can perform the Offset Retrieving Procedure ({{offset-retrieving}}), Upload Appending Procedure ({{upload-appending}}), or Upload Cancellation Procedure ({{upload-cancellation}}) for a given upload URL and otherwise reject the procedure. In addition, the upload URL SHOULD be generated in such a way that makes it hard to be guessed by non-authorized clients.
 
 # IANA Considerations
 
