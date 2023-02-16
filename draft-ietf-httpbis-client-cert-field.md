@@ -462,7 +462,7 @@ Client-Cert-Chain: :MIIB5jCCAYugAwIBAgIBFjAKBggqhkjOPQQDAjBWMQsw
 
 ## Field Injection
 
-This draft requires that the TTRP sanitize the fields of the incoming request by
+This document requires that the TTRP sanitize the fields of the incoming request by
 removing or overwriting any existing instances of the `Client-Cert`
 and `Client-Cert-Chain` header fields
 before dispatching that request to the backend application. Otherwise, a client
@@ -471,8 +471,8 @@ have come from the TTRP. Although numerous other methods of detecting/preventing
 field injection are possible; such as the use of a unique secret value as part
 of the field name or value or the application of a signature, HMAC, or AEAD,
 there is no common general mechanism. The potential problem of
-client field injection is not at all unique to the functionality of this draft,
-and it would therefore be inappropriate for this draft to define a one-off
+client field injection is not at all unique to the functionality of this document,
+and it would therefore be inappropriate for this document to define a one-off
 solution. In the absence of a generic common solution existing currently,
 stripping/sanitizing the fields is the de facto means of protecting against
 field injection in practice. Sanitizing the fields is sufficient when
@@ -482,9 +482,9 @@ properly implemented and is a normative requirement of {{sec}}.
 
 The `Forwarded` HTTP header field defined in {{?RFC7239}} allows proxy
 components to disclose information lost in the proxying process. The TLS client
-certificate information of concern to this draft could have been communicated
+certificate information of concern to this document could have been communicated
 with an extension parameter to the `Forwarded` field; however, doing so
-would have had some disadvantages that this draft endeavored to avoid. The
+would have had some disadvantages that this document endeavored to avoid. The
 `Forwarded` field syntax allows for information about a full chain of proxied
 HTTP requests, whereas the `Client-Cert` and `Client-Cert-Chain`
 header fields of this document are concerned
@@ -494,7 +494,7 @@ server from that client's perspective) to backend applications.  The multi-hop
 syntax of the `Forwarded` field is expressive but also more complicated, which
 would make processing it more cumbersome, and more importantly, make properly
 sanitizing its content as required by {{sec}} to prevent field injection
-considerably more difficult and error-prone. Thus, this draft opted for a
+considerably more difficult and error-prone. Thus, this document opted for a
 flatter and more straightforward structure.
 
 ## The Whole Certificate and Certificate Chain
@@ -505,7 +505,7 @@ distinguished name, subject alternative name(s), serial number, subject public
 key info, fingerprint, etc.. Furthermore, some applications, such as
 {{?RFC8705}}, make use of the entire certificate. In order to accommodate the
 latter and ensure wide applicability by not trying to cherry-pick particular
-certificate information, this draft opted to pass the full encoded certificate
+certificate information, this document opted to pass the full encoded certificate
 as the value of the `Client-Cert` field.
 
 The validation of the client certificate and chain of the mutually-authenticated
@@ -517,7 +517,7 @@ origin server deployments that require this additional information.
 
 # Acknowledgements
 
-The authors would like to thank the following individuals who've contributed in various ways ranging from just being generally supportive of bringing forth the draft to providing specific feedback or content:
+The authors would like to thank the following individuals who've contributed in various ways ranging from just being generally supportive of bringing forth the document to providing specific feedback or content:
 
 - Evan Anderson
 - Annabelle Backman
