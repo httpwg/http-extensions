@@ -223,7 +223,8 @@ HTTP Message Signatures are designed to be a general-purpose security mechanism 
 - The set of [component identifiers](#covered-components) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest field defined in {{DIGEST}} to be present and covered as well as mandate a value for `tag` that is specific to the API being protected.
 - The expected structured field types ({{STRUCTURED-FIELDS}}) of any required or expected covered component fields or parameters.
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means such as pre-registration of a signer's key.
-- A means of determining the signature algorithm used to verify the signature is appropriate for the key material. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
+- The set of allowable signature algorithms to be used by signers and accepted by verifiers.
+- A means of determining that the signature algorithm used to verify the signature is appropriate for the key material and context of the message. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
 - A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
 - A means of determining the context for derivation of message components from an HTTP message and its application context. While this is normally the target HTTP message itself, the context could include additional information known to the application, such as an external host name.
 - The error messages and codes that are returned from the verifier to the signer when the signature is invalid, the key material is inappropriate, the validity time window is out of specification, a component value cannot be calculated, or any other errors in the signature verification process. For example, if a signature is being used as an authentication mechanism, an HTTP status code of 401 Unauthorized or 403 Forbidden could be appropriate. If the response is from an HTTP API, a response with an HTTP status code of 400 Bad Request could include details as described in {{RFC7807}}, such as an indicator that the wrong key material was used.
@@ -1102,7 +1103,9 @@ Creation of an HTTP message signature is a process that takes as its input the s
 
 In order to create a signature, a signer MUST follow the following algorithm:
 
-1. The signer chooses an HTTP signature algorithm and key material for signing. The signer MUST choose key material that is appropriate
+1. The signer chooses an HTTP signature algorithm and key material for signing from the set of potential signing algorithms.
+    The set of potential algorithms is determined by the application and is out of scope for this document.
+    The signer MUST choose key material that is appropriate
     for the signature's algorithm, and that conforms to any requirements defined by the algorithm, such as key size or format. The
     mechanism by which the signer chooses the algorithm and key material is out of scope for this document.
 
@@ -1164,6 +1167,7 @@ In order to verify a signature, a verifier MUST follow the following algorithm:
     in which the signature is presented. If a key is identified that the verifier does not know, does
     not trust for this request, or does not match something preconfigured, the verification MUST fail.
 6. Determine the algorithm to apply for verification:
+    0. Start with the set of allowable algorithms known to the application. If any of the following steps selects an algorithm that is not in this set, the signature validation fails.
     1. If the algorithm is known through external means such as static configuration or external protocol
         negotiation, the verifier will use this algorithm.
     2. If the algorithm can be determined from the keying material, such as through an algorithm field
