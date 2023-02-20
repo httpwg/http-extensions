@@ -388,7 +388,7 @@ Note that the value for `key="c"` has been re-serialized according to the strict
 
 ### Binary-wrapped HTTP Fields {#http-field-byte-sequence}
 
-If the value of the HTTP field in question is known by the application to cause problems with serialization, particularly with the combination of multiple values into a single line as discussed in {{security-non-list}}, the signer SHOULD include the `bs` parameter in a component identifier to indicate the values of the fields need to be wrapped as binary structures before being combined.
+If the value of the HTTP field in question is known by the application to cause problems with serialization, particularly with the combination of multiple values into a single line as discussed in {{security-non-list}}, the signer SHOULD include the `bs` parameter in a component identifier to indicate the values of the field need to be wrapped as binary structures before being combined.
 
 If this parameter is included with a component identifier, the component value MUST be calculated using the following algorithm:
 
