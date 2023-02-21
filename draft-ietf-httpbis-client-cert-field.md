@@ -330,7 +330,7 @@ ensuring that proper field sanitation is in place.
 The communication between a TTRP and backend server needs to be secured against
 eavesdropping and modification by unintended parties.
 
-The configuration options and request sanitization are necessary functionally
+The configuration options and request sanitization are necessary functionality
 of the respective servers. The other requirements can be met in a number of
 ways, which will vary based on specific deployments. The communication between a
 TTRP and backend or origin server, for example, might be authenticated in some
