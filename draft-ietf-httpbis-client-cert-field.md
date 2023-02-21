@@ -323,7 +323,7 @@ from the TTRP). A TTRP MUST sanitize the incoming request before forwarding it
 on by removing or overwriting any existing instances of the fields. Otherwise,
 arbitrary clients can control the field values as seen and used by the backend
 server. It is important to note that neglecting to prevent field injection does
-not "fail-safe" in that the nominal functionality will still work as expected
+not "fail safe" in that the nominal functionality will still work as expected
 even when malicious actions are possible. As such, extra care is recommended in
 ensuring that proper field sanitation is in place.
 
