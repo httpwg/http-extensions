@@ -871,7 +871,10 @@ The `Repr-Digest` field-value is calculated across the entire JSON object
 `{"hello": "world"}`, and the field is
 
 ~~~ http-message
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+NOTE: '\' line wrapping per RFC 8792
+
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 ~~~
 
 However, since the message content is constrained to bytes 1-7,
@@ -899,23 +902,29 @@ For presentation purposes, the response body is displayed as a Base64-encoded st
 non-printable characters.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
 {: title="PUT Request with Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Location: /items/123
 Content-Encoding: br
 Content-Length: 22
-Repr-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
+Repr-Digest: \
+  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
 iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
 ~~~
@@ -932,12 +941,15 @@ depends on the representation metadata header fields, including
 
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Content-Length: 18
 Accept-Encoding: br
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -960,11 +972,14 @@ As the response body contains non-printable characters, it is displayed as a
 base64-encoded string.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -1145,6 +1160,8 @@ Host: foo.example
 {: title="GET Request"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -1157,7 +1174,8 @@ Trailer: Digest
 2\r\n
 "}\r\n
 0\r\n
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:\r\n
+Repr-Digest:
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:\r\n
 
 ~~~
 {: title="Chunked Response with Digest"}
@@ -1193,9 +1211,12 @@ Want-Repr-Digest: sha-256=3, sha=10
 {: title="GET Request with Want-Repr-Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
