@@ -99,7 +99,9 @@ are exposed, or how the certificate is encoded). A well-known predictable
 approach to this commonly occurring functionality could improve and simplify
 interoperability between independent implementations.
 
-This document describes two HTTP header fields, `Client-Cert`
+The scope of this document is to describe existing practice while codifying specific
+details sufficient to facilitate improved and lower-touch interoperability.
+As such, this document describes two HTTP header fields, `Client-Cert`
 and `Client-Cert-Chain`,  which a TLS terminating reverse proxy (TTRP) adds to
 requests sent to the backend origin servers. The `Client-Cert` field value
 contains the end-entity client certificate from  the mutually authenticated TLS
