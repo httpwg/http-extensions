@@ -1,6 +1,6 @@
 ---
 title: HTTP Unprompted Authentication
-docname: draft-schinazi-httpbis-unprompted-auth-latest
+docname: draft-ietf-httpbis-unprompted-auth-latest
 submissiontype: IETF
 number:
 date:
@@ -10,12 +10,13 @@ category: std
 wg: HTTPBIS
 area: "Applications and Real-Time"
 venue:
-  group: "HTTP"
-  type: "Working Group"
-  mail: "ietf-http-wg@w3.org"
-  arch: "https://lists.w3.org/Archives/Public/ietf-http-wg/"
-  github: "DavidSchinazi/draft-schinazi-httpbis-transport-auth"
-  latest: "https://DavidSchinazi.github.io/draft-schinazi-httpbis-transport-auth/draft-schinazi-httpbis-unprompted-auth.html"
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/unprompted-auth
+github-issue-label: unprompted-auth
 keyword:
   - secure
   - tunnels
