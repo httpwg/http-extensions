@@ -563,6 +563,7 @@ The authors would like to thank the following individuals who've contributed in 
    draft-ietf-httpbis-client-cert-field-05
 
    * Correct a couple references
+   * Updates from Genart Last Call review
    * Incorporate AD review feedback
    * Editorial updates
 
