@@ -57,7 +57,7 @@ informative:
 
 This document describes HTTP extension header fields that allow a TLS
 terminating reverse proxy to convey the client certificate information of a
-mutually-authenticated TLS connection to the origin server in a common and
+mutually authenticated TLS connection to the origin server in a common and
 predictable manner.
 
 --- middle
@@ -102,14 +102,14 @@ interoperability between independent implementations.
 This document describes two HTTP header fields, `Client-Cert`
 and `Client-Cert-Chain`,  which a TLS terminating reverse proxy (TTRP) adds to
 requests sent to the backend origin servers. The `Client-Cert` field value
-contains the end-entity client certificate from  the mutually-authenticated TLS
+contains the end-entity client certificate from  the mutually authenticated TLS
 connection between the originating client and the TTRP. Optionally, the
 `Client-Cert-Chain` field value contains the certificate chain used for
 validation of the end-entity certificate. This enables the backend origin
 server to utilize the client certificate
 information in its application logic. While there may be additional proxies or
 hops between the TTRP and the origin server (potentially even with
-mutually-authenticated TLS connections between them), the scope of the
+mutually authenticated TLS connections between them), the scope of the
 `Client-Cert` header field is intentionally limited to exposing to the origin
 server the certificate that was presented by the originating client in its
 connection to the TTRP.
@@ -124,7 +124,7 @@ connection to the TTRP.
 This document uses the following terminology from {{Section 3 of RFC8941}}
 to specify syntax and parsing: List and Byte Sequence.
 
-Phrases like TLS client certificate authentication or mutually-authenticated TLS
+Phrases like TLS client certificate authentication or mutually authenticated TLS
 are used throughout this document to refer to the process whereby, in addition
 to the normal TLS server authentication with a certificate, a client presents
 its X.509 certificate {{!RFC5280}} and proves possession of the corresponding
@@ -140,7 +140,7 @@ sometimes used to implement reactive client certificate authentication in HTTP/1
 {{?RFC9112}} where the server decides whether to request a client certificate
 based on the HTTP request. HTTP application data sent on such a connection
 after receipt and verification of the client certificate is also
-mutually-authenticated and thus suitable for the mechanisms described in this
+mutually authenticated and thus suitable for the mechanisms described in this
 document. With post-handshake authentication there is also the possibility, though
 unlikely in practice, of multiple certificates and certificate chains from the
 client on a connection, in which case only the certificate and chain
@@ -151,7 +151,7 @@ fields described herein.
 
 This document designates the following headers, defined further in {{header}}
 and {{chain-header}} respectively, to carry the client certificate information of a
-mutually-authenticated TLS connection. The headers convey the information
+mutually authenticated TLS connection. The headers convey the information
 from the reverse proxy to the origin server.
 
 Client-Cert:
@@ -216,16 +216,16 @@ to split lists into multiple instances.
 ## Processing Rules
 
 This section outlines the applicable processing rules for a TLS terminating
-reverse proxy (TTRP) that has negotiated a mutually-authenticated TLS connection
+reverse proxy (TTRP) that has negotiated a mutually authenticated TLS connection
 to convey the client certificate from that connection to the backend origin
 servers. Use of the technique is to be a configuration or deployment option and
 the processing rules described herein are for servers operating with that option
 enabled.
 
-A TTRP negotiates the use of a mutually-authenticated TLS connection with the
+A TTRP negotiates the use of a mutually authenticated TLS connection with the
 client, such as is described in {{?TLS}} or {{?TLS1.2=RFC5246}}, and validates the
 client certificate per its policy and trusted certificate authorities.  Each
-HTTP request on the underlying TLS connection are dispatched to the origin
+HTTP request on the underlying TLS connection is dispatched to the origin
 server with the following modifications:
 
 1. The client certificate is placed in the `Client-Cert` header field of the
@@ -245,7 +245,7 @@ dispatching the request to the backend server.
 
 Backend origin servers may then use the `Client-Cert` header field of the
 request to determine if the connection from the client to the TTRP was
-mutually-authenticated and, if so, the certificate thereby presented by the
+mutually authenticated and, if so, the certificate thereby presented by the
 client.
 Access control decisions based on the client certificate (or lack thereof) can be
 conveyed by selecting response content as appropriate or with an HTTP 403 response,
@@ -287,7 +287,7 @@ an HTTP 431 (Request Header Fields Too Large) status code per {{Section 5 of ?RF
 Due to the typical size of the field values containing certificate data,
 recipients may need to be configured to allow for a larger maximum header size.
 An intermediary generating client certificate header fields on connections that allow
-for advertising the maximum acceptable header size (e.g. HTTP/2 {{?RFC9113}}
+for advertising the maximum acceptable header size (e.g., HTTP/2 {{?RFC9113}}
 or HTTP/3 {{?RFC9114}}) should account for the additional size of the header
 of the requests it sends vs. requests it receives by advertising a value to its
 clients that is sufficiently smaller so as to allow for the addition of certificate data.
@@ -304,7 +304,7 @@ either disable resumption for connections with client certificates or initially 
 
 The header fields described herein enable a TTRP and backend or origin server to
 function together as though, from the client's perspective, they are a single
-logical server side deployment of HTTPS over a mutually-authenticated TLS
+logical server-side deployment of HTTPS over a mutually authenticated TLS
 connection. Use of the header fields outside that intended use
 case, however, may undermine the protections afforded by TLS client certificate
 authentication. Therefore, steps such as those described below need to be taken
@@ -314,7 +314,7 @@ Producing and consuming the `Client-Cert` and `Client-Cert-Chain` header
 fields SHOULD be configurable
 options, respectively, in a TTRP and backend server (or individual application in
 that server). The default configuration for both should be to not use the
-header fields thus requiring an "opt-in" to the functionality.
+header fields, thus requiring an "opt-in" to the functionality.
 
 In order to prevent field injection, backend servers MUST only accept the
 `Client-Cert` and `Client-Cert-Chain` header fields from a trusted
@@ -339,7 +339,7 @@ and `Client-Cert-Chain` header fields occurring
 only on that connection.
 {{Appendix B.3 of ?I-D.ietf-httpbis-message-signatures}} gives one example of
 this with an application of HTTP Message Signatures.
-Alternatively the network topology might dictate a
+Alternatively, the network topology might dictate a
 private network such that the backend application is only able to accept
 requests from the TTRP and the proxy can only make requests to that server.
 Other deployments that meet the requirements set forth herein are also possible.
@@ -367,7 +367,7 @@ Name Registry" defined by HTTP Semantics {{RFC9110}}:
 
 In a hypothetical example where a TLS client presents the client and
 intermediate certificate from {{example-chain}} when establishing a
-mutually-authenticated TLS connection with the TTRP, the proxy would send the
+mutually authenticated TLS connection with the TTRP, the proxy would send the
 `Client-Cert` field shown in {{example-header}} to the backend. Note that line
 breaks and extra spaces have been added to the field value in {{example-header}}
 and {{example-chain-header}}
@@ -468,7 +468,7 @@ and `Client-Cert-Chain` header fields
 before dispatching that request to the backend application. Otherwise, a client
 could inject its own values that would appear to the backend to
 have come from the TTRP. Although numerous other methods of detecting/preventing
-field injection are possible; such as the use of a unique secret value as part
+field injection are possible, such as the use of a unique secret value as part
 of the field name or value or the application of a signature, HMAC, or AEAD,
 there is no common general mechanism. The potential problem of
 client field injection is not at all unique to the functionality of this document,
@@ -502,13 +502,13 @@ flatter and more straightforward structure.
 Different applications will have varying requirements about what information
 from the client certificate is needed, such as the subject and/or issuer
 distinguished name, subject alternative name(s), serial number, subject public
-key info, fingerprint, etc.. Furthermore, some applications, such as
+key info, fingerprint, etc. Furthermore, some applications, such as
 {{?RFC8705}}, make use of the entire certificate. In order to accommodate the
 latter and ensure wide applicability by not trying to cherry-pick particular
-certificate information, this document opted to pass the full encoded certificate
+certificate information, this document opted to pass the full, encoded certificate
 as the value of the `Client-Cert` field.
 
-The validation of the client certificate and chain of the mutually-authenticated
+The validation of the client certificate and chain of the mutually authenticated
 TLS connection is typically performed by the TTRP during the handshake.  With the
 responsibility of certificate validation falling on the TTRP, the
 end-entity certificate is oftentimes sufficient for the needs of the origin server.
