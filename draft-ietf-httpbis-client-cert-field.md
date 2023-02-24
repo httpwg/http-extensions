@@ -207,6 +207,11 @@ Client-Cert-Chain is a List ({{Section 3.3.1 of RFC8941}}).  Each item in the
 list MUST be a Byte Sequence encoded as described in {{encoding}}. The order
 is the same as the ordering in TLS (such as described in {{Section 4.4.2 of TLS}}).
 
+Client-Cert-Chain MUST NOT appear unless Client-Cert is also present, and it does
+not itself include the end-entity certificate that is already present in Client-Cert.
+The root certificate MAY be omitted from Client-Cert-Chain, provided that the target
+origin server is known to possess the omitted trust anchor.
+
 The `Client-Cert-Chain` header field is only for use in HTTP requests and MUST
 NOT be used in HTTP responses.  It MAY have a list of values or occur multiple
 times in a request.  For header compression purposes, it might be advantageous
@@ -430,7 +435,9 @@ Client-Cert: :MIIBqDCCAU6gAwIBAgIBBzAKBggqhkjOPQQDAjA6MRswGQYDVQQKDBJ
 {: #example-header title="Header Field in HTTP Request to Origin Server"}
 
 If the proxy were configured to also include the certificate chain, it would
-also include this header:
+also include the `Client-Cert-Chain` header field. Note that while
+the following example does illustrate the TTRP inserting the root certificate,
+many deployments will opt to omit the trust anchor.
 
 ~~~
 Client-Cert-Chain: :MIIB5jCCAYugAwIBAgIBFjAKBggqhkjOPQQDAjBWMQsw
