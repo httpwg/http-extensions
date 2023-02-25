@@ -560,17 +560,11 @@ processing of invalid data.
 Not every hashing algorithm is suitable for use in the trailer section, some may require to pre-process
 the whole payload before sending a message (e.g. see {{?I-D.thomson-http-mice}}).
 
-## Content encoding can change between messages
+## Variations Within Content Encoding
 
-Some content coding mechanisms can produce different outputs for the same content.
-This happens when they use input parameters that are not conveyed
-in the representation metadata (e.g. the gzip content coding can use different
-compression levels, so the same file has have multiple gzip-encoded versions),
-or when they rely on nonces or timestamps such as
-the aes128gcm content coding defined {{?RFC8188}}.
+Content coding mechanisms can support different encoding parameters, meaning that the same input content can produce different outputs. For example, GZIP supports mulitple compression levels. Such encoding parameters are generally not communicated as representation metadata, for instance different compression levels would all use the same "Content-Encoding: gzip" field. Other examples include where encoding relies on nonces or timestamps, such as the aes128gcm content coding defined {{?RFC8188}}.
 
-In those cases, the checksum conveyed by the integrity fields
-could not be used to provide a proof of integrity "at rest"
+Since it is possible for there to be variation within content coding, the checksum conveyed by the integrity field cannot be used to provide a proof of integrity "at rest"
 unless the whole (e.g. encoded) content is persisted.
 
 ## Algorithm Agility {#sec-agility}
