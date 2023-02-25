@@ -898,8 +898,8 @@ The response includes a `Content-Encoding: br` that indicates the selected
 representation is Brotli-encoded. The `Repr-Digest` field-value is therefore
 different compared to the request.
 
-For presentation purposes, the response body is displayed as a Base64-encoded string because it contains
-non-printable characters.
+For presentation purposes, the response body is displayed as a sequence of
+hex-encoded bytes because it contains non-printable characters.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -926,7 +926,9 @@ Content-Length: 22
 Repr-Digest: \
   sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
-iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
+0x8B0x080x800x7B0x220x680x650x6C0x6C0x6F\
+0x220x3A0x200x220x770x6F0x720x6C0x640x22\
+0x7D0x03
 ~~~
 {: title="Response with Digest of encoded response"}
 
@@ -968,8 +970,8 @@ Repr-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
 The response contains two digest values using different algorithms.
 
-As the response body contains non-printable characters, it is displayed as a
-base64-encoded string.
+For presentation purposes, the response body is displayed as a sequence of
+hex-encoded bytes because it contains non-printable characters.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -997,7 +999,9 @@ Repr-Digest: \
   sha-512=:pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE60jBCwnMPyA/\
   s3NF3ZO5oIWA7lf8ukk+5KJzm3p5og==:
 
-iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
+0x8B0x080x800x7B0x220x680x650x6C0x6C0x6F\
+0x220x3A0x200x220x770x6F0x720x6C0x640x22\
+0x7D0x03
 ~~~
 {: title="Response with Digest of Encoded Content"}
 
