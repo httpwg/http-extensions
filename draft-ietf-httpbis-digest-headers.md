@@ -256,8 +256,9 @@ where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}),
-  that contains the output of the digest calculation.
+* value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}), that
+  conveys the base64 encoding of the byte output produced by the digest
+  calculation, delimited by colons.
 
 For example:
 
@@ -318,8 +319,8 @@ STRUCTURED-FIELDS}}) where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* value is a `Byte Sequence` that
-  contains the output of the digest calculation.
+* value is a `Byte Sequence`, that conveys the base64 encoding of the byte
+  output produced by the digest calculation, delimited by colons.
 
 For example:
 
@@ -1266,6 +1267,35 @@ Content-Type: application/problem+json
 ~~~
 {: title="Response advertising the supported algorithms"}
 
+# Sample Digest Values
+
+This section shows examples of digest values for different hashing algorithms.
+The input value is the JSON object `{"hello": "world"}`. By virtue of using
+`Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}) serialization, the
+digest value is the base64 encoding of the bytes calculated using the indicated
+hashing algorithm, delimited by colons.
+
+~~~
+NOTE: '\' line wrapping per RFC 8792
+
+sha-512 -   :WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+            iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+
+sha-256 -   :X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+
+md5 -       :Sd/dVLAcvNLSq16eXua5uQ==:
+
+sha -       :07CavjDP4u3/TungoUHJO/Wzr4c=:
+
+unixsum -   :jIw=:
+
+unixcksum - :rF3+Zw==:
+
+adler -     :OZkGFw==:
+
+crc32c -    :Q3lHIA==:
+~~~
+
 
 # Migrating from RFC 3230
 
@@ -1290,6 +1320,11 @@ see {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
 RFC 3230 could never communicate
 the digest of HTTP message content in the Digest field;
 Content-Digest now provides that capability.
+
+RFC 3230 allowed algorithms to define their output encoding format for use with
+the Digest field. This resulted in a mixed of formats such as base64, hex or
+decimal. By virtue of using Structured fields, Content-Digest and Repr-Digest
+use only a single encoding format. Further explanation and examples is provided in {{sample-digest-values}}.
 
 # Acknowledgements
 {:numbered="false"}
