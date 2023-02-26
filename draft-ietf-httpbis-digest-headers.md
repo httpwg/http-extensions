@@ -1324,7 +1324,7 @@ Content-Digest now provides that capability.
 RFC 3230 allowed algorithms to define their output encoding format for use with
 the Digest field. This resulted in a mixed of formats such as base64, hex or
 decimal. By virtue of using Structured fields, Content-Digest and Repr-Digest
-use only a single encoding format. Further explanation and examples is provided in {{sample-digest-values}}.
+use only a single encoding format. Further explanation and examples are provided in {{sample-digest-values}}.
 
 # Acknowledgements
 {:numbered="false"}
