@@ -257,8 +257,8 @@ where each:
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
 * value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}), that
-  conveys the base64 encoding of the byte output produced by the digest
-  calculation, delimited by colons.
+  conveys an encoded version of the byte output produced by the digest
+  calculation.
 
 For example:
 
@@ -319,8 +319,8 @@ STRUCTURED-FIELDS}}) where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* value is a `Byte Sequence`, that conveys the base64 encoding of the byte
-  output produced by the digest calculation, delimited by colons.
+* value is a `Byte Sequence`, that conveys an encoded version of the byte
+  output produced by the digest calculation.
 
 For example:
 
@@ -1270,10 +1270,10 @@ Content-Type: application/problem+json
 # Sample Digest Values
 
 This section shows examples of digest values for different hashing algorithms.
-The input value is the JSON object `{"hello": "world"}`. By virtue of using
-`Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}) serialization, the
-digest value is the base64 encoding of the bytes calculated using the indicated
-hashing algorithm, delimited by colons.
+The input value is the JSON object `{"hello": "world"}`. The digest values are
+each produced by running the relevant hashing algorithm over the input and
+running the output bytes through `Byte Sequence` serialization; see {{Section
+4.1.8 of STRUCTURED-FIELDS}}.
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
