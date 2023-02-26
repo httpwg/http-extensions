@@ -483,13 +483,11 @@ should use the following template:
  - Algorithm Key: the Structured Fields key value used in
    `Content-Digest`, `Repr-Digest`, `Want-Content-Digest`, or `Want-Repr-Digest`
     field Dictionary member keys
- - Status: the status of the algorithm.
-     Use "standard" for standardized algorithms without known problems;
-     "experimental" or some other appropriate value
-     - e.g. according to the type and status of the primary document
-     in which the algorithm is defined;
-     "insecure" when the algorithm is insecure;
-     "reserved" when the algorithm references a reserved token value
+ - Status: the status of the algorithm. The options are:
+     - "standard" - for standardized algorithms without known problems,
+     - "provisional" - for non-standard or unproven algorithms,
+     - "insecure" - for insecure algorithms,
+     - "reserved"  - for algorithms that use a reserved token value that cannot be expressed in Structured Fields
  - Description: a short description of the algorithm
  - Reference(s): pointer(s) to the primary document(s) defining the technical
    details of the algorithm, and optionally the key
@@ -498,16 +496,16 @@ When reviewing registration requests, the designated expert(s) should pay
 attention to the requested status. The status value should reflect
 standardization status and the broad opinion of relevant interest groups such as
 the IETF or security-related SDOs. The "standard" status is not suitable for an
-algorithm that is known to be weak or experimental. If a registration request
-erroneously attempts to register a "standard" status, the designated expert(s)
-should suggest an alternative status of "insecure" or "experimental".
+algorithm that is known to be weak, broken or experimental. If a registration
+request attempts to register such an algorithm as "standard", the designated
+expert(s) should suggest an alternative status of "insecure" or "provisional".
 
 When reviewing registration requests, the designated expert(s) cannot use a
-status of "insecure" or "experimental" as grounds for rejection.
+status of "insecure" or "provisional" as grounds for rejection.
 
 Requests to update or change the fields in an existing registration are
-permitted. For example, this could support the transition of an algorithm from
-"standard" to "insecure" status as the security environment evolves.
+permitted. For example, this could allow for the transition of an algorithm
+status from "standard" to "insecure" as the security environment evolves.
 
 
 # Security Considerations {#security}
