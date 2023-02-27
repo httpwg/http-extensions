@@ -208,7 +208,7 @@ As mentioned earlier, HTTP explicitly permits and in some cases requires impleme
 - Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive components such as field names, request URI scheme, or host.
 - Addition or removal of leading or trailing whitespace to a field value.
-- Addition or removal of `obs-folds` from field values.
+- Addition or removal of `obs-folds` from field values ({{Section 5.2 of HTTP1}}).
 - Changes to the request target and authority that when applied together do not
     result in a change to the message's target URI, as defined in {{Section 7.1 of HTTP}}.
 
