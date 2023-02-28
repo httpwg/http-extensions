@@ -1050,7 +1050,7 @@ This revision of the Structured Field Values for HTTP specification has made the
 * Stopped encouraging use of ABNF in definitions of new structured fields. ({{specify}})
 * Moved ABNF to an informative appendix. ({{abnf}})
 * Added a "Structured Type" column to the HTTP Field Name Registry. ({{iana}})
-* Allowed fields to specify failure handling. ({{text-parse}})
+* Refined parse failure handling. ({{text-parse}})
 
 
 # Acknowledgements
