@@ -210,7 +210,7 @@ As mentioned earlier, HTTP explicitly permits and in some cases requires impleme
 - Changes to the request target and authority that when applied together do not
     result in a change to the message's target URI, as defined in {{Section 7.1 of HTTP}}.
 
-Additionally, there are some transformations are either deprecated or otherwise not allowed, but still could occur in the wild. These transformations can still be handled without breaking the signature, and include things such as:
+Additionally, there are some transformations that are either deprecated or otherwise not allowed, but still could occur in the wild. These transformations can still be handled without breaking the signature, and include things such as:
 
 - Use, addition, or removal of leading or trailing whitespace in a field value.
 - Use, addition, or removal of `obs-fold` in field values ({{Section 5.2 of HTTP1}}).
