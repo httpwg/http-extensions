@@ -207,14 +207,19 @@ As mentioned earlier, HTTP explicitly permits and in some cases requires impleme
 - Addition of fields such as `Via` ({{Section 7.6.3 of HTTP}}) and `Forwarded` ({{Section 4 of RFC7239}}).
 - Conversion between different versions of the HTTP protocol (e.g., HTTP/1.x to HTTP/2, or vice-versa).
 - Changes in casing (e.g., "Origin" to "origin") of any case-insensitive components such as field names, request URI scheme, or host.
-- Addition or removal of leading or trailing whitespace to a field value.
-- Addition or removal of `obs-folds` from field values ({{Section 5.2 of HTTP1}}).
 - Changes to the request target and authority that when applied together do not
     result in a change to the message's target URI, as defined in {{Section 7.1 of HTTP}}.
+
+Additionally, there are some transformations are either deprecated or otherwise not allowed, but still could occur in the wild. These transformations can still be handled without breaking the signature, and include things such as:
+
+- Use, addition, or removal of leading or trailing whitespace in a field value.
+- Use, addition, or removal of `obs-fold` in field values ({{Section 5.2 of HTTP1}}).
 
 We can identify these types of transformations as ones that should not prevent signature verification, even when performed on message components covered by the signature. Additionally, all changes to components not covered by the signature should not prevent signature verification.
 
 Some examples of these kinds of transformations, and the effect they have on the message signature, are found in {{example-transform}}.
+
+Other transformations, such as parsing and re-serializing the field values of a covered component or changing the value of a derived component, can cause a signature to no longer validate against a target message. Applications of this specification need to take care to ensure that the transformations expected by the application are adequately handled by the choice of covered components.
 
 ## Application of HTTP Message Signatures {#application}
 
@@ -261,7 +266,7 @@ If the correctly combined value is not directly available for a given field by a
 
 1. Create an ordered list of the field values of each instance of the field in the message, in the order that they occur (or will occur) in the message.
 2. Strip leading and trailing whitespace from each item in the list. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
-3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification which do not allow internal line folding.
+3. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to HTTP/1.1 and does not apply to other versions of the HTTP specification which do not allow internal line folding.
 4. Concatenate the list of values together with a single comma (",") and a single space (" ") between each item.
 
 The resulting string is the component value for the field.
