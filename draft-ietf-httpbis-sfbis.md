@@ -195,7 +195,7 @@ Note that because the definition of a Strutured Field references a specific RFC 
 
 However, this document is designed to be backwards-compatible with RFC 8941; a parser that implements the requirements here can also parse valid Structured Fields whose definitions reference RFC 8941.
 
-In particular, the extensions available for use in a field are limited to the types allowed by that field's definition, which cannot exceed those defined by the Structured Fields specification it references.
+Also note that this limitation also applies to future extensions to a field; for example, a field that is defined with reference to RFC 8941 cannot use the Date type, because some recipients might still be using an RFC 8941 parser to process it.
 
 
 # Structured Data Types {#types}
