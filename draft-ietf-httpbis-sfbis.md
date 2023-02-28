@@ -687,7 +687,7 @@ Example-String: "foo
 Example-String: bar"
 ~~~
 
-If parsing fails -- including when calling another algorithm -- the entire field value MUST be ignored (i.e., treated as if the field were not present in the section), unless the field definition specifies another behavior. It is RECOMMENDED that fields not modify this requirement, as it enhances interoperability and safety.
+If parsing fails -- including when calling another algorithm -- either the entire field value MUST be ignored (i.e., treated as if the field were not present in the section), or alternatively the complete HTTP message MUST be treated as malformed. This is intentionally strict to improve interoperability and safety, and field specifications that use Structured Fields are not allowed to loosen this requirement.
 
 Note that this requirement does not apply to an implementation that is not parsing the field; for example, an intermediary is not required to strip a failing field from a message before forwarding it.
 
