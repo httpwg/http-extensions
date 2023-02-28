@@ -1385,7 +1385,7 @@ An HTTP message signature MUST use both Signature-Input and Signature fields and
 
 ## The Signature-Input HTTP Field {#signature-input-header}
 
-The Signature-Input field is a Dictionary structured field (defined in {{Section 3.2 of STRUCTURED-FIELDS}}) containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's key is the label that uniquely identifies the message signature within the the HTTP message. The member's value is the serialization of the covered components Inner List plus all signature metadata parameters identified by the label.
+The Signature-Input field is a Dictionary structured field (defined in {{Section 3.2 of STRUCTURED-FIELDS}}) containing the metadata for one or more message signatures generated from components within the HTTP message. Each member describes a single message signature. The member's key is the label that uniquely identifies the message signature within the HTTP message. The member's value is the serialization of the covered components Inner List plus all signature metadata parameters identified by the label.
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
@@ -1938,7 +1938,7 @@ If such failures are common within an application, the signer and verifier shoul
 
 ### Mismatch of Signature Parameters from Message {#security-mismatch}
 
-The verifier needs to make sure that the signed message components match those in the message itself. For example, the `@method` derived component requires that the value within the signature base be the same as the HTTP method used when presenting this message. This specification encourages this by requiring the verifier to derive the signature base from the message, but lazy cacheing or conveyance of a raw signature base to a processing subsystem could lead to downstream verifiers accepting a message that does not match the presented signature.
+The verifier needs to make sure that the signed message components match those in the message itself. For example, the `@method` derived component requires that the value within the signature base be the same as the HTTP method used when presenting this message. This specification encourages this by requiring the verifier to derive the signature base from the message, but lazy caching or conveyance of a raw signature base to a processing subsystem could lead to downstream verifiers accepting a message that does not match the presented signature.
 
 To counter this, the component that generates the signature base needs to be trusted by both the signer and verifier within a system.
 
