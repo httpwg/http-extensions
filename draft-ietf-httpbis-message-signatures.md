@@ -945,14 +945,14 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
   aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 Content-Length: 18
 Signature-Input: sig1=("@method" "@authority" "@path" \
-  "content-digest" "content-length" "content-type")\
+  "content-digest" "content-type" "content-length")\
   ;created=1618884475;keyid="test-key-rsa-pss"
-Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
-  RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkBIS1M8Br\
-  c8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpWINTEzpx\
-  jqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2Tr65+BXe\
-  TG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZElYyUKaAI\
-  jZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+Signature: sig1=:jy4OdKs6DfD7qkBy1G5ZIas30VDSFwL6HkuvNUeQNgIQLDUe3h\
+  ZDtju7+7UaMx0DAklmXFEqMBEfSZodrN7BZAjuKemxhDlC5pvTkdq227QtfsJjuOU\
+  aGAIVaW66/iis7JDfmQSOpbJlqURMBicdNGRf6yCDX7bE5sR5fP7mWvgk8P+SJfyV\
+  43Yvo63rD7QY3RV/EXysMFz3WuaqyRzEyZBv+rvkPUha5cjOEy/sgKvtxehvT4LZj\
+  mEN2qAkC18HRXgIjWbTCyscfV/G6A0WPzHFiX/nTNoWYpJ7cRxtz+t8bqcNgksdi0\
+  0ynArFxonWLzLwl3ok00se9JaZR82WPw==:
 
 {"hello": "world"}
 ~~~
@@ -976,17 +976,21 @@ NOTE: '\' line wrapping per RFC 8792
 "@status": 503
 "content-length": 62
 "content-type": application/json
-"signature";req;key="sig1": :LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziC\
-  LuD8r5MW9S0RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY\
-  /UkBIS1M8Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE\
-  3IpWINTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9Hd\
-  bD2Tr65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3\
-  LZElYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
-"@authority";req: example.com
+"signature";req;key="sig1": :jy4OdKs6DfD7qkBy1G5ZIas30VDSFwL6HkuvNU\
+  eQNgIQLDUe3hZDtju7+7UaMx0DAklmXFEqMBEfSZodrN7BZAjuKemxhDlC5pvTkdq\
+  227QtfsJjuOUaGAIVaW66/iis7JDfmQSOpbJlqURMBicdNGRf6yCDX7bE5sR5fP7m\
+  Wvgk8P+SJfyV43Yvo63rD7QY3RV/EXysMFz3WuaqyRzEyZBv+rvkPUha5cjOEy/sg\
+  KvtxehvT4LZjmEN2qAkC18HRXgIjWbTCyscfV/G6A0WPzHFiX/nTNoWYpJ7cRxtz+\
+  t8bqcNgksdi00ynArFxonWLzLwl3ok00se9JaZR82WPw==:
+"signature-input";req;key="sig1": ("@method" "@authority" "@path" \
+  "content-digest" "content-type" "content-length")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
+"@authority";req: origin.host.internal.example
 "@method";req: POST
 "@signature-params": ("@status" "content-length" "content-type" \
-  "signature";req;key="sig1" "@authority";req "@method";req)\
-  ;created=1618884479;keyid="test-key-ecc-p256"
+  "signature";req;key="sig1" "signature-input";req;key="sig1" \
+  "@authority";req "@method";req);created=1618884479\
+  ;keyid="test-key-ecc-p256"
 ~~~
 
 The signed response message is:
@@ -999,10 +1003,11 @@ Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
 Content-Length: 62
 Signature-Input: reqres=("@status" "content-length" "content-type" \
-  "signature";req;key="sig1" "@authority";req "@method";req)\
-  ;created=1618884479;keyid="test-key-ecc-p256"
-Signature: reqres=:mh17P4TbYYBmBwsXPT4nsyVzW4Rp9Fb8WcvnfqKCQLoMvzOB\
-  LD/n32tL/GPW6XE5GAS5bdsg1khK6lBzV1Cx/Q==:
+  "signature";req;key="sig1" "signature-input";req;key="sig1" \
+  "@authority";req "@method";req);created=1618884479\
+  ;keyid="test-key-ecc-p256"
+Signature: reqres=:vdftwlSGcKp/R+8/CjDZiQWhAskflyLsom7P4rF71GMsTBvj\
+  7FgV/3XGtGwPd+rlEhQtpa3+x68tWudBfdtYPw==:
 
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
@@ -1464,8 +1469,8 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
 Signature-Input: sig1=("@method" "@authority" "@path" \
   "content-digest" "content-type" "content-length")\
   ;created=1618884475;keyid="test-key-ecc-p256"
-Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
-  0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:
+Signature: sig1=:e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7lnpwaqMqn6\
+  83Cna7hyXF4rnpyACdJcOWFB3FSPVymw0fzA==:
 
 {"hello": "world"}
 ~~~
@@ -1486,8 +1491,8 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
 Signature-Input: sig1=("@method" "@authority" "@path" \
   "content-digest" "content-type" "content-length")\
   ;created=1618884475;keyid="test-key-ecc-p256"
-Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
-  0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:
+Signature: sig1=:e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7lnpwaqMqn6\
+  83Cna7hyXF4rnpyACdJcOWFB3FSPVymw0fzA==:
 
 {"hello": "world"}
 ~~~
@@ -1501,13 +1506,19 @@ The proxy identifies its own key and algorithm and, in this example, includes an
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-"signature";key="sig1": :hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4N\
-  p5iWmJSO0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:
+"signature";key="sig1": :e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7ln\
+  pwaqMqn683Cna7hyXF4rnpyACdJcOWFB3FSPVymw0fzA==:
+"signature-input";key="sig1": ("@method" "@authority" "@path" \
+  "content-digest" "content-type" "content-length")\
+  ;created=1618884475;keyid="test-key-ecc-p256"
 "@authority": origin.host.internal.example
+"@method": POST
+"@path": /foo
 "forwarded": for=192.0.2.123
-"@signature-params": ("signature";key="sig1" "@authority" \
-  "forwarded");created=1618884480;keyid="test-key-rsa"\
-  ;alg="rsa-v1_5-sha256";expires=1618884540
+"@signature-params": ("signature";key="sig1" "signature-input"\
+  ;key="sig1" "@authority" "@method" "@path" "forwarded")\
+  ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"\
+  ;expires=1618884540
 ~~~
 
 And a signature output value of:
@@ -1515,12 +1526,12 @@ And a signature output value of:
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-YvYVO11F+Q+N4WZNeBdjFKluswwE3vQ4cTXpBwEiMz2hwu0J+wSJLRhHlIZ1N83epfn\
-KDxY9cbNaVlbtr2UOLkw5O5Q5M5yrjx3s1mgDOsV7fuItD6iDyNISCiKRuevl+M+TyY\
-Bo10ubG83As5CeeoUdmrtI4G6QX7RqEeX0Xj/CYofHljr/dVzARxskjHEQbTztYVg4W\
-D+LWo1zjx9w5fw26tsOMagfXLpDb4zb4/lgpgyNKoXFwG7c89KId5q+0BC+kryWuA35\
-ZcQGaRPAz/NqzeKq/c7p7b/fmHS71fy1jOaFgWFmD+Z77bJLO8AVKuF0y2fpL3KUYHy\
-ITQHOsA==
+V++11u29ZWM1EbQfEx35tnzJVZr8kcoTeuuSCKkdU5J8xr+lb1Ofz7KuvxxZAkMtTZa\
+4uCdZNxRI+JInYxgc3wUq3duvaugtjmYRe7odUHrEmWKX7m1OwR/Q8JoOxSSPcAdtV1\
+knAHXtFCFMdnY3JT8qfnH2yi1VNy65XWCXw4eeK+yxtoE3DfhtIyzZbmjhcFfXSmibY\
+yJQgIMqagEY/wEsVA2gV+5AE7xFdUrInSGVNVcw86w9J/stKYC+Deyl3qAzE4qgBN+9\
+VgkuLnUkk6U4W8vk7lSgaq27zUzO9cduybFtRaE9MBWGaGKEk3Bi+BdIMF06qEjMCnQ\
+S+8debQ==
 ~~~
 
 These values are added to the HTTP request message by the proxy. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under the label `proxy_sig`. The proxy uses the key `test-key-rsa` to create its signature using the `rsa-v1_5-sha256` signature algorithm, while the client's original signature was made using the key id of `test-key-rsa-pss` and an RSA PSS signature algorithm.
@@ -1539,22 +1550,22 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
 Signature-Input: sig1=("@method" "@authority" "@path" \
     "content-digest" "content-type" "content-length")\
     ;created=1618884475;keyid="test-key-ecc-p256", \
-  proxy_sig=("signature";key="sig1" "@authority" "forwarded")\
-    ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"\
-    ;expires=1618884540
-Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
-    0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:, \
-  proxy_sig=:YvYVO11F+Q+N4WZNeBdjFKluswwE3vQ4cTXpBwEiMz2hwu0J+wSJLR\
-    hHlIZ1N83epfnKDxY9cbNaVlbtr2UOLkw5O5Q5M5yrjx3s1mgDOsV7fuItD6iDy\
-    NISCiKRuevl+M+TyYBo10ubG83As5CeeoUdmrtI4G6QX7RqEeX0Xj/CYofHljr/\
-    dVzARxskjHEQbTztYVg4WD+LWo1zjx9w5fw26tsOMagfXLpDb4zb4/lgpgyNKoX\
-    FwG7c89KId5q+0BC+kryWuA35ZcQGaRPAz/NqzeKq/c7p7b/fmHS71fy1jOaFgW\
-    FmD+Z77bJLO8AVKuF0y2fpL3KUYHyITQHOsA==:
+  proxy_sig=("signature";key="sig1" "signature-input";key="sig1" \
+    "@authority" "@method" "@path" "forwarded");created=1618884480\
+    ;keyid="test-key-rsa";alg="rsa-v1_5-sha256";expires=1618884540
+Signature: sig1=:e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7lnpwaqMqn6\
+    83Cna7hyXF4rnpyACdJcOWFB3FSPVymw0fzA==:, \
+  proxy_sig=:V++11u29ZWM1EbQfEx35tnzJVZr8kcoTeuuSCKkdU5J8xr+lb1Ofz7\
+    KuvxxZAkMtTZa4uCdZNxRI+JInYxgc3wUq3duvaugtjmYRe7odUHrEmWKX7m1Ow\
+    R/Q8JoOxSSPcAdtV1knAHXtFCFMdnY3JT8qfnH2yi1VNy65XWCXw4eeK+yxtoE3\
+    DfhtIyzZbmjhcFfXSmibYyJQgIMqagEY/wEsVA2gV+5AE7xFdUrInSGVNVcw86w\
+    9J/stKYC+Deyl3qAzE4qgBN+9VgkuLnUkk6U4W8vk7lSgaq27zUzO9cduybFtRa\
+    E9MBWGaGKEk3Bi+BdIMF06qEjMCnQS+8debQ==:
 
 {"hello": "world"}
 ~~~
 
-The proxy's signature and the client's original signature can be verified independently for the same message, based on the needs of the application. Since the proxy's signature covers the client signature, the backend service fronted by the proxy can trust that the proxy has validated the incoming signature.
+The proxy's signature and the client's original signature can be verified independently for the same message, based on the needs of the application and the capabilities of the verifier to access the specific message. Since the proxy's signature covers the client signature, the backend service fronted by the proxy can trust that the proxy has validated the incoming signature in that context. Since the proxy's signature also covers additional components of the second message, the origin server can verify those values itself as well.
 
 # Requesting Signatures {#request-signature}
 
