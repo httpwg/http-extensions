@@ -91,6 +91,30 @@ informative:
     CLIENT-CERT: I-D.ietf-httpbis-client-cert-field
     DIGEST: I-D.ietf-httpbis-digest-headers
     COOKIE: RFC6265
+    JACKSON2019:
+        target: https://dennis-jackson.uk/assets/pdfs/signatures.pdf
+        title: "Seems Legit: Automated Analysis of Subtle Attacks on Protocols that Use Signatures"
+        date: November, 2019
+        author:
+        -
+            name: Dennis Jackson
+            ins: D. Jackson
+            org: University of Oxford
+            country: UK
+        -
+            name: Cas Cremers
+            ins: C. Cremers
+            org: CISPA Helmholtz Center for Information Security
+            country: Germany
+        -
+            name: Katriel Cohn-Gordon
+            ins: K. Cohn-Gordon
+            org: Independent Scholar
+        -
+            name: Ralf Sasse
+            ins: R. Sasse
+            org: Department of Computer Science, ETH Zurich
+            country: Switzerland
 
 entity:
   SELF: "RFC nnnn"
@@ -944,7 +968,7 @@ Content-Length: 62
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
-To cryptographically link the response to the request, the server signs the response with its own key and includes the method, authority, and the signature value `sig1` from the request in the covered components of the response. The signature base for this example is:
+To cryptographically link the response to the request, the server signs the response with its own key and includes the method, authority, and the signature and signature input labeled `sig1` from the request in the covered components of the response. The signature base for this example is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -983,7 +1007,7 @@ Signature: reqres=:mh17P4TbYYBmBwsXPT4nsyVzW4Rp9Fb8WcvnfqKCQLoMvzOB\
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
-Since the request's signature value itself is not repeated in the response, the requester MUST keep the original signature value around long enough to validate the signature of the response that uses this component identifier.
+Since the signature component values from the request are not repeated in the response, the requester MUST keep the original message component values around long enough to validate the signature of the response that uses this component identifier. In most cases, this means the requester needs to keep the original request message around, since the signer could choose to include any portions of the request in its response, according to the needs of the application. Signing the signature value of the request alone does not provide sufficient coverage in most cases, as discussed in {{security-sign-signature}}.
 
 Note that the ECDSA algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
 
@@ -1469,7 +1493,9 @@ Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
 ~~~
 
 While the proxy is in a position to validate the client's signature, the changes the proxy makes to the message will invalidate the existing signature when the message is seen by the origin server. While it is possible for the origin server to have additional information in its signature context to account for the change in authority, this practice requires additional configuration and extra care (see further discussion in {{security-context-multiple-signatures}}). To counter this, the proxy adds its own signature over the new message before passing it along. The proxy includes the new `@authority` derived component and the Forwarded header, which it added to the message.
-The proxy's signature also includes the client's signature value from the original message in its covered components, as a dictionary field member under the label `sig1`. Note that since the client's signature already covers the client's Signature-Input value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. While the origin server may not be able to directly verify this original signature, it can verify that the proxy has vouched for the signature's validity.
+The proxy's signature also includes the client's signature value and signature input from the original message in its covered components, as dictionary field members under the label `sig1`. The proxy can also sign any unchanged components from the original message, such as the `@method`, `@path`, and `@query` in this example, even if those components were covered by the original signature. See the discussion in {{security-sign-signature}} for more information about signing signature values.
+
+While the origin server may not be able to directly verify this original signature, it can verify that the proxy has vouched for the signature's validity.
 The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
 
 ~~~
@@ -1927,6 +1953,38 @@ Some cryptographic primitives such as RSA PSS and ECDSA have non-deterministic o
 Applications of this specification need to protect against key specification downgrade attacks. For example, the same RSA key can be used for both RSA-PSS and RSA v1.5 signatures. If an application expects a key to only be used with RSA-PSS, it needs to reject signatures for that key using the weaker RSA 1.5 specification.
 
 Another example of a downgrade attack occurs when an asymmetric algorithm is expected, such as RSA-PSS, but an attacker substitutes a signature using symmetric algorithm, such as HMAC. A naive verifier implementation could use the value of the public RSA key as the input to the HMAC verification function. Since the public key is known to the attacker, this would allow the attacker to create a valid HMAC signature against this known key. To prevent this, the verifier needs to ensure that both the key material and the algorithm are appropriate for the usage in question. Additionally, while this specification does allow runtime specification of the algorithm using the `alg` signature parameter, applications are encouraged to use other mechanisms such as static configuration or higher protocol-level algorithm specification instead, preventing an attacker from substituting the algorithm specified.
+
+
+### Signing Signature Values {#security-sign-signature}
+
+When applying [request-response binding](#content-request-response) or [multiple signatures](#signature-multiple) to a message, it is possible to sign the value of an existing Signature field, thereby covering the bytes of the existing signature output in the new signature's value. While it would seem that this practice would transitively cover the components under the original signature in a verifiable fashion, the attacks described in {{JACKSON2019}} can be used to impersonate a signature output value on an unrelated message.
+
+In this example, Alice intends to send a signed request to Bob, and Bob wants to provide a signed response to Alice that includes a cryptographic proof that Bob is responding to Alice's incoming message. Mallory wants to intercept this traffic and replace Alice's message with her own, without Alice being aware that the interception has taken place.
+
+
+1. Alice creates a message, `Req_A` and applies a signature `Sig_A` using her private key `Key_A_Sign`.
+
+2. Alice believes she is sending `Req_A` to Bob.
+
+3. Mallory intercepts `Req_A` and reads the value `Sig_A` from this message.
+
+4. Mallory generates a different message `Req_M` to send to Bob instead.
+
+5. Mallory crafts a signing key `Key_M_Sign` such that she can create a valid signature `Sig_M` over her request `Req_M` using this key, but the byte value of `Sig_M` exactly equals that of `Sig_A`.
+
+6. Mallory sends `Req_M` with `Sig_M` to Bob.
+
+7. Bob validates `Sig_M` against Mallory's verification key, `Key_M_Verify`. At no time does Bob think that he's responding to Alice.
+
+8. Bob responds with response message `Res_B` to `Req_M` and creates signature `Sig_B` over this message using his key, `Key_B_Sign`. Bob includes the value of `Sig_M` under `Sig_B`'s covered components, but nothing elese from the request message.
+
+9. Mallory receives the response `Res_B` from Bob, including the signature `Sig_B` value. Mallory replays this response to Alice.
+
+10. Alice reads `Res_B` from Mallory and verifies `Sig_B` using Bob's verification key, `Key_B_Verify`. Alice includes the bytes of her original signature `Sig_A` in the signature base, and the signature verifies.
+
+11. Alice is led to believe that Bob has responded to her message, and believes she has cryptographic proof of this happening, but in fact Bob responded to Mallory's malicious request and Alice is none the wiser.
+
+To mitigate this, Bob can sign more portions of the request message than just the Signature field, in order to more fully differentiate Alice's message from Mallory's. Applications using this feature, particularly for non-repudiation purposes, can stipulate that any components required in the original signature also be covered separately in the second signature. For signed messages, requiring coverage of the corresponding Signature-Input field of the first signature ensures that unique items such as nonces and timestamps are also covered sufficiently by the second signature.
 
 ## Matching Covered Components to Message
 
