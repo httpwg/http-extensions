@@ -221,6 +221,7 @@ If the request completes successfully but the entire upload is not yet complete 
 :authority: example.com
 :path: /upload
 upload-draft-interop-version: 3
+upload-incomplete: ?0
 content-length: 100
 [content (100 bytes)]
 
