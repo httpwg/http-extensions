@@ -447,6 +447,10 @@ Specification: This document
 
 --- back
 
+## Since draft-ietf-httpbis-resumable-upload-01
+
+None yet
+
 ## Since draft-ietf-httpbis-resumable-upload-00
 
 * Remove Upload-Token and instead use Server-generated upload URL for upload identification.
