@@ -577,11 +577,12 @@ processing of invalid data.
 Not every hashing algorithm is suitable for use in the trailer section, some may require to pre-process
 the whole payload before sending a message (e.g. see {{?I-D.thomson-http-mice}}).
 
-## Usage with Encryption
+## Variations Within Content Encoding
 
-The checksum of an encrypted payload can change between different messages
-depending on the encryption algorithm used; in those cases its value could not be used to provide
-a proof of integrity "at rest" unless the whole (e.g. encoded) content is persisted.
+Content coding mechanisms can support different encoding parameters, meaning that the same input content can produce different outputs. For example, GZIP supports mulitple compression levels. Such encoding parameters are generally not communicated as representation metadata, for instance different compression levels would all use the same "Content-Encoding: gzip" field. Other examples include where encoding relies on nonces or timestamps, such as the aes128gcm content coding defined {{?RFC8188}}.
+
+Since it is possible for there to be variation within content coding, the checksum conveyed by the integrity field cannot be used to provide a proof of integrity "at rest"
+unless the whole (e.g. encoded) content is persisted.
 
 ## Algorithm Agility {#sec-agility}
 
