@@ -651,7 +651,7 @@ new registrations is provided in {{algorithms}}.
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
-## Deprecate the Hypertext Transfer Protocol (HTTP) Digest Algorithm Values
+## Deprecate the Hypertext Transfer Protocol (HTTP) Digest Algorithm Values Registry
 
 IANA is requested to deprecate the "Hypertext Transfer Protocol (HTTP) Digest
 Algorithm Values" registry at
