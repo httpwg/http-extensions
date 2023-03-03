@@ -256,8 +256,9 @@ where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}),
-  that contains the output of the digest calculation.
+* value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}), that
+  conveys an encoded version of the byte output produced by the digest
+  calculation.
 
 For example:
 
@@ -318,8 +319,8 @@ STRUCTURED-FIELDS}}) where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* value is a `Byte Sequence` that
-  contains the output of the digest calculation.
+* value is a `Byte Sequence`, that conveys an encoded version of the byte
+  output produced by the digest calculation.
 
 For example:
 
@@ -1291,6 +1292,35 @@ Content-Type: application/problem+json
 ~~~
 {: title="Response advertising the supported algorithms"}
 
+# Sample Digest Values
+
+This section shows examples of digest values for different hashing algorithms.
+The input value is the JSON object `{"hello": "world"}`. The digest values are
+each produced by running the relevant hashing algorithm over the input and
+running the output bytes through `Byte Sequence` serialization; see {{Section
+4.1.8 of STRUCTURED-FIELDS}}.
+
+~~~
+NOTE: '\' line wrapping per RFC 8792
+
+sha-512 -   :WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+            iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+
+sha-256 -   :X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+
+md5 -       :Sd/dVLAcvNLSq16eXua5uQ==:
+
+sha -       :07CavjDP4u3/TungoUHJO/Wzr4c=:
+
+unixsum -   :GQU=:
+
+unixcksum - :7zsHAA==:
+
+adler -     :OZkGFw==:
+
+crc32c -    :Q3lHIA==:
+~~~
+
 
 # Migrating from RFC 3230
 
@@ -1315,6 +1345,11 @@ see {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
 RFC 3230 could never communicate
 the digest of HTTP message content in the Digest field;
 Content-Digest now provides that capability.
+
+RFC 3230 allowed algorithms to define their output encoding format for use with
+the Digest field. This resulted in a mixed of formats such as base64, hex or
+decimal. By virtue of using Structured fields, Content-Digest and Repr-Digest
+use only a single encoding format. Further explanation and examples are provided in {{sample-digest-values}}.
 
 # Acknowledgements
 {:numbered="false"}
