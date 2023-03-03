@@ -221,7 +221,8 @@ have names that more clearly articulate the intended usages.
 {::boilerplate bcp14-tagged}
 
 This document uses the Augmented BNF defined in [RFC5234] and updated by
-[RFC7405].
+[RFC7405]. This includes the rules: CR (carriage
+return), LF (line feed), and CRLF (CR LF).
 
 This document uses the following terminology from {{Section 3 of
 !STRUCTURED-FIELDS=RFC8941}} to specify syntax and parsing:
@@ -266,8 +267,8 @@ For example:
 NOTE: '\' line wrapping per RFC 8792
 
 Content-Digest: \
-  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
-  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
 ~~~
 
 The `Dictionary` type can be used, for example, to attach multiple digests
@@ -279,9 +280,9 @@ support transitions away from weaker algorithms (see {{sec-agility}}).
 NOTE: '\' line wrapping per RFC 8792
 
 Content-Digest: \
-  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
-  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
-  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:,\
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
 ~~~
 
 A recipient MAY ignore any or all digests.
@@ -328,8 +329,8 @@ For example:
 NOTE: '\' line wrapping per RFC 8792
 
 Repr-Digest: \
-  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
-  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
 ~~~
 
 The `Dictionary` type can be used, for example, to attach multiple digests
@@ -341,9 +342,9 @@ support transitions away from weaker algorithms (see {{sec-agility}}).
 NOTE: '\' line wrapping per RFC 8792
 
 Repr-Digest: \
-  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
-  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
-  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:,\
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
 ~~~
 
 A recipient MAY ignore any or all digests.
@@ -806,7 +807,7 @@ While examples can include both fields,
 
 In this example, the message content conveys complete representation data.
 This means that in the response, `Content-Digest` and `Repr-Digest`
-are both computed over the JSON object `{"hello": "world"}`, and thus have the same value.
+are both computed over the JSON object `{"hello": "world"}` followed by an LF, and thus have the same value.
 
 ~~~ http-message
 GET /items/123 HTTP/1.1
@@ -820,10 +821,11 @@ NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 200 OK
 Content-Type: application/json
+Content-Length: 19
 Content-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 
 {"hello": "world"}
 ~~~
@@ -836,7 +838,7 @@ of a resource.
 
 The response `Content-Digest` field-value is computed on empty content.
 `Repr-Digest` is calculated over the JSON object
-`{"hello": "world"}`, which is not shown because there is no payload
+`{"hello": "world"}` followed by an LF, which is not shown because there is no payload
 data.
 
 
@@ -855,7 +857,7 @@ Content-Type: application/json
 Content-Digest: \
   sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:
 Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 
 ~~~
 {: title="Response with both Content-Digest and Digest; empty content"}
@@ -868,7 +870,7 @@ partial content.
 ~~~ http-message
 GET /items/123 HTTP/1.1
 Host: foo.example
-Range: bytes=1-7
+Range: bytes=10-18
 
 ~~~
 {: title="Request for partial content"}
@@ -878,37 +880,37 @@ NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 206 Partial Content
 Content-Type: application/json
-Content-Range: bytes 1-7/18
+Content-Range: bytes 10-18/19
 Content-Digest: \
-  sha-256=:Wqdirjg/u3J688ejbUlApbjECpiUUtIwT8lY/z81Tno=:
+  sha-256=:jjcgBDWNAtbYUXI37CVG3gRuGOAjaaDRGpIUFsdyepQ=:
 Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 
-"hello"
+"world"}
 ~~~
 {: title="Partial response with both Content-Digest and Repr-Digest"}
 
 In the response message above, note that the
 `Repr-Digest` and `Content-Digests` are different.
 The `Repr-Digest` field-value is calculated across the entire JSON object
-`{"hello": "world"}`, and the field is
+`{"hello": "world"}` followed by an LF, and the field is
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
 Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 ~~~
 
-However, since the message content is constrained to bytes 1-7,
+However, since the message content is constrained to bytes 10-18,
 the `Content-Digest` field-value is calculated over the
-byte sequence  `"hello"`, thus resulting in
+sequence  `"world"}` followed by an LF, thus resulting in
 
 ~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
 Content-Digest: \
-  sha-256=:Wqdirjg/u3J688ejbUlApbjECpiUUtIwT8lY/z81Tno=:
+  sha-256=:jjcgBDWNAtbYUXI37CVG3gRuGOAjaaDRGpIUFsdyepQ=:
 ~~~
 
 ## Client and Server Provide Full Representation Data
@@ -932,7 +934,7 @@ Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
 Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=:
 
 {"hello": "world"}
 ~~~
@@ -945,20 +947,21 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Location: /items/123
 Content-Encoding: br
-Content-Length: 22
+Content-Length: 23
 Repr-Digest: \
-  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
+  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:
 
 8B 08 80 7B 22 68 65 6C 6C 6F
 22 3A 20 22 77 6F 72 6C 64 22
-7D 03
+7D 0A 03
 ~~~
 {: title="Response with Digest of encoded response"}
 
 
 ## Client Provides Full Representation Data, Server Provides No Representation Data
 
-The request `Repr-Digest` field-value is calculated on the enclosed content.
+The request `Repr-Digest` field-value is calculated on the enclosed content, which
+is the JSON object `{"hello": "world"}` followed by an LF
 
 The response `Repr-Digest` field-value
 depends on the representation metadata header fields, including
@@ -971,10 +974,10 @@ NOTE: '\' line wrapping per RFC 8792
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
-Content-Length: 18
+Content-Length: 19
 Accept-Encoding: br
 Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:
 
 {"hello": "world"}
 ~~~
@@ -984,7 +987,7 @@ Repr-Digest: \
 HTTP/1.1 204 No Content
 Content-Type: application/json
 Content-Encoding: br
-Repr-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
+Repr-Digest: sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:
 
 ~~~
 {: title="Empty response with Digest"}
@@ -1004,7 +1007,7 @@ Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
 Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:
 
 {"hello": "world"}
 ~~~
@@ -1018,22 +1021,24 @@ Content-Type: application/json
 Content-Encoding: br
 Content-Location: /items/123
 Repr-Digest: \
-  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:,\
-  sha-512=:pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE60jBCwnMPyA/\
-  s3NF3ZO5oIWA7lf8ukk+5KJzm3p5og==:
+  sha-256=:d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=:,\
+  sha-512=:db7fdBbgZMgX1Wb2MjA8zZj+rSNgfmDCEEXM8qLWfpfoNY0sCpHAzZbj\
+  09X1/7HAb7Od5Qfto4QpuBsFbUO3dQ==:
 
 8B 08 80 7B 22 68 65 6C 6C 6F
 22 3A 20 22 77 6F 72 6C 64 22
-7D 03
+7D 0A 03
 ~~~
 {: title="Response with Digest of Encoded Content"}
 
 ## POST Response does not Reference the Request URI {#post-not-request-uri}
 
-The request `Repr-Digest` field-value is computed on the enclosed representation (see
-{{state-changing-requests}}).
+The request `Repr-Digest` field-value is computed on the enclosed representation
+(see {{state-changing-requests}}), which is the JSON object `{"title": "New
+Title"}` followed by an LF.
 
-The representation enclosed in the response refers to the resource identified by
+The representation enclosed in the response is a multiline JSON object followed by an LF.
+It refers to the resource identified by
 `Content-Location` (see {{Section 6.4.2 of RFC9110}});
 an application can thus use `Repr-Digest` in association with the resource
 referenced by `Content-Location`.
@@ -1044,7 +1049,7 @@ Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
-Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 
 {"title": "New Title"}
 ~~~
@@ -1055,7 +1060,7 @@ HTTP/1.1 201 Created
 Content-Type: application/json
 Content-Location: /books/123
 Location: /books/123
-Repr-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
+Repr-Digest: sha-256=:uVSlinTTdQUwm2On4k8TJUikGN1bf/Ds8WPX4oe0h9I=:
 
 {
   "id": "123",
@@ -1067,10 +1072,12 @@ Repr-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
 ## POST Response Describes the Request Status {#post-referencing-status}
 
 The request `Repr-Digest` field-value is computed on the enclosed representation (see
-{{state-changing-requests}}).
+{{state-changing-requests}}), which is the JSON object `{"title": "New
+Title"}` followed by an LF.
 
 The representation enclosed in the response describes the status of the request,
-so `Repr-Digest` is computed on that enclosed representation.
+so `Repr-Digest` is computed on that enclosed representation. It is a multiline
+JSON object followed by an LF.
 
 Response `Repr-Digest` has no explicit relation with the resource referenced by
 `Location`.
@@ -1081,7 +1088,7 @@ Host: foo.example
 Content-Type: application/json
 Accept: application/json
 Accept-Encoding: identity
-Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 
 {"title": "New Title"}
 ~~~
@@ -1090,7 +1097,7 @@ Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 ~~~ http-message
 HTTP/1.1 201 Created
 Content-Type: application/json
-Repr-Digest: sha-256=:2LBp5RKZGpsSNf8BPXlXrX4Td4Tf5R5bZ9z7kdi5VvY=:
+Repr-Digest: sha-256=:yXIGDTN5VrfoyisKlXgRKUHHMs35SNtyC3szSz1dbO8=:
 Location: /books/123
 
 {
@@ -1109,13 +1116,12 @@ This case is analogous to a POST request where the target resource reflects the
 target URI.
 
 The PATCH request uses the `application/merge-patch+json` media type defined in
-{{?RFC7396}}.
-
-`Repr-Digest` is calculated on the enclosed payload, which corresponds to the patch
-document.
+{{?RFC7396}}. `Repr-Digest` is calculated on the enclosed payload, which corresponds to the
+patch document and is the JSON object `{"title": "New Title"}` followed by an
+LF.
 
 The response `Repr-Digest` field-value is computed on the complete representation of the patched
-resource.
+resource. It is a multiline JSON object followed by an LF.
 
 ~~~ http-message
 PATCH /books/123 HTTP/1.1
@@ -1123,7 +1129,7 @@ Host: foo.example
 Content-Type: application/merge-patch+json
 Accept: application/json
 Accept-Encoding: identity
-Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
+Repr-Digest: sha-256=:mEkdbO7Srd9LIOegftO0aBX+VPTVz7/CSHes2Z27gc4=:
 
 {"title": "New Title"}
 ~~~
@@ -1132,7 +1138,7 @@ Repr-Digest: sha-256=:bWopGGNiZtbVgHsG+I4knzfEJpmmmQHf7RHDXA3o1hQ=:
 ~~~ http-message
 HTTP/1.1 200 OK
 Content-Type: application/json
-Repr-Digest: sha-256=:yxOAqEeoj+reqygSIsLpT0LhumrNkIds5uLKtmdLyYE=:
+Repr-Digest: sha-256=:uVSlinTTdQUwm2On4k8TJUikGN1bf/Ds8WPX4oe0h9I=:
 
 {
   "id": "123",
@@ -1156,11 +1162,12 @@ and the server generates a 404 response with a body that describes the error in
 accordance with {{?RFC7807}}.
 
 The response `Repr-Digest` field-value is computed on this enclosed representation.
+It is a multiline JSON object followed by an LF.
 
 ~~~ http-message
 HTTP/1.1 404 Not Found
 Content-Type: application/problem+json
-Repr-Digest: sha-256=:KPqhVXAT25LLitV1w0O167unHmVQusu+fpxm65zAsvk=:
+Repr-Digest: sha-256=:EXB0S2VF2H7ijkAVJkH1Sm0pBho0iDZcvVUHHXTTZSA=:
 
 {
   "title": "Not Found",
@@ -1198,11 +1205,11 @@ Trailer: Digest
 {"hello"\r\n
 8\r\n
 : "world\r\n
-2\r\n
-"}\r\n
+3\r\n
+"}\n\r\n
 0\r\n
 Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:\r\n
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:\r\n
 
 ~~~
 {: title="Chunked Response with Digest"}
@@ -1243,7 +1250,7 @@ NOTE: '\' line wrapping per RFC 8792
 HTTP/1.1 200 OK
 Content-Type: application/json
 Repr-Digest: \
-  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+  sha-256=:RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg==:
 
 {"hello": "world"}
 ~~~
@@ -1269,8 +1276,8 @@ NOTE: '\' line wrapping per RFC 8792
 HTTP/1.1 200 OK
 Content-Type: application/json
 Repr-Digest: \
-  sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
-  iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+  sha-512=:YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP+pgk4vf2aCs\
+  yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
 
 {"hello": "world"}
 ~~~
@@ -1397,8 +1404,9 @@ and Erik Wilde.
 # Code Samples
 {:numbered="false" removeinrfc="true"}
 
-How can I generate and validate the `Repr-Digest` values shown in the examples
-throughout this document?
+How can I generate and validate the digest values, computed over the JSON object
+`{"hello": "world"}` followed by an LF, shown in the examples throughout this
+document?
 
 The following python3 code can be used to generate digests for JSON objects
 using SHA algorithms for a range of encodings. Note that these are formatted as
@@ -1411,7 +1419,7 @@ log = logging.getLogger()
 
 def encode_item(item, encoding=lambda x: x):
     indent = 2 if isinstance(item, dict) and len(item) > 1 else None
-    json_bytes = json.dumps(item, indent=indent).encode()
+    json_bytes = json.dumps(item, indent=indent).encode() + b'\n'
     return encoding(json_bytes)
 
 def digest_bytes(bytes_, algorithm=hashlib.sha256):
@@ -1429,22 +1437,23 @@ item = {"hello": "world"}
 print("Encoding | hashing algorithm | digest-value")
 print("Identity | sha256 |", digest(item))
 # Encoding | hashing algorithm | digest-value
-# Identity | sha256 | X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=
+# Identity | sha256 | RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=
 
 print("Encoding | hashing algorithm | digest-value")
 print("Brotli | sha256 |", digest(item, encoding=brotli.compress))
 # Encoding | hashing algorithm | digest-value
-# Brotli | sha256 | 4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=
+# Brotli | sha256 | d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=
 
 print("Encoding | hashing algorithm | digest-value")
 print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512))
 print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
                                     encoding=brotli.compress))
 # Encoding | hashing algorithm | digest-value
-# Identity | sha512 |b'WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm'
-#                     '+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew=='
-# Brotli | sha512 | b'pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE6'
-#                   '0jBCwnMPyA/s3NF3ZO5oIWA7lf8ukk+5KJzm3p5og=='
+# Identity | sha512 |b'YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP'
+#                     '+pgk4vf2aCsyRZOtw8MjkM7iw7yZ/WkppmM44T3qg=='
+
+# Brotli | sha512 | b'db7fdBbgZMgX1Wb2MjA8zZj+rSNgfmDCEEXM8qLWfpfoNY'
+#                    '0sCpHAzZbj09X1/7HAb7Od5Qfto4QpuBsFbUO3dQ=='
 
 ~~~
 
