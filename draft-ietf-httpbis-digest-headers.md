@@ -1452,10 +1452,12 @@ print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
 {:numbered="false" removeinrfc="true"}
 
 ## Since draft-ietf-httpbis-digest-headers-10
+{:numbered="false"}
 
 * Editorial or minor changes
 
 ## Since draft-ietf-httpbis-digest-headers-09
+{:numbered="false"}
 
 * Editorial or minor changes
 
