@@ -1319,8 +1319,8 @@ running the output bytes through `Byte Sequence` serialization; see {{Section
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-sha-512 -   :WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
-            iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+sha-512 -   :WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+\
+            AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 
 sha-256 -   :X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
