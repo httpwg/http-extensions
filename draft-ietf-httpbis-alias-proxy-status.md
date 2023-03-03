@@ -109,6 +109,9 @@ does not apply in all situations. Clients can use the information in this parame
 how to use the connection established through the proxy, but need to gracefully handle situations
 in which this parameter is not present.
 
+The proxy MAY send the empty string ("") as the value of `next-hop-aliases` to indicate that
+no CNAME records were encountered when resolving the next hop's name.
+
 # Security Considerations {#sec-considerations}
 
 The `next-hop-aliases` parameter does not include any DNSSEC information or imply that DNSSEC was used.

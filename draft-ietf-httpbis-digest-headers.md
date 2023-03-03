@@ -256,8 +256,9 @@ where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}),
-  that contains the output of the digest calculation.
+* value is a `Byte Sequence` ({{Section 3.3.5 of STRUCTURED-FIELDS}}), that
+  conveys an encoded version of the byte output produced by the digest
+  calculation.
 
 For example:
 
@@ -318,8 +319,8 @@ STRUCTURED-FIELDS}}) where each:
 
 * key conveys the hashing algorithm (see {{algorithms}})
   used to compute the digest;
-* value is a `Byte Sequence` that
-  contains the output of the digest calculation.
+* value is a `Byte Sequence`, that conveys an encoded version of the byte
+  output produced by the digest calculation.
 
 For example:
 
@@ -871,7 +872,10 @@ The `Repr-Digest` field-value is calculated across the entire JSON object
 `{"hello": "world"}`, and the field is
 
 ~~~ http-message
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+NOTE: '\' line wrapping per RFC 8792
+
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 ~~~
 
 However, since the message content is constrained to bytes 1-7,
@@ -895,29 +899,37 @@ The response includes a `Content-Encoding: br` that indicates the selected
 representation is Brotli-encoded. The `Repr-Digest` field-value is therefore
 different compared to the request.
 
-For presentation purposes, the response body is displayed as a Base64-encoded string because it contains
-non-printable characters.
+For presentation purposes, the response body is displayed as a sequence of
+hex-encoded bytes because it contains non-printable characters.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
 {: title="PUT Request with Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Location: /items/123
 Content-Encoding: br
 Content-Length: 22
-Repr-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
+Repr-Digest: \
+  sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
-iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
+0x8B0x080x800x7B0x220x680x650x6C0x6C0x6F\
+0x220x3A0x200x220x770x6F0x720x6C0x640x22\
+0x7D0x03
 ~~~
 {: title="Response with Digest of encoded response"}
 
@@ -932,12 +944,15 @@ depends on the representation metadata header fields, including
 
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Content-Length: 18
 Accept-Encoding: br
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -956,15 +971,18 @@ Repr-Digest: sha-256=:4REjxQ4yrqUVicfSKYNO/cF9zNj5ANbzgDZt3/h3Qxo=:
 
 The response contains two digest values using different algorithms.
 
-As the response body contains non-printable characters, it is displayed as a
-base64-encoded string.
+For presentation purposes, the response body is displayed as a sequence of
+hex-encoded bytes because it contains non-printable characters.
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 PUT /items/123 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Accept-Encoding: br
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -982,7 +1000,9 @@ Repr-Digest: \
   sha-512=:pxo7aYzcGI88pnDnoSmAnaOEVys0MABhgvHY9+VI+ElE60jBCwnMPyA/\
   s3NF3ZO5oIWA7lf8ukk+5KJzm3p5og==:
 
-iwiAeyJoZWxsbyI6ICJ3b3JsZCJ9Aw==
+0x8B0x080x800x7B0x220x680x650x6C0x6C0x6F\
+0x220x3A0x200x220x770x6F0x720x6C0x640x22\
+0x7D0x03
 ~~~
 {: title="Response with Digest of Encoded Content"}
 
@@ -1145,6 +1165,8 @@ Host: foo.example
 {: title="GET Request"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
 Transfer-Encoding: chunked
@@ -1157,7 +1179,8 @@ Trailer: Digest
 2\r\n
 "}\r\n
 0\r\n
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:\r\n
+Repr-Digest:
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:\r\n
 
 ~~~
 {: title="Chunked Response with Digest"}
@@ -1193,9 +1216,12 @@ Want-Repr-Digest: sha-256=3, sha=10
 {: title="GET Request with Want-Repr-Digest"}
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 200 OK
 Content-Type: application/json
-Repr-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+Repr-Digest: \
+  sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 
 {"hello": "world"}
 ~~~
@@ -1266,6 +1292,35 @@ Content-Type: application/problem+json
 ~~~
 {: title="Response advertising the supported algorithms"}
 
+# Sample Digest Values
+
+This section shows examples of digest values for different hashing algorithms.
+The input value is the JSON object `{"hello": "world"}`. The digest values are
+each produced by running the relevant hashing algorithm over the input and
+running the output bytes through `Byte Sequence` serialization; see {{Section
+4.1.8 of STRUCTURED-FIELDS}}.
+
+~~~
+NOTE: '\' line wrapping per RFC 8792
+
+sha-512 -   :WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+TaPm+AbwAgBWnrI\
+            iYllu7BNNyealdVLvRwEmTHWXvJwew==:
+
+sha-256 -   :X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
+
+md5 -       :Sd/dVLAcvNLSq16eXua5uQ==:
+
+sha -       :07CavjDP4u3/TungoUHJO/Wzr4c=:
+
+unixsum -   :GQU=:
+
+unixcksum - :7zsHAA==:
+
+adler -     :OZkGFw==:
+
+crc32c -    :Q3lHIA==:
+~~~
+
 
 # Migrating from RFC 3230
 
@@ -1290,6 +1345,11 @@ see {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
 RFC 3230 could never communicate
 the digest of HTTP message content in the Digest field;
 Content-Digest now provides that capability.
+
+RFC 3230 allowed algorithms to define their output encoding format for use with
+the Digest field. This resulted in a mixed of formats such as base64, hex or
+decimal. By virtue of using Structured fields, Content-Digest and Repr-Digest
+use only a single encoding format. Further explanation and examples are provided in {{sample-digest-values}}.
 
 # Acknowledgements
 {:numbered="false"}
