@@ -85,6 +85,7 @@ normative:
     ABNF: RFC5234
 informative:
     RFC7239:
+    JWS: RFC7515
     RFC7807:
     RFC8792:
     BCP195:
@@ -115,6 +116,7 @@ informative:
             ins: R. Sasse
             org: Department of Computer Science, ETH Zurich
             country: Switzerland
+    TLS: RFC8446
 
 entity:
   SELF: "RFC nnnn"
@@ -129,17 +131,21 @@ This document also describes a means for requesting that a signature be applied 
 # Introduction {#intro}
 
 Message integrity and authenticity are security properties that are critical to the secure operation of many HTTP applications.
-Application developers typically rely on the transport layer to provide these properties, by operating their application over {{?TLS=RFC8446}}. However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance). In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application. Additionally, some operating environments present obstacles that make it impractical to use TLS, or to use features necessary to provide message authenticity. Furthermore, some applications require the binding of an application-level key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
+Application developers typically rely on the transport layer to provide these properties, by operating their application over {{TLS}}. However, TLS only guarantees these properties over a single TLS connection, and the path between client and application may be composed of multiple independent TLS connections (for example, if the application is hosted behind a TLS-terminating gateway or if the client is behind a TLS Inspection appliance). In such cases, TLS cannot guarantee end-to-end message integrity or authenticity between the client and application. Additionally, some operating environments present obstacles that make it impractical to use TLS (such as presentation of client certificates from a browser), or to use features necessary to provide message authenticity. Furthermore, some applications require the binding of a higher-level application-specific key to the HTTP message, separate from any TLS certificates in use. Consequently, while TLS can meet message integrity and authenticity needs for many HTTP-based applications, it is not a universal solution.
 
-This document defines a mechanism for providing end-to-end integrity and authenticity for components of an HTTP message. The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only the components of the message that are meaningful and appropriate for the application. Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
+Additionally, many applications need to be able to generate and verify signatures despite incomplete knowledge of the HTTP message as seen on the wire, due to the use of libraries, proxies, or application frameworks that alter or hide portions of the message from the application at the time of signing or verification. These applications need a means to protect the parts of the message that are most relevant to the application without having to violate layering and abstraction.
+
+Finally, object-based signature mechanisms such as {{JWS}} require the intact conveyance of the exact information that was signed. When applying such technologies to an HTTP message, elements of the HTTP message need to be duplicated in the object payload either directly or through inclusion of a hash. This practice introduces complexity since the repeated information needs to be carefully checked for consistency when the signature is verified.
+
+This document defines a mechanism for providing end-to-end integrity and authenticity for components of an HTTP message by use of a detached signature. The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only the components of the message that are meaningful and appropriate for the application. Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
 
 The signing mechanism described in this document consists of three parts:
 
-- A common nomenclature and canonicalization rule set for the different protocol elements and other components of HTTP messages, used to create the signature base.
-- Algorithms for generating and verifying signatures over HTTP message components using this signature base through application of cryptographic primitives.
-- A mechanism for attaching a signature and related metadata to an HTTP message, and for parsing attached signatures and metadata from HTTP messages. To facilitate this, this document defines the "Signature-Input" and "Signature" fields.
+- A common nomenclature and canonicalization rule set for the different protocol elements and other components of HTTP messages, used to create the signature base. ({{covered-components}})
+- Algorithms for generating and verifying signatures over HTTP message components using this signature base through application of cryptographic primitives. ({{message-signatures}})
+- A mechanism for attaching a signature and related metadata to an HTTP message, and for parsing attached signatures and metadata from HTTP messages. To facilitate this, this document defines the "Signature-Input" and "Signature" fields. ({{attach-signature}})
 
-This document also provides a mechanism for negotiation the use of signatures in one or more subsequent messages via the "Accept-Signature" field. This optional negotiation mechanism can be used along with opportunistic or application-driven message signatures by either party.
+This document also provides a mechanism for negotiation the use of signatures in one or more subsequent messages via the "Accept-Signature" field ({{request-signature}}). This optional negotiation mechanism can be used along with opportunistic or application-driven message signatures by either party.
 
 ## Conventions and Terminology {#definitions}
 
@@ -254,7 +260,7 @@ HTTP Message Signatures are designed to be a general-purpose security mechanism 
 - A means of retrieving the key material used to verify the signature. An application will usually use the `keyid` parameter of the signature parameters ({{signature-params}}) and define rules for resolving a key from there, though the appropriate key could be known from other means such as pre-registration of a signer's key.
 - The set of allowable signature algorithms to be used by signers and accepted by verifiers.
 - A means of determining that the signature algorithm used to verify the signature is appropriate for the key material and context of the message. For example, the process could use the `alg` parameter of the signature parameters ({{signature-params}}) to state the algorithm explicitly, derive the algorithm from the key material, or use some pre-configured algorithm agreed upon by the signer and verifier.
-- A means of determining that a given key and algorithm presented in the request are appropriate for the request being made. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
+- A means of determining that a given key and algorithm used for a signature are appropriate for the context of the message. For example, a server expecting only ECDSA signatures should know to reject any RSA signatures, or a server expecting asymmetric cryptography should know to reject any symmetric cryptography.
 - A means of determining the context for derivation of message components from an HTTP message and its application context. While this is normally the target HTTP message itself, the context could include additional information known to the application, such as an external host name.
 - The error messages and codes that are returned from the verifier to the signer when the signature is invalid, the key material is inappropriate, the validity time window is out of specification, a component value cannot be calculated, or any other errors in the signature verification process. For example, if a signature is being used as an authentication mechanism, an HTTP status code of 401 Unauthorized or 403 Forbidden could be appropriate. If the response is from an HTTP API, a response with an HTTP status code of 400 Bad Request could include details as described in {{RFC7807}}, such as an indicator that the wrong key material was used.
 
@@ -270,7 +276,7 @@ The signature context for deriving these values MUST be accessible to both the s
 
 A component identifier is composed of a component name and any parameters associated with that name. Each component name is either an HTTP field name ({{http-fields}}) or a registered derived component name ({{derived-components}}). The possible parameters for a component identifier are dependent on the component identifier, and the HTTP Signature Component Parameters registry cataloging all possible parameters is defined in {{component-param-registry}}.
 
-Within a single list of covered components, each component identifier MUST occur only once. One component identifier is distinct from another if either the component name or its parameters differ. Multiple component identifiers having the same component name MAY be included if they have parameters that make them distinct. The order of parameters MUST be preserved when processing a component identifier (such as when parsing during verification), but the order of parameters is not significant when comparing two component identifiers for equality. That is to say, `"foo";bar;baz` cannot be in the same message as `"foo";baz;bar`, since these two component identifiers are equivalent, but a system processing one form is not allowed to transform it into the other form.
+Within a single list of covered components, each component identifier MUST occur only once. One component identifier is distinct from another if the component name differs, or if any of the parameters differ for the same component name. Multiple component identifiers having the same component name MAY be included if they have parameters that make them distinct, such as `"foo";bar` and `"foo";baz`. The order of parameters MUST be preserved when processing a component identifier (such as when parsing during verification), but the order of parameters is not significant when comparing two component identifiers for equality checks. That is to say, `"foo";bar;baz` cannot be in the same message as `"foo";baz;bar`, since these two component identifiers are equivalent, but a system processing one form is not allowed to transform it into the other form.
 
 The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters. Some HTTP message components can undergo transformations that change the bitwise value without altering the meaning of the component's value (for example, when combining field values). Message component values must therefore be canonicalized before they are signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
 
@@ -282,7 +288,7 @@ The component name for an HTTP field is the lowercased form of its field name as
 
 The component value for an HTTP field is the field value for the named field as defined in {{Section 5.5 of HTTP}}. The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below.
 
-Unless overridden by additional parameters and rules, HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}} to create the component value. Specifically, HTTP fields sent as multiple fields MUST be combined using a single comma (",") and a single space (" ") between each item. Note that intermediaries are allowed to combine values of HTTP fields with any amount of whitespace between the commas, and if this behavior is not accounted for by the verifier, the signature can fail since the signer and verifier will be see a different component value in their respective signature bases. For robustness, it is RECOMMENDED that signed messages include only a single instance of any field covered under the signature, particularly with the value for any list-based fields serialized using the algorithm below. This approach increases the chances of the field value remaining untouched through intermediaries. Where that approach is not possible and multiple instances of a field need to be sent separately, it is RECOMMENDED that signers and verifiers process any list-based fields taking all individual field values and combining them based on the strict algorithm below, to counter possible intermediary behavior. When the field in question is a structured field of type List or Dictionary, this effect can be accomplished more directly by requiring the strict structured field serialization of the field value, as described in {{http-field-structured}}.
+Unless overridden by additional parameters and rules, HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}} to create the component value. Specifically, HTTP fields sent as multiple fields MUST be combined using a single comma (",") and a single space (" ") between each item. Note that intermediaries are allowed to combine values of HTTP fields with any amount of whitespace between the commas, and if this behavior is not accounted for by the verifier, the signature can fail since the signer and verifier will see a different component value in their respective signature bases. For robustness, it is RECOMMENDED that signed messages include only a single instance of any field covered under the signature, particularly with the value for any list-based fields serialized using the algorithm below. This approach increases the chances of the field value remaining untouched through intermediaries. Where that approach is not possible and multiple instances of a field need to be sent separately, it is RECOMMENDED that signers and verifiers process any list-based fields taking all individual field values and combining them based on the strict algorithm below, to counter possible intermediary behavior. When the field in question is a structured field of type List or Dictionary, this effect can be accomplished more directly by requiring the strict structured field serialization of the field value, as described in {{http-field-structured}}.
 
 Note that some HTTP fields, such as Set-Cookie ({{COOKIE}}), do not follow a syntax that allows for combination of field values in this manner (such that the combined output is unambiguous from multiple inputs). Even though the component value is never parsed by the message signature process and used only as part of the signature base in {{create-sig-input}}, caution needs to be taken when including such fields in signatures since the combined value could be ambiguous. The `bs` parameter defined in {{http-field-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
 
@@ -1046,6 +1052,8 @@ To create the signature base, the signer or verifier concatenates together entri
 
 2. For each message component item in the covered components set (in order):
 
+    0. Check that the component identifier (including its parameters) has not already been added to the signature base. If this happens, produce an error.
+
     1. Append the component identifier for the covered component serialized according to the `component-identifier` ABNF rule. Note that this serialization places the component name in double quotes and appends any parameters outside of the quotes.
 
     2. Append a single colon `:`
@@ -1402,7 +1410,7 @@ The JWS algorithm MUST NOT be `none` and MUST NOT be any algorithm with a JOSE I
 
 JWA algorithm values from the JSON Web Signature and Encryption Algorithms Registry are not included as signature parameters. Typically, the JWS algorithm can be signaled using JSON Web Keys or other mechanisms common to JOSE implementations. In fact, JWA algorithm values are not registered in the [HTTP Signature Algorithms registry](#hsa-registry), and so the explicit `alg` signature parameter is not used at all when using JOSE signing algorithms.
 
-# Including a Message Signature in a Message
+# Including a Message Signature in a Message {#attach-signature}
 
 HTTP message signatures can be included within an HTTP message via the Signature-Input and Signature fields, both defined within this specification.
 

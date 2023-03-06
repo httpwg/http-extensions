@@ -105,7 +105,7 @@ Those abstract types can be serialized into and parsed from HTTP field values us
 
 ## Intentionally Strict Processing {#strict}
 
-This specification intentionally defines strict parsing and serialization behaviors using step-by-step algorithms; the only error handling defined is to fail the operation altogether.
+This specification intentionally defines strict parsing and serialization behaviors using step-by-step algorithms; the only error handling defined is to fail the entire operation altogether.
 
 It is designed to encourage faithful implementation and good interoperability. Therefore, an implementation that tried to be helpful by being more tolerant of input would make interoperability worse, since that would create pressure on other implementations to implement similar (but likely subtly different) workarounds.
 
@@ -139,7 +139,7 @@ To specify an HTTP field as a Structured Field, its authors need to:
 
 Typically, this means that a field definition will specify the top-level type -- List, Dictionary, or Item -- and then define its allowable types and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q", or strings in lowercase. Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
 
-When parsing fails, the entire field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different error handling, this should be explicitly specified.
+When parsing fails, the entire field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different handling for type mismatches it should be explicitly specified, but note that field definitions cannot override how parsing failures are handled.
 
 Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized parameter as an error condition.
 
@@ -687,7 +687,7 @@ Example-String: "foo
 Example-String: bar"
 ~~~
 
-If parsing fails -- including when calling another algorithm -- the entire field value MUST be ignored (i.e., treated as if the field were not present in the section). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
+If parsing fails, either the entire field value MUST be ignored (i.e., treated as if the field were not present in the section), or alternatively the complete HTTP message MUST be treated as malformed. This is intentionally strict to improve interoperability and safety, and field specifications that use Structured Fields are not allowed to loosen this requirement.
 
 Note that this requirement does not apply to an implementation that is not parsing the field; for example, an intermediary is not required to strip a failing field from a message before forwarding it.
 
@@ -1050,6 +1050,7 @@ This revision of the Structured Field Values for HTTP specification has made the
 * Stopped encouraging use of ABNF in definitions of new structured fields. ({{specify}})
 * Moved ABNF to an informative appendix. ({{abnf}})
 * Added a "Structured Type" column to the HTTP Field Name Registry. ({{iana}})
+* Refined parse failure handling. ({{text-parse}})
 
 
 # Acknowledgements
