@@ -108,6 +108,12 @@ material exporter uses a label that starts with the characters
 contexts used by each scheme). The TLS keying material exporter is used to
 generate a 32-byte key which is then used as a nonce.
 
+Because the TLS keying material exporter is only secure for authentication when
+it is uniquely bound to the TLS session {{!RFC7627}}, unprompted auth is only
+defined for versions of TLS with this property, i.e. TLS 1.2 with extended
+master secret {{!RFC7627}}, TLS 1.3 {{!TLS}}, and later. Use of unprompted auth
+with prior versions of TLS is not allowed.
+
 # Header Field Definition {#header-definition}
 
 The "Unprompted-Authentication" header field allows a user agent to authenticate
