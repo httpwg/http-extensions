@@ -211,8 +211,8 @@ unintentional.
 
 In order to address potential inconsistencies and ambiguity across
 implementations of `Digest` and `Want-Digest`, this document obsoletes
-[RFC3230]. The Integrity fields ({{representation-digest}} and
-{{content-digest}}) and Integrity preference fields ({{want-fields}})
+[RFC3230]. The Integrity fields (Sections {{<content-digest}} and
+{{<representation-digest}}) and Integrity preference fields ({{want-fields}})
 defined in this document are better aligned with current HTTP semantics and
 have names that more clearly articulate the intended usages.
 
@@ -1369,7 +1369,7 @@ alongside the definition of [the Repr-Digest field](#representation-digest).
 While the syntax of Digest and Repr-Digest are different,
 the considerations and examples this document gives for Repr-Digest
 apply equally to Digest because they operate on the same input data;
-see {{state-changing-requests}}, {{security}} and {{usage-in-signatures}}.
+see Sections {{<state-changing-requests}}, {{<security}} and {{<usage-in-signatures}}.
 
 RFC 3230 could never communicate
 the digest of HTTP message content in the Digest field;
