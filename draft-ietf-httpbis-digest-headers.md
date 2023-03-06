@@ -1417,36 +1417,31 @@ account their specific formatting rules.
 import base64, json, hashlib, brotli, logging
 log = logging.getLogger()
 
-def encode_item(item, encoding=lambda x: x):
-    indent = 2 if isinstance(item, dict) and len(item) > 1 else None
-    json_bytes = json.dumps(item, indent=indent).encode() + b'\n'
-    return encoding(json_bytes)
-
 def digest_bytes(bytes_, algorithm=hashlib.sha256):
     checksum_bytes = algorithm(bytes_).digest()
     log.warning("Log bytes: \n[%r]", bytes_)
     return base64.encodebytes(checksum_bytes).strip()
 
-def digest(item, encoding=lambda x: x, algorithm=hashlib.sha256):
-    content_encoded = encode_item(item, encoding)
+def digest(bytes_, encoding=lambda x: x, algorithm=hashlib.sha256):
+    content_encoded = encoding(bytes_)
     return digest_bytes(content_encoded, algorithm)
 
 
-item = {"hello": "world"}
+bytes_ = b'{"hello": "world"}\n'
 
 print("Encoding | hashing algorithm | digest-value")
-print("Identity | sha256 |", digest(item))
+print("Identity | sha256 |", digest(bytes_))
 # Encoding | hashing algorithm | digest-value
 # Identity | sha256 | RK/0qy18MlBSVnWgjwz6lZEWjP/lF5HF9bvEF8FabDg=
 
 print("Encoding | hashing algorithm | digest-value")
-print("Brotli | sha256 |", digest(item, encoding=brotli.compress))
+print("Brotli | sha256 |", digest(bytes_, encoding=brotli.compress))
 # Encoding | hashing algorithm | digest-value
 # Brotli | sha256 | d435Qo+nKZ+gLcUHn7GQtQ72hiBVAgqoLsZnZPiTGPk=
 
 print("Encoding | hashing algorithm | digest-value")
-print("Identity | sha512 |", digest(item, algorithm=hashlib.sha512))
-print("Brotli | sha512 |", digest(item, algorithm=hashlib.sha512,
+print("Identity | sha512 |", digest(bytes_, algorithm=hashlib.sha512))
+print("Brotli | sha512 |", digest(bytes_, algorithm=hashlib.sha512,
                                     encoding=brotli.compress))
 # Encoding | hashing algorithm | digest-value
 # Identity | sha512 |b'YMAam51Jz/jOATT6/zvHrLVgOYTGFy1d6GJiOHTohq4yP'
