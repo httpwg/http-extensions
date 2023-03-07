@@ -102,7 +102,7 @@ protocol uses TLS as its authentication and key exchange mechanism
 {{?QUIC-TLS=RFC9001}}.
 
 The user agent leverages a TLS keying material exporter {{!KEY-EXPORT=RFC5705}}
-to generate a nonce which can be signed using the user's key. The keying
+to generate a nonce which can be signed using the chosen key. The keying
 material exporter uses a label that starts with the characters
 "EXPORTER-HTTP-Unprompted-Authentication-" (see {{schemes}} for the labels and
 contexts used by each scheme). The TLS keying material exporter is used to
@@ -122,16 +122,17 @@ parameters.
 This specification defines the following authentication parameters, they can be
 used by the authentication schemes defined in {{schemes}}.
 
-## The u Parameter {#parameter-u}
+## The k Parameter {#parameter-k}
 
-The OPTIONAL "u" (user ID) parameter is a byte sequence that specifies the user
-ID that the user agent wishes to authenticate.
+The OPTIONAL "k" (key ID) parameter is a byte sequence that identifies which key
+the user agent wishes to use to authenticate. This can for example be used to
+point to an entry into a server-side database of known keys.
 
 ## The p Parameter {#parameter-p}
 
 The OPTIONAL "p" (proof) parameter is a byte sequence that specifies the proof
 that the user agent provides to attest to possessing the credential that matches
-its user ID.
+its key ID.
 
 ## The s Parameter {#parameter-s}
 
@@ -156,20 +157,20 @@ This document defines the "Signature" and "HMAC" HTTP authentication schemes.
 ## Signature {#signature}
 
 The "Signature" HTTP Authentication Scheme uses asymmetric cryptography.
-User agents possess a user ID and a public/private key pair, and origin servers
-maintain a mapping of authorized user IDs to their associated public keys. When
-using this scheme, the "u", "p", and "s" parameters are REQUIRED. The TLS keying
+User agents possess a key ID and a public/private key pair, and origin servers
+maintain a mapping of authorized key IDs to their associated public keys. When
+using this scheme, the "k", "p", and "s" parameters are REQUIRED. The TLS keying
 material export label for this scheme is
 "EXPORTER-HTTP-Unprompted-Authentication-Signature" and the associated context
 is empty. The nonce is then signed using the selected asymmetric signature
 algorithm and transmitted as the proof directive.
 
-For example, the user ID "john.doe" authenticating using Ed25519
+For example, the key ID "basement" authenticating using Ed25519
 {{?ED25519=RFC8410}} could produce the following header field (lines are folded
 to fit):
 
 ~~~
-Unprompted-Authentication: Signature u=:am9obi5kb2U=:;s=7;
+Unprompted-Authentication: Signature k=:YmFzZW1lbnQ=:;s=7;
 p=:SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo
 aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ==:
 ~~~
@@ -177,19 +178,19 @@ aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ==:
 ## HMAC {#hmac}
 
 The "HMAC" HTTP Authentication Scheme uses symmetric cryptography. User
-agents possess a user ID and a secret key, and origin servers maintain a mapping
-of authorized user IDs to their associated secret key. When using this scheme,
-the "u", "p", and "h" parameters are REQUIRED. The TLS keying material export
+agents possess a key ID and a secret key, and origin servers maintain a mapping
+of authorized key IDs to their associated secret key. When using this scheme,
+the "k", "p", and "h" parameters are REQUIRED. The TLS keying material export
 label for this scheme is "EXPORTER-HTTP-Unprompted-Authentication-HMAC" and the
 associated context is empty. The nonce is then HMACed using the selected HMAC
 algorithm and transmitted as the proof directive.
 
-For example, the user ID "john.doe" authenticating using HMAC-SHA-512
+For example, the key ID "basement" authenticating using HMAC-SHA-512
 {{?SHA=RFC6234}} could produce the following header field (lines are folded to
 fit):
 
 ~~~
-Unprompted-Authentication: HMAC u="am9obi5kb2U=";h=6;
+Unprompted-Authentication: HMAC k="YmFzZW1lbnQ=";h=6;
 p="SW5zZXJ0IEhNQUMgb2Ygbm9uY2UgaGVyZSB3aGljaCB0YWtl
 cyA1MTIgYml0cyBmb3IgU0hBLTUxMiEhISEhIQ=="
 ~~~
@@ -212,7 +213,7 @@ valid authentication using some other mechanism.
 
 # Security Considerations {#security}
 
-Unprompted Authentication allows a user-agent to authenticate to an origin
+Unprompted Authentication allows a user agent to authenticate to an origin
 server while guaranteeing freshness and without the need for the server
 to transmit a nonce to the user agent. This allows the server to accept
 authenticated clients without revealing that it supports or expects
@@ -221,7 +222,7 @@ the user agent leaking the presence of authentication to observers due to
 clear-text TLS Client Hello extensions.
 
 The authentication proofs described in this document are not bound to individual
-HTTP requests; if the same user sends an authentication proof on multiple
+HTTP requests; if the key is used for authentication proofs on multiple
 requests they will all be identical. This allows for better compression when
 sending over the wire, but implies that client implementations that multiplex
 different security contexts over a single HTTP connection need to ensure that
