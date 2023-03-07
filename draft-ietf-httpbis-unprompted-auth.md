@@ -155,7 +155,7 @@ This document defines the "Signature" and "HMAC" HTTP authentication schemes.
 
 ## Signature {#signature}
 
-The "Signature" HTTP Authentication Scheme uses asymmetric cyptography.
+The "Signature" HTTP Authentication Scheme uses asymmetric cryptography.
 User agents possess a user ID and a public/private key pair, and origin servers
 maintain a mapping of authorized user IDs to their associated public keys. When
 using this scheme, the "u", "p", and "s" parameters are REQUIRED. The TLS keying
@@ -176,7 +176,7 @@ aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ==:
 
 ## HMAC {#hmac}
 
-The "HMAC" HTTP Authentication Scheme uses symmetric cyptography. User
+The "HMAC" HTTP Authentication Scheme uses symmetric cryptography. User
 agents possess a user ID and a secret key, and origin servers maintain a mapping
 of authorized user IDs to their associated secret key. When using this scheme,
 the "u", "p", and "h" parameters are REQUIRED. The TLS keying material export
