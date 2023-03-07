@@ -215,6 +215,11 @@ can be caused for example by:
 * use of Unprompted Authentication with an unknown key ID
 * failure to validate the signature or MAC.
 
+Such servers MUST also ensure that the timing of their request handling does
+not leak any information. This can be accomplished by delaying responses to
+all non-existent resources such that the timing of the authentication
+verification is not observable.
+
 # Intermediary Considerations {#intermediary}
 
 Since the Signature and HMAC HTTP Authentication Schemes leverage TLS keying
