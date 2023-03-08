@@ -834,12 +834,13 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}
    5. If type is "integer" and input_number contains more than 15 characters, fail parsing.
    6. If type is "decimal" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
-   1. Parse input_number as an integer and let output_number be the product of the result and sign.
+   1. Let output_number be an Integer that is the result of parsing input_number as an integer.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
    2. If the number of characters after "." in input_number is greater than three, fail parsing.
-   2. Parse input_number as a decimal number and let output_number be the product of the result and sign.
-0. Return output_number.
+   3. Let output_number be a Decimal that is the result of parsing input_number as a decimal number.
+0. Let output_number be the product of output_number and sign.
+1. Return output_number.
 
 
 ### Parsing a String {#parse-string}
