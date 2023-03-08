@@ -191,6 +191,15 @@ being used.</t>
 </artwork>
 </blockquote>
 
+Note that because the definition of a Structured Field references a specific RFC for Structured Fields, the types available for use in its value are limited to those defined in that RFC. For example, a field whose definition references this document can have a value that uses the Date type ({{date}}), whereas a field whose definition references RFC 8941 cannot, because it will be treated as invalid (and therefore discarded) by implementations of that specification.
+
+Also note that this limitation also applies to future extensions to a field; for example, a field that is defined with reference to RFC 8941 cannot use the Date type, because some recipients might still be using an RFC 8941 parser to process it.
+
+However, this document is designed to be backwards-compatible with RFC 8941; a parser that implements the requirements here can also parse valid Structured Fields whose definitions reference RFC 8941.
+
+The effect of upgrading a Structured Fields implementation is that some field values that were invalid according to RFC 8941 might become valid when processed.  For instance, though it would not be valid for a field defined against RFC 8941, a field might include include a Date value. An RFC 8941 implementation would reject the entire field, whereas an updated Structured Field implementation might permit the value. In some cases, the resulting Date value will be rejected by field-specific logic, but values in fields that are otherwise ignored (such as extension parameters) might not be detected and the field might subsequently be accepted and processed.
+
+
 # Structured Data Types {#types}
 
 This section defines the abstract types for Structured Fields, and summarises how those types are serialised into textual HTTP fields.
