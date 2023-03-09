@@ -974,7 +974,7 @@ Content-Length: 62
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
-To cryptographically link the response to the request, the server signs the response with its own key and includes the method, authority, and the signature and signature input labeled `sig1` from the request in the covered components of the response. The signature base for this example is:
+The server signs the response with its own key, including the `@status` code and several header fields in the covered components. To cryptographically link the response to the request, the server includes the method, authority, and the signature and signature input labeled `sig1` from the request in the covered components of the response. The signature base for this example is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -1018,9 +1018,11 @@ Signature: reqres=:vdftwlSGcKp/R+8/CjDZiQWhAskflyLsom7P4rF71GMsTBvj\
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
-Since the signature component values from the request are not repeated in the response, the requester MUST keep the original message component values around long enough to validate the signature of the response that uses this component identifier. In most cases, this means the requester needs to keep the original request message around, since the signer could choose to include any portions of the request in its response, according to the needs of the application. Signing the signature value of the request alone does not provide sufficient coverage in most cases, as discussed in {{security-sign-signature}}.
-
 Note that the ECDSA algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
+
+Since the signature component values from the request are not repeated in the response, the requester MUST keep the original message component values around long enough to validate the signature of the response that uses this component identifier. In most cases, this means the requester needs to keep the original request message around, since the signer could choose to include any portions of the request in its response, according to the needs of the application. Since it is possible for an intermediary to alter a request message before it is processed by the server, applications need to take care not to sign such altered values as the client would not be able to validate the resulting signature.
+
+Applications needing this type of binding have to sign sufficient portion the request to ensure that it is uniquely tied to the response. Signing the signature value of a signed request alone does not provide sufficient coverage in most cases, as discussed in {{security-sign-signature}}.
 
 The `req` parameter MUST NOT be used in a signature that targets a request message.
 
@@ -1505,10 +1507,9 @@ Signature: sig1=:e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7lnpwaqMqn6\
 {"hello": "world"}
 ~~~
 
-While the proxy is in a position to validate the client's signature, the changes the proxy makes to the message will invalidate the existing signature when the message is seen by the origin server. While it is possible for the origin server to have additional information in its signature context to account for the change in authority, this practice requires additional configuration and extra care (see further discussion in {{security-context-multiple-signatures}}). To counter this, the proxy adds its own signature over the new message before passing it along. The proxy includes the new `@authority` derived component and the Forwarded header, which it added to the message.
-The proxy's signature also includes the client's signature value and signature input from the original message in its covered components, as dictionary field members under the label `sig1`. The proxy can also sign any unchanged components from the original message, such as the `@method`, `@path`, and `@query` in this example, even if those components were covered by the original signature. See the discussion in {{security-sign-signature}} for more information about signing signature values.
+While the proxy is in a position to validate the client's signature, the changes the proxy makes to the message will invalidate the existing signature when the message is seen by the origin server. While it is possible for the origin server to have additional information in its signature context to account for the change in authority, this practice requires additional configuration and extra care (see further discussion in {{security-context-multiple-signatures}}). The proxy is in a position to make its own statement to the origin server about the nature of the request that it is forwarding by adding its own signature over the new message before passing it along to the origin server. The proxy includes the new `@authority` derived component and the Forwarded header, which the proxy has added to the message.
+The proxy also includes elements from the original message that are relevant to the origin server's processing, such as the `@method`, `@path`, and `@query` in this example, even if those components were covered by the original signature. The proxy additionally includes the client's signature value and signature input from the original message in the new signature's covered components. In our example application, this is used as a way for the proxy to indicate to the origin server that the proxy has read and verified these values in their original context. While the origin server may not be able to directly verify this original signature, it can verify that the proxy has vouched for the signature's validity. The origin server also has assurance that the message has been forwarded intact from the trusted proxy.
 
-While the origin server may not be able to directly verify this original signature, it can verify that the proxy has vouched for the signature's validity.
 The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
 
 ~~~
@@ -1572,8 +1573,6 @@ Signature: sig1=:e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7lnpwaqMqn6\
 
 {"hello": "world"}
 ~~~
-
-The proxy's signature and the client's original signature can be verified independently for the same message, based on the needs of the application and the capabilities of the verifier to access the specific message. Since the proxy's signature covers the client signature, the backend service fronted by the proxy can trust that the proxy has validated the incoming signature in that context. Since the proxy's signature also covers additional components of the second message, the origin server can verify those values itself as well.
 
 # Requesting Signatures {#request-signature}
 
