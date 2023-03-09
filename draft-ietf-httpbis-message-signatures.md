@@ -1024,6 +1024,8 @@ Since the signature component values from the request are not repeated in the re
 
 Applications needing this type of binding have to sign sufficient portion the request to ensure that it is uniquely tied to the response. Signing the signature value of a signed request alone does not provide sufficient coverage in most cases, as discussed in {{security-sign-signature}}.
 
+The response signature can only cover what is included in the request. Therefore, if an application needs to bind the message content of the request in its response, the client needs to include a means for covering that content, such as a Content-Digest field. See the discussion in {{security-message-content}} for more information.
+
 The `req` parameter MUST NOT be used in a signature that targets a request message.
 
 ## Creating the Signature Base {#create-sig-input}
@@ -1931,6 +1933,8 @@ From here, the signing process proceeds as usual.
 Upon verification, it is important that the verifier validate not only the signature but also the value of the Content-Digest field itself against the actual received content. Unless the verifier performs this step, it would be possible for an attacker to substitute the message content but leave the Content-Digest field value untouched to pass the signature. Since only the field value is covered by the signature directly, checking only the signature is not sufficient protection against such a substitution attack.
 
 As discussed in {{DIGEST}}, the value of the Content-Digest field is dependent on the content encoding of the message. If an intermediary changes the content encoding, the resulting Content-Digest value would change, which would in turn invalidate the signature. Any intermediary performing such an action would need to apply a new signature with the updated Content-Digest field value, similar to the reverse proxy use case discussed in {{signature-multiple}}.
+
+Applications that make use of [request-response binding](#content-request-response) also need to be aware of the limitations in this functionality. Specifically, if a client does not include something like a Content-Digest header field in the request, the server is unable to include a signature that covers the request's content.
 
 ## Cryptographic Considerations
 
