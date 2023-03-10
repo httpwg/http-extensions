@@ -109,10 +109,18 @@ contexts used by each scheme). The TLS keying material exporter is used to
 generate a 32-byte key which is then used as a nonce.
 
 Because the TLS keying material exporter is only secure for authentication when
-it is uniquely bound to the TLS session {{!RFC7627}}, unprompted auth is only
-defined for versions of TLS with this property, i.e. TLS 1.2 with extended
-master secret {{!RFC7627}}, TLS 1.3 {{!TLS}}, and later. Use of unprompted auth
-with prior versions of TLS is not allowed.
+it is uniquely bound to the TLS session {{!RFC7627}}, the Signature and HMAC
+authentication schemes require either one of the following properties:
+
+* The TLS version in use is greater or equal to 1.3 {{TLS}}.
+* The TLS version in use is greater or equal to 1.2 and the Extended
+Master Secret extension {{RFC7627}} has been negotiated.
+
+Clients MUST NOT use the Signature and HMAC authentication
+schemes on connections that do not meet one of the two properties
+above. If a server receives a request that uses these authentication
+schemes on a connection that meets neither of the above properties,
+the server MUST treat the request as malformed.
 
 # Header Field Definition {#header-definition}
 
