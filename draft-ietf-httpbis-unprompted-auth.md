@@ -216,6 +216,25 @@ The HTTP Authentication Scheme registry maintained by IANA at
 contains entries not defined in this document. Those entries MAY be used with
 Unprompted Authentication.
 
+# Server Handling
+
+Servers that wish to introduce resources whose existence cannot be probed need
+to ensure that they do not reveal any information about those resources to
+unauthenticated clients. In particular, such servers MUST respond to
+authentication failures with the exact same response that they would have used
+for non-existent resources. For example, this can mean using HTTP status code
+404 (Not Found) instead of 401 (Unauthorized). Such authentication failures
+can be caused for example by:
+* absence of the Unprompted-Authentication field
+* failure to parse the Unprompted-Authentication field
+* use of Unprompted Authentication with an unknown key ID
+* failure to validate the signature or MAC.
+
+Such servers MUST also ensure that the timing of their request handling does
+not leak any information. This can be accomplished by delaying responses to
+all non-existent resources such that the timing of the authentication
+verification is not observable.
+
 # Intermediary Considerations {#intermediary}
 
 Since the Signature and HMAC HTTP Authentication Schemes leverage TLS keying
