@@ -246,6 +246,10 @@ the browser such that it could access another context's memory, the attacker
 might also be able to access the corresponding key, so binding authentication to
 requests would not provide much benefit in practice.
 
+Key material used for authentication in unprompted authentication, whether
+symmetric or asymmetric MUST NOT be reused in other protocols. Doing so can
+undermine the security guarantees of the authentication.
+
 # IANA Considerations {#iana}
 
 ## Unprompted-Authentication Header Field {#iana-header}
