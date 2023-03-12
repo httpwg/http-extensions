@@ -372,7 +372,7 @@ In responses,
 
 - if the representation describes the status of the request,
   `Repr-Digest` MUST be computed on the enclosed representation
-   (see {{post-referencing-status}} );
+   (see {{post-referencing-status}});
 
 - if there is a referenced resource
   `Repr-Digest` MUST be computed on the selected representation of the referenced resource
