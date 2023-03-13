@@ -254,11 +254,19 @@ verification is not observable.
 # Intermediary Considerations {#intermediary}
 
 Since the Signature and HMAC HTTP Authentication Schemes leverage TLS keying
-material exporters, their output
-cannot be transparently forwarded by HTTP intermediaries. HTTP intermediaries
-that support this specification will validate the authentication received from
-the client themselves, then inform the upstream HTTP server of the presence of
-valid authentication using some other mechanism.
+material exporters, their output cannot be transparently forwarded by HTTP
+intermediaries. HTTP intermediaries that support this specification have two
+options:
+
+* The intermediary can validate the authentication received from the client,
+then inform the upstream HTTP server of the presence of valid authentication.
+
+* The intermediary can export the nonce (see {{compute-proof}}}), and forward
+it to the upstream HTTP server, then the upstream server performs the
+validation.
+
+The mechanism for the intermediary to communicate this information to the
+upstream HTTP server is out of scope for this document.
 
 # Security Considerations {#security}
 
