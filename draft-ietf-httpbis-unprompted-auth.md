@@ -81,6 +81,22 @@ and there is no existing way for the origin to share such a nonce without
 exposing the fact that it serves resources that require authentication. This
 document proposes a new non-probeable cryptographic authentication scheme.
 
+Unprompted Authentication serves use cases in which a site wants to offer a
+service or capability only to "those who know" while all others are given no
+indication the service or capability exists. The conceptual model is that of a
+"speakeasy". "Knowing" is via an externally-defined mechanism by which keys
+are distributed. For example, a company might offer remote employee access to
+company services directly via its website using their employee credentials, or
+offer access to limited special capabilities for specific employees, while
+making discovering (probing for) such capabilities difficult. Members of
+less well-defined communities might use more ephemeral keys to acquire access
+to geography- or capability-specific resources, as issued by an entity whose
+user base is larger than the available resources can support (by having that
+entity metering the availability of keys temporally or geographically).
+Unprompted Authentication is also useful for cases where a service provider
+wants to distribute user-provisioning information for its resources without
+exposing the provisioning location to non-users.
+
 There are scenarios where servers may want to expose the fact that
 authentication is required for access to specific resources. This is left for
 future work.
