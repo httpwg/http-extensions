@@ -294,10 +294,10 @@ Key material used for authentication in unprompted authentication, whether
 symmetric or asymmetric MUST NOT be reused in other protocols. Doing so can
 undermine the security guarantees of the authentication.
 
-Sites offering Unprompted Authentication are able to link requests that use
+Origins offering Unprompted Authentication are able to link requests that use
 the same key for the Authentication Schemes provided. However, requests are
-not linkable across other sites if the keys used are private to the individual
-sites using Unprompted Authentication.
+not linkable across origins if the keys used are specific to the individual
+origins using Unprompted Authentication.
 
 # IANA Considerations {#iana}
 
