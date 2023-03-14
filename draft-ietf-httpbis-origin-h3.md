@@ -117,11 +117,14 @@ in {{!ORIGIN}} and {{HTTP3}}.
 This document registers a frame type in the "HTTP/3 Frame Type"
 registry ({{HTTP3}}).
 
-| ---------------- | ------ | -------------------------- |
-| Frame Type       | Value  | Specification              |
-| ---------------- | :----: | -------------------------- |
-| ORIGIN           |  0xc   | {{frame-origin}}           |
-| ---------------- | ------ | -------------------------- |
+| ----- | ---------------- | --------- | ----------------- |
+| Value | Frame Type       | Status    | Specification     |
+| :---: | ---------------- | --------- | ----------------- |
+|  0xc  | ORIGIN           | permanent | {{frame-origin}}  |
+| ----- | ---------------- | --------- | ----------------- |
 {: #iana-frame-table title="Registered HTTP/3 Frame Types"}
+
+This allocation lists a change controller of the IETF and a contact of the HTTP
+working group (ietf-http-wg@w3.org).
 
 --- back
