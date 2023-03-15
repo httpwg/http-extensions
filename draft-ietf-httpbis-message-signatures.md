@@ -92,6 +92,30 @@ informative:
     CLIENT-CERT: I-D.ietf-httpbis-client-cert-field
     DIGEST: I-D.ietf-httpbis-digest-headers
     COOKIE: RFC6265
+    JACKSON2019:
+        target: https://dennis-jackson.uk/assets/pdfs/signatures.pdf
+        title: "Seems Legit: Automated Analysis of Subtle Attacks on Protocols that Use Signatures"
+        date: November, 2019
+        author:
+        -
+            name: Dennis Jackson
+            ins: D. Jackson
+            org: University of Oxford
+            country: UK
+        -
+            name: Cas Cremers
+            ins: C. Cremers
+            org: CISPA Helmholtz Center for Information Security
+            country: Germany
+        -
+            name: Katriel Cohn-Gordon
+            ins: K. Cohn-Gordon
+            org: Independent Scholar
+        -
+            name: Ralf Sasse
+            ins: R. Sasse
+            org: Department of Computer Science, ETH Zurich
+            country: Switzerland
     TLS: RFC8446
 
 entity:
@@ -927,14 +951,14 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
   aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
 Content-Length: 18
 Signature-Input: sig1=("@method" "@authority" "@path" \
-  "content-digest" "content-length" "content-type")\
+  "content-digest" "content-type" "content-length")\
   ;created=1618884475;keyid="test-key-rsa-pss"
-Signature:  sig1=:LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziCLuD8r5MW9S0\
-  RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY/UkBIS1M8Br\
-  c8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE3IpWINTEzpx\
-  jqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9HdbD2Tr65+BXe\
-  TG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3LZElYyUKaAI\
-  jZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
+Signature: sig1=:jy4OdKs6DfD7qkBy1G5ZIas30VDSFwL6HkuvNUeQNgIQLDUe3h\
+  ZDtju7+7UaMx0DAklmXFEqMBEfSZodrN7BZAjuKemxhDlC5pvTkdq227QtfsJjuOU\
+  aGAIVaW66/iis7JDfmQSOpbJlqURMBicdNGRf6yCDX7bE5sR5fP7mWvgk8P+SJfyV\
+  43Yvo63rD7QY3RV/EXysMFz3WuaqyRzEyZBv+rvkPUha5cjOEy/sgKvtxehvT4LZj\
+  mEN2qAkC18HRXgIjWbTCyscfV/G6A0WPzHFiX/nTNoWYpJ7cRxtz+t8bqcNgksdi0\
+  0ynArFxonWLzLwl3ok00se9JaZR82WPw==:
 
 {"hello": "world"}
 ~~~
@@ -950,7 +974,7 @@ Content-Length: 62
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
-To cryptographically link the response to the request, the server signs the response with its own key and includes the method, authority, and the signature value `sig1` from the request in the covered components of the response. The signature base for this example is:
+The server signs the response with its own key, including the `@status` code and several header fields in the covered components. To cryptographically link the response to the request, the server includes the method, authority, and the signature and signature input labeled `sig1` from the request in the covered components of the response. The signature base for this example is:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
@@ -958,17 +982,21 @@ NOTE: '\' line wrapping per RFC 8792
 "@status": 503
 "content-length": 62
 "content-type": application/json
-"signature";req;key="sig1": :LAH8BjcfcOcLojiuOBFWn0P5keD3xAOuJRGziC\
-  LuD8r5MW9S0RoXXLzLSRfGY/3SF8kVIkHjE13SEFdTo4Af/fJ/Pu9wheqoLVdwXyY\
-  /UkBIS1M8Brc8IODsn5DFIrG0IrburbLi0uCc+E2ZIIb6HbUJ+o+jP58JelMTe0QE\
-  3IpWINTEzpxjqDf5/Df+InHCAkQCTuKsamjWXUpyOT1Wkxi7YPVNOjW4MfNuTZ9Hd\
-  bD2Tr65+BXeTG9ZS/9SWuXAc+BZ8WyPz0QRz//ec3uWXd7bYYODSjRAxHqX+S1ag3\
-  LZElYyUKaAIjZ8MGOt4gXEwCSLDv/zqxZeWLj/PDkn6w==:
-"@authority";req: example.com
+"signature";req;key="sig1": :jy4OdKs6DfD7qkBy1G5ZIas30VDSFwL6HkuvNU\
+  eQNgIQLDUe3hZDtju7+7UaMx0DAklmXFEqMBEfSZodrN7BZAjuKemxhDlC5pvTkdq\
+  227QtfsJjuOUaGAIVaW66/iis7JDfmQSOpbJlqURMBicdNGRf6yCDX7bE5sR5fP7m\
+  Wvgk8P+SJfyV43Yvo63rD7QY3RV/EXysMFz3WuaqyRzEyZBv+rvkPUha5cjOEy/sg\
+  KvtxehvT4LZjmEN2qAkC18HRXgIjWbTCyscfV/G6A0WPzHFiX/nTNoWYpJ7cRxtz+\
+  t8bqcNgksdi00ynArFxonWLzLwl3ok00se9JaZR82WPw==:
+"signature-input";req;key="sig1": ("@method" "@authority" "@path" \
+  "content-digest" "content-type" "content-length")\
+  ;created=1618884475;keyid="test-key-rsa-pss"
+"@authority";req: origin.host.internal.example
 "@method";req: POST
 "@signature-params": ("@status" "content-length" "content-type" \
-  "signature";req;key="sig1" "@authority";req "@method";req)\
-  ;created=1618884479;keyid="test-key-ecc-p256"
+  "signature";req;key="sig1" "signature-input";req;key="sig1" \
+  "@authority";req "@method";req);created=1618884479\
+  ;keyid="test-key-ecc-p256"
 ~~~
 
 The signed response message is:
@@ -981,17 +1009,22 @@ Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
 Content-Length: 62
 Signature-Input: reqres=("@status" "content-length" "content-type" \
-  "signature";req;key="sig1" "@authority";req "@method";req)\
-  ;created=1618884479;keyid="test-key-ecc-p256"
-Signature: reqres=:mh17P4TbYYBmBwsXPT4nsyVzW4Rp9Fb8WcvnfqKCQLoMvzOB\
-  LD/n32tL/GPW6XE5GAS5bdsg1khK6lBzV1Cx/Q==:
+  "signature";req;key="sig1" "signature-input";req;key="sig1" \
+  "@authority";req "@method";req);created=1618884479\
+  ;keyid="test-key-ecc-p256"
+Signature: reqres=:vdftwlSGcKp/R+8/CjDZiQWhAskflyLsom7P4rF71GMsTBvj\
+  7FgV/3XGtGwPd+rlEhQtpa3+x68tWudBfdtYPw==:
 
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
 
-Since the request's signature value itself is not repeated in the response, the requester MUST keep the original signature value around long enough to validate the signature of the response that uses this component identifier.
-
 Note that the ECDSA algorithm in use here is non-deterministic, meaning a different signature value will be created every time the algorithm is run. The signature value provided here can be validated against the given keys, but newly-generated signature values are not expected to match the example. See {{security-nondeterministic}}.
+
+Since the signature component values from the request are not repeated in the response, the requester MUST keep the original message component values around long enough to validate the signature of the response that uses this component identifier. In most cases, this means the requester needs to keep the original request message around, since the signer could choose to include any portions of the request in its response, according to the needs of the application. Since it is possible for an intermediary to alter a request message before it is processed by the server, applications need to take care not to sign such altered values as the client would not be able to validate the resulting signature.
+
+Applications needing this type of binding have to sign sufficient portion the request to ensure that it is uniquely tied to the response. Signing the signature value of a signed request alone does not provide sufficient coverage in most cases, as discussed in {{security-sign-signature}}.
+
+The response signature can only cover what is included in the request. Therefore, if an application needs to bind the message content of the request in its response, the client needs to include a means for covering that content, such as a Content-Digest field. See the discussion in {{security-message-content}} for more information.
 
 The `req` parameter MUST NOT be used in a signature that targets a request message.
 
@@ -1448,8 +1481,8 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
 Signature-Input: sig1=("@method" "@authority" "@path" \
   "content-digest" "content-type" "content-length")\
   ;created=1618884475;keyid="test-key-ecc-p256"
-Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
-  0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:
+Signature: sig1=:e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7lnpwaqMqn6\
+  83Cna7hyXF4rnpyACdJcOWFB3FSPVymw0fzA==:
 
 {"hello": "world"}
 ~~~
@@ -1470,26 +1503,33 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
 Signature-Input: sig1=("@method" "@authority" "@path" \
   "content-digest" "content-type" "content-length")\
   ;created=1618884475;keyid="test-key-ecc-p256"
-Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
-  0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:
+Signature: sig1=:e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7lnpwaqMqn6\
+  83Cna7hyXF4rnpyACdJcOWFB3FSPVymw0fzA==:
 
 {"hello": "world"}
 ~~~
 
-While the proxy is in a position to validate the client's signature, the changes the proxy makes to the message will invalidate the existing signature when the message is seen by the origin server. While it is possible for the origin server to have additional information in its signature context to account for the change in authority, this practice requires additional configuration and extra care (see further discussion in {{security-context-multiple-signatures}}). To counter this, the proxy adds its own signature over the new message before passing it along. The proxy includes the new `@authority` derived component and the Forwarded header, which it added to the message.
-The proxy's signature also includes the client's signature value from the original message in its covered components, as a dictionary field member under the label `sig1`. Note that since the client's signature already covers the client's Signature-Input value for `sig1`, this value is transitively covered by the proxy's signature and need not be added explicitly. While the origin server may not be able to directly verify this original signature, it can verify that the proxy has vouched for the signature's validity.
+While the proxy is in a position to validate the client's signature, the changes the proxy makes to the message will invalidate the existing signature when the message is seen by the origin server. While it is possible for the origin server to have additional information in its signature context to account for the change in authority, this practice requires additional configuration and extra care (see further discussion in {{security-context-multiple-signatures}}). The proxy is in a position to make its own statement to the origin server about the nature of the request that it is forwarding by adding its own signature over the new message before passing it along to the origin server. The proxy includes the new `@authority` derived component and the Forwarded header, which the proxy has added to the message.
+The proxy also includes elements from the original message that are relevant to the origin server's processing, such as the `@method`, `@path`, and `@query` in this example, even if those components were covered by the original signature. The proxy additionally includes the client's signature value and signature input from the original message in the new signature's covered components. In our example application, this is used as a way for the proxy to indicate to the origin server that the proxy has read and verified these values in their original context. While the origin server may not be able to directly verify this original signature, it can verify that the proxy has vouched for the signature's validity. The origin server also has assurance that the message has been forwarded intact from the trusted proxy.
+
 The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
 
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-"signature";key="sig1": :hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4N\
-  p5iWmJSO0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:
+"signature";key="sig1": :e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7ln\
+  pwaqMqn683Cna7hyXF4rnpyACdJcOWFB3FSPVymw0fzA==:
+"signature-input";key="sig1": ("@method" "@authority" "@path" \
+  "content-digest" "content-type" "content-length")\
+  ;created=1618884475;keyid="test-key-ecc-p256"
 "@authority": origin.host.internal.example
+"@method": POST
+"@path": /foo
 "forwarded": for=192.0.2.123
-"@signature-params": ("signature";key="sig1" "@authority" \
-  "forwarded");created=1618884480;keyid="test-key-rsa"\
-  ;alg="rsa-v1_5-sha256";expires=1618884540
+"@signature-params": ("signature";key="sig1" "signature-input"\
+  ;key="sig1" "@authority" "@method" "@path" "forwarded")\
+  ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"\
+  ;expires=1618884540
 ~~~
 
 And a signature output value of:
@@ -1497,12 +1537,12 @@ And a signature output value of:
 ~~~
 NOTE: '\' line wrapping per RFC 8792
 
-YvYVO11F+Q+N4WZNeBdjFKluswwE3vQ4cTXpBwEiMz2hwu0J+wSJLRhHlIZ1N83epfn\
-KDxY9cbNaVlbtr2UOLkw5O5Q5M5yrjx3s1mgDOsV7fuItD6iDyNISCiKRuevl+M+TyY\
-Bo10ubG83As5CeeoUdmrtI4G6QX7RqEeX0Xj/CYofHljr/dVzARxskjHEQbTztYVg4W\
-D+LWo1zjx9w5fw26tsOMagfXLpDb4zb4/lgpgyNKoXFwG7c89KId5q+0BC+kryWuA35\
-ZcQGaRPAz/NqzeKq/c7p7b/fmHS71fy1jOaFgWFmD+Z77bJLO8AVKuF0y2fpL3KUYHy\
-ITQHOsA==
+V++11u29ZWM1EbQfEx35tnzJVZr8kcoTeuuSCKkdU5J8xr+lb1Ofz7KuvxxZAkMtTZa\
+4uCdZNxRI+JInYxgc3wUq3duvaugtjmYRe7odUHrEmWKX7m1OwR/Q8JoOxSSPcAdtV1\
+knAHXtFCFMdnY3JT8qfnH2yi1VNy65XWCXw4eeK+yxtoE3DfhtIyzZbmjhcFfXSmibY\
+yJQgIMqagEY/wEsVA2gV+5AE7xFdUrInSGVNVcw86w9J/stKYC+Deyl3qAzE4qgBN+9\
+VgkuLnUkk6U4W8vk7lSgaq27zUzO9cduybFtRaE9MBWGaGKEk3Bi+BdIMF06qEjMCnQ\
+S+8debQ==
 ~~~
 
 These values are added to the HTTP request message by the proxy. The original signature is included under the identifier `sig1`, and the reverse proxy's signature is included under the label `proxy_sig`. The proxy uses the key `test-key-rsa` to create its signature using the `rsa-v1_5-sha256` signature algorithm, while the client's original signature was made using the key id of `test-key-rsa-pss` and an RSA PSS signature algorithm.
@@ -1521,22 +1561,20 @@ Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
 Signature-Input: sig1=("@method" "@authority" "@path" \
     "content-digest" "content-type" "content-length")\
     ;created=1618884475;keyid="test-key-ecc-p256", \
-  proxy_sig=("signature";key="sig1" "@authority" "forwarded")\
-    ;created=1618884480;keyid="test-key-rsa";alg="rsa-v1_5-sha256"\
-    ;expires=1618884540
-Signature: sig1=:hNojB+wWw4A7SYF3qK1S01Y4UP5i2JZFYa2WOlMB4Np5iWmJSO\
-    0bDe2hrYRbcIWqVAFjuuCBRsB7lYQJkzbb6g==:, \
-  proxy_sig=:YvYVO11F+Q+N4WZNeBdjFKluswwE3vQ4cTXpBwEiMz2hwu0J+wSJLR\
-    hHlIZ1N83epfnKDxY9cbNaVlbtr2UOLkw5O5Q5M5yrjx3s1mgDOsV7fuItD6iDy\
-    NISCiKRuevl+M+TyYBo10ubG83As5CeeoUdmrtI4G6QX7RqEeX0Xj/CYofHljr/\
-    dVzARxskjHEQbTztYVg4WD+LWo1zjx9w5fw26tsOMagfXLpDb4zb4/lgpgyNKoX\
-    FwG7c89KId5q+0BC+kryWuA35ZcQGaRPAz/NqzeKq/c7p7b/fmHS71fy1jOaFgW\
-    FmD+Z77bJLO8AVKuF0y2fpL3KUYHyITQHOsA==:
+  proxy_sig=("signature";key="sig1" "signature-input";key="sig1" \
+    "@authority" "@method" "@path" "forwarded");created=1618884480\
+    ;keyid="test-key-rsa";alg="rsa-v1_5-sha256";expires=1618884540
+Signature: sig1=:e7vqNlt7NV8mJXXja35MQRW/puA3JOHCsKiAG5U7lnpwaqMqn6\
+    83Cna7hyXF4rnpyACdJcOWFB3FSPVymw0fzA==:, \
+  proxy_sig=:V++11u29ZWM1EbQfEx35tnzJVZr8kcoTeuuSCKkdU5J8xr+lb1Ofz7\
+    KuvxxZAkMtTZa4uCdZNxRI+JInYxgc3wUq3duvaugtjmYRe7odUHrEmWKX7m1Ow\
+    R/Q8JoOxSSPcAdtV1knAHXtFCFMdnY3JT8qfnH2yi1VNy65XWCXw4eeK+yxtoE3\
+    DfhtIyzZbmjhcFfXSmibYyJQgIMqagEY/wEsVA2gV+5AE7xFdUrInSGVNVcw86w\
+    9J/stKYC+Deyl3qAzE4qgBN+9VgkuLnUkk6U4W8vk7lSgaq27zUzO9cduybFtRa\
+    E9MBWGaGKEk3Bi+BdIMF06qEjMCnQS+8debQ==:
 
 {"hello": "world"}
 ~~~
-
-The proxy's signature and the client's original signature can be verified independently for the same message, based on the needs of the application. Since the proxy's signature covers the client signature, the backend service fronted by the proxy can trust that the proxy has validated the incoming signature.
 
 # Requesting Signatures {#request-signature}
 
@@ -1896,6 +1934,8 @@ Upon verification, it is important that the verifier validate not only the signa
 
 As discussed in {{DIGEST}}, the value of the Content-Digest field is dependent on the content encoding of the message. If an intermediary changes the content encoding, the resulting Content-Digest value would change, which would in turn invalidate the signature. Any intermediary performing such an action would need to apply a new signature with the updated Content-Digest field value, similar to the reverse proxy use case discussed in {{signature-multiple}}.
 
+Applications that make use of [request-response binding](#content-request-response) also need to be aware of the limitations in this functionality. Specifically, if a client does not include something like a Content-Digest header field in the request, the server is unable to include a signature that covers the request's content.
+
 ## Cryptographic Considerations
 
 ### Cryptography and Signature Collision {#security-collision}
@@ -1935,6 +1975,38 @@ Some cryptographic primitives such as RSA PSS and ECDSA have non-deterministic o
 Applications of this specification need to protect against key specification downgrade attacks. For example, the same RSA key can be used for both RSA-PSS and RSA v1.5 signatures. If an application expects a key to only be used with RSA-PSS, it needs to reject signatures for that key using the weaker RSA 1.5 specification.
 
 Another example of a downgrade attack occurs when an asymmetric algorithm is expected, such as RSA-PSS, but an attacker substitutes a signature using symmetric algorithm, such as HMAC. A naive verifier implementation could use the value of the public RSA key as the input to the HMAC verification function. Since the public key is known to the attacker, this would allow the attacker to create a valid HMAC signature against this known key. To prevent this, the verifier needs to ensure that both the key material and the algorithm are appropriate for the usage in question. Additionally, while this specification does allow runtime specification of the algorithm using the `alg` signature parameter, applications are encouraged to use other mechanisms such as static configuration or higher protocol-level algorithm specification instead, preventing an attacker from substituting the algorithm specified.
+
+
+### Signing Signature Values {#security-sign-signature}
+
+When applying [request-response binding](#content-request-response) or [multiple signatures](#signature-multiple) to a message, it is possible to sign the value of an existing Signature field, thereby covering the bytes of the existing signature output in the new signature's value. While it would seem that this practice would transitively cover the components under the original signature in a verifiable fashion, the attacks described in {{JACKSON2019}} can be used to impersonate a signature output value on an unrelated message.
+
+In this example, Alice intends to send a signed request to Bob, and Bob wants to provide a signed response to Alice that includes a cryptographic proof that Bob is responding to Alice's incoming message. Mallory wants to intercept this traffic and replace Alice's message with her own, without Alice being aware that the interception has taken place.
+
+
+1. Alice creates a message, `Req_A` and applies a signature `Sig_A` using her private key `Key_A_Sign`.
+
+2. Alice believes she is sending `Req_A` to Bob.
+
+3. Mallory intercepts `Req_A` and reads the value `Sig_A` from this message.
+
+4. Mallory generates a different message `Req_M` to send to Bob instead.
+
+5. Mallory crafts a signing key `Key_M_Sign` such that she can create a valid signature `Sig_M` over her request `Req_M` using this key, but the byte value of `Sig_M` exactly equals that of `Sig_A`.
+
+6. Mallory sends `Req_M` with `Sig_M` to Bob.
+
+7. Bob validates `Sig_M` against Mallory's verification key, `Key_M_Verify`. At no time does Bob think that he's responding to Alice.
+
+8. Bob responds with response message `Res_B` to `Req_M` and creates signature `Sig_B` over this message using his key, `Key_B_Sign`. Bob includes the value of `Sig_M` under `Sig_B`'s covered components, but nothing elese from the request message.
+
+9. Mallory receives the response `Res_B` from Bob, including the signature `Sig_B` value. Mallory replays this response to Alice.
+
+10. Alice reads `Res_B` from Mallory and verifies `Sig_B` using Bob's verification key, `Key_B_Verify`. Alice includes the bytes of her original signature `Sig_A` in the signature base, and the signature verifies.
+
+11. Alice is led to believe that Bob has responded to her message, and believes she has cryptographic proof of this happening, but in fact Bob responded to Mallory's malicious request and Alice is none the wiser.
+
+To mitigate this, Bob can sign more portions of the request message than just the Signature field, in order to more fully differentiate Alice's message from Mallory's. Applications using this feature, particularly for non-repudiation purposes, can stipulate that any components required in the original signature also be covered separately in the second signature. For signed messages, requiring coverage of the corresponding Signature-Input field of the first signature ensures that unique items such as nonces and timestamps are also covered sufficiently by the second signature.
 
 ## Matching Covered Components to Message
 
