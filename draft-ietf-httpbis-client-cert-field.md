@@ -203,7 +203,7 @@ MAY make the certificate chain
 available to the backend application with the Client-Cert-Chain HTTP header
 field.
 
-Client-Cert-Chain is a List ({{Section 3.3.1 of RFC8941}}).  Each item in the
+Client-Cert-Chain is a List ({{Section 3.1 of RFC8941}}).  Each item in the
 list MUST be a Byte Sequence encoded as described in {{encoding}}. The order
 is the same as the ordering in TLS (such as described in {{Section 4.4.2 of TLS}}).
 
@@ -245,7 +245,7 @@ server with the following modifications:
    forwarding the request. An incoming request that has a `Client-Cert` or
    `Client-Cert-Chain` header field MAY be rejected with an HTTP 400 response.
 
-Requests made over a TLS connection where the use of client certificate
+Requests to the TTRP made over a TLS connection where the use of client certificate
 authentication was not negotiated MUST be sanitized by removing any and all
 occurrences of the `Client-Cert` and `Client-Cert-Chain` header fields prior to
 dispatching the request to the backend server.
@@ -559,6 +559,10 @@ The authors would like to thank the following individuals who've contributed in 
 # Document History
 
    > To be removed by the RFC Editor before publication as an RFC
+
+   draft-ietf-httpbis-client-cert-field-06
+
+   * Updates from IESG review
 
    draft-ietf-httpbis-client-cert-field-05
 
