@@ -203,7 +203,7 @@ MAY make the certificate chain
 available to the backend application with the Client-Cert-Chain HTTP header
 field.
 
-Client-Cert-Chain is a List ({{Section 3.3.1 of RFC8941}}).  Each item in the
+Client-Cert-Chain is a List ({{Section 3.1 of RFC8941}}).  Each item in the
 list MUST be a Byte Sequence encoded as described in {{encoding}}. The order
 is the same as the ordering in TLS (such as described in {{Section 4.4.2 of TLS}}).
 
