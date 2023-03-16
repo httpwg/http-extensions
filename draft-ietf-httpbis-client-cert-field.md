@@ -560,6 +560,10 @@ The authors would like to thank the following individuals who've contributed in 
 
    > To be removed by the RFC Editor before publication as an RFC
 
+   draft-ietf-httpbis-client-cert-field-06
+
+   * Updates from IESG review
+
    draft-ietf-httpbis-client-cert-field-05
 
    * Correct a couple references
