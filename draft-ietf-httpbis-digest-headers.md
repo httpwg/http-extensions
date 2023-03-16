@@ -648,7 +648,7 @@ new registrations is provided in {{algorithms}}.
 | unixsum        | insecure | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
 | unixcksum      | insecure | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
 | adler          | insecure | The ADLER32 algorithm.                          | [RFC1950], this document. |
-| crc32c         | insecure | The CRC32c algorithm.                           | {{?RFC9260}} appendix B, this document. |
+| crc32c         | insecure | The CRC32c algorithm.                           | {{?RFC9260}} appendix A, this document. |
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
