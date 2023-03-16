@@ -245,7 +245,7 @@ server with the following modifications:
    forwarding the request. An incoming request that has a `Client-Cert` or
    `Client-Cert-Chain` header field MAY be rejected with an HTTP 400 response.
 
-Requests made over a TLS connection where the use of client certificate
+Requests to the TTRP made over a TLS connection where the use of client certificate
 authentication was not negotiated MUST be sanitized by removing any and all
 occurrences of the `Client-Cert` and `Client-Cert-Chain` header fields prior to
 dispatching the request to the backend server.
