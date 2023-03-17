@@ -462,7 +462,7 @@ Cookie: SID=31d4d96e407aad42
 
 ## Which Requirements to Implement
 
-This section helps to guide implementors in determining which requirements and
+This section helps guide implementors in determining which requirements and
 syntax they should implement. Choosing the wrong set of requirements could
 result in a lack of compatibility with other cookie implementations.
 
