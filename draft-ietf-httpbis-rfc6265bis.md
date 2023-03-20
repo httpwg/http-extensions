@@ -478,11 +478,11 @@ will be sent to a user agent, such as a web browser. These implementations are
 frequently referred to as Servers by the spec but that term includes anything
 which primarily produces cookies. Some potential examples:
 
-* Server applications hosting a website
+* Server applications hosting a website or API
 
 * Programming languages or software frameworks that support cookies
 
-* Website add-ons, such as a business management suite
+* Integrated third-party web applications, such as a business management suite
 
 All these benefit from not only supporting as many user agents as possible but
 also supporting other servers. This is useful if a cookie is produced by a
@@ -517,16 +517,15 @@ frameworks.
 #### Programming Languages & Software Frameworks {#languages-frameworks}
 
 A programming language or software framework with support for cookies could
-reasonably be used as a cookie producer, cookie consumer, or both. Because
-a user of these may want to maximize their compatibility as either a producer
-or consumer these languages or frameworks should strongly consider supporting
-both sets of requirements. It is also strongly recommended that they default to
-the "safer" server requirements and require the user to explicitly activate the
-more lenient user agent requirements.
+reasonably be used to create an application that acts as a cookie producer,
+cookie consumer, or both. Because a developer may want to maximize their
+compatibility as either a producer or consumer, these languages or frameworks
+should strongly consider supporting both sets of requirements, {{sane-profile}}
+and {{ua-requirements}}, behind a compatibility mode toggle. This toggle should
+default to {{sane-profile}}'s requirements.
 
-Doing so will reduce the chances that a user's application can inadvertently
-create cookies that cannot be read by other servers but will still allow the
-application to behave as a user agent if desired.
+Doing so will reduce the chances that a developer's application can
+inadvertently create cookies that cannot be read by other servers.
 
 # Server Requirements {#sane-profile}
 
