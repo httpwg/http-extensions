@@ -462,25 +462,25 @@ Cookie: SID=31d4d96e407aad42
 
 ## Which Requirements to Implement
 
-This section helps guide implementors in determining which requirements and
+This section helps guide implementers in determining which requirements and
 syntax they should implement. Choosing the wrong set of requirements could
 result in a lack of compatibility with other cookie implementations.
 
 It's important to note that being compatible means different things
-depending on the implementor's goals. These differences have built up over time
+depending on the implementer's goals. These differences have built up over time
 due to both intentional and unintentional spec changes, spec interpretations,
 and historical implementation differences.
 
 ### Cookie Producing Implementations
 
-An implementor should choose {{sane-profile}} whenever cookies are created and
+An implementer should choose {{sane-profile}} whenever cookies are created and
 will be sent to a user agent, such as a web browser. These implementations are
 frequently referred to as Servers by the spec but that term includes anything
 which primarily produces cookies. Some potential examples:
 
 * Server applications hosting a website
 
-* Programming languages or software frameworks that supports cookies
+* Programming languages or software frameworks that support cookies
 
 * Website add-ons, such as a business management suite
 
@@ -490,12 +490,12 @@ software framework and is later sent back to a server application which needs
 to read it. {{sane-profile}} advises best practices that help maximize this
 sense of compatibility.
 
-See the latter section for more details on programming languages and software
+See {{languages-frameworks}} for more details on programming languages and software
 frameworks.
 
-### Cookies Consuming Implementations
+### Cookie Consuming Implementations
 
-An implementor should choose {{ua-requirements}} whenever cookies are primarily
+An implementer should choose {{ua-requirements}} whenever cookies are primarily
 received from another source. These implementations are referred to as user
 agents. Some examples:
 
@@ -511,10 +511,10 @@ implement a more lenient set of requirements and to accept some things that
 servers are warned against producing. {{ua-requirements}} advises best
 practices that help maximize this sense of compatibility.
 
-See the latter section for more details on programming languages and software
+See {{languages-frameworks}} for more details on programming languages and software
 frameworks.
 
-#### Programming Languages & Software Frameworks
+#### Programming Languages & Software Frameworks {#languages-frameworks}
 
 A programming language or software framework with support for cookies could
 reasonably be used as a cookie producer, cookie consumer, or both. Because
@@ -523,6 +523,10 @@ or consumer these languages or frameworks should strongly consider supporting
 both sets of requirements. It is also strongly recommended that they default to
 the "safer" server requirements and require the user to explicitly activate the
 more lenient user agent requirements.
+
+Doing so will reduce the chances that a user's application can inadvertently
+create cookies that cannot be read by other servers but will still allow the
+application to behave as a user agent if desired.
 
 # Server Requirements {#sane-profile}
 
