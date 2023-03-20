@@ -471,6 +471,10 @@ depending on the implementer's goals. These differences have built up over time
 due to both intentional and unintentional spec changes, spec interpretations,
 and historical implementation differences.
 
+This section roughly divides implementers of the cookie spec into two types,
+producers and consumers. These are not official terms and are only used here to
+help readers develop an intuitive understanding of the use cases.
+
 ### Cookie Producing Implementations
 
 An implementer should choose {{sane-profile}} whenever cookies are created and
