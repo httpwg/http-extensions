@@ -462,9 +462,11 @@ Cookie: SID=31d4d96e407aad42
 
 ## Which Requirements to Implement
 
-This section helps guide implementers in determining which requirements and
-syntax they should implement. Choosing the wrong set of requirements could
-result in a lack of compatibility with other cookie implementations.
+The upcoming two sections, {{sane-profile}} and {{ua-requirements}}, discuss
+the set of requirements for two distinct types of implementations. This section
+is meant to help guide implementers in determining which set of requirements
+best fits their goals. Choosing the wrong set of requirements could result in a
+lack of compatibility with other cookie implementations.
 
 It's important to note that being compatible means different things
 depending on the implementer's goals. These differences have built up over time
@@ -505,7 +507,7 @@ agents. Some examples:
 
 * Web browsers
 
-* Tools that support stateful http
+* Tools that support stateful HTTP
 
 * Programming languages or software frameworks that support cookies
 
