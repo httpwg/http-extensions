@@ -323,11 +323,10 @@ only if they are equivalent under the i;ascii-casemap collation defined in
 
 The term string means a sequence of non-NUL octets.
 
-The terms "active document", "ancestor browsing context", "browsing context",
-"dedicated worker", "Document", "nested browsing context", "opaque origin",
-"parent browsing context", "sandboxed origin browsing context flag", "shared
-worker", "the worker's Documents", "top-level browsing context", and
-"WorkerGlobalScope" are defined in {{HTML}}.
+The terms "active document", "ancestor navigables", "content navigable",
+"dedicated worker", "Document", "navigable", "opaque origin", "sandboxed origin
+browsing context flag", "shared worker", "the worker's Documents", "top-level
+traversable", and "WorkerGlobalScope" are defined in {{HTML}}.
 
 "Service Workers" are defined in the Service Workers specification
 {{SERVICE-WORKERS}}.
@@ -1079,14 +1078,14 @@ The URI displayed in a user agent's address bar is the only security context
 directly exposed to users, and therefore the only signal users can reasonably
 rely upon to determine whether or not they trust a particular website. The
 origin of that URI represents the context in which a user most likely believes
-themselves to be interacting. We'll define this origin, the top-level browsing
-context's active document's origin, as the "top-level origin".
+themselves to be interacting. We'll define this origin, the top-level
+traversable's active document's origin, as the "top-level origin".
 
-For a document displayed in a top-level browsing context, we can stop here: the
+For a document displayed in a top-level traversable, we can stop here: the
 document's "site for cookies" is the top-level origin.
 
-For documents which are displayed in nested browsing contexts, we need to audit
-the origins of each of a document's ancestor browsing contexts' active documents
+For documents which are displayed in content navigables, we need to audit
+the origins of each of a document's ancestor navigables' active documents
 in order to account for the "multiple-nested scenarios" described in Section 4
 of {{RFC7034}}. A document's "site for cookies" is the top-level origin if and
 only if the top-level origin is same-site with the document's origin, and with
@@ -1096,15 +1095,15 @@ cookies" is an origin set to an opaque origin.
 Given a Document (`document`), the following algorithm returns its "site for
 cookies":
 
-1.  Let `top-document` be the active document in `document`'s browsing context's
-    top-level browsing context.
+1.  Let `top-document` be the active document in `document`'s navigable's
+    top-level traversable.
 
 2.  Let `top-origin` be the origin of `top-document`'s URI if `top-document`'s
     sandboxed origin browsing context flag is set, and `top-document`'s origin
     otherwise.
 
 3.  Let `documents` be a list containing `document` and each of `document`'s
-    ancestor browsing contexts' active documents.
+    ancestor navigables' active documents.
 
 4.  For each `item` in `documents`:
 
@@ -1119,7 +1118,7 @@ cookies":
 ### Worker-based requests {#worker-requests}
 
 Worker-driven requests aren't as clear-cut as document-driven requests, as
-there isn't a clear link between a top-level browsing context and a worker.
+there isn't a clear link between a top-level traversable and a worker.
 This is especially true for Service Workers {{SERVICE-WORKERS}}, which may
 execute code in the background, without any document visible at all.
 
@@ -1705,7 +1704,7 @@ user agent MUST process the cookie as follows:
 18. If the cookie's `same-site-flag` is not "None":
 
     1.  If the cookie was received from a "non-HTTP" API, and the API was called
-        from a browsing context's active document whose "site for cookies" is
+        from a navigable's active document whose "site for cookies" is
         not same-site with the top-level origin, then abort these steps and
         ignore the newly created cookie entirely.
 
@@ -1714,9 +1713,9 @@ user agent MUST process the cookie as follows:
         processing the cookie.
 
     3.  If the cookie was received from a request which is navigating a
-        top-level browsing context {{HTML}} (e.g. if the request's "reserved
+        top-level traversable {{HTML}} (e.g. if the request's "reserved
         client" is either `null` or an environment whose "target browsing
-        context" is a top-level browing context), skip the remaining substeps
+        context" is in a top-level traversable), skip the remaining substeps
         and continue processing the cookie.
 
         Note: Top-level navigations can create a cookie with any `SameSite`
@@ -1897,7 +1896,7 @@ cookie-string from a given cookie store.
      * The same-site-flag is "Lax" or "Default".
      * The HTTP request associated with the retrieval uses a "safe" method.
      * The target browsing context of the HTTP request associated with the
-       retrieval is a top-level browsing context.
+       retrieval is in a top-level traversable.
 
 2. The user agent SHOULD sort the cookie-list in the following order:
 
@@ -2334,7 +2333,7 @@ Requests issued for reloads triggered through user interface elements (such as a
 refresh button on a toolbar) are same-site only if the reloaded document was
 originally navigated to via a same-site request. This differs from the handling
 of other reload navigations, which are always same-site if top-level, since the
-source browsing context's active document is precisely the document being
+source navigable's active document is precisely the document being
 reloaded.
 
 This special handling of reloads triggered through a user interface element
