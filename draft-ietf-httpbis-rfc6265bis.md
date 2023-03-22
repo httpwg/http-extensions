@@ -2676,15 +2676,17 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Prevent nameless cookies with prefixed values
   <https://github.com/httpwg/http-extensions/pull/2251>
 
+## draft-ietf-httpbis-rfc6265bis-12
+
 * Advise the reader which section to implement
   <https://github.com/httpwg/http-extensions/pull/2478>
 
 * Define top-level navigation
   <https://github.com/httpwg/http-extensions/pull/2481>
 
-## draft-ietf-httpbis-rfc6265bis-12
+* Use navigables concept
+  <https://github.com/httpwg/http-extensions/pull/2478>
 
-* None. Yet!
 
 # Acknowledgements
 {:numbered="false"}
