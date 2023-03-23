@@ -323,10 +323,11 @@ only if they are equivalent under the i;ascii-casemap collation defined in
 
 The term string means a sequence of non-NUL octets.
 
-The terms "active document", "ancestor navigables", "content navigable",
-"dedicated worker", "Document", "navigable", "opaque origin", "sandboxed origin
-browsing context flag", "shared worker", "the worker's Documents", "top-level
-traversable", and "WorkerGlobalScope" are defined in {{HTML}}.
+The terms "active document", "ancestor navigables", "container document",
+"content navigable", "dedicated worker", "Document", "navigable",
+"opaque origin", "sandboxed origin browsing context flag", "shared worker",
+"the worker's Documents", "top-level traversable", and "WorkerGlobalScope" are
+defined in {{HTML}}.
 
 "Service Workers" are defined in the Service Workers specification
 {{SERVICE-WORKERS}}.
@@ -1084,13 +1085,13 @@ traversable's active document's origin, as the "top-level origin".
 For a document displayed in a top-level traversable, we can stop here: the
 document's "site for cookies" is the top-level origin.
 
-For documents which are displayed in content navigables, we need to audit
-the origins of each of a document's ancestor navigables' active documents
-in order to account for the "multiple-nested scenarios" described in Section 4
-of {{RFC7034}}. A document's "site for cookies" is the top-level origin if and
-only if the top-level origin is same-site with the document's origin, and with
-each of the document's ancestor documents' origins. Otherwise its "site for
-cookies" is an origin set to an opaque origin.
+For container documents, we need to audit the origins of each of a document's
+ancestor navigables' active documents in order to account for the
+"multiple-nested scenarios" described in Section 4 of {{RFC7034}}. A document's
+"site for cookies" is the top-level origin if and only if the top-level origin
+is same-site with the document's origin, and with each of the document's
+ancestor documents' origins. Otherwise its "site for cookies" is an origin set
+to an opaque origin.
 
 Given a Document (`document`), the following algorithm returns its "site for
 cookies":
@@ -1114,6 +1115,9 @@ cookies":
         an opaque origin.
 
 5.  Return `top-origin`.
+
+Note: This algorithm only applies when the entire chain of documents from
+`top-document` to `document` are all active.
 
 ### Worker-based requests {#worker-requests}
 
