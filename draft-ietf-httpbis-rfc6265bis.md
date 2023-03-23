@@ -352,6 +352,9 @@ The term "request", as well as a request's "client", "current url", "method",
 The term "non-HTTP APIs" refers to non-HTTP mechanisms used to set and retrieve
 cookies, such as a web browser API that exposes cookies to scripts.
 
+The term "top-level navigation" refers to a navigation of a top-level
+traversable.
+
 # Overview
 
 This section outlines a way for an origin server to send state information to a
