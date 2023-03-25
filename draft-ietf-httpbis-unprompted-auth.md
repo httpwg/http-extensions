@@ -220,9 +220,9 @@ For example, the key ID "basement" authenticating using HMAC-SHA-512
 fit):
 
 ~~~
-Unprompted-Authentication: HMAC k="YmFzZW1lbnQ=";h=6;
-p="SW5zZXJ0IEhNQUMgb2Ygbm9uY2UgaGVyZSB3aGljaCB0YWtl
-cyA1MTIgYml0cyBmb3IgU0hBLTUxMiEhISEhIQ=="
+Unprompted-Authentication: HMAC k=:YmFzZW1lbnQ=:;h=6;
+p=:SW5zZXJ0IEhNQUMgb2Ygbm9uY2UgaGVyZSB3aGljaCB0YWtl
+cyA1MTIgYml0cyBmb3IgU0hBLTUxMiEhISEhIQ==:
 ~~~
 
 ## Other HTTP Authentication Schemes
