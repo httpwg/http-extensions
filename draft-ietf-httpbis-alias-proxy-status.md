@@ -66,9 +66,9 @@ by including the list of names in a new `next-hop-aliases` Proxy-Status paramete
 
 # next-hop-aliases Parameter {#parameter}
 
-The `next-hop-aliases` parameter's value is a String that contains one or more DNS names in
-a comma-separated list. The items in the list include all alias names and canonical names
-received in CNAME records {{DNS}} during the course of resolving the next hop's
+The `next-hop-aliases` parameter's value is a String {{!STRUCTURED-FIELDS=RFC8941}} that contains
+one or more DNS names in a comma-separated list. The items in the list include all alias names an
+canonical names received in CNAME records {{DNS}} during the course of resolving the next hop's
 hostname using DNS, not including the original requested hostname itself. The names SHOULD
 appear in the order in which they were received in DNS. If there are multiple CNAME records
 in the chain, the first name in the `next-hop-aliases` list would be the value in the CNAME
