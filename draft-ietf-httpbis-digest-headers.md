@@ -235,8 +235,8 @@ interpreted as described in {{RFC9110}}.
 This document uses the line folding strategies
 described in [FOLDING].
 
-Hashing algorithm names respect the casing used in their definition document (e.g. SHA-1, CRC32c)
-whereas hashing algorithm keys are quoted (e.g. "sha", "crc32c").
+Hashing algorithm names respect the casing used in their definition document (e.g., SHA-1, CRC32c)
+whereas hashing algorithm keys are quoted (e.g., "sha", "crc32c").
 
 The term "checksum" describes the output of the application of an algorithm
 to a sequence of bytes,
@@ -307,7 +307,7 @@ the entire selected representation data (see {{Section 8.1 of RFC9110}}).
 Representations take into account the effect of the HTTP semantics on
 messages. For example, the content can be affected by Range Requests or methods
 such as HEAD, while the way the content is transferred "on the wire" is
-dependent on other transformations (e.g. transfer codings for HTTP/1.1 - see
+dependent on other transformations (e.g., transfer codings for HTTP/1.1 - see
 {{Section 6.1 of RFC9112}}). To help illustrate HTTP representation concepts,
 several examples are provided in {{resource-representation}}.
 
@@ -548,7 +548,7 @@ Integrity fields can be used with. One possible approach is to combine them with
 HTTP Message Signatures {{SIGNATURES}}.
 
 Digests explicitly
-depend on the "representation metadata" (e.g. the values of `Content-Type`,
+depend on the "representation metadata" (e.g., the values of `Content-Type`,
 `Content-Encoding` etc). A signature that protects Integrity fields but not other
 "representation metadata" can expose the communication to tampering. For
 example, an actor could manipulate the `Content-Type` field-value and cause a
@@ -576,14 +576,14 @@ Eager processing of content before the trailer section prevents digest validatio
 processing of invalid data.
 
 Not every hashing algorithm is suitable for use in the trailer section, some may require to pre-process
-the whole payload before sending a message (e.g. see {{?I-D.thomson-http-mice}}).
+the whole payload before sending a message (e.g., see {{?I-D.thomson-http-mice}}).
 
 ## Variations Within Content Encoding
 
 Content coding mechanisms can support different encoding parameters, meaning that the same input content can produce different outputs. For example, GZIP supports mulitple compression levels. Such encoding parameters are generally not communicated as representation metadata, for instance different compression levels would all use the same "Content-Encoding: gzip" field. Other examples include where encoding relies on nonces or timestamps, such as the aes128gcm content coding defined in {{?RFC8188}}.
 
 Since it is possible for there to be variation within content coding, the checksum conveyed by the integrity field cannot be used to provide a proof of integrity "at rest"
-unless the whole (e.g. encoded) content is persisted.
+unless the whole (e.g., encoded) content is persisted.
 
 ## Algorithm Agility {#sec-agility}
 
@@ -665,7 +665,7 @@ Algorithm Values" registry at
 
 The following examples show how representation metadata, payload transformations
 and method impacts on the message and content. When the content
-contains non-printable characters (e.g. when it is compressed) it is shown as
+contains non-printable characters (e.g., when it is compressed) it is shown as
 a sequence of hex-encoded bytes.
 
 ~~~ http-message
