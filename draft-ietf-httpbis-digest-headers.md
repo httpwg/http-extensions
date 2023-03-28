@@ -106,7 +106,7 @@ features or properties such as TCP checksums or TLS records {{?TLS=RFC8446}} can
 some integrity protection. However, transport-oriented integrity provides a
 limited utility because it is opaque to the application layer and only covers
 the extent of a single connection. HTTP messages often travel over a chain of
-separate connections, in between connections there is a possibility for
+separate connections. In between connections there is a possibility for
 unintended or malicious data corruption. An HTTP integrity mechanism can provide
 the means for endpoints, or applications using HTTP, to detect data corruption
 and make a choice about how to act on it. An example use case is to aid
@@ -147,12 +147,12 @@ This document is structured as follows:
 
 The HTTP fields defined in this document can be used for HTTP integrity. Senders
 choose a hashing algorithm and calculate a digest from an input related to the
-HTTP message, the algorithm identifier and digest are transmitted in an HTTP
+HTTP message. The algorithm identifier and digest are transmitted in an HTTP
 field. Receivers can validate the digest for integrity purposes. Hashing
-algorithms are registered in the "Hash Algorithms for HTTP Digest Fields" (see
-{{algorithms}}).
+algorithms are registered in the "Hash Algorithms for HTTP Digest Fields" registry (see
+{{establish-hash-algorithm-registry}}).
 
-Selecting the data on which digests are calculated depends on the use case of
+Selecting the data on which digests are calculated depends on the use case of the
 HTTP messages. This document provides different fields for HTTP representation
 data and HTTP content.
 
@@ -191,7 +191,7 @@ the phases of an HTTP exchange in whole or in part. For example, HTTP Message
 Signatures {{SIGNATURES}} could be used to sign Integrity fields, thus providing
 coverage for HTTP content or representation data.
 
-This specification does not define means for authentication, authorization or privacy.
+This specification does not define means for authentication, authorization, or privacy.
 
 ## Obsoleting RFC 3230 {#obsolete-3230}
 
@@ -229,7 +229,7 @@ This document uses the following terminology from {{Section 3 of
 Boolean, Byte Sequence, Dictionary, Integer, and List.
 
 The definitions "representation", "selected representation", "representation
-data", "representation metadata", "user agent" and "content" in this document are to be
+data", "representation metadata", "user agent", and "content" in this document are to be
 interpreted as described in {{RFC9110}}.
 
 This document uses the line folding strategies
@@ -498,7 +498,7 @@ When reviewing registration requests, the designated expert(s) should pay
 attention to the requested status. The status value should reflect
 standardization status and the broad opinion of relevant interest groups such as
 the IETF or security-related SDOs. The "standard" status is not suitable for an
-algorithm that is known to be weak, broken or experimental. If a registration
+algorithm that is known to be weak, broken, or experimental. If a registration
 request attempts to register such an algorithm as "standard", the designated
 expert(s) should suggest an alternative status of "insecure" or "provisional".
 
@@ -529,8 +529,8 @@ Integrity fields can help detect representation data or content modification due
 undesired "transforming proxies" (see {{Section 7.7 of RFC9110}})
 or other actions as the data passes across multiple hops or system boundaries.
 Even a simple mechanism for end-to-end representation data integrity is valuable
-because a user agent can validate that resource retrieval succeeded before handing off to a
-HTML parser, video player etc. for parsing.
+because a user agent can validate that resource retrieval succeeded before handing off to an
+HTML parser, video player, etc. for parsing.
 
 Note that using these mechanisms alone does not provide end-to-end integrity of HTTP messages over
 multiple hops, since metadata could be manipulated at any stage. Methods to protect
@@ -543,7 +543,7 @@ certain identification of the origin of a message [NIST800-32]. Such signatures
 can protect one or more HTTP fields and there are additional considerations when
 Integrity fields are included in this set.
 
-There are no restrictions placed on the type or format of digitial signature that
+There are no restrictions placed on the type or format of digital signature that
 Integrity fields can be used with. One possible approach is to combine them with
 HTTP Message Signatures {{SIGNATURES}}.
 
@@ -575,12 +575,12 @@ When Integrity fields are used in a trailer section, the field-values are receiv
 Eager processing of content before the trailer section prevents digest validation, possibly leading to
 processing of invalid data.
 
-Not every hashing algorithm is suitable for use in the trailer section, some may require to pre-process
+Not every hashing algorithm is suitable for use in the trailer section, some may require to preprocess
 the whole payload before sending a message (e.g., see {{?I-D.thomson-http-mice}}).
 
 ## Variations Within Content Encoding
 
-Content coding mechanisms can support different encoding parameters, meaning that the same input content can produce different outputs. For example, GZIP supports mulitple compression levels. Such encoding parameters are generally not communicated as representation metadata, for instance different compression levels would all use the same "Content-Encoding: gzip" field. Other examples include where encoding relies on nonces or timestamps, such as the aes128gcm content coding defined in {{?RFC8188}}.
+Content coding mechanisms can support different encoding parameters, meaning that the same input content can produce different outputs. For example, GZIP supports multiple compression levels. Such encoding parameters are generally not communicated as representation metadata. For instance, different compression levels would all use the same "Content-Encoding: gzip" field. Other examples include where encoding relies on nonces or timestamps, such as the aes128gcm content coding defined in {{?RFC8188}}.
 
 Since it is possible for there to be variation within content coding, the checksum conveyed by the integrity field cannot be used to provide a proof of integrity "at rest"
 unless the whole (e.g., encoded) content is persisted.
@@ -663,7 +663,7 @@ Algorithm Values" registry at
 
 # Resource Representation and Representation Data {#resource-representation}
 
-The following examples show how representation metadata, payload transformations
+The following examples show how representation metadata, payload transformations,
 and method impacts on the message and content. When the content
 contains non-printable characters (e.g., when it is compressed) it is shown as
 a sequence of hex-encoded bytes.
@@ -795,7 +795,7 @@ Some examples include JSON objects in the content.
 For presentation purposes, objects that fit completely within the line-length limits
 are presented on a single line using compact notation with no leading space.
 Objects that would exceed line-length limits are presented across multiple lines
-(one line per key-value pair) with 2 spaced of leading indentation.
+(one line per key-value pair) with 2 spaces of leading indentation.
 
 Checksum mechanisms defined in this document are media-type agnostic
 and do not provide canonicalization algorithms for specific formats.
@@ -1225,7 +1225,7 @@ Some examples include JSON objects in the content.
 For presentation purposes, objects that fit completely within the line-length limits
 are presented on a single line using compact notation with no leading space.
 Objects that would exceed line-length limits are presented across multiple lines
-(one line per key-value pair) with 2 spaced of leading indentation.
+(one line per key-value pair) with 2 spaces of leading indentation.
 
 Checksum mechanisms described in this document are media-type agnostic
 and do not provide canonicalization algorithms for specific formats.
@@ -1385,7 +1385,7 @@ use only a single encoding format. Further explanation and examples are provided
 This document is based on ideas from [RFC3230], so thanks
 to Jeff Mogul and Arthur Van Hoff for their great work.
 The original idea of refreshing RFC3230 arose from an interesting
-discussion with Mark Nottingham, Jeffrey Yasskin and Martin Thomson when reviewing
+discussion with Mark Nottingham, Jeffrey Yasskin, and Martin Thomson when reviewing
 the MICE content coding.
 
 Thanks to Julian Reschke for his valuable contributions to this document,
