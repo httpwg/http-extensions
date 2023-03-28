@@ -656,7 +656,16 @@ new registrations is provided in {{algorithms}}.
 
 IANA is requested to deprecate the "Hypertext Transfer Protocol (HTTP) Digest
 Algorithm Values" registry at
-<https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml>.
+<https://www.iana.org/assignments/http-dig-alg/http-dig-alg.xhtml> and replace the note on this registry with the following text:
+
+
+> "This registry is deprecated since it lists the algorithms that can be used
+with the Digest and Want-Digest fields defined in
+[RFC3230]<https://www.iana.org/>, which has been obsoleted by
+[rfc-to-be-this-document]. While registration is not closed, new registrations
+are encouraged to use the [Hash Algorithms for HTTP Digest
+Fields]<https://www.iana.org/assignments/http-digest-hash-alg/> registry
+instead.
 
 
 --- back
