@@ -156,16 +156,16 @@ Selecting the data on which digests are calculated depends on the use case of
 HTTP messages. This document provides different fields for HTTP representation
 data and HTTP content.
 
-There are use-cases where a simple digest of the HTTP content bytes is
+There are use cases where a simple digest of the HTTP content bytes is
 required. The `Content-Digest` request and response header and trailer field is
 defined to support digests of content ({{Section 6.4 of RFC9110}}); see
 {{content-digest}}.
 
-For more advanced use-cases, the `Repr-Digest` request and response header
+For more advanced use cases, the `Repr-Digest` request and response header
 and trailer field ({{representation-digest}}) is defined. It contains a digest value
 computed by applying a hashing algorithm to selected representation data
 ({{Section 3.2 of RFC9110}}). Basing `Repr-Digest` on the selected
-representation makes it straightforward to apply it to use-cases where the
+representation makes it straightforward to apply it to use cases where the
 message content requires some sort of manipulation to be considered as
 representation of the resource or content conveys a partial representation of a resource,
 such as Range Requests (see {{Section 14 of RFC9110}}).
