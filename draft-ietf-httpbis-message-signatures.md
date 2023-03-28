@@ -542,7 +542,7 @@ This specification defines the following derived components:
 
 Additional derived component names are defined in the HTTP Signature Derived Component Names Registry. ({{content-registry}})
 
-Derived component values are taken from the context of the target message for the signature. This context includes information about the message itself, such as its control data, as well as any additional state and context held by the signer or verifier. In particular, when signing a response, the signer can include any derived components from the originating request by using the [request-response signature binding parameter](#content-request-response).
+Derived component values are taken from the context of the target message for the signature. This context includes information about the message itself, such as its control data, as well as any additional state and context held by the signer or verifier. In particular, when signing a response, the signer can include any derived components from the originating request by using the [request-response parameter](#content-request-response).
 
 request:
 : Values derived from and results applied to an HTTP request message as described in {{Section 3.4 of HTTP}}. If the target message of the signature is a response, using the `req` parameter allows a request-targeted derived component to be included in the signature (see {{content-request-response}}).
@@ -925,7 +925,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 Note that an HTTP message could contain [multiple signatures](#signature-multiple), but only the signature parameters used for a single signature are included in a given signature parameters entry.
 
-## Request-Response Signature Binding {#content-request-response}
+## Signing Request Components in a Response Message {#content-request-response}
 
 When a request message results in a signed response message, the signer can include portions of the request message in the signature base by adding the `req` parameter to the component identifier.
 
@@ -934,7 +934,7 @@ When a request message results in a signed response message, the signer can incl
 
 This parameter can be applied to both HTTP fields and derived components that target the request, with the same semantics. The component value for a message component using this parameter is calculated in the same manner as it is normally, but data is pulled from the request message instead of the target response message to which the signature is applied.
 
-Note that the same component name MAY be included with and without the `req` parameter in a single signature base, indicating the same named component from both the request and response message.
+Note that the same component name MAY be included with and without the `req` parameter in a single signature base, indicating the same named component from both the request and response message, respectively.
 
 The `req` parameter MAY be combined with other parameters as appropriate for the component identifier, such as the `key` parameter for a dictionary field.
 
@@ -1022,9 +1022,9 @@ Note that the ECDSA algorithm in use here is non-deterministic, meaning a differ
 
 Since the signature component values from the request are not repeated in the response, the requester MUST keep the original message component values around long enough to validate the signature of the response that uses this component identifier. In most cases, this means the requester needs to keep the original request message around, since the signer could choose to include any portions of the request in its response, according to the needs of the application. Since it is possible for an intermediary to alter a request message before it is processed by the server, applications need to take care not to sign such altered values as the client would not be able to validate the resulting signature.
 
-Applications needing this type of binding have to sign sufficient portion the request to ensure that it is uniquely tied to the response. Signing the signature value of a signed request alone does not provide sufficient coverage in most cases, as discussed in {{security-sign-signature}}.
+This functionality does not fully describe how to build a secure request-response binding protocol. Each application must do its own analysis as to what is required. Applications needing this type of binding have to sign sufficient portion the request to ensure that it is uniquely tied to the response, which will require additional analysis. Signing the signature value of a signed request alone does not provide sufficient coverage in most cases, as discussed in {{security-sign-signature}}.
 
-The response signature can only cover what is included in the request. Therefore, if an application needs to bind the message content of the request in its response, the client needs to include a means for covering that content, such as a Content-Digest field. See the discussion in {{security-message-content}} for more information.
+The response signature can only cover what is included in the request. Therefore, if an application needs to include the message content of the request under the signature of its response, the client needs to include a means for covering that content, such as a Content-Digest field. See the discussion in {{security-message-content}} for more information.
 
 The `req` parameter MUST NOT be used in a signature that targets a request message.
 
@@ -1934,7 +1934,7 @@ Upon verification, it is important that the verifier validate not only the signa
 
 As discussed in {{DIGEST}}, the value of the Content-Digest field is dependent on the content encoding of the message. If an intermediary changes the content encoding, the resulting Content-Digest value would change, which would in turn invalidate the signature. Any intermediary performing such an action would need to apply a new signature with the updated Content-Digest field value, similar to the reverse proxy use case discussed in {{signature-multiple}}.
 
-Applications that make use of [request-response binding](#content-request-response) also need to be aware of the limitations in this functionality. Specifically, if a client does not include something like a Content-Digest header field in the request, the server is unable to include a signature that covers the request's content.
+Applications that make use of the [request-response parameter](#content-request-response) also need to be aware of the limitations in this functionality. Specifically, if a client does not include something like a Content-Digest header field in the request, the server is unable to include a signature that covers the request's content.
 
 ## Cryptographic Considerations
 
@@ -1979,7 +1979,7 @@ Another example of a downgrade attack occurs when an asymmetric algorithm is exp
 
 ### Signing Signature Values {#security-sign-signature}
 
-When applying [request-response binding](#content-request-response) or [multiple signatures](#signature-multiple) to a message, it is possible to sign the value of an existing Signature field, thereby covering the bytes of the existing signature output in the new signature's value. While it would seem that this practice would transitively cover the components under the original signature in a verifiable fashion, the attacks described in {{JACKSON2019}} can be used to impersonate a signature output value on an unrelated message.
+When applying the [request-response parameter](#content-request-response) or [multiple signatures](#signature-multiple) to a message, it is possible to sign the value of an existing Signature field, thereby covering the bytes of the existing signature output in the new signature's value. While it would seem that this practice would transitively cover the components under the original signature in a verifiable fashion, the attacks described in {{JACKSON2019}} can be used to impersonate a signature output value on an unrelated message.
 
 In this example, Alice intends to send a signed request to Bob, and Bob wants to provide a signed response to Alice that includes a cryptographic proof that Bob is responding to Alice's incoming message. Mallory wants to intercept this traffic and replace Alice's message with her own, without Alice being aware that the interception has taken place.
 
