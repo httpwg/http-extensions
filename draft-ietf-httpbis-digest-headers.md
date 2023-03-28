@@ -559,7 +559,7 @@ endpoints. See also {{digest-and-content-location}}.
 Signatures are likely to be deemed an adversarial setting
 when applying Integrity fields; see {{algorithms}}.
 Using signatures to protect the checksum of an empty representation
-allows receiving endpoints to detect if an eventual payload has been stripped or added.
+allows receiving endpoints to detect if an eventual content has been stripped or added.
 
 Any mangling of Integrity fields, including digests' de-duplication
 or combining different field values (see {{Section 5.2 of RFC9110}})
@@ -576,7 +576,7 @@ Eager processing of content before the trailer section prevents digest validatio
 processing of invalid data.
 
 Not every hashing algorithm is suitable for use in the trailer section, some may require to preprocess
-the whole payload before sending a message (e.g., see {{?I-D.thomson-http-mice}}).
+the whole content before sending a message (e.g., see {{?I-D.thomson-http-mice}}).
 
 ## Variations Within Content Encoding
 
@@ -672,7 +672,7 @@ instead.
 
 # Resource Representation and Representation Data {#resource-representation}
 
-The following examples show how representation metadata, payload transformations,
+The following examples show how representation metadata, content transformations,
 and method impacts on the message and content. When the content
 contains non-printable characters (e.g., when it is compressed) it is shown as
 a sequence of hex-encoded bytes.
@@ -847,8 +847,7 @@ of a resource.
 
 The response `Content-Digest` field-value is computed on empty content.
 `Repr-Digest` is calculated over the JSON object
-`{"hello": "world"}` followed by an LF, which is not shown because there is no payload
-data.
+`{"hello": "world"}` followed by an LF, which is not shown because there is no content.
 
 
 ~~~ http-message
@@ -1125,7 +1124,7 @@ This case is analogous to a POST request where the target resource reflects the
 target URI.
 
 The PATCH request uses the `application/merge-patch+json` media type defined in
-{{?RFC7396}}. `Repr-Digest` is calculated on the enclosed payload, which corresponds to the
+{{?RFC7396}}. `Repr-Digest` is calculated on the content, which corresponds to the
 patch document and is the JSON object `{"title": "New Title"}` followed by an
 LF.
 
