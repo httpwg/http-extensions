@@ -1665,7 +1665,7 @@ This specification creates algorithm identifiers by including major parameters i
 
 {: vspace="0"}
 Algorithm Name:
-: An identifier for the HTTP Signature Algorithm. The name MUST be an ASCII string consisting only of lower-case characters (`"a"` - `"z"`), digits (`"0"` - `"9"`), and hyphens (`"-"`), and SHOULD NOT exceed 20 characters in length. The identifier MUST be unique within the context of the registry.
+: An identifier for the HTTP Signature Algorithm. The name MUST be an ASCII string that conforms to the `sf-string` ABNF rule in {{Section 3.3.3 of STRUCTRED-FIELDS}} and SHOULD NOT exceed 20 characters in length. The identifier MUST be unique within the context of the registry.
 
 Description:
 : A brief description of the algorithm used to sign the signature base.
