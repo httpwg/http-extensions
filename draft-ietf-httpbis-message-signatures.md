@@ -1063,7 +1063,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 And the following signed response:
 
-~~~
+~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
 HTTP/1.1 503 Service Unavailable
@@ -1086,7 +1086,7 @@ Note that the ECDSA algorithm in use here is non-deterministic, meaning a differ
 
 Applications signing a response to a signed request SHOULD sign all of the components of the request signature value to provide sufficient coverage and protection against a class of collision attacks, as discussed in {{security-sign-signature}}. The server in this example has included all components listed in the Signature-Input of the client's signature on the request in the response signature, in addition to components of the response.
 
-While it is syntactically possible to sign another signature on a message, applications SHOULD NOT sign the Signature and Signature-Input fields of the request, as shown in this example. Doing so does not provide transitive coverage of covered components and is susceptible to attack as discussed in {{security-sign-signature}}. In some applications, signing these fields of a request can indicate to the client that the server has processed an input signature, but such applications need to carefully specify such usage in addition to ensuring sufficient coverage of the messages.
+While it is syntactically possible to include the Signature and Signature-Input fields of the request message in the signature components of a response a message using this mechanism, this practice is NOT RECOMMENDED. This is because signatures of signatures do not provide transitive coverage of covered components as one might expect and the practice is susceptible to several attacks as discussed in {{security-sign-signature}}. An application that needs to signal successful processing or receipt of a signature would need to carefully specify alternative mechanisms for sending such a signal securely.
 
 The response signature can only ever cover what is included in the request message when using this flag. Consequently, if an application needs to include the message content of the request under the signature of its response, the client needs to include a means for covering that content, such as a Content-Digest field. See the discussion in {{security-message-content}} for more information.
 
@@ -1573,7 +1573,7 @@ Signature: sig1=:X5spyd6CFnAG5QnDyHfqoSNICd+BUP4LYMz2Q0JXlb//4Ijpzp\
 {"hello": "world"}
 ~~~
 
-While the proxy is in a position to validate the client's signature, the changes the proxy makes to the message will invalidate the existing signature when the message is seen by the origin server. While it is possible for the origin server to have additional information in its signature context to account for the change in authority, this practice requires additional configuration and extra care (see further discussion in {{security-context-multiple-signatures}}). The proxy is in a position to make its own statement to the origin server about the nature of the request that it is forwarding by adding its own signature over the new message before passing it along to the origin server.
+The proxy is in a position to validate the incoming client's signature and make its own statement to the origin server about the nature of the request that it is forwarding by adding its own signature over the new message before passing it along to the origin server.
 The proxy also includes all the elements from the original message that are relevant to the origin server's processing. In many cases, the proxy will want to cover all the same components that were covered by the client's signature, which is the case in this example. Note that in this example, the proxy is signing over the new authority value, which it has changed. The proxy also adds the Forwarded header to its own signature value.
 The proxy identifies its own key and algorithm and, in this example, includes an expiration for the signature to indicate to downstream systems that the proxy will not vouch for this signed message past this short time window. This results in a signature base of:
 
@@ -1640,7 +1640,7 @@ Signature: sig1=:X5spyd6CFnAG5QnDyHfqoSNICd+BUP4LYMz2Q0JXlb//4Ijpzp\
 {"hello": "world"}
 ~~~
 
-While the proxy could additionally include the client's Signature value and Signature-Input fields from the original message in the new signature's covered components, in this example the proxy does not do this due to known problems in signing signature values as discussed in {{security-sign-signature}}. In some applications, the proxy is a highly trusted component and signing an input signature can be used as a way for the proxy to indicate to the origin server that the proxy has read and verified the client's signature in the original message context. While the origin server may not be able to directly verify this original signature, it can verify that the proxy has vouched for the signature's validity. Use of this approach should be subject to careful analysis of the trust relationship between the different components of the application.
+While the proxy could additionally include the client's Signature value and Signature-Input fields from the original message in the new signature's covered components, this practice is NOT RECOMMENDED due to known weaknesses in signing signature values as discussed in {{security-sign-signature}}. The proxy is in a position to validate the client's signature, the changes the proxy makes to the message will invalidate the existing signature when the message is seen by the origin server. In this example, it is possible for the origin server to have additional information in its signature context to account for the change in authority, though this practice requires additional configuration and extra care as discussed in {{security-context-multiple-signatures}}. In other applications, the origin server will not be able to verify the original signature itself but will still want to verify that the proxy has done the appropriate validation of the client's signature. An application that needs to signal successful processing or receipt of a signature would need to carefully specify alternative mechanisms for sending such a signal securely.
 
 # Requesting Signatures {#request-signature}
 
