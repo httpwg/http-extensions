@@ -14,16 +14,6 @@ issues.json
 pulls.json
 report.xml
 lib
-draft-ietf-httpbis-cache-digest.xml
-draft-ietf-httpbis-client-cert-field.xml
-draft-ietf-httpbis-early-hints.xml
-draft-ietf-httpbis-expect-ct.xml
-draft-ietf-httpbis-header-structure.xml
-draft-ietf-httpbis-http2-secondary-certs.xml
-draft-ietf-httpbis-key.xml
-draft-ietf-httpbis-origin-frame.xml
-draft-ietf-httpbis-rand-access-live.xml
-draft-ietf-httpbis-replay.xml
-draft-ietf-httpbis-rfc6265bis.xml
 draft-ietf-httpbis-*.xml
 !draft-ietf-httpbis-safe-method-w-body.xml
+!requirements.txt
