@@ -1,32 +1,26 @@
 ---
 title: Structured Field Values for HTTP
-docname: draft-ietf-httpbis-header-structure-latest
+docname: draft-ietf-httpbis-sfbis-latest
 date: {DATE}
 category: std
 ipr: trust200902
 area: Applications and Real-Time
 workgroup: HTTP
 keyword: Internet-Draft
+obsoletes: 8941
 
 stand_alone: yes
 smart_quotes: no
-pi:
-  toc: yes
-  tocindent: yes
-  sortrefs: yes
-  symrefs: yes
-  strict: yes
-  compact: yes
-  comments: yes
-  inline: yes
-  tocdepth: 3
+pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
 
+entity:
+  SELF: "RFC nnnn"
 
 author:
  -
     ins: M. Nottingham
     name: Mark Nottingham
-    organization: Fastly
+    organization: Cloudflare
     city: Prahran
     region: VIC
     country: Australia
@@ -39,6 +33,7 @@ author:
     email: phk@varnish-cache.org
 
 normative:
+  HTTP: RFC9110
 
 informative:
   IEEE754:
@@ -64,34 +59,36 @@ informative:
       RFC: 3629
       DOI: 10.17487/RFC3629
     target: http://www.rfc-editor.org/info/std63
+  RFC9113:
+    display: HTTP/2
+  HPACK: RFC7541
+
+venue:
+  group: HTTP
+  type: Working Group
+  home: https://httpwg.org/
+  mail: ietf-http-wg@w3.org
+  arch: https://lists.w3.org/Archives/Public/ietf-http-wg/
+  repo: https://github.com/httpwg/http-extensions/labels/header-structure
+github-issue-label: header-structure
 
 
 --- abstract
 
 This document describes a set of data types and associated algorithms that are intended to make it easier and safer to define and handle HTTP header and trailer fields, known as "Structured Fields", "Structured Headers", or "Structured Trailers". It is intended for use by specifications of new HTTP fields that wish to use a common syntax that is more restrictive than traditional HTTP field values.
 
+This document obsoletes RFC 8941.
 
---- note_Note_to_Readers
-
-*RFC EDITOR: please remove this section before publication*
-
-Discussion of this draft takes place on the HTTP working group mailing list (ietf-http-wg@w3.org), which is archived at <https://lists.w3.org/Archives/Public/ietf-http-wg/>.
-
-Working Group information can be found at <https://httpwg.github.io/>; source code and issues list for this draft can be found at <https://github.com/httpwg/http-extensions/labels/header-structure>.
-
-Tests for implementations are collected at <https://github.com/httpwg/structured-field-tests>.
-
-Implementations are tracked at <https://github.com/httpwg/wiki/wiki/Structured-Headers>.
 
 --- middle
 
 # Introduction
 
-Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in {{?RFC7231}}{: section="8.3.1"}, there are many decisions -- and pitfalls -- for a prospective HTTP field author.
+Specifying the syntax of new HTTP header (and trailer) fields is an onerous task; even with the guidance in {{Section 16.3.2 of HTTP}}, there are many decisions -- and pitfalls -- for a prospective HTTP field author.
 
 Once a field is defined, bespoke parsers and serializers often need to be written, because each field value has a slightly different handling of what looks like common syntax.
 
-This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{?RFC7230}} header and trailer fields.
+This document introduces a set of common data structures for use in definitions of new HTTP field values to address these problems. In particular, it defines a generic, abstract model for them, along with a concrete serialization for expressing that model in HTTP {{HTTP}} header and trailer fields.
 
 An HTTP field that is defined as a "Structured Header" or "Structured Trailer" (if the field can be either, it is a "Structured Field") uses the types defined in this specification to define its syntax and basic handling rules, thereby simplifying both its definition by specification writers and handling by implementations.
 
@@ -108,7 +105,7 @@ Those abstract types can be serialized into and parsed from HTTP field values us
 
 ## Intentionally Strict Processing {#strict}
 
-This specification intentionally defines strict parsing and serialization behaviors using step-by-step algorithms; the only error handling defined is to fail the operation altogether.
+This specification intentionally defines strict parsing and serialization behaviors using step-by-step algorithms; the only error handling defined is to fail the entire operation altogether.
 
 It is designed to encourage faithful implementation and good interoperability. Therefore, an implementation that tried to be helpful by being more tolerant of input would make interoperability worse, since that would create pressure on other implementations to implement similar (but likely subtly different) workarounds.
 
@@ -121,11 +118,9 @@ Note that as a result of this strictness, if a field is appended to by multiple 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This document uses algorithms to specify parsing and serialization behaviors and the Augmented Backus-Naur Form (ABNF) notation of {{!RFC5234}} to illustrate expected syntax in HTTP header fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{!RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
+This document uses algorithms to specify parsing and serialization behaviors. When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms.
 
-When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
-
-For serialization to HTTP fields, the ABNF illustrates their expected wire representations, and the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm described in {{text-parse}}.
+For serialization to HTTP fields, the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm described in {{text-parse}}.
 
 
 # Defining New Structured Fields {#specify}
@@ -144,7 +139,7 @@ To specify an HTTP field as a Structured Field, its authors need to:
 
 Typically, this means that a field definition will specify the top-level type -- List, Dictionary, or Item -- and then define its allowable types and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q", or strings in lowercase. Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
 
-When parsing fails, the entire field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different error handling, this should be explicitly specified.
+When parsing fails, the entire field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different handling for type mismatches it should be explicitly specified, but note that field definitions cannot override how parsing failures are handled.
 
 Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized parameter as an error condition.
 
@@ -158,7 +153,7 @@ A field definition cannot relax the requirements of this specification because d
 
 This specification defines minimums for the length or number of various structures supported by implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
 
-Specifications can refer to a field name as a "structured header name", "structured trailer name", or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value", or "structured field value" as necessary. Field definitions are encouraged to use the ABNF rules beginning with "sf-" defined in this specification; other rules in this specification are not intended to be used in field definitions.
+Specifications can refer to a field name as a "structured header name", "structured trailer name", or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value", or "structured field value" as necessary.
 
 For example, a fictitious Foo-Example header field might be specified as:
 
@@ -169,11 +164,7 @@ For example, a fictitious Foo-Example header field might be specified as:
 much Foo the message has.</t>
 
 <t>Foo-Example is an Item Structured Header [RFC8941]. Its value MUST be
-an Integer (Section 3.3.1 of [RFC8941]). Its ABNF is:</t>
-
-<artwork>
-  Foo-Example = sf-integer
-</artwork>
+an Integer (Section 3.3.1 of [RFC8941]).</t>
 
 <t>Its value indicates the amount of Foo in the message, and it MUST
 be between 0 and 10, inclusive; other values MUST cause
@@ -200,9 +191,18 @@ being used.</t>
 </artwork>
 </blockquote>
 
+Note that because the definition of a Structured Field references a specific RFC for Structured Fields, the types available for use in its value are limited to those defined in that RFC. For example, a field whose definition references this document can have a value that uses the Date type ({{date}}), whereas a field whose definition references RFC 8941 cannot, because it will be treated as invalid (and therefore discarded) by implementations of that specification.
+
+Also note that this limitation also applies to future extensions to a field; for example, a field that is defined with reference to RFC 8941 cannot use the Date type, because some recipients might still be using an RFC 8941 parser to process it.
+
+However, this document is designed to be backwards-compatible with RFC 8941; a parser that implements the requirements here can also parse valid Structured Fields whose definitions reference RFC 8941.
+
+The effect of upgrading a Structured Fields implementation is that some field values that were invalid according to RFC 8941 might become valid when processed.  For instance, though it would not be valid for a field defined against RFC 8941, a field might include include a Date value. An RFC 8941 implementation would reject the entire field, whereas an updated Structured Field implementation might permit the value. In some cases, the resulting Date value will be rejected by field-specific logic, but values in fields that are otherwise ignored (such as extension parameters) might not be detected and the field might subsequently be accepted and processed.
+
+
 # Structured Data Types {#types}
 
-This section defines the abstract types for Structured Fields. The ABNF provided represents the on-wire format in HTTP field values.
+This section defines the abstract types for Structured Fields, and summarises how those types are serialised into textual HTTP fields.
 
 In summary:
 
@@ -217,22 +217,15 @@ In summary:
 
 Lists are arrays of zero or more members, each of which can be an Item ({{item}}) or an Inner List ({{inner-list}}), both of which can be Parameterized ({{param}}).
 
-The ABNF for Lists in HTTP fields is:
+An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
 
-~~~ abnf
-sf-list       = list-member *( OWS "," OWS list-member )
-list-member   = sf-item / inner-list
-~~~
-
-Each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
+When serialised as a textual HTTP field, each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
 
 ~~~ http-message
 Example-List: sugar, tea, rum
 ~~~
 
-An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
-
-Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{?RFC7230}}{: section="3.2.2"}; for example, the following are equivalent:
+Note that Lists can have their members split across multiple lines of the same header or trailer section, as per {{Section 5.3 of HTTP}}; for example, the following are equivalent:
 
 ~~~ http-message
 Example-List: sugar, tea, rum
@@ -254,14 +247,7 @@ Parsers MUST support Lists containing at least 1024 members. Field specification
 
 An Inner List is an array of zero or more Items ({{item}}). Both the individual Items and the Inner List itself can be Parameterized ({{param}}).
 
-The ABNF for Inner Lists is:
-
-~~~ abnf
-inner-list    = "(" *SP [ sf-item *( 1*SP sf-item ) *SP ] ")"
-                parameters
-~~~
-
-Inner Lists are denoted by surrounding parenthesis, and their values are delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
+When serialised in a textual HTTP field, Inner Lists are denoted by surrounding parenthesis, and their values are delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
 ~~~ http-message
 Example-List: ("foo" "bar"), ("baz"), ("bat" "one"), ()
@@ -284,19 +270,9 @@ Parameters are an ordered map of key-value pairs that are associated with an Ite
 
 Implementations MUST provide access to Parameters both by index and by key. Specifications MAY use either means of accessing them.
 
-The ABNF for Parameters is:
+Note that parameters are ordered, and parameter keys cannot contain uppercase letters.
 
-~~~ abnf
-parameters    = *( ";" *SP parameter )
-parameter     = param-key [ "=" param-value ]
-param-key     = key
-key           = ( lcalpha / "*" )
-                *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
-lcalpha       = %x61-7A ; a-z
-param-value   = bare-item
-~~~
-
-Note that parameters are ordered as serialized, and parameter keys cannot contain uppercase letters. A parameter is separated from its Item or Inner List and other parameters by a semicolon. For example:
+When serialised in a textual HTTP field, a Parameter is separated from its Item or Inner List and other Parameters by a semicolon. For example:
 
 ~~~ http-message
 Example-List: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
@@ -319,16 +295,11 @@ Dictionaries are ordered maps of key-value pairs, where the keys are short textu
 
 Implementations MUST provide access to Dictionaries both by index and by key. Specifications MAY use either means of accessing the members.
 
-The ABNF for Dictionaries is:
+As with Lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
 
-~~~ abnf
-sf-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-key ( parameters / ( "=" member-value ))
-member-key     = key
-member-value   = sf-item / inner-list
-~~~
+Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their keys, as well as whether their presence is required or optional. Recipients MUST ignore members whose keys that are undefined or unknown, unless the field's specification specifically disallows them.
 
-Members are ordered as serialized and separated by a comma with optional whitespace. Member keys cannot contain uppercase characters. Keys and values are separated by "=" (without whitespace). For example:
+When serialised as a textual HTTP field, Members are ordered as serialized and separated by a comma with optional whitespace. Member keys cannot contain uppercase characters. Keys and values are separated by "=" (without whitespace). For example:
 
 ~~~ http-message
 Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
@@ -356,10 +327,6 @@ A Dictionary with a mix of Items and Inner Lists, some with parameters:
 Example-Dict: a=(1 2), b=3, c=4;aa=bb, d=(5 6);valid
 ~~~
 
-As with Lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
-
-Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their keys, as well as whether their presence is required or optional. Recipients MUST ignore members whose keys that are undefined or unknown, unless the field's specification specifically disallows them.
-
 Note that Dictionaries can have their members split across multiple lines of the same header or trailer section; for example, the following are equivalent:
 
 ~~~ http-message
@@ -380,15 +347,7 @@ Parsers MUST support Dictionaries containing at least 1024 key/value pairs and k
 
 ## Items {#item}
 
-An Item can be an Integer ({{integer}}), a Decimal ({{decimal}}), a String ({{string}}), a Token ({{token}}), a Byte Sequence ({{binary}}), or a Boolean ({{boolean}}). It can have associated parameters ({{param}}).
-
-The ABNF for Items is:
-
-~~~ abnf
-sf-item   = bare-item parameters
-bare-item = sf-integer / sf-decimal / sf-string / sf-token
-            / sf-binary / sf-boolean
-~~~
+An Item can be an Integer ({{integer}}), a Decimal ({{decimal}}), a String ({{string}}), a Token ({{token}}), a Byte Sequence ({{binary}}), a Boolean ({{boolean}}), or a Date ({{date}}). It can have associated parameters ({{param}}).
 
 For example, a header field that is defined to be an Item that is an Integer might look like:
 
@@ -407,12 +366,6 @@ Example-Integer: 5; foo=bar
 
 Integers have a range of -999,999,999,999,999 to 999,999,999,999,999 inclusive (i.e., up to fifteen digits, signed), for IEEE 754 compatibility {{IEEE754}}.
 
-The ABNF for Integers is:
-
-~~~ abnf
-sf-integer = ["-"] 1*15DIGIT
-~~~
-
 For example:
 
 ~~~ http-message
@@ -430,14 +383,6 @@ Note that commas in Integers are used in this section's prose only for readabili
 
 Decimals are numbers with an integer and a fractional component. The integer component has at most 12 digits; the fractional component has at most three digits.
 
-
-The ABNF for decimals is:
-
-
-~~~ abnf
-sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
-~~~
-
 For example, a header whose value is defined as a Decimal could look like:
 
 ~~~ http-message
@@ -453,16 +398,11 @@ Note that the serialization algorithm ({{ser-decimal}}) rounds input with more t
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
-The ABNF for Strings is:
+Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
 
-~~~ abnf
-sf-string = DQUOTE *chr DQUOTE
-chr       = unescaped / escaped
-unescaped = %x20-21 / %x23-5B / %x5D-7E
-escaped   = "\" ( DQUOTE / "\" )
-~~~
+When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably UTF-8 {{STD63}}).
 
-Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
+When serialised in a textual HTTP field, Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
 ~~~ http-message
 Example-String: "hello world"
@@ -470,22 +410,12 @@ Example-String: "hello world"
 
 Note that Strings only use DQUOTE as a delimiter; single quotes do not delimit Strings. Furthermore, only DQUOTE and "\\" can be escaped; other characters after "\\" MUST cause parsing to fail.
 
-Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
-
-When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably UTF-8 {{STD63}}).
-
 Parsers MUST support Strings (after any decoding) with at least 1024 characters.
 
 
 ### Tokens {#token}
 
-Tokens are short textual words; their abstract model is identical to their expression in the HTTP field value serialization.
-
-The ABNF for Tokens is:
-
-~~~ abnf
-sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
-~~~
+Tokens are short textual words that begin with an alphabetic character or "*", followed by zero to many token characters, which are the same as those allowed by the "token" ABNF rule defined in {{HTTP}}, plus the ":" and "/" characters.
 
 For example:
 
@@ -495,21 +425,12 @@ Example-Token: foo123/456
 
 Parsers MUST support Tokens with at least 512 characters.
 
-Note that Token allows the same characters as the "token" ABNF rule defined in {{?RFC7230}}, with the exceptions that the first character is required to be either ALPHA or "\*", and ":" and "/" are also allowed in subsequent characters.
-
 
 ### Byte Sequences {#binary}
 
 Byte Sequences can be conveyed in Structured Fields.
 
-The ABNF for a Byte Sequence is:
-
-~~~ abnf
-sf-binary = ":" *(base64) ":"
-base64    = ALPHA / DIGIT / "+" / "/" / "="
-~~~
-
-A Byte Sequence is delimited with colons and encoded using base64 ({{RFC4648, Section 4}}). For example:
+When serialised in a textual HTTP field, a Byte Sequence is delimited with colons and encoded using base64 ({{RFC4648, Section 4}}). For example:
 
 ~~~ http-message
 Example-ByteSequence: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
@@ -522,14 +443,7 @@ Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
 
 Boolean values can be conveyed in Structured Fields.
 
-The ABNF for a Boolean is:
-
-~~~ abnf
-sf-boolean = "?" boolean
-boolean    = "0" / "1"
-~~~
-
-A Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
+When serialised in a textual HTTP field, a Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ http-message
 Example-Boolean: ?1
@@ -538,9 +452,22 @@ Example-Boolean: ?1
 Note that in Dictionary ({{dictionary}}) and Parameter ({{param}}) values, Boolean true is indicated by omitting the value.
 
 
+### Dates {#date}
+
+Date values can be conveyed in Structured Fields.
+
+Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from January 1, 1970 00:00:00 UTC, excluding leap seconds.
+
+For example:
+
+~~~ http-message-new
+Example-Date: @1659578233
+~~~
+
+
 # Working with Structured Fields in HTTP {#text}
 
-This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{?RFC7540}} before compression with HPACK {{?RFC7541}}).
+This section defines how to serialize and parse Structured Fields in textual HTTP field values and other encodings compatible with them (e.g., in HTTP/2 {{RFC9113}} before compression with HPACK {{HPACK}}).
 
 ## Serializing Structured Fields {#text-serialize}
 
@@ -644,7 +571,8 @@ Given an Item as input_item, return an ASCII string suitable for use in an HTTP 
 4. If input_item is a Token, return the result of running Serializing a Token ({{ser-token}}) with input_item.
 5. If input_item is a Byte Sequence, return the result of running Serializing a Byte Sequence ({{ser-binary}}) with input_item.
 6. If input_item is a Boolean, return the result of running Serializing a Boolean ({{ser-boolean}}) with input_item.
-7. Otherwise, fail serialization.
+7. If input_item is a Date, return the result of running Serializing a Date ({{ser-date}}) with input_item.
+8. Otherwise, fail serialization.
 
 
 ### Serializing an Integer {#ser-integer}
@@ -728,6 +656,15 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in an 
 5. Return output.
 
 
+### Serialising a Date {#ser-date}
+
+Given a Date as input_integer, return an ASCII string suitable for use in an HTTP field value.
+
+0. Let output be "@".
+1. Append to output the result of running Serializing an Integer with input_date ({{ser-integer}}).
+2. Return output.
+
+
 ## Parsing Structured Fields {#text-parse}
 
 When a receiving implementation parses HTTP fields that are known to be Structured Fields, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
@@ -743,7 +680,7 @@ Given an array of bytes as input_bytes that represent the chosen field's field-v
 6. If input_string is not empty, fail parsing.
 7. Otherwise, return output.
 
-When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{RFC7230, Section 3.2.2}}; this assures that the entire field value is processed correctly.
+When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{Section 5.2 of HTTP}}; this assures that the entire field value is processed correctly.
 
 For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances. The parsing algorithms for both types allow tab characters, since these might
 be used to combine field lines by some implementations.
@@ -759,7 +696,7 @@ Example-String: "foo
 Example-String: bar"
 ~~~
 
-If parsing fails -- including when calling another algorithm -- the entire field value MUST be ignored (i.e., treated as if the field were not present in the section). This is intentionally strict, to improve interoperability and safety, and specifications referencing this document are not allowed to loosen this requirement.
+If parsing fails, either the entire field value MUST be ignored (i.e., treated as if the field were not present in the section), or alternatively the complete HTTP message MUST be treated as malformed. This is intentionally strict to improve interoperability and safety, and field specifications that use Structured Fields are not allowed to loosen this requirement.
 
 Note that this requirement does not apply to an implementation that is not parsing the field; for example, an intermediary is not required to strip a failing field from a message before forwarding it.
 
@@ -848,7 +785,8 @@ Given an ASCII string as input_string, return a bare Item. input_string is modif
 3. If the first character of input_string is an ALPHA or "\*", return the result of running Parsing a Token ({{parse-token}}) with input_string.
 4. If the first character of input_string is ":", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
 5. If the first character of input_string is "?", return the result of running Parsing a Boolean ({{parse-boolean}}) with input_string.
-6. Otherwise, the item type is unrecognized; fail parsing.
+6. If the first character of input_string is "@", return the result of running Parsing a Date ({{parse-date}}) with input_string.
+7. Otherwise, the item type is unrecognized; fail parsing.
 
 #### Parsing Parameters {#parse-param}
 
@@ -905,12 +843,13 @@ NOTE: This algorithm parses both Integers ({{integer}}) and Decimals ({{decimal}
    5. If type is "integer" and input_number contains more than 15 characters, fail parsing.
    6. If type is "decimal" and input_number contains more than 16 characters, fail parsing.
 8. If type is "integer":
-   1. Parse input_number as an integer and let output_number be the product of the result and sign.
+   1. Let output_number be an Integer that is the result of parsing input_number as an integer.
 9. Otherwise:
    1. If the final character of input_number is ".", fail parsing.
    2. If the number of characters after "." in input_number is greater than three, fail parsing.
-   2. Parse input_number as a decimal number and let output_number be the product of the result and sign.
-0. Return output_number.
+   3. Let output_number be a Decimal that is the result of parsing input_number as a decimal number.
+0. Let output_number be the product of output_number and sign.
+1. Return output_number.
 
 
 ### Parsing a String {#parse-string}
@@ -959,7 +898,7 @@ Given an ASCII string as input_string, return a Byte Sequence. input_string is m
 7. Let binary_content be the result of base64-decoding {{!RFC4648}} b64_content, synthesizing padding if necessary (note the requirements about recipient behavior below). If base64 decoding fails, parsing fails.
 8. Return binary_content.
 
-Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{RFC4648, Section 3.2}}, parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
+Because some implementations of base64 do not allow rejection of encoded data that is not properly "=" padded (see {{RFC4648, Section 3.2}}), parsers SHOULD NOT fail when "=" padding is not present, unless they cannot be configured to do so.
 
 Because some implementations of base64 do not allow rejection of encoded data that has non-zero pad bits (see {{RFC4648, Section 3.5}}), parsers SHOULD NOT fail when non-zero pad bits are present, unless they cannot be configured to do so.
 
@@ -977,9 +916,46 @@ Given an ASCII string as input_string, return a Boolean. input_string is modifie
 5. No value has matched; fail parsing.
 
 
-# IANA Considerations
+### Parsing a Date {#parse-date}
 
-This document has no IANA actions.
+Given an ASCII string as input_string, return a Date. input_string is modified to remove the parsed value.
+
+1. If the first character of input_string is not "@", fail parsing.
+2. Discard the first character of input_string.
+3. Let output_date be the result of running Parsing an Integer or Decimal ({{parse-number}}) with input_string.
+4. If output_date is a Decimal, fail parsing.
+5. Return output_date.
+
+
+# IANA Considerations {#iana}
+
+Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
+
+> The "Structured Type" column indicates the type of the field (per {{&SELF}}), if any, and may be
+> "Dictionary", "List" or "Item".
+>
+> Note that field names beginning with characters other than ALPHA or "*" will not be able to be
+> represented as a Structured Fields Token, and therefore may be incompatible with being mapped into
+> fields that refer to it.
+
+Then, add a new column, "Structured Type".
+
+Then, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
+
+| Field Name                                | Structured Type |
+|-------------------------------------------|-----------------|
+| Accept-CH                                 | List            |
+| Cache-Status                              | List            |
+| CDN-Cache-Control                         | Dictionary      |
+| Cross-Origin-Embedder-Policy              | Item            |
+| Cross-Origin-Embedder-Policy-Report-Only  | Item            |
+| Cross-Origin-Opener-Policy                | Item            |
+| Cross-Origin-Opener-Policy-Report-Only    | Item            |
+| Origin-Agent-Cluster                      | Item            |
+| Priority                                  | Dictionary      |
+| Proxy-Status                              | List            |
+{:id="existing-fields" title="Existing Fields"}
+
 
 # Security Considerations
 
@@ -1014,7 +990,7 @@ Additionally, there were widely shared feelings that JSON doesn't "look right" i
 
 A generic implementation of this specification should expose the top-level serialize ({{text-serialize}}) and parse ({{text-parse}}) functions. They need not be functions; for example, it could be implemented as an object, with methods for each of the different top-level types.
 
-For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at <https://github.com/httpwg/structured-field-tests>.
+For interoperability, it's important that generic implementations be complete and follow the algorithms closely; see {{strict}}. To aid this, a common test suite is being maintained by the community at \<https://github.com/httpwg/structured-field-tests\>.
 
 Implementers should note that Dictionaries and Parameters are order-preserving maps. Some fields may not convey meaning in the ordering of these data types, but it should still be exposed so that it will be available to applications that need to use it.
 
@@ -1024,174 +1000,67 @@ The serialization algorithm is defined in a way that it is not strictly limited 
 
 Implementations are allowed to limit the size of different structures, subject to the minimums defined for each type. When a structure exceeds an implementation limit, that structure fails parsing or serialization.
 
-# Changes
 
-_RFC Editor: Please remove this section before publication._
+# ABNF {#abnf}
 
-## Since draft-ietf-httpbis-header-structure-18
+This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{?RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
 
-* Use "sf-" prefix for ABNF, not "sh-".
-* Fix indentation in Dictionary serialisation (#1164).
-* Add example for Token; tweak example field names (#1147).
-* Editorial improvements.
-* Note that exceeding implementation limits implies failure.
-* Talk about specifying order of Dictionary members and Parameters, not cardinality.
-* Allow (but don't require) parsers to fail when a single field line isn't valid.
-* Note that some aspects of Integers and Decimals are not necessarily preserved.
-* Allow Lists and Dictionaries to be delimited by OWS, rather than *SP, to make parsing more robust.
+This section is non-normative. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
-## Since draft-ietf-httpbis-header-structure-17
+~~~ abnf
+sf-list       = list-member *( OWS "," OWS list-member )
+list-member   = sf-item / inner-list
 
-* Editorial improvements.
+inner-list    = "(" *SP [ sf-item *( 1*SP sf-item ) *SP ] ")"
+                parameters
 
-## Since draft-ietf-httpbis-header-structure-16
+parameters    = *( ";" *SP parameter )
+parameter     = param-key [ "=" param-value ]
+param-key     = key
+key           = ( lcalpha / "*" )
+                *( lcalpha / DIGIT / "_" / "-" / "." / "*" )
+lcalpha       = %x61-7A ; a-z
+param-value   = bare-item
 
-* Editorial improvements.
-* Discussion on forwards compatibility.
+sf-dictionary  = dict-member *( OWS "," OWS dict-member )
+dict-member    = member-key ( parameters / ( "=" member-value ))
+member-key     = key
+member-value   = sf-item / inner-list
 
-## Since draft-ietf-httpbis-header-structure-15
+sf-item   = bare-item parameters
+bare-item = sf-integer / sf-decimal / sf-string / sf-token
+            / sf-binary / sf-boolean
 
-* Editorial improvements.
-* Use HTTP field terminology more consistently, in line with recent changes to HTTP-core.
-* String length requirements apply to decoded strings (#1051).
-* Correctly round decimals in serialisation (#1043).
-* Clarify input to serialisation algorithms (#1055).
-* Omitted True dictionary value can have parameters (#1083).
-* Keys can now start with '*' (#1068).
+sf-integer = ["-"] 1*15DIGIT
 
+sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
 
-## Since draft-ietf-httpbis-header-structure-14
+sf-string = DQUOTE *chr DQUOTE
+chr       = unescaped / escaped
+unescaped = %x20-21 / %x23-5B / %x5D-7E
+escaped   = "\" ( DQUOTE / "\" )
 
-* Editorial improvements.
-* Allow empty dictionary values (#992).
-* Change value of omitted parameter value to True (#995).
-* Explain more about splitting dictionaries and lists across header instances (#997).
-* Disallow HTAB, replace OWS with spaces (#998).
-* Change byte sequence delimiters from "\*" to ":" (#991).
-* Allow tokens to start with "\*" (#991).
-* Change Floats to fixed-precision Decimals (#982).
-* Round the fractional component of decimal, rather than truncating it (#982).
-* Handle duplicate dictionary and parameter keys by overwriting their values, rather than failing (#997).
-* Allow "." in key (#1027).
-* Check first character of key in serialisation (#1037).
-* Talk about greasing headers (#1015).
+sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 
+sf-binary = ":" *(base64) ":"
+base64    = ALPHA / DIGIT / "+" / "/" / "="
 
-## Since draft-ietf-httpbis-header-structure-13
+sf-boolean = "?" boolean
+boolean    = "0" / "1"
 
-* Editorial improvements.
-* Define "structured header name" and "structured header value" terms (#908).
-* Corrected text about valid characters in strings (#931).
-* Removed most instances of the word "textual", as it was redundant (#915).
-* Allowed parameters on Items and Inner Lists (#907).
-* Expand the range of characters in token (#961).
-* Disallow OWS before ";" delimiter in parameters (#961).
-
-## Since draft-ietf-httpbis-header-structure-12
-
-* Editorial improvements.
-* Reworked float serialisation (#896).
-* Don't add a trailing space in inner-list (#904).
+sf-date = "@" ["-"] 1*15DIGIT
+~~~
 
 
-## Since draft-ietf-httpbis-header-structure-11
+# Changes from RFC 8941 {#changes}
 
-* Allow \* in key (#844).
-* Constrain floats to six digits of precision (#848).
-* Allow dictionary members to have parameters (#842).
+This revision of the Structured Field Values for HTTP specification has made the following changes:
 
-
-## Since draft-ietf-httpbis-header-structure-10
-
-* Update abstract (#799).
-* Input and output are now arrays of bytes (#662).
-* Implementations need to preserve difference between token and string (#790).
-* Allow empty dictionaries and lists (#781).
-* Change parameterized lists to have primary items (#797).
-* Allow inner lists in both dictionaries and lists; removes lists of lists (#816).
-* Subsume Parameterised Lists into Lists (#839).
-
-
-## Since draft-ietf-httpbis-header-structure-09
-
-* Changed Boolean from T/F to 1/0 (#784).
-* Parameters are now ordered maps (#765).
-* Clamp integers to 15 digits (#737).
-
-
-## Since draft-ietf-httpbis-header-structure-08
-
-* Disallow whitespace before items properly (#703).
-* Created "key" for use in dictionaries and parameters, rather than relying on identifier (#702). Identifiers have a separate minimum supported size.
-* Expanded the range of special characters allowed in identifier to include all of ALPHA, ".", ":", and "%" (#702).
-* Use "?" instead of "!" to indicate a Boolean (#719).
-* Added "Intentionally Strict Processing" (#684).
-* Gave better names for referring specs to use in Parameterised Lists (#720).
-* Added Lists of Lists (#721).
-* Rename Identifier to Token (#725).
-* Add implementation guidance (#727).
-
-
-## Since draft-ietf-httpbis-header-structure-07
-
-* Make Dictionaries ordered mappings (#659).
-* Changed "binary content" to "byte sequence" to align with Infra specification (#671).
-* Changed "mapping" to "map" for #671.
-* Don't fail if byte sequences aren't "=" padded (#658).
-* Add Booleans (#683).
-* Allow identifiers in items again (#629).
-* Disallowed whitespace before items (#703).
-* Explain the consequences of splitting a string across multiple headers (#686).
-
-
-## Since draft-ietf-httpbis-header-structure-06
-
-* Add a FAQ.
-* Allow non-zero pad bits.
-* Explicitly check for integers that violate constraints.
-
-
-## Since draft-ietf-httpbis-header-structure-05
-
-* Reorganise specification to separate parsing out.
-* Allow referencing specs to use ABNF.
-* Define serialisation algorithms.
-* Refine relationship between ABNF, parsing and serialisation algorithms.
-
-
-## Since draft-ietf-httpbis-header-structure-04
-
-* Remove identifiers from item.
-* Remove most limits on sizes.
-* Refine number parsing.
-
-
-## Since draft-ietf-httpbis-header-structure-03
-
-* Strengthen language around failure handling.
-
-
-## Since draft-ietf-httpbis-header-structure-02
-
-* Split Numbers into Integers and Floats.
-* Define number parsing.
-* Tighten up binary parsing and give it an explicit end delimiter.
-* Clarify that mappings are unordered.
-* Allow zero-length strings.
-* Improve string parsing algorithm.
-* Improve limits in algorithms.
-* Require parsers to combine header fields before processing.
-* Throw an error on trailing garbage.
-
-## Since draft-ietf-httpbis-header-structure-01
-
-* Replaced with draft-nottingham-structured-headers.
-
-## Since draft-ietf-httpbis-header-structure-00
-
-* Added signed 64bit integer type.
-* Drop UTF8, and settle on BCP137 ::EmbeddedUnicodeChar for h1-unicode-string.
-* Change h1_blob delimiter to ":" since "'" is valid t_char
+* Added the Date structured type. ({{date}})
+* Stopped encouraging use of ABNF in definitions of new structured fields. ({{specify}})
+* Moved ABNF to an informative appendix. ({{abnf}})
+* Added a "Structured Type" column to the HTTP Field Name Registry. ({{iana}})
+* Refined parse failure handling. ({{text-parse}})
 
 
 # Acknowledgements

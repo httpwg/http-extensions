@@ -4,6 +4,8 @@ abbrev: Retrofit Structured Fields
 docname: draft-ietf-httpbis-retrofit-latest
 date: {DATE}
 category: std
+area: Applications and Real-Time
+workgroup: HTTP
 
 ipr: trust200902
 keyword:
@@ -13,6 +15,9 @@ keyword:
 stand_alone: yes
 smart_quotes: no
 pi: [toc, tocindent, sortrefs, symrefs, strict, compact, comments, inline]
+
+entity:
+  SELF: "RFC nnnn"
 
 venue:
   group: HTTP
@@ -36,7 +41,7 @@ author:
 normative:
   RFC2119:
   HTTP: RFC9110
-  STRUCTURED-FIELDS: RFC8941
+  STRUCTURED-FIELDS: I-D.ietf-httpbis-sfbis
   COOKIES: I-D.ietf-httpbis-rfc6265bis
 
 informative:
@@ -47,7 +52,6 @@ informative:
 This specification nominates a selection of existing HTTP fields as having syntax that is compatible with Structured Fields, so that they can be handled as such (subject to certain caveats).
 
 To accommodate some additional fields whose syntax is not compatible, it also defines mappings of their semantics into new Structured Fields. It does not specify how to negotiate their use.
-
 
 --- middle
 
@@ -113,6 +117,7 @@ An application using this specification will need to consider how to handle such
 | Content-Length                   | List            |
 | Content-Type                     | Item            |
 | Cross-Origin-Resource-Policy     | Item            |
+| DNT                              | Item            |
 | Expect                           | Dictionary      |
 | Expect-CT                        | Dictionary      |
 | Host                             | Item            |
@@ -132,6 +137,7 @@ An application using this specification will need to consider how to handle such
 | Timing-Allow-Origin              | List            |
 | Trailer                          | List            |
 | Transfer-Encoding                | List            |
+| Upgrade-Insecure-Requests        | Item            |
 | Vary                             | List            |
 | X-Content-Type-Options           | Item            |
 | X-Frame-Options                  | Item            |
@@ -140,15 +146,14 @@ An application using this specification will need to consider how to handle such
 
 Note the following caveats regarding compatibility:
 
-Parameter and Dictionary keys:
-: HTTP parameter names are case-insensitive (per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase. Although the vast majority of parameters seen in typical traffic are all-lowercase, compatibility can be improved by force-lowercasing parameters when parsing.
-Likewise, many Dictionary-based fields (e.g., Cache-Control, Expect-CT, Pragma, Prefer, Preference-Applied, Surrogate-Control) have case-insensitive keys, and compatibility can be improved by force-lowercasing them when parsing.
+Parsing differences:
+: Some values may fail to parse as Structured Fields, even though they are valid according to their originally specified syntax. For example, HTTP parameter names are case-insensitive (per {{Section 5.6.6 of HTTP}}), but Structured Fields require them to be all-lowercase.
+Likewise, many Dictionary-based fields (e.g., Cache-Control, Expect-CT, Pragma, Prefer, Preference-Applied, Surrogate-Control) have case-insensitive keys.
+Similarly, the parameters rule in HTTP (see {{Section 5.6.6 of HTTP}}) allows whitespace before the ";" delimiter, but Structured Fields does not.
+And, {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Field Strings only escape "\\" and DQUOTE. The vast majority of fields seen in typical traffic do not exhibit these behaviors.
 
-Parameter delimitation:
-: The parameters rule in HTTP (see {{Section 5.6.6 of HTTP}}) allows whitespace before the ";" delimiter, but Structured Fields does not. Compatibility can be improved by allowing such whitespace when parsing.
-
-String quoting:
-: {{Section 5.6.4 of HTTP}} allows backslash-escaping most characters in quoted strings, whereas Structured Field Strings only escape "\\" and DQUOTE. Compatibility can be improved by unescaping other characters before parsing.
+Error handling:
+: Parsing algorithms specified (or just widely implemented) for current HTTP headers may differ from those in Structured Fields in details such as error handling. For example, HTTP specifies that repeated directives in the Cache-Control header field have a different precedence than that assigned by a Dictionary structured field (which Cache-Control is mapped to).
 
 Token limitations:
 : In Structured Fields, tokens are required to begin with an alphabetic character or "\*", whereas HTTP tokens allow a wider range of characters. This prevents use of mapped values that begin with one of these characters. For example, media types, field names, methods, range-units, character and transfer codings that begin with a number or special character other than "*" might be valid HTTP protocol elements, but will not be able to be represented as Structured Field Tokens.
@@ -182,10 +187,10 @@ For example, the Date HTTP header field carries a date:
 Date: Sun, 06 Nov 1994 08:49:37 GMT
 ~~~
 
-Its value is more efficiently represented as an Integer number of delta seconds from the Unix epoch (00:00:00 UTC on 1 January 1970, minus leap seconds). Thus, the example above would be mapped to:
+Its value would be mapped to:
 
-~~~ http-message
-SF-Date: 784072177
+~~~ http-message-new
+SF-Date: @784111777
 ~~~
 
 As in {{compatible}}, these fields are unable to carry values that are not valid Structured Fields, and so an application using this specification will need to how to support such values. Typically, handling them using the original field name is sufficient.
@@ -219,7 +224,7 @@ SF-Location: "https://example.com/foo"
 
 ## Dates
 
-The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as an Integer number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
+The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as a Date.
 
 | Field Name          | Mapped Field Name      |
 |---------------------|------------------------|
@@ -232,8 +237,8 @@ The field names in {{date-fields}} (paired with their mapped field names) have v
 
 For example, an Expires field could be mapped as:
 
-~~~ http-message
-SF-Expires: 1571965240
+~~~ http-message-new
+SF-Expires: @1659578233
 ~~~
 
 ## ETags
@@ -262,23 +267,6 @@ SF-If-None-Match: "abcdef"; w, "ghijkl", *
 ~~~
 
 
-## Links
-
-The field value of the Link header field {{!RFC8288}} can be mapped into the SF-Link List Structured Field by considering the URI-Reference as a String, and link-param as Parameters.
-
-For example, this:
-
-~~~ http-message
-Link: </terms>; rel="copyright"; anchor="#foo"
-~~~
-
-can be mapped to:
-
-~~~ http-message
-SF-Link: "/terms"; rel="copyright"; anchor="#foo"
-~~~
-
-
 ## Cookies
 
 The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a List), respectively.
@@ -291,14 +279,14 @@ Cookie attributes map to Parameters on the Inner List, with the parameter name b
 |---------------------|---------------------|
 | Domain              | String              |
 | HttpOnly            | Boolean             |
-| Expires             | Integer             |
+| Expires             | Date                |
 | Max-Age             | Integer             |
 | Path                | String              |
 | Secure              | Boolean             |
 | SameSite            | Token               |
 {:id="cookie-params" title="Set-Cookie Parameter Types"}
 
-The Expires attribute is mapped to an Integer representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}) expressed as a number of seconds delta from the Unix Epoch (00:00:00 UTC on 1 January 1970, excluding leap seconds).
+The Expires attribute is mapped to a Date representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}).
 
 For example, these unstructured fields:
 
@@ -310,8 +298,8 @@ Cookie: SID=31d4d96e407aad42; lang=en-US
 
 can be mapped into:
 
-~~~ http-message
-SF-Set-Cookie: ("lang" "en-US"); expires=1623233894;
+~~~ http-message-new
+SF-Set-Cookie: ("lang" "en-US"); expires=@1623233894;
                samesite=Strict; secure
 SF-Cookie: ("SID" "31d4d96e407aad42"), ("lang" "en-US")
 ~~~
@@ -321,13 +309,8 @@ SF-Cookie: ("SID" "31d4d96e407aad42"), ("lang" "en-US")
 
 Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
 
-> The "Structured Type" column indicates the type of the field (per RFC8941), if any, and may be
-> "Dictionary", "List" or "Item". A prefix of "*" indicates that it is a retrofit type (i.e., not
-> natively Structured); see \[this specification].
->
-> Note that field names beginning with characters other than ALPHA or "*" will not be able to be
-> represented as a Structured Fields Token, and therefore may be incompatible with being mapped into
-> fields that refer to it; see \[this specification].
+> A prefix of "*" in the Structured Type column indicates that it is a retrofit type (i.e., not
+> natively Structured); see {{&SELF}}.
 
 Then, add a new column, "Structured Type", with the values from {{compatible}} assigned to the nominated registrations, prefixing each with "*" to indicate that it is a retrofit type.
 
@@ -344,28 +327,11 @@ Then, add the field names in {{new-fields}}, with the corresponding Structured T
 | SF-If-Modified-Since   | Item            |
 | SF-If-None-Match       | List            |
 | SF-If-Unmodified-Since | Item            |
-| SF-Link                | List            |
 | SF-Last-Modified       | Item            |
 | SF-Location            | Item            |
 | SF-Referer             | Item            |
 | SF-Set-Cookie          | List            |
 {:id="new-fields" title="New Fields"}
-
-Then, add the indicated Structured Type for each existing registry entry listed in {{existing-fields}}.
-
-| Field Name                                | Structured Type |
-|-------------------------------------------|-----------------|
-| Accept-CH                                 | List            |
-| Cache-Status                              | List            |
-| CDN-Cache-Control                         | Dictionary      |
-| Cross-Origin-Embedder-Policy              | Item            |
-| Cross-Origin-Embedder-Policy-Report-Only  | Item            |
-| Cross-Origin-Opener-Policy                | Item            |
-| Cross-Origin-Opener-Policy-Report-Only    | Item            |
-| Origin-Agent-Cluster                      | Item            |
-| Priority                                  | Dictionary      |
-| Proxy-Status                              | List            |
-{:id="existing-fields" title="Existing Fields"}
 
 Finally, add a new column to the "Cookie Attribute Registry" established by {{COOKIES}} with the title "Structured Type", using information from {{cookie-params}}.
 
@@ -378,6 +344,11 @@ Finally, add a new column to the "Cookie Attribute Registry" established by {{CO
 
 
 --- back
+
+
+
+
+
 
 
 
