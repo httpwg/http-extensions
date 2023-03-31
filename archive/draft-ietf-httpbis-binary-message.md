@@ -2,9 +2,11 @@
 title: "Binary Representation of HTTP Messages"
 abbrev: Binary HTTP Messages
 docname: draft-ietf-httpbis-binary-message-latest
+number: 9292
+date: 2022-08
 category: std
-area: ART
-workgroup: HTTP
+area: art
+workgroup: httpbis
 venue:
   group: HTTP
   type: Working Group
@@ -29,18 +31,18 @@ author:
     email: caw@heapingbits.net
 
 normative:
-  HTTP: I-D.ietf-httpbis-semantics
+  HTTP: RFC9110
   QUIC: RFC9000
   H2:
-    =: I-D.ietf-httpbis-http2bis
+    =: RFC9113
     display: HTTP/2
 
 informative:
   MESSAGING:
-    =: I-D.ietf-httpbis-messaging
+    =: RFC9112
     display: HTTP/1.1
   H3:
-    =: I-D.ietf-quic-http
+    =: RFC9114
     display: HTTP/3
 
 
@@ -54,32 +56,32 @@ This document defines a binary format for representing HTTP messages.
 # Introduction
 
 This document defines a simple format for representing an HTTP message
-({{HTTP}}), either request or response. This allows for the encoding of HTTP
+{{HTTP}}, either request or response. This allows for the encoding of HTTP
 messages that can be conveyed outside an HTTP protocol. This enables the
 transformation of entire messages, including the application of authenticated
 encryption.
 
-The design of this format is informed by the framing structure of HTTP/2
-({{H2}}) and HTTP/3 ({{H3}}).  Rules for constructing messages rely on the rules
-defined in HTTP/2, but the format itself is distinct; see {{differences}}.
+The design of this format is informed by the framing structure of HTTP/2 {{H2}}
+and HTTP/3 {{H3}}.  Rules for constructing messages rely on the rules defined in
+HTTP/2, but the format itself is distinct; see {{differences}}.
 
-This format defines `message/bhttp`, a binary alternative to the `message/http`
-content type defined in {{MESSAGING}}. A binary format permits more efficient
-encoding and processing of messages. A binary format also reduces exposure to
-security problems related to processing of HTTP messages.
+This format defines "`message/bhttp`", a binary alternative to the
+"`message/http`" content type defined in {{MESSAGING}}. A binary format permits
+more efficient encoding and processing of messages. A binary format also reduces
+exposure to security problems related to processing of HTTP messages.
 
 Two modes for encoding are described:
 
 * a known-length encoding includes length prefixes for all major message
-  components; and
+  components, and
 
 * an indeterminate-length encoding enables efficient generation of messages
   where lengths are not known when encoding starts.
 
 This format is designed to convey the semantics of valid HTTP messages as simply
 and efficiently as possible.  It is not designed to capture all of the details
-of the encoding of messages from specific HTTP versions ({{MESSAGING}}, {{H2}},
-{{H3}}).  As such, this format is unlikely to be suitable for applications that
+of the encoding of messages from specific HTTP versions {{MESSAGING}} {{H2}}
+{{H3}}.  As such, this format is unlikely to be suitable for applications that
 depend on an exact recording of the encoding of messages.
 
 
@@ -87,7 +89,7 @@ depend on an exact recording of the encoding of messages.
 
 {::boilerplate bcp14-tagged}
 
-This document uses terminology from HTTP ({{HTTP}}) and notation from QUIC
+This document uses terminology from HTTP {{HTTP}} and notation from QUIC
 ({{Section 1.3 of QUIC}}).
 
 
@@ -121,13 +123,13 @@ encoding from {{Section 16 of QUIC}}.  Integer values do not need to be encoded
 on the minimum number of bytes necessary.
 
 
-## Known Length Messages
+## Known-Length Messages
 
 A request or response that has a known length at the time of construction uses
 the format shown in {{format-known-length}}.
 
 ~~~ quic-format
-Request with Known-Length {
+Known-Length Request {
   Framing Indicator (i) = 0,
   Request Control Data (..),
   Known-Length Field Section (..),
@@ -136,7 +138,7 @@ Request with Known-Length {
   Padding (..),
 }
 
-Response with Known-Length {
+Known-Length Response {
   Framing Indicator (i) = 1,
   Known-Length Informational Response (..) ...,
   Final Response Control Data (..),
@@ -182,11 +184,11 @@ length-prefixed value; see {{fields}}.
 The format allows for the message to be truncated before any of the length
 prefixes that precede the field sections or content; see {{padding}}.
 
-The variable-length integer encoding means that there is a limit of 2^62-1
-bytes for each field section and the message content.
+The variable-length integer encoding means that there is a limit of
+2<sup>62</sup>-1 bytes for each field section and the message content.
 
 
-## Indeterminate Length Messages
+## Indeterminate-Length Messages
 
 A request or response that is constructed without encoding a known length for
 each section uses the format shown in {{format-indeterminate-length}}:
@@ -247,15 +249,15 @@ Multiple length-prefixed portions of content can be included, each prefixed by a
 non-zero Chunk Length integer describing the number of bytes in the block.  The
 Chunk Length is encoded as a variable-length integer.
 
-Each Field Line in an Indeterminate-Length Field Section starts with a Name
-Length field.  An Indeterminate-Length Field Section ends with a Content
+Each Field Line in an Indeterminate-Length Field Section starts with a
+Name Length field.  An Indeterminate-Length Field Section ends with a Content
 Terminator field.  The zero value of the Content Terminator distinguishes it
 from the Name Length field, which cannot contain a value of 0.
 
-Indeterminate-length messages can be truncated in a similar way as known-length
-messages; see {{padding}}.
+Indeterminate-length messages can be truncated in a way similar to that for
+known-length messages; see {{padding}}.
 
-Indeterminate-length messages use the same encoding for field lines as
+Indeterminate-length messages use the same encoding for Field Line as
 known-length messages; see {{fields}}.
 
 
@@ -280,8 +282,8 @@ That information is encoded as an ordered sequence of fields: Method, Scheme,
 Authority, Path. Each of these fields is prefixed with a length.
 
 The values of these fields follow the rules in HTTP/2 ({{Section 8.3.1 of H2}})
-that apply to the `:method`, `:scheme`, `:authority`, and `:path` pseudo-header
-fields respectively. However, where the `:authority` pseudo-header field might
+that apply to the "`:method`", "`:scheme`", "`:authority`", and "`:path`" pseudo-header
+fields, respectively. However, where the "`:authority`" pseudo-header field might
 be omitted in HTTP/2, a zero-length value is encoded instead.
 
 The format of request control data is shown in {{format-request-control-data}}.
@@ -304,7 +306,7 @@ Request Control Data {
 ## Response Control Data {#response-control}
 
 The control data for a response message consists of the status code. The status
-code ({{Section 15 of HTTP}}) is encoded as a variable length integer, not a
+code ({{Section 15 of HTTP}}) is encoded as a variable-length integer, not a
 length-prefixed decimal string.
 
 The format of final response control data is shown in
@@ -322,8 +324,9 @@ Final Response Control Data {
 
 Responses that include informational status codes (see {{Section 15.2 of HTTP}})
 are encoded by repeating the response control data and associated header section
-until a final response control data is encoded.  The status code distinguishes
-between informational and final responses.
+until a final status code is encoded; that is, a Status Code field with a value
+from 200 to 599 (inclusive).  The status code distinguishes between
+informational and final responses.
 
 The format of the informational response control data is shown in
 {{format-informational}}.
@@ -341,20 +344,20 @@ header block.
 
 If the response control data includes an informational status code (that is, a
 value between 100 and 199 inclusive), the control data is followed by a header
-section (encoded with known- or indeterminate- length according to the framing
-indicator) and another block of control data.  This pattern repeats until the
-control data contains a final status code (200 to 599 inclusive).
+section (encoded with known length or indeterminate length according to the
+framing indicator) and another block of control data.  This pattern repeats
+until the control data contains a final status code (200 to 599 inclusive).
 
 
 ## Header and Trailer Field Lines {#fields}
 
 Header and trailer sections consist of zero or more field lines; see {{Section 5
-of HTTP}}. The format of a field section depends on whether the message is
-known- or indeterminate-length.
+of HTTP}}. The format of a field section depends on whether the message is of
+known length or indeterminate length.
 
-Each field line includes a name and a value. Both the name and value are
-length-prefixed sequences of bytes.  The field name length is at least one
-byte. The format of a field line is shown in {{format-field-line}}.
+Each Field Line encoding includes a name and a value. Both the name and value
+are length-prefixed sequences of bytes.  The Name field is a minimum of one
+byte. The format of a Field Line is shown in {{format-field-line}}.
 
 ~~~ quic-format
 Field Line {
@@ -368,20 +371,21 @@ Field Line {
 
 For field names, byte values that are not permitted in an HTTP field name cause
 the message to be invalid; see {{Section 5.1 of HTTP}} for a definition of what
-is valid and {{invalid}} for handling of invalid messages.  A recipient MUST
-treat a message that contains field values that would cause an HTTP/2 message to
-be malformed according to {{Section 8.2.1 of H2}} as invalid; see {{invalid}}.
+is valid and {{invalid}} regarding the handling of invalid messages.  A
+recipient MUST treat a message that contains field values that would cause an
+HTTP/2 message to be malformed according to {{Section 8.2.1 of H2}} as invalid;
+see {{invalid}}.
 
-The same field name can be repeated in multiple field lines; see {{Section 5.2 of
-HTTP}} for the semantics of repeated field names and rules for combining
+The same field name can be repeated over more than one field line; see {{Section
+5.2 of HTTP}} for the semantics of repeated field names and rules for combining
 values.
 
-Messages are invalid ({{invalid}}) if they contain fields named `:method`,
-`:scheme`, `:authority`, `:path`, or `:status`.  Other pseudo-fields that are
-defined by protocol extensions MAY be included; pseudo-fields cannot be included
-in trailers (see {{Section 8.1 of H2}}).  Field lines containing pseudo-fields
-MUST precede other field lines.  A message that contains a pseudo-field after
-any other field is invalid; see {{invalid}}.
+Messages are invalid ({{invalid}}) if they contain fields named "`:method`",
+"`:scheme`", "`:authority`", "`:path`", or "`:status`".  Other pseudo-fields
+that are defined by protocol extensions MAY be included; pseudo-fields cannot be
+included in trailers (see {{Section 8.1 of H2}}).  A Field Line containing
+pseudo-fields MUST precede other Field Line values.  A message that contains a
+pseudo-field after any other field is invalid; see {{invalid}}.
 
 Fields that relate to connections ({{Section 7.6.1 of HTTP}}) cannot be used to
 produce the effect on a connection in this context.  These fields SHOULD be
@@ -391,7 +395,7 @@ message to capture messages that are exchanged in a protocol context.
 
 Like HTTP/2 or HTTP/3, this format has an exception for the combination of
 multiple instances of the `Cookie` field. Instances of fields with the
-ASCII-encoded value of `cookie` are combined using a semicolon octet (0x3b)
+ASCII-encoded value of "`cookie`" are combined using a semicolon octet (0x3b)
 rather than a comma; see {{Section 8.2.3 of H2}}.
 
 
@@ -400,7 +404,7 @@ rather than a comma; see {{Section 8.2.3 of H2}}.
 The content of messages is a sequence of bytes of any length. Though a
 known-length message has a limit, this limit is large enough that it is
 unlikely to be a practical limitation. There is no limit to the size of content
-in an indeterminate length message.
+in an indeterminate-length message.
 
 
 ## Padding and Truncation {#padding}
@@ -410,18 +414,18 @@ bytes cause a message to be invalid (see {{invalid}}). Unlike other parts of a
 message, a processor MAY decide not to validate the value of padding bytes.
 
 Truncation can be used to reduce the size of messages that have no data in
-trailing field sections or content.  If the trailers of a message is empty, it
-MAY be omitted by the encoder in place of adding a length field equal to
+trailing field sections or content.  If the trailers of a message are empty,
+they MAY be omitted by the encoder in place of adding a length field equal to
 zero. An encoder MAY omit empty content in the same way if the trailers are also
 empty.  A message that is truncated at any other point is invalid; see
 {{invalid}}.
 
 Decoders MUST treat missing truncated fields as equivalent to having been sent
-with the length field sent to zero.
+with the length field set to zero.
 
 Padding is compatible with truncation of empty parts of the messages.
-Zero-valued bytes will be interpreted as zero-length part, which is semantically
-equivalent to the part being absent.
+Zero-valued bytes will be interpreted as a zero-length part, which is
+semantically equivalent to the part being absent.
 
 
 # Invalid Messages {#invalid}
@@ -438,15 +442,15 @@ incremental processing.
 # Examples
 
 This section includes example requests and responses encoded in both
-known-length and indefinite-length forms.
+known-length and indeterminate-length forms.
 
 ## Request Example
 
 The example HTTP/1.1 message in {{ex-request}} shows the content in the
-`message/http` format.
+"`message/http`" format.
 
-Valid HTTP/1.1 messages require lines terminated with CRLF (the two bytes 0x0a
-and 0x0d). For simplicity and consistency, the content of these examples is
+Valid HTTP/1.1 messages require lines terminated with CRLF (the two bytes 0x0d
+and 0x0a). For simplicity and consistency, the content of these examples is
 limited to text, which also uses CRLF for line endings.
 
 ~~~ http-message
@@ -458,7 +462,7 @@ Accept-Language: en, mi
 ~~~
 {: #ex-request title="Sample HTTP Request"}
 
-This can be expressed as a binary message (type `message/bhttp`) using a
+This can be expressed as a binary message (type "`message/bhttp`") using a
 known-length encoding as shown in hexadecimal in {{ex-bink-request}}.
 {{ex-bink-request}} includes text alongside to show that most of the content is
 not modified.
@@ -477,14 +481,14 @@ not modified.
 {: #ex-bink-request title="Known-Length Binary Encoding of Request"}
 
 This example shows that the Host header field is not replicated in the
-`:authority` field, as is required for ensuring that the request is reproduced
+"`:authority`" field, as is required for ensuring that the request is reproduced
 accurately; see {{Section 8.3.1 of H2}}.
 
 The same message can be truncated with no effect on interpretation. In this
-case, the last two bytes - corresponding to content and a trailer section - can
-each be removed without altering the semantics of the message.
+case, the last two bytes -- corresponding to content and a trailer section --
+can each be removed without altering the semantics of the message.
 
-The same message, encoded using an indefinite-length encoding is shown in
+The same message, encoded using an indeterminate-length encoding, is shown in
 {{ex-bini-request}}. As the content of this message is empty, the difference in
 formats is negligible.
 
@@ -499,18 +503,20 @@ formats is negligible.
 6570742d 6c616e67 75616765 06656e2c  ept-language.en,
 206d6900 00000000 00000000 00000000   mi.............
 ~~~
-{: #ex-bini-request title="Indefinite-Length Binary Encoding of Request"}
+{: #ex-bini-request title="Indeterminate-Length Binary Encoding of Request"}
 
-This indefinite-length encoding contains 10 bytes of padding.  As two additional
-bytes can be truncated in the same way as the known-length example, anything up
-to 12 bytes can be removed from this message without affecting its meaning.
+This indeterminate-length encoding contains 10 bytes of padding.  As two
+additional bytes can be truncated in the same way as the known-length example,
+anything up to 12 bytes can be removed from this message without affecting its
+meaning.
 
 
 ## Response Example
 
-Response messages can contain interim (1xx) status codes as the message in
-{{ex-response}} shows. {{ex-response}} includes examples of informational
-status codes defined in {{?RFC2518}} and {{?RFC8297}}.
+Response messages can contain interim (1xx) status codes, as the message in
+{{ex-response}} shows. {{ex-response}} includes examples of informational status
+codes 102 and 103, as defined in {{?RFC2518}} (now obsolete but defines status
+code 102) and {{?RFC8297}}, respectively.
 
 ~~~ http-message
 HTTP/1.1 102 Processing
@@ -535,9 +541,9 @@ Hello World! My content includes a trailing CRLF.
 ~~~
 {: #ex-response title="Sample HTTP Response"}
 
-As this is a longer example, only the indefinite-length encoding is shown in
-{{ex-bini-response}}. Note here that the specific text used in the reason
-phrase is not retained by this encoding.
+As this is a longer example, only the indeterminate-length encoding is shown in
+{{ex-bini-response}}. Note here that the specific text used in the reason phrase
+is not retained by this encoding.
 
 ~~~ hex-dump
 03406607 72756e6e 696e670a 22736c65  .@f.running."sle
@@ -564,12 +570,12 @@ phrase is not retained by this encoding.
 6e742069 6e636c75 64657320 61207472  nt includes a tr
 61696c69 6e672043 524c462e 0d0a0000  ailing CRLF.....
 ~~~
-{: #ex-bini-response title="Binary Response including Informational Responses"}
+{: #ex-bini-response title="Binary Response, including Informational Responses"}
 
 A response that uses the chunked encoding (see {{Section 7.1 of MESSAGING}}) as
-shown for {{ex-chunked}} can be encoded using indefinite-length encoding, which
-minimizes buffering needed to translate into the binary format. However, chunk
-boundaries do not need to be retained, and any chunk extensions cannot be
+shown in {{ex-chunked}} can be encoded using indeterminate-length encoding,
+which minimizes buffering needed to translate into the binary format. However,
+chunk boundaries do not need to be retained, and any chunk extensions cannot be
 conveyed using the binary format; see {{differences}}.
 
 ~~~ http-message
@@ -589,8 +595,8 @@ Trailer: text
 ~~~
 {: #ex-chunked title="Chunked Encoding Example"}
 
-{{ex-bink-chunked}} shows this message using the known-length coding. Note that
-the transfer-encoding header field is removed.
+{{ex-bink-chunked}} shows this message using the known-length encoding. Note
+that the Transfer-Encoding header field is removed.
 
 ~~~ hex-dump
 0140c800 1d546869 7320636f 6e74656e  .@...This conten
@@ -602,8 +608,8 @@ the transfer-encoding header field is removed.
 
 # Notable Differences with HTTP Protocol Messages {#differences}
 
-This format is designed to carry HTTP semantics just like HTTP/1.1, HTTP/2, or
-HTTP/3 ({{MESSAGING}}, {{H2}}, {{H3}}).  However, there are some notable
+This format is designed to carry HTTP semantics just like HTTP/1.1
+{{MESSAGING}}, HTTP/2 {{H2}}, or HTTP/3 {{H3}}.  However, there are some notable
 differences between this format and the format used in an interactive protocol
 version.
 
@@ -611,7 +617,7 @@ In particular, as a standalone representation, this format lacks the following
 features of the formats used in those protocols:
 
 * chunk extensions ({{Section 7.1.1 of MESSAGING}}) and transfer encoding
-  ({{Section 6.1 of MESSAGING}}) from HTTP/1.1
+  ({{Section 6.1 of MESSAGING}})
 
 * generic framing and extensibility capabilities
 
@@ -619,10 +625,10 @@ features of the formats used in those protocols:
 
 * carrying reason phrases in responses ({{Section 4 of MESSAGING}})
 
-* header compression ({{?HPACK=RFC7541}}, {{?QPACK=I-D.ietf-quic-qpack}})
+* header compression {{?HPACK=RFC7541}} {{?QPACK=RFC9204}}
 
-* framing of responses that depends on the corresponding request (such as HEAD)
-  or the value of the status code (such as 204 or 304); these responses use the
+* response framing that depends on the corresponding request (such as HEAD) or
+  the value of the status code (such as 204 or 304); these responses use the
   same framing as all other messages
 
 Some of these features are also absent in HTTP/2 and HTTP/3.
@@ -630,15 +636,15 @@ Some of these features are also absent in HTTP/2 and HTTP/3.
 Unlike HTTP/2 and HTTP/3, this format uses a fixed format for control data
 rather than using pseudo-fields.
 
-Note that while some messages - CONNECT or upgrade requests in particular - can
-be represented using this format, doing so serves no purpose as these requests
-are used to affect protocol behavior, which this format cannot do without
-additional mechanisms.
+Note that while some messages -- CONNECT or upgrade requests in particular --
+can be represented using this format, doing so serves no purpose, as these
+requests are used to affect protocol behavior, which this format cannot do
+without additional mechanisms.
 
 
 # "message/bhttp" Media Type {#media-type}
 
-The `message/bhttp` media type can be used to enclose a single HTTP request or
+The "`message/bhttp`" media type can be used to enclose a single HTTP request or
 response message, provided that it obeys the MIME restrictions for all
 "message" types regarding line length and encodings.
 
@@ -660,11 +666,11 @@ Optional parameters:
 
 Encoding considerations:
 
-: only "8bit" or "binary" is permitted
+: Only "8bit" or "binary" is permitted.
 
 Security considerations:
 
-: see {{security}}
+: See {{security}}.
 
 Interoperability considerations:
 
@@ -672,11 +678,11 @@ Interoperability considerations:
 
 Published specification:
 
-: this specification
+: RFC 9292
 
 Applications that use this media type:
 
-: Applications looking to convey HTTP request semantics independent of a
+: Applications seeking to convey HTTP semantics that are independent of a
   specific protocol.
 
 Fragment identifier considerations:
@@ -686,15 +692,15 @@ Fragment identifier considerations:
 Additional information:
 
 : <dl spacing="compact">
-  <dt>Magic number(s):</dt><dd>N/A</dd>
   <dt>Deprecated alias names for this type:</dt><dd>N/A</dd>
+  <dt>Magic number(s):</dt><dd>N/A</dd>
   <dt>File extension(s):</dt><dd>N/A</dd>
   <dt>Macintosh file type code(s):</dt><dd>N/A</dd>
   </dl>
 
-Person and email address to contact for further information:
+Person & email address to contact for further information:
 
-: see Authors' Addresses section
+: See the Authors' Addresses section.
 
 Intended usage:
 
@@ -706,12 +712,16 @@ Restrictions on usage:
 
 Author:
 
-: see Authors' Addresses section
+: See the Authors' Addresses section.
 
 Change controller:
 
 : IESG
 {: spacing="compact"}
+<<<<<<< HEAD
+
+=======
+>>>>>>> main
 
 # Security Considerations {#security}
 
@@ -725,7 +735,7 @@ possibility of resource exhaustion attacks that might arise from receiving
 large messages, particularly those with large numbers of fields.
 
 Implementations need to ensure that they aren't subject to resource exhaustion
-attack from a maliciously crafted message.  Overall, the format is designed to
+attacks from maliciously crafted messages.  Overall, the format is designed to
 allow for minimal state when processing messages.  However, producing a combined
 field value ({{Section 5.2 of HTTP}}) for fields might require the commitment of
 resources.  In particular, combining might be necessary for the `Cookie` field
@@ -736,14 +746,14 @@ not expect multiple values.
 
 # IANA Considerations
 
-IANA is requested to add the "Media Types" registry at
-[](https://www.iana.org/assignments/media-types) with the registration
-information in {{media-type}} for the media type "message/bhttp".
+IANA has added the media type "`message/bhttp`" to the "Media Types" registry at
+[](https://www.iana.org/assignments/media-types){: brackets="angle"}. See {{media-type}} for
+registration information.
 
 --- back
 
 # Acknowledgments
 {:numbered="false"}
 
-{{{Julian Reschke}}}, {{{David Schinazi}}}, {{{Lucas Pardue}}} and {{{Tommy Pauly}}} provided
-excellent feedback on both the design and its documentation.
+{{{Julian Reschke}}}, {{{David Schinazi}}}, {{{Lucas Pardue}}}, and {{{Tommy
+Pauly}}} provided excellent feedback on both the design and its documentation.
