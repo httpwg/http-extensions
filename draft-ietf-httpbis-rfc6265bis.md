@@ -23,17 +23,11 @@ github-issue-label: 6265bis
 
 author:
 -
-  ins: L. Chen
-  name: Lily Chen
+  ins: S. Bingler
+  name: Steven Bingler
   role: editor
   organization: Google LLC
-  email: chlily@google.com
--
-  ins: S. Englehardt
-  name: Steven Englehardt
-  role: editor
-  organization: Mozilla
-  email: senglehardt@mozilla.com
+  email: bingler@google.com
 -
   ins: M. West
   name: Mike West
@@ -466,6 +460,79 @@ Set-Cookie: lang=; Expires=Sun, 06 Nov 1994 08:49:37 GMT
 Cookie: SID=31d4d96e407aad42
 ~~~
 
+## Which Requirements to Implement
+
+The upcoming two sections, {{sane-profile}} and {{ua-requirements}}, discuss
+the set of requirements for two distinct types of implementations. This section
+is meant to help guide implementers in determining which set of requirements
+best fits their goals. Choosing the wrong set of requirements could result in a
+lack of compatibility with other cookie implementations.
+
+It's important to note that being compatible means different things
+depending on the implementer's goals. These differences have built up over time
+due to both intentional and unintentional spec changes, spec interpretations,
+and historical implementation differences.
+
+This section roughly divides implementers of the cookie spec into two types,
+producers and consumers. These are not official terms and are only used here to
+help readers develop an intuitive understanding of the use cases.
+
+### Cookie Producing Implementations
+
+An implementer should choose {{sane-profile}} whenever cookies are created and
+will be sent to a user agent, such as a web browser. These implementations are
+frequently referred to as Servers by the spec but that term includes anything
+which primarily produces cookies. Some potential examples:
+
+* Server applications hosting a website or API
+
+* Programming languages or software frameworks that support cookies
+
+* Integrated third-party web applications, such as a business management suite
+
+All these benefit from not only supporting as many user agents as possible but
+also supporting other servers. This is useful if a cookie is produced by a
+software framework and is later sent back to a server application which needs
+to read it. {{sane-profile}} advises best practices that help maximize this
+sense of compatibility.
+
+See {{languages-frameworks}} for more details on programming languages and software
+frameworks.
+
+### Cookie Consuming Implementations
+
+An implementer should choose {{ua-requirements}} whenever cookies are primarily
+received from another source. These implementations are referred to as user
+agents. Some examples:
+
+* Web browsers
+
+* Tools that support stateful HTTP
+
+* Programming languages or software frameworks that support cookies
+
+Because user agents don't know which servers a user will access, and whether
+or not that server is following best practices, users agents are advised to
+implement a more lenient set of requirements and to accept some things that
+servers are warned against producing. {{ua-requirements}} advises best
+practices that help maximize this sense of compatibility.
+
+See {{languages-frameworks}} for more details on programming languages and software
+frameworks.
+
+#### Programming Languages & Software Frameworks {#languages-frameworks}
+
+A programming language or software framework with support for cookies could
+reasonably be used to create an application that acts as a cookie producer,
+cookie consumer, or both. Because a developer may want to maximize their
+compatibility as either a producer or consumer, these languages or frameworks
+should strongly consider supporting both sets of requirements, {{sane-profile}}
+and {{ua-requirements}}, behind a compatibility mode toggle. This toggle should
+default to {{sane-profile}}'s requirements.
+
+Doing so will reduce the chances that a developer's application can
+inadvertently create cookies that cannot be read by other servers.
+
 # Server Requirements {#sane-profile}
 
 This section describes the syntax and semantics of a well-behaved profile of the
@@ -708,7 +775,7 @@ which assert "SameSite=Lax" or "SameSite=Strict" cannot be set in responses to
 cross-site subresource requests, or cross-site nested navigations. They can be
 set along with any top-level navigation, cross-site or otherwise.
 
-### Cookie Name Prefixes
+### Cookie Name Prefixes {#server-name-prefixes}
 
 {{weak-confidentiality}} and {{weak-integrity}} of this document spell out some of the drawbacks of cookies'
 historical implementation. In particular, it is impossible for a server to have
@@ -717,8 +784,11 @@ order to provide such confidence in a backwards-compatible way, two common sets
 of requirements can be inferred from the first few characters of the cookie's
 name.
 
-The normative requirements for the prefixes described below are detailed in the
-storage model algorithm defined in {{storage-model}}.
+The user agent requirements for the prefixes described below are detailed in
+{{ua-name-prefixes}}.
+
+To maximize compatibility with user agents servers SHOULD use prefixes as
+described below.
 
 #### The "__Secure-" Prefix
 
@@ -1100,6 +1170,82 @@ All other Set-Cookie header fields SHOULD be processed according to {{set-cookie
 That is, Set-Cookie header fields contained in responses with non-100-level status
 codes (including those in responses with 400- and 500-level status codes)
 SHOULD be processed unless ignored according to the user agent's cookie policy.
+
+## Cookie Name Prefixes {#ua-name-prefixes}
+
+User agents' requirements for cookie name prefixes differ slightly from
+servers' ({{server-name-prefixes}}) in that UAs MUST match the prefix string
+case-insensitively.
+
+The normative requirements for the prefixes are detailed in the storage model
+algorithm defined in {{storage-model}}.
+
+This is because some servers will process cookie case-insensitively, resulting
+in them unintentionally miscapitalizing and accepting miscapitalized prefixes.
+
+For example, if a server sends the following `Set-Cookie` header field
+
+~~~
+Set-Cookie: __SECURE-SID=12345
+~~~
+
+to a UA which checks prefixes case-sensitively it will accept this cookie and
+the server would incorrectly believe the cookie is subject the same guarantees
+as one spelled `__Secure-`.
+
+Additionally the server is vulnerable to an attacker that purposefully
+miscapitalizes a cookie in order to impersonate a prefixed cookie. For example,
+a site already has a cookie `__Secure-SID=12345` and by some means an attacker
+sends the following `Set-Cookie` header field for the site to a UA which checks
+prefixes case-sensitively.
+
+~~~
+Set-Cookie: __SeCuRe-SID=evil
+~~~
+
+The next time a user visits the site the UA will send both cookies:
+
+~~~
+Cookie: __Secure-SID=12345; __SeCuRe-SID=evil
+~~~
+
+The server, being case-insensitive, won't be able to tell the difference
+between the two cookies allowing the attacker to compromise the site.
+
+To prevent these issues, UAs MUST match cookie name prefixes case-insensitive.
+
+Note: Cookies with different names are still considered separate by UAs. So
+both `__Secure-foo=bar` and `__secure-foo=baz` can exist as distinct cookies
+simultaneously and both would have the requirements of the `__Secure-` prefix
+applied.
+
+The following are examples of `Set-Cookie` header fields that would be rejected
+by a conformant user agent.
+
+~~~ example
+Set-Cookie: __Secure-SID=12345; Domain=site.example
+Set-Cookie: __secure-SID=12345; Domain=site.example
+Set-Cookie: __SECURE-SID=12345; Domain=site.example
+Set-Cookie: __Host-SID=12345
+Set-Cookie: __host-SID=12345; Secure
+Set-Cookie: __host-SID=12345; Domain=site.example
+Set-Cookie: __HOST-SID=12345; Domain=site.example; Path=/
+Set-Cookie: __Host-SID=12345; Secure; Domain=site.example; Path=/
+Set-Cookie: __host-SID=12345; Secure; Domain=site.example; Path=/
+Set-Cookie: __HOST-SID=12345; Secure; Domain=site.example; Path=/
+~~~
+
+Whereas the following `Set-Cookie` header fields would be accepted if set from
+a secure origin.
+
+~~~ example
+Set-Cookie: __Secure-SID=12345; Domain=site.example; Secure
+Set-Cookie: __secure-SID=12345; Domain=site.example; Secure
+Set-Cookie: __SECURE-SID=12345; Domain=site.example; Secure
+Set-Cookie: __Host-SID=12345; Secure; Path=/
+Set-Cookie: __host-SID=12345; Secure; Path=/
+Set-Cookie: __HOST-SID=12345; Secure; Path=/
+~~~
 
 ## The Set-Cookie Header Field {#set-cookie}
 
@@ -1579,11 +1725,11 @@ user agent MUST process the cookie as follows:
 19. If the cookie's "same-site-flag" is "None", abort these steps and ignore the
     cookie entirely unless the cookie's secure-only-flag is true.
 
-20. If the cookie-name begins with a case-sensitive match for the string
+20. If the cookie-name begins with a case-insensitive match for the string
     "__Secure-", abort these steps and ignore the cookie entirely unless the
     cookie's secure-only-flag is true.
 
-21. If the cookie-name begins with a case-sensitive match for the string
+21. If the cookie-name begins with a case-insensitive match for the string
     "__Host-", abort these steps and ignore the cookie entirely unless the
     cookie meets all the following criteria:
 
@@ -1594,7 +1740,16 @@ user agent MUST process the cookie as follows:
     3.  The cookie-attribute-list contains an attribute with an attribute-name
         of "Path", and the cookie's path is `/`.
 
-22. If the cookie store contains a cookie with the same name, domain,
+22. If the cookie-name is empty and either of the following conditions are
+    true, abort these steps and ignore the cookie:
+
+    * the cookie-value begins with a case-insensitive match for the string
+      "__Secure-"
+
+    * the cookie-value begins with a case-insensitive match for the string
+      "__Host-"
+
+23. If the cookie store contains a cookie with the same name, domain,
     host-only-flag, and path as the newly-created cookie:
 
     1.  Let old-cookie be the existing cookie with the same name, domain,
@@ -1611,7 +1766,7 @@ user agent MUST process the cookie as follows:
 
     4.  Remove the old-cookie from the cookie store.
 
-23. Insert the newly-created cookie into the cookie store.
+24. Insert the newly-created cookie into the cookie store.
 
 A cookie is "expired" if the cookie has an expiry date in the past.
 
@@ -2510,9 +2665,28 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 * Add note regarding Service Worker's computation of "site for cookies":
   <https://github.com/httpwg/http-extensions/pull/2217>
 
+* Compare cookie name prefixes case-insensitively:
+  <https://github.com/httpwg/http-extensions/pull/2236>
+
+* Update editors and the acknowledgements
+  <https://github.com/httpwg/http-extensions/pull/2244>
+
+* Prevent nameless cookies with prefixed values
+  <https://github.com/httpwg/http-extensions/pull/2251>
+
+* Advise the reader which section to implement
+  <https://github.com/httpwg/http-extensions/pull/2478>
+
+## draft-ietf-httpbis-rfc6265bis-12
+
+* None. Yet!
+
 # Acknowledgements
 {:numbered="false"}
 RFC 6265 was written by Adam Barth. This document is an update of RFC 6265,
 adding features and aligning the specification with the reality of today’s
 deployments. Here, we’re standing upon the shoulders of a giant since the
 majority of the text is still Adam’s.
+
+Thank you to both Lily Chen and Steven Englehardt, editors emeritus, for their
+significant contributions improving this draft.
