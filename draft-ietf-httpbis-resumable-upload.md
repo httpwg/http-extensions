@@ -221,6 +221,7 @@ If the request completes successfully but the entire upload is not yet complete 
 :authority: example.com
 :path: /upload
 upload-draft-interop-version: 3
+upload-incomplete: ?0
 content-length: 100
 [content (100 bytes)]
 
@@ -446,11 +447,19 @@ Specification: This document
 
 --- back
 
-## Since draft-tus-httpbis-resumable-uploads-protocol-02
+## Since draft-ietf-httpbis-resumable-upload-01
+
+None yet
+
+## Since draft-ietf-httpbis-resumable-upload-00
 
 * Remove Upload-Token and instead use Server-generated upload URL for upload identification.
 * Require the Upload-Incomplete header field in Upload Creation Procedure.
 * Increase the draft interop version.
+
+## Since draft-tus-httpbis-resumable-uploads-protocol-02
+
+None
 
 ## Since draft-tus-httpbis-resumable-uploads-protocol-01
 

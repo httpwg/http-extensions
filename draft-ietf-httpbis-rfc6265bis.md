@@ -460,6 +460,79 @@ Set-Cookie: lang=; Expires=Sun, 06 Nov 1994 08:49:37 GMT
 Cookie: SID=31d4d96e407aad42
 ~~~
 
+## Which Requirements to Implement
+
+The upcoming two sections, {{sane-profile}} and {{ua-requirements}}, discuss
+the set of requirements for two distinct types of implementations. This section
+is meant to help guide implementers in determining which set of requirements
+best fits their goals. Choosing the wrong set of requirements could result in a
+lack of compatibility with other cookie implementations.
+
+It's important to note that being compatible means different things
+depending on the implementer's goals. These differences have built up over time
+due to both intentional and unintentional spec changes, spec interpretations,
+and historical implementation differences.
+
+This section roughly divides implementers of the cookie spec into two types,
+producers and consumers. These are not official terms and are only used here to
+help readers develop an intuitive understanding of the use cases.
+
+### Cookie Producing Implementations
+
+An implementer should choose {{sane-profile}} whenever cookies are created and
+will be sent to a user agent, such as a web browser. These implementations are
+frequently referred to as Servers by the spec but that term includes anything
+which primarily produces cookies. Some potential examples:
+
+* Server applications hosting a website or API
+
+* Programming languages or software frameworks that support cookies
+
+* Integrated third-party web applications, such as a business management suite
+
+All these benefit from not only supporting as many user agents as possible but
+also supporting other servers. This is useful if a cookie is produced by a
+software framework and is later sent back to a server application which needs
+to read it. {{sane-profile}} advises best practices that help maximize this
+sense of compatibility.
+
+See {{languages-frameworks}} for more details on programming languages and software
+frameworks.
+
+### Cookie Consuming Implementations
+
+An implementer should choose {{ua-requirements}} whenever cookies are primarily
+received from another source. These implementations are referred to as user
+agents. Some examples:
+
+* Web browsers
+
+* Tools that support stateful HTTP
+
+* Programming languages or software frameworks that support cookies
+
+Because user agents don't know which servers a user will access, and whether
+or not that server is following best practices, users agents are advised to
+implement a more lenient set of requirements and to accept some things that
+servers are warned against producing. {{ua-requirements}} advises best
+practices that help maximize this sense of compatibility.
+
+See {{languages-frameworks}} for more details on programming languages and software
+frameworks.
+
+#### Programming Languages & Software Frameworks {#languages-frameworks}
+
+A programming language or software framework with support for cookies could
+reasonably be used to create an application that acts as a cookie producer,
+cookie consumer, or both. Because a developer may want to maximize their
+compatibility as either a producer or consumer, these languages or frameworks
+should strongly consider supporting both sets of requirements, {{sane-profile}}
+and {{ua-requirements}}, behind a compatibility mode toggle. This toggle should
+default to {{sane-profile}}'s requirements.
+
+Doing so will reduce the chances that a developer's application can
+inadvertently create cookies that cannot be read by other servers.
+
 # Server Requirements {#sane-profile}
 
 This section describes the syntax and semantics of a well-behaved profile of the
@@ -2600,6 +2673,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Prevent nameless cookies with prefixed values
   <https://github.com/httpwg/http-extensions/pull/2251>
+
+* Advise the reader which section to implement
+  <https://github.com/httpwg/http-extensions/pull/2478>
 
 ## draft-ietf-httpbis-rfc6265bis-12
 
