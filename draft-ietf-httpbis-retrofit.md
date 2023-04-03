@@ -39,7 +39,6 @@ author:
     uri: https://www.mnot.net/
 
 normative:
-  RFC2119:
   HTTP: RFC9110
   STRUCTURED-FIELDS: I-D.ietf-httpbis-sfbis
   COOKIES: I-D.ietf-httpbis-rfc6265bis
