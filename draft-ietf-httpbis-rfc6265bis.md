@@ -324,10 +324,10 @@ only if they are equivalent under the i;ascii-casemap collation defined in
 The term string means a sequence of non-NUL octets.
 
 The terms "active document", "ancestor navigables", "container document",
-"content navigable", "dedicated worker", "Document", "navigable",
-"opaque origin", "sandboxed origin browsing context flag", "shared worker",
-"the worker's Documents", "top-level traversable", and "WorkerGlobalScope" are
-defined in {{HTML}}.
+"content navigable", "dedicated worker", "Document", "inclusive ancestor
+navigables", "navigable", "opaque origin", "sandboxed origin browsing context
+flag", "shared worker", "the worker's Documents", "top-level traversable", and
+"WorkerGlobalScope" are defined in {{HTML}}.
 
 "Service Workers" are defined in the Service Workers specification
 {{SERVICE-WORKERS}}.
@@ -1103,8 +1103,8 @@ cookies":
     sandboxed origin browsing context flag is set, and `top-document`'s origin
     otherwise.
 
-3.  Let `documents` be a list containing `document` and each of `document`'s
-    ancestor navigables' active documents.
+3.  Let `documents` be a list consisting of the active documents of
+    `document`'s inclusive ancestor navigables.
 
 4.  For each `item` in `documents`:
 
@@ -1719,8 +1719,8 @@ user agent MUST process the cookie as follows:
     3.  If the cookie was received from a request which is navigating a
         top-level traversable {{HTML}} (e.g. if the request's "reserved
         client" is either `null` or an environment whose "target browsing
-        context" is in a top-level traversable), skip the remaining substeps
-        and continue processing the cookie.
+        context"'s navigable is a top-level traversable), skip the remaining
+        substeps and continue processing the cookie.
 
         Note: Top-level navigations can create a cookie with any `SameSite`
         value, even if the new cookie wouldn't have been sent along with
@@ -1900,7 +1900,7 @@ cookie-string from a given cookie store.
      * The same-site-flag is "Lax" or "Default".
      * The HTTP request associated with the retrieval uses a "safe" method.
      * The target browsing context of the HTTP request associated with the
-       retrieval is in a top-level traversable.
+       retrieval is within a top-level traversable.
 
 2. The user agent SHOULD sort the cookie-list in the following order:
 
