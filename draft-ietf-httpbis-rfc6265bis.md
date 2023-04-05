@@ -323,11 +323,11 @@ only if they are equivalent under the i;ascii-casemap collation defined in
 
 The term string means a sequence of non-NUL octets.
 
-The terms "active document", "ancestor navigables", "container document",
-"content navigable", "dedicated worker", "Document", "inclusive ancestor
-navigables", "navigable", "opaque origin", "sandboxed origin browsing context
-flag", "shared worker", "the worker's Documents", "top-level traversable", and
-"WorkerGlobalScope" are defined in {{HTML}}.
+The terms "active browsing context", "active document", "ancestor navigables",
+"container document", "content navigable", "dedicated worker", "Document",
+"inclusive ancestor navigables", "navigable", "opaque origin", "sandboxed
+origin browsing context flag", "shared worker", "the worker's Documents",
+"top-level traversable", and "WorkerGlobalScope" are defined in {{HTML}}.
 
 "Service Workers" are defined in the Service Workers specification
 {{SERVICE-WORKERS}}.
@@ -1900,7 +1900,7 @@ cookie-string from a given cookie store.
      * The same-site-flag is "Lax" or "Default".
      * The HTTP request associated with the retrieval uses a "safe" method.
      * The target browsing context of the HTTP request associated with the
-       retrieval is within a top-level traversable.
+       retrieval is the active browsing context or a top-level traversable.
 
 2. The user agent SHOULD sort the cookie-list in the following order:
 
