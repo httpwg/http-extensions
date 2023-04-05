@@ -399,7 +399,7 @@ Note that the serialization algorithm ({{ser-decimal}}) rounds input with more t
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
-Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
+Non-ASCII characters are not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
 
 When it is necessary for a field value to convey non-ASCII content, a Display String ({{displaystring}}) can be specified.
 
