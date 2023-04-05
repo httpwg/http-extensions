@@ -469,7 +469,7 @@ Example-Date: @1659578233
 
 Display Strings are similar to Strings, in that they consist of zero or more characters, but they allow unicode content, unlike Strings.
 
-Display Strings are intended for use in cases where a value is displayed to end users, and therefore may need to carry non-ASCII content. It is NOT RECOMMENDED that they be used in situations where a String ({{string}}) or Token ({{token}}) would be adequate, because unicode has processing considerations (e.g., normalization) and security considerations (e.g., homograph attacks) that make it more difficult to handle correctly.
+Display Strings are intended for use in cases where a value is displayed to end users, and therefore may need to carry non-ASCII content. It is NOT RECOMMENDED that they be used in situations where a String ({{string}}) or Token ({{token}}) would be adequate, because Unicode has processing considerations (e.g., normalization) and security considerations (e.g., homograph attacks) that make it more difficult to handle correctly.
 
 Note that Display Strings do not indicate the language used in the value; that can be done separately if necessary (e.g., with a parameter).
 
