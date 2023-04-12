@@ -287,7 +287,7 @@ The following sections define component identifier names, their parameters, thei
 
 The component name for an HTTP field is the lowercased form of its field name as defined in {{Section 5.1 of HTTP}}. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
-The component value for an HTTP field is the field value for the named field as defined in {{Section 5.5 of HTTP}}. The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below.
+The component value for an HTTP field is the field value for the named field as defined in {{Section 5.5 of HTTP}}. The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below. For most fields, the field value is an ASCII string. Other encodings could exist, but extra care needs to be taken when dealing with these values to prevent inclusion if illegal octets (such as a newline character).
 
 Unless overridden by additional parameters and rules, HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}} to create the component value. Specifically, HTTP fields sent as multiple fields MUST be combined using a single comma (",") and a single space (" ") between each item. Note that intermediaries are allowed to combine values of HTTP fields with any amount of whitespace between the commas, and if this behavior is not accounted for by the verifier, the signature can fail since the signer and verifier will see a different component value in their respective signature bases. For robustness, it is RECOMMENDED that signed messages include only a single instance of any field covered under the signature, particularly with the value for any list-based fields serialized using the algorithm below. This approach increases the chances of the field value remaining untouched through intermediaries. Where that approach is not possible and multiple instances of a field need to be sent separately, it is RECOMMENDED that signers and verifiers process any list-based fields taking all individual field values and combining them based on the strict algorithm below, to counter possible intermediary behavior. When the field in question is a structured field of type List or Dictionary, this effect can be accomplished more directly by requiring the strict structured field serialization of the field value, as described in {{http-field-structured}}.
 
@@ -434,7 +434,7 @@ If this parameter is included with a component identifier, the component value M
 2. For each field value in the set:
     0. Strip leading and trailing whitespace from the field value. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
     1. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification.
-    2. Encode the bytes of the resulting field value's ASCII representation as a Byte Sequence.
+    2. Encode the bytes of the resulting field value's bytes as a Byte Sequence. Note that most fields are restricted to ASCII characters, but other octets could be included and need to be treated with care.
     3. Add the Byte Sequence to the List accumulator.
 3. The intermediate result is a List of Byte Sequence values.
 4. Follow the strict serialization of a List as described in {{Section 4.1.1 of STRUCTURED-FIELDS}} and return this output.
@@ -3009,6 +3009,7 @@ Jeffrey Yasskin.
      * Remove sign-the-signature examples and add explanations of why not to do that.
      * Query parameter values must be re-encoded for safety.
      * Query parameters now carry a warning of limitations.
+     * Address field value encodings.
 
   - -16
      * Editorial cleanup from AD review.
