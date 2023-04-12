@@ -536,7 +536,7 @@ This specification defines the following derived components:
 : The query portion of the target URI for a request. ({{content-request-query}})
 
 @query-param
-: A parsed query parameter of the target URI for a request. ({{content-request-query-param}})
+: A parsed and encoded query parameter of the target URI for a request. ({{content-request-query-param}})
 
 @status
 : The status code for a response. ({{content-status-code}})
@@ -823,9 +823,14 @@ The REQUIRED `name` parameter of each component identifier contains the `nameStr
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
 
-The component value of a single named parameter is the `valueString` of the named query parameter defined by "application/x-www-form-urlencoded parsing" section of {{HTMLURL}}, which is the value after percent-encoded octets are decoded.
+The component value of a single named parameter is calculated by the following process:
+
+1. Parse the `valueString` of the named query parameter defined by the "application/x-www-form-urlencoded parsing" section of {{HTMLURL}}, which is the value after percent-encoded octets are decoded
+2. Encode the `valueString` using the "percent-encode after encoding" process defined by the "application/x-www-form-urlencoded serializing" section of {{HTMLURL}}, which results in an ASCII string
+3. This ASCII string is the component value
+
 Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
-Named query parameters with an empty `valueString` are included with an empty string as the component value.
+Named query parameters with an empty `valueString` have an empty string as the component value.
 
 If a query parameter is named as a covered component but it does not occur in the query parameters, this MUST cause an error in the signature base generation.
 
@@ -844,19 +849,43 @@ Indicating the `baz`, `qux` and `param` named query parameters would result in t
 
 *param*: `value`
 
-And the following signature base lines:
+And the following signature base lines, with (SP) indicating a single trailing space character before the empty component value:
 
 ~~~
-NOTE: '\' line wrapping per RFC 8792
-
 "@query-param";name="baz": batman
-"@query-param";name="qux": \
-
+"@query-param";name="qux":(SP)
 "@query-param";name="param": value
 ~~~
 
-If a parameter name occurs multiple times in a request, all parameter values of that name MUST be included
-in separate signature base lines in the order in which the parameters occur in the target URI. Note that in some implementations, the order of parsed query parameters is not stable, and this situation could lead to unexpected results. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
+If a parameter name occurs multiple times in a request, the named query parameter MUST NOT be included since in some implementations, the order of parsed query parameters is not stable, and this situation could lead to unexpected results. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
+
+The encoding process allows query parameters that include newlines or other problematic characters in their values, or with alternative encodings such as using the plus character to represent spaces. For the query parameters in this message:
+
+~~~ htto-message
+NOTE: '\' line wrapping per RFC 8792
+
+GET /parameters?var=this%20is%20a%20big%0Amultiline%20value&\
+  bar=with+plus+whitespace HTTP/1.1
+Host: www.example.com
+Date: Tue, 20 Apr 2021 02:07:56 GMT
+~~~
+
+The resulting values are encoded as follows:
+
+~~~
+"@query-param";name="var": this%20is%20a%20big%0Amultiline%20value
+"@query-param";name="bar": with%20plus%20whitespace
+~~~
+
+If the encoding were not applied, the resultant value would be:
+
+~~~
+"@query-param";name="var": this is a big
+multiline value
+"@query-param";name="bar": with plus whitespace
+~~~
+
+This base string violates the constraints on component values, and is therefore invalid.
 
 ### Status Code {#content-status-code}
 
@@ -2973,6 +3002,11 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -17
+     * Change encoding
+     * Remove sign-the-signature examples and add explanations of why not to do that.
+     * Query parameter values must be re-encoded for safety.
 
   - -16
      * Editorial cleanup from AD review.
