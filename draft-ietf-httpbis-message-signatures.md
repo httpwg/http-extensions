@@ -857,7 +857,8 @@ And the following signature base lines, with (SP) indicating a single trailing s
 "@query-param";name="param": value
 ~~~
 
-If a parameter name occurs multiple times in a request, the named query parameter MUST NOT be included since in some implementations, the order of parsed query parameters is not stable, and this situation could lead to unexpected results. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
+This derived component has some limitations. Specifically, the algorithm in {{HTTPURL}} only supports query parameters using percent-escaped UTF-8 encoding. Other encodings are not supported.
+Multiple instances of a named parameter are not reliably supported in the wild. If a parameter name occurs multiple times in a request, the named query parameter MUST NOT be included. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
 
 The encoding process allows query parameters that include newlines or other problematic characters in their values, or with alternative encodings such as using the plus character to represent spaces. For the query parameters in this message:
 
@@ -3007,6 +3008,7 @@ Jeffrey Yasskin.
      * Change encoding
      * Remove sign-the-signature examples and add explanations of why not to do that.
      * Query parameter values must be re-encoded for safety.
+     * Query parameters now carry a warning of limitations.
 
   - -16
      * Editorial cleanup from AD review.
