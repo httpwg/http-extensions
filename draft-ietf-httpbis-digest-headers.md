@@ -672,50 +672,61 @@ instead.
 
 # Resource Representation and Representation Data {#resource-representation}
 
-The following examples show how representation metadata, content transformations,
-and method impacts on the message and content. When the content
-contains non-printable characters (e.g., when it is compressed) it is shown as
-a sequence of hex-encoded bytes.
+This section following examples show how representation metadata, content
+transformations, and method impacts on the message and content. These examples a
+not exhaustive.
+
+Unless otherwise indicated, the examples are based on the JSON object `{"hello":
+"world"}` followed by an LF. When the content contains non-printable characters
+(e.g., when it is compressed) it is shown as a sequence of hex-encoded bytes.
+
+Consider a client that wishes to upload a JSON object using the PUT method. It
+could do this using the application/json content type without any content
+coding.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
+Content-Length: 19
 
 {"hello": "world"}
 ~~~
 {: title="Request containing a JSON object without any content coding"}
 
-Compression is an efficient way to reduce
-the content length.
+However, the use of content coding is quite common. The client could also upload
+the same data with a gzip coding ({{Section 8.4.1.3 of RFC9110}}). Note that in
+this case, the `Content-Length` contains a larger value due to the coding
+overheads.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Content-Encoding: gzip
+Content-Length: 39
 
-1F 8B 08 00 A5 B4 BD 62 02 FF
-AB 56 4A 54 B2 52 50 32 A4 03
-50 AA 05 00 44 47 2A 7C 6D 00
-00 00
+1F 8B 08 00 88 41 37 64 00 FF
+AB 56 CA 48 CD C9 C9 57 B2 52
+50 2A CF 2F CA 49 51 AA E5 02
+00 D9 E4 31 E7 13 00 00 00
 ~~~
 {: title="Request containing a gzip-encoded JSON object" #ex-put-gz}
 
-Sending the compressed form of the content
-without the correct content coding means that
-the content is malformed.
-In this case, the server can reply with an error.
+Sending the gzip coded data without indicating it via `Content-Encoding` means
+that the content is malformed. In this case, the server can reply with an error.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 
-1F 8B 08 00 A5 B4 BD 62 02 FF
-AB 56 4A 54 B2 52 50 32 A4 03
-50 AA 05 00 44 47 2A 7C 6D 00
-00 00
+Content-Length: 39
+
+1F 8B 08 00 88 41 37 64 00 FF
+AB 56 CA 48 CD C9 C9 57 B2 52
+50 2A CF 2F CA 49 51 AA E5 02
+00 D9 E4 31 E7 13 00 00 00
 ~~~
 {: title="Request containing malformed JSON"}
 
@@ -725,31 +736,38 @@ HTTP/1.1 400 Bad Request
 ~~~
 {: title="An error response for a malformed content"}
 
-A Range-Request affects the transferred message content,
-conveying a partial representation of the JSON object
-in {{ex-put-gz}}.
+A Range-Request affects the transferred message content. In this example, the
+client is accessing the resource at `/entires/1234`, which is the JSON object
+`{"hello": "world"}` followed by an LF. However, the client has indicates a
+preferred content coding and a specific byte range.
 
 ~~~ http-message
 GET /entries/1234 HTTP/1.1
 Host: foo.example
+Accept-Encoding: gzip
 Range: bytes=1-7
 
 ~~~
 {: title="Request for partial content"}
 
+The server satisfies the client request by responding with a partial
+representation (equivalent to the first 10 of the JSON object displayed in whole
+in {{ex-put-gz}}).
+
 ~~~ http-message
 HTTP/1.1 206 Partial Content
 Content-Encoding: gzip
 Content-Type: application/json
-Content-Range: bytes 0-10/32
+Content-Range: bytes 0-9/39
 
 1F 8B 08 00 A5 B4 BD 62 02 FF
 ~~~
 {: title="Partial response from a gzip-encoded representation"}
 
-The method can also affect the transferred message content.
-For example, the response
-to a HEAD request does not carry content.
+Aside from content coding or range requests, the method can also affect the
+transferred message content. For example, the response to a HEAD request does
+not carry content but in this example case does include a Content-Length; see
+{{Section 8.6 of RFC9110}}.
 
 ~~~ http-message
 HEAD /entries/1234 HTTP/1.1
@@ -764,15 +782,17 @@ Accept-Encoding: gzip
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Encoding: gzip
+Content-Length: 39
 
 ~~~
 {: title="Response to HEAD request (empty content)"}
 
 Finally, the semantics of a response might decouple the target URI
-from the enclosed representation. In the example response below, the
-`Content-Location` header field indicates that the enclosed representation
-refers to the resource available at `/authors/123`, even though the request is
-directed to `/authors/`.
+from the enclosed representation. In the example below, the client issues a POST
+request directed to `/authors/` but the response includes a `Content-Location`
+header field that indicates the enclosed representation refers to the
+resource available at `/authors/123`. Note that `Content-Length` is not sent
+in this example.
 
 ~~~ http-message
 POST /authors/ HTTP/1.1
