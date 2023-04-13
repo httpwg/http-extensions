@@ -662,9 +662,9 @@ Algorithm Values" registry at
 > "This registry is deprecated since it lists the algorithms that can be used
 with the Digest and Want-Digest fields defined in
 [RFC3230]<https://www.iana.org/>, which has been obsoleted by
-[rfc-to-be-this-document]. While registration is not closed, new registrations
-are encouraged to use the [Hash Algorithms for HTTP Digest
-Fields]<https://www.iana.org/assignments/http-digest-hash-alg/> registry
+\[rfc-to-be-this-document\]. While registration is not closed, new registrations
+are encouraged to use the \[Hash Algorithms for HTTP Digest
+Fields\]<https://www.iana.org/assignments/http-digest-hash-alg/> registry
 instead.
 
 
