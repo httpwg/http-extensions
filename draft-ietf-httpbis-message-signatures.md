@@ -452,7 +452,7 @@ In our example, the same field can be sent with a semantically different single 
 Example-Header: value, with, lots, of, commas
 ~~~
 
-Both of these versions are treated differently by the application. however, if included in the signature base without parameters, the component value would be the same in both cases:
+Both of these versions are treated differently by the application. However, if included in the signature base without parameters, the component value would be the same in both cases:
 
 ~~~
 "example-header": value, with, lots, of, commas
