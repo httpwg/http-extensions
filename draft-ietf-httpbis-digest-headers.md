@@ -556,10 +556,14 @@ digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
 endpoints. See also {{digest-and-content-location}}.
 
-Signatures are likely to be deemed an adversarial setting
-when applying Integrity fields; see {{algorithms}}.
-Using signatures to protect the checksum of an empty representation
-allows receiving endpoints to detect if an eventual content has been stripped or added.
+Signatures are likely to be deemed an adversarial setting when applying
+Integrity fields; see {{algorithms}}. `Repr-Digest` offers an interesting
+possibility when combined with signatures. In the scenario where there is no
+content to send, the digest of an empty string can be included in the message
+and, if signed, can help the recipient detect if content was added either as a
+result of accident or purposeful manipulation. The opposite scenario is also
+supported; including an Integrity field for content, and signing it, can help a
+recipient detect where the content was removed.
 
 Any mangling of Integrity fields, including digests' de-duplication
 or combining different field values (see {{Section 5.2 of RFC9110}})
