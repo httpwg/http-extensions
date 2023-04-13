@@ -561,7 +561,7 @@ Integrity fields; see {{algorithms}}. `Repr-Digest` offers an interesting
 possibility when combined with signatures. In the scenario where there is no
 content to send, the digest of an empty string can be included in the message
 and, if signed, can help the recipient detect if content was added either as a
-result of accident or purposeful manipulation. The opposite is scenario is also
+result of accident or purposeful manipulation. The opposite scenario is also
 supported; including an Integrity field for content, and signing it, can help a
 recipient detect where the content was removed.
 
