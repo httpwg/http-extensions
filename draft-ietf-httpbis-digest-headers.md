@@ -738,7 +738,8 @@ HTTP/1.1 400 Bad Request
 
 A Range-Request affects the transferred message content. In this example, the
 client is accessing the resource at `/entires/1234`, which is the JSON object
-`{"hello": "world"}` followed by an LF. However, the client has indicates a
+`{"hello": "world"}` followed by an LF. However, the client has indicated a
+``
 preferred content coding and a specific byte range.
 
 ~~~ http-message
