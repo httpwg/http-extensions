@@ -678,7 +678,7 @@ not exhaustive.
 
 Unless otherwise indicated, the examples are based on the JSON object `{"hello":
 "world"}` followed by an LF. When the content contains non-printable characters
-(e.g., when it is compressed) it is shown as a sequence of hex-encoded bytes.
+(e.g., when it is encoded) it is shown as a sequence of hex-encoded bytes.
 
 Consider a client that wishes to upload a JSON object using the PUT method. It
 could do this using the application/json content type without any content
@@ -739,7 +739,6 @@ HTTP/1.1 400 Bad Request
 A Range-Request affects the transferred message content. In this example, the
 client is accessing the resource at `/entires/1234`, which is the JSON object
 `{"hello": "world"}` followed by an LF. However, the client has indicated a
-``
 preferred content coding and a specific byte range.
 
 ~~~ http-message
