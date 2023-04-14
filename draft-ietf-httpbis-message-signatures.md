@@ -287,7 +287,7 @@ The following sections define component identifier names, their parameters, thei
 
 The component name for an HTTP field is the lowercased form of its field name as defined in {{Section 5.1 of HTTP}}. While HTTP field names are case-insensitive, implementations MUST use lowercased field names (e.g., `content-type`, `date`, `etag`) when using them as component names.
 
-The component value for an HTTP field is the field value for the named field as defined in {{Section 5.5 of HTTP}}. The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below.
+The component value for an HTTP field is the field value for the named field as defined in {{Section 5.5 of HTTP}}. The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below. For most fields, the field value is an ASCII string as recommended by {{HTTP}}, and the component value is exactly that string. Other encodings could exist in some implementations, and any characters outside the ASCII range MUST be encoded using the percent-encoding mechanism defined in {{Section 2.1 of URI}}.
 
 Unless overridden by additional parameters and rules, HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}} to create the component value. Specifically, HTTP fields sent as multiple fields MUST be combined using a single comma (",") and a single space (" ") between each item. Note that intermediaries are allowed to combine values of HTTP fields with any amount of whitespace between the commas, and if this behavior is not accounted for by the verifier, the signature can fail since the signer and verifier will see a different component value in their respective signature bases. For robustness, it is RECOMMENDED that signed messages include only a single instance of any field covered under the signature, particularly with the value for any list-based fields serialized using the algorithm below. This approach increases the chances of the field value remaining untouched through intermediaries. Where that approach is not possible and multiple instances of a field need to be sent separately, it is RECOMMENDED that signers and verifiers process any list-based fields taking all individual field values and combining them based on the strict algorithm below, to counter possible intermediary behavior. When the field in question is a structured field of type List or Dictionary, this effect can be accomplished more directly by requiring the strict structured field serialization of the field value, as described in {{http-field-structured}}.
 
@@ -434,7 +434,7 @@ If this parameter is included with a component identifier, the component value M
 2. For each field value in the set:
     0. Strip leading and trailing whitespace from the field value. Note that since HTTP field values are not allowed to contain leading and trailing whitespace, this will be a no-op in a compliant implementation.
     1. Remove any obsolete line-folding within the line and replace it with a single space (" "), as discussed in {{Section 5.2 of HTTP1}}. Note that this behavior is specific to {{HTTP1}} and does not apply to other versions of the HTTP specification.
-    2. Encode the bytes of the resulting field value's ASCII representation as a Byte Sequence.
+    2. Encode the bytes of the resulting field value as a Byte Sequence. Note that most fields are restricted to ASCII characters, but other octets could be included in the value in some implementations.
     3. Add the Byte Sequence to the List accumulator.
 3. The intermediate result is a List of Byte Sequence values.
 4. Follow the strict serialization of a List as described in {{Section 4.1.1 of STRUCTURED-FIELDS}} and return this output.
@@ -452,7 +452,7 @@ In our example, the same field can be sent with a semantically different single 
 Example-Header: value, with, lots, of, commas
 ~~~
 
-Both of these versions are treated differently by the application. however, if included in the signature base without parameters, the component value would be the same in both cases:
+Both of these versions are treated differently by the application. However, if included in the signature base without parameters, the component value would be the same in both cases:
 
 ~~~
 "example-header": value, with, lots, of, commas
@@ -536,7 +536,7 @@ This specification defines the following derived components:
 : The query portion of the target URI for a request. ({{content-request-query}})
 
 @query-param
-: A parsed query parameter of the target URI for a request. ({{content-request-query-param}})
+: A parsed and encoded query parameter of the target URI for a request. ({{content-request-query-param}})
 
 @status
 : The status code for a response. ({{content-status-code}})
@@ -823,9 +823,14 @@ The REQUIRED `name` parameter of each component identifier contains the `nameStr
 Several different named query parameters MAY be included in the covered components.
 Single named parameters MAY occur in any order in the covered components.
 
-The component value of a single named parameter is the `valueString` of the named query parameter defined by "application/x-www-form-urlencoded parsing" section of {{HTMLURL}}, which is the value after percent-encoded octets are decoded.
+The component value of a single named parameter is calculated by the following process:
+
+1. Parse the `valueString` of the named query parameter defined by the "application/x-www-form-urlencoded parsing" section of {{HTMLURL}}, which is the value after percent-encoded octets are decoded
+2. Encode the `valueString` using the "percent-encode after encoding" process defined by the "application/x-www-form-urlencoded serializing" section of {{HTMLURL}}, which results in an ASCII string
+3. This ASCII string is the component value
+
 Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
-Named query parameters with an empty `valueString` are included with an empty string as the component value.
+Named query parameters with an empty `valueString` have an empty string as the component value.
 
 If a query parameter is named as a covered component but it does not occur in the query parameters, this MUST cause an error in the signature base generation.
 
@@ -844,19 +849,44 @@ Indicating the `baz`, `qux` and `param` named query parameters would result in t
 
 *param*: `value`
 
-And the following signature base lines:
+And the following signature base lines, with (SP) indicating a single trailing space character before the empty component value:
 
 ~~~
-NOTE: '\' line wrapping per RFC 8792
-
 "@query-param";name="baz": batman
-"@query-param";name="qux": \
-
+"@query-param";name="qux":(SP)
 "@query-param";name="param": value
 ~~~
 
-If a parameter name occurs multiple times in a request, all parameter values of that name MUST be included
-in separate signature base lines in the order in which the parameters occur in the target URI. Note that in some implementations, the order of parsed query parameters is not stable, and this situation could lead to unexpected results. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
+This derived component has some limitations. Specifically, the algorithm in {{HTMLURL}} only supports query parameters using percent-escaped UTF-8 encoding. Other encodings are not supported.
+Additionally, multiple instances of a named parameter are not reliably supported in the wild. If a parameter name occurs multiple times in a request, the named query parameter MUST NOT be included. If multiple parameters are common within an application, it is RECOMMENDED to sign the entire query string using the `@query` component identifier defined in {{content-request-query}}.
+
+The encoding process allows query parameters that include newlines or other problematic characters in their values, or with alternative encodings such as using the plus character to represent spaces. For the query parameters in this message:
+
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+GET /parameters?var=this%20is%20a%20big%0Amultiline%20value&\
+  bar=with+plus+whitespace HTTP/1.1
+Host: www.example.com
+Date: Tue, 20 Apr 2021 02:07:56 GMT
+~~~
+
+The resulting values are encoded as follows:
+
+~~~
+"@query-param";name="var": this%20is%20a%20big%0Amultiline%20value
+"@query-param";name="bar": with%20plus%20whitespace
+~~~
+
+If the encoding were not applied, the resultant value would be:
+
+~~~
+"@query-param";name="var": this is a big
+multiline value
+"@query-param";name="bar": with plus whitespace
+~~~
+
+This base string violates the constraints on component values, and is therefore invalid.
 
 ### Status Code {#content-status-code}
 
@@ -2973,6 +3003,13 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -17
+     * Change encoding
+     * Remove sign-the-signature examples and add explanations of why not to do that.
+     * Query parameter values must be re-encoded for safety.
+     * Query parameters now carry a warning of limitations.
+     * Address field value encodings.
 
   - -16
      * Editorial cleanup from AD review.
