@@ -862,7 +862,7 @@ Additionally, multiple instances of a named parameter are not reliably supported
 
 The encoding process allows query parameters that include newlines or other problematic characters in their values, or with alternative encodings such as using the plus character to represent spaces. For the query parameters in this message:
 
-~~~ htto-message
+~~~ http-message
 NOTE: '\' line wrapping per RFC 8792
 
 GET /parameters?var=this%20is%20a%20big%0Amultiline%20value&\
