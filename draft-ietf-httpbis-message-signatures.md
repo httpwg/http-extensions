@@ -57,6 +57,7 @@ author:
     country: United States of America
 
 normative:
+    STD80:
     RFC2104:
     RFC6234:
     RFC7517:
@@ -160,7 +161,7 @@ For brevity, the term "signature" on its own is used in this document to refer t
 This document uses the following terminology from {{Section 3 of STRUCTURED-FIELDS}}
 to specify data types: List, Inner List, Dictionary, Item, String, Integer, Byte Sequence, and Boolean.
 
-This document defines several string constructions using {{ABNF}} and uses the following ABNF rules: `VCHAR`, `SP`, `DQUOTE`, `LF`. This document uses the following ABNF rules from {{STRUCTURED-FIELDS}}: `sf-string`, `inner-list`, `parameters`. This document uses the following ABNF rules from {{HTTP}}: `field-content`.
+This document defines several string constructions using {{ABNF}} and uses the following ABNF rules: `VCHAR`, `SP`, `DQUOTE`, `LF`. This document uses the following ABNF rules from {{STRUCTURED-FIELDS}}: `sf-string`, `inner-list`, `parameters`. This document uses the following ABNF rules from {{HTTP}} and {{HTTP1}}: `field-content`, `obs-fold`, `obs-text`.
 
 In addition to those listed above, this document uses the following terms:
 
@@ -557,7 +558,7 @@ Derived component values MUST be limited to printable characters and spaces and 
 
 ### Method {#content-request-method}
 
-The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}. While conventionally standardized method names are uppercase US-ASCII, no transformation to the input method value's case is performed.
+The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}. While conventionally standardized method names are uppercase US-ASCII ({{STD80}}), no transformation to the input method value's case is performed.
 
 For example, the following request message:
 
@@ -1124,7 +1125,7 @@ The `req` parameter MUST NOT be used for any component in a signature that targe
 
 ## Creating the Signature Base {#create-sig-input}
 
-The signature base is a US-ASCII string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the ordered set of covered component identifiers and their associated values, along with any additional signature parameters discussed in {{signature-params}}.
+The signature base is a US-ASCII ({{STD80}}) string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the ordered set of covered component identifiers and their associated values, along with any additional signature parameters discussed in {{signature-params}}.
 
 Component identifiers are serialized using the strict serialization rules defined by {{STRUCTURED-FIELDS, Section 4}}.
 The component identifier has a component name, which is a String Item value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` ABNF rule. The signature parameters line defined in {{signature-params}} follows this same pattern, but the component identifier is a String Item with a fixed value and no parameters, and the component value is always an Inner List with optional parameters.
@@ -1136,7 +1137,8 @@ The output is the ordered set of bytes that form the signature base, which confo
 ~~~ abnf
 signature-base = *( signature-base-line LF ) signature-params-line
 signature-base-line = component-identifier ":" SP
-    ( derived-component-value / field-content ) ; no obs-fold
+    ( derived-component-value / *field-content )
+    ; no obs-fold nor obs-text
 component-identifier = component-name parameters
 component-name = sf-string
 derived-component-value = *( VCHAR / SP )
@@ -1186,7 +1188,9 @@ To create the signature base, the signer or verifier concatenates together entri
 
     4. Append the signature parameters' canonicalized component value as defined in {{signature-params}}, i.e. an Inner List structured field value with parameters
 
-4. Return the output string.
+4. Produce an error if the output string contains any non-ASCII ({{STD80}}) characters.
+
+5. Return the output string.
 
 If covered components reference a component identifier that cannot be resolved to a component value in the message, the implementation MUST produce an error and not create a signature base. Such situations are included but not limited to:
 
@@ -2965,8 +2969,8 @@ The editors would also like to thank the following individuals for feedback, ins
 Mark Adamcin,
 Mark Allen,
 Paul Annesley,
-{{{Karl Böhlmark}}},
-{{{Stéphane Bortzmeyer}}},
+{{{Karl BÃ¶hlmark}}},
+{{{StÃ©phane Bortzmeyer}}},
 Sarven Capadisli,
 Liam Dennehy,
 Stephen Farrell,
@@ -3010,6 +3014,7 @@ Jeffrey Yasskin.
      * Query parameter values must be re-encoded for safety.
      * Query parameters now carry a warning of limitations.
      * Address field value encodings.
+     * Import obs-fold, reference US-ASCII, enforce ASCII-ness of Signature Base
 
   - -16
      * Editorial cleanup from AD review.
