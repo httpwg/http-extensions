@@ -202,7 +202,7 @@ The effect of upgrading a Structured Fields implementation is that some field va
 
 # Structured Data Types {#types}
 
-This section defines the abstract types for Structured Fields, and summarises how those types are serialized into textual HTTP fields.
+This section defines the abstract types for Structured Fields, and summarizes how those types are serialized into textual HTTP fields.
 
 In summary:
 
