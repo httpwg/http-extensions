@@ -101,12 +101,10 @@ informative:
             name: Dennis Jackson
             ins: D. Jackson
             org: University of Oxford
-            country: UK
         -
             name: Cas Cremers
             ins: C. Cremers
             org: CISPA Helmholtz Center for Information Security
-            country: Germany
         -
             name: Katriel Cohn-Gordon
             ins: K. Cohn-Gordon
@@ -115,7 +113,6 @@ informative:
             name: Ralf Sasse
             ins: R. Sasse
             org: Department of Computer Science, ETH Zurich
-            country: Switzerland
     TLS: RFC8446
 
 entity:
