@@ -1029,7 +1029,7 @@ member-value   = sf-item / inner-list
 
 sf-item   = bare-item parameters
 bare-item = sf-integer / sf-decimal / sf-string / sf-token
-            / sf-binary / sf-boolean
+            / sf-binary / sf-boolean / sf-date
 
 sf-integer = ["-"] 1*15DIGIT
 
