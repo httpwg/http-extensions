@@ -985,6 +985,8 @@ Content-Length: 18
 This would result in the following unsigned response message:
 
 ~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
 HTTP/1.1 503 Service Unavailable
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 Content-Type: application/json
