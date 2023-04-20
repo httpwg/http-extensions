@@ -56,7 +56,7 @@ To accommodate some additional fields whose syntax is not compatible, it also de
 
 # Introduction
 
-Structured Field Values for HTTP {{STRUCTURED-FIELDS}} introduced a data model with associated parsing and serialization algorithms for use by new HTTP field values. Fields that are defined as Structured Fields can realise a number of benefits, including:
+Structured Field Values for HTTP {{STRUCTURED-FIELDS}} introduced a data model with associated parsing and serialization algorithms for use by new HTTP field values. Fields that are defined as Structured Fields can bring advantages that include:
 
 * Improved interoperability and security: precisely defined parsing and serialisation algorithms are typically not available for fields defined with just ABNF and/or prose.
 * Reuse of common implementations: many parsers for other fields are specific to a single field or a small family of fields.
@@ -70,7 +70,22 @@ This specification defines how a selection of existing HTTP fields can be handle
 
 It does so using two techniques. {{compatible}} lists compatible fields -- those that can be handled as if they were Structured Fields due to the similarity of their defined syntax to that in Structured Fields. {{mapped}} lists mapped fields -- those whose syntax needs to be transformed into an underlying data model which is then mapped into that defined by Structured Fields.
 
-Note that while implementations can parse and serialise compatible fields as Structured Fields subject to the caveats in {{compatible}}, a sender cannot generate mapped fields from {{mapped}} and expect them to be understood and acted upon by the recipient without prior negotiation. This specification does not define such a mechanism.
+Note that this specification does not enable use of Retrofit Structured Fields in the HTTP protocol "on the wire" or in APIs; it only establishes handling for specific fields that might be used by such applications in the future.
+
+
+## Using Retrofit Structured Fields
+
+Retrofitting data structures onto existing and widely-deployed HTTP fields requires careful handling to assure interoperability and security. This section highlights considerations for applications that use Retrofit Structured Fields.
+
+While the majority of field values seen in HTTP traffic should be able to be parsed or mapped successfully, some will not. An application using Retrofit Structured Fields will need to define how unsuccessful values will be handled.
+
+For example, an API that exposes field values using Structured Fields data types might make the field value available as a string in cases where the field did not successfully parse or map.
+
+The mapped field values described in {{mapped}} are not compatible with the original syntax of their fields, and so cannot be used unless parties processing them have explicitly indicated their support for that form of the field value. An application using Retrofit Structured Fields will need to define how to negotiate support for them.
+
+For example, an alternative serialization of fields that takes advantage of Structured Fields would need to establish an explicit negotiation mechanism to assure that both peers would handle that serialization appropriately before using it.
+
+See also the security considerations in {{security}}.
 
 
 ## Notational Conventions
@@ -196,7 +211,7 @@ Its value would be mapped to:
 @784111777
 ~~~
 
-Unlike those listed in {{compatible}}, these representations of the field values are not compatible with the original fields' syntax, and MUST NOT be sent to a recipient without prior negotiation.
+Unlike those listed in {{compatible}}, these representations are not compatible with the original fields' syntax, and MUST NOT be used unless they are explicitly supported. For example, this means that sending them to a next-hop recipient in HTTP requires prior negotiation. This specification does not define how to do so.
 
 
 ## URLs
@@ -335,7 +350,7 @@ Then, add a new column, "Structured Type", with the values from {{compatible}} a
 Finally, add a new column to the "Cookie Attribute Registry" established by {{COOKIES}} with the title "Structured Type", using information from {{cookie-params}}.
 
 
-# Security Considerations
+# Security Considerations {#security}
 
 {{compatible}} identifies existing HTTP fields that can be parsed and serialised with the algorithms defined in {{STRUCTURED-FIELDS}}. Variances from existing parser behavior might be exploitable, particularly if they allow an attacker to target one implementation in a chain (e.g., an intermediary). However, given the considerable variance in parsers already deployed, convergence towards a single parsing algorithm is likely to have a net security benefit in the longer term.
 
