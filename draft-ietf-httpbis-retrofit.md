@@ -196,7 +196,7 @@ Its value would be mapped to:
 @784111777
 ~~~
 
-As in {{compatible}}, these fields are unable to carry values that are not valid Structured Fields, and so an application using this specification will need to how to support such values.
+Unlike those listed in {{compatible}}, these representations of the field values are not compatible with the original fields' syntax, and MUST NOT be sent to a recipient without prior negotiation.
 
 
 ## URLs
