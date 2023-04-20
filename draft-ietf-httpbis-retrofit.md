@@ -80,11 +80,12 @@ Note that while implementations can parse and serialise compatible fields as Str
 
 # Compatible Fields {#compatible}
 
-The HTTP fields listed in {{compatible-fields}} can usually have their values handled as Structured Fields according to the listed parsing and serialisation algorithms in {{STRUCTURED-FIELDS}}, subject to the listed caveats.
+The HTTP fields listed in {{compatible-fields}} have values that can be handled as Structured Field Values according to the parsing and serialisation algorithms in {{STRUCTURED-FIELDS}} corresponding to the listed top-level type, subject to the caveats in {{compatible-caveats}}.
 
-The listed types are chosen for compatibility with the defined syntax of the field as well as with actual internet traffic. However, not all instances of these fields will successfully parse. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
+The top-level types are chosen for compatibility with the defined syntax of the field as well as with actual internet traffic. However, not all instances of these fields will successfully parse as a Structured Field Value. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
 
-An application using this specification will need to consider how to handle such field values. Depending on its requirements, it might be advisable to reject such values, treat them as opaque strings, or attempt to recover a structured value from them in an ad hoc fashion.
+An application using this specification will need to consider how to handle such field values. Depending on its requirements, it might be advisable to reject such values, treat them as opaque strings, or attempt to recover a Structured Field Value from them in an ad hoc fashion.
+
 
 | Field Name                       | Structured Type |
 |----------------------------------|-----------------|
@@ -142,6 +143,9 @@ An application using this specification will need to consider how to handle such
 | X-Frame-Options                  | Item            |
 | X-XSS-Protection                 | List            |
 {:id="compatible-fields" title="Compatible Fields"}
+
+
+## Caveats {#compatible-caveats}
 
 Note the following caveats regarding compatibility:
 
