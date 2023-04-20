@@ -48,7 +48,7 @@ informative:
 
 --- abstract
 
-This specification nominates a selection of existing HTTP fields as having syntax that is compatible with Structured Fields, so that they can be handled as such (subject to certain caveats).
+This specification nominates a selection of existing HTTP fields whose values are compatible with Structured Fields syntax, so that they can be handled as such (subject to certain caveats).
 
 To accommodate some additional fields whose syntax is not compatible, it also defines mappings of their semantics into Structured Fields. It does not specify how to convey them in HTTP messages.
 
