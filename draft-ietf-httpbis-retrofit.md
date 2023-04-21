@@ -292,7 +292,7 @@ would have a mapped value of:
 
 ## Cookies
 
-The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into a Structured Fields Lists.
+The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into Structured Fields Lists.
 
 In each case, a cookie is represented as an Inner List containing two Items; the cookie name and value. The cookie name is always a String; the cookie value is a String, unless it can be successfully parsed as the textual representation of another, bare Item structured type (e.g., Byte Sequence, Decimal, Integer, Token, or Boolean).
 
