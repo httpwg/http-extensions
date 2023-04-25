@@ -149,7 +149,7 @@ The signing mechanism described in this document consists of three parts:
 
 This document also provides a mechanism for negotiation the use of signatures in one or more subsequent messages via the "Accept-Signature" field ({{request-signature}}). This optional negotiation mechanism can be used along with opportunistic or application-driven message signatures by either party.
 
-The mechanisms defined in this document are important tools that can be used to an overall security mechanism for an application. This toolkit provides some powerful capabilities, but does not sufficient in creating an overall security story. In particular, the requirements in {{application}} and the security considerations in {{security}} are of high importance to all implementors of this specification.
+The mechanisms defined in this document are important tools that can be used to an overall security mechanism for an application. This toolkit provides some powerful capabilities, but does not sufficient in creating an overall security story. In particular, the requirements in {{application}} and the security considerations in {{security}} are of high importance to all implementors of this specification. For example, this specification does not define a means to directly cover HTTP message content (defined in {{Section 6.4 of HTTP}}), but relies on the {{DIGEST}} specification to provide a hash of the message content, as discussed in {{security-message-content}}.
 
 ## Conventions and Terminology {#definitions}
 
