@@ -57,7 +57,7 @@ author:
     country: United States of America
 
 normative:
-    STD80:
+    ASCII: RFC0020
     RFC2104:
     RFC6234:
     RFC7517:
@@ -555,7 +555,7 @@ Derived component values MUST be limited to printable characters and spaces and 
 
 ### Method {#content-request-method}
 
-The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}. While conventionally standardized method names are uppercase US-ASCII ({{STD80}}), no transformation to the input method value's case is performed.
+The `@method` derived component refers to the HTTP method of a request message. The component value is canonicalized by taking the value of the method as a string. Note that the method name is case-sensitive as per {{HTTP, Section 9.1}}. While conventionally standardized method names are uppercase {{ASCII}}, no transformation to the input method value's case is performed.
 
 For example, the following request message:
 
@@ -817,18 +817,19 @@ Resulting in the following signature base line:
 
 If a request target URI uses HTML form parameters in the query string as defined in the "application/x-www-form-urlencoded" section of {{HTMLURL}},
 the `@query-param` derived component allows addressing of individual query parameters. The query parameters MUST be parsed according to the "application/x-www-form-urlencoded parsing" section of {{HTMLURL}}, resulting in a list of (`nameString`, `valueString`) tuples.
-The REQUIRED `name` parameter of each component identifier contains the `nameString` of a single query parameter as a String value.
+The REQUIRED `name` parameter of each component identifier contains the encoded `nameString` of a single query parameter as a String value.
+The component value of a single named parameter is the encoded `valueString` of that single query parameter.
 Several different named query parameters MAY be included in the covered components.
-Single named parameters MAY occur in any order in the covered components.
+Single named parameters MAY occur in any order in the covered components, regardless of the order they occur in the query string.
 
-The component value of a single named parameter is calculated by the following process:
+The value of the `name` parameter and the component value of a single named parameter are calculated by the following process:
 
-1. Parse the `valueString` of the named query parameter defined by the "application/x-www-form-urlencoded parsing" section of {{HTMLURL}}, which is the value after percent-encoded octets are decoded
-2. Encode the `valueString` using the "percent-encode after encoding" process defined by the "application/x-www-form-urlencoded serializing" section of {{HTMLURL}}, which results in an ASCII string
-3. This ASCII string is the component value
+1. Parse the `nameString` or `valueString` of the named query parameter defined by the "application/x-www-form-urlencoded parsing" section of {{HTMLURL}}, which is the value after percent-encoded octets are decoded.
+2. Encode the `nameString` or `valueString` using the "percent-encode after encoding" process defined by the "application/x-www-form-urlencoded serializing" section of {{HTMLURL}}, which results in an {{ASCII}} string.
+3. Output the ASCII string,
 
-Note that this value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
-Named query parameters with an empty `valueString` have an empty string as the component value.
+Note that the component value does not include any leading `?` characters, equals sign `=`, or separating `&` characters.
+Named query parameters with an empty `valueString` have an empty string as the component value. Note that due to inconsistencies in implementations, some query parameter parsing libraries drop such empty values.
 
 If a query parameter is named as a covered component but it does not occur in the query parameters, this MUST cause an error in the signature base generation.
 
@@ -864,7 +865,7 @@ The encoding process allows query parameters that include newlines or other prob
 NOTE: '\' line wrapping per RFC 8792
 
 GET /parameters?var=this%20is%20a%20big%0Amultiline%20value&\
-  bar=with+plus+whitespace HTTP/1.1
+  bar=with+plus+whitespace&fa%C3%A7ade%22%3A%20=something HTTP/1.1
 Host: www.example.com
 Date: Tue, 20 Apr 2021 02:07:56 GMT
 ~~~
@@ -874,17 +875,19 @@ The resulting values are encoded as follows:
 ~~~
 "@query-param";name="var": this%20is%20a%20big%0Amultiline%20value
 "@query-param";name="bar": with%20plus%20whitespace
+"@query-param";name="fa%C3%A7ade%22%3A%20": something
 ~~~
 
-If the encoding were not applied, the resultant value would be:
+If the encoding were not applied, the resultant values would be:
 
 ~~~
 "@query-param";name="var": this is a big
 multiline value
 "@query-param";name="bar": with plus whitespace
+"@query-param";name="façade\": ": something
 ~~~
 
-This base string violates the constraints on component values, and is therefore invalid.
+This base string contains characters that violate the constraints on component names and values, and is therefore invalid.
 
 ### Status Code {#content-status-code}
 
@@ -1124,7 +1127,7 @@ The `req` parameter MUST NOT be used for any component in a signature that targe
 
 ## Creating the Signature Base {#create-sig-input}
 
-The signature base is a US-ASCII ({{STD80}}) string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the ordered set of covered component identifiers and their associated values, along with any additional signature parameters discussed in {{signature-params}}.
+The signature base is a {{ASCII}} string containing the canonicalized HTTP message components covered by the signature. The input to the signature base creation algorithm is the ordered set of covered component identifiers and their associated values, along with any additional signature parameters discussed in {{signature-params}}.
 
 Component identifiers are serialized using the strict serialization rules defined by {{STRUCTURED-FIELDS, Section 4}}.
 The component identifier has a component name, which is a String Item value serialized using the `sf-string` ABNF rule. The component identifier MAY also include defined parameters which are serialized using the `parameters` ABNF rule. The signature parameters line defined in {{signature-params}} follows this same pattern, but the component identifier is a String Item with a fixed value and no parameters, and the component value is always an Inner List with optional parameters.
@@ -1187,7 +1190,7 @@ To create the signature base, the signer or verifier concatenates together entri
 
     4. Append the signature parameters' canonicalized component value as defined in {{signature-params}}, i.e. an Inner List structured field value with parameters
 
-4. Produce an error if the output string contains any non-ASCII ({{STD80}}) characters.
+4. Produce an error if the output string contains any non-ASCII ({{ASCII}}) characters.
 
 5. Return the output string.
 
