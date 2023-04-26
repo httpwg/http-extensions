@@ -750,7 +750,7 @@ The `@path` derived component refers to the target path of the HTTP request mess
 For example, the following request message:
 
 ~~~ http-message
-POST /path?param=value HTTP/1.1
+GET /path?param=value HTTP/1.1
 Host: www.example.com
 ~~~
 
@@ -773,7 +773,7 @@ The `@query` derived component refers to the query component of the HTTP request
 For example, the following request message:
 
 ~~~ http-message
-POST /path?param=value&foo=bar&baz=bat%2Dman HTTP/1.1
+GET /path?param=value&foo=bar&baz=bat%2Dman HTTP/1.1
 Host: www.example.com
 ~~~
 
@@ -842,7 +842,7 @@ If a query parameter is named as a covered component but it does not occur in th
 For example for the following request:
 
 ~~~ http-message
-POST /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
+GET /path?param=value&foo=bar&baz=batman&qux= HTTP/1.1
 Host: www.example.com
 ~~~
 
@@ -2220,6 +2220,11 @@ In most circumstances, this causes the signature validation to fail as expected,
 
 To counter this, an application needs to validate the content of the fields covered in the signature in addition to ensuring that the signature itself validates. With such protections, the attacker's padding attack would be rejected by the field value processor, even in the case where the attacker could force a signature collision.
 
+### Ambiguous Handling of Query Elements {#security-query-elements}
+
+The HTML form parameters format defined in the "application/x-www-form-urlencoded" section of {{HTMLURL}}, is widely deployed and supported by many application frameworks. For convenience, some of these frameworks in particular combine query parameters that are found in the HTTP query and those found in the message content, particularly for POST message with a Content-Type value of "application/x-www-form-urlencoded". The `@query-param` derived component identifier defined in {{content-request-query-param}} draws its values only from the query section of the target URI of the request. As such, it would be possible for an attacker to shadow or replace query parameters in a request by overriding the signed query parameter with an unsigned form parameter, or vice versa.
+
+To counter this, an application needs to make sure that values used for the signature base and the application are drawn from a consistent context, in this case the query component of the target URI. Additionally, when the HTTP request has content, an application should sign the message content as well, as discussed in {{security-message-content}}.
 
 # Privacy Considerations {#privacy}
 
