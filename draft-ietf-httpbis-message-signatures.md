@@ -93,6 +93,11 @@ informative:
     CLIENT-CERT: I-D.ietf-httpbis-client-cert-field
     DIGEST: I-D.ietf-httpbis-digest-headers
     COOKIE: RFC6265
+    I-D.cavage-http-signatures:
+    I-D.ietf-oauth-signed-http-request:
+    AWS-SIGv4:
+        target: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+        title: "Authenticating Requests (AWS Signature Version 4)"
     JACKSON2019:
         target: https://dennis-jackson.uk/assets/pdfs/signatures.pdf
         title: "Seems Legit: Automated Analysis of Subtle Attacks on Protocols that Use Signatures"
@@ -135,7 +140,7 @@ Additionally, many applications need to be able to generate and verify signature
 
 Finally, object-based signature mechanisms such as {{JWS}} require the intact conveyance of the exact information that was signed. When applying such technologies to an HTTP message, elements of the HTTP message need to be duplicated in the object payload either directly or through inclusion of a hash. This practice introduces complexity since the repeated information needs to be carefully checked for consistency when the signature is verified.
 
-This document defines a mechanism for providing end-to-end integrity and authenticity for components of an HTTP message by use of a detached signature. The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only the components of the message that are meaningful and appropriate for the application. Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in any of the many ways permitted by HTTP.
+This document defines a mechanism for providing end-to-end integrity and authenticity for components of an HTTP message by use of a detached signature on HTTP messages. The mechanism allows applications to create digital signatures or message authentication codes (MACs) over only the components of the message that are meaningful and appropriate for the application. Strict canonicalization rules ensure that the verifier can verify the signature even if the message has been transformed in many of the ways permitted by HTTP.
 
 The signing mechanism described in this document consists of three parts:
 
@@ -144,6 +149,8 @@ The signing mechanism described in this document consists of three parts:
 - A mechanism for attaching a signature and related metadata to an HTTP message, and for parsing attached signatures and metadata from HTTP messages. To facilitate this, this document defines the "Signature-Input" and "Signature" fields. ({{attach-signature}})
 
 This document also provides a mechanism for negotiation the use of signatures in one or more subsequent messages via the "Accept-Signature" field ({{request-signature}}). This optional negotiation mechanism can be used along with opportunistic or application-driven message signatures by either party.
+
+The mechanisms defined in this document are important tools that can be used to an overall security mechanism for an application. This toolkit provides some powerful capabilities, but does not sufficient in creating an overall security story. In particular, the requirements in {{application}} and the security considerations in {{security}} are of high importance to all implementors of this specification. For example, this specification does not define a means to directly cover HTTP message content (defined in {{Section 6.4 of HTTP}}), but relies on the {{DIGEST}} specification to provide a hash of the message content, as discussed in {{security-message-content}}.
 
 ## Conventions and Terminology {#definitions}
 
@@ -251,7 +258,7 @@ Other transformations, such as parsing and re-serializing the field values of a 
 
 ## Application of HTTP Message Signatures {#application}
 
-HTTP Message Signatures are designed to be a general-purpose security mechanism applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify all of the following items:
+HTTP Message Signatures are designed to be a general-purpose tool applicable in a wide variety of circumstances and applications. In order to properly and safely apply HTTP Message Signatures, an application or profile of this specification MUST specify at least all of the following items:
 
 - The set of [component identifiers](#covered-components) and [signature parameters](#signature-params) that are expected and required to be included in the covered components list. For example, an authorization protocol could mandate that the Authorization field be covered to protect the authorization credentials and mandate the signature parameters contain a `created` parameter, while an API expecting semantically relevant HTTP message content could require the Content-Digest field defined in {{DIGEST}} to be present and covered as well as mandate a value for `tag` that is specific to the API being protected.
 - The expected structured field types ({{STRUCTURED-FIELDS}}) of any required or expected covered component fields or parameters.
@@ -265,7 +272,7 @@ HTTP Message Signatures are designed to be a general-purpose security mechanism 
 
 When choosing these parameters, an application of HTTP message signatures has to ensure that the verifier will have access to all required information needed to re-create the signature base. For example, a server behind a reverse proxy would need to know the original request URI to make use of the derived component `@target-uri`, even though the apparent target URI would be changed by the reverse proxy (see also {{security-message-component-context}}). Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions of the message, including any portions of the request that were signed by the server using the related-response parameter.
 
-The details of this kind of profiling are the purview of the application and outside the scope of this specification, however some additional considerations are discussed in {{security}}. In particular, when choosing the required set of component identifiers, care has to be taken to make sure that the coverage is sufficient for the application, as discussed in {{security-coverage}} and  {{security-message-content}}.
+The details of this kind of profiling are the purview of the application and outside the scope of this specification, however some additional considerations are discussed in {{security}}. In particular, when choosing the required set of component identifiers, care has to be taken to make sure that the coverage is sufficient for the application, as discussed in {{security-coverage}} and  {{security-message-content}}. This specification defines only part of a full security system for an application. When building a complete security system based on this tool, it is important to perform a security analysis of the entire system of which HTTP Message Signatures is a part. Historical systems, such as {{AWS-SIGv4}}, can provide inspiration and examples of how to apply similar mechanisms in a secure and trustable fashion.
 
 # HTTP Message Components {#covered-components}
 
@@ -2962,7 +2969,7 @@ Signature: transform=:ZT1kooQsEHpZ0I1IjCqtQppOmIqlJPeo7DHR3SoMn0s5J\
 # Acknowledgements {#acknowledgements}
 {:numbered="false"}
 
-This specification was initially based on the draft-cavage-http-signatures internet draft. The editors would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions. The specification also includes contributions from the draft-oauth-signed-http-request internet draft and other similar efforts.
+This specification was initially based on the {{I-D.cavage-http-signatures}} internet draft. The editors would like to thank the authors of that draft, Mark Cavage and Manu Sporny, for their work on that draft and their continuing contributions. The specification also includes contributions from the {{I-D.ietf-oauth-signed-http-request}} internet draft and other similar efforts.
 
 The editors would also like to thank the following individuals for feedback, insight, and implementation of this draft and its predecessors (in alphabetical order):
 Mark Adamcin,
@@ -3013,6 +3020,7 @@ Jeffrey Yasskin.
      * Query parameter values must be re-encoded for safety.
      * Query parameters now carry a warning of limitations.
      * Address field value encodings.
+     * Discuss history and positioning of this specification.
      * Import obs-fold, reference US-ASCII, enforce ASCII-ness of Signature Base
 
   - -16
