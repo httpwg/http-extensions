@@ -580,7 +580,7 @@ Eager processing of content before the trailer section prevents digest validatio
 processing of invalid data.
 
 One of the benefits of using Integrity fields in a trailer section is that it
-allows hashing of bytes as they are sent or received. However, it is possible to
+allows hashing of bytes as they are sent. However, it is possible to
 design a hashing algorithm that requires processing of content in such a way
 that would negate these benefits. For example, Merkle Integrity Content Encoding
 {{?I-D.thomson-http-mice}} requires content to be processed in reverse order.
