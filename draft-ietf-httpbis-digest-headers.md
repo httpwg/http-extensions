@@ -579,8 +579,14 @@ When Integrity fields are used in a trailer section, the field-values are receiv
 Eager processing of content before the trailer section prevents digest validation, possibly leading to
 processing of invalid data.
 
-Not every hashing algorithm is suitable for use in the trailer section, some may require to preprocess
-the whole content before sending a message (e.g., see {{?I-D.thomson-http-mice}}).
+One of the benefits of using Integrity fields in a trailer section is that it
+allows hashing of bytes as they are sent or received. However, it is possible to
+design a hashing algorithm that requires processing of content in such a way
+that would negate these benefits. For example, Merkle Integrity Content Encoding
+{{?I-D.thomson-http-mice}} requires content to be processed in reverse order.
+This means the complete data needs to be available, which means there is
+negligible processing difference in sending an Integrity field in a header or
+trailer section.
 
 ## Variations Within Content Encoding
 
