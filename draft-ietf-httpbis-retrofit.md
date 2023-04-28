@@ -314,14 +314,14 @@ The Expires attribute is mapped to a Date representation of parsed-cookie-date (
 For example, this Set-Cookie field:
 
 ~~~ http-message
-Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT;
+Set-Cookie: Lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT;
                samesite=Strict; secure
 ~~~
 
 would have a mapped value of:
 
 ~~~ http-message-new
-("lang" "en-US"); expires=@1623233894;
+("Lang" "en-US"); expires=@1623233894;
                samesite=Strict; secure
 ~~~
 
