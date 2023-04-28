@@ -280,7 +280,7 @@ Likewise, If-Match's field value can be mapped into a Structured Field value in 
 For example, this If-None-Match field:
 
 ~~~ http-message
-If-None-Match: "abcdef"; w, "ghijkl", *
+If-None-Match: W/"abcdef", "ghijkl", *
 ~~~
 
 would have a mapped value of:
