@@ -209,7 +209,7 @@ Its value would be mapped to:
 @784111777
 ~~~
 
-Unlike those listed in {{compatible}}, these representations are not compatible with the original fields' syntax, and MUST NOT be used unless they are explicitly supported. For example, this means that sending them to a next-hop recipient in HTTP requires prior negotiation. This specification does not define how to do so.
+Unlike those listed in {{compatible}}, these representations are not compatible with the original fields' syntax, and MUST NOT be used unless they are explicitly and unambiguously supported. For example, this means that sending them to a next-hop recipient in HTTP requires prior negotiation. This specification does not define how to do so.
 
 
 ## URLs
