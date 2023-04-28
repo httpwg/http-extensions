@@ -70,8 +70,6 @@ This specification defines how a selection of existing HTTP fields can be handle
 
 It does so using two techniques. {{compatible}} lists compatible fields -- those that can be handled as if they were Structured Fields due to the similarity of their defined syntax to that in Structured Fields. {{mapped}} lists mapped fields -- those whose syntax needs to be transformed into an underlying data model which is then mapped into that defined by Structured Fields.
 
-Note that this specification does not enable use of Retrofit Structured Fields in the HTTP protocol "on the wire" or in APIs; it only establishes handling for specific fields that might be used by such applications in the future.
-
 
 ## Using Retrofit Structured Fields
 
