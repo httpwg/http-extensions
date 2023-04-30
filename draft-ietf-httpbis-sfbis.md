@@ -479,6 +479,7 @@ For example:
 Example-DisplayString: %"This is intended for display to %C3%BCsers."
 ~~~
 
+See {{security}} for additional security considerations when handling Display Strings.
 
 
 
@@ -1006,12 +1007,14 @@ Then, add the indicated Structured Type for each existing registry entry listed 
 {:id="existing-fields" title="Existing Fields"}
 
 
-# Security Considerations
+# Security Considerations {#security}
 
 The size of most types defined by Structured Fields is not limited; as a result, extremely large fields could be an attack vector (e.g., for resource consumption). Most HTTP implementations limit the sizes of individual fields as well as the overall header or trailer section size to mitigate such attacks.
 
 It is possible for parties with the ability to inject new HTTP fields to change the meaning
 of a Structured Field. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
+
+The Display String type conveys a Unicode string without any form of sanitization. Applications using these values need to perform their own checks on their content; for example, they might contain escape sequences, or NUL. Mitigation strategies include escaping untrusted content before displaying it.
 
 --- back
 
