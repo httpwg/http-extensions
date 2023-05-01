@@ -137,6 +137,7 @@ Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
 
 Upon parsing this name, "dot%5C.label" MUST be treated as a single label.
 
+Similarly the "\" character in a label MUST be escaped as "\\".  Other uses of "\" MUST NOT appear in the label after percent-decoding.
 # Implementation Considerations
 
 In order to include the `next-hop-aliases` parameter, a proxy needs to have access to the chain
