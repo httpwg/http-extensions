@@ -75,13 +75,9 @@ in the chain, the first name in the `next-hop-aliases` list would be the value i
 record for the original hostname, and the final name in the `next-hop-aliases` list would
 be the name that ultimately resolved to one or more addresses.
 
-The list of DNS names in `next-hop-aliases` use a comma (",") as a separator between names.
-DNS names normally just contain alphanumeric characters and hyphens ("-"), although they
-are allowed to contain any character {{?RFC1035, Section 3.1}}, including a comma. To
-prevent commas or other special characters in names leading to incorrect parsing,
-any characters that appear in names in this list that do not belong to the set of URI
-Unreserved Characters {{!RFC3986, Section 2.3}} MUST be percent-encoded as
-defined in {{!RFC3986, Section 2.1}}.
+The list of DNS names in `next-hop-aliases` uses a comma (",") as a separator between names.
+Note that if a comma is included in a name itself, the comma must be encoded as described in
+{{encoding}}.
 
 For example, consider a proxy "proxy.example.net" that receives the following records when
 performing DNS resolution for the next hop "host.example.com":
@@ -111,6 +107,35 @@ in which this parameter is not present.
 
 The proxy MAY send the empty string ("") as the value of `next-hop-aliases` to indicate that
 no CNAME records were encountered when resolving the next hop's name.
+
+## Encoding special characters {#encoding}
+
+DNS names commonly just contain alphanumeric characters and hyphens ("-"), although they
+are allowed to contain any character {{?RFC1035, Section 3.1}}, including a comma. To
+prevent commas or other special characters in names leading to incorrect parsing,
+any characters that appear in names in this list that do not belong to the set of URI
+Unreserved Characters {{!RFC3986, Section 2.3}} MUST be percent-encoded as
+defined in {{!RFC3986, Section 2.1}}.
+
+For example, consider the DNS name `name,with,commas.example.com`. This name would be encoded
+within a `next-hop-aliases` parameter as follows:
+
+~~~ example
+Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
+    next-hop-aliases="name%2Cwith%2Ccommas.example.com,service1.example-cdn.com"
+~~~
+
+It is also possible for a DNS name to include a period character (".") within a label,
+instead of as a label separator. In this case, the period character MUST be first escaped
+as "\.". Since the "\" character itself will be percent-encoded, the name
+"dot\.label.example.com" would be encoded within a `next-hop-aliases` parameter as follows:
+
+~~~ example
+Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
+    next-hop-aliases="dot%5C.label.example.com,service1.example-cdn.com"
+~~~
+
+Upon parsing this name, "dot%5C.label" MUST be treated as a single label.
 
 # Implementation Considerations
 
