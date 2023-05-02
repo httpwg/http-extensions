@@ -352,6 +352,9 @@ The term "request", as well as a request's "client", "current url", "method",
 The term "non-HTTP APIs" refers to non-HTTP mechanisms used to set and retrieve
 cookies, such as a web browser API that exposes cookies to scripts.
 
+The term "top-level navigation" refers to a navigation of a top-level
+traversable.
+
 # Overview
 
 This section outlines a way for an origin server to send state information to a
@@ -2676,6 +2679,9 @@ The "Cookie Attribute Registry" should be created with the registrations below:
 
 * Advise the reader which section to implement
   <https://github.com/httpwg/http-extensions/pull/2478>
+
+* Define top-level navigation
+  <https://github.com/httpwg/http-extensions/pull/2481>
 
 ## draft-ietf-httpbis-rfc6265bis-12
 
