@@ -127,8 +127,8 @@ Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
 
 It is also possible for a DNS name to include a period character (".") within a label,
 instead of as a label separator. In this case, the period character MUST be first escaped
-as "\.". Since the "\" character itself will be percent-encoded, the name
-"dot\.label.example.com" would be encoded within a `next-hop-aliases` parameter as follows:
+as "\\.". Since the "\\" character itself will be percent-encoded, the name
+"dot\\.label.example.com" would be encoded within a `next-hop-aliases` parameter as follows:
 
 ~~~ example
 Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
@@ -137,7 +137,7 @@ Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
 
 Upon parsing this name, "dot%5C.label" MUST be treated as a single label.
 
-Similarly the "\" character in a label MUST be escaped as "\\".  Other uses of "\" MUST NOT appear in the label after percent-decoding.
+Similarly the "\\" character in a label MUST be escaped as "\\\\".  Other uses of "\\" MUST NOT appear in the label after percent-decoding.
 # Implementation Considerations
 
 In order to include the `next-hop-aliases` parameter, a proxy needs to have access to the chain
