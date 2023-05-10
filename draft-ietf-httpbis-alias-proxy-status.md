@@ -160,10 +160,10 @@ a hint, and SHOULD NOT be used for making security decisions about the identity 
 through the proxy.
 
 Inspecting CNAME chains can be used to detect cloaking of trackers or malicious hosts. However, the
-CNAME records could be omitted by a recursive resolver that is trying to hide this form of cloaking.
-Such attacks to avoid cloaking detection apply equally to clients directly performing DNS name
+CNAME records could be omitted by a recursive or authoritative resolver that is trying to hide this form of cloaking.
+In particular, recursive or authoritative resolvers can omit these records for both clients directly performing DNS name
 resolution and proxies performing DNS name resolution on behalf of client. A malicious proxy could
-also choose to not report these CNAME chains in order to hide the cloaking. In general, client can
+also choose to not report these CNAME chains in order to hide the cloaking. In general, clients can
 trust information included (or not included) in the `next-hop-aliases` parameter to the degree
 that the proxy and any resolvers used by the proxy are trusted.
 
