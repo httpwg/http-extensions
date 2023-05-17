@@ -67,10 +67,11 @@ occurs.
 The semantics of the frame payload are identical to those of the HTTP/2 frame
 defined in {{!ORIGIN}}. Where HTTP/2 reserves stream 0 for frames related to the
 state of the connection, HTTP/3 defines a pair of unidirectional streams called
-"control streams" for this purpose.  Where {{ORIGIN}} indicates that the ORIGIN
-frame should be sent on stream 0, this should be interpreted to mean the HTTP/3
-control stream.  The ORIGIN frame is sent from servers to clients on the
-server's control stream.
+"control streams" for this purpose.
+
+Where {{ORIGIN}} indicates that the ORIGIN frame is sent on stream 0, this
+should be interpreted to mean the appropriate HTTP/3 control stream: that is,
+the ORIGIN frame is sent from servers to clients on the server's control stream.
 
 HTTP/3 does not define a Flags field in the generic frame layout. As no flags
 have been defined for the ORIGIN frame, this specification does not define a
@@ -116,8 +117,9 @@ in {{!ORIGIN}} and {{HTTP3}}.
 
 # IANA Considerations {#iana}
 
-This document registers a frame type in the "HTTP/3 Frame Types"
-registry {{HTTP3}}.
+This document registers a frame type in the "HTTP/3 Frame Types" registry
+defined by {{HTTP3}}, located at
+\<https://www.iana.org/assignments/http2-parameters/http2-parameters.xhtml#frame-type>.
 
 Value:
 : 0x0c
