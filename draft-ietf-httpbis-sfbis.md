@@ -867,7 +867,7 @@ Given an ASCII string as input_string, return an unquoted String. input_string i
       3. If next_char is not DQUOTE or "\\", fail parsing.
       4. Append next_char to output_string.
    3. Else, if char is DQUOTE, return output_string.
-   4. Else, if char is in the range %x00-1f or %x7f-ff (i.e., it is not in VCHAR or SP), fail parsing.
+   4. Else, if char is in the range %x00-1f or %x7f-ff (i.e., it is not in VCHAR or SP as defined in {{HTTP}}), fail parsing.
    5. Else, append char to output_string.
 5. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
