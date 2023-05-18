@@ -117,6 +117,8 @@ Note that as a result of this strictness, if a field is appended to by multiple 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
+This document uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{?RFC5234}} to specify characters and/or their corresponding ASCII bytes, depending on context. It uses the tchar and OWS rules from {{HTTP}} for the same purpose.
+
 This document uses algorithms to specify parsing and serialization behaviors. When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms.
 
 For serialization to HTTP fields, the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm described in {{text-parse}}.
@@ -1002,7 +1004,7 @@ Implementations are allowed to limit the size of different structures, subject t
 
 # ABNF {#abnf}
 
-This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{?RFC5234}}. It also includes the tchar and OWS rules from {{HTTP}}.
+This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields.
 
 This section is non-normative. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
