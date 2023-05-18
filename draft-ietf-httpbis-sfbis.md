@@ -658,7 +658,7 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in an 
 
 ### Serializing a Date {#ser-date}
 
-Given a Date as input_integer, return an ASCII string suitable for use in an HTTP field value.
+Given a Date as input_date, return an ASCII string suitable for use in an HTTP field value.
 
 0. Let output be "@".
 1. Append to output the result of running Serializing an Integer with input_date ({{ser-integer}}).
