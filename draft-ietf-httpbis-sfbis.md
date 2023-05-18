@@ -158,13 +158,13 @@ Specifications can refer to a field name as a "structured header name", "structu
 For example, a fictitious Foo-Example header field might be specified as:
 
 <blockquote>
-<t>42. Foo-Example Header</t>
+<t>42. Foo-Example Header Field</t>
 
 <t>The Foo-Example HTTP header field conveys information about how
 much Foo the message has.</t>
 
-<t>Foo-Example is an Item Structured Header [RFC8941]. Its value MUST be
-an Integer (Section 3.3.1 of [RFC8941]).</t>
+<t>Foo-Example is an Item Structured Header Field [RFCnnnn]. Its value
+MUST be an Integer (Section 3.3.1 of [RFCnnnn]).</t>
 
 <t>Its value indicates the amount of Foo in the message, and it MUST
 be between 0 and 10, inclusive; other values MUST cause
@@ -174,7 +174,7 @@ the entire header field to be ignored.</t>
 
 <ul>
 <li>A parameter whose key is "foourl", and whose value is a String
-  (Section 3.3.3 of [RFC8941]), conveying the Foo URL
+  (Section 3.3.3 of [RFCnnnn]), conveying the Foo URL
   for the message. See below for processing requirements.</li>
 </ul>
 
@@ -391,7 +391,7 @@ Example-Decimal: 4.5
 
 While it is possible to serialize Decimals with leading zeros (e.g., "0002.5", "-01.334"), trailing zeros (e.g., "5.230", "-0.40"), and signed zero (e.g., "-0.0"), these distinctions may not be preserved by implementations.
 
-Note that the serialization algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the header definition to occur before serialization.
+Note that the serialization algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the field definition to occur before serialization.
 
 
 ### Strings {#string}
@@ -669,7 +669,7 @@ Given a Date as input_integer, return an ASCII string suitable for use in an HTT
 
 When a receiving implementation parses HTTP fields that are known to be Structured Fields, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an array of bytes as input_bytes that represent the chosen field's field-value (which is empty if that field is not present) and field_type (one of "dictionary", "list", or "item"), return the parsed header value.
+Given an array of bytes as input_bytes that represent the chosen field's field-value (which is empty if that field is not present) and field_type (one of "dictionary", "list", or "item"), return the parsed field value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading SP characters from input_string.
@@ -682,7 +682,7 @@ Given an array of bytes as input_bytes that represent the chosen field's field-v
 
 When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{Section 5.2 of HTTP}}; this assures that the entire field value is processed correctly.
 
-For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances. The parsing algorithms for both types allow tab characters, since these might
+For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple field instances. The parsing algorithms for both types allow tab characters, since these might
 be used to combine field lines by some implementations.
 
 Strings split across multiple field lines will have unpredictable results, because one or more commas (with optional whitespace) will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser, even when they are both under the control of the same party.
@@ -971,7 +971,7 @@ of a Structured Field. In some circumstances, this will cause parsing to fail, b
 
 ## Why Not JSON?
 
-Earlier proposals for Structured Fields were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields required senders and recipients to implement specific additional handling.
+Earlier proposals for Structured Fields were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP fields required senders and recipients to implement specific additional handling.
 
 For example, JSON has specification issues around large numbers and objects with duplicate members. Although advice for avoiding these issues is available (e.g., {{?RFC7493}}), it cannot be relied upon.
 
