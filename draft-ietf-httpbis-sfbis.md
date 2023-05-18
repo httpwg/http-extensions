@@ -57,7 +57,6 @@ informative:
     seriesinfo:
       STD: 63
       RFC: 3629
-      DOI: 10.17487/RFC3629
     target: http://www.rfc-editor.org/info/std63
   RFC9113:
     display: HTTP/2
