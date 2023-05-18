@@ -692,7 +692,7 @@ Given a string of Unicode characters as input_string, return an ASCII string sui
 1. Let encoded_string be an empty string.
 2. For each byte in byte_array:
   1. If byte is %x25 ("%"), append "%25" to encoded_string.
-  2. If byte is in the ranges x00-1f or %x7f-ff, append the result of applying the percent-encoding defined in {{Section 2.1 of URI}} to encoded_string.
+  2. If byte is in the ranges %x00-1f or %x7f-ff, apply the percent-encoding defined in {{Section 2.1 of URI}} to byte and append the result to encoded_string.
   3. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
 3. Let formatted_string be the result of running Serialising a String ({{ser-string}}) with encoded_string.
 4. Return the character "%" followed by formatted_string.
