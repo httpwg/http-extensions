@@ -115,7 +115,7 @@ fault detection and diagnosis across system boundaries.
 This document defines two digest integrity mechanisms for HTTP.
 First, content integrity, which acts on conveyed content ({{Section 6.4 of
 RFC9110}}).
-Second, representation data integrity, which acts on representation data ({{Section 3.2
+Second, representation data integrity, which acts on representation data ({{Section 8.1
 of RFC9110}}). This supports advanced use cases such as validating the
 integrity of a resource that was reconstructed from parts retrieved using
 multiple requests or connections.
@@ -164,7 +164,7 @@ defined to support digests of content ({{Section 6.4 of RFC9110}}); see
 For more advanced use cases, the `Repr-Digest` request and response header
 and trailer field ({{representation-digest}}) is defined. It contains a digest value
 computed by applying a hashing algorithm to selected representation data
-({{Section 3.2 of RFC9110}}). Basing `Repr-Digest` on the selected
+({{Section 8.1 of RFC9110}}). Basing `Repr-Digest` on the selected
 representation makes it straightforward to apply it to use cases where the
 message content requires some sort of manipulation to be considered as
 representation of the resource or content conveys a partial representation of a resource,
@@ -198,7 +198,7 @@ This specification does not define means for authentication, authorization, or p
 [RFC3230] defined the `Digest` and `Want-Digest` HTTP fields for HTTP integrity.
 It also coined the term "instance" and "instance manipulation" in order to
 explain concepts that are now more universally defined, and implemented, as HTTP
-semantics such as selected representation data ({{Section 3.2 of RFC9110}}).
+semantics such as selected representation data ({{Section 8.1 of RFC9110}}).
 
 Experience has shown that implementations of [RFC3230] have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
