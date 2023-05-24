@@ -519,7 +519,12 @@ representation data or content, but not HTTP header and trailer fields, from
 certain kinds of corruption.
 
 Integrity fields are not intended to be a general protection against malicious tampering with
-HTTP messages. This can be achieved by combining it with other approaches such
+HTTP messages.
+In the absence of additional security mechanisms,
+an on-path, malicious actor can remove or recalculate and substitute a digest
+value.
+This attack can be mitigated by combining mechanisms described in this
+document with other approaches such
 as transport-layer security or digital signatures (for example, HTTP Message
 Signatures {{SIGNATURES}}).
 
