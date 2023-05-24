@@ -32,8 +32,9 @@ author:
 
 --- abstract
 
-This document defines an HTTP Proxy-Status Parameter that contains a list of aliases
-and canonical names received over DNS when establishing a connection to the next hop.
+This document defines the `next-hop-aliases` HTTP Proxy-Status Parameter. This parameter carries
+the list of aliases and canonical names a proxy received during DNS resolution as part
+establishing a connection to the next hop.
 
 --- middle
 
@@ -67,7 +68,7 @@ by including the list of names in a new `next-hop-aliases` Proxy-Status paramete
 # next-hop-aliases Parameter {#parameter}
 
 The `next-hop-aliases` parameter's value is a String {{!STRUCTURED-FIELDS=RFC8941}} that contains
-one or more DNS names in a comma-separated list. The items in the list include all alias names an
+one or more DNS names in a comma-separated list. The items in the list include all alias names and
 canonical names received in CNAME records {{DNS}} during the course of resolving the next hop's
 hostname using DNS, not including the original requested hostname itself. The names SHOULD
 appear in the order in which they were received in DNS. If there are multiple CNAME records
