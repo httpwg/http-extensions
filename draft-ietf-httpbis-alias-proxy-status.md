@@ -32,8 +32,9 @@ author:
 
 --- abstract
 
-This document defines an HTTP Proxy-Status Parameter that contains a list of aliases
-and canonical names received over DNS when establishing a connection to the next hop.
+This document defines the next-hop-aliases parameter for the HTTP Proxy-Status field.
+It contains a list of aliases and canonical names received over DNS when establishing
+a connection to the next hop.
 
 --- middle
 
