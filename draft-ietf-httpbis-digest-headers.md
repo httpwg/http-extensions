@@ -592,8 +592,8 @@ trailer section.
 
 Content coding mechanisms can support different encoding parameters, meaning that the same input content can produce different outputs. For example, GZIP supports multiple compression levels. Such encoding parameters are generally not communicated as representation metadata. For instance, different compression levels would all use the same "Content-Encoding: gzip" field. Other examples include where encoding relies on nonces or timestamps, such as the aes128gcm content coding defined in {{?RFC8188}}.
 
-Since it is possible for there to be variation within content coding, the checksum conveyed by the integrity field cannot be used to provide a proof of integrity "at rest"
-unless the whole (e.g., encoded) content is persisted.
+Since it is possible for there to be variation within content coding, the checksum conveyed by the integrity fields cannot be used to provide a proof of integrity "at rest"
+unless the whole content is persisted.
 
 ## Algorithm Agility {#sec-agility}
 
@@ -747,7 +747,7 @@ HTTP/1.1 400 Bad Request
 {: title="An error response for a malformed content"}
 
 A Range-Request affects the transferred message content. In this example, the
-client is accessing the resource at `/entires/1234`, which is the JSON object
+client is accessing the resource at `/entries/1234`, which is the JSON object
 `{"hello": "world"}` followed by an LF. However, the client has indicated a
 preferred content coding and a specific byte range.
 
