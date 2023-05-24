@@ -285,9 +285,11 @@ Content-Digest: \
   yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
 ~~~
 
-A recipient MAY ignore any or all digests.
-This allows the recipient to choose which hashing algorithm(s) to use for
-validation instead of verifying every digest.
+A recipient MAY ignore any or all digests. Application-specific behavior or
+local policy MAY set additional constraints on the processing and validation
+practices of the conveyed digests. For example, validation of a subset of
+received digests is one approach to protection against resource exhaustion; see
+{{resource-exhaustion}}.
 
 A sender MAY send a digest without
 knowing whether the recipient supports a given hashing algorithm, or even knowing
@@ -347,9 +349,11 @@ Repr-Digest: \
   yRZOtw8MjkM7iw7yZ/WkppmM44T3qg==:
 ~~~
 
-A recipient MAY ignore any or all digests.
-This allows the recipient to choose which hashing algorithm(s) to use for
-validation instead of verifying every digest.
+A recipient MAY ignore any or all digests. Application-specific behavior or
+local policy MAY set additional constraints on the processing and validation
+practices of the conveyed digests. For example, validation of a subset of
+received digests is one approach to protection against resource exhaustion; see
+{{resource-exhaustion}}.
 
 A sender MAY send a digest without knowing whether the
 recipient supports a given hashing algorithm, or even knowing that the recipient
