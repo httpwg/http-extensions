@@ -57,7 +57,6 @@ informative:
     seriesinfo:
       STD: 63
       RFC: 3629
-      DOI: 10.17487/RFC3629
     target: http://www.rfc-editor.org/info/std63
   RFC9113:
     display: HTTP/2
@@ -119,6 +118,8 @@ Note that as a result of this strictness, if a field is appended to by multiple 
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{!RFC2119}} {{!RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
+This document uses the VCHAR, SP, DIGIT, ALPHA, and DQUOTE rules from {{?RFC5234}} to specify characters and/or their corresponding ASCII bytes, depending on context. It uses the tchar and OWS rules from {{HTTP}} for the same purpose.
+
 This document uses algorithms to specify parsing and serialization behaviors. When parsing from HTTP fields, implementations MUST have behavior that is indistinguishable from following the algorithms.
 
 For serialization to HTTP fields, the algorithms define the recommended way to produce them. Implementations MAY vary from the specified behavior so long as the output is still correctly handled by the parsing algorithm described in {{text-parse}}.
@@ -159,13 +160,13 @@ Specifications can refer to a field name as a "structured header name", "structu
 For example, a fictitious Foo-Example header field might be specified as:
 
 <blockquote>
-<t>42. Foo-Example Header</t>
+<t>42. Foo-Example Header Field</t>
 
 <t>The Foo-Example HTTP header field conveys information about how
 much Foo the message has.</t>
 
-<t>Foo-Example is an Item Structured Header [RFC8941]. Its value MUST be
-an Integer (Section 3.3.1 of [RFC8941]).</t>
+<t>Foo-Example is an Item Structured Header Field [RFCnnnn]. Its value
+MUST be an Integer (Section 3.3.1 of [RFCnnnn]).</t>
 
 <t>Its value indicates the amount of Foo in the message, and it MUST
 be between 0 and 10, inclusive; other values MUST cause
@@ -175,7 +176,7 @@ the entire header field to be ignored.</t>
 
 <ul>
 <li>A parameter whose key is "foourl", and whose value is a String
-  (Section 3.3.3 of [RFC8941]), conveying the Foo URL
+  (Section 3.3.3 of [RFCnnnn]), conveying the Foo URL
   for the message. See below for processing requirements.</li>
 </ul>
 
@@ -203,7 +204,7 @@ The effect of upgrading a Structured Fields implementation is that some field va
 
 # Structured Data Types {#types}
 
-This section defines the abstract types for Structured Fields, and summarises how those types are serialised into textual HTTP fields.
+This section defines the abstract types for Structured Fields, and summarizes how those types are serialized into textual HTTP fields.
 
 In summary:
 
@@ -220,7 +221,7 @@ Lists are arrays of zero or more members, each of which can be an Item ({{item}}
 
 An empty List is denoted by not serializing the field at all. This implies that fields defined as Lists have a default empty value.
 
-When serialised as a textual HTTP field, each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
+When serialized as a textual HTTP field, each member is separated by a comma and optional whitespace. For example, a field whose value is defined as a List of Tokens could look like:
 
 ~~~ http-message
 Example-List: sugar, tea, rum
@@ -248,7 +249,7 @@ Parsers MUST support Lists containing at least 1024 members. Field specification
 
 An Inner List is an array of zero or more Items ({{item}}). Both the individual Items and the Inner List itself can be Parameterized ({{param}}).
 
-When serialised in a textual HTTP field, Inner Lists are denoted by surrounding parenthesis, and their values are delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
+When serialized in a textual HTTP field, Inner Lists are denoted by surrounding parenthesis, and their values are delimited by one or more spaces. A field whose value is defined as a List of Inner Lists of Strings could look like:
 
 ~~~ http-message
 Example-List: ("foo" "bar"), ("baz"), ("bat" "one"), ()
@@ -273,7 +274,7 @@ Implementations MUST provide access to Parameters both by index and by key. Spec
 
 Note that parameters are ordered, and parameter keys cannot contain uppercase letters.
 
-When serialised in a textual HTTP field, a Parameter is separated from its Item or Inner List and other Parameters by a semicolon. For example:
+When serialized in a textual HTTP field, a Parameter is separated from its Item or Inner List and other Parameters by a semicolon. For example:
 
 ~~~ http-message
 Example-List: abc;a=1;b=2; cde_456, (ghi;jk=4 l);q="9";r=w
@@ -298,9 +299,9 @@ Implementations MUST provide access to Dictionaries both by index and by key. Sp
 
 As with Lists, an empty Dictionary is represented by omitting the entire field. This implies that fields defined as Dictionaries have a default empty value.
 
-Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their keys, as well as whether their presence is required or optional. Recipients MUST ignore members whose keys that are undefined or unknown, unless the field's specification specifically disallows them.
+Typically, a field specification will define the semantics of Dictionaries by specifying the allowed type(s) for individual members by their keys, as well as whether their presence is required or optional. Recipients MUST ignore members whose keys are undefined or unknown, unless the field's specification specifically disallows them.
 
-When serialised as a textual HTTP field, Members are ordered as serialized and separated by a comma with optional whitespace. Member keys cannot contain uppercase characters. Keys and values are separated by "=" (without whitespace). For example:
+When serialized as a textual HTTP field, Members are ordered as serialized and separated by a comma with optional whitespace. Member keys cannot contain uppercase characters. Keys and values are separated by "=" (without whitespace). For example:
 
 ~~~ http-message
 Example-Dict: en="Applepie", da=:w4ZibGV0w6ZydGU=:
@@ -392,7 +393,7 @@ Example-Decimal: 4.5
 
 While it is possible to serialize Decimals with leading zeros (e.g., "0002.5", "-01.334"), trailing zeros (e.g., "5.230", "-0.40"), and signed zero (e.g., "-0.0"), these distinctions may not be preserved by implementations.
 
-Note that the serialization algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the header definition to occur before serialization.
+Note that the serialization algorithm ({{ser-decimal}}) rounds input with more than three digits of precision in the fractional component. If an alternative rounding strategy is desired, this should be specified by the field definition to occur before serialization.
 
 
 ### Strings {#string}
@@ -403,7 +404,7 @@ Non-ASCII characters are not directly supported in Strings, because they cause a
 
 When it is necessary for a field value to convey non-ASCII content, a Display String ({{displaystring}}) can be specified.
 
-When serialised in a textual HTTP field, Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
+When serialized in a textual HTTP field, Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
 ~~~ http-message
 Example-String: "hello world"
@@ -431,7 +432,7 @@ Parsers MUST support Tokens with at least 512 characters.
 
 Byte Sequences can be conveyed in Structured Fields.
 
-When serialised in a textual HTTP field, a Byte Sequence is delimited with colons and encoded using base64 ({{RFC4648, Section 4}}). For example:
+When serialized in a textual HTTP field, a Byte Sequence is delimited with colons and encoded using base64 ({{RFC4648, Section 4}}). For example:
 
 ~~~ http-message
 Example-ByteSequence: :cHJldGVuZCB0aGlzIGlzIGJpbmFyeSBjb250ZW50Lg==:
@@ -444,7 +445,7 @@ Parsers MUST support Byte Sequences with at least 16384 octets after decoding.
 
 Boolean values can be conveyed in Structured Fields.
 
-When serialised in a textual HTTP field, a Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
+When serialized in a textual HTTP field, a Boolean is indicated with a leading "?" character followed by a "1" for a true value or "0" for false. For example:
 
 ~~~ http-message
 Example-Boolean: ?1
@@ -675,9 +676,9 @@ Given a Boolean as input_boolean, return an ASCII string suitable for use in an 
 5. Return output.
 
 
-### Serialising a Date {#ser-date}
+### Serializing a Date {#ser-date}
 
-Given a Date as input_integer, return an ASCII string suitable for use in an HTTP field value.
+Given a Date as input_date, return an ASCII string suitable for use in an HTTP field value.
 
 0. Let output be "@".
 1. Append to output the result of running Serializing an Integer with input_date ({{ser-integer}}).
@@ -702,7 +703,7 @@ Given a string of Unicode characters as input_string, return an ASCII string sui
 
 When a receiving implementation parses HTTP fields that are known to be Structured Fields, it is important that care be taken, as there are a number of edge cases that can cause interoperability or even security problems. This section specifies the algorithm for doing so.
 
-Given an array of bytes as input_bytes that represent the chosen field's field-value (which is empty if that field is not present) and field_type (one of "dictionary", "list", or "item"), return the parsed header value.
+Given an array of bytes as input_bytes that represent the chosen field's field-value (which is empty if that field is not present) and field_type (one of "dictionary", "list", or "item"), return the parsed field value.
 
 0. Convert input_bytes into an ASCII string input_string; if conversion fails, fail parsing.
 1. Discard any leading SP characters from input_string.
@@ -715,7 +716,7 @@ Given an array of bytes as input_bytes that represent the chosen field's field-v
 
 When generating input_bytes, parsers MUST combine all field lines in the same section (header or trailer) that case-insensitively match the field name into one comma-separated field-value, as per {{Section 5.2 of HTTP}}; this assures that the entire field value is processed correctly.
 
-For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple header instances. The parsing algorithms for both types allow tab characters, since these might
+For Lists and Dictionaries, this has the effect of correctly concatenating all of the field's lines, as long as individual members of the top-level data structure are not split across multiple field instances. The parsing algorithms for both types allow tab characters, since these might
 be used to combine field lines by some implementations.
 
 Strings split across multiple field lines will have unpredictable results, because one or more commas (with optional whitespace) will become part of the string output by the parser. Since concatenation might be done by an upstream intermediary, the results are not under the control of the serializer or the parser, even when they are both under the control of the same party.
@@ -1023,7 +1024,7 @@ The Display String type conveys a Unicode string without any form of sanitizatio
 
 ## Why Not JSON?
 
-Earlier proposals for Structured Fields were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP header fields required senders and recipients to implement specific additional handling.
+Earlier proposals for Structured Fields were based upon JSON {{?RFC8259}}. However, constraining its use to make it suitable for HTTP fields required senders and recipients to implement specific additional handling.
 
 For example, JSON has specification issues around large numbers and objects with duplicate members. Although advice for avoiding these issues is available (e.g., {{?RFC7493}}), it cannot be relied upon.
 
@@ -1055,7 +1056,7 @@ Implementations are allowed to limit the size of different structures, subject t
 
 # ABNF {#abnf}
 
-This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields. In doing so, it uses the VCHAR, SP, DIGIT, ALPHA, HEXDIG, and DQUOTE rules from {{?RFC5234}}. It also includes the tchar and OWS rules from {{!RFC7230}}.
+This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields.
 
 This section is non-normative. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
@@ -1081,7 +1082,7 @@ member-value   = sf-item / inner-list
 
 sf-item   = bare-item parameters
 bare-item = sf-integer / sf-decimal / sf-string / sf-token
-            / sf-binary / sf-boolean
+            / sf-binary / sf-boolean / sf-date
 
 sf-integer = ["-"] 1*15DIGIT
 

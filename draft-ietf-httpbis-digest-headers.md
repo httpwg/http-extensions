@@ -115,7 +115,7 @@ fault detection and diagnosis across system boundaries.
 This document defines two digest integrity mechanisms for HTTP.
 First, content integrity, which acts on conveyed content ({{Section 6.4 of
 RFC9110}}).
-Second, representation data integrity, which acts on representation data ({{Section 3.2
+Second, representation data integrity, which acts on representation data ({{Section 8.1
 of RFC9110}}). This supports advanced use cases such as validating the
 integrity of a resource that was reconstructed from parts retrieved using
 multiple requests or connections.
@@ -164,7 +164,7 @@ defined to support digests of content ({{Section 6.4 of RFC9110}}); see
 For more advanced use cases, the `Repr-Digest` request and response header
 and trailer field ({{representation-digest}}) is defined. It contains a digest value
 computed by applying a hashing algorithm to selected representation data
-({{Section 3.2 of RFC9110}}). Basing `Repr-Digest` on the selected
+({{Section 8.1 of RFC9110}}). Basing `Repr-Digest` on the selected
 representation makes it straightforward to apply it to use cases where the
 message content requires some sort of manipulation to be considered as
 representation of the resource or content conveys a partial representation of a resource,
@@ -198,7 +198,7 @@ This specification does not define means for authentication, authorization, or p
 [RFC3230] defined the `Digest` and `Want-Digest` HTTP fields for HTTP integrity.
 It also coined the term "instance" and "instance manipulation" in order to
 explain concepts that are now more universally defined, and implemented, as HTTP
-semantics such as selected representation data ({{Section 3.2 of RFC9110}}).
+semantics such as selected representation data ({{Section 8.1 of RFC9110}}).
 
 Experience has shown that implementations of [RFC3230] have interpreted the
 meaning of "instance" inconsistently, leading to interoperability issues. The
@@ -556,10 +556,14 @@ digest validation failure at the recipient, preventing the application from
 accessing the representation. Such an attack consumes the resources of both
 endpoints. See also {{digest-and-content-location}}.
 
-Signatures are likely to be deemed an adversarial setting
-when applying Integrity fields; see {{algorithms}}.
-Using signatures to protect the checksum of an empty representation
-allows receiving endpoints to detect if an eventual content has been stripped or added.
+Signatures are likely to be deemed an adversarial setting when applying
+Integrity fields; see {{algorithms}}. `Repr-Digest` offers an interesting
+possibility when combined with signatures. In the scenario where there is no
+content to send, the digest of an empty string can be included in the message
+and, if signed, can help the recipient detect if content was added either as a
+result of accident or purposeful manipulation. The opposite scenario is also
+supported; including an Integrity field for content, and signing it, can help a
+recipient detect where the content was removed.
 
 Any mangling of Integrity fields, including digests' de-duplication
 or combining different field values (see {{Section 5.2 of RFC9110}})
@@ -575,8 +579,14 @@ When Integrity fields are used in a trailer section, the field-values are receiv
 Eager processing of content before the trailer section prevents digest validation, possibly leading to
 processing of invalid data.
 
-Not every hashing algorithm is suitable for use in the trailer section, some may require to preprocess
-the whole content before sending a message (e.g., see {{?I-D.thomson-http-mice}}).
+One of the benefits of using Integrity fields in a trailer section is that it
+allows hashing of bytes as they are sent. However, it is possible to
+design a hashing algorithm that requires processing of content in such a way
+that would negate these benefits. For example, Merkle Integrity Content Encoding
+{{?I-D.thomson-http-mice}} requires content to be processed in reverse order.
+This means the complete data needs to be available, which means there is
+negligible processing difference in sending an Integrity field in a header or
+trailer section.
 
 ## Variations Within Content Encoding
 
@@ -662,9 +672,9 @@ Algorithm Values" registry at
 > "This registry is deprecated since it lists the algorithms that can be used
 with the Digest and Want-Digest fields defined in
 [RFC3230]<https://www.iana.org/>, which has been obsoleted by
-[rfc-to-be-this-document]. While registration is not closed, new registrations
-are encouraged to use the [Hash Algorithms for HTTP Digest
-Fields]<https://www.iana.org/assignments/http-digest-hash-alg/> registry
+\[rfc-to-be-this-document\]. While registration is not closed, new registrations
+are encouraged to use the \[Hash Algorithms for HTTP Digest
+Fields\]<https://www.iana.org/assignments/http-digest-hash-alg/> registry
 instead.
 
 
@@ -672,50 +682,61 @@ instead.
 
 # Resource Representation and Representation Data {#resource-representation}
 
-The following examples show how representation metadata, content transformations,
-and method impacts on the message and content. When the content
-contains non-printable characters (e.g., when it is compressed) it is shown as
-a sequence of hex-encoded bytes.
+This section following examples show how representation metadata, content
+transformations, and method impacts on the message and content. These examples a
+not exhaustive.
+
+Unless otherwise indicated, the examples are based on the JSON object `{"hello":
+"world"}` followed by an LF. When the content contains non-printable characters
+(e.g., when it is encoded) it is shown as a sequence of hex-encoded bytes.
+
+Consider a client that wishes to upload a JSON object using the PUT method. It
+could do this using the application/json content type without any content
+coding.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
+Content-Length: 19
 
 {"hello": "world"}
 ~~~
 {: title="Request containing a JSON object without any content coding"}
 
-Compression is an efficient way to reduce
-the content length.
+However, the use of content coding is quite common. The client could also upload
+the same data with a gzip coding ({{Section 8.4.1.3 of RFC9110}}). Note that in
+this case, the `Content-Length` contains a larger value due to the coding
+overheads.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 Content-Encoding: gzip
+Content-Length: 39
 
-1F 8B 08 00 A5 B4 BD 62 02 FF
-AB 56 4A 54 B2 52 50 32 A4 03
-50 AA 05 00 44 47 2A 7C 6D 00
-00 00
+1F 8B 08 00 88 41 37 64 00 FF
+AB 56 CA 48 CD C9 C9 57 B2 52
+50 2A CF 2F CA 49 51 AA E5 02
+00 D9 E4 31 E7 13 00 00 00
 ~~~
 {: title="Request containing a gzip-encoded JSON object" #ex-put-gz}
 
-Sending the compressed form of the content
-without the correct content coding means that
-the content is malformed.
-In this case, the server can reply with an error.
+Sending the gzip coded data without indicating it via `Content-Encoding` means
+that the content is malformed. In this case, the server can reply with an error.
 
 ~~~ http-message
 PUT /entries/1234 HTTP/1.1
 Host: foo.example
 Content-Type: application/json
 
-1F 8B 08 00 A5 B4 BD 62 02 FF
-AB 56 4A 54 B2 52 50 32 A4 03
-50 AA 05 00 44 47 2A 7C 6D 00
-00 00
+Content-Length: 39
+
+1F 8B 08 00 88 41 37 64 00 FF
+AB 56 CA 48 CD C9 C9 57 B2 52
+50 2A CF 2F CA 49 51 AA E5 02
+00 D9 E4 31 E7 13 00 00 00
 ~~~
 {: title="Request containing malformed JSON"}
 
@@ -725,31 +746,38 @@ HTTP/1.1 400 Bad Request
 ~~~
 {: title="An error response for a malformed content"}
 
-A Range-Request affects the transferred message content,
-conveying a partial representation of the JSON object
-in {{ex-put-gz}}.
+A Range-Request affects the transferred message content. In this example, the
+client is accessing the resource at `/entires/1234`, which is the JSON object
+`{"hello": "world"}` followed by an LF. However, the client has indicated a
+preferred content coding and a specific byte range.
 
 ~~~ http-message
 GET /entries/1234 HTTP/1.1
 Host: foo.example
+Accept-Encoding: gzip
 Range: bytes=1-7
 
 ~~~
 {: title="Request for partial content"}
 
+The server satisfies the client request by responding with a partial
+representation (equivalent to the first 10 of the JSON object displayed in whole
+in {{ex-put-gz}}).
+
 ~~~ http-message
 HTTP/1.1 206 Partial Content
 Content-Encoding: gzip
 Content-Type: application/json
-Content-Range: bytes 0-10/32
+Content-Range: bytes 0-9/39
 
 1F 8B 08 00 A5 B4 BD 62 02 FF
 ~~~
 {: title="Partial response from a gzip-encoded representation"}
 
-The method can also affect the transferred message content.
-For example, the response
-to a HEAD request does not carry content.
+Aside from content coding or range requests, the method can also affect the
+transferred message content. For example, the response to a HEAD request does
+not carry content but in this example case does include a Content-Length; see
+{{Section 8.6 of RFC9110}}.
 
 ~~~ http-message
 HEAD /entries/1234 HTTP/1.1
@@ -764,15 +792,17 @@ Accept-Encoding: gzip
 HTTP/1.1 200 OK
 Content-Type: application/json
 Content-Encoding: gzip
+Content-Length: 39
 
 ~~~
 {: title="Response to HEAD request (empty content)"}
 
 Finally, the semantics of a response might decouple the target URI
-from the enclosed representation. In the example response below, the
-`Content-Location` header field indicates that the enclosed representation
-refers to the resource available at `/authors/123`, even though the request is
-directed to `/authors/`.
+from the enclosed representation. In the example below, the client issues a POST
+request directed to `/authors/` but the response includes a `Content-Location`
+header field that indicates the enclosed representation refers to the
+resource available at `/authors/123`. Note that `Content-Length` is not sent
+in this example.
 
 ~~~ http-message
 POST /authors/ HTTP/1.1
@@ -1462,6 +1492,11 @@ print("Brotli | sha512 |", digest(bytes_, algorithm=hashlib.sha512,
 
 # Changes
 {:numbered="false" removeinrfc="true"}
+
+## Since draft-ietf-httpbis-digest-headers-11
+{:numbered="false"}
+
+* Editorial or minor changes
 
 ## Since draft-ietf-httpbis-digest-headers-10
 {:numbered="false"}

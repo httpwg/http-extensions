@@ -39,7 +39,6 @@ author:
     uri: https://www.mnot.net/
 
 normative:
-  RFC2119:
   HTTP: RFC9110
   STRUCTURED-FIELDS: I-D.ietf-httpbis-sfbis
   COOKIES: I-D.ietf-httpbis-rfc6265bis
@@ -49,15 +48,15 @@ informative:
 
 --- abstract
 
-This specification nominates a selection of existing HTTP fields as having syntax that is compatible with Structured Fields, so that they can be handled as such (subject to certain caveats).
+This specification nominates a selection of existing HTTP fields whose values are compatible with Structured Fields syntax, so that they can be handled as such (subject to certain caveats).
 
-To accommodate some additional fields whose syntax is not compatible, it also defines mappings of their semantics into new Structured Fields. It does not specify how to negotiate their use.
+To accommodate some additional fields whose syntax is not compatible, it also defines mappings of their semantics into Structured Fields. It does not specify how to convey them in HTTP messages.
 
 --- middle
 
 # Introduction
 
-Structured Field Values for HTTP {{STRUCTURED-FIELDS}} introduced a data model with associated parsing and serialization algorithms for use by new HTTP field values. Fields that are defined as Structured Fields can realise a number of benefits, including:
+Structured Field Values for HTTP {{STRUCTURED-FIELDS}} introduced a data model with associated parsing and serialization algorithms for use by new HTTP field values. Fields that are defined as Structured Fields can bring advantages that include:
 
 * Improved interoperability and security: precisely defined parsing and serialisation algorithms are typically not available for fields defined with just ABNF and/or prose.
 * Reuse of common implementations: many parsers for other fields are specific to a single field or a small family of fields.
@@ -71,7 +70,20 @@ This specification defines how a selection of existing HTTP fields can be handle
 
 It does so using two techniques. {{compatible}} lists compatible fields -- those that can be handled as if they were Structured Fields due to the similarity of their defined syntax to that in Structured Fields. {{mapped}} lists mapped fields -- those whose syntax needs to be transformed into an underlying data model which is then mapped into that defined by Structured Fields.
 
-Note that while implementations can parse and serialise compatible fields as Structured Fields subject to the caveats in {{compatible}}, a sender cannot generate mapped fields from {{mapped}} and expect them to be understood and acted upon by the recipient without prior negotiation. This specification does not define such a mechanism.
+
+## Using Retrofit Structured Fields
+
+Retrofitting data structures onto existing and widely-deployed HTTP fields requires careful handling to assure interoperability and security. This section highlights considerations for applications that use Retrofit Structured Fields.
+
+While the majority of field values seen in HTTP traffic should be able to be parsed or mapped successfully, some will not. An application using Retrofit Structured Fields will need to define how unsuccessful values will be handled.
+
+For example, an API that exposes field values using Structured Fields data types might make the field value available as a string in cases where the field did not successfully parse or map.
+
+The mapped field values described in {{mapped}} are not compatible with the original syntax of their fields, and so cannot be used unless parties processing them have explicitly indicated their support for that form of the field value. An application using Retrofit Structured Fields will need to define how to negotiate support for them.
+
+For example, an alternative serialization of fields that takes advantage of Structured Fields would need to establish an explicit negotiation mechanism to assure that both peers would handle that serialization appropriately before using it.
+
+See also the security considerations in {{security}}.
 
 
 ## Notational Conventions
@@ -81,11 +93,12 @@ Note that while implementations can parse and serialise compatible fields as Str
 
 # Compatible Fields {#compatible}
 
-The HTTP fields listed in {{compatible-fields}} can usually have their values handled as Structured Fields according to the listed parsing and serialisation algorithms in {{STRUCTURED-FIELDS}}, subject to the listed caveats.
+The HTTP fields listed in {{compatible-fields}} have values that can be handled as Structured Field Values according to the parsing and serialisation algorithms in {{STRUCTURED-FIELDS}} corresponding to the listed top-level type, subject to the caveats in {{compatible-caveats}}.
 
-The listed types are chosen for compatibility with the defined syntax of the field as well as with actual internet traffic. However, not all instances of these fields will successfully parse. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
+The top-level types are chosen for compatibility with the defined syntax of the field as well as with actual internet traffic. However, not all instances of these fields will successfully parse as a Structured Field Value. This might be because the field value is clearly invalid, or it might be because it is valid but not parseable as a Structured Field.
 
-An application using this specification will need to consider how to handle such field values. Depending on its requirements, it might be advisable to reject such values, treat them as opaque strings, or attempt to recover a structured value from them in an ad hoc fashion.
+An application using this specification will need to consider how to handle such field values. Depending on its requirements, it might be advisable to reject such values, treat them as opaque strings, or attempt to recover a Structured Field Value from them in an ad hoc fashion.
+
 
 | Field Name                       | Structured Type |
 |----------------------------------|-----------------|
@@ -144,6 +157,9 @@ An application using this specification will need to consider how to handle such
 | X-XSS-Protection                 | List            |
 {:id="compatible-fields" title="Compatible Fields"}
 
+
+## Caveats {#compatible-caveats}
+
 Note the following caveats regarding compatibility:
 
 Parsing differences:
@@ -179,7 +195,7 @@ Retry-After:
 
 # Mapped Fields {#mapped}
 
-Some HTTP field values have syntax that cannot be successfully parsed as Structured Fields. Instead, it is necessary to map them into a separate Structured Field with an alternative name.
+Some HTTP field values have syntax that cannot be successfully parsed as Structured Field values. Instead, it is necessary to map them into a Structured Field value.
 
 For example, the Date HTTP header field carries a date:
 
@@ -190,86 +206,91 @@ Date: Sun, 06 Nov 1994 08:49:37 GMT
 Its value would be mapped to:
 
 ~~~ http-message-new
-SF-Date: @784111777
+@784111777
 ~~~
 
-As in {{compatible}}, these fields are unable to carry values that are not valid Structured Fields, and so an application using this specification will need to how to support such values. Typically, handling them using the original field name is sufficient.
-
-Each field name listed below indicates a replacement field name and a means of mapping its original value into a Structured Field.
+Unlike those listed in {{compatible}}, these representations are not compatible with the original fields' syntax, and MUST NOT be used unless they are explicitly and unambiguously supported. For example, this means that sending them to a next-hop recipient in HTTP requires prior negotiation. This specification does not define how to do so.
 
 
 ## URLs
 
-The field names in {{url-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by treating the original field's value as a String.
+The field names in {{url-fields}} have values that can be mapped into Structured Field values by treating the original field's value as a String.
 
-| Field Name       | Mapped Field Name   |
-|------------------|---------------------|
-| Content-Location | SF-Content-Location |
-| Location         | SF-Location         |
-| Referer          | SF-Referer          |
+| Field Name       |
+|------------------|
+| Content-Location |
+| Location         |
+| Referer          |
 {:id="url-fields" title="URL Fields"}
 
-For example, this Location field
+For example, this Location field:
 
 ~~~ http-message
 Location: https://example.com/foo
 ~~~
 
-could be mapped as:
+would have a mapped value of:
 
-~~~ http-message
-SF-Location: "https://example.com/foo"
+~~~
+"https://example.com/foo"
 ~~~
 
 
 ## Dates
 
-The field names in {{date-fields}} (paired with their mapped field names) have values that can be mapped into Structured Fields by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as a Date.
+The field names in {{date-fields}} have values that can be mapped into Structured Field values by parsing their payload according to {{Section 5.6.7 of HTTP}} and representing the result as a Date.
 
-| Field Name          | Mapped Field Name      |
-|---------------------|------------------------|
-| Date                | SF-Date                |
-| Expires             | SF-Expires             |
-| If-Modified-Since   | SF-If-Modified-Since   |
-| If-Unmodified-Since | SF-If-Unmodified-Since |
-| Last-Modified       | SF-Last-Modified       |
+| Field Name          |
+|---------------------|
+| Date                |
+| Expires             |
+| If-Modified-Since   |
+| If-Unmodified-Since |
+| Last-Modified       |
 {:id="date-fields" title="Date Fields"}
 
-For example, an Expires field could be mapped as:
+For example, an Expires field's value could be mapped as:
 
 ~~~ http-message-new
-SF-Expires: @1659578233
+@1659578233
 ~~~
 
 ## ETags
 
-The field value of the ETag header field can be mapped into the SF-ETag Structured Field by representing the entity-tag as a String, and the weakness flag as a Boolean "w" parameter on it, where true indicates that the entity-tag is weak; if 0 or unset, the entity-tag is strong.
+The field value of the ETag header field can be mapped into a Structured Field value by representing the entity-tag as a String, and the weakness flag as a Boolean "w" parameter on it, where true indicates that the entity-tag is weak; if 0 or unset, the entity-tag is strong.
 
-For example, this:
+For example, this ETag header field:
 
 ~~~ http-message
 ETag: W/"abcdef"
 ~~~
 
-~~~ http-message
-SF-ETag: "abcdef"; w
+would have a mapped value of:
+
+~~~
+"abcdef"; w
 ~~~
 
-If-None-Match's field value can be mapped into the SF-If-None-Match Structured Field, which is a List of the structure described above. When a field value contains "*", it is represented as a Token.
+If-None-Match's field value can be mapped into a Structured Field value which is a List of the structure described above. When a field value contains "*", it is represented as a Token.
 
-Likewise, If-Match's field value can be mapped into the SF-If-Match Structured Field in the same manner.
+Likewise, If-Match's field value can be mapped into a Structured Field value in the same manner.
 
-
-For example:
+For example, this If-None-Match field:
 
 ~~~ http-message
-SF-If-None-Match: "abcdef"; w, "ghijkl", *
+If-None-Match: W/"abcdef", "ghijkl", *
+~~~
+
+would have a mapped value of:
+
+~~~
+"abcdef"; w, "ghijkl", *
 ~~~
 
 
 ## Cookies
 
-The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into the SF-Cookie Structured Field (a List) and SF-Set-Cookie Structured Field (a List), respectively.
+The field values of the Cookie and Set-Cookie fields {{COOKIES}} can be mapped into Structured Fields Lists.
 
 In each case, a cookie is represented as an Inner List containing two Items; the cookie name and value. The cookie name is always a String; the cookie value is a String, unless it can be successfully parsed as the textual representation of another, bare Item structured type (e.g., Byte Sequence, Decimal, Integer, Token, or Boolean).
 
@@ -288,20 +309,30 @@ Cookie attributes map to Parameters on the Inner List, with the parameter name b
 
 The Expires attribute is mapped to a Date representation of parsed-cookie-date (see {{Section 5.1.1 of COOKIES}}).
 
-For example, these unstructured fields:
+For example, this Set-Cookie field:
 
 ~~~ http-message
-Set-Cookie: lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT;
+Set-Cookie: Lang=en-US; Expires=Wed, 09 Jun 2021 10:18:14 GMT;
                samesite=Strict; secure
+~~~
+
+would have a mapped value of:
+
+~~~ http-message-new
+("Lang" "en-US"); expires=@1623233894;
+               samesite=Strict; secure
+~~~
+
+And this Cookie field:
+
+~~~ http-message
 Cookie: SID=31d4d96e407aad42; lang=en-US
 ~~~
 
-can be mapped into:
+would have a mapped value of:
 
 ~~~ http-message-new
-SF-Set-Cookie: ("lang" "en-US"); expires=@1623233894;
-               samesite=Strict; secure
-SF-Cookie: ("SID" "31d4d96e407aad42"), ("lang" "en-US")
+("SID" "31d4d96e407aad42"), ("lang" "en-US")
 ~~~
 
 
@@ -314,33 +345,14 @@ Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field N
 
 Then, add a new column, "Structured Type", with the values from {{compatible}} assigned to the nominated registrations, prefixing each with "*" to indicate that it is a retrofit type.
 
-Then, add the field names in {{new-fields}}, with the corresponding Structured Type as indicated, a status of "permanent" and referring to this document.
-
-| Field Name             | Structured Type |
-|------------------------|-----------------|
-| SF-Content-Location    | Item            |
-| SF-Cookie              | List            |
-| SF-Date                | Item            |
-| SF-ETag                | Item            |
-| SF-Expires             | Item            |
-| SF-If-Match            | List            |
-| SF-If-Modified-Since   | Item            |
-| SF-If-None-Match       | List            |
-| SF-If-Unmodified-Since | Item            |
-| SF-Last-Modified       | Item            |
-| SF-Location            | Item            |
-| SF-Referer             | Item            |
-| SF-Set-Cookie          | List            |
-{:id="new-fields" title="New Fields"}
-
 Finally, add a new column to the "Cookie Attribute Registry" established by {{COOKIES}} with the title "Structured Type", using information from {{cookie-params}}.
 
 
-# Security Considerations
+# Security Considerations {#security}
 
 {{compatible}} identifies existing HTTP fields that can be parsed and serialised with the algorithms defined in {{STRUCTURED-FIELDS}}. Variances from existing parser behavior might be exploitable, particularly if they allow an attacker to target one implementation in a chain (e.g., an intermediary). However, given the considerable variance in parsers already deployed, convergence towards a single parsing algorithm is likely to have a net security benefit in the longer term.
 
-{{mapped}} defines alternative representations of existing fields. Because downstream consumers might interpret the message differently based upon whether they recognise the alternative representation, implementations are prohibited from generating such fields unless they have negotiated support for them with their peer. This specification does not define such a mechanism, but any such definition needs to consider the implications of doing so carefully.
+{{mapped}} defines alternative representations of existing fields. Because downstream consumers might interpret the message differently based upon whether they recognise the alternative representation, implementations are prohibited from generating such values unless they have negotiated support for them with their peer. This specification does not define such a mechanism, but any such definition needs to consider the implications of doing so carefully.
 
 
 --- back
