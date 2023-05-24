@@ -111,10 +111,10 @@ no CNAME records were encountered when resolving the next hop's name.
 ## Encoding special characters {#encoding}
 
 DNS names commonly just contain alphanumeric characters and hyphens ("-"), although they
-are allowed to contain any character {{?RFC1035, Section 3.1}}, including a comma. To
+are allowed to contain any character ({{?RFC1035, Section 3.1}}), including a comma. To
 prevent commas or other special characters in names leading to incorrect parsing,
 any characters that appear in names in this list that do not belong to the set of URI
-Unreserved Characters {{!RFC3986, Section 2.3}} MUST be percent-encoded as
+Unreserved Characters ({{!RFC3986, Section 2.3}}) MUST be percent-encoded as
 defined in {{!RFC3986, Section 2.1}}.
 
 For example, consider the DNS name `name,with,commas.example.com`. This name would be encoded
