@@ -428,7 +428,7 @@ ignore it and send an Integrity field using any algorithm or omit the field
 entirely, for example see {{ex-server-selects-unsupported-algorithm}}. It is not
 a protocol error if preferences are ignored. Applications that use Integrity
 fields and Integrity preferences can define expectations or constraints that
-operate in addition to this specification. How to deal with an ignored
+operate in addition to this specification. How to deal with ignored
 preferences is a scenario that should be considered.
 
 `Want-Content-Digest` and `Want-Repr-Digest` are of type `Dictionary`
@@ -558,7 +558,7 @@ HTTP Message Signatures {{SIGNATURES}}.
 
 Digests explicitly
 depend on the "representation metadata" (e.g., the values of `Content-Type`,
-`Content-Encoding` etc). A signature that protects Integrity fields but not other
+`Content-Encoding` etc.). A signature that protects Integrity fields but not other
 "representation metadata" can expose the communication to tampering. For
 example, an actor could manipulate the `Content-Type` field-value and cause a
 digest validation failure at the recipient, preventing the application from
@@ -1229,7 +1229,7 @@ Repr-Digest: sha-256=:EXB0S2VF2H7ijkAVJkH1Sm0pBho0iDZcvVUHHXTTZSA=:
 An origin server sends `Repr-Digest` as trailer field, so it can calculate digest-value
 while streaming content and thus mitigate resource consumption.
 The `Repr-Digest` field-value is the same as in {{example-full-representation}} because `Repr-Digest` is designed to
-be independent from the use of one or more transfer codings (see {{representation-digest}}).
+be independent of the use of one or more transfer codings (see {{representation-digest}}).
 
 In the response content below, the string "\r\n" represent the bytes CRLF.
 
@@ -1423,7 +1423,7 @@ the digest of HTTP message content in the Digest field;
 Content-Digest now provides that capability.
 
 RFC 3230 allowed algorithms to define their output encoding format for use with
-the Digest field. This resulted in a mixed of formats such as base64, hex or
+the Digest field. This resulted in a mix of formats such as base64, hex or
 decimal. By virtue of using Structured fields, Content-Digest and Repr-Digest
 use only a single encoding format. Further explanation and examples are provided in {{sample-digest-values}}.
 
@@ -1567,7 +1567,7 @@ print("Brotli | sha512 |", digest(bytes_, algorithm=hashlib.sha512,
 
 * Deprecate SHA-1 #1154
 * Avoid id-* with encrypted content
-* Digest is independent from MESSAGING and HTTP/1.1 is not normative #1215
+* Digest is independent of MESSAGING and HTTP/1.1 is not normative #1215
 * Identity is not a valid field value for content-encoding #1223
 * Mention trailers #1157
 * Reference httpbis-semantics #1156
