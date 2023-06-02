@@ -428,8 +428,8 @@ ignore it and send an Integrity field using any algorithm or omit the field
 entirely, for example see {{ex-server-selects-unsupported-algorithm}}. It is not
 a protocol error if preferences are ignored. Applications that use Integrity
 fields and Integrity preferences can define expectations or constraints that
-operate in addition to this specification. How to deal with ignored
-preferences is a scenario that should be considered.
+operate in addition to this specification. Ignored preferences are an
+application-specific concern.
 
 `Want-Content-Digest` and `Want-Repr-Digest` are of type `Dictionary`
 where each:
