@@ -1,68 +1,136 @@
-# Document Shepherd Writeup
+# Document Shepherd Write-Up for Group Documents
 
-*This version is dated 8 April 2022.*
+*This version is dated 4 July 2022.*
 
-Thank you for your service as a document shepherd. Among the responsibilities is answering the questions in this writeup to give helpful context to Last Call and Internet Engineering Steering Group ([IESG](https://www.ietf.org/about/groups/iesg/)) reviewers, and your diligence in completing it, is appreciated. The full role of the shepherd is further described in [RFC 4858](https://www.rfc-editor.org/rfc/rfc4858.html), and informally. You will need the cooperation of authors to complete these checks.
+Thank you for your service as a document shepherd. Among the responsibilities is
+answering the questions in this write-up to give helpful context to Last Call
+and Internet Engineering Steering Group ([IESG][1]) reviewers, and your
+diligence in completing it is appreciated. The full role of the shepherd is
+further described in [RFC 4858][2]. You will need the cooperation of the authors
+and editors to complete these checks.
 
-Note that some numbered items contain multiple related questions; please be sure to answer all of them.
-
+Note that some numbered items contain multiple related questions; please be sure
+to answer all of them.
 
 ## Document History
 
-Answer either of the two options below (depending on the document type), then continue with the common part.
+1. Does the working group (WG) consensus represent the strong concurrence of a
+   few individuals, with others being silent, or did it reach broad agreement?
 
-### Option 1: For Documents Coming from IETF Working Groups
+2. Was there controversy about particular points, or were there decisions where
+   the consensus was particularly rough?
 
-1. Does the working group (WG) consensus represent the strong concurrence of a few individuals, with others being silent, or did it reach broad agreement?
+3. Has anyone threatened an appeal or otherwise indicated extreme discontent? If
+   so, please summarize the areas of conflict in separate email messages to the
+   responsible Area Director. (It should be in a separate email because this
+   questionnaire is publicly available.)
 
-2. Was there controversy about particular points, or were there decisions where the consensus was particularly rough?
+4. For protocol documents, are there existing implementations of the contents of
+   the document? Have a significant number of potential implementers indicated
+   plans to implement? Are any existing implementations reported somewhere,
+   either in the document itself (as [RFC 7942][3] recommends) or elsewhere
+   (where)?
 
-### Option 2: For Individual Documents
+## Additional Reviews
 
-1. Was the document considered in any WG, and if so, why was it not adopted as a work item there?
+5. Do the contents of this document closely interact with technologies in other
+   IETF working groups or external organizations, and would it therefore benefit
+   from their review? Have those reviews occurred? If yes, describe which
+   reviews took place.
 
-2. Was there controversy about particular points that caused the WG to not adopt the document?
+6. Describe how the document meets any required formal expert review criteria,
+   such as the MIB Doctor, YANG Doctor, media type, and URI type reviews.
 
-## Common Part
+7. If the document contains a YANG module, has the final version of the module
+   been checked with any of the [recommended validation tools][4] for syntax and
+   formatting validation? If there are any resulting errors or warnings, what is
+   the justification for not fixing them at this time? Does the YANG module
+   comply with the Network Management Datastore Architecture (NMDA) as specified
+   in [RFC 8342][5]?
 
-3. Has anyone threatened an appeal or otherwise indicated extreme discontent? If so, please summarize the areas of conflict in separate email messages to the responsible Area Director. (It should be in a separate email because this questionnaire is publicly available.)
+8. Describe reviews and automated checks performed to validate sections of the
+   final version of the document written in a formal language, such as XML code,
+   BNF rules, MIB definitions, CBOR's CDDL, etc.
 
-4. For protocol documents, are there existing implementations of the contents of the document? Have a significant number of potential implementers indicated plans to implement? Are any existing implementations reported somewhere, either in the document itself (as [RFC 7942](https://www.rfc-editor.org/rfc/rfc7942.html) recommends) or elsewhere (where)?
+## Document Shepherd Checks
 
-### Additional Reviews
+9. Based on the shepherd's review of the document, is it their opinion that this
+   document is needed, clearly written, complete, correctly designed, and ready
+   to be handed off to the responsible Area Director?
 
-5. Does this document need review from other IETF working groups or external organizations? Have those reviews occurred?
+10. Several IETF Areas have assembled [lists of common issues that their
+    reviewers encounter][6]. For which areas have such issues been identified
+    and addressed? For which does this still need to happen in subsequent
+    reviews?
 
-6. Describe how the document meets any required formal expert review criteria, such as the MIB Doctor, YANG Doctor, media type, and URI type reviews.
+11. What type of RFC publication is being requested on the IETF stream ([Best
+    Current Practice][12], [Proposed Standard, Internet Standard][13],
+    [Informational, Experimental or Historic][14])? Why is this the proper type
+    of RFC? Do all Datatracker state attributes correctly reflect this intent?
 
-7. If the document contains a YANG module, has the final version of the module been checked with any of the [recommended validation tools](https://trac.ietf.org/trac/ops/wiki/yang-review-tools) for syntax and formatting validation? If there are any resulting errors or warnings, what is the justification for not fixing them at this time? Does the YANG module comply with the Network Management Datastore Architecture (NMDA) as specified in [RFC 8342](https://www.rfc-editor.org/rfc/rfc8342.html)?
+12. Have reasonable efforts been made to remind all authors of the intellectual
+    property rights (IPR) disclosure obligations described in [BCP 79][7]? To
+    the best of your knowledge, have all required disclosures been filed? If
+    not, explain why. If yes, summarize any relevant discussion, including links
+    to publicly-available messages when applicable.
 
-8. Describe reviews and automated checks performed to validate sections of the final version of the document written in a formal language, such as XML code, BNF rules, MIB definitions, CBOR's CDDL, etc.
+13. Has each author, editor, and contributor shown their willingness to be
+    listed as such? If the total number of authors and editors on the front page
+    is greater than five, please provide a justification.
 
-### Document Shepherd Checks
+14. Document any remaining I-D nits in this document. Simply running the [idnits
+    tool][8] is not enough; please review the ["Content Guidelines" on
+    authors.ietf.org][15]. (Also note that the current idnits tool generates
+    some incorrect warnings; a rewrite is underway.)
 
-9. Based on the shepherd's review of the document, is it their opinion that this document is needed, clearly written, complete, correctly designed, and ready to be handed off to the responsible Area Director?
+15. Should any informative references be normative or vice-versa? See the [IESG
+    Statement on Normative and Informative References][16].
 
-10. Several IETF Areas have assembled [lists of common issues that their reviewers encounter](https://trac.ietf.org/trac/iesg/wiki/ExpertTopics). Do any such issues remain that would merit specific attention from subsequent reviews?
+16. List any normative references that are not freely available to anyone. Did
+    the community have sufficient access to review any such normative
+    references?
 
-11. What type of RFC publication is being requested on the IETF stream (Best  Current Practice, Proposed Standard, Internet Standard, Informational, Experimental, or Historic)? Why is this the proper type of RFC? Do all Datatracker state attributes correctly reflect this intent?
+17. Are there any normative downward references (see [RFC 3967][9] and [BCP
+    97][10]) that are not already listed in the [DOWNREF registry][17]? If so,
+    list them.
 
-12. Has the interested community confirmed that any and all appropriate IPR disclosures required by [BCP 78](https://www.rfc-editor.org/info/bcp78) and [BCP 79](https://www.rfc-editor.org/info/bcp79) have been filed? If not, explain why. If yes, summarize any discussion and conclusion regarding the intellectual property rights (IPR) disclosures, including links to relevant emails.
+18. Are there normative references to documents that are not ready to be
+    submitted to the IESG for publication or are otherwise in an unclear state?
+    If so, what is the plan for their completion?
 
-13. Has each Author or Contributor confirmed their willingness to be listed as such? If the number of Authors/Editors on the front page is greater than 5, please provide a justification.
+19. Will publication of this document change the status of any existing RFCs? If
+    so, does the Datatracker metadata correctly reflect this and are those RFCs
+    listed on the title page, in the abstract, and discussed in the
+    introduction? If not, explain why and point to the part of the document
+    where the relationship of this document to these other RFCs is discussed.
 
-14. Identify any remaining I-D nits in this document. (See [the idnits tool](http://www.ietf.org/tools/idnits/) and the checkbox items found in Guidelines to Authors of Internet-Drafts). Simply running the idnits tool is not enough; please review the entire guidelines document.
+20. Describe the document shepherd's review of the IANA considerations section,
+    especially with regard to its consistency with the body of the document.
+    Confirm that all aspects of the document requiring IANA assignments are
+    associated with the appropriate reservations in IANA registries. Confirm
+    that any referenced IANA registries have been clearly identified. Confirm
+    that each newly created IANA registry specifies its initial contents,
+    allocations procedures, and a reasonable name (see [RFC 8126][11]).
 
-15. Should any informative references be normative or vice-versa?
+21. List any new IANA registries that require Designated Expert Review for
+    future allocations. Are the instructions to the Designated Expert clear?
+    Please include suggestions of designated experts, if appropriate.
 
-16. List any normative references that are not freely available to anyone. Did the community have sufficient access to review any such normative references?
+[1]: https://www.ietf.org/about/groups/iesg/
+[2]: https://www.rfc-editor.org/rfc/rfc4858.html
+[3]: https://www.rfc-editor.org/rfc/rfc7942.html
+[4]: https://wiki.ietf.org/group/ops/yang-review-tools
+[5]: https://www.rfc-editor.org/rfc/rfc8342.html
+[6]: https://wiki.ietf.org/group/iesg/ExpertTopics
+[7]: https://www.rfc-editor.org/info/bcp79
+[8]: https://www.ietf.org/tools/idnits/
+[9]: https://www.rfc-editor.org/rfc/rfc3967.html
+[10]: https://www.rfc-editor.org/info/bcp97
+[11]: https://www.rfc-editor.org/rfc/rfc8126.html
+[12]: https://www.rfc-editor.org/rfc/rfc2026.html#section-5
+[13]: https://www.rfc-editor.org/rfc/rfc2026.html#section-4.1
+[14]: https://www.rfc-editor.org/rfc/rfc2026.html#section-4.2
+[15]: https://authors.ietf.org/en/content-guidelines-overview
+[16]: https://www.ietf.org/about/groups/iesg/statements/normative-informative-references/
+[17]: https://datatracker.ietf.org/doc/downref/
 
-17. Are there any normative downward references (see [RFC 3967](https://www.rfc-editor.org/rfc/rfc3967.html), [BCP 97](https://www.rfc-editor.org/info/bcp97))? If so, list them.
-
-18. Are there normative references to documents that are not ready for advancement or are otherwise in an unclear state? If they exist, what is the plan for their completion?
-
-19. Will publication of this document change the status of any existing RFCs? If so, does the Datatracker metadata correctly reflect this and are those RFCs  listed on the title page, in the abstract, and discussed in the  introduction? If not, explain why and point to the part of the document where the relationship of this document to these other RFCs is discussed.
-
-20. Describe the document shepherd's review of the IANA considerations section, especially with regard to its consistency with the body of the document. Confirm that all aspects of the document requiring IANA assignments are associated with the appropriate reservations in IANA registries. Confirm that any referenced IANA registries have been clearly identified. Confirm that each newly created IANA registry specifies its initial contents, allocations procedures, and a reasonable name (see [RFC 8126](https://www.rfc-editor.org/rfc/rfc8126.html)).
-
-21. List any new IANA registries that require Designated Expert Review for future allocations. Are the instructions to the Designated Expert clear? Please include suggestions of designated experts, if appropriate.
