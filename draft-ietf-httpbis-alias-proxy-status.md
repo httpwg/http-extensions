@@ -91,7 +91,7 @@ service1.example-cdn.com.   AAAA    2001:db8::1
 
 The proxy could include the following proxy status in its response:
 
-~~~ example
+~~~ http-message
 Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
     next-hop-aliases="tracker.example.com,service1.example-cdn.com"
 ~~~
