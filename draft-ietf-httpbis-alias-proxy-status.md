@@ -121,7 +121,7 @@ defined in {{!RFC3986, Section 2.1}}.
 For example, consider the DNS name `name,with,commas.example.com`. This name would be encoded
 within a `next-hop-aliases` parameter as follows:
 
-~~~ example
+~~~ http-message
 Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
     next-hop-aliases="name%2Cwith%2Ccommas.example.com,service1.example-cdn.com"
 ~~~
@@ -131,7 +131,7 @@ instead of as a label separator. In this case, the period character MUST be firs
 as "\\.". Since the "\\" character itself will be percent-encoded, the name
 "dot\\.label.example.com" would be encoded within a `next-hop-aliases` parameter as follows:
 
-~~~ example
+~~~ http-message
 Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
     next-hop-aliases="dot%5C.label.example.com,service1.example-cdn.com"
 ~~~
