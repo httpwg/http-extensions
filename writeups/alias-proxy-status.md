@@ -74,14 +74,14 @@ N/A
    document is needed, clearly written, complete, correctly designed, and ready
    to be handed off to the responsible Area Director?
 
-
+Yes.
 
 10. Several IETF Areas have assembled [lists of common issues that their
     reviewers encounter][6]. For which areas have such issues been identified
     and addressed? For which does this still need to happen in subsequent
     reviews?
 
-
+We've looked at it and seen no obviously large issues. Use of IP addresses and TLS ALPN tokens might merit further review.
 
 11. What type of RFC publication is being requested on the IETF stream ([Best
     Current Practice][12], [Proposed Standard, Internet Standard][13],
