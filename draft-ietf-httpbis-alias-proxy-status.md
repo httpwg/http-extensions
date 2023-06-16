@@ -91,8 +91,8 @@ service1.example.com.       AAAA    2001:db8::1
 
 The proxy could include the following proxy status in its response:
 
-~~~ example
-Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
+~~~ http-message
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
     next-hop-aliases="tracker.example.com,service1.example.com"
 ~~~
 
@@ -121,8 +121,8 @@ defined in {{!RFC3986, Section 2.1}}.
 For example, consider the DNS name `comma,name.example.com`. This name would be encoded
 within a `next-hop-aliases` parameter as follows:
 
-~~~ example
-Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
+~~~ http-message
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
     next-hop-aliases="comma%2Cname.example.com,service1.example.com"
 ~~~
 
@@ -131,8 +131,8 @@ instead of as a label separator. In this case, the period character MUST be firs
 as "\\.". Since the "\\" character itself will be percent-encoded, the name
 "dot\\.label.example.com" would be encoded within a `next-hop-aliases` parameter as follows:
 
-~~~ example
-Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
+~~~ http-message
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
     next-hop-aliases="dot%5C.label.example.com,service1.example.com"
 ~~~
 
