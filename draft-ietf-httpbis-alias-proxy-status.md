@@ -33,15 +33,15 @@ author:
 --- abstract
 
 This document defines the `next-hop-aliases` HTTP Proxy-Status Parameter. This parameter carries
-the list of aliases and canonical names a proxy received during DNS resolution as part
+the list of aliases and canonical names an intermediary received during DNS resolution as part
 establishing a connection to the next hop.
 
 --- middle
 
 # Introduction
 
-The Proxy-Status HTTP response field {{!PROXY-STATUS=RFC9209}} allows proxies to convey
-information about how a proxied request was handled in HTTP responses sent to clients.
+The Proxy-Status HTTP response field {{!PROXY-STATUS=RFC9209}} allows intermediaries to convey
+information about how they handled the request in HTTP responses sent to clients.
 It defines a set of parameters that provide information, such as the name of the next
 hop.
 
