@@ -33,15 +33,15 @@ author:
 --- abstract
 
 This document defines the `next-hop-aliases` HTTP Proxy-Status Parameter. This parameter carries
-the list of aliases and canonical names a proxy received during DNS resolution as part
+the list of aliases and canonical names an intermediary received during DNS resolution as part
 establishing a connection to the next hop.
 
 --- middle
 
 # Introduction
 
-The Proxy-Status HTTP response field {{!PROXY-STATUS=RFC9209}} allows proxies to convey
-information about how a proxied request was handled in HTTP responses sent to clients.
+The Proxy-Status HTTP response field {{!PROXY-STATUS=RFC9209}} allows intermediaries to convey
+information about how they handled the request in HTTP responses sent to clients.
 It defines a set of parameters that provide information, such as the name of the next
 hop.
 
@@ -85,19 +85,19 @@ performing DNS resolution for the next hop "host.example.com":
 
 ~~~ dns-example
 host.example.com.           CNAME   tracker.example.com.
-tracker.example.com.        CNAME   service1.example-cdn.com.
-service1.example-cdn.com.   AAAA    2001:db8::1
+tracker.example.com.        CNAME   service1.example.com.
+service1.example.com.       AAAA    2001:db8::1
 ~~~
 
 The proxy could include the following proxy status in its response:
 
-~~~ example
-Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
-    next-hop-aliases="tracker.example.com,service1.example-cdn.com"
+~~~ http-message
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
+    next-hop-aliases="tracker.example.com,service1.example.com"
 ~~~
 
 This indicates that proxy.example.net, which used the IP address "2001:db8::1" as the next hop
-for this request, encountered the names "tracker.example.com" and "service1.example-cdn.com"
+for this request, encountered the names "tracker.example.com" and "service1.example.com"
 in the DNS resolution chain. Note that while this example includes both the `next-hop` and
 `next-hop-aliases` parameters, `next-hop-aliases` can be included without including `next-hop`.
 
@@ -118,12 +118,12 @@ any characters that appear in names in this list that do not belong to the set o
 Unreserved Characters ({{!RFC3986, Section 2.3}}) MUST be percent-encoded as
 defined in {{!RFC3986, Section 2.1}}.
 
-For example, consider the DNS name `name,with,commas.example.com`. This name would be encoded
+For example, consider the DNS name `comma,name.example.com`. This name would be encoded
 within a `next-hop-aliases` parameter as follows:
 
-~~~ example
-Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
-    next-hop-aliases="name%2Cwith%2Ccommas.example.com,service1.example-cdn.com"
+~~~ http-message
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
+    next-hop-aliases="comma%2Cname.example.com,service1.example.com"
 ~~~
 
 It is also possible for a DNS name to include a period character (".") within a label,
@@ -131,9 +131,9 @@ instead of as a label separator. In this case, the period character MUST be firs
 as "\\.". Since the "\\" character itself will be percent-encoded, the name
 "dot\\.label.example.com" would be encoded within a `next-hop-aliases` parameter as follows:
 
-~~~ example
-Proxy-Status: proxy.example.net; next-hop=2001:db8::1;
-    next-hop-aliases="dot%5C.label.example.com,service1.example-cdn.com"
+~~~ http-message
+Proxy-Status: proxy.example.net; next-hop="2001:db8::1";
+    next-hop-aliases="dot%5C.label.example.com,service1.example.com"
 ~~~
 
 Upon parsing this name, "dot%5C.label" MUST be treated as a single label.
