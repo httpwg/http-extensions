@@ -69,7 +69,9 @@ normative:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
         date: 2013
-    POSIX.1:
+    POSIX:
+        -: "posix"
+        display: "POSIX.1"
         target: https://pubs.opengroup.org/onlinepubs/9699919799/
         title: The Open Group Base Specifications Issue 7, 2018 edition
         date: 2018
@@ -218,7 +220,7 @@ Target Message:
 Signature Context:
 : The data source from which the HTTP Message Component Values are drawn. The context includes the target message and any additional information the signer or verifier might have, such as the full target URI of a request or the related request message for a response.
 
-The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
+The term "Unix timestamp" refers to what Section 4.16 of {{POSIX}} calls "Seconds Since the Epoch".
 
 This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash `\` to indicate line wrapping for long values, as per {{RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
 
