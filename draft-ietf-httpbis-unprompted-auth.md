@@ -126,8 +126,9 @@ it is uniquely bound to the TLS session {{!RFC7627}}, the Signature
 authentication scheme requires either one of the following properties:
 
 * The TLS version in use is greater or equal to 1.3 {{TLS}}.
-* The TLS version in use is greater or equal to 1.2 and the Extended
-Master Secret extension {{RFC7627}} has been negotiated.
+
+* The TLS version in use is 1.2 and the Extended Master Secret extension
+  {{RFC7627}} has been negotiated.
 
 Clients MUST NOT use the Signature authentication scheme on connections that do
 not meet one of the two properties above. If a server receives a request that
@@ -223,15 +224,16 @@ clear-text TLS Client Hello extensions.
 
 The authentication proofs described in this document are not bound to
 individual HTTP requests; if the key is used for authentication proofs on
-multiple requests they will all be identical. This allows for better
-compression when sending over the wire, but implies that client implementations
-that multiplex different security contexts over a single HTTP connection need
-to ensure that those contexts cannot read each other's header fields.
-Otherwise, one context would be able to replay the Authorization header field
-of another. This constraint is met by modern Web browsers. If an attacker were
-to compromise the browser such that it could access another context's memory,
-the attacker might also be able to access the corresponding key, so binding
-authentication to requests would not provide much benefit in practice.
+multiple requests on the same connection, they will all be identical. This
+allows for better compression when sending over the wire, but implies that
+client implementations that multiplex different security contexts over a single
+HTTP connection need to ensure that those contexts cannot read each other's
+header fields. Otherwise, one context would be able to replay the Authorization
+header field of another. This constraint is met by modern Web browsers. If an
+attacker were to compromise the browser such that it could access another
+context's memory, the attacker might also be able to access the corresponding
+key, so binding authentication to requests would not provide much benefit in
+practice.
 
 Key material used for the Signature HTTP authentication scheme MUST NOT be
 reused in other protocols. Doing so can undermine the security guarantees of
