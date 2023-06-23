@@ -52,6 +52,32 @@ informative:
   H3:
     =: RFC9114
     display: HTTP/3
+  SEEMS-LEGIT:
+    title: "Seems Legit: Automated Analysis of Subtle Attacks on Protocols That Use Signatures"
+    author:
+      -
+        initials: D.
+        surname: Jackson
+        name: Dennis Jackson
+      -
+        initials: C.
+        surname: Cremers
+        name: Cas Cremers
+      -
+        initials: K.
+        surname: Cohn-Gordon
+        name: Katriel Cohn-Gordon
+      -
+        initials: R.
+        surname: Sasse
+        name: Ralf Sasse
+    date: 2019
+    refcontent:
+      - "CCS '19: Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security"
+      - "pp. 2165–2180"
+    seriesinfo:
+      DOI: 10.1145/3319535.3339813
+
 
 --- abstract
 
@@ -144,7 +170,7 @@ exporter {{!KEY-EXPORT=RFC5705}} with the following parameters:
 
 * the context is set to the structure described in {{context}}
 
-* the exporter output length is set to 32 bytes (see {{output}})
+* the exporter output length is set to 48 bytes (see {{output}})
 
 ## Key Exporter Context {#context}
 
@@ -205,10 +231,26 @@ of bytes necessary.
 
 ## Key Exporter Output {#output}
 
-The output of the exporter is a 32-byte symmetric key. That symmetric key is
-then used as nonce which can be signed using the client's chosen asymmetric
-private key. The resulting signature is then transmitted to the server using
-the Authorization field.
+The TLS key exporter output is described in {{fig-output}}:
+
+~~~
+  Nonce (256),
+  Verification (128),
+~~~
+{: #fig-output title="Key Exporter Output Format"}
+
+The key exporter context contains the following fields:
+
+Nonce:
+
+: The nonce is to be signed using the client's chosen asymmetric private key.
+The resulting signature is then transmitted to the server using the
+p Parameter (see {{parameter-p}}).
+
+Verification:
+
+: The verification is transmitted to the server using the v Parameter (see
+{{parameter-v}}).
 
 # Authentication Parameters
 
@@ -234,12 +276,21 @@ Its value is an integer between 0 and 65535 inclusive from the IANA "TLS
 SignatureScheme" registry maintained at
 <[](https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml#tls-signaturescheme)>.
 
+## The v Parameter {#parameter-v}
+
+The REQUIRED "v" (verification) parameter is a byte sequence that specifies the
+verification that the user agent provides to attest to possessing the key
+exporter output. This avoids issues with signature schemes where certain keys
+can generate signatures that are valid for multiple inputs (see
+{{SEEMS-LEGIT}}).
+
 For example, the key ID "basement" authenticating using Ed25519
 {{?ED25519=RFC8410}} could produce the following header field (lines are folded
 to fit):
 
 ~~~
 Authorization: Signature k=:YmFzZW1lbnQ=:;s=2055;
+v=:dmVyaWZpY2F0aW9uXzE2Qg==:;
 p=:SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo
 aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ==:
 ~~~
@@ -256,6 +307,7 @@ can be caused for example by:
 * absence of the Authorization field
 * failure to parse the Authorization field
 * use of the Signature authentication scheme with an unknown key ID
+* failure to validate the verification parameter
 * failure to validate the signature.
 
 Such servers MUST also ensure that the timing of their request handling does
@@ -272,9 +324,9 @@ HTTP intermediaries that support this specification have two options:
 * The intermediary can validate the authentication received from the client,
 then inform the upstream HTTP server of the presence of valid authentication.
 
-* The intermediary can export the nonce (see {{compute-proof}}}), and forward
-it to the upstream HTTP server, then the upstream server performs the
-validation.
+* The intermediary can export the nonce and verification (see
+  {{compute-proof}}}), and forward it to the upstream HTTP server, then the
+  upstream server performs the validation.
 
 The mechanism for the intermediary to communicate this information to the
 upstream HTTP server is out of scope for this document.
