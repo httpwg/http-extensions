@@ -137,11 +137,78 @@ properties, the server MUST treat the request as malformed.
 
 # Computing the Authentication Proof {#compute-proof}
 
-The user agent leverages a TLS keying material exporter {{!KEY-EXPORT=RFC5705}}
-with the label "EXPORTER-HTTP-Signature-Authentication" to generate a 32-byte
-symmetric key. That symmetric key is then used as nonce which can be signed
-using the client's chosen asymmetric private key. The resulting signature is
-then transmitted to the server using the Authorization field.
+The user agent computes the authentication proof using a TLS keying material
+exporter {{!KEY-EXPORT=RFC5705}} with the following parameters:
+
+* the label is set to "EXPORTER-HTTP-Signature-Authentication"
+
+* the context is set to the structure described in {{context}}
+
+* the exporter output length is set to 32 bytes (see {{output}})
+
+## Key Exporter Context {#context}
+
+The TLS key exporter context is described in {{fig-context}}, using the
+notation from {{Section 1.3 of !QUIC=RFC9000}}:
+
+~~~
+  Signature Algorithm (16),
+  Key ID Length (i),
+  Key ID (..),
+  Scheme Length (i),
+  Scheme (..),
+  Host Length (i),
+  Host (..),
+  Port (16),
+  Realm Length (i),
+  Realm (..),
+~~~
+{: #fig-context title="Key Exporter Context Format"}
+
+The key exporter context contains the following fields:
+
+Signature Algorithm:
+
+: The signature scheme sent in the p Parameter (see {{parameter-s}}).
+
+Key ID:
+
+: The key ID sent in the k Parameter (see {{parameter-k}}).
+
+Scheme:
+
+: The scheme that is part of the origin for this request.
+
+Host:
+
+: The host that is part of the origin for this request.
+
+Port:
+
+: The port that is part of the origin for this request.
+
+Realm:
+
+: The real of authentication that is sent in the realm authentication parameter
+({{Section 11.5 of HTTP}}). If the realm authentication parameter is not
+present, this SHALL be empty. This document does not define a means for the
+origin to communicate a realm to the client. If a client is not configured to
+use a specific realm, it SHALL use an empty realm and SHALL NOT send the realm
+authentication parameter.
+
+The Signature Algorithm and Port fields are encoded as unsigned 16-bit integers
+in network byte order. The Key ID, Scheme, Host, and Real fields are length
+prefixed: they are preceded by a Length field that represents their length in
+bytes. These length fields are encoded using the variable-length integer
+encoding from {{Section 16 of QUIC}} and MUST be encoded in the minimum number
+of bytes necessary.
+
+## Key Exporter Output {#output}
+
+The output of the exporter is a 32-byte symmetric key. That symmetric key is
+then used as nonce which can be signed using the client's chosen asymmetric
+private key. The resulting signature is then transmitted to the server using
+the Authorization field.
 
 # Authentication Parameters
 
