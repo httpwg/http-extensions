@@ -243,14 +243,44 @@ The key exporter context contains the following fields:
 
 Nonce:
 
-: The nonce is to be signed using the client's chosen asymmetric private key.
-The resulting signature is then transmitted to the server using the
-p Parameter (see {{parameter-p}}).
+: The nonce is part of the data signed using the client's chosen asymmetric
+private key (see {{computation}}).
 
 Verification:
 
 : The verification is transmitted to the server using the v Parameter (see
 {{parameter-v}}).
+
+## Signature Computation {#computation}
+
+Once the nonce has been extracted from the key exporter output (see
+{{output}}), it is prefixed with static data before being signed to mitigate
+issues caused by key reuse. The signature is computed over the concatenation of:
+
+* A string that consists of octet 32 (0x20) repeated 64 times
+
+* The context string "HTTP Signature Authentication"
+
+* A single 0 byte which serves as the separator
+
+* The nonce extracted from the key exporter output (see {{output}})
+
+For example, if the nonce has all its 32 bytes set to 01, the content covered
+by the signature (in hexadecimal format) would be:
+
+~~~
+2020202020202020202020202020202020202020202020202020202020202020
+2020202020202020202020202020202020202020202020202020202020202020
+48545450205369676E61747572652041757468656E7469636174696F6E
+00
+0101010101010101010101010101010101010101010101010101010101010101
+~~~
+
+This constructions mirrors that of the TLS 1.3 CertificateVerify message
+defined in {{Section 4.4.3 of TLS}}.
+
+The resulting signature is then transmitted to the server using the p Parameter
+(see {{parameter-p}}).
 
 # Authentication Parameters
 
