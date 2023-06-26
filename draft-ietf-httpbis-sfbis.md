@@ -1101,7 +1101,7 @@ base64    = ALPHA / DIGIT / "+" / "/" / "="
 sf-boolean = "?" boolean
 boolean    = "0" / "1"
 
-sf-date = "@" ["-"] 1*15DIGIT
+sf-date = "@" sf-integer
 
 sf-displaystring = "%" DQUOTE *uchr DQUOTE
 uchr             = chr / uescaped
