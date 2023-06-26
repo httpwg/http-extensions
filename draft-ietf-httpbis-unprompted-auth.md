@@ -169,11 +169,11 @@ The key exporter context contains the following fields:
 
 Signature Algorithm:
 
-: The signature scheme sent in the p Parameter (see {{parameter-s}}).
+: The signature scheme sent in the `p` Parameter (see {{parameter-s}}).
 
 Key ID:
 
-: The key ID sent in the k Parameter (see {{parameter-k}}).
+: The key ID sent in the `k` Parameter (see {{parameter-k}}).
 
 Scheme:
 
