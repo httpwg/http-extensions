@@ -239,7 +239,7 @@ Key material used for the Signature HTTP authentication scheme MUST NOT be
 reused in other protocols. Doing so can undermine the security guarantees of
 the authentication.
 
-Origins offering this scheme are able to link requests that use the same key.
+Origins offering this scheme can link requests that use the same key.
 However, requests are not linkable across origins if the keys used are specific
 to the individual origins using this scheme.
 
