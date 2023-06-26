@@ -1766,7 +1766,7 @@ registering the following entries according to the table below:
 
 ## HTTP Signature Algorithms Registry {#hsa-registry}
 
-This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms". Initial values for this registry are given in {{iana-hsa-contents}}. Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy {{?RFC8126}}.
+This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms". Initial values for this registry are given in {{iana-hsa-contents}}. Future assignments and modifications to existing assignment are to be made through the Specification Required registration policy {{?RFC8126}}.
 
 The algorithms listed in this registry identify some possible cryptographic algorithms for applications to use with this specification, but the entries neither represent an exhaustive list of possible algorithms nor indicate fitness for purpose with any particular application of this specification. An application is free to implement any algorithm that suits its needs, provided the signer and verifier can agree to the parameters of that algorithm in a secure and deterministic fashion. When an application has a need to signal the use of a particular algorithm at runtime using the `alg` signature parameter, this registry provides a mapping between the value of that parameter to a particular algorithm. However, use of the `alg` parameter needs to be treated with caution to avoid various forms of algorithm confusion and substitution attacks, such as discussed in {{security-keydowngrade}} and others.
 
