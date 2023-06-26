@@ -261,7 +261,7 @@ issues caused by key reuse. The signature is computed over the concatenation of:
 
 * The context string "HTTP Signature Authentication"
 
-* A single 0 byte which serves as the separator
+* A single 0 byte which serves as a separator
 
 * The nonce extracted from the key exporter output (see {{output}})
 
@@ -279,7 +279,7 @@ by the signature (in hexadecimal format) would be:
 This constructions mirrors that of the TLS 1.3 CertificateVerify message
 defined in {{Section 4.4.3 of TLS}}.
 
-The resulting signature is then transmitted to the server using the p Parameter
+The resulting signature is then transmitted to the server using the `p` Parameter
 (see {{parameter-p}}).
 
 # Authentication Parameters
