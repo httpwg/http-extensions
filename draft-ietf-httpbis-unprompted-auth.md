@@ -195,23 +195,25 @@ The key exporter context contains the following fields:
 
 Signature Algorithm:
 
-: The signature scheme sent in the p Parameter (see {{parameter-s}}).
+: The signature scheme sent in the `p` Parameter (see {{parameter-s}}).
 
 Key ID:
 
-: The key ID sent in the k Parameter (see {{parameter-k}}).
+: The key ID sent in the `k` Parameter (see {{parameter-k}}).
 
 Scheme:
 
-: The scheme that is part of the origin for this request.
+: The scheme for this request, encoded using the format of the scheme portion
+of a URI as defined in {{Section 3.1 of !URI=RFC3986}}.
 
 Host:
 
-: The host that is part of the origin for this request.
+: The host for this request, encoded using the format of the host portion of a
+URI as defined in {{Section 3.2.2 of URI}}.
 
 Port:
 
-: The port that is part of the origin for this request.
+: The port for this request.
 
 Realm:
 
@@ -224,10 +226,10 @@ authentication parameter.
 
 The Signature Algorithm and Port fields are encoded as unsigned 16-bit integers
 in network byte order. The Key ID, Scheme, Host, and Real fields are length
-prefixed: they are preceded by a Length field that represents their length in
-bytes. These length fields are encoded using the variable-length integer
-encoding from {{Section 16 of QUIC}} and MUST be encoded in the minimum number
-of bytes necessary.
+prefixed strings; they are preceded by a Length field that represents their
+length in bytes. These length fields are encoded using the variable-length
+integer encoding from {{Section 16 of QUIC}} and MUST be encoded in the minimum
+number of bytes necessary.
 
 ## Key Exporter Output {#output}
 
@@ -254,7 +256,9 @@ Verification:
 
 # Authentication Parameters
 
-This specification defines the following authentication parameters:
+This specification defines the following authentication parameters. These
+parameters use structured fields ({{STRUCTURED-FIELDS}}) in their definition,
+even though the Authorization field itself does not use structured fields.
 
 ## The k Parameter {#parameter-k}
 
@@ -358,7 +362,7 @@ Key material used for the Signature HTTP authentication scheme MUST NOT be
 reused in other protocols. Doing so can undermine the security guarantees of
 the authentication.
 
-Origins offering this scheme are able to link requests that use the same key.
+Origins offering this scheme can link requests that use the same key.
 However, requests are not linkable across origins if the keys used are specific
 to the individual origins using this scheme.
 

@@ -136,10 +136,10 @@ such a connection.  In contemporary versions of TLS {{?TLS=RFC8446}}
 CertificateVerify messages during the handshake and for the server to verify the
 CertificateVerify and Finished messages.
 
-HTTP/2 restricts TLS 1.2 renegotiation ({{Section 9.2.1 of ?RFC9113}}) and
-prohibits TLS 1.3 post-handshake authentication ({{Section 9.2.3 of ?RFC9113}}). However, they are
+HTTP/2 restricts TLS 1.2 renegotiation ({{Section 9.2.1 of RFC9113}}) and
+prohibits TLS 1.3 post-handshake authentication ({{Section 9.2.3 of RFC9113}}). However, they are
 sometimes used to implement reactive client certificate authentication in HTTP/1.1
-{{?RFC9112}} where the server decides whether to request a client certificate
+{{RFC9112}} where the server decides whether to request a client certificate
 based on the HTTP request. HTTP application data sent on such a connection
 after receipt and verification of the client certificate is also
 mutually authenticated and thus suitable for the mechanisms described in this
@@ -294,8 +294,8 @@ an HTTP 431 (Request Header Fields Too Large) status code per {{Section 5 of ?RF
 Due to the typical size of the field values containing certificate data,
 recipients may need to be configured to allow for a larger maximum header size.
 An intermediary generating client certificate header fields on connections that allow
-for advertising the maximum acceptable header size (e.g., HTTP/2 {{?RFC9113}}
-or HTTP/3 {{?RFC9114}}) should account for the additional size of the header
+for advertising the maximum acceptable header size (e.g., HTTP/2 {{RFC9113}}
+or HTTP/3 {{RFC9114}}) should account for the additional size of the header
 of the requests it sends vs. requests it receives by advertising a value to its
 clients that is sufficiently smaller so as to allow for the addition of certificate data.
 
@@ -344,7 +344,7 @@ TTRP and backend or origin server, for example, might be authenticated in some
 way with the insertion and consumption of the `Client-Cert`
 and `Client-Cert-Chain` header fields occurring
 only on that connection.
-{{Appendix B.3 of ?I-D.ietf-httpbis-message-signatures}} gives one example of
+{{Appendix B.3 of I-D.ietf-httpbis-message-signatures}} gives one example of
 this with an application of HTTP Message Signatures.
 Alternatively, the network topology might dictate a
 private network such that the backend application is only able to accept
