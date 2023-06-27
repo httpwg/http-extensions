@@ -177,15 +177,17 @@ Key ID:
 
 Scheme:
 
-: The scheme that is part of the origin for this request.
+: The scheme for this request, encoded using the format of the scheme portion
+of a URI as defined in {{Section 3.1 of !URI=RFC3986}}.
 
 Host:
 
-: The host that is part of the origin for this request.
+: The host for this request, encoded using the format of the host portion of a
+URI as defined in {{Section 3.2.2 of URI}}.
 
 Port:
 
-: The port that is part of the origin for this request.
+: The port for this request.
 
 Realm:
 
@@ -198,10 +200,10 @@ authentication parameter.
 
 The Signature Algorithm and Port fields are encoded as unsigned 16-bit integers
 in network byte order. The Key ID, Scheme, Host, and Real fields are length
-prefixed: they are preceded by a Length field that represents their length in
-bytes. These length fields are encoded using the variable-length integer
-encoding from {{Section 16 of QUIC}} and MUST be encoded in the minimum number
-of bytes necessary.
+prefixed strings; they are preceded by a Length field that represents their
+length in bytes. These length fields are encoded using the variable-length
+integer encoding from {{Section 16 of QUIC}} and MUST be encoded in the minimum
+number of bytes necessary.
 
 ## Key Exporter Output {#output}
 
