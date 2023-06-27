@@ -233,7 +233,10 @@ number of bytes necessary.
 
 ## Key Exporter Output {#output}
 
-The TLS key exporter output is described in {{fig-output}}:
+The key exporter output is 48 bytes long. Of those, the first 32 bytes are
+input to the signature and the next 16 bytes are sent alongside the signature.
+This allows the recipient to confirm that the exporter produces the right
+values. This is described in {{fig-output}}:
 
 ~~~
   Nonce (256),
