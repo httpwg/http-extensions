@@ -145,7 +145,9 @@ then transmitted to the server using the Authorization field.
 
 # Authentication Parameters
 
-This specification defines the following authentication parameters:
+This specification defines the following authentication parameters. These
+parameters use structured fields ({{STRUCTURED-FIELDS}}) in their definition,
+even though the Authorization field itself does not use structured fields.
 
 ## The k Parameter {#parameter-k}
 
