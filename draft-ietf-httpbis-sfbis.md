@@ -48,7 +48,7 @@ informative:
       DOI:  10.1109/IEEESTD.2019.8766229
       ISBN: 978-1-5044-5924-2
 
-  STD63:
+  UTF8:
     title: UTF-8, a transformation format of ISO 10646
     author:
     - ins: F. Yergeau
@@ -61,6 +61,7 @@ informative:
   RFC9113:
     display: HTTP/2
   HPACK: RFC7541
+  URI: RFC3986
 
 venue:
   group: HTTP
@@ -399,9 +400,9 @@ Note that the serialization algorithm ({{ser-decimal}}) rounds input with more t
 
 Strings are zero or more printable ASCII {{!RFC0020}} characters (i.e., the range %x20 to %x7E). Note that this excludes tabs, newlines, carriage returns, etc.
 
-Unicode is not directly supported in Strings, because it causes a number of interoperability issues, and -- with few exceptions -- field values do not require it.
+Non-ASCII characters are not directly supported in Strings, because they cause a number of interoperability issues, and -- with few exceptions -- field values do not require them.
 
-When it is necessary for a field value to convey non-ASCII content, a Byte Sequence ({{binary}}) can be specified, along with a character encoding (preferably UTF-8 {{STD63}}).
+When it is necessary for a field value to convey non-ASCII content, a Display String ({{displaystring}}) can be specified.
 
 When serialized in a textual HTTP field, Strings are delimited with double quotes, using a backslash ("\\") to escape double quotes and backslashes. For example:
 
@@ -464,6 +465,23 @@ For example:
 ~~~ http-message-new
 Example-Date: @1659578233
 ~~~
+
+### Display Strings {#displaystring}
+
+Display Strings are similar to Strings, in that they consist of zero or more characters, but they allow Unicode content, unlike Strings.
+
+Display Strings are intended for use in cases where a value is displayed to end users, and therefore may need to carry non-ASCII content. It is NOT RECOMMENDED that they be used in situations where a String ({{string}}) or Token ({{token}}) would be adequate, because Unicode has processing considerations (e.g., normalization) and security considerations (e.g., homograph attacks) that make it more difficult to handle correctly.
+
+Note that Display Strings do not indicate the language used in the value; that can be done separately if necessary (e.g., with a parameter).
+
+For example:
+
+~~~ http-message-new
+Example-DisplayString: %"This is intended for display to %C3%BCsers."
+~~~
+
+See {{security}} for additional security considerations when handling Display Strings.
+
 
 
 # Working with Structured Fields in HTTP {#text}
@@ -573,7 +591,8 @@ Given an Item as input_item, return an ASCII string suitable for use in an HTTP 
 5. If input_item is a Byte Sequence, return the result of running Serializing a Byte Sequence ({{ser-binary}}) with input_item.
 6. If input_item is a Boolean, return the result of running Serializing a Boolean ({{ser-boolean}}) with input_item.
 7. If input_item is a Date, return the result of running Serializing a Date ({{ser-date}}) with input_item.
-8. Otherwise, fail serialization.
+8. If input_item is a Display String, return the result of running Serializing a Display String ({{ser-display}}) with input_item.
+9. Otherwise, fail serialization.
 
 
 ### Serializing an Integer {#ser-integer}
@@ -664,6 +683,20 @@ Given a Date as input_date, return an ASCII string suitable for use in an HTTP f
 0. Let output be "@".
 1. Append to output the result of running Serializing an Integer with input_date ({{ser-integer}}).
 2. Return output.
+
+
+### Serializing a Display String {#ser-display}
+
+Given a string of Unicode characters as input_string, return an ASCII string suitable for use in an HTTP field value.
+
+0. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_string. If there is an error in doing so, fail parsing.
+1. Let encoded_string be an empty string.
+2. For each byte in byte_array:
+  1. If byte is %x25 ("%"), append "%25" to encoded_string.
+  2. If byte is in the ranges %x00-1f or %x7f-ff, apply the percent-encoding defined in {{Section 2.1 of URI}} to byte and append the result to encoded_string.
+  3. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
+3. Let formatted_string be the result of running Serialising a String ({{ser-string}}) with encoded_string.
+4. Return the character "%" followed by formatted_string.
 
 
 ## Parsing Structured Fields {#text-parse}
@@ -787,7 +820,8 @@ Given an ASCII string as input_string, return a bare Item. input_string is modif
 4. If the first character of input_string is ":", return the result of running Parsing a Byte Sequence ({{parse-binary}}) with input_string.
 5. If the first character of input_string is "?", return the result of running Parsing a Boolean ({{parse-boolean}}) with input_string.
 6. If the first character of input_string is "@", return the result of running Parsing a Date ({{parse-date}}) with input_string.
-7. Otherwise, the item type is unrecognized; fail parsing.
+7. If the first character of input_string is "%", return the result of running Parsing a Display String ({{parse-display}}) with input_string.
+8. Otherwise, the item type is unrecognized; fail parsing.
 
 #### Parsing Parameters {#parse-param}
 
@@ -928,6 +962,22 @@ Given an ASCII string as input_string, return a Date. input_string is modified t
 5. Return output_date.
 
 
+### Parsing a Display String {#parse-display}
+
+Given an ASCII string as input_string, return a string of Unicode characters. input_string is modified to remove the parsed value.
+
+0. If the first character of input_string is not "%", fail parsing.
+1. Discard the first character of input_string.
+2. Let parsed_string be the result of running Parsing a String ({{parse-string}}) with input_string.
+3. Let byte_array be the result of applying ASCII encoding to input_string.
+4. For each sigil_byte in byte_array which is %25 ("%"):
+  1. Let octet_hex be the two bytes after sigil_byte in byte_string. If there are not two bytes, fail parsing.
+  2. Let octet be the result of decoding octet_hex as hexidecimal, in a case-insensitive fashion.
+  3. Replace sigil_byte and octet_hex in byte_array with octet.
+5. Let unicode_string be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
+6. Return unicode_string.
+
+
 # IANA Considerations {#iana}
 
 Please add the following note to the "Hypertext Transfer Protocol (HTTP) Field Name Registry":
@@ -958,12 +1008,14 @@ Then, add the indicated Structured Type for each existing registry entry listed 
 {:id="existing-fields" title="Existing Fields"}
 
 
-# Security Considerations
+# Security Considerations {#security}
 
 The size of most types defined by Structured Fields is not limited; as a result, extremely large fields could be an attack vector (e.g., for resource consumption). Most HTTP implementations limit the sizes of individual fields as well as the overall header or trailer section size to mitigate such attacks.
 
 It is possible for parties with the ability to inject new HTTP fields to change the meaning
 of a Structured Field. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
+
+The Display String type conveys a Unicode string without any form of sanitization. Applications using these values need to perform their own checks on their content; for example, they might contain escape sequences, or NUL. Mitigation strategies include escaping untrusted content before displaying it.
 
 --- back
 
@@ -1049,7 +1101,11 @@ base64    = ALPHA / DIGIT / "+" / "/" / "="
 sf-boolean = "?" boolean
 boolean    = "0" / "1"
 
-sf-date = "@" ["-"] 1*15DIGIT
+sf-date = "@" sf-integer
+
+sf-displaystring = "%" DQUOTE *uchr DQUOTE
+uchr             = chr / uescaped
+uescaped         = "%" HEXDIG HEXDIG
 ~~~
 
 
@@ -1062,6 +1118,7 @@ This revision of the Structured Field Values for HTTP specification has made the
 * Moved ABNF to an informative appendix. ({{abnf}})
 * Added a "Structured Type" column to the HTTP Field Name Registry. ({{iana}})
 * Refined parse failure handling. ({{text-parse}})
+* Added the Display String structured type. ({{displaystring}})
 
 
 # Acknowledgements
