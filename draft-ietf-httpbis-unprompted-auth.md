@@ -374,6 +374,13 @@ non-existent resources such that the timing of the authentication verification
 is not observable. This delay needs to be carefully considered to avoid having
 the delay itself leak the fact that this origin uses this mechanism at all.
 
+Non-probeable resources also need to be non-discoverable for unauthenticated
+users. For example, if a server operator wishes to hide an authenticated
+resource by pretending it does not exist to unauthenticated users, then the
+server operator needs to ensure there are no unauthenticated pages with links
+to that resource, and no other out-of-band ways for unauthenticated users to
+discover this resource.
+
 # Intermediary Considerations {#intermediary}
 
 Since the Signature HTTP authentication scheme leverages TLS keying material
