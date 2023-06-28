@@ -287,7 +287,8 @@ This specification defines the following authentication parameters. These
 parameters use structured fields ({{STRUCTURED-FIELDS}}) in their definition,
 even though the Authorization field itself does not use structured fields. Due
 to the syntax requirements for authentication parameters, the byte sequences
-defined below SHALL be enclosed in double-quotes instead of colons.
+defined below SHALL be enclosed in double-quotes (the base64-encoded data and
+colon delimeters are enclosed in double-quotes, see example in {{example}}).
 
 
 ## The k Parameter {#parameter-k}
@@ -318,7 +319,7 @@ exporter output. This avoids issues with signature schemes where certain keys
 can generate signatures that are valid for multiple inputs (see
 {{SEEMS-LEGIT}}).
 
-# Example
+# Example {#example}
 
 For example, the key ID "basement" authenticating using Ed25519
 {{?ED25519=RFC8410}} could produce the following header field:
@@ -327,11 +328,11 @@ For example, the key ID "basement" authenticating using Ed25519
 NOTE: '\' line wrapping per RFC 8792
 
 Authorization: Signature \
-  k="YmFzZW1lbnQ=", \
+  k=":YmFzZW1lbnQ=:", \
   s=2055, \
-  v="dmVyaWZpY2F0aW9uXzE2Qg==", \
-  p="SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo \
-    aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ=="
+  v=":dmVyaWZpY2F0aW9uXzE2Qg==:", \
+  p=":SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo \
+    aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ==:"
 ~~~
 {: #fig-hdr-example title="Example Header Field"}
 
