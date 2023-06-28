@@ -449,5 +449,7 @@ The authors would like to thank many members of the IETF community, as this
 document is the fruit of many hallway conversations. In particular, the authors
 would like to thank {{{Nick Harper}}}, {{{Dennis Jackson}}}, {{{Ilari
 Liusvaara}}}, {{{Justin Richer}}}, {{{Ben Schwartz}}}, {{{Martin Thomson}}},
-and {{{Chris Wood}}} for their reviews and contributions.
+and {{{Chris Wood}}} for their reviews and contributions. The mechanism
+described in this document was originally part of the first iteration of MASQUE
+{{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
 
