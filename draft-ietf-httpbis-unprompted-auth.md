@@ -334,10 +334,15 @@ authentication failures with the exact same response that they would have used
 for non-existent resources. For example, this can mean using HTTP status code
 404 (Not Found) instead of 401 (Unauthorized). Such authentication failures
 can be caused for example by:
+
 * absence of the Authorization field
+
 * failure to parse the Authorization field
+
 * use of the Signature authentication scheme with an unknown key ID
+
 * failure to validate the verification parameter
+
 * failure to validate the signature.
 
 Such servers MUST also ensure that the timing of their request handling does
