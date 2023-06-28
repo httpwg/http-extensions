@@ -29,12 +29,8 @@ lint:: http-lint
 rfc-http-validate ?= rfc-http-validate
 .SECONDARY: $(drafts_xml)
 .PHONY: http-lint
-http-lint: http-lint-install $(addsuffix .http-lint.txt,$(addprefix .,$(drafts)))
+http-lint: $(addsuffix .http-lint.txt,$(addprefix .,$(drafts)))
 .PHONY: .%.http-lint.txt
 .%.http-lint.txt: %.xml $(DEPS_FILES)
 	$(trace) $< -s http-lint $(rfc-http-validate) -q -m sf.json $<
 	@touch $@
-
-.PHONY: http-lint-install
-http-lint-install:
-	@hash rfc-http-validate 2>/dev/null || pip3 install rfc-http-validate
