@@ -95,37 +95,29 @@ new non-probeable cryptographic authentication scheme.
 
 # Introduction {#introduction}
 
-Existing HTTP authentication schemes (see {{Section 11 of !HTTP=RFC9110}}) are
-probeable in the sense that it is possible for an unauthenticated client to
-probe whether an origin serves resources that require authentication. It is
-possible for an origin to hide the fact that it requires authentication by not
-generating Unauthorized status codes, however that only works with
-non-cryptographic authentication schemes: cryptographic signatures require a
-fresh nonce to be signed, and there is no existing way for the origin to share
-such a nonce without exposing the fact that it serves resources that require
-authentication. This document proposes a new non-probeable cryptographic
-authentication scheme.
+HTTP authentication schemes (see {{Section 11 of !HTTP=RFC9110}}) allow origins
+to restrict access for some resources to only authenticated requests. While
+these schemes commonly involve a challenge where the origin asks the client to
+provide authentication information, it is possible for clients to send such
+information unprompted. This is particularly useful in cases where an origin
+wants to offer a service or capability only to "those who know" while all
+others are given no indication the service or capability exists. Such designs
+rely on an externally-defined mechanism by which keys are distributed. For
+example, a company might offer remote employee access to company services
+directly via its website using their employee credentials, or offer access to
+limited special capabilities for specific employees, while making discovering
+(probing for) such capabilities difficult. Members of less well-defined
+communities might use more ephemeral keys to acquire access to geography- or
+capability-specific resources, as issued by an entity whose user base is larger
+than the available resources can support (by having that entity metering the
+availability of keys temporally or geographically).
 
-The Signature HTTP authentication scheme serves use cases in which a site wants
-to offer a service or capability only to "those who know" while all others are
-given no indication the service or capability exists. The conceptual model is
-that of a "speakeasy". "Knowing" is via an externally-defined mechanism by
-which keys are distributed. For example, a company might offer remote employee
-access to company services directly via its website using their employee
-credentials, or offer access to limited special capabilities for specific
-employees, while making discovering (probing for) such capabilities difficult.
-Members of less well-defined communities might use more ephemeral keys to
-acquire access to geography- or capability-specific resources, as issued by an
-entity whose user base is larger than the available resources can support (by
-having that entity metering the availability of keys temporally or
-geographically). The Signature HTTP authentication scheme is also useful for
-cases where a service provider wants to distribute user-provisioning
-information for its resources without exposing the provisioning location to
-non-users.
-
-There are scenarios where servers may want to expose the fact that
-authentication is required for access to specific resources. This is left for
-future work.
+While digital-signature-based HTTP authentication schemes already exist
+({{?HOBA=RFC7486}}), they rely on the origin explicitly sending a fresh
+challenge to the client, to ensure that the signature input is fresh. That
+makes the origin probeable as it send the challenge to unauthenticated clients.
+This document defines a new signature-based authentication scheme that is not
+probeable.
 
 ## Conventions and Definitions {#conventions}
 
@@ -133,7 +125,7 @@ future work.
 
 This document uses the following terminology from {{Section 3 of
 !STRUCTURED-FIELDS=RFC8941}} to specify syntax and parsing: Integer and Byte
-Sequence.
+Sequence. This document uses the notation from {{Section 1.3 of !QUIC=RFC9000}}.
 
 # The Signature Authentication Scheme
 
@@ -174,8 +166,7 @@ exporter {{!KEY-EXPORT=RFC5705}} with the following parameters:
 
 ## Key Exporter Context {#context}
 
-The TLS key exporter context is described in {{fig-context}}, using the
-notation from {{Section 1.3 of !QUIC=RFC9000}}:
+The TLS key exporter context is described in {{fig-context}}:
 
 ~~~
   Signature Algorithm (16),
@@ -284,8 +275,8 @@ covered by the signature (in hexadecimal format) would be:
 This constructions mirrors that of the TLS 1.3 CertificateVerify message
 defined in {{Section 4.4.3 of TLS}}.
 
-The resulting signature is then transmitted to the server using the `p` Parameter
-(see {{parameter-p}}).
+The resulting signature is then transmitted to the server using the `p`
+Parameter (see {{parameter-p}}).
 
 # Authentication Parameters
 
@@ -321,6 +312,8 @@ exporter output. This avoids issues with signature schemes where certain keys
 can generate signatures that are valid for multiple inputs (see
 {{SEEMS-LEGIT}}).
 
+# Example
+
 For example, the key ID "basement" authenticating using Ed25519
 {{?ED25519=RFC8410}} could produce the following header field (lines are folded
 to fit):
@@ -332,7 +325,7 @@ p=:SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo
 aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ==:
 ~~~
 
-# Server Handling
+# Non-Probeable Server Handling
 
 Servers that wish to introduce resources whose existence cannot be probed need
 to ensure that they do not reveal any information about those resources to
