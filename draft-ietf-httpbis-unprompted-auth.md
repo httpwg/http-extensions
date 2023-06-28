@@ -368,6 +368,10 @@ HTTP intermediaries that support this specification have two options:
 The mechanism for the intermediary to communicate this information to the
 upstream HTTP server is out of scope for this document.
 
+Note that both of these mechanisms require the upstream HTTP server to trust
+the intermediary. This is usually the case because the intermediary already
+needs access to the TLS certificate private key in order to respond to requests.
+
 # Security Considerations {#security}
 
 The Signature HTTP authentication scheme allows a user agent to authenticate to
