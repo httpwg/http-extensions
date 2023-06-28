@@ -136,6 +136,13 @@ asymmetric cryptography. User agents possess a key ID and a public/private key
 pair, and origin servers maintain a mapping of authorized key IDs to their
 associated public keys.
 
+The client uses a TLS keying material exporter to generate data to be signed
+(see {{compute-proof}}) then sends the signature using the Authorization or
+Proxy-Authorization header field. The signature and additional information are
+exchanged using authentication parameters (see {{auth-params}}).
+
+# TLS Usage
+
 This authentication scheme is only defined for uses of HTTP with TLS
 {{!TLS=RFC8446}}. This includes any use of HTTP over TLS as typically used for
 HTTP/2 {{H2}}, or HTTP/3 {{H3}} where the transport protocol uses TLS as its
@@ -281,7 +288,7 @@ defined in {{Section 4.4.3 of TLS}}.
 The resulting signature is then transmitted to the server using the `p`
 Parameter (see {{parameter-p}}).
 
-# Authentication Parameters
+# Authentication Parameters {#auth-params}
 
 This specification defines the following authentication parameters. These
 parameters use structured fields ({{STRUCTURED-FIELDS}}) in their definition,
@@ -346,9 +353,9 @@ for non-existent resources. For example, this can mean using HTTP status code
 404 (Not Found) instead of 401 (Unauthorized). Such authentication failures
 can be caused for example by:
 
-* absence of the Authorization field
+* absence of the Authorization (or Proxy-Authorization) field
 
-* failure to parse the Authorization field
+* failure to parse that field
 
 * use of the Signature authentication scheme with an unknown key ID
 
@@ -464,8 +471,8 @@ Reference:
 The authors would like to thank many members of the IETF community, as this
 document is the fruit of many hallway conversations. In particular, the authors
 would like to thank {{{Nick Harper}}}, {{{Dennis Jackson}}}, {{{Ilari
-Liusvaara}}}, {{{Justin Richer}}}, {{{Ben Schwartz}}}, {{{Martin Thomson}}},
-and {{{Chris Wood}}} for their reviews and contributions. The mechanism
-described in this document was originally part of the first iteration of MASQUE
-{{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
+Liusvaara}}}, {{{Lucas Pardue}}}, {{{Justin Richer}}}, {{{Ben Schwartz}}},
+{{{Martin Thomson}}}, and {{{Chris Wood}}} for their reviews and contributions.
+The mechanism described in this document was originally part of the first
+iteration of MASQUE {{?MASQUE-ORIGINAL=I-D.schinazi-masque-00}}.
 
