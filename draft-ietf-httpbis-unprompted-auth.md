@@ -45,6 +45,8 @@ author:
     org: Cloudflare Inc.
     email: jonathan.hoyland@gmail.com
 
+normative:
+  FOLDING: RFC8792
 informative:
   H2:
     =: RFC9113
@@ -271,6 +273,7 @@ covered by the signature (in hexadecimal format) would be:
 00
 0101010101010101010101010101010101010101010101010101010101010101
 ~~~
+{: #fig-sig-example title="Example Content Covered by Signature"}
 
 This constructions mirrors that of the TLS 1.3 CertificateVerify message
 defined in {{Section 4.4.3 of TLS}}.
@@ -282,7 +285,10 @@ Parameter (see {{parameter-p}}).
 
 This specification defines the following authentication parameters. These
 parameters use structured fields ({{STRUCTURED-FIELDS}}) in their definition,
-even though the Authorization field itself does not use structured fields.
+even though the Authorization field itself does not use structured fields. Due
+to the syntax requirements for authentication parameters, the byte sequences
+defined below SHALL be enclosed in double-quotes instead of colons.
+
 
 ## The k Parameter {#parameter-k}
 
@@ -315,15 +321,19 @@ can generate signatures that are valid for multiple inputs (see
 # Example
 
 For example, the key ID "basement" authenticating using Ed25519
-{{?ED25519=RFC8410}} could produce the following header field (lines are folded
-to fit):
+{{?ED25519=RFC8410}} could produce the following header field:
 
+~~~ http-message
+NOTE: '\' line wrapping per RFC 8792
+
+Authorization: Signature \
+  k="YmFzZW1lbnQ=", \
+  s=2055, \
+  v="dmVyaWZpY2F0aW9uXzE2Qg==", \
+  p="SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo \
+    aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ=="
 ~~~
-Authorization: Signature k=:YmFzZW1lbnQ=:;s=2055;
-v=:dmVyaWZpY2F0aW9uXzE2Qg==:;
-p=:SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo
-aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ==:
-~~~
+{: #fig-hdr-example title="Example Header Field"}
 
 # Non-Probeable Server Handling
 
