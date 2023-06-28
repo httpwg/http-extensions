@@ -453,6 +453,8 @@ Reference:
 {:numbered="false"}
 
 The authors would like to thank many members of the IETF community, as this
-document is the fruit of many hallway conversations. Ben Schwartz contributed
-ideas to this document.
+document is the fruit of many hallway conversations. In particular, the authors
+would like to thank {{{Nick Harper}}}, {{{Dennis Jackson}}}, {{{Ilari
+Liusvaara}}}, {{{Justin Richer}}}, {{{Ben Schwartz}}}, {{{Martin Thomson}}},
+and {{{Chris Wood}}} for their reviews and contributions.
 
