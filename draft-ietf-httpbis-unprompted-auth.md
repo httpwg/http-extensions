@@ -363,10 +363,16 @@ can be caused for example by:
 
 * failure to validate the signature.
 
-Such servers MUST also ensure that the timing of their request handling does
-not leak any information. This can be accomplished by delaying responses to
-all non-existent resources such that the timing of the authentication
-verification is not observable.
+In order to validate the signature, the server needs to first parse the field
+containing the signature, then look up the key ID in its database of public
+keys, and finally perform the cryptographic validation. These steps can take
+time, and an attacker could detect use of this mechanism if that time is
+observable by comparing the timing of a request for a known non-existent
+resource to the timing of a request for a potentially authenticated resource.
+Servers can prevent this observability by slightly delaying responses to some
+non-existent resources such that the timing of the authentication verification
+is not observable. This delay needs to be carefully considered to avoid having
+the delay itself leak the fact that this origin uses this mechanism at all.
 
 # Intermediary Considerations {#intermediary}
 
