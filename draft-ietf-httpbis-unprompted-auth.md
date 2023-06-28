@@ -233,23 +233,23 @@ number of bytes necessary.
 
 ## Key Exporter Output {#output}
 
-The key exporter output is 48 bytes long. Of those, the first 32 bytes are
-input to the signature and the next 16 bytes are sent alongside the signature.
-This allows the recipient to confirm that the exporter produces the right
-values. This is described in {{fig-output}}:
+The key exporter output is 48 bytes long. Of those, the first 32 bytes are part
+of the input to the signature and the next 16 bytes are sent alongside the
+signature. This allows the recipient to confirm that the exporter produces the
+right values. This is described in {{fig-output}}:
 
 ~~~
-  Nonce (256),
+  Signature Input (256),
   Verification (128),
 ~~~
 {: #fig-output title="Key Exporter Output Format"}
 
 The key exporter context contains the following fields:
 
-Nonce:
+Signature Input:
 
-: The nonce is part of the data signed using the client's chosen asymmetric
-private key (see {{computation}}).
+: This is part of the data signed using the client's chosen asymmetric private
+key (see {{computation}}).
 
 Verification:
 
@@ -258,7 +258,7 @@ Verification:
 
 ## Signature Computation {#computation}
 
-Once the nonce has been extracted from the key exporter output (see
+Once the Signature Input has been extracted from the key exporter output (see
 {{output}}), it is prefixed with static data before being signed to mitigate
 issues caused by key reuse. The signature is computed over the concatenation of:
 
@@ -268,10 +268,10 @@ issues caused by key reuse. The signature is computed over the concatenation of:
 
 * A single 0 byte which serves as a separator
 
-* The nonce extracted from the key exporter output (see {{output}})
+* The Signature Input extracted from the key exporter output (see {{output}})
 
-For example, if the nonce has all its 32 bytes set to 01, the content covered
-by the signature (in hexadecimal format) would be:
+For example, if the Signature Input has all its 32 bytes set to 01, the content
+covered by the signature (in hexadecimal format) would be:
 
 ~~~
 2020202020202020202020202020202020202020202020202020202020202020
@@ -359,11 +359,11 @@ exporters, its output cannot be transparently forwarded by HTTP intermediaries.
 HTTP intermediaries that support this specification have two options:
 
 * The intermediary can validate the authentication received from the client,
-then inform the upstream HTTP server of the presence of valid authentication.
+  then inform the upstream HTTP server of the presence of valid authentication.
 
-* The intermediary can export the nonce and verification (see
-  {{compute-proof}}}), and forward it to the upstream HTTP server, then the
-  upstream server performs the validation.
+* The intermediary can export the Signature Input and Verification (see
+  {{output}}}), and forward it to the upstream HTTP server, then the upstream
+  server performs the validation.
 
 The mechanism for the intermediary to communicate this information to the
 upstream HTTP server is out of scope for this document.
