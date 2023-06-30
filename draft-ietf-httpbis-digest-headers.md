@@ -184,12 +184,12 @@ Integrity fields are tied to the `Content-Encoding`
 and `Content-Type` header fields. Therefore, a given resource may have multiple
 different digest values when transferred with HTTP.
 
-Integrity fields do not provide integrity for
-HTTP messages or fields. However, they can be combined with other mechanisms that
-protect metadata, such as digital signatures, in order to protect
-the phases of an HTTP exchange in whole or in part. For example, HTTP Message
-Signatures {{SIGNATURES}} could be used to sign Integrity fields, thus providing
-coverage for HTTP content or representation data.
+Integrity fields apply to HTTP message content or HTTP representations. They do
+not apply to HTTP messages or fields. However, they can be combined with other
+mechanisms that protect metadata, such as digital signatures, in order to
+protect the phases of an HTTP exchange in whole or in part. For example, HTTP
+Message Signatures {{SIGNATURES}} could be used to sign Integrity fields, thus
+providing coverage for HTTP content or representation data.
 
 This specification does not define means for authentication, authorization, or privacy.
 
