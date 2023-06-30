@@ -493,10 +493,9 @@ should use the following template:
      - "standard" - for standardized algorithms without known problems,
      - "provisional" - for non-standard or unproven algorithms,
      - "insecure" - for insecure algorithms,
-     - "reserved"  - for algorithms that use a reserved token value that cannot be expressed in Structured Fields
  - Description: a short description of the algorithm
- - Reference(s): pointer(s) to the primary document(s) defining the technical
-   details of the algorithm, and optionally the key
+ - Reference(s): pointer(s) to the primary document(s) defining the Algorithm
+   Key and technical details of the algorithm
 
 When reviewing registration requests, the designated expert(s) should pay
 attention to the requested status. The status value should reflect
