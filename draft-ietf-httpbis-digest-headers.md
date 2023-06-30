@@ -468,19 +468,27 @@ in accordance with the policies set out in this section.
 Each algorithm has a status field, which is intended to provide an aid to
 implementation selection.
 
-Algorithms with a status value of "standard" are suitable for many purposes,
-including adversarial situations where hash functions might need to provide
-resistance to collision, first-preimage and second-preimage attacks. For
-adversarial situations, selecting which of the "standard" algorithms are
-acceptable will depend on the level of protection the circumstances demand. As
-there is no negotiation, endpoints that depend on a digest for security will be
-vulnerable to attacks on the weakest algorithm they are willing to accept.
+Algorithms with a status value of "standard" are suitable for many purposes and
+it is RECOMMENDED that applications use these algorithms. These can be used in
+adversarial situations where hash functions might need to provide resistance to
+collision, first-preimage and second-preimage attacks. For adversarial
+situations, selecting which of the "standard" algorithms are acceptable will
+depend on the level of protection the circumstances demand. As there is no
+negotiation, endpoints that depend on a digest for security will be vulnerable
+to attacks on the weakest algorithm they are willing to accept.
 
 Algorithms with a status value of "insecure" either provide none of these
 properties, or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}). These
 algorithms MAY be used to preserve integrity against corruption, but MUST NOT be
 used in a potentially adversarial setting; for example, when signing Integrity
-fields' values for authenticity.
+fields' values for authenticity. Permitting the use of these algorithms can help
+some applications, for example, those that previously used [RFC3230], are
+migrating to this specification ({{migrating}}), and have existing stored
+collections of computed digest values avoid undue operational overhead caused by
+recomputation using other more-secure algorithms. Such applications are not
+exempt from the requirements in this section. Furthermore, applications without
+such legacy or history ought to follow the guidance for using algorithms with
+the status value "standard".
 
 Discussion of algorithm agility is presented in {{sec-agility}}.
 
@@ -1399,7 +1407,7 @@ crc32c -    :Q3lHIA==:
 ~~~
 
 
-# Migrating from RFC 3230
+# Migrating from RFC 3230 {#migrating}
 
 HTTP digests are computed by applying a hashing algorithm to input data.
 RFC 3230 defined the input data as an "instance", a term it also defined.
