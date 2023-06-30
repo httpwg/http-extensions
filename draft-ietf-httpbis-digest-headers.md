@@ -107,7 +107,7 @@ some integrity protection. However, transport-oriented integrity provides a
 limited utility because it is opaque to the application layer and only covers
 the extent of a single connection. HTTP messages often travel over a chain of
 separate connections. In between connections there is a possibility for
-unintended or malicious data corruption. An HTTP integrity mechanism can provide
+data corruption. An HTTP integrity mechanism can provide
 the means for endpoints, or applications using HTTP, to detect data corruption
 and make a choice about how to act on it. An example use case is to aid
 fault detection and diagnosis across system boundaries.
