@@ -639,7 +639,7 @@ Integrity fields validation consumes computational resources.
 In order to avoid resource exhaustion, implementations can restrict
 validation of the algorithm types, number of validations, or the size of content.
 In these cases, skipping validation entirely or ignoring validation failure of a more-preferred algorithm
-leaves the possibility of a downgrade attack (see {{#sec-agility}}).
+leaves the possibility of a downgrade attack (see {{sec-agility}}).
 
 # IANA Considerations
 
