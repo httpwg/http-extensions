@@ -289,7 +289,7 @@ A recipient MAY ignore any or all digests. Application-specific behavior or
 local policy MAY set additional constraints on the processing and validation
 practices of the conveyed digests.
 The security considerations covers some of the issues related to
-ignoring digests (see {{algorithm-agility}})
+ignoring digests (see {{sec-agility}})
 and validating multiple digests (see {{resource-exhaustion}}).
 
 A sender MAY send a digest without
