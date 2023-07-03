@@ -290,7 +290,7 @@ local policy MAY set additional constraints on the processing and validation
 practices of the conveyed digests.
 The security considerations covers some of the issues related to
 ignoring digests (see {{sec-agility}})
-and validating multiple digests (see {{resource-exhaustion}}).
+and validating multiple digests (see {{sec-exhaustion}}).
 
 A sender MAY send a digest without
 knowing whether the recipient supports a given hashing algorithm, or even knowing
@@ -355,7 +355,7 @@ local policy MAY set additional constraints on the processing and validation
 practices of the conveyed digests.
 The security considerations covers some of the issues related to
 ignoring digests (see {{sec-agility}})
-and validating multiple digests (see {{resource-exhaustion}}).
+and validating multiple digests (see {{sec-exhaustion}}).
 
 A sender MAY send a digest without knowing whether the
 recipient supports a given hashing algorithm, or even knowing that the recipient
@@ -633,11 +633,13 @@ attacks (see Section 1 of {{?RFC6211}}) of the hashing algorithm.
 To protect against such attacks, endpoints could restrict their set of supported algorithms
 to stronger ones and protect the fields value by using TLS and/or digital signatures.
 
-## Resource exhaustion
+## Resource exhaustion {#sec-exhaustion}
 
 Integrity fields validation consumes computational resources.
 In order to avoid resource exhaustion, implementations can restrict
 validation of the algorithm types, number of validations, or the size of content.
+In these cases, skipping validation entirely or ignoring validation failure of a more-preferred algorithm
+leaves the possibility of a downgrade attack (see {{#sec-agility}}).
 
 # IANA Considerations
 
