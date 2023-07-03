@@ -471,9 +471,7 @@ it is RECOMMENDED that applications use these algorithms. These can be used in
 adversarial situations where hash functions might need to provide resistance to
 collision, first-preimage and second-preimage attacks. For adversarial
 situations, selecting which of the "standard" algorithms are acceptable will
-depend on the level of protection the circumstances demand. As there is no
-negotiation, endpoints that depend on a digest for security will be vulnerable
-to attacks on the weakest algorithm they are willing to accept.
+depend on the level of protection the circumstances demand.
 
 Algorithms with a status value of "insecure" either provide none of these
 properties, or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}). These
@@ -621,6 +619,8 @@ to choose hashing algorithms from the IANA Hash Algorithms for HTTP Digest Field
 Transition from weak algorithms is supported
 by negotiation of hashing algorithm using `Want-Content-Digest` or `Want-Repr-Digest` (see {{want-fields}})
 or by sending multiple digests from which the receiver chooses.
+A receiver that depends on a digest for security will be vulnerable
+to attacks on the weakest algorithm it is willing to accept.
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{representation-digest}}).
 
