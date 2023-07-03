@@ -352,9 +352,10 @@ Repr-Digest: \
 
 A recipient MAY ignore any or all digests. Application-specific behavior or
 local policy MAY set additional constraints on the processing and validation
-practices of the conveyed digests. For example, validation of a subset of
-received digests is one approach to protection against resource exhaustion; see
-{{resource-exhaustion}}.
+practices of the conveyed digests.
+The security considerations covers some of the issues related to
+ignoring digests (see {{sec-agility}})
+and validating multiple digests (see {{resource-exhaustion}}).
 
 A sender MAY send a digest without knowing whether the
 recipient supports a given hashing algorithm, or even knowing that the recipient
