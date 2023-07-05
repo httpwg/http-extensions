@@ -289,9 +289,10 @@ Content-Digest: \
 
 A recipient MAY ignore any or all digests. Application-specific behavior or
 local policy MAY set additional constraints on the processing and validation
-practices of the conveyed digests. For example, validation of a subset of
-received digests is one approach to protection against resource exhaustion; see
-{{resource-exhaustion}}.
+practices of the conveyed digests.
+The security considerations covers some of the issues related to
+ignoring digests (see {{sec-agility}})
+and validating multiple digests (see {{sec-exhaustion}}).
 
 A sender MAY send a digest without
 knowing whether the recipient supports a given hashing algorithm, or even knowing
@@ -353,9 +354,10 @@ Repr-Digest: \
 
 A recipient MAY ignore any or all digests. Application-specific behavior or
 local policy MAY set additional constraints on the processing and validation
-practices of the conveyed digests. For example, validation of a subset of
-received digests is one approach to protection against resource exhaustion; see
-{{resource-exhaustion}}.
+practices of the conveyed digests.
+The security considerations covers some of the issues related to
+ignoring digests (see {{sec-agility}})
+and validating multiple digests (see {{sec-exhaustion}}).
 
 A sender MAY send a digest without knowing whether the
 recipient supports a given hashing algorithm, or even knowing that the recipient
@@ -468,19 +470,26 @@ in accordance with the policies set out in this section.
 Each algorithm has a status field, which is intended to provide an aid to
 implementation selection.
 
-Algorithms with a status value of "standard" are suitable for many purposes,
-including adversarial situations where hash functions might need to provide
-resistance to collision, first-preimage and second-preimage attacks. For
-adversarial situations, selecting which of the "standard" algorithms are
-acceptable will depend on the level of protection the circumstances demand. As
-there is no negotiation, endpoints that depend on a digest for security will be
-vulnerable to attacks on the weakest algorithm they are willing to accept.
+Algorithms with a status value of "standard" are suitable for many purposes and
+it is RECOMMENDED that applications use these algorithms. These can be used in
+adversarial situations where hash functions might need to provide resistance to
+collision, first-preimage and second-preimage attacks. For adversarial
+situations, selecting which of the "standard" algorithms are acceptable will
+depend on the level of protection the circumstances demand.
+More considerations are presented in {{sec-agility}}.
 
 Algorithms with a status value of "insecure" either provide none of these
 properties, or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}). These
 algorithms MAY be used to preserve integrity against corruption, but MUST NOT be
 used in a potentially adversarial setting; for example, when signing Integrity
-fields' values for authenticity.
+fields' values for authenticity. Permitting the use of these algorithms can help
+some applications, for example, those that previously used [RFC3230], are
+migrating to this specification ({{migrating}}), and have existing stored
+collections of computed digest values avoid undue operational overhead caused by
+recomputation using other more-secure algorithms. Such applications are not
+exempt from the requirements in this section. Furthermore, applications without
+such legacy or history ought to follow the guidance for using algorithms with
+the status value "standard".
 
 Discussion of algorithm agility is presented in {{sec-agility}}.
 
@@ -615,6 +624,8 @@ to choose hashing algorithms from the IANA Hash Algorithms for HTTP Digest Field
 Transition from weak algorithms is supported
 by negotiation of hashing algorithm using `Want-Content-Digest` or `Want-Repr-Digest` (see {{want-fields}})
 or by sending multiple digests from which the receiver chooses.
+A receiver that depends on a digest for security will be vulnerable
+to attacks on the weakest algorithm it is willing to accept.
 Endpoints are advised that sending multiple values consumes resources,
 which may be wasted if the receiver ignores them (see {{representation-digest}}).
 
@@ -625,11 +636,13 @@ attacks (see Section 1 of {{?RFC6211}}) of the hashing algorithm.
 To protect against such attacks, endpoints could restrict their set of supported algorithms
 to stronger ones and protect the fields value by using TLS and/or digital signatures.
 
-## Resource exhaustion
+## Resource exhaustion {#sec-exhaustion}
 
 Integrity fields validation consumes computational resources.
 In order to avoid resource exhaustion, implementations can restrict
 validation of the algorithm types, number of validations, or the size of content.
+In these cases, skipping validation entirely or ignoring validation failure of a more-preferred algorithm
+leaves the possibility of a downgrade attack (see {{sec-agility}}).
 
 # IANA Considerations
 
@@ -1399,7 +1412,7 @@ crc32c -    :Q3lHIA==:
 ~~~
 
 
-# Migrating from RFC 3230
+# Migrating from RFC 3230 {#migrating}
 
 HTTP digests are computed by applying a hashing algorithm to input data.
 RFC 3230 defined the input data as an "instance", a term it also defined.
