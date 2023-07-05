@@ -235,8 +235,10 @@ interpreted as described in {{RFC9110}}.
 This document uses the line folding strategies
 described in [FOLDING].
 
-Hashing algorithm names respect the casing used in their definition document (e.g., SHA-1, CRC32c)
-whereas hashing algorithm keys are quoted (e.g., "sha", "crc32c").
+Hashing algorithm names respect the casing used in their definition document (e.g., SHA-1, CRC32c).
+
+HTTP messages indicate hashing algorithms using an Algorithm Key ({{{algorithms}}}).
+Where the document refers to an Algorithm Key in prose, it is quoted (e.g., "sha", "crc32c").
 
 The term "checksum" describes the output of the application of an algorithm
 to a sequence of bytes,
