@@ -474,6 +474,7 @@ adversarial situations where hash functions might need to provide resistance to
 collision, first-preimage and second-preimage attacks. For adversarial
 situations, selecting which of the "standard" algorithms are acceptable will
 depend on the level of protection the circumstances demand.
+More considerations are presented in {{sec-agility}}.
 
 Algorithms with a status value of "insecure" either provide none of these
 properties, or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}). These
