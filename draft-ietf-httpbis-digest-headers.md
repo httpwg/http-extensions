@@ -470,15 +470,15 @@ in accordance with the policies set out in this section.
 Each algorithm has a status field, which is intended to provide an aid to
 implementation selection.
 
-Algorithms with a status value of "standard" are suitable for many purposes and
+Algorithms with a status value of "Active" are suitable for many purposes and
 it is RECOMMENDED that applications use these algorithms. These can be used in
 adversarial situations where hash functions might need to provide resistance to
 collision, first-preimage and second-preimage attacks. For adversarial
-situations, selecting which of the "standard" algorithms are acceptable will
+situations, selecting which of the "Active" algorithms are acceptable will
 depend on the level of protection the circumstances demand.
 More considerations are presented in {{sec-agility}}.
 
-Algorithms with a status value of "insecure" either provide none of these
+Algorithms with a status value of "Deprecated" either provide none of these
 properties, or are known to be weak (see {{NO-MD5}} and {{NO-SHA}}). These
 algorithms MAY be used to preserve integrity against corruption, but MUST NOT be
 used in a potentially adversarial setting; for example, when signing Integrity
@@ -489,7 +489,7 @@ collections of computed digest values avoid undue operational overhead caused by
 recomputation using other more-secure algorithms. Such applications are not
 exempt from the requirements in this section. Furthermore, applications without
 such legacy or history ought to follow the guidance for using algorithms with
-the status value "standard".
+the status value "Active".
 
 Discussion of algorithm agility is presented in {{sec-agility}}.
 
@@ -501,9 +501,9 @@ should use the following template:
    `Content-Digest`, `Repr-Digest`, `Want-Content-Digest`, or `Want-Repr-Digest`
     field Dictionary member keys
  - Status: the status of the algorithm. The options are:
-     - "standard" - for standardized algorithms without known problems,
-     - "provisional" - for non-standard or unproven algorithms,
-     - "insecure" - for insecure algorithms,
+     - "Active" - for algorithms without known problems,
+     - "Provisional" - for unproven algorithms,
+     - "Deprecated" - for deprecated or insecure algorithms,
  - Description: a short description of the algorithm
  - Reference(s): pointer(s) to the primary document(s) defining the Algorithm
    Key and technical details of the algorithm
@@ -511,17 +511,17 @@ should use the following template:
 When reviewing registration requests, the designated expert(s) should pay
 attention to the requested status. The status value should reflect
 standardization status and the broad opinion of relevant interest groups such as
-the IETF or security-related SDOs. The "standard" status is not suitable for an
+the IETF or security-related SDOs. The "Active" status is not suitable for an
 algorithm that is known to be weak, broken, or experimental. If a registration
-request attempts to register such an algorithm as "standard", the designated
-expert(s) should suggest an alternative status of "insecure" or "provisional".
+request attempts to register such an algorithm as "Active", the designated
+expert(s) should suggest an alternative status of "Deprecated" or "Provisional".
 
 When reviewing registration requests, the designated expert(s) cannot use a
-status of "insecure" or "provisional" as grounds for rejection.
+status of "Deprecated" or "Provisional" as grounds for rejection.
 
 Requests to update or change the fields in an existing registration are
 permitted. For example, this could allow for the transition of an algorithm
-status from "standard" to "insecure" as the security environment evolves.
+status from "Active" to "Deprecated" as the security environment evolves.
 
 
 # Security Considerations {#security}
@@ -674,14 +674,14 @@ new registrations is provided in {{algorithms}}.
 | -------------- | -------- | ----------------------------------- | -------------- |
 | Algorithm Key  | Status   | Description                         | Reference(s)   |
 | -------------- | -------- | ----------------------------------- | --------- |
-| sha-512        | standard | The SHA-512 algorithm.              | [RFC6234], [RFC4648], this document. |
-| sha-256        | standard | The SHA-256 algorithm.              | [RFC6234], [RFC4648], this document. |
-| md5            | insecure | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and [CMU-836068] | [RFC1321], [RFC4648], this document. |
-| sha            | insecure | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [IACR-2020-014] | [RFC3174], [RFC4648], [RFC6234] this document. |
-| unixsum        | insecure | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
-| unixcksum      | insecure | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
-| adler          | insecure | The ADLER32 algorithm.                          | [RFC1950], this document. |
-| crc32c         | insecure | The CRC32c algorithm.                           | {{?RFC9260}} appendix A, this document. |
+| sha-512        | Active | The SHA-512 algorithm.              | [RFC6234], [RFC4648], this document. |
+| sha-256        | Active | The SHA-256 algorithm.              | [RFC6234], [RFC4648], this document. |
+| md5            | Deprecated | The MD5 algorithm. It is vulnerable to collision attacks; see {{NO-MD5}} and [CMU-836068] | [RFC1321], [RFC4648], this document. |
+| sha            | Deprecated | The SHA-1 algorithm. It is vulnerable to collision attacks; see {{NO-SHA}} and [IACR-2020-014] | [RFC3174], [RFC4648], [RFC6234] this document. |
+| unixsum        | Deprecated | The algorithm used by the UNIX "sum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
+| unixcksum      | Deprecated | The algorithm used by the UNIX "cksum" command. | [RFC4648], [RFC6234], [UNIX], this document. |
+| adler          | Deprecated | The ADLER32 algorithm.                          | [RFC1950], this document. |
+| crc32c         | Deprecated | The CRC32c algorithm.                           | {{?RFC9260}} appendix A, this document. |
 | -------------- | -------- | ----------------------------------- | -------------- |
 {: #iana-hash-algorithm-table title="Initial Hash Algorithms"}
 
