@@ -1516,6 +1516,15 @@ print("Brotli | sha512 |", digest(bytes_, algorithm=hashlib.sha512,
 # Changes
 {:numbered="false" removeinrfc="true"}
 
+## Since draft-ietf-httpbis-digest-headers-12
+{:numbered="false"}
+
+* Be clearer that applications can enforce additional requirements wrt digest
+* Change algorithm status names: s/standard/active, s/insecure/deprecated
+* Remove "reserved" algorithm status
+* Provide clear guidance about the use of standard or deprecated algorithms
+* Editorial or minor changes
+
 ## Since draft-ietf-httpbis-digest-headers-11
 {:numbered="false"}
 
