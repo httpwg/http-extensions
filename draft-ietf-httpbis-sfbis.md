@@ -689,16 +689,17 @@ Given a Date as input_date, return an ASCII string suitable for use in an HTTP f
 
 Given a string of Unicode characters as input_string, return an ASCII string suitable for use in an HTTP field value.
 
-0. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_string. If there is an error in doing so, fail parsing.
-1. Let encoded_string be an empty string.
-2. For each byte in byte_array:
+0. If input_string is not a string of Unicode characters, fail parsing.
+1. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_string.
+2. Let encoded_string be an empty string.
+3. For each byte in byte_array:
    1. If byte is %x25 ("%"), append "%25" to encoded_string.
    2. If byte is in the ranges %x00-1f or %x7f-ff, apply the percent-encoding defined in {{Section 2.1 of URI}} to byte and append the result to encoded_string.
    3. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
-3. Let output be a string containing %x25 ("%") followed by DQUOTE.
-4. Append encoded_string to output.
-5. Append DQUOTE to output.
-6. Return output.
+4. Let output be a string containing %x25 ("%") followed by DQUOTE.
+5. Append encoded_string to output.
+6. Append DQUOTE to output.
+7. Return output.
 
 
 ## Parsing Structured Fields {#text-parse}
