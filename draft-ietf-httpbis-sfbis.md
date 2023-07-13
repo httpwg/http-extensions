@@ -694,6 +694,7 @@ Given a string of Unicode characters as input_string, return an ASCII string sui
 2. Let encoded_string be an empty string.
 3. For each byte in byte_array:
    1. If byte is %x25 ("%"), append "%25" to encoded_string.
+   2. If byte is %x22 (DQUOTE), append "%22" to encoded_string.
    2. If byte is in the ranges %x00-1f or %x7f-ff, apply the percent-encoding defined in {{Section 2.1 of URI}} to byte and append the result to encoded_string.
    3. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
 4. Let output be a string containing "%" followed by DQUOTE.
