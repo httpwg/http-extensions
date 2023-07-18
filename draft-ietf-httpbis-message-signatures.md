@@ -985,9 +985,9 @@ NOTE: '\' line wrapping per RFC 8792
 POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
-Content-Type: application/json
 Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
   aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
+Content-Type: application/json
 Content-Length: 18
 
 {"hello": "world"}
@@ -1019,7 +1019,7 @@ NOTE: '\' line wrapping per RFC 8792
 "content-digest": sha-512=:0Y6iCBzGg5rZtoXS95Ijz03mslf6KAMCloESHObf\
   wnHJDbkkWWQz6PhhU9kxsTbARtY2PTBOzq24uJFpHsMuAg==:
 "content-type": application/json
-"@authority";req: origin.host.internal.example
+"@authority";req: example.com
 "@method";req: POST
 "@path";req: /foo
 "content-digest";req: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A\
@@ -1043,8 +1043,8 @@ Content-Digest: sha-512=:0Y6iCBzGg5rZtoXS95Ijz03mslf6KAMCloESHObfwn\
 Signature-Input: reqres=("@status" "content-digest" "content-type" \
   "@authority";req "@method";req "@path";req "content-digest";req)\
   ;created=1618884479;keyid="test-key-ecc-p256"
-Signature: reqres=:9MG6AOgykOZTc/h2rnDc/g8L+/aXgdkV4hNDvpCxfbVrmLev\
-  WPfyvEC/8jBh+3XnVwBqqcJyhUXoFgWv1SMI7A==:
+Signature: reqres=:dMT/A/76ehrdBTD/2Xx8QuKV6FoyzEP/I9hdzKN8LQJLNgzU\
+  4W767HK05rx1i8meNQQgQPgQp8wq2ive3tV5Ag==:
 
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
@@ -1061,19 +1061,19 @@ NOTE: '\' line wrapping per RFC 8792
 POST /foo?param=Value&Pet=dog HTTP/1.1
 Host: example.com
 Date: Tue, 20 Apr 2021 02:07:55 GMT
-Content-Type: application/json
 Content-Digest: sha-512=:WZDPaVn/7XgHaAy8pmojAkGWoRx2UFChF41A2svX+T\
   aPm+AbwAgBWnrIiYllu7BNNyealdVLvRwEmTHWXvJwew==:
+Content-Type: application/json
 Content-Length: 18
 Signature-Input: sig1=("@method" "@authority" "@path" "@query" \
   "content-digest" "content-type" "content-length")\
   ;created=1618884475;keyid="test-key-rsa-pss"
-Signature: sig1=:mZuBiiKDzg+s8eJiMYc0GwSkyurjSbPX7xSKpYe7EcfolW3DUF\
-  RjlpneJoDkt5zNZo3N5tjn1e0sZZlBbrhHPhD9aQtE/qJPHrjwLUOY9eYtUWw261F\
-  Xxpp2Dsqa9jeE1r0or4TGalZnEiNl5cNFv7ze8ox5G6TNNyam/3GeB2N8t8P56XOG\
-  03g50CsN/4QZGWs4AjJcD5gMzcQhq/9JoKDUJDbcEyIetxEYvQCjWKbSb4yBevGmY\
-  PWJ2ezfIFiwmUuvrs/Ab9tYzIjEw1hHP70RF67HSazjT+YsI2y5jpzjx8SerihGSN\
-  Qwr57yQaTt4vK1eRDL2758LnsEYtO8lg==:
+Signature: sig1=:e8UJ5wMiRaonlth5ERtE8GIiEH7Akcr493nQ07VPNo6y3qvjdK\
+  t0fo8VHO8xXDjmtYoatGYBGJVlMfIp06eVMEyNW2I4vN7XDAz7m5v1108vGzaDljr\
+  d0H8+SJ28g7bzn6h2xeL/8q+qUwahWA/JmC8aOC9iVnwbOKCc0WSrLgWQwTY6VLp4\
+  2Qt7jjhYT5W7/wCvfK9A1VmHH1lJXsV873Z6hpxesd50PSmO+xaNeYvDLvVdZlhtw\
+  5PCtUYzKjHqwmaQ6DEuM8udRjYsoNqp2xZKcuCO1nKc0V3RjpqMZLuuyVbHDAbCzr\
+  0pg2d2VM/OC33JAU7meEjjaNz+d7LWPg==:
 
 {"hello": "world"}
 ~~~
@@ -1087,7 +1087,7 @@ NOTE: '\' line wrapping per RFC 8792
 "content-digest": sha-512=:0Y6iCBzGg5rZtoXS95Ijz03mslf6KAMCloESHObf\
   wnHJDbkkWWQz6PhhU9kxsTbARtY2PTBOzq24uJFpHsMuAg==:
 "content-type": application/json
-"@authority";req: origin.host.internal.example
+"@authority";req: example.com
 "@method";req: POST
 "@path";req: /foo
 "@query";req: ?param=Value&Pet=dog
@@ -1116,8 +1116,8 @@ Signature-Input: reqres=("@status" "content-digest" "content-type" \
   "@authority";req "@method";req "@path";req "@query";req \
   "content-digest";req "content-type";req "content-length";req)\
   ;created=1618884479;keyid="test-key-ecc-p256"
-Signature: reqres=:zU7zd1MN56WapeNxfVNleCx5rFxBhBcZngnX4d+MurOk3tNu\
-  3rFfTFnwhglZH8qNBoygvhVMfQq9wIvLqyVNog==:
+Signature: reqres=:C73J41GVKc+TYXbSobvZf0CmNcptRiWN+NY1Or0A36ISg6ym\
+  dRN6ZgR2QfrtopFNzqAyv+CeWrMsNbcV2Ojsgg==:
 
 {"busy": true, "message": "Your call is very important to us"}
 ~~~
