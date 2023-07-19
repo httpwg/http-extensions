@@ -3,7 +3,7 @@ title: The ORIGIN Extension in HTTP/3
 abbrev: ORIGIN in HTTP/3
 number: 9412
 docname: draft-ietf-httpbis-origin-h3-latest
-date: {DATE}
+date: 2023-06
 category: std
 
 ipr: trust200902
@@ -22,10 +22,10 @@ author:
     email: mbishop@evequefou.be
 
 normative:
-  HTTP2:
-    RFC9113
-  HTTP3:
-    RFC9114
+  RFC9113:
+    display: HTTP/2
+  RFC9114:
+    display: HTTP/3
 
 informative:
   QUIC-TRANSPORT:
@@ -42,8 +42,8 @@ frame for HTTP/3.
 
 # Introduction {#problems}
 
-Existing RFCs define extensions to HTTP/2 {{HTTP2}} that remain useful in
-HTTP/3. {{Section A.2.3 of HTTP3}} describes the required updates for HTTP/2
+Existing RFCs define extensions to HTTP/2 {{RFC9113}} that remain useful in
+HTTP/3. {{Section A.2 of RFC9114}} describes the required updates for HTTP/2
 frames to be used with HTTP/3.
 
 {{!ORIGIN=RFC8336}} defines the HTTP/2 ORIGIN frame, which indicates what
@@ -70,7 +70,7 @@ state of the connection, HTTP/3 defines a pair of unidirectional streams called
 "control streams" for this purpose.
 
 Where {{ORIGIN}} indicates that the ORIGIN frame is sent on stream 0, this
-should be interpreted to mean the appropriate HTTP/3 control stream: that is,
+should be interpreted to mean the HTTP/3 control stream: that is,
 the ORIGIN frame is sent from servers to clients on the server's control stream.
 
 HTTP/3 does not define a Flags field in the generic frame layout. As no flags
@@ -79,7 +79,7 @@ mechanism for communicating such flags in HTTP/3.
 
 ## Frame Layout
 
-The ORIGIN frame has a frame layout that is nearly identical layout to the
+The ORIGIN frame has a layout that is nearly identical to the
 layout used in HTTP/2; the information is restated here for clarity.  The ORIGIN
 frame type is 0x0c (decimal 12), as in HTTP/2. The payload contains zero or more
 instances of the Origin-Entry field.
@@ -113,13 +113,13 @@ ASCII-Origin:
 # Security Considerations {#security}
 
 This document introduces no new security considerations beyond those discussed
-in {{!ORIGIN}} and {{HTTP3}}.
+in {{!ORIGIN}} and {{RFC9114}}.
 
 # IANA Considerations {#iana}
 
 This document registers a frame type in the "HTTP/3 Frame Types" registry
-defined by {{HTTP3}}, located at
-\<https://www.iana.org/assignments/http2-parameters/http2-parameters.xhtml#frame-type>.
+defined by {{RFC9114}}, located at
+\<https://www.iana.org/assignments/http3-parameters/>.
 
 Value:
 : 0x0c
