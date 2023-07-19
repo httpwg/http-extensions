@@ -978,7 +978,7 @@ Given an ASCII string as input_string, return a string of Unicode characters. in
    2. If char is in the range %x00-1f or %x7f-ff (i.e., it is not in VCHAR or SP), fail parsing.
    3. If char is "%":
       1. Let octet_hex be the two bytes after char in input_string. If there are not two bytes, fail parsing.
-      2. Let octet be the result of decoding octet_hex as hexidecimal, in a case-insensitive fashion. If decoding fails, fail parsing.
+      2. Let octet be the result of decoding octet_hex as hexadecimal, in a case-insensitive fashion. If decoding fails, fail parsing.
       3. Append octet to byte_array.
    2. If char is DQUOTE:
       1. Let unicode_string be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
