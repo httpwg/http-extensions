@@ -10,8 +10,8 @@ entity:
   SELF: "RFC 9440"
 
 ipr: trust200902
-area: Applications and Real-Time
-workgroup: HTTP
+area: art
+workgroup: httpbis
 keyword:
 - http
 - client certificate
@@ -155,7 +155,7 @@ fields described herein.
 # HTTP Header Fields and Processing Rules {#headers}
 
 This document designates the following headers, defined further in Sections {{<header}}
-and {{<chain-header}} respectively, to carry the client certificate information of a
+and {{<chain-header}}, respectively, to carry the client certificate information of a
 mutually authenticated TLS connection. The headers convey the information
 from the reverse proxy to the origin server.
 
@@ -171,7 +171,7 @@ certificate provided by the client in the TLS handshake with the reverse proxy.
 
 The headers in this document encode certificates as Byte
 Sequences ({{Section 3.3.5 of RFC8941}}) where the value of the binary data
-is a DER-encoded {{!ITU.X690}} X.509 certificate {{!RFC5280}}.
+is a DER-encoded {{!ITU.X690.1994}} X.509 certificate {{!RFC5280}}.
 In effect, this means that the binary DER certificate is encoded using base64
 (without line breaks, spaces, or other characters outside the base64 alphabet)
 and delimited with colons on either side.
@@ -207,8 +207,8 @@ available to the backend application with the Client-Cert-Chain HTTP header
 field.
 
 Client-Cert-Chain is a List ({{Section 3.1 of RFC8941}}).  Each item in the
-list MUST be a Byte Sequence encoded as described in {{encoding}}. The order
-is the same as the ordering in TLS (such as described in {{Section 4.4.2 of TLS}}).
+List MUST be a Byte Sequence encoded as described in {{encoding}}. The order
+is the same as the ordering in TLS (as described in {{Section 4.4.2 of TLS}}).
 
 Client-Cert-Chain MUST NOT appear unless Client-Cert is also present, and it does
 not itself include the end-entity certificate that is already present in Client-Cert.
@@ -266,7 +266,7 @@ When the value of the Client-Cert request header field is used to select a
 response (e.g., the response content is access-controlled), the response MUST
 either be uncacheable (e.g., by sending "Cache-Control: no-store") or be
 designated for selective reuse only for subsequent requests with the same
-Client-Cert header value by sending a "Vary: Client-Cert" response header. If a
+Client-Cert header field value by sending a "Vary: Client-Cert" response header. If a
 TTRP encounters a response with Client-Cert or Client-Cert-Chain in the Vary
 header field ({{Section 12.5.5 of RFC9110}}), it SHOULD prevent the user agent from
 caching the response by transforming the value of the Vary response header field
@@ -322,7 +322,7 @@ to prevent unintended use, both in sending the header field and in relying on it
 
 Producing and consuming the Client-Cert and Client-Cert-Chain header
 fields SHOULD be configurable
-options, respectively, in a TTRP and backend server (or individual application in
+options, respectively, in a TTRP and backend server (or in an individual application in
 that server). The default configuration for both should be to not use the
 header fields, thus requiring an "opt-in" to the functionality.
 
@@ -360,12 +360,12 @@ Other deployments that meet the requirements set forth herein are also possible.
 ## HTTP Field Name Registrations
 
 IANA has registered the following entries in the "Hypertext Transfer Protocol (HTTP) Field
-Name Registry" defined by HTTP Semantics {{RFC9110}}:
+Name Registry" defined by "HTTP Semantics" {{RFC9110}}:
 
 | Field Name         | Status    | Reference                   |
 | ------------------ | --------- | --------------------------- |
-| Client-Cert        | permanent | {{&SELF}}, {{header}}       |
-| Client-Cert-Chain  | permanent | {{&SELF}}, {{chain-header}} |
+| Client-Cert        | permanent | {{&SELF}}, {{headers}}       |
+| Client-Cert-Chain  | permanent | {{&SELF}}, {{headers}} |
 {: title="Hypertext Transfer Protocol (HTTP) Field Name Registry"}
 
 --- back
@@ -488,18 +488,18 @@ properly implemented and is a normative requirement of {{sec}}.
 
 ## The Forwarded HTTP Extension
 
-The `Forwarded` HTTP header field defined in {{?RFC7239}} allows proxy
+The Forwarded HTTP header field defined in {{?RFC7239}} allows proxy
 components to disclose information lost in the proxying process. The TLS client
 certificate information of concern to this document could have been communicated
-with an extension parameter to the `Forwarded` field; however, doing so
+with an extension parameter to the Forwarded field; however, doing so
 would have had some disadvantages that this document endeavored to avoid. The
-`Forwarded` field syntax allows for information about a full chain of proxied
+Forwarded field syntax allows for information about a full chain of proxied
 HTTP requests, whereas the Client-Cert and Client-Cert-Chain
 header fields of this document are concerned
 only with conveying information about the certificate presented by the
 originating client on the TLS connection to the TTRP (which appears as the
 server from that client's perspective) to backend applications.  The multi-hop
-syntax of the `Forwarded` field is expressive but also more complicated, which
+syntax of the Forwarded field is expressive but also more complicated, which
 would make processing it more cumbersome and, more importantly, would make properly
 sanitizing its content, as required by {{sec}} to prevent field injection,
 considerably more difficult and error-prone. Thus, this document opted for a
@@ -527,7 +527,9 @@ origin server deployments that require this additional information.
 # Acknowledgements
 {:numbered="false"}
 
-The authors would like to thank the following individuals who've contributed in various ways ranging from just being generally supportive of bringing forth the document to providing specific feedback or content:
+The authors would like to thank the following individuals who have contributed
+to this document in various ways, ranging from just being generally supportive
+of bringing forth the document to providing specific feedback or content:
 
 - Evan Anderson
 - Annabelle Backman
