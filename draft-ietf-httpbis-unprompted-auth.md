@@ -322,9 +322,9 @@ SignatureScheme" registry maintained at
 
 The REQUIRED "v" (verification) parameter is a byte sequence that specifies the
 verification that the user agent provides to attest to possessing the key
-exporter output. This avoids issues with signature schemes where certain keys
-can generate signatures that are valid for multiple inputs (see
-{{SEEMS-LEGIT}}).
+exporter output (see {{output}} for details). This avoids issues with signature
+schemes where certain keys can generate signatures that are valid for multiple
+inputs (see {{SEEMS-LEGIT}}).
 
 # Example {#example}
 
