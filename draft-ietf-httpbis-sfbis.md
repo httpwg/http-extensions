@@ -972,7 +972,7 @@ Given an ASCII string as input_string, return a string of Unicode characters. in
 3. Let byte_array be the result of applying ASCII encoding to input_string.
 4. For each sigil_byte in byte_array which is %25 ("%"):
    1. Let octet_hex be the two bytes after sigil_byte in byte_string. If there are not two bytes, fail parsing.
-   2. Let octet be the result of decoding octet_hex as hexidecimal, in a case-insensitive fashion.
+   2. Let octet be the result of decoding octet_hex as hexadecimal, in a case-insensitive fashion.
    3. Replace sigil_byte and octet_hex in byte_array with octet.
 5. Let unicode_string be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
 6. Return unicode_string.
