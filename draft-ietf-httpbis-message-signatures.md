@@ -1770,9 +1770,9 @@ This document defines HTTP Signature Algorithms, for which IANA is asked to crea
 
 The algorithms listed in this registry identify some possible cryptographic algorithms for applications to use with this specification, but the entries neither represent an exhaustive list of possible algorithms nor indicate fitness for purpose with any particular application of this specification. An application is free to implement any algorithm that suits its needs, provided the signer and verifier can agree to the parameters of that algorithm in a secure and deterministic fashion. When an application has a need to signal the use of a particular algorithm at runtime using the `alg` signature parameter, this registry provides a mapping between the value of that parameter to a particular algorithm. However, use of the `alg` parameter needs to be treated with caution to avoid various forms of algorithm confusion and substitution attacks, such as discussed in {{security-keydowngrade}} and others.
 
-When an algorithm is first registered, the status is set to "Active". If at a future time the algorithm as registered is found to have flaws, the registry entry can be updated and the algorithm can be marked as Deprecated to indicate that the algorithm has been found to have problems. This status does not preclude an application from using a particular algorithm, but serves to provide warning of possible known issues with an algorithm that need to be considered by the application.
+When an algorithm is first registered, the recommended field is set to "Yes" if there is consensus for the algorithm to be generally recommended as secure or "No" if the algorithm has not reached that consensus. A recommended status of "No" does not mean that the algorithm is known to be insecure, but instead that the algorithm has not reached IETF consensus for its recommendation. If at a future time the algorithm as registered is found to have flaws, the registry entry can be updated and the algorithm can be marked as "Deprecated" to indicate that the algorithm has been found to have problems. This status does not preclude an application from using a particular algorithm, but serves to provide warning of possible known issues with an algorithm that need to be considered by the application.
 
-The Designated Expert (DE) is expected to ensure that the algorithms referenced by a registered algorithm identifier are fully defined with all parameters (such as salt, hash, required key length, etc) fixed by the defining text. The DE is expected to ensure that the algorithm definition fully specifies the `HTTP_SIGN` and `HTTP_VERIFY` primitive functions, including how all defined inputs and outputs map to the underlying cryptographic algorithm. The DE is expected to reject any registrations that are aliases of existing registrations. The DE is expected to ensure all registrations follow the template presented in {{iana-hsa-template}}, including that the length of the name is not excessive while still being unique and recognizable. When setting a registered item's status to "Deprecated", the DE should ensure that a reason for the deprecation is documented, along with instructions for moving away from the deprecated functionality.
+The Designated Expert (DE) is expected to ensure that the algorithms referenced by a registered algorithm identifier are fully defined with all parameters (such as salt, hash, required key length, etc) fixed by the defining text. The DE is expected to ensure that the algorithm definition fully specifies the `HTTP_SIGN` and `HTTP_VERIFY` primitive functions, including how all defined inputs and outputs map to the underlying cryptographic algorithm. The DE is expected to reject any registrations that are aliases of existing registrations. The DE is expected to ensure all registrations follow the template presented in {{iana-hsa-template}}, including that the length of the name is not excessive while still being unique and recognizable. The DE is expected to determine whether an algorithm has reached IETF consensus for use when setting the recommended field to "Yes", and to set the recommended field to "No" otherwise. When setting a registered item's recommended status to "Deprecated", the DE should ensure that a reason for the deprecation is documented, along with instructions for moving away from the deprecated functionality.
 
 This specification creates algorithm identifiers by including major parameters in the identifier string in order to make the algorithm name unique and recognizable by developers. However, algorithm identifiers in this registry are to be interpreted as whole string values and not as a combination of parts. That is to say, it is expected that implementors understand `rsa-pss-sha512` as referring to one specific algorithm with its hash, mask, and salt values set as defined in the defining text that establishes this identifier. Implementors do not parse out the `rsa`, `pss`, and `sha512` portions of the identifier to determine parameters of the signing algorithm from the string, and the registry of one combination of parameters does not imply the registration of other combinations.
 
@@ -1786,8 +1786,9 @@ Algorithm Name:
 Description:
 : A brief description of the algorithm used to sign the signature base.
 
-Status:
-: A brief text description of the status of the algorithm. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status. A value of "Active" indicates that an algorithm has been fully specified and registered, but does not indicate that an algorithm is suitable for all use cases or applications. A value of "Deprecated" indicates that the signature algorithm is no longer recommended for general use and might be insecure or unsafe in some known circumstances.
+Recommended.:
+: Does the IETF have a consensus recommendation to use the algorithm?  The value MUST begin with one of "Yes", "No", or
+      "Deprecated", and MAY provide further context or explanation as to the reason for the status. A value of "Yes" indicates that an algorithm has been fully specified and that the IETF has reached consensus for the security of the algorithm, but does not indicate that an algorithm is suitable for all use cases or applications. A value of "No" indicates that an algorithm has been fully specified but that the IETF has not reached consensus for the security of the algorithm. A value of "Deprecated" indicates that the signature algorithm is no longer recommended for general use and might be insecure or unsafe in some known circumstances.
 
 Specification document(s):
 : Reference to the document(s) that specify the
@@ -1797,13 +1798,13 @@ Specification document(s):
 
 ### Initial Contents {#iana-hsa-contents}
 
-|Algorithm Name|Description|Status|Specification document(s)
-|`rsa-pss-sha512`|RSASSA-PSS using SHA-512|Active|{{method-rsa-pss-sha512}} of {{&SELF}}|
-|`rsa-v1_5-sha256`|RSASSA-PKCS1-v1_5 using SHA-256|Active|{{method-rsa-v1_5-sha256}} of {{&SELF}}|
-|`hmac-sha256`|HMAC using SHA-256|Active|{{method-hmac-sha256}} of {{&SELF}}|
-|`ecdsa-p256-sha256`|ECDSA using curve P-256 DSS and SHA-256|Active|{{method-ecdsa-p256-sha256}} of {{&SELF}}|
-|`ecdsa-p384-sha384`|ECDSA using curve P-384 DSS and SHA-384|Active|{{method-ecdsa-p384-sha384}} of {{&SELF}}|
-|`ed25519`|Edwards Curve DSA using curve edwards25519|Active|{{method-ed25519}} of {{&SELF}}|
+|Algorithm Name|Description|Recommended|Specification document(s)
+|`rsa-pss-sha512`|RSASSA-PSS using SHA-512|Yes|{{method-rsa-pss-sha512}} of {{&SELF}}|
+|`rsa-v1_5-sha256`|RSASSA-PKCS1-v1_5 using SHA-256|Yes|{{method-rsa-v1_5-sha256}} of {{&SELF}}|
+|`hmac-sha256`|HMAC using SHA-256|Yes|{{method-hmac-sha256}} of {{&SELF}}|
+|`ecdsa-p256-sha256`|ECDSA using curve P-256 DSS and SHA-256|Yes|{{method-ecdsa-p256-sha256}} of {{&SELF}}|
+|`ecdsa-p384-sha384`|ECDSA using curve P-384 DSS and SHA-384|Yes|{{method-ecdsa-p384-sha384}} of {{&SELF}}|
+|`ed25519`|Edwards Curve DSA using curve edwards25519|Yes|{{method-ed25519}} of {{&SELF}}|
 {: title="Initial contents of the HTTP Signature Algorithms Registry." }
 
 ## HTTP Signature Metadata Parameters Registry {#param-registry}
