@@ -92,7 +92,7 @@ informative:
     RFC7807:
     RFC8792:
     BCP195:
-    CLIENT-CERT: I-D.ietf-httpbis-client-cert-field
+    CLIENT-CERT: RFC9440
     DIGEST: I-D.ietf-httpbis-digest-headers
     COOKIE: RFC6265
     I-D.cavage-http-signatures:
