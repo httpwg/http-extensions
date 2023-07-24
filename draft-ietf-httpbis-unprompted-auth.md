@@ -181,6 +181,8 @@ The TLS key exporter context is described in {{fig-context}}:
   Signature Algorithm (16),
   Key ID Length (i),
   Key ID (..),
+  Public Key Length (i),
+  Public Key (..),
   Scheme Length (i),
   Scheme (..),
   Host Length (i),
@@ -200,6 +202,11 @@ Signature Algorithm:
 Key ID:
 
 : The key ID sent in the `k` Parameter (see {{parameter-k}}).
+
+Public Key:
+
+: The public key used by the server to validate the signature provided by the
+client.
 
 Scheme:
 
@@ -225,11 +232,11 @@ use a specific realm, it SHALL use an empty realm and SHALL NOT send the realm
 authentication parameter.
 
 The Signature Algorithm and Port fields are encoded as unsigned 16-bit integers
-in network byte order. The Key ID, Scheme, Host, and Real fields are length
-prefixed strings; they are preceded by a Length field that represents their
-length in bytes. These length fields are encoded using the variable-length
-integer encoding from {{Section 16 of QUIC}} and MUST be encoded in the minimum
-number of bytes necessary.
+in network byte order. The Key ID, Public Key, Scheme, Host, and Real fields
+are length prefixed strings; they are preceded by a Length field that
+represents their length in bytes. These length fields are encoded using the
+variable-length integer encoding from {{Section 16 of QUIC}} and MUST be
+encoded in the minimum number of bytes necessary.
 
 ## Key Exporter Output {#output}
 
@@ -304,6 +311,12 @@ The REQUIRED "k" (key ID) parameter is a byte sequence that identifies which key
 the user agent wishes to use to authenticate. This can for example be used to
 point to an entry into a server-side database of known keys.
 
+## The a Parameter {#parameter-a}
+
+The REQUIRED "a" (public key) parameter is a byte sequence that contains the
+public key used by the server to validate the signature provided by the
+client. This avoids key confusion issues (see {{SEEMS-LEGIT}}).
+
 ## The p Parameter {#parameter-p}
 
 The REQUIRED "p" (proof) parameter is a byte sequence that specifies the proof
@@ -336,6 +349,7 @@ NOTE: '\' line wrapping per RFC 8792
 
 Authorization: Signature \
   k=":YmFzZW1lbnQ=:", \
+  a=":VGhpcyBpcyBhIHB1YmxpYyBrZXkgaW4gdXNlIGhlcmU=", \
   s=2055, \
   v=":dmVyaWZpY2F0aW9uXzE2Qg==:", \
   p=":SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo \
@@ -358,6 +372,8 @@ can be caused for example by:
 * failure to parse that field
 
 * use of the Signature authentication scheme with an unknown key ID
+
+* mismatch between key ID and provided public key
 
 * failure to validate the verification parameter
 
