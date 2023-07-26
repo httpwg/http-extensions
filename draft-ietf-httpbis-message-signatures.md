@@ -1789,11 +1789,11 @@ Description:
 Status:
 : The status of the algorithm. The options are:
     - "Active": for algorithms without known problems.
-    - "Provisional": for unproven algorithms. The signature algorithm is fully specified but its security properties are 
+    - "Provisional": for unproven algorithms. The signature algorithm is fully specified but its security properties are
     - "Deprecated": for algorithms with know security issues. The signature algorithm is no longer recommended for general use and might be insecure or unsafe in some known circumstances.
 
 Does the IETF have a consensus recommendation to use the algorithm?  The value MUST begin with one of "Yes", "No", or
-      "Deprecated", and MAY provide further context or explanation as to the reason for the status. A value of "Yes" indicates that an algorithm has been fully specified and that the IETF has reached consensus for the security of the algorithm, but does not indicate that an algorithm is suitable for all use cases or applications. A value of "No" indicates that an algorithm has been fully specified but that the IETF has not reached consensus for the security of the algorithm. A value of "Deprecated" indicates that 
+      "Deprecated", and MAY provide further context or explanation as to the reason for the status. A value of "Yes" indicates that an algorithm has been fully specified and that the IETF has reached consensus for the security of the algorithm, but does not indicate that an algorithm is suitable for all use cases or applications. A value of "No" indicates that an algorithm has been fully specified but that the IETF has not reached consensus for the security of the algorithm. A value of "Deprecated" indicates that
 
 Specification document(s):
 : Reference to the document(s) that specify the
