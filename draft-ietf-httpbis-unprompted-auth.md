@@ -47,6 +47,14 @@ author:
 
 normative:
   FOLDING: RFC8792
+  X.690:
+    title: "Information technology - ASN.1 encoding Rules: Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)"
+    date: 2021-02
+    author:
+      org: ITU-T
+    seriesinfo:
+      ISO/IEC 8824-1:2021
+
 informative:
   H2:
     =: RFC9113
@@ -206,7 +214,7 @@ Key ID:
 Public Key:
 
 : The public key used by the server to validate the signature provided by the
-client.
+client (the encoding is described below).
 
 Scheme:
 
@@ -237,6 +245,27 @@ are length prefixed strings; they are preceded by a Length field that
 represents their length in bytes. These length fields are encoded using the
 variable-length integer encoding from {{Section 16 of QUIC}} and MUST be
 encoded in the minimum number of bytes necessary.
+
+The encoding of the public key is determined by the Signature Algorithm in use
+as follows:
+
+RSASSA-PSS algorithms:
+
+: The public key is an RSAPublicKey structure {{!PKCS1=RFC8017}} encoded in DER
+{{X.690}}. BER encodings which are not DER MUST be rejected.
+
+ECDSA algorithms:
+
+: The public key is a UncompressedPointRepresentation structure defined in
+{{Section 4.2.8.2 of TLS}}, using the curve specified by the SignatureScheme.
+
+EdDSA algorithms:
+
+: The public key is the byte string encoding defined in {{!EdDSA=RFC8032}}.
+
+This document does not define the public key encodings for other algorithms. In
+order for a SignatureScheme to be usable with the Signature HTTP authentication
+scheme, its public key encoding needs to be defined in a corresponding document.
 
 ## Key Exporter Output {#output}
 
@@ -314,8 +343,9 @@ point to an entry into a server-side database of known keys.
 ## The a Parameter {#parameter-a}
 
 The REQUIRED "a" (public key) parameter is a byte sequence that contains the
-public key used by the server to validate the signature provided by the
-client. This avoids key confusion issues (see {{SEEMS-LEGIT}}).
+public key used by the server to validate the signature provided by the client.
+This avoids key confusion issues (see {{SEEMS-LEGIT}}). The encoding of the
+public key is described in {{context}}.
 
 ## The p Parameter {#parameter-p}
 
