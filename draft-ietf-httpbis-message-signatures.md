@@ -1787,7 +1787,7 @@ Description:
 : A brief description of the algorithm used to sign the signature base.
 
 Status:
-: The status of the algorithm. The options are:
+: The status of the algorithm. MUST start with one of the following values and MAY contain additional explanatory text. The options are:
     - "Active": for algorithms without known problems. The signature algorithm is fully specified and its security properties are understood.
     - "Provisional": for unproven algorithms. The signature algorithm is fully specified but its security properties are not known or proven.
     - "Deprecated": for algorithms with know security issues. The signature algorithm is no longer recommended for general use and might be insecure or unsafe in some known circumstances.
