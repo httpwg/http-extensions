@@ -61,7 +61,6 @@ informative:
   RFC9113:
     display: HTTP/2
   HPACK: RFC7541
-  URI: RFC3986
 
 venue:
   group: HTTP
@@ -689,14 +688,19 @@ Given a Date as input_date, return an ASCII string suitable for use in an HTTP f
 
 Given a string of Unicode characters as input_string, return an ASCII string suitable for use in an HTTP field value.
 
-0. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_string. If there is an error in doing so, fail parsing.
-1. Let encoded_string be an empty string.
-2. For each byte in byte_array:
-   1. If byte is %x25 ("%"), append "%25" to encoded_string.
-   2. If byte is in the ranges %x00-1f or %x7f-ff, apply the percent-encoding defined in {{Section 2.1 of URI}} to byte and append the result to encoded_string.
-   3. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
-3. Let formatted_string be the result of running Serialising a String ({{ser-string}}) with encoded_string.
-4. Return the character "%" followed by formatted_string.
+0. If input_string is not a string of Unicode characters, fail parsing.
+1. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_string.
+2. Let encoded_string be an empty string.
+3. For each byte in byte_array:
+   1. If byte is %x25 ("%"), %x22 (DQUOTE), or in the ranges %x00-1f or %x7f-ff:
+      1. Append "%" to encoded_string.
+      2. Let encoded_byte be the result of applying base16 encoding ({{Section 8 of !RFC4648}}) to byte.
+      3. Append encoded_byte to encoded_string.
+   2. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
+4. Let output be a string containing "%" followed by DQUOTE.
+5. Append encoded_string to output.
+6. Append DQUOTE to output.
+7. Return output.
 
 
 ## Parsing Structured Fields {#text-parse}
@@ -966,16 +970,23 @@ Given an ASCII string as input_string, return a Date. input_string is modified t
 
 Given an ASCII string as input_string, return a string of Unicode characters. input_string is modified to remove the parsed value.
 
-0. If the first character of input_string is not "%", fail parsing.
-1. Discard the first character of input_string.
-2. Let parsed_string be the result of running Parsing a String ({{parse-string}}) with input_string.
-3. Let byte_array be the result of applying ASCII encoding to input_string.
-4. For each sigil_byte in byte_array which is %25 ("%"):
-   1. Let octet_hex be the two bytes after sigil_byte in byte_string. If there are not two bytes, fail parsing.
-   2. Let octet be the result of decoding octet_hex as hexidecimal, in a case-insensitive fashion.
-   3. Replace sigil_byte and octet_hex in byte_array with octet.
-5. Let unicode_string be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
-6. Return unicode_string.
+0. If the first two characters of input_string are not "%" followed by DQUOTE, fail parsing.
+1. Discard the first two characters of input_string.
+2. Let byte_array be an empty byte array.
+3. While input_string is not empty:
+   1. Let char be the result of consuming the first character of input_string.
+   2. If char is in the range %x00-1f or %x7f-ff (i.e., it is not in VCHAR or SP), fail parsing.
+   3. If char is "%":
+      1. Let octet_hex be the result of consuming two characters from input_string. If there are not two characters, fail parsing.
+      2. Let octet be the result of hex decoding octet_hex ({{Section 8 of !RFC4648}}), in a case-insensitive fashion. If decoding fails, fail parsing.
+      3. Append octet to byte_array.
+   2. If char is DQUOTE:
+      1. Let unicode_string be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
+      2. Return unicode_string.
+   3. Otherwise, if char is not "%" or DQUOTE:
+      1. Let byte be the result of applying ASCII encoding to char.
+      2. Append byte to byte_array.
+4. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
 
 # IANA Considerations {#iana}
