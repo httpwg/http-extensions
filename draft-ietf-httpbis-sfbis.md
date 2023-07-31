@@ -61,7 +61,6 @@ informative:
   RFC9113:
     display: HTTP/2
   HPACK: RFC7541
-  ENCODING: RFC4648
 
 venue:
   group: HTTP
@@ -695,7 +694,7 @@ Given a string of Unicode characters as input_string, return an ASCII string sui
 3. For each byte in byte_array:
    1. If byte is %x25 ("%"), %x22 (DQUOTE), or in the ranges %x00-1f or %x7f-ff:
       1. Append "%" to encoded_string.
-      2. Let encoded_byte be the result of applying base16 encoding ({{Section 8 of ENCODING}}) to byte.
+      2. Let encoded_byte be the result of applying base16 encoding ({{Section 8 of !RFC4648}}) to byte.
       3. Append encoded_byte to encoded_string.
    2. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
 4. Let output be a string containing "%" followed by DQUOTE.
@@ -979,7 +978,7 @@ Given an ASCII string as input_string, return a string of Unicode characters. in
    2. If char is in the range %x00-1f or %x7f-ff (i.e., it is not in VCHAR or SP), fail parsing.
    3. If char is "%":
       1. Let octet_hex be the result of consuming two characters from input_string. If there are not two characters, fail parsing.
-      2. Let octet be the result of hex decoding octet_hex ({{Section 8 of ENCODING}}), in a case-insensitive fashion. If decoding fails, fail parsing.
+      2. Let octet be the result of hex decoding octet_hex ({{Section 8 of !RFC4648}}), in a case-insensitive fashion. If decoding fails, fail parsing.
       3. Append octet to byte_array.
    2. If char is DQUOTE:
       1. Let unicode_string be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
