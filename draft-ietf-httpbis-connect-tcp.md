@@ -128,9 +128,9 @@ This section discusses some behaviors that are permitted or recommended in order
 
 ## Latency optimizations
 
-When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content without waiting for an HTTP response.  Proxies MUST buffer this "false start" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (This "false start" behavior is not permitted in HTTP/1.1 because it would prevent reuse of the connection after an error response such as 407 (Proxy Authentication Required).)
+When using this specification in HTTP/2 or HTTP/3, clients MAY start sending TCP stream content optimistically, subject to flow control limits ({{!RFC9113, Section 5.2}})({{!RFC9000, Section 4.1}}).  Proxies MUST buffer this "optimistic" content until the TCP stream becomes writable, and discard it if the TCP connection fails.  (This "optimistic" behavior is not permitted in HTTP/1.1 because it would prevent reuse of the connection after an error response such as "407 (Proxy Authentication Required)".)
 
-Servers that host a proxy under this specification MAY offer support for TLS early data in accordance with {{!RFC8470}}.  Clients MAY send "connect-tcp" requests in early data, and MAY include "false start" content in early data (in HTTP/2 and HTTP/3).  Proxies MAY accept, reject, or delay processing of this early data.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the `target_host` when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.
+Servers that host a proxy under this specification MAY offer support for TLS early data in accordance with {{!RFC8470}}.  Clients MAY send "connect-tcp" requests in early data, and MAY include "optimistic" TCP content in early data (in HTTP/2 and HTTP/3).  At the TLS layer, proxies MAY ignore, reject, or accept the `early_data` extension ({{!RFC8446, Section 4.2.10}}).  At the HTTP layer, proxies MAY process the request immediately, return a "425 (Too Early)" response ({{!RFC8470, Section 5.2}}), or delay some or all processing of the request until the handshake completes.  For example, a proxy with limited anti-replay defenses might choose to perform DNS resolution of the `target_host` when a request arrives in early data, but delay the TCP connection until the TLS handshake completes.
 
 ## Conveying metadata
 
@@ -188,4 +188,4 @@ IF APPROVED, IANA is requested to add the following entry to the HTTP Upgrade To
 # Acknowledgments
 {:numbered="false"}
 
-Thanks to Amos Jeffries and Tommy Pauly for close review and suggested changes.
+Thanks to Amos Jeffries, Tommy Pauly, and Kyle Nekritz for close review and suggested changes.
