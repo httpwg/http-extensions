@@ -686,21 +686,19 @@ Given a Date as input_date, return an ASCII string suitable for use in an HTTP f
 
 ### Serializing a Display String {#ser-display}
 
-Given a string of Unicode characters as input_string, return an ASCII string suitable for use in an HTTP field value.
+Given a sequence of Unicode codepoints as input_sequence, return an ASCII string suitable for use in an HTTP field value.
 
-0. If input_string is not a string of Unicode characters, fail parsing.
-1. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_string.
-2. Let encoded_string be an empty string.
+0. If input_sequence is not a sequence of Unicode codepoints, fail parsing.
+1. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_sequence.
+2. Let encoded_string be a string containing "%" followed by DQUOTE.
 3. For each byte in byte_array:
    1. If byte is %x25 ("%"), %x22 (DQUOTE), or in the ranges %x00-1f or %x7f-ff:
       1. Append "%" to encoded_string.
       2. Let encoded_byte be the result of applying base16 encoding ({{Section 8 of !RFC4648}}) to byte.
       3. Append encoded_byte to encoded_string.
    2. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
-4. Let output be a string containing "%" followed by DQUOTE.
-5. Append encoded_string to output.
-6. Append DQUOTE to output.
-7. Return output.
+4. Append DQUOTE to encoded_string.
+5. Return encoded_string.
 
 
 ## Parsing Structured Fields {#text-parse}
@@ -968,7 +966,7 @@ Given an ASCII string as input_string, return a Date. input_string is modified t
 
 ### Parsing a Display String {#parse-display}
 
-Given an ASCII string as input_string, return a string of Unicode characters. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a sequence of Unicode codepoints. input_string is modified to remove the parsed value.
 
 0. If the first two characters of input_string are not "%" followed by DQUOTE, fail parsing.
 1. Discard the first two characters of input_string.
@@ -980,10 +978,10 @@ Given an ASCII string as input_string, return a string of Unicode characters. in
       1. Let octet_hex be the result of consuming two characters from input_string. If there are not two characters, fail parsing.
       2. Let octet be the result of hex decoding octet_hex ({{Section 8 of !RFC4648}}), in a case-insensitive fashion. If decoding fails, fail parsing.
       3. Append octet to byte_array.
-   2. If char is DQUOTE:
-      1. Let unicode_string be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
-      2. Return unicode_string.
-   3. Otherwise, if char is not "%" or DQUOTE:
+   4. If char is DQUOTE:
+      1. Let unicode_sequence be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
+      2. Return unicode_sequence.
+   5. Otherwise, if char is not "%" or DQUOTE:
       1. Let byte be the result of applying ASCII encoding to char.
       2. Append byte to byte_array.
 4. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
