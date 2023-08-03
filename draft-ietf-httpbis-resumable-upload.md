@@ -214,7 +214,7 @@ If the request completes successfully and the entire upload is complete, the ser
 
 If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Incomplete` header, the server MUST acknowledge it by responding with the `201 (Created)` status code, the `Upload-Incomplete` header set to true.
 
-If the request includes the `Upload-Incomplete: ?0` header field and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the value of the `Content-Length` header field and the server MUST record the upload's final size to ensure its consistency with future Upload Appending Procedures.
+If the request includes the `Upload-Complete: ?1` header field and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the value of the `Content-Length` header field and the server MUST record the upload's final size to ensure its consistency with future Upload Appending Procedures.
 
 ~~~ example
 :method: POST
@@ -340,7 +340,7 @@ If the request completes successfully and the entire upload is complete, the ser
 
 If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Incomplete` header, the server MUST acknowledge it by responding with the `201 (Created)` status code, the `Upload-Incomplete` header set to true.
 
-If the request includes the `Upload-Incomplete: ?0` header field and a valid `Content-Length` header field, the client attempts to upload the remaining resource in one request. In this case, the upload's final size is the sum of the upload's offset and the `Content-Length` header field. If the server does not have a record of the upload's final size from the Upload Creation or previous Upload Appending Procedures, the server MUST record the upload's final size to ensure its consistency with future Upload Appending Procedures. If the server does have a previous record, the upload's final size from a previous procedure MUST match the upload's final size from the current Upload Appending Procedure. If they do not match, the server MUST reject the request with the `400 (Bad Request)` status code.
+If the request includes the `Upload-Complete: ?1` header field and a valid `Content-Length` header field, the client attempts to upload the remaining resource in one request. In this case, the upload's final size is the sum of the upload's offset and the `Content-Length` header field. If the server does not have a record of the upload's final size from the Upload Creation or previous Upload Appending Procedures, the server MUST record the upload's final size to ensure its consistency with future Upload Appending Procedures. If the server does have a previous record, the upload's final size from a previous procedure MUST match the upload's final size from the current Upload Appending Procedure. If they do not match, the server MUST reject the request with the `400 (Bad Request)` status code.
 
 ~~~ example
 :method: PATCH
