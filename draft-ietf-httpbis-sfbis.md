@@ -140,20 +140,11 @@ To specify an HTTP field as a Structured Field, its authors need to:
 
 Typically, this means that a field definition will specify the top-level type -- List, Dictionary, or Item -- and then define its allowable types and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q", or strings in lowercase. Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
 
-When parsing fails, the entire field is ignored (see {{text-parse}}). When field-specific
-constraints are violated, the entire field is also ignored, unless the field definition defines
-other handling requirements. For example, if a header field is defined as an Item and required to
-be an Integer, but a String is received, it should be ignored unless that field's definition
-explicitly specifies otherwise. Note that field definitions cannot override how parsing failures are handled.
+When parsing fails, the entire field is ignored (see {{text-parse}}). When field-specific constraints are violated, the entire field is also ignored, unless the field definition defines other handling requirements. For example, if a header field is defined as an Item and required to be an Integer, but a String is received, it should be ignored unless that field's definition explicitly specifies otherwise. Note that field definitions cannot override how parsing failures are handled.
 
-Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values
-can later be extended to accommodate more information, if need be. To preserve forward
-compatibility, field specifications are discouraged from defining the presence of an unrecognized
-parameter as an error condition.
+Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized parameter as an error condition.
 
-Field specifications are required to be either an Item, List, or Dictionary to preserve
-extensibility. Fields that erroneously defined as another type (e.g., Integer) are assumed to
-be Items (i.e., they allow parameters).
+Field specifications are required to be either an Item, List, or Dictionary to preserve extensibility. Fields that erroneously defined as another type (e.g., Integer) are assumed to be Items (i.e., they allow parameters).
 
 To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" parameters be added by senders. A specification could stipulate that all parameters that fit a defined pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
 
