@@ -167,27 +167,28 @@ In some cases clients might prefer to upload a file as a series of parts sent ac
 
 This example shows how the client, with prior knowledge about the server's resumable upload support, can upload parts of a file over a sequence of procedures.
 
-1) If the client is aware that the server supports resumable upload, it can use the Upload Creation Procedure with the `Upload-Incomplete` header to start an upload. The client can include the first part of the file in the Upload Creation Procedure.
+1) If the client is aware that the server supports resumable upload, it can use the Upload Creation Procedure with the `Upload-Complete: ?0` header to start an upload. The client can include the first part of the file in the Upload Creation Procedure.
 
 ~~~
 Client                                      Server
 |                                                |
-| POST with Upload-Incomplete                    |
+| POST with Upload-Complete: ?0                  |
 |----------------------------------------------->|
 |                                                |
-|             201 Created with Upload-Incomplete |
-|              and Location on completion        |
+|           201 Created with Upload-Complete: ?0 |
+|           and Location on completion           |
 |<-----------------------------------------------|
 |                                                |
 ~~~
 {: #fig-upload-creation-procedure-incomplete title="Upload Creation Procedure Incomplete"}
 
-2) After creation, the following parts are sent using the Upload Appending Procedure ({{upload-appending}}), and the last part of the upload does not have the `Upload-Incomplete` header.
+2) After creation, the following parts are sent using the Upload Appending Procedure ({{upload-appending}}), and the last part of the upload has the `Upload-Complete: ?1` header to indicate the complete transfer.
 
 ~~~
 Client                                      Server
 |                                                |
-| PATCH to upload URL and Upload-Offset          |
+| PATCH to upload URL with Upload-Offset         |
+| and Upload-Complete: ?1                        |
 |----------------------------------------------->|
 |                                                |
 |                      201 Created on completion |
@@ -202,7 +203,7 @@ The Upload Creation Procedure is intended for starting a new upload. A limited f
 
 This procedure is designed to be compatible with a regular upload. Therefore all methods are allowed with the exception of `GET`, `HEAD`, `DELETE`, and `OPTIONS`. All response status codes are allowed. The client is RECOMMENDED to use the `POST` method if not otherwise intended. The server MAY only support a limited number of methods.
 
-The request MUST include the `Upload-Incomplete` header field ({{upload-incomplete}}). It MUST be set to true if the end of the request body is not the end of the upload. Otherwise, it MUST be set to false. This header field can be used for request identification by a server. The request MUST NOT include the `Upload-Offset` header.
+The request MUST include the `Upload-Complete` header field ({{upload-complete}}). It MUST be set to false if the end of the request body is not the end of the upload. Otherwise, it MUST be set to true. This header field can be used for request identification by a server. The request MUST NOT include the `Upload-Offset` header.
 
 If the request is valid, the server SHOULD create an upload resource. If so, the server MUST include the `Location` header in the response and set to the upload URL, which points to the created upload resource. The client MAY use this upload URL to execute the Offset Retrieving Procedure ({{offset-retrieving}}), Upload Appending Procedure ({{upload-appending}}), or Upload Cancellation Procedure ({{upload-cancellation}}).
 
@@ -210,9 +211,9 @@ As soon as the upload resource is available, the server MAY send an informationa
 
 The server MUST send the `Upload-Offset` header in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the response status code indicates a success but the offset in the `Upload-Offset` header field in the response does not equal to the begin offset plus the number of bytes uploaded in the request.
 
-If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Server is RECOMMENDED to use `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Incomplete` header with the value of true.
+If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Server is RECOMMENDED to use `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Complete` header with the value of false.
 
-If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Incomplete` header, the server MUST acknowledge it by responding with the `201 (Created)` status code, the `Upload-Incomplete` header set to true.
+If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Complete: ?0` header, the server MUST acknowledge it by responding with the `201 (Created)` status code, the `Upload-Complete` header set to false.
 
 ~~~ example
 :method: POST
@@ -220,7 +221,7 @@ If the request completes successfully but the entire upload is not yet complete 
 :authority: example.com
 :path: /upload
 upload-draft-interop-version: 3
-upload-incomplete: ?0
+upload-complete: ?1
 content-length: 100
 [content (100 bytes)]
 
@@ -239,13 +240,13 @@ upload-offset: 100
 :authority: example.com
 :path: /upload
 upload-draft-interop-version: 3
-upload-incomplete: ?1
+upload-complete: ?0
 content-length: 25
 [partial content (25 bytes)]
 
 :status: 201
 location: https://example.com/upload/b530ce8ff
-upload-incomplete: ?1
+upload-complete: ?0
 upload-offset: 25
 ~~~
 
@@ -255,7 +256,7 @@ File metadata can affect how servers might act on the uploaded file. Clients can
 
 ## Feature Detection {#feature-detection}
 
-If the client has no knowledge of whether the resource supports resumable uploads, the Upload Creation Procedure MAY be used with some additional constraints. In particular, the `Upload-Incomplete` header field ({{upload-incomplete}}) MUST NOT be set to true if the server support is unclear. This allows the upload to function as if it is a regular upload.
+If the client has no knowledge of whether the resource supports resumable uploads, the Upload Creation Procedure MAY be used with some additional constraints. In particular, the `Upload-Complete` header field ({{upload-complete}}) MUST NOT be set to false if the server support is unclear. This allows the upload to function as if it is a regular upload.
 
 The server SHOULD send the `104 (Upload Resumption Supported)` informational response to the client, to indicate its support for a resumable upload.
 
@@ -285,9 +286,9 @@ The reason both the client and the server are sending and checking the draft ver
 
 If an upload is interrupted, the client MAY attempt to fetch the offset of the incomplete upload by sending a `HEAD` request to the upload URL, as obtained from the Upload Creation Procedure ({{upload-creation}}). The client MUST NOT initiate this procedure without the knowledge of server support.
 
-The request MUST NOT include the `Upload-Offset` header or the `Upload-Incomplete` header. The server MUST reject the request with the `Upload-Offset` header or the `Upload-Incomplete` header by sending a `400 (Bad Request)` response.
+The request MUST NOT include the `Upload-Offset` header or the `Upload-Complete` header. The server MUST reject the request with the `Upload-Offset` header or the `Upload-Complete` header by sending a `400 (Bad Request)` response.
 
-If the server considers the upload associated with this upload URL active, it MUST send back a `204 (No Content)` response. The response MUST include the `Upload-Offset` header set to the current resumption offset for the client. The response MUST include the `Upload-Incomplete` header which is set to true if and only if the upload is incomplete. An upload is considered complete if and only if the server completely and successfully received a corresponding Upload Creation Procedure ({{upload-creation}}) or Upload Appending Procedure ({{upload-appending}}) request with the `Upload-Incomplete` header being omitted or set to false.
+If the server considers the upload associated with this upload URL active, it MUST send back a `204 (No Content)` response. The response MUST include the `Upload-Offset` header set to the current resumption offset for the client. The response MUST include the `Upload-Complete` header which is set to true if and only if the upload is complete. An upload is considered complete if and only if the server completely and successfully received a corresponding Upload Creation Procedure ({{upload-creation}}) or Upload Appending Procedure ({{upload-appending}}) request with the `Upload-Complete` header being set to true.
 
 The client MUST NOT perform the Offset Retrieving Procedure ({{offset-retrieving}}) while the Upload Creation Procedure ({{upload-creation}}) or the Upload Appending Procedure ({{upload-appending}}) is in progress.
 
@@ -310,7 +311,7 @@ upload-draft-interop-version: 3
 
 :status: 204
 upload-offset: 100
-upload-incomplete: ?1
+upload-complete: ?0
 cache-control: no-store
 ~~~
 
@@ -322,7 +323,7 @@ The Upload Appending Procedure is used for resuming an existing upload.
 
 The request MUST use the `PATCH` method and be sent to the upload URL, as obtained from the Upload Creation Procedure ({{upload-creation}}). The `Upload-Offset` header field ({{upload-offset}}) MUST be set to the resumption offset.
 
-If the end of the request body is not the end of the upload, the `Upload-Incomplete` header field ({{upload-incomplete}}) MUST be set to true.
+If the end of the request body is not the end of the upload, the `Upload-Complete` header field ({{upload-complete}}) MUST be set to false.
 
 The server SHOULD respect representation metadata received in the Upload Creation Procedure ({{upload-creation}}) and ignore any representation metadata received in the Upload Appending Procedure ({{upload-appending}}).
 
@@ -334,9 +335,9 @@ If the offset in the `Upload-Offset` header field does not match the offset prov
 
 The server MUST send the `Upload-Offset` header in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the response status code indicates a success but the offset in the `Upload-Offset` header field in the response does not equal to the begin offset plus the number of bytes uploaded in the request.
 
-If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Server is RECOMMENDED to use `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Incomplete` header with the value of true.
+If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Server is RECOMMENDED to use `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Complete` header with the value of false.
 
-If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Incomplete` header, the server MUST acknowledge it by responding with the `201 (Created)` status code, the `Upload-Incomplete` header set to true.
+If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Complete` header, the server MUST acknowledge it by responding with the `201 (Created)` status code, the `Upload-Complete` header set to true.
 
 ~~~ example
 :method: PATCH
@@ -358,7 +359,7 @@ The client MAY automatically attempt upload resumption when the connection is te
 
 If the client wants to terminate the transfer without the ability to resume, it MAY send a `DELETE` request to the upload URL, as obtained from the Upload Creation Procedure ({{upload-creation}}). It is an indication that the client is no longer interested in uploading this body and the server can release resources associated with this upload URL. The client MUST NOT initiate this procedure without the knowledge of server support.
 
-The request MUST use the `DELETE` method. The request MUST NOT include the `Upload-Offset` header or the `Upload-Incomplete` header. The server MUST reject the request with the `Upload-Offset` header or the `Upload-Incomplete` header by sending a `400 (Bad Request)` response.
+The request MUST use the `DELETE` method. The request MUST NOT include the `Upload-Offset` header or the `Upload-Complete` header. The server MUST reject the request with the `Upload-Offset` header or the `Upload-Complete` header by sending a `400 (Bad Request)` response.
 
 If the server has successfully deactivated this upload URL, it MUST send back a `204 (No Content)` response.
 
@@ -402,15 +403,15 @@ The `Upload-Offset` request and response header field is an Item Structured Head
 Upload-Offset = sf-integer
 ~~~
 
-## Upload-Incomplete
+## Upload-Complete
 
-The `Upload-Incomplete` request and response header field is an Item Structured Header indicating whether the corresponding upload is considered complete. Its value MUST be a boolean. Its ABNF is
+The `Upload-Complete` request and response header field is an Item Structured Header indicating whether the corresponding upload is considered complete. Its value MUST be a boolean. Its ABNF is
 
 ~~~ abnf
-Upload-Incomplete = sf-boolean
+Upload-Complete = sf-boolean
 ~~~
 
-The `Upload-Incomplete` header field MUST only by used if support by the resource is known to the client ({{feature-detection}}).
+The `Upload-Complete` header field MUST only by used if support by the resource is known to the client ({{feature-detection}}).
 
 # Redirection
 
@@ -424,7 +425,7 @@ The upload URL obtained through the Upload Creation Procedure ({{upload-creation
 
 This specification registers the following entry in the Permanent Message Header Field Names registry established by {{!RFC3864}}:
 
-Header field name: Upload-Offset, Upload-Incomplete
+Header field name: Upload-Offset, Upload-Complete
 
 Applicable protocol: http
 
@@ -448,7 +449,7 @@ Specification: This document
 
 ## Since draft-ietf-httpbis-resumable-upload-01
 
-None yet
+* Replace Upload-Incomplete header with Upload-Complete.
 
 ## Since draft-ietf-httpbis-resumable-upload-00
 
