@@ -705,7 +705,7 @@ Given a Date as input_date, return an ASCII string suitable for use in an HTTP f
 
 Given a sequence of Unicode codepoints as input_sequence, return an ASCII string suitable for use in an HTTP field value.
 
-0. If input_sequence is not a sequence of Unicode codepoints, fail parsing.
+0. If input_sequence is not a sequence of Unicode codepoints, fail serialization.
 1. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_sequence.
 2. Let encoded_string be a string containing "%" followed by DQUOTE.
 3. For each byte in byte_array:
