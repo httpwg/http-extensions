@@ -215,6 +215,8 @@ If the request completes successfully and the entire upload is complete, the ser
 
 If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Complete: ?0` header, the server MUST acknowledge it by responding with the `201 (Created)` status code, the `Upload-Complete` header set to false.
 
+If the request includes the `Upload-Complete: ?1` header field and a valid `Content-Length` header field, the client attempts to upload a fixed-length resource in one request. In this case, the upload's final size is the value of the `Content-Length` header field and the server MUST record the upload's final size to ensure its consistency with future Upload Appending Procedures.
+
 ~~~ example
 :method: POST
 :scheme: https
@@ -338,6 +340,8 @@ The server MUST send the `Upload-Offset` header in the response if it considers 
 If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Server is RECOMMENDED to use `201 (Created)` response if not otherwise specified. The response MUST NOT include the `Upload-Complete` header with the value of false.
 
 If the request completes successfully but the entire upload is not yet complete indicated by the `Upload-Complete` header, the server MUST acknowledge it by responding with the `201 (Created)` status code, the `Upload-Complete` header set to true.
+
+If the request includes the `Upload-Complete: ?1` header field and a valid `Content-Length` header field, the client attempts to upload the remaining resource in one request. In this case, the upload's final size is the sum of the upload's offset and the `Content-Length` header field. If the server does not have a record of the upload's final size from the Upload Creation or previous Upload Appending Procedures, the server MUST record the upload's final size to ensure its consistency with future Upload Appending Procedures. If the server does have a previous record, the upload's final size from a previous procedure MUST match the upload's final size from the current Upload Appending Procedure. If they do not match, the server MUST reject the request with the `400 (Bad Request)` status code.
 
 ~~~ example
 :method: PATCH
