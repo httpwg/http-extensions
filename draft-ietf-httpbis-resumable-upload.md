@@ -401,7 +401,7 @@ The `Upload-Complete` header field MUST only by used if support by the resource 
 
 # Redirection
 
-The `301 (Moved Permanently)` status code and the `302 (Found)` status code MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY send a `308 (Permanent Redirect)` response which clients SHOULD use for subsequent requests to it. If client receives a `307 (Temporary Redirect)` response to a offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
+The `301 (Moved Permanently)` status code and the `302 (Found)` status code MUST NOT be used in offset retrieval ({{offset-retrieving}}) and upload cancellation ({{upload-cancellation}}) responses. For other responses, the upload resource MAY send a `308 (Permanent Redirect)` response which clients SHOULD use for subsequent requests to it. If client receives a `307 (Temporary Redirect)` response to an offset retrieval ({{offset-retrieving}}) request, it MAY apply the redirection directly in an immediate subsequent upload append ({{upload-appending}}).
 
 # Security Considerations
 
