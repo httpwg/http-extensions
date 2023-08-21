@@ -84,7 +84,7 @@ The remainder of this section uses an example of a file upload to illustrate dif
 
 In this example, the client first attempts to upload a file with a known size in a single HTTP request to the target resource. An interruption occurs and the client then attempts to resume the upload using subsequent HTTP requests to the upload resource.
 
-1) The client notifies the servier that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client, and the client begins transferring the entire file in the request content.
+1) The client notifies the server that it wants to begin an upload ({{upload-creation}}). The server reserves the required resources to accept the upload from the client, and the client begins transferring the entire file in the request content.
 
 An informational response can be sent to the client to signal the support of resumable upload on the server and transmit the upload resource URL in the Location header.
 
