@@ -287,7 +287,7 @@ An upload is considered complete only if the server completely and successfully 
 
 The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or append ({{upload-appending}}) is in progress.
 
-The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due to network delay and reordering, the server might still be receiving data from an ongoing transfer for the same upload URL, which in the client perspective has failed. The server MAY terminate any transfers for the same upload URL before sending the response by abruptly terminating the HTTP connection or stream. Alternatively, the server MAY keep the ongoing transfer alive but ignore further bytes received past the offset.
+The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due to network delay and reordering, the server might still be receiving data from an ongoing transfer for the same upload resource, which in the client perspective has failed. The server MAY terminate any transfers for the same upload resource before sending the response by abruptly terminating the HTTP connection or stream. Alternatively, the server MAY keep the ongoing transfer alive but ignore further bytes received past the offset.
 
 The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single Offset Retrieval ({{offset-retrieving}}) request.
 
