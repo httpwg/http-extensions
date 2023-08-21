@@ -283,7 +283,7 @@ The request MUST NOT include the `Upload-Offset` header or the `Upload-Complete`
 
 If the server considers the upload resource to be active, it MUST send back a `204 (No Content)` response. The response MUST include the `Upload-Offset` header set to the current resumption offset for the target resource. The response MUST include the `Upload-Complete` header which is set to true if and only if the upload is complete.
 
-An upload is considered complete if and only if the server completely and successfully received a corresponding creation ({{upload-creation}}) request or append ({{upload-appending}}) request with the `Upload-Complete` header being set to true.
+An upload is considered complete only if the server completely and successfully received a corresponding creation ({{upload-creation}}) request or append ({{upload-appending}}) request with the `Upload-Complete` header being set to true.
 
 The client MUST NOT perform offset retrieval while creation ({{upload-creation}}) or append ({{upload-appending}}) is in progress.
 
