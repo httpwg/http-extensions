@@ -198,7 +198,7 @@ When present, `Upload-Complete` MUST be set to false if the end of the request c
 
 If the request is valid, the server SHOULD create an upload resource. Then, the server MUST include the `Location` header in the response and set its value to the URL of the upload resource. The client MAY use this URL for offset retrieval ({{offset-retrieving}}),upload append ({{upload-appending}}), and upload cancellation ({{upload-cancellation}}).
 
-Once the upload resource is available, the target resource MAY send an informational response with `104 (Upload Resumption Supported)` status to the client while the request content is being uploaded. In this informational response, the `Location` header field MUST be set to the upload URL.
+Once the upload resource is available, the target resource MAY send an informational response with `104 (Upload Resumption Supported)` status to the client while the request content is being uploaded. In this informational response, the `Location` header field MUST be set to the upload resource.
 
 The server MUST send the `Upload-Offset` header in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the response status code indicates a success but the offset in the `Upload-Offset` header field in the response does not equal to the begin offset plus the number of bytes uploaded in the request.
 
