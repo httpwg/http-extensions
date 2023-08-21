@@ -154,7 +154,7 @@ Client                                      Server
 
 ## Example 2: Upload as a series of parts
 
-In some cases, clients might prefer to upload a file as a series of parts sent across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size, such as when file data originates from a streaming source.
+In some cases, clients might prefer to upload a file as a series of parts sent serially across multiple HTTP messages. One use case is to overcome server limits on HTTP message content size. Another use case is where the client does not know the final size, such as when file data originates from a streaming source.
 
 This example shows how the client, with prior knowledge about the server's resumable upload support, can upload parts of a file incrementally.
 
