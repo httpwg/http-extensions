@@ -143,8 +143,20 @@ q=foo&amp;limit=10&amp;sort=-published
     </t>
 
     <t>
-      The QUERY method provides a solution that spans the gap between the use of GET and POST. As
-      with POST, the input to the query operation is passed along within the content of the request
+      The QUERY method provides a solution that spans the gap between the use of GET and POST, with
+      the example above being expressed as:
+    </t>
+
+<artwork type="http-message">
+QUERY /feed HTTP/1.1
+Host: example.org
+Content-Type: application/x-www-form-urlencoded
+
+q=foo&amp;limit=10&amp;sort=-published
+</artwork>
+
+    <t>
+      As with POST, the input to the query operation is passed along within the content of the request
       rather than as part of the request URI. Unlike POST, however, the method is explicitly safe
       and idempotent, allowing functions like caching and automatic retries to operate.
     </t>
