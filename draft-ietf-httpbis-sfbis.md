@@ -711,7 +711,7 @@ Given a sequence of Unicode codepoints as input_sequence, return an ASCII string
 3. For each byte in byte_array:
    1. If byte is %x25 ("%"), %x22 (DQUOTE), or in the ranges %x00-1f or %x7f-ff:
       1. Append "%" to encoded_string.
-      2. Let encoded_byte be the result of applying base16 encoding ({{Section 8 of !RFC4648}}) to byte, with any alphabetic characters normalized to lowercase.
+      2. Let encoded_byte be the result of applying base16 encoding ({{Section 8 of !RFC4648}}) to byte, with any alphabetic characters converted to lowercase.
       3. Append encoded_byte to encoded_string.
    2. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
 4. Append DQUOTE to encoded_string.
