@@ -1102,35 +1102,30 @@ key           = ( lcalpha / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 
-sf-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-key ( parameters / ( "=" member-value ))
-member-key     = key
-member-value   = sf-item / inner-list
+sf-dictionary = dict-member *( OWS "," OWS dict-member )
+dict-member   = member-key ( parameters / ( "=" member-value ))
+member-key    = key
+member-value  = sf-item / inner-list
 
 sf-item   = bare-item parameters
 bare-item = sf-integer / sf-decimal / sf-string / sf-token
-            / sf-binary / sf-boolean / sf-date
+            / sf-binary / sf-boolean / sf-date / sf-displaystring
 
-sf-integer = ["-"] 1*15DIGIT
+sf-integer       = ["-"] 1*15DIGIT
+sf-decimal       = ["-"] 1*12DIGIT "." 1*3DIGIT
+sf-string        = DQUOTE *( unescaped / bs-escaped ) DQUOTE
+sf-token         = ( ALPHA / "*" ) *( tchar / ":" / "/" )
+sf-binary        = ":" *base64 ":"
+sf-boolean       = "?" ( "0" / "1" )
+sf-date          = "@" sf-integer
+sf-displaystring = "%" DQUOTE *( unescaped / "\" / pct-encoded ) DQUOTE
 
-sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
+base64       = ALPHA / DIGIT / "+" / "/" / "="
 
-sf-string    = DQUOTE *( unescaped / bs-escaped ) DQUOTE
 unescaped    = %x20-21 / %x23-5B / %x5D-7E
 bs-escaped   = "\" ( DQUOTE / "\" )
 
-sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
-
-sf-binary = ":" *(base64) ":"
-base64    = ALPHA / DIGIT / "+" / "/" / "="
-
-sf-boolean = "?" boolean
-boolean    = "0" / "1"
-
-sf-date = "@" sf-integer
-
-sf-displaystring = "%" DQUOTE *( unescaped / "\" / percent-encoded ) DQUOTE
-percent-encoded  = "%" lc-hexdig lc-hexdig
+pct-encoded  = "%" lc-hexdig lc-hexdig
 lc-hexdig = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
 ~~~
 
