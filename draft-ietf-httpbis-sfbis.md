@@ -1113,7 +1113,7 @@ bare-item = sf-integer / sf-decimal / sf-string / sf-token
 
 sf-integer       = ["-"] 1*15DIGIT
 sf-decimal       = ["-"] 1*12DIGIT "." 1*3DIGIT
-sf-string        = DQUOTE *( unescaped / bs-escaped ) DQUOTE
+sf-string        = DQUOTE *( unescaped / "%" / bs-escaped ) DQUOTE
 sf-token         = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 sf-binary        = ":" *base64 ":"
 sf-boolean       = "?" ( "0" / "1" )
@@ -1122,7 +1122,7 @@ sf-displaystring = "%" DQUOTE *( unescaped / "\" / pct-encoded ) DQUOTE
 
 base64       = ALPHA / DIGIT / "+" / "/" / "="
 
-unescaped    = %x20-21 / %x23-5B / %x5D-7E
+unescaped    = %x20-21 / %x23-24 / %x26-5B / %x5D-7E
 bs-escaped   = "\" ( DQUOTE / "\" )
 
 pct-encoded  = "%" lc-hexdig lc-hexdig
