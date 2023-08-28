@@ -1115,10 +1115,9 @@ sf-integer = ["-"] 1*15DIGIT
 
 sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
 
-sf-string = DQUOTE *chr DQUOTE
-chr       = unescaped / escaped
-unescaped = %x20-21 / %x23-5B / %x5D-7E
-escaped   = "\" ( DQUOTE / "\" )
+sf-string    = DQUOTE *( unescaped / bs-escaped ) DQUOTE
+unescaped    = %x20-21 / %x23-5B / %x5D-7E
+bs-escaped   = "\" ( DQUOTE / "\" )
 
 sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
 
@@ -1130,9 +1129,9 @@ boolean    = "0" / "1"
 
 sf-date = "@" sf-integer
 
-sf-displaystring = "%" DQUOTE *uchr DQUOTE
-uchr             = chr / uescaped
-uescaped         = "%" HEXDIG HEXDIG
+sf-displaystring = "%" DQUOTE *( unescaped / "\" / percent-encoded ) DQUOTE
+percent-encoded  = "%" lc-hexdig lc-hexdig
+lc-hexdig = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
 ~~~
 
 
