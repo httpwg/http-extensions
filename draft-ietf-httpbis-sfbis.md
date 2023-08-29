@@ -1083,7 +1083,7 @@ Implementations are allowed to limit the size of different structures, subject t
 
 # ABNF {#abnf}
 
-This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields.
+This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields. However, it cannot be used to validate their syntax, because it does not capture all requirements.
 
 This section is non-normative. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
