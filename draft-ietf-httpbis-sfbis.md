@@ -1083,7 +1083,7 @@ Implementations are allowed to limit the size of different structures, subject t
 
 # ABNF {#abnf}
 
-This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields.
+This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields. However, it cannot be used to validate their syntax, because it does not capture all requirements.
 
 This section is non-normative. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
@@ -1102,37 +1102,31 @@ key           = ( lcalpha / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 
-sf-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-key ( parameters / ( "=" member-value ))
-member-key     = key
-member-value   = sf-item / inner-list
+sf-dictionary = dict-member *( OWS "," OWS dict-member )
+dict-member   = member-key ( parameters / ( "=" member-value ))
+member-key    = key
+member-value  = sf-item / inner-list
 
 sf-item   = bare-item parameters
 bare-item = sf-integer / sf-decimal / sf-string / sf-token
-            / sf-binary / sf-boolean / sf-date
+            / sf-binary / sf-boolean / sf-date / sf-displaystring
 
-sf-integer = ["-"] 1*15DIGIT
+sf-integer       = ["-"] 1*15DIGIT
+sf-decimal       = ["-"] 1*12DIGIT "." 1*3DIGIT
+sf-string        = DQUOTE *( unescaped / "%" / bs-escaped ) DQUOTE
+sf-token         = ( ALPHA / "*" ) *( tchar / ":" / "/" )
+sf-binary        = ":" base64 ":"
+sf-boolean       = "?" ( "0" / "1" )
+sf-date          = "@" sf-integer
+sf-displaystring = "%" DQUOTE *( unescaped / "\" / pct-encoded ) DQUOTE
 
-sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
+base64       = *( ALPHA / DIGIT / "+" / "/" ) *"="
 
-sf-string = DQUOTE *chr DQUOTE
-chr       = unescaped / escaped
-unescaped = %x20-21 / %x23-5B / %x5D-7E
-escaped   = "\" ( DQUOTE / "\" )
+unescaped    = %x20-21 / %x23-24 / %x26-5B / %x5D-7E
+bs-escaped   = "\" ( DQUOTE / "\" )
 
-sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
-
-sf-binary = ":" *(base64) ":"
-base64    = ALPHA / DIGIT / "+" / "/" / "="
-
-sf-boolean = "?" boolean
-boolean    = "0" / "1"
-
-sf-date = "@" sf-integer
-
-sf-displaystring = "%" DQUOTE *uchr DQUOTE
-uchr             = chr / uescaped
-uescaped         = "%" HEXDIG HEXDIG
+pct-encoded  = "%" lc-hexdig lc-hexdig
+lc-hexdig = DIGIT / %x61-66 ; 0-9, a-f
 ~~~
 
 
