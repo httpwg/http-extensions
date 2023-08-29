@@ -1126,7 +1126,7 @@ unescaped    = %x20-21 / %x23-24 / %x26-5B / %x5D-7E
 bs-escaped   = "\" ( DQUOTE / "\" )
 
 pct-encoded  = "%" lc-hexdig lc-hexdig
-lc-hexdig = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
+lc-hexdig = DIGIT / %x61-66 ; 0-9, a-f
 ~~~
 
 
