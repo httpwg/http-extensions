@@ -4,14 +4,15 @@ abbrev: compression-dictionary
 docname: draft-ietf-httpbis-compression-dictionary-latest
 category: std
 
-ipr: trust200902
+consensus: true
+v: 3
 area: ART
 workgroup: HTTP
-keyword: Internet-Draft
-
-stand_alone: yes
-smart_quotes: no
-pi: [toc, sortrefs, symrefs]
+keyword:
+ - compression dictionary
+ - shared brotli
+ - zstandard dictionary
+ - delta compression
 
 venue:
   group: HTTP
@@ -38,14 +39,13 @@ author:
 
 normative:
   FOLDING: RFC8792
-  RFC9110:  # HTTP semantics
+  HTTP: RFC9110
 
 informative:
-  HTTP: RFC7230
   Origin: RFC6454
   ABNF: RFC5234
-  RFC3986:  # URL
-  RFC8941:  # Structured fields
+  STRUCTURED-FIELDS: RFC8941
+  URL: RFC3986
   RFC4648:  # Base16 encoding
   RFC7932:  # Brotli
   RFC8878:  # Zstandard
@@ -54,8 +54,8 @@ informative:
 
 This specification defines a mechanism for using designated {{HTTP}} responses
 as an external dictionary for future HTTP responses for compression schemes
-that support using external dictionaries (e.g. Brotli {{RFC7932}} and Zstandard
-{{RFC8878}}).
+that support using external dictionaries (e.g., Brotli {{RFC7932}} and
+Zstandard {{RFC8878}}).
 
 --- middle
 
@@ -63,8 +63,8 @@ that support using external dictionaries (e.g. Brotli {{RFC7932}} and Zstandard
 
 This specification defines a mechanism for using designated {{HTTP}} responses
 as an external dictionary for future HTTP responses for compression schemes
-that support using external dictionaries (e.g. Brotli {{RFC7932}} and Zstandard
-{{RFC8878}}).
+that support using external dictionaries (e.g., Brotli {{RFC7932}} and
+Zstandard {{RFC8878}}).
 
 This document describes the HTTP headers used for negotiating dictionary usage
 and registers media types for content encoding Brotli and Zstandard using a
