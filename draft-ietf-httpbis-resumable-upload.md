@@ -194,7 +194,7 @@ When a resource supports resumable uploads, the first step is creating the uploa
 
 As a consequence, resumable uploads support all HTTP request methods that can carry content, such as `POST`, `PUT`, and `PATCH`. Similarly, the response to the upload request can have any response status code. Both the method(s) and status code(s) supported are determined by the resource.
 
-When present, `Upload-Complete` MUST be set to false if the end of the request content is not the end of the upload. Otherwise, it MUST be set to true. This header field can be used for request identification by a server. The request MUST NOT include the `Upload-Offset` header.
+`Upload-Complete` MUST be set to false if the end of the request content is not the end of the upload. Otherwise, it MUST be set to true. This header field can be used for request identification by a server. The request MUST NOT include the `Upload-Offset` header.
 
 If the request is valid, the server SHOULD create an upload resource. Then, the server MUST include the `Location` header in the response and set its value to the URL of the upload resource. The client MAY use this URL for offset retrieval ({{offset-retrieving}}),upload append ({{upload-appending}}), and upload cancellation ({{upload-cancellation}}).
 
