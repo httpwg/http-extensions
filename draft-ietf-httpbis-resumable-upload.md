@@ -110,7 +110,7 @@ Client                                  Server
 ~~~
 {: #fig-upload-creation title="Upload Creation"}
 
-2) If the connection to the server gets interrupted, the client may want to resume the upload. Before this is possible, the client must know the amount of data that the server was able to receive before the connection got interrupted. To achieve this, the client uses Offset Retrieval ({{offset-retrieving}}) to obtain the upload's offset using the upload resource.
+2) If the connection to the server gets interrupted, the client may want to resume the upload. Before this is possible, the client must know the amount of data that the server was able to receive before the connection got interrupted. To achieve this, the client retrieves the offset ({{offset-retrieving}}) from the upload resource.
 
 ~~~
 Client                                      Server
@@ -196,7 +196,7 @@ As a consequence, resumable uploads support all HTTP request methods that can ca
 
 `Upload-Complete` MUST be set to false if the end of the request content is not the end of the upload. Otherwise, it MUST be set to true. This header field can be used for request identification by a server. The request MUST NOT include the `Upload-Offset` header.
 
-If the request is valid, the server SHOULD create an upload resource. Then, the server MUST include the `Location` header in the response and set its value to the URL of the upload resource. The client MAY use this URL for offset retrieval ({{offset-retrieving}}),upload append ({{upload-appending}}), and upload cancellation ({{upload-cancellation}}).
+If the request is valid, the server SHOULD create an upload resource. Then, the server MUST include the `Location` header in the response and set its value to the URL of the upload resource. The client MAY use this URL for offset retrieval ({{offset-retrieving}}), upload append ({{upload-appending}}), and upload cancellation ({{upload-cancellation}}).
 
 Once the upload resource is available, the target resource MAY send an informational response with `104 (Upload Resumption Supported)` status to the client while the request content is being uploaded. In this informational response, the `Location` header field MUST be set to the upload resource.
 
@@ -243,7 +243,7 @@ upload-complete: ?0
 upload-offset: 25
 ~~~
 
-If the client received an informational repsonse with the upload URL, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a server error status code between 500 and 599 (inclusive) is received. The client SHOULD NOT automatically retry if a client error status code between 400 and 499 (inclusive) is received.
+If the client received an informational response with the upload URL, it MAY automatically attempt upload resumption when the connection is terminated unexpectedly, or if a server error status code between 500 and 599 (inclusive) is received. The client SHOULD NOT automatically retry if a client error status code between 400 and 499 (inclusive) is received.
 
 File metadata can affect how servers might act on the uploaded file. Clients can send representation metadata (see {{Section 8.3 of HTTP}}) in the request that starts an upload. Servers MAY interpret this metadata or MAY ignore it. The `Content-Type` header can be used to indicate the MIME type of the file. The `Content-Disposition` header can be used to transmit a filename. If included, the parameters SHOULD be either `filename`, `filename*` or `boundary`.
 
@@ -289,7 +289,7 @@ The client MUST NOT perform offset retrieval while creation ({{upload-creation}}
 
 The offset MUST be accepted by a subsequent append ({{upload-appending}}). Due to network delay and reordering, the server might still be receiving data from an ongoing transfer for the same upload resource, which in the client perspective has failed. The server MAY terminate any transfers for the same upload resource before sending the response by abruptly terminating the HTTP connection or stream. Alternatively, the server MAY keep the ongoing transfer alive but ignore further bytes received past the offset.
 
-The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single Offset Retrieval ({{offset-retrieving}}) request.
+The client MUST NOT start more than one append ({{upload-appending}}) based on the resumption offset from a single offset retrieving ({{offset-retrieving}}) request.
 
 The response SHOULD include `Cache-Control: no-store` header to prevent HTTP caching.
 
