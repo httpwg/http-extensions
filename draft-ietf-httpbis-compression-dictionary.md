@@ -308,7 +308,7 @@ Vary: accept-encoding, available-dictionary
 ## Content Encoding
 
 IANA is asked to update the "HTTP Content Coding Registry" registry
-({{RFC9110}}) according to the table below:
+({{HTTP}}) according to the table below:
 
 |--------|---------------------------------------------------------------------------------------|-------------|
 | Name   | Description                                                                           | Reference   |
@@ -321,7 +321,7 @@ IANA is asked to update the "HTTP Content Coding Registry" registry
 
 IANA is asked to update the
 "Hypertext Transfer Protocol (HTTP) Field Name Registry" registry
-({{RFC9110}}) according to the table below:
+({{HTTP}}) according to the table below:
 
 |----------------------|-----------|-------------------------------------------|
 | Field Name           | Status    |                 Reference                 |
