@@ -80,15 +80,16 @@ When responding to a HTTP Request, a server can advertise that the response can
 be used as a dictionary for future requests for URLs that match the pattern
 specified in the Use-As-Dictionary response header.
 
-The Use-As-Dictionary response header is a Structured Field {{RFC8941}}
-sf-dictionary with values for "match", "ttl", "type" and "hashes".
+The Use-As-Dictionary response header is a Structured Field
+{{STRUCTURED-FIELDS}} sf-dictionary with values for "match", "ttl", "type" and
+"hashes".
 
 ### match
 
 The "match" value of the Use-As-Dictionary header is a sf-string value that
 provides an URL-matching pattern for requests where the dictionary can be used.
 
-The sf-string is parsed as a URL {{RFC3986}}, and supports absolute URLs
+The sf-string is parsed as a URL {{URL}}, and supports absolute URLs
 as well as relative URLs. When stored, any relative URLs MUST be expanded
 so that only absolute URL patterns are used for matching against requests.
 
