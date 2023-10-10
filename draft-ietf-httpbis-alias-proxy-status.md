@@ -34,7 +34,7 @@ author:
 
 This document defines the `next-hop-aliases` HTTP Proxy-Status Parameter. This parameter carries
 the list of aliases and canonical names an intermediary received during DNS resolution as part
-establishing a connection to the next hop.
+of establishing a connection to the next hop.
 
 --- middle
 
@@ -164,7 +164,7 @@ Similarly the "\\" character in a label MUST be escaped as "\\\\".  Other uses o
 In order to include the `next-hop-aliases` parameter, a proxy needs to have access to the chain
 of alias names and canonical names received in CNAME records.
 
-Implementations ought to note that the full chain of names might not available in common DNS
+Implementations ought to note that the full chain of names might not be available in common DNS
 resolution APIs, such as `getaddrinfo`. `getaddrinfo` does have an option for `AI_CANONNAME`,
 but this will only return the last name in the chain (the canonical name), not the alias
 names.
