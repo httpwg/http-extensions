@@ -72,6 +72,13 @@ negotiated dictionary.
 
 This document uses the line folding strategies described in [FOLDING].
 
+# Editor's Note
+
+This draft depends on the URLPattern specification which is currently in a
+draft state (https://wicg.github.io/urlpattern/). This draft MUST NOT be
+standardized until the URLPattern specification is out of incubation and
+complete.
+
 # Dictionary Negotiation
 
 ## Use-As-Dictionary
