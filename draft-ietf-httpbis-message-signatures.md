@@ -69,7 +69,9 @@ normative:
         target: https://csrc.nist.gov/publications/detail/fips/186/4/final
         title: Digital Signature Standard (DSS)
         date: 2013
-    POSIX.1:
+    POSIX:
+        -: "posix"
+        display: "POSIX.1"
         target: https://pubs.opengroup.org/onlinepubs/9699919799/
         title: The Open Group Base Specifications Issue 7, 2018 edition
         date: 2018
@@ -90,7 +92,7 @@ informative:
     RFC7807:
     RFC8792:
     BCP195:
-    CLIENT-CERT: I-D.ietf-httpbis-client-cert-field
+    CLIENT-CERT: RFC9440
     DIGEST: I-D.ietf-httpbis-digest-headers
     COOKIE: RFC6265
     I-D.cavage-http-signatures:
@@ -218,7 +220,7 @@ Target Message:
 Signature Context:
 : The data source from which the HTTP Message Component Values are drawn. The context includes the target message and any additional information the signer or verifier might have, such as the full target URI of a request or the related request message for a response.
 
-The term "Unix time" is defined by {{POSIX.1}}, [Section 4.16](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html#tag_04_16).
+The term "Unix timestamp" refers to what Section 4.16 of {{POSIX}} calls "Seconds Since the Epoch".
 
 This document contains non-normative examples of partial and complete HTTP messages. Some examples use a single trailing backslash `\` to indicate line wrapping for long values, as per {{RFC8792}}. The `\` character and leading spaces on wrapped lines are not part of the value.
 
@@ -272,19 +274,19 @@ HTTP Message Signatures are designed to be a general-purpose tool applicable in 
 
 When choosing these parameters, an application of HTTP message signatures has to ensure that the verifier will have access to all required information needed to re-create the signature base. For example, a server behind a reverse proxy would need to know the original request URI to make use of the derived component `@target-uri`, even though the apparent target URI would be changed by the reverse proxy (see also {{security-message-component-context}}). Additionally, an application using signatures in responses would need to ensure that clients receiving signed responses have access to all the signed portions of the message, including any portions of the request that were signed by the server using the related-response parameter.
 
-The details of this kind of profiling are the purview of the application and outside the scope of this specification, however some additional considerations are discussed in {{security}}. In particular, when choosing the required set of component identifiers, care has to be taken to make sure that the coverage is sufficient for the application, as discussed in {{security-coverage}} and  {{security-message-content}}. This specification defines only part of a full security system for an application. When building a complete security system based on this tool, it is important to perform a security analysis of the entire system of which HTTP Message Signatures is a part. Historical systems, such as {{AWS-SIGv4}}, can provide inspiration and examples of how to apply similar mechanisms in a secure and trustable fashion.
+The details of this kind of profiling are the purview of the application and outside the scope of this specification, however some additional considerations are discussed in {{security}}. In particular, when choosing the required set of component identifiers, care has to be taken to make sure that the coverage is sufficient for the application, as discussed in {{security-coverage}} and  {{security-message-content}}. This specification defines only part of a full security system for an application. When building a complete security system based on this tool, it is important to perform a security analysis of the entire system of which HTTP Message Signatures is a part. Historical systems, such as {{AWS-SIGv4}}, can provide inspiration and examples of how to apply similar mechanisms to an application, though review of such historical systems does not negate the need for a security analysis of an application of HTTP Message Signatures.
 
 # HTTP Message Components {#covered-components}
 
 In order to allow signers and verifiers to establish which components are covered by a signature, this document defines component identifiers for components covered by an HTTP Message Signature, a set of rules for deriving and canonicalizing the values associated with these component identifiers from the HTTP Message, and the means for combining these canonicalized values into a signature base.
 
-The signature context for deriving these values MUST be accessible to both the signer and the verifier of the message. The context MUST be the same across all components in a given signature. For example, it would be an error to use a the raw query string for the `@query` derived component but combined query and form parameters for the `@query-param` derived component. For more considerations of the message component context, see {{security-message-component-context}}.
+The signature context for deriving these values MUST be accessible to both the signer and the verifier of the message. The context MUST be the same across all components in a given signature. For example, it would be an error to use the raw query string for the `@query` derived component but combined query and form parameters for the `@query-param` derived component. For more considerations of the message component context, see {{security-message-component-context}}.
 
 A component identifier is composed of a component name and any parameters associated with that name. Each component name is either an HTTP field name ({{http-fields}}) or a registered derived component name ({{derived-components}}). The possible parameters for a component identifier are dependent on the component identifier, and the HTTP Signature Component Parameters registry cataloging all possible parameters is defined in {{component-param-registry}}.
 
 Within a single list of covered components, each component identifier MUST occur only once. One component identifier is distinct from another if the component name differs, or if any of the parameters differ for the same component name. Multiple component identifiers having the same component name MAY be included if they have parameters that make them distinct, such as `"foo";bar` and `"foo";baz`. The order of parameters MUST be preserved when processing a component identifier (such as when parsing during verification), but the order of parameters is not significant when comparing two component identifiers for equality checks. That is to say, `"foo";bar;baz` cannot be in the same message as `"foo";baz;bar`, since these two component identifiers are equivalent, but a system processing one form is not allowed to transform it into the other form.
 
-The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters. Some HTTP message components can undergo transformations that change the bitwise value without altering the meaning of the component's value (for example, when combining field values). Message component values must therefore be canonicalized before they are signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
+The component value associated with a component identifier is defined by the identifier itself. Component values MUST NOT contain newline (`\n`) characters. Some HTTP message components can undergo transformations that change the bitwise value without altering the meaning of the component's value (for example, when combining field values). Message component values therefore need to be canonicalized before they are signed, to ensure that a signature can be verified despite such intermediary transformations. This document defines rules for each component identifier that transform the identifier's associated component value into such a canonical form.
 
 The following sections define component identifier names, their parameters, their associated values, and the canonicalization rules for their values. The method for combining message components into the signature base is defined in {{create-sig-input}}.
 
@@ -294,7 +296,7 @@ The component name for an HTTP field is the lowercased form of its field name as
 
 The component value for an HTTP field is the field value for the named field as defined in {{Section 5.5 of HTTP}}. The field value MUST be taken from the named header field of the target message unless this behavior is overridden by additional parameters and rules, such as the `req` and `tr` flags, below. For most fields, the field value is an ASCII string as recommended by {{HTTP}}, and the component value is exactly that string. Other encodings could exist in some implementations, and all non-ASCII field values MUST be encoded to ASCII before being added to the signature base. The `bs` parameter defined in {{http-field-byte-sequence}} provides a method for wrapping such problematic field values.
 
-Unless overridden by additional parameters and rules, HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}} to create the component value. Specifically, HTTP fields sent as multiple fields MUST be combined using a single comma (",") and a single space (" ") between each item. Note that intermediaries are allowed to combine values of HTTP fields with any amount of whitespace between the commas, and if this behavior is not accounted for by the verifier, the signature can fail since the signer and verifier will see a different component value in their respective signature bases. For robustness, it is RECOMMENDED that signed messages include only a single instance of any field covered under the signature, particularly with the value for any list-based fields serialized using the algorithm below. This approach increases the chances of the field value remaining untouched through intermediaries. Where that approach is not possible and multiple instances of a field need to be sent separately, it is RECOMMENDED that signers and verifiers process any list-based fields taking all individual field values and combining them based on the strict algorithm below, to counter possible intermediary behavior. When the field in question is a structured field of type List or Dictionary, this effect can be accomplished more directly by requiring the strict structured field serialization of the field value, as described in {{http-field-structured}}.
+Unless overridden by additional parameters and rules, HTTP field values MUST be combined into a single value as defined in {{Section 5.2 of HTTP}} to create the component value. Specifically, HTTP fields sent as multiple fields MUST be combined by concatenating the values using a single comma and a single space as a separator ("," + " "). Note that intermediaries are allowed to combine values of HTTP fields with any amount of whitespace between the commas, and if this behavior is not accounted for by the verifier, the signature can fail since the signer and verifier will see a different component value in their respective signature bases. For robustness, it is RECOMMENDED that signed messages include only a single instance of any field covered under the signature, particularly with the value for any list-based fields serialized using the algorithm below. This approach increases the chances of the field value remaining untouched through intermediaries. Where that approach is not possible and multiple instances of a field need to be sent separately, it is RECOMMENDED that signers and verifiers process any list-based fields taking all individual field values and combining them based on the strict algorithm below, to counter possible intermediary behavior. When the field in question is a structured field of type List or Dictionary, this effect can be accomplished more directly by requiring the strict structured field serialization of the field value, as described in {{http-field-structured}}.
 
 Note that some HTTP fields, such as Set-Cookie ({{COOKIE}}), do not follow a syntax that allows for combination of field values in this manner (such that the combined output is unambiguous from multiple inputs). Even though the component value is never parsed by the message signature process and used only as part of the signature base in {{create-sig-input}}, caution needs to be taken when including such fields in signatures since the combined value could be ambiguous. The `bs` parameter defined in {{http-field-byte-sequence}} provides a method for wrapping such problematic fields. See {{security-non-list}} for more discussion of this issue.
 
@@ -1161,7 +1163,7 @@ To create the signature base, the signer or verifier concatenates together entri
 
 2. For each message component item in the covered components set (in order):
 
-    0. Check that the component identifier (including its parameters) has not already been added to the signature base. If this happens, produce an error.
+    0. If the component identifier (including its parameters) has already been added to the signature base, produce an error.
 
     1. Append the component identifier for the covered component serialized according to the `component-identifier` ABNF rule. Note that this serialization places the component name in double quotes and appends any parameters outside of the quotes.
 
@@ -1173,7 +1175,7 @@ To create the signature base, the signer or verifier concatenates together entri
 
         - If the component identifier has a parameter that is not understood, produce an error.
 
-        - If the component identifier has several incompatible parameters, such as `bs` and `sf`, produce an error.
+        - If the component identifier has parameters that are mutually incompatible with one another, such as `bs` and `sf`, produce an error.
 
         - If the component identifier contains the `req` parameter and the target message is a request, produce an error.
 
@@ -1201,7 +1203,7 @@ To create the signature base, the signer or verifier concatenates together entri
 
 5. Return the output string.
 
-If covered components reference a component identifier that cannot be resolved to a component value in the message, the implementation MUST produce an error and not create a signature base. Such situations are included but not limited to:
+If covered components reference a component identifier that cannot be resolved to a component value in the message, the implementation MUST produce an error and not create a signature base. Such situations include, but are not limited to:
 
  * The signer or verifier does not understand the derived component name.
  * The component name identifies a field that is not present in the message or whose value is malformed.
@@ -1264,7 +1266,7 @@ In order to create a signature, a signer MUST follow the following algorithm:
 
 2. The signer sets the signature's creation time to the current time.
 
-3. If applicable, the signer sets the signature's expiration time property to the time at which the signature is to expire. The expiration is a hint to the verifier, expressing the time at which the signer is no longer willing to vouch for the safety of the signature.
+3. If applicable, the signer sets the signature's expiration time property to the time at which the signature is to expire. The expiration is a hint to the verifier, expressing the time at which the signer is no longer willing to vouch for the signature. An appropriate expiration length, and the processing requirements of this parameter, are application-specific.
 
 4. The signer creates an ordered set of component identifiers representing the message components to be covered by the signature, and attaches signature metadata parameters to this set. The serialized value of this is later used as the value of the Signature-Input field as described in {{signature-input-header}}.
    * Once an order of covered components is chosen, the order MUST NOT change for the life of the signature.
@@ -1718,7 +1720,7 @@ The signature request MAY include signature metadata parameters that indicate de
 * `created`: The signer is requested to generate and include a creation time. This parameter has no associated value when sent as a signature request.
 * `expires`: The signer is requested to generate and include an expiration time. This parameter has no associated value when sent as a signature request.
 * `nonce`: The signer is requested to include the value of this parameter as the signature `nonce` in the target signature.
-* `alg`: The signer is requested to use the indicated signature algorithm to create the target signature.
+* `alg`: The signer is requested to use the indicated signature algorithm from the HTTP Signature Algorithms Registry to create the target signature.
 * `keyid`: The signer is requested to use the indicated key material to create the target signature.
 * `tag`: The signer is requested to include the value of this parameter as the signature `tag` in the target signature.
 
@@ -1764,11 +1766,16 @@ registering the following entries according to the table below:
 
 ## HTTP Signature Algorithms Registry {#hsa-registry}
 
-This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms". Initial values for this registry are given in {{iana-hsa-contents}}. Future assignments and modifications to existing assignment are to be made through the Expert Review registration policy {{?RFC8126}}.
+This document defines HTTP Signature Algorithms, for which IANA is asked to create and maintain a new registry titled "HTTP Signature Algorithms". Initial values for this registry are given in {{iana-hsa-contents}}. Future assignments and modifications to existing assignment are to be made through the Specification Required registration policy {{?RFC8126}}.
 
-The Designated Expert (DE) is expected to ensure that the algorithms referenced by a registered algorithm identifier are fully defined with all parameters (such as salt, hash, required key length, etc) are fixed by the defining text. The DE is expected to ensure that the algorithm definition fully specifies the `HTTP_SIGN` and `HTTP_VERIFY` primitive functions, including how all defined inputs and outputs map to the underlying cryptographic algorithm. The DE is expected to reject any registrations that are aliases of existing registrations. The DE is expected to ensure all registrations follow the template presented in {{iana-hsa-template}}, including that the length of the name is not excessive while still being unique and recognizable. When setting a registered item's status to "Deprecated", the DE should ensure that a reason for the deprecation is documented, along with instructions for moving away from the deprecated functionality.
+The algorithms listed in this registry identify some possible cryptographic algorithms for applications to use with this specification, but the entries neither represent an exhaustive list of possible algorithms nor indicate fitness for purpose with any particular application of this specification. An application is free to implement any algorithm that suits its needs, provided the signer and verifier can agree to the parameters of that algorithm in a secure and deterministic fashion. When an application has a need to signal the use of a particular algorithm at runtime using the `alg` signature parameter, this registry provides a mapping between the value of that parameter to a particular algorithm. However, use of the `alg` parameter needs to be treated with caution to avoid various forms of algorithm confusion and substitution attacks, such as discussed in {{security-keydowngrade}} and others.
 
-This specification creates algorithm identifiers by including major parameters in the identifier string. However, algorithm identifiers in this registry are to be interpreted as whole string values and not as a combination of parts. That is to say, it is expected that implementors understand `rsa-pss-sha512` as referring to one specific algorithm with its hash, mask, and salt values set as defined in the defining text that establishes this identifier. Implementors do not parse out the `rsa`, `pss`, and `sha512` portions of the identifier to determine parameters of the signing algorithm from the string, and the registry of one combination of parameters does not imply the registration of other combinations.
+The Status value should reflect standardization status and the broad opinion of relevant interest groups such as the IETF or security-related SDOs. When an algorithm is first registered, the Designated Expert (DE) should set the Status field to "Active" if there is consensus for the algorithm to be generally recommended as secure or "Provisional" if the algorithm has not reached that consensus, such as for an experimental algorithm. A status of "Provisional" does not mean that the algorithm is known to be insecure, but instead indicates that the algorithm has not reached consensus regarding its properties. If at a future time the algorithm as registered is found to have flaws, the registry entry can be updated and the algorithm can be marked as "Deprecated" to indicate that the algorithm has been found to have problems. This status does not preclude an application from using a particular algorithm, but serves to provide warning of possible known issues with an algorithm that need to be considered by the application. The DE can further ensure that the registration includes an explanation and reference for the Status value, which is particularly important for deprecated algorithms.
+
+The DE is expected to ensure that the algorithms referenced by a registered algorithm identifier are fully defined with all parameters (such as salt, hash, required key length, etc) fixed by the defining text. The DE is expected to ensure that the algorithm definition fully specifies the `HTTP_SIGN` and `HTTP_VERIFY` primitive functions, including how all defined inputs and outputs map to the underlying cryptographic algorithm. The DE is expected to reject any registrations that are aliases of existing registrations. The DE is expected to ensure all registrations follow the template presented in {{iana-hsa-template}}, including that the length of the name is not excessive while still being unique and recognizable.
+
+This specification creates algorithm identifiers by including major parameters in the identifier string in order to make the algorithm name unique and recognizable by developers. However, algorithm identifiers in this registry are to be interpreted as whole string values and not as a combination of parts. That is to say, it is expected that implementors understand `rsa-pss-sha512` as referring to one specific algorithm with its hash, mask, and salt values set as defined in the defining text that establishes this identifier. Implementors do not parse out the `rsa`, `pss`, and `sha512` portions of the identifier to determine parameters of the signing algorithm from the string, and the registry of one combination of parameters does not imply the registration of other combinations.
+
 
 ### Registration Template {#iana-hsa-template}
 
@@ -1780,7 +1787,10 @@ Description:
 : A brief description of the algorithm used to sign the signature base.
 
 Status:
-: A brief text description of the status of the algorithm. The description MUST begin with one of "Active" or "Deprecated", and MAY provide further context or explanation as to the reason for the status. A value of "Deprecated" indicates that the signature algorithm is no longer recommended for use and might be insecure or unsafe in practice.
+: The status of the algorithm. MUST start with one of the following values and MAY contain additional explanatory text. The options are:
+    - "Active": for algorithms without known problems. The signature algorithm is fully specified and its security properties are understood.
+    - "Provisional": for unproven algorithms. The signature algorithm is fully specified but its security properties are not known or proven.
+    - "Deprecated": for algorithms with know security issues. The signature algorithm is no longer recommended for general use and might be insecure or unsafe in some known circumstances.
 
 Specification document(s):
 : Reference to the document(s) that specify the
@@ -2251,7 +2261,7 @@ It is important to balance the need for providing useful feedback to developers 
 
 A core design tenet of this specification is that all message components covered by the signature need to be available to the verifier in order to recreate the signature base and verify the signature. As a consequence, if an application of this specification requires that a particular field be signed, the verifier will need access to the value of that field.
 
-For example, in some complex systems with intermediary processors this could cause the surprising behavior of an intermediary not being able to remove privacy-sensitive information from a message before forwarding it on for processing, for fear of breaking the signature. A possible mitigation for this specific situation would be for the intermediary to verify the signature itself, then modifying the message to remove the privacy-sensitive information. The intermediary can add its own signature at this point to signal to the next destination that the incoming signature was validated, as is shown in the example in {{signature-multiple}}.
+For example, in some complex systems with intermediary processors this could cause the surprising behavior of an intermediary not being able to remove privacy-sensitive information from a message before forwarding it on for processing, for fear of breaking the signature. A possible mitigation for this specific situation would be for the intermediary to verify the signature itself, and then modify the message to remove the privacy-sensitive information. The intermediary can add its own signature at this point to signal to the next destination that the incoming signature was validated, as is shown in the example in {{signature-multiple}}.
 
 --- back
 
@@ -3021,6 +3031,13 @@ Jeffrey Yasskin.
 *RFC EDITOR: please remove this section before publication*
 
 - draft-ietf-httpbis-message-signatures
+
+  - -19
+     * Update IANA registration instructions.
+
+  - -18
+     * Update IANA registration instructions.
+     * Editorial updates from IESG review.
 
   - -17
      * Change encoding

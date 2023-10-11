@@ -61,6 +61,7 @@ informative:
 This document describes HTTP extension header fields that allow a TLS
 terminating reverse proxy (TTRP) to convey the client certificate information of
 a mutually authenticated TLS connection to the origin server in a common and
+
 predictable manner.
 
 --- middle
@@ -128,6 +129,7 @@ connection to the TTRP.
 
 This document uses the following terminology from {{Section 3 of RFC8941}}
 to specify syntax and parsing: List and Byte Sequence.
+
 
 Phrases like "TLS client certificate authentication" or "mutually authenticated TLS"
 are used throughout this document to refer to the process whereby, in addition

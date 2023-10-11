@@ -37,8 +37,7 @@ The HTTP Working Group has a few venues for discussion:
 
 * Our [mailing list](https://lists.w3.org/Archives/Public/ietf-http-wg/) is used for notifications of meetings, adoption of documents, consensus calls, issue discussion, and other business. It's not mandatory to subscribe, but you're likely to miss important things if you don't.
 
-* We discuss most document issues on [GitHub](https://github.com/httpwg/). If you don't want to use Github to follow these discussions, you can subscribe to the [issue announce list](https://www.ietf.org/mailman/listinfo/http-issues).
-
+* We discuss most document issues on [GitHub](https://github.com/httpwg/).
 You can participate in any or all of these places.
 
 
@@ -109,7 +108,7 @@ There are other places inside and outside the IETF that are doing HTTP-related w
 
 ### Bringing Work to the IETF
 
-There are a few things that are important to know when you bring work to the IETF. 
+There are a few things that are important to know when you bring work to the IETF.
 
 First, when your draft is adopted by the Working Group _change control_ -- that is, who determines what's in the specification -- passes from you to the IETF. That means that some things that you don't agree with might happen to it, and it might be published with things that you wouldn't have included (or without things that you would have kept).
 

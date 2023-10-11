@@ -61,7 +61,6 @@ informative:
   RFC9113:
     display: HTTP/2
   HPACK: RFC7541
-  URI: RFC3986
 
 venue:
   group: HTTP
@@ -141,23 +140,15 @@ To specify an HTTP field as a Structured Field, its authors need to:
 
 Typically, this means that a field definition will specify the top-level type -- List, Dictionary, or Item -- and then define its allowable types and constraints upon them. For example, a header defined as a List might have all Integer members, or a mix of types; a header defined as an Item might allow only Strings, and additionally only strings beginning with the letter "Q", or strings in lowercase. Likewise, Inner Lists ({{inner-list}}) are only valid when a field definition explicitly allows them.
 
-When parsing fails, the entire field is ignored (see {{text-parse}}); in most situations, violating field-specific constraints should have the same effect. Thus, if a header is defined as an Item and required to be an Integer, but a String is received, the field will by default be ignored. If the field requires different handling for type mismatches it should be explicitly specified, but note that field definitions cannot override how parsing failures are handled.
-
-Both Items and Inner Lists allow parameters as an extensibility mechanism; this means that values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized parameter as an error condition.
-
-To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" parameters be added by senders. A specification could stipulate that all parameters that fit a defined pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
-
-Specifications that use Dictionaries can also allow for forward compatibility by requiring that the presence of -- as well as value and type associated with -- unknown members be ignored. Subsequent specifications can then add additional members, specifying constraints on them as appropriate.
-
-An extension to a Structured Field can then require that an entire field value be ignored by a recipient that understands the extension if constraints on the value it defines are not met.
-
-A field definition cannot relax the requirements of this specification because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List). Likewise, field definitions can only use this specification for the entire field value, not a portion thereof.
-
-This specification defines minimums for the length or number of various structures supported by implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
+Field definitions can only use this specification for the entire field value, not a portion thereof.
 
 Specifications can refer to a field name as a "structured header name", "structured trailer name", or "structured field name" as appropriate. Likewise, they can refer its field value as a "structured header value", "structured trailer value", or "structured field value" as necessary.
 
-For example, a fictitious Foo-Example header field might be specified as:
+This specification defines minimums for the length or number of various structures supported by implementations. It does not specify maximum sizes in most cases, but authors should be aware that HTTP implementations do impose various limits on the size of individual fields, the total number of fields, and/or the size of the entire header or trailer section.
+
+## Example
+
+A fictitious Foo-Example header field might be specified as:
 
 <blockquote>
 <t>42. Foo-Example Header Field</t>
@@ -193,13 +184,38 @@ being used.</t>
 </artwork>
 </blockquote>
 
-Note that because the definition of a Structured Field references a specific RFC for Structured Fields, the types available for use in its value are limited to those defined in that RFC. For example, a field whose definition references this document can have a value that uses the Date type ({{date}}), whereas a field whose definition references RFC 8941 cannot, because it will be treated as invalid (and therefore discarded) by implementations of that specification.
+## Error Handling
 
-Also note that this limitation also applies to future extensions to a field; for example, a field that is defined with reference to RFC 8941 cannot use the Date type, because some recipients might still be using an RFC 8941 parser to process it.
+When parsing fails, the entire field is ignored (see {{text-parse}}). Field definitions cannot override this, because doing so would preclude handling by generic software; they can only add additional constraints (for example, on the numeric range of Integers and Decimals, the format of Strings and Tokens, the types allowed in a Dictionary's values, or the number of Items in a List).
+
+When field-specific constraints are violated, the entire field is also ignored, unless the field definition defines other handling requirements. For example, if a header field is defined as an Item and required to be an Integer, but a String is received, it should be ignored unless that field's definition explicitly specifies otherwise.
+
+
+## Preserving Extensibility
+
+Structured Fields are designed to be extensible, because experience has shown that even when it is not foreseen, it is often necessary to modify and add to the allowable syntax and semantics of a field in a controlled fashion.
+
+Both Items and Inner Lists allow Parameters as an extensibility mechanism; this means that their values can later be extended to accommodate more information, if need be. To preserve forward compatibility, field specifications are discouraged from defining the presence of an unrecognized parameter as an error condition.
+
+Field specifications are required to be either an Item, List, or Dictionary to preserve extensibility. Fields that erroneously defined as another type (e.g., Integer) are assumed to be Items (i.e., they allow Parameters).
+
+To further assure that this extensibility is available in the future, and to encourage consumers to use a complete parser implementation, a field definition can specify that "grease" parameters be added by senders. A specification could stipulate that all parameters that fit a defined pattern are reserved for this use and then encourage them to be sent on some portion of requests. This helps to discourage recipients from writing a parser that does not account for Parameters.
+
+Specifications that use Dictionaries can also allow for forward compatibility by requiring that the presence of -- as well as value and type associated with -- unknown keys be ignored. Subsequent specifications can then add additional keys, specifying constraints on them as appropriate.
+
+An extension to a Structured Field can then require that an entire field value be ignored by a recipient that understands the extension if constraints on the value it defines are not met.
+
+## Using New Structured Types in Extensions
+
+Because a field definition needs to reference a specific RFC for Structured Fields, the types available for use in its value are limited to those defined in that RFC. For example, a field whose definition references this document can have a value that uses the Date type ({{date}}), whereas a field whose definition references RFC 8941 cannot, because it will be treated as invalid (and therefore discarded) by implementations of that specification.
+
+This limitation also applies to future extensions to a field; for example, a field that is defined with reference to RFC 8941 cannot use the Date type, because some recipients might still be using an RFC 8941 parser to process it.
 
 However, this document is designed to be backwards-compatible with RFC 8941; a parser that implements the requirements here can also parse valid Structured Fields whose definitions reference RFC 8941.
 
-The effect of upgrading a Structured Fields implementation is that some field values that were invalid according to RFC 8941 might become valid when processed.  For instance, though it would not be valid for a field defined against RFC 8941, a field might include include a Date value. An RFC 8941 implementation would reject the entire field, whereas an updated Structured Field implementation might permit the value. In some cases, the resulting Date value will be rejected by field-specific logic, but values in fields that are otherwise ignored (such as extension parameters) might not be detected and the field might subsequently be accepted and processed.
+Upgrading a Structured Fields implementation to support a newer revision of the specification (such as this document) brings the possibility that some field values that were invalid according to the earlier RFC might become valid when processed.
+
+For example, field instance might contain a syntactically valid Date ({{date}}), even though that field's definition does not accommodate Dates. An RFC8941 implementation would fail parsing such a field instance, because they are not defined in that specification. If that implementation were upgraded to this specification, parsing would now succeed. In some cases, the resulting Date value will be rejected by field-specific logic, but values in fields that are otherwise ignored (such as extension parameters) might not be detected and the field might subsequently be accepted and processed.
 
 
 # Structured Data Types {#types}
@@ -477,7 +493,7 @@ Note that Display Strings do not indicate the language used in the value; that c
 For example:
 
 ~~~ http-message-new
-Example-DisplayString: %"This is intended for display to %C3%BCsers."
+Example-DisplayString: %"This is intended for display to %c3%bcsers."
 ~~~
 
 See {{security}} for additional security considerations when handling Display Strings.
@@ -687,16 +703,19 @@ Given a Date as input_date, return an ASCII string suitable for use in an HTTP f
 
 ### Serializing a Display String {#ser-display}
 
-Given a string of Unicode characters as input_string, return an ASCII string suitable for use in an HTTP field value.
+Given a sequence of Unicode codepoints as input_sequence, return an ASCII string suitable for use in an HTTP field value.
 
-0. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_string. If there is an error in doing so, fail parsing.
-1. Let encoded_string be an empty string.
-2. For each byte in byte_array:
-   1. If byte is %x25 ("%"), append "%25" to encoded_string.
-   2. If byte is in the ranges %x00-1f or %x7f-ff, apply the percent-encoding defined in {{Section 2.1 of URI}} to byte and append the result to encoded_string.
-   3. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
-3. Let formatted_string be the result of running Serialising a String ({{ser-string}}) with encoded_string.
-4. Return the character "%" followed by formatted_string.
+0. If input_sequence is not a sequence of Unicode codepoints, fail serialization.
+1. Let byte_array be the result of applying UTF-8 encoding {{UTF8}} to input_sequence.
+2. Let encoded_string be a string containing "%" followed by DQUOTE.
+3. For each byte in byte_array:
+   1. If byte is %x25 ("%"), %x22 (DQUOTE), or in the ranges %x00-1f or %x7f-ff:
+      1. Append "%" to encoded_string.
+      2. Let encoded_byte be the result of applying base16 encoding ({{Section 8 of !RFC4648}}) to byte, with any alphabetic characters converted to lowercase.
+      3. Append encoded_byte to encoded_string.
+   2. Otherwise, decode byte as an ASCII character and append the result to encoded_string.
+4. Append DQUOTE to encoded_string.
+5. Return encoded_string.
 
 
 ## Parsing Structured Fields {#text-parse}
@@ -964,18 +983,26 @@ Given an ASCII string as input_string, return a Date. input_string is modified t
 
 ### Parsing a Display String {#parse-display}
 
-Given an ASCII string as input_string, return a string of Unicode characters. input_string is modified to remove the parsed value.
+Given an ASCII string as input_string, return a sequence of Unicode codepoints. input_string is modified to remove the parsed value.
 
-0. If the first character of input_string is not "%", fail parsing.
-1. Discard the first character of input_string.
-2. Let parsed_string be the result of running Parsing a String ({{parse-string}}) with input_string.
-3. Let byte_array be the result of applying ASCII encoding to input_string.
-4. For each sigil_byte in byte_array which is %25 ("%"):
-   1. Let octet_hex be the two bytes after sigil_byte in byte_string. If there are not two bytes, fail parsing.
-   2. Let octet be the result of decoding octet_hex as hexidecimal, in a case-insensitive fashion.
-   3. Replace sigil_byte and octet_hex in byte_array with octet.
-5. Let unicode_string be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
-6. Return unicode_string.
+0. If the first two characters of input_string are not "%" followed by DQUOTE, fail parsing.
+1. Discard the first two characters of input_string.
+2. Let byte_array be an empty byte array.
+3. While input_string is not empty:
+   1. Let char be the result of consuming the first character of input_string.
+   2. If char is in the range %x00-1f or %x7f-ff (i.e., it is not in VCHAR or SP), fail parsing.
+   3. If char is "%":
+      1. Let octet_hex be the result of consuming two characters from input_string. If there are not two characters, fail parsing.
+      2. If octet_hex contains characters outside the range %x30-39 or %x61-66 (i.e., it is not in 0-9 or lowercase a-f), fail parsing.
+      2. Let octet be the result of hex decoding octet_hex ({{Section 8 of !RFC4648}}).
+      3. Append octet to byte_array.
+   4. If char is DQUOTE:
+      1. Let unicode_sequence be the result of decoding byte_array as a UTF-8 string {{UTF8}}. Fail parsing if decoding fails.
+      2. Return unicode_sequence.
+   5. Otherwise, if char is not "%" or DQUOTE:
+      1. Let byte be the result of applying ASCII encoding to char.
+      2. Append byte to byte_array.
+4. Reached the end of input_string without finding a closing DQUOTE; fail parsing.
 
 
 # IANA Considerations {#iana}
@@ -1056,7 +1083,7 @@ Implementations are allowed to limit the size of different structures, subject t
 
 # ABNF {#abnf}
 
-This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields.
+This section uses the Augmented Backus-Naur Form (ABNF) notation {{?RFC5234}} to illustrate expected syntax of Structured Fields. However, it cannot be used to validate their syntax, because it does not capture all requirements.
 
 This section is non-normative. If there is disagreement between the parsing algorithms and ABNF, the specified algorithms take precedence.
 
@@ -1075,37 +1102,31 @@ key           = ( lcalpha / "*" )
 lcalpha       = %x61-7A ; a-z
 param-value   = bare-item
 
-sf-dictionary  = dict-member *( OWS "," OWS dict-member )
-dict-member    = member-key ( parameters / ( "=" member-value ))
-member-key     = key
-member-value   = sf-item / inner-list
+sf-dictionary = dict-member *( OWS "," OWS dict-member )
+dict-member   = member-key ( parameters / ( "=" member-value ))
+member-key    = key
+member-value  = sf-item / inner-list
 
 sf-item   = bare-item parameters
 bare-item = sf-integer / sf-decimal / sf-string / sf-token
-            / sf-binary / sf-boolean / sf-date
+            / sf-binary / sf-boolean / sf-date / sf-displaystring
 
-sf-integer = ["-"] 1*15DIGIT
+sf-integer       = ["-"] 1*15DIGIT
+sf-decimal       = ["-"] 1*12DIGIT "." 1*3DIGIT
+sf-string        = DQUOTE *( unescaped / "%" / bs-escaped ) DQUOTE
+sf-token         = ( ALPHA / "*" ) *( tchar / ":" / "/" )
+sf-binary        = ":" base64 ":"
+sf-boolean       = "?" ( "0" / "1" )
+sf-date          = "@" sf-integer
+sf-displaystring = "%" DQUOTE *( unescaped / "\" / pct-encoded ) DQUOTE
 
-sf-decimal  = ["-"] 1*12DIGIT "." 1*3DIGIT
+base64       = *( ALPHA / DIGIT / "+" / "/" ) *"="
 
-sf-string = DQUOTE *chr DQUOTE
-chr       = unescaped / escaped
-unescaped = %x20-21 / %x23-5B / %x5D-7E
-escaped   = "\" ( DQUOTE / "\" )
+unescaped    = %x20-21 / %x23-24 / %x26-5B / %x5D-7E
+bs-escaped   = "\" ( DQUOTE / "\" )
 
-sf-token = ( ALPHA / "*" ) *( tchar / ":" / "/" )
-
-sf-binary = ":" *(base64) ":"
-base64    = ALPHA / DIGIT / "+" / "/" / "="
-
-sf-boolean = "?" boolean
-boolean    = "0" / "1"
-
-sf-date = "@" sf-integer
-
-sf-displaystring = "%" DQUOTE *uchr DQUOTE
-uchr             = chr / uescaped
-uescaped         = "%" HEXDIG HEXDIG
+pct-encoded  = "%" lc-hexdig lc-hexdig
+lc-hexdig = DIGIT / %x61-66 ; 0-9, a-f
 ~~~
 
 

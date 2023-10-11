@@ -34,7 +34,7 @@ author:
 
 This document defines the `next-hop-aliases` HTTP Proxy-Status Parameter. This parameter carries
 the list of aliases and canonical names an intermediary received during DNS resolution as part
-establishing a connection to the next hop.
+of establishing a connection to the next hop.
 
 --- middle
 
@@ -70,7 +70,7 @@ by including the list of names in a new `next-hop-aliases` Proxy-Status paramete
 The `next-hop-aliases` parameter's value is a String {{!STRUCTURED-FIELDS=RFC8941}} that contains
 one or more DNS names in a comma-separated list. The items in the list include all alias names and
 canonical names received in CNAME records {{DNS}} during the course of resolving the next hop's
-hostname using DNS, not including the original requested hostname itself. The names SHOULD
+hostname using DNS, and MAY include the original requested hostname itself. The names SHOULD
 appear in the order in which they were received in DNS. If there are multiple CNAME records
 in the chain, the first name in the `next-hop-aliases` list would be the value in the CNAME
 record for the original hostname, and the final name in the `next-hop-aliases` list would
@@ -100,6 +100,25 @@ This indicates that proxy.example.net, which used the IP address "2001:db8::1" a
 for this request, encountered the names "tracker.example.com" and "service1.example.com"
 in the DNS resolution chain. Note that while this example includes both the `next-hop` and
 `next-hop-aliases` parameters, `next-hop-aliases` can be included without including `next-hop`.
+
+The proxy can also include the name of the next hop as the first item in the list. This is
+particularly useful for reverse proxies when clients would not otherwise know the name of the
+next hop, and the `next-hop` header is used to convey an IP address.
+
+For example, consider a proxy "reverseproxy.example.net" that receives the following records
+when performing DNS resolution for the next hop "host.example.com":
+
+~~~ dns-example
+host2.example.com.          CNAME   service2.example.com.
+service2.example.com.       AAAA    2001:db8::2
+~~~
+
+The proxy could include the following proxy status in its response:
+
+~~~ http-message
+Proxy-Status: reverseproxy.example.net; next-hop="2001:db8::2";
+    next-hop-aliases="host2.example.com,service2.example.com"
+~~~
 
 The `next-hop-aliases` parameter only applies when DNS was used to resolve the next hop's name, and
 does not apply in all situations. Clients can use the information in this parameter to determine
@@ -145,7 +164,7 @@ Similarly the "\\" character in a label MUST be escaped as "\\\\".  Other uses o
 In order to include the `next-hop-aliases` parameter, a proxy needs to have access to the chain
 of alias names and canonical names received in CNAME records.
 
-Implementations ought to note that the full chain of names might not available in common DNS
+Implementations ought to note that the full chain of names might not be available in common DNS
 resolution APIs, such as `getaddrinfo`. `getaddrinfo` does have an option for `AI_CANONNAME`,
 but this will only return the last name in the chain (the canonical name), not the alias
 names.
