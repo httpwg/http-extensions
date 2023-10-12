@@ -120,7 +120,11 @@ limit the life of a dictionary in cases where the dictionary is updated
 frequently which can help limit the number of possible incoming dictionary
 variations.
 
-The "ttl" value is optional and defaults to 31536000 (1 year).
+When a resource is loaded from a local cache in response to a client fetch with
+the "Use-As-Dictionary" response header on the cached entry, the dictionary
+expiration time MUST be recalculated based on the stored ttl.
+
+The "ttl" value is optional and defaults to 604800 (7 days).
 
 ### type
 
@@ -156,11 +160,11 @@ A response that contained a response header:
 NOTE: '\' line wrapping per RFC 8792
 
 Use-As-Dictionary: \
-  match="/product/*", ttl=604800, hashes=(sha-256 sha-512)
+  match="/product/*", ttl=86400, hashes=(sha-256 sha-512)
 ~~~
 
 Would specify matching any URL with a path prefix of /product/ on the same
-{{Origin}} as the original request, expiring as a dictionary in 7 days
+{{Origin}} as the original request, expiring as a dictionary in 1 day
 independent of the cache lifetime of the resource, and advertise support for
 both sha-256 and sha-512 hash algorithms.
 
@@ -211,7 +215,7 @@ Available-Dictionary: \
 To be considered as a match, the dictionary must not yet be expired as a
 dictionary. When iterating through dictionaries looking for a match, the
 expiration time of the dictionary is calculated by taking the last time the
-dictionary was written and adding the "ttl" seconds from the
+dictionary was fetched and adding the "ttl" seconds from the
 "Use-As-Dictionary" response. If the current time is beyond the expiration time
 of the dictionary, it MUST be ignored.
 
@@ -282,8 +286,19 @@ The client adds the algorithms that it supports to the "Accept-Encoding"
 request header. e.g.:
 
 ~~~ http-message
-Accept-Encoding: gzip, deflate, br, zstd, br-d, zstd-d
+Accept-Encoding: br, br-d;q=1.0, deflate, gzip, zstd, zstd-d;q=0.5
 ~~~
+
+In order to reduce the number of variations of responses that caches are likely
+to encounter as a result of "Vary: accept-encoding", Compression Dictionary
+Transport introduces some new requirements to how the Accept-Encoding header
+is constructed:
+
+1. When a dictionary version of a content encoding is advertised, the
+non-dictionary version MUST also be included. e.g. when "zstd-d" is present,
+"zstd" MUST also be present. The same goes for "br-d" which requires that "br"
+be included.
+1. The encodings MUST be ordered alphabetically from left to right.
 
 ## Content-Encoding
 
