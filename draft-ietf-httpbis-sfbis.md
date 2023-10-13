@@ -443,6 +443,8 @@ Example-Token: foo123/456
 
 Parsers MUST support Tokens with at least 512 characters.
 
+Note that Tokens are defined largely for compatibility with the data model of existing HTTP fields, and may require additional steps to use in some implementations. As a result, new fields are encouraged to use Strings.
+
 
 ### Byte Sequences {#binary}
 
