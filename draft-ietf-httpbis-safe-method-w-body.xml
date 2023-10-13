@@ -243,7 +243,7 @@ q=foo&amp;limit=10&amp;sort=-published
 
   <section title="The &quot;Accept-Query&quot; Header Field" anchor="field.accept-query">
     <t>
-      The "Accept-Query" response header field &MAY; be used by a server to
+      The "Accept-Query" response header field &MAY; be used by a resource to
       directly signal support for the QUERY method while identifying
       the specific query format media type(s) that may be used.
     </t>
@@ -257,6 +257,12 @@ Accept-Query = 1#media-type
     </t>
     <t>
       The order of types listed by the Accept-Query header field is not significant.
+    </t>
+    <t>
+      Accept-Query's value applies to every URI on the server that shares the same path; in
+      other words, the query component is ignored. If requests to the same resource return
+      different Accept-Query values, the most recently received fresh (per
+      <xref target="HTTP-CACHING" section="4.2"/>) value is used.
     </t>
   </section>
 
