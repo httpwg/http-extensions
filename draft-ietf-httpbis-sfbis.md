@@ -474,13 +474,16 @@ Note that in Dictionary ({{dictionary}}) and Parameter ({{param}}) values, Boole
 
 Date values can be conveyed in Structured Fields.
 
-Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from January 1, 1970 00:00:00 UTC, excluding leap seconds.
+Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from 1 January 1970 00:00:00 UTC, excluding leap seconds.
 
 For example:
 
 ~~~ http-message-new
 Example-Date: @1659578233
 ~~~
+
+Parsers MUST support Dates whose values include all days in years 1 to 9999 (i.e., -62,135,596,800 to 253,402,214,400 delta seconds from 1 January 1970 00:00:00 UTC).
+
 
 ### Display Strings {#displaystring}
 
