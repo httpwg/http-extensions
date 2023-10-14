@@ -67,6 +67,8 @@ informative:
     - name: Mark Davis
     - name: Michel Suignard
     date: 2014-09-19
+    seriesinfo:
+      'Unicode Technical Report': '#16'
     target: http://www.unicode.org/reports/tr36/
 
 venue:
