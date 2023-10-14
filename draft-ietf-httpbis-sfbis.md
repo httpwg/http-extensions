@@ -1049,7 +1049,7 @@ The size of most types defined by Structured Fields is not limited; as a result,
 It is possible for parties with the ability to inject new HTTP fields to change the meaning
 of a Structured Field. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
-The Display String type can convey all possible Unicode code points without any form of sanitization; for example, they might contain unassigned code points, surrogates, control points (including NUL), or non-characters. Therefore, applications consuming Display Strings need to consider strategies such as filtering or escaping untrusted content before displaying it. See also {{UNICODE-SECURITY}} and {{?I-D.draft-bray-unichars}}.
+The Display String type can convey all possible Unicode code points without any form of sanitization; for example, they might contain unassigned code points, control points (including NUL), or non-characters. Therefore, applications consuming Display Strings need to consider strategies such as filtering or escaping untrusted content before displaying it. See also {{UNICODE-SECURITY}} and {{?I-D.draft-bray-unichars}}.
 
 --- back
 
