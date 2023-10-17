@@ -474,7 +474,7 @@ Note that in Dictionary ({{dictionary}}) and Parameter ({{param}}) values, Boole
 
 Date values can be conveyed in Structured Fields.
 
-Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from 1 January 1970 00:00:00 UTC, excluding leap seconds.
+Dates have a data model that is similar to Integers, representing a (possibly negative) delta in seconds from 1970-01-01T00:00:00Z, excluding leap seconds.
 
 For example:
 
