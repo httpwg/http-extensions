@@ -509,4 +509,4 @@ This document is based on an Internet-Draft specification written by Jiten Mehta
 
 The [tus v1 protocol](https://tus.io/) is a specification for a resumable file upload protocol over HTTP. It inspired the early design of this protocol. Members of the tus community helped significantly in the process of bringing this work to the IETF.
 
-TODO: more acknowledgements.
+The authors would like to thank Mark Nottingham for substantive contributions to the text.
