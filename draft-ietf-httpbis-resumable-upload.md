@@ -510,4 +510,3 @@ None
 {:numbered="false"}
 
 * Split the Upload Transfer Procedure into the Upload Creation Procedure and the Upload Appending Procedure.
->>>>>>> 37bb262 (Tweak resumable appendix)
