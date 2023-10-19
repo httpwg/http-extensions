@@ -481,6 +481,10 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 # Changes
 {:numbered="false" removeinrfc="true"}
 
+## Since draft-ietf-httpbis-resumable-upload-02
+
+None yet
+
 ## Since draft-ietf-httpbis-resumable-upload-01
 {:numbered="false"}
 
