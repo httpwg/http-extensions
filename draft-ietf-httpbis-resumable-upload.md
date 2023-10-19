@@ -213,13 +213,13 @@ If the request includes an `Upload-Complete` field value set to true and a valid
 :scheme: https
 :authority: example.com
 :path: /upload
-upload-draft-interop-version: 3
+upload-draft-interop-version: 4
 upload-complete: ?1
 content-length: 100
 [content (100 bytes)]
 
 :status: 104
-upload-draft-interop-version: 3
+upload-draft-interop-version: 4
 location: https://example.com/upload/b530ce8ff
 
 :status: 201
@@ -232,7 +232,7 @@ upload-offset: 100
 :scheme: https
 :authority: example.com
 :path: /upload
-upload-draft-interop-version: 3
+upload-draft-interop-version: 4
 upload-complete: ?0
 content-length: 25
 [partial content (25 bytes)]
@@ -259,7 +259,7 @@ Clients MUST NOT attempt to resume an upload unless they receive `104 (Upload Re
 
 > **RFC Editor's Note:**  Please remove this section and `Upload-Draft-Interop-Version` from all examples prior to publication of a final version of this document.
 
-The current interop version is 3.
+The current interop version is 4.
 
 Client implementations of draft versions of the protocol MUST send a header field `Upload-Draft-Interop-Version` with the interop version as its value to its requests. The `Upload-Draft-Interop-Version` field value is an Integer.
 
@@ -298,7 +298,7 @@ The resumption offset can be less than or equal to the number of bytes the clien
 :scheme: https
 :authority: example.com
 :path: /upload/b530ce8ff
-upload-draft-interop-version: 3
+upload-draft-interop-version: 4
 
 :status: 204
 upload-offset: 100
@@ -338,7 +338,7 @@ If the request includes the `Upload-Complete` field value set to true  and a val
 :authority: example.com
 :path: /upload/b530ce8ff
 upload-offset: 100
-upload-draft-interop-version: 3
+upload-draft-interop-version: 4
 content-length: 100
 [content (100 bytes)]
 
@@ -369,7 +369,7 @@ If the server does not support cancellation, it MUST respond with a `405 (Method
 :scheme: https
 :authority: example.com
 :path: /upload/b530ce8ff
-upload-draft-interop-version: 3
+upload-draft-interop-version: 4
 
 :status: 204
 ~~~
@@ -486,6 +486,7 @@ The authors would like to thank Mark Nottingham for substantive contributions to
 
 * Replace Upload-Incomplete header with Upload-Complete.
 * Replace terminology about procedures with HTTP resources.
+* Increase the draft interop version.
 
 ## Since draft-ietf-httpbis-resumable-upload-00
 {:numbered="false"}
