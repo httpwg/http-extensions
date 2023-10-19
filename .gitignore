@@ -18,3 +18,4 @@ draft-ietf-httpbis-*.xml
 !draft-ietf-httpbis-safe-method-w-body.xml
 !requirements.txt
 package-lock.json
+node_modules/
