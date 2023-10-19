@@ -435,29 +435,6 @@ Specification: This document
 
 --- back
 
-## Since draft-ietf-httpbis-resumable-upload-01
-
-* Replace Upload-Incomplete header with Upload-Complete.
-
-## Since draft-ietf-httpbis-resumable-upload-00
-
-* Remove Upload-Token and instead use Server-generated upload URL for upload identification.
-* Require the Upload-Incomplete header field in Upload Creation Procedure.
-* Increase the draft interop version.
-
-## Since draft-tus-httpbis-resumable-uploads-protocol-02
-
-None
-
-## Since draft-tus-httpbis-resumable-uploads-protocol-01
-
-* Clarifying backtracking and preventing skipping ahead during the Offset Receiving Procedure.
-* Clients auto-retry 404 is no longer allowed.
-
-## Since draft-tus-httpbis-resumable-uploads-protocol-00
-
-* Split the Upload Transfer Procedure into the Upload Creation Procedure and the Upload Appending Procedure.
-
 # Informational Response
 
 The server is allowed to respond to upload creation ({{upload-creation}}) requests with a `104 (Upload Resumption Supported)` intermediate response as soon as the server has validated the request. This way, the client knows that the server supports resumable uploads before the complete response is received. The benefit is the clients can defer starting the actual data transfer until the server indicates full support (i.e. resumable are supported, the provided upload URL is active etc).
@@ -510,3 +487,37 @@ This document is based on an Internet-Draft specification written by Jiten Mehta
 The [tus v1 protocol](https://tus.io/) is a specification for a resumable file upload protocol over HTTP. It inspired the early design of this protocol. Members of the tus community helped significantly in the process of bringing this work to the IETF.
 
 The authors would like to thank Mark Nottingham for substantive contributions to the text.
+
+
+# Changes
+{:numbered="false" removeinrfc="true"}
+
+## Since draft-ietf-httpbis-resumable-upload-01
+{:numbered="false"}
+
+* Replace Upload-Incomplete header with Upload-Complete.
+* Replace terminology about procedures with HTTP resources.
+
+## Since draft-ietf-httpbis-resumable-upload-00
+{:numbered="false"}
+
+* Remove Upload-Token and instead use Server-generated upload URL for upload identification.
+* Require the Upload-Incomplete header field in Upload Creation Procedure.
+* Increase the draft interop version.
+
+## Since draft-tus-httpbis-resumable-uploads-protocol-02
+{:numbered="false"}
+
+None
+
+## Since draft-tus-httpbis-resumable-uploads-protocol-01
+{:numbered="false"}
+
+* Clarifying backtracking and preventing skipping ahead during the Offset Receiving Procedure.
+* Clients auto-retry 404 is no longer allowed.
+
+## Since draft-tus-httpbis-resumable-uploads-protocol-00
+{:numbered="false"}
+
+* Split the Upload Transfer Procedure into the Upload Creation Procedure and the Upload Appending Procedure.
+>>>>>>> 37bb262 (Tweak resumable appendix)
