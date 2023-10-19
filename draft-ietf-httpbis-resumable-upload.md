@@ -88,7 +88,7 @@ In this example, the client first attempts to upload a file with a known size in
 
 An informational response can be sent to the client to signal the support of resumable upload on the server and transmit the upload resource URL in the Location header.
 
-~~~
+~~~ aasvg
 Client                                  Server
 |                                            |
 | POST                                       |
@@ -112,21 +112,21 @@ Client                                  Server
 
 2) If the connection to the server gets interrupted, the client may want to resume the upload. Before this is possible, the client must know the amount of data that the server was able to receive before the connection got interrupted. To achieve this, the client retrieves the offset ({{offset-retrieving}}) from the upload resource.
 
-~~~
-Client                                      Server
-|                                                |
-| HEAD to upload resource URL                    |
-|----------------------------------------------->|
-|                                                |
-|              204 No Content with Upload-Offset |
-|<-----------------------------------------------|
-|                                                |
+~~~ aasvg
+Client                                       Server
+|                                                 |
+| HEAD to upload resource URL                     |
+|------------------------------------------------>|
+|                                                 |
+|               204 No Content with Upload-Offset |
+|<------------------------------------------------|
+|                                                 |
 ~~~
 {: #fig-offset-retrieving title="Offset Retrieval"}
 
 3) Afterwards, the client can resume the upload by sending the remaining file content to the upload resource ({{upload-appending}}), appending to the already stored data in the upload. The `Upload-Offset` value is included to ensure that the client and server agree on the offset that the upload resumes from.
 
-~~~
+~~~ aasvg
 Client                                       Server
 |                                                 |
 | PATCH to upload resource URL with Upload-Offset |
@@ -140,15 +140,15 @@ Client                                       Server
 
 4) If the client is not interested in completing the upload anymore, it can instruct the upload resource to delete the upload and free all related resources ({{upload-cancellation}}).
 
-~~~
-Client                                      Server
-|                                                |
-| DELETE to upload resource URL                  |
-|----------------------------------------------->|
-|                                                |
-|                   204 No Content on completion |
-|<-----------------------------------------------|
-|                                                |
+~~~ aasvg
+Client                                       Server
+|                                                 |
+| DELETE to upload resource URL                   |
+|------------------------------------------------>|
+|                                                 |
+|                    204 No Content on completion |
+|<------------------------------------------------|
+|                                                 |
 ~~~
 {: #fig-upload-cancellation title="Upload Cancellation"}
 
@@ -160,31 +160,31 @@ This example shows how the client, with prior knowledge about the server's resum
 
 1) If the client is aware that the server supports resumable upload, it can start an upload with the `Upload-Complete: ?0` and the first part of the file.
 
-~~~
-Client                                      Server
-|                                                |
-| POST with Upload-Complete: ?0                  |
-|----------------------------------------------->|
-|                                                |
-|           201 Created with Upload-Complete: ?0 |
-|           and Location on completion           |
-|<-----------------------------------------------|
-|                                                |
+~~~ aasvg
+Client                                       Server
+|                                                 |
+| POST with Upload-Complete: ?0                   |
+|------------------------------------------------>|
+|                                                 |
+|            201 Created with Upload-Complete: ?0 |
+|            and Location on completion           |
+|<------------------------------------------------|
+|                                                 |
 ~~~
 {: #fig-upload-creation-incomplete title="Incomplete Upload Creation"}
 
 2) Afterwards, the following parts are appended ({{upload-appending}}), and the last part of the upload has the `Upload-Complete: ?1` header to indicate the complete transfer.
 
-~~~
-Client                                      Server
-|                                                |
-| PATCH to upload resource URL with              |
-| Upload-Offset and Upload-Complete: ?1          |
-|----------------------------------------------->|
-|                                                |
-|                      201 Created on completion |
-|<-----------------------------------------------|
-|                                                |
+~~~ aasvg
+Client                                       Server
+|                                                 |
+| PATCH to upload resource URL with               |
+| Upload-Offset and Upload-Complete: ?1           |
+|------------------------------------------------>|
+|                                                 |
+|                       201 Created on completion |
+|<------------------------------------------------|
+|                                                 |
 ~~~
 {: #fig-upload-appending-last-chunk title="Upload Append Last Chunk"}
 
