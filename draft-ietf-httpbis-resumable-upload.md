@@ -27,7 +27,7 @@ author:
     ins: M. Kleidl
     name: Marius Kleidl
     role: editor
-    organization: Transloadit Ltd
+    organization: Transloadit
     email: marius@transloadit.com
   -
     ins: G. Zhang
