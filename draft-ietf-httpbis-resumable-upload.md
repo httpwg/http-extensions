@@ -96,9 +96,9 @@ Client                                  Server
 |                                            |
 |                                            | Reserve resources
 |                                            | for upload
-|                                            |------------------
+|                                            |-----------------.
 |                                            |                 |
-|                                            |<-----------------
+|                                            |<----------------'
 |                                            |
 |            104 Upload Resumption Supported |
 |            with upload resouce URL         |
