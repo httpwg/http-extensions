@@ -133,9 +133,7 @@ probeable.
 
 {::boilerplate bcp14-tagged}
 
-This document uses the following terminology from {{Section 3 of
-!STRUCTURED-FIELDS=RFC8941}} to specify syntax and parsing: Integer and Byte
-Sequence. This document uses the notation from {{Section 1.3 of !QUIC=RFC9000}}.
+This document uses the notation from {{Section 1.3 of !QUIC=RFC9000}}.
 
 # The Signature Authentication Scheme
 
@@ -326,13 +324,25 @@ Parameter (see {{parameter-p}}).
 
 # Authentication Parameters {#auth-params}
 
-This specification defines the following authentication parameters. These
-parameters use structured fields ({{STRUCTURED-FIELDS}}) in their definition,
-even though the Authorization field itself does not use structured fields. Due
-to the syntax requirements for authentication parameters, the byte sequences
-defined below SHALL be enclosed in double-quotes (the base64-encoded data and
-colon delimeters are enclosed in double-quotes, see example in {{example}}).
+This specification defines the following authentication parameters.
 
+All of the byte sequences below are encoded using base64url (see {{Section 5 of
+!BASE64=RFC4648}}) without quotes and without padding. In other words, these
+byte sequence authentication parameters values MUST NOT include any characters
+other then ASCII letters, digits, dash and underscore.
+
+The integer below is encoded without a minus and without leading zeroes. In
+other words, the integer authentication parameters value MUST NOT include any
+characters other than digits, and MUST NOT start with a zero unless the full
+value is "0".
+
+Using the syntax from {{!ABNF=RFC5234}}:
+
+~~~
+signature-byte-sequence-param-value = *( ALPHA / DIGIT / "-" / "_" )
+signature-integer-param-value =  %x31-39 1*4( DIGIT ) / "0"
+~~~
+{: #fig-param title="Authentication Parameter Value ABNF"}
 
 ## The k Parameter {#parameter-k}
 
@@ -378,12 +388,12 @@ For example, the key ID "basement" authenticating using Ed25519
 NOTE: '\' line wrapping per RFC 8792
 
 Authorization: Signature \
-  k=":YmFzZW1lbnQ=:", \
-  a=":VGhpcyBpcyBhIHB1YmxpYyBrZXkgaW4gdXNlIGhlcmU=", \
+  k=YmFzZW1lbnQ, \
+  a=VGhpcyBpcyBhIHB1YmxpYyBrZXkgaW4gdXNlIGhlcmU, \
   s=2055, \
-  v=":dmVyaWZpY2F0aW9uXzE2Qg==:", \
-  p=":SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo \
-    aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ==:"
+  v=dmVyaWZpY2F0aW9uXzE2Qg, \
+  p=SW5zZXJ0IHNpZ25hdHVyZSBvZiBub25jZSBoZXJlIHdo \
+    aWNoIHRha2VzIDUxMiBiaXRzIGZvciBFZDI1NTE5IQ
 ~~~
 {: #fig-hdr-example title="Example Header Field"}
 
