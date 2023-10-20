@@ -61,6 +61,15 @@ informative:
   RFC9113:
     display: HTTP/2
   HPACK: RFC7541
+  UNICODE-SECURITY:
+    title: Unicode Security Considerations
+    author:
+    - name: Mark Davis
+    - name: Michel Suignard
+    date: 2014-09-19
+    seriesinfo:
+      'Unicode Technical Report': '#16'
+    target: http://www.unicode.org/reports/tr36/
 
 venue:
   group: HTTP
@@ -1044,7 +1053,7 @@ The size of most types defined by Structured Fields is not limited; as a result,
 It is possible for parties with the ability to inject new HTTP fields to change the meaning
 of a Structured Field. In some circumstances, this will cause parsing to fail, but it is not possible to reliably fail in all such circumstances.
 
-The Display String type conveys a Unicode string without any form of sanitization. Applications using these values need to perform their own checks on their content; for example, they might contain escape sequences, or NUL. Mitigation strategies include escaping untrusted content before displaying it.
+The Display String type can convey any possible Unicode code point without sanitization; for example, they might contain unassigned code points, control points (including NUL), or noncharacters. Therefore, applications consuming Display Strings need to consider strategies such as filtering or escaping untrusted content before displaying it. See also {{UNICODE-SECURITY}} and {{?I-D.draft-bray-unichars}}.
 
 --- back
 
