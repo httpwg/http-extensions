@@ -202,6 +202,8 @@ Once the upload resource is available, the target resource MAY send an informati
 
 The server MUST send the `Upload-Offset` header field in the response if it considers the upload active, either when the response is a success (e.g. `201 (Created)`), or when the response is a failure (e.g. `409 (Conflict)`). The `Upload-Offset` field value MUST be equal to the end offset of the entire upload, or the begin offset of the next chunk if the upload is still incomplete. The client SHOULD consider the upload failed if the response has a status code that indicates a success but the offset indicated in the `Upload-Offset` field value does not equal the total of begin offset plus the number of bytes uploaded in the request.
 
+While the content is received, the target resource MAY repeatedly inform the client about the upload progress by sending an informational response with a `104 (Upload Resumption Supported)` status code. In this informational response, the `Upload-Offset` header field MUST be set to the current upload offset. Later offset retrievals ({{offset-retrieving}}) MUST NOT receive an upload offset that is less than the offset reported in the latest informational response, allowing the client to free associated resources.
+
 If the request completes successfully and the entire upload is complete, the server MUST acknowledge it by responding with a successful status code between 200 and 299 (inclusive). Servers are RECOMMENDED to use `201 (Created)` unless otherwise specified. The response MUST NOT include the `Upload-Complete` header field with the value of false.
 
 If the request completes successfully but the entire upload is not yet complete, as indicated by an `Upload-Complete` field value of false in the request, the server MUST acknowledge it by responding with the `201 (Created)` status code and an `Upload-Complete` header value set to false.
@@ -221,6 +223,10 @@ content-length: 100
 :status: 104
 upload-draft-interop-version: 4
 location: https://example.com/upload/b530ce8ff
+
+:status: 104
+upload-draft-interop-version: 4
+upload-offset: 50
 
 :status: 201
 location: https://example.com/upload/b530ce8ff
