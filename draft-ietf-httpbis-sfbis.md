@@ -493,7 +493,7 @@ For example:
 Example-Date: @1659578233
 ~~~
 
-Parsers MUST support Dates whose values include all days in years 1 to 9999 (i.e., -62,135,596,800 to 253,402,214,400 delta seconds from 1 January 1970 00:00:00 UTC).
+Parsers MUST support Dates whose values include all days in years 1 to 9999 (i.e., -62,135,596,800 to 253,402,214,400 delta seconds from 1970-01-01T00:00:00Z).
 
 
 ### Display Strings {#displaystring}
